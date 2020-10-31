@@ -1,0 +1,12 @@
+
+
+{
+  "variants": {
+    "inverted=false": {
+      "model": "minecraft:block/oak_fence_post"
+    },
+    "inverted=true": {
+      "model": "supplementaries:block/sign_post"
+    }
+  }
+}

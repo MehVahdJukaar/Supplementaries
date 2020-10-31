@@ -1,0 +1,14 @@
+{
+  "parent": "supplementaries:custom/jar",
+  "textures": {
+    "all": "supplementaries:blocks/potion_liquid",
+    
+    "0": "supplementaries:blocks/jar_side",
+    "1": "supplementaries:blocks/jar_top",
+    "2": "supplementaries:blocks/jar_cork",
+	"3": "supplementaries:blocks/jar_bottom",
+    "particle": "supplementaries:blocks/jar_side",
+    "l1":"supplementaries:blocks/potion_liquid",
+    "l2":"supplementaries:blocks/milk_liquid"
+  }
+}

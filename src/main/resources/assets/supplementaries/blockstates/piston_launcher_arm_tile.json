@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "supplementaries:block/piston_launcher_arm_tile"
+    }
+  }
+}

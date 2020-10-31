@@ -1,0 +1,44 @@
+
+modLoader="javafml" #mandatory
+
+loaderVersion="[33,)" #mandatory This is typically bumped every Minecraft version by Forge. See our download page for lists of versions.
+
+license="All rights reserved"
+
+issueTrackerURL="http://my.issue.tracker/" #optional
+
+[[mods]] #mandatory
+
+modId="supplementaries" #mandatory
+
+version="1.16.4-0.7.1" #mandatory
+
+displayName="Supplementaries" #mandatory
+
+updateJSONURL="http://myurl.me/" #optional
+
+displayURL="https://www.curseforge.com/minecraft/mc-mods/supplementaries" #optional
+
+logoFile="logo.png" #optional
+
+credits="Thanks for this example mod goes to Java" #optional
+
+authors="MehVahdJukaar" #optional
+
+description='''Many functional and useful Vanilla+ blocks'''
+
+[[dependencies.moddymcmodface]] #optional
+
+    modId="forge" #mandatory
+    mandatory=true #mandatory
+    versionRange="[34,)" #mandatory
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.moddymcmodface]]
+
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.16,1.17]"
+    ordering="NONE"
+    side="BOTH"

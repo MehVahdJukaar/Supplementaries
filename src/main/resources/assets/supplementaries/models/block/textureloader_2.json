@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "supplementaries:blocks/jar_fishes",
+    "up": "supplementaries:blocks/jar_fishes",
+    "north": "supplementaries:blocks/laser_beam",
+    "east": "supplementaries:blocks/",
+    "south": "supplementaries:blocks/jar_fishes",
+    "west": "supplementaries:blocks/laser_beam_end",
+    "particle": "supplementaries:blocks/jar_fishes"
+  }
+}

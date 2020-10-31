@@ -1,0 +1,20 @@
+{
+  "tick_1": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "supplementaries:tick1",
+        "stream": false
+      }
+    ]
+  },
+  "tick_2": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "supplementaries:tick2",
+        "stream": false
+      }
+    ]
+  }
+}

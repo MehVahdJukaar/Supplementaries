@@ -1,0 +1,11 @@
+{
+  "parent": "supplementaries:custom/clock",
+  "textures": {
+    "all": "supplementaries:blocks/clock_front",
+    "particle": "supplementaries:blocks/clock_front",
+    "0": "supplementaries:blocks/clock_front",
+    "1": "supplementaries:blocks/clock_side",
+	"2": "supplementaries:blocks/clock_back",
+    "missing": "supplementaries:blocks/clock_front"
+  }
+}

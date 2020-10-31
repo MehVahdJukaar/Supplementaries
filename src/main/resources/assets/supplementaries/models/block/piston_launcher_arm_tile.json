@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "supplementaries:blocks/transparent",
+    "up": "supplementaries:blocks/transparent",
+    "north": "supplementaries:blocks/transparent",
+    "east": "supplementaries:blocks/transparent",
+    "south": "supplementaries:blocks/transparent",
+    "west": "supplementaries:blocks/transparent",
+    "particle": "supplementaries:blocks/transparent"
+  }
+}

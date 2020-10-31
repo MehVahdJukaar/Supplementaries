@@ -1,0 +1,9 @@
+{
+  "parent": "supplementaries:custom/piston_launcher",
+  "textures": {
+    "all": "supplementaries:blocks/piston_launcher_base",
+    "particle": "supplementaries:blocks/piston_launcher_base",
+    "1": "supplementaries:blocks/piston_launcher_base",
+    "2": "supplementaries:blocks/piston_launcher_side"
+  }
+}

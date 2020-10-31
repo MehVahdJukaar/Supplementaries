@@ -1,0 +1,12 @@
+ {
+  "parent": "block/cube",
+  "textures": {
+    "down": "supplementaries:blocks/notice_board_side",
+    "up": "supplementaries:blocks/notice_board_side",
+    "north": "supplementaries:blocks/notice_board_front_full",
+    "east": "supplementaries:blocks/notice_board_side",
+    "south": "supplementaries:blocks/notice_board_side",
+    "west": "supplementaries:blocks/notice_board_side",
+    "particle": "supplementaries:blocks/notice_board_side"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "supplementaries:custom/crank_handle",
+  "textures": {
+    "all": "supplementaries:blocks/pedestal_side",
+    "particle": "supplementaries:blocks/pedestal_side",
+    "0": "supplementaries:blocks/crank_handle"
+  }
+}

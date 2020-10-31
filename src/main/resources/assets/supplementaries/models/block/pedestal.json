@@ -1,0 +1,10 @@
+{
+  "parent": "supplementaries:custom/pedestal",
+  "textures": {
+    "0": "supplementaries:blocks/pedestal_top",
+    "1": "supplementaries:blocks/pedestal_side",
+    "2": "supplementaries:blocks/pedestal_bottom",
+    "particle": "supplementaries:blocks/pedestal_side"
+
+  }
+}

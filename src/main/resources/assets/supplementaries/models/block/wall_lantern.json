@@ -1,0 +1,8 @@
+{
+  "parent": "supplementaries:custom/wall_lantern",
+  "textures": {
+    "all": "supplementaries:blocks/t2",
+    "particle": "minecraft:block/lantern",
+    "1": "supplementaries:blocks/wall_lantern"
+  }
+}

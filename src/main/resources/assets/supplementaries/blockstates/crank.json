@@ -1,0 +1,312 @@
+
+
+{
+    "multipart": [
+        {   "when": { "facing": "north" },
+            "apply": { "model": "supplementaries:block/crank_base", "uvlock": true}    
+        },
+        {   "when": { "facing": "east" },
+            "apply": { "model": "supplementaries:block/crank_base", "y": 90, "uvlock": true }
+        },
+        {   "when": { "facing": "south" },
+            "apply": { "model": "supplementaries:block/crank_base", "y": 180, "uvlock": true }
+        },
+        {   "when": { "facing": "west" },
+            "apply": { "model": "supplementaries:block/crank_base", "y": 270, "uvlock": true }
+        },
+        {   "when": { "facing": "up" },
+            "apply": { "model": "supplementaries:block/crank_base", "x": 270, "uvlock": true }
+        },
+        {   "when": { "facing": "down" },
+            "apply": { "model": "supplementaries:block/crank_base", "x": 90, "uvlock": true }
+        },
+        {   "when": { "facing": "north", "power":0 },
+        	"apply": { "model": "supplementaries:block/crank_handle_0" }
+   		},
+        {   "when": { "facing": "north", "power":1 },
+        	"apply": { "model": "supplementaries:block/crank_handle_1" }
+   		},
+        {   "when": { "facing": "north", "power":2 },
+        	"apply": { "model": "supplementaries:block/crank_handle_2" }
+   		},
+        {   "when": { "facing": "north", "power":3 },
+        	"apply": { "model": "supplementaries:block/crank_handle_3" }
+   		},
+        {   "when": { "facing": "north", "power":4 },
+        	"apply": { "model": "supplementaries:block/crank_handle_4" }
+   		},
+        {   "when": { "facing": "north", "power":5 },
+        	"apply": { "model": "supplementaries:block/crank_handle_5" }
+   		},
+        {   "when": { "facing": "north", "power":6 },
+        	"apply": { "model": "supplementaries:block/crank_handle_6" }
+   		},
+        {   "when": { "facing": "north", "power":7 },
+        	"apply": { "model": "supplementaries:block/crank_handle_7" }
+   		}, 
+        {   "when": { "facing": "north", "power":8 },
+        	"apply": { "model": "supplementaries:block/crank_handle_8" }
+   		},
+        {   "when": { "facing": "north", "power":9 },
+        	"apply": { "model": "supplementaries:block/crank_handle_9" }
+   		},
+        {   "when": { "facing": "north", "power":10 },
+        	"apply": { "model": "supplementaries:block/crank_handle_10" }
+   		},
+        {   "when": { "facing": "north", "power":11 },
+        	"apply": { "model": "supplementaries:block/crank_handle_11" }
+   		}, 
+        {   "when": { "facing": "north", "power":12 },
+        	"apply": { "model": "supplementaries:block/crank_handle_12" }
+   		},
+        {   "when": { "facing": "north", "power":13 },
+        	"apply": { "model": "supplementaries:block/crank_handle_13" }
+   		},
+        {   "when": { "facing": "north", "power":14 },
+        	"apply": { "model": "supplementaries:block/crank_handle_14" }
+   		},
+        {   "when": { "facing": "north", "power":15 },
+        	"apply": { "model": "supplementaries:block/crank_handle_15" }
+   		},
+        {   "when": { "facing": "south", "power":0 },
+        	"apply": { "model": "supplementaries:block/crank_handle_0", "y": 180}
+   		},
+        {   "when": { "facing": "south", "power":1 },
+        	"apply": { "model": "supplementaries:block/crank_handle_1", "y": 180 }
+   		},
+        {   "when": { "facing": "south", "power":2 },
+        	"apply": { "model": "supplementaries:block/crank_handle_2", "y": 180 }
+   		},
+        {   "when": { "facing": "south", "power":3 },
+        	"apply": { "model": "supplementaries:block/crank_handle_3", "y": 180 }
+   		},
+        {   "when": { "facing": "south", "power":4 },
+        	"apply": { "model": "supplementaries:block/crank_handle_4", "y": 180 }
+   		},
+        {   "when": { "facing": "south", "power":5 },
+        	"apply": { "model": "supplementaries:block/crank_handle_5", "y": 180 }
+   		},
+        {   "when": { "facing": "south", "power":6 },
+        	"apply": { "model": "supplementaries:block/crank_handle_6", "y": 180 }
+   		},
+        {   "when": { "facing": "south", "power":7 },
+        	"apply": { "model": "supplementaries:block/crank_handle_7", "y": 180 }
+   		}, 
+        {   "when": { "facing": "south", "power":8 },
+        	"apply": { "model": "supplementaries:block/crank_handle_8", "y": 180 }
+   		},
+        {   "when": { "facing": "south", "power":9 },
+        	"apply": { "model": "supplementaries:block/crank_handle_9", "y": 180 }
+   		},
+        {   "when": { "facing": "south", "power":10 },
+        	"apply": { "model": "supplementaries:block/crank_handle_10", "y": 180 }
+   		},
+        {   "when": { "facing": "south", "power":11 },
+        	"apply": { "model": "supplementaries:block/crank_handle_11", "y": 180 }
+   		}, 
+        {   "when": { "facing": "south", "power":12 },
+        	"apply": { "model": "supplementaries:block/crank_handle_12", "y": 180 }
+   		},
+        {   "when": { "facing": "south", "power":13 },
+        	"apply": { "model": "supplementaries:block/crank_handle_13", "y": 180 }
+   		},
+        {   "when": { "facing": "south", "power":14 },
+        	"apply": { "model": "supplementaries:block/crank_handle_14", "y": 180 }
+   		},
+        {   "when": { "facing": "south", "power":15 },
+        	"apply": { "model": "supplementaries:block/crank_handle_15", "y": 180 }
+   		},
+        {   "when": { "facing": "east", "power":0 },
+        	"apply": { "model": "supplementaries:block/crank_handle_0", "y": 90}
+   		},
+        {   "when": { "facing": "east", "power":1 },
+        	"apply": { "model": "supplementaries:block/crank_handle_1", "y": 90 }
+   		},
+        {   "when": { "facing": "east", "power":2 },
+        	"apply": { "model": "supplementaries:block/crank_handle_2", "y": 90 }
+   		},
+        {   "when": { "facing": "east", "power":3 },
+        	"apply": { "model": "supplementaries:block/crank_handle_3", "y": 90 }
+   		},
+        {   "when": { "facing": "east", "power":4 },
+        	"apply": { "model": "supplementaries:block/crank_handle_4", "y": 90 }
+   		},
+        {   "when": { "facing": "east", "power":5 },
+        	"apply": { "model": "supplementaries:block/crank_handle_5", "y": 90 }
+   		},
+        {   "when": { "facing": "east", "power":6 },
+        	"apply": { "model": "supplementaries:block/crank_handle_6", "y": 90 }
+   		},
+        {   "when": { "facing": "east", "power":7 },
+        	"apply": { "model": "supplementaries:block/crank_handle_7", "y": 90 }
+   		}, 
+        {   "when": { "facing": "east", "power":8 },
+        	"apply": { "model": "supplementaries:block/crank_handle_8", "y": 90 }
+   		},
+        {   "when": { "facing": "east", "power":9 },
+        	"apply": { "model": "supplementaries:block/crank_handle_9", "y": 90 }
+   		},
+        {   "when": { "facing": "east", "power":10 },
+        	"apply": { "model": "supplementaries:block/crank_handle_10", "y": 90 }
+   		},
+        {   "when": { "facing": "east", "power":11 },
+        	"apply": { "model": "supplementaries:block/crank_handle_11", "y": 90 }
+   		}, 
+        {   "when": { "facing": "east", "power":12 },
+        	"apply": { "model": "supplementaries:block/crank_handle_12", "y": 90 }
+   		},
+        {   "when": { "facing": "east", "power":13 },
+        	"apply": { "model": "supplementaries:block/crank_handle_13", "y": 90 }
+   		},
+        {   "when": { "facing": "east", "power":14 },
+        	"apply": { "model": "supplementaries:block/crank_handle_14", "y": 90 }
+   		},
+        {   "when": { "facing": "east", "power":15 },
+        	"apply": { "model": "supplementaries:block/crank_handle_15", "y": 90 }
+   		}, 
+        {   "when": { "facing": "west", "power":0 },
+        	"apply": { "model": "supplementaries:block/crank_handle_0", "y": 270}
+   		},
+        {   "when": { "facing": "west", "power":1 },
+        	"apply": { "model": "supplementaries:block/crank_handle_1", "y": 270 }
+   		},
+        {   "when": { "facing": "west", "power":2 },
+        	"apply": { "model": "supplementaries:block/crank_handle_2", "y": 270 }
+   		},
+        {   "when": { "facing": "west", "power":3 },
+        	"apply": { "model": "supplementaries:block/crank_handle_3", "y": 270 }
+   		},
+        {   "when": { "facing": "west", "power":4 },
+        	"apply": { "model": "supplementaries:block/crank_handle_4", "y": 270 }
+   		},
+        {   "when": { "facing": "west", "power":5 },
+        	"apply": { "model": "supplementaries:block/crank_handle_5", "y": 270 }
+   		},
+        {   "when": { "facing": "west", "power":6 },
+        	"apply": { "model": "supplementaries:block/crank_handle_6", "y": 270 }
+   		},
+        {   "when": { "facing": "west", "power":7 },
+        	"apply": { "model": "supplementaries:block/crank_handle_7", "y": 270 }
+   		}, 
+        {   "when": { "facing": "west", "power":8 },
+        	"apply": { "model": "supplementaries:block/crank_handle_8", "y": 270 }
+   		},
+        {   "when": { "facing": "west", "power":9 },
+        	"apply": { "model": "supplementaries:block/crank_handle_9", "y": 270 }
+   		},
+        {   "when": { "facing": "west", "power":10 },
+        	"apply": { "model": "supplementaries:block/crank_handle_10", "y": 270 }
+   		},
+        {   "when": { "facing": "west", "power":11 },
+        	"apply": { "model": "supplementaries:block/crank_handle_11", "y": 270 }
+   		}, 
+        {   "when": { "facing": "west", "power":12 },
+        	"apply": { "model": "supplementaries:block/crank_handle_12", "y": 270 }
+   		},
+        {   "when": { "facing": "west", "power":13 },
+        	"apply": { "model": "supplementaries:block/crank_handle_13", "y": 270 }
+   		},
+        {   "when": { "facing": "west", "power":14 },
+        	"apply": { "model": "supplementaries:block/crank_handle_14", "y": 270 }
+   		},
+        {   "when": { "facing": "west", "power":15 },
+        	"apply": { "model": "supplementaries:block/crank_handle_15", "y": 270 }
+   		}, 
+        {   "when": { "facing": "down", "power":0 },
+        	"apply": { "model": "supplementaries:block/crank_handle_0", "x": 90}
+   		},
+        {   "when": { "facing": "down", "power":1 },
+        	"apply": { "model": "supplementaries:block/crank_handle_1", "x": 90 }
+   		},
+        {   "when": { "facing": "down", "power":2 },
+        	"apply": { "model": "supplementaries:block/crank_handle_2", "x": 90 }
+   		},
+        {   "when": { "facing": "down", "power":3 },
+        	"apply": { "model": "supplementaries:block/crank_handle_3", "x": 90 }
+   		},
+        {   "when": { "facing": "down", "power":4 },
+        	"apply": { "model": "supplementaries:block/crank_handle_4", "x": 90 }
+   		},
+        {   "when": { "facing": "down", "power":5 },
+        	"apply": { "model": "supplementaries:block/crank_handle_5", "x": 90 }
+   		},
+        {   "when": { "facing": "down", "power":6 },
+        	"apply": { "model": "supplementaries:block/crank_handle_6", "x": 90 }
+   		},
+        {   "when": { "facing": "down", "power":7 },
+        	"apply": { "model": "supplementaries:block/crank_handle_7", "x": 90 }
+   		}, 
+        {   "when": { "facing": "down", "power":8 },
+        	"apply": { "model": "supplementaries:block/crank_handle_8", "x": 90 }
+   		},
+        {   "when": { "facing": "down", "power":9 },
+        	"apply": { "model": "supplementaries:block/crank_handle_9", "x": 90 }
+   		},
+        {   "when": { "facing": "down", "power":10 },
+        	"apply": { "model": "supplementaries:block/crank_handle_10", "x": 90 }
+   		},
+        {   "when": { "facing": "down", "power":11 },
+        	"apply": { "model": "supplementaries:block/crank_handle_11", "x": 90 }
+   		}, 
+        {   "when": { "facing": "down", "power":12 },
+        	"apply": { "model": "supplementaries:block/crank_handle_12", "x": 90 }
+   		},
+        {   "when": { "facing": "down", "power":13 },
+        	"apply": { "model": "supplementaries:block/crank_handle_13", "x": 90 }
+   		},
+        {   "when": { "facing": "down", "power":14 },
+        	"apply": { "model": "supplementaries:block/crank_handle_14", "x": 90 }
+   		},
+        {   "when": { "facing": "down", "power":15 },
+        	"apply": { "model": "supplementaries:block/crank_handle_15", "x": 90 }
+   		},
+        {   "when": { "facing": "up", "power":0 },
+        	"apply": { "model": "supplementaries:block/crank_handle_0", "x": 270}
+   		},
+        {   "when": { "facing": "up", "power":1 },
+        	"apply": { "model": "supplementaries:block/crank_handle_1", "x": 270 }
+   		},
+        {   "when": { "facing": "up", "power":2 },
+        	"apply": { "model": "supplementaries:block/crank_handle_2", "x": 270 }
+   		},
+        {   "when": { "facing": "up", "power":3 },
+        	"apply": { "model": "supplementaries:block/crank_handle_3", "x": 270 }
+   		},
+        {   "when": { "facing": "up", "power":4 },
+        	"apply": { "model": "supplementaries:block/crank_handle_4", "x": 270 }
+   		},
+        {   "when": { "facing": "up", "power":5 },
+        	"apply": { "model": "supplementaries:block/crank_handle_5", "x": 270 }
+   		},
+        {   "when": { "facing": "up", "power":6 },
+        	"apply": { "model": "supplementaries:block/crank_handle_6", "x": 270 }
+   		},
+        {   "when": { "facing": "up", "power":7 },
+        	"apply": { "model": "supplementaries:block/crank_handle_7", "x": 270 }
+   		}, 
+        {   "when": { "facing": "up", "power":8 },
+        	"apply": { "model": "supplementaries:block/crank_handle_8", "x": 270 }
+   		},
+        {   "when": { "facing": "up", "power":9 },
+        	"apply": { "model": "supplementaries:block/crank_handle_9", "x": 270 }
+   		},
+        {   "when": { "facing": "up", "power":10 },
+        	"apply": { "model": "supplementaries:block/crank_handle_10", "x": 270 }
+   		},
+        {   "when": { "facing": "up", "power":11 },
+        	"apply": { "model": "supplementaries:block/crank_handle_11", "x": 270 }
+   		}, 
+        {   "when": { "facing": "up", "power":12 },
+        	"apply": { "model": "supplementaries:block/crank_handle_12", "x": 270 }
+   		},
+        {   "when": { "facing": "up", "power":13 },
+        	"apply": { "model": "supplementaries:block/crank_handle_13", "x": 270 }
+   		},
+        {   "when": { "facing": "up", "power":14 },
+        	"apply": { "model": "supplementaries:block/crank_handle_14", "x": 270 }
+   		},
+        {   "when": { "facing": "up", "power":15 },
+        	"apply": { "model": "supplementaries:block/crank_handle_15", "x": 270 }
+   		}            
+    ]
+}

@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,has_book=true": {
+      "model": "supplementaries:block/notice_board_full"
+    },
+    "facing=north,has_book=false": {
+      "model": "supplementaries:block/notice_board"
+    },
+    "facing=east,has_book=true": {
+      "model": "supplementaries:block/notice_board_full",
+      "y": 90
+    },
+    "facing=east,has_book=false": {
+      "model": "supplementaries:block/notice_board",
+      "y": 90
+    },
+    "facing=south,has_book=true": {
+      "model": "supplementaries:block/notice_board_full",
+      "y": 180
+    },
+    "facing=south,has_book=false": {
+      "model": "supplementaries:block/notice_board",
+      "y": 180
+    },
+    "facing=west,has_book=true": {
+      "model": "supplementaries:block/notice_board_full",
+      "y": 270
+    },
+    "facing=west,has_book=false": {
+      "model": "supplementaries:block/notice_board",
+      "y": 270
+    }
+  }
+}
