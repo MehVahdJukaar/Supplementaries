@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.supplementaries.client.ClockBlockTileRenderer;
+import net.mehvahdjukaar.supplementaries.client.PedestalBlockTileRenderer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -15,6 +16,9 @@ public class ClientSetup {
         //clock
         RenderTypeLookup.setRenderLayer(Registry.CLOCK_BLOCK.get(), RenderType.getCutout());
         ClientRegistry.bindTileEntityRenderer(Registry.CLOCK_BLOCK_TILE.get(), ClockBlockTileRenderer::new);
+        //pedestal
+        RenderTypeLookup.setRenderLayer(Registry.PEDESTAL.get(), RenderType.getCutout());
+        ClientRegistry.bindTileEntityRenderer(Registry.PEDESTAL_TILE.get(), PedestalBlockTileRenderer::new);
 
 
 

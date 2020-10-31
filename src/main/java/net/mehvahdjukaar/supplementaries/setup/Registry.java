@@ -2,9 +2,7 @@ package net.mehvahdjukaar.supplementaries.setup;
 
 import com.google.common.collect.Sets;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.blocks.ClockBlock;
-import net.mehvahdjukaar.supplementaries.blocks.ClockBlockTile;
-import net.mehvahdjukaar.supplementaries.blocks.PlanterBlock;
+import net.mehvahdjukaar.supplementaries.blocks.*;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
@@ -59,5 +57,19 @@ public class Registry {
     public static final RegistryObject<Item> CLOCK_BLOCK_ITEM = ITEMS.register("clock_block", () -> new BlockItem(CLOCK_BLOCK.get(),
             new Item.Properties().group(ItemGroup.REDSTONE)));
 
+    //pedestal
+    public static final RegistryObject<Block> PEDESTAL = BLOCKS.register("pedestal", () -> new PedestalBlock(
+            AbstractBlock.Properties.create(Material.ROCK, MaterialColor.STONE)
+                    .hardnessAndResistance(2f, 6f)
+                    .harvestLevel(1)
+                    .setRequiresTool()
+                    .harvestTool(ToolType.PICKAXE)
+                    .notSolid()
+    ));
+    public static final RegistryObject<TileEntityType<PedestalBlockTile>> PEDESTAL_TILE = TILES.register("pedestal",
+            () -> TileEntityType.Builder.create(PedestalBlockTile::new, PEDESTAL.get()).build(null));
+
+    public static final RegistryObject<Item> PEDESTAL_ITEM = ITEMS.register("pedestal", () -> new BlockItem(PEDESTAL.get(),
+            new Item.Properties().group(ItemGroup.DECORATIONS)));
 
 }

@@ -140,6 +140,7 @@ public class ClockBlock extends Block {
         TileEntity te = worldIn.getTileEntity(pos);
         if(te instanceof ClockBlockTile){
             ((ClockBlockTile) te).setInitialRoll(hour);
+
         }
         worldIn.setBlockState(pos, state.with(POWER, power).with(HOUR, hour), 2);
     }

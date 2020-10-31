@@ -56,6 +56,7 @@ public class ClockBlockTile extends TileEntity implements ITickableTileEntity {
     }
 
     public void tick() {
+        if(true)return;
         if (this.world != null && this.world.getGameTime() % 20L == 0L) {
             BlockState blockstate = this.getBlockState();
             if (!this.world.isRemote) {
