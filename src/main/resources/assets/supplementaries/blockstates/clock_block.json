@@ -1,32 +1,32 @@
 {
   "variants": {
-    "facing=north,inverted=false": {
+    "facing=north,tile=false": {
       "model": "supplementaries:block/clock"
     },
-    "facing=north,inverted=true": {
+    "facing=north,tile=true": {
       "model": "supplementaries:block/clock_hand"
     },
-    "facing=east,inverted=false": {
+    "facing=east,tile=false": {
       "model": "supplementaries:block/clock",
       "y": 90
     },
-    "facing=east,inverted=true": {
+    "facing=east,tile=true": {
       "model": "supplementaries:block/clock_hand",
       "y": 90
     },
-    "facing=south,inverted=false": {
+    "facing=south,tile=false": {
       "model": "supplementaries:block/clock",
       "y": 180
     },
-    "facing=south,inverted=true": {
+    "facing=south,tile=true": {
       "model": "supplementaries:block/clock_hand",
       "y": 180
     },
-    "facing=west,inverted=false": {
+    "facing=west,tile=false": {
       "model": "supplementaries:block/clock",
       "y": 270
     },
-    "facing=west,inverted=true": {
+    "facing=west,tile=true": {
       "model": "supplementaries:block/clock_hand",
       "y": 270
     }
