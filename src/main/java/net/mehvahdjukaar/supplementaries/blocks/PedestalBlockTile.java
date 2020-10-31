@@ -12,14 +12,13 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ToolItem;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.LockableLootTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.LazyOptional;
@@ -31,7 +30,7 @@ import javax.annotation.Nullable;
 import java.util.stream.IntStream;
 
 public class PedestalBlockTile extends LockableLootTileEntity implements ISidedInventory {
-    private NonNullList<ItemStack> stacks = NonNullList.<ItemStack>withSize(1, ItemStack.EMPTY);
+    private NonNullList<ItemStack> stacks = NonNullList.withSize(1, ItemStack.EMPTY);
     public int type =0;
     public PedestalBlockTile() {
         super(Registry.PEDESTAL_TILE.get());
@@ -50,7 +49,7 @@ public class PedestalBlockTile extends LockableLootTileEntity implements ISidedI
 
 
     public void updateTile() {
-        if(!world.isRemote) {
+        if(!this.world.isRemote()) {
             BlockState state = this.getBlockState();
             BlockState newstate = state.with(PedestalBlock.UP, PedestalBlock.canConnect(world.getBlockState(pos.up()), pos, world, Direction.UP));
             if (state != newstate) {
@@ -100,11 +99,11 @@ public class PedestalBlockTile extends LockableLootTileEntity implements ISidedI
         return this.write(new CompoundNBT());
     }
     //TODO: look into this. client and server don't seem to be synced
-/*
+
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.read(pkt.getNbtCompound());
-    }*/
+        this.read(this.getBlockState(),pkt.getNbtCompound());
+    }
 
     @Override
     public int getSizeInventory() {

@@ -43,8 +43,8 @@ public class PedestalBlock extends Block {
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         World world = context.getWorld();
         BlockPos pos = context.getPos();
-        return this.getDefaultState().with(UP, this.canConnect(world.getBlockState(pos.up()), pos, world, Direction.UP))
-                .with(DOWN, this.canConnect(world.getBlockState(pos.down()), pos, world, Direction.DOWN));
+        return this.getDefaultState().with(UP, canConnect(world.getBlockState(pos.up()), pos, world, Direction.UP))
+                .with(DOWN, canConnect(world.getBlockState(pos.down()), pos, world, Direction.DOWN));
     }
 
 
@@ -70,10 +70,10 @@ public class PedestalBlock extends Block {
     @Override
     public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
         if(facing==Direction.UP){
-            return stateIn.with(UP, this.canConnect(facingState, currentPos, (World)worldIn, facing));
+            return stateIn.with(UP, canConnect(facingState, currentPos, (World)worldIn, facing));
         }
         else if(facing==Direction.DOWN){
-            return stateIn.with(DOWN, this.canConnect(facingState, currentPos, (World)worldIn, facing));
+            return stateIn.with(DOWN, canConnect(facingState, currentPos, (World)worldIn, facing));
         }
         return stateIn;
     }
@@ -100,15 +100,15 @@ public class PedestalBlock extends Block {
             boolean flag1 = (te.isEmpty() && !itemstack.isEmpty() && (te.canInsertItem(0, itemstack, null)));
             boolean flag2 = (itemstack.isEmpty() && !te.isEmpty());
             if (flag1) {
-                ItemStack it = (ItemStack) itemstack.copy();
-                it.setCount((int) 1);
-                NonNullList<ItemStack> stacks = NonNullList.<ItemStack>withSize(1, it);
+                ItemStack it = itemstack.copy();
+                it.setCount(1);
+                NonNullList<ItemStack> stacks = NonNullList.withSize(1, it);
                 te.setItems(stacks);
                 if (!player.isCreative()) {
                     itemstack.shrink(1);
                 }
                 if(!worldIn.isRemote()){
-                    worldIn.playSound((PlayerEntity) null, pos,SoundEvents.ENTITY_ITEM_FRAME_ADD_ITEM,SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.10F + 0.95F);
+                    worldIn.playSound(null, pos,SoundEvents.ENTITY_ITEM_FRAME_ADD_ITEM,SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.10F + 0.95F);
                     te.markDirty();
                 }
                 return ActionResultType.SUCCESS;
@@ -180,7 +180,7 @@ public class PedestalBlock extends Block {
     public boolean eventReceived(BlockState state, World world, BlockPos pos, int eventID, int eventParam) {
         super.eventReceived(state, world, pos, eventID, eventParam);
         TileEntity tileentity = world.getTileEntity(pos);
-        return tileentity == null ? false : tileentity.receiveClientEvent(eventID, eventParam);
+        return tileentity != null && tileentity.receiveClientEvent(eventID, eventParam);
     }
 
     @Override

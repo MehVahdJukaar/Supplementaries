@@ -95,7 +95,7 @@ public class ClockBlock extends Block {
     public boolean eventReceived(BlockState state, World world, BlockPos pos, int eventID, int eventParam) {
         super.eventReceived(state, world, pos, eventID, eventParam);
         TileEntity tileentity = world.getTileEntity(pos);
-        return tileentity == null ? false : tileentity.receiveClientEvent(eventID, eventParam);
+        return tileentity != null && tileentity.receiveClientEvent(eventID, eventParam);
     }
 
     @Override
@@ -159,7 +159,7 @@ public class ClockBlock extends Block {
                     res = new ResourceLocation("moddymcmodface:tick_2");
                 }
 
-                world.playSound(null, pos, (net.minecraft.util.SoundEvent) ForgeRegistries.SOUND_EVENTS.getValue(res),
+                world.playSound(null, pos, ForgeRegistries.SOUND_EVENTS.getValue(res),
                         SoundCategory.BLOCKS, (float) .3, 1.2f);
 
             }

@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
-import com.google.common.collect.Sets;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.blocks.*;
 import net.minecraft.block.*;
@@ -15,7 +14,6 @@ import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.ObjectHolder;
 
 public class Registry {
 
@@ -72,4 +70,18 @@ public class Registry {
     public static final RegistryObject<Item> PEDESTAL_ITEM = ITEMS.register("pedestal", () -> new BlockItem(PEDESTAL.get(),
             new Item.Properties().group(ItemGroup.DECORATIONS)));
 
+    //wind vane
+    public static final RegistryObject<Block> WIND_VANE = BLOCKS.register("wind_vane", () -> new WindVaneBlock(
+            AbstractBlock.Properties.create(Material.IRON, MaterialColor.IRON)
+                    .hardnessAndResistance(5f, 6f)
+                    .harvestLevel(2)
+                    .setRequiresTool()
+                    .harvestTool(ToolType.PICKAXE)
+                    .notSolid()
+    ));
+    public static final RegistryObject<TileEntityType<WindVaneBlockTile>> WIND_VANE_TILE = TILES.register("wind_vame",
+            () -> TileEntityType.Builder.create(WindVaneBlockTile::new, WIND_VANE.get()).build(null));
+
+    public static final RegistryObject<Item> WIND_VANE_ITEM = ITEMS.register("wind_vane", () -> new BlockItem(WIND_VANE.get(),
+            new Item.Properties().group(ItemGroup.REDSTONE)));
 }

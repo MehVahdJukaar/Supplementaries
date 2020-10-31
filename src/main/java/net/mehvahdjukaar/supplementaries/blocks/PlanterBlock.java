@@ -1,9 +1,7 @@
 package net.mehvahdjukaar.supplementaries.blocks;
 
 import net.minecraft.block.*;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;

@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import net.mehvahdjukaar.supplementaries.blocks.PedestalBlock;
 import net.mehvahdjukaar.supplementaries.blocks.PedestalBlockTile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -34,10 +33,9 @@ public class PedestalBlockTileRenderer extends TileEntityRenderer<PedestalBlockT
         return false;
     }
 
-    protected void renderName(PedestalBlockTile tile, ITextComponent displayNameIn, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
+    protected void renderName(ITextComponent displayNameIn, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
 
         double f = 0.625; //height
-        boolean flag = false; //sneaking
         int i = 0;
 
         FontRenderer fontrenderer = this.renderDispatcher.getFontRenderer();
@@ -54,7 +52,7 @@ public class PedestalBlockTileRenderer extends TileEntityRenderer<PedestalBlockT
 
         float f2 = (float)(-fontrenderer.getStringPropertyWidth(displayNameIn) / 2);
         //func_243247_a == renderTextComponent
-        fontrenderer.func_243247_a(displayNameIn, f2, (float)i, -1, false, matrix4f, bufferIn, flag, j, packedLightIn);
+        fontrenderer.func_243247_a(displayNameIn, f2, (float)i, -1, false, matrix4f, bufferIn, false, j, packedLightIn);
         matrixStackIn.pop();
 
     }
@@ -104,12 +102,12 @@ public class PedestalBlockTileRenderer extends TileEntityRenderer<PedestalBlockT
 
             matrixStackIn.push();
             matrixStackIn.translate(0.5, 1.125, 0.5);
-            int i = 1;
+
             if(this.canRenderName(tile)){
                 ITextComponent name = tile.getStackInSlot(0).getDisplayName();
-                i = "Dinnerbone".equals(name.getString())? -1 : 1;
+                int i = "Dinnerbone".equals(name.getString())? -1 : 1;
                 matrixStackIn.scale(i, i, 1);
-                this.renderName(tile, name, matrixStackIn, bufferIn, combinedLightIn);
+                this.renderName(name, matrixStackIn, bufferIn, combinedLightIn);
             }
 
             if(!Minecraft.getInstance().isGamePaused()){
