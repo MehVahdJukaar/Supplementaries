@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -13,6 +14,10 @@ import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class CommonUtil{
 
     //blockstate properties
@@ -20,6 +25,64 @@ public class CommonUtil{
     public static final IntegerProperty HOUR = IntegerProperty.create("hour", 0, 23);
     public static final IntegerProperty EXTENSION = IntegerProperty.create("extension", 0, 2);
     public static final BooleanProperty TILE = BooleanProperty.create("tile");
+    public static final BooleanProperty HAS_LAVA = BooleanProperty.create("has_lava");
+
+    //textures
+    public static final ResourceLocation WATER_TEXTURE= new ResourceLocation("minecraft:block/water_still");
+    public static final ResourceLocation LAVA_TEXTURE= new ResourceLocation("minecraft:block/lava_still");
+    public static final ResourceLocation MILK_TEXTURE= new ResourceLocation(Supplementaries.MOD_ID,"blocks/milk_liquid");
+    public static final ResourceLocation POTION_TEXTURE= new ResourceLocation(Supplementaries.MOD_ID,"blocks/potion_liquid");
+    public static final ResourceLocation HONEY_TEXTURE= new ResourceLocation(Supplementaries.MOD_ID,"blocks/honey_liquid");
+    public static final ResourceLocation DRAGON_BREATH_TEXTURE= new ResourceLocation(Supplementaries.MOD_ID,"blocks/dragon_breath_liquid");
+    public static final ResourceLocation XP_TEXTURE= new ResourceLocation(Supplementaries.MOD_ID,"blocks/xp_liquid");
+    public static final ResourceLocation FISHIES_TEXTURE= new ResourceLocation(Supplementaries.MOD_ID,"blocks/milk_liquid");
+
+    public static List<ResourceLocation> getTextures(){
+        return new ArrayList<>(Arrays.asList(MILK_TEXTURE,POTION_TEXTURE,HONEY_TEXTURE,DRAGON_BREATH_TEXTURE,XP_TEXTURE,FISHIES_TEXTURE));
+    }
+
+    //fluids
+    public enum JarContentType {
+        // color is handles separately. here it's just for default case
+        WATER(WATER_TEXTURE, 0x3F76E4, true, 1f, true, true, -1),
+        LAVA(LAVA_TEXTURE, 0xFF6600, false, 1f, false, true, -1),
+        MILK(MILK_TEXTURE, 0xFFFFFF, false, 1f, false, true, -1),
+        POTION(POTION_TEXTURE, 0x3F76E4, true, 0.88f, true, false, -1),
+        HONEY(HONEY_TEXTURE, 0xFAAC1C, false, 0.85f, true, false, -1),
+        DRAGON_BREATH(DRAGON_BREATH_TEXTURE, 0xFF33FF, true, 0.8f, true, false, -1),
+        XP(XP_TEXTURE, 0x33FF33, false, 0.95f, true, false, -1),
+        TROPICAL_FISH(WATER_TEXTURE, 0x3F76E4, true, 1f, false, true, 0),
+        SALMON(WATER_TEXTURE, 0x3F76E4, true, 1f, false, true, 1),
+        COD(WATER_TEXTURE, 0x3F76E4, true, 1f, false, true, 2),
+        PUFFER_FISH(WATER_TEXTURE, 0x3F76E4, true, 1f, false, true, 3),
+        COOKIES(WATER_TEXTURE, 0x000000, false, 1f, false, false, -1),
+        EMPTY(WATER_TEXTURE, 0x000000, false, 1f, false, false, -1);
+        public final ResourceLocation texture;
+        public final float opacity;
+        public final int color;
+        public final boolean applyColor;
+        public final boolean bucket;
+        public final boolean bottle;
+        public final int fishType;
+        JarContentType(ResourceLocation texture, int color, boolean applycolor, float opacity, boolean bottle, boolean bucket, int fishtype) {
+            this.texture = texture;
+            this.color = color; // beacon color. this will also be texture color if applycolor is true
+            this.applyColor = applycolor; // is texture grayscale and needs to be colored?
+            this.opacity = opacity;
+            this.bottle = bottle;
+            this.bucket = bucket;
+            this.fishType = fishtype;
+            // offset for fish textures. -1 is no fish
+        }
+
+        public boolean isFish() {
+            return this.fishType != -1;
+        }
+    }
+
+
+
+
     //renderer
 
     //centered on x,z. aligned on y=0
@@ -37,7 +100,7 @@ public class CommonUtil{
         float maxv2 = minv + atlasscaleV * w;
         float r = (float) ((color >> 16 & 255)) / 255.0F;
         float g = (float) ((color >> 8 & 255)) / 255.0F;
-        float b = (float) ((color >> 0 & 255)) / 255.0F;
+        float b = (float) ((color & 255)) / 255.0F;
 
 
 

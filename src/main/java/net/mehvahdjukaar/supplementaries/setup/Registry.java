@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.setup;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.blocks.*;
 import net.mehvahdjukaar.supplementaries.gui.NoticeBoardContainer;
+import net.mehvahdjukaar.supplementaries.renderers.JarItemRenderer;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
@@ -136,6 +137,21 @@ public class Registry {
     ));
     public static final RegistryObject<Item> CRANK_ITEM = ITEMS.register(CRANK_NAME, () -> new BlockItem(CRANK.get(),
             new Item.Properties().group(ItemGroup.REDSTONE)));
+
+    //jar
+    public static final String JAR_NAME = "jar";
+    public static final RegistryObject<Block> JAR = BLOCKS.register(JAR_NAME, () -> new JarBlock(
+            AbstractBlock.Properties.create(Material.GLASS, MaterialColor.AIR)
+                    .hardnessAndResistance(1f, 1f)
+                    .sound(SoundType.GLASS)
+                    .notSolid()
+    ));
+    public static final RegistryObject<TileEntityType<JarBlockTile>> JAR_TILE = TILES.register(JAR_NAME,
+            () -> TileEntityType.Builder.create(JarBlockTile::new, JAR.get()).build(null));
+
+    public static final RegistryObject<Item> JAR_ITEM = ITEMS.register(JAR_NAME, () -> new BlockItem(JAR.get(),
+            new Item.Properties().group(ItemGroup.DECORATIONS).maxStackSize(16).setISTER(()-> JarItemRenderer::new)));
+
 
 
 
