@@ -8,6 +8,8 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 
+import javax.annotation.Nonnull;
+
 public class ClockBlockTile extends TileEntity implements ITickableTileEntity {
     public float roll = 0;
     public float prevRoll = 0;
@@ -18,15 +20,16 @@ public class ClockBlockTile extends TileEntity implements ITickableTileEntity {
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
+    public void read(@Nonnull BlockState state,@Nonnull CompoundNBT compound) {
         super.read(state, compound);
         this.roll = compound.getFloat("roll");
         this.prevRoll = compound.getFloat("prevroll");
         this.targetRoll = compound.getFloat("targetroll");
     }
 
+    @Nonnull
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
+    public CompoundNBT write(@Nonnull CompoundNBT compound) {
         super.write(compound);
         compound.putFloat("roll", this.roll);
         compound.putFloat("prevroll", this.prevRoll);

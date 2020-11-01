@@ -1,8 +1,11 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
-import net.mehvahdjukaar.supplementaries.client.ClockBlockTileRenderer;
-import net.mehvahdjukaar.supplementaries.client.PedestalBlockTileRenderer;
-import net.mehvahdjukaar.supplementaries.client.WindVaneBlockTileRenderer;
+import net.mehvahdjukaar.supplementaries.gui.NoticeBoardGui;
+import net.mehvahdjukaar.supplementaries.renderers.ClockBlockTileRenderer;
+import net.mehvahdjukaar.supplementaries.renderers.NoticeBoardBlockTileRenderer;
+import net.mehvahdjukaar.supplementaries.renderers.PedestalBlockTileRenderer;
+import net.mehvahdjukaar.supplementaries.renderers.WindVaneBlockTileRenderer;
+import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -23,7 +26,9 @@ public class ClientSetup {
         //wind vane
         RenderTypeLookup.setRenderLayer(Registry.WIND_VANE.get(), RenderType.getCutout());
         ClientRegistry.bindTileEntityRenderer(Registry.WIND_VANE_TILE.get(), WindVaneBlockTileRenderer::new);
-
+        //notice board
+        ClientRegistry.bindTileEntityRenderer(Registry.NOTICE_BOARD_TILE.get(), NoticeBoardBlockTileRenderer::new);
+        ScreenManager.registerFactory(Registry.NOTICE_BOARD_CONTAINER.get(), NoticeBoardGui::new);
 
 
 

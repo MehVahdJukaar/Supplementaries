@@ -21,7 +21,7 @@ public class WindVaneBlock extends Block{
     public static final IntegerProperty POWER = BlockStateProperties.POWER_0_15;
     public WindVaneBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(INVERTED, false).with(POWER, Integer.valueOf(0)));
+        this.setDefaultState(this.stateContainer.getBaseState().with(INVERTED, false).with(POWER, 0));
     }
 
     public static void updatePower(BlockState bs, World world, BlockPos pos) {
@@ -90,6 +90,6 @@ public class WindVaneBlock extends Block{
     public boolean eventReceived(BlockState state, World world, BlockPos pos, int eventID, int eventParam) {
         super.eventReceived(state, world, pos, eventID, eventParam);
         TileEntity tileentity = world.getTileEntity(pos);
-        return tileentity == null ? false : tileentity.receiveClientEvent(eventID, eventParam);
+        return tileentity != null && tileentity.receiveClientEvent(eventID, eventParam);
     }
 }

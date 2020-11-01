@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.client;
+package net.mehvahdjukaar.supplementaries.renderers;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.mehvahdjukaar.supplementaries.blocks.PedestalBlockTile;
