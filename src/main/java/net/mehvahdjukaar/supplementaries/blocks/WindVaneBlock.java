@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.blocks;
 
 
+import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.state.BooleanProperty;
@@ -17,11 +18,11 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 public class WindVaneBlock extends Block{
-    public static final BooleanProperty INVERTED = BlockStateProperties.INVERTED; // is it rooster only?
+    public static final BooleanProperty TILE = CommonUtil.TILE; // is it rooster only?
     public static final IntegerProperty POWER = BlockStateProperties.POWER_0_15;
     public WindVaneBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(INVERTED, false).with(POWER, 0));
+        this.setDefaultState(this.stateContainer.getBaseState().with(TILE, false).with(POWER, 0));
     }
 
     public static void updatePower(BlockState bs, World world, BlockPos pos) {
@@ -52,7 +53,7 @@ public class WindVaneBlock extends Block{
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(POWER, INVERTED);
+        builder.add(POWER, TILE);
     }
 
     @Override

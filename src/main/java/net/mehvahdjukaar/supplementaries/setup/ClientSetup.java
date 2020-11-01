@@ -45,6 +45,12 @@ public class ClientSetup {
         //faucet
         RenderTypeLookup.setRenderLayer(Registry.FAUCET.get(), RenderType.getCutout());
         ClientRegistry.bindTileEntityRenderer(Registry.FAUCET_TILE.get(), FaucetBlockTileRenderer::new);
+        //piston launcher
+        RenderTypeLookup.setRenderLayer(Registry.PISTON_LAUNCHER.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(Registry.PISTON_LAUNCHER_HEAD.get(), RenderType.getCutout());
+        ClientRegistry.bindTileEntityRenderer(Registry.PISTON_LAUNCHER_ARM_TILE.get(), PistonLauncherArmBlockTileRenderer::new);
+
+
     }
 
     //textures

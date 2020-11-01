@@ -169,7 +169,55 @@ public class Registry {
     public static final RegistryObject<Item> FAUCET_ITEM = ITEMS.register(FAUCET_NAME, () -> new BlockItem(FAUCET.get(),
             new Item.Properties().group(ItemGroup.REDSTONE)));
 
+    //turn table
+    public static final String TURN_TABLE_NAME = "turn_table";
+    public static final RegistryObject<Block> TURN_TABLE = BLOCKS.register(TURN_TABLE_NAME, () -> new TurnTableBlock(
+            AbstractBlock.Properties.create(Material.ROCK, MaterialColor.STONE)
+                    .hardnessAndResistance(0.75f, 2f)
+                    .sound(SoundType.STONE)
+                    .harvestTool(ToolType.PICKAXE)
+                    .notSolid()
+    ));
+    public static final RegistryObject<TileEntityType<TurnTableBlockTile>> TURN_TABLE_TILE = TILES.register(TURN_TABLE_NAME,
+            () -> TileEntityType.Builder.create(TurnTableBlockTile::new, TURN_TABLE.get()).build(null));
 
+    public static final RegistryObject<Item> TURN_TABLE_ITEM = ITEMS.register(TURN_TABLE_NAME, () -> new BlockItem(TURN_TABLE.get(),
+            new Item.Properties().group(ItemGroup.REDSTONE)));
+
+    //piston launcher base
+
+    public static final String PISTON_LAUNCHER_NAME = "piston_launcher";
+    public static final RegistryObject<Block> PISTON_LAUNCHER = BLOCKS.register(PISTON_LAUNCHER_NAME, () -> new PistonLauncherBlock(
+            AbstractBlock.Properties.create(Material.IRON, MaterialColor.IRON)
+                    .hardnessAndResistance(4f, 5f)
+                    .harvestLevel(2)
+                    .sound(SoundType.METAL)
+                    .harvestTool(ToolType.PICKAXE)
+                    .notSolid()
+    ));
+    public static final RegistryObject<Item> PISTON_LAUNCHER_ITEM = ITEMS.register(PISTON_LAUNCHER_NAME, () -> new BlockItem(PISTON_LAUNCHER.get(),
+            new Item.Properties().group(ItemGroup.REDSTONE)));
+
+    public static final String PISTON_LAUNCHER_HEAD_NAME = "piston_launcher_head";
+    public static final RegistryObject<Block> PISTON_LAUNCHER_HEAD = BLOCKS.register(PISTON_LAUNCHER_HEAD_NAME, () -> new PistonLauncherHeadBlock(
+            AbstractBlock.Properties.create(Material.IRON, MaterialColor.IRON)
+                    .hardnessAndResistance(4f, 5f)
+                    .harvestLevel(2)
+                    .sound(SoundType.METAL)
+                    .harvestTool(ToolType.PICKAXE)
+                    .notSolid()
+    ));
+    public static final String PISTON_LAUNCHER_ARM_NAME = "piston_launcher_arm";
+    public static final RegistryObject<Block> PISTON_LAUNCHER_ARM = BLOCKS.register(PISTON_LAUNCHER_ARM_NAME, () -> new PistonLauncherArmBlock(
+            AbstractBlock.Properties.create(Material.IRON, MaterialColor.IRON)
+                    .hardnessAndResistance(4f, 5f)
+                    .harvestLevel(2)
+                    .sound(SoundType.METAL)
+                    .harvestTool(ToolType.PICKAXE)
+                    .notSolid()
+    ));
+    public static final RegistryObject<TileEntityType<PistonLauncherArmBlockTile>> PISTON_LAUNCHER_ARM_TILE = TILES.register(PISTON_LAUNCHER_ARM_NAME,
+            () -> TileEntityType.Builder.create(PistonLauncherArmBlockTile::new, PISTON_LAUNCHER_ARM.get()).build(null));
 
 
 

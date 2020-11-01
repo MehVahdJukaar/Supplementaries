@@ -38,7 +38,7 @@ public class CommonUtil{
     public static final ResourceLocation HONEY_TEXTURE= new ResourceLocation(Supplementaries.MOD_ID,"blocks/honey_liquid");
     public static final ResourceLocation DRAGON_BREATH_TEXTURE= new ResourceLocation(Supplementaries.MOD_ID,"blocks/dragon_breath_liquid");
     public static final ResourceLocation XP_TEXTURE= new ResourceLocation(Supplementaries.MOD_ID,"blocks/xp_liquid");
-    public static final ResourceLocation FAUCET_TEXTURE = new ResourceLocation("moddymcmodface:blocks/faucet_water");
+    public static final ResourceLocation FAUCET_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID, "blocks/faucet_water");
 
 
     public static List<ResourceLocation> getTextures(){
@@ -83,7 +83,6 @@ public class CommonUtil{
             return this.fishType != -1;
         }
     }
-
 
 
 
