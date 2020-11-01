@@ -4,12 +4,8 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import net.mehvahdjukaar.supplementaries.blocks.NoticeBoardBlockTile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.RenderComponentsUtil;
-import net.minecraft.client.gui.screen.EditBookScreen;
-import net.minecraft.client.gui.screen.ReadBookScreen;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.texture.NativeImage;
-import net.minecraft.client.renderer.tileentity.SignTileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.item.FilledMapItem;
@@ -18,7 +14,7 @@ import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.ITextProperties;
 import net.minecraft.world.storage.MapData;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -44,6 +40,17 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
         }
         return new StringTextComponent(s);
     }*/
+
+    public ITextProperties iGetPageText(String s) {
+        try {
+            ITextProperties itextproperties = ITextComponent.Serializer.getComponentFromJson(s);
+            if (itextproperties != null) {
+                return itextproperties;
+            }
+        } catch (Exception ignored) {
+        }
+        return ITextProperties.func_240652_a_(s);
+    }
 
     @Override
     public void render(NoticeBoardBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
@@ -72,7 +79,7 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
 
             //render book
             String page = tile.getText();
-            if (page == null || page == "") {
+            if (page == null || page.equals("")) {
                 return;
             }
 
@@ -80,7 +87,7 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
 
             matrixStackIn.push();
 
-            float d0 = 0f;
+            float d0;
             if (tile.getAxis()) {
                 d0 = 0.8f*0.7f;
             } else {
@@ -99,14 +106,13 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
 
             float bordery = 0.125f;
             float borderx = 0.1875f;
-            int scalingfactor = 1;
+            int scalingfactor;
 
             //List<ITextComponent> tempPageLines;
             List<IReorderingProcessor> tempPageLines;
 
-            //ITextComponent txt = iGetPageText(page);
-            //ITextComponent txt = new ITextComponent(page);
-            ITextComponent txt = new StringTextComponent(page);
+            ITextProperties txt = iGetPageText(page);
+            //ITextComponent txt = new StringTextComponent(page);
 
             //int width = fontrenderer.getStringWidth(txt.getFormattedText());
             int width = fontrenderer.getStringPropertyWidth(txt);
@@ -114,7 +120,7 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
             if (tile.getFlag()) {
                 float lx = 1 - (2 * borderx);
                 float ly = 1 - (2 * bordery);
-                float maxlines = 1;
+                float maxlines;
                 do {
                     scalingfactor = MathHelper.floor(MathHelper.sqrt((width * 8f) / (lx * ly)));
 
@@ -149,7 +155,7 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
                 float dx = (float)(-fontrenderer.func_243245_a(str) / 2) + 0.5f;
 
                 // float dy = (float) scalingfactor * bordery;
-                float dy = (float) ((scalingfactor - (8 * numberoflin)) / 2f) + 0.5f;
+                float dy = ((scalingfactor - (8 * numberoflin)) / 2f) + 0.5f;
 
 
                 fontrenderer.func_238416_a_(str, dx, dy + 8 * lin, i1, false, matrixStackIn.getLast().getMatrix(), bufferIn, false, 0, newl);

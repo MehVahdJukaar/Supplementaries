@@ -2,18 +2,13 @@ package net.mehvahdjukaar.supplementaries.blocks;
 
 import io.netty.buffer.Unpooled;
 import net.mehvahdjukaar.supplementaries.gui.NoticeBoardContainer;
-import net.mehvahdjukaar.supplementaries.gui.NoticeBoardGui;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.FilledMapItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.NetworkManager;
@@ -42,7 +37,7 @@ import java.util.stream.IntStream;
 
 
 public class NoticeBoardBlockTile extends LockableLootTileEntity implements ISidedInventory {
-    private NonNullList<ItemStack> stacks = NonNullList.<ItemStack>withSize(1, ItemStack.EMPTY);
+    private NonNullList<ItemStack> stacks = NonNullList.withSize(1, ItemStack.EMPTY);
     private String txt = null;
     private int fontScale = 1;
     private DyeColor textColor = DyeColor.BLACK;
@@ -93,31 +88,38 @@ public class NoticeBoardBlockTile extends LockableLootTileEntity implements ISid
 
     public void updateTile() {
         //updateTextVisibility();
-        if(!this.world.isRemote()){
+        if(this.world != null && !this.world.isRemote()){
             ItemStack itemstack = getStackInSlot(0);
+            Item item = itemstack.getItem();
             String s = null;
             this.inventoryChanged = true;
             this.cachedPageLines = Collections.emptyList();
-            if (this.isItemValidForSlot(0, itemstack)) {
 
+            if (item instanceof  WrittenBookItem) {
                 CompoundNBT com = itemstack.getTag();
+                if(WrittenBookItem.validBookTagContents(com)){
 
-                if(com != null){
                     ListNBT listnbt = com.getList("pages", 8).copy();
                     s = listnbt.getString(0);
                 }
-                if (s != this.txt) {
+            }
+            else if(item instanceof  WritableBookItem){
+                CompoundNBT com = itemstack.getTag();
+                if(WritableBookItem.isNBTValid(com)){
 
-                    //this.inventoryChanged = true;
-
-                    this.txt = s;
+                    ListNBT listnbt = com.getList("pages", 8).copy();
+                    s = listnbt.getString(0);
                 }
+            }
+
+
+            if (s != null) {
+                //this.inventoryChanged = true;
+                this.txt = s;
                 this.updateBoardBlock(true);
-            } else {
-                if (this.txt != null) {
-                    //this.inventoryChanged = true;
-                    this.txt = null;
-                }
+            }
+            else {
+                this.txt = null;
                 this.updateBoardBlock(false);
             }
         }
@@ -295,21 +297,18 @@ public class NoticeBoardBlockTile extends LockableLootTileEntity implements ISid
 
     public boolean getAxis() {
         Direction d = this.getDirection();
-        if (d == Direction.NORTH || d == Direction.SOUTH) {
-            return true;
-        } else {
-            return false;
-        }
+        return d == Direction.NORTH || d == Direction.SOUTH;
     }
 
     public int getFrontLight() {
         World world = this.getWorld();
+        assert world != null;
         IWorldLightListener block = world.getLightManager().getLightEngine(LightType.BLOCK);
         IWorldLightListener sky = world.getLightManager().getLightEngine(LightType.SKY);
         BlockPos newpos = this.pos.offset(this.getDirection());
         int u = block.getLightFor(newpos) * 16;
         int v = sky.getLightFor(newpos) * 16;
-        return ((v << 16) | (int) (u));
+        return ((v << 16) | u);
         // return this.packedFrontLight;
     }
 
@@ -317,7 +316,7 @@ public class NoticeBoardBlockTile extends LockableLootTileEntity implements ISid
         if (this.txt != null) {
             return this.txt;
         } else {
-            return (String) "";
+            return "";
         }
     }
 }

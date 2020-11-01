@@ -4,11 +4,9 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -16,16 +14,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class NoticeBoardGui extends ContainerScreen<NoticeBoardContainer> {
     private static final ResourceLocation NOTICE_BOARD_GUI_TEXTURE = new ResourceLocation("supplementaries:textures/gui/notice_board_gui.png");
 
-    private World world;
-    private int x, y, z;
-    private PlayerEntity entity;
     public NoticeBoardGui(NoticeBoardContainer container, PlayerInventory inventory, ITextComponent text) {
         super(container, inventory, text);
-        this.world = container.world;
-        this.x = container.x;
-        this.y = container.y;
-        this.z = container.z;
-        this.entity = container.entity;
         this.xSize = 176;
         this.ySize = 166;
     }

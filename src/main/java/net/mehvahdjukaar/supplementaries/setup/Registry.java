@@ -123,7 +123,19 @@ public class Registry {
 
     public static final RegistryObject<ContainerType<NoticeBoardContainer>> NOTICE_BOARD_CONTAINER = CONTAINERS.register(NOTICE_BOARD_NAME, () -> IForgeContainerType.create(NoticeBoardContainer::new));
 
-
+    //crank
+    public static final String CRANK_NAME = "crank";
+    public static final RegistryObject<Block> CRANK = BLOCKS.register(CRANK_NAME, () -> new PlanterBlock(
+            AbstractBlock.Properties.create(Material.WOOD, MaterialColor.AIR)
+                    .hardnessAndResistance(0.6f, 0.6f)
+                    .harvestLevel(1)
+                    .setRequiresTool()
+                    .harvestTool(ToolType.PICKAXE)
+                    .doesNotBlockMovement()
+                    .notSolid()
+    ));
+    public static final RegistryObject<Item> CRANK_ITEM = ITEMS.register(CRANK_NAME, () -> new BlockItem(CRANK.get(),
+            new Item.Properties().group(ItemGroup.REDSTONE)));
 
 
 

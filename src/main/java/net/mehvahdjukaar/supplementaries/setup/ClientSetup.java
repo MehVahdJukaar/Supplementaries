@@ -29,8 +29,8 @@ public class ClientSetup {
         //notice board
         ClientRegistry.bindTileEntityRenderer(Registry.NOTICE_BOARD_TILE.get(), NoticeBoardBlockTileRenderer::new);
         ScreenManager.registerFactory(Registry.NOTICE_BOARD_CONTAINER.get(), NoticeBoardGui::new);
-
-
+        //crank
+        RenderTypeLookup.setRenderLayer(Registry.CRANK.get(), RenderType.getCutout());
 
 
     }

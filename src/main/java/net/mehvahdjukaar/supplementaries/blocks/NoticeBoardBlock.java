@@ -73,12 +73,11 @@ public class NoticeBoardBlock extends Block {
             //insert Item
             if (flag2) {
                 if(server){
-                    ItemStack it = (ItemStack) itemstack.copy();
-                    it.setCount((int) 1);
-                    NonNullList<ItemStack> stacks = NonNullList.<ItemStack>withSize(1, it);
+                    ItemStack it = itemstack.copy();
+                    it.setCount(1);
+                    NonNullList<ItemStack> stacks = NonNullList.withSize(1, it);
                     te.setItems(stacks);
                     te.markDirty();
-
                 }
                 if (!player.isCreative()) {
                     itemstack.shrink(1);
@@ -162,7 +161,7 @@ public class NoticeBoardBlock extends Block {
     public boolean eventReceived(BlockState state, World world, BlockPos pos, int eventID, int eventParam) {
         super.eventReceived(state, world, pos, eventID, eventParam);
         TileEntity tileentity = world.getTileEntity(pos);
-        return tileentity == null ? false : tileentity.receiveClientEvent(eventID, eventParam);
+        return tileentity != null && tileentity.receiveClientEvent(eventID, eventParam);
     }
 
     @Override
