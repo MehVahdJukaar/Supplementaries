@@ -3,8 +3,6 @@ package net.mehvahdjukaar.supplementaries.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.IntegerProperty;
@@ -21,12 +19,12 @@ public class RedstoneIlluminatorBlock extends Block implements IForgeBlock {
     public static final IntegerProperty POWER = BlockStateProperties.POWER_0_15;
     public RedstoneIlluminatorBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(POWER, Integer.valueOf(0)));
+        this.setDefaultState(this.stateContainer.getBaseState().with(POWER, 0));
     }
 
     @Override
     public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
-        return (int) 15 - state.get(POWER);
+        return 15 - state.get(POWER);
     }
 
     @Override

@@ -48,6 +48,7 @@ public class WindVaneBlockTile extends TileEntity implements ITickableTileEntity
     public void tick() {
         float currentyaw = this.yaw;
         this.prevYaw = currentyaw;
+        if(this.world == null)return;
         if (!this.world.isRemote()) {
             if (this.world != null && this.world.getGameTime() % 20L == 0L) {
                 BlockState blockstate = this.getBlockState();
@@ -61,7 +62,7 @@ public class WindVaneBlockTile extends TileEntity implements ITickableTileEntity
             // TODO:cache some of this maybe?
             float hightoffset = 0;// (this.pos.getY()-64)/192f;
             float offset = 3f * (MathHelper.sin(this.pos.getX()) + MathHelper.sin(this.pos.getZ()) + MathHelper.sin(this.pos.getY()));
-            float i = this.getWorld().getDayTime() + offset;
+            float i = this.world.getDayTime() + offset;
             float b = (power + hightoffset) * 2f;
             float newyaw = 30f * MathHelper.sin(i * (1f + b) / 60f) + 10f * MathHelper.sin(i * (1f + b) / 20f);
             this.yaw = MathHelper.clamp(newyaw, currentyaw - 8, currentyaw + 8);

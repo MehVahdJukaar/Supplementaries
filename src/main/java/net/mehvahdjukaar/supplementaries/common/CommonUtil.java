@@ -26,6 +26,9 @@ public class CommonUtil{
     public static final IntegerProperty EXTENSION = IntegerProperty.create("extension", 0, 2);
     public static final BooleanProperty TILE = BooleanProperty.create("tile");
     public static final BooleanProperty HAS_LAVA = BooleanProperty.create("has_lava");
+    public static final BooleanProperty HAS_WATER = BooleanProperty.create("has_water");
+    public static final BooleanProperty HAS_JAR = BooleanProperty.create("has_jar");
+
 
     //textures
     public static final ResourceLocation WATER_TEXTURE= new ResourceLocation("minecraft:block/water_still");
@@ -35,10 +38,11 @@ public class CommonUtil{
     public static final ResourceLocation HONEY_TEXTURE= new ResourceLocation(Supplementaries.MOD_ID,"blocks/honey_liquid");
     public static final ResourceLocation DRAGON_BREATH_TEXTURE= new ResourceLocation(Supplementaries.MOD_ID,"blocks/dragon_breath_liquid");
     public static final ResourceLocation XP_TEXTURE= new ResourceLocation(Supplementaries.MOD_ID,"blocks/xp_liquid");
-    public static final ResourceLocation FISHIES_TEXTURE= new ResourceLocation(Supplementaries.MOD_ID,"blocks/milk_liquid");
+    public static final ResourceLocation FAUCET_TEXTURE = new ResourceLocation("moddymcmodface:blocks/faucet_water");
+
 
     public static List<ResourceLocation> getTextures(){
-        return new ArrayList<>(Arrays.asList(MILK_TEXTURE,POTION_TEXTURE,HONEY_TEXTURE,DRAGON_BREATH_TEXTURE,XP_TEXTURE,FISHIES_TEXTURE));
+        return new ArrayList<>(Arrays.asList(MILK_TEXTURE,POTION_TEXTURE,HONEY_TEXTURE,DRAGON_BREATH_TEXTURE,XP_TEXTURE,FAUCET_TEXTURE));
     }
 
     //fluids

@@ -42,7 +42,9 @@ public class ClientSetup {
         //jar
         RenderTypeLookup.setRenderLayer(Registry.JAR.get(), RenderType.getCutout());
         ClientRegistry.bindTileEntityRenderer(Registry.JAR_TILE.get(), JarBlockTileRenderer::new);
-
+        //faucet
+        RenderTypeLookup.setRenderLayer(Registry.FAUCET.get(), RenderType.getCutout());
+        ClientRegistry.bindTileEntityRenderer(Registry.FAUCET_TILE.get(), FaucetBlockTileRenderer::new);
     }
 
     //textures

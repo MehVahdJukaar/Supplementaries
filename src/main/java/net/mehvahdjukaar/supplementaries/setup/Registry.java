@@ -126,7 +126,7 @@ public class Registry {
 
     //crank
     public static final String CRANK_NAME = "crank";
-    public static final RegistryObject<Block> CRANK = BLOCKS.register(CRANK_NAME, () -> new PlanterBlock(
+    public static final RegistryObject<Block> CRANK = BLOCKS.register(CRANK_NAME, () -> new CrankBlock(
             AbstractBlock.Properties.create(Material.WOOD, MaterialColor.AIR)
                     .hardnessAndResistance(0.6f, 0.6f)
                     .harvestLevel(1)
@@ -152,6 +152,22 @@ public class Registry {
     public static final RegistryObject<Item> JAR_ITEM = ITEMS.register(JAR_NAME, () -> new BlockItem(JAR.get(),
             new Item.Properties().group(ItemGroup.DECORATIONS).maxStackSize(16).setISTER(()-> JarItemRenderer::new)));
 
+    //faucet
+    public static final String FAUCET_NAME = "faucet";
+    public static final RegistryObject<Block> FAUCET = BLOCKS.register(FAUCET_NAME, () -> new FaucetBlock(
+            AbstractBlock.Properties.create(Material.IRON, MaterialColor.IRON)
+                    .hardnessAndResistance(3f, 4.8f)
+                    .harvestLevel(2)
+                    .setRequiresTool()
+                    .sound(SoundType.METAL)
+                    .harvestTool(ToolType.PICKAXE)
+                    .notSolid()
+    ));
+    public static final RegistryObject<TileEntityType<FaucetBlockTile>> FAUCET_TILE = TILES.register(FAUCET_NAME,
+            () -> TileEntityType.Builder.create(FaucetBlockTile::new, FAUCET.get()).build(null));
+
+    public static final RegistryObject<Item> FAUCET_ITEM = ITEMS.register(FAUCET_NAME, () -> new BlockItem(FAUCET.get(),
+            new Item.Properties().group(ItemGroup.REDSTONE)));
 
 
 

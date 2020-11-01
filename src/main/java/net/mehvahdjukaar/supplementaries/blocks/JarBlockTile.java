@@ -154,7 +154,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
                     } else {
                         se = SoundEvents.ITEM_BUCKET_FILL;
                     }
-                    this.world.playSound(player, player.getPosX(), player.getPosY(), player.getPosZ(), SoundEvents.ITEM_BUCKET_FILL,
+                    this.world.playSound(player, player.getPosX(), player.getPosY(), player.getPosZ(), se,
                             SoundCategory.BLOCKS, 1.0F, 1.0F);
                     player.addStat(Stats.ITEM_USED.get(new ItemStack(Items.BUCKET).getItem()));
                     return true;
@@ -240,7 +240,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
     public void addItem(ItemStack itemstack, int amount) {
         if (this.isEmpty()) {
             itemstack.setCount(amount);
-            NonNullList<ItemStack> stacks = NonNullList.<ItemStack>withSize(1, itemstack);
+            NonNullList<ItemStack> stacks = NonNullList.withSize(1, itemstack);
             this.setItems(stacks);
         } else {
             this.getStackInSlot(0).grow(Math.min(amount, this.getInventoryStackLimit() - itemstack.getCount()));
@@ -268,7 +268,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
         }
         // other items (stack to 12)
         else if (newitem instanceof ExperienceBottleItem || newitem instanceof HoneyBottleItem || newitem instanceof MilkBucketItem
-                || newitem instanceof ExperienceBottleItem || newitem == new ItemStack(Items.LAVA_BUCKET).getItem()
+                || newitem == new ItemStack(Items.LAVA_BUCKET).getItem()
                 || newitem == new ItemStack(Items.DRAGON_BREATH).getItem() || newitem == new ItemStack(Items.COOKIE).getItem()) {
             return (this.isEmpty() || (currentitem == newitem && !this.isFull()));
         }

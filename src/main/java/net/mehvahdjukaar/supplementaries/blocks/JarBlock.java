@@ -11,6 +11,8 @@ import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootContext;
+import net.minecraft.loot.LootParameters;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
@@ -23,10 +25,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.util.text.*;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
@@ -55,7 +54,7 @@ public class JarBlock extends Block {
                 return null;
             float r = (float) ((color >> 16 & 255)) / 255.0F;
             float g = (float) ((color >> 8 & 255)) / 255.0F;
-            float b = (float) ((color >> 0 & 255)) / 255.0F;
+            float b = (float) ((color & 255)) / 255.0F;
             return new float[]{r, g, b};
         }
         return null;
@@ -91,7 +90,7 @@ public class JarBlock extends Block {
                 if (!compoundnbt.isEmpty()) {
                     itemstack.setTagInfo("BlockEntityTag", compoundnbt);
                 }
-                ItemEntity itementity = new ItemEntity(worldIn, (double) pos.getX(), (double) pos.getY(), (double) pos.getZ(), itemstack);
+                ItemEntity itementity = new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), itemstack);
                 itementity.setDefaultPickupDelay();
                 worldIn.addEntity(itementity);
             } else {
@@ -100,12 +99,13 @@ public class JarBlock extends Block {
         }
         super.onBlockHarvested(worldIn, pos, state, player);
     }
-/*
+
+
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         TileEntity tileentity = builder.get(LootParameters.BLOCK_ENTITY);
-        if (tileentity instanceof CustomTileEntity) {
-            CustomTileEntity shulkerboxtileentity = (CustomTileEntity) tileentity;
+        if (tileentity instanceof JarBlockTile) {
+            JarBlockTile shulkerboxtileentity = (JarBlockTile) tileentity;
 
             ItemStack itemstack = new ItemStack(this);
             CompoundNBT compoundnbt = shulkerboxtileentity.saveToNbt(new CompoundNBT());
@@ -116,6 +116,23 @@ public class JarBlock extends Block {
         }
         return super.getDrops(state, builder);
     }
+/*
+    public static final ResourceLocation CONTENTS = new ResourceLocation("contents");
+    @Override
+    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
+        TileEntity tileentity = builder.get(LootParameters.BLOCK_ENTITY);
+        if (tileentity instanceof JarBlockTile) {
+            JarBlockTile tile = (JarBlockTile) tileentity;
+            builder = builder.withDynamicDrop(CONTENTS, (context, stackConsumer) -> {
+                for (int i = 0; i < tile.getSizeInventory(); ++i) {
+                    stackConsumer.accept(tile.getStackInSlot(i));
+                }
+
+            });
+        }
+
+        return super.getDrops(state, builder);
+    }*/
 
     @OnlyIn(Dist.CLIENT)
     public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
@@ -125,33 +142,39 @@ public class JarBlock extends Block {
             if (compoundnbt.contains("LootTable", 8)) {
                 tooltip.add(new StringTextComponent("???????"));
             }
+
             if (compoundnbt.contains("Items", 9)) {
                 NonNullList<ItemStack> nonnulllist = NonNullList.withSize(27, ItemStack.EMPTY);
                 ItemStackHelper.loadAllItems(compoundnbt, nonnulllist);
                 int i = 0;
                 int j = 0;
-                for (ItemStack itemstack : nonnulllist) {
+
+                for(ItemStack itemstack : nonnulllist) {
                     if (!itemstack.isEmpty()) {
                         ++j;
                         if (i <= 4) {
                             ++i;
-                            ITextComponent itextcomponent = itemstack.getDisplayName().deepCopy();
-                            String s = itextcomponent.getFormattedText();
+                            IFormattableTextComponent iformattabletextcomponent = itemstack.getDisplayName().deepCopy();
+
+                            String s = iformattabletextcomponent.getString();
                             s = s.replace(" Bucket", "");
                             s = s.replace(" Bottle", "");
                             s = s.replace("Bucket of ", "");
-                            StringTextComponent str = new StringTextComponent(s);
-                            str.appendText(" x").appendText(String.valueOf(itemstack.getCount()));
+                            IFormattableTextComponent str = new StringTextComponent(s);
+
+                            str.appendString(" x").appendString(String.valueOf(itemstack.getCount()));
                             tooltip.add(str);
                         }
                     }
                 }
+
                 if (j - i > 0) {
-                    tooltip.add((new TranslationTextComponent("container.shulkerBox.more", j - i)).applyTextStyle(TextFormatting.ITALIC));
+                    tooltip.add((new TranslationTextComponent("container.shulkerBox.more", j - i)).mergeStyle(TextFormatting.ITALIC));
                 }
             }
         }
-    }*/
+
+    }
 
     public ItemStack getItem(IBlockReader worldIn, BlockPos pos, BlockState state) {
         ItemStack itemstack = super.getItem(worldIn, pos, state);
