@@ -1,6 +1,9 @@
 package net.mehvahdjukaar.supplementaries;
 
+import net.mehvahdjukaar.supplementaries.network.Networking;
 import net.mehvahdjukaar.supplementaries.setup.ClientSetup;
+import net.mehvahdjukaar.supplementaries.setup.Dispenser;
+import net.mehvahdjukaar.supplementaries.setup.ModSetup;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
 import net.minecraftforge.common.MinecraftForge;
@@ -19,17 +22,20 @@ public class Supplementaries{
 
     public static final String MOD_ID = "supplementaries";
 
-    private static final Logger LOGGER = LogManager.getLogger();
+    public static final Logger LOGGER = LogManager.getLogger();
 
     public Supplementaries() {
 
         Registry.init();
 
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::modSetup);
+        Networking.registerMessages();
+
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(ModSetup::init);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientSetup::init);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
+
     }
 
     //server & client

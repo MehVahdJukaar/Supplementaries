@@ -11,6 +11,9 @@ import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.particles.BasicParticleType;
+import net.minecraft.particles.ParticleType;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.common.extensions.IForgeContainerType;
@@ -25,13 +28,21 @@ public class Registry {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, Supplementaries.MOD_ID);
     public static final DeferredRegister<TileEntityType<?>> TILES = DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, Supplementaries.MOD_ID);
     private static final DeferredRegister<ContainerType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, Supplementaries.MOD_ID);
+    public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, Supplementaries.MOD_ID);
 
     public static void init(){
         BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
         TILES.register(FMLJavaModLoadingContext.get().getModEventBus());
         ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
         CONTAINERS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        PARTICLES.register(FMLJavaModLoadingContext.get().getModEventBus());;
     }
+
+    //particles
+    public static final RegistryObject<BasicParticleType> FIREFLY_GLOW = PARTICLES.register("firefly_glow", () -> new BasicParticleType(true));
+    public static final RegistryObject<BasicParticleType> SPEAKER_SOUND = PARTICLES.register("speaker_sound", () -> new BasicParticleType(true));
+
+    //blocks
 
     //planter
     public static final String PLANTER_NAME = "planter";
@@ -219,6 +230,19 @@ public class Registry {
     public static final RegistryObject<TileEntityType<PistonLauncherArmBlockTile>> PISTON_LAUNCHER_ARM_TILE = TILES.register(PISTON_LAUNCHER_ARM_NAME,
             () -> TileEntityType.Builder.create(PistonLauncherArmBlockTile::new, PISTON_LAUNCHER_ARM.get()).build(null));
 
+    //speaker Block
+    public static final String SPEAKER_BLOCK_NAME = "speaker_block";
+    public static final RegistryObject<Block> SPEAKER_BLOCK = BLOCKS.register(SPEAKER_BLOCK_NAME, () -> new SpeakerBlock(
+            AbstractBlock.Properties.create(Material.WOOD, MaterialColor.BROWN)
+                    .hardnessAndResistance(1f, 2f)
+                    .sound(SoundType.WOOD)
+                    .harvestTool(ToolType.AXE)
+    ));
+    public static final RegistryObject<TileEntityType<SpeakerBlockTile>> SPEAKER_BLOCK_TILE = TILES.register(SPEAKER_BLOCK_NAME,
+            () -> TileEntityType.Builder.create(SpeakerBlockTile::new, SPEAKER_BLOCK.get()).build(null));
+
+    public static final RegistryObject<Item> SPEAKER_BLOCK_ITEM = ITEMS.register(SPEAKER_BLOCK_NAME, () -> new BlockItem(SPEAKER_BLOCK.get(),
+            new Item.Properties().group(ItemGroup.REDSTONE)));
 
 
 }

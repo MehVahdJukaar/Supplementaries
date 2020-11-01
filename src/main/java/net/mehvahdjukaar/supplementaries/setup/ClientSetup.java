@@ -3,14 +3,19 @@ package net.mehvahdjukaar.supplementaries.setup;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.gui.NoticeBoardGui;
+import net.mehvahdjukaar.supplementaries.particles.FireflyGlowParticle;
+import net.mehvahdjukaar.supplementaries.particles.SpeakerSoundParticle;
 import net.mehvahdjukaar.supplementaries.renderers.*;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -52,6 +57,18 @@ public class ClientSetup {
 
 
     }
+
+    //particles
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void registerParticles(ParticleFactoryRegisterEvent event) {
+        Minecraft.getInstance().particles.registerFactory(Registry.FIREFLY_GLOW.get(), FireflyGlowParticle.Factory::new);
+        Minecraft.getInstance().particles.registerFactory(Registry.SPEAKER_SOUND.get(), SpeakerSoundParticle.Factory::new);
+
+    }
+
+
+
 
     //textures
     @SubscribeEvent
