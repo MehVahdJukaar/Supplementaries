@@ -142,7 +142,7 @@ public class CommonUtil{
             return WoodType.CRIMSON;
         }
         else if(item == Registry.SIGN_POST_ITEM_WARPED.get()){
-            return WoodType.SPRUCE;
+            return WoodType.WARPED;
         }
         return WoodType.NONE;
     }

@@ -1,23 +1,28 @@
 package net.mehvahdjukaar.supplementaries.blocks;
 
-
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.mehvahdjukaar.supplementaries.common.CommonUtil.WoodType;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.ICommandSource;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.inventory.ItemStackHelper;
+import net.minecraft.inventory.container.ChestContainer;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.DyeColor;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.tileentity.LockableLootTileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.IReorderingProcessor;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector2f;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
@@ -31,43 +36,46 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.function.Function;
+import java.util.stream.IntStream;
 
 
-public class SignPostBlockTile extends TileEntity {
-    public final ITextComponent[] signText = new ITextComponent[]{new StringTextComponent(""), new StringTextComponent("")};
+public class HangingSignBlockTile extends LockableLootTileEntity implements ITickableTileEntity, ISidedInventory {
+
+    public static final int MAXLINES = 5;
+
+    private NonNullList<ItemStack> stacks = NonNullList.<ItemStack>withSize(1, ItemStack.EMPTY);
+    public float angle = 0;
+    public float prevAngle = 0;
+    public int counter = 800;
+    //lower counter is used by hitting animation
+    public final ITextComponent[] signText = new ITextComponent[]{new StringTextComponent(""), new StringTextComponent(""),
+            new StringTextComponent(""), new StringTextComponent(""), new StringTextComponent("")};
     private boolean isEditable = true;
     private PlayerEntity player;
-    //private final String[] renderText = new String[2];
-    private final IReorderingProcessor[] renderText = new IReorderingProcessor[2];
+    private final IReorderingProcessor[] renderText = new IReorderingProcessor[MAXLINES];
     private DyeColor textColor = DyeColor.BLACK;
-
-    public BlockState fenceblock = Blocks.OAK_FENCE.getDefaultState();
-    public float yawUp = 0;
-    public float yawDown = 0;
-    public boolean leftUp = true;
-    public boolean leftDown = false;
-    public boolean up = false;
-    public boolean down = false;
-    public WoodType woodTypeUp = WoodType.OAK;
-    public WoodType woodTypeDown = WoodType.OAK;
-
-    public SignPostBlockTile() {
-        super(Registry.SIGN_POST_TILE.get());
+    public HangingSignBlockTile() {
+        super(Registry.HANGING_SIGN_TILE.get());
     }
 
     @Override
-    public AxisAlignedBB getRenderBoundingBox(){
-        return new AxisAlignedBB(this.getPos().add(-0.25,0,-0.25), this.getPos().add(1.25,1,1.25));
+    public void markDirty() {
+        // this.world.notifyBlockUpdate(this.getPos(), this.getBlockState(),
+        // this.getBlockState(), 2);
+        super.markDirty();
     }
 
     @Override
     public void read(BlockState state, CompoundNBT compound) {
         super.read(state, compound);
+        if (!this.checkLootAndRead(compound)) {
+            this.stacks = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
+        }
+        ItemStackHelper.loadAllItems(compound, this.stacks);
         // sign code
         this.isEditable = false;
         this.textColor = DyeColor.byTranslationKey(compound.getString("Color"), DyeColor.BLACK);
-
-        for(int i = 0; i < 2; ++i) {
+        for(int i = 0; i < MAXLINES; ++i) {
             String s = compound.getString("Text" + (i + 1));
             ITextComponent itextcomponent = ITextComponent.Serializer.getComponentFromJson(s.isEmpty() ? "\"\"" : s);
             if (this.world instanceof ServerWorld) {
@@ -82,39 +90,19 @@ public class SignPostBlockTile extends TileEntity {
 
             this.renderText[i] = null;
         }
-
-        this.fenceblock = NBTUtil.readBlockState(compound.getCompound("Fence"));
-        this.yawUp = compound.getFloat("Yaw_up");
-        this.yawDown = compound.getFloat("Yaw_down");
-        this.leftUp = compound.getBoolean("Left_up");
-        this.leftDown = compound.getBoolean("Left_down");
-        this.up = compound.getBoolean("Up");
-        this.down = compound.getBoolean("Down");
-        this.woodTypeUp = WoodType.values()[compound.getInt("Wood_type_up")];
-        this.woodTypeDown = WoodType.values()[compound.getInt("Wood_type_down")];
-
     }
 
     @Override
     public CompoundNBT write(CompoundNBT compound) {
         super.write(compound);
-
-        for (int i = 0; i < 2; ++i) {
+        if (!this.checkLootAndWrite(compound)) {
+            ItemStackHelper.saveAllItems(compound, this.stacks);
+        }
+        for (int i = 0; i < MAXLINES; ++i) {
             String s = ITextComponent.Serializer.toJson(this.signText[i]);
             compound.putString("Text" + (i + 1), s);
         }
-
         compound.putString("Color", this.textColor.getTranslationKey());
-        compound.put("Fence", NBTUtil.writeBlockState(fenceblock));
-        compound.putFloat("Yaw_up",this.yawUp);
-        compound.putFloat("Yaw_down",this.yawDown);
-        compound.putBoolean("Left_up",this.leftUp);
-        compound.putBoolean("Left_down",this.leftDown);
-        compound.putBoolean("Up", this.up);
-        compound.putBoolean("Down", this.down);
-        compound.putInt("Wood_type_up", this.woodTypeUp.ordinal());
-        compound.putInt("Wood_type_down", this.woodTypeDown.ordinal());
-
         return compound;
     }
 
@@ -192,7 +180,8 @@ public class SignPostBlockTile extends TileEntity {
         if (newColor != this.getTextColor()) {
             this.textColor = newColor;
             this.markDirty();
-            this.world.notifyBlockUpdate(this.getPos(), this.getBlockState(),this.getBlockState(), 3);
+            this.world.notifyBlockUpdate(this.getPos(), this.getBlockState(),
+                    this.getBlockState(), 3);
             return true;
         } else {
             return false;
@@ -205,10 +194,9 @@ public class SignPostBlockTile extends TileEntity {
     }
 
     // end of sign code
-
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.pos, 0, this.getUpdateTag());
+        return new SUpdateTileEntityPacket(this.pos, 9, this.getUpdateTag());
     }
 
     @Override
@@ -220,4 +208,98 @@ public class SignPostBlockTile extends TileEntity {
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         this.read(this.getBlockState(), pkt.getNbtCompound());
     }
+
+    @Override
+    public int getSizeInventory() {
+        return stacks.size();
+    }
+
+    @Override
+    public boolean isEmpty() {
+        for (ItemStack itemstack : this.stacks)
+            if (!itemstack.isEmpty())
+                return false;
+        return true;
+    }
+
+    @Override
+    public int getInventoryStackLimit() {
+        return 1;
+    }
+
+    @Override
+    protected NonNullList<ItemStack> getItems() {
+        return this.stacks;
+    }
+
+    @Override
+    protected void setItems(NonNullList<ItemStack> stacks) {
+        this.stacks = stacks;
+    }
+
+    @Override
+    public boolean isItemValidForSlot(int index, ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public boolean canInsertItem(int index, ItemStack stack, @Nullable Direction direction) {
+        return false;
+    }
+
+    @Override
+    public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
+        return false;
+    }
+
+    @Override
+    public int[] getSlotsForFace(Direction side) {
+        return IntStream.range(0, this.getSizeInventory()).toArray();
+    }
+
+    @Override
+    public ITextComponent getDefaultName() {
+        return new StringTextComponent("hanging sing");
+    }
+
+    @Override
+    public Container createMenu(int id, PlayerInventory player) {
+        return ChestContainer.createGeneric9X3(id, player, this);
+    }
+
+    @Override
+    public ITextComponent getDisplayName() {
+        return new StringTextComponent("Hanging sing");
+    }
+
+    public Direction getDirection() {
+        return this.getBlockState().get(HangingSignBlock.FACING);
+    }
+
+    @Override
+    public void tick() {
+        if (this.world.isRemote) {
+            this.counter++;
+
+            this.prevAngle = this.angle;
+            float maxswingangle = 45f;
+            float minswingangle = 2.5f;
+            float maxperiod = 25f;
+            float angleledamping = 150f;
+            float perioddamping = 100f;
+            //actually tey are the inverse of damping. increase them to fave less damping
+
+            float a = minswingangle;
+            float k = 0.01f;
+            if(counter<800){
+                a = (float) Math.max((float) maxswingangle * Math.pow(Math.E, -(counter / angleledamping)), minswingangle);
+                k = (float) Math.max(Math.PI*2*(float)Math.pow(Math.E, -(counter/perioddamping)), 0.01f);
+            }
+
+            this.angle = a * MathHelper.cos((counter/maxperiod) - k);
+            // this.angle = 90*(float)
+            // Math.cos((float)counter/40f)/((float)this.counter/20f);;
+        }
+    }
 }
+

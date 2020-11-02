@@ -27,7 +27,7 @@
       "model": "supplementaries:block/sign_post_crimson"
     },
     "wood_type=warped": {
-      "model": "supplementaries:block/sign_warped"
+      "model": "supplementaries:block/sign_post_warped"
     }
   }
 }

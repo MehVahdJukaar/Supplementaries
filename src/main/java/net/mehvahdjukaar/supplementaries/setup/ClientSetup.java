@@ -57,6 +57,9 @@ public class ClientSetup {
         //sign post
         RenderTypeLookup.setRenderLayer(Registry.SIGN_POST.get(), RenderType.getCutout());
         ClientRegistry.bindTileEntityRenderer(Registry.SIGN_POST_TILE.get(), SignPostBlockTileRenderer::new);
+        //hanging sign
+        RenderTypeLookup.setRenderLayer(Registry.SIGN_POST.get(), RenderType.getCutout());
+        ClientRegistry.bindTileEntityRenderer(Registry.HANGING_SIGN_TILE.get(), HangingSignBlockTileRenderer::new);
 
     }
 

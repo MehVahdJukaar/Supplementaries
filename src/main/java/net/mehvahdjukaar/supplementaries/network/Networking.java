@@ -25,6 +25,9 @@ public class Networking{
         INSTANCE.registerMessage(nextID(), UpdateServerSignPostPacket.class, UpdateServerSignPostPacket::buffer,
                 UpdateServerSignPostPacket::new, UpdateServerSignPostPacket::handler);
 
+        INSTANCE.registerMessage(nextID(), UpdateServerHangingSignPacket.class, UpdateServerHangingSignPacket::buffer,
+                UpdateServerHangingSignPacket::new, UpdateServerHangingSignPacket::handler);
+
 
 
     }

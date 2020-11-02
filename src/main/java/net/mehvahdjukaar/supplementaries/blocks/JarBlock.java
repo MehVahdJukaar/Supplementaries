@@ -90,7 +90,7 @@ public class JarBlock extends Block {
                 if (!compoundnbt.isEmpty()) {
                     itemstack.setTagInfo("BlockEntityTag", compoundnbt);
                 }
-                ItemEntity itementity = new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), itemstack);
+                ItemEntity itementity = new ItemEntity(worldIn, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5, itemstack);
                 itementity.setDefaultPickupDelay();
                 worldIn.addEntity(itementity);
             } else {

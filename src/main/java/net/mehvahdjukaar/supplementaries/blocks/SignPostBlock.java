@@ -9,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.DyeItem;
@@ -29,7 +30,7 @@ import net.minecraft.world.World;
 
 
 public class SignPostBlock extends Block {
-    public static final EnumProperty WOOD_TYPE = CommonUtil.WOOD_TYPE; //null = rendered by te. other states hold all the wood types sign models
+    public static final EnumProperty<WoodType> WOOD_TYPE = CommonUtil.WOOD_TYPE; //null = rendered by te. other states hold all the wood types sign models
     public SignPostBlock(Properties properties) {
         super(properties);
         this.setDefaultState(this.stateContainer.getBaseState().with(WOOD_TYPE, WoodType.NONE));
@@ -76,7 +77,7 @@ public class SignPostBlock extends Block {
             }
             // open gui (edit sign with empty hand)
             else if (!flag2) {
-                if(player instanceof PlayerEntity && !server) SignPostGui.open(te);
+                if(!server) SignPostGui.open(te);
                 return ActionResultType.SUCCESS;
             }
         }
@@ -105,6 +106,18 @@ public class SignPostBlock extends Block {
 
     @Override
     public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
+        TileEntity te = world.getTileEntity(pos);
+        if(te instanceof SignPostBlockTile){
+            SignPostBlockTile tile = ((SignPostBlockTile)te);
+            double y = target.getHitVec().y;
+            boolean up = y%((int)y) > 0.5d;
+            if(up && tile.up){
+                return new ItemStack(CommonUtil.getSignPostItemFromWoodType(tile.woodTypeUp));
+            }
+            else if(!up && tile.down){
+                return new ItemStack(CommonUtil.getSignPostItemFromWoodType(tile.woodTypeDown));
+            }
+        }
         return new ItemStack(Registry.SIGN_POST_ITEM_OAK.get());
     }
 
@@ -112,11 +125,20 @@ public class SignPostBlock extends Block {
     public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         TileEntity tileentity = worldIn.getTileEntity(pos);
         if(tileentity instanceof SignPostBlockTile){
-            SignPostBlockTile signtile = ((SignPostBlockTile) tileentity);
-            if(signtile.up && signtile.down){
-                spawnDrops(state, worldIn, pos);
+            SignPostBlockTile tile = ((SignPostBlockTile) tileentity);
+            if(tile.up){
+                ItemStack itemstack = new ItemStack(CommonUtil.getSignPostItemFromWoodType(tile.woodTypeUp));
+                ItemEntity itementity = new ItemEntity(worldIn, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5, itemstack);
+                itementity.setDefaultPickupDelay();
+                worldIn.addEntity(itementity);
             }
-            spawnDrops(signtile.fenceblock, worldIn, pos);
+            if(tile.down){
+                ItemStack itemstack = new ItemStack(CommonUtil.getSignPostItemFromWoodType(tile.woodTypeDown));
+                ItemEntity itementity = new ItemEntity(worldIn, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5, itemstack);
+                itementity.setDefaultPickupDelay();
+                worldIn.addEntity(itementity);
+            }
+            spawnDrops(tile.fenceblock, worldIn, pos);
         }
     }
 
@@ -140,6 +162,6 @@ public class SignPostBlock extends Block {
     public boolean eventReceived(BlockState state, World world, BlockPos pos, int eventID, int eventParam) {
         super.eventReceived(state, world, pos, eventID, eventParam);
         TileEntity tileentity = world.getTileEntity(pos);
-        return tileentity == null ? false : tileentity.receiveClientEvent(eventID, eventParam);
+        return tileentity != null && tileentity.receiveClientEvent(eventID, eventParam);
     }
 }

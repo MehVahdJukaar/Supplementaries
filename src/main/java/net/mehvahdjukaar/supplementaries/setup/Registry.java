@@ -14,7 +14,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.particles.BasicParticleType;
 import net.minecraft.particles.ParticleType;
-import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.common.extensions.IForgeContainerType;
@@ -36,7 +35,7 @@ public class Registry {
         TILES.register(FMLJavaModLoadingContext.get().getModEventBus());
         ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
         CONTAINERS.register(FMLJavaModLoadingContext.get().getModEventBus());
-        PARTICLES.register(FMLJavaModLoadingContext.get().getModEventBus());;
+        PARTICLES.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
     //particles
@@ -291,7 +290,52 @@ public class Registry {
     public static final RegistryObject<Item> SIGN_POST_ITEM_WARPED = ITEMS.register(SIGN_POST_NAME_WARPED, () -> new SignPostItem(
             new Item.Properties().group(ItemGroup.DECORATIONS).maxStackSize(64)));
 
+    //hanging sing
+    //oak
+    public static final String HANGING_SIGN_NAME_OAK = "hanging_sign_oak";
+    public static final RegistryObject<Block> HANGING_SIGN_OAK = BLOCKS.register(HANGING_SIGN_NAME_OAK, () -> new HangingSignBlock(
+            AbstractBlock.Properties.create(Material.WOOD, Blocks.OAK_PLANKS.getMaterialColor())
+                    .hardnessAndResistance(2f, 3f)
+                    .sound(SoundType.WOOD)
+                    .harvestTool(ToolType.AXE)
+                    .notSolid()
+                    .doesNotBlockMovement()
+    ));
+    public static final RegistryObject<Item> HANGING_SIGN_ITEM_OAK = ITEMS.register(HANGING_SIGN_NAME_OAK, () -> new BlockItem(HANGING_SIGN_OAK.get(),
+            new Item.Properties().group(ItemGroup.DECORATIONS)));
 
+    //birch
+    public static final String HANGING_SIGN_NAME_BIRCH = "hanging_sign_birch";
+    public static final RegistryObject<Block> HANGING_SIGN_BIRCH = BLOCKS.register(HANGING_SIGN_NAME_BIRCH, () -> new HangingSignBlock(
+            AbstractBlock.Properties.create(Material.WOOD, Blocks.BIRCH_PLANKS.getMaterialColor())
+                    .hardnessAndResistance(2f, 3f)
+                    .sound(SoundType.WOOD)
+                    .harvestTool(ToolType.AXE)
+                    .notSolid()
+                    .doesNotBlockMovement()
+    ));
+    public static final RegistryObject<Item> HANGING_SIGN_ITEM_BIRCH = ITEMS.register(HANGING_SIGN_NAME_BIRCH, () -> new BlockItem(HANGING_SIGN_BIRCH.get(),
+            new Item.Properties().group(ItemGroup.DECORATIONS)));
+    //spruce
+    public static final String HANGING_SIGN_NAME_SPRUCE = "hanging_sign_spruce";
+    public static final RegistryObject<Block> HANGING_SIGN_SPRUCE = BLOCKS.register(HANGING_SIGN_NAME_SPRUCE, () -> new HangingSignBlock(
+            AbstractBlock.Properties.create(Material.WOOD, Blocks.SPRUCE_PLANKS.getMaterialColor())
+                    .hardnessAndResistance(2f, 3f)
+                    .sound(SoundType.WOOD)
+                    .harvestTool(ToolType.AXE)
+                    .notSolid()
+                    .doesNotBlockMovement()
+    ));
+    public static final RegistryObject<Item> HANGING_SIGN_ITEM_SPRUCE = ITEMS.register(HANGING_SIGN_NAME_SPRUCE, () -> new BlockItem(HANGING_SIGN_SPRUCE.get(),
+            new Item.Properties().group(ItemGroup.DECORATIONS)));
+
+
+
+    //tile
+    public static final RegistryObject<TileEntityType<HangingSignBlockTile>> HANGING_SIGN_TILE = TILES.register("hanging_sign",
+            () -> TileEntityType.Builder.create(HangingSignBlockTile::new,
+                    HANGING_SIGN_OAK.get(), HANGING_SIGN_BIRCH.get(), HANGING_SIGN_SPRUCE.get()
+                    ).build(null));
 
 
 }
