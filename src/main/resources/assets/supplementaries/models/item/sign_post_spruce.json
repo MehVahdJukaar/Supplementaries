@@ -1,5 +1,9 @@
 {
-  "parent": "supplementaries:block/sign_post_item",
+	"parent": "supplementaries:custom/sign_post_item",
+	"textures": {
+		"particle": "supplementaries:blocks/sing_post_spruce",
+		"0": "supplementaries:blocks/sing_post_spruce"
+	},
 	"display": {
 		"thirdperson_righthand": {
 			"rotation": [75, 45, 0],

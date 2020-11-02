@@ -18,12 +18,14 @@ public class Networking{
 
         INSTANCE.registerMessage(nextID(), SendSpeakerBlockMessagePacket.class, SendSpeakerBlockMessagePacket::buffer,
                 SendSpeakerBlockMessagePacket::new, SendSpeakerBlockMessagePacket::handler);
-/*
-        INSTANCE.registerMessage(nextID(), PackedUpdateServerHangingSign.class, PackedUpdateServerHangingSign::toBytes,
-                PackedUpdateServerHangingSign::new, PackedUpdateServerHangingSign::handle);
-        INSTANCE.registerMessage(nextID(), PackedUpdateServerSignPost.class, PackedUpdateServerSignPost::toBytes, PackedUpdateServerSignPost::new,
-                PackedUpdateServerSignPost::handle);
-                */
+
+        INSTANCE.registerMessage(nextID(), UpdateServerSpeakerBlockPacket.class, UpdateServerSpeakerBlockPacket::buffer,
+                UpdateServerSpeakerBlockPacket::new, UpdateServerSpeakerBlockPacket::handler);
+
+        INSTANCE.registerMessage(nextID(), UpdateServerSignPostPacket.class, UpdateServerSignPostPacket::buffer,
+                UpdateServerSignPostPacket::new, UpdateServerSignPostPacket::handler);
+
+
 
     }
 }

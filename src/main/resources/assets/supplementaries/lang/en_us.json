@@ -26,7 +26,14 @@
   "block.supplementaries.speaker_block": "Speaker Block",
   "block.supplementaries.skull_lantern_down": "Skull Lantern Down",
   "block.supplementaries.sign_post": "Sign Post",
-  "item.supplementaries.sign_post": "Sign Post",
+  "item.supplementaries.sign_post_oak": "Oak Sign Post",
+  "item.supplementaries.sign_post_birch": "Birch Sign Post",
+  "item.supplementaries.sign_post_spruce": "Spruce Sign Post",
+  "item.supplementaries.sign_post_jungle": "Jungle Sign Post",
+  "item.supplementaries.sign_post_acacia": "Oak Sign Post",
+  "item.supplementaries.sign_post_dark_oak": "Dark Oak Sign Post",
+  "item.supplementaries.sign_post_crimson": "Crimson Sign Post",
+  "item.supplementaries.sign_post_warped": "Warped Sign Post",
   "block.supplementaries.torch_2": "Sconce",
   "block.supplementaries.notice_board": "Notice Board"
 }

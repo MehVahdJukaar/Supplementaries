@@ -1,8 +1,0 @@
-{
-  "parent": "supplementaries:custom/sign_post_item",
-  "textures": {
-    "all": "supplementaries:blocks/notice_board_front",
-    "particle": "supplementaries:blocks/notice_board_front",
-    "0": "supplementaries:blocks/sing_post"
-  }
-}

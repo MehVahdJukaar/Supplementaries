@@ -3,12 +3,19 @@ package net.mehvahdjukaar.supplementaries.common;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.items.SignPostItem;
+import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.item.Item;
+import net.minecraft.item.Items;
 import net.minecraft.state.BooleanProperty;
+import net.minecraft.state.EnumProperty;
 import net.minecraft.state.IntegerProperty;
+import net.minecraft.state.properties.RedstoneSide;
+import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
@@ -28,6 +35,7 @@ public class CommonUtil{
     public static final BooleanProperty HAS_LAVA = BooleanProperty.create("has_lava");
     public static final BooleanProperty HAS_WATER = BooleanProperty.create("has_water");
     public static final BooleanProperty HAS_JAR = BooleanProperty.create("has_jar");
+    public static final EnumProperty<WoodType> WOOD_TYPE = EnumProperty.create("wood_type", WoodType.class);
 
 
     //textures
@@ -81,6 +89,85 @@ public class CommonUtil{
 
         public boolean isFish() {
             return this.fishType != -1;
+        }
+    }
+
+    public enum WoodType implements IStringSerializable{
+        NONE("none"),
+        OAK("oak"),
+        BIRCH("birch"),
+        SPRUCE("spruce"),
+        JUNGLE("jungle"),
+        ACACIA("acacia"),
+        DARK_OAK("dark_oak"),
+        CRIMSON("crimson"),
+        WARPED("warped");
+        private final String name;
+
+        WoodType(String name) {
+            this.name = name;
+        }
+
+        public String toString() {
+            return this.name;
+        }
+
+        public String getString() {
+            return this.name;
+        }
+
+    }
+
+    //else if else if else if
+    public static WoodType getWoodTypeFromSignPostItem(Item item){
+        if(item == Registry.SIGN_POST_ITEM_OAK.get()){
+            return WoodType.OAK;
+        }
+        else if(item == Registry.SIGN_POST_ITEM_BIRCH.get()){
+            return WoodType.BIRCH;
+        }
+        else if(item == Registry.SIGN_POST_ITEM_SPRUCE.get()){
+            return WoodType.SPRUCE;
+        }
+        else if(item == Registry.SIGN_POST_ITEM_JUNGLE.get()){
+            return WoodType.JUNGLE;
+        }
+        else if(item == Registry.SIGN_POST_ITEM_ACACIA.get()){
+            return WoodType.ACACIA;
+        }
+        else if(item == Registry.SIGN_POST_ITEM__DARK_OAK.get()){
+            return WoodType.DARK_OAK;
+        }
+        else if(item == Registry.SIGN_POST_ITEM_CRIMSON.get()){
+            return WoodType.CRIMSON;
+        }
+        else if(item == Registry.SIGN_POST_ITEM_WARPED.get()){
+            return WoodType.SPRUCE;
+        }
+        return WoodType.NONE;
+    }
+
+    public static Item getSignPostItemFromWoodType(WoodType wood){
+        switch ((WoodType)wood){
+            case OAK:
+                return Registry.SIGN_POST_ITEM_OAK.get();
+            case BIRCH:
+                return Registry.SIGN_POST_ITEM_BIRCH.get();
+            case SPRUCE:
+                return Registry.SIGN_POST_ITEM_SPRUCE.get();
+            case JUNGLE:
+                return Registry.SIGN_POST_ITEM_JUNGLE.get();
+            case ACACIA:
+                return Registry.SIGN_POST_ITEM_ACACIA.get();
+            case DARK_OAK:
+                return Registry.SIGN_POST_ITEM__DARK_OAK.get();
+            case CRIMSON:
+                return Registry.SIGN_POST_ITEM_CRIMSON.get();
+            case WARPED:
+                return Registry.SIGN_POST_ITEM_WARPED.get();
+            default:
+            case NONE:
+                return Items.AIR.getItem();
         }
     }
 

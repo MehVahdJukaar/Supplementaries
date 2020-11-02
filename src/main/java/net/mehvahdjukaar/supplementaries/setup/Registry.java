@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.setup;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.blocks.*;
 import net.mehvahdjukaar.supplementaries.gui.NoticeBoardContainer;
+import net.mehvahdjukaar.supplementaries.items.SignPostItem;
 import net.mehvahdjukaar.supplementaries.renderers.JarItemRenderer;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
@@ -243,6 +244,54 @@ public class Registry {
 
     public static final RegistryObject<Item> SPEAKER_BLOCK_ITEM = ITEMS.register(SPEAKER_BLOCK_NAME, () -> new BlockItem(SPEAKER_BLOCK.get(),
             new Item.Properties().group(ItemGroup.REDSTONE)));
+
+    //sign post
+    public static final String SIGN_POST_NAME = "sign_post";
+    public static final RegistryObject<Block> SIGN_POST = BLOCKS.register(SIGN_POST_NAME, () -> new SignPostBlock(
+            AbstractBlock.Properties.create(Material.WOOD, MaterialColor.BROWN)
+                    .hardnessAndResistance(2f, 3f)
+                    .sound(SoundType.WOOD)
+                    .harvestTool(ToolType.AXE)
+                    .notSolid()
+    ));
+    public static final RegistryObject<TileEntityType<SignPostBlockTile>> SIGN_POST_TILE = TILES.register(SIGN_POST_NAME,
+            () -> TileEntityType.Builder.create(SignPostBlockTile::new, SIGN_POST.get()).build(null));
+
+    //items
+    //oak
+    public static final String SIGN_POST_NAME_OAK = "sign_post_oak";
+    public static final RegistryObject<Item> SIGN_POST_ITEM_OAK = ITEMS.register(SIGN_POST_NAME_OAK, () -> new SignPostItem(
+            new Item.Properties().group(ItemGroup.DECORATIONS).maxStackSize(64)));
+    //birch
+    public static final String SIGN_POST_NAME_BIRCH = "sign_post_birch";
+    public static final RegistryObject<Item> SIGN_POST_ITEM_BIRCH = ITEMS.register(SIGN_POST_NAME_BIRCH, () -> new SignPostItem(
+            new Item.Properties().group(ItemGroup.DECORATIONS).maxStackSize(64)));
+    //spruce
+    public static final String SIGN_POST_NAME_SPRUCE = "sign_post_spruce";
+    public static final RegistryObject<Item> SIGN_POST_ITEM_SPRUCE = ITEMS.register(SIGN_POST_NAME_SPRUCE, () -> new SignPostItem(
+            new Item.Properties().group(ItemGroup.DECORATIONS).maxStackSize(64)));
+    //jungle
+    public static final String SIGN_POST_NAME_JUNGLE = "sign_post_jungle";
+    public static final RegistryObject<Item> SIGN_POST_ITEM_JUNGLE = ITEMS.register(SIGN_POST_NAME_JUNGLE, () -> new SignPostItem(
+            new Item.Properties().group(ItemGroup.DECORATIONS).maxStackSize(64)));
+    //acacia
+    public static final String SIGN_POST_NAME_ACACIA = "sign_post_acacia";
+    public static final RegistryObject<Item> SIGN_POST_ITEM_ACACIA = ITEMS.register(SIGN_POST_NAME_ACACIA, () -> new SignPostItem(
+            new Item.Properties().group(ItemGroup.DECORATIONS).maxStackSize(64)));
+    //dark oak
+    public static final String SIGN_POST_NAME_DARK_OAK = "sign_post_dark_oak";
+    public static final RegistryObject<Item> SIGN_POST_ITEM__DARK_OAK = ITEMS.register(SIGN_POST_NAME_DARK_OAK, () -> new SignPostItem(
+            new Item.Properties().group(ItemGroup.DECORATIONS).maxStackSize(64)));
+    //crimson
+    public static final String SIGN_POST_NAME_CRIMSON = "sign_post_crimson";
+    public static final RegistryObject<Item> SIGN_POST_ITEM_CRIMSON = ITEMS.register(SIGN_POST_NAME_CRIMSON, () -> new SignPostItem(
+            new Item.Properties().group(ItemGroup.DECORATIONS).maxStackSize(64)));
+    //warped
+    public static final String SIGN_POST_NAME_WARPED = "sign_post_warped";
+    public static final RegistryObject<Item> SIGN_POST_ITEM_WARPED = ITEMS.register(SIGN_POST_NAME_WARPED, () -> new SignPostItem(
+            new Item.Properties().group(ItemGroup.DECORATIONS).maxStackSize(64)));
+
+
 
 
 }

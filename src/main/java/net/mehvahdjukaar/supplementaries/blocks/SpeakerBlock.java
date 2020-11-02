@@ -75,7 +75,7 @@ public class SpeakerBlock extends Block {
             boolean pow = world.isBlockPowered(pos);
             // state changed
             if (pow != state.get(POWERED)) {
-                world.setBlockState(pos, state.with(POWERED, Boolean.valueOf(pow)), 3);
+                world.setBlockState(pos, state.with(POWERED, pow), 3);
                 // can I emit sound?
                 Direction facing = state.get(FACING);
                 if (pow && world.isAirBlock(pos.offset(facing))) {
@@ -83,12 +83,12 @@ public class SpeakerBlock extends Block {
                     if (tileentity instanceof SpeakerBlockTile) {
                         SpeakerBlockTile speaker = (SpeakerBlockTile) tileentity;
                         MinecraftServer mcserv = ServerLifecycleHooks.getCurrentServer();
-                        RegistryKey dimension = world.getDimensionKey();
-                        if (mcserv != null && dimension != null && speaker.message != "") {
+                        RegistryKey<World> dimension = world.getDimensionKey();
+                        if (mcserv != null && !speaker.message.equals("")) {
                             // particle
                             world.addBlockEvent(pos, this, 0, 0);
                             PlayerList players = mcserv.getPlayerList();
-                            players.sendToAllNearExcept((PlayerEntity) null, pos.getX(), pos.getY(), pos.getZ(), 64, dimension,
+                            players.sendToAllNearExcept(null, pos.getX(), pos.getY(), pos.getZ(), 64, dimension,
                                     Networking.INSTANCE.toVanillaPacket(
                                             new SendSpeakerBlockMessagePacket(speaker.getName().getString() + ": " + speaker.message,
                                                     speaker.narrator),
@@ -104,7 +104,7 @@ public class SpeakerBlock extends Block {
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity entity, Hand hand,
                                              BlockRayTraceResult hit) {
         TileEntity tileentity = world.getTileEntity(pos);
-        if (tileentity instanceof SpeakerBlockTile && entity instanceof PlayerEntity) {
+        if (tileentity instanceof SpeakerBlockTile) {
             // client
             if (world.isRemote)
                 SpeakerBlockGui.open((SpeakerBlockTile) tileentity);
