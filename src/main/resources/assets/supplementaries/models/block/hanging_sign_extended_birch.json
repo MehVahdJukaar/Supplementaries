@@ -1,0 +1,8 @@
+{
+  "parent": "supplementaries:custom/hanging_sing_support_extended",
+  "textures": {
+    "all": "supplementaries:blocks/hanging_sign_front_birch",
+    "particle": "supplementaries:blocks/hanging_sign_front_birch",
+    "1": "supplementaries:blocks/hanging_sign_details_birch"
+  }
+}

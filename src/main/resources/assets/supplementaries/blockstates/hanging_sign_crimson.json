@@ -1,0 +1,64 @@
+{
+  "variants": {
+    "facing=north,tile=false,extension=0": {
+      "model": "supplementaries:block/hanging_sign_crimson"
+    },
+    "facing=east,tile=false,extension=0": {
+      "model": "supplementaries:block/hanging_sign_crimson",
+      "y": 90
+    },
+    "facing=south,tile=false,extension=0": {
+      "model": "supplementaries:block/hanging_sign_crimson",
+      "y": 180
+    },
+    "facing=west,tile=false,extension=0": {
+      "model": "supplementaries:block/hanging_sign_crimson",
+      "y": 270
+    },
+    "facing=north,tile=false,extension=1": {
+      "model": "supplementaries:block/hanging_sign_extended_crimson"
+    },
+    "facing=east,tile=false,extension=1": {
+      "model": "supplementaries:block/hanging_sign_extended_crimson",
+      "y": 90
+    },
+    "facing=south,tile=false,extension=1": {
+      "model": "supplementaries:block/hanging_sign_extended_crimson",
+      "y": 180
+    },
+    "facing=west,tile=false,extension=1": {
+      "model": "supplementaries:block/hanging_sign_extended_crimson",
+      "y": 270
+    },
+    "facing=north,tile=false,extension=2": {
+      "model": "supplementaries:block/hanging_sign_extended_2_crimson"
+    },
+    "facing=east,tile=false,extension=2": {
+      "model": "supplementaries:block/hanging_sign_extended_2_crimson",
+      "y": 90
+    },
+    "facing=south,tile=false,extension=2": {
+      "model": "supplementaries:block/hanging_sign_extended_2_crimson",
+      "y": 180
+    },
+    "facing=west,tile=false,extension=2": {
+      "model": "supplementaries:block/hanging_sign_extended_2_crimson",
+      "y": 270
+    },
+    "facing=north,tile=true": {
+      "model": "supplementaries:block/hanging_sign_tile_crimson"
+    },
+    "facing=east,tile=true": {
+      "model": "supplementaries:block/hanging_sign_tile_crimson",
+      "y": 90
+    },
+    "facing=south,tile=true": {
+      "model": "supplementaries:block/hanging_sign_tile_crimson",
+      "y": 180
+    },
+    "facing=west,tile=true": {
+      "model": "supplementaries:block/hanging_sign_tile_crimson",
+      "y": 270
+    }
+  }
+}

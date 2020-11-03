@@ -47,10 +47,11 @@ public class CommonUtil{
     public static final ResourceLocation DRAGON_BREATH_TEXTURE= new ResourceLocation(Supplementaries.MOD_ID,"blocks/dragon_breath_liquid");
     public static final ResourceLocation XP_TEXTURE= new ResourceLocation(Supplementaries.MOD_ID,"blocks/xp_liquid");
     public static final ResourceLocation FAUCET_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID, "blocks/faucet_water");
+    public static final ResourceLocation FISHIES_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID, "blocks/fishies");
 
 
     public static List<ResourceLocation> getTextures(){
-        return new ArrayList<>(Arrays.asList(MILK_TEXTURE,POTION_TEXTURE,HONEY_TEXTURE,DRAGON_BREATH_TEXTURE,XP_TEXTURE,FAUCET_TEXTURE));
+        return new ArrayList<>(Arrays.asList(MILK_TEXTURE,POTION_TEXTURE,HONEY_TEXTURE,DRAGON_BREATH_TEXTURE,XP_TEXTURE,FAUCET_TEXTURE,FISHIES_TEXTURE));
     }
 
     //fluids
@@ -76,6 +77,7 @@ public class CommonUtil{
         public final boolean bucket;
         public final boolean bottle;
         public final int fishType;
+
         JarContentType(ResourceLocation texture, int color, boolean applycolor, float opacity, boolean bottle, boolean bucket, int fishtype) {
             this.texture = texture;
             this.color = color; // beacon color. this will also be texture color if applycolor is true
@@ -289,7 +291,7 @@ public class CommonUtil{
     @OnlyIn(Dist.CLIENT)
     public static void renderFish(IVertexBuilder builder, MatrixStack matrixStackIn, float wo, float ho, int fishType, int combinedLightIn,
                                   int combinedOverlayIn) {
-        ResourceLocation texture = new ResourceLocation("moddymcmodface:blocks/jar_fishes");
+        ResourceLocation texture = FISHIES_TEXTURE;
         TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(texture);
         float w = 5 / 16f;
         float h = 4 / 16f;

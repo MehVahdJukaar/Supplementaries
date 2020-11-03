@@ -14,14 +14,6 @@
     "facing=west": {
       "model": "supplementaries:block/speaker_block",
       "y": 270
-    },
-    "facing=up": {
-      "model": "supplementaries:block/speaker_block",
-      "x": 270
-    },
-    "facing=down": {
-      "model": "supplementaries:block/speaker_block",
-      "x": 90
     }
   }
 }

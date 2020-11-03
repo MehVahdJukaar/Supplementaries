@@ -141,8 +141,6 @@ public class Registry {
     public static final RegistryObject<Block> CRANK = BLOCKS.register(CRANK_NAME, () -> new CrankBlock(
             AbstractBlock.Properties.create(Material.WOOD, MaterialColor.AIR)
                     .hardnessAndResistance(0.6f, 0.6f)
-                    .harvestLevel(1)
-                    .setRequiresTool()
                     .harvestTool(ToolType.PICKAXE)
                     .doesNotBlockMovement()
                     .notSolid()
@@ -188,6 +186,8 @@ public class Registry {
                     .hardnessAndResistance(0.75f, 2f)
                     .sound(SoundType.STONE)
                     .harvestTool(ToolType.PICKAXE)
+                    .harvestLevel(0)
+                    .setRequiresTool()
                     .notSolid()
     ));
     public static final RegistryObject<TileEntityType<TurnTableBlockTile>> TURN_TABLE_TILE = TILES.register(TURN_TABLE_NAME,
@@ -205,6 +205,7 @@ public class Registry {
                     .harvestLevel(2)
                     .sound(SoundType.METAL)
                     .harvestTool(ToolType.PICKAXE)
+                    .setRequiresTool()
                     .notSolid()
     ));
     public static final RegistryObject<Item> PISTON_LAUNCHER_ITEM = ITEMS.register(PISTON_LAUNCHER_NAME, () -> new BlockItem(PISTON_LAUNCHER.get(),
@@ -343,7 +344,7 @@ public class Registry {
                     .notSolid()
                     .doesNotBlockMovement()
     ));
-    public static final RegistryObject<Item> HANGING_SIGN_ITEM_JUNGLE = ITEMS.register(HANGING_SIGN_NAME_JUNGLE, () -> new BlockItem(HANGING_SIGN_BIRCH.get(),
+    public static final RegistryObject<Item> HANGING_SIGN_ITEM_JUNGLE = ITEMS.register(HANGING_SIGN_NAME_JUNGLE, () -> new BlockItem(HANGING_SIGN_JUNGLE.get(),
           new Item.Properties().group(ItemGroup.DECORATIONS)));
 
     //acacia
@@ -356,7 +357,7 @@ public class Registry {
                     .notSolid()
                     .doesNotBlockMovement()
     ));
-    public static final RegistryObject<Item> HANGING_SIGN_ITEM_ACACIA = ITEMS.register(HANGING_SIGN_NAME_ACACIA, () -> new BlockItem(HANGING_SIGN_BIRCH.get(),
+    public static final RegistryObject<Item> HANGING_SIGN_ITEM_ACACIA = ITEMS.register(HANGING_SIGN_NAME_ACACIA, () -> new BlockItem(HANGING_SIGN_ACACIA.get(),
           new Item.Properties().group(ItemGroup.DECORATIONS)));
 
     //dark oak
@@ -369,7 +370,7 @@ public class Registry {
                     .notSolid()
                     .doesNotBlockMovement()
     ));
-    public static final RegistryObject<Item> HANGING_SIGN_ITEM_DARK_OAK = ITEMS.register(HANGING_SIGN_NAME_DARK_OAK, () -> new BlockItem(HANGING_SIGN_BIRCH.get(),
+    public static final RegistryObject<Item> HANGING_SIGN_ITEM_DARK_OAK = ITEMS.register(HANGING_SIGN_NAME_DARK_OAK, () -> new BlockItem(HANGING_SIGN_DARK_OAK.get(),
           new Item.Properties().group(ItemGroup.DECORATIONS)));
 
     //crimson
@@ -382,7 +383,7 @@ public class Registry {
                     .notSolid()
                     .doesNotBlockMovement()
     ));
-    public static final RegistryObject<Item> HANGING_SIGN_ITEM_CRIMSON = ITEMS.register(HANGING_SIGN_NAME_CRIMSON, () -> new BlockItem(HANGING_SIGN_BIRCH.get(),
+    public static final RegistryObject<Item> HANGING_SIGN_ITEM_CRIMSON = ITEMS.register(HANGING_SIGN_NAME_CRIMSON, () -> new BlockItem(HANGING_SIGN_CRIMSON.get(),
           new Item.Properties().group(ItemGroup.DECORATIONS)));
 
     //warped
@@ -395,7 +396,7 @@ public class Registry {
                     .notSolid()
                     .doesNotBlockMovement()
     ));
-    public static final RegistryObject<Item> HANGING_SIGN_ITEM_WARPED = ITEMS.register(HANGING_SIGN_NAME_WARPED, () -> new BlockItem(HANGING_SIGN_BIRCH.get(),
+    public static final RegistryObject<Item> HANGING_SIGN_ITEM_WARPED = ITEMS.register(HANGING_SIGN_NAME_WARPED, () -> new BlockItem(HANGING_SIGN_WARPED.get(),
           new Item.Properties().group(ItemGroup.DECORATIONS)));
 
 
@@ -417,6 +418,7 @@ public class Registry {
                     .sound(SoundType.LANTERN)
                     .harvestTool(ToolType.PICKAXE)
                     .setRequiresTool()
+                    .harvestLevel(1)
                     .setLightLevel((state) -> { return 15; })
     ));
     public static final RegistryObject<TileEntityType<WallLanternBlockTile>> WALL_LANTERN_TILE = TILES.register(WALL_LANTERN_NAME,

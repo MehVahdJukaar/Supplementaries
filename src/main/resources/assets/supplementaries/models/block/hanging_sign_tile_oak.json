@@ -1,0 +1,10 @@
+{
+  "parent": "supplementaries:custom/hanging_sing",
+  "textures": {
+    "all": "supplementaries:blocks/hanging_sign_front_oak",
+    "particle": "supplementaries:blocks/hanging_sign_front_oak",
+	"0": "supplementaries:blocks/hanging_sign_front_oak",
+    "1": "supplementaries:blocks/hanging_sign_details_oak"
+
+  }
+}
