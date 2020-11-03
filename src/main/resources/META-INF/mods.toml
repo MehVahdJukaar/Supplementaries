@@ -11,7 +11,7 @@ issueTrackerURL="http://my.issue.tracker/" #optional
 
 modId="supplementaries" #mandatory
 
-version="1.16.4-0.7.1" #mandatory
+version="1.16.3-0.8.0" #mandatory
 
 displayName="Supplementaries" #mandatory
 
@@ -31,7 +31,7 @@ description='''Many functional and useful Vanilla+ blocks'''
 
     modId="forge" #mandatory
     mandatory=true #mandatory
-    versionRange="[34,)" #mandatory
+    versionRange="[33,)" #mandatory
     ordering="NONE"
     side="BOTH"
 

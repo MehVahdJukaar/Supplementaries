@@ -1,5 +1,5 @@
 {
-  "group": "moddymcmodface",
+  "group": "supplementaries",
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "012",
@@ -20,7 +20,7 @@
       "item": "minecraft:cobblestone"
     },
     "4": {
-      "item": "moddymcmodface:crank"
+      "item": "supplementaries:crank"
     },
     "5": {
       "item": "minecraft:cobblestone"
@@ -36,7 +36,7 @@
     }
   },
   "result": {
-    "item": "moddymcmodface:turn_table",
+    "item": "supplementaries:turn_table",
     "count": 1
   }
 }

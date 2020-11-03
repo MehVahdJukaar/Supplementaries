@@ -1,5 +1,5 @@
 {
-  "group": "moddymcmodface",
+  "group": "supplementaries",
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "012",
@@ -36,7 +36,7 @@
     }
   },
   "result": {
-    "item": "moddymcmodface:piston_launcher",
+    "item": "supplementaries:piston_launcher",
     "count": 1
   }
 }

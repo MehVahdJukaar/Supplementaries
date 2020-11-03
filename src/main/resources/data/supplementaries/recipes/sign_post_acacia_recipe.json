@@ -6,14 +6,14 @@
   ],
   "key": {
     "0": {
-      "item": "minecraft:birch_slab"
+      "item": "minecraft:acacia_slab"
     },
     "1": {
-      "item": "minecraft:birch_slab"
+      "item": "minecraft:acacia_slab"
     }
   },
   "result": {
-    "item": "supplementaries:sign_post_birch",
+    "item": "supplementaries:sign_post_acacia",
     "count": 1
   }
 }

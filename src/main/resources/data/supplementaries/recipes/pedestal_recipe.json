@@ -1,5 +1,5 @@
 {
-  "group": "moddymcmodface",
+  "group": "supplementaries",
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "012",
@@ -30,7 +30,7 @@
     }
   },
   "result": {
-    "item": "moddymcmodface:pedestal",
+    "item": "supplementaries:pedestal",
     "count": 1
   }
 }

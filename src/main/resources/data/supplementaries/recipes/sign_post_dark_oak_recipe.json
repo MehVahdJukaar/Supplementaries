@@ -6,14 +6,14 @@
   ],
   "key": {
     "0": {
-      "item": "minecraft:birch_slab"
+      "item": "minecraft:dark_oak_slab"
     },
     "1": {
-      "item": "minecraft:birch_slab"
+      "item": "minecraft:dark_oak_slab"
     }
   },
   "result": {
-    "item": "supplementaries:sign_post_birch",
+    "item": "supplementaries:sign_post_dark_oak",
     "count": 1
   }
 }

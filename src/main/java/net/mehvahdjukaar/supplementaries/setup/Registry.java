@@ -333,12 +333,80 @@ public class Registry {
     public static final RegistryObject<Item> HANGING_SIGN_ITEM_SPRUCE = ITEMS.register(HANGING_SIGN_NAME_SPRUCE, () -> new BlockItem(HANGING_SIGN_SPRUCE.get(),
             new Item.Properties().group(ItemGroup.DECORATIONS)));
 
+    //jungle
+    public static final String HANGING_SIGN_NAME_JUNGLE = "hanging_sign_jungle";
+    public static final RegistryObject<Block> HANGING_SIGN_JUNGLE = BLOCKS.register(HANGING_SIGN_NAME_JUNGLE, () -> new HangingSignBlock(
+            AbstractBlock.Properties.create(Material.WOOD, Blocks.JUNGLE_PLANKS.getMaterialColor())
+                    .hardnessAndResistance(2f, 3f)
+                    .sound(SoundType.WOOD)
+                    .harvestTool(ToolType.AXE)
+                    .notSolid()
+                    .doesNotBlockMovement()
+    ));
+    public static final RegistryObject<Item> HANGING_SIGN_ITEM_JUNGLE = ITEMS.register(HANGING_SIGN_NAME_JUNGLE, () -> new BlockItem(HANGING_SIGN_BIRCH.get(),
+          new Item.Properties().group(ItemGroup.DECORATIONS)));
+
+    //acacia
+    public static final String HANGING_SIGN_NAME_ACACIA = "hanging_sign_acacia";
+    public static final RegistryObject<Block> HANGING_SIGN_ACACIA = BLOCKS.register(HANGING_SIGN_NAME_ACACIA, () -> new HangingSignBlock(
+            AbstractBlock.Properties.create(Material.WOOD, Blocks.ACACIA_PLANKS.getMaterialColor())
+                    .hardnessAndResistance(2f, 3f)
+                    .sound(SoundType.WOOD)
+                    .harvestTool(ToolType.AXE)
+                    .notSolid()
+                    .doesNotBlockMovement()
+    ));
+    public static final RegistryObject<Item> HANGING_SIGN_ITEM_ACACIA = ITEMS.register(HANGING_SIGN_NAME_ACACIA, () -> new BlockItem(HANGING_SIGN_BIRCH.get(),
+          new Item.Properties().group(ItemGroup.DECORATIONS)));
+
+    //dark oak
+    public static final String HANGING_SIGN_NAME_DARK_OAK = "hanging_sign_dark_oak";
+    public static final RegistryObject<Block> HANGING_SIGN_DARK_OAK = BLOCKS.register(HANGING_SIGN_NAME_DARK_OAK, () -> new HangingSignBlock(
+            AbstractBlock.Properties.create(Material.WOOD, Blocks.DARK_OAK_PLANKS.getMaterialColor())
+                    .hardnessAndResistance(2f, 3f)
+                    .sound(SoundType.WOOD)
+                    .harvestTool(ToolType.AXE)
+                    .notSolid()
+                    .doesNotBlockMovement()
+    ));
+    public static final RegistryObject<Item> HANGING_SIGN_ITEM_DARK_OAK = ITEMS.register(HANGING_SIGN_NAME_DARK_OAK, () -> new BlockItem(HANGING_SIGN_BIRCH.get(),
+          new Item.Properties().group(ItemGroup.DECORATIONS)));
+
+    //crimson
+    public static final String HANGING_SIGN_NAME_CRIMSON = "hanging_sign_crimson";
+    public static final RegistryObject<Block> HANGING_SIGN_CRIMSON = BLOCKS.register(HANGING_SIGN_NAME_CRIMSON, () -> new HangingSignBlock(
+            AbstractBlock.Properties.create(Material.WOOD, Blocks.CRIMSON_PLANKS.getMaterialColor())
+                    .hardnessAndResistance(2f, 3f)
+                    .sound(SoundType.WOOD)
+                    .harvestTool(ToolType.AXE)
+                    .notSolid()
+                    .doesNotBlockMovement()
+    ));
+    public static final RegistryObject<Item> HANGING_SIGN_ITEM_CRIMSON = ITEMS.register(HANGING_SIGN_NAME_CRIMSON, () -> new BlockItem(HANGING_SIGN_BIRCH.get(),
+          new Item.Properties().group(ItemGroup.DECORATIONS)));
+
+    //warped
+    public static final String HANGING_SIGN_NAME_WARPED = "hanging_sign_warped";
+    public static final RegistryObject<Block> HANGING_SIGN_WARPED = BLOCKS.register(HANGING_SIGN_NAME_WARPED, () -> new HangingSignBlock(
+            AbstractBlock.Properties.create(Material.WOOD, Blocks.CRIMSON_PLANKS.getMaterialColor())
+                    .hardnessAndResistance(2f, 3f)
+                    .sound(SoundType.WOOD)
+                    .harvestTool(ToolType.AXE)
+                    .notSolid()
+                    .doesNotBlockMovement()
+    ));
+    public static final RegistryObject<Item> HANGING_SIGN_ITEM_WARPED = ITEMS.register(HANGING_SIGN_NAME_WARPED, () -> new BlockItem(HANGING_SIGN_BIRCH.get(),
+          new Item.Properties().group(ItemGroup.DECORATIONS)));
+
+
+
 
 
     //tile
     public static final RegistryObject<TileEntityType<HangingSignBlockTile>> HANGING_SIGN_TILE = TILES.register("hanging_sign",
             () -> TileEntityType.Builder.create(HangingSignBlockTile::new,
-                    HANGING_SIGN_OAK.get(), HANGING_SIGN_BIRCH.get(), HANGING_SIGN_SPRUCE.get()
+                    HANGING_SIGN_OAK.get(), HANGING_SIGN_BIRCH.get(), HANGING_SIGN_SPRUCE.get(),HANGING_SIGN_JUNGLE.get(),
+                    HANGING_SIGN_ACACIA.get(),HANGING_SIGN_DARK_OAK.get(),HANGING_SIGN_CRIMSON.get(),HANGING_SIGN_WARPED.get()
                     ).build(null));
 
     //wall lantern
@@ -354,7 +422,7 @@ public class Registry {
     public static final RegistryObject<TileEntityType<WallLanternBlockTile>> WALL_LANTERN_TILE = TILES.register(WALL_LANTERN_NAME,
             () -> TileEntityType.Builder.create(WallLanternBlockTile::new, WALL_LANTERN.get()).build(null));
     public static final RegistryObject<Item> WALL_LANTERN_ITEM = ITEMS.register(WALL_LANTERN_NAME, () -> new BlockItem(WALL_LANTERN.get(),
-            new Item.Properties().group(ItemGroup.DECORATIONS)));
+            new Item.Properties().group(null)));
 
 
 

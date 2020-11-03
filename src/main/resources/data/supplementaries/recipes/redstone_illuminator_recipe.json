@@ -1,5 +1,5 @@
 {
-  "group": "moddymcmodface",
+  "group": "supplementaries",
   "type": "minecraft:crafting_shaped",
   "pattern": [
     " 1 ",
@@ -24,7 +24,7 @@
     }
   },
   "result": {
-    "item": "moddymcmodface:redstone_illuminator",
+    "item": "supplementaries:redstone_illuminator",
     "count": 1
   }
 }
