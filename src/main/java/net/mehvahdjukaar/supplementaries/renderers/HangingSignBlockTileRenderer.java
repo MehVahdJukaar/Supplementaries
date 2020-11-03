@@ -6,7 +6,6 @@ import net.mehvahdjukaar.supplementaries.blocks.HangingSignBlockTile;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.RenderComponentsUtil;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
@@ -20,7 +19,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.storage.MapData;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -88,7 +86,6 @@ public class HangingSignBlockTileRenderer extends TileEntityRenderer<HangingSign
             // sign code
             FontRenderer fontrenderer = this.renderDispatcher.getFontRenderer();
             int i = tile.getTextColor().getTextColor();
-            double d0 = 0.4D;
             int j = (int) ((double) NativeImage.getRed(i) * 0.4D);
             int k = (int) ((double) NativeImage.getGreen(i) * 0.4D);
             int l = (int) ((double) NativeImage.getBlue(i) * 0.4D);

@@ -17,8 +17,6 @@ import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.ITextComponent;
@@ -32,21 +30,18 @@ import java.util.stream.IntStream;
 
 @OnlyIn(Dist.CLIENT)
 public class SignPostGui extends Screen {
-    private PlayerEntity entity;
     private TextInputUtil textInputUtil;
     /** The index of the line that is being edited. */
-    private int editLine = 0;
-    //for ticking cusros
+    private int editLine;
+    //for ticking cursor
     private int updateCounter;
-    private SignPostBlockTile tileSign = null;
+    private final SignPostBlockTile tileSign;
     private static final int MAXLINES = 2;
     private final String[] cachedLines;
     public SignPostGui(SignPostBlockTile teSign) {
         super(new TranslationTextComponent("sign.edit"));
         this.tileSign = teSign;
-        this.cachedLines = IntStream.range(0, MAXLINES).mapToObj(teSign::getText).map(ITextComponent::getString).toArray((p_243354_0_) -> {
-            return new String[p_243354_0_];
-        });
+        this.cachedLines = IntStream.range(0, MAXLINES).mapToObj(teSign::getText).map(ITextComponent::getString).toArray(String[]::new);
 
         editLine = !this.tileSign.up ? 1 : 0;
     }
@@ -78,7 +73,7 @@ public class SignPostGui extends Screen {
                 return true;
             }
         }
-        return this.textInputUtil.specialKeyPressed(keyCode) ? true : super.keyPressed(keyCode, scanCode, modifiers);
+        return this.textInputUtil.specialKeyPressed(keyCode) || super.keyPressed(keyCode, scanCode, modifiers);
     }
 
     @Override
@@ -104,24 +99,18 @@ public class SignPostGui extends Screen {
 
     private void close() {
         this.tileSign.markDirty();
-        this.minecraft.displayGuiScreen((Screen) null);
+        this.minecraft.displayGuiScreen(null);
     }
 
     @Override
     protected void init() {
         this.minecraft.keyboardListener.enableRepeatEvents(true);
-        this.addButton(new Button(this.width / 2 - 100, this.height / 4 + 120, 200, 20, DialogTexts.GUI_DONE, (p_238847_1_) -> {
-            this.close();
-        }));
+        this.addButton(new Button(this.width / 2 - 100, this.height / 4 + 120, 200, 20, DialogTexts.GUI_DONE, (p_238847_1_) -> this.close()));
         this.tileSign.setEditable(false);
-        this.textInputUtil = new TextInputUtil(() -> {
-            return this.cachedLines[this.editLine];
-        }, (p_238850_1_) -> {
+        this.textInputUtil = new TextInputUtil(() -> this.cachedLines[this.editLine], (p_238850_1_) -> {
             this.cachedLines[this.editLine] = p_238850_1_;
             this.tileSign.setText(this.editLine, new StringTextComponent(p_238850_1_));
-        }, TextInputUtil.getClipboardTextSupplier(this.minecraft), TextInputUtil.getClipboardTextSetter(this.minecraft), (p_238848_1_) -> {
-            return this.minecraft.fontRenderer.getStringWidth(p_238848_1_) <= 90;
-        });
+        }, TextInputUtil.getClipboardTextSupplier(this.minecraft), TextInputUtil.getClipboardTextSetter(this.minecraft), (p_238848_1_) -> this.minecraft.fontRenderer.getStringWidth(p_238848_1_) <= 90);
     }
 
 
@@ -135,7 +124,7 @@ public class SignPostGui extends Screen {
         IRenderTypeBuffer.Impl irendertypebuffer$impl = this.minecraft.getRenderTypeBuffers().getBufferSource();
         matrixstack.push();
         matrixstack.translate(this.width / 2, 0.0D, 50.0D);
-        float f = 93.75F;
+
         matrixstack.scale(93.75F, -93.75F, 93.75F);
         matrixstack.translate(0.0D, -1.3125D, 0.0D);
         // renders sign
@@ -185,7 +174,7 @@ public class SignPostGui extends Screen {
 
         //render fence
         matrixstack.translate(0, -0.5, -0.5);
-        BlockState fence = this.tileSign.fenceblock;
+        BlockState fence = this.tileSign.fenceBlock;
         if(fence !=null)blockRenderer.renderBlock(fence, matrixstack, irendertypebuffer$impl, 15728880, OverlayTexture.NO_OVERLAY, EmptyModelData.INSTANCE);
 
         matrixstack.pop();

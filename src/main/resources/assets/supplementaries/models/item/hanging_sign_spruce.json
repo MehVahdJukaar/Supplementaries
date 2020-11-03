@@ -1,9 +1,9 @@
 {
   "parent": "supplementaries:custom/hanging_sign_item",
   "textures": {
-	    "0": "supplementaries:blocks/hanging_sign_front",
-	    "1": "supplementaries:blocks/hanging_sign_details",
-	    "2": "supplementaries:blocks/hanging_sign_details"
+	    "0": "supplementaries:blocks/hanging_sign_front_spruce",
+	    "1": "supplementaries:blocks/hanging_sign_details_spruce",
+	    "2": "supplementaries:blocks/hanging_sign_details_spruce"
   },
 	"display": {
 		"thirdperson_righthand": {

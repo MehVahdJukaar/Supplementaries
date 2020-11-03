@@ -1,0 +1,26 @@
+{
+  "group": "moddymcmodface",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " 1 ",
+    "345"
+  ],
+  "key": {
+    "1": {
+      "item": "minecraft:stick"
+    },
+    "3": {
+      "item": "minecraft:cobblestone_slab"
+    },
+    "4": {
+      "item": "minecraft:cobblestone_slab"
+    },
+    "5": {
+      "item": "minecraft:cobblestone_slab"
+    }
+  },
+  "result": {
+    "item": "moddymcmodface:crank",
+    "count": 1
+  }
+}

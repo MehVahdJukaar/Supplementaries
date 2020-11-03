@@ -12,6 +12,7 @@ import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.item.Items;
 import net.minecraft.particles.BasicParticleType;
 import net.minecraft.particles.ParticleType;
 import net.minecraft.tileentity.TileEntityType;
@@ -292,6 +293,7 @@ public class Registry {
 
     //hanging sing
     //oak
+
     public static final String HANGING_SIGN_NAME_OAK = "hanging_sign_oak";
     public static final RegistryObject<Block> HANGING_SIGN_OAK = BLOCKS.register(HANGING_SIGN_NAME_OAK, () -> new HangingSignBlock(
             AbstractBlock.Properties.create(Material.WOOD, Blocks.OAK_PLANKS.getMaterialColor())
@@ -316,6 +318,8 @@ public class Registry {
     ));
     public static final RegistryObject<Item> HANGING_SIGN_ITEM_BIRCH = ITEMS.register(HANGING_SIGN_NAME_BIRCH, () -> new BlockItem(HANGING_SIGN_BIRCH.get(),
             new Item.Properties().group(ItemGroup.DECORATIONS)));
+
+
     //spruce
     public static final String HANGING_SIGN_NAME_SPRUCE = "hanging_sign_spruce";
     public static final RegistryObject<Block> HANGING_SIGN_SPRUCE = BLOCKS.register(HANGING_SIGN_NAME_SPRUCE, () -> new HangingSignBlock(
@@ -336,6 +340,23 @@ public class Registry {
             () -> TileEntityType.Builder.create(HangingSignBlockTile::new,
                     HANGING_SIGN_OAK.get(), HANGING_SIGN_BIRCH.get(), HANGING_SIGN_SPRUCE.get()
                     ).build(null));
+
+    //wall lantern
+    public static final String WALL_LANTERN_NAME = "wall_lantern";
+    public static final RegistryObject<Block> WALL_LANTERN = BLOCKS.register(WALL_LANTERN_NAME, () -> new WallLanternBlock(
+            AbstractBlock.Properties.create(Material.IRON, MaterialColor.IRON)
+                    .hardnessAndResistance(3.5f, 3.5f)
+                    .sound(SoundType.LANTERN)
+                    .harvestTool(ToolType.PICKAXE)
+                    .setRequiresTool()
+                    .setLightLevel((state) -> { return 15; })
+    ));
+    public static final RegistryObject<TileEntityType<WallLanternBlockTile>> WALL_LANTERN_TILE = TILES.register(WALL_LANTERN_NAME,
+            () -> TileEntityType.Builder.create(WallLanternBlockTile::new, WALL_LANTERN.get()).build(null));
+    public static final RegistryObject<Item> WALL_LANTERN_ITEM = ITEMS.register(WALL_LANTERN_NAME, () -> new BlockItem(WALL_LANTERN.get(),
+            new Item.Properties().group(ItemGroup.DECORATIONS)));
+
+
 
 
 }

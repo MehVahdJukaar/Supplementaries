@@ -12,8 +12,8 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class SendSpeakerBlockMessagePacket {
-    private ITextComponent str;
-    private boolean narrator;
+    private final ITextComponent str;
+    private final boolean narrator;
     public SendSpeakerBlockMessagePacket(PacketBuffer buf) {
         this.str = buf.readTextComponent();
         this.narrator = buf.readBoolean();

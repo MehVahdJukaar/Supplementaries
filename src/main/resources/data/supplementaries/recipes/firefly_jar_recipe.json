@@ -1,0 +1,13 @@
+{
+  "group": "moddymcmodface",
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "moddymcmodface:firefly_jar"
+    }
+  ],
+  "result": {
+    "item": "moddymcmodface:jar",
+    "count": 1
+  }
+}

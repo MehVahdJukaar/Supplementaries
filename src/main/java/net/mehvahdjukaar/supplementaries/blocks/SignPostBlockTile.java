@@ -41,7 +41,7 @@ public class SignPostBlockTile extends TileEntity {
     private final IReorderingProcessor[] renderText = new IReorderingProcessor[2];
     private DyeColor textColor = DyeColor.BLACK;
 
-    public BlockState fenceblock = Blocks.OAK_FENCE.getDefaultState();
+    public BlockState fenceBlock = Blocks.OAK_FENCE.getDefaultState();
     public float yawUp = 0;
     public float yawDown = 0;
     public boolean leftUp = true;
@@ -83,7 +83,7 @@ public class SignPostBlockTile extends TileEntity {
             this.renderText[i] = null;
         }
 
-        this.fenceblock = NBTUtil.readBlockState(compound.getCompound("Fence"));
+        this.fenceBlock = NBTUtil.readBlockState(compound.getCompound("Fence"));
         this.yawUp = compound.getFloat("Yaw_up");
         this.yawDown = compound.getFloat("Yaw_down");
         this.leftUp = compound.getBoolean("Left_up");
@@ -105,7 +105,7 @@ public class SignPostBlockTile extends TileEntity {
         }
 
         compound.putString("Color", this.textColor.getTranslationKey());
-        compound.put("Fence", NBTUtil.writeBlockState(fenceblock));
+        compound.put("Fence", NBTUtil.writeBlockState(fenceBlock));
         compound.putFloat("Yaw_up",this.yawUp);
         compound.putFloat("Yaw_down",this.yawDown);
         compound.putBoolean("Left_up",this.leftUp);
@@ -178,7 +178,7 @@ public class SignPostBlockTile extends TileEntity {
 
     public CommandSource getCommandSource(@Nullable ServerPlayerEntity playerIn) {
         String s = playerIn == null ? "Sign" : playerIn.getName().getString();
-        ITextComponent itextcomponent = (ITextComponent) (playerIn == null ? new StringTextComponent("Sign") : playerIn.getDisplayName());
+        ITextComponent itextcomponent = playerIn == null ? new StringTextComponent("Sign") : playerIn.getDisplayName();
         return new CommandSource(ICommandSource.DUMMY,
                 new Vector3d((double) this.pos.getX() + 0.5D, (double) this.pos.getY() + 0.5D, (double) this.pos.getZ() + 0.5D), Vector2f.ZERO,
                 (ServerWorld) this.world, 2, s, itextcomponent, this.world.getServer(), playerIn);

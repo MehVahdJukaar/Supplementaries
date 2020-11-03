@@ -138,7 +138,7 @@ public class SignPostBlock extends Block {
                 itementity.setDefaultPickupDelay();
                 worldIn.addEntity(itementity);
             }
-            spawnDrops(tile.fenceblock, worldIn, pos);
+            spawnDrops(tile.fenceBlock, worldIn, pos);
         }
     }
 

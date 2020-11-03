@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.blocks.WallLanternBlockTile;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.gui.NoticeBoardGui;
 import net.mehvahdjukaar.supplementaries.particles.FireflyGlowParticle;
@@ -60,6 +61,9 @@ public class ClientSetup {
         //hanging sign
         RenderTypeLookup.setRenderLayer(Registry.SIGN_POST.get(), RenderType.getCutout());
         ClientRegistry.bindTileEntityRenderer(Registry.HANGING_SIGN_TILE.get(), HangingSignBlockTileRenderer::new);
+        //wall lantern
+        RenderTypeLookup.setRenderLayer(Registry.WALL_LANTERN.get(), RenderType.getCutout());
+        ClientRegistry.bindTileEntityRenderer(Registry.WALL_LANTERN_TILE.get(), WallLanternBlockTileRenderer::new);
 
     }
 

@@ -43,7 +43,7 @@ public class HangingSignBlockTile extends LockableLootTileEntity implements ITic
 
     public static final int MAXLINES = 5;
 
-    private NonNullList<ItemStack> stacks = NonNullList.<ItemStack>withSize(1, ItemStack.EMPTY);
+    private NonNullList<ItemStack> stacks = NonNullList.withSize(1, ItemStack.EMPTY);
     public float angle = 0;
     public float prevAngle = 0;
     public int counter = 800;
@@ -166,7 +166,7 @@ public class HangingSignBlockTile extends LockableLootTileEntity implements ITic
 
     public CommandSource getCommandSource(@Nullable ServerPlayerEntity playerIn) {
         String s = playerIn == null ? "Sign" : playerIn.getName().getString();
-        ITextComponent itextcomponent = (ITextComponent) (playerIn == null ? new StringTextComponent("Sign") : playerIn.getDisplayName());
+        ITextComponent itextcomponent = playerIn == null ? new StringTextComponent("Sign") : playerIn.getDisplayName();
         return new CommandSource(ICommandSource.DUMMY,
                 new Vector3d((double) this.pos.getX() + 0.5D, (double) this.pos.getY() + 0.5D, (double) this.pos.getZ() + 0.5D), Vector2f.ZERO,
                 (ServerWorld) this.world, 2, s, itextcomponent, this.world.getServer(), playerIn);
@@ -292,7 +292,7 @@ public class HangingSignBlockTile extends LockableLootTileEntity implements ITic
             float a = minswingangle;
             float k = 0.01f;
             if(counter<800){
-                a = (float) Math.max((float) maxswingangle * Math.pow(Math.E, -(counter / angleledamping)), minswingangle);
+                a = (float) Math.max(maxswingangle * Math.pow(Math.E, -(counter / angleledamping)), minswingangle);
                 k = (float) Math.max(Math.PI*2*(float)Math.pow(Math.E, -(counter/perioddamping)), 0.01f);
             }
 

@@ -3,21 +3,17 @@ package net.mehvahdjukaar.supplementaries.renderers;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.mehvahdjukaar.supplementaries.blocks.SignPostBlock;
 import net.mehvahdjukaar.supplementaries.blocks.SignPostBlockTile;
-import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.RenderComponentsUtil;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.EmptyModelData;
@@ -36,7 +32,7 @@ public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockT
 
         BlockRendererDispatcher blockRenderer = Minecraft.getInstance().getBlockRendererDispatcher();
 
-        BlockState fence = tile.fenceblock;
+        BlockState fence = tile.fenceBlock;
         if(fence !=null)blockRenderer.renderBlock(fence, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
 
         boolean up = tile.up;
@@ -48,7 +44,6 @@ public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockT
             // sign code
             FontRenderer fontrenderer = this.renderDispatcher.getFontRenderer();
             int i = tile.getTextColor().getTextColor();
-            double d0 = 0.4D;
             int j = (int) ((double) NativeImage.getRed(i) * 0.4D);
             int k = (int) ((double) NativeImage.getGreen(i) * 0.4D);
             int l = (int) ((double) NativeImage.getBlue(i) * 0.4D);

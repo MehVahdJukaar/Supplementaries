@@ -4,6 +4,8 @@ import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -36,7 +38,7 @@ public class ClockBlockTile extends TileEntity implements ITickableTileEntity {
         compound.putFloat("targetroll", this.targetRoll);
         return compound;
     }
-/*
+
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
         return new SUpdateTileEntityPacket(this.pos, 0, this.getUpdateTag());
@@ -49,8 +51,8 @@ public class ClockBlockTile extends TileEntity implements ITickableTileEntity {
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.read(pkt.getNbtCompound());
-    }*/
+        this.read(this.getBlockState(), pkt.getNbtCompound());
+    }
 
     public void setInitialRoll(int hour) {
         this.targetRoll = (30f * hour) % 360;
@@ -59,7 +61,7 @@ public class ClockBlockTile extends TileEntity implements ITickableTileEntity {
     }
 
     public void tick() {
-        if(true)return; //TODO:this on placement logic
+        //TODO:update tile this on placement logic
         if (this.world != null && this.world.getGameTime() % 20L == 0L) {
             BlockState blockstate = this.getBlockState();
             if (!this.world.isRemote) {

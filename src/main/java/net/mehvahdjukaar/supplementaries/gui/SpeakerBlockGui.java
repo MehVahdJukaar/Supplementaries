@@ -9,8 +9,6 @@ import net.minecraft.client.gui.DialogTexts;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.network.play.ClientPlayNetHandler;
-import net.minecraft.network.play.client.CUpdateSignPacket;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -84,14 +82,13 @@ public class SpeakerBlockGui extends Screen {
         this.tileSpeaker.narrator = this.narrator;
         //update server tile
 
-        ClientPlayNetHandler clientplaynethandler = this.minecraft.getConnection();
         Networking.INSTANCE.sendToServer(new UpdateServerSpeakerBlockPacket(this.tileSpeaker.getPos(), this.tileSpeaker.message, this.tileSpeaker.narrator));
 
     }
 
     private void close() {
         this.tileSpeaker.markDirty();
-        this.minecraft.displayGuiScreen((Screen)null);
+        this.minecraft.displayGuiScreen(null);
     }
     @Override
     public void closeScreen() {

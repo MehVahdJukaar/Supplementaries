@@ -75,15 +75,15 @@ public class HangingSignBlock extends Block {
             //not an else to allow to place dye items after coloring
             //place item
             if (flag1) {
-                ItemStack it = (ItemStack) itemstack.copy();
-                it.setCount((int) 1);
-                NonNullList<ItemStack> stacks = NonNullList.<ItemStack>withSize(1, it);
+                ItemStack it = itemstack.copy();
+                it.setCount(1);
+                NonNullList<ItemStack> stacks = NonNullList.withSize(1, it);
                 te.setItems(stacks);
                 if (!player.isCreative()) {
                     itemstack.shrink(1);
                 }
                 if (!worldIn.isRemote()) {
-                    worldIn.playSound((PlayerEntity) null, pos, SoundEvents.ENTITY_ITEM_FRAME_ADD_ITEM, SoundCategory.BLOCKS, 1.0F,
+                    worldIn.playSound(null, pos, SoundEvents.ENTITY_ITEM_FRAME_ADD_ITEM, SoundCategory.BLOCKS, 1.0F,
                             worldIn.rand.nextFloat() * 0.10F + 0.95F);
                     te.markDirty();
                 }
@@ -99,7 +99,7 @@ public class HangingSignBlock extends Block {
                 return ActionResultType.SUCCESS;
             }
             // open gui (edit sign with empty hand)
-            else if (player instanceof PlayerEntity && !server && emptyhand) {
+            else if (!server && emptyhand) {
                 HangingSignGui.open(te);
                 return ActionResultType.SUCCESS;
             }
@@ -204,7 +204,7 @@ public class HangingSignBlock extends Block {
     public boolean eventReceived(BlockState state, World world, BlockPos pos, int eventID, int eventParam) {
         super.eventReceived(state, world, pos, eventID, eventParam);
         TileEntity tileentity = world.getTileEntity(pos);
-        return tileentity == null ? false : tileentity.receiveClientEvent(eventID, eventParam);
+        return tileentity != null && tileentity.receiveClientEvent(eventID, eventParam);
     }
 }
 

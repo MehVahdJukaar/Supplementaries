@@ -31,21 +31,18 @@ import java.util.stream.IntStream;
 
 @OnlyIn(Dist.CLIENT)
 public class HangingSignGui extends Screen {
-    private PlayerEntity entity;
     private TextInputUtil textInputUtil;
     // The index of the line that is being edited.
     private int editLine = 0;
     //for ticking cursor
     private int updateCounter;
-    private HangingSignBlockTile tileSign = null;
+    private final HangingSignBlockTile tileSign;
     private static final int MAXLINES = 5;
     private final String[] cachedLines;
     public HangingSignGui(HangingSignBlockTile teSign) {
         super(new TranslationTextComponent("sign.edit"));
         this.tileSign = teSign;
-        this.cachedLines = IntStream.range(0, MAXLINES).mapToObj(teSign::getText).map(ITextComponent::getString).toArray((p_243354_0_) -> {
-            return new String[p_243354_0_];
-        });
+        this.cachedLines = IntStream.range(0, MAXLINES).mapToObj(teSign::getText).map(ITextComponent::getString).toArray(String[]::new);
     }
 
     public static void open(HangingSignBlockTile sign) {
@@ -68,7 +65,7 @@ public class HangingSignGui extends Screen {
         }
         // !down arrow, !enter, !enter, handles special keys
         else if (keyCode != 264 && keyCode != 257 && keyCode != 335) {
-            return this.textInputUtil.specialKeyPressed(keyCode) ? true : super.keyPressed(keyCode, scanCode, modifiers);
+            return this.textInputUtil.specialKeyPressed(keyCode) || super.keyPressed(keyCode, scanCode, modifiers);
         }
         // down arrow, enter
         else {
@@ -110,18 +107,12 @@ public class HangingSignGui extends Screen {
     @Override
     protected void init() {
         this.minecraft.keyboardListener.enableRepeatEvents(true);
-        this.addButton(new Button(this.width / 2 - 100, this.height / 4 + 120, 200, 20, DialogTexts.GUI_DONE, (p_238847_1_) -> {
-            this.close();
-        }));
+        this.addButton(new Button(this.width / 2 - 100, this.height / 4 + 120, 200, 20, DialogTexts.GUI_DONE, (p_238847_1_) -> this.close()));
         this.tileSign.setEditable(false);
-        this.textInputUtil = new TextInputUtil(() -> {
-            return this.cachedLines[this.editLine];
-        }, (p_238850_1_) -> {
+        this.textInputUtil = new TextInputUtil(() -> this.cachedLines[this.editLine], (p_238850_1_) -> {
             this.cachedLines[this.editLine] = p_238850_1_;
             this.tileSign.setText(this.editLine, new StringTextComponent(p_238850_1_));
-        }, TextInputUtil.getClipboardTextSupplier(this.minecraft), TextInputUtil.getClipboardTextSetter(this.minecraft), (p_238848_1_) -> {
-            return this.minecraft.fontRenderer.getStringWidth(p_238848_1_) <= 75;
-        });
+        }, TextInputUtil.getClipboardTextSupplier(this.minecraft), TextInputUtil.getClipboardTextSetter(this.minecraft), (p_238848_1_) -> this.minecraft.fontRenderer.getStringWidth(p_238848_1_) <= 75);
     }
 
     @Override
@@ -134,7 +125,7 @@ public class HangingSignGui extends Screen {
         IRenderTypeBuffer.Impl irendertypebuffer$impl = this.minecraft.getRenderTypeBuffers().getBufferSource();
         matrixstack.push();
         matrixstack.translate((double) (this.width / 2), 0.0D, 50.0D);
-        float f = 93.75F;
+
         matrixstack.scale(93.75F, -93.75F, 93.75F);
         matrixstack.translate(0.0D, -1.3125D, 0.0D);
         // renders sign

@@ -75,7 +75,7 @@ public class SignPostItem  extends Item {
                     signtile.yawDown = 90 + r*-22.5f;
                     flag = true;
                 }
-                if(flag && isfence)signtile.fenceblock = targetblock.getDefaultState();
+                if(flag && isfence)signtile.fenceBlock = targetblock.getDefaultState();
 
             }
             //TODO: fix placement & sound

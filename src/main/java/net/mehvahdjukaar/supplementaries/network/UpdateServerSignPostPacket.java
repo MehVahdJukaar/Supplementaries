@@ -8,12 +8,13 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkEvent;
 
+import java.util.Objects;
 import java.util.function.Supplier;
 
 public class UpdateServerSignPostPacket {
-    private BlockPos pos;
-    private ITextComponent t0;
-    private ITextComponent t1;
+    private final BlockPos pos;
+    private final ITextComponent t0;
+    private final ITextComponent t1;
 
     public UpdateServerSignPostPacket(PacketBuffer buf) {
         this.pos = buf.readBlockPos();
@@ -35,7 +36,7 @@ public class UpdateServerSignPostPacket {
 
     public static void handler(UpdateServerSignPostPacket message, Supplier<NetworkEvent.Context> ctx) {
         // server world
-        World world = ctx.get().getSender().world;
+        World world = Objects.requireNonNull(ctx.get().getSender()).world;
         ctx.get().enqueueWork(() -> {
             if (world != null) {
                 TileEntity tileentity = world.getTileEntity(message.pos);

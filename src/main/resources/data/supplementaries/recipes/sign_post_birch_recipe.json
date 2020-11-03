@@ -1,0 +1,19 @@
+{
+  "group": "moddymcmodface",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "01"
+  ],
+  "key": {
+    "0": {
+      "tag": "minecraft:birch_slab"
+    },
+    "1": {
+      "tag": "minecraft:birch_slab"
+    }
+  },
+  "result": {
+    "item": "moddymcmodface:sign_post_birch",
+    "count": 1
+  }
+}

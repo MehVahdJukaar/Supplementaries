@@ -1,11 +1,18 @@
 {
   "block.supplementaries.faucet": "Faucet",
   "block.supplementaries.hanging_sign": "Hanging Sign",
+  "block.supplementaries.hanging_sign_oak": "Oak Hanging Sign",
+  "block.supplementaries.hanging_sign_birch": "Birch Hanging Sign",
+  "block.supplementaries.hanging_sign_spruce": "Spruce Hanging Sign",
+  "block.supplementaries.hanging_sign_jungle": "Jungle Hanging Sign",
+  "block.supplementaries.hanging_sign_acacia": "Acacia Hanging Sign",
+  "block.supplementaries.hanging_sign_dark_oak": "Dark Oak Hanging Sign",
+  "block.supplementaries.hanging_sign_crimson": "Crimson Hanging Sign",
+  "block.supplementaries.hanging_sign_warped": "Warped Hanging Sign",
   "block.supplementaries.wall_lantern": "Wall Lantern",
   "block.supplementaries.planter": "Planter",
   "entity.supplementaries.firefly": "Firefly",
   "block.supplementaries.blaze_block": "Blaze Block",
-  "block.supplementaries.tiki": "Tiki",
   "block.supplementaries.firefly_jar": "Firefly Jar",
   "block.supplementaries.bellows": "Bellows",
   "block.supplementaries.wind_vane": "Wind Vane",
@@ -34,6 +41,6 @@
   "item.supplementaries.sign_post_dark_oak": "Dark Oak Sign Post",
   "item.supplementaries.sign_post_crimson": "Crimson Sign Post",
   "item.supplementaries.sign_post_warped": "Warped Sign Post",
-  "block.supplementaries.torch_2": "Sconce",
+  "block.supplementaries.sconce": "Sconce",
   "block.supplementaries.notice_board": "Notice Board"
 }

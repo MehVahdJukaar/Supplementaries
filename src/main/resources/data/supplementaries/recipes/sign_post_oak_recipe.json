@@ -1,0 +1,19 @@
+{
+  "group": "moddymcmodface",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "01"
+  ],
+  "key": {
+    "0": {
+      "tag": "minecraft:oak_slab"
+    },
+    "1": {
+      "tag": "minecraft:oak_slab"
+    }
+  },
+  "result": {
+    "item": "moddymcmodface:sign_post_oak",
+    "count": 1
+  }
+}

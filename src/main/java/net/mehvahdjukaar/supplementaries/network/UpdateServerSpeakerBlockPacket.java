@@ -9,12 +9,13 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkEvent;
 
+import java.util.Objects;
 import java.util.function.Supplier;
 
 public class UpdateServerSpeakerBlockPacket{
-    private BlockPos pos;
-    private ITextComponent str;
-    private boolean narrator;
+    private final BlockPos pos;
+    private final ITextComponent str;
+    private final boolean narrator;
 
     public UpdateServerSpeakerBlockPacket(PacketBuffer buf) {
 
@@ -38,7 +39,7 @@ public class UpdateServerSpeakerBlockPacket{
 
     public static void handler(UpdateServerSpeakerBlockPacket message, Supplier<NetworkEvent.Context> ctx) {
         // server world
-        World world = ctx.get().getSender().world;
+        World world = Objects.requireNonNull(ctx.get().getSender()).world;
 
         ctx.get().enqueueWork(() -> {
             if (world != null) {

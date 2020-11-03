@@ -1,0 +1,36 @@
+{
+  "group": "moddymcmodface",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "012",
+    " 4 ",
+    "678"
+  ],
+  "key": {
+    "0": {
+      "item": "minecraft:stone_slab"
+    },
+    "1": {
+      "item": "minecraft:stone_slab"
+    },
+    "2": {
+      "item": "minecraft:stone_slab"
+    },
+    "4": {
+      "item": "minecraft:stone"
+    },
+    "6": {
+      "item": "minecraft:stone_slab"
+    },
+    "7": {
+      "item": "minecraft:stone_slab"
+    },
+    "8": {
+      "item": "minecraft:stone_slab"
+    }
+  },
+  "result": {
+    "item": "moddymcmodface:pedestal",
+    "count": 1
+  }
+}
