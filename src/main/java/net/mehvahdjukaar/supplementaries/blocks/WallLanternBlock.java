@@ -123,12 +123,12 @@ public class WallLanternBlock extends Block {
 
 
     @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
         TileEntity te = worldIn.getTileEntity(pos);
         if (te instanceof WallLanternBlockTile) {
             spawnDrops(((WallLanternBlockTile) te).lanternBlock, worldIn, pos);
-
         }
+        super.onBlockHarvested(worldIn, pos, state, player);
     }
 
     @Override

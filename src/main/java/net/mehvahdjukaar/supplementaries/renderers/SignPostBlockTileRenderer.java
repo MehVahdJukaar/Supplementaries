@@ -120,7 +120,7 @@ public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockT
                 matrixStackIn.scale(0.010416667F, -0.010416667F, 0.010416667F);
                 matrixStackIn.translate(0, 1, 0);
 
-                IReorderingProcessor ireorderingprocessor = tile.getRenderText(0, (p_243502_1_) -> {
+                IReorderingProcessor ireorderingprocessor = tile.getRenderText(1, (p_243502_1_) -> {
                     List<IReorderingProcessor> list = fontrenderer.trimStringToWidth(p_243502_1_, 90);
                     return list.isEmpty() ? IReorderingProcessor.field_242232_a : list.get(0);
                 });

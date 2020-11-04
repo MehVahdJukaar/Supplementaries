@@ -419,7 +419,7 @@ public class Registry {
                     .harvestTool(ToolType.PICKAXE)
                     .setRequiresTool()
                     .harvestLevel(1)
-                    .setLightLevel((state) -> { return 15; })
+                    .setLightLevel((state) -> 15)
     ));
     public static final RegistryObject<TileEntityType<WallLanternBlockTile>> WALL_LANTERN_TILE = TILES.register(WALL_LANTERN_NAME,
             () -> TileEntityType.Builder.create(WallLanternBlockTile::new, WALL_LANTERN.get()).build(null));

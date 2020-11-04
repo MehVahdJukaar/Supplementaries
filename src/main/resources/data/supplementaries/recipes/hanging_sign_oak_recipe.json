@@ -1,0 +1,42 @@
+{
+  "group": "supplementaries",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "012",
+    "345",
+    "678"
+  ],
+  "key": {
+    "0": {
+      "item": "minecraft:iron_nugget"
+    },
+    "1": {
+      "item": "minecraft:stick"
+    },
+    "2": {
+      "item": "minecraft:iron_nugget"
+    },
+    "3": {
+      "item": "minecraft:oak_planks"
+    },
+    "4": {
+      "item": "minecraft:oak_planks"
+    },
+    "5": {
+      "item": "minecraft:oak_planks"
+    },
+    "6": {
+      "item": "minecraft:oak_planks"
+    },
+    "7": {
+      "item": "minecraft:oak_planks"
+    },
+    "8": {
+      "item": "minecraft:oak_planks"
+    }
+  },
+  "result": {
+    "item": "supplementaries:hanging_sign_oak",
+    "count": 2
+  }
+}

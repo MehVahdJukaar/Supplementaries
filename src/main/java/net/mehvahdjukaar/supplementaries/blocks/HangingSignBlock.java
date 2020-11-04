@@ -8,6 +8,7 @@ import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.CompassItem;
 import net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathNodeType;
