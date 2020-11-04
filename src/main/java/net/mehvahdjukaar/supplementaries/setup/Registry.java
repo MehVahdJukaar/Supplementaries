@@ -219,6 +219,7 @@ public class Registry {
                     .sound(SoundType.METAL)
                     .harvestTool(ToolType.PICKAXE)
                     .notSolid()
+                    .noDrops()
     ));
     public static final String PISTON_LAUNCHER_ARM_NAME = "piston_launcher_arm";
     public static final RegistryObject<Block> PISTON_LAUNCHER_ARM = BLOCKS.register(PISTON_LAUNCHER_ARM_NAME, () -> new PistonLauncherArmBlock(
@@ -228,6 +229,7 @@ public class Registry {
                     .sound(SoundType.METAL)
                     .harvestTool(ToolType.PICKAXE)
                     .notSolid()
+                    .noDrops()
     ));
     public static final RegistryObject<TileEntityType<PistonLauncherArmBlockTile>> PISTON_LAUNCHER_ARM_TILE = TILES.register(PISTON_LAUNCHER_ARM_NAME,
             () -> TileEntityType.Builder.create(PistonLauncherArmBlockTile::new, PISTON_LAUNCHER_ARM.get()).build(null));
@@ -426,7 +428,19 @@ public class Registry {
     public static final RegistryObject<Item> WALL_LANTERN_ITEM = ITEMS.register(WALL_LANTERN_NAME, () -> new BlockItem(WALL_LANTERN.get(),
             new Item.Properties().group(null)));
 
-
+    //bellows
+    public static final String BELLOWS_NAME = "bellows";
+    public static final RegistryObject<Block> BELLOWS = BLOCKS.register(BELLOWS_NAME, () -> new BellowsBlock(
+            AbstractBlock.Properties.create(Material.WOOD, MaterialColor.BROWN)
+                    .hardnessAndResistance(3f, 3f)
+                    .sound(SoundType.WOOD)
+                    .harvestTool(ToolType.AXE)
+                    .notSolid()
+    ));
+    public static final RegistryObject<TileEntityType<BellowsBlockTile>> BELLOWS_TILE = TILES.register(BELLOWS_NAME,
+            () -> TileEntityType.Builder.create(BellowsBlockTile::new, BELLOWS.get()).build(null));
+    public static final RegistryObject<Item> BELLOWS_ITEM = ITEMS.register(BELLOWS_NAME, () -> new BlockItem(BELLOWS.get(),
+            new Item.Properties().group(null)));
 
 
 }

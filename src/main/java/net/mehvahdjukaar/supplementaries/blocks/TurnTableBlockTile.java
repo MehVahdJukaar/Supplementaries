@@ -134,10 +134,18 @@ public class TurnTableBlockTile extends TileEntity implements ITickableTileEntit
                 }
                 // TODO:add sign post support
             }
+            //signs and banners
             else if (_bs.hasProperty(BlockStateProperties.ROTATION_0_15)){
                 if (mydir.getAxis() == Axis.Y) {
                     world.setBlockState(targetpos, _bs.rotate(rot), 3);
                     return true;
+                }
+            }
+            //sign posts
+            else if (_bs.getBlock() instanceof SignPostBlock){
+                if (mydir.getAxis() == Axis.Y) {
+                    return ((SignPostBlock) _bs.getBlock()).rotateSigns(world, targetpos, ccw ? 90 : -90);
+
                 }
             }
         } catch (Exception e) {

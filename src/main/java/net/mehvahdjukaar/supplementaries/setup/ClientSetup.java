@@ -64,6 +64,9 @@ public class ClientSetup {
         //wall lantern
         RenderTypeLookup.setRenderLayer(Registry.WALL_LANTERN.get(), RenderType.getCutout());
         ClientRegistry.bindTileEntityRenderer(Registry.WALL_LANTERN_TILE.get(), WallLanternBlockTileRenderer::new);
+        //bellows
+        RenderTypeLookup.setRenderLayer(Registry.BELLOWS.get(), RenderType.getCutout());
+        ClientRegistry.bindTileEntityRenderer(Registry.BELLOWS_TILE.get(), BellowsBlockTileRenderer::new);
 
     }
 

@@ -4,8 +4,10 @@ import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.IntegerProperty;
@@ -135,16 +137,16 @@ public class ClockBlock extends Block {
     }
 
     @Deprecated
-    public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
-        int time = (int) (worldIn.getDayTime() % 24000);
+    public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+        int time = (int) (world.getDayTime() % 24000);
         int power = MathHelper.clamp(MathHelper.floor(time / 1500D), 0, 15);
         int hour = MathHelper.clamp(MathHelper.floor(time / 1000D), 0, 24);
-        TileEntity te = worldIn.getTileEntity(pos);
+        TileEntity te = world.getTileEntity(pos);
         if(te instanceof ClockBlockTile){
             ((ClockBlockTile) te).setInitialRoll(hour);
 
         }
-        worldIn.setBlockState(pos, state.with(POWER, power).with(HOUR, hour), 2);
+        world.setBlockState(pos, state.with(POWER, power).with(HOUR, hour), 2);
     }
     //TODO: make this cleaner
     public static void updatePower(BlockState bs, World world, BlockPos pos) {

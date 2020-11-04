@@ -9,7 +9,6 @@ import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.INamedContainerProvider;
@@ -25,26 +24,50 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.RegistryKey;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.math.vector.Vector2f;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
 
 
 public class SignPostBlock extends Block {
+    protected static final VoxelShape SHAPE = Block.makeCuboidShape(5D, 0.0D, 5D, 11D, 16.0D, 11D);
     public static final EnumProperty<WoodType> WOOD_TYPE = CommonUtil.WOOD_TYPE; //null = rendered by te. other states hold all the wood types sign models
     public SignPostBlock(Properties properties) {
         super(properties);
         this.setDefaultState(this.stateContainer.getBaseState().with(WOOD_TYPE, WoodType.NONE));
+    }
+
+    public boolean rotateSigns(World world, BlockPos pos, float angle){
+        TileEntity te = world.getTileEntity(pos);
+        boolean success = false;
+        if (te instanceof SignPostBlockTile) {
+            SignPostBlockTile tile = (SignPostBlockTile) te;
+
+            if(tile.up){
+                tile.yawUp= MathHelper.wrapDegrees(tile.yawUp+angle);
+                success = true;
+            }
+            if(tile.down){
+                tile.yawDown= MathHelper.wrapDegrees(tile.yawDown+angle);
+                success = true;
+            }
+            if(success){
+                world.notifyBlockUpdate(pos, tile.getBlockState(), tile.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
+                tile.markDirty();
+            }
+        }
+
+        return success;
     }
 
     @Override
@@ -124,6 +147,7 @@ public class SignPostBlock extends Block {
         return ActionResultType.PASS;
     }
 
+    @Nullable
     private BlockPos getLodestonePos(World world, CompoundNBT cmp) {
         boolean flag = cmp.contains("LodestonePos");
         boolean flag1 = cmp.contains("LodestoneDimension");
@@ -132,16 +156,16 @@ public class SignPostBlock extends Block {
             Optional<RegistryKey<World>> optional = CompassItem.func_234667_a_(cmp);
 
             if ( optional.isPresent() && world.getDimensionKey() == optional.get() ) {
-                int aaa =1;
                 return NBTUtil.readBlockPos(cmp.getCompound("LodestonePos"));
             }
         }
         return null;
     }
 
+    @Nullable
     private BlockPos getWorldSpawnPos(World world) {
-        return new BlockPos(world.getWorldInfo().getSpawnX(),world.getWorldInfo().getSpawnY(),world.getWorldInfo().getSpawnZ());
-        //return world.getDimensionType().isNatural() ? world.func_239140_u_() : null;
+        return world.getDimensionType().isNatural() ? new BlockPos(world.getWorldInfo().getSpawnX(),
+                world.getWorldInfo().getSpawnY(),world.getWorldInfo().getSpawnZ()) : null;
     }
 
     @Override
@@ -151,7 +175,7 @@ public class SignPostBlock extends Block {
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
-        return VoxelShapes.create(0.625D, 0D, 0.625D, 0.375D, 1D, 0.375D);
+        return SHAPE;
     }
 
     @Override

@@ -47,6 +47,7 @@ public class HangingSignBlockTile extends LockableLootTileEntity implements ITic
     public float angle = 0;
     public float prevAngle = 0;
     public int counter = 800;
+    //TODO: add random offset here^
     //lower counter is used by hitting animation
     public final ITextComponent[] signText = new ITextComponent[]{new StringTextComponent(""), new StringTextComponent(""),
             new StringTextComponent(""), new StringTextComponent(""), new StringTextComponent("")};

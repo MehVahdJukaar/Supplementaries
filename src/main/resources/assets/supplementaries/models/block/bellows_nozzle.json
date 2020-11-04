@@ -1,0 +1,7 @@
+{
+  "parent": "supplementaries:custom/bellows_nozzle",
+  "textures": {
+    "particle": "supplementaries:blocks/notice_board_top",
+    "0": "supplementaries:blocks/notice_board_top"
+  }
+}

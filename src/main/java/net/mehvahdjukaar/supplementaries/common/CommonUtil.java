@@ -15,6 +15,7 @@ import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.properties.RedstoneSide;
+import net.minecraft.util.Direction;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3f;
@@ -32,6 +33,7 @@ public class CommonUtil{
     public static final IntegerProperty HOUR = IntegerProperty.create("hour", 0, 23);
     public static final IntegerProperty EXTENSION = IntegerProperty.create("extension", 0, 2);
     public static final BooleanProperty TILE = BooleanProperty.create("tile");
+    public static final IntegerProperty TILE_3 = IntegerProperty.create("tile_3",0,2);
     public static final BooleanProperty HAS_LAVA = BooleanProperty.create("has_lava");
     public static final BooleanProperty HAS_WATER = BooleanProperty.create("has_water");
     public static final BooleanProperty HAS_JAR = BooleanProperty.create("has_jar");
@@ -48,10 +50,12 @@ public class CommonUtil{
     public static final ResourceLocation XP_TEXTURE= new ResourceLocation(Supplementaries.MOD_ID,"blocks/xp_liquid");
     public static final ResourceLocation FAUCET_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID, "blocks/faucet_water");
     public static final ResourceLocation FISHIES_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID, "blocks/fishies");
+    public static final ResourceLocation BELLOWS_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID, "blocks/bellows");
 
 
     public static List<ResourceLocation> getTextures(){
-        return new ArrayList<>(Arrays.asList(MILK_TEXTURE,POTION_TEXTURE,HONEY_TEXTURE,DRAGON_BREATH_TEXTURE,XP_TEXTURE,FAUCET_TEXTURE,FISHIES_TEXTURE));
+        return new ArrayList<>(Arrays.asList(MILK_TEXTURE,POTION_TEXTURE,HONEY_TEXTURE,DRAGON_BREATH_TEXTURE,
+                XP_TEXTURE,FAUCET_TEXTURE,FISHIES_TEXTURE,BELLOWS_TEXTURE));
     }
 
     //fluids
@@ -177,10 +181,15 @@ public class CommonUtil{
 
     //renderer
 
-    //centered on x,z. aligned on y=0
     @OnlyIn(Dist.CLIENT)
     public static void addCube(IVertexBuilder builder, MatrixStack matrixStackIn, float w, float h, TextureAtlasSprite sprite, int combinedLightIn,
                                int color, float a, int combinedOverlayIn, boolean up, boolean down, boolean fakeshading, boolean flippedY) {
+        addCube(builder, matrixStackIn, w, h, sprite, combinedLightIn, color, a, combinedOverlayIn, up, down, false, flippedY, Direction.Axis.Y);
+    }
+        //centered on x,z. aligned on y=0
+    @OnlyIn(Dist.CLIENT)
+    public static void addCube(IVertexBuilder builder, MatrixStack matrixStackIn, float w, float h, TextureAtlasSprite sprite, int combinedLightIn,
+                               int color, float a, int combinedOverlayIn, boolean up, boolean down, boolean fakeshading, boolean flippedY, Direction.Axis axis) {
         int lu = combinedLightIn & '\uffff';
         int lv = combinedLightIn >> 16 & '\uffff'; // ok
         float atlasscaleU = sprite.getMaxU() - sprite.getMinU();
@@ -204,20 +213,36 @@ public class CommonUtil{
         r8 = r6 = r5 = r;
         g8 = g6 = g5 = g;
         b8 = b6 = b5 = b;
-
         if(fakeshading){
+            float s1 = 1, s2 = 1, s3 = 1;
+            switch (axis){
+                default:
+                case Y:
+                    s1 = 0.8f;
+                    s2 = 0.6f;
+                    s3 = 0.5f;
+                    break;
+                case X:
+                    s1 = 0.6f;
+                    s2 = 0.6f;
+                    s3 = 0.5f;
+                    break;
+
+            }
             // 80%: s,n
-            r8 *= 0.8f;
-            g8 *= 0.8f;
-            b8 *= 0.8f;
+            r8 *= s1;
+            g8 *= s1;
+            b8 *= s1;
             // 60%: e,w
-            r6 *= 0.6f;
-            g6 *= 0.6f;
-            b6 *= 0.6f;
+            r6 *= s2;
+            g6 *= s2;
+            b6 *= s2;
             // 50%: d
-            r5 *= 0.5f;
-            g5 *= 0.5f;
-            b5 *= 0.5f;
+            r5 *= s3;
+            g5 *= s3;
+            b5 *= s3;
+            //100%
+
         }
 
         float hw = w/2f;

@@ -1,8 +1,7 @@
 {
   "parent": "supplementaries:custom/bellows",
   "textures": {
-    "all": "supplementaries:blocks/notice_board_top",
-    "particle": "supplementaries:blocks/notice_board_top",
-    "missing": "supplementaries:blocks/notice_board_top"
+    "particle": "supplementaries:blocks/bellows",
+    "0": "supplementaries:blocks/bellows"
   }
 }
