@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.blocks;
 
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DirectionalBlock;
 import net.minecraft.entity.LivingEntity;
@@ -12,9 +13,14 @@ import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.tileentity.ShulkerBoxTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
@@ -29,6 +35,19 @@ public class BellowsBlock extends Block {
         super(properties);
         this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(POWERED, false).with(TILE, 0));
     }
+
+    @Override
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        TileEntity te = worldIn.getTileEntity(pos);
+        return te instanceof BellowsBlockTile ? VoxelShapes.create(((BellowsBlockTile)te).getBoundingBox(state)) : VoxelShapes.fullCube();
+
+    }
+
+    /*
+    @Override
+    public BlockRenderType getRenderType(BlockState state){
+        return state.get(TILE) == 0? BlockRenderType.INVISIBLE : super.getRenderType(state);
+    }*/
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {

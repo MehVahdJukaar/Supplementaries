@@ -1,0 +1,7 @@
+{
+  "parent": "supplementaries:custom/bellows",
+  "textures": {
+    "particle": "supplementaries:blocks/bellows",
+    "0": "supplementaries:blocks/bellows"
+  }
+}

@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.blocks;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.DirectionalBlock;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.LivingEntity;
@@ -22,6 +23,13 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 public class PistonLauncherBlock extends Block {
+    protected static final VoxelShape PISTON_BASE_EAST_AABB = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 12.0D, 16.0D, 16.0D);
+    protected static final VoxelShape PISTON_BASE_WEST_AABB = Block.makeCuboidShape(4.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
+    protected static final VoxelShape PISTON_BASE_SOUTH_AABB = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 12.0D);
+    protected static final VoxelShape PISTON_BASE_NORTH_AABB = Block.makeCuboidShape(0.0D, 0.0D, 4.0D, 16.0D, 16.0D, 16.0D);
+    protected static final VoxelShape PISTON_BASE_UP_AABB = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 12.0D, 16.0D);
+    protected static final VoxelShape PISTON_BASE_DOWN_AABB = Block.makeCuboidShape(0.0D, 4.0D, 0.0D, 16.0D, 16.0D, 16.0D);
+
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
     public static final BooleanProperty EXTENDED = BlockStateProperties.EXTENDED; // is base only?
     public PistonLauncherBlock(Properties properties){
@@ -31,7 +39,13 @@ public class PistonLauncherBlock extends Block {
 
     @Override
     public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
-        return true;
+        return state.get(EXTENDED);
+    }
+
+    @Override
+    //TODO: add this to other blocks
+    public boolean isTransparent(BlockState state) {
+        return state.get(EXTENDED);
     }
 
     @Override
@@ -53,46 +67,25 @@ public class PistonLauncherBlock extends Block {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
         if (state.get(EXTENDED)) {
-            switch (state.get(FACING)) {
-                case SOUTH :
-                default :
-                    return VoxelShapes.create(1D, 0D, 0.812D, 0D, 1D, 0D);
-                case NORTH :
-                    return VoxelShapes.create(0D, 0D, 0.188D, 1D, 1D, 1D);
-                case WEST :
-                    return VoxelShapes.create(0.188D, 0D, 1D, 1D, 1D, 0D);
-                case EAST :
-                    return VoxelShapes.create(0.812D, 0D, 0D, 0D, 1D, 1D);
-                case UP :
-                    return VoxelShapes.create(0D, 0.812D, 0D, 1D, 0D, 1D);
-                case DOWN :
-                    return VoxelShapes.create(0D, 0.188D, 1D, 1D, 1D, 0D);
+            switch((Direction)state.get(FACING)) {
+                case DOWN:
+                    return PISTON_BASE_DOWN_AABB;
+                case UP:
+                default:
+                    return PISTON_BASE_UP_AABB;
+                case NORTH:
+                    return PISTON_BASE_NORTH_AABB;
+                case SOUTH:
+                    return PISTON_BASE_SOUTH_AABB;
+                case WEST:
+                    return PISTON_BASE_WEST_AABB;
+                case EAST:
+                    return PISTON_BASE_EAST_AABB;
             }
         } else {
-            switch (state.get(FACING)) {
-                case SOUTH :
-                default :
-                    return VoxelShapes.or(VoxelShapes.create(1D, 0D, 0.812D, 0D, 1D, 0D), VoxelShapes.create(1D, 0D, 1D, 0D, 1D, 0.875D),
-                            VoxelShapes.create(0.9375D, 0.062D, 0.8125D, 0.0625D, 0.9375D, 0.875D));
-                case NORTH :
-                    return VoxelShapes.or(VoxelShapes.create(0D, 0D, 0.188D, 1D, 1D, 1D), VoxelShapes.create(0D, 0D, 0D, 1D, 1D, 0.125D),
-                            VoxelShapes.create(0.0625D, 0.062D, 0.1875D, 0.9375D, 0.9375D, 0.125D));
-                case WEST :
-                    return VoxelShapes.or(VoxelShapes.create(0.188D, 0D, 1D, 1D, 1D, 0D), VoxelShapes.create(0D, 0D, 1D, 0.125D, 1D, 0D),
-                            VoxelShapes.create(0.1875D, 0.062D, 0.9375D, 0.125D, 0.9375D, 0.0625D));
-                case EAST :
-                    return VoxelShapes.or(VoxelShapes.create(0.812D, 0D, 0D, 0D, 1D, 1D), VoxelShapes.create(1D, 0D, 0D, 0.875D, 1D, 1D),
-                            VoxelShapes.create(0.8125D, 0.062D, 0.0625D, 0.875D, 0.9375D, 0.9375D));
-                case UP :
-                    return VoxelShapes.or(VoxelShapes.create(0D, 0.812D, 0D, 1D, 0D, 1D), VoxelShapes.create(0D, 1D, 0D, 1D, 0.875D, 1D),
-                            VoxelShapes.create(0.0625D, 0.8125D, 0.062D, 0.9375D, 0.875D, 0.9375D));
-                case DOWN :
-                    return VoxelShapes.or(VoxelShapes.create(0D, 0.188D, 1D, 1D, 1D, 0D), VoxelShapes.create(0D, 0D, 1D, 1D, 0.125D, 0D),
-                            VoxelShapes.create(0.0625D, 0.1875D, 0.938D, 0.9375D, 0.125D, 0.0625D));
-            }
-            // return VoxelShapes.create(0D, 0D, 0D, 1D, 0.5D, 1D);
+            return VoxelShapes.fullCube();
         }
     }
 

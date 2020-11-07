@@ -47,10 +47,12 @@ public class BellowsBlockTileRenderer extends TileEntityRenderer<BellowsBlockTil
 
 
         matrixStackIn.push();
-        matrixStackIn.rotate(Vector3f.XP.rotationDegrees(180)) ;
+        matrixStackIn.translate(0, -1+(3/16d), 0);
+
+        //matrixStackIn.rotate(Vector3f.XP.rotationDegrees(180)) ;
 
         matrixStackIn.translate(-0.5, -0.5, -0.5);
-        matrixStackIn.translate(0, dh,0);
+        matrixStackIn.translate(0, -dh,0);
 
         blockRenderer.renderBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
         matrixStackIn.pop();

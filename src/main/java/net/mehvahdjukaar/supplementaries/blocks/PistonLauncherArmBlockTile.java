@@ -23,10 +23,10 @@ import java.util.List;
 import java.util.Random;
 
 public class PistonLauncherArmBlockTile extends TileEntity implements ITickableTileEntity {
-    private int age = 0;
+    public int age = 0;
     private double increment = 0;
-    private double offset = 0;
-    private double prevOffset = 0;
+    public double offset = 0;
+    public double prevOffset = 0;
     private int dx = 0;
     private int dy = 0;
     private int dz = 0;

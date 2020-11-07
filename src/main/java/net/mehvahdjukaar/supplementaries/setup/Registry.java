@@ -16,6 +16,8 @@ import net.minecraft.item.Items;
 import net.minecraft.particles.BasicParticleType;
 import net.minecraft.particles.ParticleType;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockReader;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.fml.RegistryObject;
@@ -66,7 +68,6 @@ public class Registry {
                     .harvestLevel(0)
                     .sound(SoundType.WOOD)
                     .harvestTool(ToolType.AXE)
-                    .notSolid()
     ));
     public static final RegistryObject<TileEntityType<ClockBlockTile>> CLOCK_BLOCK_TILE = TILES.register(CLOCK_BLOCK_NAME,
             () -> TileEntityType.Builder.create(ClockBlockTile::new, CLOCK_BLOCK.get()).build(null));
@@ -82,7 +83,6 @@ public class Registry {
                     .harvestLevel(1)
                     .setRequiresTool()
                     .harvestTool(ToolType.PICKAXE)
-                    .notSolid()
     ));
     public static final RegistryObject<TileEntityType<PedestalBlockTile>> PEDESTAL_TILE = TILES.register(PEDESTAL_NAME,
             () -> TileEntityType.Builder.create(PedestalBlockTile::new, PEDESTAL.get()).build(null));
@@ -113,7 +113,6 @@ public class Registry {
             AbstractBlock.Properties.create(Material.REDSTONE_LIGHT, MaterialColor.QUARTZ)
                     .hardnessAndResistance(0.3f, 0.3f)
                     .sound(SoundType.GLASS)
-                    .notSolid()
                     .setLightLevel((state) -> 15)
     ));
     public static final RegistryObject<Item> REDSTONE_ILLUMINATOR_ITEM = ITEMS.register(REDSTONE_ILLUMINATOR_NAME, () -> new BlockItem(REDSTONE_ILLUMINATOR.get(),
@@ -126,7 +125,7 @@ public class Registry {
                     .hardnessAndResistance(2.5f, 2.5f)
                     .sound(SoundType.WOOD)
                     .harvestTool(ToolType.AXE)
-                    .notSolid()
+
     ));
     public static final RegistryObject<TileEntityType<NoticeBoardBlockTile>> NOTICE_BOARD_TILE = TILES.register(NOTICE_BOARD_NAME,
             () -> TileEntityType.Builder.create(NoticeBoardBlockTile::new, NOTICE_BOARD.get()).build(null));
@@ -188,7 +187,6 @@ public class Registry {
                     .harvestTool(ToolType.PICKAXE)
                     .harvestLevel(0)
                     .setRequiresTool()
-                    .notSolid()
     ));
     public static final RegistryObject<TileEntityType<TurnTableBlockTile>> TURN_TABLE_TILE = TILES.register(TURN_TABLE_NAME,
             () -> TileEntityType.Builder.create(TurnTableBlockTile::new, TURN_TABLE.get()).build(null));
@@ -197,6 +195,9 @@ public class Registry {
             new Item.Properties().group(ItemGroup.REDSTONE)));
 
     //piston launcher base
+    static AbstractBlock.IPositionPredicate abstractblock$ipositionpredicate = (state, reader, pos) -> {
+        return !state.get(PistonBlock.EXTENDED);
+    };
 
     public static final String PISTON_LAUNCHER_NAME = "piston_launcher";
     public static final RegistryObject<Block> PISTON_LAUNCHER = BLOCKS.register(PISTON_LAUNCHER_NAME, () -> new PistonLauncherBlock(
@@ -206,7 +207,10 @@ public class Registry {
                     .sound(SoundType.METAL)
                     .harvestTool(ToolType.PICKAXE)
                     .setRequiresTool()
-                    .notSolid()
+                    .setOpaque((BlockState state, IBlockReader reader, BlockPos pos)->false)
+                    .setSuffocates(abstractblock$ipositionpredicate)
+                    .setBlocksVision(abstractblock$ipositionpredicate)
+
     ));
     public static final RegistryObject<Item> PISTON_LAUNCHER_ITEM = ITEMS.register(PISTON_LAUNCHER_NAME, () -> new BlockItem(PISTON_LAUNCHER.get(),
             new Item.Properties().group(ItemGroup.REDSTONE)));
@@ -218,8 +222,8 @@ public class Registry {
                     .harvestLevel(2)
                     .sound(SoundType.METAL)
                     .harvestTool(ToolType.PICKAXE)
-                    .notSolid()
                     .noDrops()
+                    .jumpFactor(1.18f)
     ));
     public static final String PISTON_LAUNCHER_ARM_NAME = "piston_launcher_arm";
     public static final RegistryObject<Block> PISTON_LAUNCHER_ARM = BLOCKS.register(PISTON_LAUNCHER_ARM_NAME, () -> new PistonLauncherArmBlock(
@@ -422,6 +426,8 @@ public class Registry {
                     .setRequiresTool()
                     .harvestLevel(1)
                     .setLightLevel((state) -> 15)
+                    .notSolid()
+                    .noDrops()
     ));
     public static final RegistryObject<TileEntityType<WallLanternBlockTile>> WALL_LANTERN_TILE = TILES.register(WALL_LANTERN_NAME,
             () -> TileEntityType.Builder.create(WallLanternBlockTile::new, WALL_LANTERN.get()).build(null));
@@ -440,7 +446,7 @@ public class Registry {
     public static final RegistryObject<TileEntityType<BellowsBlockTile>> BELLOWS_TILE = TILES.register(BELLOWS_NAME,
             () -> TileEntityType.Builder.create(BellowsBlockTile::new, BELLOWS.get()).build(null));
     public static final RegistryObject<Item> BELLOWS_ITEM = ITEMS.register(BELLOWS_NAME, () -> new BlockItem(BELLOWS.get(),
-            new Item.Properties().group(null)));
+            new Item.Properties().group(ItemGroup.REDSTONE)));
 
 
 }

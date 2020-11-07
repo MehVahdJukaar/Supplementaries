@@ -68,7 +68,7 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
 
                 matrixStackIn.translate(0.5, 0.5, 0.5);
                 matrixStackIn.rotate(Vector3f.YP.rotationDegrees(tile.getYaw()+180));
-                matrixStackIn.translate(0, 0, -0.5 - 0.005);
+                matrixStackIn.translate(0, 0, -0.5 - 0.008);
                 matrixStackIn.scale(0.0078125F, 0.0078125F, 0.0078125F);
                 matrixStackIn.translate(-64.0D, -64.0D, 0.0D);
 
@@ -96,7 +96,7 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
 
             matrixStackIn.translate(0.5, 0.5, 0.5);
             matrixStackIn.rotate(Vector3f.YP.rotationDegrees(tile.getYaw()));
-            matrixStackIn.translate(0, 0.5, 0.5005);
+            matrixStackIn.translate(0, 0.5, 0.5 + 0.008);
 
             int i = tile.getTextColor().getTextColor();
             int r = (int) ((double) NativeImage.getRed(i) * d0);

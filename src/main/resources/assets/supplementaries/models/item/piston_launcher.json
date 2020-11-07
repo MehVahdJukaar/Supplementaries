@@ -1,5 +1,5 @@
 {
-  "parent": "supplementaries:block/piston_launcher",
+  "parent": "supplementaries:block/spring_launcher",
   "display": {
         "gui": {
             "rotation": [ 120, 0, 135 ],

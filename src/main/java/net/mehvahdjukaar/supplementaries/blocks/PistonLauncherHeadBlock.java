@@ -2,11 +2,11 @@ package net.mehvahdjukaar.supplementaries.blocks;
 
 
 import net.mehvahdjukaar.supplementaries.setup.Registry;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.DirectionalBlock;
+import net.minecraft.block.*;
 import net.minecraft.block.material.PushReaction;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.item.FallingBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
@@ -14,6 +14,8 @@ import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.state.properties.PistonType;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
@@ -22,13 +24,37 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
+import java.util.Arrays;
+
 
 public class PistonLauncherHeadBlock extends DirectionalBlock {
+    protected static final VoxelShape PISTON_EXTENSION_EAST_AABB = Block.makeCuboidShape(12.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
+    protected static final VoxelShape PISTON_EXTENSION_WEST_AABB = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 4.0D, 16.0D, 16.0D);
+    protected static final VoxelShape PISTON_EXTENSION_SOUTH_AABB = Block.makeCuboidShape(0.0D, 0.0D, 12.0D, 16.0D, 16.0D, 16.0D);
+    protected static final VoxelShape PISTON_EXTENSION_NORTH_AABB = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 4.0D);
+    protected static final VoxelShape PISTON_EXTENSION_UP_AABB = Block.makeCuboidShape(0.0D, 12.0D, 0.0D, 16.0D, 16.0D, 16.0D);
+    protected static final VoxelShape PISTON_EXTENSION_DOWN_AABB = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 4.0D, 16.0D);
+    protected static final VoxelShape UP_ARM_AABB = Block.makeCuboidShape(1.0D, -4.0D, 1.0D, 15.0D, 12.0D, 15.0D);
+    protected static final VoxelShape DOWN_ARM_AABB = Block.makeCuboidShape(1.0D, 4.0D, 1.0D, 15.0D, 20.0D, 15.0D);
+    protected static final VoxelShape SOUTH_ARM_AABB = Block.makeCuboidShape(1.0D, 1.0D, -4.0D, 15.0D, 15.0D, 12.0D);
+    protected static final VoxelShape NORTH_ARM_AABB = Block.makeCuboidShape(1.0D, 1.0D, 4.0D, 15.0D, 15.0D, 20.0D);
+    protected static final VoxelShape EAST_ARM_AABB = Block.makeCuboidShape(-4.0D, 1.0D, 1.0D, 12.0D, 15.0D, 15.0D);
+    protected static final VoxelShape WEST_ARM_AABB = Block.makeCuboidShape(4.0D, 1.0D, 1.0D, 20.0D, 15.0D, 15.0D);
+    protected static final VoxelShape SHORT_UP_ARM_AABB = Block.makeCuboidShape(1.0D, 0.0D, 1.0D, 15.0D, 12.0D, 15.0D);
+    protected static final VoxelShape SHORT_DOWN_ARM_AABB = Block.makeCuboidShape(1.0D, 4.0D, 1.0D, 15.0D, 16.0D, 15.0D);
+    protected static final VoxelShape SHORT_SOUTH_ARM_AABB = Block.makeCuboidShape(1.0D, 1.0D, 0.0D, 15.0D, 15.0D, 12.0D);
+    protected static final VoxelShape SHORT_NORTH_ARM_AABB = Block.makeCuboidShape(1.0D, 1.0D, 4.0D, 15.0D, 15.0D, 16.0D);
+    protected static final VoxelShape SHORT_EAST_ARM_AABB = Block.makeCuboidShape(0.0D, 1.0D, 1.0D, 12.0D, 15.0D, 15.0D);
+    protected static final VoxelShape SHORT_WEST_ARM_AABB = Block.makeCuboidShape(4.0D, 1.0D, 1.0D, 16.0D, 15.0D, 15.0D);
+    private static final VoxelShape[] EXTENDED_SHAPES = getShapesForExtension(true);
+    private static final VoxelShape[] UNEXTENDED_SHAPES = getShapesForExtension(false);
+
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
     public static final BooleanProperty SHORT = BlockStateProperties.SHORT; // is not small? (only used for
     // tile entity, leave true
@@ -37,34 +63,86 @@ public class PistonLauncherHeadBlock extends DirectionalBlock {
         this.setDefaultState(this.stateContainer.getBaseState().with(SHORT, false).with(FACING, Direction.NORTH));
     }
 
-    @Override
-    public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
-        return true;
+    private static VoxelShape[] getShapesForExtension(boolean extended) {
+        return Arrays.stream(Direction.values()).map((direction) -> {
+            return getShapeForDirection(direction, extended);
+        }).toArray((id) -> {
+            return new VoxelShape[id];
+        });
+    }
+
+    private static VoxelShape getShapeForDirection(Direction direction, boolean shortArm) {
+        switch(direction) {
+            case DOWN:
+            default:
+                return VoxelShapes.or(PISTON_EXTENSION_DOWN_AABB, shortArm ? SHORT_DOWN_ARM_AABB : DOWN_ARM_AABB);
+            case UP:
+                return VoxelShapes.or(PISTON_EXTENSION_UP_AABB, shortArm ? SHORT_UP_ARM_AABB : UP_ARM_AABB);
+            case NORTH:
+                return VoxelShapes.or(PISTON_EXTENSION_NORTH_AABB, shortArm ? SHORT_NORTH_ARM_AABB : NORTH_ARM_AABB);
+            case SOUTH:
+                return VoxelShapes.or(PISTON_EXTENSION_SOUTH_AABB, shortArm ? SHORT_SOUTH_ARM_AABB : SOUTH_ARM_AABB);
+            case WEST:
+                return VoxelShapes.or(PISTON_EXTENSION_WEST_AABB, shortArm ? SHORT_WEST_ARM_AABB : WEST_ARM_AABB);
+            case EAST:
+                return VoxelShapes.or(PISTON_EXTENSION_EAST_AABB, shortArm ? SHORT_EAST_ARM_AABB : EAST_ARM_AABB);
+        }
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
-        switch (state.get(FACING)) {
-            default :
-            case NORTH :
-                return VoxelShapes.or(VoxelShapes.create(0.9375D, 0.0625D, 1.1875D, 0.0625D, 0.938D, 0.125D),
-                        VoxelShapes.create(0D, 0D, 0D, 1D, 1D, 0.125D));
-            case SOUTH :
-                return VoxelShapes.or(VoxelShapes.create(0.0625D, 0.0625D, -0.1875D, 0.938D, 0.938D, 0.875D),
-                        VoxelShapes.create(1D, 0D, 1D, 0D, 1D, 0.875D));
-            case EAST :
-                return VoxelShapes.or(VoxelShapes.create(-0.1875D, 0.0625D, 0.9375D, 0.875D, 0.938D, 0.0625D),
-                        VoxelShapes.create(1D, 0D, 0D, 0.875D, 1D, 1D));
-            case WEST :
-                return VoxelShapes.or(VoxelShapes.create(1.1875D, 0.0625D, 0.0625D, 0.125D, 0.938D, 0.938D),
-                        VoxelShapes.create(0D, 0D, 1D, 0.125D, 1D, 0D));
-            case DOWN :
-                return VoxelShapes.or(VoxelShapes.create(0.0625D, 1.1875D, 0.0625D, 0.938D, 0.125D, 0.938D),
-                        VoxelShapes.create(0D, 0D, 1D, 1D, 0.125D, 0D));
-            case UP :
-                return VoxelShapes.or(VoxelShapes.create(0.0625D, -0.1875D, 0.9375D, 0.938D, 0.875D, 0.0625D),
-                        VoxelShapes.create(0D, 1D, 0D, 1D, 0.875D, 1D));
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        return (state.get(SHORT) ? EXTENDED_SHAPES : UNEXTENDED_SHAPES)[state.get(FACING).ordinal()];
+    }
+
+
+    public void onFallenUpon(World worldIn, BlockPos pos, Entity entityIn, float fallDistance) {
+        BlockState state = worldIn.getBlockState(pos);
+        if (entityIn.isSuppressingBounce() || state.get(FACING)!=Direction.UP) {
+            super.onFallenUpon(worldIn, pos, entityIn, fallDistance);
+        } else {
+            entityIn.onLivingFall(fallDistance, 0.0F);
+            //TODO: add falling block entity support
+            if((entityIn instanceof LivingEntity) && !worldIn.isRemote && fallDistance>5f){
+                worldIn.setBlockState(pos, Registry.PISTON_LAUNCHER_ARM.get().getDefaultState()
+                        .with(PistonLauncherArmBlock.EXTENDING, false).with(FACING, state.get(FACING)), 3);
+                TileEntity te = worldIn.getTileEntity(pos);
+                if(te instanceof PistonLauncherArmBlockTile){
+                    PistonLauncherArmBlockTile pistonarm = (PistonLauncherArmBlockTile) te;
+                    pistonarm.age = 1;
+                    pistonarm.offset = -0.5;
+                }
+            }
+            //this.bounceEntity(entityIn);
         }
+
+    }
+
+    /**
+     * Called when an Entity lands on this Block. This method *must* update motionY because the entity will not do that
+     * on its own
+     */
+    /*
+    public void onLanded(IBlockReader worldIn, Entity entityIn) {
+        if (entityIn.isSuppressingBounce()) {
+            super.onLanded(worldIn, entityIn);
+        } else {
+            this.bounceEntity(entityIn);
+        }
+
+    }*/
+
+    private void bounceEntity(Entity entity) {
+        Vector3d vector3d = entity.getMotion();
+        if (vector3d.y < 0.0D) {
+            double d0 = entity instanceof LivingEntity ? 1.0D : 0.8D;
+            entity.setMotion(vector3d.x, -vector3d.y * d0, vector3d.z);
+        }
+
+    }
+
+    @Override
+    public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
+        return true;
     }
 
     @Override

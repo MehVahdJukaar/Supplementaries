@@ -158,16 +158,16 @@ public class ClockBlock extends Block {
             if (bs.get(HOUR) != hour){
                 ResourceLocation res;
                 if (hour % 2 == 0) {
-                    res = new ResourceLocation("moddymcmodface:tick_1");
+                    res = CommonUtil.TICK_1;
                 } else {
-                    res = new ResourceLocation("moddymcmodface:tick_2");
+                    res = CommonUtil.TICK_2;
                 }
 
                 world.playSound(null, pos, ForgeRegistries.SOUND_EVENTS.getValue(res),
                         SoundCategory.BLOCKS, (float) .3, 1.2f);
 
             }
-            world.setBlockState(pos, bs.with(POWER, power).with(HOUR, hour), 2);
+            world.setBlockState(pos, bs.with(POWER, power).with(HOUR, hour), 3);
         }
     }
 }

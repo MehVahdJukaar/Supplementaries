@@ -1,37 +1,34 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
-import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.blocks.WallLanternBlockTile;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.LanternBlock;
-import net.minecraft.block.SoundType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.*;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.AbstractFireBlock;
+import net.minecraft.block.FireBlock;
+import net.minecraftforge.common.extensions.IForgeBlock;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+
+import java.lang.reflect.Method;
 
 public class ModSetup {
 
-    public static void init(final FMLClientSetupEvent event){
+    public static void init(final FMLClientSetupEvent event) {
 
         Dispenser.registerBehaviors();
 
     }
 
+    public static void reflectionStuff(){
+
+
+        Method[] methods = FireBlock.class.getMethods();
+        // get the name of every method present in the list
+        for (Method method : methods) {
+            String MethodName = method.getName();
+            System.out.println("Name of the method: "
+                    + MethodName);
+        }
+    }
 
 
 

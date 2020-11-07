@@ -18,6 +18,8 @@ import net.minecraft.state.properties.RedstoneSide;
 import net.minecraft.util.Direction;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -40,6 +42,12 @@ public class CommonUtil{
     public static final EnumProperty<WoodType> WOOD_TYPE = EnumProperty.create("wood_type", WoodType.class);
 
 
+    //sounds
+    //TODO: add alot more
+    public static final ResourceLocation TICK_1 = new ResourceLocation("supplementaries:tick_1");
+    public static final ResourceLocation TICK_2 = new ResourceLocation(Supplementaries.MOD_ID,"tick_2");
+
+
     //textures
     public static final ResourceLocation WATER_TEXTURE= new ResourceLocation("minecraft:block/water_still");
     public static final ResourceLocation LAVA_TEXTURE= new ResourceLocation("minecraft:block/lava_still");
@@ -51,6 +59,8 @@ public class CommonUtil{
     public static final ResourceLocation FAUCET_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID, "blocks/faucet_water");
     public static final ResourceLocation FISHIES_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID, "blocks/fishies");
     public static final ResourceLocation BELLOWS_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID, "blocks/bellows");
+
+
 
 
     public static List<ResourceLocation> getTextures(){
@@ -177,19 +187,40 @@ public class CommonUtil{
         }
     }
 
-
+    //bounding box
+    static public AxisAlignedBB getDirectionBB(BlockPos pos, Direction facing, int offset) {
+        BlockPos endPos = pos.offset(facing, offset);
+        switch (facing){
+            default:
+            case NORTH:
+                endPos = endPos.add(1, 1, 0);
+                break;
+            case SOUTH:
+                endPos = endPos.add(1, 1, 1);
+                break;
+            case WEST:
+                endPos = endPos.add(0, 1, 1);
+                break;
+            case EAST:
+                endPos = endPos.add(1, 1, 1);
+                break;
+            case UP:
+                endPos = endPos.add(1, 1, 1);
+                break;
+            case DOWN:
+                endPos = endPos.add(1, 0, 1);
+                break;
+        }
+        return new AxisAlignedBB(pos, endPos);
+    }
 
     //renderer
 
-    @OnlyIn(Dist.CLIENT)
-    public static void addCube(IVertexBuilder builder, MatrixStack matrixStackIn, float w, float h, TextureAtlasSprite sprite, int combinedLightIn,
-                               int color, float a, int combinedOverlayIn, boolean up, boolean down, boolean fakeshading, boolean flippedY) {
-        addCube(builder, matrixStackIn, w, h, sprite, combinedLightIn, color, a, combinedOverlayIn, up, down, false, flippedY, Direction.Axis.Y);
-    }
+
         //centered on x,z. aligned on y=0
     @OnlyIn(Dist.CLIENT)
     public static void addCube(IVertexBuilder builder, MatrixStack matrixStackIn, float w, float h, TextureAtlasSprite sprite, int combinedLightIn,
-                               int color, float a, int combinedOverlayIn, boolean up, boolean down, boolean fakeshading, boolean flippedY, Direction.Axis axis) {
+                               int color, float a, int combinedOverlayIn, boolean up, boolean down, boolean fakeshading, boolean flippedY) {
         int lu = combinedLightIn & '\uffff';
         int lv = combinedLightIn >> 16 & '\uffff'; // ok
         float atlasscaleU = sprite.getMaxU() - sprite.getMinU();
@@ -214,21 +245,7 @@ public class CommonUtil{
         g8 = g6 = g5 = g;
         b8 = b6 = b5 = b;
         if(fakeshading){
-            float s1 = 1, s2 = 1, s3 = 1;
-            switch (axis){
-                default:
-                case Y:
-                    s1 = 0.8f;
-                    s2 = 0.6f;
-                    s3 = 0.5f;
-                    break;
-                case X:
-                    s1 = 0.6f;
-                    s2 = 0.6f;
-                    s3 = 0.5f;
-                    break;
-
-            }
+            float s1 = 0.8f, s2 = 0.6f, s3 = 0.5f;
             // 80%: s,n
             r8 *= s1;
             g8 *= s1;

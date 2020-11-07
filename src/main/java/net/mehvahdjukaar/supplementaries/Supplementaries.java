@@ -52,16 +52,7 @@ public class Supplementaries{
 
     }
 
-    //server & client
-    private void modSetup(final FMLCommonSetupEvent event)
-    {
-        // some preinit code
-    }
 
-    //client only
-    private void c1lientSetup(final FMLClientSetupEvent event) {
-        // do something that can only be done on the client
-    }
 
 
     //I should probably mode this outta here
