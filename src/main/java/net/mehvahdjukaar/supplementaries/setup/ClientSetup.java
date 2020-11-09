@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.blocks.WallLanternBlockTile;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.gui.NoticeBoardGui;
 import net.mehvahdjukaar.supplementaries.particles.FireflyGlowParticle;
@@ -13,17 +12,13 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 import java.util.List;
@@ -71,6 +66,10 @@ public class ClientSetup {
         //bellows
         RenderTypeLookup.setRenderLayer(Registry.BELLOWS.get(), RenderType.getCutout());
         ClientRegistry.bindTileEntityRenderer(Registry.BELLOWS_TILE.get(), BellowsBlockTileRenderer::new);
+        //laser
+        ClientRegistry.bindTileEntityRenderer(Registry.LASER_BLOCK_TILE.get(), LaserBlockTileRenderer::new);
+
+
 
     }
 

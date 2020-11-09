@@ -112,6 +112,7 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
         this.prevHeight = this.height;
 
         if(powered){
+            this.counter++;
             //slope of animation. for particles and pusing entities
             float j = MathHelper.sin((float) this.counter / SPEED);
 
@@ -123,7 +124,7 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
 
             final float dh = 1 / 16f;//0.09375f;
             this.height = dh * MathHelper.cos((float) this.counter / SPEED) - dh;
-            this.counter++;
+
 
             Direction facing = this.getDirection();
 

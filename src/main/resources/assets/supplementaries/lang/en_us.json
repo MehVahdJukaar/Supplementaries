@@ -27,7 +27,7 @@
   "block.supplementaries.pedestal": "Pedestal",
   "block.supplementaries.texture_loader": "Texture Loader",
   "item.supplementaries.firefly": "Firefly Spawn Egg",
-  "block.supplementaries.laser": "Laser",
+  "block.supplementaries.laser_block": "Laser Block",
   "block.supplementaries.turn_table": "Turn Table",
   "block.supplementaries.redstone_illuminator": "Redstone Illuminator",
   "block.supplementaries.speaker_block": "Speaker Block",

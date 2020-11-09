@@ -1,7 +1,9 @@
 package net.mehvahdjukaar.supplementaries;
 
+import net.mehvahdjukaar.supplementaries.blocks.WallLanternBlock;
 import net.mehvahdjukaar.supplementaries.blocks.WallLanternBlockTile;
 import net.mehvahdjukaar.supplementaries.network.Networking;
+import net.mehvahdjukaar.supplementaries.network.SendSpeakerBlockMessagePacket;
 import net.mehvahdjukaar.supplementaries.setup.ClientSetup;
 import net.mehvahdjukaar.supplementaries.setup.Dispenser;
 import net.mehvahdjukaar.supplementaries.setup.ModSetup;
@@ -9,11 +11,9 @@ import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
+import net.minecraft.server.management.PlayerList;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
@@ -28,6 +28,8 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.network.NetworkDirection;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -67,7 +69,9 @@ public class Supplementaries{
 
         ItemStack stack = player.getHeldItem(hand);
         Item i = stack.getItem();
-        if(i instanceof BlockItem && ((BlockItem) i).getBlock() instanceof LanternBlock){
+
+        if(i instanceof BlockItem && (((BlockItem) i).getBlock() instanceof LanternBlock || ((BlockItem) i).getBlock().getRegistryName().getNamespace().equals("skinnedlanterns"))){
+
             Direction dir = event.getFace();
 
             if(dir != Direction.UP && dir != Direction.DOWN){
@@ -83,11 +87,16 @@ public class Supplementaries{
                 ActionResultType result = ((BlockItem)item).tryPlace(ctx);
 
                 if(result.isSuccessOrConsume()) {
-                    if (player.isCreative()) stack.grow(1);
 
                     BlockState s = ((BlockItem) i).getBlock().getDefaultState();
+                    BlockPos placedPos = ctx.getPos();
+                    //update light level
+                    world.setBlockState(placedPos, world.getBlockState(placedPos)
+                            .with(WallLanternBlock.LIGHT_LEVEL, s.getLightValue()),4|16);
 
-                    TileEntity te = world.getTileEntity(ctx.getPos());
+
+
+                    TileEntity te = world.getTileEntity(placedPos);
                     if (te instanceof WallLanternBlockTile) {
                         ((WallLanternBlockTile) te).lanternBlock = s;
                     }

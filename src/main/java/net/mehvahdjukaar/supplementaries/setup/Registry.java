@@ -12,7 +12,6 @@ import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
-import net.minecraft.item.Items;
 import net.minecraft.particles.BasicParticleType;
 import net.minecraft.particles.ParticleType;
 import net.minecraft.tileentity.TileEntityType;
@@ -55,7 +54,6 @@ public class Registry {
                     .harvestLevel(1)
                     .setRequiresTool()
                     .harvestTool(ToolType.PICKAXE)
-                    .notSolid()
     ));
     public static final RegistryObject<Item> PLANTER_ITEM = ITEMS.register(PLANTER_NAME, () -> new BlockItem(PLANTER.get(),
             new Item.Properties().group(ItemGroup.DECORATIONS)));
@@ -447,6 +445,20 @@ public class Registry {
             () -> TileEntityType.Builder.create(BellowsBlockTile::new, BELLOWS.get()).build(null));
     public static final RegistryObject<Item> BELLOWS_ITEM = ITEMS.register(BELLOWS_NAME, () -> new BlockItem(BELLOWS.get(),
             new Item.Properties().group(ItemGroup.REDSTONE)));
+
+    //laser
+    public static final String LASER_NAME = "laser_block";
+    public static final RegistryObject<Block> LASER_BLOCK = BLOCKS.register(LASER_NAME, () -> new LaserBlock(
+            AbstractBlock.Properties.create(Material.ROCK, MaterialColor.STONE)
+                    .hardnessAndResistance(3.5f, 3.5f)
+                    .sound(SoundType.STONE)
+                    .harvestTool(ToolType.AXE)
+    ));
+    public static final RegistryObject<TileEntityType<LaserBlockTile>> LASER_BLOCK_TILE = TILES.register(LASER_NAME,
+            () -> TileEntityType.Builder.create(LaserBlockTile::new, LASER_BLOCK.get()).build(null));
+    public static final RegistryObject<Item> LASER_BLOCK_ITEM = ITEMS.register(LASER_NAME, () -> new BlockItem(LASER_BLOCK.get(),
+            new Item.Properties().group(null)));
+
 
 
 }

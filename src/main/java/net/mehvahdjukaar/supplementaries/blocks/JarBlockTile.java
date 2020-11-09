@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.blocks;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil.JarContentType;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.ConcretePowderBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -126,6 +127,11 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
                 return true;
             }
         }
+        // can I insert this item?
+        else if (this.isItemValidForSlot(0, handstack)) {
+            this.handleAddItem(handstack, player, hand);
+            return true;
+        }
         // is hand item bottle?
         else if (isbottle) {
             // can content be extracted with bottle
@@ -161,11 +167,6 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
                 }
             }
             return false;
-        }
-        // can I insert this item?
-        else if (this.isItemValidForSlot(0, handstack)) {
-            this.handleAddItem(handstack, player, hand);
-            return true;
         }
         return false;
     }
@@ -243,7 +244,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
             NonNullList<ItemStack> stacks = NonNullList.withSize(1, itemstack);
             this.setItems(stacks);
         } else {
-            this.getStackInSlot(0).grow(Math.min(amount, this.getInventoryStackLimit() - itemstack.getCount()));
+            this.getStackInSlot(0).grow(Math.min(amount, this.getInventoryStackLimit() - amount));
         }
     }
 

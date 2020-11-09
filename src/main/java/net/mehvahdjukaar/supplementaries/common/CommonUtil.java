@@ -40,6 +40,9 @@ public class CommonUtil{
     public static final BooleanProperty HAS_WATER = BooleanProperty.create("has_water");
     public static final BooleanProperty HAS_JAR = BooleanProperty.create("has_jar");
     public static final EnumProperty<WoodType> WOOD_TYPE = EnumProperty.create("wood_type", WoodType.class);
+    // it's detecting incoming laser and its distance
+    public static final IntegerProperty RECEIVING = IntegerProperty.create("laser_receiving", 0, 15);
+    public static final IntegerProperty LIGHT_LEVEL_0_15 = IntegerProperty.create("light_level", 0, 15);
 
 
     //sounds
@@ -59,13 +62,15 @@ public class CommonUtil{
     public static final ResourceLocation FAUCET_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID, "blocks/faucet_water");
     public static final ResourceLocation FISHIES_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID, "blocks/fishies");
     public static final ResourceLocation BELLOWS_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID, "blocks/bellows");
+    public static final ResourceLocation LASER_BEAM_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID, "blocks/laser_beam");
+    public static final ResourceLocation LASER_BEAM_END_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID, "blocks/laser_beam_end");
 
 
 
 
     public static List<ResourceLocation> getTextures(){
         return new ArrayList<>(Arrays.asList(MILK_TEXTURE,POTION_TEXTURE,HONEY_TEXTURE,DRAGON_BREATH_TEXTURE,
-                XP_TEXTURE,FAUCET_TEXTURE,FISHIES_TEXTURE,BELLOWS_TEXTURE));
+                XP_TEXTURE,FAUCET_TEXTURE,FISHIES_TEXTURE,BELLOWS_TEXTURE,LASER_BEAM_TEXTURE,LASER_BEAM_END_TEXTURE));
     }
 
     //fluids

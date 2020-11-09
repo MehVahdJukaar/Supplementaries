@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.blocks;
 
+import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -9,6 +10,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.DirectionProperty;
+import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -28,9 +30,10 @@ import net.minecraft.world.World;
 
 public class WallLanternBlock extends Block {
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
+    public static final IntegerProperty LIGHT_LEVEL = CommonUtil.LIGHT_LEVEL_0_15;
     public WallLanternBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH));
+        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(LIGHT_LEVEL, 15));
     }
 
     @Override
@@ -41,7 +44,7 @@ public class WallLanternBlock extends Block {
             return ((WallLanternBlockTile) te).lanternBlock.getLightValue();
         }*/
         //may cause lag
-        return 15;
+        return state.get(LIGHT_LEVEL);
     }
 
 
@@ -103,7 +106,7 @@ public class WallLanternBlock extends Block {
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
+        builder.add(FACING, LIGHT_LEVEL);
     }
 
     public BlockState rotate(BlockState state, Rotation rot) {

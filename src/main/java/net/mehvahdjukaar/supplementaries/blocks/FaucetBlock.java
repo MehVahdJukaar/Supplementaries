@@ -20,10 +20,13 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
+import java.lang.reflect.Field;
 import java.util.Random;
 
 public class FaucetBlock extends Block {
@@ -102,7 +105,8 @@ public class FaucetBlock extends Block {
                 && backblock.getBlock().getBeaconColorMultiplier(backblock, world, backpos, backpos) != null);
         boolean iswater = (world.getFluidState(backpos).isTagged(FluidTags.WATER)
                 || ((backblock.getBlock() instanceof CauldronBlock) && backblock.getComparatorInputOverride(world, backpos) > 0));
-        boolean hasjar = world.getBlockState(pos.down()).getBlock() instanceof JarBlock;
+        BlockState downstate = world.getBlockState(pos.down());
+        boolean hasjar = downstate.getBlock() instanceof JarBlock;
         boolean haswater = ishoney || iswater || isjarliquid;
         if (ispowered != state.get(POWERED) || haswater != state.get(HAS_WATER) || hasjar != state.get(HAS_JAR) || toggle) {
             world.setBlockState(pos,
@@ -125,6 +129,20 @@ public class FaucetBlock extends Block {
                 ((FaucetBlockTile) tileentity).watercolor = newcolor;
             }
         }
+
+        //handles concrete
+        System.out.println("a");
+        if(!hasjar && haswater && (state.get(ENABLED)^toggle^ispowered) && downstate.getBlock() instanceof  ConcretePowderBlock){
+            try {
+                //field_200294_a ->solidifiedState
+                Field f = ObfuscationReflectionHelper.findField(ConcretePowderBlock.class,"field_200294_a");
+                f.setAccessible(true);
+                world.setBlockState(pos.down(), (BlockState) f.get(downstate.getBlock()), 2|16);
+            } catch (Exception e) {}
+
+        }
+
+
     }
 
     public boolean isOpen(BlockState state) {

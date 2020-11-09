@@ -59,11 +59,6 @@ public class PlanterBlock extends Block {
     }
 
     @Override
-    public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
-        return true;
-    }
-
-    @Override
     public boolean isFertile(BlockState state, IBlockReader world, BlockPos pos) {
         return true;
     }
