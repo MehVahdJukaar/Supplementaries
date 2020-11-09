@@ -65,6 +65,7 @@ public class UpdateServerHangingSignPacket {
                     sign.setText(2, message.t2);
                     sign.setText(3, message.t3);
                     sign.setText(4, message.t4);
+                    tileentity.markDirty();
                 }
             }
         });

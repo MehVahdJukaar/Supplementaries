@@ -28,6 +28,7 @@ import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
 import java.util.function.Function;
@@ -53,6 +54,12 @@ public class SignPostBlockTile extends TileEntity {
 
     public SignPostBlockTile() {
         super(Registry.SIGN_POST_TILE.get());
+    }
+
+    @Override
+    public void markDirty() {
+        this.world.notifyBlockUpdate(this.pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
+        super.markDirty();
     }
 
     @Override
@@ -192,7 +199,6 @@ public class SignPostBlockTile extends TileEntity {
         if (newColor != this.getTextColor()) {
             this.textColor = newColor;
             this.markDirty();
-            this.world.notifyBlockUpdate(this.getPos(), this.getBlockState(),this.getBlockState(), 3);
             return true;
         } else {
             return false;

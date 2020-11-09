@@ -44,6 +44,7 @@ public class UpdateServerSignPostPacket {
                     SignPostBlockTile sign = (SignPostBlockTile) tileentity;
                     sign.setText(0, message.t0);
                     sign.setText(1, message.t1);
+                    tileentity.markDirty();
                 }
             }
         });

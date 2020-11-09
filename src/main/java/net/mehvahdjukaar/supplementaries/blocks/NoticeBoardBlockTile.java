@@ -217,7 +217,7 @@ public class NoticeBoardBlockTile extends LockableLootTileEntity implements ISid
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return (stack.getItem() == Items.WRITTEN_BOOK || stack.getItem() == Items.WRITABLE_BOOK || stack.getItem() instanceof FilledMapItem);
+        return (this.isEmpty()&&(stack.getItem() == Items.WRITTEN_BOOK || stack.getItem() == Items.WRITABLE_BOOK || stack.getItem() instanceof FilledMapItem));
     }
 
     @Override

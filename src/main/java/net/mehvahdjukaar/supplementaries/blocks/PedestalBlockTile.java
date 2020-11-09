@@ -151,7 +151,7 @@ public class PedestalBlockTile extends LockableLootTileEntity implements ISidedI
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return true;
+        return this.isEmpty();
     }
 
     @Override
