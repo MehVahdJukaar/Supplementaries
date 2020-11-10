@@ -5,10 +5,12 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.HorizontalBlock;
+import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootContext;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
@@ -26,6 +28,8 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
+import java.util.Collections;
+import java.util.List;
 
 
 public class WallLanternBlock extends Block {
@@ -47,6 +51,10 @@ public class WallLanternBlock extends Block {
         return state.get(LIGHT_LEVEL);
     }
 
+    @Override
+    public PushReaction getPushReaction(BlockState state) {
+        return PushReaction.DESTROY;
+    }
 
     @Override
     public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
@@ -124,7 +132,7 @@ public class WallLanternBlock extends Block {
         return this.getDefaultState().with(FACING, context.getFace());
     }
 
-
+/*
     @Override
     public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
         TileEntity te = worldIn.getTileEntity(pos);
@@ -132,6 +140,18 @@ public class WallLanternBlock extends Block {
             spawnDrops(((WallLanternBlockTile) te).lanternBlock, worldIn, pos);
         }
         super.onBlockHarvested(worldIn, pos, state, player);
+    }*/
+
+    //can't use getDrops cause it doesn't have pos.
+    @Override
+    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (state.getBlock() != newState.getBlock()) {
+            TileEntity te = worldIn.getTileEntity(pos);
+            if (te instanceof WallLanternBlockTile) {
+                spawnDrops(((WallLanternBlockTile) te).lanternBlock, worldIn, pos);
+            }
+            super.onReplaced(state, worldIn, pos, newState, isMoving);
+        }
     }
 
     @Override

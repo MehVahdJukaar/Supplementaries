@@ -206,25 +206,27 @@ public class SignPostBlock extends Block {
     }
 
     @Override
-    public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
-        TileEntity tileentity = worldIn.getTileEntity(pos);
-        if(tileentity instanceof SignPostBlockTile){
-            SignPostBlockTile tile = ((SignPostBlockTile) tileentity);
-            if(tile.up){
-                ItemStack itemstack = new ItemStack(CommonUtil.getSignPostItemFromWoodType(tile.woodTypeUp));
-                ItemEntity itementity = new ItemEntity(worldIn, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5, itemstack);
-                itementity.setDefaultPickupDelay();
-                worldIn.addEntity(itementity);
+    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (state.getBlock() != newState.getBlock()) {
+            TileEntity tileentity = worldIn.getTileEntity(pos);
+            if (tileentity instanceof SignPostBlockTile) {
+                SignPostBlockTile tile = ((SignPostBlockTile) tileentity);
+                if (tile.up) {
+                    ItemStack itemstack = new ItemStack(CommonUtil.getSignPostItemFromWoodType(tile.woodTypeUp));
+                    ItemEntity itementity = new ItemEntity(worldIn, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, itemstack);
+                    itementity.setDefaultPickupDelay();
+                    worldIn.addEntity(itementity);
+                }
+                if (tile.down) {
+                    ItemStack itemstack = new ItemStack(CommonUtil.getSignPostItemFromWoodType(tile.woodTypeDown));
+                    ItemEntity itementity = new ItemEntity(worldIn, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, itemstack);
+                    itementity.setDefaultPickupDelay();
+                    worldIn.addEntity(itementity);
+                }
+                spawnDrops(tile.fenceBlock, worldIn, pos);
             }
-            if(tile.down){
-                ItemStack itemstack = new ItemStack(CommonUtil.getSignPostItemFromWoodType(tile.woodTypeDown));
-                ItemEntity itementity = new ItemEntity(worldIn, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5, itemstack);
-                itementity.setDefaultPickupDelay();
-                worldIn.addEntity(itementity);
-            }
-            spawnDrops(tile.fenceBlock, worldIn, pos);
+            super.onReplaced(state, worldIn, pos, newState, isMoving);
         }
-        super.onBlockHarvested(worldIn, pos, state, player);
     }
 
     @Override

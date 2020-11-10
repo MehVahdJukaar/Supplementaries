@@ -1,9 +1,9 @@
 package net.mehvahdjukaar.supplementaries.blocks;
 
+import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil.JarContentType;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.ConcretePowderBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -54,74 +54,58 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
         super.markDirty();
     }
 
-    // I love hardcoding
     public void updateTile() {
-        boolean haslava = false;
+
         ItemStack stack = this.getStackInSlot(0);
-        Item it = stack.getItem();
-        this.liquidLevel = (float) this.getStackInSlot(0).getCount() / 16f;
-        boolean getdefaultcolor = true;
-        this.color = 0xFFFFFF;
-        if (it instanceof PotionItem) {
-            getdefaultcolor = false;
-            if (PotionUtils.getPotionFromItem(stack) == Potions.WATER) {
-                this.color = -1; //let client get biome color on next rendering. ugly i know but that class is client side
-                this.liquidType = JarContentType.WATER;
-            } else {
-                this.color = PotionUtils.getColor(stack);
-                this.liquidType = JarContentType.POTION;
-            }
-        } else if (it instanceof FishBucketItem) {
-            getdefaultcolor = false;
-            this.color = -1;
+
+        this.liquidType = CommonUtil.getJarContentTypeFromItem(stack);
+        //level
+        if(this.liquidType.isFish()){
             this.liquidLevel = 0.625f;
-            if (it == new ItemStack(Items.COD_BUCKET).getItem()) {
-                this.liquidType = JarContentType.COD;
-            } else if (it == new ItemStack(Items.PUFFERFISH_BUCKET).getItem()) {
-                this.liquidType = JarContentType.PUFFER_FISH;
-            } else if (it == new ItemStack(Items.SALMON_BUCKET).getItem()) {
-                this.liquidType = JarContentType.SALMON;
-            } else {
-                this.liquidType = JarContentType.TROPICAL_FISH;
-            }
-        } else if (it == new ItemStack(Items.LAVA_BUCKET).getItem()) {
-            this.liquidType = JarContentType.LAVA;
-            haslava = true;
-        } else if (it instanceof HoneyBottleItem) {
-            this.liquidType = JarContentType.HONEY;
-        } else if (it instanceof MilkBucketItem) {
-            this.liquidType = JarContentType.MILK;
-        } else if (it == new ItemStack(Items.DRAGON_BREATH).getItem()) {
-            this.liquidType = JarContentType.DRAGON_BREATH;
-        } else if (it instanceof ExperienceBottleItem) {
-            this.liquidType = JarContentType.XP;
-        } else if (it == new ItemStack(Items.COOKIE).getItem()) {
-            this.liquidType = JarContentType.COOKIES;
-        } else {
-            this.liquidType = JarContentType.EMPTY;
         }
-        if (getdefaultcolor) {
+        else{
+            this.liquidLevel = (float) this.getStackInSlot(0).getCount() / 16f;
+        }
+
+        //color
+        if(this.liquidType.isWater()){
+            this.color=-1;//let client get biome color on next rendering. ugly i know but that class is client side
+        }
+        else if(this.liquidType == JarContentType.POTION){
+            this.color = PotionUtils.getColor(stack);
+        }
+        else if (this.liquidType.applyColor){
             this.color = this.liquidType.color;
         }
-        BlockState bs = this.world.getBlockState(this.pos);
-        if (bs.get(JarBlock.HAS_LAVA) != haslava && !this.world.isRemote) {
-            this.world.setBlockState(this.pos, bs.with(JarBlock.HAS_LAVA, haslava), 2);
+        else{
+            this.color = 0xFFFFFF;
         }
+
+        //lava light
+        if(!this.world.isRemote && this.liquidType.isLava()){
+            BlockState bs = this.world.getBlockState(this.pos);
+            if (!bs.get(JarBlock.HAS_LAVA)) {
+                this.world.setBlockState(this.pos, bs.with(JarBlock.HAS_LAVA, true), 4|16);
+            }
+
+        }
+
     }
 
     // does all the calculation for handling player interaction.
     public boolean handleInteraction(PlayerEntity player, Hand hand) {
         ItemStack handstack = player.getHeldItem(hand);
         Item handitem = handstack.getItem();
-        boolean isbucket = (handitem == new ItemStack(Items.BUCKET).getItem());
-        boolean isbottle = (handitem == new ItemStack(Items.GLASS_BOTTLE).getItem());
+        boolean isbucket = handitem == Items.BUCKET;
+        boolean isbottle = handitem == Items.GLASS_BOTTLE;
+        boolean isbowl = handitem == Items.BOWL;
         boolean isempty = handstack.isEmpty();
-        // cookies!
+        // eat cookies
         if (isempty && this.liquidType == JarContentType.COOKIES) {
             boolean eat = false;
             if (player.canEat(false))
                 eat = true;
-            if (this.extractItem(false, handstack, player, hand, !eat)) {
+            if (this.extractItem(1, handstack, player, hand, !eat)) {
                 if (eat)
                     player.getFoodStats().addStats(2, 0.1F);
                 return true;
@@ -137,10 +121,10 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
             // can content be extracted with bottle
             if (this.liquidType.bottle) {
                 // if extraction successful
-                if (this.extractItem(false, handstack, player, hand, true)) {
+                if (this.extractItem(1, handstack, player, hand, true)) {
                     this.world.playSound(player, player.getPosX(), player.getPosY(), player.getPosZ(), SoundEvents.ITEM_BOTTLE_FILL,
                             SoundCategory.BLOCKS, 1.0F, 1.0F);
-                    player.addStat(Stats.ITEM_USED.get(new ItemStack(Items.GLASS_BOTTLE).getItem()));
+                    player.addStat(Stats.ITEM_USED.get(Items.GLASS_BOTTLE));
                     return true;
                 }
             }
@@ -151,18 +135,23 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
             // can content be extracted with bucket
             if (this.liquidType.bucket) {
                 // if extraction successful
-                if (this.extractItem(true, handstack, player, hand, true)) {
-                    SoundEvent se;
-                    if (this.liquidType == JarContentType.LAVA) {
-                        se = SoundEvents.ITEM_BUCKET_FILL_LAVA;
-                    } else if (this.liquidType.isFish()) {
-                        se = SoundEvents.ITEM_BUCKET_FILL_FISH;
-                    } else {
-                        se = SoundEvents.ITEM_BUCKET_FILL;
-                    }
-                    this.world.playSound(player, player.getPosX(), player.getPosY(), player.getPosZ(), se,
+                if (this.extractItem(4, handstack, player, hand, true)) {
+                    this.world.playSound(player, player.getPosX(), player.getPosY(), player.getPosZ(), this.liquidType.getSound(),
                             SoundCategory.BLOCKS, 1.0F, 1.0F);
-                    player.addStat(Stats.ITEM_USED.get(new ItemStack(Items.BUCKET).getItem()));
+                    player.addStat(Stats.ITEM_USED.get(Items.BUCKET));
+                    return true;
+                }
+            }
+            return false;
+        }
+        else if (isbowl) {
+            // can content be extracted with bowl
+            if (this.liquidType.bowl) {
+                // if extraction successful
+                if (this.extractItem(2, handstack, player, hand, true)) {
+                    this.world.playSound(player, player.getPosX(), player.getPosY(), player.getPosZ(), SoundEvents.ITEM_BOTTLE_FILL,
+                            SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    player.addStat(Stats.ITEM_USED.get(Items.BOWL));
                     return true;
                 }
             }
@@ -172,8 +161,8 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
     }
 
     // removes item from te and gives it to player
-    public boolean extractItem(boolean isbucket, ItemStack handstack, PlayerEntity player, Hand handIn, boolean givetoplayer) {
-        int amount = isbucket && !this.liquidType.isFish() ? 4 : 1;
+    public boolean extractItem(int amount, ItemStack handstack, PlayerEntity player, Hand handIn, boolean givetoplayer) {
+        amount = this.liquidType.isFish() ? 1 : amount;
         ItemStack mystack = this.getStackInSlot(0);
         int count = mystack.getCount();
         // do i have enough?
@@ -182,7 +171,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
                 ItemStack extracted = mystack.copy();
                 extracted.setCount(1);
                 // special case to convert water bottles into bucket
-                if (this.liquidType == JarContentType.WATER && isbucket) {
+                if (this.liquidType == JarContentType.WATER && amount==4) {
                     extracted = new ItemStack(Items.WATER_BUCKET);
                 }
                 handstack.shrink(1);
@@ -206,36 +195,36 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
     public void handleAddItem(ItemStack handstack, @Nullable PlayerEntity player, @Nullable Hand handIn) {
         ItemStack it = handstack.copy();
         Item i = it.getItem();
-        boolean isfish = i instanceof FishBucketItem;
-        boolean iswaterbucket = (i == new ItemStack(Items.WATER_BUCKET).getItem());
-        boolean isbucket = iswaterbucket || i == new ItemStack(Items.LAVA_BUCKET).getItem() || i == new ItemStack(Items.MILK_BUCKET).getItem()
-                || isfish;
-        boolean iscookie = i == Items.COOKIE;
+
+        //add item
+        int count = CommonUtil.getLiquidCountFromItem(i);
+        //convert water bucket to bottle
+        boolean isWaterBucket = i == Items.WATER_BUCKET;
+        if(isWaterBucket)
+            it = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.WATER);
+
+        this.addItem(it, count);
+        //update liquidType after adding item
+        this.updateTile();
+
+
         // shrink stack and replace bottle /bucket with empty ones
+
         if (player != null && handIn != null) {
             if (!player.isCreative()) {
                 handstack.shrink(1);
-                if (!iscookie) {
-                    ItemStack emptybottle = isbucket ? new ItemStack(Items.BUCKET) : new ItemStack(Items.GLASS_BOTTLE);
-                    if (handstack.isEmpty()) {
-                        player.setHeldItem(handIn, emptybottle);
-                    } else if (!player.inventory.addItemStackToInventory(emptybottle)) {
-                        player.dropItem(emptybottle, false);
-                    }
+                ItemStack returnItem = new ItemStack(isWaterBucket? Items.BUCKET : this.liquidType.getReturnItem());
+                if (handstack.isEmpty()) {
+                    player.setHeldItem(handIn, returnItem);
+                } else if (!player.inventory.addItemStackToInventory(returnItem)) {
+                    player.dropItem(returnItem, false);
                 }
             }
-            if (!iscookie)
+            if (this.liquidType.makesSound())
                 this.world.playSound(player, player.getPosX(), player.getPosY(), player.getPosZ(), SoundEvents.ITEM_BOTTLE_EMPTY,
                         SoundCategory.BLOCKS, 1.0F, 1.0F);
         }
-        int count = 1;
-        if (iswaterbucket) {
-            it = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.WATER);
-        }
-        if (isbucket && !isfish) {
-            count = 4;
-        }
-        this.addItem(it, count);
+
     }
 
     public void addItem(ItemStack itemstack, int amount) {
@@ -254,8 +243,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        if (index != 0)
-            return false;
+        if (index != 0) return false;
         ItemStack currentstack = this.getStackInSlot(0);
         Item newitem = stack.getItem();
         Item currentitem = currentstack.getItem();
@@ -264,18 +252,27 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
             return (this.isEmpty() || ((PotionUtils.getPotionFromItem(stack) == PotionUtils.getPotionFromItem(currentstack)) && !this.isFull()));
         }
         // is it waterbucket (check it it has water bottle)
-        else if (newitem == new ItemStack(Items.WATER_BUCKET).getItem()) {
+        else if (newitem == Items.WATER_BUCKET) {
             return (this.isEmpty() || (PotionUtils.getPotionFromItem(currentstack) == Potions.WATER && !this.isFull()));
         }
         // other items (stack to 12)
         else if (newitem instanceof ExperienceBottleItem || newitem instanceof HoneyBottleItem || newitem instanceof MilkBucketItem
-                || newitem == new ItemStack(Items.LAVA_BUCKET).getItem()
-                || newitem == new ItemStack(Items.DRAGON_BREATH).getItem() || newitem == new ItemStack(Items.COOKIE).getItem()) {
+                || newitem == Items.LAVA_BUCKET
+                || newitem == Items.DRAGON_BREATH || newitem == Items.COOKIE) {
             return (this.isEmpty() || (currentitem == newitem && !this.isFull()));
         }
         // fish bucket (only 1 can stay in)
         else if (newitem instanceof FishBucketItem) {
             return this.isEmpty();
+        }
+        //stews, stack to 6
+        else if (newitem == Items.MUSHROOM_STEW|| newitem == Items.RABBIT_STEW||
+                newitem==Items.BEETROOT_SOUP){
+            return (this.isEmpty() || (currentitem == newitem && !this.isFull()));
+        }
+        else if(newitem instanceof SuspiciousStewItem){
+            CompoundNBT cmp = stack.getOrCreateTag();
+            return (currentstack.getOrCreateTag().equals(stack.getOrCreateTag()) || this.isEmpty())&&!this.isFull();
         }
         return false;
     }

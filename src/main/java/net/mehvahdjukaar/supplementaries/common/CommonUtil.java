@@ -3,21 +3,18 @@ package net.mehvahdjukaar.supplementaries.common;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.items.SignPostItem;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
+import net.minecraft.item.*;
+import net.minecraft.potion.PotionUtils;
+import net.minecraft.potion.Potions;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.properties.RedstoneSide;
-import net.minecraft.util.Direction;
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3f;
@@ -64,31 +61,37 @@ public class CommonUtil{
     public static final ResourceLocation BELLOWS_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID, "blocks/bellows");
     public static final ResourceLocation LASER_BEAM_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID, "blocks/laser_beam");
     public static final ResourceLocation LASER_BEAM_END_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID, "blocks/laser_beam_end");
+    public static final ResourceLocation SOUP_TEXTURE= new ResourceLocation(Supplementaries.MOD_ID,"blocks/soup_liquid");
 
 
 
 
     public static List<ResourceLocation> getTextures(){
-        return new ArrayList<>(Arrays.asList(MILK_TEXTURE,POTION_TEXTURE,HONEY_TEXTURE,DRAGON_BREATH_TEXTURE,
+        return new ArrayList<>(Arrays.asList(MILK_TEXTURE,POTION_TEXTURE,HONEY_TEXTURE,DRAGON_BREATH_TEXTURE,SOUP_TEXTURE,
                 XP_TEXTURE,FAUCET_TEXTURE,FISHIES_TEXTURE,BELLOWS_TEXTURE,LASER_BEAM_TEXTURE,LASER_BEAM_END_TEXTURE));
     }
 
     //fluids
     public enum JarContentType {
         // color is handles separately. here it's just for default case
-        WATER(WATER_TEXTURE, 0x3F76E4, true, 1f, true, true, -1),
-        LAVA(LAVA_TEXTURE, 0xFF6600, false, 1f, false, true, -1),
-        MILK(MILK_TEXTURE, 0xFFFFFF, false, 1f, false, true, -1),
-        POTION(POTION_TEXTURE, 0x3F76E4, true, 0.88f, true, false, -1),
-        HONEY(HONEY_TEXTURE, 0xFAAC1C, false, 0.85f, true, false, -1),
-        DRAGON_BREATH(DRAGON_BREATH_TEXTURE, 0xFF33FF, true, 0.8f, true, false, -1),
-        XP(XP_TEXTURE, 0x33FF33, false, 0.95f, true, false, -1),
-        TROPICAL_FISH(WATER_TEXTURE, 0x3F76E4, true, 1f, false, true, 0),
-        SALMON(WATER_TEXTURE, 0x3F76E4, true, 1f, false, true, 1),
-        COD(WATER_TEXTURE, 0x3F76E4, true, 1f, false, true, 2),
-        PUFFER_FISH(WATER_TEXTURE, 0x3F76E4, true, 1f, false, true, 3),
-        COOKIES(WATER_TEXTURE, 0x000000, false, 1f, false, false, -1),
-        EMPTY(WATER_TEXTURE, 0x000000, false, 1f, false, false, -1);
+        WATER(WATER_TEXTURE, 0x3F76E4, true, 1f, true, true, false, -1),
+        LAVA(LAVA_TEXTURE, 0xFF6600, false, 1f, false, true,false, -1),
+        MILK(MILK_TEXTURE, 0xFFFFFF, false, 1f, false, true, false,-1),
+        POTION(POTION_TEXTURE, 0x3F76E4, true, 0.88f, true, false, false,-1),
+        HONEY(HONEY_TEXTURE, 0xFAAC1C, false, 0.85f, true, false, false,-1),
+        DRAGON_BREATH(DRAGON_BREATH_TEXTURE, 0xFF33FF, true, 0.8f, true, false,false, -1),
+        XP(XP_TEXTURE, 0x33FF33, false, 0.95f, true, false, false,-1),
+        TROPICAL_FISH(WATER_TEXTURE, 0x3F76E4, true, 1f, false, true, false,0),
+        SALMON(WATER_TEXTURE, 0x3F76E4, true, 1f, false, true, false,1),
+        COD(WATER_TEXTURE, 0x3F76E4, true, 1f, false, true, false,2),
+        PUFFER_FISH(WATER_TEXTURE, 0x3F76E4, true, 1f, false, true, false,3),
+        COOKIES(WATER_TEXTURE, 0x000000, false, 1f, false, false, false,-1),
+        EMPTY(WATER_TEXTURE, 0x000000, false, 1f, false, false, false,-1),
+        MUSHROOM_STEW(SOUP_TEXTURE,0xffad89, true, 1f, false, false, true,-1),
+        BEETROOT_SOUP(SOUP_TEXTURE,0xC93434, true, 1f, false, false, true,-1),
+        SUSPICIOUS_STEW(SOUP_TEXTURE,0xBAE85F, true, 1f, false, false, true,-1),
+        RABBIT_STEW(SOUP_TEXTURE,0xFF904F, true, 1f, false, false, true,-1);
+
         public final ResourceLocation texture;
         public final float opacity;
         public final int color;
@@ -96,14 +99,16 @@ public class CommonUtil{
         public final boolean bucket;
         public final boolean bottle;
         public final int fishType;
+        public final boolean bowl;
 
-        JarContentType(ResourceLocation texture, int color, boolean applycolor, float opacity, boolean bottle, boolean bucket, int fishtype) {
+        JarContentType(ResourceLocation texture, int color, boolean applycolor, float opacity, boolean bottle, boolean bucket, boolean bowl, int fishtype) {
             this.texture = texture;
             this.color = color; // beacon color. this will also be texture color if applycolor is true
             this.applyColor = applycolor; // is texture grayscale and needs to be colored?
             this.opacity = opacity;
             this.bottle = bottle;
             this.bucket = bucket;
+            this.bowl = bowl;
             this.fishType = fishtype;
             // offset for fish textures. -1 is no fish
         }
@@ -111,6 +116,76 @@ public class CommonUtil{
         public boolean isFish() {
             return this.fishType != -1;
         }
+        public boolean isLava() {return this == JarContentType.LAVA;}
+        public boolean isWater(){ return this.isFish() || this == JarContentType.WATER;}
+        public Item getReturnItem(){
+            if(this.bottle)
+                return Items.GLASS_BOTTLE;
+            else if(this.bucket)
+                return Items.BUCKET;
+            else if(this.bowl)
+                return Items.BOWL;
+            return null;
+        }
+        public boolean makesSound(){
+            return this.bottle||this.bowl||this.bucket;
+        }
+        //only for bucket
+        public SoundEvent getSound(){
+            if (this.isLava()) return SoundEvents.ITEM_BUCKET_FILL_LAVA;
+            else if (this.isFish()) return SoundEvents.ITEM_BUCKET_FILL_FISH;
+            else return SoundEvents.ITEM_BUCKET_FILL;
+        }
+
+    }
+
+    public static JarContentType getJarContentTypeFromItem(ItemStack stack){
+        Item i = stack.getItem();
+        if (i instanceof PotionItem) {
+            if (PotionUtils.getPotionFromItem(stack).equals(Potions.WATER)) {
+                return JarContentType.WATER;
+            } else {
+                return JarContentType.POTION;
+            }
+        } else if (i instanceof FishBucketItem) {
+            if (i == Items.COD_BUCKET) {
+                return JarContentType.COD;
+            } else if (i == Items.PUFFERFISH_BUCKET) {
+                return JarContentType.PUFFER_FISH;
+            } else if (i == Items.SALMON_BUCKET) {
+                return JarContentType.SALMON;
+            } else {
+                return JarContentType.TROPICAL_FISH;
+            }
+        } else if (i == Items.LAVA_BUCKET) {
+            return JarContentType.LAVA;
+        } else if (i instanceof HoneyBottleItem) {
+            return JarContentType.HONEY;
+        } else if (i instanceof MilkBucketItem) {
+            return JarContentType.MILK;
+        } else if (i == Items.DRAGON_BREATH) {
+            return JarContentType.DRAGON_BREATH;
+        } else if (i instanceof ExperienceBottleItem) {
+            return JarContentType.XP;
+        } else if(i == Items.MUSHROOM_STEW){
+            return JarContentType.MUSHROOM_STEW;
+        } else if(i == Items.RABBIT_STEW){
+            return JarContentType.RABBIT_STEW;
+        } else if(i == Items.BEETROOT_SOUP){
+            return JarContentType.BEETROOT_SOUP;
+        } else if(i instanceof SuspiciousStewItem){
+            return JarContentType.SUSPICIOUS_STEW;
+        } else if (i == Items.COOKIE) {
+            return JarContentType.COOKIES;
+        }
+        return JarContentType.EMPTY;
+    }
+
+    public static int getLiquidCountFromItem(Item i){
+        if(i instanceof FishBucketItem) return 1;
+        if(i instanceof MilkBucketItem|| i==Items.LAVA_BUCKET || i==Items.WATER_BUCKET) return 4;
+        else if(i instanceof SoupItem||i instanceof SuspiciousStewItem) return 2;
+        else return 1;
     }
 
     public enum WoodType implements IStringSerializable{
@@ -169,7 +244,7 @@ public class CommonUtil{
     }
 
     public static Item getSignPostItemFromWoodType(WoodType wood){
-        switch ((WoodType)wood){
+        switch (wood){
             case OAK:
                 return Registry.SIGN_POST_ITEM_OAK.get();
             case BIRCH:
@@ -201,16 +276,12 @@ public class CommonUtil{
                 endPos = endPos.add(1, 1, 0);
                 break;
             case SOUTH:
+            case UP:
+            case EAST:
                 endPos = endPos.add(1, 1, 1);
                 break;
             case WEST:
                 endPos = endPos.add(0, 1, 1);
-                break;
-            case EAST:
-                endPos = endPos.add(1, 1, 1);
-                break;
-            case UP:
-                endPos = endPos.add(1, 1, 1);
                 break;
             case DOWN:
                 endPos = endPos.add(1, 0, 1);
@@ -338,8 +409,7 @@ public class CommonUtil{
     @OnlyIn(Dist.CLIENT)
     public static void renderFish(IVertexBuilder builder, MatrixStack matrixStackIn, float wo, float ho, int fishType, int combinedLightIn,
                                   int combinedOverlayIn) {
-        ResourceLocation texture = FISHIES_TEXTURE;
-        TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(texture);
+        TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(FISHIES_TEXTURE);
         float w = 5 / 16f;
         float h = 4 / 16f;
         float hw = w / 2f;

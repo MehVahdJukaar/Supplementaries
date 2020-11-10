@@ -30,7 +30,7 @@ import java.util.List;
 
 public class BellowsBlockTile extends TileEntity implements ITickableTileEntity {
     private static final int RANGE = 5;
-    private static final float SPEED = 13;
+    private static final float PERIOD = 75;
 
     public float height = 0;
     public float prevHeight = 0;
@@ -114,7 +114,7 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
         if(powered){
             this.counter++;
             //slope of animation. for particles and pusing entities
-            float j = MathHelper.sin((float) this.counter / SPEED);
+            float j = MathHelper.sin((float)Math.PI*2* this.counter / PERIOD);
 
             //client
             if (this.world.isRemote && this.world.rand.nextInt(2) == 0 &&
@@ -123,13 +123,14 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
 
 
             final float dh = 1 / 16f;//0.09375f;
-            this.height = dh * MathHelper.cos((float) this.counter / SPEED) - dh;
+            this.height = dh * MathHelper.cos((float)Math.PI*2* this.counter / PERIOD) - dh;
 
 
             Direction facing = this.getDirection();
 
-            //push entities (only if pusing air)
-            if (1 > 0) {
+            //push entities (only if pushing air)
+            float g = this.counter%PERIOD;
+            if ( g< 0.5f*PERIOD) {
                 List<Entity> list = this.world.getEntitiesWithinAABB(Entity.class,
                         CommonUtil.getDirectionBB(this.pos, this.getDirection(), RANGE));
 
