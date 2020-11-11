@@ -7,10 +7,7 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.ChestContainer;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ToolItem;
+import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
@@ -32,6 +29,7 @@ import java.util.stream.IntStream;
 public class PedestalBlockTile extends LockableLootTileEntity implements ISidedInventory {
     private NonNullList<ItemStack> stacks = NonNullList.withSize(1, ItemStack.EMPTY);
     public int type =0;
+    public float yaw = 0;
     public PedestalBlockTile() {
         super(Registry.PEDESTAL_TILE.get());
     }
@@ -61,11 +59,14 @@ public class PedestalBlockTile extends LockableLootTileEntity implements ISidedI
         if (it instanceof BlockItem){
             this.type=1;
         }
-        else if(it instanceof ToolItem){
+        else if(it instanceof SwordItem){
             this.type=2;
+        }
+        else if(it instanceof ToolItem){
+            this.type=3;
 
         }else{
-            this.type=3;
+            this.type=0;
         }
     }
 
@@ -77,6 +78,7 @@ public class PedestalBlockTile extends LockableLootTileEntity implements ISidedI
         }
         ItemStackHelper.loadAllItems(compound, this.stacks);
         this.type=compound.getInt("type");
+        this.yaw=compound.getFloat("yaw");
     }
 
     @Override
@@ -86,6 +88,7 @@ public class PedestalBlockTile extends LockableLootTileEntity implements ISidedI
             ItemStackHelper.saveAllItems(compound, this.stacks);
         }
         compound.putInt("type",this.type);
+        compound.putFloat("yaw",this.yaw);
         return compound;
     }
 

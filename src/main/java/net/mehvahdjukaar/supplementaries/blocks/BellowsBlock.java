@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.blocks;
 
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DirectionalBlock;
 import net.minecraft.entity.LivingEntity;
@@ -13,9 +12,7 @@ import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.ShulkerBoxTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -28,12 +25,12 @@ public class BellowsBlock extends Block {
 
 
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
-    public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
+    public static final IntegerProperty POWER = BlockStateProperties.POWER_0_15;
     public static final IntegerProperty TILE = CommonUtil.TILE_3;
 
     public BellowsBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(POWERED, false).with(TILE, 0));
+        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(POWER, 0).with(TILE, 0));
     }
 
     @Override
@@ -51,7 +48,7 @@ public class BellowsBlock extends Block {
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(FACING, POWERED, TILE);
+        builder.add(FACING, POWER, TILE);
     }
 
     public BlockState rotate(BlockState state, Rotation rot) {
@@ -74,17 +71,14 @@ public class BellowsBlock extends Block {
     }
 
 
-    public boolean updatePower(BlockState state, World world, BlockPos pos) {
-        boolean ispowered = world.getRedstonePowerFromNeighbors(pos) > 0;
-        boolean haspower = state.get(POWERED);
+    public void updatePower(BlockState state, World world, BlockPos pos) {
+        int newpower = world.getRedstonePowerFromNeighbors(pos);
+        int currentpower = state.get(POWER);
         // on-off
-        if (ispowered != haspower) {
-            world.setBlockState(pos, state.with(POWERED, ispowered), 2 | 4);
-            return true;
+        if (newpower != currentpower) {
+            world.setBlockState(pos, state.with(POWER, newpower), 2 | 4);
             //returns if state changed
         }
-        return false;
-
     }
 
 

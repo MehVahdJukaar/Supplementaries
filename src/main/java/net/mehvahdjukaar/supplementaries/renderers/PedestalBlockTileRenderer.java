@@ -110,18 +110,31 @@ public class PedestalBlockTileRenderer extends TileEntityRenderer<PedestalBlockT
                 this.renderName(name, matrixStackIn, bufferIn, combinedLightIn);
             }
 
-            if(!Minecraft.getInstance().isGamePaused()){
-                BlockPos blockpos = tile.getPos();
-                long blockoffset = (long)(blockpos.getX()*7 + blockpos.getY()*9 + blockpos.getZ()*13);
+            if(tile.type==2){
+                matrixStackIn.scale(1.5f,1.5f,1.5f);
+                matrixStackIn.translate(0,0.25,0);
+                matrixStackIn.rotate(Vector3f.YP.rotationDegrees(tile.yaw));
+                matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(-135));
 
-                long time = System.currentTimeMillis();
-                long t = blockoffset + time;
-                float angle = (t / 40) % 360;
-                Quaternion rotation = Vector3f.YP.rotationDegrees(angle);
+                matrixStackIn.translate(0.125,0,0);
 
-                matrixStackIn.rotate(rotation);
+                //matrixStackIn.translate(-0.5, 0, 0);
+
             }
+            else {
+                if (!Minecraft.getInstance().isGamePaused()) {
+                    BlockPos blockpos = tile.getPos();
+                    long blockoffset = (long) (blockpos.getX() * 7 + blockpos.getY() * 9 + blockpos.getZ() * 13);
 
+                    long time = System.currentTimeMillis();
+                    long t = blockoffset + time;
+                    float angle = (t / 40) % 360;
+                    Quaternion rotation = Vector3f.YP.rotationDegrees(angle);
+
+                    matrixStackIn.rotate(rotation);
+                }
+
+            }
             ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
             ItemStack stack = tile.getStackInSlot(0);
             IBakedModel ibakedmodel = itemRenderer.getItemModelWithOverrides(stack, tile.getWorld(), null);

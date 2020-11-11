@@ -14,6 +14,8 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.tileentity.CampfireTileEntity;
+import net.minecraft.tileentity.FurnaceTileEntity;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -30,7 +32,7 @@ import java.util.List;
 
 public class BellowsBlockTile extends TileEntity implements ITickableTileEntity {
     private static final int RANGE = 5;
-    private static final float PERIOD = 75;
+    private static final float PERIOD = 78;
 
     public float height = 0;
     public float prevHeight = 0;
@@ -108,57 +110,75 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
 
 
     public void tick() {
-        boolean powered = this.getBlockState().get(BellowsBlock.POWERED);
+        int power = this.getBlockState().get(BellowsBlock.POWER);
         this.prevHeight = this.height;
 
-        if(powered){
+        if(power!=0){
             this.counter++;
+
+            float period = PERIOD - (power-1)*3;
+
+            Direction facing = this.getDirection();
+
             //slope of animation. for particles and pusing entities
-            float j = MathHelper.sin((float)Math.PI*2* this.counter / PERIOD);
+            float j = MathHelper.sin((float)Math.PI*2* this.counter / period);
 
             //client
             if (this.world.isRemote && this.world.rand.nextInt(2) == 0 &&
-                    this.world.rand.nextFloat() < j)
+                    this.world.rand.nextFloat() < j &&
+                    ! Block.hasEnoughSolidSide(this.world, this.pos.offset(facing), facing.getOpposite()))
                 this.spawnParticles(this.world, this.pos);
 
 
             final float dh = 1 / 16f;//0.09375f;
-            this.height = dh * MathHelper.cos((float)Math.PI*2* this.counter / PERIOD) - dh;
-
-
-            Direction facing = this.getDirection();
-
-            //push entities (only if pushing air)
-            float g = this.counter%PERIOD;
-            if ( g< 0.5f*PERIOD) {
-                List<Entity> list = this.world.getEntitiesWithinAABB(Entity.class,
-                        CommonUtil.getDirectionBB(this.pos, this.getDirection(), RANGE));
-
-                for (Entity entity : list) {
-
-                    if (!this.inLineOfSight(entity, facing)) continue;
-
-                    double velocity = 0.01; // Affects acceleration
-                    double maxVelocity = 2; // Affects max speed
-
-                    if (facing == Direction.UP) {
-                        maxVelocity *= 0.5D;
-                    }
-                    //TODO: make velocity dependant on distance from block
-
-                    if (Math.abs(entity.getMotion().getCoordinate(facing.getAxis())) < maxVelocity)
-                        entity.setMotion(entity.getMotion().add(facing.getXOffset() * velocity, facing.getYOffset() * velocity, facing.getZOffset() * velocity));
-
-                }
-            }
-
+            this.height = dh * MathHelper.cos((float)Math.PI*2* this.counter / period) - dh;
 
             //server
             if (!this.world.isRemote) {
 
+                //push entities (only if pushing air)
+                float g = this.counter%period;
+                if ( g< 0.5f*period) {
+                    List<Entity> list = this.world.getEntitiesWithinAABB(Entity.class,
+                            CommonUtil.getDirectionBB(this.pos, facing, RANGE));
 
-                //refresh fire blocks
+                    for (Entity entity : list) {
+
+                        if (!this.inLineOfSight(entity, facing)) continue;
+
+                        double velocity = 1/period; // Affects acceleration
+                        double maxVelocity = 2; // Affects max speed
+
+                        if (facing == Direction.UP) {
+                            maxVelocity *= 0.5D;
+                        }
+                        //TODO: make velocity dependant on distance from block
+                        double dist = entity.getDistanceSq(this.pos.getX()+0.5*facing.getXOffset(),
+                                this.pos.getY()+0.5*facing.getYOffset(),this.pos.getZ()+0.5*facing.getZOffset());
+                        velocity = velocity*(-MathHelper.sqrt(dist) + RANGE);
+
+                        if (Math.abs(entity.getMotion().getCoordinate(facing.getAxis())) < maxVelocity)
+                            entity.setMotion(entity.getMotion().add(facing.getXOffset() * velocity, facing.getYOffset() * velocity, facing.getZOffset() * velocity));
+                        entity.velocityChanged=true;
+                    }
+                }
+
+
+
+
+
+
+
                 BlockPos frontpos = this.pos.offset(facing);
+
+                //speeds up furnaces
+                if(this.counter % 9-((int)(power/2)) == 0) {
+                    TileEntity te = world.getTileEntity(frontpos);
+                    if (te instanceof FurnaceTileEntity || te instanceof CampfireTileEntity) {
+                        ((ITickableTileEntity) te).tick();
+                    }
+                }
+                //refresh fire blocks
                 //update more frequently block closed to it
                 //fire updates (previous random tick) at a minimum of 30 ticks
                 int n = 0;
@@ -234,13 +254,13 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
     @Override
     public void read(BlockState state, CompoundNBT compound) {
         super.read(state, compound);
-        compound.putInt("Progress", this.counter);
+        this.counter = compound.getInt("Progress");
     }
 
     @Override
     public CompoundNBT write(CompoundNBT compound) {
         super.write(compound);
-        this.counter = compound.getInt("Progress");
+        compound.putInt("Progress", this.counter);
         return compound;
     }
 

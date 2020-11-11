@@ -109,6 +109,7 @@ public class PedestalBlock extends Block {
                 }
                 if(!worldIn.isRemote()){
                     worldIn.playSound(null, pos,SoundEvents.ENTITY_ITEM_FRAME_ADD_ITEM,SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.10F + 0.95F);
+                    te.yaw=player.getHorizontalFacing().getAxis() == Direction.Axis.X ? 90 : 0;
                     te.markDirty();
                 }
                 return ActionResultType.SUCCESS;
