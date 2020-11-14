@@ -9,6 +9,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.INameable;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.util.Constants;
 
 public class SpeakerBlockTile extends TileEntity implements INameable {
@@ -32,7 +33,7 @@ public class SpeakerBlockTile extends TileEntity implements INameable {
     }
 
     public ITextComponent getDefaultName() {
-        return new StringTextComponent("Speaker Block");
+        return new TranslationTextComponent("block.supplementaries.speaker_block");
     }
 
     @Override

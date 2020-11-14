@@ -81,7 +81,6 @@ public class SignPostItem  extends Item {
                 }
 
             }
-            //TODO: fix placement & sound
             if(flag){
                 if(world.isRemote()){
                     BlockState newstate = world.getBlockState(blockpos);
@@ -97,4 +96,3 @@ public class SignPostItem  extends Item {
         return ActionResultType.PASS;
     }
 }
-

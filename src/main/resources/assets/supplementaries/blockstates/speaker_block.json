@@ -5,15 +5,18 @@
     },
     "facing=east": {
       "model": "supplementaries:block/speaker_block",
-      "y": 90
+      "y": 90,
+      "uvlock": true
     },
     "facing=south": {
       "model": "supplementaries:block/speaker_block",
-      "y": 180
+      "y": 180,
+      "uvlock": true
     },
     "facing=west": {
       "model": "supplementaries:block/speaker_block",
-      "y": 270
+      "y": 270,
+      "uvlock": true
     }
   }
 }

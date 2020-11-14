@@ -20,6 +20,7 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import net.minecraft.world.lighting.IWorldLightListener;
@@ -36,7 +37,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 
-public class NoticeBoardBlockTile extends LockableLootTileEntity implements ISidedInventory {
+public class NoticeBoardBlockTile extends LockableLootTileEntity implements INameable, ISidedInventory{
     private NonNullList<ItemStack> stacks = NonNullList.withSize(1, ItemStack.EMPTY);
     private String txt = null;
     private int fontScale = 1;
@@ -46,8 +47,25 @@ public class NoticeBoardBlockTile extends LockableLootTileEntity implements ISid
     private boolean inventoryChanged = true;
     // private int packedFrontLight =0;
     public boolean textVisible = true; //for culling
+    private ITextComponent customName;
     public NoticeBoardBlockTile() {
         super(Registry.NOTICE_BOARD_TILE.get());
+    }
+
+    public void setCustomName(ITextComponent name) {
+        this.customName = name;
+    }
+
+    public ITextComponent getName() {
+        return this.customName != null ? this.customName : this.getDefaultName();
+    }
+
+    public ITextComponent getCustomName() {
+        return this.customName;
+    }
+
+    public ITextComponent getDefaultName() {
+        return new TranslationTextComponent("block.supplementaries.notice_board");
     }
 
     //update blockstate and plays sound
@@ -128,6 +146,9 @@ public class NoticeBoardBlockTile extends LockableLootTileEntity implements ISid
     @Override
     public void read(BlockState state, CompoundNBT compound) {
         super.read(state, compound);
+        if (compound.contains("CustomName", 8)) {
+            this.customName = ITextComponent.Serializer.getComponentFromJson(compound.getString("CustomName"));
+        }
         if (!this.checkLootAndRead(compound)) {
             this.stacks = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
         }
@@ -143,6 +164,9 @@ public class NoticeBoardBlockTile extends LockableLootTileEntity implements ISid
     @Override
     public CompoundNBT write(CompoundNBT compound) {
         super.write(compound);
+        if (this.customName != null) {
+            compound.putString("CustomName", ITextComponent.Serializer.toJson(this.customName));
+        }
         if (!this.checkLootAndWrite(compound)) {
             ItemStackHelper.saveAllItems(compound, this.stacks);
         }
@@ -186,11 +210,6 @@ public class NoticeBoardBlockTile extends LockableLootTileEntity implements ISid
     }
 
     @Override
-    public ITextComponent getDefaultName() {
-        return new StringTextComponent("notice_board");
-    }
-
-    @Override
     public int getInventoryStackLimit() {
         return 1;
     }
@@ -198,11 +217,6 @@ public class NoticeBoardBlockTile extends LockableLootTileEntity implements ISid
     @Override
     public Container createMenu(int id, PlayerInventory player) {
         return new NoticeBoardContainer(id, player, new PacketBuffer(Unpooled.buffer()).writeBlockPos(this.getPos()));
-    }
-
-    @Override
-    public ITextComponent getDisplayName() {
-        return new StringTextComponent("Notice Board");
     }
 
     @Override

@@ -271,7 +271,6 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
             return (this.isEmpty() || (currentitem == newitem && !this.isFull()));
         }
         else if(newitem instanceof SuspiciousStewItem){
-            CompoundNBT cmp = stack.getOrCreateTag();
             return (currentstack.getOrCreateTag().equals(stack.getOrCreateTag()) || this.isEmpty())&&!this.isFull();
         }
         return false;

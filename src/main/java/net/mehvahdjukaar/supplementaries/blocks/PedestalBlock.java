@@ -81,9 +81,11 @@ public class PedestalBlock extends Block {
     @Override
     public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
         TileEntity te = world.getTileEntity(pos);
-        if (te instanceof PedestalBlockTile) {
-            ItemStack i = ((PedestalBlockTile)te).getStackInSlot(0);
-            if (!i.isEmpty()) return i;
+        if(target.getHitVec().getY() > pos.getY()+1-0.1875) {
+            if (te instanceof PedestalBlockTile) {
+                ItemStack i = ((PedestalBlockTile) te).getStackInSlot(0);
+                if (!i.isEmpty()) return i;
+            }
         }
         return new ItemStack(this, 1);
 

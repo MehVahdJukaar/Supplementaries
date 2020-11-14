@@ -16,10 +16,12 @@ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.apache.logging.log4j.core.pattern.AbstractStyleNameConverter;
 
 import java.util.Random;
 
@@ -63,11 +65,11 @@ public class JarBlockTileRenderer extends TileEntityRenderer<JarBlockTile> {
                 IVertexBuilder builder1 = bufferIn.getBuffer(RenderType.getCutout());
                 long time = System.currentTimeMillis();
                 //TODO: fix integer division. maybe but this in tick()
-                float angle = ((time / 80) + r) % 360;
+                float angle =((time / 80) + r) % 360;
                 float angle2 = ((time / 3) + r) % 360;
                 float angle3 = ((time / 350) + r) % 360;
-                float wo = 0.015f * (float) Math.sin(2 * Math.PI * angle2 / 360);
-                float ho = 0.1f * (float) Math.sin(2 * Math.PI * angle3 / 360);
+                float wo = 0.015f * MathHelper.sin((float)(2 * Math.PI * angle2 / 360));
+                float ho = 0.1f * MathHelper.sin((float)(2 * Math.PI * angle3 / 360));
                 matrixStackIn.translate(0.5, 0.5, 0.5);
                 Quaternion rotation = Vector3f.YP.rotationDegrees(-angle);
                 matrixStackIn.rotate(rotation);
@@ -84,7 +86,8 @@ public class JarBlockTileRenderer extends TileEntityRenderer<JarBlockTile> {
                 ResourceLocation texture = tile.liquidType.texture;
                 TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(texture);
                 // TODO:remove breaking animation
-                IVertexBuilder builder = bufferIn.getBuffer(RenderType.getTranslucent());
+                IVertexBuilder builder = bufferIn.getBuffer(
+                        RenderType.getTranslucentMovingBlock());
                 matrixStackIn.translate(0.5, 0.0625, 0.5);
                 CommonUtil.addCube(builder, matrixStackIn, 0.5f, height, sprite, combinedLightIn, color, opacity, combinedOverlayIn, true, true,
                         true, true);

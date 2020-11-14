@@ -5,6 +5,7 @@ import net.mehvahdjukaar.supplementaries.gui.NoticeBoardContainer;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -20,6 +21,8 @@ import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.stats.Stats;
+import net.minecraft.tileentity.FurnaceTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -111,17 +114,10 @@ public class NoticeBoardBlock extends Block {
             //open gui
             else if (player instanceof ServerPlayerEntity) {
                 //this.getContainer ?
-                NetworkHooks.openGui((ServerPlayerEntity) player, new INamedContainerProvider() {
-                    @Override
-                    public ITextComponent getDisplayName() {
-                        return new StringTextComponent("Notice Board");
-                    }
-                    //TODO: make te do this
-                    @Override
-                    public Container createMenu(int id, PlayerInventory inventory, PlayerEntity player) {
-                        return new NoticeBoardContainer(id, inventory, new PacketBuffer(Unpooled.buffer()).writeBlockPos(pos));
-                    }
-                }, pos);
+                TileEntity te1 = worldIn.getTileEntity(pos);
+                if (te1 instanceof NoticeBoardBlockTile) {
+                    player.openContainer((INamedContainerProvider)tileentity);
+                }
                 return ActionResultType.SUCCESS;
             }
 
@@ -145,6 +141,16 @@ public class NoticeBoardBlock extends Block {
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
         return new NoticeBoardBlockTile();
+    }
+
+    @Override
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+        if (stack.hasDisplayName()) {
+            TileEntity tileentity = worldIn.getTileEntity(pos);
+            if (tileentity instanceof NoticeBoardBlockTile) {
+                ((NoticeBoardBlockTile) tileentity).setCustomName(stack.getDisplayName());
+            }
+        }
     }
 
     @Override

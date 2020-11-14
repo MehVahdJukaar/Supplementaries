@@ -12,6 +12,7 @@ import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -24,7 +25,7 @@ public class SpeakerBlockGui extends Screen {
     private final String message;
     private Button modeBtn;
     public SpeakerBlockGui(SpeakerBlockTile te) {
-        super(new StringTextComponent("Set Speaker Block Message"));
+        super(new TranslationTextComponent("gui.supplementaries.speaker_block.edit"));
         this.tileSpeaker = te;
         this.narrator = tileSpeaker.narrator;
         this.message = tileSpeaker.message;
@@ -38,8 +39,8 @@ public class SpeakerBlockGui extends Screen {
         this.commandTextField.tick();
     }
 
-    private static final ITextComponent NARRATOR_TEXT = new StringTextComponent("Narrator message");
-    private static final ITextComponent CHAT_TEXT = new StringTextComponent("Chat message");
+    private static final ITextComponent NARRATOR_TEXT = new TranslationTextComponent("gui.supplementaries.speaker_block.chat_message");
+    private static final ITextComponent CHAT_TEXT = new TranslationTextComponent("gui.supplementaries.speaker_block.narrator_message");
     private void updateMode() {
         if (this.narrator) {
             this.modeBtn.setMessage(NARRATOR_TEXT);

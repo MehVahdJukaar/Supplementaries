@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.blocks.FlagBlockTile;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.gui.NoticeBoardGui;
 import net.mehvahdjukaar.supplementaries.particles.FireflyGlowParticle;
@@ -68,7 +69,9 @@ public class ClientSetup {
         ClientRegistry.bindTileEntityRenderer(Registry.BELLOWS_TILE.get(), BellowsBlockTileRenderer::new);
         //laser
         ClientRegistry.bindTileEntityRenderer(Registry.LASER_BLOCK_TILE.get(), LaserBlockTileRenderer::new);
-
+        //flag
+        RenderTypeLookup.setRenderLayer(Registry.FLAG.get(), RenderType.getCutout());
+        ClientRegistry.bindTileEntityRenderer(Registry.FLAG_TILE.get(), FlagBlockTileRenderer::new);
 
 
     }

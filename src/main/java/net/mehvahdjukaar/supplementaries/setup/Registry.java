@@ -14,6 +14,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.particles.BasicParticleType;
 import net.minecraft.particles.ParticleType;
+import net.minecraft.potion.Effects;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
@@ -457,6 +458,27 @@ public class Registry {
     public static final RegistryObject<TileEntityType<LaserBlockTile>> LASER_BLOCK_TILE = TILES.register(LASER_NAME,
             () -> TileEntityType.Builder.create(LaserBlockTile::new, LASER_BLOCK.get()).build(null));
     public static final RegistryObject<Item> LASER_BLOCK_ITEM = ITEMS.register(LASER_NAME, () -> new BlockItem(LASER_BLOCK.get(),
+            new Item.Properties().group(null)));
+
+    //clover
+    /*
+    public static final RegistryObject<Block> CLOVER_BLOCK = BLOCKS.register("clover", () -> new FlowerBlock(
+            Effects.LUCK, 0, Block.Properties.create(Material.PLANTS).doesNotBlockMovement().sound(SoundType.PLANT)
+            .hardnessAndResistance(0f, 0f)
+    ));*/
+
+    //flag
+    public static final String FLAG_NAME = "flag";
+    public static final RegistryObject<Block> FLAG = BLOCKS.register(FLAG_NAME, () -> new FlagBlock(
+            AbstractBlock.Properties.create(Material.WOOD, MaterialColor.AIR)
+                    .hardnessAndResistance(1f, 1f)
+                    .sound(SoundType.WOOD)
+                    .harvestTool(ToolType.AXE)
+                    .notSolid()
+    ));
+    public static final RegistryObject<TileEntityType<FlagBlockTile>> FLAG_TILE = TILES.register(FLAG_NAME,
+            () -> TileEntityType.Builder.create(FlagBlockTile::new, FLAG.get()).build(null));
+    public static final RegistryObject<Item> FLAG_ITEM = ITEMS.register(FLAG_NAME, () -> new BlockItem(FLAG.get(),
             new Item.Properties().group(null)));
 
 
