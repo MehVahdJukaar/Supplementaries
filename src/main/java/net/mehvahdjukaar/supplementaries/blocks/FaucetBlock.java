@@ -4,6 +4,8 @@ import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.minecraft.block.*;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ParticleTypes;
@@ -29,16 +31,22 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import java.lang.reflect.Field;
 import java.util.Random;
 
-public class FaucetBlock extends Block {
+public class FaucetBlock extends Block implements  IWaterLoggable{
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
     public static final BooleanProperty ENABLED = BlockStateProperties.ENABLED;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     public static final BooleanProperty HAS_WATER = CommonUtil.HAS_WATER;
     public static final BooleanProperty HAS_JAR = CommonUtil.HAS_JAR;
+    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public FaucetBlock(Properties properties) {
         super(properties);
         this.setDefaultState(this.stateContainer.getBaseState().with(HAS_JAR, false).with(FACING, Direction.NORTH)
-                .with(ENABLED, false).with(POWERED, false).with(HAS_WATER, false));
+                .with(ENABLED, false).with(POWERED, false).with(HAS_WATER, false).with(WATERLOGGED,false));
+    }
+
+    @Override
+    public FluidState getFluidState(BlockState state) {
+        return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
     }
 
     @Override
@@ -86,6 +94,14 @@ public class FaucetBlock extends Block {
     @Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         this.updateBlock(state, worldIn, pos, false);
+    }
+
+    @Override
+    public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
+        if (stateIn.get(WATERLOGGED)) {
+            worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
+        }
+        return super.updatePostPlacement(stateIn,facing,facingState,worldIn,currentPos,facingPos);
     }
 
     //TODO: replace this with updatePostPlacement
@@ -138,7 +154,7 @@ public class FaucetBlock extends Block {
                 Field f = ObfuscationReflectionHelper.findField(ConcretePowderBlock.class,"field_200294_a");
                 f.setAccessible(true);
                 world.setBlockState(pos.down(), (BlockState) f.get(downstate.getBlock()), 2|16);
-            } catch (Exception e) {}
+            } catch (Exception ignored) {}
 
         }
 
@@ -156,7 +172,7 @@ public class FaucetBlock extends Block {
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(FACING, ENABLED, POWERED, HAS_WATER, HAS_JAR);
+        builder.add(FACING, ENABLED, POWERED, HAS_WATER, HAS_JAR, WATERLOGGED);
     }
 
     public BlockState rotate(BlockState state, Rotation rot) {
@@ -169,9 +185,13 @@ public class FaucetBlock extends Block {
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
+        World world = context.getWorld();
+        BlockPos pos = context.getPos();
+        boolean flag = world.getFluidState(pos).getFluid() == Fluids.WATER;
+        boolean hasjar = world.getBlockState(pos.down()).getBlock() instanceof JarBlock;
         if (context.getFace() == Direction.UP || context.getFace() == Direction.DOWN)
-            return this.getDefaultState().with(FACING, Direction.NORTH);
-        return this.getDefaultState().with(FACING, context.getFace());
+            return this.getDefaultState().with(FACING, Direction.NORTH).with(HAS_JAR,hasjar).with(WATERLOGGED,flag);
+        return this.getDefaultState().with(FACING, context.getFace()).with(HAS_JAR,hasjar).with(WATERLOGGED,flag);
     }
 
     @OnlyIn(Dist.CLIENT)

@@ -106,6 +106,7 @@ public class Supplementaries{
                     SoundType soundtype = s.getSoundType(world, ctx.getPos(), player);
                     world.playSound(player, ctx.getPos(), soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
 
+                    event.setCanceled(true);
 
                 }
             }

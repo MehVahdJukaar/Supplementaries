@@ -37,6 +37,8 @@
   "gui.supplementaries.speaker_block.chat_message" : "Narrator Message",
   "gui.supplementaries.speaker_block.narrator_message": "Chat Message",
 
+  "block.supplementaries.flag": "WIP Flag",
+
   "entity.supplementaries.firefly": "Firefly",
   "item.supplementaries.firefly": "Firefly Spawn Egg",
   "block.supplementaries.firefly_jar": "Firefly Jar",

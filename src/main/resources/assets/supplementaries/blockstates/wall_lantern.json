@@ -1,18 +1,48 @@
 {
   "variants": {
-    "facing=north": {
+    "facing=north,extension=0": {
       "model": "supplementaries:block/wall_lantern"
     },
-    "facing=east": {
+    "facing=east,extension=0": {
       "model": "supplementaries:block/wall_lantern",
       "y": 90
     },
-    "facing=south": {
+    "facing=south,extension=0": {
       "model": "supplementaries:block/wall_lantern",
       "y": 180
     },
-    "facing=west": {
+    "facing=west,extension=0": {
       "model": "supplementaries:block/wall_lantern",
+      "y": 270
+    },
+    "facing=north,extension=1": {
+      "model": "supplementaries:block/wall_lantern_long"
+    },
+    "facing=east,extension=1": {
+      "model": "supplementaries:block/wall_lantern_long",
+      "y": 90
+    },
+    "facing=south,extension=1": {
+      "model": "supplementaries:block/wall_lantern_long",
+      "y": 180
+    },
+    "facing=west,extension=1": {
+      "model": "supplementaries:block/wall_lantern_long",
+      "y": 270
+    },
+    "facing=north,extension=2": {
+      "model": "supplementaries:block/wall_lantern_long"
+    },
+    "facing=east,extension=2": {
+      "model": "supplementaries:block/wall_lantern_long",
+      "y": 90
+    },
+    "facing=south,extension=2": {
+      "model": "supplementaries:block/wall_lantern_long",
+      "y": 180
+    },
+    "facing=west,extension=2": {
+      "model": "supplementaries:block/wall_lantern_long",
       "y": 270
     }
   }

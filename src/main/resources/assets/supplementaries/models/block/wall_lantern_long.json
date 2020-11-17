@@ -1,0 +1,40 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"1": "supplementaries:blocks/wall_lantern",
+		"particle": "minecraft:block/lantern"
+	},
+	"elements": [
+		{
+			"from": [7, 13, 6],
+			"to": [9, 15, 14],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 13.75, 8.25]},
+			"faces": {
+				"north": {"uv": [14, 3, 16, 5], "texture": "#1"},
+				"east": {"uv": [6, 3, 14, 5], "texture": "#1"},
+				"west": {"uv": [6, 3, 14, 5], "texture": "#1"},
+				"up": {"uv": [6, 3, 14, 5], "rotation": 270, "texture": "#1"},
+				"down": {"uv": [6, 3, 14, 5], "rotation": 90, "texture": "#1"}
+			}
+		},
+		{
+			"from": [7, 13, 14],
+			"to": [9, 15, 22],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 13.75, 16.25]},
+			"faces": {
+				"east": {"uv": [6, 3, 14, 5], "texture": "#1"},
+				"west": {"uv": [6, 3, 14, 5], "texture": "#1"},
+				"up": {"uv": [6, 3, 14, 5], "rotation": 270, "texture": "#1"},
+				"down": {"uv": [6, 3, 14, 5], "rotation": 90, "texture": "#1"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "group",
+			"origin": [16, 8, 8],
+			"children": [0, 1]
+		}
+	]
+}

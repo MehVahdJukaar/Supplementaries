@@ -5,10 +5,11 @@ import net.mehvahdjukaar.supplementaries.gui.HangingSignGui;
 import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.CompassItem;
 import net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathNodeType;
@@ -16,6 +17,7 @@ import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -29,18 +31,19 @@ import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
 
-public class HangingSignBlock extends Block {
+public class HangingSignBlock extends Block implements  IWaterLoggable{
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
     public static final BooleanProperty TILE = CommonUtil.TILE; // is it renderer by tile entity? animated part
     public static final IntegerProperty EXTENSION = CommonUtil.EXTENSION;
+    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public HangingSignBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(EXTENSION, 0).with(FACING, Direction.NORTH).with(TILE, false));
+        this.setDefaultState(this.stateContainer.getBaseState().with(WATERLOGGED, false).with(EXTENSION, 0).with(FACING, Direction.NORTH).with(TILE, false));
     }
 
     @Override
-    public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
-        return true;
+    public FluidState getFluidState(BlockState state) {
+        return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
     }
 
     //for player bed spawn
@@ -115,6 +118,9 @@ public class HangingSignBlock extends Block {
     @Override
     public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos,
                                           BlockPos facingPos) {
+        if (stateIn.get(WATERLOGGED)) {
+            worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
+        }
         return facing == stateIn.get(FACING).getOpposite() && !stateIn.isValidPosition(worldIn, currentPos)
                 ? Blocks.AIR.getDefaultState()
                 : super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
@@ -139,7 +145,7 @@ public class HangingSignBlock extends Block {
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(FACING, TILE, EXTENSION);
+        builder.add(FACING, TILE, EXTENSION, WATERLOGGED);
     }
 
     public BlockState rotate(BlockState state, Rotation rot) {
@@ -162,8 +168,9 @@ public class HangingSignBlock extends Block {
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
+        boolean water = context.getWorld().getFluidState(context.getPos()).getFluid() == Fluids.WATER;
         if (context.getFace() == Direction.UP || context.getFace() == Direction.DOWN)
-            return this.getDefaultState().with(FACING, Direction.NORTH);
+            return this.getDefaultState().with(FACING, Direction.NORTH).with(WATERLOGGED,water);
         BlockPos blockpos = context.getPos();
         IBlockReader world = context.getWorld();
         Block block = world.getBlockState(blockpos.offset(context.getFace().getOpposite())).getBlock();
@@ -171,7 +178,7 @@ public class HangingSignBlock extends Block {
         int flag = 0;
         if(block instanceof FenceBlock || block instanceof SignPostBlock) flag = 1;
         else if(block instanceof WallBlock) flag = 2;
-        return this.getDefaultState().with(FACING, context.getFace()).with(EXTENSION, flag);
+        return this.getDefaultState().with(FACING, context.getFace()).with(EXTENSION, flag).with(WATERLOGGED,water);
     }
 
     @Override
@@ -184,7 +191,11 @@ public class HangingSignBlock extends Block {
         if (state.getBlock() != newState.getBlock()) {
             TileEntity tileentity = world.getTileEntity(pos);
             if (tileentity instanceof HangingSignBlockTile) {
-                InventoryHelper.dropInventoryItems(world, pos, (HangingSignBlockTile) tileentity);
+                //InventoryHelper.dropInventoryItems(world, pos, (HangingSignBlockTile) tileentity);
+
+                ItemStack itemstack =  ((HangingSignBlockTile) tileentity).getStackInSlot(0);
+                ItemEntity itementity = new ItemEntity(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, itemstack);                itementity.setDefaultPickupDelay();
+                world.addEntity(itementity);
                 world.updateComparatorOutputLevel(pos, this);
             }
             super.onReplaced(state, world, pos, newState, isMoving);

@@ -2,7 +2,10 @@ package net.mehvahdjukaar.supplementaries.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.IWaterLoggable;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
@@ -22,28 +25,35 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraftforge.common.extensions.IForgeFluidState;
 
 
-public class PedestalBlock extends Block {
+public class PedestalBlock extends Block implements IWaterLoggable {
     public static final BooleanProperty UP = BlockStateProperties.UP;
     public static final BooleanProperty DOWN = BlockStateProperties.DOWN;
+    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     public PedestalBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(UP, false).with(DOWN, false));
+        this.setDefaultState(this.stateContainer.getBaseState().with(UP, false).with(DOWN, false).with(WATERLOGGED,false));
     }
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(UP,DOWN);
+        builder.add(UP,DOWN,WATERLOGGED);
     }
 
+    @Override
+    public FluidState getFluidState(BlockState state) {
+        return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
+    }
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         World world = context.getWorld();
         BlockPos pos = context.getPos();
-        return this.getDefaultState().with(UP, canConnect(world.getBlockState(pos.up()), pos, world, Direction.UP))
+        boolean flag = world.getFluidState(pos).getFluid() == Fluids.WATER;
+        return this.getDefaultState().with(WATERLOGGED, flag).with(UP, canConnect(world.getBlockState(pos.up()), pos, world, Direction.UP))
                 .with(DOWN, canConnect(world.getBlockState(pos.down()), pos, world, Direction.DOWN));
     }
 
@@ -69,6 +79,10 @@ public class PedestalBlock extends Block {
     //called when a neighbor is placed
     @Override
     public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
+        if (stateIn.get(WATERLOGGED)) {
+            worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
+        }
+
         if(facing==Direction.UP){
             return stateIn.with(UP, canConnect(facingState, currentPos, (World)worldIn, facing));
         }

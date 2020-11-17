@@ -89,7 +89,7 @@ public class JarItemRenderer extends ItemStackTileEntityRenderer {
                 if (height != -0) {
                     matrixStackIn.push();
                     TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(t);
-                    IVertexBuilder builder = bufferIn.getBuffer(RenderType.getTranslucent());
+                    IVertexBuilder builder = bufferIn.getBuffer(RenderType.getTranslucentMovingBlock());
                     matrixStackIn.translate(0.5, 0.0625, 0.5);
                     CommonUtil.addCube(builder, matrixStackIn, 0.5f, height, sprite, combinedLightIn, color, opacity, combinedOverlayIn, true,
                             true, false, true);

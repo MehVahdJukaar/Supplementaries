@@ -4,9 +4,12 @@ import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;
+import net.minecraft.block.IWaterLoggable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
@@ -24,20 +27,27 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
 
-public class ClockBlock extends Block {
+public class ClockBlock extends Block implements IWaterLoggable {
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
     public static final IntegerProperty POWER = BlockStateProperties.POWER_0_15;
     public static final IntegerProperty HOUR = CommonUtil.HOUR;
     public static final BooleanProperty TILE = CommonUtil.TILE; // rendered by tile?
+    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     public ClockBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(TILE, false).with(POWER, 0));
+        this.setDefaultState(this.stateContainer.getBaseState().with(WATERLOGGED,false).with(FACING, Direction.NORTH).with(TILE, false).with(POWER, 0));
+    }
+
+    @Override
+    public FluidState getFluidState(BlockState state) {
+        return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
     }
 
     @Override
@@ -63,7 +73,8 @@ public class ClockBlock extends Block {
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing().getOpposite());
+        boolean flag = context.getWorld().getFluidState(context.getPos()).getFluid() == Fluids.WATER;;
+        return this.getDefaultState().with(WATERLOGGED, flag).with(FACING, context.getPlacementHorizontalFacing().getOpposite());
     }
 
     /*
@@ -120,7 +131,7 @@ public class ClockBlock extends Block {
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(POWER,HOUR,FACING,TILE);
+        builder.add(POWER,HOUR,FACING,TILE,WATERLOGGED);
     }
 
     @Override
@@ -135,6 +146,14 @@ public class ClockBlock extends Block {
 
     public static int getHour(BlockState state) {
         return state.get(HOUR);
+    }
+
+    @Override
+    public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
+        if (stateIn.get(WATERLOGGED)) {
+            worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
+        }
+        return super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
 
     @Deprecated

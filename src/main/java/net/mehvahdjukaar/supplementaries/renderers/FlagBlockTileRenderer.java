@@ -50,8 +50,8 @@ public class FlagBlockTileRenderer extends TileEntityRenderer<FlagBlockTile> {
 
 
         if(Minecraft.getInstance().gameSettings.graphicFanciness.func_238162_a_()<1){
-            matrixStackIn.rotate(Vector3f.YP.rotationDegrees(2*MathHelper.sin(((tile.counter+partialTicks) / 35f)% (2 * (float) Math.PI))));
-            renderCurvedSegment(builder, matrixStackIn, 0, 0, w, h, lu, lv, true, false);
+            float ang =2*MathHelper.sin(((tile.counter+partialTicks) / 35f)% (2 * (float) Math.PI));
+            renderCurvedSegment(builder, matrixStackIn, ang, 0, w, h, lu, lv, true, false);
         }
         else {
 
@@ -60,24 +60,42 @@ public class FlagBlockTileRenderer extends TileEntityRenderer<FlagBlockTile> {
 
             float t = (tile.counter+partialTicks) / (20f);
 
-            float l = 7f; //wave length in pixels
+            float l = 15f; //wave length in pixels
 
             float speed = 0.5f;
-            float invdamping = 0.6f;
-            float wavyness = 6;
+            float invdamping = 0.3f;
+            float wavyness = 1f;
+
+            int segmentlen = 1;
+
+            if(Minecraft.getInstance().gameSettings.graphicFanciness.func_238162_a_()==2){
+                invdamping =0.5f;
+                wavyness = 4;
+                speed=1f;
 
 
-            for (int z = 0; z < w; z++) {
+            }
+
+
+            for (int z = 0; z < w; z+=segmentlen) {
+
                 float ang = (wavyness + invdamping*z) * MathHelper.sin((((z / (l)) - speed * t) * (float) Math.PI) % (2 * (float) Math.PI));
 
-                renderCurvedSegment(builder, matrixStackIn, ang, z, 1, h, lu, lv, z + 1 == w, zAxis);
 
-                float dz = 1 / 16f;
+
+                renderCurvedSegment(builder, matrixStackIn, ang, z, segmentlen, h, lu, lv, z + segmentlen >= w, zAxis);
+//IVertexBuilder builder2 = bufferIn.getBuffer(RenderType.getEntityNoOutline(new ResourceLocation("supplementaries:textures/entity/flagcross.png")));
+
+                //renderCurvedSegment(builder2, matrixStackIn, ang, z, segmentlen, h, lu, lv, z + segmentlen >= w, zAxis);
+
 
                 matrixStackIn.rotate(Vector3f.YP.rotationDegrees(ang));
-                matrixStackIn.translate(0, 0, dz);
+                matrixStackIn.translate(0, 0, segmentlen/16f);
                 matrixStackIn.rotate(Vector3f.YP.rotationDegrees(-ang));
             }
+
+
+
         }
 
         matrixStackIn.pop();
@@ -190,13 +208,13 @@ public class FlagBlockTileRenderer extends TileEntityRenderer<FlagBlockTile> {
             matrixStackIn.rotate(rotation2);
             matrixStackIn.translate(-hw, 0, 0);
 
-            CommonUtil.addVert(builder, matrixStackIn, 0, h, 0f, maxu-(1/textw), 0, 1, 1, 1, 1, lu, lv, 0, 0, 1);
-            CommonUtil.addVert(builder, matrixStackIn, 0, 0, 0f, maxu, maxv-(1/textw), 1, 1, 1, 1, lu, lv, 0, 0, 1);
+            CommonUtil.addVert(builder, matrixStackIn, 0, h, 0, maxu-(1/textw), 0, 1, 1, 1, 1, lu, lv, 0, 0, 1);
+            CommonUtil.addVert(builder, matrixStackIn, 0, 0, 0, maxu-(1/textw), maxv, 1, 1, 1, 1, lu, lv, 0, 0, 1);
 
             matrixStackIn.translate(w, 0, 0);
 
-            CommonUtil.addVert(builder, matrixStackIn, 0, 0, 0f, maxu, maxv, 1, 1, 1, 1, lu, lv, 0, 0, 1);
-            CommonUtil.addVert(builder, matrixStackIn, 0, h, 0f, maxu, 0, 1, 1, 1, 1, lu, lv, 0, 0, 1);
+            CommonUtil.addVert(builder, matrixStackIn, 0, 0, 0, maxu, maxv, 1, 1, 1, 1, lu, lv, 0, 0, 1);
+            CommonUtil.addVert(builder, matrixStackIn, 0, h, 0, maxu, 0, 1, 1, 1, 1, lu, lv, 0, 0, 1);
 
             matrixStackIn.pop();
         }

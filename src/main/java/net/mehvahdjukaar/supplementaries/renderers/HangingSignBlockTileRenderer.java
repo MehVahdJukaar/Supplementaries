@@ -50,7 +50,7 @@ public class HangingSignBlockTileRenderer extends TileEntityRenderer<HangingSign
         BlockState state = tile.getBlockState().getBlock().getDefaultState().with(HangingSignBlock.TILE, true);
         blockRenderer.renderBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
         matrixStackIn.translate(0.5, 0.5 - 0.1875, 0.5);
-        matrixStackIn.rotate(Vector3f.YP.rotationDegrees(90));
+        matrixStackIn.rotate(Vector3f.YP.rotationDegrees(-90));
         // render item
         if (!tile.isEmpty()) {
             ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
@@ -72,6 +72,7 @@ public class HangingSignBlockTileRenderer extends TileEntityRenderer<HangingSign
                 else{
                     matrixStackIn.translate(0, 0, 0.078125);
                     matrixStackIn.scale(0.5f, 0.5f, 0.5f);
+                    matrixStackIn.rotate(Vector3f.YP.rotationDegrees(180));
                     itemRenderer.renderItem(stack, ItemCameraTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
                             combinedOverlayIn, ibakedmodel);
                 }

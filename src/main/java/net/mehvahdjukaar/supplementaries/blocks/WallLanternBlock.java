@@ -1,19 +1,20 @@
 package net.mehvahdjukaar.supplementaries.blocks;
 
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.HorizontalBlock;
+import net.minecraft.block.*;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootContext;
+import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Mirror;
@@ -32,12 +33,19 @@ import java.util.Collections;
 import java.util.List;
 
 
-public class WallLanternBlock extends Block {
+public class WallLanternBlock extends Block implements  IWaterLoggable{
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
     public static final IntegerProperty LIGHT_LEVEL = CommonUtil.LIGHT_LEVEL_0_15;
+    public static final IntegerProperty EXTENSION = CommonUtil.EXTENSION;
+    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public WallLanternBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(LIGHT_LEVEL, 15));
+        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(LIGHT_LEVEL, 15).with(WATERLOGGED,false));
+    }
+
+    @Override
+    public FluidState getFluidState(BlockState state) {
+        return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
     }
 
     @Override
@@ -75,12 +83,16 @@ public class WallLanternBlock extends Block {
         Direction direction = state.get(FACING);
         BlockPos blockpos = pos.offset(direction.getOpposite());
         BlockState blockstate = worldIn.getBlockState(blockpos);
-        return blockstate.isSolidSide(worldIn, blockpos, direction);
+        Block block =  blockstate.getBlock();
+        return (blockstate.isSolidSide(worldIn, blockpos, direction)||block instanceof FenceBlock || block instanceof SignPostBlock ||block instanceof WallBlock);
     }
 
     @Override
     public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos,
                                           BlockPos facingPos) {
+        if (stateIn.get(WATERLOGGED)) {
+            worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
+        }
         return facing == stateIn.get(FACING).getOpposite() && !stateIn.isValidPosition(worldIn, currentPos)
                 ? Blocks.AIR.getDefaultState()
                 : super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
@@ -114,7 +126,7 @@ public class WallLanternBlock extends Block {
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(FACING, LIGHT_LEVEL);
+        builder.add(FACING, LIGHT_LEVEL, EXTENSION, WATERLOGGED);
     }
 
     public BlockState rotate(BlockState state, Rotation rot) {
@@ -129,7 +141,14 @@ public class WallLanternBlock extends Block {
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         if (context.getFace() == Direction.UP || context.getFace() == Direction.DOWN)
             return this.getDefaultState().with(FACING, Direction.NORTH);
-        return this.getDefaultState().with(FACING, context.getFace());
+        BlockPos blockpos = context.getPos();
+        IBlockReader world = context.getWorld();
+        Block block = world.getBlockState(blockpos.offset(context.getFace().getOpposite())).getBlock();
+
+        boolean flag = world.getFluidState(blockpos).getFluid() == Fluids.WATER;;
+        boolean ext = (block instanceof FenceBlock || block instanceof SignPostBlock ||block instanceof WallBlock);
+
+        return this.getDefaultState().with(FACING, context.getFace()).with(EXTENSION, ext? 1:0).with(WATERLOGGED,flag);
     }
 
 /*

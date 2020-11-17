@@ -1,6 +1,8 @@
 package net.mehvahdjukaar.supplementaries.blocks;
 
 import net.minecraft.block.*;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
@@ -16,27 +18,37 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.IPlantable;
 
 
-public class PlanterBlock extends Block {
+public class PlanterBlock extends Block implements  IWaterLoggable{
     public static final BooleanProperty EXTENDED = BlockStateProperties.EXTENDED; // raised dirt?
+    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     public PlanterBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(EXTENDED, false));
+        this.setDefaultState(this.stateContainer.getBaseState().with(WATERLOGGED, false).with(EXTENDED, false));
+    }
+
+    @Override
+    public FluidState getFluidState(BlockState state) {
+        return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
     }
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(EXTENDED);
+        builder.add(EXTENDED,WATERLOGGED);
     }
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.updatedState(this.getDefaultState(), context.getWorld(), context.getPos());
+        boolean flag = context.getWorld().getFluidState(context.getPos()).getFluid() == Fluids.WATER;
+        return this.updatedState(this.getDefaultState(), context.getWorld(), context.getPos()).with(WATERLOGGED, flag);
     }
 
     //called when a neighbor is placed
     @Override
     public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
+        if (stateIn.get(WATERLOGGED)) {
+            worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
+        }
         if(facing==Direction.UP){
             return this.updatedState(stateIn, (World) worldIn, currentPos);
         }

@@ -8,6 +8,7 @@ import net.minecraft.command.ICommandSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.ChestContainer;
@@ -17,8 +18,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.tileentity.HopperTileEntity;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.LockableLootTileEntity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.NonNullList;
@@ -40,7 +43,7 @@ import java.util.function.Function;
 import java.util.stream.IntStream;
 
 
-public class HangingSignBlockTile extends LockableLootTileEntity implements ITickableTileEntity, ISidedInventory {
+public class HangingSignBlockTile extends TileEntity implements ITickableTileEntity {
 
     public static final int MAXLINES = 5;
 
@@ -69,9 +72,8 @@ public class HangingSignBlockTile extends LockableLootTileEntity implements ITic
     @Override
     public void read(BlockState state, CompoundNBT compound) {
         super.read(state, compound);
-        if (!this.checkLootAndRead(compound)) {
-            this.stacks = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
-        }
+
+        this.stacks = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
         ItemStackHelper.loadAllItems(compound, this.stacks);
         // sign code
         this.isEditable = false;
@@ -96,9 +98,8 @@ public class HangingSignBlockTile extends LockableLootTileEntity implements ITic
     @Override
     public CompoundNBT write(CompoundNBT compound) {
         super.write(compound);
-        if (!this.checkLootAndWrite(compound)) {
-            ItemStackHelper.saveAllItems(compound, this.stacks);
-        }
+        ItemStackHelper.saveAllItems(compound, this.stacks);
+
         for (int i = 0; i < MAXLINES; ++i) {
             String s = ITextComponent.Serializer.toJson(this.signText[i]);
             compound.putString("Text" + (i + 1), s);
@@ -208,12 +209,12 @@ public class HangingSignBlockTile extends LockableLootTileEntity implements ITic
         this.read(this.getBlockState(), pkt.getNbtCompound());
     }
 
-    @Override
+
     public int getSizeInventory() {
         return stacks.size();
     }
 
-    @Override
+
     public boolean isEmpty() {
         for (ItemStack itemstack : this.stacks)
             if (!itemstack.isEmpty())
@@ -221,54 +222,46 @@ public class HangingSignBlockTile extends LockableLootTileEntity implements ITic
         return true;
     }
 
-    @Override
+
     public int getInventoryStackLimit() {
         return 1;
     }
 
-    @Override
+
     protected NonNullList<ItemStack> getItems() {
         return this.stacks;
     }
 
-    @Override
+
     protected void setItems(NonNullList<ItemStack> stacks) {
         this.stacks = stacks;
     }
 
-    @Override
-    public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return true;
-    }
 
-    @Override
-    public boolean canInsertItem(int index, ItemStack stack, @Nullable Direction direction) {
-        return false;
-    }
-
-    @Override
-    public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
-        return false;
-    }
-
-    @Override
     public int[] getSlotsForFace(Direction side) {
         return IntStream.range(0, this.getSizeInventory()).toArray();
     }
 
-    @Override
-    public ITextComponent getDefaultName() {
-        return new StringTextComponent("hanging sing");
+
+    public ItemStack removeStackFromSlot(int index) {
+        return ItemStackHelper.getAndRemove(this.getItems(), index);
     }
 
-    @Override
-    public Container createMenu(int id, PlayerInventory player) {
-        return ChestContainer.createGeneric9X3(id, player, this);
+    public ItemStack getStackInSlot(int index) {
+        return this.getItems().get(index);
     }
 
-    @Override
-    public ITextComponent getDisplayName() {
-        return new StringTextComponent("Hanging sing");
+    public void setInventorySlotContents(int index, ItemStack stack) {
+        this.getItems().set(index, stack);
+        if (stack.getCount() > this.getInventoryStackLimit()) {
+            stack.setCount(this.getInventoryStackLimit());
+        }
+
+        this.markDirty();
+    }
+
+    public void clear() {
+        this.getItems().clear();
     }
 
     public Direction getDirection() {

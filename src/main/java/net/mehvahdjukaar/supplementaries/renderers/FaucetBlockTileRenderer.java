@@ -28,7 +28,7 @@ public class FaucetBlockTileRenderer extends TileEntityRenderer<FaucetBlockTile>
         if (tile.hasWater() && tile.isOpen() && !tile.hasJar()) {
             TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(CommonUtil.FAUCET_TEXTURE);
             // TODO:remove breaking animation
-            IVertexBuilder builder = bufferIn.getBuffer(RenderType.getTranslucent());
+            IVertexBuilder builder = bufferIn.getBuffer(RenderType.getTranslucentMovingBlock());
             int color = tile.watercolor;
             if(color==-1)color = tile.updateClientWaterColor();
             float opacity = 0.75f;

@@ -9,6 +9,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.FenceBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
@@ -16,7 +17,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 
@@ -46,7 +49,8 @@ public class SignPostItem  extends Item {
         if(isfence || issignpost){
 
             //if(!world.isRemote) world.setBlockState(blockpos, Registry.SIGN_POST.get().getDefaultState(), 3);
-            world.setBlockState(blockpos, Registry.SIGN_POST.get().getDefaultState(), 3);
+
+            world.setBlockState(blockpos, Registry.SIGN_POST.get().getStateForPlacement(new BlockItemUseContext(context)), 3);
 
             boolean flag = false;
 

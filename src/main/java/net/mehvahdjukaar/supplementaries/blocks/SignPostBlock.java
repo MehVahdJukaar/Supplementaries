@@ -9,22 +9,21 @@ import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.IWaterLoggable;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.CompassItem;
-import net.minecraft.item.DyeItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
+import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.Rotation;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.MathHelper;
@@ -32,6 +31,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 
@@ -39,12 +39,34 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 
 
-public class SignPostBlock extends Block {
+public class SignPostBlock extends Block implements IWaterLoggable {
     protected static final VoxelShape SHAPE = Block.makeCuboidShape(5D, 0.0D, 5D, 11D, 16.0D, 11D);
+
+    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final EnumProperty<WoodType> WOOD_TYPE = CommonUtil.WOOD_TYPE; //null = rendered by te. other states hold all the wood types sign models
     public SignPostBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(WOOD_TYPE, WoodType.NONE));
+        this.setDefaultState(this.stateContainer.getBaseState().with(WOOD_TYPE, WoodType.NONE).with(WATERLOGGED, false));
+    }
+
+    @Override
+    public FluidState getFluidState(BlockState state) {
+        return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
+    }
+
+    @Override
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
+        boolean flag = context.getWorld().getFluidState(context.getPos()).getFluid() == Fluids.WATER;;
+        return this.getDefaultState().with(WATERLOGGED, flag);
+    }
+
+    @Override
+    public BlockState updatePostPlacement(BlockState state, Direction facing, BlockState facingState, IWorld world, BlockPos currentPos,
+                                          BlockPos facingPos) {
+        if (state.get(WATERLOGGED)) {
+            world.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+        }
+        return super.updatePostPlacement(state, facing, facingState, world, currentPos, facingPos);
     }
 
     public boolean rotateSigns(World world, BlockPos pos, float angle){
@@ -185,7 +207,7 @@ public class SignPostBlock extends Block {
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(WOOD_TYPE);
+        builder.add(WOOD_TYPE,WATERLOGGED);
     }
 
     @Override
