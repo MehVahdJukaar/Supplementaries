@@ -66,7 +66,7 @@ public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockT
 
                 if(!left){
                     matrixStackIn.translate(-0.15625, 0, 0);
-                    matrixStackIn.rotate(Vector3f.YP.rotationDegrees(180));
+                    matrixStackIn.rotate(Vector3f.YP.rotationDegrees(-180));
                     matrixStackIn.translate(0.15625, 0, 0);
                 }
                 matrixStackIn.translate(-0.5, -0.5, -0.5);
@@ -106,7 +106,7 @@ public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockT
 
                 if(!left){
                     matrixStackIn.translate(-0.15625, 0, 0);
-                    matrixStackIn.rotate(Vector3f.YP.rotationDegrees(180));
+                    matrixStackIn.rotate(Vector3f.YP.rotationDegrees(-180));
                     matrixStackIn.translate(0.15625, 0, 0);
                 }
                 matrixStackIn.translate(-0.5, -1, -0.5);

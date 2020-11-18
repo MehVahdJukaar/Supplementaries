@@ -148,9 +148,9 @@ public class SignPostGui extends Screen {
 
             matrixstack.push();
             if(!leftup){
-                matrixstack.translate(0.15625, 0, 0);
-                matrixstack.rotate(Vector3f.YP.rotationDegrees(180));
-                matrixstack.translate(-0.15625, 0, 0);
+                //matrixstack.translate(0.15625, 0, 0);
+                matrixstack.rotate(Vector3f.YP.rotationDegrees(-180));
+                //matrixstack.translate(-0.15625, 0, 0);
             }
             matrixstack.translate(0, - 0.5, -0.5);
             blockRenderer.renderBlock(state, matrixstack, irendertypebuffer$impl, 15728880, OverlayTexture.NO_OVERLAY, EmptyModelData.INSTANCE);
@@ -161,12 +161,10 @@ public class SignPostGui extends Screen {
 
             matrixstack.push();
             if(!leftdown){
-                matrixstack.translate(0.15625, 0, 0);
-                matrixstack.rotate(Vector3f.YP.rotationDegrees(180));
-                matrixstack.translate(-0.15625, 0, 0);
-                //TODO: right sign is shaded... don't know why
+                //matrixstack.translate(0.15625, 0, 0);
+                matrixstack.rotate(Vector3f.YP.rotationDegrees(-180));
+                //matrixstack.translate(-0.15625, 0, 0);
             }
-
             matrixstack.translate(0, -1, -0.5);
             blockRenderer.renderBlock(state, matrixstack, irendertypebuffer$impl, 15728880, OverlayTexture.NO_OVERLAY, EmptyModelData.INSTANCE);
             matrixstack.pop();

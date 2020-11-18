@@ -33,7 +33,7 @@ public class ClockBlockTileRenderer extends TileEntityRenderer<ClockBlockTile> {
         matrixStackIn.rotate(Vector3f.XP.rotationDegrees(90.0F));
         matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(MathHelper.interpolateAngle(partialTicks, tile.prevRoll, tile.roll)));
 
-        matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(180));
+        //matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(180));
         BlockRendererDispatcher blockRenderer = Minecraft.getInstance().getBlockRendererDispatcher();
         matrixStackIn.translate(-0.5, -0.5, -0.5);
         BlockState state = Registry.CLOCK_BLOCK.get().getDefaultState().with(ClockBlock.TILE, true);

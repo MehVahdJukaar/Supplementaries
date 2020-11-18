@@ -23,6 +23,8 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 public class WindVaneBlock extends Block implements IWaterLoggable {
+    protected static final VoxelShape SHAPE = VoxelShapes.create(0.125D, 0D, 0.125D, 0.875D, 1D, 0.875D);
+
     public static final BooleanProperty TILE = CommonUtil.TILE; // is it rooster only?
     public static final IntegerProperty POWER = BlockStateProperties.POWER_0_15;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
@@ -82,7 +84,7 @@ public class WindVaneBlock extends Block implements IWaterLoggable {
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
-        return VoxelShapes.create(0.125D, 0D, 0.125D, 0.875D, 1D, 0.875D);
+        return SHAPE;
     }
 
     /*

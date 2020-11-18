@@ -10,7 +10,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.shapes.VoxelShape;
 
 public class FlagBlockTile extends TileEntity implements ITickableTileEntity {
 

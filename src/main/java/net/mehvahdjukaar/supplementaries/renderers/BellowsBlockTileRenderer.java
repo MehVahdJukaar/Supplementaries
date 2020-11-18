@@ -2,24 +2,16 @@ package net.mehvahdjukaar.supplementaries.renderers;
 
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.mehvahdjukaar.supplementaries.blocks.BellowsBlock;
 import net.mehvahdjukaar.supplementaries.blocks.BellowsBlockTile;
-import net.mehvahdjukaar.supplementaries.blocks.WindVaneBlock;
-import net.mehvahdjukaar.supplementaries.blocks.WindVaneBlockTile;
-import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.texture.AtlasTexture;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;

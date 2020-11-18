@@ -17,7 +17,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 public class FlagBlock extends Block {
-    protected static final VoxelShape AABB = Block.makeCuboidShape(4.0D, 0.0D, 4.0D, 12.0D, 16.0D, 12.0D);
+    protected static final VoxelShape SHAPE = Block.makeCuboidShape(4.0D, 0.0D, 4.0D, 12.0D, 16.0D, 12.0D);
 
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
 
@@ -41,7 +41,7 @@ public class FlagBlock extends Block {
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
-        return AABB;
+        return SHAPE;
     }
 
     @Override

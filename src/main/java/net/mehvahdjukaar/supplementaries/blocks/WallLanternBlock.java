@@ -34,6 +34,11 @@ import java.util.List;
 
 
 public class WallLanternBlock extends Block implements  IWaterLoggable{
+    protected static final VoxelShape SHAPE_SOUTH = VoxelShapes.create(0.6875D, 0.125D, 0.625D, 0.3125D, 1D, 0D);
+    protected static final VoxelShape SHAPE_NORTH = VoxelShapes.create(0.3125D, 0.125D, 0.375D, 0.6875D, 1D, 1D);
+    protected static final VoxelShape SHAPE_WEST = VoxelShapes.create(0.375D, 0.125D, 0.6875D, 1D, 1D, 0.3125D);
+    protected static final VoxelShape SHAPE_EAST = VoxelShapes.create(0.625D, 0.125D, 0.3125D, 0D, 1D, 0.6875D);
+
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
     public static final IntegerProperty LIGHT_LEVEL = CommonUtil.LIGHT_LEVEL_0_15;
     public static final IntegerProperty EXTENSION = CommonUtil.EXTENSION;
@@ -114,13 +119,13 @@ public class WallLanternBlock extends Block implements  IWaterLoggable{
             case DOWN :
             case SOUTH :
             default :
-                return VoxelShapes.create(0.6875D, 0.125D, 0.625D, 0.3125D, 1D, 0D);
+                return SHAPE_SOUTH;
             case NORTH :
-                return VoxelShapes.create(0.3125D, 0.125D, 0.375D, 0.6875D, 1D, 1D);
+                return SHAPE_NORTH;
             case WEST :
-                return VoxelShapes.create(0.375D, 0.125D, 0.6875D, 1D, 1D, 0.3125D);
+                return SHAPE_WEST;
             case EAST :
-                return VoxelShapes.create(0.625D, 0.125D, 0.3125D, 0D, 1D, 0.6875D);
+                return SHAPE_EAST;
         }
     }
 

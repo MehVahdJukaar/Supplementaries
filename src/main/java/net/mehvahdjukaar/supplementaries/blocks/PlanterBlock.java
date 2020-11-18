@@ -18,7 +18,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.IPlantable;
 
 
-public class PlanterBlock extends Block implements  IWaterLoggable{
+public class PlanterBlock extends Block implements IWaterLoggable{
+    protected static final VoxelShape SHAPE = VoxelShapes.or(VoxelShapes.create(0.125D, 0D, 0.125D, 0.875D, 0.687D, 0.875D), VoxelShapes.create(0D, 0.687D, 0D, 1D, 1D, 1D));
+
     public static final BooleanProperty EXTENDED = BlockStateProperties.EXTENDED; // raised dirt?
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
@@ -82,6 +84,6 @@ public class PlanterBlock extends Block implements  IWaterLoggable{
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
-        return VoxelShapes.or(VoxelShapes.create(0.125D, 0D, 0.125D, 0.875D, 0.687D, 0.875D), VoxelShapes.create(0D, 0.687D, 0D, 1D, 1D, 1D));
+        return SHAPE;
     }
 }

@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.blocks;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.minecraft.block.*;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -32,6 +33,11 @@ import java.lang.reflect.Field;
 import java.util.Random;
 
 public class FaucetBlock extends Block implements  IWaterLoggable{
+    protected static final VoxelShape SHAPE_NORTH = VoxelShapes.create(0.6875D, 0.3125D, 1D, 0.3125D, 0.9375D, 0.3125D);
+    protected static final VoxelShape SHAPE_SOUTH = VoxelShapes.create(0.3125D, 0, 0D, 0.6875D, 0.625D, 0.6875D);
+    protected static final VoxelShape SHAPE_WEST = VoxelShapes.create(1D, 0, 0.3125D, 0.3125D, 0.625D, 0.6875D);
+    protected static final VoxelShape SHAPE_EAST = VoxelShapes.create(0D, 0, 0.6875D, 0.6875D, 0.625D, 0.3125D);
+
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
     public static final BooleanProperty ENABLED = BlockStateProperties.ENABLED;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
@@ -57,13 +63,13 @@ public class FaucetBlock extends Block implements  IWaterLoggable{
                 case DOWN :
                 case NORTH :
                 default :
-                    return VoxelShapes.create(0.6875D, 0, 1D, 0.3125D, 0.625D, 0.3125D);
+                    return SHAPE_NORTH;
                 case SOUTH :
-                    return VoxelShapes.create(0.3125D, 0, 0D, 0.6875D, 0.625D, 0.6875D);
+                    return SHAPE_SOUTH;
                 case EAST :
-                    return VoxelShapes.create(0D, 0, 0.6875D, 0.6875D, 0.625D, 0.3125D);
+                    return SHAPE_EAST;
                 case WEST :
-                    return VoxelShapes.create(1D, 0, 0.3125D, 0.3125D, 0.625D, 0.6875D);
+                    return SHAPE_WEST;
             }
         } else {
             switch (state.get(FACING)) {
@@ -71,7 +77,7 @@ public class FaucetBlock extends Block implements  IWaterLoggable{
                 case DOWN :
                 case NORTH :
                 default :
-                    return VoxelShapes.create(0.6875D, 0.3125D, 1D, 0.3125D, 0.9375D, 0.3125D);
+                    return SHAPE_NORTH;
                 case SOUTH :
                     return VoxelShapes.create(0.3125D, 0.3125D, 0D, 0.6875D, 0.9375D, 0.6875D);
                 case EAST :
@@ -207,7 +213,7 @@ public class FaucetBlock extends Block implements  IWaterLoggable{
                 double d1 = (y + 0.25 + 0 * random.nextFloat());
                 // 0.3125
                 double d2 = (z + 0.375 + 0.25 * random.nextFloat());
-                world.addParticle(ParticleTypes.FALLING_WATER, d0, d1, d2, 0, 0, 0);
+               // world.addParticle(ParticleTypes.FALLING_WATER, d0, d1, d2, 0, 0, 0);
                 world.addParticle(ParticleTypes.DRIPPING_WATER, x + 0.5, y + 0.25, z + 0.5, 0, 0, 0);
             }
         }

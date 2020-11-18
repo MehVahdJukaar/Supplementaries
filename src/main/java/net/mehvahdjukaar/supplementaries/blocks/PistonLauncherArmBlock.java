@@ -29,6 +29,8 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 public class PistonLauncherArmBlock  extends Block {
+    protected static final VoxelShape SHAPE = VoxelShapes.empty();
+
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
     public static final BooleanProperty EXTENDING = CommonUtil.EXTENDING;// is it extending?
     public PistonLauncherArmBlock(Properties properties) {
@@ -38,7 +40,7 @@ public class PistonLauncherArmBlock  extends Block {
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
-        return VoxelShapes.create(0D, 0D, 0D, 0D, 0D, 0D);
+        return SHAPE;
     }
 
     @Override

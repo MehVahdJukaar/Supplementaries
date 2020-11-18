@@ -38,6 +38,9 @@ import java.util.List;
 
 
 public class JarBlock extends Block {
+    protected static final VoxelShape SHAPE = VoxelShapes.or(VoxelShapes.create(0.1875D, 0D, 0.1875D, 0.8125D, 0.875D, 0.8125D),
+            VoxelShapes.create(0.3125, 0.875, 0.3125, 0.6875, 1, 0.6875));
+
     public static final BooleanProperty HAS_LAVA = CommonUtil.HAS_LAVA;
     public JarBlock(Properties properties) {
         super(properties);
@@ -199,8 +202,7 @@ public class JarBlock extends Block {
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
-        return VoxelShapes.or(VoxelShapes.create(0.1875D, 0D, 0.1875D, 0.8125D, 0.875D, 0.8125D),
-                VoxelShapes.create(0.3125, 0.875, 0.3125, 0.6875, 1, 0.6875));
+        return SHAPE;
     }
 
     @Override

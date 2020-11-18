@@ -32,6 +32,12 @@ import net.minecraft.world.World;
 
 
 public class HangingSignBlock extends Block implements  IWaterLoggable{
+    protected static final VoxelShape SHAPE_SOUTH = VoxelShapes.create(0.5625D, 0D, 1D, 0.4375D, 1D, 0D);
+    protected static final VoxelShape SHAPE_NORTH = VoxelShapes.create(0.4375D, 0D, 0D, 0.5625D, 1D, 1D);
+    protected static final VoxelShape SHAPE_EAST = VoxelShapes.create(1D, 0D, 0.4375D, 0D, 1D, 0.5625D);
+    protected static final VoxelShape SHAPE_WEST = VoxelShapes.create(0D, 0D, 0.5625D, 1D, 1D, 0.4375D);
+
+
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
     public static final BooleanProperty TILE = CommonUtil.TILE; // is it renderer by tile entity? animated part
     public static final IntegerProperty EXTENSION = CommonUtil.EXTENSION;
@@ -133,13 +139,13 @@ public class HangingSignBlock extends Block implements  IWaterLoggable{
             case DOWN :
             case SOUTH :
             default :
-                return VoxelShapes.create(0.5625D, 0D, 1D, 0.4375D, 1D, 0D);
+                return SHAPE_SOUTH;
             case NORTH :
-                return VoxelShapes.create(0.4375D, 0D, 0D, 0.5625D, 1D, 1D);
+                return SHAPE_NORTH;
             case WEST :
-                return VoxelShapes.create(0D, 0D, 0.5625D, 1D, 1D, 0.4375D);
+                return SHAPE_WEST;
             case EAST :
-                return VoxelShapes.create(1D, 0D, 0.4375D, 0D, 1D, 0.5625D);
+                return SHAPE_EAST;
         }
     }
 

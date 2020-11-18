@@ -34,6 +34,11 @@ import net.minecraftforge.registries.ForgeRegistries;
 import javax.annotation.Nonnull;
 
 public class ClockBlock extends Block implements IWaterLoggable {
+    protected static final VoxelShape SHAPE_NORTH = VoxelShapes.create(1D, 0D, 1D, 0D, 1D, 0.0625D);
+    protected static final VoxelShape SHAPE_SOUTH = VoxelShapes.create(0D, 0D, 0D, 1D, 1D, 0.9375D);
+    protected static final VoxelShape SHAPE_EAST = VoxelShapes.create(0D, 0D, 1D, 0.9375D, 1D, 0D);
+    protected static final VoxelShape SHAPE_WEST = VoxelShapes.create(1D, 0D, 0D, 0.0625D, 1D, 1D);
+
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
     public static final IntegerProperty POWER = BlockStateProperties.POWER_0_15;
     public static final IntegerProperty HOUR = CommonUtil.HOUR;
@@ -87,13 +92,13 @@ public class ClockBlock extends Block implements IWaterLoggable {
         switch (state.get(FACING)) {
             case NORTH :
             default :
-                return VoxelShapes.create(1D, 0D, 1D, 0D, 1D, 0.0625D);
+                return SHAPE_NORTH;
             case SOUTH :
-                return VoxelShapes.create(0D, 0D, 0D, 1D, 1D, 0.9375D);
+                return SHAPE_SOUTH;
             case EAST :
-                return VoxelShapes.create(0D, 0D, 1D, 0.9375D, 1D, 0D);
+                return SHAPE_EAST;
             case WEST :
-                return VoxelShapes.create(1D, 0D, 0D, 0.0625D, 1D, 1D);
+                return SHAPE_WEST;
         }
     }
 

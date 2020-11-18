@@ -29,6 +29,15 @@ import net.minecraftforge.common.extensions.IForgeFluidState;
 
 
 public class PedestalBlock extends Block implements IWaterLoggable {
+    protected static final VoxelShape SHAPE = VoxelShapes.or(VoxelShapes.create(0.1875D, 0.125D, 0.1875D, 0.815D, 0.885D, 0.815D),
+            VoxelShapes.create(0.0625D, 0.8125D, 0.0625D, 0.9375D, 1D, 0.9375D),
+            VoxelShapes.create(0.0625D, 0D, 0.0625D, 0.9375D, 0.1875D, 0.9375D));
+    protected static final VoxelShape SHAPE_UP = VoxelShapes.or(VoxelShapes.create(0.1875D, 0.125D, 0.1875D, 0.815D, 1, 0.815D),
+            VoxelShapes.create(0.0625D, 0D, 0.0625D, 0.9375D, 0.1875D, 0.9375D));
+    protected static final VoxelShape SHAPE_DOWN = VoxelShapes.or(VoxelShapes.create(0.1875D, 0, 0.1875D, 0.815D, 0.885D, 0.815D),
+            VoxelShapes.create(0.0625D, 0.8125D, 0.0625D, 0.9375D, 1D, 0.9375D));
+    protected static final VoxelShape SHAPE_UP_DOWN = VoxelShapes.create(0.1875D, 0, 0.1875D, 0.815D, 1, 0.815D);
+
     public static final BooleanProperty UP = BlockStateProperties.UP;
     public static final BooleanProperty DOWN = BlockStateProperties.DOWN;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
@@ -154,25 +163,18 @@ public class PedestalBlock extends Block implements IWaterLoggable {
         boolean down = state.get(DOWN);
         if(!up){
             if(!down){
-                return VoxelShapes.or(VoxelShapes.create(0.1875D, 0.125D, 0.1875D, 0.815D, 0.885D, 0.815D),
-                        VoxelShapes.create(0.0625D, 0.8125D, 0.0625D, 0.9375D, 1D, 0.9375D),
-                        VoxelShapes.create(0.0625D, 0D, 0.0625D, 0.9375D, 0.1875D, 0.9375D)
-                );
+                return SHAPE;
             }
             else{
-                return VoxelShapes.or(VoxelShapes.create(0.1875D, 0, 0.1875D, 0.815D, 0.885D, 0.815D),
-                        VoxelShapes.create(0.0625D, 0.8125D, 0.0625D, 0.9375D, 1D, 0.9375D)
-                );
+                return SHAPE_DOWN;
             }
         }
         else{
             if(!down){
-                return VoxelShapes.or(VoxelShapes.create(0.1875D, 0.125D, 0.1875D, 0.815D, 1, 0.815D),
-                        VoxelShapes.create(0.0625D, 0D, 0.0625D, 0.9375D, 0.1875D, 0.9375D)
-                );
+                return SHAPE_UP;
             }
             else{
-                return VoxelShapes.create(0.1875D, 0, 0.1875D, 0.815D, 1, 0.815D);
+                return SHAPE_UP_DOWN;
             }
         }
     }
