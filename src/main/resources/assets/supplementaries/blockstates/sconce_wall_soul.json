@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "supplementaries:block/sconce_wall_soul"
+    },
+    "facing=east": {
+      "model": "supplementaries:block/sconce_wall_soul",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "supplementaries:block/sconce_wall_soul",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "supplementaries:block/sconce_wall_soul",
+      "y": 270
+    }
+  }
+}

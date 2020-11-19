@@ -19,6 +19,7 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
@@ -28,6 +29,10 @@ import java.util.List;
 public class ClientSetup {
 
     public static void init(final FMLClientSetupEvent event){
+
+        //firefly & jar
+        RenderingRegistry.registerEntityRenderingHandler(Registry.FIREFLY.get(), FireflyEntityRenderer::new);
+        RenderTypeLookup.setRenderLayer(Registry.FIREFLY_JAR.get(), RenderType.getCutout());
 
         //planter
         RenderTypeLookup.setRenderLayer(Registry.PLANTER.get(), RenderType.getCutout());
@@ -72,7 +77,14 @@ public class ClientSetup {
         //flag
         RenderTypeLookup.setRenderLayer(Registry.FLAG.get(), RenderType.getCutout());
         ClientRegistry.bindTileEntityRenderer(Registry.FLAG_TILE.get(), FlagBlockTileRenderer::new);
-
+        //drawers
+        RenderTypeLookup.setRenderLayer(Registry.DRAWERS.get(), RenderType.getCutout());
+        ClientRegistry.bindTileEntityRenderer(Registry.DRAWERS_TILE.get(), DrawerBlockTileRenderer::new);
+        //sconce
+        RenderTypeLookup.setRenderLayer(Registry.SCONCE_WALL.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(Registry.SCONCE.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(Registry.SCONCE_WALL_SOUL.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(Registry.SCONCE_SOUL.get(), RenderType.getCutout());
 
     }
 

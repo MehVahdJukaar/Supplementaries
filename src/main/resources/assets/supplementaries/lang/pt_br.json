@@ -36,6 +36,8 @@
   "gui.supplementaries.speaker_block.edit": "Editar mensagem do Bloco de Alto-Falante",
   "gui.supplementaries.speaker_block.chat_message" : "Mensagem do Narrador",
   "gui.supplementaries.speaker_block.narrator_message": "Mensagem de bate-papo",
+  "block.supplementaries.sconce": "Arandela",
+  "block.supplementaries.sconce_soul": "Arandela das almas",
 
   "entity.supplementaries.firefly": "Vaga-Lume",
   "item.supplementaries.firefly": "Ovo Gerador de Vaga-Lume",
@@ -43,6 +45,5 @@
   "block.supplementaries.laser_block": "Bloco de Laser",
   "block.supplementaries.clover": "Trevo",
   "block.supplementaries.fancy_lamp": "Lâmpada Chique",
-  "block.supplementaries.sconce": "Arandela",
   "block.supplementaries.skull_lantern": "Lanterna de Caveira"
 }

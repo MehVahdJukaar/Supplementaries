@@ -22,7 +22,10 @@
   "block.supplementaries.turn_table": "Turn Table",
   "block.supplementaries.pedestal": "Pedestal",
   "block.supplementaries.redstone_illuminator": "Redstone Illuminator",
+  "block.supplementaries.notice_board": "Notice Board",
   "block.supplementaries.speaker_block": "Speaker Block",
+  "block.supplementaries.sconce": "Sconce",
+  "block.supplementaries.sconce_soul": "Soul Sconce",
   "block.supplementaries.sign_post": "Sign Post",
   "item.supplementaries.sign_post_oak": "Oak Sign Post",
   "item.supplementaries.sign_post_birch": "Birch Sign Post",
@@ -32,7 +35,6 @@
   "item.supplementaries.sign_post_dark_oak": "Dark Oak Sign Post",
   "item.supplementaries.sign_post_crimson": "Crimson Sign Post",
   "item.supplementaries.sign_post_warped": "Warped Sign Post",
-  "block.supplementaries.notice_board": "Notice Board",
   "gui.supplementaries.speaker_block.edit": "Edit Speaker Block Message",
   "gui.supplementaries.speaker_block.chat_message" : "Narrator Message",
   "gui.supplementaries.speaker_block.narrator_message": "Chat Message",
@@ -45,6 +47,5 @@
   "block.supplementaries.laser_block": "Laser Block",
   "block.supplementaries.clover": "Clover",
   "block.supplementaries.fancy_lamp": "Fancy Lamp",
-  "block.supplementaries.sconce": "Sconce",
   "block.supplementaries.skull_lantern": "Skull Lantern"
 }

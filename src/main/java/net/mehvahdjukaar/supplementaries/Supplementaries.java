@@ -42,6 +42,7 @@ public class Supplementaries{
 
     public Supplementaries() {
 
+        Registry.init1();
         Registry.init();
 
         Networking.registerMessages();
@@ -53,6 +54,8 @@ public class Supplementaries{
         MinecraftForge.EVENT_BUS.register(this);
 
     }
+
+
 
 
 
@@ -130,5 +133,7 @@ public class Supplementaries{
             // register a new block here
             LOGGER.info("HELLO from Register Block");
         }
+
+
     }
 }

@@ -2,44 +2,74 @@ package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.blocks.*;
+import net.mehvahdjukaar.supplementaries.entities.FireflyEntity;
 import net.mehvahdjukaar.supplementaries.gui.NoticeBoardContainer;
 import net.mehvahdjukaar.supplementaries.items.SignPostItem;
+import net.mehvahdjukaar.supplementaries.renderers.FireflyJarItemRenderer;
 import net.mehvahdjukaar.supplementaries.renderers.JarItemRenderer;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
+import net.minecraft.entity.EntityClassification;
+import net.minecraft.entity.EntitySpawnPlacementRegistry;
+import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
+import net.minecraft.item.*;
 import net.minecraft.particles.BasicParticleType;
 import net.minecraft.particles.ParticleType;
-import net.minecraft.potion.Effects;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.common.extensions.IForgeContainerType;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-
+@Mod.EventBusSubscriber(modid = Supplementaries.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class Registry {
+
+    @SubscribeEvent
+    public void registerSpawnEggs(RegistryEvent.Register<Item> event) {
+        event.getRegistry().register(new SpawnEggItem(EntityType.IRON_GOLEM, -4784384, -16777216,
+                new Item.Properties().group(ItemGroup.MISC)).setRegistryName("aaaa"));
+    }
 
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Supplementaries.MOD_ID);
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, Supplementaries.MOD_ID);
     public static final DeferredRegister<TileEntityType<?>> TILES = DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, Supplementaries.MOD_ID);
     private static final DeferredRegister<ContainerType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, Supplementaries.MOD_ID);
     public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, Supplementaries.MOD_ID);
+    public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES, Supplementaries.MOD_ID);
+
 
     public static void init(){
+        ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
         BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
         TILES.register(FMLJavaModLoadingContext.get().getModEventBus());
         ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
         CONTAINERS.register(FMLJavaModLoadingContext.get().getModEventBus());
         PARTICLES.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
+
+    //entities
+    public static final String FIREFLY_NAME = "firefly";
+    public static final RegistryObject<EntityType<FireflyEntity>> FIREFLY = ENTITIES.register(FIREFLY_NAME,
+            () -> EntityType.Builder.create(FireflyEntity::new, EntityClassification.AMBIENT)
+                    .size(0.3125f, 1f)
+                    .build(FIREFLY_NAME)
+    );
+
+
+    //TODO: fix this not registering
+    public static final RegistryObject<Item> FIREFLY_SPAWN_EGG_ITEM = ITEMS.register(FIREFLY_NAME, () -> new SpawnEggItem(FIREFLY.get(),
+            -4784384, -16777216, new Item.Properties().group(ItemGroup.MISC)));
+
 
     //particles
     public static final RegistryObject<BasicParticleType> FIREFLY_GLOW = PARTICLES.register("firefly_glow", () -> new BasicParticleType(true));
@@ -453,7 +483,7 @@ public class Registry {
             AbstractBlock.Properties.create(Material.ROCK, MaterialColor.STONE)
                     .hardnessAndResistance(3.5f, 3.5f)
                     .sound(SoundType.STONE)
-                    .harvestTool(ToolType.AXE)
+                    .harvestTool(ToolType.PICKAXE)
     ));
     public static final RegistryObject<TileEntityType<LaserBlockTile>> LASER_BLOCK_TILE = TILES.register(LASER_NAME,
             () -> TileEntityType.Builder.create(LaserBlockTile::new, LASER_BLOCK.get()).build(null));
@@ -480,6 +510,78 @@ public class Registry {
             () -> TileEntityType.Builder.create(FlagBlockTile::new, FLAG.get()).build(null));
     public static final RegistryObject<Item> FLAG_ITEM = ITEMS.register(FLAG_NAME, () -> new BlockItem(FLAG.get(),
             new Item.Properties().group(null)));
+
+
+    //drawers
+    public static final String DRAWERS_NAME = "drawers";
+    public static final RegistryObject<Block> DRAWERS = BLOCKS.register(DRAWERS_NAME, () -> new DrawersBlock(
+            AbstractBlock.Properties.create(Material.WOOD, MaterialColor.WOOD)
+                    .hardnessAndResistance(2f, 2f)
+                    .sound(SoundType.WOOD)
+                    .harvestTool(ToolType.AXE)
+                    .notSolid()
+    ));
+    public static final RegistryObject<TileEntityType<DrawersBlockTile>> DRAWERS_TILE = TILES.register(DRAWERS_NAME,
+            () -> TileEntityType.Builder.create(DrawersBlockTile::new, DRAWERS.get()).build(null));
+    public static final RegistryObject<Item> DRAWERS_ITEM = ITEMS.register(DRAWERS_NAME, () -> new BlockItem(DRAWERS.get(),
+            new Item.Properties().group(null)));
+
+    //sconce
+    private static boolean needsPostProcessing(BlockState state, IBlockReader reader, BlockPos pos) {
+        return true;
+    }
+
+    //normal
+    public static final String SCONCE_NAME = "sconce";
+    public static final RegistryObject<Block> SCONCE = BLOCKS.register(SCONCE_NAME, ()-> new SconceBlock(
+            AbstractBlock.Properties.create(Material.MISCELLANEOUS)
+                    .doesNotBlockMovement().zeroHardnessAndResistance()
+                    .setLightLevel((state) -> 14)
+                    .setNeedsPostProcessing(Registry::needsPostProcessing)
+                    .setEmmisiveRendering(Registry::needsPostProcessing)
+                    .sound(SoundType.WOOD), ParticleTypes.FLAME));
+    public static final RegistryObject<Block> SCONCE_WALL = BLOCKS.register("sconce_wall", ()-> new SconceWallBlock(
+            AbstractBlock.Properties.create(Material.MISCELLANEOUS)
+                    .doesNotBlockMovement().zeroHardnessAndResistance()
+                    .setLightLevel((state) -> 14)
+                    .lootFrom(SCONCE.get())
+                    .setNeedsPostProcessing(Registry::needsPostProcessing)
+                    .setEmmisiveRendering(Registry::needsPostProcessing)
+                    .sound(SoundType.WOOD), ParticleTypes.FLAME));
+    public static final RegistryObject<Item> SCONCE_ITEM = ITEMS.register(SCONCE_NAME, () ->new WallOrFloorItem(SCONCE.get(), SCONCE_WALL.get(), (new Item.Properties()).group(ItemGroup.DECORATIONS)));
+    //soul
+    public static final String SCONCE_NAME_SOUL = "sconce_soul";
+    public static final RegistryObject<Block> SCONCE_SOUL = BLOCKS.register(SCONCE_NAME_SOUL, ()-> new SconceBlock(
+            AbstractBlock.Properties.create(Material.MISCELLANEOUS)
+                    .doesNotBlockMovement().zeroHardnessAndResistance()
+                    .setLightLevel((state) -> 10)
+                    .setNeedsPostProcessing(Registry::needsPostProcessing)
+                    .setEmmisiveRendering(Registry::needsPostProcessing)
+                    .sound(SoundType.WOOD), ParticleTypes.SOUL_FIRE_FLAME));
+    public static final RegistryObject<Block> SCONCE_WALL_SOUL = BLOCKS.register("sconce_wall_soul", ()-> new SconceWallBlock(
+            AbstractBlock.Properties.create(Material.MISCELLANEOUS)
+                    .doesNotBlockMovement().zeroHardnessAndResistance()
+                    .setLightLevel((state) -> 10)
+                    .lootFrom(SCONCE_SOUL.get())
+                    .setNeedsPostProcessing(Registry::needsPostProcessing)
+                    .setEmmisiveRendering(Registry::needsPostProcessing)
+                    .sound(SoundType.WOOD), ParticleTypes.SOUL_FIRE_FLAME));
+    public static final RegistryObject<Item> SCONCE_ITEM_SOUL = ITEMS.register(SCONCE_NAME_SOUL, () ->new WallOrFloorItem(SCONCE_SOUL.get(), SCONCE_WALL_SOUL.get(), (new Item.Properties()).group(ItemGroup.DECORATIONS)));
+
+    //firefly & jar
+    public static final String FIREFLY_JAR_NAME = "firefly_jar";
+    public static final RegistryObject<Block> FIREFLY_JAR = BLOCKS.register(FIREFLY_JAR_NAME, () -> new FireflyJarBlock(
+            AbstractBlock.Properties.create(Material.GLASS, MaterialColor.GRASS)
+                    .hardnessAndResistance(1f, 1f)
+                    .sound(SoundType.GLASS)
+                    .notSolid()
+                    .setLightLevel((state) -> 8)
+    ));
+    public static final RegistryObject<TileEntityType<FireflyJarBlockTile>> FIREFLY_JAR_TILE = TILES.register(FIREFLY_JAR_NAME,
+            () -> TileEntityType.Builder.create(FireflyJarBlockTile::new, FIREFLY_JAR.get()).build(null));
+    public static final RegistryObject<Item> FIREFLY_JAR_ITEM = ITEMS.register(FIREFLY_JAR_NAME, () -> new BlockItem(FIREFLY_JAR.get(),
+            new Item.Properties().group(ItemGroup.DECORATIONS).maxStackSize(16).setISTER(()-> FireflyJarItemRenderer::new)));
+
 
 
 
