@@ -31,7 +31,7 @@ public class ClientSetup {
     public static void init(final FMLClientSetupEvent event){
 
         //firefly & jar
-        RenderingRegistry.registerEntityRenderingHandler(Registry.FIREFLY.get(), FireflyEntityRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(Registry.FIREFLY_TYPE, FireflyEntityRenderer::new);
         RenderTypeLookup.setRenderLayer(Registry.FIREFLY_JAR.get(), RenderType.getCutout());
 
         //planter
@@ -78,8 +78,8 @@ public class ClientSetup {
         RenderTypeLookup.setRenderLayer(Registry.FLAG.get(), RenderType.getCutout());
         ClientRegistry.bindTileEntityRenderer(Registry.FLAG_TILE.get(), FlagBlockTileRenderer::new);
         //drawers
-        RenderTypeLookup.setRenderLayer(Registry.DRAWERS.get(), RenderType.getCutout());
-        ClientRegistry.bindTileEntityRenderer(Registry.DRAWERS_TILE.get(), DrawerBlockTileRenderer::new);
+        //RenderTypeLookup.setRenderLayer(Registry.DRAWERS.get(), RenderType.getCutout());
+        //ClientRegistry.bindTileEntityRenderer(Registry.DRAWERS_TILE.get(), DrawerBlockTileRenderer::new);
         //sconce
         RenderTypeLookup.setRenderLayer(Registry.SCONCE_WALL.get(), RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(Registry.SCONCE.get(), RenderType.getCutout());

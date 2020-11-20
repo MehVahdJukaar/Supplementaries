@@ -11,7 +11,7 @@ issueTrackerURL="http://my.issue.tracker/" #optional
 
 modId="supplementaries" #mandatory
 
-version="0.8.9" #mandatory
+version="0.9.0" #mandatory
 
 displayName="Supplementaries" #mandatory
 

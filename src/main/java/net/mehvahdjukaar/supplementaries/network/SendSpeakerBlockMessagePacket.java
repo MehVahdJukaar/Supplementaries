@@ -33,6 +33,8 @@ public class SendSpeakerBlockMessagePacket {
         // client world
         ctx.get().enqueueWork(() -> {
             // PlayerEntity player = ctx.get().getSender();
+
+            //TODO: add @p command support
             if (message.narrator) {
                 Narrator.getNarrator().say(message.str.getString(), true);
             } else {

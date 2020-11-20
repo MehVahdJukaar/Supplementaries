@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries;
 
 import net.mehvahdjukaar.supplementaries.blocks.WallLanternBlock;
 import net.mehvahdjukaar.supplementaries.blocks.WallLanternBlockTile;
+import net.mehvahdjukaar.supplementaries.events.RightClickEvent;
 import net.mehvahdjukaar.supplementaries.network.Networking;
 import net.mehvahdjukaar.supplementaries.network.SendSpeakerBlockMessagePacket;
 import net.mehvahdjukaar.supplementaries.setup.ClientSetup;
@@ -9,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.setup.Dispenser;
 import net.mehvahdjukaar.supplementaries.setup.ModSetup;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.*;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.server.management.PlayerList;
@@ -42,7 +44,6 @@ public class Supplementaries{
 
     public Supplementaries() {
 
-        Registry.init1();
         Registry.init();
 
         Networking.registerMessages();
@@ -60,62 +61,6 @@ public class Supplementaries{
 
 
 
-    //I should probably mode this outta here
-    @SubscribeEvent
-    public void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
-        PlayerEntity player = event.getPlayer();
-
-        if(!player.abilities.allowEdit)return;
-
-        Hand hand = event.getHand();
-        if (hand != player.getActiveHand())return;
-
-        ItemStack stack = player.getHeldItem(hand);
-        Item i = stack.getItem();
-
-        if(i instanceof BlockItem && (((BlockItem) i).getBlock() instanceof LanternBlock || ((BlockItem) i).getBlock().getRegistryName().getNamespace().equals("skinnedlanterns"))){
-
-            Direction dir = event.getFace();
-
-            if(dir != Direction.UP && dir != Direction.DOWN){
-                BlockPos pos = event.getPos();
-                World world = event.getWorld();
-
-                Item item = Registry.WALL_LANTERN_ITEM.get();
-
-                BlockItemUseContext ctx = new BlockItemUseContext(
-                        new ItemUseContext(player, hand, new BlockRayTraceResult(
-                                new Vector3d(pos.getX(),pos.getY(),pos.getZ()), dir, pos, false)));
-
-                ActionResultType result = ((BlockItem)item).tryPlace(ctx);
-
-                if(result.isSuccessOrConsume()) {
-
-                    BlockState s = ((BlockItem) i).getBlock().getDefaultState();
-                    BlockPos placedPos = ctx.getPos();
-                    //update light level
-                    world.setBlockState(placedPos, world.getBlockState(placedPos)
-                            .with(WallLanternBlock.LIGHT_LEVEL, s.getLightValue()),4|16);
-
-
-
-                    TileEntity te = world.getTileEntity(placedPos);
-                    if (te instanceof WallLanternBlockTile) {
-                        ((WallLanternBlockTile) te).lanternBlock = s;
-                    }
-
-                    player.swing(hand, true);
-
-                    SoundType soundtype = s.getSoundType(world, ctx.getPos(), player);
-                    world.playSound(player, ctx.getPos(), soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
-
-                    event.setCanceled(true);
-
-                }
-            }
-        }
-    }
-
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
     @SubscribeEvent
@@ -124,16 +69,4 @@ public class Supplementaries{
         LOGGER.info("HELLO from server starting");
     }
 
-    // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
-    // Event bus for receiving Registry Events)
-    @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
-    public static class RegistryEvents {
-        @SubscribeEvent
-        public static void onBlocksRegistry(final RegistryEvent.Register<Block> blockRegistryEvent) {
-            // register a new block here
-            LOGGER.info("HELLO from Register Block");
-        }
-
-
-    }
 }

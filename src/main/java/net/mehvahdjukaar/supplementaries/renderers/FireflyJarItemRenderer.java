@@ -57,7 +57,7 @@ public class FireflyJarItemRenderer extends ItemStackTileEntityRenderer {
 
         matrixStackIn.rotate(Vector3f.YP.rotationDegrees(-45));
 
-        CommonUtil.addQuadSide(ivertexbuilder, matrixStackIn, -0.5f, -0.5f, 0, 0.5f, 0.5f, 0, 0, 0, 1, 1,  r,  g, b, a, 240, 0, 0, 1, 0);
+        RendererUtil.addQuadSide(ivertexbuilder, matrixStackIn, -0.5f, -0.5f, 0, 0.5f, 0.5f, 0, 0, 0, 1, 1,  r,  g, b, a, 240, 0, 0, 1, 0);
 
         matrixStackIn.pop();
     }

@@ -43,7 +43,7 @@ public class FireflyJarBlockTile extends TileEntity implements ITickableTileEnti
     }
 
     public void tick() {
-        if (this.world.isRemote() && this.world.getGameTime() % 8L == 0L && this.rand.nextFloat() > 0.6f) {
+        if (this.world.isRemote() && this.world.getGameTime() % 8L == 0L && this.rand.nextFloat() > 0.55f) {
             int x = this.pos.getX();
             int y = this.pos.getY();
             int z = this.pos.getZ();

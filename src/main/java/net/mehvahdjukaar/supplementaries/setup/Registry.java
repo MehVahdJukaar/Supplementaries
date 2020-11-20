@@ -11,17 +11,17 @@ import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.*;
 import net.minecraft.particles.BasicParticleType;
 import net.minecraft.particles.ParticleType;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
@@ -31,13 +31,19 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-@Mod.EventBusSubscriber(modid = Supplementaries.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
+
+@Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
 public class Registry {
 
     @SubscribeEvent
-    public void registerSpawnEggs(RegistryEvent.Register<Item> event) {
-        event.getRegistry().register(new SpawnEggItem(EntityType.IRON_GOLEM, -4784384, -16777216,
-                new Item.Properties().group(ItemGroup.MISC)).setRegistryName("aaaa"));
+    public static void registerSpawnEggs(RegistryEvent.Register<Item> event) {
+        event.getRegistry().register(FIREFLY_SPAWN_EGG_ITEM);
+    }
+
+    @SubscribeEvent
+    public static void registerEntities(final RegistryEvent.Register<EntityType<?>> event){
+        event.getRegistry().register(FIREFLY_TYPE);
+        GlobalEntityTypeAttributes.put(Registry.FIREFLY_TYPE, FireflyEntity.setCustomAttributes().create());
     }
 
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Supplementaries.MOD_ID);
@@ -45,11 +51,11 @@ public class Registry {
     public static final DeferredRegister<TileEntityType<?>> TILES = DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, Supplementaries.MOD_ID);
     private static final DeferredRegister<ContainerType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, Supplementaries.MOD_ID);
     public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, Supplementaries.MOD_ID);
-    public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES, Supplementaries.MOD_ID);
+    //public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES, Supplementaries.MOD_ID);
 
 
     public static void init(){
-        ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
+        //ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
         BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
         TILES.register(FMLJavaModLoadingContext.get().getModEventBus());
         ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
@@ -59,16 +65,13 @@ public class Registry {
 
     //entities
     public static final String FIREFLY_NAME = "firefly";
-    public static final RegistryObject<EntityType<FireflyEntity>> FIREFLY = ENTITIES.register(FIREFLY_NAME,
-            () -> EntityType.Builder.create(FireflyEntity::new, EntityClassification.AMBIENT)
-                    .size(0.3125f, 1f)
-                    .build(FIREFLY_NAME)
-    );
-
-
-    //TODO: fix this not registering
-    public static final RegistryObject<Item> FIREFLY_SPAWN_EGG_ITEM = ITEMS.register(FIREFLY_NAME, () -> new SpawnEggItem(FIREFLY.get(),
-            -4784384, -16777216, new Item.Properties().group(ItemGroup.MISC)));
+    public static final EntityType FIREFLY_TYPE = (EntityType.Builder.create(FireflyEntity::new, EntityClassification.AMBIENT)
+            .setShouldReceiveVelocityUpdates(true).setTrackingRange(128).setUpdateInterval(3)
+            .size(0.3125f, 1f))
+            .build(FIREFLY_NAME)
+            .setRegistryName(FIREFLY_NAME);
+    public static final Item FIREFLY_SPAWN_EGG_ITEM = new SpawnEggItem(FIREFLY_TYPE, -4784384, -16777216,
+            new Item.Properties().group(ItemGroup.MISC)).setRegistryName(FIREFLY_NAME);
 
 
     //particles
@@ -513,6 +516,7 @@ public class Registry {
 
 
     //drawers
+    /*
     public static final String DRAWERS_NAME = "drawers";
     public static final RegistryObject<Block> DRAWERS = BLOCKS.register(DRAWERS_NAME, () -> new DrawersBlock(
             AbstractBlock.Properties.create(Material.WOOD, MaterialColor.WOOD)
@@ -525,7 +529,7 @@ public class Registry {
             () -> TileEntityType.Builder.create(DrawersBlockTile::new, DRAWERS.get()).build(null));
     public static final RegistryObject<Item> DRAWERS_ITEM = ITEMS.register(DRAWERS_NAME, () -> new BlockItem(DRAWERS.get(),
             new Item.Properties().group(null)));
-
+    */
     //sconce
     private static boolean needsPostProcessing(BlockState state, IBlockReader reader, BlockPos pos) {
         return true;
@@ -535,37 +539,33 @@ public class Registry {
     public static final String SCONCE_NAME = "sconce";
     public static final RegistryObject<Block> SCONCE = BLOCKS.register(SCONCE_NAME, ()-> new SconceBlock(
             AbstractBlock.Properties.create(Material.MISCELLANEOUS)
-                    .doesNotBlockMovement().zeroHardnessAndResistance()
-                    .setLightLevel((state) -> 14)
-                    .setNeedsPostProcessing(Registry::needsPostProcessing)
-                    .setEmmisiveRendering(Registry::needsPostProcessing)
-                    .sound(SoundType.WOOD), ParticleTypes.FLAME));
+                    .doesNotBlockMovement()
+                    .zeroHardnessAndResistance()
+                    .setLightLevel((state) -> state.get(BlockStateProperties.LIT)? 14 : 0)
+                    .sound(SoundType.LANTERN), ParticleTypes.FLAME));
     public static final RegistryObject<Block> SCONCE_WALL = BLOCKS.register("sconce_wall", ()-> new SconceWallBlock(
             AbstractBlock.Properties.create(Material.MISCELLANEOUS)
-                    .doesNotBlockMovement().zeroHardnessAndResistance()
-                    .setLightLevel((state) -> 14)
+                    .doesNotBlockMovement()
+                    .zeroHardnessAndResistance()
+                    .setLightLevel((state) -> state.get(BlockStateProperties.LIT)? 14 : 0)
                     .lootFrom(SCONCE.get())
-                    .setNeedsPostProcessing(Registry::needsPostProcessing)
-                    .setEmmisiveRendering(Registry::needsPostProcessing)
-                    .sound(SoundType.WOOD), ParticleTypes.FLAME));
+                    .sound(SoundType.LANTERN), ParticleTypes.FLAME));
     public static final RegistryObject<Item> SCONCE_ITEM = ITEMS.register(SCONCE_NAME, () ->new WallOrFloorItem(SCONCE.get(), SCONCE_WALL.get(), (new Item.Properties()).group(ItemGroup.DECORATIONS)));
     //soul
     public static final String SCONCE_NAME_SOUL = "sconce_soul";
     public static final RegistryObject<Block> SCONCE_SOUL = BLOCKS.register(SCONCE_NAME_SOUL, ()-> new SconceBlock(
             AbstractBlock.Properties.create(Material.MISCELLANEOUS)
-                    .doesNotBlockMovement().zeroHardnessAndResistance()
-                    .setLightLevel((state) -> 10)
-                    .setNeedsPostProcessing(Registry::needsPostProcessing)
-                    .setEmmisiveRendering(Registry::needsPostProcessing)
-                    .sound(SoundType.WOOD), ParticleTypes.SOUL_FIRE_FLAME));
+                    .doesNotBlockMovement()
+                    .zeroHardnessAndResistance()
+                    .setLightLevel((state) -> state.get(BlockStateProperties.LIT)? 10 : 0)
+                    .sound(SoundType.LANTERN), ParticleTypes.SOUL_FIRE_FLAME));
     public static final RegistryObject<Block> SCONCE_WALL_SOUL = BLOCKS.register("sconce_wall_soul", ()-> new SconceWallBlock(
             AbstractBlock.Properties.create(Material.MISCELLANEOUS)
-                    .doesNotBlockMovement().zeroHardnessAndResistance()
-                    .setLightLevel((state) -> 10)
+                    .zeroHardnessAndResistance()
+                    .doesNotBlockMovement()
+                    .setLightLevel((state) -> state.get(BlockStateProperties.LIT)? 10 : 0)
                     .lootFrom(SCONCE_SOUL.get())
-                    .setNeedsPostProcessing(Registry::needsPostProcessing)
-                    .setEmmisiveRendering(Registry::needsPostProcessing)
-                    .sound(SoundType.WOOD), ParticleTypes.SOUL_FIRE_FLAME));
+                    .sound(SoundType.LANTERN), ParticleTypes.SOUL_FIRE_FLAME));
     public static final RegistryObject<Item> SCONCE_ITEM_SOUL = ITEMS.register(SCONCE_NAME_SOUL, () ->new WallOrFloorItem(SCONCE_SOUL.get(), SCONCE_WALL_SOUL.get(), (new Item.Properties()).group(ItemGroup.DECORATIONS)));
 
     //firefly & jar
@@ -582,7 +582,17 @@ public class Registry {
     public static final RegistryObject<Item> FIREFLY_JAR_ITEM = ITEMS.register(FIREFLY_JAR_NAME, () -> new BlockItem(FIREFLY_JAR.get(),
             new Item.Properties().group(ItemGroup.DECORATIONS).maxStackSize(16).setISTER(()-> FireflyJarItemRenderer::new)));
 
-
+    //candelabra
+    public static final String CANDELABRA_NAME = "candelabra";
+    public static final RegistryObject<Block> CANDELABRA = BLOCKS.register(CANDELABRA_NAME, () -> new CandelabraBlock(
+            AbstractBlock.Properties.create(Material.GLASS, MaterialColor.GRASS)
+                    .hardnessAndResistance(1f, 1f)
+                    .sound(SoundType.GLASS)
+                    .notSolid()
+                    .setLightLevel((state) -> 14)
+    ));
+    public static final RegistryObject<Item> CANDELABRA_ITEM = ITEMS.register(CANDELABRA_NAME, () -> new BlockItem(CANDELABRA.get(),
+            new Item.Properties().group(ItemGroup.DECORATIONS).maxStackSize(16)));
 
 
 }

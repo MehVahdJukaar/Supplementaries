@@ -1,0 +1,77 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "supplementaries:blocks/sconce",
+		"particle": "supplementaries:blocks/sconce"
+	},
+	"elements": [
+		{
+			"from": [7, 0, 7],
+			"to": [9, 8, 9],
+			"rotation": {"angle": 0, "axis": "y", "origin": [15, 7, 16]},
+			"faces": {
+				"north": {"uv": [10, 5, 12, 13], "texture": "#0"},
+				"east": {"uv": [10, 5, 12, 13], "texture": "#0"},
+				"south": {"uv": [10, 5, 12, 13], "texture": "#0"},
+				"west": {"uv": [10, 5, 12, 13], "texture": "#0"},
+				"down": {"uv": [7, 13, 9, 15], "texture": "#0"}
+			}
+		},
+		{
+			"from": [6, 8, 6],
+			"to": [10, 9, 10],
+			"rotation": {"angle": 0, "axis": "y", "origin": [17, 16, 17]},
+			"faces": {
+				"north": {"uv": [6, 4, 10, 5], "texture": "#0"},
+				"east": {"uv": [6, 4, 10, 5], "texture": "#0"},
+				"south": {"uv": [6, 4, 10, 5], "texture": "#0"},
+				"west": {"uv": [6, 4, 10, 5], "texture": "#0"},
+				"up": {"uv": [0, 12, 4, 16], "texture": "#0"},
+				"down": {"uv": [0, 12, 4, 16], "texture": "#0"}
+			}
+		},
+		{
+			"from": [6, 9, 6],
+			"to": [10, 11, 6],
+			"rotation": {"angle": 0, "axis": "y", "origin": [17, 17, 14]},
+			"faces": {
+				"north": {"uv": [6, 2, 10, 4], "texture": "#0"},
+				"south": {"uv": [6, 2, 10, 4], "texture": "#0"}
+			}
+		},
+		{
+			"from": [6, 9, 10],
+			"to": [10, 11, 10],
+			"rotation": {"angle": 0, "axis": "y", "origin": [17, 17, 18]},
+			"faces": {
+				"north": {"uv": [6, 2, 10, 4], "texture": "#0"},
+				"south": {"uv": [6, 2, 10, 4], "texture": "#0"}
+			}
+		},
+		{
+			"from": [10, 9, 6],
+			"to": [10, 11, 10],
+			"rotation": {"angle": 0, "axis": "y", "origin": [17, 17, 17]},
+			"faces": {
+				"east": {"uv": [6, 2, 10, 4], "texture": "#0"},
+				"west": {"uv": [6, 2, 10, 4], "texture": "#0"}
+			}
+		},
+		{
+			"from": [6, 9, 6],
+			"to": [6, 11, 10],
+			"rotation": {"angle": 0, "axis": "y", "origin": [13, 17, 17]},
+			"faces": {
+				"east": {"uv": [6, 2, 10, 4], "texture": "#0"},
+				"west": {"uv": [6, 2, 10, 4], "texture": "#0"}
+			}
+		}
+	],
+	"groups": [0, 1,
+		{
+			"name": "group",
+			"origin": [13, 20, 21],
+			"children": [2, 3, 4, 5]
+		}
+	]
+}

@@ -1,5 +1,5 @@
 {
-  "parent": "supplementaries:block/redstone_illuminator",
+  "parent": "supplementaries:block/redstone_illuminator_0",
   "display": {
     "thirdperson": {
       "rotation": [

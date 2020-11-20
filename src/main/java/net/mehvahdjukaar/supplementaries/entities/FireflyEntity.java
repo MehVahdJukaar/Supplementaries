@@ -11,7 +11,6 @@ import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.controller.FlyingMovementController;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.LookRandomlyGoal;
-import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.IFlyingAnimal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ArrowEntity;
@@ -26,7 +25,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.network.FMLPlayMessages;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -279,7 +277,7 @@ public class FireflyEntity extends CreatureEntity implements IFlyingAnimal {
             Vector3d vec3d2 = RandomPositionGenerator.findAirTarget(FireflyEntity.this, 8, 7, vec3d, ((float) Math.PI / 2F), 2, 1);
             return vec3d2 != null
                     ? vec3d2
-                    : RandomPositionGenerator.findGroundTarget(FireflyEntity.this, 8, 4, -2, vec3d, (double) ((float) Math.PI / 2F));
+                    : RandomPositionGenerator.findGroundTarget(FireflyEntity.this, 8, 4, -2, vec3d, (float) Math.PI / 2F);
         }
     }
 }

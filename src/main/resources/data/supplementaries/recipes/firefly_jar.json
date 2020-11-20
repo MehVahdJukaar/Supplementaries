@@ -1,0 +1,18 @@
+{
+  "group": "supplementaries",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "   ",
+    " 1 ",
+    "   "
+  ],
+  "key": {
+    "1": {
+      "item": "supplementaries:firefly_jar"
+    }
+  },
+  "result": {
+    "item": "supplementaries:jar",
+    "count": 1
+  }
+}

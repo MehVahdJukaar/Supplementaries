@@ -35,7 +35,7 @@ public class FaucetBlockTileRenderer extends TileEntityRenderer<FaucetBlockTile>
             matrixStackIn.push();
             matrixStackIn.translate(0.5, -0.5 - 0.1875, 0.5);
 
-            CommonUtil.addCube(builder, matrixStackIn, 0.25f, 1, sprite, combinedLightIn, color, opacity, combinedOverlayIn, false,
+            RendererUtil.addCube(builder, matrixStackIn, 0.25f, 1, sprite, combinedLightIn, color, opacity, combinedOverlayIn, false,
                     false, true, false);
 
             matrixStackIn.pop();

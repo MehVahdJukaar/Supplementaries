@@ -167,6 +167,7 @@ public class CrankBlock extends Block implements IWaterLoggable{
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.getDefaultState().with(FACING, context.getFace());
+        boolean flag = context.getWorld().getFluidState(context.getPos()).getFluid() == Fluids.WATER;
+        return this.getDefaultState().with(WATERLOGGED, flag).with(FACING, context.getFace());
     }
 }

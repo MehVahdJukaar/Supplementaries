@@ -83,7 +83,7 @@ public class JarItemRenderer extends ItemStackTileEntityRenderer {
                     matrixStackIn.translate(0.5, 0.375, 0.5);
                     matrixStackIn.rotate(Vector3f.YP.rotationDegrees(-45));
                     // matrixStackIn.scale(0.6f, 0.6f, 0.6f);
-                    CommonUtil.renderFish(builder1, matrixStackIn, 0, 0, lt.fishType, combinedLightIn, combinedOverlayIn);
+                    RendererUtil.renderFish(builder1, matrixStackIn, 0, 0, lt.fishType, combinedLightIn, combinedOverlayIn);
                     matrixStackIn.pop();
                 }
                 if (height != -0) {
@@ -91,7 +91,7 @@ public class JarItemRenderer extends ItemStackTileEntityRenderer {
                     TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(t);
                     IVertexBuilder builder = bufferIn.getBuffer(RenderType.getTranslucentMovingBlock());
                     matrixStackIn.translate(0.5, 0.0625, 0.5);
-                    CommonUtil.addCube(builder, matrixStackIn, 0.5f, height, sprite, combinedLightIn, color, opacity, combinedOverlayIn, true,
+                    RendererUtil.addCube(builder, matrixStackIn, 0.5f, height, sprite, combinedLightIn, color, opacity, combinedOverlayIn, true,
                             true, false, true);
                     matrixStackIn.pop();
                 }

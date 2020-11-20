@@ -4,7 +4,6 @@ package net.mehvahdjukaar.supplementaries.renderers;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.mehvahdjukaar.supplementaries.blocks.FlagBlockTile;
-import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
@@ -127,14 +126,14 @@ public class FlagBlockTileRenderer extends TileEntityRenderer<FlagBlockTile> {
 
         matrixStackIn.translate(hw,0,0);
 
-        CommonUtil.addVert(builder, matrixStackIn, 0, 0, 0, u, maxv, 1, 1, 1, 1, lus, lvs, nx,0, nz);
-        CommonUtil.addVert(builder, matrixStackIn, 0, h, 0, u, v, 1, 1, 1, 1, lus, lvs, nx,0, nz);
+        RendererUtil.addVert(builder, matrixStackIn, 0, 0, 0, u, maxv, 1, 1, 1, 1, lus, lvs, nx,0, nz);
+        RendererUtil.addVert(builder, matrixStackIn, 0, h, 0, u, v, 1, 1, 1, 1, lus, lvs, nx,0, nz);
 
         matrixStackIn.rotate(rotation);
         matrixStackIn.translate(0, 0, l);
 
-        CommonUtil.addVert(builder, matrixStackIn, 0, h, 0,maxu , v, 1, 1, 1, 1, lus, lvs, nx, 0, nz);
-        CommonUtil.addVert(builder, matrixStackIn, 0, 0, 0, maxu, maxv, 1, 1, 1, 1, lus, lvs, nx, 0, nz);
+        RendererUtil.addVert(builder, matrixStackIn, 0, h, 0,maxu , v, 1, 1, 1, 1, lus, lvs, nx, 0, nz);
+        RendererUtil.addVert(builder, matrixStackIn, 0, 0, 0, maxu, maxv, 1, 1, 1, 1, lus, lvs, nx, 0, nz);
 
         matrixStackIn.pop();
 
@@ -143,14 +142,14 @@ public class FlagBlockTileRenderer extends TileEntityRenderer<FlagBlockTile> {
 
         matrixStackIn.translate(-hw,0,0);
 
-        CommonUtil.addVert(builder, matrixStackIn, 0, h, 0, u, v, 1, 1, 1, 1, lus, lvs, -nx, 0, nz);
-        CommonUtil.addVert(builder, matrixStackIn, 0, 0, 0, u, maxv, 1, 1, 1, 1, lus, lvs, -nx, 0, nz);
+        RendererUtil.addVert(builder, matrixStackIn, 0, h, 0, u, v, 1, 1, 1, 1, lus, lvs, -nx, 0, nz);
+        RendererUtil.addVert(builder, matrixStackIn, 0, 0, 0, u, maxv, 1, 1, 1, 1, lus, lvs, -nx, 0, nz);
 
         matrixStackIn.rotate(rotation);
         matrixStackIn.translate(0, 0, l);
 
-        CommonUtil.addVert(builder, matrixStackIn, 0, 0, 0, maxu, maxv, 1, 1, 1, 1, lus, lvs, -nx, 0, nz);
-        CommonUtil.addVert(builder, matrixStackIn, 0, h, 0, maxu, v, 1, 1, 1, 1, lus, lvs, -nx, 0, nz);
+        RendererUtil.addVert(builder, matrixStackIn, 0, 0, 0, maxu, maxv, 1, 1, 1, 1, lus, lvs, -nx, 0, nz);
+        RendererUtil.addVert(builder, matrixStackIn, 0, h, 0, maxu, v, 1, 1, 1, 1, lus, lvs, -nx, 0, nz);
 
         matrixStackIn.pop();
 
@@ -159,17 +158,17 @@ public class FlagBlockTileRenderer extends TileEntityRenderer<FlagBlockTile> {
 
         matrixStackIn.translate(hw,0,0);
 
-        CommonUtil.addVert(builder, matrixStackIn, 0, h, 0, u, v, 1, 1, 1, 1, lu, lv, 0, 1, 0);
+        RendererUtil.addVert(builder, matrixStackIn, 0, h, 0, u, v, 1, 1, 1, 1, lu, lv, 0, 1, 0);
         matrixStackIn.translate(-w,0,0);
-        CommonUtil.addVert(builder, matrixStackIn, 0, h, 0, u, w, 1, 1, 1, 1, lu, lv, 0, 1, 0);
+        RendererUtil.addVert(builder, matrixStackIn, 0, h, 0, u, w, 1, 1, 1, 1, lu, lv, 0, 1, 0);
 
         matrixStackIn.rotate(rotation);
         matrixStackIn.translate(0, 0, l);
 
-        CommonUtil.addVert(builder, matrixStackIn, 0, h, 0, maxu, w, 1, 1, 1, 1, lu, lv, 0, 1, 0);
+        RendererUtil.addVert(builder, matrixStackIn, 0, h, 0, maxu, w, 1, 1, 1, 1, lu, lv, 0, 1, 0);
         matrixStackIn.rotate(rotation2);
         matrixStackIn.translate(w,0,0);
-        CommonUtil.addVert(builder, matrixStackIn, 0, h, 0, maxu, v, 1, 1, 1, 1, lu, lv, 0, 1, 0);
+        RendererUtil.addVert(builder, matrixStackIn, 0, h, 0, maxu, v, 1, 1, 1, 1, lu, lv, 0, 1, 0);
 
         matrixStackIn.pop();
 
@@ -178,17 +177,17 @@ public class FlagBlockTileRenderer extends TileEntityRenderer<FlagBlockTile> {
 
         matrixStackIn.translate(-hw,0,0);
 
-        CommonUtil.addVert(builder, matrixStackIn, 0, 0, 0, u, h-w, 1, 1, 1, 1, lu, lv, -1, 0, 0);
+        RendererUtil.addVert(builder, matrixStackIn, 0, 0, 0, u, h-w, 1, 1, 1, 1, lu, lv, -1, 0, 0);
         matrixStackIn.translate(w,0,0);
-        CommonUtil.addVert(builder, matrixStackIn, 0, 0, 0, u, h, 1, 1, 1, 1, lu, lv, 0, -1, 0);
+        RendererUtil.addVert(builder, matrixStackIn, 0, 0, 0, u, h, 1, 1, 1, 1, lu, lv, 0, -1, 0);
 
         matrixStackIn.rotate(rotation);
         matrixStackIn.translate(0, 0, l);
 
-        CommonUtil.addVert(builder, matrixStackIn, 0, 0, 0, maxu, h, 1, 1, 1, 1, lu, lv, 0, -1, 0);
+        RendererUtil.addVert(builder, matrixStackIn, 0, 0, 0, maxu, h, 1, 1, 1, 1, lu, lv, 0, -1, 0);
         matrixStackIn.rotate(rotation2);
         matrixStackIn.translate(-w,0,0);
-        CommonUtil.addVert(builder, matrixStackIn, 0, 0, 0, maxu, h-w, 1, 1, 1, 1, lu, lv, 0, -1, 0);
+        RendererUtil.addVert(builder, matrixStackIn, 0, 0, 0, maxu, h-w, 1, 1, 1, 1, lu, lv, 0, -1, 0);
 
 
         matrixStackIn.pop();
@@ -202,13 +201,13 @@ public class FlagBlockTileRenderer extends TileEntityRenderer<FlagBlockTile> {
             matrixStackIn.rotate(rotation2);
             matrixStackIn.translate(-hw, 0, 0);
 
-            CommonUtil.addVert(builder, matrixStackIn, 0, h, 0, maxu-(1/textw), 0, 1, 1, 1, 1, lu, lv, 0, 0, 1);
-            CommonUtil.addVert(builder, matrixStackIn, 0, 0, 0, maxu-(1/textw), maxv, 1, 1, 1, 1, lu, lv, 0, 0, 1);
+            RendererUtil.addVert(builder, matrixStackIn, 0, h, 0, maxu-(1/textw), 0, 1, 1, 1, 1, lu, lv, 0, 0, 1);
+            RendererUtil.addVert(builder, matrixStackIn, 0, 0, 0, maxu-(1/textw), maxv, 1, 1, 1, 1, lu, lv, 0, 0, 1);
 
             matrixStackIn.translate(w, 0, 0);
 
-            CommonUtil.addVert(builder, matrixStackIn, 0, 0, 0, maxu, maxv, 1, 1, 1, 1, lu, lv, 0, 0, 1);
-            CommonUtil.addVert(builder, matrixStackIn, 0, h, 0, maxu, 0, 1, 1, 1, 1, lu, lv, 0, 0, 1);
+            RendererUtil.addVert(builder, matrixStackIn, 0, 0, 0, maxu, maxv, 1, 1, 1, 1, lu, lv, 0, 0, 1);
+            RendererUtil.addVert(builder, matrixStackIn, 0, h, 0, maxu, 0, 1, 1, 1, 1, lu, lv, 0, 0, 1);
 
             matrixStackIn.pop();
         }

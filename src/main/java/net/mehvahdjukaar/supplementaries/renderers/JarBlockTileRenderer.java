@@ -21,7 +21,6 @@ import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.apache.logging.log4j.core.pattern.AbstractStyleNameConverter;
 
 import java.util.Random;
 
@@ -75,7 +74,7 @@ public class JarBlockTileRenderer extends TileEntityRenderer<JarBlockTile> {
                 matrixStackIn.rotate(rotation);
                 matrixStackIn.scale(0.6f, 0.6f, 0.6f);
                 matrixStackIn.translate(0, -0.2, -0.35);
-                CommonUtil.renderFish(builder1, matrixStackIn, wo, ho, tile.liquidType.fishType, combinedLightIn, combinedOverlayIn);
+                RendererUtil.renderFish(builder1, matrixStackIn, wo, ho, tile.liquidType.fishType, combinedLightIn, combinedOverlayIn);
                 matrixStackIn.pop();
             }
             if (height != 0) {
@@ -89,7 +88,7 @@ public class JarBlockTileRenderer extends TileEntityRenderer<JarBlockTile> {
                 IVertexBuilder builder = bufferIn.getBuffer(
                         RenderType.getTranslucentMovingBlock());
                 matrixStackIn.translate(0.5, 0.0625, 0.5);
-                CommonUtil.addCube(builder, matrixStackIn, 0.5f, height, sprite, combinedLightIn, color, opacity, combinedOverlayIn, true, true,
+                RendererUtil.addCube(builder, matrixStackIn, 0.5f, height, sprite, combinedLightIn, color, opacity, combinedOverlayIn, true, true,
                         true, true);
                 matrixStackIn.pop();
             }

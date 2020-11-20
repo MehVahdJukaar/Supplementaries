@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "face=floor,facing=north": {
+      "model": "supplementaries:block/candelabra"
+    },
+    "face=floor,facing=east": {
+      "model": "supplementaries:block/candelabra",
+      "y": 90
+    },
+    "face=floor,facing=south": {
+      "model": "supplementaries:block/candelabra",
+      "y": 180
+    },
+    "face=floor,facing=west": {
+      "model": "supplementaries:block/candelabra",
+      "y": 270
+    },
+    "face=wall,facing=north": {
+      "model": "supplementaries:block/candelabra_wall"
+    },
+    "face=wall,facing=east": {
+      "model": "supplementaries:block/candelabra_wall",
+      "y": 90
+    },
+    "face=wall,facing=south": {
+      "model": "supplementaries:block/candelabra_wall",
+      "y": 180
+    },
+    "face=wall,facing=west": {
+      "model": "supplementaries:block/candelabra_wall",
+      "y": 270
+    }
+  }
+}

@@ -1,5 +1,5 @@
 package net.mehvahdjukaar.supplementaries.blocks;
-
+/*
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -95,6 +95,7 @@ public class DrawersBlock extends Block {
         }
         return ActionResultType.SUCCESS;
     }*/
+/*
 
     @Override
     public INamedContainerProvider getContainer(BlockState state, World worldIn, BlockPos pos) {
@@ -145,3 +146,4 @@ public class DrawersBlock extends Block {
             return 0;
     }
 }
+*/

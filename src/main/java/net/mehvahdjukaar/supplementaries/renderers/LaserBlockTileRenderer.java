@@ -63,17 +63,17 @@ public class LaserBlockTileRenderer extends TileEntityRenderer<LaserBlockTile> {
             int l = Math.min(lenght, MAXLENGHT);
             for (int i = 0; i < l; i++) {
                 matrixStackIn.translate(0, 1, 0);
-                CommonUtil.addCube(builder1, matrixStackIn, w, 1f, sprite, combinedLightIn, color, 0.7f, combinedOverlayIn, false, false, false,
+                RendererUtil.addCube(builder1, matrixStackIn, w, 1f, sprite, combinedLightIn, color, 0.7f, combinedOverlayIn, false, false, false,
                         false);
-                CommonUtil.addCube(builder1, matrixStackIn, w2, 1f, sprite, combinedLightIn, 0xFFFFFF, 1f, combinedOverlayIn, false, false,
+                RendererUtil.addCube(builder1, matrixStackIn, w2, 1f, sprite, combinedLightIn, 0xFFFFFF, 1f, combinedOverlayIn, false, false,
                         false, false);
             }
             if (lenght == MAXLENGHT + 1) {
                 matrixStackIn.translate(0, 1, 0);
                 TextureAtlasSprite sprite1 = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(CommonUtil.LASER_BEAM_END_TEXTURE);
-                CommonUtil.addCube(builder1, matrixStackIn, w, 1f, sprite1, combinedLightIn, color, 0.7f, combinedOverlayIn, false, false, false,
+                RendererUtil.addCube(builder1, matrixStackIn, w, 1f, sprite1, combinedLightIn, color, 0.7f, combinedOverlayIn, false, false, false,
                         true);
-                CommonUtil.addCube(builder1, matrixStackIn, w2, 1f, sprite1, combinedLightIn, 0xFFFFFF, 1f, combinedOverlayIn, false, false,
+                RendererUtil.addCube(builder1, matrixStackIn, w2, 1f, sprite1, combinedLightIn, 0xFFFFFF, 1f, combinedOverlayIn, false, false,
                         false, true);
             }
             matrixStackIn.pop();
