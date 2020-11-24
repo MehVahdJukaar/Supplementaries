@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.blocks;
 
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.*;
 import net.minecraft.block.material.PushReaction;
@@ -24,8 +25,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import java.util.List;
 
 public class BellowsBlockTile extends TileEntity implements ITickableTileEntity {
-    private static final int RANGE = 5;
-    private static final float PERIOD = 78;
 
     public float height = 0;
     public float prevHeight = 0;
@@ -115,8 +114,9 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
         if(power!=0){
             this.counter++;
 
+            float RANGE = ServerConfigs.cached.BELLOWS_RANGE;
 
-            float period = PERIOD - (power-1)*3;
+            float period = ((float)ServerConfigs.cached.BELLOWS_PERIOD)-(power-1)*((float)ServerConfigs.cached.BELLOWS_POWER_SCALING);
 
             Direction facing = this.getDirection();
 
@@ -144,26 +144,29 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
                 float g = this.counter%period;
                 if ( g< 0.5f*period) {
                     List<Entity> list = this.world.getEntitiesWithinAABB(Entity.class,
-                            CommonUtil.getDirectionBB(this.pos, facing, RANGE));
+                            CommonUtil.getDirectionBB(this.pos, facing, (int)RANGE));
 
                     for (Entity entity : list) {
 
                         if (!this.inLineOfSight(entity, facing)) continue;
 
-                        double velocity = 1/period; // Affects acceleration
-                        double maxVelocity = 2; // Affects max speed
+                        double velocity = ServerConfigs.cached.BELLOWS_BASE_VEL_SCALING/period; // Affects acceleration
+                        double maxVelocity = ServerConfigs.cached.BELLOWS_MAX_VEL; // Affects max speed
 
                         if (facing == Direction.UP) {
                             maxVelocity *= 0.5D;
                         }
 
-                        double dist = entity.getDistanceSq(this.pos.getX()+0.5*facing.getXOffset(),
-                                this.pos.getY()+0.5*facing.getYOffset(),this.pos.getZ()+0.5*facing.getZOffset());
-                        velocity = velocity*(-MathHelper.sqrt(dist) + RANGE);
+                        /*double dist =Math.min(RANGE,entity.getDistanceSq(this.pos.getX()+0.5+0.5*facing.getXOffset(),
+                                this.pos.getY()+0.5+0.5*facing.getYOffset(),this.pos.getZ()+0.5+0.5*facing.getZOffset()));*/
+
+                        double dist = Math.max(0.0D,getAxisDist(facing, this.pos, entity));
+
+                        velocity = velocity*(RANGE-dist)/RANGE;
 
                         if (Math.abs(entity.getMotion().getCoordinate(facing.getAxis())) < maxVelocity) {
                             entity.setMotion(entity.getMotion().add(facing.getXOffset() * velocity, facing.getYOffset() * velocity, facing.getZOffset() * velocity));
-                            entity.velocityChanged = true;
+                            if(ServerConfigs.cached.BELLOWS_FLAG) entity.velocityChanged = true;
                         }
                     }
                 }
@@ -177,6 +180,7 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
                 BlockPos frontpos = this.pos.offset(facing);
 
                 //speeds up furnaces
+                //TODO add configs
                 if(this.counter % 9- (power/2) == 0) {
                     TileEntity te = world.getTileEntity(frontpos);
                     if (te instanceof AbstractFurnaceTileEntity || te instanceof CampfireTileEntity) {
@@ -218,6 +222,22 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
         }
         if(this.height !=0){
             this.moveCollidedEntities();
+        }
+    }
+
+    private double getAxisDist(Direction facing, BlockPos pos, Entity entity){
+        switch(facing.getAxis()){
+            default:
+            case X:
+                double ex =entity.getPosX();
+                double px = pos.getX();
+                double px2 = px+0.5+facing.getXOffset()*0.5;
+                return ex-px2;
+                //return entity.getPosX() - pos.getX()+0.5+0.5*facing.getXOffset();
+            case Y:
+                return entity.getPosY() - pos.getY()+0.5+0.5*facing.getYOffset();
+            case Z:
+                return entity.getPosZ() - pos.getZ()+0.5+0.5*facing.getZOffset();
         }
     }
 

@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.blocks;
 
 
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.*;
 import net.minecraft.nbt.CompoundNBT;
@@ -20,7 +21,7 @@ import net.minecraft.world.World;
 
 
 public class TurnTableBlockTile extends TileEntity implements ITickableTileEntity {
-    private int cooldown = TurnTableBlock.PERIOD;
+    private int cooldown = ServerConfigs.cached.TURN_TABLE_PERIOD;
     private boolean canRotate = false;
     // private long tickedGameTime;
     public TurnTableBlockTile() {
@@ -38,7 +39,7 @@ public class TurnTableBlockTile extends TileEntity implements ITickableTileEntit
             // cd > 0
             if (this.cooldown == 0) {
                 boolean success = this.doRotateBlock();
-                this.cooldown = TurnTableBlock.PERIOD;
+                this.cooldown = ServerConfigs.cached.TURN_TABLE_PERIOD;
                 // if it didn't rotate last block that means that block is immovable
                 this.canRotate = (success && this.getBlockState().get(TurnTableBlock.POWERED));
             } else if (this.canRotate) {

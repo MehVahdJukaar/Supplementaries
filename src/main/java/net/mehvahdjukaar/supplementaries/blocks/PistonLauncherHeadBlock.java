@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.blocks;
 
 
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.*;
 import net.minecraft.block.material.PushReaction;
@@ -102,7 +103,7 @@ public class PistonLauncherHeadBlock extends DirectionalBlock {
         } else {
             entityIn.onLivingFall(fallDistance, 0.0F);
             //TODO: add falling block entity support
-            if((entityIn instanceof LivingEntity) && !worldIn.isRemote && fallDistance>5f){
+            if((entityIn instanceof LivingEntity) && !worldIn.isRemote && fallDistance>(float)ServerConfigs.cached.LAUNCHER_HEIGHT){
                 worldIn.setBlockState(pos, Registry.PISTON_LAUNCHER_ARM.getDefaultState()
                         .with(PistonLauncherArmBlock.EXTENDING, false).with(FACING, state.get(FACING)), 3);
                 TileEntity te = worldIn.getTileEntity(pos);

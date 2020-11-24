@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.blocks;
 
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.gui.SpeakerBlockGui;
 import net.mehvahdjukaar.supplementaries.network.Networking;
 import net.mehvahdjukaar.supplementaries.network.SendSpeakerBlockMessagePacket;
@@ -88,8 +89,8 @@ public class SpeakerBlock extends Block {
                             // particle
                             world.addBlockEvent(pos, this, 0, 0);
                             PlayerList players = mcserv.getPlayerList();
-                            players.sendToAllNearExcept(null, pos.getX(), pos.getY(), pos.getZ(), 64, dimension,
-                                    Networking.INSTANCE.toVanillaPacket(
+                            players.sendToAllNearExcept(null, pos.getX(), pos.getY(), pos.getZ(), ServerConfigs.cached.SPEAKER_RANGE,
+                                    dimension, Networking.INSTANCE.toVanillaPacket(
                                             new SendSpeakerBlockMessagePacket(speaker.getName().getString() + ": " + speaker.message,
                                                     speaker.narrator),
                                             NetworkDirection.PLAY_TO_CLIENT));

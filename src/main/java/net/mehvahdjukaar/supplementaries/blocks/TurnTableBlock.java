@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.blocks;
 
 
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DirectionalBlock;
@@ -26,9 +27,7 @@ import net.minecraft.world.World;
 
 public class TurnTableBlock  extends Block {
 
-    public static final int PERIOD = 20;
     //TODO:figure out why these two don't match up
-    public static final float ANGLE_INCREMENT = 90f / (float)(PERIOD-1);
 
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
@@ -53,6 +52,7 @@ public class TurnTableBlock  extends Block {
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
+
         return this.getDefaultState().with(FACING, context.getNearestLookingDirection().getOpposite());
     }
 
@@ -145,6 +145,8 @@ public class TurnTableBlock  extends Block {
         super.onEntityWalk(world, pos, e);
         BlockState state = world.getBlockState(pos);
         if (state.get(POWERED) && state.get(FACING) == Direction.UP) {
+            float ANGLE_INCREMENT = 90f / (float)(ServerConfigs.cached.TURN_TABLE_PERIOD-1);
+
             float increment = state.get(INVERTED) ? ANGLE_INCREMENT : -1 * ANGLE_INCREMENT;
             Vector3d origin = new Vector3d(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
             Vector3d oldpos = e.getPositionVec();
@@ -160,8 +162,8 @@ public class TurnTableBlock  extends Block {
                 ((LivingEntity) e).setIdleTime(20);
                 e.setRenderYawOffset(diff);
                 e.setRotationYawHead(diff);
-                e.setOnGround(false); //remove this?
-                e.velocityChanged = true;
+                //e.setOnGround(false); //remove this?
+                //e.velocityChanged = true;
             }
             // e.prevRotationYaw = e.rotationYaw;
             e.rotationYaw -= increment;

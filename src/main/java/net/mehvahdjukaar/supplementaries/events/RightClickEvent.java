@@ -28,7 +28,7 @@ public class RightClickEvent {
 
     @SubscribeEvent
     public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
-        //System.out.println("---"+ServerConfigs.reg.CLOCK_ENABLED.get());
+        if(!ServerConfigs.cached.WALL_LANTERN_PLACEMENT)return;
         PlayerEntity player = event.getPlayer();
 
         if(!player.abilities.allowEdit)return;

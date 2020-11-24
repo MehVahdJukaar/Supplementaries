@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.blocks;
 
 
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -95,7 +96,7 @@ public class PistonLauncherArmBlockTile extends TileEntity implements ITickableT
                             double d1 = vec3d.x;
                             double d2 = vec3d.y;
                             double d3 = vec3d.z;
-                            double speed = 1.5;
+                            double speed = ServerConfigs.cached.LAUNCHER_VEL;
                             if (dx != 0) {
                                 d1 = this.dx * speed;
                             }

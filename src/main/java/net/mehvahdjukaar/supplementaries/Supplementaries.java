@@ -26,6 +26,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -55,10 +56,13 @@ public class Supplementaries{
 
         Networking.registerMessages();
 
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(ModSetup::init);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientSetup::init);
+        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
+        bus.addListener(ModSetup::init);
+        bus.addListener(ClientSetup::init);
 
+        bus.addListener(ServerConfigs::loadConfig);
+        bus.addListener(ServerConfigs::reloadConfig);
 
     }
 
