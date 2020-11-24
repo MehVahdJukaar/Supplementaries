@@ -59,8 +59,9 @@ public class HangingSignBlockTile extends TileEntity implements ITickableTileEnt
     private PlayerEntity player;
     private final IReorderingProcessor[] renderText = new IReorderingProcessor[MAXLINES];
     private DyeColor textColor = DyeColor.BLACK;
+
     public HangingSignBlockTile() {
-        super(Registry.HANGING_SIGN_TILE.get());
+        super(Registry.HANGING_SIGN_TILE);
     }
 
     @Override

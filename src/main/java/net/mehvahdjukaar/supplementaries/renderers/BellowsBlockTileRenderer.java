@@ -27,7 +27,7 @@ public class BellowsBlockTileRenderer extends TileEntityRenderer<BellowsBlockTil
     @Override
     public void render(BellowsBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
-        BlockState state = Registry.BELLOWS.get().getDefaultState().with(BellowsBlock.TILE, 1);
+        BlockState state = Registry.BELLOWS.getDefaultState().with(BellowsBlock.TILE, 1);
         BlockRendererDispatcher blockRenderer = Minecraft.getInstance().getBlockRendererDispatcher();
 
         float dh = MathHelper.lerp(partialTicks, tile.prevHeight, tile.height);
@@ -63,7 +63,7 @@ public class BellowsBlockTileRenderer extends TileEntityRenderer<BellowsBlockTil
         matrixStackIn.scale(1, 1+j*dh, 1);
 
 
-        BlockState state1 = Registry.BELLOWS.get().getDefaultState().with(BellowsBlock.TILE, 2);
+        BlockState state1 = Registry.BELLOWS.getDefaultState().with(BellowsBlock.TILE, 2);
         blockRenderer.renderBlock(state1, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
 
         matrixStackIn.pop();

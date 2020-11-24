@@ -18,7 +18,7 @@ public class ClockBlockTile extends TileEntity implements ITickableTileEntity {
     public float targetRoll = 0;
 
     public ClockBlockTile() {
-        super(Registry.CLOCK_BLOCK_TILE.get());
+        super(Registry.CLOCK_BLOCK_TILE);
     }
 
     @Override

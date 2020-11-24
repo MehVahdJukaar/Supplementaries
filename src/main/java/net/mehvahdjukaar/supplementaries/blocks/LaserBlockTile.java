@@ -26,7 +26,7 @@ public class LaserBlockTile extends TileEntity implements ITickableTileEntity {
     public float width = 0;
     public static final int MAXLENGHT = 15;
     public LaserBlockTile() {
-        super(Registry.LASER_BLOCK_TILE.get());
+        super(Registry.LASER_BLOCK_TILE);
     }
 
     // TODO:cache the blockposition on a list for faster accsssing

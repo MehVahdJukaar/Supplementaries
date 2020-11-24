@@ -34,7 +34,7 @@ public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
     protected final Random rand = new Random();
     public int watercolor = 0x423cf7;
     public FaucetBlockTile() {
-        super(Registry.FAUCET_TILE.get());
+        super(Registry.FAUCET_TILE);
     }
 
     @Override

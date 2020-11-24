@@ -97,8 +97,8 @@ public class SconceWallBlock extends WallTorchBlock implements IWaterLoggable {
         }
         else{
             Random random = worldIn.getRandom();
-            for (int i = 0; i < 20; ++i) {
-                worldIn.addParticle(ParticleTypes.SMOKE, (double) pos.getX() + 0.25D + random.nextDouble() / 2.0D * (double) (random.nextBoolean() ? 1 : -1), (double) pos.getY() + 0.4D, (double) pos.getZ() + 0.25D + random.nextDouble() / 2.0D * (double) (random.nextBoolean() ? 1 : -1), 0.0D, 0.005D, 0.0D);
+            for (int i = 0; i < 10; ++i) {
+                worldIn.addParticle(ParticleTypes.SMOKE,pos.getX()+0.25f+random.nextFloat()*0.5f,pos.getY()+0.5f+random.nextFloat()*0.5f,pos.getZ()+0.25f+random.nextFloat()*0.5f,0, 0.005, 0);
             }
         }
     }

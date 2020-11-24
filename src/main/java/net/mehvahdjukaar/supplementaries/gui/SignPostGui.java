@@ -144,7 +144,7 @@ public class SignPostGui extends Screen {
         //render signs
 
         if(this.tileSign.up){
-            BlockState state = Registry.SIGN_POST.get().getDefaultState().with(SignPostBlock.WOOD_TYPE, tileSign.woodTypeUp);
+            BlockState state = Registry.SIGN_POST.getDefaultState().with(SignPostBlock.WOOD_TYPE, tileSign.woodTypeUp);
 
             matrixstack.push();
             if(!leftup){
@@ -157,7 +157,7 @@ public class SignPostGui extends Screen {
             matrixstack.pop();
         }
         if(this.tileSign.down){
-            BlockState state = Registry.SIGN_POST.get().getDefaultState().with(SignPostBlock.WOOD_TYPE, tileSign.woodTypeDown);
+            BlockState state = Registry.SIGN_POST.getDefaultState().with(SignPostBlock.WOOD_TYPE, tileSign.woodTypeDown);
 
             matrixstack.push();
             if(!leftdown){

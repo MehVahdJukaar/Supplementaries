@@ -223,8 +223,9 @@ public class SignPostBlock extends Block implements IWaterLoggable {
             else if(!up && tile.down){
                 return new ItemStack(CommonUtil.getSignPostItemFromWoodType(tile.woodTypeDown));
             }
+            else return new ItemStack(tile.fenceBlock.getBlock());
         }
-        return new ItemStack(Registry.SIGN_POST_ITEM_OAK.get());
+        return new ItemStack(Registry.SIGN_POST_ITEM_OAK);
     }
 
     @Override

@@ -50,7 +50,7 @@ public class SignPostItem  extends Item {
 
             //if(!world.isRemote) world.setBlockState(blockpos, Registry.SIGN_POST.get().getDefaultState(), 3);
 
-            world.setBlockState(blockpos, Registry.SIGN_POST.get().getStateForPlacement(new BlockItemUseContext(context)), 3);
+            world.setBlockState(blockpos, Registry.SIGN_POST.getStateForPlacement(new BlockItemUseContext(context)), 3);
 
             boolean flag = false;
 

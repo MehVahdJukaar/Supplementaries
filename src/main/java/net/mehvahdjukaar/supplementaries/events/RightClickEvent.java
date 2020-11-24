@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.events;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.blocks.WallLanternBlock;
 import net.mehvahdjukaar.supplementaries.blocks.WallLanternBlockTile;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LanternBlock;
@@ -27,6 +28,7 @@ public class RightClickEvent {
 
     @SubscribeEvent
     public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
+        //System.out.println("---"+ServerConfigs.reg.CLOCK_ENABLED.get());
         PlayerEntity player = event.getPlayer();
 
         if(!player.abilities.allowEdit)return;
@@ -38,14 +40,13 @@ public class RightClickEvent {
         Item i = stack.getItem();
 
         if(i instanceof BlockItem && (((BlockItem) i).getBlock() instanceof LanternBlock || ((BlockItem) i).getBlock().getRegistryName().getNamespace().equals("skinnedlanterns"))){
-
             Direction dir = event.getFace();
 
             if(dir != Direction.UP && dir != Direction.DOWN){
                 BlockPos pos = event.getPos();
                 World world = event.getWorld();
 
-                Item item = Registry.WALL_LANTERN_ITEM.get();
+                Item item = Registry.WALL_LANTERN_ITEM;
 
                 BlockItemUseContext ctx = new BlockItemUseContext(
                         new ItemUseContext(player, hand, new BlockRayTraceResult(
@@ -71,7 +72,7 @@ public class RightClickEvent {
                     player.swing(hand, true);
 
                     SoundType soundtype = s.getSoundType(world, ctx.getPos(), player);
-                    world.playSound(player, ctx.getPos(), soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+                    //world.playSound(null, ctx.getPos(), soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
 
                     event.setCanceled(true);
 

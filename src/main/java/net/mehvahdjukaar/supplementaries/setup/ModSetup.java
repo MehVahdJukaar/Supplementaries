@@ -1,9 +1,12 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
 
+import net.mehvahdjukaar.supplementaries.blocks.NoticeBoardBlockTile;
 import net.mehvahdjukaar.supplementaries.entities.FireflyEntity;
 import net.minecraft.block.FireBlock;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
+import net.minecraft.entity.EntityType;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
@@ -21,7 +24,7 @@ public class ModSetup {
 
     private static void registerSpawningStuff(){
         //TODO:adjust this so they can spawn on more blocks but not underground
-        EntitySpawnPlacementRegistry.register(Registry.FIREFLY_TYPE, EntitySpawnPlacementRegistry.PlacementType.NO_RESTRICTIONS,
+        EntitySpawnPlacementRegistry.register((EntityType<FireflyEntity>)Registry.FIREFLY_TYPE, EntitySpawnPlacementRegistry.PlacementType.NO_RESTRICTIONS,
                 Heightmap.Type.MOTION_BLOCKING, FireflyEntity::canSpawnOn);
     }
 

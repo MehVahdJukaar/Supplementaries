@@ -53,7 +53,7 @@ public class SignPostBlockTile extends TileEntity {
     public WoodType woodTypeDown = WoodType.OAK;
 
     public SignPostBlockTile() {
-        super(Registry.SIGN_POST_TILE.get());
+        super(Registry.SIGN_POST_TILE);
     }
 
     @Override

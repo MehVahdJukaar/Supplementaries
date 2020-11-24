@@ -49,7 +49,7 @@ public class NoticeBoardBlockTile extends LockableLootTileEntity implements INam
     public boolean textVisible = true; //for culling
     private ITextComponent customName;
     public NoticeBoardBlockTile() {
-        super(Registry.NOTICE_BOARD_TILE.get());
+        super(Registry.NOTICE_BOARD_TILE);
     }
 
     public void setCustomName(ITextComponent name) {

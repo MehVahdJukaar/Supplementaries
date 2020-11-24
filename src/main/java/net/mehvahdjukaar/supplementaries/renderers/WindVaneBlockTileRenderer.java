@@ -11,6 +11,9 @@ import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.passive.BeeEntity;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3f;
@@ -32,8 +35,14 @@ public class WindVaneBlockTileRenderer extends TileEntityRenderer<WindVaneBlockT
         matrixStackIn.rotate(Vector3f.YP.rotationDegrees(90 + MathHelper.lerp(partialTicks, tile.prevYaw, tile.yaw)));
         matrixStackIn.translate(-0.5, -0.5, -0.5);
         BlockRendererDispatcher blockRenderer = Minecraft.getInstance().getBlockRendererDispatcher();
-        BlockState state = Registry.WIND_VANE.get().getDefaultState().with(WindVaneBlock.TILE, true);
+        BlockState state = Registry.WIND_VANE.getDefaultState().with(WindVaneBlock.TILE, true);
         blockRenderer.renderBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
+        matrixStackIn.pop();
+
+        matrixStackIn.push();
+        Entity entity = tile.getBee();
+
+        Minecraft.getInstance().getRenderManager().renderEntityStatic(entity, 0.0D, 0.0D, 0.0D, 0.0F, partialTicks, matrixStackIn, bufferIn, combinedLightIn);
         matrixStackIn.pop();
     }
 }

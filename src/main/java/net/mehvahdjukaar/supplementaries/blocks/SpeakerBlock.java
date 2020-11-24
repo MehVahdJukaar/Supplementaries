@@ -133,7 +133,7 @@ public class SpeakerBlock extends Block {
     public boolean eventReceived(BlockState state, World world, BlockPos pos, int eventID, int eventParam) {
         super.eventReceived(state, world, pos, eventID, eventParam);
         Direction facing = state.get(FACING);
-        world.addParticle(Registry.SPEAKER_SOUND.get(), pos.getX() + 0.5 + facing.getXOffset() * 0.725, pos.getY() + 0.5,
+        world.addParticle(Registry.SPEAKER_SOUND, pos.getX() + 0.5 + facing.getXOffset() * 0.725, pos.getY() + 0.5,
                 pos.getZ() + 0.5 + facing.getZOffset() * 0.725, (double) world.rand.nextInt(24) / 24.0D, 0.0D, 0.0D);
         return true;
     }

@@ -103,7 +103,7 @@ public class PistonLauncherHeadBlock extends DirectionalBlock {
             entityIn.onLivingFall(fallDistance, 0.0F);
             //TODO: add falling block entity support
             if((entityIn instanceof LivingEntity) && !worldIn.isRemote && fallDistance>5f){
-                worldIn.setBlockState(pos, Registry.PISTON_LAUNCHER_ARM.get().getDefaultState()
+                worldIn.setBlockState(pos, Registry.PISTON_LAUNCHER_ARM.getDefaultState()
                         .with(PistonLauncherArmBlock.EXTENDING, false).with(FACING, state.get(FACING)), 3);
                 TileEntity te = worldIn.getTileEntity(pos);
                 if(te instanceof PistonLauncherArmBlockTile){
@@ -165,7 +165,7 @@ public class PistonLauncherHeadBlock extends DirectionalBlock {
 
     @Override
     public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
-        return new ItemStack(Registry.PISTON_LAUNCHER.get());
+        return new ItemStack(Registry.PISTON_LAUNCHER);
     }
 
     @Override
@@ -192,7 +192,7 @@ public class PistonLauncherHeadBlock extends DirectionalBlock {
 
     @Override
     public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-        BlockState comp = Registry.PISTON_LAUNCHER_ARM.get().getDefaultState().with(PistonLauncherArmBlock.EXTENDING, false).with(FACING, state.get(FACING));
+        BlockState comp = Registry.PISTON_LAUNCHER_ARM.getDefaultState().with(PistonLauncherArmBlock.EXTENDING, false).with(FACING, state.get(FACING));
         if ((state.getBlock() != newState.getBlock()) && (newState != comp)) {
             super.onReplaced(state, worldIn, pos, newState, isMoving);
             Direction direction = state.get(FACING).getOpposite();
@@ -222,7 +222,7 @@ public class PistonLauncherHeadBlock extends DirectionalBlock {
 
     public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
         BlockState bs = worldIn.getBlockState(pos.offset(state.get(FACING).getOpposite()));
-        return bs == Registry.PISTON_LAUNCHER.get().getDefaultState().with(BlockStateProperties.EXTENDED, true).with(FACING, state.get(FACING));
+        return bs == Registry.PISTON_LAUNCHER.getDefaultState().with(BlockStateProperties.EXTENDED, true).with(FACING, state.get(FACING));
         // return bs == PistonLauncherBlock.block || block ==
         // PistonLauncherArmTileBlock.block;
     }

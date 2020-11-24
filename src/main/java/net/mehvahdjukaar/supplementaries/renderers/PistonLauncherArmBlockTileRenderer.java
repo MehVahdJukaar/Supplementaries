@@ -35,7 +35,7 @@ public class PistonLauncherArmBlockTileRenderer extends TileEntityRenderer<Pisto
         matrixStackIn.translate(0, MathHelper.lerp(partialTicks, tile.getPrevOffset(), tile.getOffset()), 0);
         BlockRendererDispatcher blockRenderer = Minecraft.getInstance().getBlockRendererDispatcher();
         boolean flag1 = tile.getExtending() == tile.getAge() < 2;
-        BlockState state = Registry.PISTON_LAUNCHER_HEAD.get().getDefaultState().with(PistonLauncherHeadBlock.FACING, Direction.UP).with(BlockStateProperties.SHORT,
+        BlockState state = Registry.PISTON_LAUNCHER_HEAD.getDefaultState().with(PistonLauncherHeadBlock.FACING, Direction.UP).with(BlockStateProperties.SHORT,
                 flag1);
         blockRenderer.renderBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
         matrixStackIn.pop();

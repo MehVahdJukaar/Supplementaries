@@ -117,7 +117,7 @@ public class PistonLauncherBlock extends Block {
                  */
                 if (flag2) {
                     world.setBlockState(_bp,
-                            Registry.PISTON_LAUNCHER_ARM.get().getDefaultState().with(PistonLauncherArmBlock.EXTENDING, true).with(FACING, state.get(FACING)),
+                            Registry.PISTON_LAUNCHER_ARM.getDefaultState().with(PistonLauncherArmBlock.EXTENDING, true).with(FACING, state.get(FACING)),
                             3);
                     world.setBlockState(pos, state.with(EXTENDED, true));
                     world.playSound(null, pos, SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, 0.53F,
@@ -128,7 +128,7 @@ public class PistonLauncherBlock extends Block {
                 if (bs.getBlock() instanceof PistonLauncherHeadBlock && state.get(FACING) == bs.get(FACING)) {
                     // world.setBlockState(_bp, Blocks.AIR.getDefaultState(), 3);
                     world.setBlockState(_bp,
-                            Registry.PISTON_LAUNCHER_ARM.get().getDefaultState().with(PistonLauncherArmBlock.EXTENDING, false).with(FACING, state.get(FACING)),
+                            Registry.PISTON_LAUNCHER_ARM.getDefaultState().with(PistonLauncherArmBlock.EXTENDING, false).with(FACING, state.get(FACING)),
                             3);
                     world.playSound(null, pos, SoundEvents.BLOCK_PISTON_CONTRACT, SoundCategory.BLOCKS, 0.53F,
                             world.rand.nextFloat() * 0.15F + 0.45F);

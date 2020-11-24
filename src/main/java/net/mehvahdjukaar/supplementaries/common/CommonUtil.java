@@ -227,21 +227,21 @@ public class CommonUtil {
 
     //else if else if else if
     public static WoodType getWoodTypeFromSignPostItem(Item item) {
-        if (item == Registry.SIGN_POST_ITEM_OAK.get()) {
+        if (item == Registry.SIGN_POST_ITEM_OAK) {
             return WoodType.OAK;
-        } else if (item == Registry.SIGN_POST_ITEM_BIRCH.get()) {
+        } else if (item == Registry.SIGN_POST_ITEM_BIRCH) {
             return WoodType.BIRCH;
-        } else if (item == Registry.SIGN_POST_ITEM_SPRUCE.get()) {
+        } else if (item == Registry.SIGN_POST_ITEM_SPRUCE) {
             return WoodType.SPRUCE;
-        } else if (item == Registry.SIGN_POST_ITEM_JUNGLE.get()) {
+        } else if (item == Registry.SIGN_POST_ITEM_JUNGLE) {
             return WoodType.JUNGLE;
-        } else if (item == Registry.SIGN_POST_ITEM_ACACIA.get()) {
+        } else if (item == Registry.SIGN_POST_ITEM_ACACIA) {
             return WoodType.ACACIA;
-        } else if (item == Registry.SIGN_POST_ITEM__DARK_OAK.get()) {
+        } else if (item == Registry.SIGN_POST_ITEM_DARK_OAK) {
             return WoodType.DARK_OAK;
-        } else if (item == Registry.SIGN_POST_ITEM_CRIMSON.get()) {
+        } else if (item == Registry.SIGN_POST_ITEM_CRIMSON) {
             return WoodType.CRIMSON;
-        } else if (item == Registry.SIGN_POST_ITEM_WARPED.get()) {
+        } else if (item == Registry.SIGN_POST_ITEM_WARPED) {
             return WoodType.WARPED;
         }
         return WoodType.NONE;
@@ -250,21 +250,21 @@ public class CommonUtil {
     public static Item getSignPostItemFromWoodType(WoodType wood) {
         switch (wood) {
             case OAK:
-                return Registry.SIGN_POST_ITEM_OAK.get();
+                return Registry.SIGN_POST_ITEM_OAK;
             case BIRCH:
-                return Registry.SIGN_POST_ITEM_BIRCH.get();
+                return Registry.SIGN_POST_ITEM_BIRCH;
             case SPRUCE:
-                return Registry.SIGN_POST_ITEM_SPRUCE.get();
+                return Registry.SIGN_POST_ITEM_SPRUCE;
             case JUNGLE:
-                return Registry.SIGN_POST_ITEM_JUNGLE.get();
+                return Registry.SIGN_POST_ITEM_JUNGLE;
             case ACACIA:
-                return Registry.SIGN_POST_ITEM_ACACIA.get();
+                return Registry.SIGN_POST_ITEM_ACACIA;
             case DARK_OAK:
-                return Registry.SIGN_POST_ITEM__DARK_OAK.get();
+                return Registry.SIGN_POST_ITEM_DARK_OAK;
             case CRIMSON:
-                return Registry.SIGN_POST_ITEM_CRIMSON.get();
+                return Registry.SIGN_POST_ITEM_CRIMSON;
             case WARPED:
-                return Registry.SIGN_POST_ITEM_WARPED.get();
+                return Registry.SIGN_POST_ITEM_WARPED;
             default:
             case NONE:
                 return Items.AIR.getItem();

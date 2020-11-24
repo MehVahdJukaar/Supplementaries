@@ -40,7 +40,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
     public float liquidLevel = 0;
     public JarContentType liquidType = JarContentType.EMPTY;
     public JarBlockTile() {
-        super(Registry.JAR_TILE.get());
+        super(Registry.JAR_TILE);
     }
 
     // called when inventory is updated -> update tile

@@ -24,7 +24,7 @@ public class TurnTableBlockTile extends TileEntity implements ITickableTileEntit
     private boolean canRotate = false;
     // private long tickedGameTime;
     public TurnTableBlockTile() {
-        super(Registry.TURN_TABLE_TILE.get());
+        super(Registry.TURN_TABLE_TILE);
     }
 
     public void tryRotate() {

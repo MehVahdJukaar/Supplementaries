@@ -17,7 +17,7 @@ public class SpeakerBlockTile extends TileEntity implements INameable {
     public boolean narrator = false;
     private ITextComponent customName;
     public SpeakerBlockTile() {
-        super(Registry.SPEAKER_BLOCK_TILE.get());
+        super(Registry.SPEAKER_BLOCK_TILE);
     }
 
     public void setCustomName(ITextComponent name) {

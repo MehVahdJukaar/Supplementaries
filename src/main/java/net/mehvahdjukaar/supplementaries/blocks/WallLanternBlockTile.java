@@ -20,7 +20,7 @@ public class WallLanternBlockTile extends TileEntity implements ITickableTileEnt
     public BlockState lanternBlock = Blocks.AIR.getDefaultState();
     // lower counter is used by hitting animation
     public WallLanternBlockTile() {
-        super(Registry.WALL_LANTERN_TILE.get());
+        super(Registry.WALL_LANTERN_TILE);
     }
 
 

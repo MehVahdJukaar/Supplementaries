@@ -32,7 +32,7 @@ public class PistonLauncherArmBlockTile extends TileEntity implements ITickableT
     private int dz = 0;
     protected final Random rand = new Random();
     public PistonLauncherArmBlockTile() {
-        super(Registry.PISTON_LAUNCHER_ARM_TILE.get());
+        super(Registry.PISTON_LAUNCHER_ARM_TILE);
         //this.setParameters();
     }
     public PistonLauncherArmBlockTile(boolean extending, Direction dir) {
@@ -69,10 +69,10 @@ public class PistonLauncherArmBlockTile extends TileEntity implements ITickableT
             this.prevOffset = this.offset;
             if (!this.world.isRemote()) {
                 if (this.getExtending()) {
-                    BlockState _bs = Registry.PISTON_LAUNCHER_HEAD.get().getDefaultState();
+                    BlockState _bs = Registry.PISTON_LAUNCHER_HEAD.getDefaultState();
                     world.setBlockState(pos, _bs.with(PistonLauncherHeadBlock.FACING, this.getDirection()), 3);
                 } else {
-                    BlockState _bs = Registry.PISTON_LAUNCHER.get().getDefaultState();
+                    BlockState _bs = Registry.PISTON_LAUNCHER.getDefaultState();
                     BlockPos _bp = pos.offset(this.getDirection().getOpposite());
                     BlockState oldstate = world.getBlockState(_bp);
                     if (_bs.with(PistonLauncherBlock.FACING, this.getDirection()).with(PistonLauncherBlock.EXTENDED, true) == oldstate) {

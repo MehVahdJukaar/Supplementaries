@@ -66,8 +66,8 @@ public class FireflyEntity extends CreatureEntity implements IFlyingAnimal {
         ItemStack itemstack = player.getHeldItem(hand);
         Item item = itemstack.getItem();
 
-        if (item == Registry.JAR_ITEM.get()) {
-            ItemStack itemstack4 = new ItemStack(Registry.FIREFLY_JAR_ITEM.get());
+        if (item == Registry.JAR_ITEM) {
+            ItemStack itemstack4 = new ItemStack(Registry.FIREFLY_JAR_ITEM);
             if (!player.abilities.isCreativeMode) {
                 itemstack.shrink(1);
                 if (itemstack.isEmpty()) {

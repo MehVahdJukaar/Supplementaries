@@ -19,7 +19,7 @@ public class Dispenser {
 
     public static void registerBehaviors() {
         for(Item item : ForgeRegistries.ITEMS) {
-            if(item == new ItemStack(Registry.JAR.get()).getItem()){
+            if(item == new ItemStack(Registry.JAR).getItem()){
                 register(item, new JarDispenseBehavior());
             }
         }

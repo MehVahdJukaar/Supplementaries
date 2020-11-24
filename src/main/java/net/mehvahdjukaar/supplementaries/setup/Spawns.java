@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
@@ -20,23 +21,14 @@ public class Spawns {
             Biome biome = ForgeRegistries.BIOMES.getValue(event.getName());
             if (biome != null) {
                 //RegistryKey<Biome> biomeKey = RegistryKey.getOrCreateKey(ForgeRegistries.Keys.BIOMES, event.getName());
-                ResourceLocation biomres = ForgeRegistries.BIOMES.getKey(biome);
-                boolean biomeCriteria = false;
-                if (biomres.equals(new ResourceLocation("plains")))
-                    biomeCriteria = true;
-                if (biomres.equals(new ResourceLocation("swamp")))
-                    biomeCriteria = true;
-                if (biomres.equals(new ResourceLocation("sunflower_plains")))
-                    biomeCriteria = true;
-                if (biomres.equals(new ResourceLocation("dark_forest")))
-                    biomeCriteria = true;
-                if (biomres.equals(new ResourceLocation("dark_forest_hills")))
-                    biomeCriteria = true;
+                ResourceLocation biomeres = ForgeRegistries.BIOMES.getKey(biome);
 
-
-                //TODO:adjust this so they can spawn on more blocks but not underground
-                if(biomeCriteria) {
-                    event.getSpawns().getSpawner(EntityClassification.AMBIENT).add(new MobSpawnInfo.Spawners(Registry.FIREFLY_TYPE, 2, 4, 7));
+                if (ServerConfigs.spawn.FIREFLY_BIOMES.get().contains(biomeres.getPath())){
+                    //TODO:adjust this so they can spawn on more blocks but not underground
+                    event.getSpawns().getSpawner(EntityClassification.AMBIENT).add(new MobSpawnInfo.Spawners(
+                            Registry.FIREFLY_TYPE, ServerConfigs.spawn.FIREFLY_WEIGHT.get(),
+                            ServerConfigs.spawn.FIREFLY_MIN.get(),
+                            ServerConfigs.spawn.FIREFLY_MAX.get()));
                 }
 
             }

@@ -31,7 +31,7 @@ public class PedestalBlockTile extends LockableLootTileEntity implements ISidedI
     public int type =0;
     public float yaw = 0;
     public PedestalBlockTile() {
-        super(Registry.PEDESTAL_TILE.get());
+        super(Registry.PEDESTAL_TILE);
     }
 
     //hijacking this method to work with hoppers

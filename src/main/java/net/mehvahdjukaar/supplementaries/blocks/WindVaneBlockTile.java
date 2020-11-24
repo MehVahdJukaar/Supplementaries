@@ -3,6 +3,9 @@ package net.mehvahdjukaar.supplementaries.blocks;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.passive.BeeEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
@@ -13,9 +16,14 @@ import net.minecraft.util.math.MathHelper;
 public class WindVaneBlockTile extends TileEntity implements ITickableTileEntity {
     public float yaw = 0;
     public float prevYaw = 0;
+    public Entity entity = null;
+    public Entity getBee(){
+        if(entity==null)entity=new BeeEntity(EntityType.BEE, this.world);
+        return entity;
+    }
 
     public WindVaneBlockTile() {
-        super(Registry.WIND_VANE_TILE.get());
+        super(Registry.WIND_VANE_TILE);
     }
 
     @Override
@@ -46,6 +54,10 @@ public class WindVaneBlockTile extends TileEntity implements ITickableTileEntity
 
     @Override
     public void tick() {
+        if(entity!=null){
+            entity.tick();
+            ((BeeEntity)entity).livingTick();
+        }
         float currentyaw = this.yaw;
         this.prevYaw = currentyaw;
         if(this.world == null)return;

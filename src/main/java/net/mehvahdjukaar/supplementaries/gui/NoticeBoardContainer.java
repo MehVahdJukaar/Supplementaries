@@ -32,7 +32,7 @@ public class NoticeBoardContainer extends Container implements Supplier<Map<Inte
     private final Map<Integer, Slot> customSlots = new HashMap<>();
     private boolean bound = false;
     public NoticeBoardContainer(int id, PlayerInventory inv, PacketBuffer extraData) {
-        super(Registry.NOTICE_BOARD_CONTAINER.get(), id);
+        super(Registry.NOTICE_BOARD_CONTAINER, id);
         this.entity = inv.player;
         this.world = inv.player.world;
         this.internal = new ItemStackHandler(1);

@@ -31,7 +31,7 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
     public float prevHeight = 0;
     public int counter = 0;
     public BellowsBlockTile() {
-        super(Registry.BELLOWS_TILE.get());
+        super(Registry.BELLOWS_TILE);
     }
 
 

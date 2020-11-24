@@ -55,7 +55,7 @@ public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockT
             if(up){
                 matrixStackIn.push();
 
-                BlockState state = Registry.SIGN_POST.get().getDefaultState().with(SignPostBlock.WOOD_TYPE, tile.woodTypeUp);
+                BlockState state = Registry.SIGN_POST.getDefaultState().with(SignPostBlock.WOOD_TYPE, tile.woodTypeUp);
 
                 boolean left = tile.leftUp;
                 int o = left ? 1 : -1;
@@ -95,7 +95,7 @@ public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockT
             if(down){
                 matrixStackIn.push();
 
-                BlockState state = Registry.SIGN_POST.get().getDefaultState().with(SignPostBlock.WOOD_TYPE, tile.woodTypeDown);
+                BlockState state = Registry.SIGN_POST.getDefaultState().with(SignPostBlock.WOOD_TYPE, tile.woodTypeDown);
 
                 boolean left = tile.leftDown;
                 int o = left ? 1 : -1;

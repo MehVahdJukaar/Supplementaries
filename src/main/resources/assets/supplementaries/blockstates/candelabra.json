@@ -29,6 +29,21 @@
     "face=wall,facing=west": {
       "model": "supplementaries:block/candelabra_wall",
       "y": 270
+    },
+    "face=ceiling,facing=north": {
+      "model": "supplementaries:block/candelabra_ceiling"
+    },
+    "face=ceiling,facing=east": {
+      "model": "supplementaries:block/candelabra_ceiling",
+      "y": 90
+    },
+    "face=ceiling,facing=south": {
+      "model": "supplementaries:block/candelabra_ceiling",
+      "y": 180
+    },
+    "face=ceiling,facing=west": {
+      "model": "supplementaries:block/candelabra_ceiling",
+      "y": 270
     }
   }
 }

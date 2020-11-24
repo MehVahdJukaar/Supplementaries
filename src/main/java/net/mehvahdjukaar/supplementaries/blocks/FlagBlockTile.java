@@ -16,7 +16,7 @@ public class FlagBlockTile extends TileEntity implements ITickableTileEntity {
     public float counter = 0;
 
     public FlagBlockTile() {
-        super(Registry.FLAG_TILE.get());
+        super(Registry.FLAG_TILE);
     }
 
 

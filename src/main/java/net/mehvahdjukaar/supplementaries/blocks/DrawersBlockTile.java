@@ -34,7 +34,7 @@ public class DrawersBlockTile extends LockableLootTileEntity implements ISidedIn
     public float prevOpening = 0;
 
     public DrawersBlockTile() {
-        super(Registry.DRAWERS_TILE.get());
+        super(Registry.DRAWERS_TILE);
     }
 
     @Override
