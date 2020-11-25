@@ -38,6 +38,8 @@
   "gui.supplementaries.speaker_block.edit": "Editar mensagem do Bloco de Alto-Falante",
   "gui.supplementaries.speaker_block.chat_message" : "Mensagem do Narrador",
   "gui.supplementaries.speaker_block.narrator_message": "Mensagem de bate-papo",
+
+  "block.supplementaries.candelabra": "Candelabro",
  
   "block.supplementaries.flag": "WIP  Bandeira",
 

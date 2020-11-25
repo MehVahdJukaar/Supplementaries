@@ -32,19 +32,21 @@ import net.minecraft.world.World;
 
 
 public class HangingSignBlock extends Block implements  IWaterLoggable{
-    protected static final VoxelShape SHAPE_SOUTH = VoxelShapes.create(0.5625D, 0D, 1D, 0.4375D, 1D, 0D);
+    //protected static final VoxelShape SHAPE_SOUTH = VoxelShapes.create(0.5625D, 0D, 1D, 0.4375D, 1D, 0D);
     protected static final VoxelShape SHAPE_NORTH = VoxelShapes.create(0.4375D, 0D, 0D, 0.5625D, 1D, 1D);
-    protected static final VoxelShape SHAPE_EAST = VoxelShapes.create(1D, 0D, 0.4375D, 0D, 1D, 0.5625D);
+    //protected static final VoxelShape SHAPE_EAST = VoxelShapes.create(1D, 0D, 0.4375D, 0D, 1D, 0.5625D);
     protected static final VoxelShape SHAPE_WEST = VoxelShapes.create(0D, 0D, 0.5625D, 1D, 1D, 0.4375D);
 
 
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
+    public static final BooleanProperty UP = BlockStateProperties.UP;
     public static final BooleanProperty TILE = CommonUtil.TILE; // is it renderer by tile entity? animated part
     public static final IntegerProperty EXTENSION = CommonUtil.EXTENSION;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public HangingSignBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(WATERLOGGED, false).with(EXTENSION, 0).with(FACING, Direction.NORTH).with(TILE, false));
+        this.setDefaultState(this.stateContainer.getBaseState().with(WATERLOGGED, false)
+                .with(EXTENSION, 0).with(FACING, Direction.NORTH).with(TILE, false).with(UP,false));
     }
 
     @Override
@@ -118,7 +120,12 @@ public class HangingSignBlock extends Block implements  IWaterLoggable{
     }
 
     public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-        return worldIn.getBlockState(pos.offset(state.get(FACING).getOpposite())).getMaterial().isSolid();
+        if(state.get(UP)){
+            return worldIn.getBlockState(pos.up()).isSolidSide(worldIn, pos.up(), Direction.DOWN);
+        }
+        else {
+            return worldIn.getBlockState(pos.offset(state.get(FACING).getOpposite())).getMaterial().isSolid();
+        }
     }
 
     @Override
@@ -127,31 +134,37 @@ public class HangingSignBlock extends Block implements  IWaterLoggable{
         if (stateIn.get(WATERLOGGED)) {
             worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
         }
-        return facing == stateIn.get(FACING).getOpposite() && !stateIn.isValidPosition(worldIn, currentPos)
-                ? Blocks.AIR.getDefaultState()
-                : super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
-    }
-
-    @Override
-    public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
-        switch (state.get(FACING)) {
-            case UP :
-            case DOWN :
-            case SOUTH :
-            default :
-                return SHAPE_SOUTH;
-            case NORTH :
-                return SHAPE_NORTH;
-            case WEST :
-                return SHAPE_WEST;
-            case EAST :
-                return SHAPE_EAST;
+        if(facing==Direction.UP){
+            return !stateIn.isValidPosition(worldIn, currentPos)
+                    ? Blocks.AIR.getDefaultState()
+                    : super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+        }
+        else {
+            return facing == stateIn.get(FACING).getOpposite() && !stateIn.isValidPosition(worldIn, currentPos)
+                    ? Blocks.AIR.getDefaultState()
+                    : super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
         }
     }
 
     @Override
+    public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
+        switch (state.get(FACING).getAxis()) {
+            default:
+            case Z:
+                return SHAPE_NORTH;
+            case X :
+                return SHAPE_WEST;
+        }
+    }
+
+    @Override
+    public BlockRenderType getRenderType(BlockState state) {
+        return state.get(UP) ? BlockRenderType.ENTITYBLOCK_ANIMATED : super.getRenderType(state);
+    }
+
+    @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(FACING, TILE, EXTENSION, WATERLOGGED);
+        builder.add(FACING, TILE, EXTENSION, WATERLOGGED, UP);
     }
 
     public BlockState rotate(BlockState state, Rotation rot) {
@@ -175,8 +188,10 @@ public class HangingSignBlock extends Block implements  IWaterLoggable{
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         boolean water = context.getWorld().getFluidState(context.getPos()).getFluid() == Fluids.WATER;
-        if (context.getFace() == Direction.UP || context.getFace() == Direction.DOWN)
-            return this.getDefaultState().with(FACING, Direction.NORTH).with(WATERLOGGED,water);
+        if (context.getFace() == Direction.DOWN||context.getFace() == Direction.UP) {
+            return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing().rotateYCCW())
+                    .with(UP, context.getFace()==Direction.DOWN).with(WATERLOGGED, water);
+        }
         BlockPos blockpos = context.getPos();
         IBlockReader world = context.getWorld();
         Block block = world.getBlockState(blockpos.offset(context.getFace().getOpposite())).getBlock();

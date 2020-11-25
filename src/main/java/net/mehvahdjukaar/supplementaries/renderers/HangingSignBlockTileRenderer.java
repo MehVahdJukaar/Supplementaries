@@ -39,9 +39,11 @@ public class HangingSignBlockTileRenderer extends TileEntityRenderer<HangingSign
 
         matrixStackIn.push();
         //rotate towards direction
+        if(tile.getBlockState().get(HangingSignBlock.UP))matrixStackIn.translate(0,0.125, 0);
         matrixStackIn.translate(0.5, 0.875, 0.5);
         matrixStackIn.rotate(tile.getDirection().getOpposite().getRotation());
         matrixStackIn.rotate(Vector3f.XP.rotationDegrees(-90));
+
         //animation
         matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(MathHelper.lerp(partialTicks, tile.prevAngle, tile.angle)));
         matrixStackIn.translate(-0.5, -0.875, -0.5);
@@ -63,7 +65,7 @@ public class HangingSignBlockTileRenderer extends TileEntityRenderer<HangingSign
                 //render map
                 if(mapdata != null){
                     matrixStackIn.translate(0, 0, -0.0625 - 0.005);
-                    matrixStackIn.scale(.0068359375F, .0068359375F, .0068359375F);
+                    matrixStackIn.scale(-0.0068359375F, -0.0068359375F, -0.0068359375F);
                     matrixStackIn.translate(-64.0D, -64.0D, 0.0D);
                     //matrixStackIn.translate(0.0D, 0.0D, -1.0D);
                     Minecraft.getInstance().gameRenderer.getMapItemRenderer().renderMap(matrixStackIn, bufferIn, mapdata, true, combinedLightIn);

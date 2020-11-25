@@ -163,7 +163,7 @@ public class TurnTableBlock  extends Block {
                 e.setRenderYawOffset(diff);
                 e.setRotationYawHead(diff);
                 //e.setOnGround(false); //remove this?
-                //e.velocityChanged = true;
+                e.velocityChanged = true;
             }
             // e.prevRotationYaw = e.rotationYaw;
             e.rotationYaw -= increment;

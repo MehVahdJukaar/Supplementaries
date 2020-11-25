@@ -28,6 +28,7 @@
   "block.supplementaries.sconce_soul": "Soul Sconce",
   "block.supplementaries.sconce_ender": "Ender Sconce",
   "block.supplementaries.sign_post": "Sign Post",
+  "block.supplementaries.candelabra": "Candelabra",
   "item.supplementaries.sign_post_oak": "Oak Sign Post",
   "item.supplementaries.sign_post_birch": "Birch Sign Post",
   "item.supplementaries.sign_post_spruce": "Spruce Sign Post",
@@ -39,14 +40,13 @@
   "gui.supplementaries.speaker_block.edit": "Edit Speaker Block Message",
   "gui.supplementaries.speaker_block.chat_message" : "Narrator Message",
   "gui.supplementaries.speaker_block.narrator_message": "Chat Message",
+  "entity.supplementaries.firefly": "Firefly",
+  "block.supplementaries.firefly_jar": "Firefly Jar",
+  "item.supplementaries.firefly": "Firefly Spawn Egg",
 
   "block.supplementaries.flag": "WIP Flag",
-
-  "entity.supplementaries.firefly": "Firefly",
-  "item.supplementaries.firefly": "Firefly Spawn Egg",
-  "block.supplementaries.firefly_jar": "Firefly Jar",
+  "block.supplementaries.mob_jar": "Mob in a Jar",
   "block.supplementaries.laser_block": "Laser Block",
-  "block.supplementaries.clover": "Clover",
   "block.supplementaries.fancy_lamp": "Fancy Lamp",
   "block.supplementaries.skull_lantern": "Skull Lantern"
 }

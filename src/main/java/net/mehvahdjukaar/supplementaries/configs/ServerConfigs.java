@@ -20,7 +20,6 @@ public class ServerConfigs {
         spawn.init(SERVER_BUILDER);
 
         SERVER_CONFIG = SERVER_BUILDER.build();
-
     }
 
 
@@ -40,6 +39,10 @@ public class ServerConfigs {
         public static ForgeConfigSpec.IntValue TURN_TABLE_PERIOD;
 
         public static ForgeConfigSpec.BooleanValue WALL_LANTERN_PLACEMENT;
+
+        public static ForgeConfigSpec.IntValue JAR_CAPACITY;
+
+        public static ForgeConfigSpec.BooleanValue NOTICE_BOARDS_UNRESTRICTED;
 
 
         private static void  init(ForgeConfigSpec.Builder builder){
@@ -89,6 +92,16 @@ public class ServerConfigs {
             WALL_LANTERN_PLACEMENT = builder.comment("allow wall lanterns placement")
                     .define("enabled",true);
             builder.pop();
+            //jar
+            builder.push("jar");
+            JAR_CAPACITY = builder.comment("jar liquid capacity: leave at 12 for pixel accuracy")
+                    .defineInRange("capacity",12,0,1024);
+            builder.pop();
+            //notice boards
+            builder.push("notice_board");
+            NOTICE_BOARDS_UNRESTRICTED = builder.comment("allow notice boards to accept and display any item, not just maps and books")
+                    .define("allow_any_item", false);
+            builder.pop();
 
             builder.pop();
 
@@ -103,8 +116,9 @@ public class ServerConfigs {
         public static ForgeConfigSpec.ConfigValue<List<? extends String>> FIREFLY_BIOMES;
 
         private static void init(ForgeConfigSpec.Builder builder) {
-            builder.comment("Configure fireflies spawn conditions")
+            builder.comment("Configure spawning conditions")
                     .push("spawns");
+            builder.push("firefly");
             List<String> defaultBiomes = Arrays.asList("plains","swamp","sunflower_plains","dark_forest","dark_forest_hills");
             //TODO add validation for biomes
             FIREFLY_BIOMES = builder.comment("Spawnable biomes")
@@ -116,6 +130,7 @@ public class ServerConfigs {
                     .defineInRange("min", 4, 0, 64);
             FIREFLY_MAX = builder.comment("Maximum group size")
                     .defineInRange("max", 7, 0, 64);
+            builder.pop();
             builder.pop();
         }
     }
@@ -202,6 +217,8 @@ public class ServerConfigs {
         public static int LAUNCHER_HEIGHT;
         public static int TURN_TABLE_PERIOD;
         public static boolean WALL_LANTERN_PLACEMENT;
+        public static int JAR_CAPACITY;
+        public static boolean NOTICE_BOARDS_UNRESTRICTED;
         public static void refresh(){
             FIREFLY_MIN = spawn.FIREFLY_MIN.get();
             FIREFLY_MAX = spawn.FIREFLY_MAX.get();
@@ -223,6 +240,10 @@ public class ServerConfigs {
             TURN_TABLE_PERIOD = block.TURN_TABLE_PERIOD.get();
 
             WALL_LANTERN_PLACEMENT = block.WALL_LANTERN_PLACEMENT.get();
+
+            JAR_CAPACITY = block.JAR_CAPACITY.get();
+
+            NOTICE_BOARDS_UNRESTRICTED = block.NOTICE_BOARDS_UNRESTRICTED.get();
         }
     }
 

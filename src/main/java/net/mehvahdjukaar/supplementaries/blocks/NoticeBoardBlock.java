@@ -81,6 +81,8 @@ public class NoticeBoardBlock extends Block {
                     NonNullList<ItemStack> stacks = NonNullList.withSize(1, it);
                     te.setItems(stacks);
                     te.markDirty();
+                    worldIn.playSound(null, pos, SoundEvents.ENTITY_ITEM_FRAME_ADD_ITEM, SoundCategory.BLOCKS, 1.0F,
+                            worldIn.rand.nextFloat() * 0.10F + 0.95F);
                 }
                 if (!player.isCreative()) {
                     itemstack.shrink(1);

@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.gui;
 
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -82,6 +83,7 @@ public class NoticeBoardContainer extends Container implements Supplier<Map<Inte
 
             @Override
             public boolean isItemValid(ItemStack stack) {
+                if(!stack.isEmpty()&& ServerConfigs.cached.NOTICE_BOARDS_UNRESTRICTED)return true;
                 return (stack.getItem() == Items.WRITTEN_BOOK || stack.getItem() == Items.WRITABLE_BOOK || stack.getItem() instanceof FilledMapItem);
             }
         }));

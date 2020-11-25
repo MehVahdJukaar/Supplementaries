@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.blocks;
 
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil.JarContentType;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -43,8 +44,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
         super(Registry.JAR_TILE);
     }
 
-    // called when inventory is updated -> update tile
-    // callen when item is placed chen item has blockentyty tag
+
     // hijacking this method to work with hoppers
     @Override
     public void markDirty() {
@@ -64,7 +64,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
             this.liquidLevel = 0.625f;
         }
         else{
-            this.liquidLevel = (float) this.getStackInSlot(0).getCount() / 16f;
+            this.liquidLevel = ((float) this.getStackInSlot(0).getCount()/ (float)ServerConfigs.cached.JAR_CAPACITY)*0.75f;
         }
 
         //color
@@ -361,7 +361,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
 
     @Override
     public int getInventoryStackLimit() {
-        return 12;
+        return ServerConfigs.cached.JAR_CAPACITY;
     }
 
     @Override

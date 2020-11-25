@@ -16,11 +16,6 @@ import net.minecraft.util.math.MathHelper;
 public class WindVaneBlockTile extends TileEntity implements ITickableTileEntity {
     public float yaw = 0;
     public float prevYaw = 0;
-    public Entity entity = null;
-    public Entity getBee(){
-        if(entity==null)entity=new BeeEntity(EntityType.BEE, this.world);
-        return entity;
-    }
 
     public WindVaneBlockTile() {
         super(Registry.WIND_VANE_TILE);
@@ -54,10 +49,6 @@ public class WindVaneBlockTile extends TileEntity implements ITickableTileEntity
 
     @Override
     public void tick() {
-        if(entity!=null){
-            entity.tick();
-            ((BeeEntity)entity).livingTick();
-        }
         float currentyaw = this.yaw;
         this.prevYaw = currentyaw;
         if(this.world == null)return;

@@ -89,11 +89,15 @@ public class ClientSetup {
         //sconce
         RenderTypeLookup.setRenderLayer(Registry.SCONCE_WALL, RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(Registry.SCONCE, RenderType.getCutout());
-
         RenderTypeLookup.setRenderLayer(Registry.SCONCE_WALL_SOUL, RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(Registry.SCONCE_SOUL, RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(Registry.SCONCE_WALL_ENDER, RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(Registry.SCONCE_ENDER, RenderType.getCutout());
+        //candelabra
+        RenderTypeLookup.setRenderLayer(Registry.CANDELABRA, RenderType.getCutout());
+        //mob jar
+        RenderTypeLookup.setRenderLayer(Registry.MOB_JAR, RenderType.getCutout());
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<MobJarBlockTile>)Registry.MOB_JAR_TILE, MobJarBlockTileRenderer::new);
 
     }
 
