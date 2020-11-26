@@ -51,6 +51,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
         // this.updateServerAndClient();
         this.updateTile();
         this.world.notifyBlockUpdate(this.pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
+        this.world.notifyNeighborsOfStateChange(pos,this.getBlockState().getBlock());
         super.markDirty();
     }
 
@@ -74,12 +75,10 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
         else if(this.liquidType == JarContentType.POTION){
             this.color = PotionUtils.getColor(stack);
         }
-        else if (this.liquidType.applyColor){
+        else{
             this.color = this.liquidType.color;
         }
-        else{
-            this.color = 0xFFFFFF;
-        }
+
 
         //lava light
         if(!this.world.isRemote && this.liquidType.isLava()){

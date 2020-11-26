@@ -2,20 +2,20 @@
   "group": "supplementaries",
   "type": "minecraft:crafting_shaped",
   "pattern": [
+    "   ",
     "212",
-    "2 2",
-    "222"
+    " 2 "
   ],
   "key": {
     "1": {
-      "tag": "minecraft:planks"
+      "item": "endergetic:ender_torch"
     },
     "2": {
-      "item": "minecraft:glass"
+      "item": "minecraft:iron_nugget"
     }
   },
   "result": {
-    "item": "supplementaries:jar",
+    "item": "supplementaries:sconce_ender",
     "count": 1
   }
 }

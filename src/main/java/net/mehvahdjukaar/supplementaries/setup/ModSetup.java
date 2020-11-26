@@ -9,24 +9,22 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 import java.lang.reflect.Method;
 
 public class ModSetup {
 
-    public static void init(final FMLClientSetupEvent event) {
+    public static void init(final FMLCommonSetupEvent event) {
 
         Dispenser.registerBehaviors();
+        Spawns.registerSpawningStuff();
         //DeferredWorkQueue.runLater(()->{ });
-        registerSpawningStuff();
+
 
     }
 
-    private static void registerSpawningStuff(){
-        //TODO:adjust this so they can spawn on more blocks but not underground
-        EntitySpawnPlacementRegistry.register((EntityType<FireflyEntity>)Registry.FIREFLY_TYPE, EntitySpawnPlacementRegistry.PlacementType.NO_RESTRICTIONS,
-                Heightmap.Type.MOTION_BLOCKING, FireflyEntity::canSpawnOn);
-    }
+
 
     public static void reflectionStuff(){
         Method[] methods = FireBlock.class.getMethods();

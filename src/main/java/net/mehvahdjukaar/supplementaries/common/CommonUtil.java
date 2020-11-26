@@ -75,14 +75,14 @@ public class CommonUtil {
 
     //fluids
     public enum JarContentType {
-        // color is handles separately. here it's just for default case
+        // color is handles separately. here it's just for default case  FF6600
         WATER(WATER_TEXTURE, 0x3F76E4, true, 1f, true, true, false, -1),
-        LAVA(LAVA_TEXTURE, 0xFF6600, false, 1f, false, true, false, -1),
+        LAVA(LAVA_TEXTURE, 0xfd6d15, false, 1f, false, true, false, -1),
         MILK(MILK_TEXTURE, 0xFFFFFF, false, 1f, false, true, false, -1),
         POTION(POTION_TEXTURE, 0x3F76E4, true, 0.88f, true, false, false, -1),
-        HONEY(HONEY_TEXTURE, 0xFAAC1C, false, 0.85f, true, false, false, -1),
+        HONEY(HONEY_TEXTURE, 0xffa710, false, 0.85f, true, false, false, -1),
         DRAGON_BREATH(DRAGON_BREATH_TEXTURE, 0xFF33FF, true, 0.8f, true, false, false, -1),
-        XP(XP_TEXTURE, 0x33FF33, false, 0.95f, true, false, false, -1),
+        XP(XP_TEXTURE, 0x8eff11, false, 0.95f, true, false, false, -1),
         TROPICAL_FISH(WATER_TEXTURE, 0x3F76E4, true, 1f, false, true, false, 0),
         SALMON(WATER_TEXTURE, 0x3F76E4, true, 1f, false, true, false, 1),
         COD(WATER_TEXTURE, 0x3F76E4, true, 1f, false, true, false, 2),

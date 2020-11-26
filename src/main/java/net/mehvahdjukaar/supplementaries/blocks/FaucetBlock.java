@@ -153,7 +153,6 @@ public class FaucetBlock extends Block implements  IWaterLoggable{
         }
 
         //handles concrete
-        System.out.println("a");
         if(!hasjar && haswater && (state.get(ENABLED)^toggle^ispowered) && downstate.getBlock() instanceof  ConcretePowderBlock){
             try {
                 //field_200294_a ->solidifiedState
