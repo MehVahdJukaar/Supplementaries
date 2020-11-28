@@ -44,7 +44,7 @@ public class ServerConfigs {
 
         public static ForgeConfigSpec.BooleanValue NOTICE_BOARDS_UNRESTRICTED;
 
-        public static ForgeConfigSpec.ConfigValue<List<? extends String>> MOB_JAR_ALLOWED_MOBS; //not cached
+        public static ForgeConfigSpec.ConfigValue<List<? extends String>> MOB_JAR_ALLOWED_MOBS;
 
 
         private static void  init(ForgeConfigSpec.Builder builder){
@@ -106,7 +106,8 @@ public class ServerConfigs {
             builder.pop();
             //mob jar
             builder.push("Mob in a Jar");
-            List<String> defaultMobs = Arrays.asList("endermite","slime","parrot","bee","magma_cube","vex");
+            List<String> defaultMobs = Arrays.asList("minecraft:endermite","minecraft:slime","minecraft:parrot",
+                    "minecraft:minecraft:bee","minecraft:magma_cube");
             MOB_JAR_ALLOWED_MOBS = builder.comment("catchable mobs")
                     .defineList("mobs", defaultMobs,s -> true);
 
@@ -227,6 +228,7 @@ public class ServerConfigs {
         public static boolean WALL_LANTERN_PLACEMENT;
         public static int JAR_CAPACITY;
         public static boolean NOTICE_BOARDS_UNRESTRICTED;
+        public static List<? extends String> MOB_JAR_ALLOWED_MOBS;
 
         public static void refresh(){
             FIREFLY_MIN = spawn.FIREFLY_MIN.get();
@@ -253,6 +255,8 @@ public class ServerConfigs {
             JAR_CAPACITY = block.JAR_CAPACITY.get();
 
             NOTICE_BOARDS_UNRESTRICTED = block.NOTICE_BOARDS_UNRESTRICTED.get();
+
+            MOB_JAR_ALLOWED_MOBS = block.MOB_JAR_ALLOWED_MOBS.get();
 
         }
     }

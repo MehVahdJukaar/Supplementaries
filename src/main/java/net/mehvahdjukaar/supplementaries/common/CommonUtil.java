@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.common;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
-import net.minecraft.command.arguments.serializers.IntArgumentSerializer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.IFlyingAnimal;
@@ -66,7 +65,7 @@ public class CommonUtil {
     }
 
     //fluids
-    public enum JarContentType {
+    public enum JarLiquidType {
         // color is handles separately. here it's just for default case  FF6600
         WATER(WATER_TEXTURE, 0x3F76E4, true, 1f, true, true, false, -1),
         LAVA(LAVA_TEXTURE, 0xfd6d15, false, 1f, false, true, false, -1),
@@ -95,7 +94,7 @@ public class CommonUtil {
         public final int fishType;
         public final boolean bowl;
 
-        JarContentType(ResourceLocation texture, int color, boolean applycolor, float opacity, boolean bottle, boolean bucket, boolean bowl, int fishtype) {
+        JarLiquidType(ResourceLocation texture, int color, boolean applycolor, float opacity, boolean bottle, boolean bucket, boolean bowl, int fishtype) {
             this.texture = texture;
             this.color = color; // beacon color. this will also be texture color if applycolor is true
             this.applyColor = applycolor; // is texture grayscale and needs to be colored?
@@ -107,16 +106,20 @@ public class CommonUtil {
             // offset for fish textures. -1 is no fish
         }
 
+        public boolean isEmpty(){
+            return this==EMPTY;
+        }
+
         public boolean isFish() {
             return this.fishType != -1;
         }
 
         public boolean isLava() {
-            return this == JarContentType.LAVA;
+            return this == JarLiquidType.LAVA;
         }
 
         public boolean isWater() {
-            return this.isFish() || this == JarContentType.WATER;
+            return this.isFish() || this == JarLiquidType.WATER;
         }
 
         public Item getReturnItem() {
@@ -142,51 +145,52 @@ public class CommonUtil {
 
     }
 
-    public static JarContentType getJarContentTypeFromItem(ItemStack stack) {
+    public static JarLiquidType getJarContentTypeFromItem(ItemStack stack) {
         Item i = stack.getItem();
         if (i instanceof PotionItem) {
             if (PotionUtils.getPotionFromItem(stack).equals(Potions.WATER)) {
-                return JarContentType.WATER;
+                return JarLiquidType.WATER;
             } else {
-                return JarContentType.POTION;
+                return JarLiquidType.POTION;
             }
         } else if (i instanceof FishBucketItem) {
             if (i == Items.COD_BUCKET) {
-                return JarContentType.COD;
+                return JarLiquidType.COD;
             } else if (i == Items.PUFFERFISH_BUCKET) {
-                return JarContentType.PUFFER_FISH;
+                return JarLiquidType.PUFFER_FISH;
             } else if (i == Items.SALMON_BUCKET) {
-                return JarContentType.SALMON;
+                return JarLiquidType.SALMON;
             } else {
-                return JarContentType.TROPICAL_FISH;
+                return JarLiquidType.TROPICAL_FISH;
             }
         } else if (i == Items.LAVA_BUCKET) {
-            return JarContentType.LAVA;
+            return JarLiquidType.LAVA;
         } else if (i instanceof HoneyBottleItem) {
-            return JarContentType.HONEY;
+            return JarLiquidType.HONEY;
         } else if (i instanceof MilkBucketItem) {
-            return JarContentType.MILK;
+            return JarLiquidType.MILK;
         } else if (i == Items.DRAGON_BREATH) {
-            return JarContentType.DRAGON_BREATH;
+            return JarLiquidType.DRAGON_BREATH;
         } else if (i instanceof ExperienceBottleItem) {
-            return JarContentType.XP;
+            return JarLiquidType.XP;
         } else if (i == Items.MUSHROOM_STEW) {
-            return JarContentType.MUSHROOM_STEW;
+            return JarLiquidType.MUSHROOM_STEW;
         } else if (i == Items.RABBIT_STEW) {
-            return JarContentType.RABBIT_STEW;
+            return JarLiquidType.RABBIT_STEW;
         } else if (i == Items.BEETROOT_SOUP) {
-            return JarContentType.BEETROOT_SOUP;
+            return JarLiquidType.BEETROOT_SOUP;
         } else if (i instanceof SuspiciousStewItem) {
-            return JarContentType.SUSPICIOUS_STEW;
+            return JarLiquidType.SUSPICIOUS_STEW;
         } else if (i == Items.COOKIE) {
-            return JarContentType.COOKIES;
+            return JarLiquidType.COOKIES;
         }
-        return JarContentType.EMPTY;
+        return JarLiquidType.EMPTY;
     }
 
+    //converts bucket and bowls in minecraft bottle fluid unit
     public static int getLiquidCountFromItem(Item i) {
         if (i instanceof FishBucketItem) return 1;
-        if (i instanceof MilkBucketItem || i == Items.LAVA_BUCKET || i == Items.WATER_BUCKET) return 4;
+        if (i instanceof MilkBucketItem || i == Items.LAVA_BUCKET || i == Items.WATER_BUCKET) return 3;
         else if (i instanceof SoupItem || i instanceof SuspiciousStewItem) return 2;
         else return 1;
     }
@@ -329,6 +333,11 @@ public class CommonUtil {
         CompoundNBT mobCompound = new CompoundNBT();
         mob.writeUnlessPassenger(mobCompound);
         if (!mobCompound.isEmpty()) {
+
+            mobCompound.remove("Passengers");
+            mobCompound.remove("Leash");
+            mobCompound.remove("UUID");
+
             CompoundNBT cacheCompound = new CompoundNBT();
 
             boolean flag = mob.hasNoGravity() || mob instanceof IFlyingAnimal;

@@ -85,6 +85,7 @@ public class MobJarBlockTile extends TileEntity implements ITickableTileEntity {
         return this.write(new CompoundNBT());
     }
 
+
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         this.read(this.getBlockState(), pkt.getNbtCompound());
@@ -117,7 +118,7 @@ public class MobJarBlockTile extends TileEntity implements ITickableTileEntity {
                         this.jumpY=Math.max(0,this.jumpY+this.yVel);
                     if(jumpY!=0){
                         //decelerate
-                        this.yVel = this.yVel-0.005f;
+                        this.yVel = this.yVel-0.006f;
                     }
                     //on ground
                     else {
@@ -126,7 +127,7 @@ public class MobJarBlockTile extends TileEntity implements ITickableTileEntity {
                             this.yVel=0;
                             slime.squishAmount = -0.5f;
                         }
-                        if (this.rand.nextFloat() > 0.98) {
+                        if (this.rand.nextFloat() > 0.985) {
                             //jump
                             this.yVel = 0.05f;
                             slime.squishAmount = 1.0F;

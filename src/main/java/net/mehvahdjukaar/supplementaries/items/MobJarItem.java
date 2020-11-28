@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.items;
 
 import net.mehvahdjukaar.supplementaries.blocks.MobJarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.block.BeehiveBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -9,6 +10,8 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.monster.SlimeEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.BlockItem;
@@ -17,12 +20,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CollectionNBT;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.NonNullList;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.*;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
@@ -39,6 +41,11 @@ public class MobJarItem extends BlockItem {
         super(blockIn, properties);
     }
 
+
+    @Override
+    public ITextComponent getDisplayName(ItemStack stack) {
+        return new StringTextComponent("this is a test");
+    }
 
     @OnlyIn(Dist.CLIENT)
     @Override
@@ -63,11 +70,35 @@ public class MobJarItem extends BlockItem {
 
     @Override
     public ActionResultType onItemUse(ItemUseContext context) {
+        CompoundNBT com = context.getItem().getTag();
+        if(!context.getPlayer().isSneaking() && com!=null && com.contains("JarMob")){
+            World world = context.getWorld();
+            Entity entity  = EntityType.loadEntityAndExecute(com.getCompound("JarMob"), world, o -> o);
+            if(entity!=null) {
+                if(!world.isRemote) {
+                    Vector3d v = context.getHitVec();
+                    entity.setPositionAndRotation(v.getX(), v.getY(), v.getZ(), context.getPlacementYaw(), 0);
+                    world.addEntity(entity);
+                }
+            }
+            return ActionResultType.SUCCESS;
+
+        }
         return super.onItemUse(context);
     }
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, PlayerEntity player, Entity entity) {
+
+
+        String name =  entity.getType().getRegistryName().toString();
+        if(!ServerConfigs.cached.MOB_JAR_ALLOWED_MOBS.contains(name)){
+            int aa = 1;
+            return false;
+        }
+
+        if(entity instanceof SlimeEntity && ((SlimeEntity)entity).getSlimeSize()>1) return false;
+
         if(player.world.isRemote)return true;
 
         Entity e = entity;
@@ -98,9 +129,6 @@ public class MobJarItem extends BlockItem {
             if(compound!=null&&compound.contains("JarMob")&&compound.contains("CachedJarMobValues")) {
                 CompoundNBT com2 = compound.getCompound("CachedJarMobValues");
                 CompoundNBT com = compound.getCompound("JarMob");
-                com.remove("Passengers");
-                com.remove("Leash");
-                com.remove("UUID");
 
                 mobjar.entityData = com;
                 mobjar.yOffset = com2.getFloat("YOffset");

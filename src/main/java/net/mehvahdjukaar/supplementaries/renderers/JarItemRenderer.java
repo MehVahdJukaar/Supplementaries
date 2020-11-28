@@ -3,8 +3,7 @@ package net.mehvahdjukaar.supplementaries.renderers;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.mehvahdjukaar.supplementaries.common.CommonUtil;
-import net.mehvahdjukaar.supplementaries.common.CommonUtil.JarContentType;
+import net.mehvahdjukaar.supplementaries.common.CommonUtil.JarLiquidType;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -38,12 +37,12 @@ public class JarItemRenderer extends ItemStackTileEntityRenderer {
         matrixStackIn.pop();
         float height = 0;
         int color = 0xffffff;
-        JarContentType lt = JarContentType.EMPTY;
+        JarLiquidType lt = JarLiquidType.EMPTY;
         CompoundNBT compound = stack.getTag();
         if (compound != null && !compound.isEmpty() && compound.contains("BlockEntityTag")) {
             compound = compound.getCompound("BlockEntityTag");
             if (compound.contains("liquidType")) {
-                lt = JarContentType.values()[compound.getInt("liquidType")];
+                lt = JarLiquidType.values()[compound.getInt("liquidType")];
             }
             if (compound.contains("liquidLevel"))
                 height = compound.getFloat("liquidLevel");
@@ -55,7 +54,7 @@ public class JarItemRenderer extends ItemStackTileEntityRenderer {
 
             Random rand = new Random(420);
             //cookies
-            if (lt == JarContentType.COOKIES) {
+            if (lt == JarLiquidType.COOKIES) {
                 matrixStackIn.push();
                 matrixStackIn.translate(0.5, 0.5, 0.5);
                 matrixStackIn.rotate(Vector3f.XP.rotationDegrees(-90));

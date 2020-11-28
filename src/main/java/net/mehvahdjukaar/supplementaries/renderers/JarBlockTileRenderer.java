@@ -3,8 +3,7 @@ package net.mehvahdjukaar.supplementaries.renderers;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.mehvahdjukaar.supplementaries.blocks.JarBlockTile;
-import net.mehvahdjukaar.supplementaries.common.CommonUtil;
-import net.mehvahdjukaar.supplementaries.common.CommonUtil.JarContentType;
+import net.mehvahdjukaar.supplementaries.common.CommonUtil.JarLiquidType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.model.IBakedModel;
@@ -37,7 +36,7 @@ public class JarBlockTileRenderer extends TileEntityRenderer<JarBlockTile> {
         long r = tile.getPos().toLong();
         Random rand = new Random(r);
         //render cookies
-        if (tile.liquidType == JarContentType.COOKIES) {
+        if (tile.liquidType == JarLiquidType.COOKIES) {
             matrixStackIn.push();
             matrixStackIn.translate(0.5, 0.5, 0.5);
             matrixStackIn.rotate(Vector3f.XP.rotationDegrees(-90));

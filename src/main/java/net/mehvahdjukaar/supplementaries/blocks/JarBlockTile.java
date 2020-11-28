@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.blocks;
 
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
-import net.mehvahdjukaar.supplementaries.common.CommonUtil.JarContentType;
+import net.mehvahdjukaar.supplementaries.common.CommonUtil.JarLiquidType;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
@@ -39,7 +39,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
     private NonNullList<ItemStack> stacks = NonNullList.withSize(1, ItemStack.EMPTY);
     public int color = 0xffffff;
     public float liquidLevel = 0;
-    public JarContentType liquidType = JarContentType.EMPTY;
+    public JarLiquidType liquidType = JarLiquidType.EMPTY;
     public JarBlockTile() {
         super(Registry.JAR_TILE);
     }
@@ -76,7 +76,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
         if(this.liquidType.isWater()){
             this.color=-1;//let client get biome color on next rendering. ugly i know but that class is client side
         }
-        else if(this.liquidType == JarContentType.POTION){
+        else if(this.liquidType == JarLiquidType.POTION){
             this.color = PotionUtils.getColor(stack);
         }
         else{
@@ -104,7 +104,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
         boolean isbowl = handitem == Items.BOWL;
         boolean isempty = handstack.isEmpty();
         // eat cookies
-        if (isempty && this.liquidType == JarContentType.COOKIES) {
+        if (isempty && this.liquidType == JarLiquidType.COOKIES) {
             boolean eat = false;
             if (player.canEat(false))
                 eat = true;
@@ -174,7 +174,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
                 ItemStack extracted = mystack.copy();
                 extracted.setCount(1);
                 // special case to convert water bottles into bucket
-                if (this.liquidType == JarContentType.WATER && amount==4) {
+                if (this.liquidType == JarLiquidType.WATER && amount==4) {
                     extracted = new ItemStack(Items.WATER_BUCKET);
                 }
                 handstack.shrink(1);
@@ -241,57 +241,27 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
     }
 
     public boolean isFull() {
-        return this.getStackInSlot(0).getCount() >= this.getInventoryStackLimit();
+        return (this.liquidType.isFish() || this.getStackInSlot(0).getCount() >= this.getInventoryStackLimit());
     }
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        if (index != 0) return false;
-        ItemStack currentstack = this.getStackInSlot(0);
-        Item newitem = stack.getItem();
-        Item currentitem = currentstack.getItem();
-        // is it potion
-        if (newitem instanceof PotionItem) {
-            return (this.isEmpty() || ((PotionUtils.getPotionFromItem(stack) == PotionUtils.getPotionFromItem(currentstack)) && !this.isFull()));
-        }
-        // is it waterbucket (check it it has water bottle)
-        else if (newitem == Items.WATER_BUCKET) {
-            return (this.isEmpty() || (PotionUtils.getPotionFromItem(currentstack) == Potions.WATER && !this.isFull()));
-        }
-        // other items (stack to 12)
-        else if (newitem instanceof ExperienceBottleItem || newitem instanceof HoneyBottleItem || newitem instanceof MilkBucketItem
-                || newitem == Items.LAVA_BUCKET
-                || newitem == Items.DRAGON_BREATH || newitem == Items.COOKIE) {
-            return (this.isEmpty() || (currentitem == newitem && !this.isFull()));
-        }
-        // fish bucket (only 1 can stay in)
-        else if (newitem instanceof FishBucketItem) {
-            return this.isEmpty();
-        }
-        //stews, stack to 6
-        else if (newitem == Items.MUSHROOM_STEW|| newitem == Items.RABBIT_STEW||
-                newitem==Items.BEETROOT_SOUP){
-            return (this.isEmpty() || (currentitem == newitem && !this.isFull()));
-        }
-        else if(newitem instanceof SuspiciousStewItem){
-            return (currentstack.getOrCreateTag().equals(stack.getOrCreateTag()) || this.isEmpty())&&!this.isFull();
+        //TODO rewrite this to use forge fluid system
+        //convert water buckets
+        if(stack.getItem() == Items.WATER_BUCKET)
+            stack = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.WATER);
+
+        JarLiquidType lt = CommonUtil.getJarContentTypeFromItem(stack);
+        if(!lt.isEmpty() && index == 0){
+            ItemStack currentStack = this.getStackInSlot(0);
+            if (this.isEmpty()) return true;
+            else if(!this.isFull()&&this.liquidType==lt){
+                return currentStack.getOrCreateTag().equals(stack.getOrCreateTag());
+            }
         }
         return false;
     }
 
-    /*
-     * public void loadFromNbt(CompoundNBT compound) { this.stacks =
-     * NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY); if
-     * (!this.checkLootAndRead(compound) && compound.contains("Items", 9)) {
-     * ItemStackHelper.loadAllItems(compound, this.stacks);
-     *
-     * MinecraftServer mcserv = ServerLifecycleHooks.getCurrentServer();
-     * mcserv.getPlayerList().sendMessage(new StringTextComponent("no"));
-     *
-     * if(compound.contains("fluidLevel")){ mcserv.getPlayerList().sendMessage(new
-     * StringTextComponent("nwewo")); this.fluidLevel =
-     * compound.getFloat("fluidLevel"); } } }
-     */
     // save to itemstack
     public CompoundNBT saveToNbt(CompoundNBT compound) {
         if (!this.checkLootAndWrite(compound)) {
@@ -314,7 +284,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
         ItemStackHelper.loadAllItems(compound, this.stacks);
         this.liquidLevel = compound.getFloat("liquid_level");
         this.color = compound.getInt("liquid_color");
-        this.liquidType = JarContentType.values()[compound.getInt("liquid_type")];
+        this.liquidType = JarLiquidType.values()[compound.getInt("liquid_type")];
     }
 
     @Override
@@ -358,11 +328,6 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
     }
 
     @Override
-    public ITextComponent getDefaultName() {
-        return new StringTextComponent("jar");
-    }
-
-    @Override
     public int getInventoryStackLimit() {
         return ServerConfigs.cached.JAR_CAPACITY;
     }
@@ -370,6 +335,11 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
     @Override
     public Container createMenu(int id, PlayerInventory player) {
         return ChestContainer.createGeneric9X3(id, player, this);
+    }
+
+    @Override
+    public ITextComponent getDefaultName() {
+        return new StringTextComponent("jar");
     }
 
     @Override
@@ -396,12 +366,11 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
     public boolean canInsertItem(int index, ItemStack stack, @Nullable Direction direction) {
         //can only insert cookies
         return stack.getItem() == Items.COOKIE;
-        //return this.isItemValidForSlot(index, stack) && (this.liquidType == JarContentType.COOKIES || this.liquidType == JarContentType.EMPTY);
     }
 
     @Override
     public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
-        return this.liquidType == JarContentType.COOKIES;
+        return this.liquidType == JarLiquidType.COOKIES;
     }
     private final LazyOptional<? extends IItemHandler>[] handlers = SidedInvWrapper.create(this, Direction.values());
     @Override

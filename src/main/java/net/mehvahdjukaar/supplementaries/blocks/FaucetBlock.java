@@ -136,7 +136,7 @@ public class FaucetBlock extends Block implements  IWaterLoggable{
         int newcolor = -2;
         //TODO:rewrite this
         if (ishoney)
-            newcolor = CommonUtil.JarContentType.HONEY.color;
+            newcolor = CommonUtil.JarLiquidType.HONEY.color;
         else if (isjarliquid) {
             TileEntity tileentity = world.getTileEntity(backpos);
             if (tileentity instanceof JarBlockTile) {
