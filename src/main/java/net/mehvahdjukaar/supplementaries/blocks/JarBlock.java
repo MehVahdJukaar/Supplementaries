@@ -188,10 +188,14 @@ public class JarBlock extends Block {
 
     public ItemStack getItem(IBlockReader worldIn, BlockPos pos, BlockState state) {
         ItemStack itemstack = super.getItem(worldIn, pos, state);
-        JarBlockTile tile = (JarBlockTile) worldIn.getTileEntity(pos);
-        CompoundNBT compoundnbt = tile.saveToNbt(new CompoundNBT());
-        if (!compoundnbt.isEmpty()) {
-            itemstack.setTagInfo("BlockEntityTag", compoundnbt);
+
+        TileEntity tileentity = worldIn.getTileEntity(pos);
+        if (tileentity instanceof JarBlockTile) {
+            JarBlockTile shulkerboxtileentity = (JarBlockTile) tileentity;
+            CompoundNBT compoundnbt = shulkerboxtileentity.saveToNbt(new CompoundNBT());
+            if (!compoundnbt.isEmpty()) {
+                itemstack.setTagInfo("BlockEntityTag", compoundnbt);
+            }
         }
         return itemstack;
     }

@@ -22,6 +22,11 @@ public class WindVaneBlockTile extends TileEntity implements ITickableTileEntity
     }
 
     @Override
+    public double getMaxRenderDistanceSquared() {
+        return 80;
+    }
+
+    @Override
     public void read(BlockState state, CompoundNBT compound) {
         super.read(state, compound);
     }

@@ -44,6 +44,8 @@ public class ServerConfigs {
 
         public static ForgeConfigSpec.BooleanValue NOTICE_BOARDS_UNRESTRICTED;
 
+        public static ForgeConfigSpec.ConfigValue<List<? extends String>> MOB_JAR_ALLOWED_MOBS; //not cached
+
 
         private static void  init(ForgeConfigSpec.Builder builder){
             builder.comment("Server side blocks configs")
@@ -102,6 +104,12 @@ public class ServerConfigs {
             NOTICE_BOARDS_UNRESTRICTED = builder.comment("allow notice boards to accept and display any item, not just maps and books")
                     .define("allow_any_item", false);
             builder.pop();
+            //mob jar
+            builder.push("Mob in a Jar");
+            List<String> defaultMobs = Arrays.asList("endermite","slime","parrot","bee","magma_cube","vex");
+            MOB_JAR_ALLOWED_MOBS = builder.comment("catchable mobs")
+                    .defineList("mobs", defaultMobs,s -> true);
+
 
             builder.pop();
 
@@ -119,7 +127,7 @@ public class ServerConfigs {
             builder.comment("Configure spawning conditions")
                     .push("spawns");
             builder.push("firefly");
-            List<String> defaultBiomes = Arrays.asList("plains","swamp","sunflower_plains","dark_forest","dark_forest_hills");
+            List<String> defaultBiomes = Arrays.asList("minecraft:plains","minecraft:swamp","minecraft:sunflower_plains","minecraft:dark_forest","minecraft:dark_forest_hills");
             //TODO add validation for biomes
             FIREFLY_BIOMES = builder.comment("Spawnable biomes")
                     .defineList("biomes", defaultBiomes, s -> true);
@@ -219,6 +227,7 @@ public class ServerConfigs {
         public static boolean WALL_LANTERN_PLACEMENT;
         public static int JAR_CAPACITY;
         public static boolean NOTICE_BOARDS_UNRESTRICTED;
+
         public static void refresh(){
             FIREFLY_MIN = spawn.FIREFLY_MIN.get();
             FIREFLY_MAX = spawn.FIREFLY_MAX.get();
@@ -244,19 +253,27 @@ public class ServerConfigs {
             JAR_CAPACITY = block.JAR_CAPACITY.get();
 
             NOTICE_BOARDS_UNRESTRICTED = block.NOTICE_BOARDS_UNRESTRICTED.get();
+
         }
     }
 
+    /*
     @SubscribeEvent
-    public static void loadConfig(final ModConfig.Loading event) {
+    public static void loadConfig(ModConfig.Loading event) {
         if(event.getConfig().getType() == ModConfig.Type.COMMON)
             cached.refresh();
     }
 
     @SubscribeEvent
-    public static void reloadConfig(final ModConfig.Reloading event) {
-        int a = 1;
+    public static void reloadConfig(ModConfig.Reloading event) {
+
         if(event.getConfig().getType() == ModConfig.Type.COMMON)
+            cached.refresh();
+    }*/
+
+    @SubscribeEvent
+    public static void configEvent(ModConfig.ModConfigEvent event) {
+        if(event.getConfig().getSpec() == SERVER_CONFIG)
             cached.refresh();
     }
 

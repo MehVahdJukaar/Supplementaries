@@ -71,6 +71,11 @@ public class HangingSignBlockTile extends TileEntity implements ITickableTileEnt
     }
 
     @Override
+    public double getMaxRenderDistanceSquared() {
+        return 96;
+    }
+
+    @Override
     public void read(BlockState state, CompoundNBT compound) {
         super.read(state, compound);
 

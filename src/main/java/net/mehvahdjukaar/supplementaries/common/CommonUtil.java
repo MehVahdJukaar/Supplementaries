@@ -1,14 +1,13 @@
 package net.mehvahdjukaar.supplementaries.common;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.AtlasTexture;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.command.arguments.serializers.IntArgumentSerializer;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.passive.IFlyingAnimal;
 import net.minecraft.item.*;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.potion.Potions;
 import net.minecraft.state.BooleanProperty;
@@ -17,17 +16,10 @@ import net.minecraft.state.IntegerProperty;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Matrix3f;
-import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.Vector3f;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 public class CommonUtil {
 
@@ -223,6 +215,10 @@ public class CommonUtil {
             return this.name;
         }
 
+        public String getName() {
+            return this.name;
+        }
+
     }
 
     //else if else if else if
@@ -272,7 +268,7 @@ public class CommonUtil {
     }
 
     //bounding box
-    static public AxisAlignedBB getDirectionBB(BlockPos pos, Direction facing, int offset) {
+    public static AxisAlignedBB getDirectionBB(BlockPos pos, Direction facing, int offset) {
         BlockPos endPos = pos.offset(facing, offset);
         switch (facing) {
             default:
@@ -300,6 +296,64 @@ public class CommonUtil {
         }
         return new AxisAlignedBB(pos, endPos);
     }
+
+    //used for animation only (maybe caching item renderer later)
+    public enum JarMobType {
+        DEFAULT(null),
+        SLIME(EntityType.SLIME),
+        MAGMA_CUBE(EntityType.MAGMA_CUBE),
+        BEE(EntityType.BEE),
+        BAT(EntityType.BAT),
+        VEX(EntityType.VEX),
+        ENDERMITE(EntityType.ENDERMITE);
+
+        public final EntityType<?> type;
+        public final int a;
+
+        JarMobType(EntityType<?> type){
+            this.type=type;
+            this.a=1;
+        };
+
+        public static JarMobType getJarMobType(Entity e){
+            for (JarMobType n : JarMobType.values()){
+                if(e.getType().equals(n.type))return n;
+            }
+            return JarMobType.DEFAULT;
+        }
+    }
+
+
+    public static void saveJarMobItemNBT(ItemStack stack, Entity mob){
+        if(mob==null)return;
+        CompoundNBT mobCompound = new CompoundNBT();
+        mob.writeUnlessPassenger(mobCompound);
+        if (!mobCompound.isEmpty()) {
+            CompoundNBT cacheCompound = new CompoundNBT();
+
+            boolean flag = mob.hasNoGravity() || mob instanceof IFlyingAnimal;
+            float s = 1;
+            float w = mob.getWidth();
+            float h = mob.getHeight();
+            float maxh = flag ? 0.5f : 0.75f;
+            float maxw = 0.375f;
+            if (w > maxw || h > maxh) {
+                if (w - maxw > h - maxh)
+                    s = maxw / w;
+                else
+                    s = maxh / h;
+            }
+
+            float y = flag ? 0.4375f - mob.getHeight() * s / 2f : 0.0625f;
+
+            cacheCompound.putFloat("Scale", s);
+            cacheCompound.putFloat("YOffset", y);
+            cacheCompound.putString("Name",mob.getName().getString());
+            stack.setTagInfo("CachedJarMobValues", cacheCompound);
+            stack.setTagInfo("JarMob", mobCompound);
+        }
+    }
+
 
 
 }

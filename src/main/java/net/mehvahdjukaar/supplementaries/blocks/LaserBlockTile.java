@@ -96,7 +96,13 @@ public class LaserBlockTile extends TileEntity implements ITickableTileEntity {
 
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
-        return CommonUtil.getDirectionBB(this.pos, this.getDirection(), this.lenght);
+        return new AxisAlignedBB(this.pos.add(-20,-20,-20), this.pos.add(20,20,20));
+        //return CommonUtil.getDirectionBB(this.pos, this.getDirection(), this.lenght);
+    }
+
+    @Override
+    public double getMaxRenderDistanceSquared() {
+        return 128;
     }
 
     @Override

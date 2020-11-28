@@ -38,6 +38,11 @@ public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
     }
 
     @Override
+    public double getMaxRenderDistanceSquared() {
+        return 80;
+    }
+
+    @Override
     public AxisAlignedBB getRenderBoundingBox() {
         return new AxisAlignedBB(getPos().add(0, -1, 0), getPos().add(1, 1, 1));
     }

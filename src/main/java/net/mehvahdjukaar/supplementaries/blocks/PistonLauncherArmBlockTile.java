@@ -41,6 +41,10 @@ public class PistonLauncherArmBlockTile extends TileEntity implements ITickableT
         this.setParameters(extending, dir);
     }
 
+    @Override
+    public double getMaxRenderDistanceSquared() {
+        return 96;
+    }
 
     //TODO: rewrite some of this old code
     public AxisAlignedBB getAdjustedBoundingBox() {

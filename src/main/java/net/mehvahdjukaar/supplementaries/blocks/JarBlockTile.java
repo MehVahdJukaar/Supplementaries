@@ -44,6 +44,10 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
         super(Registry.JAR_TILE);
     }
 
+    @Override
+    public double getMaxRenderDistanceSquared() {
+        return 80;
+    }
 
     // hijacking this method to work with hoppers
     @Override

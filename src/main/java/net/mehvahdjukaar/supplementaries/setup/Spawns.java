@@ -27,7 +27,7 @@ public class Spawns {
                 //RegistryKey<Biome> biomeKey = RegistryKey.getOrCreateKey(ForgeRegistries.Keys.BIOMES, event.getName());
                 ResourceLocation biomeres = ForgeRegistries.BIOMES.getKey(biome);
 
-                if (ServerConfigs.cached.FIREFLY_BIOMES.contains(biomeres.getPath())){
+                if (ServerConfigs.cached.FIREFLY_BIOMES.contains(biomeres)){
                     //TODO:adjust this so they can spawn on more blocks but not underground
                     event.getSpawns().getSpawner(EntityClassification.AMBIENT).add(new MobSpawnInfo.Spawners(
                             Registry.FIREFLY_TYPE, ServerConfigs.cached.FIREFLY_WEIGHT,

@@ -19,6 +19,10 @@ public class FlagBlockTile extends TileEntity implements ITickableTileEntity {
         super(Registry.FLAG_TILE);
     }
 
+    @Override
+    public double getMaxRenderDistanceSquared() {
+        return 96;
+    }
 
     public void tick() {
         if(this.world.isRemote) {

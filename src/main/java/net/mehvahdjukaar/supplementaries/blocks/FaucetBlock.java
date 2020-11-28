@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.blocks;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.minecraft.block.*;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -208,10 +207,10 @@ public class FaucetBlock extends Block implements  IWaterLoggable{
             int y = pos.getY();
             int z = pos.getZ();
             for (int l = 0; l < 4; ++l) {
-                double d0 = (x + 0.375 + 0.25 * random.nextFloat());
-                double d1 = (y + 0.25 + 0 * random.nextFloat());
+                //double d0 = (x + 0.375 + 0.25 * random.nextFloat());
+                //double d1 = (y + 0.25 + 0 * random.nextFloat());
                 // 0.3125
-                double d2 = (z + 0.375 + 0.25 * random.nextFloat());
+                //double d2 = (z + 0.375 + 0.25 * random.nextFloat());
                // world.addParticle(ParticleTypes.FALLING_WATER, d0, d1, d2, 0, 0, 0);
                 world.addParticle(ParticleTypes.DRIPPING_WATER, x + 0.5, y + 0.25, z + 0.5, 0, 0, 0);
             }

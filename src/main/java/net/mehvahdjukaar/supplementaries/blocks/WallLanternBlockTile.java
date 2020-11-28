@@ -23,6 +23,10 @@ public class WallLanternBlockTile extends TileEntity implements ITickableTileEnt
         super(Registry.WALL_LANTERN_TILE);
     }
 
+    @Override
+    public double getMaxRenderDistanceSquared() {
+        return 128;
+    }
 
     @Override
     public void read(BlockState state, CompoundNBT compound) {

@@ -57,6 +57,11 @@ public class SignPostBlockTile extends TileEntity {
     }
 
     @Override
+    public double getMaxRenderDistanceSquared() {
+        return 128;
+    }
+
+    @Override
     public void markDirty() {
         this.world.notifyBlockUpdate(this.pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
         super.markDirty();

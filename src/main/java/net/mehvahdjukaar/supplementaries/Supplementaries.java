@@ -61,8 +61,8 @@ public class Supplementaries{
         bus.addListener(ModSetup::init);
         bus.addListener(ClientSetup::init);
 
-        bus.addListener(ServerConfigs::loadConfig);
-        bus.addListener(ServerConfigs::reloadConfig);
+        bus.addListener(ServerConfigs::configEvent);
+        //bus.addListener(ServerConfigs::reloadConfig);
 
     }
 
