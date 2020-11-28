@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.blocks;
 
 import net.minecraft.block.*;
 import net.minecraft.block.material.PushReaction;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;

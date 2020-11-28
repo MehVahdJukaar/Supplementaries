@@ -1,16 +1,11 @@
 package net.mehvahdjukaar.supplementaries.particles;
 
+import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.api.distmarker.Dist;
-
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.particles.BasicParticleType;
-import net.minecraft.client.particle.SpriteTexturedParticle;
-import net.minecraft.client.particle.Particle;
-import net.minecraft.client.particle.IParticleRenderType;
-import net.minecraft.client.particle.IParticleFactory;
-import net.minecraft.client.particle.IAnimatedSprite;
+import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 
 @OnlyIn(Dist.CLIENT)

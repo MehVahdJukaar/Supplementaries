@@ -4,12 +4,11 @@ import com.google.common.collect.Lists;
 import net.mehvahdjukaar.supplementaries.blocks.*;
 import net.mehvahdjukaar.supplementaries.entities.FireflyEntity;
 import net.mehvahdjukaar.supplementaries.gui.NoticeBoardContainer;
+import net.mehvahdjukaar.supplementaries.items.EmptyJarItem;
 import net.mehvahdjukaar.supplementaries.items.JarItem;
-import net.mehvahdjukaar.supplementaries.items.MobJarItem;
 import net.mehvahdjukaar.supplementaries.items.SignPostItem;
 import net.mehvahdjukaar.supplementaries.renderers.FireflyJarItemRenderer;
 import net.mehvahdjukaar.supplementaries.renderers.JarItemRenderer;
-import net.mehvahdjukaar.supplementaries.renderers.MobJarItemRenderer;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -134,6 +133,7 @@ public class Registry {
             BLOCKS.add(JAR);
             TILES.add(JAR_TILE);
             ITEMS.add(JAR_ITEM);
+            ITEMS.add(EMPTY_JAR_ITEM);
         }
         //faucet
         if(true) {
@@ -235,11 +235,6 @@ public class Registry {
             ITEMS.add(FIREFLY_JAR_ITEM);
         }
 
-
-        BLOCKS.add(MOB_JAR);
-        ITEMS.add(MOB_JAR_ITEM);
-        TILES.add(MOB_JAR_TILE);
-
         //flag
         if(true) {
             BLOCKS.add(FLAG);
@@ -293,6 +288,7 @@ public class Registry {
                     .harvestLevel(0)
                     .sound(SoundType.WOOD)
                     .harvestTool(ToolType.AXE)
+                    .setLightLevel((state)->1)
     ).setRegistryName(CLOCK_BLOCK_NAME);
     public static final TileEntityType<?> CLOCK_BLOCK_TILE =  TileEntityType.Builder.create(
             ClockBlockTile::new, CLOCK_BLOCK).build(null).setRegistryName(CLOCK_BLOCK_NAME);
@@ -383,8 +379,10 @@ public class Registry {
     ).setRegistryName(JAR_NAME);
     public static final TileEntityType<?> JAR_TILE =  TileEntityType.Builder.create(
             JarBlockTile::new, JAR).build(null).setRegistryName(JAR_NAME);
-    public static final Item JAR_ITEM = new JarItem(JAR, new Item.Properties().group(
-            ItemGroup.DECORATIONS).maxStackSize(16).setISTER(()-> JarItemRenderer::new)).setRegistryName(JAR_NAME);
+    public static final Item JAR_ITEM = new JarItem(JAR, new Item.Properties().group(null)
+            .maxStackSize(1).setISTER(()-> JarItemRenderer::new)).setRegistryName("jar_full");
+    public static final Item EMPTY_JAR_ITEM = new EmptyJarItem(JAR, new Item.Properties().group(
+            ItemGroup.DECORATIONS).maxStackSize(16)).setRegistryName("jar");
 
 
     //faucet
@@ -782,19 +780,6 @@ public class Registry {
     ).setRegistryName(CANDELABRA_NAME);
     public static final Item CANDELABRA_ITEM = new BlockItem(CANDELABRA,
             new Item.Properties().group(ItemGroup.DECORATIONS)).setRegistryName(CANDELABRA_NAME);
-
-    //mob jar
-    public static final String MOB_JAR_NAME = "mob_jar";
-    public static final Block MOB_JAR = new MobJarBlock(
-            AbstractBlock.Properties.create(Material.GLASS, MaterialColor.GRASS)
-                    .hardnessAndResistance(1f, 1f)
-                    .sound(SoundType.GLASS)
-                    .notSolid()
-    ).setRegistryName(MOB_JAR_NAME);
-    public static final TileEntityType<?> MOB_JAR_TILE =  TileEntityType.Builder.create(
-            MobJarBlockTile::new, MOB_JAR).build(null).setRegistryName(MOB_JAR_NAME);
-    public static final Item MOB_JAR_ITEM = new MobJarItem(MOB_JAR, new Item.Properties().group(
-            null).maxStackSize(1).setISTER(()-> MobJarItemRenderer::new)).setRegistryName(MOB_JAR_NAME);
 
 
 }

@@ -95,9 +95,6 @@ public class ClientSetup {
         RenderTypeLookup.setRenderLayer(Registry.SCONCE_ENDER, RenderType.getCutout());
         //candelabra
         RenderTypeLookup.setRenderLayer(Registry.CANDELABRA, RenderType.getCutout());
-        //mob jar
-        RenderTypeLookup.setRenderLayer(Registry.MOB_JAR, RenderType.getCutout());
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<MobJarBlockTile>)Registry.MOB_JAR_TILE, MobJarBlockTileRenderer::new);
 
     }
 

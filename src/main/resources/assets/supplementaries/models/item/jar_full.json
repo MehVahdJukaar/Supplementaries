@@ -1,5 +1,5 @@
 {
-  "parent": "supplementaries:block/jar",
+  "parent": "builtin/entity",
   "textures": {
     "particle": "supplementaries:blocks/jar_side"
   },

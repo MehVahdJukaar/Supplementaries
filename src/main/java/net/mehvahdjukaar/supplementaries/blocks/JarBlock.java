@@ -1,40 +1,37 @@
 package net.mehvahdjukaar.supplementaries.blocks;
 
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.material.PushReaction;
-import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootContext;
 import net.minecraft.loot.LootParameters;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.pathfinding.PathNodeType;
-import net.minecraft.state.BooleanProperty;
+import net.minecraft.state.DirectionProperty;
+import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.NonNullList;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.text.*;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -42,11 +39,11 @@ import java.util.List;
 public class JarBlock extends Block {
     protected static final VoxelShape SHAPE = VoxelShapes.or(VoxelShapes.create(0.1875D, 0D, 0.1875D, 0.8125D, 0.875D, 0.8125D),
             VoxelShapes.create(0.3125, 0.875, 0.3125, 0.6875, 1, 0.6875));
-
-    public static final BooleanProperty HAS_LAVA = CommonUtil.HAS_LAVA;
+    public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
+    public static final IntegerProperty LIGHT_LEVEL = CommonUtil.LIGHT_LEVEL_0_15;
     public JarBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(HAS_LAVA, false));
+        this.setDefaultState(this.stateContainer.getBaseState().with(LIGHT_LEVEL, 0).with(FACING, Direction.NORTH));
     }
 
     @Override
@@ -88,18 +85,45 @@ public class JarBlock extends Block {
         return ActionResultType.PASS;
     }
 
+    @Override
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+        if (stack.hasDisplayName()) {
+            TileEntity tileentity = worldIn.getTileEntity(pos);
+            if (tileentity instanceof JarBlockTile) {
+                ((JarBlockTile) tileentity).setCustomName(stack.getDisplayName());
+            }
+        }
+    }
+
+    public ItemStack getJarItem(JarBlockTile te){
+        ItemStack returnStack;
+        if(te.isEmpty()&&te.hasNoMob()){
+            returnStack = new ItemStack(Registry.EMPTY_JAR_ITEM);
+        }
+        else{
+            returnStack = new ItemStack(Registry.JAR_ITEM);
+            CompoundNBT compoundnbt = te.saveToNbt(new CompoundNBT());
+            if (!compoundnbt.isEmpty())
+                returnStack.setTagInfo("BlockEntityTag", compoundnbt);
+            //TODO: learn how to use BlockEntityTag
+            CommonUtil.saveJarMobItemNBT(returnStack, te.mob);
+        }
+        if(te.hasCustomName()){
+            returnStack.setDisplayName(te.getCustomName());
+        }
+        return returnStack;
+    }
+
     // shulker box code
     @Override
     public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
         TileEntity tileentity = worldIn.getTileEntity(pos);
         if (tileentity instanceof JarBlockTile) {
             JarBlockTile tile = (JarBlockTile) tileentity;
-            if (!worldIn.isRemote && player.isCreative() && !tile.isEmpty()) {
-                ItemStack itemstack = new ItemStack(this);
-                CompoundNBT compoundnbt = tile.saveToNbt(new CompoundNBT());
-                if (!compoundnbt.isEmpty()) {
-                    itemstack.setTagInfo("BlockEntityTag", compoundnbt);
-                }
+            if (!worldIn.isRemote && player.isCreative()) {
+
+                ItemStack itemstack = this.getJarItem(tile);
+
                 ItemEntity itementity = new ItemEntity(worldIn, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5, itemstack);
                 itementity.setDefaultPickupDelay();
                 worldIn.addEntity(itementity);
@@ -115,100 +139,31 @@ public class JarBlock extends Block {
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         TileEntity tileentity = builder.get(LootParameters.BLOCK_ENTITY);
         if (tileentity instanceof JarBlockTile) {
-            JarBlockTile shulkerboxtileentity = (JarBlockTile) tileentity;
+            JarBlockTile tile = (JarBlockTile) tileentity;
 
-            ItemStack itemstack = new ItemStack(this);
-            CompoundNBT compoundnbt = shulkerboxtileentity.saveToNbt(new CompoundNBT());
-            if (!compoundnbt.isEmpty()) {
-                itemstack.setTagInfo("BlockEntityTag", compoundnbt);
-            }
+            ItemStack itemstack = this.getJarItem(tile);
+
             return Collections.singletonList(itemstack);
         }
         return super.getDrops(state, builder);
     }
-/*
-    public static final ResourceLocation CONTENTS = new ResourceLocation("contents");
+
+    //for pick block
     @Override
-    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
-        TileEntity tileentity = builder.get(LootParameters.BLOCK_ENTITY);
-        if (tileentity instanceof JarBlockTile) {
-            JarBlockTile tile = (JarBlockTile) tileentity;
-            builder = builder.withDynamicDrop(CONTENTS, (context, stackConsumer) -> {
-                for (int i = 0; i < tile.getSizeInventory(); ++i) {
-                    stackConsumer.accept(tile.getStackInSlot(i));
-                }
-
-            });
-        }
-
-        return super.getDrops(state, builder);
-    }*/
-
-    @OnlyIn(Dist.CLIENT)
-    public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
-        CompoundNBT compoundnbt = stack.getChildTag("BlockEntityTag");
-        if (compoundnbt != null) {
-            if (compoundnbt.contains("LootTable", 8)) {
-                tooltip.add(new StringTextComponent("???????"));
-            }
-
-            if (compoundnbt.contains("Items", 9)) {
-                NonNullList<ItemStack> nonnulllist = NonNullList.withSize(27, ItemStack.EMPTY);
-                ItemStackHelper.loadAllItems(compoundnbt, nonnulllist);
-                int i = 0;
-                int j = 0;
-
-                for(ItemStack itemstack : nonnulllist) {
-                    if (!itemstack.isEmpty()) {
-                        ++j;
-                        if (i <= 4) {
-                            ++i;
-                            IFormattableTextComponent iformattabletextcomponent = itemstack.getDisplayName().deepCopy();
-
-                            String s = iformattabletextcomponent.getString();
-                            s = s.replace(" Bucket", "");
-                            s = s.replace(" Bottle", "");
-                            s = s.replace("Bucket of ", "");
-                            IFormattableTextComponent str = new StringTextComponent(s);
-
-                            str.appendString(" x").appendString(String.valueOf(itemstack.getCount()));
-                            tooltip.add(str);
-                        }
-                    }
-                }
-
-                if (j - i > 0) {
-                    tooltip.add((new TranslationTextComponent("container.shulkerBox.more", j - i)).mergeStyle(TextFormatting.ITALIC));
-                }
-            }
-        }
-
-    }
-
     public ItemStack getItem(IBlockReader worldIn, BlockPos pos, BlockState state) {
-        ItemStack itemstack = super.getItem(worldIn, pos, state);
 
         TileEntity tileentity = worldIn.getTileEntity(pos);
         if (tileentity instanceof JarBlockTile) {
-            JarBlockTile shulkerboxtileentity = (JarBlockTile) tileentity;
-            CompoundNBT compoundnbt = shulkerboxtileentity.saveToNbt(new CompoundNBT());
-            if (!compoundnbt.isEmpty()) {
-                itemstack.setTagInfo("BlockEntityTag", compoundnbt);
-            }
+            JarBlockTile tile = (JarBlockTile) tileentity;
+            return this.getJarItem(tile);
         }
-        return itemstack;
+        return super.getItem(worldIn, pos, state);
     }
 
     // end shoulker box code
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(HAS_LAVA);
-    }
-
-    @Override
-    public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
-        return true;
+        builder.add(LIGHT_LEVEL,FACING);
     }
 
     @Override
@@ -246,7 +201,7 @@ public class JarBlock extends Block {
 
     @Override
     public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
-        return state.get(HAS_LAVA) ? 15 : 0;
+        return state.get(LIGHT_LEVEL);
     }
 
     @Override
@@ -262,4 +217,19 @@ public class JarBlock extends Block {
         else
             return 0;
     }
+
+    public BlockState rotate(BlockState state, Rotation rot) {
+        return state.with(FACING, rot.rotate(state.get(FACING)));
+    }
+
+    public BlockState mirror(BlockState state, Mirror mirrorIn) {
+        return state.rotate(mirrorIn.toRotation(state.get(FACING)));
+    }
+
+    @Override
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
+        return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing().getOpposite());
+    }
+
+
 }

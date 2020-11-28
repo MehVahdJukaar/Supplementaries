@@ -2,24 +2,34 @@ package net.mehvahdjukaar.supplementaries.blocks;
 
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil.JarLiquidType;
+import net.mehvahdjukaar.supplementaries.common.CommonUtil.JarMobType;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.monster.SlimeEntity;
+import net.minecraft.entity.passive.BeeEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.ChestContainer;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.item.*;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.potion.Potions;
 import net.minecraft.stats.Stats;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.LockableLootTileEntity;
 import net.minecraft.util.*;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.biome.BiomeColors;
@@ -33,13 +43,27 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 
 import javax.annotation.Nullable;
+import java.util.Random;
 import java.util.stream.IntStream;
 
-public class JarBlockTile extends LockableLootTileEntity implements ISidedInventory {
+public class JarBlockTile extends LockableLootTileEntity implements ISidedInventory, ITickableTileEntity {
     private NonNullList<ItemStack> stacks = NonNullList.withSize(1, ItemStack.EMPTY);
     public int color = 0xffffff;
     public float liquidLevel = 0;
     public JarLiquidType liquidType = JarLiquidType.EMPTY;
+
+    //mob jar code
+    public Entity mob = null;
+    public CompoundNBT entityData = null;
+    public boolean entityChanged = false;
+    public float yOffset = 1;
+    public float scale = 1;
+    public float jumpY = 0;
+    public float prevJumpY = 0;
+    public float yVel = 0;
+    private Random rand = new Random();
+    public JarMobType animationType = CommonUtil.JarMobType.DEFAULT;
+
     public JarBlockTile() {
         super(Registry.JAR_TILE);
     }
@@ -71,7 +95,6 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
         else{
             this.liquidLevel = ((float) this.getStackInSlot(0).getCount()/ (float)ServerConfigs.cached.JAR_CAPACITY)*0.75f;
         }
-
         //color
         if(this.liquidType.isWater()){
             this.color=-1;//let client get biome color on next rendering. ugly i know but that class is client side
@@ -82,13 +105,11 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
         else{
             this.color = this.liquidType.color;
         }
-
-
         //lava light
         if(!this.world.isRemote && this.liquidType.isLava()){
-            BlockState bs = this.world.getBlockState(this.pos);
-            if (!bs.get(JarBlock.HAS_LAVA)) {
-                this.world.setBlockState(this.pos, bs.with(JarBlock.HAS_LAVA, true), 4|16);
+            BlockState bs = this.getBlockState();
+            if (bs.get(JarBlock.LIGHT_LEVEL)!=15) {
+                this.world.setBlockState(this.pos, bs.with(JarBlock.LIGHT_LEVEL, 15), 4|16);
             }
 
         }
@@ -125,7 +146,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
             if (this.liquidType.bottle) {
                 // if extraction successful
                 if (this.extractItem(1, handstack, player, hand, true)) {
-                    this.world.playSound(player, player.getPosX(), player.getPosY(), player.getPosZ(), SoundEvents.ITEM_BOTTLE_FILL,
+                    this.world.playSound(player, player.getPosition(), SoundEvents.ITEM_BOTTLE_FILL,
                             SoundCategory.BLOCKS, 1.0F, 1.0F);
                     player.addStat(Stats.ITEM_USED.get(Items.GLASS_BOTTLE));
                     return true;
@@ -139,7 +160,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
             if (this.liquidType.bucket) {
                 // if extraction successful
                 if (this.extractItem(4, handstack, player, hand, true)) {
-                    this.world.playSound(player, player.getPosX(), player.getPosY(), player.getPosZ(), this.liquidType.getSound(),
+                        this.world.playSound(player, player.getPosition(), this.liquidType.getSound(),
                             SoundCategory.BLOCKS, 1.0F, 1.0F);
                     player.addStat(Stats.ITEM_USED.get(Items.BUCKET));
                     return true;
@@ -152,7 +173,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
             if (this.liquidType.bowl) {
                 // if extraction successful
                 if (this.extractItem(2, handstack, player, hand, true)) {
-                    this.world.playSound(player, player.getPosX(), player.getPosY(), player.getPosZ(), SoundEvents.ITEM_BOTTLE_FILL,
+                    this.world.playSound(player, player.getPosition(), SoundEvents.ITEM_BOTTLE_FILL,
                             SoundCategory.BLOCKS, 1.0F, 1.0F);
                     player.addStat(Stats.ITEM_USED.get(Items.BOWL));
                     return true;
@@ -170,23 +191,18 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
         int count = mystack.getCount();
         // do i have enough?
         if (count >= amount) {
-            if (!player.isCreative() && givetoplayer) {
+            //case for cookies
+            if ( givetoplayer) {
                 ItemStack extracted = mystack.copy();
                 extracted.setCount(1);
                 // special case to convert water bottles into bucket
                 if (this.liquidType == JarLiquidType.WATER && amount==4) {
                     extracted = new ItemStack(Items.WATER_BUCKET);
                 }
-                handstack.shrink(1);
-                if (handstack.isEmpty()) {
-                    player.setHeldItem(handIn, extracted);
-                } else if (!player.inventory.addItemStackToInventory(extracted)) {
-                    player.dropItem(extracted, false);
-                }
-                /*
-                 * else if (player instanceof ServerPlayerEntity) {
-                 * ((ServerPlayerEntity)player).sendContainerToPlayer(player.container); }
-                 */
+                player.setHeldItem(handIn,DrinkHelper.fill(handstack,player,extracted,true));
+
+                 //else if (player instanceof ServerPlayerEntity)
+                 //     ((ServerPlayerEntity)player).sendContainerToPlayer(player.container);
             }
             mystack.setCount(Math.max(0, count - amount));
             return true;
@@ -212,7 +228,6 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
 
 
         // shrink stack and replace bottle /bucket with empty ones
-
         if (player != null && handIn != null) {
             if (!player.isCreative()) {
                 handstack.shrink(1);
@@ -224,7 +239,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
                 }
             }
             if (this.liquidType.makesSound())
-                this.world.playSound(player, player.getPosX(), player.getPosY(), player.getPosZ(), SoundEvents.ITEM_BOTTLE_EMPTY,
+                this.world.playSound(player, player.getPosition(), SoundEvents.ITEM_BOTTLE_EMPTY,
                         SoundCategory.BLOCKS, 1.0F, 1.0F);
         }
 
@@ -246,6 +261,12 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
+        //c*m jar easter egg XD
+        if(!this.hasNoMob()){
+            if(!this.hasCustomName())return false;
+            else if(!this.getCustomName().toString().toLowerCase().contains("cum"))return false;
+        }
+
         //TODO rewrite this to use forge fluid system
         //convert water buckets
         if(stack.getItem() == Items.WATER_BUCKET)
@@ -285,6 +306,15 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
         this.liquidLevel = compound.getFloat("liquid_level");
         this.color = compound.getInt("liquid_color");
         this.liquidType = JarLiquidType.values()[compound.getInt("liquid_type")];
+        //mob jar
+        //TODO: reformat all nbts to be consistent
+        if(compound.contains("jar_mob")){
+            this.entityData = compound.getCompound("jar_mob");
+            this.entityChanged = true;
+        }
+        this.scale = compound.getFloat("scale");
+        this.yOffset = compound.getFloat("y_offset");
+        this.animationType = JarMobType.values()[compound.getInt("animation_type")];
     }
 
     @Override
@@ -296,6 +326,12 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
         compound.putInt("liquid_color", this.color);
         compound.putFloat("liquid_level", this.liquidLevel);
         compound.putInt("liquid_type", this.liquidType.ordinal());
+        //mob jar
+        if(this.entityData!=null)
+            compound.put("jar_mob", this.entityData);
+        compound.putFloat("scale",this.scale);
+        compound.putFloat("y_offset",this.yOffset);
+        compound.putInt("animation_type", this.animationType.ordinal());
         return compound;
     }
 
@@ -392,5 +428,79 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
         this.color = BiomeColors.getWaterColor(this.world, this.pos);
         return this.color;
     }
+
+    //mob jar code
+
+    public Direction getDirection() {
+        return this.getBlockState().get(ClockBlock.FACING);
+    }
+
+    public void tick() {
+        if (this.entityChanged && this.entityData != null) {
+            this.updateMob();
+            this.entityChanged = false;
+        }
+        if (!this.world.isRemote) return;
+        //for client side animation
+        if (this.mob != null) {
+            this.mob.ticksExisted++;
+            this.prevJumpY = this.jumpY;
+            switch (this.animationType) {
+                default:
+                case DEFAULT:
+                    break;
+                case SLIME:
+                case MAGMA_CUBE:
+                    SlimeEntity slime = (SlimeEntity) this.mob;
+                    slime.squishFactor += (slime.squishAmount - slime.squishFactor) * 0.5F;
+                    slime.prevSquishFactor = slime.squishFactor;
+                    //move
+                    if (this.yVel != 0)
+                        this.jumpY = Math.max(0, this.jumpY + this.yVel);
+                    if (jumpY != 0) {
+                        //decelerate
+                        this.yVel = this.yVel - 0.006f;
+                    }
+                    //on ground
+                    else {
+                        if (this.yVel != 0) {
+                            //land
+                            this.yVel = 0;
+                            slime.squishAmount = -0.5f;
+                        }
+                        if (this.rand.nextFloat() > 0.985) {
+                            //jump
+                            this.yVel = 0.05f;
+                            slime.squishAmount = 1.0F;
+                        }
+                    }
+                    slime.squishAmount *= 0.6F;
+                    break;
+                case VEX:
+                    this.jumpY = 0.04f * MathHelper.sin(this.mob.ticksExisted / 10f) - 0.03f;
+                    break;
+                case ENDERMITE:
+                    if (this.rand.nextFloat() > 0.7f) {
+                        this.world.addParticle(ParticleTypes.PORTAL, this.pos.getX() + 0.5f, this.pos.getY() + 0.2f,
+                                this.pos.getZ() + 0.5f, (this.rand.nextDouble() - 0.5D) * 2.0D, -this.rand.nextDouble(), (this.rand.nextDouble() - 0.5D) * 2.0D);
+                    }
+            }
+        }
+    }
+
+    public void updateMob(){
+        Entity entity  = EntityType.loadEntityAndExecute(this.entityData, this.world, o -> o);
+        if(entity==null && this.entityData.contains("id")){
+            boolean flag = this.entityData.get("id").getString().equals("minecraft:bee");
+            if(flag) entity = new BeeEntity(EntityType.BEE, this.world);
+        }
+        this.mob = entity;
+        this.animationType = CommonUtil.JarMobType.getJarMobType(entity);
+    }
+
+    public boolean hasNoMob(){
+        return this.entityData==null;
+    }
+
 
 }

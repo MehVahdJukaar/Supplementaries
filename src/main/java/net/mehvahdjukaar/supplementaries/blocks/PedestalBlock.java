@@ -25,7 +25,6 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraftforge.common.extensions.IForgeFluidState;
 
 
 public class PedestalBlock extends Block implements IWaterLoggable {

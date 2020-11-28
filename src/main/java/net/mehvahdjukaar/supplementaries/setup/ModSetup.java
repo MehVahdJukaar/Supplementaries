@@ -1,14 +1,7 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
 
-import net.mehvahdjukaar.supplementaries.blocks.NoticeBoardBlockTile;
-import net.mehvahdjukaar.supplementaries.entities.FireflyEntity;
 import net.minecraft.block.FireBlock;
-import net.minecraft.entity.EntitySpawnPlacementRegistry;
-import net.minecraft.entity.EntityType;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.world.gen.Heightmap;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 import java.lang.reflect.Method;
