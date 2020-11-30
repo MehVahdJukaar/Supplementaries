@@ -5,6 +5,7 @@ import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.gui.NoticeBoardContainer;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.ItemStackHelper;
@@ -316,6 +317,8 @@ public class NoticeBoardBlockTile extends LockableLootTileEntity implements INam
     }
 
     public int getFrontLight() {
+        return WorldRenderer.getCombinedLight(this.world, this.pos);
+        /*
         World world = this.getWorld();
         assert world != null;
         IWorldLightListener block = world.getLightManager().getLightEngine(LightType.BLOCK);
@@ -324,6 +327,7 @@ public class NoticeBoardBlockTile extends LockableLootTileEntity implements INam
         int u = block.getLightFor(newpos) * 16;
         int v = sky.getLightFor(newpos) * 16;
         return ((v << 16) | u);
+        */
         // return this.packedFrontLight;
     }
 

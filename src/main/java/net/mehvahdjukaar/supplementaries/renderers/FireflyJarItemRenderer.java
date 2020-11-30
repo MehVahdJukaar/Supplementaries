@@ -35,23 +35,9 @@ public class FireflyJarItemRenderer extends ItemStackTileEntityRenderer {
         float b = 1;
         float a = 1;
         EntityRendererManager renderManager = Minecraft.getInstance().getRenderManager();
-        matrixStackIn.translate(0.5, 0.5, 0.5);
-        matrixStackIn.translate(0, -0.1, 0);
-        // matrixStackIn.rotate(renderManager.getCameraOrientation());
-        // renderManager.renderEntityStatic(new
-        // FireflyEntity.CustomEntity(FireflyEntity.entity,
-        // (World)Minecraft.getInstance().world), 0d, 0d, 0d, 0f, 1f, matrixStackIn,
-        // bufferIn, combinedLightIn);
-        // TextureAtlasSprite sprite =
-        // Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_PARTICLES_TEXTURE).apply(texture);
-        matrixStackIn.scale(0.6f, 0.6f, 0.6f);
-        // matrixStackIn.rotate(Vector3f.YP.rotationDegrees(180.0F));
-        float f9 = 0.32F;
-        // matrixStackIn.scale(0.3F, 0.3F, 0.3F);
-        float minu = 0;// sprite.getMinU();
-        float minv = 0;// sprite.getMinV();
-        float maxu = 1;// sprite.getMaxU();
-        float maxv = 1;// sprite.getMaxV();
+        matrixStackIn.translate(0.5, 0.5-0.125, 0.5);
+
+        matrixStackIn.scale(0.25f, 0.25f, 0.25f);
 
         IVertexBuilder ivertexbuilder = bufferIn.getBuffer(RenderType.getEntityTranslucent(CommonUtil.FIREFLY_TEXTURE));
 

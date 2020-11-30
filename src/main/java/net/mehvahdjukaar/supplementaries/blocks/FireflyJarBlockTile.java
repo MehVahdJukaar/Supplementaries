@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.blocks;
 
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
@@ -43,17 +45,22 @@ public class FireflyJarBlockTile extends TileEntity implements ITickableTileEnti
     }
 
     public void tick() {
-        if (this.world.isRemote() && this.world.getGameTime() % 8L == 0L && this.rand.nextFloat() > 0.55f) {
-            int x = this.pos.getX();
-            int y = this.pos.getY();
-            int z = this.pos.getZ();
-            double pr = 0.15d;
-            for (int l = 0; l < 1; ++l) {
-                double d0 = (x + 0.5 + (this.rand.nextFloat() - 0.5) * (0.625D - pr));
-                double d1 = (y + 0.5 - 0.0625 + (this.rand.nextFloat() - 0.5) * (0.875D - pr));
-                double d2 = (z + 0.5 + (this.rand.nextFloat() - 0.5) * (0.625D - pr));
-                world.addParticle(Registry.FIREFLY_GLOW, d0, d1, d2, 0, 0, 0);
+        if (this.world.isRemote()){
+            int p = ClientConfigs.cached.FIREFLY_SPAWN_PERIOD;
+            float c = (float) ClientConfigs.cached.FIREFLY_SPAWN_CHANCE;
+            if(this.world.getGameTime() % p == 0L && this.rand.nextFloat() > c) {
+                int x = this.pos.getX();
+                int y = this.pos.getY();
+                int z = this.pos.getZ();
+                double pr = 0.15d;
+                for (int l = 0; l < 1; ++l) {
+                    double d0 = (x + 0.5 + (this.rand.nextFloat() - 0.5) * (0.625D - pr));
+                    double d1 = (y + 0.5 - 0.0625 + (this.rand.nextFloat() - 0.5) * (0.875D - pr));
+                    double d2 = (z + 0.5 + (this.rand.nextFloat() - 0.5) * (0.625D - pr));
+                    world.addParticle(Registry.FIREFLY_GLOW, d0, d1, d2, 0, 0, 0);
+                }
             }
         }
     }
+
 }

@@ -36,7 +36,6 @@ public class Supplementaries{
         bus.addListener(ClientSetup::init);
 
         bus.addListener(ServerConfigs::configEvent);
-        //bus.addListener(ServerConfigs::reloadConfig);
 
     }
 

@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.entities;
 
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -14,8 +14,6 @@ import net.minecraft.entity.ai.goal.LookRandomlyGoal;
 import net.minecraft.entity.passive.IFlyingAnimal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ArrowEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.IPacket;
 import net.minecraft.pathfinding.FlyingPathNavigator;
 import net.minecraft.tags.BlockTags;
@@ -34,10 +32,9 @@ import java.util.Random;
 
 public class FireflyEntity extends CreatureEntity implements IFlyingAnimal {
     private int particleCooldown = 20;
-    private float alpha = 1;
-    private float prevAlpha = 1;
-    private final int flickerPeriod = 40;
-    private int flickerCounter =0;
+    public float alpha = 1;
+    public float prevAlpha = 1;
+    private final int flickerPeriod = ClientConfigs.cached.FIREFLY_PERIOD + new Random().nextInt(10) ; //40
 
 
     public FireflyEntity(EntityType<? extends CreatureEntity> type, World world) {
@@ -47,7 +44,7 @@ public class FireflyEntity extends CreatureEntity implements IFlyingAnimal {
         this.moveController = new FlyingMovementController(this, 10, true);
         this.navigator = new FlyingPathNavigator(this, this.world);
         //this.setRenderDistanceWeight(20);
-        this.flickerCounter = (int)(this.rand.nextFloat()*this.flickerPeriod);
+        //this.flickerCounter = (int)(this.rand.nextFloat()*2*this.flickerPeriod);
     }
 
     public static boolean canSpawnOn(FireflyEntity ce, IWorld worldIn, SpawnReason reason, BlockPos pos, Random random) {
@@ -62,58 +59,26 @@ public class FireflyEntity extends CreatureEntity implements IFlyingAnimal {
     }
 
     @Override
-    public ActionResultType applyPlayerInteraction(PlayerEntity player, Vector3d vec, Hand hand) {
-        ItemStack itemstack = player.getHeldItem(hand);
-        Item item = itemstack.getItem();
-
-        if (item == Registry.JAR_ITEM) {
-            ItemStack itemstack4 = new ItemStack(Registry.FIREFLY_JAR_ITEM);
-            if (!player.abilities.isCreativeMode) {
-                itemstack.shrink(1);
-                if (itemstack.isEmpty()) {
-                    player.setHeldItem(hand, itemstack4);
-                } else if (!player.inventory.addItemStackToInventory(itemstack4) && !this.world.isRemote()) {
-                    player.dropItem(itemstack4, false);
-                }
-            }
-            this.world.playSound((PlayerEntity)null, this.getPosition(), SoundEvents.ITEM_BOTTLE_FILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
-            this.dead=true;
-            this.getCombatTracker().reset();
-            this.remove();
-            return ActionResultType.SUCCESS;
-        }
-        return ActionResultType.PASS;
+    public boolean isInRangeToRenderDist(double distance) {
+        return Math.abs(distance) < 3500;
     }
-
-
-    public float getAlpha() {
-        return this.alpha;
-    }
-
-    public float getPrevAlpha() {
-        return this.prevAlpha;
-    }
-
-    //@OnlyIn(Dist.CLIENT)
-    //public double getMaxRenderDistanceSquared() {
-    //		return 65536.0D;
-    //	}
 
     @Override
     public void tick() {
         super.tick();
+
         //despawn when entity is not lit
-        if ((this.flickerCounter+(this.flickerPeriod/2)) % (this.flickerPeriod*2) == 0){
+        if (this.alpha == 0){
             long dayTime = this.world.getWorldInfo().getDayTime();
             if (dayTime > 23500 || dayTime < 12500)
                 this.remove();
         }
-        this.flickerCounter++;
+        //this.flickerCounter++;
         this.prevAlpha = this.alpha;
-        float p = 0.3f;
-        this.alpha = Math.max( (1-p)*MathHelper.sin(this.flickerCounter * ((float) Math.PI / this.flickerPeriod))+p, 0);
-
-
+        float a = (float) ClientConfigs.cached.FIREFLY_INTENSITY; //0.3
+        float p = (float) ClientConfigs.cached.FIREFLY_EXPONENT;
+        this.alpha = (float) Math.pow( Math.max( ( (1-a)*MathHelper.sin(this.ticksExisted * ((float)Math.PI*2 / this.flickerPeriod))+a),0), p);
+        //this.alpha =  Math.max( ( (1-p)*MathHelper.sin(this.ticksExisted * ((float) Math.PI / this.flickerPeriod))+p), 0);
 
         this.setMotion(this.getMotion().mul(1.0D, 0.6D, 1.0D));
         this.setMotion(this.getMotion().add(0.02 * (this.rand.nextDouble() - 0.5), 0.03 * (this.rand.nextDouble() - 0.5),

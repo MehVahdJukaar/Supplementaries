@@ -49,7 +49,7 @@ public class ServerConfigs {
 
         private static void  init(ForgeConfigSpec.Builder builder){
             builder.comment("Server side blocks configs")
-                    .push("block_settings");
+                    .push("blocks");
 
             //speaker
             builder.push("speaker_block");
@@ -110,7 +110,7 @@ public class ServerConfigs {
                     "minecraft:minecraft:bee","minecraft:magma_cube");
             MOB_JAR_ALLOWED_MOBS = builder.comment("catchable mobs")
                     .defineList("mobs", defaultMobs,s -> true);
-
+            builder.pop();
 
             builder.pop();
 
@@ -128,7 +128,7 @@ public class ServerConfigs {
             builder.comment("Configure spawning conditions")
                     .push("spawns");
             builder.push("firefly");
-            List<String> defaultBiomes = Arrays.asList("minecraft:plains","minecraft:swamp","minecraft:sunflower_plains","minecraft:dark_forest","minecraft:dark_forest_hills");
+            List<String> defaultBiomes = Arrays.asList("minecraft:swamp","minecraft:swamp_hills","minecraft:plains","minecraft:sunflower_plains","minecraft:dark_forest","minecraft:dark_forest_hills");
             //TODO add validation for biomes
             FIREFLY_BIOMES = builder.comment("Spawnable biomes")
                     .defineList("biomes", defaultBiomes, s -> true);
@@ -279,6 +279,8 @@ public class ServerConfigs {
     public static void configEvent(ModConfig.ModConfigEvent event) {
         if(event.getConfig().getSpec() == SERVER_CONFIG)
             cached.refresh();
+        else if(event.getConfig().getSpec() == ClientConfigs.CLIENT_CONFIG)
+            ClientConfigs.cached.refresh();
     }
 
 }
