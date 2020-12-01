@@ -26,7 +26,9 @@
   "block.supplementaries.speaker_block": "Bloco de Alto-Falante",
   "block.supplementaries.sconce": "Arandela",
   "block.supplementaries.sconce_soul": "Arandela das almas",
+  "block.supplementaries.sconce_ender": "Arandela do Fim",
   "block.supplementaries.sign_post": "Placa de Sinalização",
+  "block.supplementaries.candelabra": "Candelabro",
   "item.supplementaries.sign_post_oak": "Placa de Sinalização Carvalho",
   "item.supplementaries.sign_post_birch": "Placa de Sinalização Bétula",
   "item.supplementaries.sign_post_spruce": "Placa de Sinalização Pinheiro",
@@ -38,14 +40,11 @@
   "gui.supplementaries.speaker_block.edit": "Editar mensagem do Bloco de Alto-Falante",
   "gui.supplementaries.speaker_block.chat_message" : "Mensagem do Narrador",
   "gui.supplementaries.speaker_block.narrator_message": "Mensagem de bate-papo",
-
-  "block.supplementaries.candelabra": "Candelabro",
+  "entity.supplementaries.firefly": "Vaga-Lume",
+  "block.supplementaries.firefly_jar": "Jarro com Vaga-Lume",
+  "item.supplementaries.firefly": "Ovo Gerador de Vaga-Lume",
  
   "block.supplementaries.flag": "WIP  Bandeira",
-
-  "entity.supplementaries.firefly": "Vaga-Lume",
-  "item.supplementaries.firefly": "Ovo Gerador de Vaga-Lume",
-  "block.supplementaries.firefly_jar": "Jarro com Vaga-Lume",
   "block.supplementaries.laser_block": "Bloco de Laser",
   "block.supplementaries.clover": "Trevo",
   "block.supplementaries.fancy_lamp": "Lâmpada Chique",
