@@ -45,7 +45,7 @@ public class ServerConfigs {
         public static ForgeConfigSpec.BooleanValue NOTICE_BOARDS_UNRESTRICTED;
 
         public static ForgeConfigSpec.ConfigValue<List<? extends String>> MOB_JAR_ALLOWED_MOBS;
-
+        public static ForgeConfigSpec.ConfigValue<List<? extends String>> MOB_JAR_TINTED_ALLOWED_MOBS;
 
         private static void  init(ForgeConfigSpec.Builder builder){
             builder.comment("Server side blocks configs")
@@ -98,19 +98,25 @@ public class ServerConfigs {
             builder.push("jar");
             JAR_CAPACITY = builder.comment("jar liquid capacity: leave at 12 for pixel accuracy")
                     .defineInRange("capacity",12,0,1024);
+
+            List<String> defaultMobs = Arrays.asList("minecraft:slime","minecraft:parrot",
+                    "minecraft:bee","minecraft:magma_cube");
+            MOB_JAR_ALLOWED_MOBS = builder.comment("catchable mobs")
+                    .defineList("mobs", defaultMobs,s -> true);
+            List<String> defaultMobsTinted = Arrays.asList("minecraft:endermite","minecraft:slime","minecraft:parrot",
+                    "minecraft:bee","minecraft:magma_cube", "minecraft:vex");
+            MOB_JAR_TINTED_ALLOWED_MOBS = builder.comment("tinted jar catchable mobs")
+                    .defineList("tinted_jar_mobs", defaultMobsTinted,s -> true);
             builder.pop();
             //notice boards
             builder.push("notice_board");
             NOTICE_BOARDS_UNRESTRICTED = builder.comment("allow notice boards to accept and display any item, not just maps and books")
                     .define("allow_any_item", false);
             builder.pop();
-            //mob jar
-            builder.push("Mob in a Jar");
-            List<String> defaultMobs = Arrays.asList("minecraft:endermite","minecraft:slime","minecraft:parrot",
-                    "minecraft:minecraft:bee","minecraft:magma_cube");
-            MOB_JAR_ALLOWED_MOBS = builder.comment("catchable mobs")
-                    .defineList("mobs", defaultMobs,s -> true);
-            builder.pop();
+
+
+
+
 
             builder.pop();
 
@@ -229,6 +235,7 @@ public class ServerConfigs {
         public static int JAR_CAPACITY;
         public static boolean NOTICE_BOARDS_UNRESTRICTED;
         public static List<? extends String> MOB_JAR_ALLOWED_MOBS;
+        public static List<? extends String> MOB_JAR_TINTED_ALLOWED_MOBS;
 
         public static void refresh(){
             FIREFLY_MIN = spawn.FIREFLY_MIN.get();
@@ -257,6 +264,7 @@ public class ServerConfigs {
             NOTICE_BOARDS_UNRESTRICTED = block.NOTICE_BOARDS_UNRESTRICTED.get();
 
             MOB_JAR_ALLOWED_MOBS = block.MOB_JAR_ALLOWED_MOBS.get();
+            MOB_JAR_TINTED_ALLOWED_MOBS = block.MOB_JAR_TINTED_ALLOWED_MOBS.get();
 
         }
     }

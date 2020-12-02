@@ -27,16 +27,19 @@ public class EmptyJarItem extends BlockItem {
         String name = n.toString();
         //Fireflies
         boolean isFirefly = entity.getType().getRegistryName().getPath().toLowerCase().contains("firefl");
-
-        if(!isFirefly&&!ServerConfigs.cached.MOB_JAR_ALLOWED_MOBS.contains(name)){
-            return ActionResultType.PASS;
-            //TODO: figure out diccerence between ActionResultType.SUCCESS and CONSUME
+        boolean flag = this.getItem() == Registry.EMPTY_JAR_ITEM;
+        if(!isFirefly) {
+            if (flag ? !ServerConfigs.cached.MOB_JAR_ALLOWED_MOBS.contains(name) :
+                    !ServerConfigs.cached.MOB_JAR_TINTED_ALLOWED_MOBS.contains(name)) {
+                return ActionResultType.PASS;
+                //TODO: figure out diccerence between ActionResultType.SUCCESS and CONSUME
+            }
         }
 
         if(entity instanceof SlimeEntity && ((SlimeEntity)entity).getSlimeSize()>1) return ActionResultType.PASS;
 
         if(player.world.isRemote)return ActionResultType.SUCCESS;
-        ItemStack returnStack = new ItemStack(isFirefly?  Registry.FIREFLY_JAR_ITEM : Registry.JAR_ITEM);
+        ItemStack returnStack = new ItemStack(isFirefly?  Registry.FIREFLY_JAR_ITEM : (flag ? Registry.JAR_ITEM : Registry.JAR_ITEM_TINTED));
         if(!isFirefly) {
 
             entity.rotationYaw = 0;

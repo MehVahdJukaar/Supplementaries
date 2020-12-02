@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
+import net.mehvahdjukaar.supplementaries.items.EmptyJarItem;
+import net.mehvahdjukaar.supplementaries.items.JarItem;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.dispenser.IDispenseItemBehavior;
@@ -19,7 +21,7 @@ public class Dispenser {
 
     public static void registerBehaviors() {
         for(Item item : ForgeRegistries.ITEMS) {
-            if(item == new ItemStack(Registry.JAR).getItem()){
+            if(item instanceof JarItem || item instanceof EmptyJarItem){
                 register(item, new JarDispenseBehavior());
             }
         }
@@ -40,7 +42,8 @@ public class Dispenser {
                 Direction direction = source.getBlockState().get(DispenserBlock.FACING);
                 BlockPos blockpos = source.getBlockPos().offset(direction);
                 Direction direction1 = source.getWorld().isAirBlock(blockpos.down()) ? direction : Direction.UP;
-                this.setSuccessful(((BlockItem)item).tryPlace(new DirectionalPlaceContext(source.getWorld(), blockpos, direction, stack, direction1)) == ActionResultType.SUCCESS);
+                ActionResultType result = ((BlockItem)item).tryPlace(new DirectionalPlaceContext(source.getWorld(), blockpos, direction, stack, direction1));
+                this.setSuccessful(result== ActionResultType.SUCCESS);
             }
 
             return stack;

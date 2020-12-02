@@ -10,6 +10,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
@@ -109,8 +110,33 @@ public class JarItem extends BlockItem {
     }
 
     @Override
+    public ActionResultType tryPlace(BlockItemUseContext context) {
+        ActionResultType placeresult = super.tryPlace(context);
+        if(placeresult.isSuccessOrConsume()) {
+            TileEntity te = context.getWorld().getTileEntity(context.getPos());
+            if(te instanceof JarBlockTile){
+                JarBlockTile mobjar = ((JarBlockTile)te);
+                CompoundNBT compound = context.getItem().getTag();
+                if(compound!=null&&compound.contains("JarMob")&&compound.contains("CachedJarMobValues")) {
+                    CompoundNBT com2 = compound.getCompound("CachedJarMobValues");
+                    CompoundNBT com = compound.getCompound("JarMob");
+
+                    mobjar.entityData = com;
+                    mobjar.yOffset = com2.getFloat("YOffset");
+                    mobjar.scale = com2.getFloat("Scale");
+                    mobjar.markDirty();
+                    //mobjar.updateMob();
+
+                }
+            }
+        }
+        return placeresult;
+    }
+
+    @Override
     protected boolean onBlockPlaced(BlockPos pos, World worldIn, PlayerEntity player, ItemStack stack, BlockState state) {
         boolean ret = super.onBlockPlaced(pos, worldIn, player, stack, state);
+        /*
         TileEntity te = worldIn.getTileEntity(pos);
         if(te instanceof JarBlockTile){
             JarBlockTile mobjar = ((JarBlockTile)te);
@@ -122,11 +148,12 @@ public class JarItem extends BlockItem {
                 mobjar.entityData = com;
                 mobjar.yOffset = com2.getFloat("YOffset");
                 mobjar.scale = com2.getFloat("Scale");
+                //mobjar.markDirty();
                 mobjar.updateMob();
 
             }
 
-        }
+        }*/
         return ret;
     }
 

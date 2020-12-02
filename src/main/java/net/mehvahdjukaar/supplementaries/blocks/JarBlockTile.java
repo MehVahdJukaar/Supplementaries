@@ -6,10 +6,13 @@ import net.mehvahdjukaar.supplementaries.common.CommonUtil.JarMobType;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.entity.PigRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.monster.SlimeEntity;
 import net.minecraft.entity.passive.BeeEntity;
+import net.minecraft.entity.passive.ParrotEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -55,7 +58,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
     //mob jar code
     public Entity mob = null;
     public CompoundNBT entityData = null;
-    public boolean entityChanged = false;
+    public boolean entityChanged = true;
     public float yOffset = 1;
     public float scale = 1;
     public float jumpY = 0;
@@ -83,8 +86,8 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
         super.markDirty();
     }
 
+    //called by markdirty. server side. client will receive updated values via update packet and read()
     public void updateTile() {
-
         ItemStack stack = this.getStackInSlot(0);
 
         this.liquidType = CommonUtil.getJarContentTypeFromItem(stack);
@@ -310,6 +313,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
         //TODO: reformat all nbts to be consistent
         if(compound.contains("jar_mob")){
             this.entityData = compound.getCompound("jar_mob");
+            //this.updateMob();
             this.entityChanged = true;
         }
         this.scale = compound.getFloat("scale");
@@ -436,10 +440,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
     }
 
     public void tick() {
-        if (this.entityChanged && this.entityData != null) {
-            this.updateMob();
-            this.entityChanged = false;
-        }
+        if(this.entityChanged && this.entityData!=null)this.updateMob();
         if (!this.world.isRemote) return;
         //for client side animation
         if (this.mob != null) {
@@ -484,18 +485,38 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
                         this.world.addParticle(ParticleTypes.PORTAL, this.pos.getX() + 0.5f, this.pos.getY() + 0.2f,
                                 this.pos.getZ() + 0.5f, (this.rand.nextDouble() - 0.5D) * 2.0D, -this.rand.nextDouble(), (this.rand.nextDouble() - 0.5D) * 2.0D);
                     }
+                    break;
+                case PARROT:
+                    ParrotEntity parrot = (ParrotEntity) this.mob;
+                    //parrot.isAirBorne =true;
+                    //parrot.setPartying(this.pos, true);
+                    //parrot.setOnGround(false);
+                    //parrot.setAir(1);
+
+                    parrot.livingTick();
+                    parrot.setOnGround(false);
+
+
+
             }
         }
     }
 
+    //only client side. cached mob from entitydata
     public void updateMob(){
         Entity entity  = EntityType.loadEntityAndExecute(this.entityData, this.world, o -> o);
         if(entity==null && this.entityData.contains("id")){
             boolean flag = this.entityData.get("id").getString().equals("minecraft:bee");
             if(flag) entity = new BeeEntity(EntityType.BEE, this.world);
         }
+        //TODO: add shadows
+        entity.setPosition(this.pos.getX()+0.5,this.pos.getY()+0.5+0.0625, this.pos.getZ()+0.5);
+        entity.lastTickPosX=this.pos.getX()+0.5;
+        entity.lastTickPosY=this.pos.getY()+0.5+0.0625;
+        entity.lastTickPosZ=this.pos.getZ()+0.5;
         this.mob = entity;
         this.animationType = CommonUtil.JarMobType.getJarMobType(entity);
+        this.entityChanged=false;
     }
 
     public boolean hasNoMob(){

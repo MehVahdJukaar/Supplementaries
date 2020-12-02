@@ -20,6 +20,12 @@ public class ClientConfigs {
     public static class block {
         public static ForgeConfigSpec.DoubleValue FIREFLY_SPAWN_CHANCE;
         public static ForgeConfigSpec.IntValue FIREFLY_SPAWN_PERIOD;
+        public static ForgeConfigSpec.DoubleValue FLAG_SPEED;
+        public static ForgeConfigSpec.DoubleValue FLAG_WAVE_FREQUENCY;
+        public static ForgeConfigSpec.DoubleValue FLAG_SEGMENT_LENGHT;
+        public static ForgeConfigSpec.DoubleValue FLAG_INCREMENTA_FREQ;
+        public static ForgeConfigSpec.BooleanValue PEDESTAL_SPIN;
+        public static ForgeConfigSpec.DoubleValue PEDESTAL_SPEED;
         private static void init(ForgeConfigSpec.Builder builder) {
             builder.comment("Tweak and change the various block animations +\n" +
                     "IF YOU FIND A CONFIG THAT LOOKS BETTER THAT THESE DEFAULTS, SEND IT TO ME AND I'LL MAKE IT THE NEW DEFAUL\n"+
@@ -33,6 +39,13 @@ public class ClientConfigs {
             FIREFLY_SPAWN_CHANCE = builder.comment("spawn chance every period")
                     .defineInRange("spawn_chance", 0.6, 0, 1);
             builder.pop();
+
+            builder.push("pedestal");
+            PEDESTAL_SPIN = builder.comment("enable displayed item spin")
+                    .define("spin",true);
+            PEDESTAL_SPEED = builder.defineInRange("speed",2f,0f,100f);
+            builder.pop();
+//TODO: add more
 
             builder.pop();
         }
@@ -93,6 +106,8 @@ public class ClientConfigs {
         public static double FIREFLY_EXPONENT;
         public static double FIREFLY_SPAWN_CHANCE;
         public static int FIREFLY_SPAWN_PERIOD;
+        public static boolean PEDESTAL_SPIN;
+        public static double PEDESTAL_SPEED;
 
         public static void refresh(){
             //particles
@@ -106,6 +121,8 @@ public class ClientConfigs {
             //blocks
             FIREFLY_SPAWN_CHANCE = block.FIREFLY_SPAWN_CHANCE.get();
             FIREFLY_SPAWN_PERIOD = block.FIREFLY_SPAWN_PERIOD.get();
+            PEDESTAL_SPIN = block.PEDESTAL_SPIN.get();
+            PEDESTAL_SPEED = block.PEDESTAL_SPEED.get();
 
 
         }

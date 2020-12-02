@@ -310,7 +310,8 @@ public class CommonUtil {
         BEE(EntityType.BEE),
         BAT(EntityType.BAT),
         VEX(EntityType.VEX),
-        ENDERMITE(EntityType.ENDERMITE);
+        ENDERMITE(EntityType.ENDERMITE),
+        PARROT(EntityType.PARROT);
 
         public final EntityType<?> type;
         public final int a;

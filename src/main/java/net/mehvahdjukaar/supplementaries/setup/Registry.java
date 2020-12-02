@@ -134,6 +134,10 @@ public class Registry {
             TILES.add(JAR_TILE);
             ITEMS.add(JAR_ITEM);
             ITEMS.add(EMPTY_JAR_ITEM);
+
+            BLOCKS.add(JAR_TINTED);
+            ITEMS.add(JAR_ITEM_TINTED);
+            ITEMS.add(EMPTY_JAR_ITEM_TINTED);
         }
         //faucet
         if(true) {
@@ -377,12 +381,32 @@ public class Registry {
                     .sound(SoundType.GLASS)
                     .notSolid()
     ).setRegistryName(JAR_NAME);
+
+    public static final String JAR_NAME_TINTED = "jar_tinted";
+    public static final Block JAR_TINTED = new JarBlock(
+            AbstractBlock.Properties.create(Material.GLASS, MaterialColor.AIR)
+                    .hardnessAndResistance(1f, 1f)
+                    .sound(SoundType.GLASS)
+                    .notSolid()
+    ).setRegistryName(JAR_NAME_TINTED);
+
     public static final TileEntityType<?> JAR_TILE =  TileEntityType.Builder.create(
-            JarBlockTile::new, JAR).build(null).setRegistryName(JAR_NAME);
+            JarBlockTile::new, JAR,JAR_TINTED).build(null).setRegistryName(JAR_NAME);
+
     public static final Item JAR_ITEM = new JarItem(JAR, new Item.Properties().group(null)
             .maxStackSize(1).setISTER(()-> JarItemRenderer::new)).setRegistryName("jar_full");
+
+    public static final Item JAR_ITEM_TINTED = new JarItem(JAR_TINTED, new Item.Properties().group(null)
+            .maxStackSize(1).setISTER(()-> JarItemRenderer::new)).setRegistryName("jar_full_tinted");
+
+
     public static final Item EMPTY_JAR_ITEM = new EmptyJarItem(JAR, new Item.Properties().group(
-            ItemGroup.DECORATIONS).maxStackSize(16)).setRegistryName("jar");
+            ItemGroup.DECORATIONS).maxStackSize(16)).setRegistryName(JAR_NAME);
+
+    public static final Item EMPTY_JAR_ITEM_TINTED = new EmptyJarItem(JAR_TINTED, new Item.Properties().group(
+            ItemGroup.DECORATIONS).maxStackSize(16)).setRegistryName(JAR_NAME_TINTED);
+
+
 
 
     //faucet

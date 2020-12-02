@@ -97,11 +97,12 @@ public class JarBlock extends Block {
 
     public ItemStack getJarItem(JarBlockTile te){
         ItemStack returnStack;
+        boolean flag = this.getBlock() ==  Registry.JAR;
         if(te.isEmpty()&&te.hasNoMob()){
-            returnStack = new ItemStack(Registry.EMPTY_JAR_ITEM);
+            returnStack = new ItemStack(flag ? Registry.EMPTY_JAR_ITEM : Registry.EMPTY_JAR_ITEM_TINTED);
         }
         else{
-            returnStack = new ItemStack(Registry.JAR_ITEM);
+            returnStack = new ItemStack(flag ? Registry.JAR_ITEM : Registry.JAR_ITEM_TINTED);
             CompoundNBT compoundnbt = te.saveToNbt(new CompoundNBT());
             if (!compoundnbt.isEmpty())
                 returnStack.setTagInfo("BlockEntityTag", compoundnbt);

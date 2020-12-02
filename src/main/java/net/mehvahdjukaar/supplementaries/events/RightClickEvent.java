@@ -7,7 +7,6 @@ import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LanternBlock;
-import net.minecraft.block.SoundType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.*;
@@ -15,7 +14,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
@@ -40,12 +38,13 @@ public class RightClickEvent {
         if(i instanceof BlockItem && (((BlockItem) i).getBlock() instanceof LanternBlock || ((BlockItem) i).getBlock().getRegistryName().getNamespace().equals("skinnedlanterns"))) {
             Direction dir = event.getFace();
             //is wall face
-            if (dir != Direction.UP && dir != Direction.DOWN) {
+            if (dir != Direction.UP && dir != Direction.DOWN && dir != null) {
 
                 World worldIn = event.getWorld();
                 BlockPos pos = event.getPos();
                 BlockState blockstate = worldIn.getBlockState(pos);
                 //try interact with block behind
+
                 BlockRayTraceResult raytrace = new BlockRayTraceResult(
                         new Vector3d(pos.getX(), pos.getY(), pos.getZ()), dir, pos, false);
 

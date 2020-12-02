@@ -1,0 +1,21 @@
+{
+  "group": "supplementaries",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "212",
+    "2 2",
+    "222"
+  ],
+  "key": {
+    "1": {
+      "tag": "minecraft:planks"
+    },
+    "2": {
+      "tag": "forge:stained_glass"
+    }
+  },
+  "result": {
+    "item": "supplementaries:jar_tinted",
+    "count": 1
+  }
+}
