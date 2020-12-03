@@ -496,8 +496,6 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
                     parrot.livingTick();
                     parrot.setOnGround(false);
 
-
-
             }
         }
     }

@@ -350,6 +350,7 @@ public class Registry {
                     .hardnessAndResistance(2.5f, 2.5f)
                     .sound(SoundType.WOOD)
                     .harvestTool(ToolType.AXE)
+                    .notSolid()
 
     ).setRegistryName(NOTICE_BOARD_NAME);
     public static final TileEntityType<?> NOTICE_BOARD_TILE =  TileEntityType.Builder.create(

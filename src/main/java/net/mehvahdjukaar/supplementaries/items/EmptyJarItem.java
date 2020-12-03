@@ -26,8 +26,8 @@ public class EmptyJarItem extends BlockItem {
         if(n==null)return ActionResultType.PASS;
         String name = n.toString();
         //Fireflies
-        boolean isFirefly = entity.getType().getRegistryName().getPath().toLowerCase().contains("firefl");
         boolean flag = this.getItem() == Registry.EMPTY_JAR_ITEM;
+        boolean isFirefly = entity.getType().getRegistryName().getPath().toLowerCase().contains("firefl") && flag;
         if(!isFirefly) {
             if (flag ? !ServerConfigs.cached.MOB_JAR_ALLOWED_MOBS.contains(name) :
                     !ServerConfigs.cached.MOB_JAR_TINTED_ALLOWED_MOBS.contains(name)) {

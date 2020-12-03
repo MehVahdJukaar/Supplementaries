@@ -140,11 +140,11 @@ public class ServerConfigs {
                     .defineList("biomes", defaultBiomes, s -> true);
             FIREFLY_WEIGHT = builder.comment("Spawn weight \n"+
                     "Set to 0 to disable spawning entirely")
-                    .defineInRange("weight", 2, 0, 100);
+                    .defineInRange("weight", 3, 0, 100);
             FIREFLY_MIN = builder.comment("Minimum group size")
-                    .defineInRange("min", 4, 0, 64);
+                    .defineInRange("min", 5, 0, 64);
             FIREFLY_MAX = builder.comment("Maximum group size")
-                    .defineInRange("max", 7, 0, 64);
+                    .defineInRange("max", 9, 0, 64);
             builder.pop();
             builder.pop();
         }

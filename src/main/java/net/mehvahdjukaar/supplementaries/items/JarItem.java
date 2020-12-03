@@ -1,6 +1,8 @@
 package net.mehvahdjukaar.supplementaries.items;
 
+import net.mehvahdjukaar.supplementaries.blocks.JarBlock;
 import net.mehvahdjukaar.supplementaries.blocks.JarBlockTile;
+import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -95,12 +97,12 @@ public class JarItem extends BlockItem {
                     entity.setPositionAndRotation(v.getX(), v.getY(), v.getZ(), context.getPlacementYaw(), 0);
                     world.addEntity(entity);
                 }
-
-               if(!context.getPlayer().isCreative()) {
-                   ItemStack returnItem = new ItemStack(Registry.EMPTY_JAR_ITEM);
+                boolean flag = this.getItem() == Registry.JAR_ITEM;
+                if(!context.getPlayer().isCreative()) {
+                   ItemStack returnItem = new ItemStack(flag ? Registry.EMPTY_JAR_ITEM : Registry.EMPTY_JAR_ITEM_TINTED);
                    if(stack.hasDisplayName())returnItem.setDisplayName(stack.getDisplayName());
                    context.getPlayer().setHeldItem(context.getHand(), returnItem);
-               }
+                }
 
             }
             return ActionResultType.SUCCESS;
@@ -113,7 +115,9 @@ public class JarItem extends BlockItem {
     public ActionResultType tryPlace(BlockItemUseContext context) {
         ActionResultType placeresult = super.tryPlace(context);
         if(placeresult.isSuccessOrConsume()) {
-            TileEntity te = context.getWorld().getTileEntity(context.getPos());
+            World world = context.getWorld();
+            BlockPos pos = context.getPos();
+            TileEntity te = world.getTileEntity(pos);
             if(te instanceof JarBlockTile){
                 JarBlockTile mobjar = ((JarBlockTile)te);
                 CompoundNBT compound = context.getItem().getTag();
@@ -124,6 +128,12 @@ public class JarItem extends BlockItem {
                     mobjar.entityData = com;
                     mobjar.yOffset = com2.getFloat("YOffset");
                     mobjar.scale = com2.getFloat("Scale");
+                    if (!world.isRemote && com.getString("id").equals("minecraft:endermite")){
+                        BlockState state = world.getBlockState(pos);
+                        if(state.get(JarBlock.LIGHT_LEVEL)<5){
+                            world.setBlockState(pos,state.with(JarBlock.LIGHT_LEVEL, 5));
+                        }
+                    }
                     mobjar.markDirty();
                     //mobjar.updateMob();
 

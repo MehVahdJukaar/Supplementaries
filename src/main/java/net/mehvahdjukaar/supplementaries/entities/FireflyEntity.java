@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.entities;
 
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
@@ -47,9 +46,10 @@ public class FireflyEntity extends CreatureEntity implements IFlyingAnimal {
         //this.flickerCounter = (int)(this.rand.nextFloat()*2*this.flickerPeriod);
     }
 
-    public static boolean canSpawnOn(FireflyEntity ce, IWorld worldIn, SpawnReason reason, BlockPos pos, Random random) {
-        Block block = worldIn.getBlockState(pos.down()).getBlock();
-        return (block.isIn(BlockTags.LEAVES) || block == Blocks.GRASS_BLOCK || block == Blocks.AIR) ;
+    public static boolean canSpawnOn(EntityType<? extends MobEntity> firefly, IWorld worldIn, SpawnReason reason, BlockPos pos, Random random) {
+        BlockState blockstate = worldIn.getBlockState(pos.down());
+        if (pos.getY() <= worldIn.getSeaLevel()) {return false;}
+        return (blockstate.isIn(BlockTags.LEAVES) || blockstate.isIn(Blocks.GRASS_BLOCK) || blockstate.isIn(BlockTags.LOGS) || blockstate.isIn(Blocks.AIR)) && worldIn.getLightSubtracted(pos, 0) > 8;
     }
 
     @Override
@@ -69,7 +69,7 @@ public class FireflyEntity extends CreatureEntity implements IFlyingAnimal {
 
         //despawn when entity is not lit
         if (this.alpha == 0){
-            long dayTime = this.world.getWorldInfo().getDayTime();
+            long dayTime = this.world.getWorldInfo().getDayTime()%24000;
             if (dayTime > 23500 || dayTime < 12500)
                 this.remove();
         }
