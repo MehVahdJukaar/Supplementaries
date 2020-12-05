@@ -225,11 +225,19 @@ public class Registry {
             BLOCKS.add(SCONCE_ENDER);
             BLOCKS.add(SCONCE_WALL_ENDER);
             ITEMS.add(SCONCE_ITEM_ENDER);
+
+            PARTICLES.add(GREEN_FLAME);
+            BLOCKS.add(SCONCE_GREEN);
+            BLOCKS.add(SCONCE_WALL_GREEN);
+            ITEMS.add(SCONCE_ITEM_GREEN);
         }
         //candelabra
         if(true) {
             BLOCKS.add(CANDELABRA);
             ITEMS.add(CANDELABRA_ITEM);
+
+            BLOCKS.add(CANDELABRA_SILVER);
+            ITEMS.add(CANDELABRA_ITEM_SILVER);
         }
         //firefly jar
         if(true) {
@@ -237,6 +245,18 @@ public class Registry {
             BLOCKS.add(FIREFLY_JAR);
             TILES.add(FIREFLY_JAR_TILE);
             ITEMS.add(FIREFLY_JAR_ITEM);
+        }
+        if(true) {
+            BLOCKS.add(ITEM_SHELF);
+            TILES.add(ITEM_SHELF_TILE);
+            ITEMS.add(ITEM_SHELF_ITEM);
+        }
+
+
+        //cog block
+        if(true){
+            BLOCKS.add(COG_BLOCK);
+            ITEMS.add(COG_BLOCK_ITEM);
         }
 
         //flag
@@ -268,6 +288,7 @@ public class Registry {
     public static final BasicParticleType ENDERGETIC_FLAME = (BasicParticleType) new BasicParticleType(true).setRegistryName("endergetic_flame");
     public static final BasicParticleType FIREFLY_GLOW = (BasicParticleType) new BasicParticleType(true).setRegistryName("firefly_glow");
     public static final BasicParticleType SPEAKER_SOUND = (BasicParticleType) new BasicParticleType(true).setRegistryName("speaker_sound");
+    public static final BasicParticleType GREEN_FLAME = (BasicParticleType) new BasicParticleType(true).setRegistryName("green_flame");
 
 
     //blocks
@@ -775,6 +796,23 @@ public class Registry {
                     .sound(SoundType.LANTERN), ENDERGETIC_FLAME).setRegistryName("sconce_wall_ender");
     public static final Item SCONCE_ITEM_ENDER = new WallOrFloorItem(SCONCE_ENDER, SCONCE_WALL_ENDER,
             (new Item.Properties()).group(ItemGroup.DECORATIONS)).setRegistryName(SCONCE_NAME_ENDER);
+    //green
+    public static final String SCONCE_NAME_GREEN = "sconce_green";
+    public static final Block SCONCE_GREEN = new SconceBlock(
+            AbstractBlock.Properties.create(Material.MISCELLANEOUS)
+                    .doesNotBlockMovement()
+                    .zeroHardnessAndResistance()
+                    .setLightLevel((state) -> state.get(BlockStateProperties.LIT)? 13 : 0)
+                    .sound(SoundType.LANTERN), GREEN_FLAME).setRegistryName(SCONCE_NAME_GREEN);
+    public static final Block SCONCE_WALL_GREEN = new SconceWallBlock(
+            AbstractBlock.Properties.create(Material.MISCELLANEOUS)
+                    .zeroHardnessAndResistance()
+                    .doesNotBlockMovement()
+                    .setLightLevel((state) -> state.get(BlockStateProperties.LIT)? 13 : 0)
+                    .lootFrom(SCONCE_GREEN)
+                    .sound(SoundType.LANTERN), GREEN_FLAME).setRegistryName("sconce_wall_green");
+    public static final Item SCONCE_ITEM_GREEN = new WallOrFloorItem(SCONCE_GREEN, SCONCE_WALL_GREEN,
+            (new Item.Properties()).group(ItemGroup.DECORATIONS)).setRegistryName(SCONCE_NAME_GREEN);
 
 
     //firefly & jar
@@ -805,6 +843,47 @@ public class Registry {
     ).setRegistryName(CANDELABRA_NAME);
     public static final Item CANDELABRA_ITEM = new BlockItem(CANDELABRA,
             new Item.Properties().group(ItemGroup.DECORATIONS)).setRegistryName(CANDELABRA_NAME);
+    //silver
+    public static final String CANDELABRA_NAME_SILVER = "candelabra_silver";
+    public static final Block CANDELABRA_SILVER = new CandelabraBlock(
+            AbstractBlock.Properties.create(Material.IRON, MaterialColor.IRON)
+                    .hardnessAndResistance(4f, 5f)
+                    .sound(SoundType.METAL)
+                    .notSolid()
+                    .setLightLevel((state) -> 14)
+                    .setRequiresTool()
+                    .harvestTool(ToolType.PICKAXE)
+                    .harvestLevel(2)
+    ).setRegistryName(CANDELABRA_NAME_SILVER);
+    public static final Item CANDELABRA_ITEM_SILVER = new BlockItem(CANDELABRA_SILVER,
+            new Item.Properties().group(ItemGroup.DECORATIONS)).setRegistryName(CANDELABRA_NAME_SILVER);
 
+    //item shelf
+    public static final String ITEM_SHELF_NAME = "item_shelf";
+    public static final Block ITEM_SHELF = new ItemShelfBlock(
+            AbstractBlock.Properties.create(Material.WOOD, MaterialColor.WOOD)
+                    .sound(SoundType.WOOD)
+                    .hardnessAndResistance(0.75f, 0.1f)
+                    .notSolid()
+                    .doesNotBlockMovement()
+                    .harvestTool(ToolType.AXE)
+    ).setRegistryName(ITEM_SHELF_NAME);
+    public static final TileEntityType<?> ITEM_SHELF_TILE =  TileEntityType.Builder.create(
+            ItemShelfBlockTile::new, ITEM_SHELF).build(null).setRegistryName(ITEM_SHELF_NAME);
+    public static final Item ITEM_SHELF_ITEM = new BlockItem(ITEM_SHELF,
+            new Item.Properties().group(ItemGroup.DECORATIONS)).setRegistryName(ITEM_SHELF_NAME);
+
+    //cog block
+    public static final String COG_BLOCK_NAME = "cog_block";
+    public static final Block COG_BLOCK = new CogBlock(
+            AbstractBlock.Properties.create(Material.IRON, MaterialColor.IRON)
+                    .hardnessAndResistance(5f, 6f)
+                    .sound(SoundType.METAL)
+                    .setRequiresTool()
+                    .harvestTool(ToolType.PICKAXE)
+                    .harvestLevel(2)
+    ).setRegistryName(COG_BLOCK_NAME);
+    public static final Item COG_BLOCK_ITEM = new BlockItem(COG_BLOCK,
+            new Item.Properties().group(ItemGroup.REDSTONE)).setRegistryName(COG_BLOCK_NAME);
 
 }

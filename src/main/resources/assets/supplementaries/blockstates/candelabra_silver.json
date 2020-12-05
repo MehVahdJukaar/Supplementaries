@@ -1,0 +1,49 @@
+{
+  "variants": {
+    "face=floor,facing=north": {
+      "model": "supplementaries:block/candelabra_silver"
+    },
+    "face=floor,facing=east": {
+      "model": "supplementaries:block/candelabra_silver",
+      "y": 90
+    },
+    "face=floor,facing=south": {
+      "model": "supplementaries:block/candelabra_silver",
+      "y": 180
+    },
+    "face=floor,facing=west": {
+      "model": "supplementaries:block/candelabra_silver",
+      "y": 270
+    },
+    "face=wall,facing=north": {
+      "model": "supplementaries:block/candelabra_wall_silver"
+    },
+    "face=wall,facing=east": {
+      "model": "supplementaries:block/candelabra_wall_silver",
+      "y": 90
+    },
+    "face=wall,facing=south": {
+      "model": "supplementaries:block/candelabra_wall_silver",
+      "y": 180
+    },
+    "face=wall,facing=west": {
+      "model": "supplementaries:block/candelabra_wall_silver",
+      "y": 270
+    },
+    "face=ceiling,facing=north": {
+      "model": "supplementaries:block/candelabra_ceiling_silver"
+    },
+    "face=ceiling,facing=east": {
+      "model": "supplementaries:block/candelabra_ceiling_silver",
+      "y": 90
+    },
+    "face=ceiling,facing=south": {
+      "model": "supplementaries:block/candelabra_ceiling_silver",
+      "y": 180
+    },
+    "face=ceiling,facing=west": {
+      "model": "supplementaries:block/candelabra_ceiling_silver",
+      "y": 270
+    }
+  }
+}

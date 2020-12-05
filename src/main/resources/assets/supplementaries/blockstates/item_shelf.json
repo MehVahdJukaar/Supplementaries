@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "supplementaries:block/item_shelf"
+    },
+    "facing=east": {
+      "model": "supplementaries:block/item_shelf",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "supplementaries:block/item_shelf",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "supplementaries:block/item_shelf",
+      "y": 270
+    }
+  }
+}

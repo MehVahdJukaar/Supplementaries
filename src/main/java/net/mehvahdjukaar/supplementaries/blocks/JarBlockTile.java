@@ -19,13 +19,14 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.ChestContainer;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.potion.Effect;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.potion.Potions;
 import net.minecraft.stats.Stats;
@@ -127,15 +128,59 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
         boolean isbottle = handitem == Items.GLASS_BOTTLE;
         boolean isbowl = handitem == Items.BOWL;
         boolean isempty = handstack.isEmpty();
-        // eat cookies
-        if (isempty && this.liquidType == JarLiquidType.COOKIES) {
-            boolean eat = false;
-            if (player.canEat(false))
-                eat = true;
-            if (this.extractItem(1, handstack, player, hand, !eat)) {
-                if (eat)
-                    player.getFoodStats().addStats(2, 0.1F);
+        // eat food
+        Boolean candrinkfromjar = ServerConfigs.cached.JAR_EAT;
+        if(isempty && !player.isSneaking()) {
+            ItemStack stack = this.getStackInSlot(0);
+            Item it = stack.getItem();
+            if(stack.isFood()){
+                //eat foods
+                if (player.canEat(false) && candrinkfromjar) {
+                    if(this.world.isRemote)return true;
+                    Food food = it.getFood();
+                    int div = CommonUtil.getLiquidCountFromItem(it);
+                    player.getFoodStats().addStats(food.getHealing()/div, food.getSaturation()/(float)div);
+                    //add stew effects
+                    if(it instanceof  SuspiciousStewItem){
+                        //stew code
+                        CompoundNBT compoundnbt = stack.getTag();
+                        if (compoundnbt != null && compoundnbt.contains("Effects", 9)) {
+                            ListNBT listnbt = compoundnbt.getList("Effects", 10);
+                            for(int i = 0; i < listnbt.size(); ++i) {
+                                int j = 160;
+                                CompoundNBT compoundnbt1 = listnbt.getCompound(i);
+                                if (compoundnbt1.contains("EffectDuration", 3))
+                                    j = compoundnbt1.getInt("EffectDuration")/div;
+                                Effect effect = Effect.get(compoundnbt1.getByte("EffectId"));
+                                if (effect != null) {
+                                    player.addPotionEffect(new EffectInstance(effect, j));
+                                }
+                            }
+                        }
+                    }
+                    this.extractItem(1, handstack, null, null);
+                    return true;
+                }
+                //extract cookies with empty hand
+                else if(this.liquidType == JarLiquidType.COOKIES){
+                    this.extractItem(1, handstack, player, hand);
+                    return true;
+                }
+            }
+            //drink potions
+            else if(it instanceof PotionItem && candrinkfromjar){
+                if(this.world.isRemote)return true;
+                //potion code
+                for(EffectInstance effectinstance : PotionUtils.getEffectsFromStack(stack)) {
+                    if (effectinstance.getPotion().isInstant()) {
+                        effectinstance.getPotion().affectEntity(player, player, player, effectinstance.getAmplifier(), 1.0D);
+                    } else {
+                        player.addPotionEffect(new EffectInstance(effectinstance));
+                    }
+                }
+                this.extractItem(1, handstack, null, null);
                 return true;
+
             }
         }
         // can I insert this item?
@@ -148,7 +193,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
             // can content be extracted with bottle
             if (this.liquidType.bottle) {
                 // if extraction successful
-                if (this.extractItem(1, handstack, player, hand, true)) {
+                if (this.extractItem(1, handstack, player, hand)) {
                     this.world.playSound(player, player.getPosition(), SoundEvents.ITEM_BOTTLE_FILL,
                             SoundCategory.BLOCKS, 1.0F, 1.0F);
                     player.addStat(Stats.ITEM_USED.get(Items.GLASS_BOTTLE));
@@ -162,7 +207,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
             // can content be extracted with bucket
             if (this.liquidType.bucket) {
                 // if extraction successful
-                if (this.extractItem(4, handstack, player, hand, true)) {
+                if (this.extractItem(4, handstack, player, hand)) {
                         this.world.playSound(player, player.getPosition(), this.liquidType.getSound(),
                             SoundCategory.BLOCKS, 1.0F, 1.0F);
                     player.addStat(Stats.ITEM_USED.get(Items.BUCKET));
@@ -175,7 +220,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
             // can content be extracted with bowl
             if (this.liquidType.bowl) {
                 // if extraction successful
-                if (this.extractItem(2, handstack, player, hand, true)) {
+                if (this.extractItem(2, handstack, player, hand)) {
                     this.world.playSound(player, player.getPosition(), SoundEvents.ITEM_BOTTLE_FILL,
                             SoundCategory.BLOCKS, 1.0F, 1.0F);
                     player.addStat(Stats.ITEM_USED.get(Items.BOWL));
@@ -188,14 +233,14 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
     }
 
     // removes item from te and gives it to player
-    public boolean extractItem(int amount, ItemStack handstack, PlayerEntity player, Hand handIn, boolean givetoplayer) {
+    public boolean extractItem(int amount, @Nullable ItemStack handstack, @Nullable PlayerEntity player, @Nullable Hand handIn) {
         amount = this.liquidType.isFish() ? 1 : amount;
         ItemStack mystack = this.getStackInSlot(0);
         int count = mystack.getCount();
         // do i have enough?
         if (count >= amount) {
             //case for cookies
-            if ( givetoplayer) {
+            if (player != null && handIn != null) {
                 ItemStack extracted = mystack.copy();
                 extracted.setCount(1);
                 // special case to convert water bottles into bucket

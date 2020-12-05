@@ -1,0 +1,9 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "supplementaries:block/candelabra_wall",
+	"textures": {
+		"1": "supplementaries:blocks/candelabra_silver",
+		"particle": "supplementaries:blocks/candelabra_silver",
+		"all": "candle"
+	}
+}

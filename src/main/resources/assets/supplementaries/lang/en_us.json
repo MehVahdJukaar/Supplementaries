@@ -45,8 +45,13 @@
   "block.supplementaries.firefly_jar": "Firefly Jar",
   "item.supplementaries.firefly": "Firefly Spawn Egg",
 
+  "block.supplementaries.sconce_green": "Green Sconce",
+  "block.supplementaries.candelabra_silver": "Silver Candelabra",
+  "block.supplementaries.item_shelf": "Item Shelf",
+  "block.supplementaries.cog_block": "WIP Cog Block",
+
   "block.supplementaries.flag": "WIP Flag",
-  "block.supplementaries.laser_block": "Laser Block",
+  "block.supplementaries.laser_block": "WIP Laser Block",
   "block.supplementaries.fancy_lamp": "Fancy Lamp",
   "block.supplementaries.skull_lantern": "Skull Lantern"
 }

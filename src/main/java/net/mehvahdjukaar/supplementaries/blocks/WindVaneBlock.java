@@ -65,23 +65,24 @@ public class WindVaneBlock extends Block implements IWaterLoggable {
         return true;
     }
 
-    public boolean canProvidePower(BlockState state) {
-        return true;
-    }
-
     @Override
     public int getComparatorInputOverride(BlockState blockState, World world, BlockPos pos) {
         return blockState.get(POWER);
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(POWER, TILE, WATERLOGGED);
+    public boolean canProvidePower(BlockState state) {
+        return true;
     }
 
     @Override
-    public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
-        return true;
+    public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+        return blockState.get(POWER);
+    }
+
+    @Override
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+        builder.add(POWER, TILE, WATERLOGGED);
     }
 
     @Override
@@ -92,11 +93,6 @@ public class WindVaneBlock extends Block implements IWaterLoggable {
     @Override
     public PathNodeType getAiPathNodeType(BlockState state, IBlockReader world, BlockPos pos, MobEntity entity) {
         return PathNodeType.BLOCKED;
-    }
-
-    @Override
-    public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
-        return blockState.get(POWER);
     }
 
     @Override

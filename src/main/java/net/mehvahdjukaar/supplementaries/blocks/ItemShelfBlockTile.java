@@ -26,49 +26,13 @@ import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import javax.annotation.Nullable;
 import java.util.stream.IntStream;
 
-public class PedestalBlockTile extends LockableLootTileEntity implements ISidedInventory {
+public class ItemShelfBlockTile extends LockableLootTileEntity implements ISidedInventory {
     private NonNullList<ItemStack> stacks = NonNullList.withSize(1, ItemStack.EMPTY);
-    public int type =0;
-    public float yaw = 0;
-    public PedestalBlockTile() {
-        super(Registry.PEDESTAL_TILE);
+
+    public ItemShelfBlockTile() {
+        super(Registry.ITEM_SHELF_TILE);
     }
 
-    //hijacking this method to work with hoppers
-    @Override
-    public void markDirty() {
-        //this.updateServerAndClient();
-        this.updateTile();
-        this.world.notifyBlockUpdate(this.pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
-
-        super.markDirty();
-    }
-
-
-
-    public void updateTile() {
-        if(!this.world.isRemote()) {
-            BlockState state = this.getBlockState();
-            BlockState newstate = state.with(PedestalBlock.UP, PedestalBlock.canConnect(world.getBlockState(pos.up()), pos, world, Direction.UP));
-            if (state != newstate) {
-                this.world.setBlockState(this.pos, newstate, 3);
-            }
-        }
-
-        Item it = getStackInSlot(0).getItem();
-        if (it instanceof BlockItem){
-            this.type=1;
-        }
-        else if(it instanceof SwordItem){
-            this.type=2;
-        }
-        else if(it instanceof ToolItem){
-            this.type=3;
-
-        }else{
-            this.type=0;
-        }
-    }
 
     @Override
     public void read(BlockState state, CompoundNBT compound) {
@@ -77,8 +41,6 @@ public class PedestalBlockTile extends LockableLootTileEntity implements ISidedI
             this.stacks = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
         }
         ItemStackHelper.loadAllItems(compound, this.stacks);
-        this.type=compound.getInt("type");
-        this.yaw=compound.getFloat("yaw");
     }
 
     @Override
@@ -87,8 +49,6 @@ public class PedestalBlockTile extends LockableLootTileEntity implements ISidedI
         if (!this.checkLootAndWrite(compound)) {
             ItemStackHelper.saveAllItems(compound, this.stacks);
         }
-        compound.putInt("type",this.type);
-        compound.putFloat("yaw",this.yaw);
         return compound;
     }
 
@@ -101,7 +61,6 @@ public class PedestalBlockTile extends LockableLootTileEntity implements ISidedI
     public CompoundNBT getUpdateTag() {
         return this.write(new CompoundNBT());
     }
-    //TODO: look into this. client and server don't seem to be synced
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
@@ -136,6 +95,7 @@ public class PedestalBlockTile extends LockableLootTileEntity implements ISidedI
     public Container createMenu(int id, PlayerInventory player) {
         return ChestContainer.createGeneric9X3(id, player, this);
     }
+
 
     @Override
     protected NonNullList<ItemStack> getItems() {
@@ -179,6 +139,14 @@ public class PedestalBlockTile extends LockableLootTileEntity implements ISidedI
         super.remove();
         for (LazyOptional<? extends IItemHandler> handler : handlers)
             handler.invalidate();
+    }
+
+    public float getYaw() {
+        return -this.getDirection().getOpposite().getHorizontalAngle();
+    }
+
+    public Direction getDirection() {
+        return this.getBlockState().get(ItemShelfBlock.FACING);
     }
 }
 

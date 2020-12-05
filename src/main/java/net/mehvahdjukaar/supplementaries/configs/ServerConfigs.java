@@ -41,11 +41,12 @@ public class ServerConfigs {
         public static ForgeConfigSpec.BooleanValue WALL_LANTERN_PLACEMENT;
 
         public static ForgeConfigSpec.IntValue JAR_CAPACITY;
-
-        public static ForgeConfigSpec.BooleanValue NOTICE_BOARDS_UNRESTRICTED;
+        public static ForgeConfigSpec.BooleanValue JAR_EAT;
 
         public static ForgeConfigSpec.ConfigValue<List<? extends String>> MOB_JAR_ALLOWED_MOBS;
         public static ForgeConfigSpec.ConfigValue<List<? extends String>> MOB_JAR_TINTED_ALLOWED_MOBS;
+
+        public static ForgeConfigSpec.BooleanValue NOTICE_BOARDS_UNRESTRICTED;
 
         private static void  init(ForgeConfigSpec.Builder builder){
             builder.comment("Server side blocks configs")
@@ -98,6 +99,10 @@ public class ServerConfigs {
             builder.push("jar");
             JAR_CAPACITY = builder.comment("jar liquid capacity: leave at 12 for pixel accuracy")
                     .defineInRange("capacity",12,0,1024);
+            JAR_EAT = builder.comment("allow right click to instantly eat or drink food or potions inside a jar.\n" +
+                    "Disable if you think this ability is op. Cookies are excluded")
+                    .define("drink_from_jar",true);
+
 
             List<String> defaultMobs = Arrays.asList("minecraft:slime","minecraft:parrot",
                     "minecraft:bee","minecraft:magma_cube");
@@ -233,6 +238,7 @@ public class ServerConfigs {
         public static int TURN_TABLE_PERIOD;
         public static boolean WALL_LANTERN_PLACEMENT;
         public static int JAR_CAPACITY;
+        public static boolean JAR_EAT;
         public static boolean NOTICE_BOARDS_UNRESTRICTED;
         public static List<? extends String> MOB_JAR_ALLOWED_MOBS;
         public static List<? extends String> MOB_JAR_TINTED_ALLOWED_MOBS;
@@ -260,6 +266,8 @@ public class ServerConfigs {
             WALL_LANTERN_PLACEMENT = block.WALL_LANTERN_PLACEMENT.get();
 
             JAR_CAPACITY = block.JAR_CAPACITY.get();
+
+            JAR_EAT = block.JAR_EAT.get();
 
             NOTICE_BOARDS_UNRESTRICTED = block.NOTICE_BOARDS_UNRESTRICTED.get();
 

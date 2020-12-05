@@ -33,9 +33,13 @@ import java.util.Random;
 
 public class FaucetBlock extends Block implements  IWaterLoggable{
     protected static final VoxelShape SHAPE_NORTH = VoxelShapes.create(0.6875D, 0.3125D, 1D, 0.3125D, 0.9375D, 0.3125D);
-    protected static final VoxelShape SHAPE_SOUTH = VoxelShapes.create(0.3125D, 0, 0D, 0.6875D, 0.625D, 0.6875D);
-    protected static final VoxelShape SHAPE_WEST = VoxelShapes.create(1D, 0, 0.3125D, 0.3125D, 0.625D, 0.6875D);
-    protected static final VoxelShape SHAPE_EAST = VoxelShapes.create(0D, 0, 0.6875D, 0.6875D, 0.625D, 0.3125D);
+    protected static final VoxelShape SHAPE_SOUTH = VoxelShapes.create(0.3125D, 0.3125D, 0D, 0.6875D, 0.9375D, 0.6875D);
+    protected static final VoxelShape SHAPE_WEST = VoxelShapes.create(1D, 0.3125D, 0.3125D, 0.3125D, 0.9375D, 0.6875D);
+    protected static final VoxelShape SHAPE_EAST = VoxelShapes.create(0D, 0.3125D, 0.6875D, 0.6875D, 0.9375D, 0.3125D);
+    protected static final VoxelShape SHAPE_NORTH_JAR = VoxelShapes.create(0.6875D, 0, 1D, 0.3125D, 0.625D, 0.3125D);
+    protected static final VoxelShape SHAPE_SOUTH_JAR = VoxelShapes.create(0.3125D, 0, 0D, 0.6875D, 0.625D, 0.6875D);
+    protected static final VoxelShape SHAPE_WEST_JAR = VoxelShapes.create(1D, 0, 0.3125D, 0.3125D, 0.625D, 0.6875D);
+    protected static final VoxelShape SHAPE_EAST_JAR = VoxelShapes.create(0D, 0, 0.6875D, 0.6875D, 0.625D, 0.3125D);
 
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
     public static final BooleanProperty ENABLED = BlockStateProperties.ENABLED;
@@ -62,13 +66,13 @@ public class FaucetBlock extends Block implements  IWaterLoggable{
                 case DOWN :
                 case NORTH :
                 default :
-                    return SHAPE_NORTH;
+                    return SHAPE_NORTH_JAR;
                 case SOUTH :
-                    return SHAPE_SOUTH;
+                    return SHAPE_SOUTH_JAR;
                 case EAST :
-                    return SHAPE_EAST;
+                    return SHAPE_EAST_JAR;
                 case WEST :
-                    return SHAPE_WEST;
+                    return SHAPE_WEST_JAR;
             }
         } else {
             switch (state.get(FACING)) {
@@ -78,11 +82,11 @@ public class FaucetBlock extends Block implements  IWaterLoggable{
                 default :
                     return SHAPE_NORTH;
                 case SOUTH :
-                    return VoxelShapes.create(0.3125D, 0.3125D, 0D, 0.6875D, 0.9375D, 0.6875D);
+                    return SHAPE_SOUTH;
                 case EAST :
-                    return VoxelShapes.create(0D, 0.3125D, 0.6875D, 0.6875D, 0.9375D, 0.3125D);
+                    return SHAPE_EAST;
                 case WEST :
-                    return VoxelShapes.create(1D, 0.3125D, 0.3125D, 0.3125D, 0.9375D, 0.6875D);
+                    return SHAPE_WEST;
             }
         }
     }

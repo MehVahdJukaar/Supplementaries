@@ -94,8 +94,14 @@ public class ClientSetup {
         RenderTypeLookup.setRenderLayer(Registry.SCONCE_SOUL, RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(Registry.SCONCE_WALL_ENDER, RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(Registry.SCONCE_ENDER, RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(Registry.SCONCE_WALL_GREEN, RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(Registry.SCONCE_GREEN, RenderType.getCutout());
         //candelabra
         RenderTypeLookup.setRenderLayer(Registry.CANDELABRA, RenderType.getCutout());
+        //item shelf
+        RenderTypeLookup.setRenderLayer(Registry.ITEM_SHELF, RenderType.getCutout());
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<ItemShelfBlockTile>)Registry.ITEM_SHELF_TILE, ItemShelfBlockTileRenderer::new);
+
 
     }
 
@@ -106,6 +112,7 @@ public class ClientSetup {
         Minecraft.getInstance().particles.registerFactory(Registry.FIREFLY_GLOW, FireflyGlowParticle.Factory::new);
         Minecraft.getInstance().particles.registerFactory(Registry.SPEAKER_SOUND, SpeakerSoundParticle.Factory::new);
         Minecraft.getInstance().particles.registerFactory(Registry.ENDERGETIC_FLAME, FlameParticle.Factory::new);
+        Minecraft.getInstance().particles.registerFactory(Registry.GREEN_FLAME, FlameParticle.Factory::new);
     }
 
 

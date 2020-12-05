@@ -30,7 +30,6 @@ import java.util.EnumSet;
 import java.util.Random;
 
 public class FireflyEntity extends CreatureEntity implements IFlyingAnimal {
-    private int particleCooldown = 20;
     public float alpha = 1;
     public float prevAlpha = 1;
     private final int flickerPeriod = ClientConfigs.cached.FIREFLY_PERIOD + new Random().nextInt(10) ; //40
@@ -70,7 +69,7 @@ public class FireflyEntity extends CreatureEntity implements IFlyingAnimal {
         //despawn when entity is not lit
         if (this.alpha == 0){
             long dayTime = this.world.getWorldInfo().getDayTime()%24000;
-            if (dayTime > 23500 || dayTime < 12500)
+            if (dayTime > 23500 || dayTime < 12500 && this.rand.nextFloat()<0.1)
                 this.remove();
         }
         //this.flickerCounter++;
@@ -200,7 +199,7 @@ public class FireflyEntity extends CreatureEntity implements IFlyingAnimal {
         super.livingTick();
         this.setNoGravity(true);
 
-        this.particleCooldown--;
+        //this.particleCooldown--;
 
     }
     //bee code

@@ -20,8 +20,9 @@
 			"scale": [0.4, 0.4, 0.4]
 		},
 		"ground": {
-			"translation": [1, 2, 0.3125],
-			"scale": [0.25, 0.25, 0.25]
+			"rotation": [ 0, 0, 0 ],
+			"translation": [ 0, 3, 0 ],
+			"scale":[ 0.25, 0.25, 0.25 ]
 		},
 		"gui": {
 			"translation": [1, -1, 0],
