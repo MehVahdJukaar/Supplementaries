@@ -33,7 +33,7 @@ public class FireflyEntity extends CreatureEntity implements IFlyingAnimal {
     public float alpha = 1;
     public float prevAlpha = 1;
     private final int flickerPeriod = ClientConfigs.cached.FIREFLY_PERIOD + new Random().nextInt(10) ; //40
-
+    private final int offset = new Random().nextInt(this.flickerPeriod);
 
     public FireflyEntity(EntityType<? extends CreatureEntity> type, World world) {
         super(type, world);
@@ -67,16 +67,20 @@ public class FireflyEntity extends CreatureEntity implements IFlyingAnimal {
         super.tick();
 
         //despawn when entity is not lit
-        if (this.alpha == 0){
+        if (this.alpha == 0 && !this.world.isRemote){
             long dayTime = this.world.getWorldInfo().getDayTime()%24000;
-            if (dayTime > 23500 || dayTime < 12500 && this.rand.nextFloat()<0.1)
+            if (dayTime > 23500 || dayTime < 12500 && this.rand.nextFloat()<0.05)
+                this.remove();
+            if(this.world.isRaining()&& this.rand.nextFloat()<0.05)
                 this.remove();
         }
+
         //this.flickerCounter++;
         this.prevAlpha = this.alpha;
         float a = (float) ClientConfigs.cached.FIREFLY_INTENSITY; //0.3
         float p = (float) ClientConfigs.cached.FIREFLY_EXPONENT;
-        this.alpha = (float) Math.pow( Math.max( ( (1-a)*MathHelper.sin(this.ticksExisted * ((float)Math.PI*2 / this.flickerPeriod))+a),0), p);
+        float time = this.ticksExisted+this.offset;
+        this.alpha = (float) Math.pow( Math.max( ( (1-a)*MathHelper.sin(time * ((float)Math.PI*2 / this.flickerPeriod))+a),0), p);
         //this.alpha =  Math.max( ( (1-p)*MathHelper.sin(this.ticksExisted * ((float) Math.PI / this.flickerPeriod))+p), 0);
 
         this.setMotion(this.getMotion().mul(1.0D, 0.6D, 1.0D));
@@ -84,12 +88,10 @@ public class FireflyEntity extends CreatureEntity implements IFlyingAnimal {
                 0.02 * (this.rand.nextDouble() - 0.5)));
     }
 
-
     @Override
     public boolean isAlive() {
         return true;
     }
-
 
     @Override
     protected float getStandingEyeHeight(Pose poseIn, EntitySize sizeIn) {

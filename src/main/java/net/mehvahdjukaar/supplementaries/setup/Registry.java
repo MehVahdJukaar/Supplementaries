@@ -258,6 +258,11 @@ public class Registry {
             BLOCKS.add(COG_BLOCK);
             ITEMS.add(COG_BLOCK_ITEM);
         }
+        //candle holder
+        if(true){
+            BLOCKS.add(CANDLE_HOLDER);
+            ITEMS.add(CANDLE_HOLDER_ITEM);
+        }
 
         //flag
         if(true) {
@@ -885,5 +890,18 @@ public class Registry {
     ).setRegistryName(COG_BLOCK_NAME);
     public static final Item COG_BLOCK_ITEM = new BlockItem(COG_BLOCK,
             new Item.Properties().group(ItemGroup.REDSTONE)).setRegistryName(COG_BLOCK_NAME);
+
+    //candle holder
+    public static final String CANDLE_HOLDER_NAME = "candle_holder";
+    public static final Block CANDLE_HOLDER = new CandleHolderBlock(
+            AbstractBlock.Properties.create(Material.MISCELLANEOUS)
+                    .zeroHardnessAndResistance()
+                    .doesNotBlockMovement()
+                    .setLightLevel((state) -> state.get(BlockStateProperties.LIT)? 9 : 0)
+                    .sound(SoundType.LANTERN), ParticleTypes.FLAME).setRegistryName(CANDLE_HOLDER_NAME);
+    public static final Item CANDLE_HOLDER_ITEM = new BlockItem(CANDLE_HOLDER,
+            (new Item.Properties()).group(ItemGroup.DECORATIONS)).setRegistryName(CANDLE_HOLDER_NAME);
+    //placeholder candle
+
 
 }

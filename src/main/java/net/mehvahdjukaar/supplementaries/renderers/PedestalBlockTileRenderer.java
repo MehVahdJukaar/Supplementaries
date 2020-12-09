@@ -8,6 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.entity.EnderCrystalRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
@@ -80,25 +81,42 @@ public class PedestalBlockTileRenderer extends TileEntityRenderer<PedestalBlockT
             matrixStackIn.scale(0.5f, 0.5f, 0.5f);
             matrixStackIn.translate(0, 0.25, 0);
             matrixStackIn.rotate(Vector3f.YP.rotationDegrees(tile.yaw));
+
+            ItemCameraTransforms.TransformType transform = ItemCameraTransforms.TransformType.FIXED;
             if(tile.type==2 && ClientConfigs.cached.PEDESTAL_SWORD){
                 //sword
+                //matrixStackIn.translate(0,-0.03125,0);
+                matrixStackIn.translate(0,-0.03125,0);
                 matrixStackIn.scale(1.5f,1.5f,1.5f);
-                matrixStackIn.translate(0,-0.125,0);
+
 
                 matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(135));
 
             }
+            else if(tile.type==4){
+                //transform = ItemCameraTransforms.TransformType.HEAD;
+                //matrixStackIn.scale(1.75f,1.75f,1.75f);
+                matrixStackIn.translate(0,0.03125,0);
+                matrixStackIn.scale(1.5f,1.5f,1.5f);
+
+                matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(-45));
+
+            }
             else {
                 if (ClientConfigs.cached.PEDESTAL_SPIN && !Minecraft.getInstance().isGamePaused()) {
+                    matrixStackIn.translate(0,6/16f, 0);
+                    matrixStackIn.scale(1.5f,1.5f,1.5f);
+
                     //BlockPos blockpos = tile.getPos();
                     //long blockoffset = (long) (blockpos.getX() * 7 + blockpos.getY() * 9 + blockpos.getZ() * 13);
 
                     //long time = System.currentTimeMillis();
+                    //TODO: fix stuttering
                     float tt = tile.getWorld().getGameTime()+ partialTicks;
+
                     //long t = blockoffset + time;
                     float angle = (tt * (float)ClientConfigs.cached.PEDESTAL_SPEED ) % 360f;
                     Quaternion rotation = Vector3f.YP.rotationDegrees(angle);
-
 
                     matrixStackIn.rotate(rotation);
                 }
@@ -108,7 +126,7 @@ public class PedestalBlockTileRenderer extends TileEntityRenderer<PedestalBlockT
             ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
             ItemStack stack = tile.getStackInSlot(0);
             IBakedModel ibakedmodel = itemRenderer.getItemModelWithOverrides(stack, tile.getWorld(), null);
-            itemRenderer.renderItem(stack, ItemCameraTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
+            itemRenderer.renderItem(stack, transform, true, matrixStackIn, bufferIn, combinedLightIn,
                     combinedOverlayIn, ibakedmodel);
 
             matrixStackIn.pop();

@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.setup;
 
 import net.minecraft.block.FireBlock;
 import net.minecraft.tileentity.DispenserTileEntity;
+import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.network.ICustomPacket;
 
@@ -13,9 +14,9 @@ public class ModSetup {
 
     public static void init(final FMLCommonSetupEvent event) {
 
-        Dispenser.registerBehaviors();
+
         Spawns.registerSpawningStuff();
-        //DeferredWorkQueue.runLater(()->{ });
+        DeferredWorkQueue.runLater(Dispenser::registerBehaviors);
 
     }
 

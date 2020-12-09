@@ -26,7 +26,7 @@ import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import javax.annotation.Nullable;
 import java.util.stream.IntStream;
 
-public class PedestalBlockTile extends LockableLootTileEntity implements ISidedInventory {
+public class PedestalBlockTile extends LockableLootTileEntity implements ISidedInventory{
     private NonNullList<ItemStack> stacks = NonNullList.withSize(1, ItemStack.EMPTY);
     public int type =0;
     public float yaw = 0;
@@ -61,6 +61,9 @@ public class PedestalBlockTile extends LockableLootTileEntity implements ISidedI
         }
         else if(it instanceof SwordItem){
             this.type=2;
+        }
+        else if(it instanceof TridentItem){
+            this.type=4;
         }
         else if(it instanceof ToolItem){
             this.type=3;

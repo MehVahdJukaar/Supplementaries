@@ -17,6 +17,11 @@ public class ClockBlockTile extends TileEntity implements ITickableTileEntity {
     public float prevRoll = 0;
     public float targetRoll = 0;
 
+    public float sRoll = 0;
+    public float sPrevRoll = 0;
+    public float sTargetRoll = 0;
+
+
     public ClockBlockTile() {
         super(Registry.CLOCK_BLOCK_TILE);
     }
@@ -27,15 +32,20 @@ public class ClockBlockTile extends TileEntity implements ITickableTileEntity {
         this.roll = compound.getFloat("roll");
         this.prevRoll = compound.getFloat("prevroll");
         this.targetRoll = compound.getFloat("targetroll");
+        this.sRoll = compound.getFloat("sroll");
+        this.sPrevRoll = compound.getFloat("sprevroll");
+        this.sTargetRoll = compound.getFloat("stargetroll");
     }
 
-    @Nonnull
     @Override
     public CompoundNBT write(@Nonnull CompoundNBT compound) {
         super.write(compound);
         compound.putFloat("roll", this.roll);
         compound.putFloat("prevroll", this.prevRoll);
         compound.putFloat("targetroll", this.targetRoll);
+        compound.putFloat("sroll", this.sRoll);
+        compound.putFloat("sprevroll", this.sPrevRoll);
+        compound.putFloat("stargetroll", this.sTargetRoll);
         return compound;
     }
 

@@ -172,7 +172,7 @@ public class ClockBlock extends Block implements IWaterLoggable {
         }
         world.setBlockState(pos, state.with(POWER, power).with(HOUR, hour), 2);
     }
-    //TODO: make this cleaner
+    //TODO: make this cleaner. move to tile
     public static void updatePower(BlockState bs, World world, BlockPos pos) {
         if (!world.isRemote){
             // 0-24000

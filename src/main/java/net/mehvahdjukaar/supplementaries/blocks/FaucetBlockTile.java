@@ -83,7 +83,7 @@ public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
             return false;
         }
         // empty cauldron
-        else if (backstate.getBlock() instanceof CauldronBlock && backstate.get(BlockStateProperties.LEVEL_0_3) > 0) {
+        else if (backstate.getBlock() instanceof CauldronBlock && backstate.get(BlockStateProperties.LEVEL_0_3) > 0 && world.getTileEntity(behind)==null) {
             if (this.hasJar()) {
                 if (this.addItemToJar(PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.WATER))) {
                     this.world.setBlockState(behind,

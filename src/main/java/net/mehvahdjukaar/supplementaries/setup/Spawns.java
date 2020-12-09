@@ -26,15 +26,18 @@ public class Spawns {
             if (biome != null) {
                 //RegistryKey<Biome> biomeKey = RegistryKey.getOrCreateKey(ForgeRegistries.Keys.BIOMES, event.getName());
                 ResourceLocation biomeres = ForgeRegistries.BIOMES.getKey(biome);
+                if (biomeres != null) {
+                    String modbiomes = biomeres.getNamespace();
+                    if (ServerConfigs.cached.FIREFLY_MOD_WHITELIST.contains(modbiomes) ||
+                            ServerConfigs.cached.FIREFLY_BIOMES.contains(biomeres.toString())) {
+                        //TODO:adjust this so they can spawn on more blocks but not underground
+                        event.getSpawns().getSpawner(EntityClassification.AMBIENT).add(new MobSpawnInfo.Spawners(
+                                Registry.FIREFLY_TYPE, ServerConfigs.cached.FIREFLY_WEIGHT,
+                                ServerConfigs.cached.FIREFLY_MIN,
+                                ServerConfigs.cached.FIREFLY_MAX));
+                    }
 
-                if (ServerConfigs.cached.FIREFLY_BIOMES.contains(biomeres.toString())){
-                    //TODO:adjust this so they can spawn on more blocks but not underground
-                    event.getSpawns().getSpawner(EntityClassification.AMBIENT).add(new MobSpawnInfo.Spawners(
-                            Registry.FIREFLY_TYPE, ServerConfigs.cached.FIREFLY_WEIGHT,
-                            ServerConfigs.cached.FIREFLY_MIN,
-                            ServerConfigs.cached.FIREFLY_MAX));
                 }
-
             }
         }
     }

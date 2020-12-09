@@ -10,6 +10,7 @@ import net.minecraft.entity.monster.SlimeEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.*;
 
 public class EmptyJarItem extends BlockItem {
@@ -55,7 +56,7 @@ public class EmptyJarItem extends BlockItem {
 
             CommonUtil.saveJarMobItemNBT(returnStack, entity);
         }
-        player.setHeldItem(player.getActiveHand(), DrinkHelper.fill(stack,player,returnStack,isFirefly));
+        player.setHeldItem(player.getActiveHand(), DrinkHelper.fill(stack.copy(),player,returnStack,isFirefly));
         player.world.playSound(null, player.getPosition(),  SoundEvents.ITEM_BOTTLE_FILL_DRAGONBREATH, SoundCategory.BLOCKS,1,1);
 
         entity.remove();

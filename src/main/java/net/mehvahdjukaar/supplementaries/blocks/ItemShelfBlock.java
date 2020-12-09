@@ -107,7 +107,7 @@ public class ItemShelfBlock extends Block implements IWaterLoggable {
         if (tileentity instanceof ItemShelfBlockTile) {
             ItemShelfBlockTile te = (ItemShelfBlockTile) tileentity;
             ItemStack itemstack = player.getHeldItem(handIn);
-            boolean flag1 = (te.isEmpty() && !itemstack.isEmpty() && (te.canInsertItem(0, itemstack, null)));
+            boolean flag1 = (te.isEmpty() && !itemstack.isEmpty() && (te.isItemValidForSlot(0, itemstack)));
             boolean flag2 = (itemstack.isEmpty() && !te.isEmpty());
             if (flag1) {
                 ItemStack it = itemstack.copy();

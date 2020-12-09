@@ -19,6 +19,7 @@
   "block.supplementaries.piston_launcher": "Pistão de Mola",
   "block.supplementaries.crank": "Manivela",
   "block.supplementaries.jar": "Jarro",
+  "block.supplementaries.jar_tinted": "Jarro Colorido",
   "block.supplementaries.turn_table": "Mesa Giratória",
   "block.supplementaries.pedestal": "Pedestal",
   "block.supplementaries.redstone_illuminator": "Iluminador Redstone",
@@ -43,10 +44,14 @@
   "entity.supplementaries.firefly": "Vaga-Lume",
   "block.supplementaries.firefly_jar": "Jarro com Vaga-Lume",
   "item.supplementaries.firefly": "Ovo Gerador de Vaga-Lume",
+
+  "block.supplementaries.sconce_green": "Arandela Verde",
+  "block.supplementaries.candelabra_silver": "Candelabro de Prata",
+  "block.supplementaries.item_shelf": "Prateleira de Itens",
+  "block.supplementaries.cog_block": "WIP Bloco de Engrenagem",
  
-  "block.supplementaries.flag": "WIP  Bandeira",
+  "block.supplementaries.flag": "WIP Bandeira",
   "block.supplementaries.laser_block": "Bloco de Laser",
-  "block.supplementaries.clover": "Trevo",
   "block.supplementaries.fancy_lamp": "Lâmpada Chique",
   "block.supplementaries.skull_lantern": "Lanterna de Caveira"
 }

@@ -29,7 +29,6 @@ public class CommonUtil {
     public static final IntegerProperty EXTENSION = IntegerProperty.create("extension", 0, 2);
     public static final BooleanProperty TILE = BooleanProperty.create("tile");
     public static final IntegerProperty TILE_3 = IntegerProperty.create("tile_3", 0, 2);
-    public static final BooleanProperty HAS_LAVA = BooleanProperty.create("has_lava");
     public static final BooleanProperty HAS_WATER = BooleanProperty.create("has_water");
     public static final BooleanProperty HAS_JAR = BooleanProperty.create("has_jar");
     public static final EnumProperty<WoodType> WOOD_TYPE = EnumProperty.create("wood_type", WoodType.class);
@@ -184,6 +183,8 @@ public class CommonUtil {
             return JarLiquidType.SUSPICIOUS_STEW;
         } else if (i == Items.COOKIE) {
             return JarLiquidType.COOKIES;
+        }else if (i == Items.WATER_BUCKET){
+            return JarLiquidType.WATER;
         }
         return JarLiquidType.EMPTY;
     }

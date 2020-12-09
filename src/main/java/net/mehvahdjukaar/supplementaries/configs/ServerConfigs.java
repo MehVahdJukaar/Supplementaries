@@ -134,15 +134,19 @@ public class ServerConfigs {
         public static ForgeConfigSpec.IntValue FIREFLY_MAX;
         public static ForgeConfigSpec.IntValue FIREFLY_WEIGHT;
         public static ForgeConfigSpec.ConfigValue<List<? extends String>> FIREFLY_BIOMES;
+        public static ForgeConfigSpec.ConfigValue<List<? extends String>> FIREFLY_MOD_WHITELIST;
 
         private static void init(ForgeConfigSpec.Builder builder) {
             builder.comment("Configure spawning conditions")
                     .push("spawns");
             builder.push("firefly");
             List<String> defaultBiomes = Arrays.asList("minecraft:swamp","minecraft:swamp_hills","minecraft:plains","minecraft:sunflower_plains","minecraft:dark_forest","minecraft:dark_forest_hills");
+            List<String> defaultMods = Arrays.asList();
             //TODO add validation for biomes
             FIREFLY_BIOMES = builder.comment("Spawnable biomes")
                     .defineList("biomes", defaultBiomes, s -> true);
+            FIREFLY_MOD_WHITELIST = builder.comment("Whitelisted mods. All biomes from said mods will be able to spawn fireflies. Use the one above for more control")
+                    .defineList("mod_whitelist", defaultMods, s -> true);
             FIREFLY_WEIGHT = builder.comment("Spawn weight \n"+
                     "Set to 0 to disable spawning entirely")
                     .defineInRange("weight", 3, 0, 100);
@@ -225,6 +229,7 @@ public class ServerConfigs {
         public static int FIREFLY_MAX;
         public static int FIREFLY_WEIGHT;
         public static List<? extends String> FIREFLY_BIOMES;
+        public static List<? extends String> FIREFLY_MOD_WHITELIST;
         //blocks
         public static int SPEAKER_RANGE;
         public static int BELLOWS_PERIOD;
@@ -248,6 +253,7 @@ public class ServerConfigs {
             FIREFLY_MAX = spawn.FIREFLY_MAX.get();
             FIREFLY_WEIGHT = spawn.FIREFLY_WEIGHT.get();
             FIREFLY_BIOMES = spawn.FIREFLY_BIOMES.get();
+            FIREFLY_MOD_WHITELIST = spawn.FIREFLY_MOD_WHITELIST.get();
 
             SPEAKER_RANGE = block.SPEAKER_RANGE.get();
 

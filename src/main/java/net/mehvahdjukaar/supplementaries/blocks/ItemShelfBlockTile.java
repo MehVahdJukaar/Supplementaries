@@ -119,12 +119,12 @@ public class ItemShelfBlockTile extends LockableLootTileEntity implements ISided
 
     @Override
     public boolean canInsertItem(int index, ItemStack stack, @Nullable Direction direction) {
-        return this.isItemValidForSlot(index, stack);
+        return false;
     }
 
     @Override
     public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
-        return true;
+        return false;
     }
     private final LazyOptional<? extends IItemHandler>[] handlers = SidedInvWrapper.create(this, Direction.values());
     @Override

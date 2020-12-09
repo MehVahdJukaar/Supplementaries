@@ -5,6 +5,7 @@ import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IWaterLoggable;
+import net.minecraft.block.RepeaterBlock;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -57,6 +58,7 @@ public class WindVaneBlock extends Block implements IWaterLoggable {
         }
         if (weather != bs.get(POWER)) {
             world.setBlockState(pos, bs.with(POWER, weather), 3);
+            world.notifyNeighborsOfStateChange(pos.down(), bs.getBlock());
         }
     }
 
@@ -68,6 +70,11 @@ public class WindVaneBlock extends Block implements IWaterLoggable {
     @Override
     public int getComparatorInputOverride(BlockState blockState, World world, BlockPos pos) {
         return blockState.get(POWER);
+    }
+
+    @Override
+    public int getStrongPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+        return side==Direction.UP ? this.getWeakPower(blockState,blockAccess,pos,side) : 0;
     }
 
     @Override

@@ -158,12 +158,12 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
                             }
                         }
                     }
-                    this.extractItem(1, handstack, null, null);
+                    this.extractItem(1);
                     return true;
                 }
                 //extract cookies with empty hand
                 else if(this.liquidType == JarLiquidType.COOKIES){
-                    this.extractItem(1, handstack, player, hand);
+                    this.handleExtractItem(1, handstack, player, hand);
                     return true;
                 }
             }
@@ -178,7 +178,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
                         player.addPotionEffect(new EffectInstance(effectinstance));
                     }
                 }
-                this.extractItem(1, handstack, null, null);
+                this.extractItem(1);
                 return true;
 
             }
@@ -193,7 +193,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
             // can content be extracted with bottle
             if (this.liquidType.bottle) {
                 // if extraction successful
-                if (this.extractItem(1, handstack, player, hand)) {
+                if (this.handleExtractItem(1, handstack, player, hand)) {
                     this.world.playSound(player, player.getPosition(), SoundEvents.ITEM_BOTTLE_FILL,
                             SoundCategory.BLOCKS, 1.0F, 1.0F);
                     player.addStat(Stats.ITEM_USED.get(Items.GLASS_BOTTLE));
@@ -207,7 +207,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
             // can content be extracted with bucket
             if (this.liquidType.bucket) {
                 // if extraction successful
-                if (this.extractItem(4, handstack, player, hand)) {
+                if (this.handleExtractItem(3, handstack, player, hand)) {
                         this.world.playSound(player, player.getPosition(), this.liquidType.getSound(),
                             SoundCategory.BLOCKS, 1.0F, 1.0F);
                     player.addStat(Stats.ITEM_USED.get(Items.BUCKET));
@@ -220,7 +220,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
             // can content be extracted with bowl
             if (this.liquidType.bowl) {
                 // if extraction successful
-                if (this.extractItem(2, handstack, player, hand)) {
+                if (this.handleExtractItem(2, handstack, player, hand)) {
                     this.world.playSound(player, player.getPosition(), SoundEvents.ITEM_BOTTLE_FILL,
                             SoundCategory.BLOCKS, 1.0F, 1.0F);
                     player.addStat(Stats.ITEM_USED.get(Items.BOWL));
@@ -232,31 +232,36 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
         return false;
     }
 
-    // removes item from te and gives it to player
-    public boolean extractItem(int amount, @Nullable ItemStack handstack, @Nullable PlayerEntity player, @Nullable Hand handIn) {
+    // removes item from te
+    public ItemStack extractItem(int amount) {
         amount = this.liquidType.isFish() ? 1 : amount;
         ItemStack mystack = this.getStackInSlot(0);
         int count = mystack.getCount();
         // do i have enough?
         if (count >= amount) {
             //case for cookies
-            if (player != null && handIn != null) {
-                ItemStack extracted = mystack.copy();
-                extracted.setCount(1);
-                // special case to convert water bottles into bucket
-                if (this.liquidType == JarLiquidType.WATER && amount==4) {
-                    extracted = new ItemStack(Items.WATER_BUCKET);
-                }
-                player.setHeldItem(handIn,DrinkHelper.fill(handstack,player,extracted,true));
-
-                 //else if (player instanceof ServerPlayerEntity)
-                 //     ((ServerPlayerEntity)player).sendContainerToPlayer(player.container);
+            ItemStack extracted = mystack.copy();
+            extracted.setCount(1);
+            // special case to convert water bottles into bucket
+            if (this.liquidType == JarLiquidType.WATER && amount==3) {
+                extracted = new ItemStack(Items.WATER_BUCKET);
             }
             mystack.setCount(Math.max(0, count - amount));
+            return extracted;
+        }
+        return null;
+    }
+
+    // removes item from te and gives it to player
+    public boolean handleExtractItem(int amount, ItemStack handstack, @Nullable PlayerEntity player, @Nullable Hand handIn){
+        ItemStack extracted = this.extractItem(amount);
+        if(extracted!=null) {
+            player.setHeldItem(handIn, DrinkHelper.fill(handstack.copy(), player, extracted, true));
             return true;
         }
         return false;
     }
+
 
     // adds item to te, removes from player
     public void handleAddItem(ItemStack handstack, @Nullable PlayerEntity player, @Nullable Hand handIn) {
