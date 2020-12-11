@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.entities;
 
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
@@ -13,7 +14,9 @@ import net.minecraft.entity.ai.goal.LookRandomlyGoal;
 import net.minecraft.entity.passive.IFlyingAnimal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ArrowEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.pathfinding.FlyingPathNavigator;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.*;
@@ -22,6 +25,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -29,11 +33,11 @@ import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.Random;
 
-public class FireflyEntity extends CreatureEntity implements IFlyingAnimal {
-    public float alpha = 1;
-    public float prevAlpha = 1;
-    private final int flickerPeriod = ClientConfigs.cached.FIREFLY_PERIOD + new Random().nextInt(10) ; //40
-    private final int offset = new Random().nextInt(this.flickerPeriod);
+public class FireflyEntity extends CreatureEntity implements IFlyingAnimal, IEntityAdditionalSpawnData {
+    public float alpha = 0f;
+    public float prevAlpha = 0.01f;
+    private int flickerPeriod;//+ new Random().nextInt(10) ; //40
+    private int offset;//new Random().nextInt(Math.abs(this.flickerPeriod));
 
     public FireflyEntity(EntityType<? extends CreatureEntity> type, World world) {
         super(type, world);
@@ -41,9 +45,9 @@ public class FireflyEntity extends CreatureEntity implements IFlyingAnimal {
         setNoAI(false);
         this.moveController = new FlyingMovementController(this, 10, true);
         this.navigator = new FlyingPathNavigator(this, this.world);
-        //this.setRenderDistanceWeight(20);
-        //this.flickerCounter = (int)(this.rand.nextFloat()*2*this.flickerPeriod);
+
     }
+
 
     public static boolean canSpawnOn(EntityType<? extends MobEntity> firefly, IWorld worldIn, SpawnReason reason, BlockPos pos, Random random) {
         BlockState blockstate = worldIn.getBlockState(pos.down());
@@ -66,13 +70,16 @@ public class FireflyEntity extends CreatureEntity implements IFlyingAnimal {
     public void tick() {
         super.tick();
 
+
         //despawn when entity is not lit
-        if (this.alpha == 0 && !this.world.isRemote){
-            long dayTime = this.world.getWorldInfo().getDayTime()%24000;
-            if (dayTime > 23500 || dayTime < 12500 && this.rand.nextFloat()<0.05)
+        if (this.alpha == 0f && !this.world.isRemote){
+            long dayTime = this.world.getDayTime()%24000;
+            if (dayTime > 23500 || dayTime < 12500 && this.rand.nextFloat()<0.1)
                 this.remove();
-            if(this.world.isRaining()&& this.rand.nextFloat()<0.05)
+            else if(this.world.isRaining() && this.rand.nextFloat()<0.1) {
                 this.remove();
+            }
+
         }
 
         //this.flickerCounter++;
@@ -80,12 +87,30 @@ public class FireflyEntity extends CreatureEntity implements IFlyingAnimal {
         float a = (float) ClientConfigs.cached.FIREFLY_INTENSITY; //0.3
         float p = (float) ClientConfigs.cached.FIREFLY_EXPONENT;
         float time = this.ticksExisted+this.offset;
-        this.alpha = (float) Math.pow( Math.max( ( (1-a)*MathHelper.sin(time * ((float)Math.PI*2 / this.flickerPeriod))+a),0), p);
+        boolean w = this.world.isRemote;
+
+        this.alpha = Math.max(((1-a)*MathHelper.sin(time * ((float)Math.PI*2 / this.flickerPeriod))+a),0);
+        if (this.alpha!=0)this.alpha= (float) Math.pow(this.alpha,p);
         //this.alpha =  Math.max( ( (1-p)*MathHelper.sin(this.ticksExisted * ((float) Math.PI / this.flickerPeriod))+p), 0);
 
         this.setMotion(this.getMotion().mul(1.0D, 0.6D, 1.0D));
         this.setMotion(this.getMotion().add(0.02 * (this.rand.nextDouble() - 0.5), 0.03 * (this.rand.nextDouble() - 0.5),
                 0.02 * (this.rand.nextDouble() - 0.5)));
+
+    }
+
+    @Override
+    public void readSpawnData(PacketBuffer buffer) {
+        this.offset = buffer.readInt();
+        this.flickerPeriod = buffer.readInt();
+    }
+
+    @Override
+    public void writeSpawnData(PacketBuffer buffer) {
+        this.flickerPeriod = ServerConfigs.cached.FIREFLY_PERIOD + this.rand.nextInt(10);
+        this.offset = this.rand.nextInt(this.flickerPeriod/2);
+        buffer.writeInt(this.offset);
+        buffer.writeInt(this.flickerPeriod);
     }
 
     @Override
@@ -154,12 +179,12 @@ public class FireflyEntity extends CreatureEntity implements IFlyingAnimal {
 
     @Override
     public net.minecraft.util.SoundEvent getHurtSound(DamageSource ds) {
-        return (net.minecraft.util.SoundEvent) ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("entity.bat.hurt"));
+        return ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("entity.bat.hurt"));
     }
 
     @Override
     public net.minecraft.util.SoundEvent getDeathSound() {
-        return (net.minecraft.util.SoundEvent) ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("entity.bat.death"));
+        return ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("entity.bat.death"));
     }
 
     @Override
@@ -181,11 +206,11 @@ public class FireflyEntity extends CreatureEntity implements IFlyingAnimal {
     public static AttributeModifierMap.MutableAttribute setCustomAttributes() {
         return MobEntity.func_233666_p_()
                 .createMutableAttribute(Attributes.FOLLOW_RANGE, 48.0D)
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.2)
+                .createMutableAttribute(Attributes.MOVEMENT_SPEED, ServerConfigs.entity.FIREFLY_SPEED.get())
                 .createMutableAttribute(Attributes.MAX_HEALTH, 1)
                 .createMutableAttribute(Attributes.ARMOR, 0)
                 .createMutableAttribute(Attributes.ATTACK_DAMAGE, 0D)
-                .createMutableAttribute(Attributes.FLYING_SPEED, 0.25);
+                .createMutableAttribute(Attributes.FLYING_SPEED, ServerConfigs.entity.FIREFLY_SPEED.get());
     }
 
     @Override
@@ -204,6 +229,9 @@ public class FireflyEntity extends CreatureEntity implements IFlyingAnimal {
         //this.particleCooldown--;
 
     }
+
+
+
     //bee code
     class WanderGoal extends Goal {
         WanderGoal() {

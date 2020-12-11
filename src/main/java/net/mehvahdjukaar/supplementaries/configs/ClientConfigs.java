@@ -20,10 +20,7 @@ public class ClientConfigs {
     public static class block {
         public static ForgeConfigSpec.DoubleValue FIREFLY_SPAWN_CHANCE;
         public static ForgeConfigSpec.IntValue FIREFLY_SPAWN_PERIOD;
-        public static ForgeConfigSpec.DoubleValue FLAG_SPEED;
-        public static ForgeConfigSpec.DoubleValue FLAG_WAVE_FREQUENCY;
-        public static ForgeConfigSpec.DoubleValue FLAG_SEGMENT_LENGHT;
-        public static ForgeConfigSpec.DoubleValue FLAG_INCREMENTA_FREQ;
+
         public static ForgeConfigSpec.BooleanValue PEDESTAL_SPIN;
         public static ForgeConfigSpec.BooleanValue PEDESTAL_SWORD;
         public static ForgeConfigSpec.DoubleValue PEDESTAL_SPEED;
@@ -33,6 +30,13 @@ public class ClientConfigs {
         public static ForgeConfigSpec.DoubleValue WIND_VANE_ANGLE_2;
         public static ForgeConfigSpec.DoubleValue WIND_VANE_PERIOD_1;
         public static ForgeConfigSpec.DoubleValue WIND_VANE_PERIOD_2;
+
+        public static ForgeConfigSpec.DoubleValue FLAG_SEGMENT_LENGTH;
+        public static ForgeConfigSpec.DoubleValue FLAG_SPEED;
+        public static ForgeConfigSpec.DoubleValue FLAG_WAVELENGTH;
+        public static ForgeConfigSpec.DoubleValue FLAG_AMPLITUDE;
+        public static ForgeConfigSpec.DoubleValue FLAG_AMPLITUDE_INCREMENT;
+
 
         private static void init(ForgeConfigSpec.Builder builder) {
             builder.comment("Tweak and change the various block animations +\n" +
@@ -80,6 +84,14 @@ public class ClientConfigs {
                     .defineInRange("period_2", 150.0, 0.0, 2000.0);
             builder.pop();
 
+            builder.push("flag");
+            FLAG_SPEED = builder.comment("I don't remember what these are, I'll adde proper descriptions later. names may be a bit random and non descriptive")
+                    .defineInRange("speed", 1d, 0, 10);
+            FLAG_WAVELENGTH = builder.defineInRange("wavelenght", 15d, 0.001, 100);
+            FLAG_AMPLITUDE = builder.defineInRange("amplitude", 1d, 0d, 100d);
+            FLAG_AMPLITUDE_INCREMENT = builder.comment("how much the wave amplitude increases each pixel")
+                    .defineInRange("amplitude_increment", 0.3d, 0, 10);
+            builder.pop();
             //TODO: add more
 
 
@@ -108,7 +120,6 @@ public class ClientConfigs {
     }
 
     public static class entity {
-        public static ForgeConfigSpec.IntValue FIREFLY_PERIOD;
         public static ForgeConfigSpec.DoubleValue FIREFLY_SCALE;
         public static ForgeConfigSpec.DoubleValue FIREFLY_INTENSITY;
         public static ForgeConfigSpec.DoubleValue FIREFLY_EXPONENT;
@@ -116,12 +127,11 @@ public class ClientConfigs {
             builder.comment("entities parameters")
                     .push("entities");
             builder.push("firefly");
-            FIREFLY_SCALE = builder.comment("scale multiplier")
-                    .defineInRange("scale", 0.15, 0,1);
-            FIREFLY_PERIOD = builder.comment("glow animation uses following euation:\n"+
+            FIREFLY_SCALE = builder.comment("glow animation uses following euation:\n"+
                     "alpha = scale = {max[(1-intensity)*sin(time*2pi/period)+intensity, 0]}^exponent\n"+
-                    "note that actual period will be this + a random number between 0 and 10")
-                    .defineInRange("period", 65, 1,200);
+                    "period variable is located in common configs\n"+
+                    "scale multiplier")
+                    .defineInRange("scale", 0.15, 0,1);
             FIREFLY_INTENSITY = builder.comment("affects how long the pulse last, not how frequently it occurs. 0.5 for normal sin wave. higher and it won't turn off completely")
                     .defineInRange("intensity", 0.2,-100,1);
             FIREFLY_EXPONENT = builder.comment("affects the shape of the wave. stay under 0.5 for sharper transitions")
@@ -136,7 +146,6 @@ public class ClientConfigs {
     public static class cached {
         public static int FIREFLY_PAR_MAXAGE;
         public static double FIREFLY_PAR_SCALE;
-        public static int FIREFLY_PERIOD;
         public static double FIREFLY_SCALE;
         public static double FIREFLY_INTENSITY;
         public static double FIREFLY_EXPONENT;
@@ -157,7 +166,6 @@ public class ClientConfigs {
             FIREFLY_PAR_MAXAGE = particle.FIREFLY_PAR_MAXAGE.get();
             FIREFLY_PAR_SCALE = particle.FIREFLY_PAR_SCALE.get();
             //entities
-            FIREFLY_PERIOD = entity.FIREFLY_PERIOD.get();
             FIREFLY_SCALE = entity.FIREFLY_SCALE.get();
             FIREFLY_INTENSITY = entity.FIREFLY_INTENSITY.get();
             FIREFLY_EXPONENT = entity.FIREFLY_EXPONENT.get();

@@ -9,6 +9,7 @@ import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.MathHelper;
 
 import javax.annotation.Nonnull;
 
@@ -20,6 +21,8 @@ public class ClockBlockTile extends TileEntity implements ITickableTileEntity {
     public float sRoll = 0;
     public float sPrevRoll = 0;
     public float sTargetRoll = 0;
+
+    public int power = 0;
 
 
     public ClockBlockTile() {
@@ -35,6 +38,7 @@ public class ClockBlockTile extends TileEntity implements ITickableTileEntity {
         this.sRoll = compound.getFloat("sroll");
         this.sPrevRoll = compound.getFloat("sprevroll");
         this.sTargetRoll = compound.getFloat("stargetroll");
+        this.power = compound.getInt("power");
     }
 
     @Override
@@ -46,6 +50,7 @@ public class ClockBlockTile extends TileEntity implements ITickableTileEntity {
         compound.putFloat("sroll", this.sRoll);
         compound.putFloat("sprevroll", this.sPrevRoll);
         compound.putFloat("stargetroll", this.sTargetRoll);
+        compound.putInt("power",this.power);
         return compound;
     }
 
@@ -70,25 +75,59 @@ public class ClockBlockTile extends TileEntity implements ITickableTileEntity {
         this.roll = this.targetRoll;
     }
 
-    public void tick() {
-        //TODO:update tile this on placement logic
-        if (this.world != null && this.world.getGameTime() % 20L == 0L) {
-            BlockState blockstate = this.getBlockState();
-            if (!this.world.isRemote) {
-                Block block = blockstate.getBlock();
-                if (block instanceof ClockBlock) {
-                    ClockBlock.updatePower(blockstate, this.world, this.pos);
-                }
+
+    public void updateInitialTime(){
+        int time = (int) (world.getDayTime() % 24000);
+        this.updateTime(time);
+        this.roll = this.targetRoll;
+        this.prevRoll = this.targetRoll;
+        this.sRoll = this.sTargetRoll;
+        this.sPrevRoll = this.sTargetRoll;
+    }
+
+    public void updateTime(int time){
+        //minute here are 1 rl second -> 50m in a minecraft hour
+        int minute = MathHelper.clamp((time%1000)/20 , 0, 50);
+        int hour = MathHelper.clamp(time / 1000, 0, 24);
+
+        //server
+        if(!this.world.isRemote){
+            BlockState state = this.getBlockState();
+            if(hour!=state.get(ClockBlock.HOUR)){
+                world.setBlockState(this.pos, state.with(ClockBlock.HOUR, hour));
             }
-            this.targetRoll = (30f * ClockBlock.getHour(blockstate)) % 360;
+            int p = MathHelper.clamp(time / 1500, 0, 15);
+            if (p!=this.power){
+                this.power=p;
+                this.world.updateComparatorOutputLevel(this.pos, this.getBlockState().getBlock());
+            }
         }
+        //hours
+        this.targetRoll = (hour*30)%360;
+        //minutes
+        this.sTargetRoll = (minute*7.2f + 180)%360f;
+    }
+
+    public void tick() {
+        int time = (int) (world.getDayTime() % 24000);
+        if (this.world != null && time % 20 == 0) {
+            this.updateTime(time);
+        }
+        //hours
         this.prevRoll = this.roll;
         if (this.roll != this.targetRoll) {
             float r = (this.roll + 8) % 360;
-            if (r >= this.targetRoll && r <= this.targetRoll + 8) {
+            if (r >= this.targetRoll && r <= this.targetRoll + 8)
                 r = this.targetRoll;
-            }
             this.roll = r;
+        }
+        //minutes
+        this.sPrevRoll = this.sRoll;
+        if (this.sRoll != this.sTargetRoll) {
+            float r = (this.sRoll + 8) % 360;
+            if (r >= this.sTargetRoll && r <= this.sTargetRoll + 8)
+                r = this.sTargetRoll;
+            this.sRoll = r;
         }
     }
 

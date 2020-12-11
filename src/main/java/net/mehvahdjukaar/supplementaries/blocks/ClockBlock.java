@@ -39,14 +39,12 @@ public class ClockBlock extends Block implements IWaterLoggable {
     protected static final VoxelShape SHAPE_WEST = VoxelShapes.create(1D, 0D, 0D, 0.0625D, 1D, 1D);
 
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
-    public static final IntegerProperty POWER = BlockStateProperties.POWER_0_15;
     public static final IntegerProperty HOUR = CommonUtil.HOUR;
-    public static final BooleanProperty TILE = CommonUtil.TILE; // rendered by tile?
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     public ClockBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(WATERLOGGED,false).with(FACING, Direction.NORTH).with(TILE, false).with(POWER, 0));
+        this.setDefaultState(this.stateContainer.getBaseState().with(WATERLOGGED,false).with(FACING, Direction.NORTH));
     }
 
     @Override
@@ -80,11 +78,6 @@ public class ClockBlock extends Block implements IWaterLoggable {
         boolean flag = context.getWorld().getFluidState(context.getPos()).getFluid() == Fluids.WATER;;
         return this.getDefaultState().with(WATERLOGGED, flag).with(FACING, context.getPlacementHorizontalFacing().getOpposite());
     }
-
-    /*
-     * public int getWeakPower(BlockState blockState, IBlockReader blockAccess,
-     * BlockPos pos, Direction side) { return blockState.get(POWER); }
-     */
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
@@ -129,13 +122,9 @@ public class ClockBlock extends Block implements IWaterLoggable {
         }
     }
 
-    public boolean canProvidePower(BlockState state) {
-        return false;
-    }
-
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(POWER,HOUR,FACING,TILE,WATERLOGGED);
+        builder.add(HOUR,FACING,WATERLOGGED);
     }
 
     @Override
@@ -145,11 +134,11 @@ public class ClockBlock extends Block implements IWaterLoggable {
 
     @Override
     public int getComparatorInputOverride(BlockState blockState, World world, BlockPos pos) {
-        return blockState.get(POWER);
-    }
-
-    public static int getHour(BlockState state) {
-        return state.get(HOUR);
+        TileEntity te = world.getTileEntity(pos);
+        if(te instanceof ClockBlockTile){
+            return ((ClockBlockTile) te).power;
+        }
+        return 0;
     }
 
     @Override
@@ -162,36 +151,10 @@ public class ClockBlock extends Block implements IWaterLoggable {
 
     @Deprecated
     public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        int time = (int) (world.getDayTime() % 24000);
-        int power = MathHelper.clamp(MathHelper.floor(time / 1500D), 0, 15);
-        int hour = MathHelper.clamp(MathHelper.floor(time / 1000D), 0, 24);
         TileEntity te = world.getTileEntity(pos);
         if(te instanceof ClockBlockTile){
-            ((ClockBlockTile) te).setInitialRoll(hour);
+            ((ClockBlockTile) te).updateInitialTime();
 
-        }
-        world.setBlockState(pos, state.with(POWER, power).with(HOUR, hour), 2);
-    }
-    //TODO: make this cleaner. move to tile
-    public static void updatePower(BlockState bs, World world, BlockPos pos) {
-        if (!world.isRemote){
-            // 0-24000
-            int time = (int) (world.getDayTime() % 24000);
-            int power = MathHelper.clamp(MathHelper.floor(time / 1500D), 0, 15);
-            int hour = MathHelper.clamp(MathHelper.floor(time / 1000D), 0, 24);
-            if (bs.get(HOUR) != hour){
-                ResourceLocation res;
-                if (hour % 2 == 0) {
-                    res = CommonUtil.TICK_1;
-                } else {
-                    res = CommonUtil.TICK_2;
-                }
-
-                world.playSound(null, pos, ForgeRegistries.SOUND_EVENTS.getValue(res),
-                        SoundCategory.BLOCKS, (float) .3, 1.2f);
-
-            }
-            world.setBlockState(pos, bs.with(POWER, power).with(HOUR, hour), 3);
         }
     }
 }

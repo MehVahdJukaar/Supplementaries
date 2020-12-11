@@ -1,5 +1,5 @@
 {
-  "parent": "supplementaries:custom/jar",
+  "parent": "supplementaries:block/jar",
   "textures": {
     "all": "supplementaries:blocks/potion_liquid",
     

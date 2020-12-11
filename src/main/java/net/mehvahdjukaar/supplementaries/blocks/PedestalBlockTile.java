@@ -11,6 +11,7 @@ import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.LockableLootTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
@@ -26,10 +27,11 @@ import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import javax.annotation.Nullable;
 import java.util.stream.IntStream;
 
-public class PedestalBlockTile extends LockableLootTileEntity implements ISidedInventory{
+public class PedestalBlockTile extends LockableLootTileEntity implements ISidedInventory, ITickableTileEntity {
     private NonNullList<ItemStack> stacks = NonNullList.withSize(1, ItemStack.EMPTY);
     public int type =0;
     public float yaw = 0;
+    public int counter = 0;
     public PedestalBlockTile() {
         super(Registry.PEDESTAL_TILE);
     }
@@ -44,7 +46,10 @@ public class PedestalBlockTile extends LockableLootTileEntity implements ISidedI
         super.markDirty();
     }
 
-
+    @Override
+    public void tick() {
+        if(this.world.isRemote)this.counter++;
+    }
 
     public void updateTile() {
         if(!this.world.isRemote()) {

@@ -46,11 +46,12 @@ public class FaucetBlock extends Block implements  IWaterLoggable{
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     public static final BooleanProperty HAS_WATER = CommonUtil.HAS_WATER;
     public static final BooleanProperty HAS_JAR = CommonUtil.HAS_JAR;
+    public static final BooleanProperty EXTENDED = BlockStateProperties.EXTENDED; //glass extension
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public FaucetBlock(Properties properties) {
         super(properties);
         this.setDefaultState(this.stateContainer.getBaseState().with(HAS_JAR, false).with(FACING, Direction.NORTH)
-                .with(ENABLED, false).with(POWERED, false).with(HAS_WATER, false).with(WATERLOGGED,false));
+                .with(ENABLED, false).with(EXTENDED, false).with(POWERED, false).with(HAS_WATER, false).with(WATERLOGGED,false));
     }
 
     @Override
@@ -126,16 +127,17 @@ public class FaucetBlock extends Block implements  IWaterLoggable{
         // checks backblock
         boolean ispowered = world.getRedstonePowerFromNeighbors(pos) > 0;
         boolean ishoney = backblock.getBlock() instanceof BeehiveBlock && backblock.get(BlockStateProperties.HONEY_LEVEL) > 0;
-        boolean isjarliquid = (backblock.getBlock() instanceof JarBlock
-                && backblock.getBlock().getBeaconColorMultiplier(backblock, world, backpos, backpos) != null);
+        boolean backjar = backblock.getBlock() instanceof JarBlock;
+        boolean isjarliquid = backjar && backblock.getBlock().getBeaconColorMultiplier(backblock, world, backpos, backpos) != null;
         boolean iswater = (world.getFluidState(backpos).isTagged(FluidTags.WATER)
                 || ((backblock.getBlock() instanceof CauldronBlock) && backblock.getComparatorInputOverride(world, backpos) > 0));
         BlockState downstate = world.getBlockState(pos.down());
         boolean hasjar = downstate.getBlock() instanceof JarBlock;
         boolean haswater = ishoney || iswater || isjarliquid;
-        if (ispowered != state.get(POWERED) || haswater != state.get(HAS_WATER) || hasjar != state.get(HAS_JAR) || toggle) {
+        if (ispowered != state.get(POWERED) || haswater != state.get(HAS_WATER) || hasjar != state.get(HAS_JAR) || toggle||backjar != state.get(EXTENDED)) {
             world.setBlockState(pos,
-                    state.with(POWERED, ispowered).with(HAS_WATER, haswater).with(HAS_JAR, hasjar).with(ENABLED, toggle ^ state.get(ENABLED)), 2);
+                    state.with(POWERED, ispowered).with(HAS_WATER, haswater).with(HAS_JAR, hasjar).with(EXTENDED, backjar)
+                            .with(ENABLED, toggle ^ state.get(ENABLED)), 2);
         }
         int newcolor = -2;
         //TODO:rewrite this
@@ -180,7 +182,7 @@ public class FaucetBlock extends Block implements  IWaterLoggable{
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(FACING, ENABLED, POWERED, HAS_WATER, HAS_JAR, WATERLOGGED);
+        builder.add(EXTENDED,FACING, ENABLED, POWERED, HAS_WATER, HAS_JAR, WATERLOGGED);
     }
 
     public BlockState rotate(BlockState state, Rotation rot) {
@@ -197,9 +199,12 @@ public class FaucetBlock extends Block implements  IWaterLoggable{
         BlockPos pos = context.getPos();
         boolean flag = world.getFluidState(pos).getFluid() == Fluids.WATER;
         boolean hasjar = world.getBlockState(pos.down()).getBlock() instanceof JarBlock;
-        if (context.getFace() == Direction.UP || context.getFace() == Direction.DOWN)
-            return this.getDefaultState().with(FACING, Direction.NORTH).with(HAS_JAR,hasjar).with(WATERLOGGED,flag);
-        return this.getDefaultState().with(FACING, context.getFace()).with(HAS_JAR,hasjar).with(WATERLOGGED,flag);
+        Direction dir = context.getFace();
+        if (context.getFace() == Direction.UP || context.getFace() == Direction.DOWN) {
+            dir = Direction.NORTH;
+        }
+        boolean jarbehind = world.getBlockState(pos.offset(dir.getOpposite())).getBlock() instanceof JarBlock;
+        return this.getDefaultState().with(FACING, dir).with(EXTENDED, jarbehind).with(HAS_JAR,hasjar).with(WATERLOGGED,flag);
     }
 
     @OnlyIn(Dist.CLIENT)

@@ -4,6 +4,7 @@ package net.mehvahdjukaar.supplementaries.renderers;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.mehvahdjukaar.supplementaries.blocks.FlagBlockTile;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
@@ -53,26 +54,31 @@ public class FlagBlockTileRenderer extends TileEntityRenderer<FlagBlockTile> {
 
             float t = (tile.counter+partialTicks) / (20f);
 
-            float l = 15f; //wave length in pixels
+            //float l = 15f; //wave length in pixels
+            //float speed = 0.5f;
+            //float invdamping = 0.3f;
+            //float wavyness = 1f;
 
-            float speed = 0.5f;
-            float invdamping = 0.3f;
-            float wavyness = 1f;
+            double l = ClientConfigs.block.FLAG_WAVELENGTH.get();
+            double speed = ClientConfigs.block.FLAG_SPEED.get();
+            double wavyness = ClientConfigs.block.FLAG_AMPLITUDE.get();
+            double invdamping = ClientConfigs.block.FLAG_AMPLITUDE_INCREMENT.get();
+
 
             int segmentlen = 1;
-
+/*
             if(Minecraft.getInstance().gameSettings.graphicFanciness.func_238162_a_()==2){
                 invdamping =0.5f;
                 wavyness = 4;
                 speed=1f;
 
 
-            }
+            }*/
 
 
             for (int z = 0; z < w; z+=segmentlen) {
 
-                float ang = (wavyness + invdamping*z) * MathHelper.sin((((z / (l)) - speed * t) * (float) Math.PI) % (2 * (float) Math.PI));
+                float ang = (float) ((wavyness + invdamping*z) * MathHelper.sin((float) ((((z / (l)) - speed * t) * (float) Math.PI) % (2 * (float) Math.PI))));
 
 
 

@@ -18,6 +18,7 @@ public class ServerConfigs {
         //reg.init(SERVER_BUILDER);
         block.init(SERVER_BUILDER);
         spawn.init(SERVER_BUILDER);
+        entity.init(SERVER_BUILDER);
 
         SERVER_CONFIG = SERVER_BUILDER.build();
     }
@@ -159,6 +160,27 @@ public class ServerConfigs {
         }
     }
 
+    public static class entity {
+        public static ForgeConfigSpec.IntValue FIREFLY_PERIOD;
+        public static ForgeConfigSpec.DoubleValue FIREFLY_SPEED;
+        private static void init(ForgeConfigSpec.Builder builder) {
+            builder.comment("entities parameters")
+                    .push("entities");
+            builder.push("firefly");
+            FIREFLY_PERIOD = builder.comment("firefly animation period\n"+
+                    "note that actual period will be this + a random number between 0 and 10\n"+
+                    "this needs to be here to allow correct despawning of the entity when it's not glowing\n"+
+                    "check client configs come more animation settings")
+                    .defineInRange("period", 65, 1, 200);
+            FIREFLY_SPEED = builder.comment("firefly flying speed")
+                    .defineInRange("speed", 0.25, 0, 10);
+
+            builder.pop();
+
+            builder.pop();
+        }
+    }
+
     public static class reg {
         public static ForgeConfigSpec.BooleanValue FIREFLY_ENABLED;
         public static ForgeConfigSpec.BooleanValue PLANTER_ENABLED;
@@ -247,6 +269,9 @@ public class ServerConfigs {
         public static boolean NOTICE_BOARDS_UNRESTRICTED;
         public static List<? extends String> MOB_JAR_ALLOWED_MOBS;
         public static List<? extends String> MOB_JAR_TINTED_ALLOWED_MOBS;
+        //entity
+        public static int FIREFLY_PERIOD;
+        public static double FIREFLY_SPEED;
 
         public static void refresh(){
             FIREFLY_MIN = spawn.FIREFLY_MIN.get();
@@ -279,6 +304,9 @@ public class ServerConfigs {
 
             MOB_JAR_ALLOWED_MOBS = block.MOB_JAR_ALLOWED_MOBS.get();
             MOB_JAR_TINTED_ALLOWED_MOBS = block.MOB_JAR_TINTED_ALLOWED_MOBS.get();
+
+            FIREFLY_PERIOD = entity.FIREFLY_PERIOD.get();
+            FIREFLY_SPEED = entity.FIREFLY_SPEED.get();
 
         }
     }

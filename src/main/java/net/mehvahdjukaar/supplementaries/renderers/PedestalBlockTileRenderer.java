@@ -112,7 +112,9 @@ public class PedestalBlockTileRenderer extends TileEntityRenderer<PedestalBlockT
 
                     //long time = System.currentTimeMillis();
                     //TODO: fix stuttering
-                    float tt = tile.getWorld().getGameTime()+ partialTicks;
+                    //float tt = tile.getWorld().getGameTime()+ partialTicks;
+                    float tt = tile.counter+partialTicks;
+
 
                     //long t = blockoffset + time;
                     float angle = (tt * (float)ClientConfigs.cached.PEDESTAL_SPEED ) % 360f;

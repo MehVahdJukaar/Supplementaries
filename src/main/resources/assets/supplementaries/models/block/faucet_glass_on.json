@@ -95,7 +95,7 @@
 		{
 			"from": [6, 14, 7],
 			"to": [10, 15, 11],
-			"rotation": {"angle": 0, "axis": "y", "origin": [17, 22, 16]},
+			"rotation": {"angle": 45, "axis": "y", "origin": [8, 13, 9]},
 			"faces": {
 				"north": {"uv": [5, 0, 9, 1], "texture": "#0"},
 				"east": {"uv": [5, 0, 9, 1], "texture": "#0"},
@@ -126,6 +126,25 @@
 				"up": {"uv": [1, 15, 5, 16], "texture": "#0"},
 				"down": {"uv": [7, 10, 11, 11], "texture": "#0"}
 			}
+		},
+		{
+			"from": [5, 8, 16],
+			"to": [11, 14, 19],
+			"rotation": {"angle": 0, "axis": "y", "origin": [13, 21, 24]},
+			"faces": {
+				"east": {"uv": [13, 0, 16, 6], "texture": "#0"},
+				"south": {"uv": [0, 0, 0, 0], "texture": "#0"},
+				"west": {"uv": [13, 0, 16, 6], "rotation": 180, "texture": "#0"},
+				"up": {"uv": [13, 0, 16, 6], "rotation": 270, "texture": "#0"},
+				"down": {"uv": [13, 0, 16, 6], "rotation": 90, "texture": "#0"}
+			}
+		}
+	],
+	"groups": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
+		{
+			"name": "group",
+			"origin": [13, 21, 24],
+			"children": [10]
 		}
 	]
 }

@@ -23,12 +23,13 @@ public class FireflyEntityRenderer extends EntityRenderer<FireflyEntity> {
     @Override
     public void render(FireflyEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn,
                        int packedLightIn) {
+
         matrixStackIn.push();
 
         float r = 1;
         float g = 1;
         float b = 1;
-        float a = MathHelper.lerp(partialTicks, entityIn.alpha, entityIn.prevAlpha);
+        float a = MathHelper.lerp(partialTicks, entityIn.prevAlpha, entityIn.alpha);
 
         matrixStackIn.translate(0.0D, 0.5, 0.0D);
         matrixStackIn.rotate(this.renderManager.getCameraOrientation());
