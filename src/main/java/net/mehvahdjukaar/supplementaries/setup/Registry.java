@@ -4,9 +4,8 @@ import com.google.common.collect.Lists;
 import net.mehvahdjukaar.supplementaries.blocks.*;
 import net.mehvahdjukaar.supplementaries.entities.FireflyEntity;
 import net.mehvahdjukaar.supplementaries.gui.NoticeBoardContainer;
-import net.mehvahdjukaar.supplementaries.items.EmptyJarItem;
-import net.mehvahdjukaar.supplementaries.items.JarItem;
-import net.mehvahdjukaar.supplementaries.items.SignPostItem;
+import net.mehvahdjukaar.supplementaries.items.*;
+import net.mehvahdjukaar.supplementaries.renderers.CageItemRenderer;
 import net.mehvahdjukaar.supplementaries.renderers.FireflyJarItemRenderer;
 import net.mehvahdjukaar.supplementaries.renderers.JarItemRenderer;
 import net.minecraft.block.AbstractBlock;
@@ -246,12 +245,32 @@ public class Registry {
             TILES.add(FIREFLY_JAR_TILE);
             ITEMS.add(FIREFLY_JAR_ITEM);
         }
+        //item shelf
         if(true) {
             BLOCKS.add(ITEM_SHELF);
             TILES.add(ITEM_SHELF_TILE);
             ITEMS.add(ITEM_SHELF_ITEM);
         }
 
+        //cage
+        if(true){
+            BLOCKS.add(CAGE);
+            TILES.add(CAGE_TILE);
+            ITEMS.add(CAGE_ITEM);
+            ITEMS.add(EMPTY_CAGE_ITEM);
+
+        }
+
+        if(true){
+            BLOCKS.add(SCONCE_LEVER);
+            ITEMS.add(SCONCE_LEVER_ITEM);
+        }
+
+        //stone_lamp
+        if(true){
+            BLOCKS.add(STONE_LAMP);
+            ITEMS.add(STONE_LAMP_ITEM);
+        }
 
         //cog block
         if(true){
@@ -841,7 +860,7 @@ public class Registry {
                     .hardnessAndResistance(4f, 5f)
                     .sound(SoundType.METAL)
                     .notSolid()
-                    .setLightLevel((state) -> 14)
+                    .setLightLevel((state) -> state.get(BlockStateProperties.LIT)? 14 : 0)
                     .setRequiresTool()
                     .harvestTool(ToolType.PICKAXE)
                     .harvestLevel(2)
@@ -882,7 +901,7 @@ public class Registry {
     public static final String COG_BLOCK_NAME = "cog_block";
     public static final Block COG_BLOCK = new CogBlock(
             AbstractBlock.Properties.create(Material.IRON, MaterialColor.IRON)
-                    .hardnessAndResistance(5f, 6f)
+                    .hardnessAndResistance(3f, 6f)
                     .sound(SoundType.METAL)
                     .setRequiresTool()
                     .harvestTool(ToolType.PICKAXE)
@@ -890,6 +909,43 @@ public class Registry {
     ).setRegistryName(COG_BLOCK_NAME);
     public static final Item COG_BLOCK_ITEM = new BlockItem(COG_BLOCK,
             new Item.Properties().group(ItemGroup.REDSTONE)).setRegistryName(COG_BLOCK_NAME);
+
+    //stone lamp
+    public static final String STONE_LAMP_NAME = "stone_lamp";
+    public static final Block STONE_LAMP = new Block(
+            AbstractBlock.Properties.create(Material.MISCELLANEOUS)
+                    .hardnessAndResistance(1.5f, 6f)
+                    .setLightLevel((state) -> 15)
+                    .sound(SoundType.STONE)).setRegistryName(STONE_LAMP_NAME);
+    public static final Item STONE_LAMP_ITEM = new BlockItem(STONE_LAMP,
+            (new Item.Properties()).group(null)).setRegistryName(STONE_LAMP_NAME);
+
+    //cage
+    public static final String CAGE_NAME = "cage";
+    public static final Block CAGE = new CageBlock(
+            AbstractBlock.Properties.create(Material.IRON, MaterialColor.IRON)
+                    .hardnessAndResistance(3f, 6f)
+                    .sound(SoundType.METAL)
+    ).setRegistryName(CAGE_NAME);
+    public static final TileEntityType<?> CAGE_TILE =  TileEntityType.Builder.create(
+            CageBlockTile::new, CAGE).build(null).setRegistryName(CAGE_NAME);
+    public static final Item CAGE_ITEM = new CageItem(CAGE,
+            new Item.Properties().maxStackSize(1).setISTER(()-> CageItemRenderer::new)
+                    .group(null)).setRegistryName("cage_full");
+    public static final Item EMPTY_CAGE_ITEM = new EmptyCageItem(CAGE,
+            new Item.Properties().maxStackSize(16).group(ItemGroup.DECORATIONS)).setRegistryName(CAGE_NAME);
+
+    //sconce lever
+    public static final String SCONCE_LEVER_NAME = "sconce_lever";
+    public static final Block SCONCE_LEVER = new SconceLeverBlock(
+            AbstractBlock.Properties.create(Material.MISCELLANEOUS)
+                    .zeroHardnessAndResistance()
+                    .doesNotBlockMovement()
+                    .setLightLevel((state) -> state.get(BlockStateProperties.LIT)? 14 : 0)
+                    .lootFrom(SCONCE_GREEN)
+                    .sound(SoundType.LANTERN), ParticleTypes.FLAME).setRegistryName(SCONCE_LEVER_NAME);
+    public static final Item SCONCE_LEVER_ITEM = new BlockItem(SCONCE_LEVER,
+            (new Item.Properties()).group(ItemGroup.REDSTONE)).setRegistryName(SCONCE_LEVER_NAME);
 
     //candle holder
     public static final String CANDLE_HOLDER_NAME = "candle_holder";
@@ -902,6 +958,9 @@ public class Registry {
     public static final Item CANDLE_HOLDER_ITEM = new BlockItem(CANDLE_HOLDER,
             (new Item.Properties()).group(ItemGroup.DECORATIONS)).setRegistryName(CANDLE_HOLDER_NAME);
     //placeholder candle
+
+
+
 
 
 }

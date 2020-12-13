@@ -12,11 +12,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
 
+import java.util.Random;
+
 
 public class WallLanternBlockTile extends TileEntity implements ITickableTileEntity {
     public float angle = 0;
     public float prevAngle = 0;
-    public int counter = 800;
+    public int counter = 800 + new Random().nextInt(80);;
     public BlockState lanternBlock = Blocks.AIR.getDefaultState();
     // lower counter is used by hitting animation
     public WallLanternBlockTile() {

@@ -49,7 +49,6 @@ public class FireflyGlowParticle extends SpriteTexturedParticle {
         }
     }
 
-    // TODO: add this to the entity clamp this to prevent black particle
     public int getBrightnessForRender(float partialTick) {
         float f = this.getScale(partialTick) / this.particleScale;
         f = MathHelper.clamp(f, 0.0F, 1.0F);

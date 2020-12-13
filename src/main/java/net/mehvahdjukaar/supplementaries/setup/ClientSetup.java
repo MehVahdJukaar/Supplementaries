@@ -101,6 +101,12 @@ public class ClientSetup {
         //item shelf
         RenderTypeLookup.setRenderLayer(Registry.ITEM_SHELF, RenderType.getCutout());
         ClientRegistry.bindTileEntityRenderer((TileEntityType<ItemShelfBlockTile>)Registry.ITEM_SHELF_TILE, ItemShelfBlockTileRenderer::new);
+        //cage
+        RenderTypeLookup.setRenderLayer(Registry.CAGE, RenderType.getCutout());
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<CageBlockTile>)Registry.CAGE_TILE, CageBlockTileRenderer::new);
+        //sconce lever
+        RenderTypeLookup.setRenderLayer(Registry.SCONCE_LEVER, RenderType.getCutout());
+
 
 
     }

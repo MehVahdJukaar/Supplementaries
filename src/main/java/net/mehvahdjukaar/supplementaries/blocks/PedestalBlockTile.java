@@ -109,7 +109,6 @@ public class PedestalBlockTile extends LockableLootTileEntity implements ISidedI
     public CompoundNBT getUpdateTag() {
         return this.write(new CompoundNBT());
     }
-    //TODO: look into this. client and server don't seem to be synced
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {

@@ -16,8 +16,8 @@ public class ModSetup {
 
 
         Spawns.registerSpawningStuff();
-        DeferredWorkQueue.runLater(Dispenser::registerBehaviors);
-
+        //DeferredWorkQueue.runLater(Dispenser::registerBehaviors);
+        Dispenser.registerBehaviors();
     }
 
 

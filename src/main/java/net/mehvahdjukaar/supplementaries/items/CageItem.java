@@ -1,16 +1,13 @@
 package net.mehvahdjukaar.supplementaries.items;
 
+import net.mehvahdjukaar.supplementaries.blocks.CageBlockTile;
 import net.mehvahdjukaar.supplementaries.blocks.JarBlock;
-import net.mehvahdjukaar.supplementaries.blocks.JarBlockTile;
-import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
@@ -18,11 +15,10 @@ import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
-import net.minecraft.util.DrinkHelper;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.*;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -30,8 +26,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class JarItem extends BlockItem {
-    public JarItem(Block blockIn, Properties properties) {
+public class CageItem extends BlockItem {
+    public CageItem(Block blockIn, Properties properties) {
         super(blockIn, properties);
     }
 
@@ -39,41 +35,6 @@ public class JarItem extends BlockItem {
     @OnlyIn(Dist.CLIENT)
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
-        CompoundNBT compoundnbt = stack.getChildTag("BlockEntityTag");
-        if (compoundnbt != null) {
-            if (compoundnbt.contains("LootTable", 8)) {
-                tooltip.add(new StringTextComponent("???????"));
-            }
-
-            if (compoundnbt.contains("Items", 9)) {
-                NonNullList<ItemStack> nonnulllist = NonNullList.withSize(27, ItemStack.EMPTY);
-                ItemStackHelper.loadAllItems(compoundnbt, nonnulllist);
-                int i = 0;
-                int j = 0;
-
-                for(ItemStack itemstack : nonnulllist) {
-                    if (!itemstack.isEmpty()) {
-                        ++j;
-                        if (i <= 4) {
-                            ++i;
-                            IFormattableTextComponent iformattabletextcomponent = itemstack.getDisplayName().deepCopy();
-
-                            String s = iformattabletextcomponent.getString();
-                            s = s.replace(" Bucket", "");
-                            s = s.replace(" Bottle", "");
-                            s = s.replace("Bucket of ", "");
-                            IFormattableTextComponent str = new StringTextComponent(s);
-
-                            str.appendString(" x").appendString(String.valueOf(itemstack.getCount()));
-                            tooltip.add(str);
-                        }
-                    }
-                }
-                if (j - i > 0) {
-                    tooltip.add((new TranslationTextComponent("container.shulkerBox.more", j - i)).mergeStyle(TextFormatting.ITALIC));
-                }
-            }
-        }
         //mob jar
         CompoundNBT com = stack.getChildTag("CachedJarMobValues");
         if (com != null){
@@ -118,8 +79,8 @@ public class JarItem extends BlockItem {
             World world = context.getWorld();
             BlockPos pos = context.getPos();
             TileEntity te = world.getTileEntity(pos);
-            if(te instanceof JarBlockTile){
-                JarBlockTile mobjar = ((JarBlockTile)te);
+            if(te instanceof CageBlockTile){
+                CageBlockTile mobjar = ((CageBlockTile)te);
                 CompoundNBT compound = context.getItem().getTag();
                 if(compound!=null&&compound.contains("JarMob")&&compound.contains("CachedJarMobValues")) {
                     CompoundNBT com2 = compound.getCompound("CachedJarMobValues");

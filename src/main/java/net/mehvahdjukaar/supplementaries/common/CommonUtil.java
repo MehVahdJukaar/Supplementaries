@@ -4,7 +4,8 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.boss.dragon.EnderDragonEntity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.passive.BatEntity;
 import net.minecraft.entity.passive.IFlyingAnimal;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
@@ -307,34 +308,59 @@ public class CommonUtil {
 
     //used for animation only (maybe caching item renderer later)
     public enum JarMobType {
-        DEFAULT(null),
-        SLIME(EntityType.SLIME),
-        MAGMA_CUBE(EntityType.MAGMA_CUBE),
-        BEE(EntityType.BEE),
-        BAT(EntityType.BAT),
-        VEX(EntityType.VEX),
-        ENDERMITE(EntityType.ENDERMITE),
-        PARROT(EntityType.PARROT);
+        DEFAULT(null,0,0),
+        SLIME("minecraft:slime",0,0),
+        MAGMA_CUBE("minecraft:magma_cube",0,0),
+        BEE("minecraft:bee",0,0),
+        BAT("minecraft:bat",0,0),
+        VEX("minecraft:vex",0,0.125f),
+        ENDERMITE("minecraft:endermite",0,0),
+        SILVERFISH("minecraft:silverfish",0,0.25f),
+        PARROT("minecraft:parrot",0,0),
+        CAT("minecraft:cat",0,0.1875f),
+        RABBIT("minecraft:rabbit",0,0),
+        CHICKEN("minecraft:chicken",0.25f,0.3125f),
+        PIXIE("iceandfire:pixie",0,0);
 
-        public final EntityType<?> type;
-        public final int a;
 
-        JarMobType(EntityType<?> type){
-            this.type=type;
-            this.a=1;
-        };
+        public final String type;
+        public final float adjHeight;
+        public final float adjWidth;
+
+        JarMobType(String type, float h, float w){
+            this.type = type;
+            this.adjHeight =h;
+            this.adjWidth = w;
+        }
 
         public static JarMobType getJarMobType(Entity e){
+            String name = e.getType().getRegistryName().toString();
             for (JarMobType n : JarMobType.values()){
-                if(e.getType().equals(n.type))return n;
+                if(name.equals(n.type)){
+                    int a = 1;
+                    return n;
+                }
             }
             return JarMobType.DEFAULT;
         }
     }
 
 
-    public static void saveJarMobItemNBT(ItemStack stack, Entity mob){
+    public static void saveJarMobItemNBT(ItemStack stack, Entity mob, float blockh, float blockw){
         if(mob==null)return;
+        if(mob instanceof LivingEntity){
+            LivingEntity le = (LivingEntity) mob;
+            le.prevRotationYawHead = 0;
+            le.rotationYawHead = 0;
+            le.limbSwingAmount = 0;
+            le.prevLimbSwingAmount = 0;
+            le.limbSwing = 0;
+        }
+        mob.rotationYaw = 0;
+        mob.prevRotationYaw = 0;
+        mob.prevRotationPitch = 0;
+        mob.rotationPitch = 0;
+        mob.extinguish();
         CompoundNBT mobCompound = new CompoundNBT();
         mob.writeUnlessPassenger(mobCompound);
         if (!mobCompound.isEmpty()) {
@@ -343,22 +369,28 @@ public class CommonUtil {
             mobCompound.remove("Leash");
             mobCompound.remove("UUID");
 
+
             CompoundNBT cacheCompound = new CompoundNBT();
 
-            boolean flag = mob.hasNoGravity() || mob instanceof IFlyingAnimal;
+            boolean flag = mob.hasNoGravity() || mob instanceof IFlyingAnimal||mob.doesEntityNotTriggerPressurePlate();
+
+            JarMobType type = JarMobType.getJarMobType(mob);
+
             float s = 1;
-            float w = mob.getWidth();
-            float h = mob.getHeight();
-            float maxh = flag ? 0.5f : 0.75f;
-            float maxw = 0.375f;
+            float w = mob.getWidth() ;
+            float h = mob.getHeight() ;
+            //float maxh = flag ? 0.5f : 0.75f;
+            //1 px border
+            float maxh = blockh - (flag ? 0.25f : 0.125f) - type.adjHeight;
+            float maxw = blockw - 0.25f - type.adjWidth;
             if (w > maxw || h > maxh) {
                 if (w - maxw > h - maxh)
                     s = maxw / w;
                 else
                     s = maxh / h;
             }
-
-            float y = flag ? 0.4375f - mob.getHeight() * s / 2f : 0.0625f;
+            //TODO: rewrite this to account for adjValues
+            float y = flag ? (blockh/2f) - h * s / 2f : 0.0626f;
 
             cacheCompound.putFloat("Scale", s);
             cacheCompound.putFloat("YOffset", y);
@@ -367,6 +399,8 @@ public class CommonUtil {
             stack.setTagInfo("JarMob", mobCompound);
         }
     }
+
+
 
 
 

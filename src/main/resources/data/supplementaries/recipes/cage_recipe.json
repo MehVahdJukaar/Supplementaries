@@ -2,20 +2,23 @@
   "group": "supplementaries",
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "212",
+    "111",
     "2 2",
-    "222"
+    "000"
   ],
   "key": {
-    "1": {
+    "0": {
       "tag": "minecraft:wooden_slabs"
     },
+    "1": {
+      "item": "minecraft:iron_ingot"
+    },
     "2": {
-      "item": "minecraft:glass"
+      "item": "minecraft:iron_bars"
     }
   },
   "result": {
-    "item": "supplementaries:jar",
+    "item": "supplementaries:cage",
     "count": 1
   }
 }

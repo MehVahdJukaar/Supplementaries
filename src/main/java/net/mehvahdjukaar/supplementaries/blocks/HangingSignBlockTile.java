@@ -32,6 +32,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
+import java.util.Random;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
@@ -43,8 +44,7 @@ public class HangingSignBlockTile extends TileEntity implements ITickableTileEnt
     private NonNullList<ItemStack> stacks = NonNullList.withSize(1, ItemStack.EMPTY);
     public float angle = 0;
     public float prevAngle = 0;
-    public int counter = 800;
-    //TODO: add random offset here^
+    public int counter = 800 + new Random().nextInt(80);
     //lower counter is used by hitting animation
     public final ITextComponent[] signText = new ITextComponent[]{new StringTextComponent(""), new StringTextComponent(""),
             new StringTextComponent(""), new StringTextComponent(""), new StringTextComponent("")};

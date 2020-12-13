@@ -45,6 +45,9 @@
   "block.supplementaries.firefly_jar": "Jarro com Vaga-Lume",
   "item.supplementaries.firefly": "Ovo Gerador de Vaga-Lume",
 
+  "block.supplementaries.sconce_lever": "Luminária com Alavanca",
+  "block.supplementaries.cage": "Jaula de Mobs",
+  "block.supplementaries.stone_lamp" : "Lâmpada de Pedra",
   "block.supplementaries.sconce_green": "Arandela Verde",
   "block.supplementaries.candelabra_silver": "Candelabro de Prata",
   "block.supplementaries.item_shelf": "Prateleira de Itens",

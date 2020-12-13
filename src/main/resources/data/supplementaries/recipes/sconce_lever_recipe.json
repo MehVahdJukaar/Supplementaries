@@ -2,20 +2,20 @@
   "group": "supplementaries",
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "212",
-    "2 2",
-    "222"
+    "   ",
+    " 1 ",
+    " 2 "
   ],
   "key": {
     "1": {
-      "tag": "minecraft:wooden_slabs"
+      "item": "supplementaries:sconce"
     },
     "2": {
-      "item": "minecraft:glass"
+      "item": "minecraft:redstone_dust"
     }
   },
   "result": {
-    "item": "supplementaries:jar",
+    "item": "supplementaries:sconce_lever",
     "count": 1
   }
 }

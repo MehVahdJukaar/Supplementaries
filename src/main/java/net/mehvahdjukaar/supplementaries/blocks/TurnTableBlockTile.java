@@ -133,7 +133,6 @@ public class TurnTableBlockTile extends TileEntity implements ITickableTileEntit
                         return true;
                     }
                 }
-                // TODO:add sign post support
             }
             //signs and banners
             else if (_bs.hasProperty(BlockStateProperties.ROTATION_0_15)){

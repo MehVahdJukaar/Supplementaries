@@ -47,6 +47,8 @@ public class ServerConfigs {
         public static ForgeConfigSpec.ConfigValue<List<? extends String>> MOB_JAR_ALLOWED_MOBS;
         public static ForgeConfigSpec.ConfigValue<List<? extends String>> MOB_JAR_TINTED_ALLOWED_MOBS;
 
+        public static ForgeConfigSpec.ConfigValue<List<? extends String>> CAGE_ALLOWED_MOBS;
+
         public static ForgeConfigSpec.BooleanValue NOTICE_BOARDS_UNRESTRICTED;
 
         private static void  init(ForgeConfigSpec.Builder builder){
@@ -105,15 +107,28 @@ public class ServerConfigs {
                     .define("drink_from_jar",true);
 
 
-            List<String> defaultMobs = Arrays.asList("minecraft:slime","minecraft:parrot",
-                    "minecraft:bee","minecraft:magma_cube");
-            MOB_JAR_ALLOWED_MOBS = builder.comment("catchable mobs")
+            List<String> defaultMobs = Arrays.asList("minecraft:slime",
+                    "minecraft:bee","minecraft:magma_cube","iceandfire:pixie");
+            MOB_JAR_ALLOWED_MOBS = builder.comment("catchable mobs \n"+
+                    "BE VERY CAREFUL WITH THESE: SOME MOBS MIGHT NOT WORK OF EVEN CRASH THE GAME.\n"+
+                    "That's due to a vanilla bug. Check in a new world if the mobs you added here work before adding to a modpack")
                     .defineList("mobs", defaultMobs,s -> true);
-            List<String> defaultMobsTinted = Arrays.asList("minecraft:endermite","minecraft:slime","minecraft:parrot",
-                    "minecraft:bee","minecraft:magma_cube", "minecraft:vex");
+            List<String> defaultMobsTinted = Arrays.asList("minecraft:endermite","minecraft:slime",
+                    "minecraft:bee","minecraft:magma_cube", "minecraft:vex","iceandfire:pixie");
             MOB_JAR_TINTED_ALLOWED_MOBS = builder.comment("tinted jar catchable mobs")
                     .defineList("tinted_jar_mobs", defaultMobsTinted,s -> true);
             builder.pop();
+
+            //cage
+            builder.push("cage");
+            List<String> defaultCageMobs = Arrays.asList("minecraft:endermite","minecraft:slime","minecraft:parrot",
+                    "minecraft:bee","minecraft:magma_cube", "minecraft:vex","minecraft:rabbit", "minecraft:cat",
+                    "minecraft:chicken","minecraft:bat","iceandfire:pixie");
+            CAGE_ALLOWED_MOBS = builder.comment("catchable mobs")
+                    .defineList("cage_mobs", defaultCageMobs,s -> true);
+
+            builder.pop();
+
             //notice boards
             builder.push("notice_board");
             NOTICE_BOARDS_UNRESTRICTED = builder.comment("allow notice boards to accept and display any item, not just maps and books")
@@ -173,7 +188,7 @@ public class ServerConfigs {
                     "check client configs come more animation settings")
                     .defineInRange("period", 65, 1, 200);
             FIREFLY_SPEED = builder.comment("firefly flying speed")
-                    .defineInRange("speed", 0.25, 0, 10);
+                    .defineInRange("speed", 0.3, 0, 10);
 
             builder.pop();
 
@@ -269,6 +284,7 @@ public class ServerConfigs {
         public static boolean NOTICE_BOARDS_UNRESTRICTED;
         public static List<? extends String> MOB_JAR_ALLOWED_MOBS;
         public static List<? extends String> MOB_JAR_TINTED_ALLOWED_MOBS;
+        public static List<? extends String> CAGE_ALLOWED_MOBS;
         //entity
         public static int FIREFLY_PERIOD;
         public static double FIREFLY_SPEED;
@@ -304,6 +320,8 @@ public class ServerConfigs {
 
             MOB_JAR_ALLOWED_MOBS = block.MOB_JAR_ALLOWED_MOBS.get();
             MOB_JAR_TINTED_ALLOWED_MOBS = block.MOB_JAR_TINTED_ALLOWED_MOBS.get();
+
+            CAGE_ALLOWED_MOBS = block.CAGE_ALLOWED_MOBS.get();
 
             FIREFLY_PERIOD = entity.FIREFLY_PERIOD.get();
             FIREFLY_SPEED = entity.FIREFLY_SPEED.get();

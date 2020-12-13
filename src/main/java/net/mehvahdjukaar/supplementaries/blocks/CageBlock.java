@@ -6,111 +6,47 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.material.PushReaction;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootContext;
 import net.minecraft.loot.LootParameters;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Mirror;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
 import java.util.Collections;
 import java.util.List;
 
 
-public class JarBlock extends Block {
-    protected static final VoxelShape SHAPE = VoxelShapes.or(VoxelShapes.create(0.1875D, 0D, 0.1875D, 0.8125D, 0.875D, 0.8125D),
-            VoxelShapes.create(0.3125, 0.875, 0.3125, 0.6875, 1, 0.6875));
+public class CageBlock extends Block {
+    protected static final VoxelShape SHAPE = Block.makeCuboidShape(1D,0D,1D,15.0D,16.0D,15.0D);
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
     public static final IntegerProperty LIGHT_LEVEL = CommonUtil.LIGHT_LEVEL_0_15;
-    public JarBlock(Properties properties) {
+    public CageBlock(Properties properties) {
         super(properties);
         this.setDefaultState(this.stateContainer.getBaseState().with(LIGHT_LEVEL, 0).with(FACING, Direction.NORTH));
     }
 
-    @Override
-    public float[] getBeaconColorMultiplier(BlockState state, IWorldReader world, BlockPos pos, BlockPos beaconPos) {
-        TileEntity tileentity = world.getTileEntity(pos);
-        if (tileentity instanceof JarBlockTile) {
-            JarBlockTile te = (JarBlockTile) tileentity;
-            int color = te.color;
-            if (te.isEmpty() || color == 0x000000)
-                return null;
-            float r = (float) ((color >> 16 & 255)) / 255.0F;
-            float g = (float) ((color >> 8 & 255)) / 255.0F;
-            float b = (float) ((color & 255)) / 255.0F;
-            return new float[]{r, g, b};
-        }
-        return null;
-    }
-
-    //TODO: add ai path nodes to all blocks
-
-    @Override
-    public PathNodeType getAiPathNodeType(BlockState state, IBlockReader world, BlockPos pos,  MobEntity entity) {
-        return PathNodeType.BLOCKED;
-    }
-
-    @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
-                                             BlockRayTraceResult hit) {
-        TileEntity tileentity = worldIn.getTileEntity(pos);
-        if (tileentity instanceof JarBlockTile) {
-            // make te do the work
-            JarBlockTile te = (JarBlockTile) tileentity;
-            if (te.handleInteraction(player, handIn)) {
-                if (!worldIn.isRemote())
-                    te.markDirty();
-                return ActionResultType.SUCCESS;
-            }
-        }
-        return ActionResultType.PASS;
-    }
-
-    @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        if (stack.hasDisplayName()) {
-            TileEntity tileentity = worldIn.getTileEntity(pos);
-            if (tileentity instanceof JarBlockTile) {
-                ((JarBlockTile) tileentity).setCustomName(stack.getDisplayName());
-            }
-        }
-    }
-
-    public ItemStack getJarItem(JarBlockTile te){
+    public ItemStack getCageItem(CageBlockTile te){
         ItemStack returnStack;
-        boolean flag = this.getBlock() ==  Registry.JAR;
-        if(te.isEmpty()&&te.hasNoMob()){
-            returnStack = new ItemStack(flag ? Registry.EMPTY_JAR_ITEM : Registry.EMPTY_JAR_ITEM_TINTED);
+        if(te.hasNoMob()){
+            returnStack = new ItemStack(Registry.EMPTY_CAGE_ITEM);
         }
         else{
-            returnStack = new ItemStack(flag ? Registry.JAR_ITEM : Registry.JAR_ITEM_TINTED);
-            CompoundNBT compoundnbt = te.saveToNbt(new CompoundNBT());
-            if (!compoundnbt.isEmpty())
-                returnStack.setTagInfo("BlockEntityTag", compoundnbt);
-            //TODO: learn how to use BlockEntityTag
-            CommonUtil.saveJarMobItemNBT(returnStack, te.mob, 0.875f, 0.625f);
-        }
-        if(te.hasCustomName()){
-            returnStack.setDisplayName(te.getCustomName());
+            returnStack = new ItemStack(Registry.CAGE_ITEM);
+            CommonUtil.saveJarMobItemNBT(returnStack, te.mob, 1f, 0.875f);
         }
         return returnStack;
     }
@@ -119,17 +55,15 @@ public class JarBlock extends Block {
     @Override
     public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
         TileEntity tileentity = worldIn.getTileEntity(pos);
-        if (tileentity instanceof JarBlockTile) {
-            JarBlockTile tile = (JarBlockTile) tileentity;
+        if (tileentity instanceof CageBlockTile) {
+            CageBlockTile tile = (CageBlockTile) tileentity;
             if (!worldIn.isRemote && player.isCreative()) {
 
-                ItemStack itemstack = this.getJarItem(tile);
+                ItemStack itemstack = this.getCageItem(tile);
 
                 ItemEntity itementity = new ItemEntity(worldIn, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5, itemstack);
                 itementity.setDefaultPickupDelay();
                 worldIn.addEntity(itementity);
-            } else {
-                tile.fillWithLoot(player);
             }
         }
         super.onBlockHarvested(worldIn, pos, state, player);
@@ -139,10 +73,10 @@ public class JarBlock extends Block {
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         TileEntity tileentity = builder.get(LootParameters.BLOCK_ENTITY);
-        if (tileentity instanceof JarBlockTile) {
-            JarBlockTile tile = (JarBlockTile) tileentity;
+        if (tileentity instanceof CageBlockTile) {
+            CageBlockTile tile = (CageBlockTile) tileentity;
 
-            ItemStack itemstack = this.getJarItem(tile);
+            ItemStack itemstack = this.getCageItem(tile);
 
             return Collections.singletonList(itemstack);
         }
@@ -154,9 +88,9 @@ public class JarBlock extends Block {
     public ItemStack getItem(IBlockReader worldIn, BlockPos pos, BlockState state) {
 
         TileEntity tileentity = worldIn.getTileEntity(pos);
-        if (tileentity instanceof JarBlockTile) {
-            JarBlockTile tile = (JarBlockTile) tileentity;
-            return this.getJarItem(tile);
+        if (tileentity instanceof CageBlockTile) {
+            CageBlockTile tile = (CageBlockTile) tileentity;
+            return this.getCageItem(tile);
         }
         return super.getItem(worldIn, pos, state);
     }
@@ -190,7 +124,7 @@ public class JarBlock extends Block {
 
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new JarBlockTile();
+        return new CageBlockTile();
     }
 
     @Override
@@ -203,20 +137,6 @@ public class JarBlock extends Block {
     @Override
     public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
         return state.get(LIGHT_LEVEL);
-    }
-
-    @Override
-    public boolean hasComparatorInputOverride(BlockState state) {
-        return true;
-    }
-
-    @Override
-    public int getComparatorInputOverride(BlockState blockState, World world, BlockPos pos) {
-        TileEntity tileentity = world.getTileEntity(pos);
-        if (tileentity instanceof JarBlockTile)
-            return Container.calcRedstoneFromInventory((JarBlockTile) tileentity);
-        else
-            return 0;
     }
 
     public BlockState rotate(BlockState state, Rotation rot) {

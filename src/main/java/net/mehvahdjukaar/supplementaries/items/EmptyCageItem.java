@@ -10,12 +10,11 @@ import net.minecraft.entity.monster.SlimeEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.util.*;
 
-public class EmptyJarItem extends BlockItem {
+public class EmptyCageItem extends BlockItem {
 
-    public EmptyJarItem(Block blockIn, Properties properties) {
+    public EmptyCageItem(Block blockIn, Properties properties) {
         super(blockIn, properties);
     }
 
@@ -27,27 +26,23 @@ public class EmptyJarItem extends BlockItem {
         if(n==null)return ActionResultType.PASS;
         String name = n.toString();
         //Fireflies
-        boolean flag = this.getItem() == Registry.EMPTY_JAR_ITEM;
-        boolean isFirefly = entity.getType().getRegistryName().getPath().toLowerCase().contains("firefl") && flag;
-        if(!isFirefly) {
-            if (flag ? !ServerConfigs.cached.MOB_JAR_ALLOWED_MOBS.contains(name) :
-                    !ServerConfigs.cached.MOB_JAR_TINTED_ALLOWED_MOBS.contains(name)) {
-                return ActionResultType.PASS;
-                //TODO: figure out diccerence between ActionResultType.SUCCESS and CONSUME
-            }
+
+        if (!ServerConfigs.cached.CAGE_ALLOWED_MOBS.contains(name)) {
+            return ActionResultType.PASS;
+            //TODO: figure out difference between ActionResultType.SUCCESS and CONSUME
         }
 
         if(entity instanceof SlimeEntity && ((SlimeEntity)entity).getSlimeSize()>1) return ActionResultType.PASS;
 
         if(player.world.isRemote)return ActionResultType.SUCCESS;
-        ItemStack returnStack = new ItemStack(isFirefly?  Registry.FIREFLY_JAR_ITEM : (flag ? Registry.JAR_ITEM : Registry.JAR_ITEM_TINTED));
-        if(!isFirefly) {
+        ItemStack returnStack = new ItemStack(Registry.CAGE_ITEM);
 
-            if (stack.hasDisplayName()) returnStack.setDisplayName(stack.getDisplayName());
+        if (stack.hasDisplayName()) returnStack.setDisplayName(stack.getDisplayName());
 
-            CommonUtil.saveJarMobItemNBT(returnStack, entity, 0.875f, 0.625f);
-        }
-        player.setHeldItem(player.getActiveHand(), DrinkHelper.fill(stack.copy(),player,returnStack,isFirefly));
+        CommonUtil.saveJarMobItemNBT(returnStack, entity, 1f, 0.875f);
+
+        player.setHeldItem(player.getActiveHand(), DrinkHelper.fill(stack.copy(),player,returnStack,false));
+        //TODO: cage sound here
         player.world.playSound(null, player.getPosition(),  SoundEvents.ITEM_BOTTLE_FILL_DRAGONBREATH, SoundCategory.BLOCKS,1,1);
 
         entity.remove();

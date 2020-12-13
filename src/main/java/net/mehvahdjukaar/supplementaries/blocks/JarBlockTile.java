@@ -6,13 +6,14 @@ import net.mehvahdjukaar.supplementaries.common.CommonUtil.JarMobType;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.renderer.entity.PigRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.monster.SlimeEntity;
 import net.minecraft.entity.passive.BeeEntity;
+import net.minecraft.entity.passive.CatEntity;
 import net.minecraft.entity.passive.ParrotEntity;
+import net.minecraft.entity.passive.RabbitEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -65,7 +66,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
     public float jumpY = 0;
     public float prevJumpY = 0;
     public float yVel = 0;
-    private Random rand = new Random();
+    private final Random rand = new Random();
     public JarMobType animationType = CommonUtil.JarMobType.DEFAULT;
 
     public JarBlockTile() {
@@ -129,7 +130,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
         boolean isbowl = handitem == Items.BOWL;
         boolean isempty = handstack.isEmpty();
         // eat food
-        Boolean candrinkfromjar = ServerConfigs.cached.JAR_EAT;
+        boolean candrinkfromjar = ServerConfigs.cached.JAR_EAT;
         if(isempty && !player.isSneaking()) {
             ItemStack stack = this.getStackInSlot(0);
             Item it = stack.getItem();
@@ -159,6 +160,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
                         }
                     }
                     this.extractItem(1);
+                    this.world.playSound(player,pos, SoundEvents.ENTITY_GENERIC_DRINK, SoundCategory.BLOCKS,1,1);
                     return true;
                 }
                 //extract cookies with empty hand
@@ -179,6 +181,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
                     }
                 }
                 this.extractItem(1);
+                this.world.playSound(null,pos, SoundEvents.ENTITY_GENERIC_DRINK, SoundCategory.BLOCKS,1,1);
                 return true;
 
             }
@@ -510,7 +513,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
                         this.jumpY = Math.max(0, this.jumpY + this.yVel);
                     if (jumpY != 0) {
                         //decelerate
-                        this.yVel = this.yVel - 0.006f;
+                        this.yVel = this.yVel - 0.010f;
                     }
                     //on ground
                     else {
@@ -521,7 +524,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
                         }
                         if (this.rand.nextFloat() > 0.985) {
                             //jump
-                            this.yVel = 0.05f;
+                            this.yVel = 0.08f;
                             slime.squishAmount = 1.0F;
                         }
                     }
@@ -538,14 +541,45 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
                     break;
                 case PARROT:
                     ParrotEntity parrot = (ParrotEntity) this.mob;
-                    //parrot.isAirBorne =true;
-                    //parrot.setPartying(this.pos, true);
-                    //parrot.setOnGround(false);
-                    //parrot.setAir(1);
-
                     parrot.livingTick();
                     parrot.setOnGround(false);
-
+                    break;
+                case PIXIE:
+                    LivingEntity le = ((LivingEntity)this.mob);
+                    le.livingTick();
+                    le.lastTickPosY=this.pos.getY();
+                    le.setPosition(le.getPosX(),this.pos.getY(),le.getPosZ());
+                    break;
+                case RABBIT:
+                    RabbitEntity rabbit = (RabbitEntity) this.mob;
+                    //move
+                    if (this.yVel != 0)
+                        this.jumpY = Math.max(0, this.jumpY + this.yVel);
+                    if (jumpY != 0) {
+                        //decelerate
+                        this.yVel = this.yVel - 0.017f;
+                    }
+                    //on ground
+                    else {
+                        if (this.yVel != 0) {
+                            //land
+                            this.yVel = 0;
+                        }
+                        if (this.rand.nextFloat() > 0.985) {
+                            //jump
+                            this.yVel = 0.093f;
+                            rabbit.startJumping();
+                        }
+                    }
+                    //handles animation without using reflections
+                    rabbit.livingTick();
+                    break;
+                case CAT:
+                    CatEntity cat = (CatEntity) this.mob;
+                    //cat.func_233687_w_(true);
+                    cat.setSleeping(true);
+                    break;
+                //TODO: move jump position & stuff inside entity. merge with jar one
             }
         }
     }
@@ -558,10 +592,18 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
             if(flag) entity = new BeeEntity(EntityType.BEE, this.world);
         }
         //TODO: add shadows
-        entity.setPosition(this.pos.getX()+0.5,this.pos.getY()+0.5+0.0625, this.pos.getZ()+0.5);
-        entity.lastTickPosX=this.pos.getX()+0.5;
-        entity.lastTickPosY=this.pos.getY()+0.5+0.0625;
-        entity.lastTickPosZ=this.pos.getZ()+0.5;
+        double px = this.pos.getX()+0.5;
+        double py = this.pos.getY()+0.5+0.0625;
+        double pz = this.pos.getZ()+0.5;
+        entity.setPosition(px, py, pz);
+        //entity.setMotion(0,0,0);
+        entity.lastTickPosX=px;
+        entity.lastTickPosY=py;
+        entity.lastTickPosZ=pz;
+        entity.prevPosX=px;
+        entity.prevPosY=py;
+        entity.prevPosZ=pz;
+
         this.mob = entity;
         this.animationType = CommonUtil.JarMobType.getJarMobType(entity);
         this.entityChanged=false;

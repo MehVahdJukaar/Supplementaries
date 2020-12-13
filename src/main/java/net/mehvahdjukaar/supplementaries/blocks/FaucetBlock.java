@@ -26,6 +26,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import java.lang.reflect.Field;
@@ -133,7 +134,10 @@ public class FaucetBlock extends Block implements  IWaterLoggable{
                 || ((backblock.getBlock() instanceof CauldronBlock) && backblock.getComparatorInputOverride(world, backpos) > 0));
         BlockState downstate = world.getBlockState(pos.down());
         boolean hasjar = downstate.getBlock() instanceof JarBlock;
-        boolean haswater = ishoney || iswater || isjarliquid;
+        boolean isTank = backblock instanceof IFluidTank && !((IFluidTank)backblock).getFluid().isEmpty();
+        boolean haswater = ishoney || iswater || isjarliquid || isTank;
+
+
         if (ispowered != state.get(POWERED) || haswater != state.get(HAS_WATER) || hasjar != state.get(HAS_JAR) || toggle||backjar != state.get(EXTENDED)) {
             world.setBlockState(pos,
                     state.with(POWERED, ispowered).with(HAS_WATER, haswater).with(HAS_JAR, hasjar).with(EXTENDED, backjar)
@@ -148,8 +152,12 @@ public class FaucetBlock extends Block implements  IWaterLoggable{
             if (tileentity instanceof JarBlockTile) {
                 newcolor = ((JarBlockTile) tileentity).color;
             }
-        } else if (iswater)
+        }
+        else if (iswater)
             newcolor = -1;
+        else if (isTank){
+            newcolor = ((IFluidTank)backblock).getFluid().getFluid().getAttributes().getColor();
+        }
         if (newcolor != -2) {
             TileEntity tileentity = world.getTileEntity(pos);
             if (tileentity instanceof FaucetBlockTile) {

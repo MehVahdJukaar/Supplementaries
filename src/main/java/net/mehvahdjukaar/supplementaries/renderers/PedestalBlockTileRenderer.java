@@ -40,7 +40,7 @@ public class PedestalBlockTileRenderer extends TileEntityRenderer<PedestalBlockT
 
     protected void renderName(ITextComponent displayNameIn, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
 
-        double f = 0.625; //height
+        double f = 0.875; //height
         int i = 0;
 
         FontRenderer fontrenderer = this.renderDispatcher.getFontRenderer();
@@ -68,7 +68,7 @@ public class PedestalBlockTileRenderer extends TileEntityRenderer<PedestalBlockT
                        int combinedOverlayIn) {
 
         if(!tile.isEmpty()){
-
+            //TODO: optimize transforms
             matrixStackIn.push();
             matrixStackIn.translate(0.5, 1.125, 0.5);
 
