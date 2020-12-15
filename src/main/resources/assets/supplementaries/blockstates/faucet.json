@@ -1,124 +1,124 @@
 {
   "variants": {
-    "facing=north,enabled=false,has_jar=false,extended=false": {
+    "facing=north,enabled=false,has_jar=false,attached=false": {
       "model": "supplementaries:block/faucet"
     },
-    "facing=north,enabled=true,has_jar=false,extended=false": {
+    "facing=north,enabled=true,has_jar=false,attached=false": {
       "model": "supplementaries:block/faucet_on"
     },
-    "facing=east,enabled=false,has_jar=false,extended=false": {
+    "facing=east,enabled=false,has_jar=false,attached=false": {
       "model": "supplementaries:block/faucet",
       "y": 90
     },
-    "facing=east,enabled=true,has_jar=false,extended=false": {
+    "facing=east,enabled=true,has_jar=false,attached=false": {
       "model": "supplementaries:block/faucet_on",
       "y": 90
     },
-    "facing=south,enabled=false,has_jar=false,extended=false": {
+    "facing=south,enabled=false,has_jar=false,attached=false": {
       "model": "supplementaries:block/faucet",
       "y": 180
     },
-    "facing=south,enabled=true,has_jar=false,extended=false": {
+    "facing=south,enabled=true,has_jar=false,attached=false": {
       "model": "supplementaries:block/faucet_on",
       "y": 180
     },
-    "facing=west,enabled=false,has_jar=false,extended=false": {
+    "facing=west,enabled=false,has_jar=false,attached=false": {
       "model": "supplementaries:block/faucet",
       "y": 270
     },
-    "facing=west,enabled=true,has_jar=false,extended=false": {
+    "facing=west,enabled=true,has_jar=false,attached=false": {
       "model": "supplementaries:block/faucet_on",
       "y": 270
     },
-    "facing=north,enabled=false,has_jar=true,extended=false": {
+    "facing=north,enabled=false,has_jar=true,attached=false": {
       "model": "supplementaries:block/faucet_jar"
     },
-    "facing=north,enabled=true,has_jar=true,extended=false": {
+    "facing=north,enabled=true,has_jar=true,attached=false": {
       "model": "supplementaries:block/faucet_jar_on"
     },
-    "facing=east,enabled=false,has_jar=true,extended=false": {
+    "facing=east,enabled=false,has_jar=true,attached=false": {
       "model": "supplementaries:block/faucet_jar",
       "y": 90
     },
-    "facing=east,enabled=true,has_jar=true,extended=false": {
+    "facing=east,enabled=true,has_jar=true,attached=false": {
       "model": "supplementaries:block/faucet_jar_on",
       "y": 90
     },
-    "facing=south,enabled=false,has_jar=true,extended=false": {
+    "facing=south,enabled=false,has_jar=true,attached=false": {
       "model": "supplementaries:block/faucet_jar",
       "y": 180
     },
-    "facing=south,enabled=true,has_jar=true,extended=false": {
+    "facing=south,enabled=true,has_jar=true,attached=false": {
       "model": "supplementaries:block/faucet_jar_on",
       "y": 180
     },
-    "facing=west,enabled=false,has_jar=true,extended=false": {
+    "facing=west,enabled=false,has_jar=true,attached=false": {
       "model": "supplementaries:block/faucet_jar",
       "y": 270
     },
-    "facing=west,enabled=true,has_jar=true,extended=false": {
+    "facing=west,enabled=true,has_jar=true,attached=false": {
       "model": "supplementaries:block/faucet_jar_on",
       "y": 270
     },
 
 
-    "facing=north,enabled=false,has_jar=false,extended=true": {
+    "facing=north,enabled=false,has_jar=false,attached=true": {
       "model": "supplementaries:block/faucet_glass"
     },
-    "facing=north,enabled=true,has_jar=false,extended=true": {
+    "facing=north,enabled=true,has_jar=false,attached=true": {
       "model": "supplementaries:block/faucet_glass_on"
     },
-    "facing=east,enabled=false,has_jar=false,extended=true": {
+    "facing=east,enabled=false,has_jar=false,attached=true": {
       "model": "supplementaries:block/faucet_glass",
       "y": 90
     },
-    "facing=east,enabled=true,has_jar=false,extended=true": {
+    "facing=east,enabled=true,has_jar=false,attached=true": {
       "model": "supplementaries:block/faucet_glass_on",
       "y": 90
     },
-    "facing=south,enabled=false,has_jar=false,extended=true": {
+    "facing=south,enabled=false,has_jar=false,attached=true": {
       "model": "supplementaries:block/faucet_glass",
       "y": 180
     },
-    "facing=south,enabled=true,has_jar=false,extended=true": {
+    "facing=south,enabled=true,has_jar=false,attached=true": {
       "model": "supplementaries:block/faucet_glass_on",
       "y": 180
     },
-    "facing=west,enabled=false,has_jar=false,extended=true": {
+    "facing=west,enabled=false,has_jar=false,attached=true": {
       "model": "supplementaries:block/faucet_glass",
       "y": 270
     },
-    "facing=west,enabled=true,has_jar=false,extended=true": {
+    "facing=west,enabled=true,has_jar=false,attached=true": {
       "model": "supplementaries:block/faucet_glass_on",
       "y": 270
     },
-    "facing=north,enabled=false,has_jar=true,extended=true": {
+    "facing=north,enabled=false,has_jar=true,attached=true": {
       "model": "supplementaries:block/faucet_jar_glass"
     },
-    "facing=north,enabled=true,has_jar=true,extended=true": {
+    "facing=north,enabled=true,has_jar=true,attached=true": {
       "model": "supplementaries:block/faucet_jar_glass_on"
     },
-    "facing=east,enabled=false,has_jar=true,extended=true": {
+    "facing=east,enabled=false,has_jar=true,attached=true": {
       "model": "supplementaries:block/faucet_jar_glass",
       "y": 90
     },
-    "facing=east,enabled=true,has_jar=true,extended=true": {
+    "facing=east,enabled=true,has_jar=true,attached=true": {
       "model": "supplementaries:block/faucet_jar_glass_on",
       "y": 90
     },
-    "facing=south,enabled=false,has_jar=true,extended=true": {
+    "facing=south,enabled=false,has_jar=true,attached=true": {
       "model": "supplementaries:block/faucet_jar_glass",
       "y": 180
     },
-    "facing=south,enabled=true,has_jar=true,extended=true": {
+    "facing=south,enabled=true,has_jar=true,attached=true": {
       "model": "supplementaries:block/faucet_jar_glass_on",
       "y": 180
     },
-    "facing=west,enabled=false,has_jar=true,extended=true": {
+    "facing=west,enabled=false,has_jar=true,attached=true": {
       "model": "supplementaries:block/faucet_jar_glass",
       "y": 270
     },
-    "facing=west,enabled=true,has_jar=true,extended=true": {
+    "facing=west,enabled=true,has_jar=true,attached=true": {
       "model": "supplementaries:block/faucet_jar_glass_on",
       "y": 270
     }

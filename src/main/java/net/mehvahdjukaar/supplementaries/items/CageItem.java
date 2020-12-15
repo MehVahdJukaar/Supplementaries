@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.items;
 
+import net.mehvahdjukaar.supplementaries.blocks.CageBlock;
 import net.mehvahdjukaar.supplementaries.blocks.CageBlockTile;
 import net.mehvahdjukaar.supplementaries.blocks.JarBlock;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
@@ -58,9 +59,8 @@ public class CageItem extends BlockItem {
                     entity.setPositionAndRotation(v.getX(), v.getY(), v.getZ(), context.getPlacementYaw(), 0);
                     world.addEntity(entity);
                 }
-                boolean flag = this.getItem() == Registry.JAR_ITEM;
                 if(!context.getPlayer().isCreative()) {
-                   ItemStack returnItem = new ItemStack(flag ? Registry.EMPTY_JAR_ITEM : Registry.EMPTY_JAR_ITEM_TINTED);
+                   ItemStack returnItem = new ItemStack(((BlockItem)stack.getItem()).getBlock().asItem());
                    if(stack.hasDisplayName())returnItem.setDisplayName(stack.getDisplayName());
                    context.getPlayer().setHeldItem(context.getHand(), returnItem);
                 }
@@ -89,12 +89,16 @@ public class CageItem extends BlockItem {
                     mobjar.entityData = com;
                     mobjar.yOffset = com2.getFloat("YOffset");
                     mobjar.scale = com2.getFloat("Scale");
-                    //TODO: rewrite this check
-                    if (!world.isRemote && (com.getString("id").equals("minecraft:endermite")||com.getString("id").equals("iceandfire:pixie"))){
-                        BlockState state = world.getBlockState(pos);
-                        if(state.get(JarBlock.LIGHT_LEVEL)<5){
-                            world.setBlockState(pos,state.with(JarBlock.LIGHT_LEVEL, 5));
+                    if (!world.isRemote){
+                        int light = 0;
+                        //TODO move to enum
+                        if(com.getString("id").equals("minecraft:endermite"))light = 5;
+                        else if(com.getString("id").equals("iceandfire:pixie"))light = 10;
+                        if(light!=0) {
+                            BlockState state = world.getBlockState(pos);
+                            world.setBlockState(pos, state.with(JarBlock.LIGHT_LEVEL, light));
                         }
+
                     }
                     mobjar.markDirty();
                     //mobjar.updateMob();

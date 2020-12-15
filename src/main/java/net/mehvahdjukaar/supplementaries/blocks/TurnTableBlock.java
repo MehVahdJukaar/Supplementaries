@@ -143,6 +143,7 @@ public class TurnTableBlock  extends Block {
     @Override
     public void onEntityWalk(World world, BlockPos pos, Entity e) {
         super.onEntityWalk(world, pos, e);
+        if(!ServerConfigs.cached.TURN_TABLE_ROTATE_ENTITIES)return;
         BlockState state = world.getBlockState(pos);
         if (state.get(POWERED) && state.get(FACING) == Direction.UP) {
             float ANGLE_INCREMENT = 90f / (float)(ServerConfigs.cached.TURN_TABLE_PERIOD-1);

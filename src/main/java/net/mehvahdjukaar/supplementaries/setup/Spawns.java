@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.entities.FireflyEntity;
 import net.minecraft.entity.EntityClassification;
@@ -21,6 +22,7 @@ public class Spawns {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void addSpawn(BiomeLoadingEvent event) {
+        if(!RegistryConfigs.reg.FIREFLY_ENABLED.get())return;
         if (event.getName() != null) {
             Biome biome = ForgeRegistries.BIOMES.getValue(event.getName());
             if (biome != null) {
@@ -43,6 +45,7 @@ public class Spawns {
     }
 
     public static void registerSpawningStuff(){
+        if(!RegistryConfigs.reg.FIREFLY_ENABLED.get())return;
         EntitySpawnPlacementRegistry.register((EntityType<FireflyEntity>)Registry.FIREFLY_TYPE, EntitySpawnPlacementRegistry.PlacementType.NO_RESTRICTIONS,
                 Heightmap.Type.MOTION_BLOCKING, FireflyEntity::canSpawnOn);
     }

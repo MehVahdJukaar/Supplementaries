@@ -39,7 +39,7 @@ public class EmptyCageItem extends BlockItem {
 
         if (stack.hasDisplayName()) returnStack.setDisplayName(stack.getDisplayName());
 
-        CommonUtil.saveJarMobItemNBT(returnStack, entity, 1f, 0.875f);
+        CommonUtil.createJarMobItemNBT(returnStack, entity, 1f, 0.875f);
 
         player.setHeldItem(player.getActiveHand(), DrinkHelper.fill(stack.copy(),player,returnStack,false));
         //TODO: cage sound here

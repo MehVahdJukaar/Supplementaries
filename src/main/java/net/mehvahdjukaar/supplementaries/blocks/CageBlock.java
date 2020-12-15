@@ -46,7 +46,8 @@ public class CageBlock extends Block {
         }
         else{
             returnStack = new ItemStack(Registry.CAGE_ITEM);
-            CommonUtil.saveJarMobItemNBT(returnStack, te.mob, 1f, 0.875f);
+            te.saveToNbt(returnStack);
+            //CommonUtil.createJarMobItemNBT(returnStack, te.mob, 1f, 0.875f);
         }
         return returnStack;
     }

@@ -10,7 +10,6 @@ import net.minecraft.entity.monster.SlimeEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.util.*;
 
 public class EmptyJarItem extends BlockItem {
@@ -45,7 +44,7 @@ public class EmptyJarItem extends BlockItem {
 
             if (stack.hasDisplayName()) returnStack.setDisplayName(stack.getDisplayName());
 
-            CommonUtil.saveJarMobItemNBT(returnStack, entity, 0.875f, 0.625f);
+            CommonUtil.createJarMobItemNBT(returnStack, entity, 0.875f, 0.625f);
         }
         player.setHeldItem(player.getActiveHand(), DrinkHelper.fill(stack.copy(),player,returnStack,isFirefly));
         player.world.playSound(null, player.getPosition(),  SoundEvents.ITEM_BOTTLE_FILL_DRAGONBREATH, SoundCategory.BLOCKS,1,1);

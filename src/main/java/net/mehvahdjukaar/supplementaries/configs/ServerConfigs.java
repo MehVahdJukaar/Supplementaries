@@ -38,6 +38,8 @@ public class ServerConfigs {
         public static ForgeConfigSpec.IntValue LAUNCHER_HEIGHT;
 
         public static ForgeConfigSpec.IntValue TURN_TABLE_PERIOD;
+        public static ForgeConfigSpec.BooleanValue TURN_TABLE_ROTATE_ENTITIES;
+        public static ForgeConfigSpec.ConfigValue<List<? extends String>> TURN_TABLE_BLACKLIST;
 
         public static ForgeConfigSpec.BooleanValue WALL_LANTERN_PLACEMENT;
 
@@ -92,6 +94,11 @@ public class ServerConfigs {
             builder.push("turn_table");
             TURN_TABLE_PERIOD = builder.comment("how many ticks it takes to rotate a block/entity")
                     .defineInRange("period", 20, 1, 256);
+            TURN_TABLE_ROTATE_ENTITIES = builder.comment("can rotate entities standing on it?")
+                    .define("rotate_entities", true);
+            List<String> turnTableBlacklist = Arrays.asList("minecraft:end_portal_frame");
+            TURN_TABLE_BLACKLIST = builder.comment("blocks that can't be rotated. Some special ones like chests, beds and pistons are already hardcoded")
+                    .defineList("mobs", turnTableBlacklist,s -> true);
             builder.pop();
             //wall lantern
             builder.push("wall_lantern");
@@ -196,67 +203,7 @@ public class ServerConfigs {
         }
     }
 
-    public static class reg {
-        public static ForgeConfigSpec.BooleanValue FIREFLY_ENABLED;
-        public static ForgeConfigSpec.BooleanValue PLANTER_ENABLED;
-        public static ForgeConfigSpec.BooleanValue CLOCK_ENABLED;
-        public static ForgeConfigSpec.BooleanValue PEDESTAL_ENABLED;
-        public static ForgeConfigSpec.BooleanValue WIND_VANE_ENABLED;
-        public static ForgeConfigSpec.BooleanValue ILLUMINATOR_ENABLED;
-        public static ForgeConfigSpec.BooleanValue NOTICE_BOARD_ENABLED;
-        public static ForgeConfigSpec.BooleanValue CRANK_ENABLED;
-        public static ForgeConfigSpec.BooleanValue JAR_ENABLED;
-        public static ForgeConfigSpec.BooleanValue FAUCET_ENABLED;
-        public static ForgeConfigSpec.BooleanValue TURN_TABLE_ENABLED;
-        public static ForgeConfigSpec.BooleanValue PISTON_LAUNCHER_ENABLED;
-        public static ForgeConfigSpec.BooleanValue SPEAKER_BLOCK_ENABLED;
-        public static ForgeConfigSpec.BooleanValue SIGN_POST_ENABLED;
-        public static ForgeConfigSpec.BooleanValue HANGING_SIGN_ENABLED;
-        public static ForgeConfigSpec.BooleanValue WALL_LANTERN_ENABLED;
-        public static ForgeConfigSpec.BooleanValue BELLOWS_ENABLED;
-        //public static ForgeConfigSpec.BooleanValue SCONCE_ENABLED;
-        public static ForgeConfigSpec.BooleanValue CANDELABRA_ENABLED;
-        public static ForgeConfigSpec.BooleanValue LASER_ENABLED;
-        public static ForgeConfigSpec.BooleanValue FLAG_ENABLED;
 
-        private static void init(ForgeConfigSpec.Builder builder) {
-            builder.comment("CURRENTLY NOT WORKING");
-            builder.comment("if you know how to load forge configs before registration to allow this let me know pls");
-            builder.comment("Enable and disable blocks / entities");
-            builder.push("registration");
-            builder.push("blocks");
-            PLANTER_ENABLED = builder.define("planter", true);
-            CLOCK_ENABLED = builder.define("clock_block", true);
-            PEDESTAL_ENABLED = builder.define("pedestal", true);
-            WIND_VANE_ENABLED = builder.define("wind_vane", true);
-            ILLUMINATOR_ENABLED = builder.define("redstone_illuminator", true);
-            NOTICE_BOARD_ENABLED = builder.define("notice_board", true);
-            CRANK_ENABLED = builder.define("crank", true);
-            JAR_ENABLED = builder.define("jar", true);
-            FAUCET_ENABLED = builder.define("faucet", true);
-            TURN_TABLE_ENABLED = builder.define("turn_table", true);
-            PISTON_LAUNCHER_ENABLED = builder.define("spring_launcher", true);
-            SPEAKER_BLOCK_ENABLED = builder.define("speaker_block", true);
-            SIGN_POST_ENABLED = builder.define("sign_post", true);
-            HANGING_SIGN_ENABLED = builder.define("hanging_sign", true);
-            WALL_LANTERN_ENABLED = builder.define("wall_lantern", true);
-            BELLOWS_ENABLED = builder.define("bellows", true);
-            //SCONCE_ENABLED = builder.define("sconce", true);
-            CANDELABRA_ENABLED = builder.define("candelabra", true);
-            builder.comment("WIP");
-            LASER_ENABLED = builder.define("laser", true);
-            builder.comment("WIP");
-            FLAG_ENABLED = builder.define("flag", true);
-            builder.pop();
-            builder.push("entities");
-            FIREFLY_ENABLED = builder.define("firefly", true);
-            builder.pop();
-            builder.pop();
-
-        }
-
-
-    }
 
 
     //maybe not need but hey
@@ -278,6 +225,8 @@ public class ServerConfigs {
         public static double LAUNCHER_VEL;
         public static int LAUNCHER_HEIGHT;
         public static int TURN_TABLE_PERIOD;
+        public static boolean TURN_TABLE_ROTATE_ENTITIES;
+        public static List<? extends String> TURN_TABLE_BLACKLIST;
         public static boolean WALL_LANTERN_PLACEMENT;
         public static int JAR_CAPACITY;
         public static boolean JAR_EAT;
@@ -309,6 +258,8 @@ public class ServerConfigs {
             LAUNCHER_HEIGHT = block.LAUNCHER_HEIGHT.get();
 
             TURN_TABLE_PERIOD = block.TURN_TABLE_PERIOD.get();
+            TURN_TABLE_ROTATE_ENTITIES = block.TURN_TABLE_ROTATE_ENTITIES.get();
+            TURN_TABLE_BLACKLIST = block.TURN_TABLE_BLACKLIST.get();
 
             WALL_LANTERN_PLACEMENT = block.WALL_LANTERN_PLACEMENT.get();
 

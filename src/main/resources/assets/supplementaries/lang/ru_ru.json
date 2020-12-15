@@ -45,11 +45,14 @@
   "block.supplementaries.firefly_jar": "Баночка со светлячком",
   "item.supplementaries.firefly": "Яйцо призыва светлячка",
 
-  "block.supplementaries.candle_holder":"Подсвечник",
+  "block.supplementaries.sconce_lever": " Активирующее бра",
+  "block.supplementaries.cage": "Клетка для мобов",
+  "block.supplementaries.stone_lamp": "Каменный фонарь",
   "block.supplementaries.sconce_green": "Зелёное бра",
   "block.supplementaries.candelabra_silver": "Серебряный подсвечник" ,
   "block.supplementaries.item_shelf": "Полка",
   "block.supplementaries.cog_block": "Блок шестерней",
+  "block.supplementaries.candle_holder":"Подсвечник",
 
   "block.supplementaries.flag": "Флаг (WIP)",
   "block.supplementaries.laser_block": "Лазерный блок",

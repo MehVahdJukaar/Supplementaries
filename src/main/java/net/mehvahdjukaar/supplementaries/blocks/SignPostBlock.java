@@ -23,10 +23,7 @@ import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.RegistryKey;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.MathHelper;
@@ -42,7 +39,7 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 
 
-public class SignPostBlock extends Block implements IWaterLoggable {
+public class SignPostBlock extends Block implements IWaterLoggable{
     protected static final VoxelShape SHAPE = Block.makeCuboidShape(5D, 0.0D, 5D, 11D, 16.0D, 11D);
     protected static final VoxelShape COLLISION_SHAPE = Block.makeCuboidShape(5D, 0.0D, 5D, 11D, 24.0D, 11D);
 
@@ -72,29 +69,6 @@ public class SignPostBlock extends Block implements IWaterLoggable {
             world.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(world));
         }
         return super.updatePostPlacement(state, facing, facingState, world, currentPos, facingPos);
-    }
-
-    public boolean rotateSigns(World world, BlockPos pos, float angle){
-        TileEntity te = world.getTileEntity(pos);
-        boolean success = false;
-        if (te instanceof SignPostBlockTile) {
-            SignPostBlockTile tile = (SignPostBlockTile) te;
-
-            if(tile.up){
-                tile.yawUp= MathHelper.wrapDegrees(tile.yawUp+angle);
-                success = true;
-            }
-            if(tile.down){
-                tile.yawDown= MathHelper.wrapDegrees(tile.yawDown+angle);
-                success = true;
-            }
-            if(success){
-                world.notifyBlockUpdate(pos, tile.getBlockState(), tile.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
-                tile.markDirty();
-            }
-        }
-
-        return success;
     }
 
     @Override
@@ -259,6 +233,30 @@ public class SignPostBlock extends Block implements IWaterLoggable {
             }
             super.onReplaced(state, worldIn, pos, newState, isMoving);
         }
+    }
+
+    @Override
+    public BlockState rotate(BlockState state, IWorld world, BlockPos pos, Rotation rot) {
+        float angle = rot.equals(Rotation.CLOCKWISE_90)? 90 : -90;
+        TileEntity te = world.getTileEntity(pos);
+        if (te instanceof SignPostBlockTile) {
+            SignPostBlockTile tile = (SignPostBlockTile) te;
+            boolean success = false;
+            if(tile.up){
+                tile.yawUp= MathHelper.wrapDegrees(tile.yawUp+angle);
+                success=true;
+            }
+            if(tile.down){
+                tile.yawDown= MathHelper.wrapDegrees(tile.yawDown+angle);
+                success=true;
+            }
+
+            if(success){
+                //world.notifyBlockUpdate(pos, tile.getBlockState(), tile.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
+                tile.markDirty();
+            }
+        }
+        return state;
     }
 
     @Override

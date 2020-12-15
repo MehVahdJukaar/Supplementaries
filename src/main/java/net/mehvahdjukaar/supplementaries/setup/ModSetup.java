@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
 
+import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.minecraft.block.FireBlock;
 import net.minecraft.tileentity.DispenserTileEntity;
 import net.minecraftforge.fml.DeferredWorkQueue;
@@ -13,7 +14,6 @@ import java.lang.reflect.Method;
 public class ModSetup {
 
     public static void init(final FMLCommonSetupEvent event) {
-
 
         Spawns.registerSpawningStuff();
         //DeferredWorkQueue.runLater(Dispenser::registerBehaviors);

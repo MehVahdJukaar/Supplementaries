@@ -311,7 +311,7 @@ public class CommonUtil {
         DEFAULT(null,0,0),
         SLIME("minecraft:slime",0,0),
         MAGMA_CUBE("minecraft:magma_cube",0,0),
-        BEE("minecraft:bee",0,0),
+        BEE("minecraft:bee",0.3125f,0),
         BAT("minecraft:bat",0,0),
         VEX("minecraft:vex",0,0.125f),
         ENDERMITE("minecraft:endermite",0,0),
@@ -346,7 +346,7 @@ public class CommonUtil {
     }
 
 
-    public static void saveJarMobItemNBT(ItemStack stack, Entity mob, float blockh, float blockw){
+    public static void createJarMobItemNBT(ItemStack stack, Entity mob, float blockh, float blockw){
         if(mob==null)return;
         if(mob instanceof LivingEntity){
             LivingEntity le = (LivingEntity) mob;
@@ -391,6 +391,12 @@ public class CommonUtil {
             }
             //TODO: rewrite this to account for adjValues
             float y = flag ? (blockh/2f) - h * s / 2f : 0.0626f;
+
+            //ice&fire dragons
+            String name = mob.getType().getRegistryName().toString();
+            if(name.equals("iceandfire:fire_dragon")||name.equals("iceandfire:ice_dragon")||name.equals("iceandfire:lightning_dragon")){
+                s*=0.45;
+            }
 
             cacheCompound.putFloat("Scale", s);
             cacheCompound.putFloat("YOffset", y);

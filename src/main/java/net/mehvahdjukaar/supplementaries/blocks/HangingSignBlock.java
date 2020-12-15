@@ -140,10 +140,18 @@ public class HangingSignBlock extends Block implements  IWaterLoggable{
                     : super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
         }
         else {
-            return facing == stateIn.get(FACING).getOpposite() && !stateIn.isValidPosition(worldIn, currentPos)
+            return facing == stateIn.get(FACING).getOpposite()? !stateIn.isValidPosition(worldIn, currentPos)
                     ? Blocks.AIR.getDefaultState()
-                    : super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+                    : this.getConnectedState(stateIn,facingState) : stateIn;
         }
+    }
+
+    public BlockState getConnectedState(BlockState state, BlockState facingState){
+        Block block = facingState.getBlock();
+        int flag = 0;
+        if(block instanceof FenceBlock || block instanceof SignPostBlock) flag = 1;
+        else if(block instanceof WallBlock) flag = 2;
+        return state.with(EXTENSION, flag);
     }
 
     @Override
@@ -194,12 +202,9 @@ public class HangingSignBlock extends Block implements  IWaterLoggable{
         }
         BlockPos blockpos = context.getPos();
         IBlockReader world = context.getWorld();
-        Block block = world.getBlockState(blockpos.offset(context.getFace().getOpposite())).getBlock();
+        BlockState facingState = world.getBlockState(blockpos.offset(context.getFace().getOpposite()));
 
-        int flag = 0;
-        if(block instanceof FenceBlock || block instanceof SignPostBlock) flag = 1;
-        else if(block instanceof WallBlock) flag = 2;
-        return this.getDefaultState().with(FACING, context.getFace()).with(EXTENSION, flag).with(WATERLOGGED,water);
+        return this.getConnectedState(this.getDefaultState(),facingState).with(FACING, context.getFace()).with(WATERLOGGED,water);
     }
 
     @Override

@@ -51,7 +51,7 @@ public class ClientConfigs {
                     "how often they try to spawn")
                     .defineInRange("spawn_period",8, 1, 20);
             FIREFLY_SPAWN_CHANCE = builder.comment("spawn chance every period")
-                    .defineInRange("spawn_chance", 0.6, 0, 1);
+                    .defineInRange("spawn_chance", 0.3, 0, 1);
             builder.pop();
 
             builder.push("pedestal");

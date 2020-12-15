@@ -10,6 +10,7 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.GameRules;
 
 import javax.annotation.Nonnull;
 
@@ -24,6 +25,8 @@ public class ClockBlockTile extends TileEntity implements ITickableTileEntity {
 
     public int power = 0;
 
+    private int offset = 0; //difference between gameTime and DayTime
+    private boolean updateOffset = true;
 
     public ClockBlockTile() {
         super(Registry.CLOCK_BLOCK_TILE);
@@ -69,13 +72,6 @@ public class ClockBlockTile extends TileEntity implements ITickableTileEntity {
         this.read(this.getBlockState(), pkt.getNbtCompound());
     }
 
-    public void setInitialRoll(int hour) {
-        this.targetRoll = (30f * hour) % 360;
-        this.prevRoll = this.targetRoll;
-        this.roll = this.targetRoll;
-    }
-
-
     public void updateInitialTime(){
         int time = (int) (world.getDayTime() % 24000);
         this.updateTime(time);
@@ -108,10 +104,24 @@ public class ClockBlockTile extends TileEntity implements ITickableTileEntity {
         this.sTargetRoll = (minute*7.2f + 180)%360f;
     }
 
+    //TODO: use this on other blocks
+    //can't access chunk data. use with care
+    @Override
+    public void onLoad() {
+        //this.calculateOffset();
+    }
+    //makes clock sync with daytime
+    private void calculateOffset(){
+        long dayTime = (this.world.getDayTime()%24000)%20;
+        long gameTime = (this.world.getGameTime()%24000)%20;
+        this.offset = (int) (dayTime - gameTime);
+    }
+
     public void tick() {
-        int time = (int) (world.getDayTime() % 24000);
-        if (this.world != null && time % 20 == 0) {
-            this.updateTime(time);
+        int time = this.world.getGameRules().getBoolean(GameRules.DO_DAYLIGHT_CYCLE)?
+                (int) (world.getDayTime() % 24000) : (int) (world.getGameTime() % 24000);
+        if (this.world != null && (time) % 20 == 0) {
+            this.updateTime((int) (this.world.getDayTime()%24000));
         }
         //hours
         this.prevRoll = this.roll;

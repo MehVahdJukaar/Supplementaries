@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.setup;
 
 import com.google.common.collect.Lists;
 import net.mehvahdjukaar.supplementaries.blocks.*;
+import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.entities.FireflyEntity;
 import net.mehvahdjukaar.supplementaries.gui.NoticeBoardContainer;
 import net.mehvahdjukaar.supplementaries.items.*;
@@ -43,6 +44,7 @@ public class Registry {
     private static final List<ParticleType<?>> PARTICLES = Lists.newArrayList();
     private static final List<EntityType<?>> ENTITIES = Lists.newArrayList();
 
+
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
         for (Block n : BLOCKS)
@@ -71,7 +73,8 @@ public class Registry {
     public static void registerEntities(final RegistryEvent.Register<EntityType<?>> event){
         for (EntityType<?> n : ENTITIES)
             event.getRegistry().register(n);
-        GlobalEntityTypeAttributes.put((EntityType<? extends LivingEntity>) FIREFLY_TYPE, FireflyEntity.setCustomAttributes().create());
+        if(RegistryConfigs.reg.FIREFLY_ENABLED.get())
+            GlobalEntityTypeAttributes.put((EntityType<? extends LivingEntity>) FIREFLY_TYPE, FireflyEntity.setCustomAttributes().create());
     }
 
     @SubscribeEvent
@@ -82,53 +85,54 @@ public class Registry {
 
 
     public static void init(){
+        //TODO: add configs
         //firefly
-        if(true) {
+        if(RegistryConfigs.reg.FIREFLY_ENABLED.get()) {
             ENTITIES.add(FIREFLY_TYPE);
             ITEMS.add(FIREFLY_SPAWN_EGG_ITEM);
         }
         //planter
-        if(true) {
+        if(RegistryConfigs.reg.PLANTER_ENABLED.get()) {
             BLOCKS.add(PLANTER);
             ITEMS.add(PLANTER_ITEM);
         }
         //clock
-        if(true) {
+        if(RegistryConfigs.reg.CLOCK_ENABLED.get()) {
             BLOCKS.add(CLOCK_BLOCK);
             TILES.add(CLOCK_BLOCK_TILE);
             ITEMS.add(CLOCK_BLOCK_ITEM);
         }
         //pedestal
-        if(true) {
+        if(RegistryConfigs.reg.PEDESTAL_ENABLED.get()) {
             BLOCKS.add(PEDESTAL);
             TILES.add(PEDESTAL_TILE);
             ITEMS.add(PEDESTAL_ITEM);
         }
         //wind vane
-        if(true) {
+        if(RegistryConfigs.reg.WIND_VANE_ENABLED.get()) {
             BLOCKS.add(WIND_VANE);
             TILES.add(WIND_VANE_TILE);
             ITEMS.add(WIND_VANE_ITEM);
         }
         //illuminator
-        if(true) {
+        if(RegistryConfigs.reg.ILLUMINATOR_ENABLED.get()) {
             BLOCKS.add(REDSTONE_ILLUMINATOR);
             ITEMS.add(REDSTONE_ILLUMINATOR_ITEM);
         }
         //notice board
-        if(true) {
+        if(RegistryConfigs.reg.NOTICE_BOARD_ENABLED.get()) {
             BLOCKS.add(NOTICE_BOARD);
             TILES.add(NOTICE_BOARD_TILE);
             ITEMS.add(NOTICE_BOARD_ITEM);
             CONTAINERS.add(NOTICE_BOARD_CONTAINER);
         }
         //crank
-        if(true) {
+        if(RegistryConfigs.reg.CRANK_ENABLED.get()) {
             BLOCKS.add(CRANK);
             ITEMS.add(CRANK_ITEM);
         }
         //jar
-        if(true) {
+        if(RegistryConfigs.reg.JAR_ENABLED.get()) {
             BLOCKS.add(JAR);
             TILES.add(JAR_TILE);
             ITEMS.add(JAR_ITEM);
@@ -139,19 +143,19 @@ public class Registry {
             ITEMS.add(EMPTY_JAR_ITEM_TINTED);
         }
         //faucet
-        if(true) {
+        if(RegistryConfigs.reg.FAUCET_ENABLED.get()) {
             BLOCKS.add(FAUCET);
             TILES.add(FAUCET_TILE);
             ITEMS.add(FAUCET_ITEM);
         }
         //turn table
-        if(true) {
+        if(RegistryConfigs.reg.TURN_TABLE_ENABLED.get()) {
             BLOCKS.add(TURN_TABLE);
             TILES.add(TURN_TABLE_TILE);
             ITEMS.add(TURN_TABLE_ITEM);
         }
         //piston launcher
-        if(true) {
+        if(RegistryConfigs.reg.PISTON_LAUNCHER_ENABLED.get()) {
             BLOCKS.add(PISTON_LAUNCHER);
             BLOCKS.add(PISTON_LAUNCHER_ARM);
             BLOCKS.add(PISTON_LAUNCHER_HEAD);
@@ -159,14 +163,14 @@ public class Registry {
             ITEMS.add(PISTON_LAUNCHER_ITEM);
         }
         //speaker block
-        if(true) {
+        if(RegistryConfigs.reg.SPEAKER_BLOCK_ENABLED.get()) {
             PARTICLES.add(SPEAKER_SOUND);
             BLOCKS.add(SPEAKER_BLOCK);
             TILES.add(SPEAKER_BLOCK_TILE);
             ITEMS.add(SPEAKER_BLOCK_ITEM);
         }
         //sign post
-        if(true) {
+        if(RegistryConfigs.reg.SIGN_POST_ENABLED.get()) {
             BLOCKS.add(SIGN_POST);
             TILES.add(SIGN_POST_TILE);
             ITEMS.add(SIGN_POST_ITEM_OAK);
@@ -179,7 +183,7 @@ public class Registry {
             ITEMS.add(SIGN_POST_ITEM_WARPED);
         }
         //hanging sign
-        if(true) {
+        if(RegistryConfigs.reg.HANGING_SIGN_ENABLED.get()) {
             BLOCKS.add(HANGING_SIGN_OAK);
             BLOCKS.add(HANGING_SIGN_SPRUCE);
             BLOCKS.add(HANGING_SIGN_BIRCH);
@@ -198,20 +202,20 @@ public class Registry {
             ITEMS.add(HANGING_SIGN_ITEM_CRIMSON);
             ITEMS.add(HANGING_SIGN_ITEM_WARPED);
         }
-        //wall lantern
+        //wall lantern (disabled via server config)
         if(true) {
             BLOCKS.add(WALL_LANTERN);
             TILES.add(WALL_LANTERN_TILE);
             ITEMS.add(WALL_LANTERN_ITEM);
         }
         //bellows
-        if(true) {
+        if(RegistryConfigs.reg.BELLOWS_ENABLED.get()) {
             BLOCKS.add(BELLOWS);
             TILES.add(BELLOWS_TILE);
             ITEMS.add(BELLOWS_ITEM);
         }
         //sconce
-        if(true) { //true
+        if(RegistryConfigs.reg.SCONCE_ENABLED.get()) { //true
             BLOCKS.add(SCONCE);
             BLOCKS.add(SCONCE_WALL);
             ITEMS.add(SCONCE_ITEM);
@@ -231,7 +235,7 @@ public class Registry {
             ITEMS.add(SCONCE_ITEM_GREEN);
         }
         //candelabra
-        if(true) {
+        if(RegistryConfigs.reg.CANDELABRA_ENABLED.get()) {
             BLOCKS.add(CANDELABRA);
             ITEMS.add(CANDELABRA_ITEM);
 
@@ -239,21 +243,21 @@ public class Registry {
             ITEMS.add(CANDELABRA_ITEM_SILVER);
         }
         //firefly jar
-        if(true) {
+        if(RegistryConfigs.reg.FIREFLY_ENABLED.get() && RegistryConfigs.reg.JAR_ENABLED.get()) {
             PARTICLES.add(FIREFLY_GLOW);
             BLOCKS.add(FIREFLY_JAR);
             TILES.add(FIREFLY_JAR_TILE);
             ITEMS.add(FIREFLY_JAR_ITEM);
         }
         //item shelf
-        if(true) {
+        if(RegistryConfigs.reg.ITEM_SHELF_ENABLED.get()) {
             BLOCKS.add(ITEM_SHELF);
             TILES.add(ITEM_SHELF_TILE);
             ITEMS.add(ITEM_SHELF_ITEM);
         }
 
         //cage
-        if(true){
+        if(RegistryConfigs.reg.CAGE_ENABLED.get()){
             BLOCKS.add(CAGE);
             TILES.add(CAGE_TILE);
             ITEMS.add(CAGE_ITEM);
@@ -261,36 +265,36 @@ public class Registry {
 
         }
 
-        if(true){
+        if(RegistryConfigs.reg.SCONCE_LEVER_ENABLED.get()){
             BLOCKS.add(SCONCE_LEVER);
             ITEMS.add(SCONCE_LEVER_ITEM);
         }
 
         //stone_lamp
-        if(true){
+        if(RegistryConfigs.reg.STONE_LAMP_ENABLED.get()){
             BLOCKS.add(STONE_LAMP);
             ITEMS.add(STONE_LAMP_ITEM);
         }
 
         //cog block
-        if(true){
+        if(RegistryConfigs.reg.COG_BLOCK_ENABLED.get()){
             BLOCKS.add(COG_BLOCK);
             ITEMS.add(COG_BLOCK_ITEM);
         }
         //candle holder
-        if(true){
+        if(RegistryConfigs.reg.CANDLE_HOLDER_ENABLED.get()){
             BLOCKS.add(CANDLE_HOLDER);
             ITEMS.add(CANDLE_HOLDER_ITEM);
         }
 
         //flag
-        if(true) {
+        if(RegistryConfigs.reg.FLAG_ENABLED.get()) {
             BLOCKS.add(FLAG);
             TILES.add(FLAG_TILE);
             ITEMS.add(FLAG_ITEM);
         }
         //laser
-        if(true) {
+        if(RegistryConfigs.reg.LASER_ENABLED.get()) {
             BLOCKS.add(LASER_BLOCK);
             TILES.add(LASER_BLOCK_TILE);
             ITEMS.add(LASER_BLOCK_ITEM);
@@ -918,7 +922,7 @@ public class Registry {
                     .setLightLevel((state) -> 15)
                     .sound(SoundType.STONE)).setRegistryName(STONE_LAMP_NAME);
     public static final Item STONE_LAMP_ITEM = new BlockItem(STONE_LAMP,
-            (new Item.Properties()).group(null)).setRegistryName(STONE_LAMP_NAME);
+            (new Item.Properties()).group(ItemGroup.DECORATIONS)).setRegistryName(STONE_LAMP_NAME);
 
     //cage
     public static final String CAGE_NAME = "cage";
@@ -926,6 +930,7 @@ public class Registry {
             AbstractBlock.Properties.create(Material.IRON, MaterialColor.IRON)
                     .hardnessAndResistance(3f, 6f)
                     .sound(SoundType.METAL)
+                    .harvestTool(ToolType.PICKAXE)
     ).setRegistryName(CAGE_NAME);
     public static final TileEntityType<?> CAGE_TILE =  TileEntityType.Builder.create(
             CageBlockTile::new, CAGE).build(null).setRegistryName(CAGE_NAME);
@@ -942,7 +947,6 @@ public class Registry {
                     .zeroHardnessAndResistance()
                     .doesNotBlockMovement()
                     .setLightLevel((state) -> state.get(BlockStateProperties.LIT)? 14 : 0)
-                    .lootFrom(SCONCE_GREEN)
                     .sound(SoundType.LANTERN), ParticleTypes.FLAME).setRegistryName(SCONCE_LEVER_NAME);
     public static final Item SCONCE_LEVER_ITEM = new BlockItem(SCONCE_LEVER,
             (new Item.Properties()).group(ItemGroup.REDSTONE)).setRegistryName(SCONCE_LEVER_NAME);

@@ -180,12 +180,6 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
                     }
                 }
 
-
-
-
-
-
-
                 BlockPos frontpos = this.pos.offset(facing);
 
                 //speeds up furnaces

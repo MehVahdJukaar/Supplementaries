@@ -103,11 +103,9 @@ public class JarBlock extends Block {
         }
         else{
             returnStack = new ItemStack(flag ? Registry.JAR_ITEM : Registry.JAR_ITEM_TINTED);
-            CompoundNBT compoundnbt = te.saveToNbt(new CompoundNBT());
-            if (!compoundnbt.isEmpty())
-                returnStack.setTagInfo("BlockEntityTag", compoundnbt);
+            te.saveToNbt(returnStack);
             //TODO: learn how to use BlockEntityTag
-            CommonUtil.saveJarMobItemNBT(returnStack, te.mob, 0.875f, 0.625f);
+            //CommonUtil.createJarMobItemNBT(returnStack, te.mob, 0.875f, 0.625f);
         }
         if(te.hasCustomName()){
             returnStack.setDisplayName(te.getCustomName());

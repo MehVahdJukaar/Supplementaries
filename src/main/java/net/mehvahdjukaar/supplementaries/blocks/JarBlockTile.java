@@ -340,7 +340,9 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
     }
 
     // save to itemstack
-    public CompoundNBT saveToNbt(CompoundNBT compound) {
+    public void saveToNbt(ItemStack stack) {
+        //liquid stuff
+        CompoundNBT compound = new CompoundNBT();
         if (!this.checkLootAndWrite(compound)) {
             ItemStackHelper.saveAllItems(compound, this.stacks, false);
             if (this.liquidLevel != 0) {
@@ -349,7 +351,16 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
                 compound.putInt("liquidColor", this.liquidType.bucket ? this.liquidType.color : this.color);
             }
         }
-        return compound;
+        if (!compound.isEmpty())
+            stack.setTagInfo("BlockEntityTag", compound);
+        //jar mob stuff
+        if(this.mob==null||entityData==null)return;
+        CompoundNBT cmp = new CompoundNBT();
+        cmp.putFloat("Scale", this.scale);
+        cmp.putFloat("YOffset", this.yOffset);
+        cmp.putString("Name",this.mob.getName().getString());
+        stack.setTagInfo("CachedJarMobValues", cmp);
+        stack.setTagInfo("JarMob", entityData);
     }
 
     @Override
@@ -586,27 +597,31 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
 
     //only client side. cached mob from entitydata
     public void updateMob(){
-        Entity entity  = EntityType.loadEntityAndExecute(this.entityData, this.world, o -> o);
-        if(entity==null && this.entityData.contains("id")){
-            boolean flag = this.entityData.get("id").getString().equals("minecraft:bee");
-            if(flag) entity = new BeeEntity(EntityType.BEE, this.world);
-        }
-        //TODO: add shadows
-        double px = this.pos.getX()+0.5;
-        double py = this.pos.getY()+0.5+0.0625;
-        double pz = this.pos.getZ()+0.5;
-        entity.setPosition(px, py, pz);
-        //entity.setMotion(0,0,0);
-        entity.lastTickPosX=px;
-        entity.lastTickPosY=py;
-        entity.lastTickPosZ=pz;
-        entity.prevPosX=px;
-        entity.prevPosY=py;
-        entity.prevPosZ=pz;
+        if(this.entityData.contains("id")) {
+            Entity entity;
+            if(this.entityData.get("id").getString().equals("minecraft:bee")){
+                entity = new BeeEntity(EntityType.BEE, this.world);
+            }
+            else{
+                entity  = EntityType.loadEntityAndExecute(this.entityData, this.world, o -> o);
+            }
+            //TODO: add shadows
+            double px = this.pos.getX() + 0.5;
+            double py = this.pos.getY() + 0.5 + 0.0625;
+            double pz = this.pos.getZ() + 0.5;
+            entity.setPosition(px, py, pz);
+            //entity.setMotion(0,0,0);
+            entity.lastTickPosX = px;
+            entity.lastTickPosY = py;
+            entity.lastTickPosZ = pz;
+            entity.prevPosX = px;
+            entity.prevPosY = py;
+            entity.prevPosZ = pz;
 
-        this.mob = entity;
-        this.animationType = CommonUtil.JarMobType.getJarMobType(entity);
-        this.entityChanged=false;
+            this.mob = entity;
+            this.animationType = CommonUtil.JarMobType.getJarMobType(entity);
+            this.entityChanged = false;
+        }
     }
 
     public boolean hasNoMob(){

@@ -1,7 +1,9 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.blocks.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.items.EmptyJarItem;
 import net.mehvahdjukaar.supplementaries.items.JarItem;
 import net.minecraft.block.Block;
@@ -44,28 +46,28 @@ public class Dispenser {
     public static void registerBehaviors() {
 
         DEFAULT_BEHAVIORS = Dispenser.getVanillaDispenserBehaviors();
-        if(DEFAULT_BEHAVIORS==null) return;
-
-        for(Item item : ForgeRegistries.ITEMS) {
-            if(item instanceof JarItem || item instanceof EmptyJarItem){
-                DispenserBlock.registerDispenseBehavior(item, new JarItemDispenseBehavior());
-            }
-            else if(!CommonUtil.getJarContentTypeFromItem(new ItemStack(item)).isEmpty()){
-                DispenserBlock.registerDispenseBehavior(item, new FillJarDispenserBehavior());
-            }
-            else if(item==Items.BUCKET){
-                DispenserBlock.registerDispenseBehavior(item, new BucketJarDispenserBehavior());
-            }
-            else if(item==Items.BOWL){
-                DispenserBlock.registerDispenseBehavior(item, new BowlJarDispenserBehavior());
-            }
-            else if(item==Items.GLASS_BOTTLE){
-                DispenserBlock.registerDispenseBehavior(item, new BottleJarDispenserBehavior());
-            }
-            else if (item == Registry.FIREFLY_SPAWN_EGG_ITEM){
-                DispenserBlock.registerDispenseBehavior(item, spawneggBehavior);
-            }
+        if(DEFAULT_BEHAVIORS==null){
+            Supplementaries.LOGGER.info("failed to register dispenser behaviors");
+            return;
         }
+        //jar
+        if(RegistryConfigs.reg.JAR_ENABLED.get()){
+            for(Item item : ForgeRegistries.ITEMS) {
+                if (item instanceof JarItem || item instanceof EmptyJarItem) {
+                    DispenserBlock.registerDispenseBehavior(item, new JarItemDispenseBehavior());
+                } else if (!CommonUtil.getJarContentTypeFromItem(new ItemStack(item)).isEmpty()) {
+                    DispenserBlock.registerDispenseBehavior(item, new FillJarDispenserBehavior());
+                }
+            }
+            DispenserBlock.registerDispenseBehavior(Items.BUCKET, new BucketJarDispenserBehavior());
+            DispenserBlock.registerDispenseBehavior(Items.BOWL, new BowlJarDispenserBehavior());
+            DispenserBlock.registerDispenseBehavior(Items.GLASS_BOTTLE, new BottleJarDispenserBehavior());
+        }
+        //firefly
+        if(RegistryConfigs.reg.FIREFLY_ENABLED.get()) {
+            DispenserBlock.registerDispenseBehavior(Registry.FIREFLY_SPAWN_EGG_ITEM, spawneggBehavior);
+        }
+
     }
 
     private static final DefaultDispenseItemBehavior spawneggBehavior = new DefaultDispenseItemBehavior() {

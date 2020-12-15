@@ -16,6 +16,7 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 
@@ -38,7 +39,7 @@ public class TurnTableBlockTile extends TileEntity implements ITickableTileEntit
 
             // cd > 0
             if (this.cooldown == 0) {
-                boolean success = this.doRotateBlock();
+                boolean success = this.handleRotation();
                 this.cooldown = ServerConfigs.cached.TURN_TABLE_PERIOD;
                 // if it didn't rotate last block that means that block is immovable
                 this.canRotate = (success && this.getBlockState().get(TurnTableBlock.POWERED));
@@ -64,12 +65,52 @@ public class TurnTableBlockTile extends TileEntity implements ITickableTileEntit
         // neither piston arms
         if (state.hasProperty(BlockStateProperties.SHORT))
             return true;
-        // can't rotate blocks that it can't toutch
-        return state.getBlock() instanceof WallTorchBlock || state.getBlock() instanceof WallBlock || state.getBlock() instanceof WallBannerBlock;
+
+        return ServerConfigs.cached.TURN_TABLE_BLACKLIST.contains(state.getBlock().getRegistryName().toString());
     }
 
+
+    private boolean doRotateBlocks(BlockState oldstate, BlockState newState, BlockPos pos) {
+        if(newState!=oldstate){
+            //always returns true because block could be able to rotate in the future even if it can't now
+            if(newState.isValidPosition(world,pos)) {
+                world.setBlockState(pos, newState, 3);
+                //self update post placement to connect to others
+                for(int i = 0; i<6; i++){
+                    Direction d = Direction.byIndex(i);
+                    BlockPos otherPos = pos.offset(d);
+                    BlockState neighbour = world.getBlockState(otherPos);
+                    BlockState updatedNewState = newState.updatePostPlacement(d, neighbour, this.world, pos, otherPos);
+
+                    if(!updatedNewState.isAir()) {
+                        world.setBlockState(pos, updatedNewState,3);
+                        newState = updatedNewState;
+                    }
+                    else {
+                        //turns into air == rotation failed
+                        world.setBlockState(pos, oldstate,3);
+                        return false;
+                    }
+                }
+                //update others so they connect to this block
+                for(int i = 0; i<6; i++){
+                    Direction d = Direction.byIndex(i);
+                    BlockPos otherPos = pos.offset(d);
+                    BlockState neighbour = world.getBlockState(otherPos);
+                    BlockState updatedNeighbour = neighbour.updatePostPlacement(d.getOpposite(), newState, this.world, otherPos, pos);
+                    if(updatedNeighbour!=neighbour)
+                        world.setBlockState(otherPos, updatedNeighbour,3);
+                }
+            }
+            return true;
+            //TODO: this makes block instantly rotate when condition becomes true
+        }
+        return false;
+    }
+
+
     // spaghetti code incoming
-    public boolean doRotateBlock() {
+    public boolean handleRotation() {
         BlockState state = this.getBlockState();
 
         World world = this.world;
@@ -78,76 +119,50 @@ public class TurnTableBlockTile extends TileEntity implements ITickableTileEntit
         BlockPos targetpos = mypos.offset(mydir);
         BlockState _bs = world.getBlockState(targetpos);
         // is block blacklisted?
-        if (this.isInBlacklist(_bs))
-            return false;
+        if (this.isInBlacklist(_bs)) return false;
         boolean ccw = (state.get(BlockStateProperties.INVERTED) ^ (state.get(BlockStateProperties.FACING) == Direction.DOWN));
         Rotation rot = ccw ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90;
+
         try {
-            // horizontal blocks. only if facing up or down. using each block rotation
-            // method
-            if (_bs.hasProperty(BlockStateProperties.HORIZONTAL_FACING) || _bs.hasProperty(BlockStateProperties.FACING_EXCEPT_UP)
-                    || _bs.hasProperty(BlockStateProperties.RAIL_SHAPE)) {
-                if (mydir.getAxis() == Direction.Axis.Y) {
-                    world.setBlockState(targetpos, _bs.rotate(rot), 3);
+            //horizontal facing blocks -easy
+            if (mydir.getAxis() == Direction.Axis.Y) {
+                //sign posts
+                if (_bs.getBlock() instanceof SignPostBlock) {
+                    _bs.rotate(world,targetpos,rot);
                     return true;
-                } else {
+                }
+                BlockState rotatedstate = _bs.rotate(world,targetpos,rot);
+                return doRotateBlocks(_bs, rotatedstate, targetpos);
+            }
+            // 6 dir blocks blocks
+            else if (_bs.hasProperty(BlockStateProperties.FACING)) {
+                Vector3f targetvec = _bs.get(BlockStateProperties.FACING).toVector3f();
+                Vector3f myvec = mydir.toVector3f();
+                if (!ccw)
+                    targetvec.mul(-1);
+                // hacky I know..
+                myvec.cross(targetvec);
+                if (myvec.equals(new Vector3f(0, 0, 0))) {
+                    // same axis, can't rotate
                     return false;
                 }
-            }
-            // rotateable blocks
-            else if (_bs.hasProperty(BlockStateProperties.FACING)) {
-                if (mydir.getAxis() == Axis.Y) {
-                    world.setBlockState(targetpos, _bs.rotate(rot), 3);
-                } else {
-                    Vector3f targetvec = _bs.get(BlockStateProperties.FACING).toVector3f();
-                    Vector3f myvec = mydir.toVector3f();
-                    if (!ccw)
-                        targetvec.mul(-1);
-                    // hacky I know..
-                    myvec.cross(targetvec);
-                    if (myvec.equals(new Vector3f(0, 0, 0))) {
-                        // same axis, can't rotate
-                        return false;
-                    }
-                    Direction newdir = Direction.getFacingFromVector(myvec.getX(), myvec.getY(), myvec.getZ());
-                    world.setBlockState(targetpos, _bs.with(BlockStateProperties.FACING, newdir), 3);
-                }
-                return true;
+                Direction newdir = Direction.getFacingFromVector(myvec.getX(), myvec.getY(), myvec.getZ());
+                return this.doRotateBlocks(_bs, _bs.with(BlockStateProperties.FACING, newdir), targetpos);
             }
             // axis blocks
             else if (_bs.hasProperty(BlockStateProperties.AXIS)) {
-                if (mydir.getAxis() == Axis.Y) {
-                    world.setBlockState(targetpos, _bs.rotate(rot), 3);
-                    return true;
-                } else {
-                    Axis targetaxis = _bs.get(BlockStateProperties.AXIS);
-                    Axis myaxis = mydir.getAxis();
-                    if (myaxis == targetaxis) {
-                        // same axis, can't rotate
-                        return false;
-                    } else if (myaxis == Axis.X) {
-                        world.setBlockState(targetpos, _bs.with(BlockStateProperties.AXIS, targetaxis == Axis.Y ? Axis.Z : Axis.Y), 3);
-                        return true;
-                    } else if (myaxis == Axis.Z) {
-                        world.setBlockState(targetpos, _bs.with(BlockStateProperties.AXIS, targetaxis == Axis.Y ? Axis.X : Axis.Y), 3);
-                        return true;
-                    }
+                Axis targetaxis = _bs.get(BlockStateProperties.AXIS);
+                Axis myaxis = mydir.getAxis();
+                if (myaxis == targetaxis) {
+                    // same axis, can't rotate
+                    return false;
+                } else if (myaxis == Axis.X) {
+                    return this.doRotateBlocks(_bs, _bs.with(BlockStateProperties.AXIS, targetaxis == Axis.Y ? Axis.Z : Axis.Y), targetpos);
+                } else if (myaxis == Axis.Z) {
+                    return this.doRotateBlocks(_bs, _bs.with(BlockStateProperties.AXIS, targetaxis == Axis.Y ? Axis.X : Axis.Y), targetpos);
                 }
             }
-            //signs and banners
-            else if (_bs.hasProperty(BlockStateProperties.ROTATION_0_15)){
-                if (mydir.getAxis() == Axis.Y) {
-                    world.setBlockState(targetpos, _bs.rotate(rot), 3);
-                    return true;
-                }
-            }
-            //sign posts
-            else if (_bs.getBlock() instanceof SignPostBlock){
-                if (mydir.getAxis() == Axis.Y) {
-                    return ((SignPostBlock) _bs.getBlock()).rotateSigns(world, targetpos, ccw ? 90 : -90);
 
-                }
-            }
         } catch (Exception e) {
             // mcserv.getPlayerList().sendMessage(new StringTextComponent("error rotating
             // block: "+e.toString()));

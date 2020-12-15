@@ -45,10 +45,14 @@
   "block.supplementaries.firefly_jar": "Topf mit Glühwürmchen",
   "item.supplementaries.firefly": "Glühwürmchen-Spawn-Ei",
 
+  "block.supplementaries.sconce_lever": "Wandleuchterhebel",
+  "block.supplementaries.cage": "Käfig für Mobs",
+  "block.supplementaries.stone_lamp": "Steinlampe",
   "block.supplementaries.sconce_green": "Grüne Leuchter",
   "block.supplementaries.candelabra_silver": "Silberne Kandelaber",
   "block.supplementaries.item_shelf": "Regal",
   "block.supplementaries.cog_block": "Kettenräder (WIP)",
+  "block.supplementaries.candle_holder": "Kerzenständer",
 
   "block.supplementaries.flag": "Flagge (WIP)",
   "block.supplementaries.laser_block": "Laserblock (WIP)",

@@ -1,0 +1,21 @@
+{
+  "group": "supplementaries",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "000",
+    "010",
+    "000"
+  ],
+  "key": {
+    "0": {
+      "item": "minecraft:stone"
+    },
+    "1": {
+      "item": "minecraft:shroomlight"
+    }
+  },
+  "result": {
+    "item": "supplementaries:stone_lamp",
+    "count": 1
+  }
+}

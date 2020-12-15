@@ -28,7 +28,7 @@
   "block.supplementaries.sconce_soul": "Eteryczny kinkiet",
   "block.supplementaries.sconce_ender": "Endowy kinkiet",
   "block.supplementaries.sign_post": "Drogowskaz",
-  "block.supplementaries.candelabra": "Świecznik",
+  "block.supplementaries.candelabra": "Kandelabr",
   "item.supplementaries.sign_post_oak": "Dębowy drogowskaz",
   "item.supplementaries.sign_post_birch": "Brzozowy drogowskaz",
   "item.supplementaries.sign_post_spruce": "Świerkowy drogowskaz",
@@ -44,10 +44,15 @@
   "block.supplementaries.firefly_jar": "Słój z robaczkiem świętojańskim",
   "item.supplementaries.firefly": "Jajo przyzywające robaczka świętojańskiego",
 
+  "block.supplementaries.sconce_lever": "Kinkietowa dźwignia",
+  "block.supplementaries.cage": "Klatka na moby",
+  "block.supplementaries.stone_lamp": "Kamienna lampa",
   "block.supplementaries.sconce_green": "Zielony kinkiet",
-  "block.supplementaries.candelabra_silver": "Srebrny świecznik",
+  "block.supplementaries.candelabra_silver": "Srebrny kandelabr",
   "block.supplementaries.item_shelf": "Półka na przedmiot",
   "block.supplementaries.cog_block": "Blok zębatki (WIP)",
+  "block.supplementaries.candle_holder": "Świecznik",
+
 
   "block.supplementaries.flag": "Flaga (WIP)",
   "block.supplementaries.laser_block": "Blok laseru (WIP)",

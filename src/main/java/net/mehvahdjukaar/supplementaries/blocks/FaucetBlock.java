@@ -47,7 +47,7 @@ public class FaucetBlock extends Block implements  IWaterLoggable{
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     public static final BooleanProperty HAS_WATER = CommonUtil.HAS_WATER;
     public static final BooleanProperty HAS_JAR = CommonUtil.HAS_JAR;
-    public static final BooleanProperty EXTENDED = BlockStateProperties.EXTENDED; //glass extension
+    public static final BooleanProperty EXTENDED = BlockStateProperties.ATTACHED; //glass extension
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public FaucetBlock(Properties properties) {
         super(properties);

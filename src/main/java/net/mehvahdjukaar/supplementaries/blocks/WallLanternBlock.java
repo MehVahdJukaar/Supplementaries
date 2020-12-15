@@ -88,15 +88,21 @@ public class WallLanternBlock extends Block implements  IWaterLoggable{
         return (blockstate.isSolidSide(worldIn, blockpos, direction)||block instanceof FenceBlock || block instanceof SignPostBlock ||block instanceof WallBlock);
     }
 
+    public BlockState getConnectedState(BlockState state, BlockState facingState){
+        Block block = facingState.getBlock();
+        boolean ext = (block instanceof FenceBlock || block instanceof SignPostBlock ||block instanceof WallBlock);
+        return state.with(EXTENSION, ext?1:0);
+    }
+
     @Override
     public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos,
                                           BlockPos facingPos) {
         if (stateIn.get(WATERLOGGED)) {
             worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
         }
-        return facing == stateIn.get(FACING).getOpposite() && !stateIn.isValidPosition(worldIn, currentPos)
+        return facing == stateIn.get(FACING).getOpposite()?  !stateIn.isValidPosition(worldIn, currentPos)
                 ? Blocks.AIR.getDefaultState()
-                : super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+                : this.getConnectedState(stateIn,facingState) : stateIn;
     }
 
     @Override
@@ -144,12 +150,11 @@ public class WallLanternBlock extends Block implements  IWaterLoggable{
             return this.getDefaultState().with(FACING, Direction.NORTH);
         BlockPos blockpos = context.getPos();
         IBlockReader world = context.getWorld();
-        Block block = world.getBlockState(blockpos.offset(context.getFace().getOpposite())).getBlock();
+        BlockState facingState = world.getBlockState(blockpos.offset(context.getFace().getOpposite()));
 
         boolean flag = world.getFluidState(blockpos).getFluid() == Fluids.WATER;;
-        boolean ext = (block instanceof FenceBlock || block instanceof SignPostBlock ||block instanceof WallBlock);
 
-        return this.getDefaultState().with(FACING, context.getFace()).with(EXTENSION, ext? 1:0).with(WATERLOGGED,flag);
+        return this.getConnectedState(this.getDefaultState(), facingState).with(FACING, context.getFace()).with(WATERLOGGED,flag);
     }
 
 /*

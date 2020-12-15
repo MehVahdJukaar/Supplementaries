@@ -10,6 +10,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.monster.SlimeEntity;
 import net.minecraft.entity.passive.*;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
@@ -43,6 +44,18 @@ public class CageBlockTile extends TileEntity implements ITickableTileEntity {
     @Override
     public double getMaxRenderDistanceSquared() {
         return 80;
+    }
+
+
+    public void saveToNbt(ItemStack stack){
+        if(this.mob==null||entityData==null)return;
+        //same as CommonUtil.createNBT
+        CompoundNBT cmp = new CompoundNBT();
+        cmp.putFloat("Scale", this.scale);
+        cmp.putFloat("YOffset", this.yOffset);
+        cmp.putString("Name",this.mob.getName().getString());
+        stack.setTagInfo("CachedJarMobValues", cmp);
+        stack.setTagInfo("JarMob", entityData);
     }
 
 
@@ -144,6 +157,7 @@ public class CageBlockTile extends TileEntity implements ITickableTileEntity {
                     ParrotEntity parrot = (ParrotEntity) this.mob;
                     parrot.livingTick();
                     parrot.setOnGround(false);
+                    this.jumpY=0.0625f;
                     break;
                 case PIXIE:
                     LivingEntity le = ((LivingEntity)this.mob);
@@ -180,6 +194,7 @@ public class CageBlockTile extends TileEntity implements ITickableTileEntity {
                     CatEntity cat = (CatEntity) this.mob;
                     //cat.func_233687_w_(true);
                     cat.setSleeping(true);
+                    //this.jumpY=0.0325f;
                     break;
                     //TODO: move jump position & stuff inside entity. merge with jar one
                 case CHICKEN:
@@ -206,27 +221,31 @@ public class CageBlockTile extends TileEntity implements ITickableTileEntity {
 
     //only client side. cached mob from entitydata
     public void updateMob(){
-        Entity entity  = EntityType.loadEntityAndExecute(this.entityData, this.world, o -> o);
-        if(entity==null && this.entityData.contains("id")){
-            boolean flag = this.entityData.get("id").getString().equals("minecraft:bee");
-            if(flag) entity = new BeeEntity(EntityType.BEE, this.world);
-        }
-        //TODO: add shadows
-        double px = this.pos.getX()+0.5;
-        double py = this.pos.getY()+0.5+0.0625;
-        double pz = this.pos.getZ()+0.5;
-        entity.setPosition(px, py, pz);
-        //entity.setMotion(0,0,0);
-        entity.lastTickPosX=px;
-        entity.lastTickPosY=py;
-        entity.lastTickPosZ=pz;
-        entity.prevPosX=px;
-        entity.prevPosY=py;
-        entity.prevPosZ=pz;
+        if(this.entityData.contains("id")) {
+            Entity entity;
+            if(this.entityData.get("id").getString().equals("minecraft:bee")){
+                entity = new BeeEntity(EntityType.BEE, this.world);
+            }
+            else{
+                entity  = EntityType.loadEntityAndExecute(this.entityData, this.world, o -> o);
+            }
+            //TODO: add shadows
+            double px = this.pos.getX() + 0.5;
+            double py = this.pos.getY() + 0.5 + 0.0625;
+            double pz = this.pos.getZ() + 0.5;
+            entity.setPosition(px, py, pz);
+            //entity.setMotion(0,0,0);
+            entity.lastTickPosX = px;
+            entity.lastTickPosY = py;
+            entity.lastTickPosZ = pz;
+            entity.prevPosX = px;
+            entity.prevPosY = py;
+            entity.prevPosZ = pz;
 
-        this.mob = entity;
-        this.animationType = CommonUtil.JarMobType.getJarMobType(entity);
-        this.entityChanged=false;
+            this.mob = entity;
+            this.animationType = CommonUtil.JarMobType.getJarMobType(entity);
+            this.entityChanged = false;
+        }
     }
 
     public boolean hasNoMob(){
