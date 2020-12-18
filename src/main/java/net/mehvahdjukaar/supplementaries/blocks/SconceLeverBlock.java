@@ -2,9 +2,14 @@ package net.mehvahdjukaar.supplementaries.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.PotionEntity;
+import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.potion.PotionUtils;
+import net.minecraft.potion.Potions;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -24,10 +29,40 @@ public class SconceLeverBlock extends SconceWallBlock{
                 .with(FACING, Direction.NORTH).with(WATERLOGGED, false).with(LIT, true));
     }
 
+    //need to update neighbours too
+    @Override
+    public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
+        if(!worldIn.isRemote && entityIn instanceof ProjectileEntity) {
+            ProjectileEntity projectile = (ProjectileEntity)entityIn;
+            if (projectile.isBurning()) {
+                Entity entity = projectile.func_234616_v_();
+                boolean flag = entity == null || entity instanceof PlayerEntity || net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(worldIn, entity);
+                if (flag && !state.get(LIT) && !state.get(WATERLOGGED)) {
+                    worldIn.setBlockState(pos, state.with(BlockStateProperties.LIT, true), 11);
+                    this.updateNeighbors(state, worldIn, pos);
+                    worldIn.playSound(null, pos, SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.BLOCKS, 0.5F, 1.4F);
+                }
+            }
+            else if (projectile instanceof PotionEntity && PotionUtils.getPotionFromItem(((PotionEntity)projectile).getItem()).equals(Potions.WATER)) {
+                Entity entity = projectile.func_234616_v_();
+                boolean flag = entity == null || entity instanceof PlayerEntity || net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(worldIn, entity);
+                if (flag && state.get(LIT)) {
+                    worldIn.setBlockState(pos, state.with(BlockStateProperties.LIT, false), 11);
+                    this.updateNeighbors(state, worldIn, pos);
+                    extinguish(worldIn, pos);
+                }
+            }
+        }
+    }
+
+
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         ActionResultType result = super.onBlockActivated(state,worldIn,pos,player,handIn,hit);
-        if(result.isSuccessOrConsume()) return result;
+        if(result.isSuccessOrConsume()) {
+            this.updateNeighbors(state, worldIn, pos);
+            return result;
+        }
         if (worldIn.isRemote) {
             state.func_235896_a_(POWERED);
             return ActionResultType.SUCCESS;

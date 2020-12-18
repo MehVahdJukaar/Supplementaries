@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.blocks;
 
 
+import net.mehvahdjukaar.supplementaries.blocks.tiles.TurnTableBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

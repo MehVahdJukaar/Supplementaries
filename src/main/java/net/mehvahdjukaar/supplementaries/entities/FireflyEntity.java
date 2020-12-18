@@ -93,7 +93,7 @@ public class FireflyEntity extends CreatureEntity implements IFlyingAnimal, IEnt
         if (this.alpha!=0)this.alpha= (float) Math.pow(this.alpha,p);
         //this.alpha =  Math.max( ( (1-p)*MathHelper.sin(this.ticksExisted * ((float) Math.PI / this.flickerPeriod))+p), 0);
 
-        this.setMotion(this.getMotion().mul(1.0D, 0.6D, 1.0D));
+        this.setMotion(this.getMotion().mul(1.0D, 0.65D, 1.0D));
         this.setMotion(this.getMotion().add(0.02 * (this.rand.nextDouble() - 0.5), 0.03 * (this.rand.nextDouble() - 0.5),
                 0.02 * (this.rand.nextDouble() - 0.5)));
 

@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.renderers;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.mehvahdjukaar.supplementaries.blocks.BellowsBlock;
-import net.mehvahdjukaar.supplementaries.blocks.BellowsBlockTile;
+import net.mehvahdjukaar.supplementaries.blocks.tiles.BellowsBlockTile;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;

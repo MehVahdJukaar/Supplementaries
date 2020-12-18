@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.blocks;
 
+import net.mehvahdjukaar.supplementaries.blocks.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.gui.SpeakerBlockGui;
 import net.mehvahdjukaar.supplementaries.network.Networking;

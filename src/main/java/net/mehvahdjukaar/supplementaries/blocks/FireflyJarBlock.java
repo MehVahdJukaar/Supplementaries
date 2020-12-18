@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.blocks;
 
+import net.mehvahdjukaar.supplementaries.blocks.tiles.FireflyJarBlockTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.PushReaction;

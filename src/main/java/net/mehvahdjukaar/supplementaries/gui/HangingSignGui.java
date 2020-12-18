@@ -5,7 +5,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.mehvahdjukaar.supplementaries.blocks.HangingSignBlock;
-import net.mehvahdjukaar.supplementaries.blocks.HangingSignBlockTile;
+import net.mehvahdjukaar.supplementaries.blocks.tiles.HangingSignBlockTile;
 import net.mehvahdjukaar.supplementaries.network.Networking;
 import net.mehvahdjukaar.supplementaries.network.UpdateServerHangingSignPacket;
 import net.minecraft.block.BlockState;

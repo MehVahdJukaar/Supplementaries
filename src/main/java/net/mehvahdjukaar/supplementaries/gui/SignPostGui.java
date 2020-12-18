@@ -4,7 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.mehvahdjukaar.supplementaries.blocks.SignPostBlock;
-import net.mehvahdjukaar.supplementaries.blocks.SignPostBlockTile;
+import net.mehvahdjukaar.supplementaries.blocks.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.network.Networking;
 import net.mehvahdjukaar.supplementaries.network.UpdateServerSignPostPacket;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
@@ -148,9 +148,9 @@ public class SignPostGui extends Screen {
 
             matrixstack.push();
             if(!leftup){
-                //matrixstack.translate(0.15625, 0, 0);
+                matrixstack.translate(0.15625, 0, 0);
                 matrixstack.rotate(Vector3f.YP.rotationDegrees(-180));
-                //matrixstack.translate(-0.15625, 0, 0);
+                matrixstack.translate(-0.15625, 0, 0);
             }
             matrixstack.translate(0, - 0.5, -0.5);
             blockRenderer.renderBlock(state, matrixstack, irendertypebuffer$impl, 15728880, OverlayTexture.NO_OVERLAY, EmptyModelData.INSTANCE);

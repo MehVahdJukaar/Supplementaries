@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.renderers;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.mehvahdjukaar.supplementaries.blocks.FaucetBlockTile;
+import net.mehvahdjukaar.supplementaries.blocks.tiles.FaucetBlockTile;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;

@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.blocks;
 
+import net.mehvahdjukaar.supplementaries.blocks.tiles.HangingSignBlockTile;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.gui.HangingSignGui;
 import net.minecraft.block.*;

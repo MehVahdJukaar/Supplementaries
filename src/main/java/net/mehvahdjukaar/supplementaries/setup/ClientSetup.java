@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.blocks.*;
+import net.mehvahdjukaar.supplementaries.blocks.tiles.*;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.entities.FireflyEntity;
 import net.mehvahdjukaar.supplementaries.gui.NoticeBoardContainer;
@@ -106,6 +106,10 @@ public class ClientSetup {
         ClientRegistry.bindTileEntityRenderer((TileEntityType<CageBlockTile>)Registry.CAGE_TILE, CageBlockTileRenderer::new);
         //sconce lever
         RenderTypeLookup.setRenderLayer(Registry.SCONCE_LEVER, RenderType.getCutout());
+        //globe
+        //RenderTypeLookup.setRenderLayer(Registry.GLOBE, RenderType.getCutout());
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<GlobeBlockTile>)Registry.GLOBE_TILE, GlobeBlockTileRenderer::new);
+
 
 
 

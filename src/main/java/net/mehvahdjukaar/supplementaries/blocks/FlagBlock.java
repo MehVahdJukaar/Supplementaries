@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.blocks;
 
+import net.mehvahdjukaar.supplementaries.blocks.tiles.FlagBlockTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;

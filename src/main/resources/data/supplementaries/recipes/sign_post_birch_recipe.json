@@ -2,18 +2,15 @@
   "group": "supplementaries",
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "01"
+    "0"
   ],
   "key": {
     "0": {
-      "item": "minecraft:birch_slab"
-    },
-    "1": {
-      "item": "minecraft:birch_slab"
+      "item": "minecraft:birch_sign"
     }
   },
   "result": {
     "item": "supplementaries:sign_post_birch",
-    "count": 1
+    "count": 2
   }
 }

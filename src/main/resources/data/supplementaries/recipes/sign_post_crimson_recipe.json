@@ -2,18 +2,15 @@
   "group": "supplementaries",
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "01"
+    "0"
   ],
   "key": {
     "0": {
-      "item": "minecraft:crimson_slab"
-    },
-    "1": {
-      "item": "minecraft:crimson_slab"
+      "item": "minecraft:crimson_sign"
     }
   },
   "result": {
     "item": "supplementaries:sign_post_crimson",
-    "count": 1
+    "count": 2
   }
 }

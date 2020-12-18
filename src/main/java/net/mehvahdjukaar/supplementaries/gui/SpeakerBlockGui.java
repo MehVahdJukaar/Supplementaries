@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import net.mehvahdjukaar.supplementaries.blocks.SpeakerBlockTile;
+import net.mehvahdjukaar.supplementaries.blocks.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.network.Networking;
 import net.mehvahdjukaar.supplementaries.network.UpdateServerSpeakerBlockPacket;
 import net.minecraft.client.Minecraft;

@@ -1,9 +1,7 @@
 package net.mehvahdjukaar.supplementaries.items;
 
-import net.mehvahdjukaar.supplementaries.blocks.CageBlock;
-import net.mehvahdjukaar.supplementaries.blocks.CageBlockTile;
+import net.mehvahdjukaar.supplementaries.blocks.tiles.CageBlockTile;
 import net.mehvahdjukaar.supplementaries.blocks.JarBlock;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;

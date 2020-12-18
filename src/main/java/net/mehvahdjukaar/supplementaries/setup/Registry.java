@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.setup;
 
 import com.google.common.collect.Lists;
 import net.mehvahdjukaar.supplementaries.blocks.*;
+import net.mehvahdjukaar.supplementaries.blocks.tiles.*;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.entities.FireflyEntity;
 import net.mehvahdjukaar.supplementaries.gui.NoticeBoardContainer;
@@ -287,6 +288,13 @@ public class Registry {
             ITEMS.add(CANDLE_HOLDER_ITEM);
         }
 
+        //globe
+        if(RegistryConfigs.reg.GLOBE_ENABLED.get()){
+            BLOCKS.add(GLOBE);
+            TILES.add(GLOBE_TILE);
+            ITEMS.add(GLOBE_ITEM);
+        }
+
         //flag
         if(RegistryConfigs.reg.FLAG_ENABLED.get()) {
             BLOCKS.add(FLAG);
@@ -354,7 +362,6 @@ public class Registry {
     public static final Block PEDESTAL = new PedestalBlock(
             AbstractBlock.Properties.create(Material.ROCK, MaterialColor.STONE)
                     .hardnessAndResistance(2f, 6f)
-                    .harvestLevel(1)
                     .setRequiresTool()
                     .harvestTool(ToolType.PICKAXE)
     ).setRegistryName(PEDESTAL_NAME);
@@ -369,7 +376,7 @@ public class Registry {
     public static final Block WIND_VANE = new WindVaneBlock(
             AbstractBlock.Properties.create(Material.IRON, MaterialColor.IRON)
                     .hardnessAndResistance(5f, 6f)
-                    .harvestLevel(2)
+                    .harvestLevel(1)
                     .setRequiresTool()
                     .sound(SoundType.METAL)
                     .harvestTool(ToolType.PICKAXE)
@@ -464,7 +471,7 @@ public class Registry {
     public static final Block FAUCET = new FaucetBlock(
             AbstractBlock.Properties.create(Material.IRON, MaterialColor.IRON)
                     .hardnessAndResistance(3f, 4.8f)
-                    .harvestLevel(2)
+                    .harvestLevel(1)
                     .setRequiresTool()
                     .sound(SoundType.METAL)
                     .harvestTool(ToolType.PICKAXE)
@@ -497,7 +504,7 @@ public class Registry {
     public static final Block PISTON_LAUNCHER = new PistonLauncherBlock(
             AbstractBlock.Properties.create(Material.IRON, MaterialColor.IRON)
                     .hardnessAndResistance(4f, 5f)
-                    .harvestLevel(2)
+                    .harvestLevel(1)
                     .sound(SoundType.METAL)
                     .harvestTool(ToolType.PICKAXE)
                     .setRequiresTool()
@@ -513,7 +520,7 @@ public class Registry {
     public static final Block PISTON_LAUNCHER_HEAD = new PistonLauncherHeadBlock(
             AbstractBlock.Properties.create(Material.IRON, MaterialColor.IRON)
                     .hardnessAndResistance(4f, 5f)
-                    .harvestLevel(2)
+                    .harvestLevel(1)
                     .sound(SoundType.METAL)
                     .harvestTool(ToolType.PICKAXE)
                     .noDrops()
@@ -523,7 +530,7 @@ public class Registry {
     public static final Block PISTON_LAUNCHER_ARM = new PistonLauncherArmBlock(
             AbstractBlock.Properties.create(Material.IRON, MaterialColor.IRON)
                     .hardnessAndResistance(4f, 5f)
-                    .harvestLevel(2)
+                    .harvestLevel(1)
                     .sound(SoundType.METAL)
                     .harvestTool(ToolType.PICKAXE)
                     .notSolid()
@@ -867,7 +874,7 @@ public class Registry {
                     .setLightLevel((state) -> state.get(BlockStateProperties.LIT)? 14 : 0)
                     .setRequiresTool()
                     .harvestTool(ToolType.PICKAXE)
-                    .harvestLevel(2)
+                    .harvestLevel(1)
     ).setRegistryName(CANDELABRA_NAME);
     public static final Item CANDELABRA_ITEM = new BlockItem(CANDELABRA,
             new Item.Properties().group(ItemGroup.DECORATIONS)).setRegistryName(CANDELABRA_NAME);
@@ -881,7 +888,7 @@ public class Registry {
                     .setLightLevel((state) -> 14)
                     .setRequiresTool()
                     .harvestTool(ToolType.PICKAXE)
-                    .harvestLevel(2)
+                    .harvestLevel(1)
     ).setRegistryName(CANDELABRA_NAME_SILVER);
     public static final Item CANDELABRA_ITEM_SILVER = new BlockItem(CANDELABRA_SILVER,
             new Item.Properties().group(ItemGroup.DECORATIONS)).setRegistryName(CANDELABRA_NAME_SILVER);
@@ -909,7 +916,7 @@ public class Registry {
                     .sound(SoundType.METAL)
                     .setRequiresTool()
                     .harvestTool(ToolType.PICKAXE)
-                    .harvestLevel(2)
+                    .harvestLevel(1)
     ).setRegistryName(COG_BLOCK_NAME);
     public static final Item COG_BLOCK_ITEM = new BlockItem(COG_BLOCK,
             new Item.Properties().group(ItemGroup.REDSTONE)).setRegistryName(COG_BLOCK_NAME);
@@ -950,6 +957,21 @@ public class Registry {
                     .sound(SoundType.LANTERN), ParticleTypes.FLAME).setRegistryName(SCONCE_LEVER_NAME);
     public static final Item SCONCE_LEVER_ITEM = new BlockItem(SCONCE_LEVER,
             (new Item.Properties()).group(ItemGroup.REDSTONE)).setRegistryName(SCONCE_LEVER_NAME);
+
+    //globe
+    public static final String GLOBE_NAME = "globe";
+    public static final Block GLOBE = new GlobeBlock(
+            AbstractBlock.Properties.create(Material.IRON, MaterialColor.ORANGE_TERRACOTTA)
+                    .sound(SoundType.METAL)
+                    .hardnessAndResistance(2, 4)
+                    .harvestTool(ToolType.PICKAXE)
+                    .setRequiresTool()
+                    .harvestLevel(1)
+    ).setRegistryName(GLOBE_NAME);
+    public static final TileEntityType<?> GLOBE_TILE =  TileEntityType.Builder.create(
+            GlobeBlockTile::new, GLOBE).build(null).setRegistryName(GLOBE_NAME);
+    public static final Item GLOBE_ITEM = new BlockItem(GLOBE,
+            new Item.Properties().group(ItemGroup.DECORATIONS)).setRegistryName(GLOBE_NAME);
 
     //candle holder
     public static final String CANDLE_HOLDER_NAME = "candle_holder";

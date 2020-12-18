@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.network;
 
-import net.mehvahdjukaar.supplementaries.blocks.SpeakerBlockTile;
+import net.mehvahdjukaar.supplementaries.blocks.tiles.SpeakerBlockTile;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;

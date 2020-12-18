@@ -5,23 +5,32 @@ import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.monster.SlimeEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
+import net.minecraft.world.World;
 
 public class EmptyCageItem extends BlockItem {
 
     public EmptyCageItem(Block blockIn, Properties properties) {
         super(blockIn, properties);
     }
+/*
+    @Override
+    public boolean onLeftClickEntity(ItemStack stack, PlayerEntity player, Entity entity) {
+        if(!(entity instanceof LivingEntity))return false;
+        return this.itemInteractionForEntity(stack,player, ((LivingEntity) entity),player.getActiveHand()).isSuccessOrConsume();
+    }
+*/
 
+//TODO: replace all actionresourl.SUCCESS with ActionResultType.func_233537a(World::isRemote). CONSUME=server, SUCCESS=client
 
     @Override
     public ActionResultType itemInteractionForEntity(ItemStack stack, PlayerEntity player, LivingEntity entity, Hand hand) {
-
         ResourceLocation n =  entity.getType().getRegistryName();
         if(n==null)return ActionResultType.PASS;
         String name = n.toString();

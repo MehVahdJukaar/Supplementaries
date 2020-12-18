@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.blocks;
 
+import net.mehvahdjukaar.supplementaries.blocks.tiles.NoticeBoardBlockTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;
@@ -22,6 +23,7 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 public class NoticeBoardBlock extends Block {
@@ -147,13 +149,14 @@ public class NoticeBoardBlock extends Block {
     }
 
     @Override
-    public void neighborChanged(BlockState state, World world, BlockPos pos, Block neighborBlock, BlockPos fromPos, boolean moving) {
-        //for culling text
-        TileEntity te = world.getTileEntity(pos);
-        if (te instanceof NoticeBoardBlockTile) {
-            ((NoticeBoardBlockTile)te).updateTextVisibility(state, world, pos, fromPos);
+    public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
+        if(facing==stateIn.get(FACING)){
+            TileEntity te = worldIn.getTileEntity(currentPos);
+            if(te instanceof NoticeBoardBlockTile){
+                ((NoticeBoardBlockTile)te).textVisible=!facingState.isSolidSide(worldIn,currentPos,facing.getOpposite());
+            }
         }
-        super.neighborChanged(state, world, pos, neighborBlock, fromPos, moving);
+        return stateIn;
     }
 
     @Override

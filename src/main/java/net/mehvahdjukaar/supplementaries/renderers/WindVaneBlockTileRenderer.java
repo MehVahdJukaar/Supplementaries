@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.renderers;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.mehvahdjukaar.supplementaries.blocks.WindVaneBlock;
-import net.mehvahdjukaar.supplementaries.blocks.WindVaneBlockTile;
+import net.mehvahdjukaar.supplementaries.blocks.tiles.WindVaneBlockTile;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;

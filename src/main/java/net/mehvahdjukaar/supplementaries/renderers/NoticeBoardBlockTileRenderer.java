@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.renderers;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import net.mehvahdjukaar.supplementaries.blocks.NoticeBoardBlockTile;
+import net.mehvahdjukaar.supplementaries.blocks.tiles.NoticeBoardBlockTile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IReorderingProcessor;
@@ -18,6 +19,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.ITextProperties;
+import net.minecraft.world.World;
 import net.minecraft.world.storage.MapData;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -57,7 +59,9 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
             matrixStackIn.translate(0, 0, 0.5);
 
             //render map
-            MapData mapdata = FilledMapItem.getMapData(stack, tile.getWorld());
+
+            MapData mapdata = FilledMapItem.getData(stack, tile.getWorld());
+            //MapData mapdata = tile.mapData;
             if(mapdata != null){
                 matrixStackIn.push();
                 matrixStackIn.translate(0,0,0.008);

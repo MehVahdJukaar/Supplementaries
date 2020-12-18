@@ -1,15 +1,12 @@
 package net.mehvahdjukaar.supplementaries.items;
 
 import net.mehvahdjukaar.supplementaries.blocks.JarBlock;
-import net.mehvahdjukaar.supplementaries.blocks.JarBlockTile;
-import net.mehvahdjukaar.supplementaries.common.CommonUtil;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.blocks.tiles.JarBlockTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;
@@ -18,7 +15,6 @@ import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
-import net.minecraft.util.DrinkHelper;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;

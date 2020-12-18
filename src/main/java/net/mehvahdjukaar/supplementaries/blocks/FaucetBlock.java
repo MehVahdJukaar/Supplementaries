@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.blocks;
 
+import net.mehvahdjukaar.supplementaries.blocks.tiles.FaucetBlockTile;
+import net.mehvahdjukaar.supplementaries.blocks.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.minecraft.block.*;
 import net.minecraft.entity.LivingEntity;
@@ -115,7 +117,8 @@ public class FaucetBlock extends Block implements  IWaterLoggable{
         return super.updatePostPlacement(stateIn,facing,facingState,worldIn,currentPos,facingPos);
     }
 
-    //TODO: replace this with updatePostPlacement
+    //TODO: replace this with updatePostPlacement. this will make faucets rotate correctly with turn table
+    //TODO!!! also fix faucet glass connection shading
     @Override
     public void neighborChanged(BlockState state, World world, BlockPos pos, Block neighborBlock, BlockPos fromPos, boolean moving) {
         super.neighborChanged(state, world, pos, neighborBlock, fromPos, moving);
@@ -193,10 +196,12 @@ public class FaucetBlock extends Block implements  IWaterLoggable{
         builder.add(EXTENDED,FACING, ENABLED, POWERED, HAS_WATER, HAS_JAR, WATERLOGGED);
     }
 
+    @Override
     public BlockState rotate(BlockState state, Rotation rot) {
         return state.with(FACING, rot.rotate(state.get(FACING)));
     }
 
+    @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
         return state.rotate(mirrorIn.toRotation(state.get(FACING)));
     }

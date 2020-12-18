@@ -2,18 +2,15 @@
   "group": "supplementaries",
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "01"
+    "0"
   ],
   "key": {
     "0": {
-      "item": "minecraft:oak_slab"
-    },
-    "1": {
-      "item": "minecraft:oak_slab"
+      "item": "minecraft:oak_sign"
     }
   },
   "result": {
     "item": "supplementaries:sign_post_oak",
-    "count": 1
+    "count": 2
   }
 }

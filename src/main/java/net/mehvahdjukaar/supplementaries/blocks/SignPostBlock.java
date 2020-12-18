@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.blocks;
 
 
+import net.mehvahdjukaar.supplementaries.blocks.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil.WoodType;
 import net.mehvahdjukaar.supplementaries.gui.SignPostGui;
@@ -33,13 +34,13 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.common.extensions.IForgeBlock;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
 
 
-public class SignPostBlock extends Block implements IWaterLoggable{
+public class SignPostBlock extends Block implements IWaterLoggable, IForgeBlock {
     protected static final VoxelShape SHAPE = Block.makeCuboidShape(5D, 0.0D, 5D, 11D, 16.0D, 11D);
     protected static final VoxelShape COLLISION_SHAPE = Block.makeCuboidShape(5D, 0.0D, 5D, 11D, 24.0D, 11D);
 
@@ -52,13 +53,22 @@ public class SignPostBlock extends Block implements IWaterLoggable{
     }
 
     @Override
+    public float getPlayerRelativeBlockHardness(BlockState state, PlayerEntity player, IBlockReader worldIn, BlockPos pos) {
+        TileEntity te = worldIn.getTileEntity(pos);
+        if(te instanceof SignPostBlockTile){
+            return ((SignPostBlockTile)te).fenceBlock.getPlayerRelativeBlockHardness(player,worldIn,pos);
+        }
+        return super.getPlayerRelativeBlockHardness(state, player, worldIn, pos);
+    }
+
+    @Override
     public FluidState getFluidState(BlockState state) {
         return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
     }
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        boolean flag = context.getWorld().getFluidState(context.getPos()).getFluid() == Fluids.WATER;;
+        boolean flag = context.getWorld().getFluidState(context.getPos()).getFluid() == Fluids.WATER;
         return this.getDefaultState().with(WATERLOGGED, flag);
     }
 

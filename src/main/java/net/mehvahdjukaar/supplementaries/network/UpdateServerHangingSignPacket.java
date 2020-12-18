@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.network;
 
 
-import net.mehvahdjukaar.supplementaries.blocks.HangingSignBlockTile;
+import net.mehvahdjukaar.supplementaries.blocks.tiles.HangingSignBlockTile;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;

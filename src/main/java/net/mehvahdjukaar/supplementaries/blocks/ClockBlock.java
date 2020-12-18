@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.blocks;
 
+import net.mehvahdjukaar.supplementaries.blocks.tiles.ClockBlockTile;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -20,7 +21,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
@@ -28,7 +28,6 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
 
@@ -62,7 +61,8 @@ public class ClockBlock extends Block implements IWaterLoggable {
             String a = time < 12000 ? " AM" : " PM";
             player.sendStatusMessage(new StringTextComponent(h + ":" + ((m<10)?"0":"") + m+ a), true);
         }
-        return ActionResultType.SUCCESS;
+        //TODO: do this fo all ActionResultType
+        return ActionResultType.func_233537_a_(worldIn.isRemote);
     }
 
     public BlockState rotate(BlockState state, Rotation rot) {

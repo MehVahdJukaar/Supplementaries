@@ -11,7 +11,7 @@ issueTrackerURL="https://www.curseforge.com/minecraft/mc-mods/supplementaries/is
 
 modId="supplementaries" #mandatory
 
-version="0.9.11" #mandatory
+version="0.9.12" #mandatory
 
 displayName="Supplementaries" #mandatory
 
@@ -21,7 +21,7 @@ displayURL="https://www.curseforge.com/minecraft/mc-mods/supplementaries" #optio
 
 logoFile="logo.png" #optional
 
-credits="Umaroth senpai" #optional
+credits="see curse forge page" #optional
 
 authors="MehVahdJukaar" #optional
 

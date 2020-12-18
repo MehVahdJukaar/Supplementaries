@@ -121,16 +121,25 @@ public class ServerConfigs {
                     "That's due to a vanilla bug. Check in a new world if the mobs you added here work before adding to a modpack")
                     .defineList("mobs", defaultMobs,s -> true);
             List<String> defaultMobsTinted = Arrays.asList("minecraft:endermite","minecraft:slime",
-                    "minecraft:bee","minecraft:magma_cube", "minecraft:vex","iceandfire:pixie");
+                    "minecraft:bee","minecraft:magma_cube", "minecraft:vex","iceandfire:pixie","alexmobs:crimson_mosquito");
             MOB_JAR_TINTED_ALLOWED_MOBS = builder.comment("tinted jar catchable mobs")
                     .defineList("tinted_jar_mobs", defaultMobsTinted,s -> true);
             builder.pop();
 
             //cage
-            builder.push("cage");
+            builder.comment("I haven't tested most of the mods included here. let me know if they work")
+                    .push("cage");
             List<String> defaultCageMobs = Arrays.asList("minecraft:endermite","minecraft:slime","minecraft:parrot",
                     "minecraft:bee","minecraft:magma_cube", "minecraft:vex","minecraft:rabbit", "minecraft:cat",
-                    "minecraft:chicken","minecraft:bat","iceandfire:pixie");
+                    "minecraft:chicken","minecraft:bat","iceandfire:pixie","minecraft:fox","minecraft:ocelot",
+                    "alexmobs:roadrunner","alexmobs:hummingbird","alexmobs:crimson_mosquito", "alexmobs:rattlesnake",
+                    "alexmobs:lobster","alexmobs:capuchin_monkey","alexmobs:warped_toad","mysticalworld:beetle",
+                    "mysticalworld:frog", "mysticalworld:silver_fox", "mysticalworld:sprout", "mysticalworld:endermini", "mysticalworld:lava_cat",
+                    "mysticalworld:owl", "mysticalworld:silkworm", "mysticalworld:hell_sprout","quark:toretoise",
+                    "quark:crab", "quark:foxhound", "quark:stoneling", "quark:frog","rats:rat", "rats:piper",
+                    "rats:plague_doctor", "rats:black_death", "rats:plague_cloud", "rats:plague_beast", "rats:rat_king", "rats:demon_rat", "rats:ratlantean_spirit",
+                    "rats:ratlantean_automation", "rats:feral_ratlantean", "rats:neo_ratlantean", "rats:pirat", "rats:ghost_pirat", "rats:dutchrat", "rats:ratfish",
+                    "rats:ratlantean_ratbot", "rats:rat_baron", "goblintraders:goblin_trader", "goblintrader:vein_goblin_trader");
             CAGE_ALLOWED_MOBS = builder.comment("catchable mobs")
                     .defineList("cage_mobs", defaultCageMobs,s -> true);
 

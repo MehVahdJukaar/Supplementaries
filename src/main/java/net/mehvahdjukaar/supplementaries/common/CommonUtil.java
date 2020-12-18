@@ -45,6 +45,7 @@ public class CommonUtil {
 
 
     //textures
+    public static final ResourceLocation SAND_TEXTURE = new ResourceLocation("minecraft:block/sand");
     public static final ResourceLocation WATER_TEXTURE = new ResourceLocation("minecraft:block/water_still");
     public static final ResourceLocation LAVA_TEXTURE = new ResourceLocation("minecraft:block/lava_still");
     public static final ResourceLocation MILK_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID, "blocks/milk_liquid");
@@ -56,19 +57,26 @@ public class CommonUtil {
     public static final ResourceLocation FISHIES_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID, "blocks/fishies");
     public static final ResourceLocation BELLOWS_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID, "blocks/bellows");
     public static final ResourceLocation LASER_BEAM_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID, "blocks/laser_beam");
+    public static final ResourceLocation LASER_OVERLAY_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID, "blocks/laser_overlay");
     public static final ResourceLocation LASER_BEAM_END_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID, "blocks/laser_beam_end");
     public static final ResourceLocation SOUP_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID, "blocks/soup_liquid");
     public static final ResourceLocation FIREFLY_TEXTURE =  new ResourceLocation(Supplementaries.MOD_ID+":textures/entity/firefly.png");
     public static final ResourceLocation CLOCK_HAND_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID, "blocks/clock_hand");
+    public static final ResourceLocation GLOBE_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID, "blocks/globe_the_world");
+
 
 
     public static List<ResourceLocation> getTextures() {
         return new ArrayList<>(Arrays.asList(MILK_TEXTURE, POTION_TEXTURE, HONEY_TEXTURE, DRAGON_BREATH_TEXTURE, SOUP_TEXTURE,
-                XP_TEXTURE, FAUCET_TEXTURE, FISHIES_TEXTURE, BELLOWS_TEXTURE, LASER_BEAM_TEXTURE, LASER_BEAM_END_TEXTURE, CLOCK_HAND_TEXTURE));
+                XP_TEXTURE, FAUCET_TEXTURE, FISHIES_TEXTURE, BELLOWS_TEXTURE, LASER_BEAM_TEXTURE, LASER_BEAM_END_TEXTURE,LASER_OVERLAY_TEXTURE, CLOCK_HAND_TEXTURE, GLOBE_TEXTURE));
     }
+
+
+
 
     //fluids
     public enum JarLiquidType {
+        //TODO: move to config and add mod support
         // color is handles separately. here it's just for default case  FF6600
         WATER(WATER_TEXTURE, 0x3F76E4, true, 1f, true, true, false, -1),
         LAVA(LAVA_TEXTURE, 0xfd6d15, false, 1f, false, true, false, -1),
@@ -337,7 +345,6 @@ public class CommonUtil {
             String name = e.getType().getRegistryName().toString();
             for (JarMobType n : JarMobType.values()){
                 if(name.equals(n.type)){
-                    int a = 1;
                     return n;
                 }
             }

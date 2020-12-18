@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.blocks;
 
+import net.mehvahdjukaar.supplementaries.blocks.tiles.WallLanternBlockTile;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.minecraft.block.*;
 import net.minecraft.block.material.PushReaction;

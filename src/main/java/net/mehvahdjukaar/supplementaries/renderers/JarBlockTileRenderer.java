@@ -2,7 +2,8 @@ package net.mehvahdjukaar.supplementaries.renderers;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.mehvahdjukaar.supplementaries.blocks.JarBlockTile;
+import net.mehvahdjukaar.supplementaries.blocks.tiles.JarBlockTile;
+import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil.JarLiquidType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -64,20 +65,24 @@ public class JarBlockTileRenderer extends TileEntityRenderer<JarBlockTile> {
             if (tile.liquidType.isFish()) {
                 matrixStackIn.push();
                 IVertexBuilder builder1 = bufferIn.getBuffer(RenderType.getCutout());
-                long time = System.currentTimeMillis();
+                long time = System.currentTimeMillis() + r;
                 //TODO: fix integer division. maybe but this in tick()
-                float angle =((time / 80) + r) % 360;
-                float angle2 = ((time / 3) + r) % 360;
-                float angle3 = ((time / 350) + r) % 360;
+                float angle =(time%(360*80))/80f;
+                float angle2 = (time%(360*3))/3f;
+                float angle3 = (time%(360*350))/350f;
                 float wo = 0.015f * MathHelper.sin((float)(2 * Math.PI * angle2 / 360));
                 float ho = 0.1f * MathHelper.sin((float)(2 * Math.PI * angle3 / 360));
-                matrixStackIn.translate(0.5, 0.5, 0.5);
+                matrixStackIn.translate(0.5, 0.0635, 0.5);
+                TextureAtlasSprite sprite_s = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(CommonUtil.SAND_TEXTURE);
+                RendererUtil.addCube(builder1, matrixStackIn, 0.499f, 0.0625f, sprite_s, combinedLightIn, 16777215, 1f, combinedOverlayIn, true, true,true, true);
+                matrixStackIn.translate(0, 0.5-0.0635, 0);
                 Quaternion rotation = Vector3f.YP.rotationDegrees(-angle);
                 matrixStackIn.rotate(rotation);
                 matrixStackIn.scale(0.6f, 0.6f, 0.6f);
                 matrixStackIn.translate(0, -0.2, -0.35);
                 RendererUtil.renderFish(builder1, matrixStackIn, wo, ho, tile.liquidType.fishType, combinedLightIn, combinedOverlayIn);
                 matrixStackIn.pop();
+
             }
             if (height != 0) {
                 matrixStackIn.push();

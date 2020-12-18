@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.renderers;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.mehvahdjukaar.supplementaries.blocks.HangingSignBlock;
-import net.mehvahdjukaar.supplementaries.blocks.HangingSignBlockTile;
+import net.mehvahdjukaar.supplementaries.blocks.tiles.HangingSignBlockTile;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;

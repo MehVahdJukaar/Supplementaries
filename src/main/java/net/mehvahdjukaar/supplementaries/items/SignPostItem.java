@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.items;
 
 import net.mehvahdjukaar.supplementaries.blocks.SignPostBlock;
-import net.mehvahdjukaar.supplementaries.blocks.SignPostBlockTile;
+import net.mehvahdjukaar.supplementaries.blocks.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;

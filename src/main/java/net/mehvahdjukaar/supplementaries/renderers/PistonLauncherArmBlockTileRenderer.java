@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.renderers;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import net.mehvahdjukaar.supplementaries.blocks.PistonLauncherArmBlockTile;
+import net.mehvahdjukaar.supplementaries.blocks.tiles.PistonLauncherArmBlockTile;
 import net.mehvahdjukaar.supplementaries.blocks.PistonLauncherHeadBlock;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;

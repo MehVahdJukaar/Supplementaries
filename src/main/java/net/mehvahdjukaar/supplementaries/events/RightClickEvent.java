@@ -1,8 +1,7 @@
 package net.mehvahdjukaar.supplementaries.events;
 
 import net.mehvahdjukaar.supplementaries.blocks.WallLanternBlock;
-import net.mehvahdjukaar.supplementaries.blocks.WallLanternBlockTile;
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.blocks.tiles.WallLanternBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.advancements.CriteriaTriggers;

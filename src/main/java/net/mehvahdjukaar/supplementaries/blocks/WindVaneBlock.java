@@ -1,11 +1,11 @@
 package net.mehvahdjukaar.supplementaries.blocks;
 
 
+import net.mehvahdjukaar.supplementaries.blocks.tiles.WindVaneBlockTile;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IWaterLoggable;
-import net.minecraft.block.RepeaterBlock;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;

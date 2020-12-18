@@ -2,18 +2,15 @@
   "group": "supplementaries",
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "01"
+    "0"
   ],
   "key": {
     "0": {
-      "item": "minecraft:spruce_slab"
-    },
-    "1": {
-      "item": "minecraft:spruce_slab"
+      "item": "minecraft:spruce_sign"
     }
   },
   "result": {
     "item": "supplementaries:sign_post_spruce",
-    "count": 1
+    "count": 2
   }
 }
