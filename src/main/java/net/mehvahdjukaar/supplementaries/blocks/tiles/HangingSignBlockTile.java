@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.blocks.tiles;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.mehvahdjukaar.supplementaries.blocks.HangingSignBlock;
+import net.mehvahdjukaar.supplementaries.common.IMapDisplay;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.command.CommandSource;
@@ -38,7 +39,7 @@ import java.util.function.Function;
 import java.util.stream.IntStream;
 
 
-public class HangingSignBlockTile extends TileEntity implements ITickableTileEntity {
+public class HangingSignBlockTile extends TileEntity implements ITickableTileEntity, IMapDisplay {
 
     public static final int MAXLINES = 5;
 
@@ -56,6 +57,11 @@ public class HangingSignBlockTile extends TileEntity implements ITickableTileEnt
 
     public HangingSignBlockTile() {
         super(Registry.HANGING_SIGN_TILE);
+    }
+
+    @Override
+    public ItemStack getMapStack(){
+        return this.getStackInSlot(0);
     }
 
     @Override

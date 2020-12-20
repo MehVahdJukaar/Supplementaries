@@ -5,6 +5,7 @@ import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.monster.SlimeEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -18,6 +19,12 @@ public class EmptyJarItem extends BlockItem {
         super(blockIn, properties);
     }
 
+
+    @Override
+    public boolean onLeftClickEntity(ItemStack stack, PlayerEntity player, Entity entity) {
+        if(!(entity instanceof LivingEntity))return false;
+        return this.itemInteractionForEntity(stack,player, ((LivingEntity) entity),player.getActiveHand()).isSuccessOrConsume();
+    }
 
     @Override
     public ActionResultType itemInteractionForEntity(ItemStack stack, PlayerEntity player, LivingEntity entity, Hand hand) {
@@ -46,7 +53,7 @@ public class EmptyJarItem extends BlockItem {
 
             CommonUtil.createJarMobItemNBT(returnStack, entity, 0.875f, 0.625f);
         }
-        player.setHeldItem(player.getActiveHand(), DrinkHelper.fill(stack.copy(),player,returnStack,isFirefly));
+        player.setHeldItem(hand, DrinkHelper.fill(stack.copy(),player,returnStack,isFirefly));
         player.world.playSound(null, player.getPosition(),  SoundEvents.ITEM_BOTTLE_FILL_DRAGONBREATH, SoundCategory.BLOCKS,1,1);
 
         entity.remove();

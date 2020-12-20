@@ -5,13 +5,13 @@ import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil.JarMobType;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.entity.ChickenRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.monster.SlimeEntity;
 import net.minecraft.entity.passive.*;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
@@ -109,9 +109,23 @@ public class CageBlockTile extends TileEntity implements ITickableTileEntity {
 
     public void tick() {
         if(this.entityChanged && this.entityData!=null)this.updateMob();
-        if (!this.world.isRemote) return;
-        //for client side animation
+
+
         if (this.mob != null) {
+            //needed for eggs
+            if (!this.world.isRemote) {
+                if (this.animationType == JarMobType.CHICKEN) {
+                    ChickenEntity ch = (ChickenEntity) this.mob;
+                    if (--ch.timeUntilNextEgg <= 0) {
+                        ch.entityDropItem(Items.EGG);
+                        ch.timeUntilNextEgg = this.rand.nextInt(6000) + 6000;
+                    }
+                }
+                return;
+            }
+
+            //client side animation
+
             this.mob.ticksExisted++;
             this.prevJumpY = this.jumpY;
             switch (this.animationType) {
@@ -200,22 +214,9 @@ public class CageBlockTile extends TileEntity implements ITickableTileEntity {
                     //TODO: move jump position & stuff inside entity. merge with jar one
                 case CHICKEN:
                     ChickenEntity ch = (ChickenEntity) this.mob;
-                    /*
-                    ch.oFlap = ch.wingRotation;
-                    ch.oFlapSpeed = 1;
-                    this.destPos = (float)((double)this.destPos + (double)(this.onGround ? -1 : 4) * 0.3D);
-                    this.destPos = MathHelper.clamp(this.destPos, 0.0F, 1.0F);
-                    if (!ch.isOnGround() && ch.wingRotDelta < 1.0F) {
-                        ch.wingRotDelta = 1.0F;
-                    }
-
-                    ch.wingRotDelta = (float)((double)ch.wingRotDelta * 0.9D);
-                    ch.wingRotation += ch.wingRotDelta * 2.0F;*/
                     ch.livingTick();
-                    if(rand.nextFloat()>(ch.isOnGround()?0.99: 0.87))ch.setOnGround(!ch.isOnGround());
-                    //TODO: don't call living tick
-                    break;
 
+                    if (rand.nextFloat() > (ch.isOnGround() ? 0.99 : 0.88)) ch.setOnGround(!ch.isOnGround());
             }
         }
     }

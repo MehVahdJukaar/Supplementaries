@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.blocks.tiles;
 
 import io.netty.buffer.Unpooled;
 import net.mehvahdjukaar.supplementaries.blocks.NoticeBoardBlock;
+import net.mehvahdjukaar.supplementaries.common.IMapDisplay;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.gui.NoticeBoardContainer;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
@@ -14,20 +15,14 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
-import net.minecraft.network.IPacket;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.LockableLootTileEntity;
 import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.LightType;
-import net.minecraft.world.World;
-import net.minecraft.world.lighting.IWorldLightListener;
-import net.minecraft.world.storage.MapData;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.LazyOptional;
@@ -41,7 +36,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 
-public class NoticeBoardBlockTile extends LockableLootTileEntity implements INameable, ISidedInventory{
+public class NoticeBoardBlockTile extends LockableLootTileEntity implements INameable, ISidedInventory, IMapDisplay {
     private NonNullList<ItemStack> stacks = NonNullList.withSize(1, ItemStack.EMPTY);
     private String txt = null;
     private int fontScale = 1;
@@ -98,6 +93,10 @@ public class NoticeBoardBlockTile extends LockableLootTileEntity implements INam
         super.markDirty();
     }
 
+    @Override
+    public ItemStack getMapStack(){
+        return this.getStackInSlot(0);
+    }
 
     public void updateTile() {
         //updateTextVisibility();
@@ -176,6 +175,7 @@ public class NoticeBoardBlockTile extends LockableLootTileEntity implements INam
         compound.putBoolean("textvisible", this.textVisible);
 
         // compound.putInt("light", this.packedFrontLight);
+
         return compound;
     }
 
@@ -314,18 +314,7 @@ public class NoticeBoardBlockTile extends LockableLootTileEntity implements INam
     }
 
     public int getFrontLight() {
-        return WorldRenderer.getCombinedLight(this.world, this.pos);
-        /*
-        World world = this.getWorld();
-        assert world != null;
-        IWorldLightListener block = world.getLightManager().getLightEngine(LightType.BLOCK);
-        IWorldLightListener sky = world.getLightManager().getLightEngine(LightType.SKY);
-        BlockPos newpos = this.pos.offset(this.getDirection());
-        int u = block.getLightFor(newpos) * 16;
-        int v = sky.getLightFor(newpos) * 16;
-        return ((v << 16) | u);
-        */
-        // return this.packedFrontLight;
+        return WorldRenderer.getCombinedLight(this.world, this.pos.offset(this.getDirection()));
     }
 
     public String getText() {

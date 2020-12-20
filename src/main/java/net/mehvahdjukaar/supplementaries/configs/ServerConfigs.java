@@ -92,8 +92,8 @@ public class ServerConfigs {
             builder.pop();
             //turn table
             builder.push("turn_table");
-            TURN_TABLE_PERIOD = builder.comment("how many ticks it takes to rotate a block/entity")
-                    .defineInRange("period", 20, 1, 256);
+            //TURN_TABLE_PERIOD = builder.comment("how many ticks it takes to rotate a block/entity")
+            //        .defineInRange("period", 20, 1, 256);
             TURN_TABLE_ROTATE_ENTITIES = builder.comment("can rotate entities standing on it?")
                     .define("rotate_entities", true);
             List<String> turnTableBlacklist = Arrays.asList("minecraft:end_portal_frame");
@@ -115,13 +115,17 @@ public class ServerConfigs {
 
 
             List<String> defaultMobs = Arrays.asList("minecraft:slime",
-                    "minecraft:bee","minecraft:magma_cube","iceandfire:pixie");
+                    "minecraft:bee","minecraft:magma_cube","iceandfire:pixie","alexmobs:crimson_mosquito",
+                    "mysticalworld:frog","mysticalworld:beetle", "druidcraft:lunar_moth", "druidcraft:dreadfish","swampexpansion:slabfish",
+                    "savageandravage:creepie","betteranimalsplus:butterfly");
             MOB_JAR_ALLOWED_MOBS = builder.comment("catchable mobs \n"+
                     "BE VERY CAREFUL WITH THESE: SOME MOBS MIGHT NOT WORK OF EVEN CRASH THE GAME.\n"+
                     "That's due to a vanilla bug. Check in a new world if the mobs you added here work before adding to a modpack")
                     .defineList("mobs", defaultMobs,s -> true);
             List<String> defaultMobsTinted = Arrays.asList("minecraft:endermite","minecraft:slime",
-                    "minecraft:bee","minecraft:magma_cube", "minecraft:vex","iceandfire:pixie","alexmobs:crimson_mosquito");
+                    "minecraft:bee","minecraft:magma_cube", "minecraft:vex","iceandfire:pixie","alexmobs:crimson_mosquito",
+                    "mysticalworld:frog","mysticalworld:beetle", "druidcraft:lunar_moth", "druidcraft:dreadfish","swampexpansion:slabfish",
+                    "savageandravage:creepie","betteranimalsplus:butterfly");
             MOB_JAR_TINTED_ALLOWED_MOBS = builder.comment("tinted jar catchable mobs")
                     .defineList("tinted_jar_mobs", defaultMobsTinted,s -> true);
             builder.pop();
@@ -139,7 +143,14 @@ public class ServerConfigs {
                     "quark:crab", "quark:foxhound", "quark:stoneling", "quark:frog","rats:rat", "rats:piper",
                     "rats:plague_doctor", "rats:black_death", "rats:plague_cloud", "rats:plague_beast", "rats:rat_king", "rats:demon_rat", "rats:ratlantean_spirit",
                     "rats:ratlantean_automation", "rats:feral_ratlantean", "rats:neo_ratlantean", "rats:pirat", "rats:ghost_pirat", "rats:dutchrat", "rats:ratfish",
-                    "rats:ratlantean_ratbot", "rats:rat_baron", "goblintraders:goblin_trader", "goblintrader:vein_goblin_trader");
+                    "rats:ratlantean_ratbot", "rats:rat_baron", "goblintraders:goblin_trader", "goblintraders:vein_goblin_trader",
+                    "autumnity:snail","buzzierbees:honey_slime", "betteranimalsplus:lammergeier","betteranimalsplus:songbird",
+                    "betteranimalsplus:pheasant", "betteranimalsplus:squirrel", "betteranimalsplus:badger", "betteranimalsplus:turkey",
+                    "exoticbirds:roadrunner","exoticbirds:hummingbird","exoticbirds:woodpecker","exoticbirds:kingfisher",
+                    "exoticbirds:toucan","exoticbirds:macaw","exoticbirds:magpie", "exoticbirds:kiwi", "exoticbirds:owl",
+                    "exoticbirds:gouldianfinch", "exoticbirds:gull", "exoticbirds:pigeon", "exoticbirds:penguin", "exoticbirds:duck",
+                    "exoticbirds:booby", "exoticbirds:cardinal", "exoticbirds:bluejay", "exoticbirds:robin", "exoticbirds:kookaburra",
+                    "exoticbirds:budgerigar", "exoticbirds:cockatoo","swampexpansion:slabfish");
             CAGE_ALLOWED_MOBS = builder.comment("catchable mobs")
                     .defineList("cage_mobs", defaultCageMobs,s -> true);
 
@@ -266,7 +277,7 @@ public class ServerConfigs {
             LAUNCHER_VEL = block.LAUNCHER_VEL.get();
             LAUNCHER_HEIGHT = block.LAUNCHER_HEIGHT.get();
 
-            TURN_TABLE_PERIOD = block.TURN_TABLE_PERIOD.get();
+            //TURN_TABLE_PERIOD = block.TURN_TABLE_PERIOD.get();
             TURN_TABLE_ROTATE_ENTITIES = block.TURN_TABLE_ROTATE_ENTITIES.get();
             TURN_TABLE_BLACKLIST = block.TURN_TABLE_BLACKLIST.get();
 

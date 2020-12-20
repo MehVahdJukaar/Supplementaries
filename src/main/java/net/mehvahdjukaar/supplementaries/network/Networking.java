@@ -28,6 +28,11 @@ public class Networking{
         INSTANCE.registerMessage(nextID(), UpdateServerHangingSignPacket.class, UpdateServerHangingSignPacket::buffer,
                 UpdateServerHangingSignPacket::new, UpdateServerHangingSignPacket::handler);
 
+        INSTANCE.registerMessage(nextID(), SyncGlobeDataPacket.class, SyncGlobeDataPacket::buffer,
+                SyncGlobeDataPacket::new, SyncGlobeDataPacket::handler);
+
+        INSTANCE.registerMessage(nextID(), RequestMapDataFromServerPacket.class,RequestMapDataFromServerPacket::buffer,
+                RequestMapDataFromServerPacket::new, RequestMapDataFromServerPacket::handler);
 
 
     }

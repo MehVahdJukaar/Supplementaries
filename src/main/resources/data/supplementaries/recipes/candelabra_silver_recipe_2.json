@@ -11,7 +11,7 @@
       "item": "minecraft:torch"
     },
     "2": {
-      "tag": "forge:silver_ingot"
+      "tag": "forge:ingots/silver"
     }
   },
   "result": {

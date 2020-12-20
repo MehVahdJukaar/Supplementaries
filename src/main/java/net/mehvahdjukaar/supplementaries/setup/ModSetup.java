@@ -1,15 +1,10 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
 
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
-import net.minecraft.block.FireBlock;
 import net.minecraft.tileentity.DispenserTileEntity;
-import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.network.ICustomPacket;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 
 public class ModSetup {
 

@@ -14,6 +14,7 @@ import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
+import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
@@ -31,16 +32,16 @@ public class TurnTableBlock  extends Block {
     //TODO:figure out why these two don't match up
 
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
-    public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
+    public static final IntegerProperty POWER = BlockStateProperties.POWER_0_15;
     public static final BooleanProperty INVERTED = BlockStateProperties.INVERTED;
     public TurnTableBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.UP).with(POWERED, false).with(INVERTED, false));
+        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.UP).with(POWER, 0).with(INVERTED, false));
     }
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(FACING, POWERED, INVERTED);
+        builder.add(FACING, POWER, INVERTED);
     }
 
     public BlockState rotate(BlockState state, Rotation rot) {
@@ -59,10 +60,10 @@ public class TurnTableBlock  extends Block {
 
     @Override
     public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        boolean powerchanged = this.updatePower(state, world, pos);
-        // if power changed and is powered or facing block changed
-        if (world.getBlockState(pos).get(POWERED) && powerchanged)
+        if(this.updatePower(state, world, pos) && world.getBlockState(pos).get(POWER)!=0){
             this.tryRotate(world, pos);
+        }
+        // if power changed and is powered or facing block changed
     }
 
     @Override
@@ -85,28 +86,15 @@ public class TurnTableBlock  extends Block {
     }
 
     public boolean updatePower(BlockState state, World world, BlockPos pos) {
-        boolean ispowered = world.getRedstonePowerFromNeighbors(pos) > 0;
-        boolean haspower = state.get(POWERED);
+        int blockpower = world.getRedstonePowerFromNeighbors(pos);
+        int currentpower = state.get(POWER);
         // on-off
-        if (ispowered != haspower) {
-            world.setBlockState(pos, state.with(POWERED, ispowered), 2 | 4);
+        if (blockpower != currentpower) {
+            world.setBlockState(pos, state.with(POWER, blockpower), 2 | 4);
             return true;
             //returns if state changed
         }
         return false;
-        /*
-         *
-         * //do rotate if(nextrot == 0){ world.setBlockState(pos,
-         * state.with(NEXT_ROTATION, PERIOD), 2|4|16); this.doRotateBlock(pos, state,
-         * world); //mcserv.getPlayerList().sendMessage(new
-         * StringTextComponent("2--"+nextrot));
-         *
-         * } //keep rotating else if(haspower&&nextrot==PERIOD || nextrot!=PERIOD){
-         * world.setBlockState(pos, state.with(NEXT_ROTATION, nextrot-1), 2|4|16);
-         * world.getPendingBlockTicks().scheduleTick(pos, state.getBlock(), (int) 1);
-         * //mcserv.getPlayerList().sendMessage(new StringTextComponent("1--"+nextrot));
-         * }
-         */
     }
 
     private void tryRotate(World world, BlockPos pos) {
@@ -121,9 +109,8 @@ public class TurnTableBlock  extends Block {
         super.neighborChanged(state, world, pos, neighborBlock, fromPos, moving);
         boolean powerchanged = this.updatePower(state, world, pos);
         // if power changed and is powered or facing block changed
-        if (world.getBlockState(pos).get(POWERED) && (powerchanged || fromPos.equals(pos.offset(state.get(FACING)))))
+        if (world.getBlockState(pos).get(POWER)!=0 && (powerchanged || fromPos.equals(pos.offset(state.get(FACING)))))
             this.tryRotate(world, pos);
-        // TODO:optimize this
     }
 
     private static Vector3d rotateY(Vector3d vec, double deg) {
@@ -140,14 +127,19 @@ public class TurnTableBlock  extends Block {
         return new Vector3d(x * c + z * s, y, z * c - x * s);
     }
 
+    public static int getPeriod(BlockState state){
+        return (60-state.get(POWER)*4)+5;
+    }
+
     // rotate entities
     @Override
     public void onEntityWalk(World world, BlockPos pos, Entity e) {
         super.onEntityWalk(world, pos, e);
         if(!ServerConfigs.cached.TURN_TABLE_ROTATE_ENTITIES)return;
         BlockState state = world.getBlockState(pos);
-        if (state.get(POWERED) && state.get(FACING) == Direction.UP) {
-            float ANGLE_INCREMENT = 90f / (float)(ServerConfigs.cached.TURN_TABLE_PERIOD-1);
+        if (state.get(POWER)!=0 && state.get(FACING) == Direction.UP) {
+            float period = getPeriod(state)+1;
+            float ANGLE_INCREMENT = 90f / period;
 
             float increment = state.get(INVERTED) ? ANGLE_INCREMENT : -1 * ANGLE_INCREMENT;
             Vector3d origin = new Vector3d(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
@@ -156,19 +148,25 @@ public class TurnTableBlock  extends Block {
             Vector3d newoffset = rotateY(oldoffset, increment);
             Vector3d posdiff = origin.add(newoffset).subtract(oldpos);
 
-            e.move(MoverType.SELF, posdiff);
+            e.move(MoverType.SHULKER_BOX, posdiff);
             // e.setMotion(e.getMotion().add(adjustedposdiff));
-            e.velocityChanged = true;
+            //e.velocityChanged = true;
+            //TODO: use setMotion
             if ((e instanceof LivingEntity)) {
                 float diff = e.getRotationYawHead() - increment;
                 ((LivingEntity) e).setIdleTime(20);
                 e.setRenderYawOffset(diff);
                 e.setRotationYawHead(diff);
-                //e.setOnGround(false); //remove this?
-                e.velocityChanged = true;
+                ((LivingEntity) e).prevRotationYawHead=((LivingEntity) e).rotationYawHead;
+                e.setOnGround(true); //remove this?
+                //e.velocityChanged = true;
             }
             // e.prevRotationYaw = e.rotationYaw;
+
             e.rotationYaw -= increment;
+            e.prevRotationYaw = e.rotationYaw;
+
+            //e.rotateTowards(e.rotationYaw - increment, e.rotationPitch);
         }
     }
 

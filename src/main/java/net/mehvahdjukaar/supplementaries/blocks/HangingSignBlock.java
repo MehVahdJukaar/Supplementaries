@@ -32,7 +32,7 @@ import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
 
-public class HangingSignBlock extends Block implements  IWaterLoggable{
+public class HangingSignBlock extends Block implements  IWaterLoggable {
     //protected static final VoxelShape SHAPE_SOUTH = VoxelShapes.create(0.5625D, 0D, 1D, 0.4375D, 1D, 0D);
     protected static final VoxelShape SHAPE_NORTH = VoxelShapes.create(0.4375D, 0D, 0D, 0.5625D, 1D, 1D);
     //protected static final VoxelShape SHAPE_EAST = VoxelShapes.create(1D, 0D, 0.4375D, 0D, 1D, 0.5625D);

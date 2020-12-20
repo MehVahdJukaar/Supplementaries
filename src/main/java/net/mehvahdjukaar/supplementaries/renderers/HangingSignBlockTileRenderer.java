@@ -3,6 +3,8 @@ package net.mehvahdjukaar.supplementaries.renderers;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.mehvahdjukaar.supplementaries.blocks.HangingSignBlock;
 import net.mehvahdjukaar.supplementaries.blocks.tiles.HangingSignBlockTile;
+import net.mehvahdjukaar.supplementaries.network.Networking;
+import net.mehvahdjukaar.supplementaries.network.RequestMapDataFromServerPacket;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -14,6 +16,8 @@ import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.AbstractMapItem;
 import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IReorderingProcessor;
@@ -60,15 +64,23 @@ public class HangingSignBlockTileRenderer extends TileEntityRenderer<HangingSign
             IBakedModel ibakedmodel = itemRenderer.getItemModelWithOverrides(stack, tile.getWorld(), null);
 
             MapData mapdata = FilledMapItem.getMapData(stack, tile.getWorld());
+
             for (int v = 0; v < 2; v++) {
                 matrixStackIn.push();
                 //render map
-                if(mapdata != null){
-                    matrixStackIn.translate(0, 0, -0.0625 - 0.005);
-                    matrixStackIn.scale(-0.0068359375F, -0.0068359375F, -0.0068359375F);
-                    matrixStackIn.translate(-64.0D, -64.0D, 0.0D);
-                    //matrixStackIn.translate(0.0D, 0.0D, -1.0D);
-                    Minecraft.getInstance().gameRenderer.getMapItemRenderer().renderMap(matrixStackIn, bufferIn, mapdata, true, combinedLightIn);
+                if(stack.getItem() instanceof AbstractMapItem) {
+                    if (mapdata != null) {
+                        matrixStackIn.translate(0, 0, -0.0625 - 0.005);
+                        matrixStackIn.scale(-0.0068359375F, -0.0068359375F, -0.0068359375F);
+                        matrixStackIn.translate(-64.0D, -64.0D, 0.0D);
+                        //matrixStackIn.translate(0.0D, 0.0D, -1.0D);
+                        Minecraft.getInstance().gameRenderer.getMapItemRenderer().renderMap(matrixStackIn, bufferIn, mapdata, true, combinedLightIn);
+                    }
+                    else{
+                        //request map data from server
+                        PlayerEntity player = Minecraft.getInstance().player;
+                        Networking.INSTANCE.sendToServer(new RequestMapDataFromServerPacket(tile.getPos(),player.getUniqueID()));
+                    }
                 }
                 //render item
                 else{

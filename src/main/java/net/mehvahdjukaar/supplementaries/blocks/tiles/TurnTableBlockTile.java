@@ -5,7 +5,8 @@ import net.mehvahdjukaar.supplementaries.blocks.SignPostBlock;
 import net.mehvahdjukaar.supplementaries.blocks.TurnTableBlock;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
-import net.minecraft.block.*;
+import net.minecraft.block.BedBlock;
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
@@ -18,13 +19,12 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 
 
 public class TurnTableBlockTile extends TileEntity implements ITickableTileEntity {
-    private int cooldown = ServerConfigs.cached.TURN_TABLE_PERIOD;
+    private int cooldown = 5;
     private boolean canRotate = false;
     // private long tickedGameTime;
     public TurnTableBlockTile() {
@@ -33,6 +33,8 @@ public class TurnTableBlockTile extends TileEntity implements ITickableTileEntit
 
     public void tryRotate() {
         this.canRotate = true;
+        //updates correct cooldown
+        this.cooldown = TurnTableBlock.getPeriod(this.getBlockState());
         // allows for a rotation try nedxt period
     }
 
@@ -42,9 +44,9 @@ public class TurnTableBlockTile extends TileEntity implements ITickableTileEntit
             // cd > 0
             if (this.cooldown == 0) {
                 boolean success = this.handleRotation();
-                this.cooldown = ServerConfigs.cached.TURN_TABLE_PERIOD;
+                this.cooldown = TurnTableBlock.getPeriod(this.getBlockState());//ServerConfigs.cached.TURN_TABLE_PERIOD;
                 // if it didn't rotate last block that means that block is immovable
-                this.canRotate = (success && this.getBlockState().get(TurnTableBlock.POWERED));
+                this.canRotate = (success && this.getBlockState().get(TurnTableBlock.POWER)!=0);
             } else if (this.canRotate) {
                 this.cooldown--;
             }

@@ -12,20 +12,19 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
-import net.minecraft.world.World;
 
 public class EmptyCageItem extends BlockItem {
 
     public EmptyCageItem(Block blockIn, Properties properties) {
         super(blockIn, properties);
     }
-/*
+
     @Override
     public boolean onLeftClickEntity(ItemStack stack, PlayerEntity player, Entity entity) {
         if(!(entity instanceof LivingEntity))return false;
         return this.itemInteractionForEntity(stack,player, ((LivingEntity) entity),player.getActiveHand()).isSuccessOrConsume();
     }
-*/
+
 
 //TODO: replace all actionresourl.SUCCESS with ActionResultType.func_233537a(World::isRemote). CONSUME=server, SUCCESS=client
 
@@ -50,7 +49,7 @@ public class EmptyCageItem extends BlockItem {
 
         CommonUtil.createJarMobItemNBT(returnStack, entity, 1f, 0.875f);
 
-        player.setHeldItem(player.getActiveHand(), DrinkHelper.fill(stack.copy(),player,returnStack,false));
+        player.setHeldItem(hand, DrinkHelper.fill(stack.copy(),player,returnStack,false));
         //TODO: cage sound here
         player.world.playSound(null, player.getPosition(),  SoundEvents.ITEM_BOTTLE_FILL_DRAGONBREATH, SoundCategory.BLOCKS,1,1);
 

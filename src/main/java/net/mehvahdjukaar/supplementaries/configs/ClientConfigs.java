@@ -1,8 +1,6 @@
 package net.mehvahdjukaar.supplementaries.configs;
 
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.config.ModConfig;
 
 public class ClientConfigs {
     public static ForgeConfigSpec CLIENT_CONFIG;
