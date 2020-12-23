@@ -112,6 +112,10 @@ public class TurnTableBlockTile extends TileEntity implements ITickableTileEntit
         return false;
     }
 
+    public Vector3f toVector3f(Direction dir) {
+        return new Vector3f((float)dir.getXOffset(), (float)dir.getYOffset(), (float)dir.getZOffset());
+    }
+
 
     // spaghetti code incoming
     public boolean handleRotation() {
@@ -140,8 +144,8 @@ public class TurnTableBlockTile extends TileEntity implements ITickableTileEntit
             }
             // 6 dir blocks blocks
             else if (_bs.hasProperty(BlockStateProperties.FACING)) {
-                Vector3f targetvec = _bs.get(BlockStateProperties.FACING).toVector3f();
-                Vector3f myvec = mydir.toVector3f();
+                Vector3f targetvec = toVector3f(_bs.get(BlockStateProperties.FACING));
+                Vector3f myvec =toVector3f(mydir);
                 if (!ccw)
                     targetvec.mul(-1);
                 // hacky I know..

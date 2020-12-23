@@ -2,19 +2,20 @@
   "group": "supplementaries",
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " 1 ",
-    " 3 "
+    "111",
+    "222",
+    " 2 "
   ],
   "key": {
     "1": {
       "item": "buzzier_bees:candles"
     },
-    "3": {
-      "item": "minecraft:iron_nugget"
+    "2": {
+      "tag": "forge:ingots/silver"
     }
   },
   "result": {
-    "item": "supplementaries:candle_holder",
+    "item": "supplementaries:candelabra_silver",
     "count": 1
   }
 }

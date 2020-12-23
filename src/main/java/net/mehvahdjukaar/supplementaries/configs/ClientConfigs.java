@@ -28,6 +28,8 @@ public class ClientConfigs {
         public static ForgeConfigSpec.DoubleValue WIND_VANE_ANGLE_2;
         public static ForgeConfigSpec.DoubleValue WIND_VANE_PERIOD_1;
         public static ForgeConfigSpec.DoubleValue WIND_VANE_PERIOD_2;
+        public static ForgeConfigSpec.BooleanValue CLOCK_24H;
+        public static ForgeConfigSpec.BooleanValue GLOBE_RANDOM;
 
         public static ForgeConfigSpec.DoubleValue FLAG_SEGMENT_LENGTH;
         public static ForgeConfigSpec.DoubleValue FLAG_SPEED;
@@ -43,6 +45,14 @@ public class ClientConfigs {
                     "only cosmetic stuff here. Lots of maths to tweak every aspect of the animation. leave default if not interested")
 
                     .push("blocks");
+
+            builder.push("globe");
+            GLOBE_RANDOM = builder.comment("enable a random globe texture for each world").define("random_world", true);
+            builder.pop();
+
+            builder.push("clock_block");
+            CLOCK_24H = builder.comment("display 24h time format. False for 12h format").define("24h_format", true);
+            builder.pop();
 
             builder.push("firefly_jar");
             FIREFLY_SPAWN_PERIOD = builder.comment("particle spawn if this equation is true: time%period==0 and randomfloat>chance  where random float is a random number between 0.0 and 1.0\n"+
@@ -158,6 +168,8 @@ public class ClientConfigs {
         public static double WIND_VANE_ANGLE_2;
         public static double WIND_VANE_PERIOD_1;
         public static double WIND_VANE_PERIOD_2;
+        public static boolean CLOCK_24H;
+        public static boolean GLOBE_RANDOM;
 
         public static void refresh(){
             //particles
@@ -179,6 +191,8 @@ public class ClientConfigs {
             WIND_VANE_ANGLE_2 = block.WIND_VANE_ANGLE_2.get();
             WIND_VANE_PERIOD_1 = block.WIND_VANE_PERIOD_1.get();
             WIND_VANE_PERIOD_2 = block.WIND_VANE_PERIOD_2.get();
+            CLOCK_24H = block.CLOCK_24H.get();
+            GLOBE_RANDOM = block.GLOBE_RANDOM.get();
 
 
         }

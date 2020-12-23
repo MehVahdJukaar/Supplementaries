@@ -107,10 +107,11 @@ public class ClientSetup {
         //sconce lever
         RenderTypeLookup.setRenderLayer(Registry.SCONCE_LEVER, RenderType.getCutout());
         //globe
-        //RenderTypeLookup.setRenderLayer(Registry.GLOBE, RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(Registry.GLOBE, RenderType.getCutout());
         ClientRegistry.bindTileEntityRenderer((TileEntityType<GlobeBlockTile>)Registry.GLOBE_TILE, GlobeBlockTileRenderer::new);
-
-
+        //hourglass
+        RenderTypeLookup.setRenderLayer(Registry.HOURGLASS, RenderType.getCutout());
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<HourGlassBlockTile>)Registry.HOURGLASS_TILE, HourGlassBlockTileRenderer::new);
 
 
     }

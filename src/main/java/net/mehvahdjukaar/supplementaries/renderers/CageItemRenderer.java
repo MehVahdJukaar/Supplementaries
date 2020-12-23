@@ -11,6 +11,8 @@ import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.monster.ZombieEntity;
+import net.minecraft.entity.monster.piglin.PiglinEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -47,6 +49,8 @@ public class CageItemRenderer extends ItemStackTileEntityRenderer {
             if (world != null) {
                 Entity e = type.create(world);
                 if(e instanceof AgeableEntity)((AgeableEntity)e).setGrowingAge(cmp.getInt("Age"));
+                else if(e instanceof ZombieEntity)((ZombieEntity) e).setChild(cmp.getBoolean("IsBaby"));
+                else if(e instanceof PiglinEntity)((PiglinEntity) e).setChild(cmp.getBoolean("IsBaby"));
                 if (e != null) {
                     float y = cmp2.getFloat("YOffset");
                     float s = cmp2.getFloat("Scale");

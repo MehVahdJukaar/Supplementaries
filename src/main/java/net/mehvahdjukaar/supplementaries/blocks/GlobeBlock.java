@@ -2,11 +2,14 @@ package net.mehvahdjukaar.supplementaries.blocks;
 
 
 import net.mehvahdjukaar.supplementaries.blocks.tiles.GlobeBlockTile;
+import net.mehvahdjukaar.supplementaries.blocks.tiles.SpeakerBlockTile;
 import net.minecraft.block.*;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
@@ -15,11 +18,12 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
@@ -30,21 +34,44 @@ import javax.annotation.Nonnull;
 public class GlobeBlock extends Block implements IWaterLoggable {
     protected static final VoxelShape SHAPE = VoxelShapes.create(0.125D, 0D, 0.125D, 0.875D, 1D, 0.875D);
 
+    public static final BooleanProperty TRIGGERED = BlockStateProperties.TRIGGERED;
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+
     public GlobeBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(WATERLOGGED,false).with(FACING, Direction.NORTH));
+        this.setDefaultState(this.stateContainer.getBaseState().with(WATERLOGGED,false).with(TRIGGERED,false).with(FACING, Direction.NORTH));
+    }
+
+    @Override
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+        this.updatePower(state, worldIn, pos);
+        if (stack.hasDisplayName()) {
+            TileEntity tileentity = worldIn.getTileEntity(pos);
+            if (tileentity instanceof GlobeBlockTile) {
+                ((GlobeBlockTile) tileentity).setCustomName(stack.getDisplayName());
+            }
+        }
+    }
+
+    public void updatePower(BlockState state, World world, BlockPos pos) {
+        boolean powered = world.getRedstonePowerFromNeighbors(pos) > 0;
+        if(powered != state.get(TRIGGERED)){
+            world.setBlockState(pos, state.with(TRIGGERED, powered), 4);
+            //server
+            //calls event on server and client through packet
+            if(powered)
+                world.addBlockEvent(pos, state.getBlock(), 1, 0);
+        }
     }
 
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
                                              BlockRayTraceResult hit) {
-        TileEntity te = worldIn.getTileEntity(pos);
-        if (te instanceof GlobeBlockTile) {
-            ((GlobeBlockTile) te).spin();
+        if (!worldIn.isRemote) {
+            worldIn.addBlockEvent(pos, state.getBlock(), 1, 0);
         }
-        if(worldIn.isRemote) {
+        else {
             player.sendStatusMessage(new StringTextComponent("X: "+pos.getX()+", Z: "+pos.getZ()), true);
         }
         return ActionResultType.func_233537_a_(worldIn.isRemote);
@@ -53,13 +80,9 @@ public class GlobeBlock extends Block implements IWaterLoggable {
     @Override
     public void neighborChanged(BlockState state, World world, BlockPos pos, Block neighborBlock, BlockPos fromPos, boolean moving) {
         super.neighborChanged(state, world, pos, neighborBlock, fromPos, moving);
-        if(world.getRedstonePowerFromNeighbors(pos) > 0){
-            //server
-            //calls event on server and client through packet
-            world.addBlockEvent(pos, state.getBlock(), 1, 0);
-
-        }
+        this.updatePower(state,world,pos);
     }
+
 
     @Override
     public BlockState rotate(BlockState state, Rotation rot) {
@@ -78,6 +101,13 @@ public class GlobeBlock extends Block implements IWaterLoggable {
 
     @Override
     public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
+        if(!worldIn.isRemote()){
+            TileEntity te = worldIn.getTileEntity(currentPos);
+            if(te instanceof GlobeBlockTile){
+                //((GlobeBlockTile)te).spin();
+            }
+        }
+
         if (stateIn.get(WATERLOGGED)) {
             worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
         }
@@ -91,7 +121,7 @@ public class GlobeBlock extends Block implements IWaterLoggable {
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(WATERLOGGED, FACING);
+        builder.add(WATERLOGGED, FACING, TRIGGERED);
     }
 
     @Override
@@ -129,9 +159,13 @@ public class GlobeBlock extends Block implements IWaterLoggable {
 
     @Override
     public int getComparatorInputOverride(BlockState blockState, World world, BlockPos pos) {
-        int p = Math.max(Math.abs(pos.getX()),Math.abs(pos.getZ()))/1875000;
-        //TODO: maybe store into tile
-        return MathHelper.clamp(p,0,15);
+        TileEntity te = world.getTileEntity(pos);
+        //TODO: improve this
+            if(te instanceof GlobeBlockTile){
+                if(((GlobeBlockTile)te).yaw!=0) return 15;
+                else return ((GlobeBlockTile)te).face/-90 +1;
+            }
+        return 0;
     }
 
 }

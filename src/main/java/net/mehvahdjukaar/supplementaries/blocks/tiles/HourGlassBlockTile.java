@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.blocks.tiles;
 
-import net.mehvahdjukaar.supplementaries.blocks.ItemShelfBlock;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerInventory;
@@ -8,10 +7,13 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.ChestContainer;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.LockableLootTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
@@ -24,15 +26,28 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 
 import javax.annotation.Nullable;
+import java.util.HashMap;
 import java.util.stream.IntStream;
 
-public class ItemShelfBlockTile extends LockableLootTileEntity implements ISidedInventory {
+public class HourGlassBlockTile extends LockableLootTileEntity implements ISidedInventory, ITickableTileEntity {
     private NonNullList<ItemStack> stacks = NonNullList.withSize(1, ItemStack.EMPTY);
-
-    public ItemShelfBlockTile() {
-        super(Registry.ITEM_SHELF_TILE);
+    private static final HashMap<Item,Float> sandsTimesMap = new HashMap<>();
+    public float increment = 0;
+    public float progress = 0; //0-1 percentage of progress
+    public float prevProgress = 0;
+    public HourGlassBlockTile() {
+        super(Registry.HOURGLASS_TILE);
+        //TODO: add configs
+        sandsTimesMap.put(Items.SAND,0.1f);
     }
 
+    @Override
+    public void tick() {
+        this.prevProgress = this.progress;
+        if(this.progress!=1){
+            this.progress=Math.min(this.progress+0.001f,1f);
+        }
+    }
 
     @Override
     public void read(BlockState state, CompoundNBT compound) {
@@ -41,6 +56,7 @@ public class ItemShelfBlockTile extends LockableLootTileEntity implements ISided
             this.stacks = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
         }
         ItemStackHelper.loadAllItems(compound, this.stacks);
+        this.progress = compound.getFloat("progress");
     }
 
     @Override
@@ -49,6 +65,7 @@ public class ItemShelfBlockTile extends LockableLootTileEntity implements ISided
         if (!this.checkLootAndWrite(compound)) {
             ItemStackHelper.saveAllItems(compound, this.stacks);
         }
+        compound.putFloat("progress",this.progress);
         return compound;
     }
 
@@ -82,7 +99,7 @@ public class ItemShelfBlockTile extends LockableLootTileEntity implements ISided
 
     @Override
     public ITextComponent getDefaultName() {
-        return new StringTextComponent("itemshalf");
+        return new StringTextComponent("hourglass");
     }
 
     @Override
@@ -141,12 +158,6 @@ public class ItemShelfBlockTile extends LockableLootTileEntity implements ISided
             handler.invalidate();
     }
 
-    public float getYaw() {
-        return -this.getDirection().getOpposite().getHorizontalAngle();
-    }
 
-    public Direction getDirection() {
-        return this.getBlockState().get(ItemShelfBlock.FACING);
-    }
 }
 

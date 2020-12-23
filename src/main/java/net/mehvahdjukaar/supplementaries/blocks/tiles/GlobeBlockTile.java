@@ -9,14 +9,35 @@ import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.INameable;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
-public class GlobeBlockTile extends TileEntity implements ITickableTileEntity {
+public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, INameable {
     public float yaw = 0;
     public float prevYaw = 0;
     public int face = 0;
+    private ITextComponent customName;
 
     public GlobeBlockTile() {
         super(Registry.GLOBE_TILE);
+    }
+
+
+    public void setCustomName(ITextComponent name) {
+        this.customName = name;
+    }
+
+    public ITextComponent getName() {
+        return this.customName != null ? this.customName : this.getDefaultName();
+    }
+
+    public ITextComponent getCustomName() {
+        return this.customName;
+    }
+
+    public ITextComponent getDefaultName() {
+        return new TranslationTextComponent("block.supplementaries.globe");
     }
 
     @Override
@@ -27,19 +48,30 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity {
     @Override
     public void read(BlockState state, CompoundNBT compound) {
         super.read(state, compound);
+        if (compound.contains("CustomName", 8)) {
+            this.customName = ITextComponent.Serializer.getComponentFromJson(compound.getString("CustomName"));
+        }
         this.face = compound.getInt("face");
+        this.yaw = compound.getFloat("yaw");
     }
 
     @Override
     public CompoundNBT write(CompoundNBT compound) {
         super.write(compound);
+        if (this.customName != null) {
+            compound.putString("CustomName", ITextComponent.Serializer.toJson(this.customName));
+        }
         compound.putInt("face",this.face);
+        compound.putFloat("yaw",this.yaw);
         return compound;
     }
 
     public void spin(){
-        this.face=(this.face-=90)%360;
-        this.yaw=this.yaw+360+90;
+        int spin = 360;
+        int inc = 90;
+        this.face=(this.face-=inc)%360;
+        this.yaw=(this.yaw+spin+inc);
+        this.prevYaw=(this.prevYaw+spin+inc);
         this.markDirty();
     }
 
@@ -69,10 +101,17 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity {
 
     @Override
     public void tick() {
-        if(this.world.isRemote){
-            this.prevYaw=this.yaw;
-            if(this.yaw!=0)this.yaw=Math.max(0,(this.yaw*0.94f) -0.7f);
+        this.prevYaw=this.yaw;
+        if(this.yaw!=0){
+            if(this.yaw<0){
+                this.yaw=0;
+                this.world.updateComparatorOutputLevel(this.pos, this.getBlockState().getBlock());
+            }
+            else {
+                this.yaw = (this.yaw * 0.94f) - 0.7f;
+            }
         }
+
     }
 
     public Direction getDirection(){

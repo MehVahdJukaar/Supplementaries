@@ -63,6 +63,7 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue COG_BLOCK_ENABLED;
         public static ForgeConfigSpec.BooleanValue STONE_LAMP_ENABLED;
         public static ForgeConfigSpec.BooleanValue GLOBE_ENABLED;
+        public static ForgeConfigSpec.BooleanValue HOURGLASS_ENABLED;
         public static ForgeConfigSpec.BooleanValue LASER_ENABLED;
         public static ForgeConfigSpec.BooleanValue FLAG_ENABLED;
 
@@ -100,6 +101,7 @@ public class RegistryConfigs {
             STONE_LAMP_ENABLED = builder.define("sconce_lever", true);
             CANDLE_HOLDER_ENABLED = builder.define("sconce_lever", true);
             GLOBE_ENABLED = builder.define("globe", true);
+            HOURGLASS_ENABLED = builder.define("hourglass", true);
 
             LASER_ENABLED = builder.comment("WIP")
                     .define("laser", true);

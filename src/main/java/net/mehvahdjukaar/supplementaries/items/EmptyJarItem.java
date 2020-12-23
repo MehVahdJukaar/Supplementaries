@@ -57,7 +57,7 @@ public class EmptyJarItem extends BlockItem {
         player.world.playSound(null, player.getPosition(),  SoundEvents.ITEM_BOTTLE_FILL_DRAGONBREATH, SoundCategory.BLOCKS,1,1);
 
         entity.remove();
-        return ActionResultType.SUCCESS;
+        return ActionResultType.CONSUME;
     }
 
 }

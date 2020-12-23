@@ -46,6 +46,8 @@ public class Registry {
     private static final List<EntityType<?>> ENTITIES = Lists.newArrayList();
 
 
+
+
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
         for (Block n : BLOCKS)
@@ -83,7 +85,6 @@ public class Registry {
         for (ParticleType<?> n : PARTICLES)
             event.getRegistry().register(n);
     }
-
 
     public static void init(){
         //TODO: add configs
@@ -293,6 +294,13 @@ public class Registry {
             BLOCKS.add(GLOBE);
             TILES.add(GLOBE_TILE);
             ITEMS.add(GLOBE_ITEM);
+        }
+
+        //globe
+        if(RegistryConfigs.reg.HOURGLASS_ENABLED.get()){
+            BLOCKS.add(HOURGLASS);
+            TILES.add(HOURGLASS_TILE);
+            ITEMS.add(HOURGLASS_ITEM);
         }
 
         //flag
@@ -972,6 +980,21 @@ public class Registry {
             GlobeBlockTile::new, GLOBE).build(null).setRegistryName(GLOBE_NAME);
     public static final Item GLOBE_ITEM = new BlockItem(GLOBE,
             new Item.Properties().group(ItemGroup.DECORATIONS)).setRegistryName(GLOBE_NAME);
+
+    //hourglass
+    public static final String HOURGLASS_NAME = "hourglass";
+    public static final Block HOURGLASS = new HourGlassBlock(
+            AbstractBlock.Properties.create(Material.IRON, MaterialColor.GOLD)
+                    .sound(SoundType.METAL)
+                    .hardnessAndResistance(2, 4)
+                    .harvestTool(ToolType.PICKAXE)
+                    .setRequiresTool()
+                    .harvestLevel(1)
+    ).setRegistryName(HOURGLASS_NAME);
+    public static final TileEntityType<?> HOURGLASS_TILE =  TileEntityType.Builder.create(
+            HourGlassBlockTile::new, HOURGLASS).build(null).setRegistryName(HOURGLASS_NAME);
+    public static final Item HOURGLASS_ITEM = new BlockItem(HOURGLASS,
+            new Item.Properties().group(ItemGroup.DECORATIONS)).setRegistryName(HOURGLASS_NAME);
 
     //candle holder
     public static final String CANDLE_HOLDER_NAME = "candle_holder";

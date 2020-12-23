@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.blocks;
 
 import net.mehvahdjukaar.supplementaries.blocks.tiles.ClockBlockTile;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;
@@ -56,10 +57,15 @@ public class ClockBlock extends Block implements IWaterLoggable {
                                              BlockRayTraceResult hit) {
         if (!worldIn.isRemote()) {
             int time = ((int) (worldIn.getDayTime()+6000) % 24000);
-            int h = time / 1000;
             int m = (int) (((time % 1000f) / 1000f) * 60);
-            String a = time < 12000 ? " AM" : " PM";
-            player.sendStatusMessage(new StringTextComponent(h + ":" + ((m<10)?"0":"") + m+ a), true);
+            int h = time / 1000;
+            String a ="";
+            if(!ClientConfigs.cached.CLOCK_24H) {
+                a = time < 12000 ? " AM" : " PM";
+                h=h%12;
+            }
+            player.sendStatusMessage(new StringTextComponent(h + ":" + ((m<10)?"0":"") + m + a), true);
+
         }
         //TODO: do this fo all ActionResultType
         return ActionResultType.func_233537_a_(worldIn.isRemote);

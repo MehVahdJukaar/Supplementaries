@@ -2,8 +2,12 @@ package net.mehvahdjukaar.supplementaries.common;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.entity.monster.ZombieEntity;
+import net.minecraft.entity.monster.piglin.PiglinEntity;
 import net.minecraft.entity.passive.IFlyingAnimal;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
@@ -60,7 +64,10 @@ public class CommonUtil {
     public static final ResourceLocation SOUP_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID, "blocks/soup_liquid");
     public static final ResourceLocation FIREFLY_TEXTURE =  new ResourceLocation(Supplementaries.MOD_ID+":textures/entity/firefly.png");
     public static final ResourceLocation CLOCK_HAND_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID, "blocks/clock_hand");
-    public static final ResourceLocation GLOBE_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID, "blocks/globe_the_world");
+    public static final ResourceLocation GLOBE_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID+":textures/entity/globe_the_world.png");
+    public static final ResourceLocation GLOBE_EARTH_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID+":textures/entity/globe_earth.png");
+    public static final ResourceLocation GLOBE_FLAT_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID+":textures/entity/globe_flat.png");
+
 
 
 
@@ -312,6 +319,35 @@ public class CommonUtil {
         return new AxisAlignedBB(pos, endPos);
     }
 
+
+    public enum HourGlassSandType {
+        DEFAULT(null,0,0),
+        SAND("minecraft:sand", 60, 0xffffff);
+
+
+
+        public final String type;
+        public final float increment;
+        public final int color;
+
+        HourGlassSandType(String type, int t, int c){
+            this.type = type;
+            this.increment =1f/(float)t;
+            this.color = c;
+        }
+
+        public static HourGlassSandType getHourGlassSandType(Item i){
+            String name = i.getRegistryName().toString();
+            for (HourGlassSandType n : HourGlassSandType.values()){
+                if(name.equals(n.type)){
+                    return n;
+                }
+            }
+            return HourGlassSandType.DEFAULT;
+        }
+    }
+
+
     //used for animation only (maybe caching item renderer later)
     public enum JarMobType {
         DEFAULT(null,0,0),
@@ -360,12 +396,16 @@ public class CommonUtil {
             le.limbSwingAmount = 0;
             le.prevLimbSwingAmount = 0;
             le.limbSwing = 0;
+            le.hurtTime=0;
+            le.maxHurtTime=0;
+            le.hurtTime=0;
         }
         mob.rotationYaw = 0;
         mob.prevRotationYaw = 0;
         mob.prevRotationPitch = 0;
         mob.rotationPitch = 0;
         mob.extinguish();
+        mob.hurtResistantTime=0;
         CompoundNBT mobCompound = new CompoundNBT();
         mob.writeUnlessPassenger(mobCompound);
         if (!mobCompound.isEmpty()) {
@@ -380,10 +420,16 @@ public class CommonUtil {
             boolean flag = mob.hasNoGravity() || mob instanceof IFlyingAnimal||mob.doesEntityNotTriggerPressurePlate();
 
             JarMobType type = JarMobType.getJarMobType(mob);
+            float babyscale = 1;
+            //non ageable
+
+            if(mob instanceof AgeableEntity && ((AgeableEntity) mob).isChild()) babyscale = 2f;
+            if(mobCompound.contains("IsBaby")&&mobCompound.getBoolean("IsBaby")||
+                    (mob instanceof VillagerEntity && ((VillagerEntity) mob).isChild())) babyscale = 1.125f;
 
             float s = 1;
-            float w = mob.getWidth() ;
-            float h = mob.getHeight() ;
+            float w = mob.getWidth() *babyscale;
+            float h = mob.getHeight() *babyscale;
             //float maxh = flag ? 0.5f : 0.75f;
             //1 px border
             float maxh = blockh - (flag ? 0.25f : 0.125f) - type.adjHeight;
