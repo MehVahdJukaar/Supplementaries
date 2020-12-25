@@ -1,6 +1,8 @@
 package net.mehvahdjukaar.supplementaries.blocks.tiles;
 
 import net.mehvahdjukaar.supplementaries.blocks.GlobeBlock;
+import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.CommonUtil.GlobeType;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
@@ -17,6 +19,7 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, I
     public float yaw = 0;
     public float prevYaw = 0;
     public int face = 0;
+    public GlobeType type = GlobeType.DEFAULT;
     private ITextComponent customName;
 
     public GlobeBlockTile() {
@@ -26,6 +29,7 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, I
 
     public void setCustomName(ITextComponent name) {
         this.customName = name;
+        this.type = GlobeType.getGlobeType(name.toString());
     }
 
     public ITextComponent getName() {
@@ -53,6 +57,7 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, I
         }
         this.face = compound.getInt("face");
         this.yaw = compound.getFloat("yaw");
+        this.type = CommonUtil.GlobeType.values()[compound.getInt("globe_type")];
     }
 
     @Override
@@ -63,6 +68,7 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, I
         }
         compound.putInt("face",this.face);
         compound.putFloat("yaw",this.yaw);
+        compound.putInt("globe_type", this.type.ordinal());
         return compound;
     }
 

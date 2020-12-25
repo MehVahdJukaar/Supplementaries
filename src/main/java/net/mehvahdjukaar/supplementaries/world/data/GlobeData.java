@@ -19,6 +19,7 @@ public class GlobeData extends WorldSavedData {
     public static final String DATA_NAME = "supplementariesGlobeData";
     public static final GlobeDataGenerator gen = new GlobeDataGenerator();
     public byte[][] colors;
+    public long seed;
     public GlobeData() {
         super(DATA_NAME);
         this.colors= new byte[32][16];
@@ -26,12 +27,13 @@ public class GlobeData extends WorldSavedData {
 
     public GlobeData(long seed){
         super(DATA_NAME);
-        this.updateData(seed);
+        this.seed = seed;
+        this.updateData();
     }
 
-    public void updateData(long seed){
+    public void updateData(){
         //even when data is recovered from disk this is called anyways
-        this.colors = gen.generate(seed);
+        this.colors = gen.generate(this.seed);
         //set and save data
         this.markDirty();
     }
@@ -41,6 +43,7 @@ public class GlobeData extends WorldSavedData {
         for(int i = 0; i<colors.length; i++) {
             this.colors[i] = nbt.getByteArray("colors_"+i);
         }
+        this.seed = nbt.getLong("seed");
     }
 
     @Override
@@ -48,6 +51,7 @@ public class GlobeData extends WorldSavedData {
         for(int i = 0; i<colors.length; i++) {
             nbt.putByteArray("colors_"+i, this.colors[i]);
         }
+        nbt.putLong("seed",this.seed);
         return nbt;
     }
 
@@ -76,7 +80,7 @@ public class GlobeData extends WorldSavedData {
         IWorld world = event.getWorld();
         //TODO: might remove this on final release
         if(world instanceof ServerWorld && ((ServerWorld) world).getDimensionKey()==World.OVERWORLD){
-            GlobeData.get((World) world).updateData(((ServerWorld) world).getSeed());
+            GlobeData.get((World) world).updateData();
         }
     }
 

@@ -1,5 +1,8 @@
 package net.mehvahdjukaar.supplementaries.blocks.tiles;
 
+import net.mehvahdjukaar.supplementaries.blocks.HourGlassBlock;
+import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.CommonUtil.HourGlassSandType;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerInventory;
@@ -20,6 +23,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -32,20 +36,61 @@ import java.util.stream.IntStream;
 public class HourGlassBlockTile extends LockableLootTileEntity implements ISidedInventory, ITickableTileEntity {
     private NonNullList<ItemStack> stacks = NonNullList.withSize(1, ItemStack.EMPTY);
     private static final HashMap<Item,Float> sandsTimesMap = new HashMap<>();
-    public float increment = 0;
+    public HourGlassSandType sandType = HourGlassSandType.DEFAULT;
     public float progress = 0; //0-1 percentage of progress
     public float prevProgress = 0;
+    public int power = 0;
     public HourGlassBlockTile() {
         super(Registry.HOURGLASS_TILE);
         //TODO: add configs
         sandsTimesMap.put(Items.SAND,0.1f);
     }
 
+    //hijacking this method to work with hoppers
+    @Override
+    public void markDirty() {
+        //this.updateServerAndClient();
+        this.updateTile();
+        this.world.notifyBlockUpdate(this.pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
+        super.markDirty();
+    }
+
+    public void updateTile(){
+        this.sandType = HourGlassSandType.getHourGlassSandType(this.getStackInSlot(0).getItem());
+        int p = this.getDirection()==Direction.DOWN?1:0;
+        int l = this.sandType.getLight();
+        if(l!=this.getBlockState().get(HourGlassBlock.LIGHT_LEVEL)){
+            world.setBlockState(this.pos, this.getBlockState().with(HourGlassBlock.LIGHT_LEVEL,l),4);
+        }
+        this.prevProgress=p;
+        this.progress=p;
+    }
+
     @Override
     public void tick() {
-        this.prevProgress = this.progress;
-        if(this.progress!=1){
-            this.progress=Math.min(this.progress+0.001f,1f);
+        Direction dir = this.getDirection();
+        if(!this.sandType.isEmpty()){
+            this.prevProgress = this.progress;
+            if(dir==Direction.UP && this.progress != 1){
+                this.progress = Math.min(this.progress + this.sandType.increment, 1f);
+            }
+            else if(dir==Direction.DOWN && this.progress != 0){
+                this.progress = Math.max(this.progress - this.sandType.increment, 0f);
+            }
+        }
+
+        if(!this.world.isRemote){
+            int p;
+            if(dir==Direction.DOWN) {
+                p = (int) ((1-this.progress) * 15f);
+            }
+            else{
+                p = (int) ((this.progress) * 15f);
+            }
+            if(p!=this.power){
+                this.power=p;
+                this.world.updateComparatorOutputLevel(this.pos,this.getBlockState().getBlock());
+            }
         }
     }
 
@@ -56,6 +101,7 @@ public class HourGlassBlockTile extends LockableLootTileEntity implements ISided
             this.stacks = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
         }
         ItemStackHelper.loadAllItems(compound, this.stacks);
+        this.sandType = CommonUtil.HourGlassSandType.values()[compound.getInt("sand_type")];
         this.progress = compound.getFloat("progress");
     }
 
@@ -65,7 +111,8 @@ public class HourGlassBlockTile extends LockableLootTileEntity implements ISided
         if (!this.checkLootAndWrite(compound)) {
             ItemStackHelper.saveAllItems(compound, this.stacks);
         }
-        compound.putFloat("progress",this.progress);
+        compound.putInt("sand_type", this.sandType.ordinal());
+        compound.putFloat("progress", this.progress);
         return compound;
     }
 
@@ -126,7 +173,7 @@ public class HourGlassBlockTile extends LockableLootTileEntity implements ISided
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return this.isEmpty();
+        return this.isEmpty() && !CommonUtil.HourGlassSandType.getHourGlassSandType(stack.getItem()).isEmpty();
     }
 
     @Override
@@ -136,12 +183,15 @@ public class HourGlassBlockTile extends LockableLootTileEntity implements ISided
 
     @Override
     public boolean canInsertItem(int index, ItemStack stack, @Nullable Direction direction) {
+        if(direction==Direction.UP) {
+            return this.isItemValidForSlot(0, stack);
+        }
         return false;
     }
 
     @Override
     public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
-        return false;
+        return true;
     }
     private final LazyOptional<? extends IItemHandler>[] handlers = SidedInvWrapper.create(this, Direction.values());
     @Override
@@ -158,6 +208,9 @@ public class HourGlassBlockTile extends LockableLootTileEntity implements ISided
             handler.invalidate();
     }
 
+    public Direction getDirection(){
+        return this.getBlockState().get(HourGlassBlock.FACING);
+    }
 
 }
 

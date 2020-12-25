@@ -16,9 +16,11 @@ import net.minecraft.potion.Potions;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.IntegerProperty;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,6 +49,24 @@ public class CommonUtil {
 
 
     //textures
+    public static final ResourceLocation WHITE_CONCRETE_TEXTURE = new ResourceLocation("minecraft:block/white_concrete_powder");
+    public static final ResourceLocation ORANGE_CONCRETE_TEXTURE = new ResourceLocation("minecraft:block/orange_concrete_powder");
+    public static final ResourceLocation LIGHT_BLUE_CONCRETE_TEXTURE = new ResourceLocation("minecraft:block/light_blue_concrete_powder");
+    public static final ResourceLocation YELLOW_CONCRETE_TEXTURE = new ResourceLocation("minecraft:block/yellow_concrete_powder");
+    public static final ResourceLocation LIME_CONCRETE_TEXTURE = new ResourceLocation("minecraft:block/lime_concrete_powder");
+    public static final ResourceLocation PINK_CONCRETE_TEXTURE = new ResourceLocation("minecraft:block/pink_concrete_powder");
+    public static final ResourceLocation GRAY_CONCRETE_TEXTURE = new ResourceLocation("minecraft:block/gray_concrete_powder");
+    public static final ResourceLocation LIGHT_GRAY_CONCRETE_TEXTURE = new ResourceLocation("minecraft:block/light_gray_concrete_powder");
+    public static final ResourceLocation CYAN_CONCRETE_TEXTURE = new ResourceLocation("minecraft:block/cyan_concrete_powder");
+    public static final ResourceLocation PURPLE_CONCRETE_TEXTURE = new ResourceLocation("minecraft:block/purple_concrete_powder");
+    public static final ResourceLocation BLUE_CONCRETE_TEXTURE = new ResourceLocation("minecraft:block/blue_concrete_powder");
+    public static final ResourceLocation BROWN_CONCRETE_TEXTURE = new ResourceLocation("minecraft:block/brown_concrete_powder");
+    public static final ResourceLocation GREEN_CONCRETE_TEXTURE = new ResourceLocation("minecraft:block/green_concrete_powder");
+    public static final ResourceLocation RED_CONCRETE_TEXTURE = new ResourceLocation("minecraft:block/red_concrete_powder");
+    public static final ResourceLocation BLACK_CONCRETE_TEXTURE = new ResourceLocation("minecraft:block/black_concrete_powder");
+    public static final ResourceLocation MAGENTA_CONCRETE_TEXTURE = new ResourceLocation("minecraft:block/magenta_concrete_powder");
+
+    public static final ResourceLocation RED_SAND_TEXTURE = new ResourceLocation("minecraft:block/red_sand");
     public static final ResourceLocation SAND_TEXTURE = new ResourceLocation("minecraft:block/sand");
     public static final ResourceLocation WATER_TEXTURE = new ResourceLocation("minecraft:block/water_still");
     public static final ResourceLocation LAVA_TEXTURE = new ResourceLocation("minecraft:block/lava_still");
@@ -320,26 +340,93 @@ public class CommonUtil {
     }
 
 
+    public enum GlobeType {
+        DEFAULT(null, null),
+        FLAT(new String[]{"flat"}, new TranslationTextComponent("globe.supplementaries.flat")),
+        MOON(new String[]{"moon"}, new TranslationTextComponent("globe.supplementaries.moon")),
+        EARTH(new String[]{"earth", "terra","gaia","gaea","tierra","tellus","terre"},
+                new TranslationTextComponent("globe.supplementaries.earth")); //TODO: add via translationtext
+
+
+        GlobeType(String[] k, TranslationTextComponent t){
+            this.keyWords = k;
+            this.transKeyWord = t;
+        }
+
+        public final String[] keyWords;
+        public final TranslationTextComponent transKeyWord;
+
+        public static GlobeType getGlobeType(String text){
+            String name = text.toLowerCase();
+            for (GlobeType n : GlobeType.values()) {
+                if(n==DEFAULT)continue;
+                if(name.contains(n.transKeyWord.getString().toLowerCase()))return n;
+                for (String s : n.keyWords) {
+                    if (name.contains(s)) {
+                        return n;
+                    }
+                }
+            }
+            return GlobeType.DEFAULT;
+        }
+
+        public static GlobeType getGlobeType(TileEntity t){
+            if(t instanceof INameable && ((INameable) t).hasCustomName()) {
+                return getGlobeType(((INameable) t).getCustomName().toString());
+            }
+            return GlobeType.DEFAULT;
+        }
+    }
+
+
     public enum HourGlassSandType {
-        DEFAULT(null,0,0),
-        SAND("minecraft:sand", 60, 0xffffff);
+        DEFAULT(null,null,0),
+        SAND(SAND_TEXTURE,"minecraft:sand", 60),
+        RED_SAND(RED_SAND_TEXTURE,"minecraft:red_sand", 60),
+        WHITE_CONCRETE(WHITE_CONCRETE_TEXTURE,"minecraft:white_concrete_powder", 90),
+        ORANGE_CONCRETE(ORANGE_CONCRETE_TEXTURE,"minecraft:orange_concrete_powder", 90),
+        LIGHT_BLUE_CONCRETE(LIGHT_BLUE_CONCRETE_TEXTURE,"minecraft:orange_concrete_powder", 90),
+        YELLOW_CONCRETE(YELLOW_CONCRETE_TEXTURE,"minecraft:yellow_concrete_powder", 90),
+        LIME_CONCRETE(LIME_CONCRETE_TEXTURE,"minecraft:lime_concrete_powder", 90),
+        PINK_CONCRETE(PINK_CONCRETE_TEXTURE,"minecraft:pink_concrete_powder", 90),
+        GRAY_CONCRETE(GRAY_CONCRETE_TEXTURE,"minecraft:gray_concrete_powder", 90),
+        LIGHT_GRAY_CONCRETE(LIGHT_GRAY_CONCRETE_TEXTURE,"minecraft:gray_concrete_powder", 90),
+        CYAN_CONCRETE(CYAN_CONCRETE_TEXTURE,"minecraft:cyan_concrete_powder", 90),
+        PURPLE_CONCRETE(PURPLE_CONCRETE_TEXTURE,"minecraft:purple_concrete_powder", 90),
+        BLUE_CONCRETE(BLUE_CONCRETE_TEXTURE,"minecraft:blue_concrete_powder", 90),
+        BROWN_CONCRETE(BROWN_CONCRETE_TEXTURE,"minecraft:brown_concrete_powder", 90),
+        RED_CONCRETE(RED_CONCRETE_TEXTURE,"minecraft:red_concrete_powder", 90),
+        BLACK_CONCRETE(BLACK_CONCRETE_TEXTURE,"minecraft:black_concrete_powder", 90),
+        MAGENTA_CONCRETE(MAGENTA_CONCRETE_TEXTURE,"minecraft:magenta_concrete_powder", 90),
+        GUNPOWDER(GRAY_CONCRETE_TEXTURE,"minecraft:gunpowder", 80),
+        SUGAR(WHITE_CONCRETE_TEXTURE,"minecraft:sugar", 40),
+        GLOWSTONE_DUST(YELLOW_CONCRETE_TEXTURE,"minecraft:glowstone_dust", 120),
+        REDSTONE_DUST(RED_CONCRETE_TEXTURE,"minecraft:redstone", 200),
+        BLAZE_POWDER(ORANGE_CONCRETE_TEXTURE,"minecraft:blaze_powder", 100);
 
 
 
-        public final String type;
+        public final ResourceLocation texture;
+        public final String name;
         public final float increment;
-        public final int color;
 
-        HourGlassSandType(String type, int t, int c){
-            this.type = type;
+        HourGlassSandType(ResourceLocation texture, String name, int t){
+            this.texture = texture;
+            this.name = name;
             this.increment =1f/(float)t;
-            this.color = c;
+        }
+        public boolean isEmpty(){return this==DEFAULT;}
+
+        public int getLight(){
+            if(this==GLOWSTONE_DUST)return 9;
+            if(this==BLAZE_POWDER)return 6;
+            return 0;
         }
 
         public static HourGlassSandType getHourGlassSandType(Item i){
             String name = i.getRegistryName().toString();
             for (HourGlassSandType n : HourGlassSandType.values()){
-                if(name.equals(n.type)){
+                if(name.equals(n.name)){
                     return n;
                 }
             }

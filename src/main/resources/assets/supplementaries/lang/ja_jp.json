@@ -45,7 +45,8 @@
   "block.supplementaries.firefly_jar": "\u30db\u30bf\u30eb\u306e\u5165\u3063\u305f\u74f6",
   "item.supplementaries.firefly": "\u30db\u30bf\u30eb\u306e\u30b9\u30dd\u30fc\u30f3\u30a8\u30c3\u30b0",
 
-  "block.supplementaries.globe": "地球儀",
+  "block.supplementaries.hourglass" : "\u7802\u6642\u8a08",
+  "block.supplementaries.globe": "\u5730\u7403\u5100",
   "block.supplementaries.sconce_lever": "\u71ed\u53f0\u30ec\u30d0\u30fc",
   "block.supplementaries.cage": "\u30b1\u30fc\u30b8",
   "block.supplementaries.stone_lamp" : "\u77f3\u306e\u30e9\u30f3\u30d7",

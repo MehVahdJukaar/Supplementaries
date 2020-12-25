@@ -46,6 +46,12 @@
   "block.supplementaries.candelabra_silver": "Candelabro d'argento",
   "block.supplementaries.cog_block": "Blocco di ingranaggi",
 
+  "globe.supplementaries.earth": "Terra",
+  "globe.supplementaries.flat": "Piatta",
+  "message.supplementaries.command.globe_changed": "cambiato il seme del mappamondo",
+  "message.supplementaries.command.globe_reset": "seme del mappamondo resettato",
+
+
   "block.supplementaries.hourglass": "Clessidra",
   "block.supplementaries.globe": "Mappamondo",
   "block.supplementaries.cage": "Gabbia",

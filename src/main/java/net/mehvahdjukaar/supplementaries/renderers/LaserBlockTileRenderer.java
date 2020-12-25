@@ -73,8 +73,7 @@ public class LaserBlockTileRenderer extends TileEntityRenderer<LaserBlockTile> {
                 matrixStackIn.pop();
                 matrixStackIn.push();
                 IVertexBuilder builder = bufferIn.getBuffer(RenderType.getTranslucentMovingBlock());
-                RendererUtil.addCube(builder, matrixStackIn, 0.25f, 1f, sprite_o, combinedLightIn, 0xFFFFFF, 1f, combinedOverlayIn, false, false,
-                        false, false);
+                //RendererUtil.addCube(builder, matrixStackIn, 0.25f, 1f, sprite_o, combinedLightIn, 0xFFFFFF, 1f, combinedOverlayIn, false, false, false, false);
                 matrixStackIn.pop();
 
             }

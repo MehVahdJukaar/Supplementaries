@@ -45,6 +45,12 @@
   "block.supplementaries.firefly_jar": "Firefly Jar",
   "item.supplementaries.firefly": "Firefly Spawn Egg",
 
+  "globe.supplementaries.moon": "Moon",
+  "globe.supplementaries.earth": "Earth",
+  "globe.supplementaries.flat": "Flat",
+  "message.supplementaries.command.globe_changed": "globe seed changed",
+  "message.supplementaries.command.globe_reset": "globe seed reset",
+
   "block.supplementaries.hourglass" : "Hourglass",
   "block.supplementaries.globe": "Globe",
   "block.supplementaries.sconce_lever": "Sconce Lever",

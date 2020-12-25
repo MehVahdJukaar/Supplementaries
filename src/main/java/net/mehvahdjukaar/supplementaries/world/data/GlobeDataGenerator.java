@@ -1,7 +1,9 @@
 package net.mehvahdjukaar.supplementaries.world.data;
 
+import net.minecraft.client.renderer.tileentity.ChestTileEntityRenderer;
 import net.minecraft.util.math.MathHelper;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -251,6 +253,7 @@ public class GlobeDataGenerator {
     }
 
 
+
     public static class Pixel{
         public TerrainType terrain = TerrainType.WATER;
         public Biome biome = Biome.TEMPERATE;
@@ -377,8 +380,23 @@ public class GlobeDataGenerator {
         generateMushrooms();
         generateIcebergs2();
 
+        Calendar calendar = Calendar.getInstance();
+        if (calendar.get(Calendar.MONTH) + 1 == 12 && calendar.get(Calendar.DATE) >= 24 && calendar.get(Calendar.DATE) <= 26) {
+            christmas();
+        }
     }
 
+
+    public void christmas(){
+        for (Pixel[] pixel : pixels) {
+            for (Pixel value : pixel) {
+                value.biome = Biome.COLD;
+                if (value.specialFeature != Feature.NORMAL) {
+                    value.specialFeature = Feature.ICEBERG;
+                }
+            }
+        }
+    }
 
     public void generateMushrooms(){
         //sides

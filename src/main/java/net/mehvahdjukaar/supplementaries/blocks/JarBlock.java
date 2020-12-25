@@ -79,7 +79,7 @@ public class JarBlock extends Block {
             if (te.handleInteraction(player, handIn)) {
                 if (!worldIn.isRemote())
                     te.markDirty();
-                return ActionResultType.SUCCESS;
+                return ActionResultType.func_233537_a_(worldIn.isRemote);
             }
         }
         return ActionResultType.PASS;

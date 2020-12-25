@@ -281,7 +281,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
             it = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.WATER);
 
         this.addItem(it, count);
-        //update liquidType after adding item
+        //update liquidType after adding item. this should' be here. too bad
         this.updateTile();
 
 

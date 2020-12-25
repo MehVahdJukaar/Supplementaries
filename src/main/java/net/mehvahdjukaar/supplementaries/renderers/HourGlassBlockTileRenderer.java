@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.renderers;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import net.mehvahdjukaar.supplementaries.blocks.HourGlassBlock;
 import net.mehvahdjukaar.supplementaries.blocks.tiles.HourGlassBlockTile;
 import net.mehvahdjukaar.supplementaries.blocks.tiles.WallLanternBlockTile;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
@@ -16,6 +17,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -30,22 +32,39 @@ public class HourGlassBlockTileRenderer extends TileEntityRenderer<HourGlassBloc
     @Override
     public void render(HourGlassBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
-        matrixStackIn.push();
-        float h = MathHelper.lerp(partialTicks, tile.prevProgress, tile.progress);
-        matrixStackIn.translate(0.5,0.125,0.5);
-        TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(CommonUtil.SAND_TEXTURE);
+        if(tile.sandType.isEmpty())return;
 
-        int color = 0xff00ff;
+        TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(tile.sandType.texture);
+        int color = 0xffffff;
         IVertexBuilder builder = bufferIn.getBuffer(RenderType.getTranslucentMovingBlock());
+        float h = MathHelper.lerp(partialTicks, tile.prevProgress, tile.progress);
+
+        matrixStackIn.push();
+
+        matrixStackIn.translate(0.5,0.5,0.5);
+        matrixStackIn.rotate(tile.getBlockState().get(HourGlassBlock.FACING).getRotation());
+        Quaternion q = tile.getBlockState().get(HourGlassBlock.FACING).getRotation();
+        q.conjugate();
+
+
+
         if(h!=0) {
+            matrixStackIn.push();
+            matrixStackIn.translate(0,-0.25,0);
+            matrixStackIn.rotate(q);
+            matrixStackIn.translate(0,-0.125,0);
             RendererUtil.addCube(builder, matrixStackIn, 0.25f, h * 0.25f, sprite, combinedLightIn, color, 1, combinedOverlayIn, true,
                     false, true, true);
+            matrixStackIn.pop();
         }
         if(h!=1) {
-            matrixStackIn.translate(0, 0.5, 0);
-
+            matrixStackIn.push();
+            matrixStackIn.translate(0,0.25,0);
+            matrixStackIn.rotate(q);
+            matrixStackIn.translate(0,-0.125,0);
             RendererUtil.addCube(builder, matrixStackIn, 0.25f, (1 - h) * 0.25f, sprite, combinedLightIn, color, 1, combinedOverlayIn, true,
                     false, true, true);
+            matrixStackIn.pop();
         }
         matrixStackIn.pop();
     }

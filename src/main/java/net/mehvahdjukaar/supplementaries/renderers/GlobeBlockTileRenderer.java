@@ -65,64 +65,63 @@ public class GlobeBlockTileRenderer extends TileEntityRenderer<GlobeBlockTile> {
 
         IVertexBuilder builder = bufferIn.getBuffer(RenderType.getEntityCutout(CommonUtil.GLOBE_TEXTURE));
 
-        if(tile.hasCustomName()){
-            String name = tile.getCustomName().toString().toLowerCase();
-            if(name.contains("flat")){
-                IVertexBuilder builder2 = bufferIn.getBuffer(RenderType.getEntityCutout(CommonUtil.GLOBE_FLAT_TEXTURE));
-                this.renderFlat(matrixStackIn,builder2,combinedLightIn,combinedOverlayIn);
-            }
-            else if(name.contains("earth")){
-                this.renderEarth(matrixStackIn,builder,combinedLightIn,combinedOverlayIn);
-            }
-
-        }
-        else if(!ClientConfigs.cached.GLOBE_RANDOM){
+        if(!ClientConfigs.cached.GLOBE_RANDOM){
             this.renderEarth(matrixStackIn,builder,combinedLightIn,combinedOverlayIn);
         }
-        else {
-            matrixStackIn.translate(-0.25, 0.25, 0.25);
 
-            //TODO: use less transforms
+        switch(tile.type){
+            case FLAT:
+                IVertexBuilder builder2 = bufferIn.getBuffer(RenderType.getEntityCutout(CommonUtil.GLOBE_FLAT_TEXTURE));
+                this.renderFlat(matrixStackIn,builder2,combinedLightIn,combinedOverlayIn);
+                break;
+            case EARTH:
+                this.renderEarth(matrixStackIn,builder,combinedLightIn,combinedOverlayIn);
+                break;
+            default:
+            case DEFAULT:
+                matrixStackIn.translate(-0.25, 0.25, 0.25);
+
+                //TODO: use less transforms
+
+                byte[][] colors = GlobeData.get(tile.getWorld()).colors;
+
+                if (colors[0].length != 16) {
+                    matrixStackIn.pop();
+                    return;
+                }
+
+                int lu = combinedLightIn & '\uffff';
+                int lv = combinedLightIn >> 16 & '\uffff'; // ok
+
+                matrixStackIn.scale(0.0625f, 0.0625f, 0.0625f);
 
 
-            byte[][] colors = GlobeData.get(tile.getWorld()).colors;
+                renderFace(matrixStackIn, builder, colors, 0, 8, lu, lv);
 
-            if (colors[0].length != 16) {
+                matrixStackIn.rotate(nintydeg);
+
+                //up
+                matrixStackIn.push();
+                matrixStackIn.rotate(Vector3f.XP.rotationDegrees(-90));
+                matrixStackIn.translate(0, 8, 0);
+                renderFaceUp(matrixStackIn, builder, colors, 8, 0, lu, lv);
                 matrixStackIn.pop();
-                return;
+
+                //down
+                matrixStackIn.push();
+                matrixStackIn.translate(0, -8, 0);
+                matrixStackIn.rotate(Vector3f.XP.rotationDegrees(90));
+                renderFace(matrixStackIn, builder, colors, 16, 0, lu, lv);
+                matrixStackIn.pop();
+
+                renderFace(matrixStackIn, builder, colors, 8, 8, lu, lv);
+                matrixStackIn.rotate(nintydeg);
+                renderFace(matrixStackIn, builder, colors, 16, 8, lu, lv);
+                matrixStackIn.rotate(nintydeg);
+                renderFace(matrixStackIn, builder, colors, 24, 8, lu, lv);
+                break;
+
             }
-
-            int lu = combinedLightIn & '\uffff';
-            int lv = combinedLightIn >> 16 & '\uffff'; // ok
-
-            matrixStackIn.scale(0.0625f, 0.0625f, 0.0625f);
-
-
-            renderFace(matrixStackIn, builder, colors, 0, 8, lu, lv);
-
-            matrixStackIn.rotate(nintydeg);
-
-            //up
-            matrixStackIn.push();
-            matrixStackIn.rotate(Vector3f.XP.rotationDegrees(-90));
-            matrixStackIn.translate(0, 8, 0);
-            renderFaceUp(matrixStackIn, builder, colors, 8, 0, lu, lv);
-            matrixStackIn.pop();
-
-            //down
-            matrixStackIn.push();
-            matrixStackIn.translate(0, -8, 0);
-            matrixStackIn.rotate(Vector3f.XP.rotationDegrees(90));
-            renderFace(matrixStackIn, builder, colors, 16, 0, lu, lv);
-            matrixStackIn.pop();
-
-            renderFace(matrixStackIn, builder, colors, 8, 8, lu, lv);
-            matrixStackIn.rotate(nintydeg);
-            renderFace(matrixStackIn, builder, colors, 16, 8, lu, lv);
-            matrixStackIn.rotate(nintydeg);
-            renderFace(matrixStackIn, builder, colors, 24, 8, lu, lv);
-
-        }
         matrixStackIn.pop();
     }
 
