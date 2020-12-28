@@ -1,35 +1,16 @@
 {
-  "group": "supplementaries",
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "012",
-    "3 5",
-    "678"
+    "000",
+    "1 1",
+    "000"
   ],
   "key": {
     "0": {
       "tag": "minecraft:wooden_slabs"
     },
     "1": {
-      "tag": "minecraft:wooden_slabs"
-    },
-    "2": {
-      "tag": "minecraft:wooden_slabs"
-    },
-    "3": {
-      "item": "minecraft:paper"
-    },
-    "5": {
-      "item": "minecraft:paper"
-    },
-    "6": {
-      "tag": "minecraft:wooden_slabs"
-    },
-    "7": {
-      "tag": "minecraft:wooden_slabs"
-    },
-    "8": {
-      "tag": "minecraft:wooden_slabs"
+      "item": "minecraft:leather"
     }
   },
   "result": {

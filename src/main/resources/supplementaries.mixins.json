@@ -1,0 +1,18 @@
+
+{
+    "minVersion": "0.8",
+    "required": true,
+    "compatibilityLevel": "JAVA_8",
+    "refmap": "supplementaries.refmap.json",
+
+    "package": "net.mehvahdjukaar.supplementaries.mixins",
+    "mixins": [
+        "MapDataMixin",
+        "CatSitOnBlockMixin"
+    ],
+    "client": [
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
+}

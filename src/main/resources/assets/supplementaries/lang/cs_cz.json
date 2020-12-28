@@ -44,6 +44,12 @@
   "block.supplementaries.firefly_jar": "Sklenice se světluškou",
   "item.supplementaries.firefly": "Vajíčko se světluškou",
 
+  "globe.supplementaries.moon": "Měsíc",
+  "globe.supplementaries.earth": "Země",
+  "globe.supplementaries.flat": "Plochá Země",
+  "message.supplementaries.command.globe_changed": "Semeno pro generátor světa glóbusu bylo změněno",
+  "message.supplementaries.command.globe_reset": "Semeno pro generátor světa glóbusu bylo resetováno",
+
   "block.supplementaries.hourglass": "Přesýpací hodiny",
   "block.supplementaries.globe": "Glóbus",
   "block.supplementaries.sconce_lever": "Aktivační pochodeň",

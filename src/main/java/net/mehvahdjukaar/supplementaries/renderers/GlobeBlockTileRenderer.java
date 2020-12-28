@@ -4,7 +4,6 @@ package net.mehvahdjukaar.supplementaries.renderers;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.mehvahdjukaar.supplementaries.blocks.tiles.GlobeBlockTile;
-import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.world.data.GlobeData;
 import net.mehvahdjukaar.supplementaries.world.data.GlobeDataGenerator;
@@ -63,7 +62,7 @@ public class GlobeBlockTileRenderer extends TileEntityRenderer<GlobeBlockTile> {
         matrixStackIn.rotate(Vector3f.XP.rotationDegrees(-22.5f));
         matrixStackIn.rotate(Vector3f.YP.rotationDegrees(MathHelper.lerp(partialTicks, tile.prevYaw+tile.face, tile.yaw+tile.face)));
 
-        IVertexBuilder builder = bufferIn.getBuffer(RenderType.getEntityCutout(CommonUtil.GLOBE_TEXTURE));
+        IVertexBuilder builder = bufferIn.getBuffer(RenderType.getEntityCutout(tile.type.texture));
 
         if(!ClientConfigs.cached.GLOBE_RANDOM){
             this.renderEarth(matrixStackIn,builder,combinedLightIn,combinedOverlayIn);
@@ -71,13 +70,12 @@ public class GlobeBlockTileRenderer extends TileEntityRenderer<GlobeBlockTile> {
 
         switch(tile.type){
             case FLAT:
-                IVertexBuilder builder2 = bufferIn.getBuffer(RenderType.getEntityCutout(CommonUtil.GLOBE_FLAT_TEXTURE));
-                this.renderFlat(matrixStackIn,builder2,combinedLightIn,combinedOverlayIn);
+                this.renderFlat(matrixStackIn,builder,combinedLightIn,combinedOverlayIn);
                 break;
+            default:
             case EARTH:
                 this.renderEarth(matrixStackIn,builder,combinedLightIn,combinedOverlayIn);
                 break;
-            default:
             case DEFAULT:
                 matrixStackIn.translate(-0.25, 0.25, 0.25);
 

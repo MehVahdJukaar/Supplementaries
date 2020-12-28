@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.blocks;
 
 import net.mehvahdjukaar.supplementaries.blocks.tiles.PedestalBlockTile;
+import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IWaterLoggable;
@@ -41,15 +42,17 @@ public class PedestalBlock extends Block implements IWaterLoggable {
     public static final BooleanProperty UP = BlockStateProperties.UP;
     public static final BooleanProperty DOWN = BlockStateProperties.DOWN;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+    public static final BooleanProperty HAS_ITEM = CommonUtil.HAS_ITEM;
 
     public PedestalBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(UP, false).with(DOWN, false).with(WATERLOGGED,false));
+        this.setDefaultState(this.stateContainer.getBaseState().with(UP, false)
+                .with(DOWN, false).with(WATERLOGGED,false).with(HAS_ITEM,false));
     }
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(UP,DOWN,WATERLOGGED);
+        builder.add(UP,DOWN,WATERLOGGED,HAS_ITEM);
     }
 
     @Override
@@ -62,24 +65,17 @@ public class PedestalBlock extends Block implements IWaterLoggable {
         World world = context.getWorld();
         BlockPos pos = context.getPos();
         boolean flag = world.getFluidState(pos).getFluid() == Fluids.WATER;
-        return this.getDefaultState().with(WATERLOGGED, flag).with(UP, canConnect(world.getBlockState(pos.up()), pos, world, Direction.UP))
-                .with(DOWN, canConnect(world.getBlockState(pos.down()), pos, world, Direction.DOWN));
+        return this.getDefaultState().with(WATERLOGGED, flag).with(UP, canConnect(world.getBlockState(pos.up()), pos, world, Direction.UP, false))
+                .with(DOWN, canConnect(world.getBlockState(pos.down()), pos, world, Direction.DOWN, false));
     }
 
-
-    public static boolean canConnect(BlockState state, BlockPos pos, World world, Direction dir){
+    public static boolean canConnect(BlockState state, BlockPos pos, World world, Direction dir, boolean hasItem){
         if(state.getBlock() instanceof  PedestalBlock) {
             if (dir == Direction.DOWN) {
-                TileEntity te = world.getTileEntity(pos.down());
-                if(te instanceof PedestalBlockTile) {
-                    return ((PedestalBlockTile)te).isEmpty();
-                }
+                        return !state.get(HAS_ITEM);
             }
             else if (dir == Direction.UP) {
-                TileEntity te = world.getTileEntity(pos);
-                if(te instanceof PedestalBlockTile) {
-                    return ((PedestalBlockTile)te).isEmpty();
-                }
+                return !hasItem;
             }
         }
         return false;
@@ -93,10 +89,10 @@ public class PedestalBlock extends Block implements IWaterLoggable {
         }
 
         if(facing==Direction.UP){
-            return stateIn.with(UP, canConnect(facingState, currentPos, (World)worldIn, facing));
+            return stateIn.with(UP, canConnect(facingState, currentPos, (World)worldIn, facing, stateIn.get(HAS_ITEM)));
         }
         else if(facing==Direction.DOWN){
-            return stateIn.with(DOWN, canConnect(facingState, currentPos, (World)worldIn, facing));
+            return stateIn.with(DOWN, canConnect(facingState, currentPos, (World)worldIn, facing,stateIn.get(HAS_ITEM)));
         }
         return stateIn;
     }
@@ -137,7 +133,7 @@ public class PedestalBlock extends Block implements IWaterLoggable {
                     te.yaw=player.getHorizontalFacing().getAxis() == Direction.Axis.X ? 90 : 0;
                     te.markDirty();
                 }
-                return ActionResultType.SUCCESS;
+                return ActionResultType.func_233537_a_(worldIn.isRemote);
             }
             else if (flag2) {
                 ItemStack it = te.removeStackFromSlot(0);
@@ -145,7 +141,7 @@ public class PedestalBlock extends Block implements IWaterLoggable {
                 if(!worldIn.isRemote()){
                     te.markDirty();
                 }
-                return ActionResultType.SUCCESS;
+                return ActionResultType.func_233537_a_(worldIn.isRemote);
             }
         }
         return ActionResultType.PASS;

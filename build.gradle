@@ -1,11 +1,13 @@
 buildscript {
     repositories {
         maven { url = 'https://files.minecraftforge.net/maven' }
+        maven { url = 'https://repo.spongepowered.org/maven' }
         jcenter()
         mavenCentral()
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
@@ -13,7 +15,13 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '0.9.15'
+apply plugin: 'org.spongepowered.mixin'
+
+mixin {
+    add sourceSets.main, "supplementaries.refmap.json"
+}
+
+version = '0.9.16'
 group = 'net.mehvahdjukaar.supplementaries' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'supplementaries'
 
@@ -36,6 +44,10 @@ minecraft {
     // These can be tweaked, removed, or duplicated as needed.
     runs {
         client {
+            property 'mixin.env.disableRefMap', 'true'
+            arg "-mixin.config=supplementaries.mixins.json".toString()
+
+
             workingDirectory project.file('run')
 
             // Recommended logging data for a userdev environment
@@ -52,6 +64,9 @@ minecraft {
         }
 
         server {
+            property 'mixin.env.disableRefMap', 'true'
+            arg "-mixin.config="+archivesBaseName+".mixins.json"
+
             workingDirectory project.file('run')
 
             // Recommended logging data for a userdev environment
@@ -115,6 +130,8 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
+
+
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
@@ -127,7 +144,8 @@ jar {
             "Implementation-Title": project.name,
             "Implementation-Version": "${version}",
             "Implementation-Vendor" :"examplemodsareus",
-            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+            "MixinConfigs": "supplementaries.mixins.json"
         ])
     }
 }
@@ -148,5 +166,30 @@ publishing {
         maven {
             url "file:///${project.projectDir}/mcmodsrepo"
         }
+    }
+}
+repositories{
+    maven {
+        // location of the maven that hosts JEI files
+        name = "Progwml6 maven"
+        url = "https://dvs1.progwml6.com/files/maven/"
+    }
+    maven {
+        // location of a maven mirror for JEI files, as a fallback
+        name = "ModMaven"
+        url = "https://modmaven.k-4u.nl"
+    }
+    jcenter()
+    mavenCentral()
+
+}
+
+repositories {
+    maven { // JEI
+        url "https://dvs1.progwml6.com/files/maven"
+    }
+    maven { // TOP
+        name 'tterrag maven'
+        url "http://maven.tterrag.com/"
     }
 }

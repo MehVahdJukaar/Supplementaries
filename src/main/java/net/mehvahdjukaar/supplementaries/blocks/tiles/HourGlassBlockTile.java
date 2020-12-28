@@ -184,14 +184,15 @@ public class HourGlassBlockTile extends LockableLootTileEntity implements ISided
     @Override
     public boolean canInsertItem(int index, ItemStack stack, @Nullable Direction direction) {
         if(direction==Direction.UP) {
-            return this.isItemValidForSlot(0, stack);
+            return this.isItemValidForSlot(0,stack);
         }
         return false;
     }
 
     @Override
     public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
-        return true;
+        Direction dir = this.getBlockState().get(HourGlassBlock.FACING);
+        return (dir==Direction.UP && this.progress==1)||(dir==Direction.DOWN && this.progress==0);
     }
     private final LazyOptional<? extends IItemHandler>[] handlers = SidedInvWrapper.create(this, Direction.values());
     @Override

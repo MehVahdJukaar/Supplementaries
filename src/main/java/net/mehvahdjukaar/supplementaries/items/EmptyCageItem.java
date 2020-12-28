@@ -5,12 +5,9 @@ import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
-import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.monster.SlimeEntity;
-import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
@@ -38,7 +35,7 @@ public class EmptyCageItem extends BlockItem {
         String name = n.toString();
         //Fireflies
 
-        if (!(ServerConfigs.cached.CAGE_ALLOWED_MOBS.contains(name)||
+        if (!ServerConfigs.cached.CAGE_ALL_MOBS && !(ServerConfigs.cached.CAGE_ALLOWED_MOBS.contains(name)||
                 (ServerConfigs.cached.CAGE_ALLOWED_BABY_MOBS.contains(name)&&entity.isChild()))) {
             return ActionResultType.PASS;
         }

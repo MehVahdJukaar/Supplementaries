@@ -1,5 +1,5 @@
 {
-  "group": "supplementaries",
+  "group": "jar",
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "212",
@@ -8,7 +8,7 @@
   ],
   "key": {
     "1": {
-      "tag": "minecraft:planks"
+      "tag": "minecraft:wooden_slabs"
     },
     "2": {
       "tag": "forge:stained_glass"

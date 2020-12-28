@@ -34,6 +34,7 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.storage.MapData;
 import net.minecraftforge.common.extensions.IForgeBlock;
 
 import javax.annotation.Nullable;
@@ -81,6 +82,7 @@ public class SignPostBlock extends Block implements IWaterLoggable, IForgeBlock 
         return super.updatePostPlacement(state, facing, facingState, world, currentPos, facingPos);
     }
 
+
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
                                              BlockRayTraceResult hit) {
@@ -89,6 +91,20 @@ public class SignPostBlock extends Block implements IWaterLoggable, IForgeBlock 
             SignPostBlockTile te = (SignPostBlockTile) tileentity;
             ItemStack itemstack = player.getHeldItem(handIn);
             Item item = itemstack.getItem();
+
+
+
+
+            //put post on map
+            if(item instanceof FilledMapItem){
+                MapData data = FilledMapItem.getMapData(itemstack,worldIn);
+                if(data!=null) {
+                    data.tryAddBanner(worldIn, pos);
+                    return ActionResultType.func_233537_a_(worldIn.isRemote);
+                }
+            }
+
+
             boolean server = !worldIn.isRemote();
             boolean emptyhand = itemstack.isEmpty();
             boolean isDye = item instanceof DyeItem && player.abilities.allowEdit;

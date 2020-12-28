@@ -18,7 +18,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 
@@ -112,8 +112,8 @@ public class TurnTableBlockTile extends TileEntity implements ITickableTileEntit
         return false;
     }
 
-    public Vector3f toVector3f(Direction dir) {
-        return new Vector3f((float)dir.getXOffset(), (float)dir.getYOffset(), (float)dir.getZOffset());
+    public Vector3d toVector3d(Direction dir) {
+        return new Vector3d((float)dir.getXOffset(), (float)dir.getYOffset(), (float)dir.getZOffset());
     }
 
 
@@ -144,13 +144,13 @@ public class TurnTableBlockTile extends TileEntity implements ITickableTileEntit
             }
             // 6 dir blocks blocks
             else if (_bs.hasProperty(BlockStateProperties.FACING)) {
-                Vector3f targetvec = toVector3f(_bs.get(BlockStateProperties.FACING));
-                Vector3f myvec =toVector3f(mydir);
+                Vector3d targetvec = toVector3d(_bs.get(BlockStateProperties.FACING));
+                Vector3d myvec = toVector3d(mydir);
                 if (!ccw)
-                    targetvec.mul(-1);
+                    targetvec.mul(-1,-1,-1);
                 // hacky I know..
-                myvec.cross(targetvec);
-                if (myvec.equals(new Vector3f(0, 0, 0))) {
+                myvec = myvec.crossProduct(targetvec);
+                if (myvec.equals(new Vector3d(0, 0, 0))) {
                     // same axis, can't rotate
                     return false;
                 }

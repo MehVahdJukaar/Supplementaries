@@ -45,9 +45,15 @@
   "block.supplementaries.firefly_jar": "Баночка со светлячком",
   "item.supplementaries.firefly": "Яйцо призыва светлячка",
 
+  "globe.supplementaries.moon": "Луна",
+  "globe.supplementaries.earth": "Земля",
+  "globe.supplementaries.flat": "Плоская земля",
+  "message.supplementaries.command.globe_changed": "Изменен ключ для генератора мира глобуса",
+  "message.supplementaries.command.globe_reset": "Обновлено ключ для генератора мира глобуса",
+
   "block.supplementaries.hourglass": "Песочные часы",
   "block.supplementaries.globe": "Глобус",
-  "block.supplementaries.sconce_lever": " Активирующее бра",
+  "block.supplementaries.sconce_lever": "Активирующее бра",
   "block.supplementaries.cage": "Клетка для мобов",
   "block.supplementaries.stone_lamp": "Каменный фонарь",
   "block.supplementaries.sconce_green": "Зелёное бра",

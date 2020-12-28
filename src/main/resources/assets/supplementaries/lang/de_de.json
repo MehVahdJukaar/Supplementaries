@@ -45,9 +45,15 @@
   "block.supplementaries.firefly_jar": "Topf mit Glühwürmchen",
   "item.supplementaries.firefly": "Glühwürmchen-Spawn-Ei",
 
+  "globe.supplementaries.moon": "Mond",
+  "globe.supplementaries.earth": "Erde",
+  "globe.supplementaries.flat": "Flache Erde",
+  "message.supplementaries.command.globe_changed": "globe seed changed",
+  "message.supplementaries.command.globe_reset": "globe seed reset",
+
   "block.supplementaries.hourglass": "Sanduhr",
   "block.supplementaries.globe": "Globus",
-  "block.supplementaries.sconce_lever": "Wandleuchterhebel",
+  "block.supplementaries.sconce_lever": "Leuchterhebel",
   "block.supplementaries.cage": "Käfig für Mobs",
   "block.supplementaries.stone_lamp": "Steinlampe",
   "block.supplementaries.sconce_green": "Grüne Leuchter",

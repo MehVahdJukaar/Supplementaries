@@ -932,7 +932,7 @@ public class Registry {
     //stone lamp
     public static final String STONE_LAMP_NAME = "stone_lamp";
     public static final Block STONE_LAMP = new Block(
-            AbstractBlock.Properties.create(Material.MISCELLANEOUS)
+            AbstractBlock.Properties.create(Material.ROCK,MaterialColor.YELLOW)
                     .hardnessAndResistance(1.5f, 6f)
                     .setLightLevel((state) -> 15)
                     .sound(SoundType.STONE)).setRegistryName(STONE_LAMP_NAME);
@@ -979,7 +979,8 @@ public class Registry {
     public static final TileEntityType<?> GLOBE_TILE =  TileEntityType.Builder.create(
             GlobeBlockTile::new, GLOBE).build(null).setRegistryName(GLOBE_NAME);
     public static final Item GLOBE_ITEM = new BlockItem(GLOBE,
-            new Item.Properties().group(ItemGroup.DECORATIONS)).setRegistryName(GLOBE_NAME);
+            new Item.Properties().group(ItemGroup.DECORATIONS).rarity(Rarity.RARE)
+                    ).setRegistryName(GLOBE_NAME);
 
     //hourglass
     public static final String HOURGLASS_NAME = "hourglass";

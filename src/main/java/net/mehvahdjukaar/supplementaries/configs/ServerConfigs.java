@@ -51,6 +51,7 @@ public class ServerConfigs {
 
         public static ForgeConfigSpec.ConfigValue<List<? extends String>> CAGE_ALLOWED_MOBS;
         public static ForgeConfigSpec.ConfigValue<List<? extends String>> CAGE_ALLOWED_BABY_MOBS;
+        public static ForgeConfigSpec.BooleanValue CAGE_ALL_MOBS;
 
         public static ForgeConfigSpec.BooleanValue NOTICE_BOARDS_UNRESTRICTED;
 
@@ -157,6 +158,8 @@ public class ServerConfigs {
             List<String> defaultCageBabyMobs = Arrays.asList("minecraft:cow","minecraft:sheep","minecraft:pig");
             CAGE_ALLOWED_BABY_MOBS = builder.comment("additional mobs that you'll be able to catch with the added condition that it has to be a baby variant. No need to include the ones already in cage_mobs")
                     .defineList("cage_baby_mobs", defaultCageBabyMobs,s -> true);
+            CAGE_ALL_MOBS = builder.comment("allow all mobs to be captured by jars")
+                    .define("cage_allow_all_mobs", false);
             builder.pop();
 
             //notice boards
@@ -258,6 +261,7 @@ public class ServerConfigs {
         public static List<? extends String> MOB_JAR_TINTED_ALLOWED_MOBS;
         public static List<? extends String> CAGE_ALLOWED_MOBS;
         public static List<? extends String> CAGE_ALLOWED_BABY_MOBS;
+        public static boolean CAGE_ALL_MOBS;
         //entity
         public static int FIREFLY_PERIOD;
         public static double FIREFLY_SPEED;
@@ -298,6 +302,7 @@ public class ServerConfigs {
 
             CAGE_ALLOWED_MOBS = block.CAGE_ALLOWED_MOBS.get();
             CAGE_ALLOWED_BABY_MOBS = block.CAGE_ALLOWED_BABY_MOBS.get();
+            CAGE_ALL_MOBS = block.CAGE_ALL_MOBS.get();
 
             FIREFLY_PERIOD = entity.FIREFLY_PERIOD.get();
             FIREFLY_SPEED = entity.FIREFLY_SPEED.get();

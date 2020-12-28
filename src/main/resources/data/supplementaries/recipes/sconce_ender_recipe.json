@@ -1,5 +1,4 @@
 {
-  "group": "supplementaries",
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "   ",
@@ -17,5 +16,11 @@
   "result": {
     "item": "supplementaries:sconce_ender",
     "count": 1
-  }
+  },
+  "conditions": [
+    {
+      "type":"forge:mod_loaded",
+      "modid":"endergetic"
+    }
+  ]
 }

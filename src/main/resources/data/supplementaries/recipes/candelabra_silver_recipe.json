@@ -1,5 +1,5 @@
 {
-  "group": "supplementaries",
+  "group": "candelabra",
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "111",
@@ -17,5 +17,11 @@
   "result": {
     "item": "supplementaries:candelabra_silver",
     "count": 1
-  }
+  },
+  "conditions": [
+    {
+      "type":"forge:mod_loaded",
+      "modid":"buzzier_bees"
+    }
+  ]
 }

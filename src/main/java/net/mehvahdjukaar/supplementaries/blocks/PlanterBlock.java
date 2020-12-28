@@ -30,6 +30,16 @@ public class PlanterBlock extends Block implements IWaterLoggable{
     }
 
     @Override
+    public VoxelShape getCollisionShape(BlockState state, IBlockReader reader, BlockPos pos) {
+        return VoxelShapes.fullCube();
+    }
+
+    @Override
+    public VoxelShape getRenderShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
+        return VoxelShapes.fullCube();
+    }
+
+    @Override
     public FluidState getFluidState(BlockState state) {
         return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
     }
@@ -57,13 +67,6 @@ public class PlanterBlock extends Block implements IWaterLoggable{
         return stateIn;
     }
 
-    /*
-    @Override
-    public void neighborChanged(BlockState state, World world, BlockPos pos, Block neighborBlock, BlockPos fromPos, boolean moving) {
-        super.neighborChanged(state, world, pos, neighborBlock, fromPos, moving);
-        if(fromPos.equals(pos.up())) world.setBlockState(pos, this.updatedState(state, world, pos));
-    }*/
-
     public BlockState updatedState(BlockState state, World world, BlockPos pos){
         return state.with(EXTENDED, this.canConnect(world.getBlockState(pos.up()).getBlock()));
     }
@@ -85,5 +88,10 @@ public class PlanterBlock extends Block implements IWaterLoggable{
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
         return SHAPE;
+    }
+
+    @Override
+    public VoxelShape getRayTraceShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext context) {
+        return VoxelShapes.fullCube();
     }
 }

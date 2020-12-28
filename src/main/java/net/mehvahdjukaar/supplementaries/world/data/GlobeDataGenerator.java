@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.world.data;
 
-import net.minecraft.client.renderer.tileentity.ChestTileEntityRenderer;
 import net.minecraft.util.math.MathHelper;
 
 import java.util.Calendar;
@@ -594,16 +593,16 @@ public class GlobeDataGenerator {
                     double p = 0.1;
                     if(pfp(pos.up()).isTemperate()){
 
-                        p+= pfp(pos.up()).isShaded()? 0.15 : 0.35;
+                        p+= pfp(pos.up()).isShaded()? 0.19 : 0.35;
                     }
                     if(pfp(pos.down()).isTemperate()){
-                        p+= pfp(pos.down()).isShaded()?0.15 : 0.35;
+                        p+= pfp(pos.down()).isShaded()?0.19 : 0.35;
                     }
                     if(pfp(pos.right()).isTemperate()){
-                        p+= pfp(pos.right()).isShaded()?0.15 : 0.35;
+                        p+= pfp(pos.right()).isShaded()?0.19 : 0.35;
                     }
                     if(pfp(pos.left()).isTemperate()){
-                        p+= pfp(pos.left()).isShaded()?0.15 : 0.35;
+                        p+= pfp(pos.left()).isShaded()?0.19 : 0.35;
                     }
                     if(rand.nextFloat()<p)pixels[x][y].shaded=true;
                 }

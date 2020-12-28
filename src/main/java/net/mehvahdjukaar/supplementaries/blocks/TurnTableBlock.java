@@ -79,7 +79,7 @@ public class TurnTableBlock  extends Block {
                 float f = state.get(INVERTED) ? 0.55F : 0.5F;
                 worldIn.playSound(player, pos, SoundEvents.BLOCK_COMPARATOR_CLICK, SoundCategory.BLOCKS, 0.3F, f);
                 worldIn.setBlockState(pos, state, 2 | 4);
-                return ActionResultType.SUCCESS;
+                return ActionResultType.func_233537_a_(worldIn.isRemote);
             }
         }
         return ActionResultType.PASS;

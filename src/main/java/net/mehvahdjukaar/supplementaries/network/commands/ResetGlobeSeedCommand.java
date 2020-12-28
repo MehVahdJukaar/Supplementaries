@@ -9,10 +9,7 @@ import net.mehvahdjukaar.supplementaries.world.data.GlobeData;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-
-import java.util.Random;
 
 public class ResetGlobeSeedCommand implements Command<CommandSource> {
 

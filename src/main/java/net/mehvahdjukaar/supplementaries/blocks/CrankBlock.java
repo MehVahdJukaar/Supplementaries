@@ -83,12 +83,13 @@ public class CrankBlock extends Block implements IWaterLoggable{
             double d1 = (double) pos.getY() + 0.5D + 0.1D * (double) direction.getYOffset() + 0.2D * (double) direction.getYOffset();
             double d2 = (double) pos.getZ() + 0.5D + 0.1D * (double) direction.getZOffset() + 0.2D * (double) direction.getZOffset();
             worldIn.addParticle(ParticleTypes.SMOKE, d0, d1, d2, 0, 0, 0);
+            return ActionResultType.SUCCESS;
         } else {
             this.activate(state, worldIn, pos);
             float f = 0.4f;
             worldIn.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 0.3F, f);
+            return ActionResultType.CONSUME;
         }
-        return ActionResultType.SUCCESS;
     }
 
     public void activate(BlockState state, World world, BlockPos pos) {

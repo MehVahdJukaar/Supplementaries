@@ -108,9 +108,11 @@ public class SpeakerBlock extends Block {
         TileEntity tileentity = world.getTileEntity(pos);
         if (tileentity instanceof SpeakerBlockTile) {
             // client
-            if (world.isRemote)
+            if (world.isRemote) {
                 SpeakerBlockGui.open((SpeakerBlockTile) tileentity);
-            return ActionResultType.SUCCESS;
+                return ActionResultType.SUCCESS;
+            }
+            return ActionResultType.CONSUME;
         }
         return ActionResultType.PASS;
     }

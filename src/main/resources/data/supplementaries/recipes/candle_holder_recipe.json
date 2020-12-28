@@ -1,5 +1,5 @@
 {
-  "group": "supplementaries",
+  "group": "candle_holder",
   "type": "minecraft:crafting_shaped",
   "pattern": [
     " 1 ",
@@ -16,5 +16,11 @@
   "result": {
     "item": "supplementaries:candle_holder",
     "count": 1
-  }
+  },
+  "conditions": [
+    {
+      "type":"forge:mod_loaded",
+      "modid":"buzzier_bees"
+    }
+  ]
 }

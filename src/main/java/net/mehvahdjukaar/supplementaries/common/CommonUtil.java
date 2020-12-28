@@ -6,8 +6,6 @@ import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
-import net.minecraft.entity.monster.ZombieEntity;
-import net.minecraft.entity.monster.piglin.PiglinEntity;
 import net.minecraft.entity.passive.IFlyingAnimal;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
@@ -40,6 +38,7 @@ public class CommonUtil {
     // it's detecting incoming laser and its distance
     public static final IntegerProperty RECEIVING = IntegerProperty.create("laser_receiving", 0, 15);
     public static final IntegerProperty LIGHT_LEVEL_0_15 = IntegerProperty.create("light_level", 0, 15);
+    public static final BooleanProperty HAS_ITEM = BooleanProperty.create("has_item");
 
 
     //sounds
@@ -65,12 +64,12 @@ public class CommonUtil {
     public static final ResourceLocation RED_CONCRETE_TEXTURE = new ResourceLocation("minecraft:block/red_concrete_powder");
     public static final ResourceLocation BLACK_CONCRETE_TEXTURE = new ResourceLocation("minecraft:block/black_concrete_powder");
     public static final ResourceLocation MAGENTA_CONCRETE_TEXTURE = new ResourceLocation("minecraft:block/magenta_concrete_powder");
-
     public static final ResourceLocation RED_SAND_TEXTURE = new ResourceLocation("minecraft:block/red_sand");
     public static final ResourceLocation SAND_TEXTURE = new ResourceLocation("minecraft:block/sand");
     public static final ResourceLocation WATER_TEXTURE = new ResourceLocation("minecraft:block/water_still");
     public static final ResourceLocation LAVA_TEXTURE = new ResourceLocation("minecraft:block/lava_still");
     public static final ResourceLocation MILK_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID, "blocks/milk_liquid");
+
     public static final ResourceLocation POTION_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID, "blocks/potion_liquid");
     public static final ResourceLocation HONEY_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID, "blocks/honey_liquid");
     public static final ResourceLocation DRAGON_BREATH_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID, "blocks/dragon_breath_liquid");
@@ -85,15 +84,20 @@ public class CommonUtil {
     public static final ResourceLocation FIREFLY_TEXTURE =  new ResourceLocation(Supplementaries.MOD_ID+":textures/entity/firefly.png");
     public static final ResourceLocation CLOCK_HAND_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID, "blocks/clock_hand");
     public static final ResourceLocation GLOBE_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID+":textures/entity/globe_the_world.png");
-    public static final ResourceLocation GLOBE_EARTH_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID+":textures/entity/globe_earth.png");
     public static final ResourceLocation GLOBE_FLAT_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID+":textures/entity/globe_flat.png");
-
+    public static final ResourceLocation GLOBE_MOON_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID+":textures/entity/globe_moon.png");
+    public static final ResourceLocation HOURGLASS_REDSTONE = new ResourceLocation(Supplementaries.MOD_ID, "blocks/hourglass_redstone");
+    public static final ResourceLocation HOURGLASS_GLOWSTONE = new ResourceLocation(Supplementaries.MOD_ID, "blocks/hourglass_glowstone");
+    public static final ResourceLocation HOURGLASS_SUGAR = new ResourceLocation(Supplementaries.MOD_ID, "blocks/hourglass_sugar");
+    public static final ResourceLocation HOURGLASS_BLAZE = new ResourceLocation(Supplementaries.MOD_ID, "blocks/hourglass_blaze");
+    public static final ResourceLocation HOURGLASS_GUNPOWDER = new ResourceLocation(Supplementaries.MOD_ID, "blocks/hourglass_gunpowder");
 
 
 
     public static List<ResourceLocation> getTextures() {
         return new ArrayList<>(Arrays.asList(MILK_TEXTURE, POTION_TEXTURE, HONEY_TEXTURE, DRAGON_BREATH_TEXTURE, SOUP_TEXTURE,
-                XP_TEXTURE, FAUCET_TEXTURE, FISHIES_TEXTURE, BELLOWS_TEXTURE, LASER_BEAM_TEXTURE, LASER_BEAM_END_TEXTURE,LASER_OVERLAY_TEXTURE, CLOCK_HAND_TEXTURE, GLOBE_TEXTURE));
+                XP_TEXTURE, FAUCET_TEXTURE, FISHIES_TEXTURE, BELLOWS_TEXTURE, LASER_BEAM_TEXTURE, LASER_BEAM_END_TEXTURE,LASER_OVERLAY_TEXTURE,
+                CLOCK_HAND_TEXTURE, HOURGLASS_REDSTONE, HOURGLASS_GLOWSTONE, HOURGLASS_SUGAR, HOURGLASS_BLAZE, HOURGLASS_GUNPOWDER));
     }
 
 
@@ -341,20 +345,23 @@ public class CommonUtil {
 
 
     public enum GlobeType {
-        DEFAULT(null, null),
-        FLAT(new String[]{"flat"}, new TranslationTextComponent("globe.supplementaries.flat")),
-        MOON(new String[]{"moon"}, new TranslationTextComponent("globe.supplementaries.moon")),
-        EARTH(new String[]{"earth", "terra","gaia","gaea","tierra","tellus","terre"},
-                new TranslationTextComponent("globe.supplementaries.earth")); //TODO: add via translationtext
+        DEFAULT(null, null, GLOBE_TEXTURE),
+        FLAT(new String[]{"flat"}, new TranslationTextComponent("globe.supplementaries.flat"), GLOBE_FLAT_TEXTURE),
+        MOON(new String[]{"moon","luna","selene","cynthia"},
+                new TranslationTextComponent("globe.supplementaries.moon"),GLOBE_MOON_TEXTURE),
+        EARTH(new String[]{"earth","terra","gaia","gaea","tierra","tellus","terre"},
+                new TranslationTextComponent("globe.supplementaries.earth"),GLOBE_TEXTURE); //TODO: add via translationtext
 
 
-        GlobeType(String[] k, TranslationTextComponent t){
+        GlobeType(String[] k, TranslationTextComponent t, ResourceLocation r){
             this.keyWords = k;
             this.transKeyWord = t;
+            this.texture = r;
         }
 
         public final String[] keyWords;
         public final TranslationTextComponent transKeyWord;
+        public final ResourceLocation texture;
 
         public static GlobeType getGlobeType(String text){
             String name = text.toLowerCase();
@@ -385,12 +392,13 @@ public class CommonUtil {
         RED_SAND(RED_SAND_TEXTURE,"minecraft:red_sand", 60),
         WHITE_CONCRETE(WHITE_CONCRETE_TEXTURE,"minecraft:white_concrete_powder", 90),
         ORANGE_CONCRETE(ORANGE_CONCRETE_TEXTURE,"minecraft:orange_concrete_powder", 90),
-        LIGHT_BLUE_CONCRETE(LIGHT_BLUE_CONCRETE_TEXTURE,"minecraft:orange_concrete_powder", 90),
+        LIGHT_BLUE_CONCRETE(LIGHT_BLUE_CONCRETE_TEXTURE,"minecraft:light_blue_concrete_powder", 90),
         YELLOW_CONCRETE(YELLOW_CONCRETE_TEXTURE,"minecraft:yellow_concrete_powder", 90),
         LIME_CONCRETE(LIME_CONCRETE_TEXTURE,"minecraft:lime_concrete_powder", 90),
+        GREEN_CONCRETE(GREEN_CONCRETE_TEXTURE,"minecraft:green_concrete_powder",90),
         PINK_CONCRETE(PINK_CONCRETE_TEXTURE,"minecraft:pink_concrete_powder", 90),
         GRAY_CONCRETE(GRAY_CONCRETE_TEXTURE,"minecraft:gray_concrete_powder", 90),
-        LIGHT_GRAY_CONCRETE(LIGHT_GRAY_CONCRETE_TEXTURE,"minecraft:gray_concrete_powder", 90),
+        LIGHT_GRAY_CONCRETE(LIGHT_GRAY_CONCRETE_TEXTURE,"minecraft:light_gray_concrete_powder", 90),
         CYAN_CONCRETE(CYAN_CONCRETE_TEXTURE,"minecraft:cyan_concrete_powder", 90),
         PURPLE_CONCRETE(PURPLE_CONCRETE_TEXTURE,"minecraft:purple_concrete_powder", 90),
         BLUE_CONCRETE(BLUE_CONCRETE_TEXTURE,"minecraft:blue_concrete_powder", 90),
@@ -398,11 +406,11 @@ public class CommonUtil {
         RED_CONCRETE(RED_CONCRETE_TEXTURE,"minecraft:red_concrete_powder", 90),
         BLACK_CONCRETE(BLACK_CONCRETE_TEXTURE,"minecraft:black_concrete_powder", 90),
         MAGENTA_CONCRETE(MAGENTA_CONCRETE_TEXTURE,"minecraft:magenta_concrete_powder", 90),
-        GUNPOWDER(GRAY_CONCRETE_TEXTURE,"minecraft:gunpowder", 80),
-        SUGAR(WHITE_CONCRETE_TEXTURE,"minecraft:sugar", 40),
-        GLOWSTONE_DUST(YELLOW_CONCRETE_TEXTURE,"minecraft:glowstone_dust", 120),
-        REDSTONE_DUST(RED_CONCRETE_TEXTURE,"minecraft:redstone", 200),
-        BLAZE_POWDER(ORANGE_CONCRETE_TEXTURE,"minecraft:blaze_powder", 100);
+        GUNPOWDER(HOURGLASS_GUNPOWDER,"minecraft:gunpowder", 80),
+        SUGAR(HOURGLASS_SUGAR,"minecraft:sugar", 40),
+        GLOWSTONE_DUST(HOURGLASS_GLOWSTONE,"minecraft:glowstone_dust", 120),
+        REDSTONE_DUST(HOURGLASS_REDSTONE,"minecraft:redstone", 200),
+        BLAZE_POWDER(HOURGLASS_BLAZE,"minecraft:blaze_powder", 100);
 
 
 

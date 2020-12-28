@@ -42,7 +42,7 @@ public class PedestalBlockTile extends LockableLootTileEntity implements ISidedI
     public void markDirty() {
         //this.updateServerAndClient();
         this.updateTile();
-        this.world.notifyBlockUpdate(this.pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
+        this.world.notifyBlockUpdate(this.pos, this.getBlockState(), this.getBlockState(),Constants.BlockFlags.BLOCK_UPDATE);
 
         super.markDirty();
     }
@@ -53,9 +53,12 @@ public class PedestalBlockTile extends LockableLootTileEntity implements ISidedI
     }
 
     public void updateTile() {
+        //TODO: rewrite this
         if(!this.world.isRemote()) {
             BlockState state = this.getBlockState();
-            BlockState newstate = state.with(PedestalBlock.UP, PedestalBlock.canConnect(world.getBlockState(pos.up()), pos, world, Direction.UP));
+            boolean hasItem = !this.isEmpty();
+            BlockState newstate = state.with(PedestalBlock.HAS_ITEM, hasItem)
+                    .with(PedestalBlock.UP, PedestalBlock.canConnect(world.getBlockState(pos.up()), pos, world, Direction.UP, hasItem));
             if (state != newstate) {
                 this.world.setBlockState(this.pos, newstate, 3);
             }
