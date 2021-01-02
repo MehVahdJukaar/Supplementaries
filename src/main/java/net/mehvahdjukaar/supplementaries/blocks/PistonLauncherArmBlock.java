@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.blocks;
 
 
 import net.mehvahdjukaar.supplementaries.blocks.tiles.PistonLauncherArmBlockTile;
-import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.Resources;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -30,7 +30,7 @@ public class PistonLauncherArmBlock  extends Block {
     protected static final VoxelShape SHAPE = VoxelShapes.empty();
 
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
-    public static final BooleanProperty EXTENDING = CommonUtil.EXTENDING;// is it extending?
+    public static final BooleanProperty EXTENDING = Resources.EXTENDING;// is it extending?
     public PistonLauncherArmBlock(Properties properties) {
         super(properties);
         this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(EXTENDING, true));

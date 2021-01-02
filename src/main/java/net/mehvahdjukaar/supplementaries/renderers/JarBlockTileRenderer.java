@@ -3,8 +3,8 @@ package net.mehvahdjukaar.supplementaries.renderers;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.mehvahdjukaar.supplementaries.blocks.tiles.JarBlockTile;
-import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil.JarLiquidType;
+import net.mehvahdjukaar.supplementaries.common.Resources;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
@@ -73,7 +73,7 @@ public class JarBlockTileRenderer extends TileEntityRenderer<JarBlockTile> {
                 float wo = 0.015f * MathHelper.sin((float)(2 * Math.PI * angle2 / 360));
                 float ho = 0.1f * MathHelper.sin((float)(2 * Math.PI * angle3 / 360));
                 matrixStackIn.translate(0.5, 0.0635, 0.5);
-                TextureAtlasSprite sprite_s = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(CommonUtil.SAND_TEXTURE);
+                TextureAtlasSprite sprite_s = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(Resources.SAND_TEXTURE);
                 RendererUtil.addCube(builder1, matrixStackIn, 0.499f, 0.0625f, sprite_s, combinedLightIn, 16777215, 1f, combinedOverlayIn, true, true,true, true);
                 matrixStackIn.translate(0, 0.5-0.0635, 0);
                 Quaternion rotation = Vector3f.YP.rotationDegrees(-angle);

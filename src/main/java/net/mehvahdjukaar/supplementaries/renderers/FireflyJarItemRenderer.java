@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.renderers;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.Resources;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -37,7 +37,7 @@ public class FireflyJarItemRenderer extends ItemStackTileEntityRenderer {
         matrixStackIn.translate(0.5, 0.5-0.125, 0.5);
         matrixStackIn.scale(0.25f, 0.25f, 0.25f);
 
-        IVertexBuilder ivertexbuilder = bufferIn.getBuffer(RenderType.getEntityTranslucent(CommonUtil.FIREFLY_TEXTURE));
+        IVertexBuilder ivertexbuilder = bufferIn.getBuffer(RenderType.getEntityTranslucent(Resources.FIREFLY_TEXTURE));
 
         if(transformType.equals(ItemCameraTransforms.TransformType.FIXED)) {
             Quaternion rotation = Minecraft.getInstance().getRenderManager().getCameraOrientation();

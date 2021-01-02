@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "open=false": {
+      "model": "supplementaries:block/sack_closed"
+    },
+    "open=true": {
+      "model": "supplementaries:block/sack_open"
+    }
+  }
+}

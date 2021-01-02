@@ -3,15 +3,15 @@ package net.mehvahdjukaar.supplementaries.blocks;
 
 import net.mehvahdjukaar.supplementaries.blocks.tiles.TurnTableBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.DirectionalBlock;
+import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.IntegerProperty;
@@ -136,6 +136,7 @@ public class TurnTableBlock  extends Block {
     public void onEntityWalk(World world, BlockPos pos, Entity e) {
         super.onEntityWalk(world, pos, e);
         if(!ServerConfigs.cached.TURN_TABLE_ROTATE_ENTITIES)return;
+        if(!e.isOnGround())return;
         BlockState state = world.getBlockState(pos);
         if (state.get(POWER)!=0 && state.get(FACING) == Direction.UP) {
             float period = getPeriod(state)+1;
@@ -151,20 +152,28 @@ public class TurnTableBlock  extends Block {
             e.move(MoverType.SHULKER_BOX, posdiff);
             // e.setMotion(e.getMotion().add(adjustedposdiff));
             //e.velocityChanged = true;
+
+
             //TODO: use setMotion
             if ((e instanceof LivingEntity)) {
+                e.setOnGround(false); //remove this?
                 float diff = e.getRotationYawHead() - increment;
-                ((LivingEntity) e).setIdleTime(20);
                 e.setRenderYawOffset(diff);
                 e.setRotationYawHead(diff);
                 ((LivingEntity) e).prevRotationYawHead=((LivingEntity) e).rotationYawHead;
-                e.setOnGround(true); //remove this?
+                ((LivingEntity) e).setIdleTime(20);
                 //e.velocityChanged = true;
             }
             // e.prevRotationYaw = e.rotationYaw;
 
             e.rotationYaw -= increment;
             e.prevRotationYaw = e.rotationYaw;
+
+
+
+
+
+
 
             //e.rotateTowards(e.rotationYaw - increment, e.rotationPitch);
         }

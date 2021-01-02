@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.blocks;
 
 import net.mehvahdjukaar.supplementaries.blocks.tiles.WallLanternBlockTile;
-import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.Resources;
 import net.minecraft.block.*;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.Entity;
@@ -10,6 +10,9 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootContext;
+import net.minecraft.loot.LootParameters;
+import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.IntegerProperty;
@@ -24,10 +27,15 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+
+import java.util.Collections;
+import java.util.List;
 
 
 public class WallLanternBlock extends Block implements  IWaterLoggable{
@@ -37,8 +45,8 @@ public class WallLanternBlock extends Block implements  IWaterLoggable{
     protected static final VoxelShape SHAPE_EAST = VoxelShapes.create(0.625D, 0.125D, 0.3125D, 0D, 1D, 0.6875D);
 
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
-    public static final IntegerProperty LIGHT_LEVEL = CommonUtil.LIGHT_LEVEL_0_15;
-    public static final IntegerProperty EXTENSION = CommonUtil.EXTENSION;
+    public static final IntegerProperty LIGHT_LEVEL = Resources.LIGHT_LEVEL_0_15;
+    public static final IntegerProperty EXTENSION = Resources.EXTENSION;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public WallLanternBlock(Properties properties) {
         super(properties);
@@ -75,10 +83,6 @@ public class WallLanternBlock extends Block implements  IWaterLoggable{
         return new ItemStack(Blocks.LANTERN, 1);
     }
 
-    @Override
-    public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
-        return true;
-    }
 
     @Override
     public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
@@ -107,12 +111,22 @@ public class WallLanternBlock extends Block implements  IWaterLoggable{
     }
 
     @Override
+    public boolean allowsMovement(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
+        return false;
+    }
+
+    @Override
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
         super.onEntityCollision(state, world, pos, entity);
         TileEntity tileentity = world.getTileEntity(pos);
-        if (tileentity instanceof WallLanternBlockTile) {
-            ((WallLanternBlockTile) tileentity).counter = 0;
-        }
+        if (world.isRemote && tileentity instanceof WallLanternBlockTile) {
+            WallLanternBlockTile te = ((WallLanternBlockTile) tileentity);
+            te.counter = 0;
+            double v = entity.getMotion().dotProduct(Vector3d.copyCentered(te.getDirection().rotateY().getDirectionVec()));
+            if(v!=0){
+                te.inv=v<0;
+            }
+        } //TODO: merge with hanging sign
     }
 
     @Override
@@ -158,26 +172,13 @@ public class WallLanternBlock extends Block implements  IWaterLoggable{
         return this.getConnectedState(this.getDefaultState(), facingState).with(FACING, context.getFace()).with(WATERLOGGED,flag);
     }
 
-/*
     @Override
-    public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
-        TileEntity te = worldIn.getTileEntity(pos);
-        if (te instanceof WallLanternBlockTile) {
-            spawnDrops(((WallLanternBlockTile) te).lanternBlock, worldIn, pos);
+    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
+        TileEntity tileentity = builder.get(LootParameters.BLOCK_ENTITY);
+        if (tileentity instanceof WallLanternBlockTile){
+            return Collections.singletonList(new ItemStack(((WallLanternBlockTile) tileentity).lanternBlock.getBlock()));
         }
-        super.onBlockHarvested(worldIn, pos, state, player);
-    }*/
-
-    //can't use getDrops cause it doesn't have pos.
-    @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (state.getBlock() != newState.getBlock()) {
-            TileEntity te = worldIn.getTileEntity(pos);
-            if (te instanceof WallLanternBlockTile) {
-                spawnDrops(((WallLanternBlockTile) te).lanternBlock, worldIn, pos);
-            }
-            super.onReplaced(state, worldIn, pos, newState, isMoving);
-        }
+        return super.getDrops(state,builder);
     }
 
     @Override

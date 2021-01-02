@@ -55,6 +55,8 @@ public class HangingSignBlockTile extends TileEntity implements ITickableTileEnt
     private final IReorderingProcessor[] renderText = new IReorderingProcessor[MAXLINES];
     private DyeColor textColor = DyeColor.BLACK;
 
+    public boolean inv = false;
+
     public HangingSignBlockTile() {
         super(Registry.HANGING_SIGN_TILE);
     }
@@ -295,6 +297,7 @@ public class HangingSignBlockTile extends TileEntity implements ITickableTileEnt
             }
 
             this.angle = a * MathHelper.cos((counter/maxperiod) - k);
+            this.angle *= this.inv? -1:1;
             // this.angle = 90*(float)
             // Math.cos((float)counter/40f)/((float)this.counter/20f);;
         }

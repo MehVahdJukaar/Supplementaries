@@ -14,16 +14,19 @@ import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.*;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.UUID;
 
 public class CageItem extends BlockItem {
     public CageItem(Block blockIn, Properties properties) {
@@ -38,7 +41,7 @@ public class CageItem extends BlockItem {
         CompoundNBT com = stack.getChildTag("CachedJarMobValues");
         if (com != null){
             if(com.contains("Name")){
-                tooltip.add(new StringTextComponent(com.getString("Name")));
+                tooltip.add(new StringTextComponent(com.getString("Name")).mergeStyle(TextFormatting.GRAY));
             }
         }
     }
@@ -50,12 +53,28 @@ public class CageItem extends BlockItem {
         CompoundNBT com = stack.getTag();
         if(!context.getPlayer().isSneaking() && com!=null && com.contains("JarMob")){
             World world = context.getWorld();
-            Entity entity  = EntityType.loadEntityAndExecute(com.getCompound("JarMob"), world, o -> o);
+            CompoundNBT nbt = com.getCompound("JarMob");
+            Entity entity  = EntityType.loadEntityAndExecute(nbt, world, o -> o);
             if(entity!=null) {
                 if(!world.isRemote) {
                     Vector3d v = context.getHitVec();
                     entity.setPositionAndRotation(v.getX(), v.getY(), v.getZ(), context.getPlacementYaw(), 0);
-                    world.addEntity(entity);
+
+                    UUID temp = entity.getUniqueID();
+                    if(com.contains("CachedJarMobValues")){
+                        CompoundNBT c = com.getCompound("CachedJarMobValues");
+                        if(c.contains("oldID")) {
+                            UUID id = c.getUniqueId("oldID");
+                            entity.setUniqueId(id);
+                        }
+                    }
+                    if(!world.addEntity(entity)){
+                        //spawn failed, reverting to old UUID
+                        entity.setUniqueId(temp);
+                        world.addEntity(entity);
+                    }
+
+
                 }
                 if(!context.getPlayer().isCreative()) {
                    ItemStack returnItem = new ItemStack(((BlockItem)stack.getItem()).getBlock().asItem());
@@ -87,6 +106,9 @@ public class CageItem extends BlockItem {
                     mobjar.entityData = com;
                     mobjar.yOffset = com2.getFloat("YOffset");
                     mobjar.scale = com2.getFloat("Scale");
+                    if(com2.contains("oldID")) {
+                        mobjar.uuid = com2.getUniqueId("oldID");
+                    }
                     if (!world.isRemote){
                         int light = 0;
                         //TODO move to enum

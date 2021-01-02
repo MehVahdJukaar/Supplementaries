@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.blocks;
 
 import net.mehvahdjukaar.supplementaries.blocks.tiles.HangingSignBlockTile;
-import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.Resources;
 import net.mehvahdjukaar.supplementaries.gui.HangingSignGui;
 import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
@@ -26,6 +26,8 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
@@ -41,8 +43,8 @@ public class HangingSignBlock extends Block implements  IWaterLoggable {
 
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
     public static final BooleanProperty UP = BlockStateProperties.UP;
-    public static final BooleanProperty TILE = CommonUtil.TILE; // is it renderer by tile entity? animated part
-    public static final IntegerProperty EXTENSION = CommonUtil.EXTENSION;
+    public static final BooleanProperty TILE = Resources.TILE; // is it renderer by tile entity? animated part
+    public static final IntegerProperty EXTENSION = Resources.EXTENSION;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public HangingSignBlock(Properties properties) {
         super(properties);
@@ -168,7 +170,7 @@ public class HangingSignBlock extends Block implements  IWaterLoggable {
 
     @Override
     public BlockRenderType getRenderType(BlockState state) {
-        return state.get(UP) ? BlockRenderType.ENTITYBLOCK_ANIMATED : super.getRenderType(state);
+        return state.get(UP) ? BlockRenderType.ENTITYBLOCK_ANIMATED : BlockRenderType.MODEL;
     }
 
     @Override
@@ -190,7 +192,12 @@ public class HangingSignBlock extends Block implements  IWaterLoggable {
 
         TileEntity tileentity = world.getTileEntity(pos);
         if (tileentity instanceof HangingSignBlockTile) {
-            ((HangingSignBlockTile) tileentity).counter = 0;
+            HangingSignBlockTile te = ((HangingSignBlockTile) tileentity);
+            te.counter = 0;
+            double v = entity.getMotion().dotProduct(Vector3d.copyCentered(te.getDirection().rotateY().getDirectionVec()));
+            if(v!=0){
+                te.inv=v<0;
+            }
         }
     }
 

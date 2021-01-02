@@ -25,6 +25,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.UUID;
 
 public class JarItem extends BlockItem {
     public JarItem(Block blockIn, Properties properties) {
@@ -38,7 +39,7 @@ public class JarItem extends BlockItem {
         CompoundNBT compoundnbt = stack.getChildTag("BlockEntityTag");
         if (compoundnbt != null) {
             if (compoundnbt.contains("LootTable", 8)) {
-                tooltip.add(new StringTextComponent("???????"));
+                tooltip.add(new StringTextComponent("???????").mergeStyle(TextFormatting.GRAY));
             }
 
             if (compoundnbt.contains("Items", 9)) {
@@ -61,12 +62,12 @@ public class JarItem extends BlockItem {
                             IFormattableTextComponent str = new StringTextComponent(s);
 
                             str.appendString(" x").appendString(String.valueOf(itemstack.getCount()));
-                            tooltip.add(str);
+                            tooltip.add(str.mergeStyle(TextFormatting.GRAY));
                         }
                     }
                 }
                 if (j - i > 0) {
-                    tooltip.add((new TranslationTextComponent("container.shulkerBox.more", j - i)).mergeStyle(TextFormatting.ITALIC));
+                    tooltip.add((new TranslationTextComponent("container.shulkerBox.more", j - i)).mergeStyle(TextFormatting.ITALIC).mergeStyle(TextFormatting.GRAY));
                 }
             }
         }
@@ -74,7 +75,7 @@ public class JarItem extends BlockItem {
         CompoundNBT com = stack.getChildTag("CachedJarMobValues");
         if (com != null){
             if(com.contains("Name")){
-                tooltip.add(new StringTextComponent(com.getString("Name")));
+                tooltip.add(new StringTextComponent(com.getString("Name")).mergeStyle(TextFormatting.GRAY));
             }
         }
     }
@@ -91,7 +92,21 @@ public class JarItem extends BlockItem {
                 if(!world.isRemote) {
                     Vector3d v = context.getHitVec();
                     entity.setPositionAndRotation(v.getX(), v.getY(), v.getZ(), context.getPlacementYaw(), 0);
-                    world.addEntity(entity);
+
+                    UUID temp = entity.getUniqueID();
+                    if(com.contains("CachedJarMobValues")){
+                        CompoundNBT c = com.getCompound("CachedJarMobValues");
+                        if(c.contains("oldID")) {
+                            UUID id = c.getUniqueId("oldID");
+                            entity.setUniqueId(id);
+                        }
+                    }
+                    if(!world.addEntity(entity)){
+                        //spawn failed, reverting to old UUID
+                        entity.setUniqueId(temp);
+                        world.addEntity(entity);
+                    }
+
                 }
                 if(!context.getPlayer().isCreative()) {
                    ItemStack returnItem = new ItemStack(((BlockItem)stack.getItem()).getBlock().asItem());
@@ -123,6 +138,9 @@ public class JarItem extends BlockItem {
                     mobjar.entityData = com;
                     mobjar.yOffset = com2.getFloat("YOffset");
                     mobjar.scale = com2.getFloat("Scale");
+                    if(com2.contains("oldID")) {
+                        mobjar.uuid = com2.getUniqueId("oldID");
+                    }
                     if (!world.isRemote){
                         int light = 0;
                         if(com.getString("id").equals("minecraft:endermite"))light = 5;

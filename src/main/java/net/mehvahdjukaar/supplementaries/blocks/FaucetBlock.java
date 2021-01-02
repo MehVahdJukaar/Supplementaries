@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.blocks;
 import net.mehvahdjukaar.supplementaries.blocks.tiles.FaucetBlockTile;
 import net.mehvahdjukaar.supplementaries.blocks.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.Resources;
 import net.minecraft.block.*;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -11,6 +12,7 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
@@ -47,14 +49,19 @@ public class FaucetBlock extends Block implements  IWaterLoggable{
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
     public static final BooleanProperty ENABLED = BlockStateProperties.ENABLED;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
-    public static final BooleanProperty HAS_WATER = CommonUtil.HAS_WATER;
-    public static final BooleanProperty HAS_JAR = CommonUtil.HAS_JAR;
+    public static final BooleanProperty HAS_WATER = Resources.HAS_WATER;
+    public static final BooleanProperty HAS_JAR = Resources.HAS_JAR;
     public static final BooleanProperty EXTENDED = BlockStateProperties.ATTACHED; //glass extension
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public FaucetBlock(Properties properties) {
         super(properties);
         this.setDefaultState(this.stateContainer.getBaseState().with(HAS_JAR, false).with(FACING, Direction.NORTH)
                 .with(ENABLED, false).with(EXTENDED, false).with(POWERED, false).with(HAS_WATER, false).with(WATERLOGGED,false));
+    }
+
+    @Override
+    public boolean allowsMovement(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
+        return false;
     }
 
     @Override
@@ -176,7 +183,6 @@ public class FaucetBlock extends Block implements  IWaterLoggable{
                 f.setAccessible(true);
                 world.setBlockState(pos.down(), (BlockState) f.get(downstate.getBlock()), 2|16);
             } catch (Exception ignored) {}
-
         }
 
 

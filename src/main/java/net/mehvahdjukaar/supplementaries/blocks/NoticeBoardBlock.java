@@ -56,15 +56,15 @@ public class NoticeBoardBlock extends Block {
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
                                              BlockRayTraceResult hit) {
         TileEntity tileentity = worldIn.getTileEntity(pos);
-        // itemstack.getItem() instanceof WrittenBookItem && player.abilities.allowEdit;
+
+        boolean server = !worldIn.isRemote();
         if (tileentity instanceof NoticeBoardBlockTile) {
             ItemStack itemstack = player.getHeldItem(handIn);
             NoticeBoardBlockTile te = (NoticeBoardBlockTile) tileentity;
             boolean flag = itemstack.getItem() instanceof DyeItem && player.abilities.allowEdit;
-            boolean flag2 = (te.isEmpty() && (te.canInsertItem(0, itemstack, null)));
+            boolean flag2 = (te.isEmpty() && (te.canInsertItem(0, itemstack, null))&& player.abilities.allowEdit);
             boolean flag3 = (player.isSneaking() && !te.isEmpty());
 
-            boolean server = !worldIn.isRemote();
 
             //insert Item
             if (flag2) {
@@ -80,8 +80,6 @@ public class NoticeBoardBlock extends Block {
                 if (!player.isCreative()) {
                     itemstack.shrink(1);
                 }
-
-                return ActionResultType.SUCCESS;
             }
             // change color
             else if (flag) {
@@ -92,7 +90,6 @@ public class NoticeBoardBlock extends Block {
                     if(server){
                         te.markDirty();
                     }
-                    return ActionResultType.SUCCESS;
                 }
             }
             //pop item
@@ -104,22 +101,14 @@ public class NoticeBoardBlock extends Block {
                     worldIn.addEntity(drop);
                     te.markDirty();
                 }
-                return ActionResultType.SUCCESS;
             }
             //open gui
             else if (player instanceof ServerPlayerEntity) {
-                //this.getContainer ?
-                TileEntity te1 = worldIn.getTileEntity(pos);
-                if (te1 instanceof NoticeBoardBlockTile) {
-                    player.openContainer((INamedContainerProvider)tileentity);
-                }
-                return ActionResultType.SUCCESS;
+                player.openContainer((INamedContainerProvider)tileentity);
             }
-
-        } else {
-            return ActionResultType.PASS;
+            return ActionResultType.func_233537_a_(!server);
         }
-        return ActionResultType.SUCCESS;
+        return ActionResultType.PASS;
     }
 
     @Override

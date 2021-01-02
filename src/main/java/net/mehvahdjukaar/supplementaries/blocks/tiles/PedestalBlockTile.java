@@ -163,6 +163,8 @@ public class PedestalBlockTile extends LockableLootTileEntity implements ISidedI
         return this.isEmpty();
     }
 
+
+    //TODO: figure out what this handlers and Isided inventory do
     @Override
     public int[] getSlotsForFace(Direction side) {
         return IntStream.range(0, this.getSizeInventory()).toArray();

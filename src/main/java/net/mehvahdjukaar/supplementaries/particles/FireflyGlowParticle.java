@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.particles;
 
+import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
@@ -25,13 +26,22 @@ public class FireflyGlowParticle extends SpriteTexturedParticle {
         // this.motionX =0.2d;
         // this.motionY =0.2d;
         // this.motionZ =0.2d;
+
+
         this.maxAge = new Random().nextInt(10)+ ClientConfigs.cached.FIREFLY_PAR_MAXAGE;
+        //this.setColor(CommonUtil.ishalloween?0.7f:1,0,1);
     }
     @Override
     public float getScale(float partialTicks) {
+        if(CommonUtil.ishalloween){
+            this.particleRed=0.3f;
+            this.particleGreen=0;
+        }
         float f = ((float) this.age + partialTicks) / (float) this.maxAge;
         return this.particleScale * (1 - f) * f * 4;// (1.0F - f * f * 0.5F);
     }
+
+
 
     @Override
     public IParticleRenderType getRenderType() {

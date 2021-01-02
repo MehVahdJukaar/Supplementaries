@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.renderers;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.Resources;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.entities.FireflyEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -26,8 +27,8 @@ public class FireflyEntityRenderer extends EntityRenderer<FireflyEntity> {
 
         matrixStackIn.push();
 
-        float r = 1;
-        float g = 1;
+        float r = CommonUtil.ishalloween?0.3f:1;
+        float g = CommonUtil.ishalloween?0:1;
         float b = 1;
         float a = MathHelper.lerp(partialTicks, entityIn.prevAlpha, entityIn.alpha);
 
@@ -36,7 +37,7 @@ public class FireflyEntityRenderer extends EntityRenderer<FireflyEntity> {
         matrixStackIn.rotate(Vector3f.YP.rotationDegrees(180.0F));
         float scale = (float) ClientConfigs.cached.FIREFLY_SCALE;
         matrixStackIn.scale(a*scale, a*scale, a*scale);
-        IVertexBuilder builder = bufferIn.getBuffer(RenderType.getBeaconBeam(CommonUtil.FIREFLY_TEXTURE, true));
+        IVertexBuilder builder = bufferIn.getBuffer(RenderType.getBeaconBeam(Resources.FIREFLY_TEXTURE, true));
 
         RendererUtil.addQuadSide(builder, matrixStackIn, -0.5f, -0.5f, 0f, 0.5f, 0.5f, 0f, 0, 0, 1, 1, r, g,b, a, 240, 0, 0, 1, 0);
 
@@ -47,6 +48,6 @@ public class FireflyEntityRenderer extends EntityRenderer<FireflyEntity> {
 
     @Override
     public ResourceLocation getEntityTexture(FireflyEntity entity) {
-        return CommonUtil.FIREFLY_TEXTURE;
+        return Resources.FIREFLY_TEXTURE;
     }
 }

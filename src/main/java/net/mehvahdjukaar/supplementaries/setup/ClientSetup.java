@@ -2,10 +2,12 @@ package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.blocks.tiles.*;
-import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.Resources;
 import net.mehvahdjukaar.supplementaries.entities.FireflyEntity;
 import net.mehvahdjukaar.supplementaries.gui.NoticeBoardContainer;
 import net.mehvahdjukaar.supplementaries.gui.NoticeBoardGui;
+import net.mehvahdjukaar.supplementaries.gui.SackContainer;
+import net.mehvahdjukaar.supplementaries.gui.SackGui;
 import net.mehvahdjukaar.supplementaries.particles.FireflyGlowParticle;
 import net.mehvahdjukaar.supplementaries.particles.SpeakerSoundParticle;
 import net.mehvahdjukaar.supplementaries.renderers.*;
@@ -112,7 +114,9 @@ public class ClientSetup {
         //hourglass
         RenderTypeLookup.setRenderLayer(Registry.HOURGLASS, RenderType.getCutout());
         ClientRegistry.bindTileEntityRenderer((TileEntityType<HourGlassBlockTile>)Registry.HOURGLASS_TILE, HourGlassBlockTileRenderer::new);
-
+        //sack
+        RenderTypeLookup.setRenderLayer(Registry.SACK, RenderType.getCutout());
+        ScreenManager.registerFactory((ContainerType<SackContainer>)Registry.SACK_CONTAINER, SackGui::new);
 
     }
 
@@ -134,7 +138,7 @@ public class ClientSetup {
         if (!event.getMap().getTextureLocation().equals(AtlasTexture.LOCATION_BLOCKS_TEXTURE)) {
             return;
         }
-        List<ResourceLocation> l = CommonUtil.getTextures();
+        List<ResourceLocation> l = Resources.getTextures();
         for(ResourceLocation r : l) {
             event.addSprite(r);
         }

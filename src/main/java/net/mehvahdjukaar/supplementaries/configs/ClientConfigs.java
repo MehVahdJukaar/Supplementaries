@@ -38,6 +38,8 @@ public class ClientConfigs {
         public static ForgeConfigSpec.DoubleValue FLAG_AMPLITUDE_INCREMENT;
 
 
+
+
         private static void init(ForgeConfigSpec.Builder builder) {
             builder.comment("Tweak and change the various block animations +\n" +
                     "IF YOU FIND A CONFIG THAT LOOKS BETTER THAT THESE DEFAULTS, SEND IT TO ME AND I'LL MAKE IT THE NEW DEFAUL\n"+

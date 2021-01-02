@@ -55,6 +55,8 @@ public class ServerConfigs {
 
         public static ForgeConfigSpec.BooleanValue NOTICE_BOARDS_UNRESTRICTED;
 
+        public static ForgeConfigSpec.BooleanValue SACK_PENALITY;
+        public static ForgeConfigSpec.IntValue SACK_INCREMENT;
         private static void  init(ForgeConfigSpec.Builder builder){
             builder.comment("Server side blocks configs")
                     .push("blocks");
@@ -168,6 +170,13 @@ public class ServerConfigs {
                     .define("allow_any_item", false);
             builder.pop();
 
+            builder.push("sack");
+            SACK_PENALITY = builder.comment("penalize the player with slowness effecn when carring too many sacks")
+                    .define("sack_penality", true);
+            SACK_INCREMENT = builder.comment("maximum number of sacks after which the slowness effect will be applied. each multiple of this number will further slow the player down")
+                    .defineInRange("sack_increment",2,0,50);
+            builder.pop();
+
 
 
 
@@ -262,6 +271,8 @@ public class ServerConfigs {
         public static List<? extends String> CAGE_ALLOWED_MOBS;
         public static List<? extends String> CAGE_ALLOWED_BABY_MOBS;
         public static boolean CAGE_ALL_MOBS;
+        public static int SACK_INCREMENT;
+        public static boolean SACK_PENALITY;
         //entity
         public static int FIREFLY_PERIOD;
         public static double FIREFLY_SPEED;
@@ -303,6 +314,9 @@ public class ServerConfigs {
             CAGE_ALLOWED_MOBS = block.CAGE_ALLOWED_MOBS.get();
             CAGE_ALLOWED_BABY_MOBS = block.CAGE_ALLOWED_BABY_MOBS.get();
             CAGE_ALL_MOBS = block.CAGE_ALL_MOBS.get();
+
+            SACK_INCREMENT = block.SACK_INCREMENT.get();
+            SACK_PENALITY = block.SACK_PENALITY.get();
 
             FIREFLY_PERIOD = entity.FIREFLY_PERIOD.get();
             FIREFLY_SPEED = entity.FIREFLY_SPEED.get();

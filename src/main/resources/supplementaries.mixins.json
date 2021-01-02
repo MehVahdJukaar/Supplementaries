@@ -8,7 +8,9 @@
     "package": "net.mehvahdjukaar.supplementaries.mixins",
     "mixins": [
         "MapDataMixin",
-        "CatSitOnBlockMixin"
+        "CatSitOnBlockMixin",
+        "ShulkerBoxTileEntityMixin",
+        "ShulkerBoxSlotMixin"
     ],
     "client": [
     ],

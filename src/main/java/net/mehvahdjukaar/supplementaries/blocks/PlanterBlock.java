@@ -4,6 +4,7 @@ import net.minecraft.block.*;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -20,23 +21,30 @@ import net.minecraftforge.common.IPlantable;
 
 public class PlanterBlock extends Block implements IWaterLoggable{
     protected static final VoxelShape SHAPE = VoxelShapes.or(VoxelShapes.create(0.125D, 0D, 0.125D, 0.875D, 0.687D, 0.875D), VoxelShapes.create(0D, 0.687D, 0D, 1D, 1D, 1D));
+    protected static final VoxelShape SHAPE_C = VoxelShapes.or(VoxelShapes.create(0, 0, 0, 1, 0.9375, 1));
 
     public static final BooleanProperty EXTENDED = BlockStateProperties.EXTENDED; // raised dirt?
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     public PlanterBlock(Properties properties) {
         super(properties);
+
         this.setDefaultState(this.stateContainer.getBaseState().with(WATERLOGGED, false).with(EXTENDED, false));
     }
-
+    //TODO: this seem sto fix pathfinding
     @Override
-    public VoxelShape getCollisionShape(BlockState state, IBlockReader reader, BlockPos pos) {
-        return VoxelShapes.fullCube();
+    public boolean allowsMovement(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
+        return false;
     }
 
     @Override
-    public VoxelShape getRenderShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
-        return VoxelShapes.fullCube();
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        return SHAPE;
+    }
+
+    @Override
+    public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        return SHAPE_C;
     }
 
     @Override
@@ -85,13 +93,7 @@ public class PlanterBlock extends Block implements IWaterLoggable{
         return true;
     }
 
-    @Override
-    public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
-        return SHAPE;
-    }
 
-    @Override
-    public VoxelShape getRayTraceShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext context) {
-        return VoxelShapes.fullCube();
-    }
+
+
 }

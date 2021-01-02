@@ -11,7 +11,7 @@
       "conditions": {
         "items": [
           {
-            "item": "minecraft:firefly_jar"
+            "item": "supplementaries:firefly_jar"
           }
         ]
       }

@@ -57,19 +57,31 @@ public class SignPostGui extends Screen {
     }
 
     @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+        if(this.tileSign.up&&this.tileSign.down) {
+            this.scrollText((int) delta);
+            return true;
+        }
+        return false;
+    }
+
+    public void scrollText(int amount){
+        this.editLine = Math.floorMod(this.editLine - amount, MAXLINES);
+        this.textInputUtil.moveCursorToEnd();
+    }
+
+    @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
 
         if(this.tileSign.up&&this.tileSign.down){
             // up arrow
             if (keyCode == 265) {
-                this.editLine = Math.floorMod(this.editLine - 1, MAXLINES);
-                this.textInputUtil.moveCursorToEnd();
+                this.scrollText(1);
                 return true;
             }
             // down arrow, enter
             else if(keyCode == 264 || keyCode == 257 || keyCode == 335) {
-                this.editLine = Math.floorMod(this.editLine + 1, MAXLINES);
-                this.textInputUtil.moveCursorToEnd();
+                this.scrollText(-1);
                 return true;
             }
         }

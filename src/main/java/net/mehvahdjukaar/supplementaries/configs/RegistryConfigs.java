@@ -66,9 +66,17 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue HOURGLASS_ENABLED;
         public static ForgeConfigSpec.BooleanValue LASER_ENABLED;
         public static ForgeConfigSpec.BooleanValue FLAG_ENABLED;
+        public static ForgeConfigSpec.BooleanValue SACK_ENABLED;
+
+        public static ForgeConfigSpec.BooleanValue CREATIVE_TAB;
 
         private static void init(ForgeConfigSpec.Builder builder) {
+            builder.push("general");
+            CREATIVE_TAB = builder.comment("enable creative tab").define("creative_tab",false);
+            builder.pop();
+
             builder.comment("Enable and disable blocks / entities");
+
             builder.push("registration");
 
             builder.push("blocks");
@@ -102,6 +110,7 @@ public class RegistryConfigs {
             CANDLE_HOLDER_ENABLED = builder.define("sconce_lever", true);
             GLOBE_ENABLED = builder.define("globe", true);
             HOURGLASS_ENABLED = builder.define("hourglass", true);
+            SACK_ENABLED = builder.define("sack", true);
 
             LASER_ENABLED = builder.comment("WIP")
                     .define("laser", true);

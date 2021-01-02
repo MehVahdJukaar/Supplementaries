@@ -1,4 +1,5 @@
 {
+  "itemGroup.supplementaries": "Supplementaries",
   "block.supplementaries.faucet": "Faucet",
   "block.supplementaries.hanging_sign": "Vývěsní štít",
   "block.supplementaries.hanging_sign_oak": "Dubová vývěsní štít",
@@ -60,7 +61,7 @@
   "block.supplementaries.item_shelf": "Polička",
   "block.supplementaries.cog_block": "Blok ozubeného kola (WIP)",
   "block.supplementaries.candle_holder": "Svícen",
-
+  "block.supplementaries.sack": "Pytel",
 
   "block.supplementaries.flag": "Vlajka (WIP)",
   "block.supplementaries.laser_block": "Laserový blok (WIP)",

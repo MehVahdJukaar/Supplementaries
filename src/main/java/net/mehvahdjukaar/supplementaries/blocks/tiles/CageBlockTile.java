@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.blocks.tiles;
 
 import net.mehvahdjukaar.supplementaries.blocks.ClockBlock;
-import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil.JarMobType;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
@@ -22,6 +21,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
 
 import java.util.Random;
+import java.util.UUID;
 
 public class CageBlockTile extends TileEntity implements ITickableTileEntity {
 
@@ -29,6 +29,7 @@ public class CageBlockTile extends TileEntity implements ITickableTileEntity {
     //mob jar code
     public Entity mob = null;
     public CompoundNBT entityData = null;
+    public UUID uuid = null;
     public boolean entityChanged = true;
     public float yOffset = 1;
     public float scale = 1;
@@ -36,7 +37,7 @@ public class CageBlockTile extends TileEntity implements ITickableTileEntity {
     public float prevJumpY = 0;
     public float yVel = 0;
     private final Random rand = new Random();
-    public JarMobType animationType = CommonUtil.JarMobType.DEFAULT;
+    public JarMobType animationType = JarMobType.DEFAULT;
 
     public CageBlockTile() {
         super(Registry.CAGE_TILE);
@@ -55,6 +56,8 @@ public class CageBlockTile extends TileEntity implements ITickableTileEntity {
         cmp.putFloat("Scale", this.scale);
         cmp.putFloat("YOffset", this.yOffset);
         cmp.putString("Name",this.mob.getName().getString());
+        if(this.uuid!=null)
+            cmp.putUniqueId("oldID",this.uuid);
         stack.setTagInfo("CachedJarMobValues", cmp);
         stack.setTagInfo("JarMob", entityData);
     }
@@ -72,6 +75,8 @@ public class CageBlockTile extends TileEntity implements ITickableTileEntity {
         this.scale = compound.getFloat("scale");
         this.yOffset = compound.getFloat("y_offset");
         this.animationType = JarMobType.values()[compound.getInt("animation_type")];
+        if(compound.contains("uuid"))
+            this.uuid = compound.getUniqueId("uuid");
     }
 
     @Override
@@ -83,6 +88,8 @@ public class CageBlockTile extends TileEntity implements ITickableTileEntity {
         compound.putFloat("scale",this.scale);
         compound.putFloat("y_offset",this.yOffset);
         compound.putInt("animation_type", this.animationType.ordinal());
+        if(this.uuid!=null)
+            compound.putUniqueId("uuid",this.uuid);
         return compound;
     }
 
@@ -232,6 +239,11 @@ public class CageBlockTile extends TileEntity implements ITickableTileEntity {
                 entity  = EntityType.loadEntityAndExecute(this.entityData, this.world, o -> o);
             }
             if (entity==null)return;
+
+            if(this.uuid!=null) {
+                entity.setUniqueId(this.uuid);
+            }
+
             //TODO: add shadows
             double px = this.pos.getX() + 0.5;
             double py = this.pos.getY() + 0.5 + 0.0625;
@@ -247,7 +259,7 @@ public class CageBlockTile extends TileEntity implements ITickableTileEntity {
             entity.ticksExisted+=this.rand.nextInt(40);
 
             this.mob = entity;
-            this.animationType = CommonUtil.JarMobType.getJarMobType(entity);
+            this.animationType = JarMobType.getJarMobType(entity);
             this.entityChanged = false;
         }
     }

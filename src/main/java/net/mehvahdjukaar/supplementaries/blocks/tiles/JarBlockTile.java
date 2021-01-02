@@ -51,6 +51,7 @@ import net.minecraftforge.items.wrapper.SidedInvWrapper;
 
 import javax.annotation.Nullable;
 import java.util.Random;
+import java.util.UUID;
 import java.util.stream.IntStream;
 
 public class JarBlockTile extends LockableLootTileEntity implements ISidedInventory, ITickableTileEntity {
@@ -62,6 +63,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
     //mob jar code
     public Entity mob = null;
     public CompoundNBT entityData = null;
+    public UUID uuid;
     public boolean entityChanged = true;
     public float yOffset = 1;
     public float scale = 1;
@@ -361,6 +363,8 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
         cmp.putFloat("Scale", this.scale);
         cmp.putFloat("YOffset", this.yOffset);
         cmp.putString("Name",this.mob.getName().getString());
+        if(this.uuid!=null)
+            cmp.putUniqueId("oldID",this.uuid);
         stack.setTagInfo("CachedJarMobValues", cmp);
         stack.setTagInfo("JarMob", entityData);
     }
@@ -385,6 +389,8 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
         this.scale = compound.getFloat("scale");
         this.yOffset = compound.getFloat("y_offset");
         this.animationType = JarMobType.values()[compound.getInt("animation_type")];
+        if(compound.contains("uuid"))
+            this.uuid = compound.getUniqueId("uuid");
     }
 
     @Override
@@ -402,6 +408,8 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
         compound.putFloat("scale",this.scale);
         compound.putFloat("y_offset",this.yOffset);
         compound.putInt("animation_type", this.animationType.ordinal());
+        if(this.uuid!=null)
+            compound.putUniqueId("uuid",this.uuid);
         return compound;
     }
 
@@ -607,6 +615,12 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
             else{
                 entity  = EntityType.loadEntityAndExecute(this.entityData, this.world, o -> o);
             }
+            if (entity==null)return;
+
+            if(this.uuid!=null) {
+                entity.setUniqueId(this.uuid);
+            }
+
             //TODO: add shadows
             double px = this.pos.getX() + 0.5;
             double py = this.pos.getY() + 0.5 + 0.0625;
@@ -621,7 +635,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
             entity.prevPosZ = pz;
 
             this.mob = entity;
-            this.animationType = CommonUtil.JarMobType.getJarMobType(entity);
+            this.animationType = JarMobType.getJarMobType(entity);
             this.entityChanged = false;
         }
     }

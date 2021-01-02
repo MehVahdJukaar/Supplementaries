@@ -22,6 +22,9 @@ public class WallLanternBlockTile extends TileEntity implements ITickableTileEnt
     public int counter = 800 + new Random().nextInt(80);;
     public BlockState lanternBlock = Blocks.AIR.getDefaultState();
     // lower counter is used by hitting animation
+
+    public boolean inv = false;
+
     public WallLanternBlockTile() {
         super(Registry.WALL_LANTERN_TILE);
     }
@@ -82,6 +85,7 @@ public class WallLanternBlockTile extends TileEntity implements ITickableTileEnt
                 k = (float) Math.max(Math.PI * 2 * (float) Math.pow(Math.E, -(counter / perioddamping)), 0.01f);
             }
             this.angle = a * MathHelper.cos((counter / maxperiod) - k);
+            this.angle *= this.inv? -1:1;
             // this.angle = 90*(float)
             // Math.cos((float)counter/40f)/((float)this.counter/20f);;
         }

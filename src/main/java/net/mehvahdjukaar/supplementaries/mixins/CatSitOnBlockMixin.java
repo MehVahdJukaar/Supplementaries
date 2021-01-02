@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.blocks.PlanterBlock;
+import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.ai.goal.CatSitOnBlockGoal;
 import net.minecraft.util.math.BlockPos;
@@ -16,7 +16,7 @@ public abstract class CatSitOnBlockMixin {
     @Inject(method = "shouldMoveTo", at = @At("HEAD"), cancellable = true)
     protected void shouldMoveTo(IWorldReader worldIn, BlockPos pos, CallbackInfoReturnable<Boolean> info) {
         BlockState blockstate = worldIn.getBlockState(pos);
-        if (blockstate.getBlock() instanceof PlanterBlock) {
+        if (blockstate.getBlock() == Registry.PLANTER) {
             info.setReturnValue(true);
         }
     }

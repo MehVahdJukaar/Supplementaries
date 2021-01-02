@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.renderers;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.mehvahdjukaar.supplementaries.blocks.tiles.LaserBlockTile;
-import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.Resources;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
@@ -31,8 +31,8 @@ public class LaserBlockTileRenderer extends TileEntityRenderer<LaserBlockTile> {
             int lenght = tile.lenght;
             if (lenght == 0)
                 return;
-            TextureAtlasSprite sprite_o = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(CommonUtil.LASER_OVERLAY_TEXTURE);
-            TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(CommonUtil.LASER_BEAM_TEXTURE);
+            TextureAtlasSprite sprite_o = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(Resources.LASER_OVERLAY_TEXTURE);
+            TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(Resources.LASER_BEAM_TEXTURE);
             // IVertexBuilder builder = bufferIn.getBuffer(RenderType.getTranslucent());
 
 
@@ -81,7 +81,7 @@ public class LaserBlockTileRenderer extends TileEntityRenderer<LaserBlockTile> {
                 matrixStackIn.translate(0, 1, 0);
                 matrixStackIn.push();
                 IVertexBuilder builder1 = bufferIn.getBuffer(RenderType.getLightning());
-                TextureAtlasSprite sprite1 = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(CommonUtil.LASER_BEAM_END_TEXTURE);
+                TextureAtlasSprite sprite1 = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(Resources.LASER_BEAM_END_TEXTURE);
                 RendererUtil.addCube(builder1, matrixStackIn, w, 1f, sprite1, combinedLightIn, color, 0.7f, combinedOverlayIn, false, false, false,
                         true);
                 RendererUtil.addCube(builder1, matrixStackIn, w2, 1f, sprite1, combinedLightIn, 0xFFFFFF, 1f, combinedOverlayIn, false, false,

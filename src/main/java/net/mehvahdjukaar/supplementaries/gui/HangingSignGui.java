@@ -38,6 +38,9 @@ public class HangingSignGui extends Screen {
     private final HangingSignBlockTile tileSign;
     private static final int MAXLINES = 5;
     private final String[] cachedLines;
+
+    private BlackBoardButton rem;
+
     public HangingSignGui(HangingSignBlockTile teSign) {
         super(new TranslationTextComponent("sign.edit"));
         this.tileSign = teSign;
@@ -53,13 +56,24 @@ public class HangingSignGui extends Screen {
         this.textInputUtil.putChar(codePoint);
         return true;
     }
-    
+
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+        this.scrollText((int)delta);
+        return true;
+    }
+
+    public void scrollText(int amount){
+        this.editLine = Math.floorMod(this.editLine - amount, MAXLINES);
+        this.textInputUtil.moveCursorToEnd();
+    }
+
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         // up arrow
         if (keyCode == 265) {
-            this.editLine = Math.floorMod(this.editLine - 1, MAXLINES);
-            this.textInputUtil.moveCursorToEnd();
+            this.scrollText(1);
             return true;
         }
         // !down arrow, !enter, !enter, handles special keys
@@ -68,8 +82,7 @@ public class HangingSignGui extends Screen {
         }
         // down arrow, enter
         else {
-            this.editLine = Math.floorMod(this.editLine + 1, MAXLINES);
-            this.textInputUtil.moveCursorToEnd();
+            this.scrollText(-1);
             return true;
         }
     }
@@ -105,6 +118,10 @@ public class HangingSignGui extends Screen {
 
     @Override
     protected void init() {
+
+        rem = new BlackBoardButton(188, this.height/3, 8, 8);
+        this.addListener(rem);
+
         this.minecraft.keyboardListener.enableRepeatEvents(true);
         this.addButton(new Button(this.width / 2 - 100, this.height / 4 + 120, 200, 20, DialogTexts.GUI_DONE, (p_238847_1_) -> this.close()));
         this.tileSign.setEditable(false);
@@ -125,7 +142,14 @@ public class HangingSignGui extends Screen {
         matrixstack.push();
         matrixstack.translate((double) (this.width / 2), 0.0D, 50.0D);
 
+
+
+
+
         matrixstack.scale(93.75F, -93.75F, 93.75F);
+        //rem.render(matrixStack,mouseX,mouseY,partialTicks);
+
+
         matrixstack.translate(0.0D, -1.3125D, 0.0D);
         // renders sign
         matrixstack.push();
@@ -136,6 +160,8 @@ public class HangingSignGui extends Screen {
         BlockState state = this.tileSign.getBlockState().getBlock().getDefaultState().with(HangingSignBlock.TILE, true);
         blockRenderer.renderBlock(state, matrixstack, irendertypebuffer$impl, 15728880, OverlayTexture.NO_OVERLAY, EmptyModelData.INSTANCE);
         matrixstack.pop();
+
+
 
         //renders text
         boolean flag1 = this.updateCounter / 6 % 2 == 0;

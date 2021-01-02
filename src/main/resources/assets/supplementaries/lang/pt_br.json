@@ -1,4 +1,5 @@
 {
+  "itemGroup.supplementaries": "Supplementaries",
   "block.supplementaries.faucet": "Torneira",
   "block.supplementaries.hanging_sign": "Placa Suspensa",
   "block.supplementaries.hanging_sign_oak": "Placa Suspensa Carvalho",
@@ -60,7 +61,8 @@
   "block.supplementaries.candelabra_silver": "Candelabro de Prata",
   "block.supplementaries.item_shelf": "Prateleira de Itens",
   "block.supplementaries.cog_block": "Bloco de Engrenagem",
-  "block.supplementaries.candle_holder": "Castiçal 1.17",
+  "block.supplementaries.candle_holder": "Castiçal",
+  "block.supplementaries.sack": "Saco",
  
   "block.supplementaries.flag": "WIP Bandeira",
   "block.supplementaries.laser_block": "Bloco de Laser",

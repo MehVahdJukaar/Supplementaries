@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.blocks.tiles;
 
 import net.mehvahdjukaar.supplementaries.blocks.GlobeBlock;
-import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil.GlobeType;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
@@ -57,7 +56,7 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, I
         }
         this.face = compound.getInt("face");
         this.yaw = compound.getFloat("yaw");
-        this.type = CommonUtil.GlobeType.values()[compound.getInt("globe_type")];
+        this.type = GlobeType.values()[compound.getInt("globe_type")];
     }
 
     @Override

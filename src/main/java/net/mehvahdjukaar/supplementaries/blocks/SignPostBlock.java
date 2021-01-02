@@ -2,23 +2,25 @@ package net.mehvahdjukaar.supplementaries.blocks;
 
 
 import net.mehvahdjukaar.supplementaries.blocks.tiles.SignPostBlockTile;
+import net.mehvahdjukaar.supplementaries.blocks.tiles.WallLanternBlockTile;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil.WoodType;
+import net.mehvahdjukaar.supplementaries.common.Resources;
 import net.mehvahdjukaar.supplementaries.gui.SignPostGui;
 import net.mehvahdjukaar.supplementaries.items.SignPostItem;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.IWaterLoggable;
+import net.minecraft.block.*;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.*;
+import net.minecraft.loot.LootContext;
+import net.minecraft.loot.LootParameters;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
+import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
@@ -38,6 +40,9 @@ import net.minecraft.world.storage.MapData;
 import net.minecraftforge.common.extensions.IForgeBlock;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -47,7 +52,7 @@ public class SignPostBlock extends Block implements IWaterLoggable, IForgeBlock 
 
 
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
-    public static final EnumProperty<WoodType> WOOD_TYPE = CommonUtil.WOOD_TYPE; //null = rendered by te. other states hold all the wood types sign models
+    public static final EnumProperty<WoodType> WOOD_TYPE = Resources.WOOD_TYPE; //null = rendered by te. other states hold all the wood types sign models
     public SignPostBlock(Properties properties) {
         super(properties);
         this.setDefaultState(this.stateContainer.getBaseState().with(WOOD_TYPE, WoodType.NONE).with(WATERLOGGED, false));
@@ -220,6 +225,11 @@ public class SignPostBlock extends Block implements IWaterLoggable, IForgeBlock 
     }
 
     @Override
+    public boolean allowsMovement(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
+        return false;
+    }
+
+    @Override
     public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
         TileEntity te = world.getTileEntity(pos);
         if(te instanceof SignPostBlockTile){
@@ -238,27 +248,24 @@ public class SignPostBlock extends Block implements IWaterLoggable, IForgeBlock 
     }
 
     @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (state.getBlock() != newState.getBlock()) {
-            TileEntity tileentity = worldIn.getTileEntity(pos);
-            if (tileentity instanceof SignPostBlockTile) {
-                SignPostBlockTile tile = ((SignPostBlockTile) tileentity);
-                if (tile.up) {
-                    ItemStack itemstack = new ItemStack(CommonUtil.getSignPostItemFromWoodType(tile.woodTypeUp));
-                    ItemEntity itementity = new ItemEntity(worldIn, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, itemstack);
-                    itementity.setDefaultPickupDelay();
-                    worldIn.addEntity(itementity);
-                }
-                if (tile.down) {
-                    ItemStack itemstack = new ItemStack(CommonUtil.getSignPostItemFromWoodType(tile.woodTypeDown));
-                    ItemEntity itementity = new ItemEntity(worldIn, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, itemstack);
-                    itementity.setDefaultPickupDelay();
-                    worldIn.addEntity(itementity);
-                }
-                spawnDrops(tile.fenceBlock, worldIn, pos);
+    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
+        TileEntity tileentity = builder.get(LootParameters.BLOCK_ENTITY);
+        if (tileentity instanceof SignPostBlockTile){
+            SignPostBlockTile tile = ((SignPostBlockTile) tileentity);
+            List<ItemStack> list = new ArrayList<>();
+            list.add(new ItemStack(tile.fenceBlock.getBlock()));
+
+            if (tile.up) {
+                ItemStack s = new ItemStack(CommonUtil.getSignPostItemFromWoodType(tile.woodTypeUp));
+                list.add(s);
             }
-            super.onReplaced(state, worldIn, pos, newState, isMoving);
+            if (tile.down) {
+                ItemStack s = new ItemStack(CommonUtil.getSignPostItemFromWoodType(tile.woodTypeDown));
+                list.add(s);
+            }
+            return list;
         }
+        return super.getDrops(state,builder);
     }
 
     @Override

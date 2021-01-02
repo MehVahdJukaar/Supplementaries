@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.mehvahdjukaar.supplementaries.common.Resources;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
@@ -12,7 +13,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class NoticeBoardGui extends ContainerScreen<NoticeBoardContainer> {
-    private static final ResourceLocation NOTICE_BOARD_GUI_TEXTURE = new ResourceLocation("supplementaries:textures/gui/notice_board_gui.png");
 
     public NoticeBoardGui(NoticeBoardContainer container, PlayerInventory inventory, ITextComponent text) {
         super(container, inventory, text);
@@ -23,7 +23,7 @@ public class NoticeBoardGui extends ContainerScreen<NoticeBoardContainer> {
     @Override
     protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int x, int y) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        Minecraft.getInstance().getTextureManager().bindTexture(NOTICE_BOARD_GUI_TEXTURE);
+        Minecraft.getInstance().getTextureManager().bindTexture(Resources.NOTICE_BOARD_GUI_TEXTURE);
         int k = (this.width - this.xSize) / 2;
         int l = (this.height - this.ySize) / 2;
         this.blit(matrixStack, k, l, 0, 0, this.xSize, this.ySize);

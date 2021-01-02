@@ -1,11 +1,8 @@
 package net.mehvahdjukaar.supplementaries.blocks;
 
 import net.mehvahdjukaar.supplementaries.blocks.tiles.HourGlassBlockTile;
-import net.mehvahdjukaar.supplementaries.common.CommonUtil;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.DirectionalBlock;
-import net.minecraft.block.IWaterLoggable;
+import net.mehvahdjukaar.supplementaries.common.Resources;
+import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -13,6 +10,7 @@ import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.IntegerProperty;
@@ -36,11 +34,22 @@ public class HourGlassBlock extends Block implements IWaterLoggable, IForgeBlock
     protected static final VoxelShape SHAPE_X = Block.makeCuboidShape(0D, 4D, 4D, 16D, 12D, 12.0D);
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
-    public static final IntegerProperty LIGHT_LEVEL = CommonUtil.LIGHT_LEVEL_0_15;
+    public static final IntegerProperty LIGHT_LEVEL = Resources.LIGHT_LEVEL_0_15;
+
     public HourGlassBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.UP).with(LIGHT_LEVEL,0)
-                .with(WATERLOGGED,false));
+        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.UP).with(LIGHT_LEVEL, 0)
+                .with(WATERLOGGED, false));
+    }
+
+    @Override
+    public boolean allowsMovement(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
+        return false;
+    }
+
+    @Override
+    public BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.MODEL;
     }
 
     @Override
@@ -50,7 +59,7 @@ public class HourGlassBlock extends Block implements IWaterLoggable, IForgeBlock
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(FACING,WATERLOGGED,LIGHT_LEVEL);
+        builder.add(FACING, WATERLOGGED, LIGHT_LEVEL);
     }
 
     @Override
@@ -71,7 +80,7 @@ public class HourGlassBlock extends Block implements IWaterLoggable, IForgeBlock
         World world = context.getWorld();
         BlockPos pos = context.getPos();
         boolean flag = world.getFluidState(pos).getFluid() == Fluids.WATER;
-        return this.getDefaultState().with(WATERLOGGED,flag).with(FACING, context.getFace());
+        return this.getDefaultState().with(WATERLOGGED, flag).with(FACING, context.getFace());
     }
 
     //called when a neighbor is placed
@@ -101,16 +110,15 @@ public class HourGlassBlock extends Block implements IWaterLoggable, IForgeBlock
                 if (!player.isCreative()) {
                     itemstack.shrink(1);
                 }
-                if(!worldIn.isRemote()){
-                    worldIn.playSound(null, pos,SoundEvents.ENTITY_ITEM_FRAME_ADD_ITEM,SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.10F + 0.95F);
+                if (!worldIn.isRemote()) {
+                    worldIn.playSound(null, pos, SoundEvents.ENTITY_ITEM_FRAME_ADD_ITEM, SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.10F + 0.95F);
                     te.markDirty();
                 }
                 return ActionResultType.func_233537_a_(worldIn.isRemote);
-            }
-            else if (flag2) {
+            } else if (flag2) {
                 ItemStack it = te.removeStackFromSlot(0);
                 player.setHeldItem(handIn, it);
-                if(!worldIn.isRemote()){
+                if (!worldIn.isRemote()) {
                     te.markDirty();
                 }
                 return ActionResultType.func_233537_a_(worldIn.isRemote);
@@ -121,7 +129,7 @@ public class HourGlassBlock extends Block implements IWaterLoggable, IForgeBlock
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
-        switch (state.get(FACING).getAxis()){
+        switch (state.get(FACING).getAxis()) {
             case Z:
                 return SHAPE_Z;
             default:
@@ -177,8 +185,7 @@ public class HourGlassBlock extends Block implements IWaterLoggable, IForgeBlock
         TileEntity tileentity = world.getTileEntity(pos);
         if (tileentity instanceof HourGlassBlockTile) {
             return ((HourGlassBlockTile) tileentity).power;
-        }
-        else
+        } else
             return 0;
     }
 }

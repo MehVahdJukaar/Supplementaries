@@ -7,7 +7,7 @@
   ],
   "key": {
     "0": {
-      "item": "minecraft:iron_ingot"
+      "tag": "forge:ingots/copper"
     },
     "1": {
       "item": "minecraft:redstone_block"
