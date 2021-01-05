@@ -35,15 +35,12 @@ import java.util.stream.IntStream;
 
 public class HourGlassBlockTile extends LockableLootTileEntity implements ISidedInventory, ITickableTileEntity {
     private NonNullList<ItemStack> stacks = NonNullList.withSize(1, ItemStack.EMPTY);
-    private static final HashMap<Item,Float> sandsTimesMap = new HashMap<>();
     public HourGlassSandType sandType = HourGlassSandType.DEFAULT;
     public float progress = 0; //0-1 percentage of progress
     public float prevProgress = 0;
     public int power = 0;
     public HourGlassBlockTile() {
         super(Registry.HOURGLASS_TILE);
-        //TODO: add configs
-        sandsTimesMap.put(Items.SAND,0.1f);
     }
 
     //hijacking this method to work with hoppers
@@ -101,8 +98,8 @@ public class HourGlassBlockTile extends LockableLootTileEntity implements ISided
             this.stacks = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
         }
         ItemStackHelper.loadAllItems(compound, this.stacks);
-        this.sandType = CommonUtil.HourGlassSandType.values()[compound.getInt("sand_type")];
-        this.progress = compound.getFloat("progress");
+        this.sandType = CommonUtil.HourGlassSandType.values()[compound.getInt("SandType")];
+        this.progress = compound.getFloat("Progress");
     }
 
     @Override
@@ -111,8 +108,8 @@ public class HourGlassBlockTile extends LockableLootTileEntity implements ISided
         if (!this.checkLootAndWrite(compound)) {
             ItemStackHelper.saveAllItems(compound, this.stacks);
         }
-        compound.putInt("sand_type", this.sandType.ordinal());
-        compound.putFloat("progress", this.progress);
+        compound.putInt("SandType", this.sandType.ordinal());
+        compound.putFloat("Progress", this.progress);
         return compound;
     }
 
@@ -154,12 +151,10 @@ public class HourGlassBlockTile extends LockableLootTileEntity implements ISided
         return 1;
     }
 
-
     @Override
     public Container createMenu(int id, PlayerInventory player) {
         return ChestContainer.createGeneric9X3(id, player, this);
     }
-
 
     @Override
     protected NonNullList<ItemStack> getItems() {
@@ -176,6 +171,7 @@ public class HourGlassBlockTile extends LockableLootTileEntity implements ISided
         return this.isEmpty() && !CommonUtil.HourGlassSandType.getHourGlassSandType(stack.getItem()).isEmpty();
     }
 
+    //TODO: FIX this so it can only put from top
     @Override
     public int[] getSlotsForFace(Direction side) {
         return IntStream.range(0, this.getSizeInventory()).toArray();

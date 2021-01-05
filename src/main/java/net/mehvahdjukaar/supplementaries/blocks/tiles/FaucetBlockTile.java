@@ -191,13 +191,15 @@ public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
     @Override
     public void read(BlockState state, CompoundNBT compound) {
         super.read(state, compound);
-        this.watercolor = compound.getInt("watercolor");
+        this.watercolor = compound.getInt("Watercolor");
+        this.transferCooldown = compound.getInt("TransferCooldown");
     }
 
     @Override
     public CompoundNBT write(CompoundNBT compound) {
         super.write(compound);
-        compound.putInt("watercolor", this.watercolor);
+        compound.putInt("Watercolor", this.watercolor);
+        compound.putInt("TransferCooldown", this.transferCooldown);
         return compound;
     }
 

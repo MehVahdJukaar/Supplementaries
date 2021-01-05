@@ -3,8 +3,6 @@ package net.mehvahdjukaar.supplementaries.mixins;
 import net.mehvahdjukaar.supplementaries.items.SackItem;
 import net.minecraft.inventory.container.ShulkerBoxSlot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.ShulkerBoxTileEntity;
-import net.minecraft.util.Direction;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

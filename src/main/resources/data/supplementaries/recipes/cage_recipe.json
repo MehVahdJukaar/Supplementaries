@@ -19,5 +19,12 @@
   "result": {
     "item": "supplementaries:cage",
     "count": 1
-  }
+  },
+
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "cage"
+    }
+  ]
 }

@@ -21,6 +21,11 @@
     {
       "type":"forge:mod_loaded",
       "modid":"endergetic"
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "sconce_ender"
     }
   ]
+
 }

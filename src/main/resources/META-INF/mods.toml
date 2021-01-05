@@ -11,7 +11,7 @@ issueTrackerURL="https://www.curseforge.com/minecraft/mc-mods/supplementaries/is
 
 modId="supplementaries" #mandatory
 
-version="0.9.17" #mandatory
+version="0.9.17-b" #mandatory
 
 displayName="Supplementaries" #mandatory
 

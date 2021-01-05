@@ -10,17 +10,15 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.*;
-import net.minecraft.inventory.container.ChestContainer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ShulkerBoxContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.BarrelTileEntity;
-import net.minecraft.tileentity.ChestTileEntity;
 import net.minecraft.tileentity.LockableLootTileEntity;
 import net.minecraft.tileentity.LockableTileEntity;
 import net.minecraft.util.Direction;
@@ -49,10 +47,12 @@ public class SackBlockTile extends LockableLootTileEntity implements ISidedInven
         super(Registry.SACK_TILE);
     }
 
+    @Override
     public int getSizeInventory() {
         return this.items.size();
     }
 
+    @Override
     protected ITextComponent getDefaultName() {
         return new TranslationTextComponent("block.supplementaries.sack");
     }
@@ -68,15 +68,13 @@ public class SackBlockTile extends LockableLootTileEntity implements ISidedInven
             BlockState blockstate = this.getBlockState();
             boolean flag = blockstate.get(SackBlock.OPEN);
             if (!flag) {
-                //this.playSound(blockstate, SoundEvents.BLOCK_BARREL_OPEN);
-                this.world.playSound((PlayerEntity)null, this.pos.getX()+0.5, this.pos.getY()+0.5, this.pos.getZ()+0.5,
+                this.world.playSound(null, this.pos.getX()+0.5, this.pos.getY()+0.5, this.pos.getZ()+0.5,
                         SoundEvents.BLOCK_WOOL_BREAK, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.55F);
                 this.world.setBlockState(this.getPos(), blockstate.with(SackBlock.OPEN, true), 3);
             }
             this.world.getPendingBlockTicks().scheduleTick(this.getPos(), this.getBlockState().getBlock(), 5);
         }
     }
-
     public static int calculatePlayersUsing(World world, LockableTileEntity tile, int x, int y, int z) {
         int i = 0;
         for(PlayerEntity playerentity : world.getEntitiesWithinAABB(PlayerEntity.class, new AxisAlignedBB((float)x - 5.0F, (float)y - 5.0F, (float)z - 5.0F, (float)(x + 1) + 5.0F, (float)(y + 1) + 5.0F, (float)(z + 1) + 5.0F))) {
@@ -116,18 +114,20 @@ public class SackBlockTile extends LockableLootTileEntity implements ISidedInven
 
     }
 
+    @Override
     public void closeInventory(PlayerEntity player) {
         if (!player.isSpectator()) {
             --this.numPlayersUsing;
         }
     }
 
-
+    @Override
     public void read(BlockState state, CompoundNBT nbt) {
         super.read(state, nbt);
         this.loadFromNbt(nbt);
     }
 
+    @Override
     public CompoundNBT write(CompoundNBT compound) {
         super.write(compound);
         return this.saveToNbt(compound);

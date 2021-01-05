@@ -149,7 +149,7 @@ public class RendererUtil {
             addVert(builder, matrixStackIn, -hw + Math.abs(wo / 2), -hh + ho, -wo, maxu, minv, 1, 1, 1, 1, lu, lv, 0, 1, 0);
             addVert(builder, matrixStackIn, -hw + Math.abs(wo / 2), hh + ho, -wo, maxu, maxv, 1, 1, 1, 1, lu, lv, 0, 1, 0);
             addVert(builder, matrixStackIn, hw - Math.abs(wo / 2), hh + ho, +wo, minu, maxv, 1, 1, 1, 1, lu, lv, 0, 1, 0);
-            matrixStackIn.rotate(Vector3f.YP.rotationDegrees(180));
+            matrixStackIn.rotate(Const.Y180);
             float temp = minu;
             minu = maxu;
             maxu = temp;

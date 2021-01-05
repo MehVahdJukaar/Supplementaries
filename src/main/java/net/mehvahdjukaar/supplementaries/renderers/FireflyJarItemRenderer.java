@@ -45,13 +45,13 @@ public class FireflyJarItemRenderer extends ItemStackTileEntityRenderer {
             matrixStackIn.rotate(rotation);
             RendererUtil.addQuadSide(ivertexbuilder, matrixStackIn, -0.5f, -0.5f, 0, 0.5f, 0.5f, 0, 0, 0, 1, 1,  r,  g, b, a, 240, 0, 0, 1, 0);
             matrixStackIn.pop();
-            matrixStackIn.rotate(Vector3f.YP.rotationDegrees(90.0F));
+            matrixStackIn.rotate(Const.Y90);
             matrixStackIn.rotate(rotation);
             //TODO: fix this like compass item does
 
         }
         else{
-            matrixStackIn.rotate(Vector3f.YP.rotationDegrees(-45));
+            matrixStackIn.rotate(Const.YN45);
         }
 
 

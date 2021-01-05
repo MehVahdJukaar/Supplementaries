@@ -39,7 +39,7 @@ public class FlagBlockTileRenderer extends TileEntityRenderer<FlagBlockTile> {
         matrixStackIn.push();
         matrixStackIn.translate(0.5,0,0.5);
         matrixStackIn.rotate(tile.getDirection().getRotation());
-        matrixStackIn.rotate(Vector3f.XP.rotationDegrees(-90)) ;
+        matrixStackIn.rotate(Const.XN90) ;
         matrixStackIn.translate(0,0,1/16f);
 
 

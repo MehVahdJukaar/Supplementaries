@@ -31,5 +31,11 @@
   "result": {
     "item": "supplementaries:pedestal",
     "count": 1
-  }
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "pedestal"
+    }
+  ]
 }

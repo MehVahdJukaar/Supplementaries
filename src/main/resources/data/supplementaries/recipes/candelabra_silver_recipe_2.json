@@ -17,5 +17,11 @@
   "result": {
     "item": "supplementaries:candelabra_silver",
     "count": 1
-  }
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "candelabra_silver"
+    }
+  ]
 }

@@ -29,6 +29,8 @@ import java.util.Random;
 
 @OnlyIn(Dist.CLIENT)
 public class JarBlockTileRenderer extends TileEntityRenderer<JarBlockTile> {
+
+
     public JarBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
     }
@@ -43,7 +45,7 @@ public class JarBlockTileRenderer extends TileEntityRenderer<JarBlockTile> {
         if (tile.liquidType == JarLiquidType.COOKIES) {
             matrixStackIn.push();
             matrixStackIn.translate(0.5, 0.5, 0.5);
-            matrixStackIn.rotate(Vector3f.XP.rotationDegrees(-90));
+            matrixStackIn.rotate(Const.XN90);
             matrixStackIn.translate(0, 0, -0.5);
             float scale = 8f / 14f;
             matrixStackIn.scale(scale, scale, scale);
@@ -109,7 +111,7 @@ public class JarBlockTileRenderer extends TileEntityRenderer<JarBlockTile> {
 
             matrixStackIn.translate(0.5, y,0.5);
             matrixStackIn.rotate(tile.getDirection().getRotation());
-            matrixStackIn.rotate(Vector3f.XP.rotationDegrees(-90));
+            matrixStackIn.rotate(Const.XN90);
             matrixStackIn.scale(s,s,s);
             Minecraft.getInstance().getRenderManager().renderEntityStatic(mob, 0.0D, 0.0D, 0.0D, 0.0F, partialTicks, matrixStackIn, bufferIn, combinedLightIn);
             matrixStackIn.pop();

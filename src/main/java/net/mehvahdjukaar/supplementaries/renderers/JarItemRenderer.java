@@ -4,9 +4,7 @@ package net.mehvahdjukaar.supplementaries.renderers;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil.JarLiquidType;
-import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderType;
@@ -14,28 +12,21 @@ import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
-import net.minecraft.entity.AgeableEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.monster.ZombieEntity;
-import net.minecraft.entity.monster.piglin.PiglinEntity;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.data.EmptyModelData;
 
 import java.util.Random;
 
 
 @OnlyIn(Dist.CLIENT)
 public class JarItemRenderer extends CageItemRenderer {
+
 
     @Override
     public void func_239207_a_(ItemStack stack, ItemCameraTransforms.TransformType transformType, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
@@ -65,7 +56,7 @@ public class JarItemRenderer extends CageItemRenderer {
             if (lt == JarLiquidType.COOKIES) {
                 matrixStackIn.push();
                 matrixStackIn.translate(0.5, 0.5, 0.5);
-                matrixStackIn.rotate(Vector3f.XP.rotationDegrees(-90));
+                matrixStackIn.rotate(Const.YN90);
                 matrixStackIn.translate(0, 0, -0.5);
                 float scale = 8f / 14f;
                 matrixStackIn.scale(scale, scale, scale);
@@ -88,7 +79,7 @@ public class JarItemRenderer extends CageItemRenderer {
                     matrixStackIn.push();
                     IVertexBuilder builder1 = bufferIn.getBuffer(RenderType.getCutout());
                     matrixStackIn.translate(0.5, 0.375, 0.5);
-                    matrixStackIn.rotate(Vector3f.YP.rotationDegrees(-45));
+                    matrixStackIn.rotate(Const.YN45);
                     // matrixStackIn.scale(0.6f, 0.6f, 0.6f);
                     RendererUtil.renderFish(builder1, matrixStackIn, 0, 0, lt.fishType, combinedLightIn, combinedOverlayIn);
                     matrixStackIn.pop();

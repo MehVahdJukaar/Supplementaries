@@ -26,6 +26,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.EmptyModelData;
 
+import java.util.ArrayList;
 import java.util.stream.IntStream;
 
 @OnlyIn(Dist.CLIENT)
@@ -39,12 +40,11 @@ public class HangingSignGui extends Screen {
     private static final int MAXLINES = 5;
     private final String[] cachedLines;
 
-    private BlackBoardButton rem;
-
     public HangingSignGui(HangingSignBlockTile teSign) {
         super(new TranslationTextComponent("sign.edit"));
         this.tileSign = teSign;
         this.cachedLines = IntStream.range(0, MAXLINES).mapToObj(teSign::getText).map(ITextComponent::getString).toArray(String[]::new);
+
     }
 
     public static void open(HangingSignBlockTile sign) {
@@ -119,9 +119,6 @@ public class HangingSignGui extends Screen {
     @Override
     protected void init() {
 
-        rem = new BlackBoardButton(188, this.height/3, 8, 8);
-        this.addListener(rem);
-
         this.minecraft.keyboardListener.enableRepeatEvents(true);
         this.addButton(new Button(this.width / 2 - 100, this.height / 4 + 120, 200, 20, DialogTexts.GUI_DONE, (p_238847_1_) -> this.close()));
         this.tileSign.setEditable(false);
@@ -133,22 +130,17 @@ public class HangingSignGui extends Screen {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void render(MatrixStack matrixStack, int  mouseX, int mouseY, float partialTicks) {
+    public void render(MatrixStack matrixstack, int  mouseX, int mouseY, float partialTicks) {
         RenderHelper.setupGuiFlatDiffuseLighting();
-        this.renderBackground(matrixStack);
-        drawCenteredString(matrixStack, this.font, this.title, this.width / 2, 40, 16777215);
-        MatrixStack matrixstack = new MatrixStack();
+        this.renderBackground(matrixstack);
+        drawCenteredString(matrixstack, this.font, this.title, this.width / 2, 40, 16777215);
+        //MatrixStack matrixstack = new MatrixStack();
         IRenderTypeBuffer.Impl irendertypebuffer$impl = this.minecraft.getRenderTypeBuffers().getBufferSource();
         matrixstack.push();
-        matrixstack.translate((double) (this.width / 2), 0.0D, 50.0D);
 
-
-
-
+        matrixstack.translate((this.width / 2d), 0.0D, 50.0D);
 
         matrixstack.scale(93.75F, -93.75F, 93.75F);
-        //rem.render(matrixStack,mouseX,mouseY,partialTicks);
-
 
         matrixstack.translate(0.0D, -1.3125D, 0.0D);
         // renders sign
@@ -208,7 +200,7 @@ public class HangingSignGui extends Screen {
                 int j3 = this.minecraft.fontRenderer.getStringWidth(s1.substring(0, Math.max(Math.min(j, s1.length()), 0)));
                 int k3 = j3 - this.minecraft.fontRenderer.getStringWidth(s1) / 2;
                 if (flag1 && j < s1.length()) {
-                    fill(matrixStack, k3, l - 1, k3 + 1, l + 9, -16777216 | i);
+                    fill(matrixstack, k3, l - 1, k3 + 1, l + 9, -16777216 | i);
                 }
 
                 if (k != j) {
@@ -238,7 +230,7 @@ public class HangingSignGui extends Screen {
         }
         matrixstack.pop();
         RenderHelper.setupGui3DDiffuseLighting();
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
+        super.render(matrixstack, mouseX, mouseY, partialTicks);
     }
 }
 

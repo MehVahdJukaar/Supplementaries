@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.IReorderingProcessor;
+import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -66,7 +67,7 @@ public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockT
 
                 if(!left){
                     matrixStackIn.translate(-0.15625, 0, 0);
-                    matrixStackIn.rotate(Vector3f.YP.rotationDegrees(-180));
+                    matrixStackIn.rotate(Const.YN180);
                     matrixStackIn.translate(0.15625, 0, 0);
                 }
                 matrixStackIn.translate(-0.5, -0.5, -0.5);
@@ -75,7 +76,7 @@ public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockT
 
 
                 //text up
-                matrixStackIn.rotate(Vector3f.YP.rotationDegrees(-90));
+                matrixStackIn.rotate(Const.YN90);
                 matrixStackIn.translate(-0.03125*o, 0.28125, 0.1875 + 0.005);
                 matrixStackIn.scale(0.010416667F, -0.010416667F, 0.010416667F);
                 matrixStackIn.translate(0, 1, 0);
@@ -106,7 +107,7 @@ public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockT
 
                 if(!left){
                     matrixStackIn.translate(-0.15625, 0, 0);
-                    matrixStackIn.rotate(Vector3f.YP.rotationDegrees(-180));
+                    matrixStackIn.rotate(Const.YN180);
                     matrixStackIn.translate(0.15625, 0, 0);
                 }
                 matrixStackIn.translate(-0.5, -1, -0.5);
@@ -115,7 +116,7 @@ public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockT
 
                 //text down
                 matrixStackIn.translate(0, -0.5, 0);
-                matrixStackIn.rotate(Vector3f.YP.rotationDegrees(-90));
+                matrixStackIn.rotate(Const.YN90);
                 matrixStackIn.translate(-0.03125*o, 0.28125, 0.1875 + 0.005);
                 matrixStackIn.scale(0.010416667F, -0.010416667F, 0.010416667F);
                 matrixStackIn.translate(0, 1, 0);

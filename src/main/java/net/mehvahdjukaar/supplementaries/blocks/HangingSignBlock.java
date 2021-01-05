@@ -27,7 +27,6 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
@@ -84,7 +83,7 @@ public class HangingSignBlock extends Block implements  IWaterLoggable {
                     if(server){
                         te.markDirty();
                     }
-                    return ActionResultType.SUCCESS;
+                    return ActionResultType.func_233537_a_(worldIn.isRemote);
                 }
             }
             //not an else to allow to place dye items after coloring
@@ -102,7 +101,7 @@ public class HangingSignBlock extends Block implements  IWaterLoggable {
                             worldIn.rand.nextFloat() * 0.10F + 0.95F);
                     te.markDirty();
                 }
-                return ActionResultType.SUCCESS;
+                return ActionResultType.func_233537_a_(worldIn.isRemote);
             }
             //remove item
             else if (flag2) {
@@ -111,7 +110,7 @@ public class HangingSignBlock extends Block implements  IWaterLoggable {
                 if (!worldIn.isRemote()) {
                     te.markDirty();
                 }
-                return ActionResultType.SUCCESS;
+                return ActionResultType.func_233537_a_(worldIn.isRemote);
             }
             // open gui (edit sign with empty hand)
             else if (!server && emptyhand) {

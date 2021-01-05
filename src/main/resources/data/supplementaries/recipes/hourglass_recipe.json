@@ -16,5 +16,11 @@
   "result": {
     "item": "supplementaries:hourglass",
     "count": 1
-  }
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "hourglass"
+    }
+  ]
 }

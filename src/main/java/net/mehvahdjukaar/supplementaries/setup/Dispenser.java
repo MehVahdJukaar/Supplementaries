@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.items.EmptyJarItem;
 import net.mehvahdjukaar.supplementaries.items.JarItem;
+import net.mehvahdjukaar.supplementaries.items.SackItem;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.dispenser.IBlockSource;
@@ -46,8 +47,8 @@ public class Dispenser {
         //jar
         if(RegistryConfigs.reg.JAR_ENABLED.get()){
             for(Item item : ForgeRegistries.ITEMS) {
-                if (item instanceof JarItem || item instanceof EmptyJarItem) {
-                    DispenserBlock.registerDispenseBehavior(item, new JarItemDispenseBehavior());
+                if (item instanceof JarItem || item instanceof EmptyJarItem || item == Registry.FIREFLY_JAR_ITEM || item instanceof SackItem) {
+                    DispenserBlock.registerDispenseBehavior(item, new PlaceBlockDispenseBehavior());
                 } else if (!CommonUtil.getJarContentTypeFromItem(new ItemStack(item)).isEmpty()) {
                     DispenserBlock.registerDispenseBehavior(item, new FillJarDispenserBehavior());
                 }
@@ -55,6 +56,7 @@ public class Dispenser {
             DispenserBlock.registerDispenseBehavior(Items.BUCKET, new BucketJarDispenserBehavior());
             DispenserBlock.registerDispenseBehavior(Items.BOWL, new BowlJarDispenserBehavior());
             DispenserBlock.registerDispenseBehavior(Items.GLASS_BOTTLE, new BottleJarDispenserBehavior());
+
         }
         //firefly
         if(RegistryConfigs.reg.FIREFLY_ENABLED.get()) {
@@ -242,7 +244,7 @@ public class Dispenser {
 
     }
 
-    public static class JarItemDispenseBehavior extends OptionalDispenseBehavior {
+    public static class PlaceBlockDispenseBehavior extends OptionalDispenseBehavior {
 
         protected ItemStack dispenseStack(IBlockSource source, ItemStack stack) {
             this.setSuccessful(false);
@@ -257,4 +259,5 @@ public class Dispenser {
             return stack;
         }
     }
+
 }

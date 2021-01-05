@@ -36,7 +36,7 @@ public class BellowsBlockTileRenderer extends TileEntityRenderer<BellowsBlockTil
         matrixStackIn.translate(0.5, 0.5, 0.5);
         Direction dir = tile.getDirection();
         matrixStackIn.rotate(dir.getOpposite().getRotation());
-        matrixStackIn.rotate(Vector3f.XP.rotationDegrees(-90)) ;
+        matrixStackIn.rotate(Const.XN90) ;
 
 
         matrixStackIn.push();

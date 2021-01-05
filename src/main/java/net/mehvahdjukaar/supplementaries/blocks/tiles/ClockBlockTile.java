@@ -35,25 +35,22 @@ public class ClockBlockTile extends TileEntity implements ITickableTileEntity {
     @Override
     public void read(@Nonnull BlockState state,@Nonnull CompoundNBT compound) {
         super.read(state, compound);
-        this.roll = compound.getFloat("roll");
-        this.prevRoll = compound.getFloat("prevroll");
-        this.targetRoll = compound.getFloat("targetroll");
-        this.sRoll = compound.getFloat("sroll");
-        this.sPrevRoll = compound.getFloat("sprevroll");
-        this.sTargetRoll = compound.getFloat("stargetroll");
+        this.roll = compound.getFloat("MinRoll");
+        this.prevRoll = this.roll;
+        this.targetRoll = this.roll;
+
+        this.sRoll = compound.getFloat("SecRoll");
+        this.sPrevRoll = this.sRoll;
+        this.targetRoll = this.sRoll;
         this.power = compound.getInt("power");
     }
 
     @Override
     public CompoundNBT write(@Nonnull CompoundNBT compound) {
         super.write(compound);
-        compound.putFloat("roll", this.roll);
-        compound.putFloat("prevroll", this.prevRoll);
-        compound.putFloat("targetroll", this.targetRoll);
-        compound.putFloat("sroll", this.sRoll);
-        compound.putFloat("sprevroll", this.sPrevRoll);
-        compound.putFloat("stargetroll", this.sTargetRoll);
-        compound.putInt("power",this.power);
+        compound.putFloat("MinRoll", this.targetRoll);
+        compound.putFloat("SecRoll", this.sTargetRoll);
+        compound.putInt("Power",this.power);
         return compound;
     }
 

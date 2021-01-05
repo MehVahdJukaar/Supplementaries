@@ -128,14 +128,14 @@ public class SignPostGui extends Screen {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(MatrixStack matrixstack, int mouseX, int mouseY, float partialTicks) {
         RenderHelper.setupGuiFlatDiffuseLighting();
-        this.renderBackground(matrixStack);
-        drawCenteredString(matrixStack, this.font, this.title, this.width / 2, 40, 16777215);
-        MatrixStack matrixstack = new MatrixStack();
+        this.renderBackground(matrixstack);
+        drawCenteredString(matrixstack, this.font, this.title, this.width / 2, 40, 16777215);
+
         IRenderTypeBuffer.Impl irendertypebuffer$impl = this.minecraft.getRenderTypeBuffers().getBufferSource();
         matrixstack.push();
-        matrixstack.translate(this.width / 2, 0.0D, 50.0D);
+        matrixstack.translate(this.width / 2d, 0.0D, 50.0D);
 
         matrixstack.scale(93.75F, -93.75F, 93.75F);
         matrixstack.translate(0.0D, -1.3125D, 0.0D);
@@ -235,17 +235,17 @@ public class SignPostGui extends Screen {
                 int j3 = this.minecraft.fontRenderer.getStringWidth(s1.substring(0, Math.max(Math.min(j, s1.length()), 0)));
                 int k3 = j3 - this.minecraft.fontRenderer.getStringWidth(s1) / 2;
                 if (flag1 && j < s1.length()) {
-                    fill(matrixStack, k3, l - 1, k3 + 1, l + 9, -16777216 | i);
+                    fill(matrixstack, k3, l - 1, k3 + 1, l + 9, -16777216 | i);
                 }
 
                 if (k != j) {
-                    int l3 = -3*o[i3] + Math.min(j, k);
-                    int l1 = -3*o[i3] + Math.max(j, k);
+                    int l3 =  Math.min(j, k);
+                    int l1 =  Math.max(j, k);
 
                     int i2 = this.minecraft.fontRenderer.getStringWidth(s1.substring(0, l3)) - this.minecraft.fontRenderer.getStringWidth(s1) / 2;
                     int j2 = this.minecraft.fontRenderer.getStringWidth(s1.substring(0, l1)) - this.minecraft.fontRenderer.getStringWidth(s1) / 2;
-                    int k2 = Math.min(i2, j2);
-                    int l2 = Math.max(i2, j2);
+                    int k2 = -3*o[i3] + Math.min(i2, j2);
+                    int l2 = -3*o[i3] + Math.max(i2, j2);
                     Tessellator tessellator = Tessellator.getInstance();
                     BufferBuilder bufferbuilder = tessellator.getBuffer();
                     RenderSystem.disableTexture();
@@ -266,6 +266,6 @@ public class SignPostGui extends Screen {
 
         matrixstack.pop();
         RenderHelper.setupGui3DDiffuseLighting();
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
+        super.render(matrixstack, mouseX, mouseY, partialTicks);
     }
 }

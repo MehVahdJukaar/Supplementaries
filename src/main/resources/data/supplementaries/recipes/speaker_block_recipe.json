@@ -16,5 +16,11 @@
   "result": {
     "item": "supplementaries:speaker_block",
     "count": 1
-  }
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "speaker_block"
+    }
+  ]
 }

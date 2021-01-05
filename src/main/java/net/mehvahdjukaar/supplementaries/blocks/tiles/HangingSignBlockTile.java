@@ -51,7 +51,6 @@ public class HangingSignBlockTile extends TileEntity implements ITickableTileEnt
     public final ITextComponent[] signText = new ITextComponent[]{new StringTextComponent(""), new StringTextComponent(""),
             new StringTextComponent(""), new StringTextComponent(""), new StringTextComponent("")};
     private boolean isEditable = true;
-    private PlayerEntity player;
     private final IReorderingProcessor[] renderText = new IReorderingProcessor[MAXLINES];
     private DyeColor textColor = DyeColor.BLACK;
 
@@ -147,31 +146,6 @@ public class HangingSignBlockTile extends TileEntity implements ITickableTileEnt
     @OnlyIn(Dist.CLIENT)
     public void setEditable(boolean isEditableIn) {
         this.isEditable = isEditableIn;
-        if (!isEditableIn) {
-            this.player = null;
-        }
-    }
-
-    public void setPlayer(PlayerEntity playerIn) {
-        this.player = playerIn;
-    }
-
-    public PlayerEntity getPlayer() {
-        return this.player;
-    }
-
-    public boolean executeCommand(PlayerEntity playerIn) {
-        for (ITextComponent itextcomponent : this.signText) {
-            Style style = itextcomponent == null ? null : itextcomponent.getStyle();
-            if (style != null && style.getClickEvent() != null) {
-                ClickEvent clickevent = style.getClickEvent();
-                if (clickevent.getAction() == ClickEvent.Action.RUN_COMMAND) {
-                    playerIn.getServer().getCommandManager().handleCommand(this.getCommandSource((ServerPlayerEntity) playerIn),
-                            clickevent.getValue());
-                }
-            }
-        }
-        return true;
     }
 
     public CommandSource getCommandSource(@Nullable ServerPlayerEntity playerIn) {
@@ -216,6 +190,7 @@ public class HangingSignBlockTile extends TileEntity implements ITickableTileEnt
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         this.read(this.getBlockState(), pkt.getNbtCompound());
     }
+
 
 
     public int getSizeInventory() {
@@ -287,7 +262,7 @@ public class HangingSignBlockTile extends TileEntity implements ITickableTileEnt
             float maxperiod = 25f;
             float angleledamping = 150f;
             float perioddamping = 100f;
-            //actually tey are the inverse of damping. increase them to fave less damping
+            //actually they are the inverse of damping. increase them to have less damping
 
             float a = minswingangle;
             float k = 0.01f;

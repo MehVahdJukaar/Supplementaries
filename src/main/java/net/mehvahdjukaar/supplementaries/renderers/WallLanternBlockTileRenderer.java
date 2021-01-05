@@ -27,7 +27,7 @@ public class WallLanternBlockTileRenderer extends TileEntityRenderer<WallLantern
         // rotate towards direction
         matrixStackIn.translate(0.5, 0.875, 0.5);
         matrixStackIn.rotate(tile.getDirection().getOpposite().getRotation());
-        matrixStackIn.rotate(Vector3f.XP.rotationDegrees(-90));
+        matrixStackIn.rotate(Const.XN90);
         // animation
         matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(MathHelper.lerp(partialTicks, tile.prevAngle, tile.angle)));
         matrixStackIn.translate(-0.5, -0.75, -0.375);

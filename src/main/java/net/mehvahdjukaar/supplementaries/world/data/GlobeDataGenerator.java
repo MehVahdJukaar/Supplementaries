@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.world.data;
 
+import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.minecraft.util.math.MathHelper;
 
 import java.util.Calendar;
@@ -380,11 +381,35 @@ public class GlobeDataGenerator {
         generateIcebergs2();
 
         Calendar calendar = Calendar.getInstance();
-        if (calendar.get(Calendar.MONTH) + 1 == 12 && calendar.get(Calendar.DATE) >= 24 && calendar.get(Calendar.DATE) <= 26) {
-            christmas();
+        if(CommonUtil.ischristmas){
+           christmas();
+        }
+        else if(CommonUtil.isearthday){
+            meltice();
         }
     }
 
+    public void meltice(){
+        for (Pixel[] pixel : pixels) {
+            for (Pixel value : pixel) {
+                if(value.biome==Biome.COLD){
+                    value.biome = Biome.TEMPERATE;
+                }
+                if (value.specialFeature == Feature.ICEBERG) {
+                    value.specialFeature = Feature.NORMAL;
+                }
+            }
+        }
+    }
+
+    public void desertify(){
+        for (Pixel[] pixel : pixels) {
+            for (Pixel value : pixel) {
+                if(value.biome==Biome.TEMPERATE)
+                    value.biome = Biome.HOT;
+            }
+        }
+    }
 
     public void christmas(){
         for (Pixel[] pixel : pixels) {

@@ -2,15 +2,16 @@ package net.mehvahdjukaar.supplementaries.blocks;
 
 
 import net.mehvahdjukaar.supplementaries.blocks.tiles.SignPostBlockTile;
-import net.mehvahdjukaar.supplementaries.blocks.tiles.WallLanternBlockTile;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil.WoodType;
 import net.mehvahdjukaar.supplementaries.common.Resources;
 import net.mehvahdjukaar.supplementaries.gui.SignPostGui;
 import net.mehvahdjukaar.supplementaries.items.SignPostItem;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
-import net.minecraft.block.*;
-import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.IWaterLoggable;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -41,7 +42,6 @@ import net.minecraftforge.common.extensions.IForgeBlock;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -125,7 +125,7 @@ public class SignPostBlock extends Block implements IWaterLoggable, IForgeBlock 
                     if(server){
                         te.markDirty();
                     }
-                    return ActionResultType.SUCCESS;
+                    return ActionResultType.func_233537_a_(worldIn.isRemote);
                 }
             }
             //sneak right click rotates the sign on z axis
@@ -141,7 +141,7 @@ public class SignPostBlock extends Block implements IWaterLoggable, IForgeBlock 
                 if(server){
                     te.markDirty();
                 }
-                return ActionResultType.SUCCESS;
+                return ActionResultType.func_233537_a_(worldIn.isRemote);
             }
             //change direction with compass
             else if (isCompass){
@@ -160,15 +160,13 @@ public class SignPostBlock extends Block implements IWaterLoggable, IForgeBlock 
                     if (up && te.up) {
                         int d = te.leftUp ? 180 : 0;
                         te.yawUp = (float) yaw - d;// r*-22.5f;
-                        return ActionResultType.SUCCESS;
+                        return ActionResultType.func_233537_a_(worldIn.isRemote);
                     } else if (!up && te.down) {
                         int d = te.leftDown ? 180 : 0;
                         te.yawDown = (float) yaw - d;// r*-22.5f;
-                        return ActionResultType.SUCCESS;
+                        return ActionResultType.func_233537_a_(worldIn.isRemote);
                     }
                 }
-
-
             }
             // open gui (edit sign with empty hand)
             else if (!isSignPost) {

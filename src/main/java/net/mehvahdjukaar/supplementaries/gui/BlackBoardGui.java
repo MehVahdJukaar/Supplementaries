@@ -5,9 +5,12 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.mehvahdjukaar.supplementaries.blocks.HangingSignBlock;
+import net.mehvahdjukaar.supplementaries.blocks.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.blocks.tiles.HangingSignBlockTile;
 import net.mehvahdjukaar.supplementaries.network.Networking;
+import net.mehvahdjukaar.supplementaries.network.UpdateServerBlackboardPacket;
 import net.mehvahdjukaar.supplementaries.network.UpdateServerHangingSignPacket;
+import net.mehvahdjukaar.supplementaries.network.UpdateServerSignPostPacket;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.DialogTexts;
@@ -26,58 +29,30 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.EmptyModelData;
 
+import java.util.ArrayList;
 import java.util.stream.IntStream;
 
 @OnlyIn(Dist.CLIENT)
 public class BlackBoardGui extends Screen {
-    private TextInputUtil textInputUtil;
-    // The index of the line that is being edited.
-    private int editLine = 0;
-    //for ticking cursor
-    private int updateCounter;
-    private final HangingSignBlockTile tileSign;
-    private static final int MAXLINES = 5;
-    private final String[] cachedLines;
-    public BlackBoardGui(HangingSignBlockTile teSign) {
-        super(new TranslationTextComponent("sign.edit"));
-        this.tileSign = teSign;
-        this.cachedLines = IntStream.range(0, MAXLINES).mapToObj(teSign::getText).map(ITextComponent::getString).toArray(String[]::new);
+    private final BlackboardBlockTile tileBoard;
+
+    private final BlackBoardButton[][] buttons = new BlackBoardButton[16][16];
+
+
+    public BlackBoardGui(BlackboardBlockTile teBoard) {
+        super(new TranslationTextComponent("gui.supplementaries.blackboard.edit"));
+        this.tileBoard = teBoard;
+
     }
 
-    public static void open(HangingSignBlockTile sign) {
+    public static void open(BlackboardBlockTile sign) {
         Minecraft.getInstance().displayGuiScreen(new BlackBoardGui(sign));
     }
 
-    @Override
-    public boolean charTyped(char codePoint, int modifiers) {
-        this.textInputUtil.putChar(codePoint);
-        return true;
-    }
-    
-    @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        // up arrow
-        if (keyCode == 265) {
-            this.editLine = Math.floorMod(this.editLine - 1, MAXLINES);
-            this.textInputUtil.moveCursorToEnd();
-            return true;
-        }
-        // !down arrow, !enter, !enter, handles special keys
-        else if (keyCode != 264 && keyCode != 257 && keyCode != 335) {
-            return this.textInputUtil.specialKeyPressed(keyCode) || super.keyPressed(keyCode, scanCode, modifiers);
-        }
-        // down arrow, enter
-        else {
-            this.editLine = Math.floorMod(this.editLine + 1, MAXLINES);
-            this.textInputUtil.moveCursorToEnd();
-            return true;
-        }
-    }
 
     @Override
     public void tick() {
-        ++this.updateCounter;
-        if (!this.tileSign.getType().isValidBlock(this.tileSign.getBlockState().getBlock())) {
+        if (!this.tileBoard.getType().isValidBlock(this.tileBoard.getBlockState().getBlock())) {
             this.close();
         }
     }
@@ -91,131 +66,80 @@ public class BlackBoardGui extends Screen {
     @Override
     public void onClose() {
         this.minecraft.keyboardListener.enableRepeatEvents(false);
-        // send new text to the server
-        Networking.INSTANCE.sendToServer(new UpdateServerHangingSignPacket(this.tileSign.getPos(), this.tileSign.getText(0), this.tileSign.getText(1),
-                this.tileSign.getText(2), this.tileSign.getText(3), this.tileSign.getText(4)));
-        
-        this.tileSign.setEditable(true);
+        // send new image to the server
+        byte[][] pixels = new byte[16][16];
+        for (int xx=0; xx < 16; xx++) {
+            for (int yy = 0; yy < 16; yy++) {
+                pixels[xx][yy]= (byte) (this.buttons[xx][yy].on?1:0);
+            }
+        }
+        Networking.INSTANCE.sendToServer(new UpdateServerBlackboardPacket(this.tileBoard.getPos(),pixels));
+        this.tileBoard.setEditable(true);
     }
 
     private void close() {
-        this.tileSign.markDirty();
+        this.tileBoard.markDirty();
         this.minecraft.displayGuiScreen(null);
+    }
+
+    //dynamic update for client
+    public void setPixel(int x, int y, boolean on){
+        this.tileBoard.pixels[x][y]= (byte) (on?1:0);
+    }
+
+    //calls drag for other buttons
+    public void dragButtons(double mx, double my, boolean on){
+        for (int xx=0; xx < 16; xx++) {
+            for (int yy = 0; yy < 16; yy++) {
+                if(this.buttons[xx][yy].isMouseOver(mx,my))
+                    this.buttons[xx][yy].onDrag(mx,my,on);
+            }
+        }
     }
 
     @Override
     protected void init() {
-        BlackBoardButton b = new BlackBoardButton(50, 50, 20, 20);
-        this.addListener(b);
+        for (int xx=0; xx < 16; xx++) {
+            for (int yy = 0; yy < 16; yy++) {
+                this.buttons[xx][yy]=new BlackBoardButton(this.width / 2, -10 + this.height / 2, xx, yy, this::setPixel, this::dragButtons);
+                this.addListener(this.buttons[xx][yy]);
+                this.buttons[xx][yy].on=this.tileBoard.pixels[xx][yy]>0;
+            }
+        }
 
         this.minecraft.keyboardListener.enableRepeatEvents(true);
         this.addButton(new Button(this.width / 2 - 100, this.height / 4 + 120, 200, 20, DialogTexts.GUI_DONE, (p_238847_1_) -> this.close()));
-        this.tileSign.setEditable(false);
-        this.textInputUtil = new TextInputUtil(() -> this.cachedLines[this.editLine], (p_238850_1_) -> {
-            this.cachedLines[this.editLine] = p_238850_1_;
-            this.tileSign.setText(this.editLine, new StringTextComponent(p_238850_1_));
-        }, TextInputUtil.getClipboardTextSupplier(this.minecraft), TextInputUtil.getClipboardTextSetter(this.minecraft), (p_238848_1_) -> this.minecraft.fontRenderer.getStringWidth(p_238848_1_) <= 75);
+        this.tileBoard.setEditable(false);
     }
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void render(MatrixStack matrixStack, int  mouseX, int mouseY, float partialTicks) {
+    public void render(MatrixStack matrixstack, int  mouseX, int mouseY, float partialTicks) {
         RenderHelper.setupGuiFlatDiffuseLighting();
-        this.renderBackground(matrixStack);
-        drawCenteredString(matrixStack, this.font, this.title, this.width / 2, 40, 16777215);
-        MatrixStack matrixstack = new MatrixStack();
-        IRenderTypeBuffer.Impl irendertypebuffer$impl = this.minecraft.getRenderTypeBuffers().getBufferSource();
+        this.renderBackground(matrixstack);
+        drawCenteredString(matrixstack, this.font, this.title, this.width / 2, 40, 16777215);
+
+
         matrixstack.push();
-        matrixstack.translate((double) (this.width / 2), 0.0D, 50.0D);
-
-        matrixstack.scale(93.75F, -93.75F, 93.75F);
-        matrixstack.translate(0.0D, -1.3125D, 0.0D);
-        // renders sign
-        matrixstack.push();
-        // matrixstack.scale(0.6666667F, 0.6666667F, 0.6666667F);
-        matrixstack.rotate(Vector3f.YP.rotationDegrees(90));
-        matrixstack.translate(0, - 0.5 + 0.1875, -0.5);
-        BlockRendererDispatcher blockRenderer = Minecraft.getInstance().getBlockRendererDispatcher();
-        BlockState state = this.tileSign.getBlockState().getBlock().getDefaultState().with(HangingSignBlock.TILE, true);
-        blockRenderer.renderBlock(state, matrixstack, irendertypebuffer$impl, 15728880, OverlayTexture.NO_OVERLAY, EmptyModelData.INSTANCE);
-        matrixstack.pop();
-
-        //renders text
-        boolean flag1 = this.updateCounter / 6 % 2 == 0;
-
-        matrixstack.translate(0, 0, 0.0625 + 0.005);
-        matrixstack.scale(0.010416667F, -0.010416667F, 0.010416667F);
-
-        Matrix4f matrix4f = matrixstack.getLast().getMatrix();
-
-        int i = this.tileSign.getTextColor().getTextColor();
-        int j = this.textInputUtil.getEndIndex();
-        int k = this.textInputUtil.getStartIndex();
-        int l = this.editLine * 10 - this.tileSign.signText.length * 5;
-
-        for(int i1 = 0; i1 < this.cachedLines.length; ++i1) {
-            String s = this.cachedLines[i1];
-            if (s != null) {
-                if (this.font.getBidiFlag()) {
-                    s = this.font.bidiReorder(s);
+        //float ff = 93.75F/16f;
+        //matrixstack.scale(ff,ff,ff);
+        int ut =-1;
+        int vt =-1;
+        for (int xx=0; xx< 16; xx++) {
+            for (int yy = 0; yy < 16; yy++) {
+                if(this.buttons[xx][yy].isHovered()){
+                    ut=xx;
+                    vt=yy;
                 }
-                float f3 = (float) (-this.minecraft.fontRenderer.getStringWidth(s) / 2);
-                //this.minecraft.fontRenderer.renderString(s, f3, (float) (k1 * 48 - this.tileSign.signText.length * 5), i, false, matrix4f,
-                //       irendertypebuffer$impl, false, 0, 15728880); //*10
-                this.minecraft.fontRenderer.func_238411_a_(s, f3, (float)(i1 * 10 - this.cachedLines.length * 5), i, false, matrix4f, irendertypebuffer$impl, false, 0, 15728880, false);
-                if (i1 == this.editLine && j >= 0 && flag1) {
-                    int j1 = this.minecraft.fontRenderer.getStringWidth(s.substring(0, Math.max(Math.min(j, s.length()), 0)));
-
-                    int k1 = ( j1 - this.minecraft.fontRenderer.getStringWidth(s) / 2);
-                    if (j >= s.length()) {
-                        this.minecraft.fontRenderer.func_238411_a_("_", (float)k1, (float)l, i, false, matrix4f, irendertypebuffer$impl, false, 0, 15728880, false);
-                    }
-                }
+                this.buttons[xx][yy].render(matrixstack, mouseX, mouseY, partialTicks);
             }
         }
-
-
-
-        irendertypebuffer$impl.finish();
-        //draw highlighted text box
-
-        for(int i3 = 0; i3 < this.cachedLines.length; ++i3) {
-            String s1 = this.cachedLines[i3];
-            if (s1 != null && i3 == this.editLine && j >= 0) {
-                int j3 = this.minecraft.fontRenderer.getStringWidth(s1.substring(0, Math.max(Math.min(j, s1.length()), 0)));
-                int k3 = j3 - this.minecraft.fontRenderer.getStringWidth(s1) / 2;
-                if (flag1 && j < s1.length()) {
-                    fill(matrixStack, k3, l - 1, k3 + 1, l + 9, -16777216 | i);
-                }
-
-                if (k != j) {
-                    int l3 = Math.min(j, k);
-                    int l1 = Math.max(j, k);
-
-                    int i2 = this.minecraft.fontRenderer.getStringWidth(s1.substring(0, l3)) - this.minecraft.fontRenderer.getStringWidth(s1) / 2;
-                    int j2 = this.minecraft.fontRenderer.getStringWidth(s1.substring(0, l1)) - this.minecraft.fontRenderer.getStringWidth(s1) / 2;
-                    int k2 = Math.min(i2, j2);
-                    int l2 = Math.max(i2, j2);
-                    Tessellator tessellator = Tessellator.getInstance();
-                    BufferBuilder bufferbuilder = tessellator.getBuffer();
-                    RenderSystem.disableTexture();
-                    RenderSystem.enableColorLogicOp();
-                    RenderSystem.logicOp(GlStateManager.LogicOp.OR_REVERSE);
-                    bufferbuilder.begin(7, DefaultVertexFormats.POSITION_COLOR);
-                    bufferbuilder.pos(matrix4f, (float)k2, (float)(l + 9), 0.0F).color(0, 0, 255, 255).endVertex();
-                    bufferbuilder.pos(matrix4f, (float)l2, (float)(l + 9), 0.0F).color(0, 0, 255, 255).endVertex();
-                    bufferbuilder.pos(matrix4f, (float)l2, (float)l, 0.0F).color(0, 0, 255, 255).endVertex();
-                    bufferbuilder.pos(matrix4f, (float)k2, (float)l, 0.0F).color(0, 0, 255, 255).endVertex();
-                    bufferbuilder.finishDrawing();
-                    WorldVertexBufferUploader.draw(bufferbuilder);
-                    RenderSystem.disableColorLogicOp();
-                    RenderSystem.enableTexture();
-                }
-            }
-        }
+        if(ut!=-1)this.buttons[ut][vt].renderTooltip(matrixstack);
         matrixstack.pop();
+
+        //TODO: could be optimized a lot. too bad
         RenderHelper.setupGui3DDiffuseLighting();
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
+        super.render(matrixstack, mouseX, mouseY, partialTicks);
     }
 }
 

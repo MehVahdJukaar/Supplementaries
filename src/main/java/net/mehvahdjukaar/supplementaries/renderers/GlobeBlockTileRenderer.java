@@ -20,7 +20,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class GlobeBlockTileRenderer extends TileEntityRenderer<GlobeBlockTile> {
-    public static final Quaternion nintydeg = Vector3f.YP.rotationDegrees(90);
 
     public final ModelRenderer globe = new ModelRenderer(32, 16, 0, 0);
     public final ModelRenderer flat = new ModelRenderer(32, 32, 0, 0);
@@ -40,12 +39,12 @@ public class GlobeBlockTileRenderer extends TileEntityRenderer<GlobeBlockTile> {
     }
 
     public void renderEarth(MatrixStack matrixStack, IVertexBuilder vertexBuilder, int combinedLightIn, int combinedOverlayIn){
-        matrixStack.rotate(Vector3f.XP.rotationDegrees(180f));
+        matrixStack.rotate(Const.X180);
         this.globe.render(matrixStack, vertexBuilder, combinedLightIn,combinedOverlayIn,1,1,1,1);
     }
 
     public void renderFlat(MatrixStack matrixStack, IVertexBuilder vertexBuilder, int combinedLightIn, int combinedOverlayIn){
-        matrixStack.rotate(Vector3f.XP.rotationDegrees(180f));
+        matrixStack.rotate(Const.X180);
         this.flat.render(matrixStack, vertexBuilder, combinedLightIn,combinedOverlayIn,1,1,1,1);
     }
 
@@ -57,9 +56,9 @@ public class GlobeBlockTileRenderer extends TileEntityRenderer<GlobeBlockTile> {
         matrixStackIn.push();
         matrixStackIn.translate(0.5,0.5,0.5);
         matrixStackIn.rotate(tile.getDirection().getRotation());
-        matrixStackIn.rotate(Vector3f.XP.rotationDegrees(-90));
+        matrixStackIn.rotate(Const.XN90);
         matrixStackIn.translate(0,+0.0625,0);
-        matrixStackIn.rotate(Vector3f.XP.rotationDegrees(-22.5f));
+        matrixStackIn.rotate(Const.XN22);
         matrixStackIn.rotate(Vector3f.YP.rotationDegrees(MathHelper.lerp(partialTicks, tile.prevYaw+tile.face, tile.yaw+tile.face)));
 
         IVertexBuilder builder = bufferIn.getBuffer(RenderType.getEntityCutout(tile.type.texture));
@@ -96,11 +95,11 @@ public class GlobeBlockTileRenderer extends TileEntityRenderer<GlobeBlockTile> {
 
                 renderFace(matrixStackIn, builder, colors, 0, 8, lu, lv);
 
-                matrixStackIn.rotate(nintydeg);
+                matrixStackIn.rotate(Const.Y90);
 
                 //up
                 matrixStackIn.push();
-                matrixStackIn.rotate(Vector3f.XP.rotationDegrees(-90));
+                matrixStackIn.rotate(Const.XN90);
                 matrixStackIn.translate(0, 8, 0);
                 renderFaceUp(matrixStackIn, builder, colors, 8, 0, lu, lv);
                 matrixStackIn.pop();
@@ -108,14 +107,14 @@ public class GlobeBlockTileRenderer extends TileEntityRenderer<GlobeBlockTile> {
                 //down
                 matrixStackIn.push();
                 matrixStackIn.translate(0, -8, 0);
-                matrixStackIn.rotate(Vector3f.XP.rotationDegrees(90));
+                matrixStackIn.rotate(Const.X90);
                 renderFace(matrixStackIn, builder, colors, 16, 0, lu, lv);
                 matrixStackIn.pop();
 
                 renderFace(matrixStackIn, builder, colors, 8, 8, lu, lv);
-                matrixStackIn.rotate(nintydeg);
+                matrixStackIn.rotate(Const.Y90);
                 renderFace(matrixStackIn, builder, colors, 16, 8, lu, lv);
-                matrixStackIn.rotate(nintydeg);
+                matrixStackIn.rotate(Const.Y90);
                 renderFace(matrixStackIn, builder, colors, 24, 8, lu, lv);
                 break;
 

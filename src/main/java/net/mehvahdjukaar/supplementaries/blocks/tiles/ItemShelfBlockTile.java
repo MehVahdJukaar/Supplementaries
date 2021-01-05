@@ -18,6 +18,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -33,6 +34,13 @@ public class ItemShelfBlockTile extends LockableLootTileEntity implements ISided
         super(Registry.ITEM_SHELF_TILE);
     }
 
+
+    //for server
+    @Override
+    public void markDirty() {
+        this.world.notifyBlockUpdate(this.pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
+        super.markDirty();
+    }
 
     @Override
     public void read(BlockState state, CompoundNBT compound) {

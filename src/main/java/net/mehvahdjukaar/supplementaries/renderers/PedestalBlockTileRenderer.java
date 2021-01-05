@@ -88,7 +88,7 @@ public class PedestalBlockTileRenderer extends TileEntityRenderer<PedestalBlockT
                 matrixStackIn.scale(1.5f,1.5f,1.5f);
 
 
-                matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(135));
+                matrixStackIn.rotate(Const.Z135);
 
             }
             else if(tile.type==4){
@@ -97,7 +97,7 @@ public class PedestalBlockTileRenderer extends TileEntityRenderer<PedestalBlockT
                 matrixStackIn.translate(0,0.03125,0);
                 matrixStackIn.scale(1.5f,1.5f,1.5f);
 
-                matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(-45));
+                matrixStackIn.rotate(Const.ZN45);
 
             }
             else {

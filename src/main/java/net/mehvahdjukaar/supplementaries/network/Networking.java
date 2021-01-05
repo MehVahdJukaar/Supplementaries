@@ -34,6 +34,9 @@ public class Networking{
         INSTANCE.registerMessage(nextID(), RequestMapDataFromServerPacket.class,RequestMapDataFromServerPacket::buffer,
                 RequestMapDataFromServerPacket::new, RequestMapDataFromServerPacket::handler);
 
+        INSTANCE.registerMessage(nextID(), UpdateServerBlackboardPacket.class,UpdateServerBlackboardPacket::buffer,
+                UpdateServerBlackboardPacket::new, UpdateServerBlackboardPacket::handler);
+
 
     }
 }

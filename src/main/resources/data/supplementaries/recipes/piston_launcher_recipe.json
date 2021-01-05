@@ -37,5 +37,11 @@
   "result": {
     "item": "supplementaries:piston_launcher",
     "count": 1
-  }
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "piston_launcher"
+    }
+  ]
 }

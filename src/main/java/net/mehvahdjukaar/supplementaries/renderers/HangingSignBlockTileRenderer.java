@@ -33,6 +33,7 @@ import java.util.List;
 @OnlyIn(Dist.CLIENT)
 public class HangingSignBlockTileRenderer extends TileEntityRenderer<HangingSignBlockTile> {
     private static final int MAXLINES = 5;
+    
     public HangingSignBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
     }
@@ -46,7 +47,7 @@ public class HangingSignBlockTileRenderer extends TileEntityRenderer<HangingSign
         if(tile.getBlockState().get(HangingSignBlock.UP))matrixStackIn.translate(0,0.125, 0);
         matrixStackIn.translate(0.5, 0.875, 0.5);
         matrixStackIn.rotate(tile.getDirection().getOpposite().getRotation());
-        matrixStackIn.rotate(Vector3f.XP.rotationDegrees(-90));
+        matrixStackIn.rotate(Const.XN90);
 
         //animation
         matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(MathHelper.lerp(partialTicks, tile.prevAngle, tile.angle)));
@@ -56,7 +57,7 @@ public class HangingSignBlockTileRenderer extends TileEntityRenderer<HangingSign
         BlockState state = tile.getBlockState().getBlock().getDefaultState().with(HangingSignBlock.TILE, true);
         blockRenderer.renderBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
         matrixStackIn.translate(0.5, 0.5 - 0.1875, 0.5);
-        matrixStackIn.rotate(Vector3f.YP.rotationDegrees(-90));
+        matrixStackIn.rotate(Const.YN90);
         // render item
         if (!tile.isEmpty()) {
             ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
@@ -86,13 +87,13 @@ public class HangingSignBlockTileRenderer extends TileEntityRenderer<HangingSign
                 else{
                     matrixStackIn.translate(0, 0, 0.078125);
                     matrixStackIn.scale(0.5f, 0.5f, 0.5f);
-                    matrixStackIn.rotate(Vector3f.YP.rotationDegrees(180));
+                    matrixStackIn.rotate(Const.Y180);
                     itemRenderer.renderItem(stack, ItemCameraTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
                             combinedOverlayIn, ibakedmodel);
                 }
                 matrixStackIn.pop();
 
-                matrixStackIn.rotate(Vector3f.YP.rotationDegrees(180));
+                matrixStackIn.rotate(Const.Y180);
 
             }
         }
@@ -124,7 +125,7 @@ public class HangingSignBlockTileRenderer extends TileEntityRenderer<HangingSign
 
 
                 matrixStackIn.pop();
-                matrixStackIn.rotate(Vector3f.YP.rotationDegrees(180));
+                matrixStackIn.rotate(Const.Y180);
             }
         }
         matrixStackIn.pop();

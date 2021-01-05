@@ -29,7 +29,7 @@ public class CageBlockTileRenderer extends TileEntityRenderer<CageBlockTile> {
 
             matrixStackIn.translate(0.5, y,0.5);
             matrixStackIn.rotate(tile.getDirection().getRotation());
-            matrixStackIn.rotate(Vector3f.XP.rotationDegrees(-90));
+            matrixStackIn.rotate(Const.XN90);
             matrixStackIn.scale(s,s,s);
             Minecraft.getInstance().getRenderManager().renderEntityStatic(mob, 0.0D, 0.0D, 0.0D, 0.0F, partialTicks, matrixStackIn, bufferIn, combinedLightIn);
             matrixStackIn.pop();

@@ -21,5 +21,11 @@
   "result": {
     "item": "supplementaries:crank",
     "count": 1
-  }
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "crank"
+    }
+  ]
 }

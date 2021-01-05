@@ -37,5 +37,11 @@
   "result": {
     "item": "supplementaries:planter",
     "count": 1
-  }
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "planter"
+    }
+  ]
 }

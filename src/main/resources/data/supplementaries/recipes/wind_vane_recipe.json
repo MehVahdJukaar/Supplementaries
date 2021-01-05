@@ -19,5 +19,11 @@
   "result": {
     "item": "supplementaries:wind_vane",
     "count": 1
-  }
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "wind_vane"
+    }
+  ]
 }

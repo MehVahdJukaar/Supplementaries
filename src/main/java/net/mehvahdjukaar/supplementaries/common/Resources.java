@@ -80,10 +80,11 @@ public class Resources {
     public static final ResourceLocation HOURGLASS_SUGAR = new ResourceLocation(Supplementaries.MOD_ID, "blocks/hourglass_sugar");
     public static final ResourceLocation HOURGLASS_BLAZE = new ResourceLocation(Supplementaries.MOD_ID, "blocks/hourglass_blaze");
     public static final ResourceLocation HOURGLASS_GUNPOWDER = new ResourceLocation(Supplementaries.MOD_ID, "blocks/hourglass_gunpowder");
+    public static final ResourceLocation BLACKBOARD_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID+":textures/entity/blackboard.png");
+    public static final ResourceLocation BLACKBOARD_WHITE_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID+":textures/entity/blackboard_white.png");
 
     public static final ResourceLocation NOTICE_BOARD_GUI_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID+":textures/gui/notice_board_gui.png");
     public static final ResourceLocation SACK_GUI_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID+":textures/gui/sack_gui.png");
-
 
 
     public static List<ResourceLocation> getTextures() {

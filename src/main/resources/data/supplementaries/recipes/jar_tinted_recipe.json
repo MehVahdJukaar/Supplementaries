@@ -17,5 +17,11 @@
   "result": {
     "item": "supplementaries:jar_tinted",
     "count": 1
-  }
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "jar"
+    }
+  ]
 }

@@ -16,5 +16,12 @@
   "result": {
     "item": "supplementaries:candle_holder",
     "count": 1
-  }
+  },
+
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "candle_holder"
+    }
+  ]
 }

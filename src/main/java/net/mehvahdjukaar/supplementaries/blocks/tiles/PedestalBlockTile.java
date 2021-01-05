@@ -37,7 +37,7 @@ public class PedestalBlockTile extends LockableLootTileEntity implements ISidedI
         super(Registry.PEDESTAL_TILE);
     }
 
-    //hijacking this method to work with hoppers
+    //hijacking this method to work with hoppers & multiplayer
     @Override
     public void markDirty() {
         //this.updateServerAndClient();

@@ -25,11 +25,15 @@ public class CommonUtil {
 
     public static boolean ishalloween;
     public static boolean aprilfool;
+    public static boolean isearthday;
+    public static boolean ischristmas;
     static{
         Calendar calendar = Calendar.getInstance();
-        ishalloween= ((calendar.get(Calendar.MONTH)==Calendar.OCTOBER && calendar.get(Calendar.DATE)>=29)||
+        ishalloween = ((calendar.get(Calendar.MONTH)==Calendar.OCTOBER && calendar.get(Calendar.DATE)>=29)||
                         (calendar.get(Calendar.MONTH)== Calendar.NOVEMBER&&calendar.get(Calendar.DATE) <= 1));
-        aprilfool= (calendar.get(Calendar.MONTH)==Calendar.APRIL&&calendar.get(Calendar.DATE)==1);
+        aprilfool = (calendar.get(Calendar.MONTH)==Calendar.APRIL&&calendar.get(Calendar.DATE)==1);
+        isearthday = (calendar.get(Calendar.MONTH)==Calendar.APRIL&&calendar.get(Calendar.DATE)==22);
+        ischristmas = (calendar.get(Calendar.MONTH) + 1 == 12 && calendar.get(Calendar.DATE) >= 24 && calendar.get(Calendar.DATE) <= 26);
     }
 
     //TODO: I hope nobody is reading this

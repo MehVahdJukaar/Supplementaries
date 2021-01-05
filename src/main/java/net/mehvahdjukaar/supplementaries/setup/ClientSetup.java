@@ -117,6 +117,10 @@ public class ClientSetup {
         //sack
         RenderTypeLookup.setRenderLayer(Registry.SACK, RenderType.getCutout());
         ScreenManager.registerFactory((ContainerType<SackContainer>)Registry.SACK_CONTAINER, SackGui::new);
+        //blackboard
+        RenderTypeLookup.setRenderLayer(Registry.BLACKBOARD, RenderType.getCutout());
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<BlackboardBlockTile>)Registry.BLACKBOARD_TILE, BlackboardBlockTileRenderer::new);
+
 
     }
 

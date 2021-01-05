@@ -37,7 +37,6 @@ import java.util.function.Function;
 public class SignPostBlockTile extends TileEntity {
     public final ITextComponent[] signText = new ITextComponent[]{new StringTextComponent(""), new StringTextComponent("")};
     private boolean isEditable = true;
-    private PlayerEntity player;
     //private final String[] renderText = new String[2];
     private final IReorderingProcessor[] renderText = new IReorderingProcessor[2];
     private DyeColor textColor = DyeColor.BLACK;
@@ -161,31 +160,6 @@ public class SignPostBlockTile extends TileEntity {
     @OnlyIn(Dist.CLIENT)
     public void setEditable(boolean isEditableIn) {
         this.isEditable = isEditableIn;
-        if (!isEditableIn) {
-            this.player = null;
-        }
-    }
-
-    public void setPlayer(PlayerEntity playerIn) {
-        this.player = playerIn;
-    }
-
-    public PlayerEntity getPlayer() {
-        return this.player;
-    }
-
-    public boolean executeCommand(PlayerEntity playerIn) {
-        for (ITextComponent itextcomponent : this.signText) {
-            Style style = itextcomponent == null ? null : itextcomponent.getStyle();
-            if (style != null && style.getClickEvent() != null) {
-                ClickEvent clickevent = style.getClickEvent();
-                if (clickevent.getAction() == ClickEvent.Action.RUN_COMMAND) {
-                    playerIn.getServer().getCommandManager().handleCommand(this.getCommandSource((ServerPlayerEntity) playerIn),
-                            clickevent.getValue());
-                }
-            }
-        }
-        return true;
     }
 
     public CommandSource getCommandSource(@Nullable ServerPlayerEntity playerIn) {

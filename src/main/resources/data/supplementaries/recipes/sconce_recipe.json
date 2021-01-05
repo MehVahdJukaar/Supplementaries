@@ -16,5 +16,11 @@
   "result": {
     "item": "supplementaries:sconce",
     "count": 1
-  }
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "sconce"
+    }
+  ]
 }

@@ -4,103 +4,114 @@ package net.mehvahdjukaar.supplementaries.gui;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.Resources;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.IRenderable;
+import net.minecraft.client.gui.screen.inventory.ChestScreen;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvents;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 @OnlyIn(Dist.CLIENT)
 public class BlackBoardButton extends AbstractGui implements IRenderable, IGuiEventListener {
-    public static final ResourceLocation WIDGETS_LOCATION = new ResourceLocation(Supplementaries.MOD_ID+":textures/gui/blackboard.png");
-    protected int width;
-    protected int height;
+
+    public int u;
+    public int v;
     public int x;
     public int y;
+    public static final int width=6;
     private boolean wasHovered;
     protected boolean isHovered;
-    public boolean active = true;
+    public boolean on = false;
     private boolean focused;
 
+    private final BlackBoardButton.IDraggable onDragged;
 
+    protected final BlackBoardButton.IPressable onPress;
 
-    public BlackBoardButton(int x, int y, int width, int height) {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
+    public BlackBoardButton(int center_x, int center_y, int u, int v, BlackBoardButton.IPressable pressedAction,
+                            BlackBoardButton.IDraggable dragAction) {
+        this.x = center_x-((8-u)*width);
+        this.y = center_y-((8-v)*width);
+        this.u = u;
+        this.v = v;
+        this.onPress = pressedAction;
+        this.onDragged = dragAction;
     }
 
-    protected int getYImage(boolean isHovered) {
-        int i = 1;
-        if (!this.active) {
-            i = 0;
-        } else if (isHovered) {
-            i = 2;
-        }
-        return i;
-    }
-
-    public int getHeightRealms() {
-        return this.height;
-    }
-
+    @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        this.isHovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
-
-        this.renderButton(matrixStack, mouseX, mouseY, partialTicks);
-
+        this.isHovered = this.isMouseOver(mouseX,mouseY);
+        this.renderButton(matrixStack);
         this.wasHovered = this.isHovered();
 
     }
 
 
-    public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void renderButton(MatrixStack matrixStack) {
         Minecraft minecraft = Minecraft.getInstance();
-        minecraft.getTextureManager().bindTexture(WIDGETS_LOCATION);
-
-        int i = this.getYImage(this.isHovered());
+        minecraft.getTextureManager().bindTexture(Resources.BLACKBOARD_TEXTURE);
+        RenderSystem.enableDepthTest();
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
+
+        int b = this.on?16:0;
+
+
+        RenderSystem.color4f(1, 1, 1, 1);
+        blit(matrixStack, this.x, this.y, (this.u+b)*width, this.v*width, width, width,32*width,16*width);
+
+    }
+
+    public void renderTooltip(MatrixStack matrixStack) {
         RenderSystem.enableDepthTest();
-        RenderSystem.color4f(0.0F, 1.0F, 1.0F, 2);
-        blit(matrixStack, 19, 19, 0, 0, 16, 16,16,16);
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 2);
-        blit(matrixStack, 20, 20, 0, 0, 16, 16,16,16);
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+
+        RenderSystem.color4f(0, 0, 0, 1);
+        blit(matrixStack, this.x-1, this.y-1, this.u*width, this.v*width, width+2 , width+2,16*width,16*width);
+        this.renderButton(matrixStack);
     }
 
-
-
+    //toggle
     public void onClick(double mouseX, double mouseY) {
-        this.active=!this.active;
+        this.on = !this.on;
+        this.onPress.onPress(this.u,this.v,this.on);
+
     }
 
-    public void onRelease(double mouseX, double mouseY) {
+    public void onRelease(double mouseX, double mouseY) {}
+
+    //set
+    protected void onDrag(double mouseX, double mouseY, boolean on) {
+        this.on=on;
+        this.onPress.onPress(this.u,this.v,this.on);
     }
 
-    protected void onDrag(double mouseX, double mouseY, double dragX, double dragY) {
-    }
-
+    @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (this.active) {
-            if (this.isValidClickButton(button)) {
-                boolean flag = this.clicked(mouseX, mouseY);
-                if (flag) {
-                    this.playDownSound(Minecraft.getInstance().getSoundHandler());
-                    this.onClick(mouseX, mouseY);
-                    return true;
-                }
+        if (this.isValidClickButton(button)) {
+            boolean flag = this.isMouseOver(mouseX, mouseY);
+            if (flag) {
+                this.playDownSound(Minecraft.getInstance().getSoundHandler());
+                this.onClick(mouseX, mouseY);
+                return true;
             }
-
         }
         return false;
     }
 
+    @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         if (this.isValidClickButton(button)) {
             this.onRelease(mouseX, mouseY);
@@ -114,43 +125,47 @@ public class BlackBoardButton extends AbstractGui implements IRenderable, IGuiEv
         return button == 0;
     }
 
+    @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        int a = this.u;
         if (this.isValidClickButton(button)) {
-            this.onDrag(mouseX, mouseY, dragX, dragY);
+            this.onDragged.onPress(mouseX,mouseY, this.on);
             return true;
         } else {
             return false;
         }
     }
 
-    protected boolean clicked(double mouseX, double mouseY) {
-        return this.active && mouseX >= (double)this.x && mouseY >= (double)this.y && mouseX < (double)(this.x + this.width) && mouseY < (double)(this.y + this.height);
-    }
-
     public boolean isHovered() {
         return this.isHovered || this.focused;
     }
 
+    @Override
     public boolean changeFocus(boolean focus) {
-        if (this.active) {
-            this.focused = !this.focused;
-            this.onFocusedChanged(this.focused);
-            return this.focused;
-        } else {
-            return false;
-        }
+        this.focused = !this.focused;
+        //this.onFocusedChanged(this.focused);
+        return this.focused;
     }
 
-    protected void onFocusedChanged(boolean focused) {
-    }
-
+    @Override
     public boolean isMouseOver(double mouseX, double mouseY) {
-        return this.active && mouseX >= (double)this.x && mouseY >= (double)this.y && mouseX < (double)(this.x + this.width) && mouseY < (double)(this.y + this.height);
+        return mouseX >= (double)this.x && mouseY >= (double)this.y && mouseX < (double)(this.x + width) && mouseY < (double)(this.y + width);
     }
 
 
     public void playDownSound(SoundHandler handler) {
         handler.play(SimpleSound.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+    }
+
+
+    @OnlyIn(Dist.CLIENT)
+    public interface IPressable {
+        void onPress(int x, int y, boolean on);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public interface IDraggable {
+        void onPress(double mouseX, double mouseY, boolean on);
     }
 
 }

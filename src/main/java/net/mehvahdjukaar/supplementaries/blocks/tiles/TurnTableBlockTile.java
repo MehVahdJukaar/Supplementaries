@@ -182,14 +182,14 @@ public class TurnTableBlockTile extends TileEntity implements ITickableTileEntit
     public void read(BlockState state, CompoundNBT compound) {
         super.read(state, compound);
         this.cooldown = compound.getInt("Cooldown");
-        this.canRotate = compound.getBoolean("Can_rotate");
+        this.canRotate = compound.getBoolean("CanRotate");
     }
 
     @Override
     public CompoundNBT write(CompoundNBT compound) {
         super.write(compound);
         compound.putInt("Cooldown", this.cooldown);
-        compound.putBoolean("Can_rotate", this.canRotate);
+        compound.putBoolean("CanRotate", this.canRotate);
         return compound;
     }
 

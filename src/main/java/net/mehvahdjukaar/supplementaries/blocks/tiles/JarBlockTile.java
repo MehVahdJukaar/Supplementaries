@@ -311,7 +311,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
             NonNullList<ItemStack> stacks = NonNullList.withSize(1, itemstack);
             this.setItems(stacks);
         } else {
-            this.getStackInSlot(0).grow(Math.min(amount, this.getInventoryStackLimit() - amount));
+            this.getStackInSlot(0).grow(Math.min(amount, this.getInventoryStackLimit() - this.getStackInSlot(0).getCount()));
         }
     }
 
@@ -321,11 +321,12 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        //c*m jar easter egg XD
+        //c*m jar easter egg XD. so funi XDD
         if(!this.hasNoMob()){
             if(!this.hasCustomName())return false;
             else if(!this.getCustomName().toString().toLowerCase().contains("cum"))return false;
         }
+        //bottom text
 
         //TODO rewrite this to use forge fluid system
         //convert water buckets
@@ -342,6 +343,8 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
         }
         return false;
     }
+
+    //TODO: ise write instead so you can pass stuff directly when usign blockEntityTag
 
     // save to itemstack
     public void saveToNbt(ItemStack stack) {

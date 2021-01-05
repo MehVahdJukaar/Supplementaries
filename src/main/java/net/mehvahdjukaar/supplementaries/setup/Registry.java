@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
-import com.google.common.collect.Lists;
 import net.mehvahdjukaar.supplementaries.blocks.*;
 import net.mehvahdjukaar.supplementaries.blocks.tiles.*;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
@@ -34,21 +33,13 @@ import net.minecraftforge.common.ToolType;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.network.IContainerFactory;
 
-import java.util.List;
+import java.lang.reflect.Field;
 
 @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
 public class Registry {
-
-    private static final List<Block> BLOCKS = Lists.newArrayList();
-    private static final List<TileEntityType<?>> TILES = Lists.newArrayList();
-    private static final List<Item> ITEMS = Lists.newArrayList();
-    private static final List<ContainerType<?>> CONTAINERS = Lists.newArrayList();
-    private static final List<ParticleType<?>> PARTICLES = Lists.newArrayList();
-    private static final List<EntityType<?>> ENTITIES = Lists.newArrayList();
-
     private static final boolean tab = RegistryConfigs.reg.CREATIVE_TAB.get();
     public static final ItemGroup MYTAB = !tab?null:
     new ItemGroup("supplementaries") {
@@ -63,289 +54,87 @@ public class Registry {
         }
     };
 
-    private static ItemGroup getTab(ItemGroup g){
-        return tab?MYTAB:g;
+    private static ItemGroup getTab(ItemGroup g,String reg_name){
+        if(RegistryConfigs.reg.isEnabled(reg_name)) {
+            return tab ? MYTAB : g;
+        }
+        return null;
     }
-
-
 
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
-        for (Block n : BLOCKS)
-            event.getRegistry().register(n);
+        for (Field f : Registry.class.getDeclaredFields()) {
+            try{
+                if(Block.class.isAssignableFrom(f.getType())){
+                    Block b = (Block) f.get(null);
+                    event.getRegistry().register(b);
+                }
+            } catch (Exception ignored) {}
+        }
     }
 
     @SubscribeEvent
     public static void registerTiles(RegistryEvent.Register<TileEntityType<?>> event) {
-        for (TileEntityType<?> n : TILES)
-            event.getRegistry().register(n);
+        for (Field f : Registry.class.getDeclaredFields()) {
+            try{
+                if(TileEntityType.class.isAssignableFrom(f.getType())){
+                    TileEntityType<?> t = (TileEntityType<?>) f.get(null);
+                    event.getRegistry().register(t);
+                }
+            } catch (Exception ignored) {}
+        }
     }
 
     @SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> event) {
-        for (Item n : ITEMS)
-            event.getRegistry().register(n);
+        for (Field f : Registry.class.getDeclaredFields()) {
+            try{
+                if(Item.class.isAssignableFrom(f.getType())){
+                    Item i = (Item) f.get(null);
+                    event.getRegistry().register(i);
+                }
+            } catch (Exception ignored) {}
+        }
     }
 
     @SubscribeEvent
     public static void registerContainers(RegistryEvent.Register<ContainerType<?>> event) {
-        for (ContainerType<?> n : CONTAINERS)
-            event.getRegistry().register(n);
+        for (Field f : Registry.class.getDeclaredFields()) {
+            try{
+                if(ContainerType.class.isAssignableFrom(f.getType())){
+                    ContainerType<?> c = (ContainerType<?>) f.get(null);
+                    event.getRegistry().register(c);
+                }
+            } catch (Exception ignored) {}
+        }
     }
 
     @SubscribeEvent
     public static void registerEntities(final RegistryEvent.Register<EntityType<?>> event){
-        for (EntityType<?> n : ENTITIES)
-            event.getRegistry().register(n);
+        for (Field f : Registry.class.getDeclaredFields()) {
+            try{
+                if(EntityType.class.isAssignableFrom(f.getType())){
+                    EntityType<?> e = (EntityType<?>) f.get(null);
+                    event.getRegistry().register(e);
+                }
+            } catch (Exception ignored) {}
+        }
         if(RegistryConfigs.reg.FIREFLY_ENABLED.get())
             GlobalEntityTypeAttributes.put((EntityType<? extends LivingEntity>) FIREFLY_TYPE, FireflyEntity.setCustomAttributes().create());
     }
 
     @SubscribeEvent
     public static void registerParticles(final RegistryEvent.Register<ParticleType<?>> event){
-        for (ParticleType<?> n : PARTICLES)
-            event.getRegistry().register(n);
+        for (Field f : Registry.class.getDeclaredFields()) {
+            try{
+                if(ParticleType.class.isAssignableFrom(f.getType())){
+                    ParticleType<?> p = (ParticleType<?>) f.get(null);
+                    event.getRegistry().register(p);
+                }
+            } catch (Exception ignored) {}
+        }
     }
 
-    public static void init(){
-        //TODO: add configs
-        //firefly
-        if(RegistryConfigs.reg.FIREFLY_ENABLED.get()) {
-            ENTITIES.add(FIREFLY_TYPE);
-            ITEMS.add(FIREFLY_SPAWN_EGG_ITEM);
-        }
-        //planter
-        if(RegistryConfigs.reg.PLANTER_ENABLED.get()) {
-            BLOCKS.add(PLANTER);
-            ITEMS.add(PLANTER_ITEM);
-        }
-        //clock
-        if(RegistryConfigs.reg.CLOCK_ENABLED.get()) {
-            BLOCKS.add(CLOCK_BLOCK);
-            TILES.add(CLOCK_BLOCK_TILE);
-            ITEMS.add(CLOCK_BLOCK_ITEM);
-        }
-        //pedestal
-        if(RegistryConfigs.reg.PEDESTAL_ENABLED.get()) {
-            BLOCKS.add(PEDESTAL);
-            TILES.add(PEDESTAL_TILE);
-            ITEMS.add(PEDESTAL_ITEM);
-        }
-        //wind vane
-        if(RegistryConfigs.reg.WIND_VANE_ENABLED.get()) {
-            BLOCKS.add(WIND_VANE);
-            TILES.add(WIND_VANE_TILE);
-            ITEMS.add(WIND_VANE_ITEM);
-        }
-        //illuminator
-        if(RegistryConfigs.reg.ILLUMINATOR_ENABLED.get()) {
-            BLOCKS.add(REDSTONE_ILLUMINATOR);
-            ITEMS.add(REDSTONE_ILLUMINATOR_ITEM);
-        }
-        //notice board
-        if(RegistryConfigs.reg.NOTICE_BOARD_ENABLED.get()) {
-            BLOCKS.add(NOTICE_BOARD);
-            TILES.add(NOTICE_BOARD_TILE);
-            ITEMS.add(NOTICE_BOARD_ITEM);
-            CONTAINERS.add(NOTICE_BOARD_CONTAINER);
-        }
-        //crank
-        if(RegistryConfigs.reg.CRANK_ENABLED.get()) {
-            BLOCKS.add(CRANK);
-            ITEMS.add(CRANK_ITEM);
-        }
-        //jar
-        if(RegistryConfigs.reg.JAR_ENABLED.get()) {
-            BLOCKS.add(JAR);
-            TILES.add(JAR_TILE);
-            ITEMS.add(JAR_ITEM);
-            ITEMS.add(EMPTY_JAR_ITEM);
-
-            BLOCKS.add(JAR_TINTED);
-            ITEMS.add(JAR_ITEM_TINTED);
-            ITEMS.add(EMPTY_JAR_ITEM_TINTED);
-        }
-        //faucet
-        if(RegistryConfigs.reg.FAUCET_ENABLED.get()) {
-            BLOCKS.add(FAUCET);
-            TILES.add(FAUCET_TILE);
-            ITEMS.add(FAUCET_ITEM);
-        }
-        //turn table
-        if(RegistryConfigs.reg.TURN_TABLE_ENABLED.get()) {
-            BLOCKS.add(TURN_TABLE);
-            TILES.add(TURN_TABLE_TILE);
-            ITEMS.add(TURN_TABLE_ITEM);
-        }
-        //piston launcher
-        if(RegistryConfigs.reg.PISTON_LAUNCHER_ENABLED.get()) {
-            BLOCKS.add(PISTON_LAUNCHER);
-            BLOCKS.add(PISTON_LAUNCHER_ARM);
-            BLOCKS.add(PISTON_LAUNCHER_HEAD);
-            TILES.add(PISTON_LAUNCHER_ARM_TILE);
-            ITEMS.add(PISTON_LAUNCHER_ITEM);
-        }
-        //speaker block
-        if(RegistryConfigs.reg.SPEAKER_BLOCK_ENABLED.get()) {
-            PARTICLES.add(SPEAKER_SOUND);
-            BLOCKS.add(SPEAKER_BLOCK);
-            TILES.add(SPEAKER_BLOCK_TILE);
-            ITEMS.add(SPEAKER_BLOCK_ITEM);
-        }
-        //sign post
-        if(RegistryConfigs.reg.SIGN_POST_ENABLED.get()) {
-            BLOCKS.add(SIGN_POST);
-            TILES.add(SIGN_POST_TILE);
-            ITEMS.add(SIGN_POST_ITEM_OAK);
-            ITEMS.add(SIGN_POST_ITEM_SPRUCE);
-            ITEMS.add(SIGN_POST_ITEM_BIRCH);
-            ITEMS.add(SIGN_POST_ITEM_JUNGLE);
-            ITEMS.add(SIGN_POST_ITEM_ACACIA);
-            ITEMS.add(SIGN_POST_ITEM_DARK_OAK);
-            ITEMS.add(SIGN_POST_ITEM_CRIMSON);
-            ITEMS.add(SIGN_POST_ITEM_WARPED);
-        }
-        //hanging sign
-        if(RegistryConfigs.reg.HANGING_SIGN_ENABLED.get()) {
-            BLOCKS.add(HANGING_SIGN_OAK);
-            BLOCKS.add(HANGING_SIGN_SPRUCE);
-            BLOCKS.add(HANGING_SIGN_BIRCH);
-            BLOCKS.add(HANGING_SIGN_JUNGLE);
-            BLOCKS.add(HANGING_SIGN_ACACIA);
-            BLOCKS.add(HANGING_SIGN_DARK_OAK);
-            BLOCKS.add(HANGING_SIGN_CRIMSON);
-            BLOCKS.add(HANGING_SIGN_WARPED);
-            TILES.add(HANGING_SIGN_TILE);
-            ITEMS.add(HANGING_SIGN_ITEM_OAK);
-            ITEMS.add(HANGING_SIGN_ITEM_SPRUCE);
-            ITEMS.add(HANGING_SIGN_ITEM_BIRCH);
-            ITEMS.add(HANGING_SIGN_ITEM_JUNGLE);
-            ITEMS.add(HANGING_SIGN_ITEM_ACACIA);
-            ITEMS.add(HANGING_SIGN_ITEM_DARK_OAK);
-            ITEMS.add(HANGING_SIGN_ITEM_CRIMSON);
-            ITEMS.add(HANGING_SIGN_ITEM_WARPED);
-        }
-        //wall lantern (disabled via server config)
-        if(true) {
-            BLOCKS.add(WALL_LANTERN);
-            TILES.add(WALL_LANTERN_TILE);
-            ITEMS.add(WALL_LANTERN_ITEM);
-        }
-        //bellows
-        if(RegistryConfigs.reg.BELLOWS_ENABLED.get()) {
-            BLOCKS.add(BELLOWS);
-            TILES.add(BELLOWS_TILE);
-            ITEMS.add(BELLOWS_ITEM);
-        }
-        //sconce
-        if(RegistryConfigs.reg.SCONCE_ENABLED.get()) { //true
-            BLOCKS.add(SCONCE);
-            BLOCKS.add(SCONCE_WALL);
-            ITEMS.add(SCONCE_ITEM);
-
-            BLOCKS.add(SCONCE_SOUL);
-            BLOCKS.add(SCONCE_WALL_SOUL);
-            ITEMS.add(SCONCE_ITEM_SOUL);
-
-            PARTICLES.add(ENDERGETIC_FLAME);
-            BLOCKS.add(SCONCE_ENDER);
-            BLOCKS.add(SCONCE_WALL_ENDER);
-            ITEMS.add(SCONCE_ITEM_ENDER);
-
-            PARTICLES.add(GREEN_FLAME);
-            BLOCKS.add(SCONCE_GREEN);
-            BLOCKS.add(SCONCE_WALL_GREEN);
-            ITEMS.add(SCONCE_ITEM_GREEN);
-        }
-        //candelabra
-        if(RegistryConfigs.reg.CANDELABRA_ENABLED.get()) {
-            BLOCKS.add(CANDELABRA);
-            ITEMS.add(CANDELABRA_ITEM);
-
-            BLOCKS.add(CANDELABRA_SILVER);
-            ITEMS.add(CANDELABRA_ITEM_SILVER);
-        }
-        //firefly jar
-        if(RegistryConfigs.reg.FIREFLY_ENABLED.get() && RegistryConfigs.reg.JAR_ENABLED.get()) {
-            PARTICLES.add(FIREFLY_GLOW);
-            BLOCKS.add(FIREFLY_JAR);
-            TILES.add(FIREFLY_JAR_TILE);
-            ITEMS.add(FIREFLY_JAR_ITEM);
-        }
-        //item shelf
-        if(RegistryConfigs.reg.ITEM_SHELF_ENABLED.get()) {
-            BLOCKS.add(ITEM_SHELF);
-            TILES.add(ITEM_SHELF_TILE);
-            ITEMS.add(ITEM_SHELF_ITEM);
-        }
-
-        //cage
-        if(RegistryConfigs.reg.CAGE_ENABLED.get()){
-            BLOCKS.add(CAGE);
-            TILES.add(CAGE_TILE);
-            ITEMS.add(CAGE_ITEM);
-            ITEMS.add(EMPTY_CAGE_ITEM);
-
-        }
-
-        if(RegistryConfigs.reg.SCONCE_LEVER_ENABLED.get()){
-            BLOCKS.add(SCONCE_LEVER);
-            ITEMS.add(SCONCE_LEVER_ITEM);
-        }
-
-        //stone_lamp
-        if(RegistryConfigs.reg.STONE_LAMP_ENABLED.get()){
-            BLOCKS.add(STONE_LAMP);
-            ITEMS.add(STONE_LAMP_ITEM);
-        }
-
-        //cog block
-        if(RegistryConfigs.reg.COG_BLOCK_ENABLED.get()){
-            BLOCKS.add(COG_BLOCK);
-            ITEMS.add(COG_BLOCK_ITEM);
-        }
-        //candle holder
-        if(RegistryConfigs.reg.CANDLE_HOLDER_ENABLED.get()){
-            BLOCKS.add(CANDLE_HOLDER);
-            ITEMS.add(CANDLE_HOLDER_ITEM);
-        }
-
-        //globe
-        if(RegistryConfigs.reg.GLOBE_ENABLED.get()){
-            BLOCKS.add(GLOBE);
-            TILES.add(GLOBE_TILE);
-            ITEMS.add(GLOBE_ITEM);
-        }
-
-        //globe
-        if(RegistryConfigs.reg.HOURGLASS_ENABLED.get()){
-            BLOCKS.add(HOURGLASS);
-            TILES.add(HOURGLASS_TILE);
-            ITEMS.add(HOURGLASS_ITEM);
-        }
-
-        //flag
-        if(RegistryConfigs.reg.FLAG_ENABLED.get()) {
-            BLOCKS.add(FLAG);
-            TILES.add(FLAG_TILE);
-            ITEMS.add(FLAG_ITEM);
-        }
-        //laser
-        if(RegistryConfigs.reg.LASER_ENABLED.get()) {
-            BLOCKS.add(LASER_BLOCK);
-            TILES.add(LASER_BLOCK_TILE);
-            ITEMS.add(LASER_BLOCK_ITEM);
-        }
-        if(RegistryConfigs.reg.SACK_ENABLED.get()){
-            BLOCKS.add(SACK);
-            TILES.add(SACK_TILE);
-            ITEMS.add(SACK_ITEM);
-            CONTAINERS.add(SACK_CONTAINER);
-        }
-        //launcher rail
-        //BLOCKS.add(LAUNCHER_RAIL);
-        //ITEMS.add(LAUNCHER_RAIL_ITEM);
-    }
 
     //entities
     public static final String FIREFLY_NAME = "firefly";
@@ -355,7 +144,7 @@ public class Registry {
             .build(FIREFLY_NAME)
             .setRegistryName(FIREFLY_NAME);
     public static final Item FIREFLY_SPAWN_EGG_ITEM = new SpawnEggItem(FIREFLY_TYPE, -4784384, -16777216,
-            new Item.Properties().group(tab?MYTAB:ItemGroup.MISC)).setRegistryName(FIREFLY_NAME);
+            new Item.Properties().group(getTab(ItemGroup.MISC,FIREFLY_NAME))).setRegistryName(FIREFLY_NAME);
 
 
     //particles
@@ -378,7 +167,8 @@ public class Registry {
                     .notSolid()
     ).setRegistryName(PLANTER_NAME);
     public static final Item PLANTER_ITEM = new BlockItem(PLANTER,
-            new Item.Properties().group(tab?MYTAB:ItemGroup.DECORATIONS)).setRegistryName(PLANTER_NAME);
+            new Item.Properties().group(getTab(ItemGroup.DECORATIONS,PLANTER_NAME))
+    ).setRegistryName(PLANTER_NAME);
 
     //clock
     public static final String CLOCK_BLOCK_NAME = "clock_block";
@@ -394,7 +184,8 @@ public class Registry {
             ClockBlockTile::new, CLOCK_BLOCK).build(null).setRegistryName(CLOCK_BLOCK_NAME);
 
     public static final Item CLOCK_BLOCK_ITEM = new BlockItem(CLOCK_BLOCK,
-            new Item.Properties().group(tab?MYTAB:ItemGroup.REDSTONE)).setRegistryName(CLOCK_BLOCK_NAME);
+            new Item.Properties().group(getTab(ItemGroup.REDSTONE,CLOCK_BLOCK_NAME))
+    ).setRegistryName(CLOCK_BLOCK_NAME);
 
     //pedestal
     public static final String PEDESTAL_NAME = "pedestal";
@@ -408,7 +199,8 @@ public class Registry {
             PedestalBlockTile::new, PEDESTAL).build(null).setRegistryName(PEDESTAL_NAME);
 
     public static final Item PEDESTAL_ITEM = new BlockItem(PEDESTAL,
-            new Item.Properties().group(tab?MYTAB:ItemGroup.DECORATIONS)).setRegistryName(PEDESTAL_NAME);
+            new Item.Properties().group(getTab(ItemGroup.DECORATIONS,PEDESTAL_NAME))
+    ).setRegistryName(PEDESTAL_NAME);
 
     //wind vane
     public static final String WIND_VANE_NAME = "wind_vane";
@@ -425,7 +217,8 @@ public class Registry {
             WindVaneBlockTile::new, WIND_VANE).build(null).setRegistryName(WIND_VANE_NAME);
 
     public static final Item WIND_VANE_ITEM = new BlockItem(WIND_VANE,
-            new Item.Properties().group(tab?MYTAB:ItemGroup.REDSTONE)).setRegistryName(WIND_VANE_NAME);
+            new Item.Properties().group(getTab(ItemGroup.REDSTONE,WIND_VANE_NAME))
+    ).setRegistryName(WIND_VANE_NAME);
 
     //illuminator
     public static final String REDSTONE_ILLUMINATOR_NAME = "redstone_illuminator";
@@ -436,7 +229,8 @@ public class Registry {
                     .setLightLevel((state) -> 15)
     ).setRegistryName(REDSTONE_ILLUMINATOR_NAME);
     public static final Item REDSTONE_ILLUMINATOR_ITEM = new BlockItem(REDSTONE_ILLUMINATOR,
-            new Item.Properties().group(tab?MYTAB:ItemGroup.REDSTONE)).setRegistryName(REDSTONE_ILLUMINATOR_NAME);
+            new Item.Properties().group(getTab(ItemGroup.REDSTONE,REDSTONE_ILLUMINATOR_NAME))
+    ).setRegistryName(REDSTONE_ILLUMINATOR_NAME);
 
     //notice board
     public static final String NOTICE_BOARD_NAME = "notice_board";
@@ -452,7 +246,8 @@ public class Registry {
             NoticeBoardBlockTile::new, NOTICE_BOARD).build(null).setRegistryName(NOTICE_BOARD_NAME);
 
     public static final Item NOTICE_BOARD_ITEM = new BlockItem(NOTICE_BOARD,
-            new Item.Properties().group(tab?MYTAB:ItemGroup.DECORATIONS)).setRegistryName(NOTICE_BOARD_NAME);
+            new Item.Properties().group(getTab(ItemGroup.DECORATIONS,NOTICE_BOARD_NAME))
+    ).setRegistryName(NOTICE_BOARD_NAME);
 
     public static final ContainerType<?> NOTICE_BOARD_CONTAINER = IForgeContainerType.create(
             NoticeBoardContainer::new).setRegistryName(NOTICE_BOARD_NAME);
@@ -467,7 +262,8 @@ public class Registry {
                     .notSolid()
     ).setRegistryName(CRANK_NAME);
     public static final Item CRANK_ITEM =   new BlockItem(CRANK,
-            new Item.Properties().group(tab?MYTAB:ItemGroup.REDSTONE)).setRegistryName(CRANK_NAME);
+            new Item.Properties().group(getTab(ItemGroup.REDSTONE,CRANK_NAME))
+    ).setRegistryName(CRANK_NAME);
 
     //jar
     public static final String JAR_NAME = "jar";
@@ -497,12 +293,10 @@ public class Registry {
 
 
     public static final Item EMPTY_JAR_ITEM = new EmptyJarItem(JAR, new Item.Properties().group(
-            tab?MYTAB:ItemGroup.DECORATIONS).maxStackSize(16)).setRegistryName(JAR_NAME);
+            getTab(ItemGroup.DECORATIONS,JAR_NAME)).maxStackSize(16)).setRegistryName(JAR_NAME);
 
     public static final Item EMPTY_JAR_ITEM_TINTED = new EmptyJarItem(JAR_TINTED, new Item.Properties().group(
-            tab?MYTAB:ItemGroup.DECORATIONS).maxStackSize(16)).setRegistryName(JAR_NAME_TINTED);
-
-
+            getTab(ItemGroup.DECORATIONS,JAR_NAME)).maxStackSize(16)).setRegistryName(JAR_NAME_TINTED);
 
 
     //faucet
@@ -520,7 +314,8 @@ public class Registry {
             FaucetBlockTile::new, FAUCET).build(null).setRegistryName(FAUCET_NAME);
 
     public static final Item FAUCET_ITEM = new BlockItem(FAUCET,
-            new Item.Properties().group(tab?MYTAB:ItemGroup.REDSTONE)).setRegistryName(FAUCET_NAME);
+            new Item.Properties().group(getTab(ItemGroup.REDSTONE,FAUCET_NAME))
+    ).setRegistryName(FAUCET_NAME);
 
     //turn table
     public static final String TURN_TABLE_NAME = "turn_table";
@@ -536,7 +331,8 @@ public class Registry {
             TurnTableBlockTile::new, TURN_TABLE).build(null).setRegistryName(TURN_TABLE_NAME);
 
     public static final Item TURN_TABLE_ITEM = new BlockItem(TURN_TABLE,
-            new Item.Properties().group(tab?MYTAB:ItemGroup.REDSTONE)).setRegistryName(TURN_TABLE_NAME);
+            new Item.Properties().group(getTab(ItemGroup.REDSTONE,TURN_TABLE_NAME))
+    ).setRegistryName(TURN_TABLE_NAME);
 
     //piston launcher base
     public static final String PISTON_LAUNCHER_NAME = "piston_launcher";
@@ -553,7 +349,8 @@ public class Registry {
 
     ).setRegistryName(PISTON_LAUNCHER_NAME);
     public static final Item PISTON_LAUNCHER_ITEM = new BlockItem(PISTON_LAUNCHER,
-            new Item.Properties().group(tab?MYTAB:ItemGroup.REDSTONE)).setRegistryName(PISTON_LAUNCHER_NAME);
+            new Item.Properties().group(getTab(ItemGroup.REDSTONE,PISTON_LAUNCHER_NAME))
+    ).setRegistryName(PISTON_LAUNCHER_NAME);
 
     public static final String PISTON_LAUNCHER_HEAD_NAME = "piston_launcher_head";
     public static final Block PISTON_LAUNCHER_HEAD = new PistonLauncherHeadBlock(
@@ -576,7 +373,8 @@ public class Registry {
                     .noDrops()
     ).setRegistryName(PISTON_LAUNCHER_ARM_NAME);
     public static final TileEntityType<?> PISTON_LAUNCHER_ARM_TILE =  TileEntityType.Builder.create(
-            PistonLauncherArmBlockTile::new, PISTON_LAUNCHER_ARM).build(null).setRegistryName(PISTON_LAUNCHER_ARM_NAME);
+            PistonLauncherArmBlockTile::new, PISTON_LAUNCHER_ARM).build(null
+    ).setRegistryName(PISTON_LAUNCHER_ARM_NAME);
 
     //speaker Block
     public static final String SPEAKER_BLOCK_NAME = "speaker_block";
@@ -587,10 +385,12 @@ public class Registry {
                     .harvestTool(ToolType.AXE)
     ).setRegistryName(SPEAKER_BLOCK_NAME);
     public static final TileEntityType<?> SPEAKER_BLOCK_TILE =  TileEntityType.Builder.create(
-            SpeakerBlockTile::new, SPEAKER_BLOCK).build(null).setRegistryName(SPEAKER_BLOCK_NAME);
+            SpeakerBlockTile::new, SPEAKER_BLOCK).build(null
+    ).setRegistryName(SPEAKER_BLOCK_NAME);
 
     public static final Item SPEAKER_BLOCK_ITEM = new BlockItem(SPEAKER_BLOCK,
-            new Item.Properties().group(tab?MYTAB:ItemGroup.REDSTONE)).setRegistryName(SPEAKER_BLOCK_NAME);
+            new Item.Properties().group(getTab(ItemGroup.REDSTONE,SPEAKER_BLOCK_NAME))
+    ).setRegistryName(SPEAKER_BLOCK_NAME);
 
     //sign post
     public static final String SIGN_POST_NAME = "sign_post";
@@ -602,35 +402,45 @@ public class Registry {
                     .notSolid()
     ).setRegistryName(SIGN_POST_NAME);
     public static final TileEntityType<?> SIGN_POST_TILE =  TileEntityType.Builder.create(
-            SignPostBlockTile::new, SIGN_POST).build(null).setRegistryName(SIGN_POST_NAME);
+            SignPostBlockTile::new, SIGN_POST).build(null
+    ).setRegistryName(SIGN_POST_NAME);
 
     //items
     //oak
     public static final Item SIGN_POST_ITEM_OAK = new SignPostItem(
-            new Item.Properties().group(tab?MYTAB:ItemGroup.DECORATIONS).maxStackSize(64)).setRegistryName("sign_post_oak");
+            new Item.Properties().group(getTab(ItemGroup.DECORATIONS,SIGN_POST_NAME)).maxStackSize(64)
+    ).setRegistryName("sign_post_oak");
     //spruce
     public static final Item SIGN_POST_ITEM_SPRUCE = new SignPostItem(
-            new Item.Properties().group(tab?MYTAB:ItemGroup.DECORATIONS).maxStackSize(64)).setRegistryName("sign_post_spruce");
+            new Item.Properties().group(getTab(ItemGroup.DECORATIONS,SIGN_POST_NAME)).maxStackSize(64)
+    ).setRegistryName("sign_post_spruce");
     //birch
     public static final Item SIGN_POST_ITEM_BIRCH = new SignPostItem(
-            new Item.Properties().group(tab?MYTAB:ItemGroup.DECORATIONS).maxStackSize(64)).setRegistryName("sign_post_birch");
+            new Item.Properties().group(getTab(ItemGroup.DECORATIONS,SIGN_POST_NAME)).maxStackSize(64)
+    ).setRegistryName("sign_post_birch");
     //jungle
     public static final Item SIGN_POST_ITEM_JUNGLE = new SignPostItem(
-            new Item.Properties().group(tab?MYTAB:ItemGroup.DECORATIONS).maxStackSize(64)).setRegistryName("sign_post_jungle");
+            new Item.Properties().group(getTab(ItemGroup.DECORATIONS,SIGN_POST_NAME)).maxStackSize(64)
+    ).setRegistryName("sign_post_jungle");
     //acacia
     public static final Item SIGN_POST_ITEM_ACACIA = new SignPostItem(
-            new Item.Properties().group(tab?MYTAB:ItemGroup.DECORATIONS).maxStackSize(64)).setRegistryName("sign_post_acacia");
+            new Item.Properties().group(getTab(ItemGroup.DECORATIONS,SIGN_POST_NAME)).maxStackSize(64)
+    ).setRegistryName("sign_post_acacia");
     //dark oak
     public static final Item SIGN_POST_ITEM_DARK_OAK = new SignPostItem(
-            new Item.Properties().group(tab?MYTAB:ItemGroup.DECORATIONS).maxStackSize(64)).setRegistryName("sign_post_dark_oak");
+            new Item.Properties().group(getTab(ItemGroup.DECORATIONS,SIGN_POST_NAME)).maxStackSize(64)
+    ).setRegistryName("sign_post_dark_oak");
     //crimson
     public static final Item SIGN_POST_ITEM_CRIMSON = new SignPostItem(
-            new Item.Properties().group(tab?MYTAB:ItemGroup.DECORATIONS).maxStackSize(64)).setRegistryName("sign_post_crimson");
+            new Item.Properties().group(getTab(ItemGroup.DECORATIONS,SIGN_POST_NAME)).maxStackSize(64)
+    ).setRegistryName("sign_post_crimson");
     //warped
     public static final Item SIGN_POST_ITEM_WARPED = new SignPostItem(
-            new Item.Properties().group(tab?MYTAB:ItemGroup.DECORATIONS).maxStackSize(64)).setRegistryName("sign_post_warped");
+            new Item.Properties().group(getTab(ItemGroup.DECORATIONS,SIGN_POST_NAME)).maxStackSize(64)
+    ).setRegistryName("sign_post_warped");
 
     //hanging sing
+    public static final String HANGING_SIGN_NAME = "hanging_sign";
     //oak
     public static final String HANGING_SIGN_NAME_OAK = "hanging_sign_oak";
     public static final Block HANGING_SIGN_OAK = new HangingSignBlock(
@@ -642,7 +452,8 @@ public class Registry {
                     .doesNotBlockMovement()
     ).setRegistryName(HANGING_SIGN_NAME_OAK);
     public static final Item HANGING_SIGN_ITEM_OAK = new BlockItem(HANGING_SIGN_OAK,
-            new Item.Properties().group(tab?MYTAB:ItemGroup.DECORATIONS)).setRegistryName(HANGING_SIGN_NAME_OAK);
+            new Item.Properties().group(getTab(ItemGroup.DECORATIONS,HANGING_SIGN_NAME))
+    ).setRegistryName(HANGING_SIGN_NAME_OAK);
 
     //spruce
     public static final String HANGING_SIGN_NAME_SPRUCE = "hanging_sign_spruce";
@@ -655,7 +466,8 @@ public class Registry {
                     .doesNotBlockMovement()
     ).setRegistryName(HANGING_SIGN_NAME_SPRUCE);
     public static final Item HANGING_SIGN_ITEM_SPRUCE = new BlockItem(HANGING_SIGN_SPRUCE,
-            new Item.Properties().group(tab?MYTAB:ItemGroup.DECORATIONS)).setRegistryName(HANGING_SIGN_NAME_SPRUCE);
+            new Item.Properties().group(getTab(ItemGroup.DECORATIONS,HANGING_SIGN_NAME))
+    ).setRegistryName(HANGING_SIGN_NAME_SPRUCE);
 
     //birch
     public static final String HANGING_SIGN_NAME_BIRCH = "hanging_sign_birch";
@@ -668,7 +480,8 @@ public class Registry {
                     .doesNotBlockMovement()
     ).setRegistryName(HANGING_SIGN_NAME_BIRCH);
     public static final Item HANGING_SIGN_ITEM_BIRCH = new BlockItem(HANGING_SIGN_BIRCH,
-            new Item.Properties().group(tab?MYTAB:ItemGroup.DECORATIONS)).setRegistryName(HANGING_SIGN_NAME_BIRCH);
+            new Item.Properties().group(getTab(ItemGroup.DECORATIONS,HANGING_SIGN_NAME))
+    ).setRegistryName(HANGING_SIGN_NAME_BIRCH);
 
     //jungle
     public static final String HANGING_SIGN_NAME_JUNGLE = "hanging_sign_jungle";
@@ -681,7 +494,8 @@ public class Registry {
                     .doesNotBlockMovement()
     ).setRegistryName(HANGING_SIGN_NAME_JUNGLE);
     public static final Item HANGING_SIGN_ITEM_JUNGLE = new BlockItem(HANGING_SIGN_JUNGLE,
-          new Item.Properties().group(tab?MYTAB:ItemGroup.DECORATIONS)).setRegistryName(HANGING_SIGN_NAME_JUNGLE);
+          new Item.Properties().group(getTab(ItemGroup.DECORATIONS,HANGING_SIGN_NAME))
+    ).setRegistryName(HANGING_SIGN_NAME_JUNGLE);
 
     //acacia
     public static final String HANGING_SIGN_NAME_ACACIA = "hanging_sign_acacia";
@@ -694,7 +508,8 @@ public class Registry {
                     .doesNotBlockMovement()
     ).setRegistryName(HANGING_SIGN_NAME_ACACIA);
     public static final Item HANGING_SIGN_ITEM_ACACIA = new BlockItem(HANGING_SIGN_ACACIA,
-          new Item.Properties().group(tab?MYTAB:ItemGroup.DECORATIONS)).setRegistryName(HANGING_SIGN_NAME_ACACIA);
+          new Item.Properties().group(getTab(ItemGroup.DECORATIONS,HANGING_SIGN_NAME))
+    ).setRegistryName(HANGING_SIGN_NAME_ACACIA);
 
     //dark oak
     public static final String HANGING_SIGN_NAME_DARK_OAK = "hanging_sign_dark_oak";
@@ -707,7 +522,8 @@ public class Registry {
                     .doesNotBlockMovement()
     ).setRegistryName(HANGING_SIGN_NAME_DARK_OAK);
     public static final Item HANGING_SIGN_ITEM_DARK_OAK = new BlockItem(HANGING_SIGN_DARK_OAK,
-          new Item.Properties().group(tab?MYTAB:ItemGroup.DECORATIONS)).setRegistryName(HANGING_SIGN_NAME_DARK_OAK);
+          new Item.Properties().group(getTab(ItemGroup.DECORATIONS,HANGING_SIGN_NAME))
+    ).setRegistryName(HANGING_SIGN_NAME_DARK_OAK);
 
     //crimson
     public static final String HANGING_SIGN_NAME_CRIMSON = "hanging_sign_crimson";
@@ -720,7 +536,8 @@ public class Registry {
                     .doesNotBlockMovement()
     ).setRegistryName(HANGING_SIGN_NAME_CRIMSON);
     public static final Item HANGING_SIGN_ITEM_CRIMSON = new BlockItem(HANGING_SIGN_CRIMSON,
-          new Item.Properties().group(tab?MYTAB:ItemGroup.DECORATIONS)).setRegistryName(HANGING_SIGN_NAME_CRIMSON);
+          new Item.Properties().group(getTab(ItemGroup.DECORATIONS,HANGING_SIGN_NAME))
+    ).setRegistryName(HANGING_SIGN_NAME_CRIMSON);
 
     //warped
     public static final String HANGING_SIGN_NAME_WARPED = "hanging_sign_warped";
@@ -733,7 +550,8 @@ public class Registry {
                     .doesNotBlockMovement()
     ).setRegistryName(HANGING_SIGN_NAME_WARPED);
     public static final Item HANGING_SIGN_ITEM_WARPED = new BlockItem(HANGING_SIGN_WARPED,
-          new Item.Properties().group(tab?MYTAB:ItemGroup.DECORATIONS)).setRegistryName(HANGING_SIGN_NAME_WARPED);
+          new Item.Properties().group(getTab(ItemGroup.DECORATIONS,HANGING_SIGN_NAME))
+    ).setRegistryName(HANGING_SIGN_NAME_WARPED);
 
 
     //tile
@@ -772,7 +590,8 @@ public class Registry {
     public static final TileEntityType<?> BELLOWS_TILE =  TileEntityType.Builder.create(
             BellowsBlockTile::new, BELLOWS).build(null).setRegistryName(BELLOWS_NAME);
     public static final Item BELLOWS_ITEM = new BlockItem(BELLOWS,
-            new Item.Properties().group(tab?MYTAB:ItemGroup.REDSTONE)).setRegistryName(BELLOWS_NAME);
+            new Item.Properties().group(getTab(ItemGroup.REDSTONE,BELLOWS_NAME))
+    ).setRegistryName(BELLOWS_NAME);
 
     //laser
     public static final String LASER_NAME = "laser_block";
@@ -785,7 +604,8 @@ public class Registry {
     public static final TileEntityType<?> LASER_BLOCK_TILE =  TileEntityType.Builder.create(
             LaserBlockTile::new, LASER_BLOCK).build(null).setRegistryName(LASER_NAME);
     public static final Item LASER_BLOCK_ITEM = new BlockItem(LASER_BLOCK,
-            new Item.Properties().group(null)).setRegistryName(LASER_NAME);
+            new Item.Properties().group(null)
+    ).setRegistryName(LASER_NAME); //getTab(ItemGroup.REDSTONE,LASER_NAME)
     
     //flag
     public static final String FLAG_NAME = "flag";
@@ -799,7 +619,8 @@ public class Registry {
     public static final TileEntityType<?> FLAG_TILE =  TileEntityType.Builder.create(
             FlagBlockTile::new, FLAG).build(null).setRegistryName(FLAG_NAME);
     public static final Item FLAG_ITEM = new BlockItem(FLAG,
-            new Item.Properties().group(null)).setRegistryName(FLAG_NAME);
+            new Item.Properties().group(null)
+    ).setRegistryName(FLAG_NAME);//getTab(ItemGroup.DECORATIONS,FLAG_NAME)
 
 
     //drawers
@@ -833,7 +654,8 @@ public class Registry {
                     .lootFrom(SCONCE)
                     .sound(SoundType.LANTERN), ParticleTypes.FLAME).setRegistryName("sconce_wall");
     public static final Item SCONCE_ITEM = new WallOrFloorItem(SCONCE, SCONCE_WALL,
-            (new Item.Properties()).group(tab?MYTAB:ItemGroup.DECORATIONS)).setRegistryName(SCONCE_NAME);
+            (new Item.Properties()).group(getTab(ItemGroup.DECORATIONS,SCONCE_NAME))
+    ).setRegistryName(SCONCE_NAME);
 
     //soul
     public static final String SCONCE_NAME_SOUL = "sconce_soul";
@@ -851,7 +673,8 @@ public class Registry {
                     .lootFrom(SCONCE_SOUL)
                     .sound(SoundType.LANTERN), ParticleTypes.SOUL_FIRE_FLAME).setRegistryName("sconce_wall_soul");
     public static final Item SCONCE_ITEM_SOUL = new WallOrFloorItem(SCONCE_SOUL, SCONCE_WALL_SOUL,
-            (new Item.Properties()).group(tab?MYTAB:ItemGroup.DECORATIONS)).setRegistryName(SCONCE_NAME_SOUL);
+            (new Item.Properties()).group(getTab(ItemGroup.DECORATIONS,SCONCE_NAME_SOUL))
+    ).setRegistryName(SCONCE_NAME_SOUL);
     //TODO: add config. also add burn times for wood stuff
     //optional: endergetic
     public static final String SCONCE_NAME_ENDER = "sconce_ender";
@@ -869,7 +692,9 @@ public class Registry {
                     .lootFrom(SCONCE_ENDER)
                     .sound(SoundType.LANTERN), ENDERGETIC_FLAME).setRegistryName("sconce_wall_ender");
     public static final Item SCONCE_ITEM_ENDER = new WallOrFloorItem(SCONCE_ENDER, SCONCE_WALL_ENDER,
-            (new Item.Properties()).group(tab?MYTAB:ItemGroup.DECORATIONS)).setRegistryName(SCONCE_NAME_ENDER);
+            (new Item.Properties()).group(ModList.get().isLoaded("endergetic")?(getTab(ItemGroup.DECORATIONS,SCONCE_NAME_ENDER)):null)
+    ).setRegistryName(SCONCE_NAME_ENDER);
+
     //green
     public static final String SCONCE_NAME_GREEN = "sconce_green";
     public static final Block SCONCE_GREEN = new SconceBlock(
@@ -886,7 +711,7 @@ public class Registry {
                     .lootFrom(SCONCE_GREEN)
                     .sound(SoundType.LANTERN), GREEN_FLAME).setRegistryName("sconce_wall_green");
     public static final Item SCONCE_ITEM_GREEN = new WallOrFloorItem(SCONCE_GREEN, SCONCE_WALL_GREEN,
-            (new Item.Properties()).group(tab?MYTAB:ItemGroup.DECORATIONS)).setRegistryName(SCONCE_NAME_GREEN);
+            (new Item.Properties()).group(getTab(ItemGroup.DECORATIONS,SCONCE_NAME_GREEN))).setRegistryName(SCONCE_NAME_GREEN);
 
 
     //firefly & jar
@@ -901,7 +726,7 @@ public class Registry {
     public static final TileEntityType<?> FIREFLY_JAR_TILE =  TileEntityType.Builder.create(
             FireflyJarBlockTile::new, FIREFLY_JAR).build(null).setRegistryName(FIREFLY_JAR_NAME);
     public static final Item FIREFLY_JAR_ITEM = new BlockItem(FIREFLY_JAR, new Item.Properties()
-            .group(tab?MYTAB:ItemGroup.DECORATIONS).maxStackSize(16).setISTER(()-> FireflyJarItemRenderer::new))
+            .group(getTab(ItemGroup.DECORATIONS,FIREFLY_JAR_NAME)).maxStackSize(16).setISTER(()-> FireflyJarItemRenderer::new))
             .setRegistryName(FIREFLY_JAR_NAME);
 
     //candelabra
@@ -917,7 +742,7 @@ public class Registry {
                     .harvestLevel(1)
     ).setRegistryName(CANDELABRA_NAME);
     public static final Item CANDELABRA_ITEM = new BlockItem(CANDELABRA,
-            new Item.Properties().group(tab?MYTAB:ItemGroup.DECORATIONS)).setRegistryName(CANDELABRA_NAME);
+            new Item.Properties().group(getTab(ItemGroup.DECORATIONS,CANDELABRA_NAME))).setRegistryName(CANDELABRA_NAME);
     //silver
     public static final String CANDELABRA_NAME_SILVER = "candelabra_silver";
     public static final Block CANDELABRA_SILVER = new CandelabraBlock(
@@ -931,7 +756,8 @@ public class Registry {
                     .harvestLevel(1)
     ).setRegistryName(CANDELABRA_NAME_SILVER);
     public static final Item CANDELABRA_ITEM_SILVER = new BlockItem(CANDELABRA_SILVER,
-            new Item.Properties().group(tab?MYTAB:ItemGroup.DECORATIONS)).setRegistryName(CANDELABRA_NAME_SILVER);
+            new Item.Properties().group(null)
+    ).setRegistryName(CANDELABRA_NAME_SILVER);//getTab(ItemGroup.DECORATIONS,CANDELABRA_NAME_SILVER)
 
     //item shelf
     public static final String ITEM_SHELF_NAME = "item_shelf";
@@ -946,7 +772,8 @@ public class Registry {
     public static final TileEntityType<?> ITEM_SHELF_TILE =  TileEntityType.Builder.create(
             ItemShelfBlockTile::new, ITEM_SHELF).build(null).setRegistryName(ITEM_SHELF_NAME);
     public static final Item ITEM_SHELF_ITEM = new BlockItem(ITEM_SHELF,
-            new Item.Properties().group(tab?MYTAB:ItemGroup.DECORATIONS)).setRegistryName(ITEM_SHELF_NAME);
+            new Item.Properties().group(getTab(ItemGroup.DECORATIONS,ITEM_SHELF_NAME))
+    ).setRegistryName(ITEM_SHELF_NAME);
 
     //cog block
     public static final String COG_BLOCK_NAME = "cog_block";
@@ -959,7 +786,8 @@ public class Registry {
                     .harvestLevel(1)
     ).setRegistryName(COG_BLOCK_NAME);
     public static final Item COG_BLOCK_ITEM = new BlockItem(COG_BLOCK,
-            new Item.Properties().group(tab?MYTAB:ItemGroup.REDSTONE)).setRegistryName(COG_BLOCK_NAME);
+            new Item.Properties().group(getTab(ItemGroup.REDSTONE,COG_BLOCK_NAME))
+    ).setRegistryName(COG_BLOCK_NAME);
 
     //stone lamp
 
@@ -970,7 +798,8 @@ public class Registry {
                     .setLightLevel((s) -> 15)
                     .sound(SoundType.STONE)).setRegistryName(STONE_LAMP_NAME);
     public static final Item STONE_LAMP_ITEM = new BlockItem(STONE_LAMP,
-            (new Item.Properties()).group(tab?MYTAB:ItemGroup.DECORATIONS)).setRegistryName(STONE_LAMP_NAME);
+            (new Item.Properties()).group(getTab(ItemGroup.DECORATIONS,STONE_LAMP_NAME))
+    ).setRegistryName(STONE_LAMP_NAME);
 
     //cage
     public static final String CAGE_NAME = "cage";
@@ -986,7 +815,8 @@ public class Registry {
             new Item.Properties().maxStackSize(1).setISTER(()-> CageItemRenderer::new)
                     .group(null)).setRegistryName("cage_full");
     public static final Item EMPTY_CAGE_ITEM = new EmptyCageItem(CAGE,
-            new Item.Properties().maxStackSize(16).group(tab?MYTAB:ItemGroup.DECORATIONS)).setRegistryName(CAGE_NAME);
+            new Item.Properties().maxStackSize(16).group(getTab(ItemGroup.DECORATIONS,CAGE_NAME))
+    ).setRegistryName(CAGE_NAME);
 
     //sconce lever
     public static final String SCONCE_LEVER_NAME = "sconce_lever";
@@ -997,7 +827,8 @@ public class Registry {
                     .setLightLevel((state) -> state.get(BlockStateProperties.LIT)? 14 : 0)
                     .sound(SoundType.LANTERN), ParticleTypes.FLAME).setRegistryName(SCONCE_LEVER_NAME);
     public static final Item SCONCE_LEVER_ITEM = new BlockItem(SCONCE_LEVER,
-            (new Item.Properties()).group(tab?MYTAB:ItemGroup.REDSTONE)).setRegistryName(SCONCE_LEVER_NAME);
+            (new Item.Properties()).group(getTab(ItemGroup.REDSTONE,SCONCE_LEVER_NAME))
+    ).setRegistryName(SCONCE_LEVER_NAME);
 
     //globe
     public static final String GLOBE_NAME = "globe";
@@ -1012,8 +843,8 @@ public class Registry {
     public static final TileEntityType<?> GLOBE_TILE =  TileEntityType.Builder.create(
             GlobeBlockTile::new, GLOBE).build(null).setRegistryName(GLOBE_NAME);
     public static final Item GLOBE_ITEM = new BlockItem(GLOBE,
-            new Item.Properties().group(tab?MYTAB:ItemGroup.DECORATIONS).rarity(Rarity.RARE)
-                    ).setRegistryName(GLOBE_NAME);
+            new Item.Properties().group(getTab(ItemGroup.DECORATIONS,GLOBE_NAME)).rarity(Rarity.RARE)
+    ).setRegistryName(GLOBE_NAME);
 
     //hourglass
     public static final String HOURGLASS_NAME = "hourglass";
@@ -1028,18 +859,8 @@ public class Registry {
     public static final TileEntityType<?> HOURGLASS_TILE =  TileEntityType.Builder.create(
             HourGlassBlockTile::new, HOURGLASS).build(null).setRegistryName(HOURGLASS_NAME);
     public static final Item HOURGLASS_ITEM = new BlockItem(HOURGLASS,
-            new Item.Properties().group(tab?MYTAB:ItemGroup.DECORATIONS)).setRegistryName(HOURGLASS_NAME);
-
-    //launcher rail
-    public static final String LAUNCHER_RAIL_NAME = "launcher_rail";
-    public static final Block LAUNCHER_RAIL = new LauncherRailBlock(
-            AbstractBlock.Properties.create(Material.MISCELLANEOUS)
-                    .doesNotBlockMovement()
-                    .hardnessAndResistance(0.7F)
-                    .sound(SoundType.METAL)
-    ).setRegistryName(LAUNCHER_RAIL_NAME);
-    public static final Item LAUNCHER_RAIL_ITEM = new BlockItem(LAUNCHER_RAIL,
-            new Item.Properties().group(null)).setRegistryName(LAUNCHER_RAIL_NAME);
+            new Item.Properties().group(getTab(ItemGroup.DECORATIONS,HOURGLASS_NAME))
+    ).setRegistryName(HOURGLASS_NAME);
 
 
     //sack
@@ -1056,7 +877,8 @@ public class Registry {
             SackContainer::new).setRegistryName(SACK_NAME);
 
     public static final Item SACK_ITEM = new SackItem(SACK,
-            new Item.Properties().group(tab?MYTAB:ItemGroup.DECORATIONS).maxStackSize(1)).setRegistryName(SACK_NAME);
+            new Item.Properties().group(getTab(ItemGroup.DECORATIONS,SACK_NAME)).maxStackSize(1)
+    ).setRegistryName(SACK_NAME);
 
     //candle holder
     public static final String CANDLE_HOLDER_NAME = "candle_holder";
@@ -1067,11 +889,49 @@ public class Registry {
                     .setLightLevel((state) -> state.get(BlockStateProperties.LIT)? 9 : 0)
                     .sound(SoundType.LANTERN), ParticleTypes.FLAME).setRegistryName(CANDLE_HOLDER_NAME);
     public static final Item CANDLE_HOLDER_ITEM = new BlockItem(CANDLE_HOLDER,
-            (new Item.Properties()).group(tab?MYTAB:ItemGroup.DECORATIONS)).setRegistryName(CANDLE_HOLDER_NAME);
-    //placeholder candle
+            (new Item.Properties()).group(getTab(ItemGroup.DECORATIONS,CANDLE_HOLDER_NAME))
+    ).setRegistryName(CANDLE_HOLDER_NAME);
 
+    //blackboard
+    public static final String BLACKBOARD_NAME = "blackboard";
+    public static final Block BLACKBOARD = new BlackboardBlock(
+            AbstractBlock.Properties.create(Material.ROCK, MaterialColor.BLACK)
+                    .hardnessAndResistance(2,3)
+                    .setRequiresTool()
+                    .harvestLevel(0)
+                    .harvestTool(ToolType.PICKAXE)
+    ).setRegistryName(BLACKBOARD_NAME);
+    public static final TileEntityType<?> BLACKBOARD_TILE = TileEntityType.Builder.create(
+            BlackboardBlockTile::new, BLACKBOARD).build(null).setRegistryName(BLACKBOARD_NAME);
+    public static final Item BLACKBOARD_ITEM = new BlockItem(BLACKBOARD,
+            (new Item.Properties()).group(getTab(ItemGroup.DECORATIONS,BLACKBOARD_NAME))
+    ).setRegistryName(BLACKBOARD_NAME);
 
+    //safe
+    public static final String SAFE_NAME = "safe";
+    public static final Block SAFE = new SafeBlock(
+            AbstractBlock.Properties.create(Material.IRON, MaterialColor.BLACK)
+                    .hardnessAndResistance(50.0F, 1200.0F)
+                    .setRequiresTool()
+                    .harvestTool(ToolType.PICKAXE)
+                    .sound(SoundType.NETHERITE)
+    ).setRegistryName(SAFE_NAME);
+    public static final TileEntityType<?> SAFE_TILE = TileEntityType.Builder.create(
+            SafeBlockTile::new, SAFE).build(null).setRegistryName(SAFE_NAME);
+    public static final Item SAFE_ITEM = new BlockItem(SAFE,
+            (new Item.Properties()).group(getTab(ItemGroup.DECORATIONS,SAFE_NAME)).maxStackSize(1)
+    ).setRegistryName(SAFE_NAME);
 
-
-
+    /*
+    //launcher rail
+    public static final String LAUNCHER_RAIL_NAME = "launcher_rail";
+    public static final Block LAUNCHER_RAIL = new LauncherRailBlock(
+            AbstractBlock.Properties.create(Material.MISCELLANEOUS)
+                    .doesNotBlockMovement()
+                    .hardnessAndResistance(0.7F)
+                    .sound(SoundType.METAL)
+    ).setRegistryName(LAUNCHER_RAIL_NAME);
+    public static final Item LAUNCHER_RAIL_ITEM = new BlockItem(LAUNCHER_RAIL,
+            new Item.Properties().group(null)).setRegistryName(LAUNCHER_RAIL_NAME);
+    */
 }

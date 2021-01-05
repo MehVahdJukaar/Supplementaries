@@ -51,7 +51,12 @@
   "globe.supplementaries.flat": "Piatta",
   "message.supplementaries.command.globe_changed": "cambiato il seme del mappamondo",
   "message.supplementaries.command.globe_reset": "seme del mappamondo resettato",
+  "message.supplementaries.safe": "Questa cassaforte è di",
+  "container.supplementaries.safe": "Proprietario",
 
+  "gui.supplementaries.blackboard.edit": "Disegna sulla lavagna",
+  "block.supplementaries.safe": "Cassaforte",
+  "block.supplementaries.blackboard": "Lavagna",
   "block.supplementaries.sack": "Sacco",
   "block.supplementaries.hourglass": "Clessidra",
   "block.supplementaries.globe": "Mappamondo",

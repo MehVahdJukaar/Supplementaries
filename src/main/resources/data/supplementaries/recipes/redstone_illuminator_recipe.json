@@ -25,5 +25,11 @@
   "result": {
     "item": "supplementaries:redstone_illuminator",
     "count": 1
-  }
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "redstone_illuminator"
+    }
+  ]
 }

@@ -51,6 +51,8 @@
   "globe.supplementaries.flat": "Flat",
   "message.supplementaries.command.globe_changed": "globe seed changed",
   "message.supplementaries.command.globe_reset": "globe seed reset",
+  "message.supplementaries.safe": "This safe is owned by",
+  "container.supplementaries.safe": "Owner",
 
   "block.supplementaries.hourglass" : "Hourglass",
   "block.supplementaries.globe": "Globe",
@@ -63,6 +65,9 @@
   "block.supplementaries.cog_block": "Cog Block",
   "block.supplementaries.candle_holder": "Candle Holder",
   "block.supplementaries.sack": "Sack",
+  "gui.supplementaries.blackboard.edit": "Edit Blackboard",
+  "block.supplementaries.safe": "Safe",
+  "block.supplementaries.blackboard": "Blackboard",
 
   "block.supplementaries.flag": "WIP Flag",
   "block.supplementaries.laser_block": "WIP Laser Block",

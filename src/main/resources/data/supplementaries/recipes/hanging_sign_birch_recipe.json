@@ -38,5 +38,11 @@
   "result": {
     "item": "supplementaries:hanging_sign_birch",
     "count": 2
-  }
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "hanging_sign"
+    }
+  ]
 }

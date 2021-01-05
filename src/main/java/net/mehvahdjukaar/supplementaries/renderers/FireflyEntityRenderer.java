@@ -34,7 +34,7 @@ public class FireflyEntityRenderer extends EntityRenderer<FireflyEntity> {
 
         matrixStackIn.translate(0.0D, 0.5, 0.0D);
         matrixStackIn.rotate(this.renderManager.getCameraOrientation());
-        matrixStackIn.rotate(Vector3f.YP.rotationDegrees(180.0F));
+        matrixStackIn.rotate(Const.Y180);
         float scale = (float) ClientConfigs.cached.FIREFLY_SCALE;
         matrixStackIn.scale(a*scale, a*scale, a*scale);
         IVertexBuilder builder = bufferIn.getBuffer(RenderType.getBeaconBeam(Resources.FIREFLY_TEXTURE, true));

@@ -21,6 +21,10 @@
     {
       "type":"forge:mod_loaded",
       "modid":"buzzier_bees"
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "candle_holder"
     }
   ]
 }

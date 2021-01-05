@@ -2,6 +2,8 @@ package net.mehvahdjukaar.supplementaries.blocks;
 
 
 import net.mehvahdjukaar.supplementaries.blocks.tiles.GlobeBlockTile;
+import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.*;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -9,6 +11,7 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
@@ -28,6 +31,7 @@ import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
+import java.util.Random;
 
 public class GlobeBlock extends Block implements IWaterLoggable {
     protected static final VoxelShape SHAPE = VoxelShapes.create(0.125D, 0D, 0.125D, 0.875D, 1D, 0.875D);
@@ -78,6 +82,22 @@ public class GlobeBlock extends Block implements IWaterLoggable {
             player.sendStatusMessage(new StringTextComponent("X: "+pos.getX()+", Z: "+pos.getZ()), true);
         }
         return ActionResultType.func_233537_a_(worldIn.isRemote);
+    }
+
+    @Override
+    public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
+        if(CommonUtil.isearthday && worldIn.isRemote){
+            int x = pos.getX();
+            int y = pos.getY();
+            int z = pos.getZ();
+
+            for (int l = 0; l < 1; ++l) {
+                double d0 = (x + 0.5 + (rand.nextFloat() - 0.5) * (0.625D));
+                double d1 = (y + 0.5 + (rand.nextFloat() - 0.5) * (0.625D));
+                double d2 = (z + 0.5 + (rand.nextFloat() - 0.5) * (0.625D));
+                worldIn.addParticle(ParticleTypes.FLAME, d0, d1, d2, 0, 0, 0);
+            }
+        }
     }
 
     @Override

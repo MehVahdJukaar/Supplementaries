@@ -25,5 +25,11 @@
   "result": {
     "item": "supplementaries:faucet",
     "count": 1
-  }
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "faucet"
+    }
+  ]
 }

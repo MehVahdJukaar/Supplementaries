@@ -121,7 +121,7 @@ public class ServerConfigs {
             List<String> defaultMobs = Arrays.asList("minecraft:slime",
                     "minecraft:bee","minecraft:magma_cube","iceandfire:pixie","alexmobs:crimson_mosquito",
                     "mysticalworld:frog","mysticalworld:beetle", "druidcraft:lunar_moth", "druidcraft:dreadfish","swampexpansion:slabfish",
-                    "savageandravage:creepie","betteranimalsplus:butterfly");
+                    "savageandravage:creepie","betteranimalsplus:butterfly","whisperwoods:moth");
             MOB_JAR_ALLOWED_MOBS = builder.comment("catchable mobs \n"+
                     "BE VERY CAREFUL WITH THESE: SOME MOBS MIGHT NOT WORK OF EVEN CRASH THE GAME.\n"+
                     "That's due to a vanilla bug. Check in a new world if the mobs you added here work before adding to a modpack")
@@ -129,7 +129,7 @@ public class ServerConfigs {
             List<String> defaultMobsTinted = Arrays.asList("minecraft:endermite","minecraft:slime",
                     "minecraft:bee","minecraft:magma_cube", "minecraft:vex","iceandfire:pixie","alexmobs:crimson_mosquito",
                     "mysticalworld:frog","mysticalworld:beetle", "druidcraft:lunar_moth", "druidcraft:dreadfish","swampexpansion:slabfish",
-                    "savageandravage:creepie","betteranimalsplus:butterfly");
+                    "savageandravage:creepie","betteranimalsplus:butterfly","whisperwoods:moth");
             MOB_JAR_TINTED_ALLOWED_MOBS = builder.comment("tinted jar catchable mobs")
                     .defineList("tinted_jar_mobs", defaultMobsTinted,s -> true);
             builder.pop();
