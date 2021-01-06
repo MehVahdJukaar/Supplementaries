@@ -57,6 +57,9 @@ public class ServerConfigs {
 
         public static ForgeConfigSpec.BooleanValue SACK_PENALITY;
         public static ForgeConfigSpec.IntValue SACK_INCREMENT;
+
+        public static ForgeConfigSpec.BooleanValue SAFE_UNBREAKABLE;
+
         private static void  init(ForgeConfigSpec.Builder builder){
             builder.comment("Server side blocks configs")
                     .push("blocks");
@@ -177,6 +180,10 @@ public class ServerConfigs {
                     .defineInRange("sack_increment",2,0,50);
             builder.pop();
 
+            builder.push("safe");
+            SAFE_UNBREAKABLE = builder.comment("makes safes only breakable by their owner or by a player in creative")
+                    .define("prevent_breaking",false);
+            builder.pop();
 
 
 
@@ -273,6 +280,7 @@ public class ServerConfigs {
         public static boolean CAGE_ALL_MOBS;
         public static int SACK_INCREMENT;
         public static boolean SACK_PENALITY;
+        public static boolean SAFE_UNBREAKABLE;
         //entity
         public static int FIREFLY_PERIOD;
         public static double FIREFLY_SPEED;
@@ -317,6 +325,8 @@ public class ServerConfigs {
 
             SACK_INCREMENT = block.SACK_INCREMENT.get();
             SACK_PENALITY = block.SACK_PENALITY.get();
+
+            SAFE_UNBREAKABLE= block.SAFE_UNBREAKABLE.get();
 
             FIREFLY_PERIOD = entity.FIREFLY_PERIOD.get();
             FIREFLY_SPEED = entity.FIREFLY_SPEED.get();

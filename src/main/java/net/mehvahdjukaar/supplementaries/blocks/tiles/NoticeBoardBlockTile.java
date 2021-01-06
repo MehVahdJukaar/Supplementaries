@@ -7,11 +7,14 @@ import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.gui.NoticeBoardContainer;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.LecternBlock;
+import net.minecraft.client.gui.screen.LecternScreen;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.LecternContainer;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
@@ -19,10 +22,13 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tileentity.LecternTileEntity;
 import net.minecraft.tileentity.LockableLootTileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.LazyOptional;
@@ -230,7 +236,7 @@ public class NoticeBoardBlockTile extends LockableLootTileEntity implements INam
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
         if(!stack.isEmpty()&&this.isEmpty()&&ServerConfigs.cached.NOTICE_BOARDS_UNRESTRICTED)return true;
-        return (this.isEmpty()&&(stack.getItem() == Items.WRITTEN_BOOK || stack.getItem() == Items.WRITABLE_BOOK || stack.getItem() instanceof FilledMapItem));
+        return (this.isEmpty()&&(stack.getItem().isIn(ItemTags.LECTERN_BOOKS)|| stack.getItem() instanceof FilledMapItem));
     }
 
     @Override

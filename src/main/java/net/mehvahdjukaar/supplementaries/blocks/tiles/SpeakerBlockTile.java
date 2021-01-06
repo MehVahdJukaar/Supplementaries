@@ -13,6 +13,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 public class SpeakerBlockTile extends TileEntity implements INameable {
     public String message = "";
     public boolean narrator = false;
+    public double volume = 1;
     private ITextComponent customName;
     public SpeakerBlockTile() {
         super(Registry.SPEAKER_BLOCK_TILE);
@@ -49,6 +50,7 @@ public class SpeakerBlockTile extends TileEntity implements INameable {
 
         this.message = compound.getString("Message");
         this.narrator = compound.getBoolean("Narrator");
+        this.volume = compound.getDouble("Volume");
     }
 
     @Override
@@ -59,6 +61,7 @@ public class SpeakerBlockTile extends TileEntity implements INameable {
         }
         compound.putString("Message", this.message);
         compound.putBoolean("Narrator", this.narrator);
+        compound.putDouble("Volume", this.volume);
         return compound;
     }
 

@@ -90,7 +90,7 @@ public class SpeakerBlock extends Block {
                             // particle
                             world.addBlockEvent(pos, this, 0, 0);
                             PlayerList players = mcserv.getPlayerList();
-                            players.sendToAllNearExcept(null, pos.getX(), pos.getY(), pos.getZ(), ServerConfigs.cached.SPEAKER_RANGE,
+                            players.sendToAllNearExcept(null, pos.getX(), pos.getY(), pos.getZ(), ServerConfigs.cached.SPEAKER_RANGE*speaker.volume,
                                     dimension, Networking.INSTANCE.toVanillaPacket(
                                             new SendSpeakerBlockMessagePacket(speaker.getName().getString() + ": " + speaker.message,
                                                     speaker.narrator),
@@ -117,11 +117,6 @@ public class SpeakerBlock extends Block {
         return ActionResultType.PASS;
     }
 
-    @Override
-    public INamedContainerProvider getContainer(BlockState state, World worldIn, BlockPos pos) {
-        TileEntity tileEntity = worldIn.getTileEntity(pos);
-        return tileEntity instanceof INamedContainerProvider ? (INamedContainerProvider) tileEntity : null;
-    }
 
     @Override
     public boolean hasTileEntity(BlockState state) {

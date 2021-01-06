@@ -41,7 +41,7 @@ public class ClockBlockTile extends TileEntity implements ITickableTileEntity {
 
         this.sRoll = compound.getFloat("SecRoll");
         this.sPrevRoll = this.sRoll;
-        this.targetRoll = this.sRoll;
+        this.sTargetRoll = this.sRoll;
         this.power = compound.getInt("power");
     }
 

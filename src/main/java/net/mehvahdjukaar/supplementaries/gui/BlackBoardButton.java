@@ -78,8 +78,8 @@ public class BlackBoardButton extends AbstractGui implements IRenderable, IGuiEv
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
 
-        RenderSystem.color4f(0, 0, 0, 1);
-        blit(matrixStack, this.x-1, this.y-1, this.u*width, this.v*width, width+2 , width+2,16*width,16*width);
+        RenderSystem.color4f(0.5f, 0.5f, 0.5f, 1);
+        blit(matrixStack, this.x-1, this.y-1, 16*width, 0, width+2 , width+2,32*width,16*width);
         this.renderButton(matrixStack);
     }
 

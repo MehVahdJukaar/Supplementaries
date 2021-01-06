@@ -94,6 +94,8 @@ public class Resources {
     }
 
 
+    //tags
+    public static final ResourceLocation SHULKER_BLACKLIST = new ResourceLocation(Supplementaries.MOD_ID, "shulker_like_containers_blacklist");
 
 
 

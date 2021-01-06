@@ -63,6 +63,13 @@
   "block.supplementaries.cog_block": "Bloco de Engrenagem",
   "block.supplementaries.candle_holder": "Castiçal",
   "block.supplementaries.sack": "Saco",
+  "gui.supplementaries.blackboard.edit": "Editar Quadro-Negro",
+  "block.supplementaries.safe": "Cofre",
+  "block.supplementaries.blackboard": "Quadro-Negro",
+  "message.supplementaries.safe": "Este cofre é propriedade de",
+  "container.supplementaries.safe": "Proprietário",
+  "gui.supplementaries.speaker_block.volume" : "Volume: ",
+  "gui.supplementaries.speaker_block.blocks": " blocos",
  
   "block.supplementaries.flag": "WIP Bandeira",
   "block.supplementaries.laser_block": "Bloco de Laser",

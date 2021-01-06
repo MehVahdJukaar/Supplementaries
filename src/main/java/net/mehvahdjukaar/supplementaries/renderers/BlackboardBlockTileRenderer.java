@@ -50,8 +50,8 @@ public class BlackboardBlockTileRenderer extends TileEntityRenderer<BlackboardBl
         matrixStackIn.scale(-1,-1,1);
 
         float w = 1/16f;
-        for (int x=0; x < 16; x++) {
-            for (int y = 0; y < 16; y++) {
+        for (int x=0; x < tile.pixels.length; x++) {
+            for (int y = 0; y < tile.pixels[x].length; y++) {
 
                 float x0 = x * w;
                 float x1 = (x + 1) * w;

@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.blocks.tiles;
 
 import io.netty.buffer.Unpooled;
 import net.mehvahdjukaar.supplementaries.blocks.SackBlock;
+import net.mehvahdjukaar.supplementaries.common.Resources;
 import net.mehvahdjukaar.supplementaries.gui.SackContainer;
 import net.mehvahdjukaar.supplementaries.items.SackItem;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
@@ -14,11 +15,14 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.tags.ITag;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.tileentity.LockableLootTileEntity;
 import net.minecraft.tileentity.LockableTileEntity;
 import net.minecraft.util.Direction;
@@ -174,8 +178,9 @@ public class SackBlockTile extends LockableLootTileEntity implements ISidedInven
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        if((Block.getBlockFromItem(stack.getItem()) instanceof ShulkerBoxBlock)||
-                (stack.getItem() instanceof SackItem))return false;
+        ITag<Item> t = ItemTags.getCollection().get(Resources.SHULKER_BLACKLIST);
+        if(t!=null && stack.getItem().isIn(t))
+            return false;
         return super.isItemValidForSlot(index,stack);
     }
 

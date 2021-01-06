@@ -46,11 +46,15 @@
   "block.supplementaries.firefly_jar": "Баночка со светлячком",
   "item.supplementaries.firefly": "Яйцо призыва светлячка",
 
+  "gui.supplementaries.speaker_block.volume" : "Громкость: ",
+  "gui.supplementaries.speaker_block.blocks": " блоков",
   "globe.supplementaries.moon": "Луна",
   "globe.supplementaries.earth": "Земля",
   "globe.supplementaries.flat": "Плоская земля",
   "message.supplementaries.command.globe_changed": "Изменен ключ для генератора мира глобуса",
   "message.supplementaries.command.globe_reset": "Обновлено ключ для генератора мира глобуса",
+  "message.supplementaries.safe": "Владелец сейфа - ",
+  "container.supplementaries.safe": "Владелец",
 
   "block.supplementaries.hourglass": "Песочные часы",
   "block.supplementaries.globe": "Глобус",
@@ -63,6 +67,9 @@
   "block.supplementaries.cog_block": "Блок шестерней",
   "block.supplementaries.candle_holder":"Подсвечник",
   "block.supplementaries.sack": "Большой мешок",
+  "gui.supplementaries.blackboard.edit": "Редактирование доски",
+  "block.supplementaries.safe": "Сейф",
+  "block.supplementaries.blackboard": "Доска",
 
   "block.supplementaries.flag": "Флаг (WIP)",
   "block.supplementaries.laser_block": "Лазерный блок",

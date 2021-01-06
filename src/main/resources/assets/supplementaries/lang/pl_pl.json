@@ -45,12 +45,15 @@
   "block.supplementaries.firefly_jar": "Słój ze świetlikiem",
   "item.supplementaries.firefly": "Jajo przyzywające świetlika",
 
+  "gui.supplementaries.speaker_block.volume" : "Głośność: ",
+  "gui.supplementaries.speaker_block.blocks": " bloków",
   "globe.supplementaries.moon": "Księżyc",
   "globe.supplementaries.earth": "Ziemia",
   "globe.supplementaries.flat": "Płaska ziemia",
   "message.supplementaries.command.globe_changed": "Ziarno generatora globusu zostało zmienione",
   "message.supplementaries.command.globe_reset": "Ziarno generatora globusu zostało odświeżone",
-
+  "message.supplementaries.safe": "Właścicielem tego sejfu jest",
+  "container.supplementaries.safe": "Właściciel",
 
   "block.supplementaries.hourglass": "Klepsydra",
   "block.supplementaries.globe": "Globus",
@@ -63,6 +66,9 @@
   "block.supplementaries.cog_block": "Blok zębatki (Praca w toku)",
   "block.supplementaries.candle_holder": "Świecznik",
   "block.supplementaries.sack": "Wór",
+  "gui.supplementaries.blackboard.edit": "Edytuj tablicę",
+  "block.supplementaries.safe": "Sejf",
+  "block.supplementaries.blackboard": "Tablica",
 
   "block.supplementaries.flag": "Flaga (Praca w toku)",
   "block.supplementaries.laser_block": "Blok laseru (Praca w toku)",

@@ -143,7 +143,7 @@ public class Registry {
             .size(0.3125f, 1f))
             .build(FIREFLY_NAME)
             .setRegistryName(FIREFLY_NAME);
-    public static final Item FIREFLY_SPAWN_EGG_ITEM = new SpawnEggItem(FIREFLY_TYPE, -4784384, -16777216,
+    public static final Item FIREFLY_SPAWN_EGG_ITEM = new SpawnEggItem(FIREFLY_TYPE,  -5048018, -14409439, //-4784384, -16777216,
             new Item.Properties().group(getTab(ItemGroup.MISC,FIREFLY_NAME))).setRegistryName(FIREFLY_NAME);
 
 
@@ -919,7 +919,7 @@ public class Registry {
     public static final TileEntityType<?> SAFE_TILE = TileEntityType.Builder.create(
             SafeBlockTile::new, SAFE).build(null).setRegistryName(SAFE_NAME);
     public static final Item SAFE_ITEM = new BlockItem(SAFE,
-            (new Item.Properties()).group(getTab(ItemGroup.DECORATIONS,SAFE_NAME)).maxStackSize(1)
+            (new Item.Properties()).group(getTab(ItemGroup.DECORATIONS,SAFE_NAME)).maxStackSize(1).isImmuneToFire()
     ).setRegistryName(SAFE_NAME);
 
     /*

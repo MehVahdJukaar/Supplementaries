@@ -16,18 +16,21 @@ public class UpdateServerSpeakerBlockPacket{
     private final BlockPos pos;
     private final ITextComponent str;
     private final boolean narrator;
+    private final double volume;
 
     public UpdateServerSpeakerBlockPacket(PacketBuffer buf) {
 
         this.pos = buf.readBlockPos();
         this.str = buf.readTextComponent();
         this.narrator = buf.readBoolean();
+        this.volume = buf.readDouble();
     }
 
-    public UpdateServerSpeakerBlockPacket(BlockPos pos, String str, boolean narrator) {
+    public UpdateServerSpeakerBlockPacket(BlockPos pos, String str, boolean narrator, double volume) {
         this.pos = pos;
         this.str = new StringTextComponent(str);
         this.narrator = narrator;
+        this.volume = volume;
     }
 
     public static void buffer(UpdateServerSpeakerBlockPacket message, PacketBuffer buf) {
@@ -35,6 +38,7 @@ public class UpdateServerSpeakerBlockPacket{
         buf.writeBlockPos(message.pos);
         buf.writeTextComponent(message.str);
         buf.writeBoolean(message.narrator);
+        buf.writeDouble(message.volume);
     }
 
     public static void handler(UpdateServerSpeakerBlockPacket message, Supplier<NetworkEvent.Context> ctx) {
@@ -48,6 +52,7 @@ public class UpdateServerSpeakerBlockPacket{
                     SpeakerBlockTile speaker = (SpeakerBlockTile) tileentity;
                     speaker.message = message.str.getString();
                     speaker.narrator = message.narrator;
+                    speaker.volume = message.volume;
                     tileentity.markDirty();
                 }
             }

@@ -23,5 +23,4 @@ public class Const {
     public static final Quaternion ZN45 = Vector3f.ZP.rotationDegrees(-45);
     public static final Quaternion ZN90 = Vector3f.ZP.rotationDegrees(-90);
     public static final Quaternion ZN180 = Vector3f.ZP.rotationDegrees(-180);
-
 }

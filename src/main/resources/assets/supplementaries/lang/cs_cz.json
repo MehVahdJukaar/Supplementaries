@@ -45,11 +45,15 @@
   "block.supplementaries.firefly_jar": "Sklenice se světluškou",
   "item.supplementaries.firefly": "Vajíčko se světluškou",
 
+  "gui.supplementaries.speaker_block.volume" : "Hlasitost: ",
+  "gui.supplementaries.speaker_block.blocks": " bloků",
   "globe.supplementaries.moon": "Měsíc",
   "globe.supplementaries.earth": "Země",
   "globe.supplementaries.flat": "Plochá Země",
   "message.supplementaries.command.globe_changed": "Semeno pro generátor světa glóbusu bylo změněno",
   "message.supplementaries.command.globe_reset": "Semeno pro generátor světa glóbusu bylo resetováno",
+  "message.supplementaries.safe": "Vlastníkem tohoto trezoru je ",
+  "container.supplementaries.safe": "Vlastník",
 
   "block.supplementaries.hourglass": "Přesýpací hodiny",
   "block.supplementaries.globe": "Glóbus",
@@ -62,6 +66,9 @@
   "block.supplementaries.cog_block": "Blok ozubeného kola (WIP)",
   "block.supplementaries.candle_holder": "Svícen",
   "block.supplementaries.sack": "Pytel",
+  "gui.supplementaries.blackboard.edit": "Nakreslete na tabuli",
+  "block.supplementaries.safe": "Trezor",
+  "block.supplementaries.blackboard": "Tabule",
 
   "block.supplementaries.flag": "Vlajka (WIP)",
   "block.supplementaries.laser_block": "Laserový blok (WIP)",

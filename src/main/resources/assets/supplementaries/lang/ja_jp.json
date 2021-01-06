@@ -46,11 +46,15 @@
   "block.supplementaries.firefly_jar": "\u30db\u30bf\u30eb\u306e\u5165\u3063\u305f\u74f6",
   "item.supplementaries.firefly": "\u30db\u30bf\u30eb\u306e\u30b9\u30dd\u30fc\u30f3\u30a8\u30c3\u30b0",
 
+  "gui.supplementaries.speaker_block.volume" : "\u97f3\u91cf",
+  "gui.supplementaries.speaker_block.blocks": "\u30d6\u30ed\u30c3\u30af",
   "globe.supplementaries.moon": "\u6708",
   "globe.supplementaries.earth": "\u5730\u7403",
   "globe.supplementaries.flat": "\u30d5\u30e9\u30c3\u30c8",
   "message.supplementaries.command.globe_changed": "\u5730\u7403\u5100\u306e\u30b7\u30fc\u30c9\u5024\u3092\u5909\u66f4\u3057\u307e\u3057\u305f",
   "message.supplementaries.command.globe_reset": "\u5730\u7403\u5100\u306e\u30b7\u30fc\u30c9\u5024\u3092\u30ea\u30bb\u30c3\u30c8\u3057\u307e\u3057\u305f",
+  "message.supplementaries.safe": "\u3053\u306e\u91d1\u5eab\u306f%1$s\u304c\u6240\u6709\u3057\u3066\u3044\u307e\u3059",
+  "container.supplementaries.safe": "\u6240\u6709\u8005",
 
   "block.supplementaries.hourglass" : "\u7802\u6642\u8a08",
   "block.supplementaries.globe": "\u5730\u7403\u5100",

@@ -45,12 +45,15 @@
   "block.supplementaries.firefly_jar": "Банка з світлячком",
   "item.supplementaries.firefly": "Яйце виклику світлячка",
 
+  "gui.supplementaries.speaker_block.volume" : "Гучність: ",
+  "gui.supplementaries.speaker_block.blocks": " блоків",
   "globe.supplementaries.moon": "Місяць",
   "globe.supplementaries.earth": "Земля",
   "globe.supplementaries.flat": "Плоска земля",
   "message.supplementaries.command.globe_changed": "Ключ для генерації світу глобусу змінено",
   "message.supplementaries.command.globe_reset": "Ключ для генерації світу глобусу скинутий",
-
+  "message.supplementaries.safe": "Власником цього сейфу є",
+  "container.supplementaries.safe": "Власник",
 
   "block.supplementaries.hourglass": "Пісочний годинник",
   "block.supplementaries.globe": "Глобус",
@@ -63,6 +66,9 @@
   "block.supplementaries.cog_block": "Кремальєра (Робота в процесі)",
   "block.supplementaries.candle_holder": "Свічник",
   "block.supplementaries.sack": "Мішок",
+  "gui.supplementaries.blackboard.edit": "Редагувати малюнок на дошці",
+  "block.supplementaries.safe": "Сейф",
+  "block.supplementaries.blackboard": "Дошка",
 
   "block.supplementaries.flag": "Прапор (Робота в процесі)",
   "block.supplementaries.laser_block": "Лазерний блок (Робота в процесі)",

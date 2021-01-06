@@ -1,8 +1,11 @@
 package net.mehvahdjukaar.supplementaries.blocks.tiles;
 
 import io.netty.buffer.Unpooled;
+import net.mehvahdjukaar.supplementaries.blocks.HourGlassBlock;
 import net.mehvahdjukaar.supplementaries.blocks.SackBlock;
 import net.mehvahdjukaar.supplementaries.blocks.SafeBlock;
+import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.Resources;
 import net.mehvahdjukaar.supplementaries.gui.SackContainer;
 import net.mehvahdjukaar.supplementaries.items.SackItem;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
@@ -16,11 +19,14 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ShulkerBoxContainer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.tags.ITag;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.tileentity.LockableLootTileEntity;
 import net.minecraft.tileentity.LockableTileEntity;
 import net.minecraft.tileentity.ShulkerBoxTileEntity;
@@ -32,6 +38,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.LazyOptional;
@@ -40,10 +47,11 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 
 import javax.annotation.Nullable;
+import java.lang.reflect.Field;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
-public class SafeBlockTile extends LockableLootTileEntity {
+public class SafeBlockTile extends LockableLootTileEntity implements ISidedInventory{
 
     private NonNullList<ItemStack> items = NonNullList.withSize(27, ItemStack.EMPTY);
     private int numPlayersUsing;
@@ -67,6 +75,19 @@ public class SafeBlockTile extends LockableLootTileEntity {
         this.world.notifyBlockUpdate(this.pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
     }
 
+    public void clearOwner(){
+        this.ownerName=null;
+        this.owner=null;
+    }
+
+    public boolean isOwnedBy(PlayerEntity player){
+        return (this.owner!=null && this.owner.equals(player.getUniqueID()));
+    }
+    //owner==null is public
+    public boolean isNotOwnedBy(PlayerEntity player){
+        return (this.owner!=null && this.owner!=player.getUniqueID());
+    }
+
     @Override
     protected ITextComponent getDefaultName() {
         return new TranslationTextComponent("block.supplementaries.safe");
@@ -85,7 +106,7 @@ public class SafeBlockTile extends LockableLootTileEntity {
             if (!flag) {
                 //this.playSound(blockstate, SoundEvents.BLOCK_BARREL_OPEN);
                 this.world.playSound((PlayerEntity)null, this.pos.getX()+0.5, this.pos.getY()+0.5, this.pos.getZ()+0.5,
-                        SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.7F);
+                        SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.65F);
                 this.world.setBlockState(this.getPos(), blockstate.with(SafeBlock.OPEN, true), 3);
             }
             this.world.getPendingBlockTicks().scheduleTick(this.getPos(), this.getBlockState().getBlock(), 5);
@@ -95,11 +116,17 @@ public class SafeBlockTile extends LockableLootTileEntity {
     public static int calculatePlayersUsing(World world, LockableTileEntity tile, int x, int y, int z) {
         int i = 0;
         for(PlayerEntity playerentity : world.getEntitiesWithinAABB(PlayerEntity.class, new AxisAlignedBB((float)x - 5.0F, (float)y - 5.0F, (float)z - 5.0F, (float)(x + 1) + 5.0F, (float)(y + 1) + 5.0F, (float)(z + 1) + 5.0F))) {
-            if (playerentity.openContainer instanceof SackContainer) {
-                IInventory iinventory = ((SackContainer)playerentity.openContainer).inventory;
-                if (iinventory == tile) {
-                    ++i;
-                }
+            if (playerentity.openContainer instanceof ShulkerBoxContainer) {
+                //TODO: maybe make my own container instead of this hacky stuff?
+                try {
+                    for (Field f : ShulkerBoxContainer.class.getDeclaredFields())
+                        if(IInventory.class.isAssignableFrom(f.getType())){
+                            f.setAccessible(true);
+                            if(f.get(playerentity.openContainer) == tile){
+                                ++i;
+                            }
+                        }
+                }catch (Exception ignored) {}
             }
         }
         return i;
@@ -118,7 +145,7 @@ public class SafeBlockTile extends LockableLootTileEntity {
             boolean flag = blockstate.get(SackBlock.OPEN);
             if (flag) {
                 this.world.playSound(null, this.pos.getX()+0.5, this.pos.getY()+0.5, this.pos.getZ()+0.5,
-                        SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.7F);
+                        SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.65F);
                 this.world.setBlockState(this.getPos(), blockstate.with(SackBlock.OPEN, false), 3);
             }
         }
@@ -191,13 +218,42 @@ public class SafeBlockTile extends LockableLootTileEntity {
         this.read(this.getBlockState(), pkt.getNbtCompound());
     }
 
-
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        if((Block.getBlockFromItem(stack.getItem()) instanceof ShulkerBoxBlock)||
-                (stack.getItem() instanceof SackItem))return false;
+        ITag<Item> t = ItemTags.getCollection().get(Resources.SHULKER_BLACKLIST);
+        if(t!=null && stack.getItem().isIn(t))
+            return false;
         return super.isItemValidForSlot(index,stack);
     }
 
 
+    //TODO: FIX this so it can only put from top
+    @Override
+    public int[] getSlotsForFace(Direction side) {
+        return IntStream.range(0, this.getSizeInventory()).toArray();
+    }
+
+    @Override
+    public boolean canInsertItem(int index, ItemStack stack, @Nullable Direction direction) {
+        return false;
+    }
+
+    @Override
+    public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
+        return false;
+    }
+    private final LazyOptional<? extends IItemHandler>[] handlers = SidedInvWrapper.create(this, Direction.values());
+    @Override
+    public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
+        if (!this.removed && facing != null && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+            return handlers[facing.ordinal()].cast();
+        return super.getCapability(capability, facing);
+    }
+
+    @Override
+    public void remove() {
+        super.remove();
+        for (LazyOptional<? extends IItemHandler> handler : handlers)
+            handler.invalidate();
+    }
 }

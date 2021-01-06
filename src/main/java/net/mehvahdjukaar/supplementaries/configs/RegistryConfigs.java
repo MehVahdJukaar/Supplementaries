@@ -73,6 +73,8 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue LASER_ENABLED;
         public static ForgeConfigSpec.BooleanValue FLAG_ENABLED;
         public static ForgeConfigSpec.BooleanValue SACK_ENABLED;
+        public static ForgeConfigSpec.BooleanValue BLACKBOARD_ENABLED;
+        public static ForgeConfigSpec.BooleanValue SAFE_ENABLED;
 
         public static ForgeConfigSpec.BooleanValue CREATIVE_TAB;
 
@@ -98,6 +100,7 @@ public class RegistryConfigs {
             builder.comment("all these don't actually disable blocks anymore, they just remove their recipe and remove them from the creative tabs(like all other mods do)")
                     .push("general");
             CREATIVE_TAB = builder.comment("enable creative tab").define("creative_tab",false);
+
             builder.pop();
 
             builder.comment("Enable and disable blocks / entities");
@@ -135,6 +138,8 @@ public class RegistryConfigs {
             GLOBE_ENABLED = builder.define(Registry.GLOBE_NAME, true);
             HOURGLASS_ENABLED = builder.define(Registry.HOURGLASS_NAME, true);
             SACK_ENABLED = builder.define(Registry.SACK_NAME, true);
+            BLACKBOARD_ENABLED = builder.define(Registry.BLACKBOARD_NAME, true);
+            SAFE_ENABLED = builder.define(Registry.SAFE_NAME, true);
 
 
             STONE_LAMP_ENABLED = builder.define(Registry.STONE_LAMP_NAME, false);

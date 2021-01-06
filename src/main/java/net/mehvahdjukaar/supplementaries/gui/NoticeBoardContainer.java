@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.gui;
 
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.minecraft.client.gui.screen.OptionsScreen;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -12,9 +13,11 @@ import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
@@ -32,6 +35,8 @@ public class NoticeBoardContainer extends Container implements Supplier<Map<Inte
     private IItemHandler internal;
     private final Map<Integer, Slot> customSlots = new HashMap<>();
     private boolean bound = false;
+
+    //TODO: remove mcreator stuff and clean this and ogher guis up
     public NoticeBoardContainer(int id, PlayerInventory inv, PacketBuffer extraData) {
         super(Registry.NOTICE_BOARD_CONTAINER, id);
         this.entity = inv.player;
@@ -84,7 +89,7 @@ public class NoticeBoardContainer extends Container implements Supplier<Map<Inte
             @Override
             public boolean isItemValid(ItemStack stack) {
                 if(!stack.isEmpty()&& ServerConfigs.cached.NOTICE_BOARDS_UNRESTRICTED)return true;
-                return (stack.getItem() == Items.WRITTEN_BOOK || stack.getItem() == Items.WRITABLE_BOOK || stack.getItem() instanceof FilledMapItem);
+                return (stack.getItem().isIn(ItemTags.LECTERN_BOOKS) || stack.getItem() instanceof FilledMapItem);
             }
         }));
         int si;

@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "12 ",
+    "120",
+    "12 "
+  ],
+  "key": {
+    "1": {
+      "tag": "minecraft:wooden_slabs"
+    },
+    "2": {
+      "item": "minecraft:blackstone"
+    },
+    "0": {
+      "item": "minecraft:quartz"
+    }
+  },
+  "result": {
+    "item": "supplementaries:blackboard",
+    "count": 1
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "blackboard"
+    }
+  ]
+}

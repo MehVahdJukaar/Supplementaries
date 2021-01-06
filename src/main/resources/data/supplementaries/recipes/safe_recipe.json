@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " 1 ",
+    "121",
+    " 1 "
+  ],
+  "key": {
+    "2": {
+      "tag": "supplementaries:shulker_boxes"
+    },
+    "1": {
+      "item": "minecraft:netherite_ingot"
+    }
+  },
+  "result": {
+    "item": "supplementaries:safe",
+    "count": 1
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "safe"
+    }
+  ]
+}
