@@ -19,8 +19,17 @@
   },
   "conditions": [
     {
-      "type": "supplementaries:flag",
-      "flag": "cog_block"
+      "type": "forge:and",
+      "values": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "candelabra"
+        },
+        {
+          "type": "forge:tag_empty",
+          "tag": "forge:ingots/copper"
+        }
+      ]
     }
   ]
 }

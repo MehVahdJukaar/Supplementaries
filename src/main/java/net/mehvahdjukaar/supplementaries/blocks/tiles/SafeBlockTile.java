@@ -1,17 +1,10 @@
 package net.mehvahdjukaar.supplementaries.blocks.tiles;
 
-import io.netty.buffer.Unpooled;
-import net.mehvahdjukaar.supplementaries.blocks.HourGlassBlock;
 import net.mehvahdjukaar.supplementaries.blocks.SackBlock;
 import net.mehvahdjukaar.supplementaries.blocks.SafeBlock;
-import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.Resources;
-import net.mehvahdjukaar.supplementaries.gui.SackContainer;
-import net.mehvahdjukaar.supplementaries.items.SackItem;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
@@ -23,13 +16,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tileentity.LockableLootTileEntity;
 import net.minecraft.tileentity.LockableTileEntity;
-import net.minecraft.tileentity.ShulkerBoxTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
@@ -38,7 +29,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.LazyOptional;
@@ -220,7 +210,7 @@ public class SafeBlockTile extends LockableLootTileEntity implements ISidedInven
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        ITag<Item> t = ItemTags.getCollection().get(Resources.SHULKER_BLACKLIST);
+        ITag<Item> t = ItemTags.getCollection().get(Resources.SHULKER_BLACKLIST_TAG);
         if(t!=null && stack.getItem().isIn(t))
             return false;
         return super.isItemValidForSlot(index,stack);

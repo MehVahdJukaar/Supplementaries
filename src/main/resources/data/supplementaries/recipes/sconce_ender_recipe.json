@@ -19,12 +19,17 @@
   },
   "conditions": [
     {
-      "type":"forge:mod_loaded",
-      "modid":"endergetic"
-    },
-    {
-      "type": "supplementaries:flag",
-      "flag": "sconce_ender"
+      "type": "forge:and",
+      "values": [
+        {
+          "type":"forge:mod_loaded",
+          "modid":"endergetic"
+        },
+        {
+          "type": "supplementaries:flag",
+          "flag": "sconce_ender"
+        }
+      ]
     }
   ]
 

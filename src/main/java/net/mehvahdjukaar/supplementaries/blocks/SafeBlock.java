@@ -142,7 +142,7 @@ public class SafeBlock extends Block {
                 Item item = player.getHeldItem(handIn).getItem();
                 //clear ownership with tripwire
                 if(item instanceof BlockItem && ((BlockItem) item).getBlock() instanceof TripWireHookBlock &&
-                        safe.isOwnedBy(player)){
+                        (safe.isOwnedBy(player)||(safe.isNotOwnedBy(player)&&player.isCreative()))){
                     safe.clearOwner();
                     player.sendStatusMessage(new TranslationTextComponent("message.supplementaries.safe_cleared"),true);
                     worldIn.playSound(null, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5,

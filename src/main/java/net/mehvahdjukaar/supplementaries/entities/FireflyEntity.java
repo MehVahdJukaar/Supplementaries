@@ -4,6 +4,7 @@ import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.renderer.model.multipart.ICondition;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
@@ -73,11 +74,14 @@ public class FireflyEntity extends CreatureEntity implements IFlyingAnimal, IEnt
 
         //despawn when entity is not lit
         if (this.alpha == 0f && !this.world.isRemote){
-            long dayTime = this.world.getDayTime()%24000;
-            if (dayTime > 23500 || dayTime < 12500 && this.rand.nextFloat()<0.1)
+
+            if(this.world.isRaining() && this.rand.nextFloat()<0.1) {
                 this.remove();
-            else if(this.world.isRaining() && this.rand.nextFloat()<0.1) {
-                this.remove();
+            }
+            if(ServerConfigs.cached.FIREFLY_DESPAWN) {
+                long dayTime = this.world.getDayTime() % 24000;
+                if (dayTime > 23500 || dayTime < 12500 && this.rand.nextFloat() < 0.1)
+                    this.remove();
             }
 
         }

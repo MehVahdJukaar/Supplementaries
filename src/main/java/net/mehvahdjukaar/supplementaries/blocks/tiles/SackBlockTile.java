@@ -4,11 +4,8 @@ import io.netty.buffer.Unpooled;
 import net.mehvahdjukaar.supplementaries.blocks.SackBlock;
 import net.mehvahdjukaar.supplementaries.common.Resources;
 import net.mehvahdjukaar.supplementaries.gui.SackContainer;
-import net.mehvahdjukaar.supplementaries.items.SackItem;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
@@ -178,7 +175,7 @@ public class SackBlockTile extends LockableLootTileEntity implements ISidedInven
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        ITag<Item> t = ItemTags.getCollection().get(Resources.SHULKER_BLACKLIST);
+        ITag<Item> t = ItemTags.getCollection().get(Resources.SHULKER_BLACKLIST_TAG);
         if(t!=null && stack.getItem().isIn(t))
             return false;
         return super.isItemValidForSlot(index,stack);

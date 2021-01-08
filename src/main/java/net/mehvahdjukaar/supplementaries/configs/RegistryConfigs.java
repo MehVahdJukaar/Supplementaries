@@ -3,12 +3,20 @@ package net.mehvahdjukaar.supplementaries.configs;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.Resources;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.minecraft.item.Item;
+import net.minecraft.tags.ITag;
+import net.minecraft.tags.ITagCollection;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagCollectionManager;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLPaths;
 
 import java.lang.reflect.Field;
+import java.util.List;
 
 @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
 //loaded before registry
@@ -23,9 +31,19 @@ public class RegistryConfigs {
         REGISTRY_CONFIG = REGISTRY_BUILDER.build();
 
         //extra variables
-        reg.FIREFLY_JAR=reg.FIREFLY_ENABLED.get()&&reg.JAR_ENABLED.get();
+        reg.FIREFLY_JAR = reg.FIREFLY_ENABLED.get() && reg.JAR_ENABLED.get();
 
 
+        ITag<Item> tag = TagCollectionManager.getManager().getItemTags().get(new ResourceLocation("forge:ingots/silver"));
+        reg.HAS_SILVER = !(tag == null || tag.getAllElements().isEmpty());
+        reg.SILVER_CANDELABRA = reg.CANDELABRA_ENABLED.get() && reg.HAS_SILVER;
+
+        ITagCollection<Item> i = ItemTags.getCollection();
+        boolean b = i.get(new ResourceLocation("forge:ingots/copper"))!=null;
+        List<? extends ITag.INamedTag<Item>> l = ItemTags.getAllTags();
+        ITag<Item> t =ItemTags.getCollection().get(new ResourceLocation("forge:ingots/copper"));
+        reg.HAS_COPPER= t!=null;
+        boolean a = false;
     }
     public static void registerConfig(){
         CommentedFileConfig replacementConfig = CommentedFileConfig
@@ -61,7 +79,6 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue SCONCE_GREEN_ENABLED;
         public static ForgeConfigSpec.BooleanValue SCONCE_SOUL_ENABLED;
         public static ForgeConfigSpec.BooleanValue CANDELABRA_ENABLED;
-        public static ForgeConfigSpec.BooleanValue CANDELABRA_SILVER_ENABLED;
         public static ForgeConfigSpec.BooleanValue CAGE_ENABLED;
         public static ForgeConfigSpec.BooleanValue ITEM_SHELF_ENABLED;
         public static ForgeConfigSpec.BooleanValue SCONCE_LEVER_ENABLED;
@@ -79,11 +96,20 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue CREATIVE_TAB;
 
         public static boolean FIREFLY_JAR;
-
+        public static boolean SILVER_CANDELABRA;
+        public static boolean HAS_COPPER;
+        public static boolean HAS_SILVER;
 
 
         //oh god what have I done
         public static boolean isEnabled(String path){
+            //special double condition cases
+            if(path.equals(Registry.FIREFLY_JAR_NAME)){
+                return RegistryConfigs.reg.FIREFLY_JAR;
+            }
+            if(path.equals(Registry.CANDELABRA_NAME_SILVER)){
+                return reg.SILVER_CANDELABRA;
+            }
             for (Field f : reg.class.getDeclaredFields()) {
                 try{
                     if(ForgeConfigSpec.BooleanValue.class.isAssignableFrom(f.getType())){
@@ -129,7 +155,6 @@ public class RegistryConfigs {
             SCONCE_ENDER_ENABLED = builder.define(Registry.SCONCE_NAME_ENDER, true);
             SCONCE_SOUL_ENABLED = builder.define(Registry.SCONCE_NAME_SOUL, true);
             CANDELABRA_ENABLED = builder.define(Registry.CANDELABRA_NAME, true);
-            CANDELABRA_SILVER_ENABLED = builder.define(Registry.CANDELABRA_NAME_SILVER, true);
             CAGE_ENABLED = builder.define(Registry.CAGE_NAME, true);
             ITEM_SHELF_ENABLED = builder.define(Registry.ITEM_SHELF_NAME, true);
             SCONCE_LEVER_ENABLED = builder.define(Registry.SCONCE_LEVER_NAME, true);

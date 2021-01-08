@@ -23,10 +23,6 @@ public class RecipeCondition implements ICondition {
 
     @Override
     public boolean test() {
-        //special double condition cases
-        if(flag.equals("firefly_jar")){
-            return RegistryConfigs.reg.FIREFLY_JAR;
-        }
         return RegistryConfigs.reg.isEnabled(flag);
     }
 

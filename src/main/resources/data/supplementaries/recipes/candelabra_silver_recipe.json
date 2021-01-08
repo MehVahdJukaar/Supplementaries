@@ -8,7 +8,7 @@
   ],
   "key": {
     "1": {
-      "item": "buzzier_bees:candles"
+      "tag": "buzzier_bees:candles"
     },
     "2": {
       "tag": "forge:ingots/silver"
@@ -20,12 +20,25 @@
   },
   "conditions": [
     {
-      "type":"forge:mod_loaded",
-      "modid":"buzzier_bees"
-    },
-    {
-      "type": "supplementaries:flag",
-      "flag": "candelabra_silver"
+      "type": "forge:and",
+      "values": [
+        {
+          "type":"forge:mod_loaded",
+          "modid":"buzzier_bees"
+        },
+        {
+          "type": "supplementaries:flag",
+          "flag": "candelabra"
+        },
+        {
+          "type": "forge:not",
+          "value": {
+            "type": "forge:tag_empty",
+            "tag": "forge:ingots/silver"
+          }
+        }
+      ]
     }
   ]
 }
+

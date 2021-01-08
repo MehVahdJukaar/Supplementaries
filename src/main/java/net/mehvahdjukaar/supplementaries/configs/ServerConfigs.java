@@ -105,7 +105,7 @@ public class ServerConfigs {
                     .define("rotate_entities", true);
             List<String> turnTableBlacklist = Arrays.asList("minecraft:end_portal_frame");
             TURN_TABLE_BLACKLIST = builder.comment("blocks that can't be rotated. Some special ones like chests, beds and pistons are already hardcoded")
-                    .defineList("mobs", turnTableBlacklist,s -> true);
+                    .defineList("blacklist", turnTableBlacklist,s -> true);
             builder.pop();
             //wall lantern
             builder.push("wall_lantern");
@@ -126,8 +126,7 @@ public class ServerConfigs {
                     "mysticalworld:frog","mysticalworld:beetle", "druidcraft:lunar_moth", "druidcraft:dreadfish","swampexpansion:slabfish",
                     "savageandravage:creepie","betteranimalsplus:butterfly","whisperwoods:moth");
             MOB_JAR_ALLOWED_MOBS = builder.comment("catchable mobs \n"+
-                    "BE VERY CAREFUL WITH THESE: SOME MOBS MIGHT NOT WORK OF EVEN CRASH THE GAME.\n"+
-                    "That's due to a vanilla bug. Check in a new world if the mobs you added here work before adding to a modpack")
+                    "due to a vanilla bug some mobs might not render correctly or at all")
                     .defineList("mobs", defaultMobs,s -> true);
             List<String> defaultMobsTinted = Arrays.asList("minecraft:endermite","minecraft:slime",
                     "minecraft:bee","minecraft:magma_cube", "minecraft:vex","iceandfire:pixie","alexmobs:crimson_mosquito",
@@ -205,7 +204,7 @@ public class ServerConfigs {
             builder.comment("Configure spawning conditions")
                     .push("spawns");
             builder.push("firefly");
-            List<String> defaultBiomes = Arrays.asList("minecraft:swamp","minecraft:swamp_hills","minecraft:plains","minecraft:sunflower_plains","minecraft:dark_forest","minecraft:dark_forest_hills");
+            List<String> defaultBiomes = Arrays.asList("minecraft:swamp","minecraft:swamp_hills","minecraft:plains","minecraft:sunflower_plains","minecraft:dark_forest","minecraft:dark_forest_hills", "byg:bayou", "byg:cypress_swamplands", "byg:glowshroom_bayou", "byg:mangrove_marshes", "byg:vibrant_swamplands", "byg:fresh_water_lake", "byg:grassland_plateau", "byg:wooded_grassland_plateau", "byg:flowering_grove", "byg:guiana_shield", "byg:guiana_clearing", "byg:meadow", "byg:orchard", "byg:seasonal_birch_forest", "byg:seasonal_deciduous_forest", "byg:seasonal_forest", "biomesoplenty:flower_meadow", "biomesoplenty:fir_clearing", "biomesoplenty:grove_lakes", "biomesoplenty:grove", "biomesoplenty:highland_moor", "biomesoplenty:wetland_marsh", "biomesoplenty:deep_bayou");
             List<String> defaultMods = Arrays.asList();
             //TODO add validation for biomes
             FIREFLY_BIOMES = builder.comment("Spawnable biomes")
@@ -219,6 +218,7 @@ public class ServerConfigs {
                     .defineInRange("min", 5, 0, 64);
             FIREFLY_MAX = builder.comment("Maximum group size")
                     .defineInRange("max", 9, 0, 64);
+
             builder.pop();
             builder.pop();
         }
@@ -227,6 +227,7 @@ public class ServerConfigs {
     public static class entity {
         public static ForgeConfigSpec.IntValue FIREFLY_PERIOD;
         public static ForgeConfigSpec.DoubleValue FIREFLY_SPEED;
+        public static ForgeConfigSpec.BooleanValue FIREFLY_DESPAWN;
         private static void init(ForgeConfigSpec.Builder builder) {
             builder.comment("entities parameters")
                     .push("entities");
@@ -238,7 +239,8 @@ public class ServerConfigs {
                     .defineInRange("period", 65, 1, 200);
             FIREFLY_SPEED = builder.comment("firefly flying speed")
                     .defineInRange("speed", 0.3, 0, 10);
-
+            FIREFLY_DESPAWN = builder.comment("despawn during the day")
+                    .define("despawn",true);
             builder.pop();
 
             builder.pop();
@@ -256,6 +258,7 @@ public class ServerConfigs {
         public static int FIREFLY_WEIGHT;
         public static List<? extends String> FIREFLY_BIOMES;
         public static List<? extends String> FIREFLY_MOD_WHITELIST;
+        public static boolean FIREFLY_DESPAWN;
         //blocks
         public static int SPEAKER_RANGE;
         public static int BELLOWS_PERIOD;
@@ -330,6 +333,7 @@ public class ServerConfigs {
 
             FIREFLY_PERIOD = entity.FIREFLY_PERIOD.get();
             FIREFLY_SPEED = entity.FIREFLY_SPEED.get();
+            FIREFLY_DESPAWN = entity.FIREFLY_DESPAWN.get();
 
         }
     }

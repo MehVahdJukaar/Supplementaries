@@ -21,8 +21,29 @@
 
   "conditions": [
     {
-      "type": "supplementaries:flag",
-      "flag": "candelabra"
+      "type": "forge:and",
+      "values": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "candelabra"
+        },
+        {
+          "type": "forge:not",
+          "value": {
+            "type": "forge:or",
+            "values": [
+              {
+                "type": "forge:mod_loaded",
+                "modid": "buzzier_bees"
+              },
+              {
+                "type": "forge:mod_loaded",
+                "modid": "quark"
+              }
+            ]
+          }
+        }
+      ]
     }
   ]
 }

@@ -42,7 +42,7 @@ public class BlackBoardButton extends AbstractGui implements IRenderable, IGuiEv
     public BlackBoardButton(int center_x, int center_y, int u, int v, BlackBoardButton.IPressable pressedAction,
                             BlackBoardButton.IDraggable dragAction) {
         this.x = center_x-((8-u)*width);
-        this.y = center_y-((8-v)*width);
+        this.y = center_y-((-v)*width);
         this.u = u;
         this.v = v;
         this.onPress = pressedAction;

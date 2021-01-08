@@ -2,7 +2,8 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "supplementaries:cog_block_recipe"
+      "supplementaries:cog_block_recipe",
+      "supplementaries:cog_block_recipe_2"
     ]
   },
   "criteria": {

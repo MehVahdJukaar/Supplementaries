@@ -67,10 +67,12 @@ public class HourGlassBlock extends Block implements IWaterLoggable, IForgeBlock
         return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
     }
 
+    @Override
     public BlockState rotate(BlockState state, Rotation rot) {
         return state.with(FACING, rot.rotate(state.get(FACING)));
     }
 
+    @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
         return state.rotate(mirrorIn.toRotation(state.get(FACING)));
     }
@@ -95,8 +97,16 @@ public class HourGlassBlock extends Block implements IWaterLoggable, IForgeBlock
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
                                              BlockRayTraceResult hit) {
-        TileEntity tileentity = worldIn.getTileEntity(pos);
+        if(player.isSneaking()&&player.getHeldItem(handIn).isEmpty()&&state.get(FACING).getAxis() == Direction.Axis.Y){
+            if(!worldIn.isRemote) {
+                worldIn.setBlockState(pos, state.with(FACING, state.get(FACING).getOpposite()), 3);
+                worldIn.playSound(null,pos, SoundEvents.ENTITY_ITEM_FRAME_ROTATE_ITEM, SoundCategory.BLOCKS,1,1);
+                return ActionResultType.CONSUME;
+            }
+            return ActionResultType.SUCCESS;
+        }
 
+        TileEntity tileentity = worldIn.getTileEntity(pos);
         if (tileentity instanceof HourGlassBlockTile) {
             HourGlassBlockTile te = (HourGlassBlockTile) tileentity;
             ItemStack itemstack = player.getHeldItem(handIn);

@@ -15,6 +15,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.DialogTexts;
 import net.minecraft.client.gui.fonts.TextInputUtil;
+import net.minecraft.client.gui.screen.EditSignScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.*;
@@ -101,7 +102,7 @@ public class BlackBoardGui extends Screen {
     protected void init() {
         for (int xx=0; xx < 16; xx++) {
             for (int yy = 0; yy < 16; yy++) {
-                this.buttons[xx][yy]=new BlackBoardButton(this.width / 2, -10 + this.height / 2, xx, yy, this::setPixel, this::dragButtons);
+                this.buttons[xx][yy]=new BlackBoardButton((this.width / 2), 40 + 25, xx, yy, this::setPixel, this::dragButtons);
                 this.addListener(this.buttons[xx][yy]);
                 this.buttons[xx][yy].on=this.tileBoard.pixels[xx][yy]>0;
             }

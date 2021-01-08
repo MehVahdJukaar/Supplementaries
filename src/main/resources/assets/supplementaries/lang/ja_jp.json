@@ -55,6 +55,7 @@
   "message.supplementaries.command.globe_reset": "\u5730\u7403\u5100\u306e\u30b7\u30fc\u30c9\u5024\u3092\u30ea\u30bb\u30c3\u30c8\u3057\u307e\u3057\u305f",
   "message.supplementaries.safe": "\u3053\u306e\u91d1\u5eab\u306f%1$s\u304c\u6240\u6709\u3057\u3066\u3044\u307e\u3059",
   "container.supplementaries.safe": "\u6240\u6709\u8005",
+  "message.supplementaries.safe_cleared": "\u6240\u6709\u6a29\u3092\u6d88\u53bb\u3057\u307e\u3057\u305f",
 
   "block.supplementaries.hourglass" : "\u7802\u6642\u8a08",
   "block.supplementaries.globe": "\u5730\u7403\u5100",
@@ -67,6 +68,9 @@
   "block.supplementaries.cog_block": "\u6b6f\u8eca\u30d6\u30ed\u30c3\u30af",
   "block.supplementaries.candle_holder": "\u308d\u3046\u305d\u304f\u7acb\u3066",
   "block.supplementaries.sack": "\u888b",
+   "gui.supplementaries.blackboard.edit": "\u9ed2\u677f\u306e\u7de8\u96c6",
+  "block.supplementaries.safe": "\u91d1\u5eab",
+  "block.supplementaries.blackboard": "\u9ed2\u677f",
 
   "block.supplementaries.flag": "WIP \u65d7",
   "block.supplementaries.laser_block": "WIP \u30ec\u30fc\u30b6\u30fc\u30d6\u30ed\u30c3\u30af",

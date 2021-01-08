@@ -30,7 +30,9 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import java.lang.reflect.Field;
@@ -135,6 +137,7 @@ public class FaucetBlock extends Block implements  IWaterLoggable{
     public void updateBlock(BlockState state, World world, BlockPos pos, boolean toggle) {
         BlockPos backpos = pos.offset(state.get(FACING), -1);
         BlockState backblock = world.getBlockState(backpos);
+        TileEntity backtile = world.getTileEntity(pos.offset(state.get(FACING), -1));
         // checks backblock
         boolean ispowered = world.getRedstonePowerFromNeighbors(pos) > 0;
         boolean ishoney = backblock.getBlock() instanceof BeehiveBlock && backblock.get(BlockStateProperties.HONEY_LEVEL) > 0;
@@ -144,7 +147,7 @@ public class FaucetBlock extends Block implements  IWaterLoggable{
                 || ((backblock.getBlock() instanceof CauldronBlock) && backblock.getComparatorInputOverride(world, backpos) > 0));
         BlockState downstate = world.getBlockState(pos.down());
         boolean hasjar = downstate.getBlock() instanceof JarBlock;
-        boolean isTank = backblock instanceof IFluidTank && !((IFluidTank)backblock).getFluid().isEmpty();
+        boolean isTank = false;//backtile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)!=null && !backtile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).map(iFluidHandler -> iFluidHandler.getFluidInTank(0).isEmpty()).orElse(true);
         boolean haswater = ishoney || iswater || isjarliquid || isTank;
 
 
@@ -166,7 +169,7 @@ public class FaucetBlock extends Block implements  IWaterLoggable{
         else if (iswater)
             newcolor = -1;
         else if (isTank){
-            newcolor = ((IFluidTank)backblock).getFluid().getFluid().getAttributes().getColor();
+            newcolor = getFluidTankColor(backtile);
         }
         if (newcolor != -2) {
             TileEntity tileentity = world.getTileEntity(pos);
@@ -187,6 +190,11 @@ public class FaucetBlock extends Block implements  IWaterLoggable{
 
 
     }
+
+    public static int getFluidTankColor(TileEntity te){
+        return te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).map(iFluidHandler -> iFluidHandler.getFluidInTank(0).getFluid().getAttributes().getColor()).orElse(0xffffff);
+    }
+
 
     public boolean isOpen(BlockState state) {
         return (state.get(BlockStateProperties.POWERED) ^ state.get(BlockStateProperties.ENABLED));

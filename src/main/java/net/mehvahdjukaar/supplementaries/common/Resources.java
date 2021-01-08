@@ -30,11 +30,6 @@ public class Resources {
     public static final BooleanProperty HAS_ITEM = BooleanProperty.create("has_item");
 
 
-    //sounds
-    //TODO: add alot more
-    public static final ResourceLocation TICK_1 = new ResourceLocation("supplementaries:tick_1");
-    public static final ResourceLocation TICK_2 = new ResourceLocation(Supplementaries.MOD_ID, "tick_2");
-
 
     //textures
     public static final ResourceLocation WHITE_CONCRETE_TEXTURE = new ResourceLocation("minecraft:block/white_concrete_powder");
@@ -95,7 +90,11 @@ public class Resources {
 
 
     //tags
-    public static final ResourceLocation SHULKER_BLACKLIST = new ResourceLocation(Supplementaries.MOD_ID, "shulker_like_containers_blacklist");
+    public static final ResourceLocation SHULKER_BLACKLIST_TAG = new ResourceLocation(Supplementaries.MOD_ID, "shulker_like_containers_blacklist");
+    public static final ResourceLocation COPPER_TAG = new ResourceLocation(Supplementaries.MOD_ID, "shulker_like_containers_blacklist");
+    public static final ResourceLocation SILVER_TAG = new ResourceLocation(Supplementaries.MOD_ID, "shulker_like_containers_blacklist");
+
+
 
 
 

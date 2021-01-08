@@ -7,7 +7,7 @@
   ],
   "key": {
     "1": {
-      "item": "buzzier_bees:candles"
+      "tag": "buzzier_bees:candles"
     },
     "3": {
       "item": "minecraft:iron_nugget"
@@ -19,12 +19,17 @@
   },
   "conditions": [
     {
-      "type":"forge:mod_loaded",
-      "modid":"buzzier_bees"
-    },
-    {
-      "type": "supplementaries:flag",
-      "flag": "candle_holder"
+      "type": "forge:and",
+      "values": [
+        {
+          "type":"forge:mod_loaded",
+          "modid":"buzzier_bees"
+        },
+        {
+          "type": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ]
     }
   ]
 }

@@ -8,6 +8,7 @@ buildscript {
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
         classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
+
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
@@ -21,7 +22,7 @@ mixin {
     add sourceSets.main, "supplementaries.refmap.json"
 }
 
-version = '0.9.18'
+version = '0.9.19'
 group = 'net.mehvahdjukaar.supplementaries' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'supplementaries'
 
@@ -179,17 +180,22 @@ repositories{
         name = "ModMaven"
         url = "https://modmaven.k-4u.nl"
     }
+
+    maven { // JEI
+        url = "https://dvs1.progwml6.com/files/maven"
+    }
+    maven { // TOP
+        name = 'tterrag maven'
+        url = "http://maven.tterrag.com/"
+    }
+    maven{
+        url = "http://www.cursemaven.com"
+    }
+
+
+
+
     jcenter()
     mavenCentral()
 
-}
-
-repositories {
-    maven { // JEI
-        url "https://dvs1.progwml6.com/files/maven"
-    }
-    maven { // TOP
-        name 'tterrag maven'
-        url "http://maven.tterrag.com/"
-    }
 }

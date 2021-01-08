@@ -27,6 +27,7 @@ public class TurnTableBlockTile extends TileEntity implements ITickableTileEntit
     private int cooldown = 5;
     private boolean canRotate = false;
     // private long tickedGameTime;
+    public int cat = 0;
     public TurnTableBlockTile() {
         super(Registry.TURN_TABLE_TILE);
     }
@@ -37,10 +38,10 @@ public class TurnTableBlockTile extends TileEntity implements ITickableTileEntit
         this.cooldown = TurnTableBlock.getPeriod(this.getBlockState());
         // allows for a rotation try nedxt period
     }
-
+    @Override
     public void tick() {
         if (this.world != null && !this.world.isRemote) {
-
+            this.cat=Math.max(cat-1,0);
             // cd > 0
             if (this.cooldown == 0) {
                 boolean success = this.handleRotation();

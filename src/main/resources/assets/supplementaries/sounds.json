@@ -1,19 +1,29 @@
 {
-  "tick_1": {
+  "block.tick_1": {
+    "subtitle": "sound.supplementaries.sub",
     "category": "block",
     "sounds": [
       {
-        "name": "supplementaries:tick1",
+        "name": "supplementaries:block/tick_1",
         "stream": false
       }
     ]
   },
-  "tick_2": {
+  "block.tick_2": {
     "category": "block",
     "sounds": [
       {
-        "name": "supplementaries:tick2",
+        "name": "supplementaries:block/tick_2",
         "stream": false
+      }
+    ]
+  },
+  "block.tom": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "supplementaries:block/tom",
+        "stream": true
       }
     ]
   }

@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.blocks.*;
 import net.mehvahdjukaar.supplementaries.blocks.tiles.*;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
@@ -7,9 +8,9 @@ import net.mehvahdjukaar.supplementaries.entities.FireflyEntity;
 import net.mehvahdjukaar.supplementaries.gui.NoticeBoardContainer;
 import net.mehvahdjukaar.supplementaries.gui.SackContainer;
 import net.mehvahdjukaar.supplementaries.items.*;
-import net.mehvahdjukaar.supplementaries.renderers.CageItemRenderer;
-import net.mehvahdjukaar.supplementaries.renderers.FireflyJarItemRenderer;
-import net.mehvahdjukaar.supplementaries.renderers.JarItemRenderer;
+import net.mehvahdjukaar.supplementaries.renderers.items.CageItemRenderer;
+import net.mehvahdjukaar.supplementaries.renderers.items.FireflyJarItemRenderer;
+import net.mehvahdjukaar.supplementaries.renderers.items.JarItemRenderer;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -27,6 +28,8 @@ import net.minecraft.particles.ParticleType;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolType;
@@ -59,6 +62,24 @@ public class Registry {
             return tab ? MYTAB : g;
         }
         return null;
+    }
+
+    @SubscribeEvent
+    public static void registerSounds(RegistryEvent.Register<SoundEvent> event) {
+        event.getRegistry().register(TOM_SOUND_EVENT);
+        event.getRegistry().register(TICK_SOUND_EVENT);
+        event.getRegistry().register(TICK_2_SOUND_EVENT);
+
+    }
+    //TODO: figure out sound
+    //these are the names in sound.json. not actual location
+    public static final SoundEvent TICK_SOUND_EVENT = makeSoundEvent("block.tick_1");
+    public static final SoundEvent TICK_2_SOUND_EVENT = makeSoundEvent("block.tick_2");
+    public static final SoundEvent TOM_SOUND_EVENT = makeSoundEvent("block.tom");
+
+    public static SoundEvent makeSoundEvent(String name){
+        ResourceLocation loc = new ResourceLocation(Supplementaries.MOD_ID,name);
+        return new SoundEvent(loc).setRegistryName(name);
     }
 
     @SubscribeEvent
@@ -756,8 +777,8 @@ public class Registry {
                     .harvestLevel(1)
     ).setRegistryName(CANDELABRA_NAME_SILVER);
     public static final Item CANDELABRA_ITEM_SILVER = new BlockItem(CANDELABRA_SILVER,
-            new Item.Properties().group(null)
-    ).setRegistryName(CANDELABRA_NAME_SILVER);//getTab(ItemGroup.DECORATIONS,CANDELABRA_NAME_SILVER)
+            new Item.Properties().group(getTab(ItemGroup.DECORATIONS,CANDELABRA_NAME_SILVER))
+    ).setRegistryName(CANDELABRA_NAME_SILVER);
 
     //item shelf
     public static final String ITEM_SHELF_NAME = "item_shelf";
@@ -921,6 +942,13 @@ public class Registry {
     public static final Item SAFE_ITEM = new BlockItem(SAFE,
             (new Item.Properties()).group(getTab(ItemGroup.DECORATIONS,SAFE_NAME)).maxStackSize(1).isImmuneToFire()
     ).setRegistryName(SAFE_NAME);
+
+
+
+    //flute
+    public static final String FLUTE_NAME = "flute";
+    public static final Item FLUTE_ITEM = new Flute((new Item.Properties())
+            .group(null).maxStackSize(1).maxDamage(32)).setRegistryName(FLUTE_NAME);
 
     /*
     //launcher rail

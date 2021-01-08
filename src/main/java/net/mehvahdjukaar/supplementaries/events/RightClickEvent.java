@@ -1,12 +1,19 @@
 package net.mehvahdjukaar.supplementaries.events;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.mehvahdjukaar.supplementaries.blocks.WallLanternBlock;
 import net.mehvahdjukaar.supplementaries.blocks.tiles.WallLanternBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.items.Flute;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LanternBlock;
+import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.entity.PlayerRenderer;
+import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.*;
@@ -18,7 +25,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -89,4 +98,24 @@ public class RightClickEvent {
     }
 
 
+    /*
+    @SubscribeEvent
+    public static void onRenderPlayer(RenderPlayerEvent event) {
+
+        MatrixStack matrixStack = event.getMatrixStack();
+        PlayerEntity player = event.getPlayer();
+        PlayerRenderer renderer = event.getRenderer();
+        IRenderTypeBuffer buffer = event.getBuffers();
+        float partialTicks = event.getPartialRenderTick();
+        int light = event.getLight();
+
+        //renderer.getEntityModel().rightArmPose= BipedModel.ArmPose.CROSSBOW_CHARGE;
+        renderer.getEntityModel().bipedLeftLeg.showModel=false;
+        if (player.getHeldItem(Hand.MAIN_HAND).getItem() instanceof Flute) {
+            renderer.getEntityModel().bipedLeftArm.rotateAngleZ = 20;
+
+
+     }
+
+    }*/
 }

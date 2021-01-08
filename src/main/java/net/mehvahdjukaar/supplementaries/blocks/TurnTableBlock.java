@@ -3,12 +3,14 @@ package net.mehvahdjukaar.supplementaries.blocks;
 
 import net.mehvahdjukaar.supplementaries.blocks.tiles.TurnTableBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DirectionalBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MoverType;
+import net.minecraft.entity.passive.CatEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
@@ -90,6 +92,11 @@ public class TurnTableBlock  extends Block {
         int currentpower = state.get(POWER);
         // on-off
         if (blockpower != currentpower) {
+            TileEntity te = world.getTileEntity(pos);
+            if(te instanceof TurnTableBlockTile) {
+                TurnTableBlockTile table = ((TurnTableBlockTile) te);
+
+            }
             world.setBlockState(pos, state.with(POWER, blockpower), 2 | 4);
             return true;
             //returns if state changed
@@ -163,6 +170,18 @@ public class TurnTableBlock  extends Block {
                 ((LivingEntity) e).prevRotationYawHead=((LivingEntity) e).rotationYawHead;
                 ((LivingEntity) e).setIdleTime(20);
                 //e.velocityChanged = true;
+
+                if(e instanceof CatEntity &&((CatEntity) e).isSitting()&&!world.isRemote){
+                    TileEntity te = world.getTileEntity(pos);
+                    if(te instanceof TurnTableBlockTile) {
+                        TurnTableBlockTile table = ((TurnTableBlockTile) te);
+                        if(table.cat==0) {
+                            ((TurnTableBlockTile) te).cat = 20*20;
+                            world.playSound(null, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, Registry.TOM_SOUND_EVENT, SoundCategory.BLOCKS, 0.85f, 1);
+                        }
+                    }
+                }
+
             }
             // e.prevRotationYaw = e.rotationYaw;
 
