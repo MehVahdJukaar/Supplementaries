@@ -3,8 +3,10 @@ package net.mehvahdjukaar.supplementaries.blocks;
 
 import net.mehvahdjukaar.supplementaries.blocks.tiles.GlobeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.IWaterLoggable;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
@@ -37,7 +39,7 @@ public class GlobeBlock extends Block implements IWaterLoggable {
     protected static final VoxelShape SHAPE = VoxelShapes.create(0.125D, 0D, 0.125D, 0.875D, 1D, 0.875D);
 
     public static final BooleanProperty TRIGGERED = BlockStateProperties.TRIGGERED;
-    public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
+    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     public GlobeBlock(Properties properties) {

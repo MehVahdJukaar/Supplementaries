@@ -54,6 +54,7 @@
   "message.supplementaries.command.globe_changed": "Изменен ключ для генератора мира глобуса",
   "message.supplementaries.command.globe_reset": "Обновлено ключ для генератора мира глобуса",
   "message.supplementaries.safe": "Владелец сейфа - ",
+  "message.supplementaries.safe_cleared": "Владелец удален",
   "container.supplementaries.safe": "Владелец",
 
   "block.supplementaries.hourglass": "Песочные часы",
@@ -70,6 +71,12 @@
   "gui.supplementaries.blackboard.edit": "Редактирование доски",
   "block.supplementaries.safe": "Сейф",
   "block.supplementaries.blackboard": "Доска",
+  "block.supplementaries.soul_jar": "Баночка с душой",
+  "item.supplementaries.flute": "Бамбуковая флейта",
+  "message.supplementaries.throwable_brick": "Можно бросить",
+  "message.supplementaries.wall_lantern": "Можно повесить на стену",
+  "message.supplementaries.command.configs_reloaded": "Конфиги перезагружены",
+  "block.supplementaries.copper_lantern": "Медный фонарь",
 
   "block.supplementaries.flag": "Флаг (WIP)",
   "block.supplementaries.laser_block": "Лазерный блок",

@@ -3,12 +3,9 @@ package net.mehvahdjukaar.supplementaries.configs;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.Resources;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.item.Item;
 import net.minecraft.tags.ITag;
-import net.minecraft.tags.ITagCollection;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagCollectionManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -16,7 +13,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLPaths;
 
 import java.lang.reflect.Field;
-import java.util.List;
 
 @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
 //loaded before registry
@@ -33,17 +29,15 @@ public class RegistryConfigs {
         //extra variables
         reg.FIREFLY_JAR = reg.FIREFLY_ENABLED.get() && reg.JAR_ENABLED.get();
 
+        try{
+            //TODO: properly fix forge:ingots/silver used before it was bound
+            ITag<Item> tag = TagCollectionManager.getManager().getItemTags().get(new ResourceLocation("forge:ingots/silver"));
+            reg.HAS_SILVER = tag != null;
+        }
+        catch(Exception ignored){};
 
-        ITag<Item> tag = TagCollectionManager.getManager().getItemTags().get(new ResourceLocation("forge:ingots/silver"));
-        reg.HAS_SILVER = !(tag == null || tag.getAllElements().isEmpty());
         reg.SILVER_CANDELABRA = reg.CANDELABRA_ENABLED.get() && reg.HAS_SILVER;
 
-        ITagCollection<Item> i = ItemTags.getCollection();
-        boolean b = i.get(new ResourceLocation("forge:ingots/copper"))!=null;
-        List<? extends ITag.INamedTag<Item>> l = ItemTags.getAllTags();
-        ITag<Item> t =ItemTags.getCollection().get(new ResourceLocation("forge:ingots/copper"));
-        reg.HAS_COPPER= t!=null;
-        boolean a = false;
     }
     public static void registerConfig(){
         CommentedFileConfig replacementConfig = CommentedFileConfig
@@ -92,13 +86,16 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue SACK_ENABLED;
         public static ForgeConfigSpec.BooleanValue BLACKBOARD_ENABLED;
         public static ForgeConfigSpec.BooleanValue SAFE_ENABLED;
+        public static ForgeConfigSpec.BooleanValue COPPER_LANTERN_ENABLED;
+        public static ForgeConfigSpec.BooleanValue FLUTE_ENABLED;
 
         public static ForgeConfigSpec.BooleanValue CREATIVE_TAB;
+        public static ForgeConfigSpec.BooleanValue DISPENSERS;
 
         public static boolean FIREFLY_JAR;
         public static boolean SILVER_CANDELABRA;
         public static boolean HAS_COPPER;
-        public static boolean HAS_SILVER;
+        public static boolean HAS_SILVER = false;
 
 
         //oh god what have I done
@@ -126,6 +123,8 @@ public class RegistryConfigs {
             builder.comment("all these don't actually disable blocks anymore, they just remove their recipe and remove them from the creative tabs(like all other mods do)")
                     .push("general");
             CREATIVE_TAB = builder.comment("enable creative tab").define("creative_tab",false);
+
+            DISPENSERS = builder.comment("set to false to disable custom dispenser behaviors (filling jars) if for some reason they are causing trouble").define("dispensers",true);
 
             builder.pop();
 
@@ -165,7 +164,8 @@ public class RegistryConfigs {
             SACK_ENABLED = builder.define(Registry.SACK_NAME, true);
             BLACKBOARD_ENABLED = builder.define(Registry.BLACKBOARD_NAME, true);
             SAFE_ENABLED = builder.define(Registry.SAFE_NAME, true);
-
+            COPPER_LANTERN_ENABLED = builder.define(Registry.COPPER_LANTERN_NAME, true);
+            FLUTE_ENABLED = builder.define(Registry.FLUTE_NAME, true);
 
             STONE_LAMP_ENABLED = builder.define(Registry.STONE_LAMP_NAME, false);
             LASER_ENABLED = builder.comment("WIP")

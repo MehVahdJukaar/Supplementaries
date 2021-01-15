@@ -1,8 +1,0 @@
-{
-  "parent": "supplementaries:custom/wall_glass_pane",
-  "textures": {
-    "particle": "minecraft:block/glass",
-    "0": "minecraft:block/glass_pane_top",
-    "1": "minecraft:block/glass"
-  }
-}

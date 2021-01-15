@@ -1,60 +1,54 @@
 package net.mehvahdjukaar.supplementaries.blocks.tiles;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.mehvahdjukaar.supplementaries.blocks.HangingSignBlock;
 import net.mehvahdjukaar.supplementaries.common.IMapDisplay;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.ICommandSource;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
 import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector2f;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentUtils;
-import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
-import java.util.Random;
 import java.util.function.Function;
-import java.util.stream.IntStream;
 
 
-public class HangingSignBlockTile extends TileEntity implements ITickableTileEntity, IMapDisplay {
+public class HangingSignBlockTile extends SwayingBlockTile implements ITickableTileEntity, IMapDisplay {
 
     public static final int MAXLINES = 5;
 
     private NonNullList<ItemStack> stacks = NonNullList.withSize(1, ItemStack.EMPTY);
-    public float angle = 0;
-    public float prevAngle = 0;
-    public int counter = 800 + new Random().nextInt(80);
-    //lower counter is used by hitting animation
+
     public final ITextComponent[] signText = new ITextComponent[]{new StringTextComponent(""), new StringTextComponent(""),
             new StringTextComponent(""), new StringTextComponent(""), new StringTextComponent("")};
     private boolean isEditable = true;
     private final IReorderingProcessor[] renderText = new IReorderingProcessor[MAXLINES];
     private DyeColor textColor = DyeColor.BLACK;
 
-    public boolean inv = false;
+    static {
+        maxSwingAngle = 45f;
+        minSwingAngle = 2.5f;
+        maxPeriod = 25f;
+        angleDamping = 150f;
+        periodDamping = 100f;
+    }
+
+    //TODO: group all sign entities
 
     public HangingSignBlockTile() {
         super(Registry.HANGING_SIGN_TILE);
@@ -69,11 +63,6 @@ public class HangingSignBlockTile extends TileEntity implements ITickableTileEnt
     public void markDirty() {
         this.world.notifyBlockUpdate(this.pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
         super.markDirty();
-    }
-
-    @Override
-    public double getMaxRenderDistanceSquared() {
-        return 96;
     }
 
     @Override
@@ -176,27 +165,10 @@ public class HangingSignBlockTile extends TileEntity implements ITickableTileEnt
     }
 
     // end of sign code
-    @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.pos, 9, this.getUpdateTag());
-    }
-
-    @Override
-    public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
-    }
-
-    @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.read(this.getBlockState(), pkt.getNbtCompound());
-    }
-
-
 
     public int getSizeInventory() {
         return stacks.size();
     }
-
 
     public boolean isEmpty() {
         for (ItemStack itemstack : this.stacks)
@@ -205,24 +177,12 @@ public class HangingSignBlockTile extends TileEntity implements ITickableTileEnt
         return true;
     }
 
-
-    public int getInventoryStackLimit() {
-        return 1;
-    }
-
-
     protected NonNullList<ItemStack> getItems() {
         return this.stacks;
     }
 
-
     public void setItems(NonNullList<ItemStack> stacks) {
         this.stacks = stacks;
-    }
-
-
-    public int[] getSlotsForFace(Direction side) {
-        return IntStream.range(0, this.getSizeInventory()).toArray();
     }
 
 
@@ -232,6 +192,15 @@ public class HangingSignBlockTile extends TileEntity implements ITickableTileEnt
 
     public ItemStack getStackInSlot(int index) {
         return this.getItems().get(index);
+    }
+
+    /*
+    public int[] getSlotsForFace(Direction side) {
+        return IntStream.range(0, this.getSizeInventory()).toArray();
+    }
+
+    public int getInventoryStackLimit() {
+        return 1;
     }
 
     public void setInventorySlotContents(int index, ItemStack stack) {
@@ -245,37 +214,7 @@ public class HangingSignBlockTile extends TileEntity implements ITickableTileEnt
 
     public void clear() {
         this.getItems().clear();
-    }
+    }*/
 
-    public Direction getDirection() {
-        return this.getBlockState().get(HangingSignBlock.FACING);
-    }
-
-    @Override
-    public void tick() {
-        if (this.world.isRemote) {
-            this.counter++;
-
-            this.prevAngle = this.angle;
-            float maxswingangle = 45f;
-            float minswingangle = 2.5f;
-            float maxperiod = 25f;
-            float angleledamping = 150f;
-            float perioddamping = 100f;
-            //actually they are the inverse of damping. increase them to have less damping
-
-            float a = minswingangle;
-            float k = 0.01f;
-            if(counter<800){
-                a = (float) Math.max(maxswingangle * Math.pow(Math.E, -(counter / angleledamping)), minswingangle);
-                k = (float) Math.max(Math.PI*2*(float)Math.pow(Math.E, -(counter/perioddamping)), 0.01f);
-            }
-
-            this.angle = a * MathHelper.cos((counter/maxperiod) - k);
-            this.angle *= this.inv? -1:1;
-            // this.angle = 90*(float)
-            // Math.cos((float)counter/40f)/((float)this.counter/20f);;
-        }
-    }
 }
 

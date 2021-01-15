@@ -3,9 +3,11 @@ package net.mehvahdjukaar.supplementaries.gui;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.mehvahdjukaar.supplementaries.common.Resources;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -23,10 +25,21 @@ import net.minecraftforge.api.distmarker.OnlyIn;
     @Override
     protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int x, int y) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        Minecraft.getInstance().getTextureManager().bindTexture(Resources.SACK_GUI_TEXTURE);
+        Minecraft.getInstance().getTextureManager().bindTexture(getBackground());
         int k = (this.width - this.xSize) / 2;
         int l = (this.height - this.ySize) / 2;
         this.blit(matrixStack, k, l, 0, 0, this.xSize, this.ySize);
+    }
+
+    private ResourceLocation getBackground(){
+        int add = ServerConfigs.cached.SACK_SLOTS;
+        if(add==0){
+            return Resources.SACK_GUI_TEXTURE;
+        }
+        else if(add==1){
+            return Resources.SACK_GUI_TEXTURE_7;
+        }
+        return Resources.SACK_GUI_TEXTURE_9;
     }
 
     @Override

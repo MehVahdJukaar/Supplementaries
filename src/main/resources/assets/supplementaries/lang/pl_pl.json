@@ -53,6 +53,7 @@
   "message.supplementaries.command.globe_changed": "Ziarno generatora globusu zostało zmienione",
   "message.supplementaries.command.globe_reset": "Ziarno generatora globusu zostało odświeżone",
   "message.supplementaries.safe": "Właścicielem tego sejfu jest",
+  "message.supplementaries.safe_cleared": "Usunięto właściciela",
   "container.supplementaries.safe": "Właściciel",
 
   "block.supplementaries.hourglass": "Klepsydra",
@@ -69,6 +70,12 @@
   "gui.supplementaries.blackboard.edit": "Edytuj tablicę",
   "block.supplementaries.safe": "Sejf",
   "block.supplementaries.blackboard": "Tablica",
+  "block.supplementaries.soul_jar": "Słój z duszą",
+  "item.supplementaries.flute": "Flet",
+  "message.supplementaries.throwable_brick": "Może być rzucona",
+  "message.supplementaries.wall_lantern": "Można powiesić na ścianach",
+  "message.supplementaries.command.configs_reloaded": "Konfiguracja została ponownie załadowana",
+  "block.supplementaries.copper_lantern": "Miedziana latarenka",
 
   "block.supplementaries.flag": "Flaga (Praca w toku)",
   "block.supplementaries.laser_block": "Blok laseru (Praca w toku)",

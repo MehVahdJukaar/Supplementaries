@@ -1,10 +1,9 @@
-{
-  "parent": "supplementaries:custom/turntable",
-  "textures": {
-    "0": "supplementaries:blocks/turn_table_top",
-    "1": "supplementaries:blocks/turn_table_side_left",
-    "2": "supplementaries:blocks/turn_table_bottom",
-    "particle": "supplementaries:blocks/turn_table_side_left"
 
+{
+  "parent": "minecraft:block/template_piston",
+  "textures": {
+    "platform": "supplementaries:blocks/turn_table_top",
+    "bottom": "supplementaries:blocks/turn_table_bottom",
+    "side": "supplementaries:blocks/turn_table_side_left"
   }
 }

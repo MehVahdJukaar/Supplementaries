@@ -33,12 +33,15 @@ public class BlackboardBlockTile extends TileEntity {
         super.markDirty();
     }
 
+    //dont change name or it will crash with older saves
     @Override
     public void read(BlockState state, CompoundNBT compound) {
         super.read(state, compound);
         this.pixels=new byte[16][16];
         for(int i = 0; i<16; i++) {
-            this.pixels[i] = compound.getByteArray("pixels_"+i);
+            byte[] b = compound.getByteArray("pixels_"+i);
+            if(b.length==16)
+                this.pixels[i] = b;
         }
 
     }

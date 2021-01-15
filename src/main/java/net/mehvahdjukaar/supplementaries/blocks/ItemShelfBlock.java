@@ -1,7 +1,10 @@
 package net.mehvahdjukaar.supplementaries.blocks;
 
 import net.mehvahdjukaar.supplementaries.blocks.tiles.ItemShelfBlockTile;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.IWaterLoggable;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -28,17 +31,13 @@ import net.minecraft.world.World;
 
 
 public class ItemShelfBlock extends Block implements IWaterLoggable {
-    //protected static final VoxelShape SHAPE_NORTH = Block.makeCuboidShape(3.0D, 2.0D, 13.0D, 13.0D, 4.0D, 16.0D);
-    //protected static final VoxelShape SHAPE_SOUTH = Block.makeCuboidShape(3.0D, 2.0D, 0.0D, 13.0D, 4.0D, 3.0D);
-    //protected static final VoxelShape SHAPE_WEST = Block.makeCuboidShape(13.0D, 2.0D, 3.0D, 16.0D, 4.0D, 13.0D);
-    //protected static final VoxelShape SHAPE_EAST = Block.makeCuboidShape(0.0D, 2.0D, 3.0D, 3.0D, 4.0D, 13.0D);
-    protected static final VoxelShape SHAPE_NORTH = Block.makeCuboidShape(0D, 1.0D, 13.0D, 16.0D, 4.0D, 16.0D);
+  protected static final VoxelShape SHAPE_NORTH = Block.makeCuboidShape(0D, 1.0D, 13.0D, 16.0D, 4.0D, 16.0D);
     protected static final VoxelShape SHAPE_SOUTH = Block.makeCuboidShape(0D, 1.0D, 0.0D, 16.0D, 4.0D, 3.0D);
     protected static final VoxelShape SHAPE_WEST = Block.makeCuboidShape(13.0D, 1.0D, 0D, 16.0D, 4.0D, 16.0D);
     protected static final VoxelShape SHAPE_EAST = Block.makeCuboidShape(0.0D, 1.0D, 0D, 3.0D, 4.0D, 16.0D);
 
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
-    public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
+    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public ItemShelfBlock(Properties properties) {
         super(properties);
         this.setDefaultState(this.stateContainer.getBaseState().with(WATERLOGGED,false).with(FACING, Direction.NORTH));

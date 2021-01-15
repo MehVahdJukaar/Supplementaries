@@ -1,0 +1,7 @@
+{
+  "parent": "supplementaries:block/wall_lantern_long",
+  "textures": {
+    "particle": "supplementaries:blocks/wall_lantern_copper",
+    "1": "supplementaries:blocks/wall_lantern_copper"
+  }
+}

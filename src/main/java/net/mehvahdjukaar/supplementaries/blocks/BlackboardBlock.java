@@ -1,19 +1,12 @@
 package net.mehvahdjukaar.supplementaries.blocks;
 
 import net.mehvahdjukaar.supplementaries.blocks.tiles.BlackboardBlockTile;
-import net.mehvahdjukaar.supplementaries.blocks.tiles.GlobeBlockTile;
-import net.mehvahdjukaar.supplementaries.blocks.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.gui.BlackBoardGui;
-import net.mehvahdjukaar.supplementaries.gui.SignPostGui;
-import net.mehvahdjukaar.supplementaries.items.SignPostItem;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.HorizontalBlock;
+import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.item.*;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
@@ -25,19 +18,18 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraft.world.storage.MapData;
 
 public class BlackboardBlock extends Block {
-    public static final VoxelShape SHAPE_SOUTH = Block.makeCuboidShape(0,0,0,16,16,4);
-    public static final VoxelShape SHAPE_NORTH= Block.makeCuboidShape(0,0,12,16,16,16);
-    public static final VoxelShape SHAPE_EAST = Block.makeCuboidShape(0,0,0,4,16,16);
-    public static final VoxelShape SHAPE_WEST = Block.makeCuboidShape(12,0,0,16,16,16);
+    public static final VoxelShape SHAPE_SOUTH = Block.makeCuboidShape(0.0D,0.0D,0.0D,16.0D,16.0D,4.0D);
+    public static final VoxelShape SHAPE_NORTH= Block.makeCuboidShape(0.0D,0.0D,12.0D,16.0D,16.0D,16.0D);
+    public static final VoxelShape SHAPE_EAST = Block.makeCuboidShape(0.0D,0.0D,0.0D,4.0D,16.0D,16.0D);
+    public static final VoxelShape SHAPE_WEST = Block.makeCuboidShape(12.0D,0.0D,0.0D,16.0D,16.0D,16.0D);
 
-    public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
+    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public BlackboardBlock(Properties properties) {
         super(properties);
@@ -48,6 +40,22 @@ public class BlackboardBlock extends Block {
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(FACING, WATERLOGGED);
     }
+/*
+    @Override
+    public boolean isTransparent(BlockState state) {
+        return true;
+    }
+    @Override
+    public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
+        return true;
+    }
+    //TODO: fix culling on all blocks
+    @Override
+    public BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.MODEL;
+    }*/
+
+
 
     @Override
     public FluidState getFluidState(BlockState state) {

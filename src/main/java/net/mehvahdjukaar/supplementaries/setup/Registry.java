@@ -5,6 +5,7 @@ import net.mehvahdjukaar.supplementaries.blocks.*;
 import net.mehvahdjukaar.supplementaries.blocks.tiles.*;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.entities.FireflyEntity;
+import net.mehvahdjukaar.supplementaries.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.gui.NoticeBoardContainer;
 import net.mehvahdjukaar.supplementaries.gui.SackContainer;
 import net.mehvahdjukaar.supplementaries.items.*;
@@ -158,6 +159,8 @@ public class Registry {
 
 
     //entities
+
+    //firefly
     public static final String FIREFLY_NAME = "firefly";
     public static final EntityType<?> FIREFLY_TYPE = (EntityType.Builder.create(FireflyEntity::new, EntityClassification.AMBIENT)
             .setShouldReceiveVelocityUpdates(true).setTrackingRange(128).setUpdateInterval(3)
@@ -166,6 +169,13 @@ public class Registry {
             .setRegistryName(FIREFLY_NAME);
     public static final Item FIREFLY_SPAWN_EGG_ITEM = new SpawnEggItem(FIREFLY_TYPE,  -5048018, -14409439, //-4784384, -16777216,
             new Item.Properties().group(getTab(ItemGroup.MISC,FIREFLY_NAME))).setRegistryName(FIREFLY_NAME);
+    //brick
+    public static final String THROWABLE_BRICK_NAME = "brick_projectile";
+    public static final EntityType<?> THROWABLE_BRICK =  (EntityType.Builder.<ThrowableBrickEntity>create(ThrowableBrickEntity::new, EntityClassification.MISC)
+            .setShouldReceiveVelocityUpdates(true).setCustomClientFactory(ThrowableBrickEntity::new)
+            .setTrackingRange(64).setUpdateInterval(1).size(0.5f, 0.5f))//.size(0.25F, 0.25F).trackingRange(4).func_233608_b_(10))
+            .build(THROWABLE_BRICK_NAME).setRegistryName(THROWABLE_BRICK_NAME);
+
 
 
     //particles
@@ -318,6 +328,37 @@ public class Registry {
 
     public static final Item EMPTY_JAR_ITEM_TINTED = new EmptyJarItem(JAR_TINTED, new Item.Properties().group(
             getTab(ItemGroup.DECORATIONS,JAR_NAME)).maxStackSize(16)).setRegistryName(JAR_NAME_TINTED);
+
+
+    //firefly jar
+    public static final String FIREFLY_JAR_NAME = "firefly_jar";
+    public static final Block FIREFLY_JAR = new FireflyJarBlock(
+            AbstractBlock.Properties.create(Material.GLASS, MaterialColor.AIR)
+                    .hardnessAndResistance(1f, 1f)
+                    .sound(SoundType.GLASS)
+                    .notSolid()
+                    .setLightLevel((state) -> 8),false
+    ).setRegistryName(FIREFLY_JAR_NAME);
+
+    public static final Item FIREFLY_JAR_ITEM = new BlockItem(FIREFLY_JAR, new Item.Properties()
+            .group(getTab(ItemGroup.DECORATIONS,FIREFLY_JAR_NAME)).maxStackSize(16).setISTER(()-> FireflyJarItemRenderer::new))
+            .setRegistryName(FIREFLY_JAR_NAME);
+
+    //soul jar
+    public static final String SOUL_JAR_NAME = "soul_jar";
+    public static final Block SOUL_JAR = new FireflyJarBlock(
+            AbstractBlock.Properties.create(Material.GLASS, MaterialColor.AIR)
+                    .hardnessAndResistance(1f, 1f)
+                    .sound(SoundType.GLASS)
+                    .notSolid()
+                    .setLightLevel((state) -> 8),true
+    ).setRegistryName(SOUL_JAR_NAME);
+    public static final Item SOUL_JAR_ITEM = new BlockItem(SOUL_JAR, new Item.Properties()
+            .group(getTab(ItemGroup.DECORATIONS,SOUL_JAR_NAME)).maxStackSize(16))
+            .setRegistryName(SOUL_JAR_NAME);
+
+    public static final TileEntityType<?> FIREFLY_JAR_TILE =  TileEntityType.Builder.create(
+            FireflyJarBlockTile::new, FIREFLY_JAR,SOUL_JAR).build(null).setRegistryName(FIREFLY_JAR_NAME);
 
 
     //faucet
@@ -735,21 +776,6 @@ public class Registry {
             (new Item.Properties()).group(getTab(ItemGroup.DECORATIONS,SCONCE_NAME_GREEN))).setRegistryName(SCONCE_NAME_GREEN);
 
 
-    //firefly & jar
-    public static final String FIREFLY_JAR_NAME = "firefly_jar";
-    public static final Block FIREFLY_JAR = new FireflyJarBlock(
-            AbstractBlock.Properties.create(Material.GLASS, MaterialColor.AIR)
-                    .hardnessAndResistance(1f, 1f)
-                    .sound(SoundType.GLASS)
-                    .notSolid()
-                    .setLightLevel((state) -> 8)
-    ).setRegistryName(FIREFLY_JAR_NAME);
-    public static final TileEntityType<?> FIREFLY_JAR_TILE =  TileEntityType.Builder.create(
-            FireflyJarBlockTile::new, FIREFLY_JAR).build(null).setRegistryName(FIREFLY_JAR_NAME);
-    public static final Item FIREFLY_JAR_ITEM = new BlockItem(FIREFLY_JAR, new Item.Properties()
-            .group(getTab(ItemGroup.DECORATIONS,FIREFLY_JAR_NAME)).maxStackSize(16).setISTER(()-> FireflyJarItemRenderer::new))
-            .setRegistryName(FIREFLY_JAR_NAME);
-
     //candelabra
     public static final String CANDELABRA_NAME = "candelabra";
     public static final Block CANDELABRA = new CandelabraBlock(
@@ -916,7 +942,7 @@ public class Registry {
     //blackboard
     public static final String BLACKBOARD_NAME = "blackboard";
     public static final Block BLACKBOARD = new BlackboardBlock(
-            AbstractBlock.Properties.create(Material.ROCK, MaterialColor.BLACK)
+            AbstractBlock.Properties.create(Material.IRON, MaterialColor.IRON)
                     .hardnessAndResistance(2,3)
                     .setRequiresTool()
                     .harvestLevel(0)
@@ -944,11 +970,26 @@ public class Registry {
     ).setRegistryName(SAFE_NAME);
 
 
-
     //flute
     public static final String FLUTE_NAME = "flute";
     public static final Item FLUTE_ITEM = new Flute((new Item.Properties())
-            .group(null).maxStackSize(1).maxDamage(32)).setRegistryName(FLUTE_NAME);
+            .group(getTab(ItemGroup.TOOLS,FLUTE_NAME)).maxStackSize(1).maxDamage(32)).setRegistryName(FLUTE_NAME);
+
+    //copper lantern
+    public static final String COPPER_LANTERN_NAME = "copper_lantern";
+    public static final Block COPPER_LANTERN = new OilLanternBlock(
+            AbstractBlock.Properties.create(Material.IRON, MaterialColor.ORANGE_TERRACOTTA)
+                    .hardnessAndResistance(3.5f)
+                    .setRequiresTool()
+                    .setLightLevel((state)->state.get(OilLanternBlock.LIT)?15:0)
+                    .sound(SoundType.LANTERN)
+                    .notSolid()
+    ).setRegistryName(COPPER_LANTERN_NAME);
+    public static final TileEntityType<?> COPPER_LANTERN_TILE = TileEntityType.Builder.create(
+            OilLanternBlockTile::new, COPPER_LANTERN).build(null).setRegistryName(COPPER_LANTERN_NAME);
+    public static final Item COPPER_LANTERN_ITEM = new BlockItem(COPPER_LANTERN,
+            (new Item.Properties()).group(getTab(ItemGroup.DECORATIONS,COPPER_LANTERN_NAME))
+    ).setRegistryName(COPPER_LANTERN_NAME);
 
     /*
     //launcher rail

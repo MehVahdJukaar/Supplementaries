@@ -3,7 +3,10 @@ package net.mehvahdjukaar.supplementaries.blocks;
 import net.mehvahdjukaar.supplementaries.blocks.tiles.ClockBlockTile;
 import net.mehvahdjukaar.supplementaries.common.Resources;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.IWaterLoggable;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
@@ -36,7 +39,7 @@ public class ClockBlock extends Block implements IWaterLoggable {
     protected static final VoxelShape SHAPE_EAST = VoxelShapes.create(0D, 0D, 1D, 0.9375D, 1D, 0D);
     protected static final VoxelShape SHAPE_WEST = VoxelShapes.create(1D, 0D, 0D, 0.0625D, 1D, 1D);
 
-    public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
+    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final IntegerProperty HOUR = Resources.HOUR;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
@@ -57,7 +60,8 @@ public class ClockBlock extends Block implements IWaterLoggable {
 
     @Override
     public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+        return super.getRenderType(state);
+        //return BlockRenderType.MODEL;
     }
 
     @Override

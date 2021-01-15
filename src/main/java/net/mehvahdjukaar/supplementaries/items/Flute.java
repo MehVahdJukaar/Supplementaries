@@ -1,36 +1,45 @@
 package net.mehvahdjukaar.supplementaries.items;
 
+import net.minecraft.client.gui.screen.EditBookScreen;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.passive.CatEntity;
 import net.minecraft.entity.passive.TameableEntity;
+import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.item.*;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ITagCollection;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.*;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.UUID;
 
 public class Flute extends Item {
     public Flute(Properties properties) {
         super(properties);
     }
+
+    @Override
+    public boolean hasEffect(ItemStack stack) {
+        CompoundNBT compoundnbt = stack.getTag();
+        return compoundnbt != null && (compoundnbt.contains("Pet") || super.hasEffect(stack));
+    }
+
+    @Override
+    public boolean onLeftClickEntity(ItemStack stack, PlayerEntity player, Entity entity) {
+        if(!(entity instanceof LivingEntity)||player.getActiveHand()==null)return false;
+        return this.itemInteractionForEntity(stack,player, ((LivingEntity) entity),player.getActiveHand()).isSuccessOrConsume();
+    }
+
 
 
     @Override
@@ -38,21 +47,39 @@ public class Flute extends Item {
 
         ItemStack stack = playerIn.getHeldItem(handIn);
         if (!worldIn.isRemote) {
-            BlockPos pos = playerIn.getPosition();
             double x = playerIn.getPosX();
             double y = playerIn.getPosY();
             double z = playerIn.getPosZ();
-            int r = 20;
-            AxisAlignedBB bb = new AxisAlignedBB(x - r, y - r, z - r, x + r, y + r, z + r);
-            List<Entity> entities = worldIn.getEntitiesInAABBexcluding(playerIn, bb, (e) -> e instanceof TameableEntity);
-            for (Entity e : entities) {
-                TameableEntity pet = ((TameableEntity) e);
-                if (pet.isTamed() && !pet.isSitting() && pet.getOwnerId().equals(playerIn.getUniqueID())) {
-                    pet.attemptTeleport(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, false);
-                    playerIn.getCooldownTracker().setCooldown(this, 20);
+            int r=64;
+            int maxdistsq = r*r;
+            CompoundNBT com = stack.getChildTag("Pet");
+            if(com!=null){
+                Entity entity = worldIn.getEntityByID(com.getInt("ID"));
+                if(entity instanceof TameableEntity){
+                    TameableEntity pet1 = ((TameableEntity) entity);
+                    if (pet1.world==playerIn.world && pet1.isTamed() && pet1.getOwnerId().equals(playerIn.getUniqueID())&&pet1.getDistanceSq(playerIn)<maxdistsq) {
+                        if(pet1.attemptTeleport(x, y, z, false)){
+                            //pet1.setSleeping(false);
+                        }
+                    }
                 }
             }
+            else {
+                AxisAlignedBB bb = new AxisAlignedBB(x - r, y - r, z - r, x + r, y + r, z + r);
+                List<Entity> entities = worldIn.getEntitiesInAABBexcluding(playerIn, bb, (e) -> e instanceof TameableEntity);
+                for (Entity e : entities) {
+                    TameableEntity pet = ((TameableEntity) e);
+                    if (pet.isTamed() && !pet.isSitting() && pet.getOwnerId().equals(playerIn.getUniqueID())) {
+                        pet.attemptTeleport(x, y, z, false);
+                    }
+                }
+            }
+
+
+            playerIn.getCooldownTracker().setCooldown(this, 20);
             stack.damageItem(1, playerIn, (en) -> en.sendBreakAnimation(EquipmentSlotType.MAINHAND));
+            worldIn.playSound(null, playerIn.getPosition(), SoundEvents.BLOCK_NOTE_BLOCK_FLUTE, SoundCategory.PLAYERS, 1f, 1.45f);
+
             return ActionResult.resultConsume(stack);
         }
         //swings hand
@@ -65,7 +92,8 @@ public class Flute extends Item {
                 ((TameableEntity) target).getOwnerId().equals(playerIn.getUniqueID())) {
             CompoundNBT com = new CompoundNBT();
             com.putString("Name", target.getName().getString());
-            com.putUniqueId("Id", target.getUniqueID());
+            com.putUniqueId("UUID", target.getUniqueID());
+            com.putInt("ID", target.getEntityId());
             stack.setTagInfo("Pet",com);
             playerIn.setHeldItem(hand, stack);
             playerIn.getCooldownTracker().setCooldown(this, 20);

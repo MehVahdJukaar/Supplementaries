@@ -45,13 +45,11 @@
   "entity.supplementaries.firefly": "Firefly",
   "block.supplementaries.firefly_jar": "Firefly Jar",
   "item.supplementaries.firefly": "Firefly Spawn Egg",
-
   "globe.supplementaries.moon": "Moon",
   "globe.supplementaries.earth": "Earth",
   "globe.supplementaries.flat": "Flat",
   "message.supplementaries.command.globe_changed": "globe seed changed",
   "message.supplementaries.command.globe_reset": "globe seed reset",
-
   "block.supplementaries.hourglass" : "Hourglass",
   "block.supplementaries.globe": "Globe",
   "block.supplementaries.sconce_lever": "Sconce Lever",
@@ -71,6 +69,12 @@
   "container.supplementaries.safe": "Owner",
   "gui.supplementaries.speaker_block.volume" : "Volume: ",
   "gui.supplementaries.speaker_block.blocks": " blocks",
+  "block.supplementaries.soul_jar": "Soul Jar",
+  "item.supplementaries.flute": "Flute",
+  "message.supplementaries.throwable_brick": "Can be thrown",
+  "message.supplementaries.wall_lantern": "Can be placed on walls",
+  "message.supplementaries.command.configs_reloaded": "Configs reloaded",
+  "block.supplementaries.copper_lantern": "Copper Lantern",
 
   "block.supplementaries.flag": "WIP Flag",
   "block.supplementaries.laser_block": "WIP Laser Block",

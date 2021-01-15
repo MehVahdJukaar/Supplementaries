@@ -69,7 +69,7 @@ public class SackItem extends BlockItem {
             }
 
             if (compoundnbt.contains("Items", 9)) {
-                NonNullList<ItemStack> nonnulllist = NonNullList.withSize(5, ItemStack.EMPTY);
+                NonNullList<ItemStack> nonnulllist = NonNullList.withSize(9, ItemStack.EMPTY);
                 ItemStackHelper.loadAllItems(compoundnbt, nonnulllist);
                 int i = 0;
                 int j = 0;

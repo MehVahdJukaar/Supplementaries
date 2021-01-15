@@ -54,6 +54,7 @@
   "message.supplementaries.command.globe_reset": "Semeno pro generátor světa glóbusu bylo resetováno",
   "message.supplementaries.safe": "Vlastníkem tohoto trezoru je ",
   "container.supplementaries.safe": "Vlastník",
+  "message.supplementaries.safe_cleared": "Vlastník odstraněn",
 
   "block.supplementaries.hourglass": "Přesýpací hodiny",
   "block.supplementaries.globe": "Glóbus",
@@ -69,6 +70,12 @@
   "gui.supplementaries.blackboard.edit": "Nakreslete na tabuli",
   "block.supplementaries.safe": "Trezor",
   "block.supplementaries.blackboard": "Tabule",
+  "block.supplementaries.soul_jar": "Sklenice s duší",
+  "item.supplementaries.flute": "Flétna",
+  "message.supplementaries.throwable_brick": "Může být hozena",
+  "message.supplementaries.wall_lantern": "Lze pověsit na stěny",
+  "message.supplementaries.command.configs_reloaded": "Konfigy znovu načteny",
+  "block.supplementaries.copper_lantern": "Měděná lucerna",
 
   "block.supplementaries.flag": "Vlajka (WIP)",
   "block.supplementaries.laser_block": "Laserový blok (WIP)",

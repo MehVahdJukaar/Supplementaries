@@ -1,3 +1,6 @@
 {
-  "parent": "item/bamboo"
+  "parent": "item/handheld",
+  "textures": {
+    "layer0": "supplementaries:items/flute_item"
+  }
 }

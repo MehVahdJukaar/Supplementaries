@@ -26,7 +26,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.EmptyModelData;
 
-import java.util.ArrayList;
 import java.util.stream.IntStream;
 
 @OnlyIn(Dist.CLIENT)

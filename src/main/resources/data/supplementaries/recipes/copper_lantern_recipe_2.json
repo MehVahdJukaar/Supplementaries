@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " 0 ",
+    " 1 ",
+    " 0 "
+  ],
+  "key": {
+    "0": {
+      "item": "minecraft:iron_ingot"
+    },
+    "1": {
+      "item": "minecraft:blaze_powder"
+    }
+  },
+  "result": {
+    "item": "supplementaries:copper_lantern",
+    "count": 2
+  },
+  "conditions": [
+    {
+      "type": "forge:and",
+      "values": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "copper_lantern"
+        },
+        {
+          "type": "forge:tag_empty",
+          "tag": "forge:ingots/copper"
+        }
+      ]
+    }
+  ]
+}

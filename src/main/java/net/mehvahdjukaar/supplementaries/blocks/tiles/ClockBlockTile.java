@@ -9,6 +9,8 @@ import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.GameRules;
 
@@ -42,7 +44,7 @@ public class ClockBlockTile extends TileEntity implements ITickableTileEntity {
         this.sRoll = compound.getFloat("SecRoll");
         this.sPrevRoll = this.sRoll;
         this.sTargetRoll = this.sRoll;
-        this.power = compound.getInt("power");
+        this.power = compound.getInt("Power");
     }
 
     @Override
@@ -87,13 +89,17 @@ public class ClockBlockTile extends TileEntity implements ITickableTileEntity {
         if(!this.world.isRemote){
             BlockState state = this.getBlockState();
             if(hour!=state.get(ClockBlock.HOUR)){
-                world.setBlockState(this.pos, state.with(ClockBlock.HOUR, hour));
+                //if they are sent to the client the animation gets broken. Side effect is that you can't see hour with f3
+                world.setBlockState(this.pos, state.with(ClockBlock.HOUR, hour),4);
             }
             int p = MathHelper.clamp(time / 1500, 0, 15);
             if (p!=this.power){
                 this.power=p;
                 this.world.updateComparatorOutputLevel(this.pos, this.getBlockState().getBlock());
             }
+
+            this.world.playSound(null, this.pos, SoundEvents.BLOCK_NOTE_BLOCK_SNARE, SoundCategory.BLOCKS,0.03f,time%40==0?2:1.92f);
+
         }
         //hours
         this.targetRoll = (hour*30)%360;
@@ -114,26 +120,30 @@ public class ClockBlockTile extends TileEntity implements ITickableTileEntity {
         this.offset = (int) (dayTime - gameTime);
     }
 
+    @Override
     public void tick() {
         int time = this.world.getGameRules().getBoolean(GameRules.DO_DAYLIGHT_CYCLE)?
                 (int) (world.getDayTime() % 24000) : (int) (world.getGameTime() % 24000);
         if (this.world != null && (time) % 20 == 0) {
             this.updateTime((int) (this.world.getDayTime()%24000));
+
         }
         //hours
         this.prevRoll = this.roll;
         if (this.roll != this.targetRoll) {
             float r = (this.roll + 8) % 360;
-            if (r >= this.targetRoll && r <= this.targetRoll + 8)
+            if ((r >= this.targetRoll) && (r <= this.targetRoll + 8)) {
                 r = this.targetRoll;
+            }
             this.roll = r;
         }
         //minutes
         this.sPrevRoll = this.sRoll;
         if (this.sRoll != this.sTargetRoll) {
             float r = (this.sRoll + 8) % 360;
-            if (r >= this.sTargetRoll && r <= this.sTargetRoll + 8)
+            if ((r >= this.sTargetRoll) && (r <= this.sTargetRoll + 8)) {
                 r = this.sTargetRoll;
+            }
             this.sRoll = r;
         }
     }

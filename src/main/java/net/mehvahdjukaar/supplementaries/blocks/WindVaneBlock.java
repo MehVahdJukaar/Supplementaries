@@ -43,6 +43,8 @@ public class WindVaneBlock extends Block implements IWaterLoggable {
         return false;
     }
 
+
+    //model=block model+ tile. animated=tile, inv=inv
     @Override
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.MODEL;

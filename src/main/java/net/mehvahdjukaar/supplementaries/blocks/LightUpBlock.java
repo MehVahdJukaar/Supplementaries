@@ -27,7 +27,7 @@ import net.minecraft.world.World;
 
 import java.util.Random;
 
-public class LightUpBlock extends Block implements IWaterLoggable {
+public abstract class LightUpBlock extends Block implements IWaterLoggable {
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public LightUpBlock(Properties properties) {
@@ -60,7 +60,7 @@ public class LightUpBlock extends Block implements IWaterLoggable {
                     worldIn.setBlockState(pos, state.with(LIT, true), 3);
                 }
                 item.damageItem(1, player, (playerIn) -> playerIn.sendBreakAnimation(handIn));
-                return ActionResultType.SUCCESS;
+                return ActionResultType.func_233537_a_(worldIn.isRemote);
             }
             else if(item.getItem() instanceof FireChargeItem) {
                 if (!worldIn.isRemote) {
@@ -68,7 +68,7 @@ public class LightUpBlock extends Block implements IWaterLoggable {
                     worldIn.setBlockState(pos, state.with(LIT, true), 3);
                 }
                 if(!player.isCreative())item.shrink(1);
-                return ActionResultType.SUCCESS;
+                return ActionResultType.func_233537_a_(worldIn.isRemote);
             }
         }
         return ActionResultType.PASS;
@@ -126,8 +126,8 @@ public class LightUpBlock extends Block implements IWaterLoggable {
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         boolean flag = context.getWorld().getFluidState(context.getPos()).getFluid() == Fluids.WATER;
-        BlockState state = super.getStateForPlacement(context);
-        return state != null ? state.with(WATERLOGGED, flag).with(LIT,!flag) : state;
+        BlockState state = this.getDefaultState();
+        return state.with(WATERLOGGED, flag).with(LIT,!flag);
     }
 
 

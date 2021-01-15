@@ -15,11 +15,8 @@ import net.minecraft.world.World;
 
 
 public class CogBlock extends Block {
+
     public static final IntegerProperty POWER = BlockStateProperties.POWER_0_15;
-    //public static final BooleanProperty RECEIVING_NORTH = BlockStateProperties.NORTH;
-    //public static final BooleanProperty RECEIVING_SOUTH = BlockStateProperties.SOUTH;
-    //public static final BooleanProperty RECEIVING_EAST = BlockStateProperties.EAST;
-    //public static final BooleanProperty RECEIVING_WEST = BlockStateProperties.SOUTH;
 
     public CogBlock(Properties properties) {
         super(properties);

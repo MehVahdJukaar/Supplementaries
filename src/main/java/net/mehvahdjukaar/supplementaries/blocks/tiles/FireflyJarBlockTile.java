@@ -6,6 +6,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 
@@ -13,10 +14,14 @@ import java.util.Random;
 
 public class FireflyJarBlockTile extends TileEntity implements ITickableTileEntity {
     protected final Random rand = new Random();
-    public FireflyJarBlockTile() {
+    protected final boolean soul;
+    public FireflyJarBlockTile(boolean isSoul) {
         super(Registry.FIREFLY_JAR_TILE);
+        soul=isSoul;
     }
-
+    public FireflyJarBlockTile() {
+        this(false);
+    }
     @Override
     public void read(BlockState state, CompoundNBT compound) {
         super.read(state, compound);
@@ -51,12 +56,23 @@ public class FireflyJarBlockTile extends TileEntity implements ITickableTileEnti
                 int x = this.pos.getX();
                 int y = this.pos.getY();
                 int z = this.pos.getZ();
-                double pr = 0.15d;
-                for (int l = 0; l < 1; ++l) {
-                    double d0 = (x + 0.5 + (this.rand.nextFloat() - 0.5) * (0.625D - pr));
-                    double d1 = (y + 0.5 - 0.0625 + (this.rand.nextFloat() - 0.5) * (0.875D - pr));
-                    double d2 = (z + 0.5 + (this.rand.nextFloat() - 0.5) * (0.625D - pr));
-                    world.addParticle(Registry.FIREFLY_GLOW, d0, d1, d2, 0, 0, 0);
+                double pr = 0.15;
+                if(soul){
+                    pr=0.25;
+                    for (int l = 0; l < 1; ++l) {
+                        double d0 = (x + 0.5 + (this.rand.nextFloat() - 0.5) * (0.625D - pr));
+                        double d1 = (y + 0.25);
+                        double d2 = (z + 0.5 + (this.rand.nextFloat() - 0.5) * (0.625D - pr));
+                        world.addParticle(ParticleTypes.SOUL, d0, d1, d2, 0, this.rand.nextFloat()*0.02, 0);
+                    }
+                }
+                else {
+                    for (int l = 0; l < 1; ++l) {
+                        double d0 = (x + 0.5 + (this.rand.nextFloat() - 0.5) * (0.625D - pr));
+                        double d1 = (y + 0.5 - 0.0625 + (this.rand.nextFloat() - 0.5) * (0.875D - pr));
+                        double d2 = (z + 0.5 + (this.rand.nextFloat() - 0.5) * (0.625D - pr));
+                        world.addParticle(Registry.FIREFLY_GLOW, d0, d1, d2, 0, 0, 0);
+                    }
                 }
             }
         }

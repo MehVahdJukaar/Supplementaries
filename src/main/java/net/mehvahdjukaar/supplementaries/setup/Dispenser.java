@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.blocks.FireflyJarBlock;
 import net.mehvahdjukaar.supplementaries.blocks.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
@@ -35,9 +36,11 @@ public class Dispenser {
 
 
     static public Map<Item, IDispenseItemBehavior> DEFAULT_BEHAVIORS;
-
+    //TODO: find a better way to do this
 
     public static void registerBehaviors() {
+
+        if(!RegistryConfigs.reg.DISPENSERS.get())return;
 
         DEFAULT_BEHAVIORS = Dispenser.getVanillaDispenserBehaviors();
         if(DEFAULT_BEHAVIORS==null){
@@ -47,7 +50,8 @@ public class Dispenser {
         //jar
         if(RegistryConfigs.reg.JAR_ENABLED.get()){
             for(Item item : ForgeRegistries.ITEMS) {
-                if (item instanceof JarItem || item instanceof EmptyJarItem || item == Registry.FIREFLY_JAR_ITEM || item instanceof SackItem) {
+                if (item instanceof JarItem || item instanceof EmptyJarItem || item instanceof SackItem ||
+                        (item instanceof BlockItem && ((BlockItem) item).getBlock() instanceof FireflyJarBlock)) {
                     DispenserBlock.registerDispenseBehavior(item, new PlaceBlockDispenseBehavior());
                 } else if (!CommonUtil.getJarContentTypeFromItem(new ItemStack(item)).isEmpty()) {
                     DispenserBlock.registerDispenseBehavior(item, new FillJarDispenserBehavior());

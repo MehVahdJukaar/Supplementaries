@@ -233,7 +233,7 @@ public class SignPostGui extends Screen {
             String s1 = this.cachedLines[i3];
             if (s1 != null && i3 == this.editLine && j >= 0) {
                 int j3 = this.minecraft.fontRenderer.getStringWidth(s1.substring(0, Math.max(Math.min(j, s1.length()), 0)));
-                int k3 = j3 - this.minecraft.fontRenderer.getStringWidth(s1) / 2;
+                int k3 = -3*o[i3] + j3 - this.minecraft.fontRenderer.getStringWidth(s1) / 2;
                 if (flag1 && j < s1.length()) {
                     fill(matrixstack, k3, l - 1, k3 + 1, l + 9, -16777216 | i);
                 }

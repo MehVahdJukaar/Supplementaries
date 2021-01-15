@@ -4,7 +4,6 @@ import net.mehvahdjukaar.supplementaries.blocks.tiles.PistonLauncherArmBlockTile
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.DirectionalBlock;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.BlockItemUseContext;
@@ -30,7 +29,7 @@ public class PistonLauncherBlock extends Block {
     protected static final VoxelShape PISTON_BASE_UP_AABB = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 12.0D, 16.0D);
     protected static final VoxelShape PISTON_BASE_DOWN_AABB = Block.makeCuboidShape(0.0D, 4.0D, 0.0D, 16.0D, 16.0D, 16.0D);
 
-    public static final DirectionProperty FACING = DirectionalBlock.FACING;
+    public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final BooleanProperty EXTENDED = BlockStateProperties.EXTENDED; // is base only?
     public PistonLauncherBlock(Properties properties){
         super(properties);

@@ -82,6 +82,7 @@ public class PedestalBlockTile extends LockableLootTileEntity implements ISidedI
         }
     }
 
+    //TODO: put yaw inside blockstate so it can be rotated
     @Override
     public void read(BlockState state, CompoundNBT compound) {
         super.read(state, compound);
@@ -89,8 +90,8 @@ public class PedestalBlockTile extends LockableLootTileEntity implements ISidedI
             this.stacks = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
         }
         ItemStackHelper.loadAllItems(compound, this.stacks);
-        this.type=compound.getInt("type");
-        this.yaw=compound.getFloat("yaw");
+        this.type=compound.getInt("Type");
+        this.yaw=compound.getFloat("Yaw");
     }
 
     @Override
@@ -99,8 +100,8 @@ public class PedestalBlockTile extends LockableLootTileEntity implements ISidedI
         if (!this.checkLootAndWrite(compound)) {
             ItemStackHelper.saveAllItems(compound, this.stacks);
         }
-        compound.putInt("type",this.type);
-        compound.putFloat("yaw",this.yaw);
+        compound.putInt("Type",this.type);
+        compound.putFloat("Yaw",this.yaw);
         return compound;
     }
 

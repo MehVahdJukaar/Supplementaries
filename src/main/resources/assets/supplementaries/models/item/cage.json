@@ -1,8 +1,9 @@
+
 {
-  "parent": "supplementaries:block/cage",
-  "textures": {
-    "particle": "supplementaries:blocks/cage_side"
-  },
+	"parent": "supplementaries:block/cage",
+	"textures": {
+		"particle": "supplementaries:blocks/cage_side"
+	},
 	"display": {
 		"thirdperson_righthand": {
 			"rotation": [75, 45, 0],
@@ -35,5 +36,4 @@
 		}
 	}
 }
-
 

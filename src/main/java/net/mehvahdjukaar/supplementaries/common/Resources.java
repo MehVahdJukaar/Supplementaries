@@ -1,10 +1,13 @@
 package net.mehvahdjukaar.supplementaries.common;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.minecraft.item.Item;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.IntegerProperty;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.Tags;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -80,6 +83,8 @@ public class Resources {
 
     public static final ResourceLocation NOTICE_BOARD_GUI_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID+":textures/gui/notice_board_gui.png");
     public static final ResourceLocation SACK_GUI_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID+":textures/gui/sack_gui.png");
+    public static final ResourceLocation SACK_GUI_TEXTURE_7 = new ResourceLocation(Supplementaries.MOD_ID+":textures/gui/sack_gui_7.png");
+    public static final ResourceLocation SACK_GUI_TEXTURE_9 = new ResourceLocation(Supplementaries.MOD_ID+":textures/gui/sack_gui_9.png");
 
 
     public static List<ResourceLocation> getTextures() {
@@ -93,7 +98,7 @@ public class Resources {
     public static final ResourceLocation SHULKER_BLACKLIST_TAG = new ResourceLocation(Supplementaries.MOD_ID, "shulker_like_containers_blacklist");
     public static final ResourceLocation COPPER_TAG = new ResourceLocation(Supplementaries.MOD_ID, "shulker_like_containers_blacklist");
     public static final ResourceLocation SILVER_TAG = new ResourceLocation(Supplementaries.MOD_ID, "shulker_like_containers_blacklist");
-
+    public static final Tags.IOptionalNamedTag<Item> POSTS = ItemTags.createOptional(new ResourceLocation(Supplementaries.MOD_ID, "brazier"));
 
 
 

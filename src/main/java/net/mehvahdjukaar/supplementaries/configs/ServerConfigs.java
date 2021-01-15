@@ -19,10 +19,35 @@ public class ServerConfigs {
         block.init(SERVER_BUILDER);
         spawn.init(SERVER_BUILDER);
         entity.init(SERVER_BUILDER);
+        tweaks.init(SERVER_BUILDER);
 
         SERVER_CONFIG = SERVER_BUILDER.build();
     }
 
+    public static class tweaks {
+        public static ForgeConfigSpec.BooleanValue WALL_LANTERN_PLACEMENT;
+        public static ForgeConfigSpec.BooleanValue THROWABLE_BRICKS;
+
+        private static void init(ForgeConfigSpec.Builder builder){
+            builder.comment("Vanilla tweaks")
+                    .push("tweaks");
+
+            //throwable bricks
+            builder.push("throwable_bricks");
+            THROWABLE_BRICKS = builder.comment("throw bricks at your foes! Might glass blocks")
+                    .define("enabled",true);
+            builder.pop();
+            //wall lantern
+            builder.push("wall_lantern");
+            WALL_LANTERN_PLACEMENT = builder.comment("allow wall lanterns placement")
+                    .define("enabled",true);
+            builder.pop();
+
+
+            builder.pop();
+        }
+
+    }
 
     public static class block {
         public static ForgeConfigSpec.IntValue SPEAKER_RANGE;
@@ -41,8 +66,6 @@ public class ServerConfigs {
         public static ForgeConfigSpec.BooleanValue TURN_TABLE_ROTATE_ENTITIES;
         public static ForgeConfigSpec.ConfigValue<List<? extends String>> TURN_TABLE_BLACKLIST;
 
-        public static ForgeConfigSpec.BooleanValue WALL_LANTERN_PLACEMENT;
-
         public static ForgeConfigSpec.IntValue JAR_CAPACITY;
         public static ForgeConfigSpec.BooleanValue JAR_EAT;
 
@@ -57,10 +80,12 @@ public class ServerConfigs {
 
         public static ForgeConfigSpec.BooleanValue SACK_PENALITY;
         public static ForgeConfigSpec.IntValue SACK_INCREMENT;
+        public static ForgeConfigSpec.IntValue SACK_SLOTS;
 
         public static ForgeConfigSpec.BooleanValue SAFE_UNBREAKABLE;
 
         private static void  init(ForgeConfigSpec.Builder builder){
+
             builder.comment("Server side blocks configs")
                     .push("blocks");
 
@@ -106,11 +131,6 @@ public class ServerConfigs {
             List<String> turnTableBlacklist = Arrays.asList("minecraft:end_portal_frame");
             TURN_TABLE_BLACKLIST = builder.comment("blocks that can't be rotated. Some special ones like chests, beds and pistons are already hardcoded")
                     .defineList("blacklist", turnTableBlacklist,s -> true);
-            builder.pop();
-            //wall lantern
-            builder.push("wall_lantern");
-            WALL_LANTERN_PLACEMENT = builder.comment("allow wall lanterns placement")
-                    .define("enabled",true);
             builder.pop();
             //jar
             builder.push("jar");
@@ -177,6 +197,8 @@ public class ServerConfigs {
                     .define("sack_penality", true);
             SACK_INCREMENT = builder.comment("maximum number of sacks after which the slowness effect will be applied. each multiple of this number will further slow the player down")
                     .defineInRange("sack_increment",2,0,50);
+            SACK_SLOTS = builder.comment("additional sack slots divided by 2. Number of slots will be 5 + additional_slots*2")
+                    .defineInRange("additional_slots",0,0,2);
             builder.pop();
 
             builder.push("safe");
@@ -252,6 +274,9 @@ public class ServerConfigs {
 
     //maybe not need but hey
     public static class cached{
+        //tweaks
+        public static boolean THROWABLE_BRICKS;
+        public static boolean WALL_LANTERN_PLACEMENT;
         //spawns
         public static int FIREFLY_MIN;
         public static int FIREFLY_MAX;
@@ -272,7 +297,6 @@ public class ServerConfigs {
         public static int TURN_TABLE_PERIOD;
         public static boolean TURN_TABLE_ROTATE_ENTITIES;
         public static List<? extends String> TURN_TABLE_BLACKLIST;
-        public static boolean WALL_LANTERN_PLACEMENT;
         public static int JAR_CAPACITY;
         public static boolean JAR_EAT;
         public static boolean NOTICE_BOARDS_UNRESTRICTED;
@@ -283,12 +307,16 @@ public class ServerConfigs {
         public static boolean CAGE_ALL_MOBS;
         public static int SACK_INCREMENT;
         public static boolean SACK_PENALITY;
+        public static int SACK_SLOTS;
         public static boolean SAFE_UNBREAKABLE;
         //entity
         public static int FIREFLY_PERIOD;
         public static double FIREFLY_SPEED;
 
         public static void refresh(){
+            WALL_LANTERN_PLACEMENT = tweaks.WALL_LANTERN_PLACEMENT.get();
+            THROWABLE_BRICKS = tweaks.THROWABLE_BRICKS.get();
+
             FIREFLY_MIN = spawn.FIREFLY_MIN.get();
             FIREFLY_MAX = spawn.FIREFLY_MAX.get();
             FIREFLY_WEIGHT = spawn.FIREFLY_WEIGHT.get();
@@ -311,8 +339,6 @@ public class ServerConfigs {
             TURN_TABLE_ROTATE_ENTITIES = block.TURN_TABLE_ROTATE_ENTITIES.get();
             TURN_TABLE_BLACKLIST = block.TURN_TABLE_BLACKLIST.get();
 
-            WALL_LANTERN_PLACEMENT = block.WALL_LANTERN_PLACEMENT.get();
-
             JAR_CAPACITY = block.JAR_CAPACITY.get();
 
             JAR_EAT = block.JAR_EAT.get();
@@ -328,6 +354,7 @@ public class ServerConfigs {
 
             SACK_INCREMENT = block.SACK_INCREMENT.get();
             SACK_PENALITY = block.SACK_PENALITY.get();
+            SACK_SLOTS = block.SACK_SLOTS.get();
 
             SAFE_UNBREAKABLE= block.SAFE_UNBREAKABLE.get();
 

@@ -8,7 +8,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.ICommandSource;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.DyeColor;
 import net.minecraft.nbt.CompoundNBT;
@@ -22,9 +21,7 @@ import net.minecraft.util.math.vector.Vector2f;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentUtils;
-import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -95,15 +92,19 @@ public class SignPostBlockTile extends TileEntity {
         }
 
         this.fenceBlock = NBTUtil.readBlockState(compound.getCompound("Fence"));
-        this.yawUp = compound.getFloat("Yaw_up");
-        this.yawDown = compound.getFloat("Yaw_down");
-        this.leftUp = compound.getBoolean("Left_up");
-        this.leftDown = compound.getBoolean("Left_down");
+        this.yawUp = compound.getFloat("YawUp");
+        this.yawDown = compound.getFloat("YawDown");
+        this.leftUp = compound.getBoolean("LeftUp");
+        this.leftDown = compound.getBoolean("LeftDown");
         this.up = compound.getBoolean("Up");
         this.down = compound.getBoolean("Down");
-        this.woodTypeUp = WoodType.values()[compound.getInt("Wood_type_up")];
-        this.woodTypeDown = WoodType.values()[compound.getInt("Wood_type_down")];
+        this.woodTypeUp = WoodType.values()[compound.getInt("WoodTypeUp")];
+        this.woodTypeDown = WoodType.values()[compound.getInt("WoodTypeDown")];
 
+
+        //remove in the future
+        if(compound.contains("Wood_type_up"))this.woodTypeUp = WoodType.values()[compound.getInt("Wood_type_up")];
+        if(compound.contains("Wood_type_down"))this.woodTypeDown = WoodType.values()[compound.getInt("Wood_type_down")];
     }
 
     @Override
@@ -117,14 +118,14 @@ public class SignPostBlockTile extends TileEntity {
 
         compound.putString("Color", this.textColor.getTranslationKey());
         compound.put("Fence", NBTUtil.writeBlockState(fenceBlock));
-        compound.putFloat("Yaw_up",this.yawUp);
-        compound.putFloat("Yaw_down",this.yawDown);
-        compound.putBoolean("Left_up",this.leftUp);
-        compound.putBoolean("Left_down",this.leftDown);
+        compound.putFloat("YawUp",this.yawUp);
+        compound.putFloat("TawDown",this.yawDown);
+        compound.putBoolean("LeftUp",this.leftUp);
+        compound.putBoolean("LeftDown",this.leftDown);
         compound.putBoolean("Up", this.up);
         compound.putBoolean("Down", this.down);
-        compound.putInt("Wood_type_up", this.woodTypeUp.ordinal());
-        compound.putInt("Wood_type_down", this.woodTypeDown.ordinal());
+        compound.putInt("WoodTypeUp", this.woodTypeUp.ordinal());
+        compound.putInt("WoodTypeDown", this.woodTypeDown.ordinal());
 
         return compound;
     }

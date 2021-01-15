@@ -5,7 +5,6 @@ import net.mehvahdjukaar.supplementaries.common.Resources;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.DirectionalBlock;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
@@ -28,7 +27,7 @@ import net.minecraft.world.World;
 public class BellowsBlock extends Block {
 
 
-    public static final DirectionProperty FACING = DirectionalBlock.FACING;
+    public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final IntegerProperty POWER = BlockStateProperties.POWER_0_15;
     public static final IntegerProperty TILE = Resources.TILE_3;
 

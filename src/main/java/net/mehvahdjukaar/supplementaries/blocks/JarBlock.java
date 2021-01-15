@@ -6,7 +6,6 @@ import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
@@ -23,6 +22,7 @@ import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -41,8 +41,10 @@ import java.util.List;
 public class JarBlock extends Block {
     protected static final VoxelShape SHAPE = VoxelShapes.or(VoxelShapes.create(0.1875D, 0D, 0.1875D, 0.8125D, 0.875D, 0.8125D),
             VoxelShapes.create(0.3125, 0.875, 0.3125, 0.6875, 1, 0.6875));
-    public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
+
+    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final IntegerProperty LIGHT_LEVEL = Resources.LIGHT_LEVEL_0_15;
+
     public JarBlock(Properties properties) {
         super(properties);
         this.setDefaultState(this.stateContainer.getBaseState().with(LIGHT_LEVEL, 0).with(FACING, Direction.NORTH));
@@ -97,10 +99,11 @@ public class JarBlock extends Block {
         }
     }
 
+    //TODO: finish this
     public ItemStack getJarItem(JarBlockTile te){
         ItemStack returnStack;
         boolean flag = this.getBlock() ==  Registry.JAR;
-        if(te.isEmpty()&&te.hasNoMob()){
+        if(te.isEmpty()&&te.mobHolder.isEmpty()){
             returnStack = new ItemStack(flag ? Registry.EMPTY_JAR_ITEM : Registry.EMPTY_JAR_ITEM_TINTED);
         }
         else{
@@ -116,12 +119,14 @@ public class JarBlock extends Block {
     }
 
     // shulker box code
+
+    //forces creative drop. might remove this since pick block does work
     @Override
     public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
         TileEntity tileentity = worldIn.getTileEntity(pos);
         if (tileentity instanceof JarBlockTile) {
             JarBlockTile tile = (JarBlockTile) tileentity;
-            if (!worldIn.isRemote && player.isCreative()) {
+            if (!worldIn.isRemote && player.isCreative() && tile.hasContent()) {
 
                 ItemStack itemstack = this.getJarItem(tile);
 

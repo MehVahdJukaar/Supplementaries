@@ -1,7 +1,10 @@
 package net.mehvahdjukaar.supplementaries.blocks;
 
 
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.IWaterLoggable;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
@@ -24,6 +27,8 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
+
 
 public class CrankBlock extends Block implements IWaterLoggable{
     protected static final VoxelShape SHAPE_DOWN = VoxelShapes.create(0.125D, 0.6875D, 0.875D, 0.875D, 1D, 0.125D);
@@ -33,7 +38,7 @@ public class CrankBlock extends Block implements IWaterLoggable{
     protected static final VoxelShape SHAPE_EAST = VoxelShapes.create(0.3125D, 0.125D, 0.125D, 0D, 0.875D, 0.875D);
     protected static final VoxelShape SHAPE_WEST = VoxelShapes.create(0.6875D, 0.125D, 0.875D, 1D, 0.875D, 0.125D);
 
-    public static final DirectionProperty FACING = DirectionalBlock.FACING;
+    public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final IntegerProperty POWER = BlockStateProperties.POWER_0_15;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public CrankBlock(Properties properties) {
@@ -165,9 +170,23 @@ public class CrankBlock extends Block implements IWaterLoggable{
         return state.rotate(mirrorIn.toRotation(state.get(FACING)));
     }
 
-    @Override
+    @Nullable
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         boolean flag = context.getWorld().getFluidState(context.getPos()).getFluid() == Fluids.WATER;
-        return this.getDefaultState().with(WATERLOGGED, flag).with(FACING, context.getFace());
+        BlockState blockstate = this.getDefaultState();
+        IWorldReader iworldreader = context.getWorld();
+        BlockPos blockpos = context.getPos();
+        Direction[] adirection = context.getNearestLookingDirections();
+
+        for(Direction direction : adirection) {
+            if (direction.getAxis().isHorizontal()) {
+                Direction direction1 = direction.getOpposite();
+                blockstate = blockstate.with(FACING, direction1);
+                if (blockstate.isValidPosition(iworldreader, blockpos)) {
+                    return blockstate.with(WATERLOGGED, flag);
+                }
+            }
+        }
+        return null;
     }
 }

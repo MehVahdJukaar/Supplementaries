@@ -766,7 +766,7 @@ public class GlobeDataGenerator {
                 if(pixel.isLand() && (pfp(pos.right()).isWater() ||
                         pfp(pos.up()).isWater() ||
                         pfp(pos.down()).isWater() ||
-                        pfp(pos.left()).isWater()) && rand.nextInt(4)==0){
+                        pfp(pos.left()).isWater()) && rand.nextFloat()>0.7){
                     pixels[x][y].specialFeature = pixel.biome!=Biome.COLD ? Feature.SUNKEN : Feature.ICEBERG;
                 }
             }
@@ -790,12 +790,13 @@ public class GlobeDataGenerator {
         int x = p.x;
         int y = p.y;
         if(dist<0||pixels[x][y].isLand())return;
-        int d = dist - this.rand.nextInt(10);
+        //int d = dist - this.rand.nextInt(10);
         pixels[x][y].setLand();
-        setLand(p.up(),d);
-        setLand(p.down(),d);
-        setLand(p.left(),d);
-        setLand(p.right(),d);
+        setLand(p.up(),dist - rand.nextInt(10));
+        setLand(p.down(),dist - rand.nextInt(10));
+        setLand(p.left(),dist - rand.nextInt(10));
+        setLand(p.right(),dist - rand.nextInt(10));
+        //TODO: apply this fix to other gens
     }
 
 }

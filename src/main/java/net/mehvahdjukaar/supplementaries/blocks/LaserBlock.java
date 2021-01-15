@@ -4,7 +4,6 @@ import net.mehvahdjukaar.supplementaries.blocks.tiles.LaserBlockTile;
 import net.mehvahdjukaar.supplementaries.common.Resources;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.DirectionalBlock;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
@@ -24,7 +23,7 @@ import net.minecraft.world.World;
 
 
 public class LaserBlock extends Block {
-    public static final DirectionProperty FACING = DirectionalBlock.FACING;
+    public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     public static final IntegerProperty RECEIVING = Resources.RECEIVING;
     public LaserBlock(Properties properties) {

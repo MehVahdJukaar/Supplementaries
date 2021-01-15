@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.blocks.tiles;
 
 import net.mehvahdjukaar.supplementaries.blocks.SackBlock;
 import net.mehvahdjukaar.supplementaries.blocks.SafeBlock;
-import net.mehvahdjukaar.supplementaries.common.Resources;
+import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -12,13 +12,10 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ShulkerBoxContainer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tags.ITag;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.tileentity.LockableLootTileEntity;
 import net.minecraft.tileentity.LockableTileEntity;
 import net.minecraft.util.Direction;
@@ -95,7 +92,7 @@ public class SafeBlockTile extends LockableLootTileEntity implements ISidedInven
             boolean flag = blockstate.get(SafeBlock.OPEN);
             if (!flag) {
                 //this.playSound(blockstate, SoundEvents.BLOCK_BARREL_OPEN);
-                this.world.playSound((PlayerEntity)null, this.pos.getX()+0.5, this.pos.getY()+0.5, this.pos.getZ()+0.5,
+                this.world.playSound(null, this.pos.getX()+0.5, this.pos.getY()+0.5, this.pos.getZ()+0.5,
                         SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.65F);
                 this.world.setBlockState(this.getPos(), blockstate.with(SafeBlock.OPEN, true), 3);
             }
@@ -210,10 +207,7 @@ public class SafeBlockTile extends LockableLootTileEntity implements ISidedInven
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        ITag<Item> t = ItemTags.getCollection().get(Resources.SHULKER_BLACKLIST_TAG);
-        if(t!=null && stack.getItem().isIn(t))
-            return false;
-        return super.isItemValidForSlot(index,stack);
+        return CommonUtil.isAllowedInShulker(stack);
     }
 
 

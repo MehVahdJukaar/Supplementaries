@@ -11,6 +11,7 @@ public class RecipeCondition implements ICondition {
     private final String flag;
 
 
+
     public RecipeCondition(String flag, ResourceLocation loc) {
         this.flag = flag;
         this.res = loc;

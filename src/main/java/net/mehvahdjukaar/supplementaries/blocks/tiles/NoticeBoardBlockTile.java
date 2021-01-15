@@ -1,34 +1,27 @@
 package net.mehvahdjukaar.supplementaries.blocks.tiles;
 
-import io.netty.buffer.Unpooled;
 import net.mehvahdjukaar.supplementaries.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.common.IMapDisplay;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.gui.NoticeBoardContainer;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.LecternBlock;
-import net.minecraft.client.gui.screen.LecternScreen;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.LecternContainer;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tileentity.LecternTileEntity;
 import net.minecraft.tileentity.LockableLootTileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.LazyOptional;
@@ -53,22 +46,27 @@ public class NoticeBoardBlockTile extends LockableLootTileEntity implements INam
     // private int packedFrontLight =0;
     public boolean textVisible = true; //for culling
     private ITextComponent customName;
+
     public NoticeBoardBlockTile() {
         super(Registry.NOTICE_BOARD_TILE);
     }
 
+    @Override
     public void setCustomName(ITextComponent name) {
         this.customName = name;
     }
 
+    @Override
     public ITextComponent getName() {
         return this.customName != null ? this.customName : this.getDefaultName();
     }
 
+    @Override
     public ITextComponent getCustomName() {
         return this.customName;
     }
 
+    @Override
     public ITextComponent getDefaultName() {
         return new TranslationTextComponent("block.supplementaries.notice_board");
     }
@@ -153,11 +151,12 @@ public class NoticeBoardBlockTile extends LockableLootTileEntity implements INam
             this.stacks = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
         }
         ItemStackHelper.loadAllItems(compound, this.stacks);
-        this.txt = compound.getString("txt");
-        this.fontScale = compound.getInt("fontscale");
+        this.txt = compound.getString("Text");
+        this.fontScale = compound.getInt("FontScale");
+        //TODO: rework this
         this.inventoryChanged = compound.getBoolean("invchanged");
-        this.textColor = DyeColor.byTranslationKey(compound.getString("color"), DyeColor.BLACK);
-        this.textVisible = compound.getBoolean("textvisible");
+        this.textColor = DyeColor.byTranslationKey(compound.getString("Color"), DyeColor.BLACK);
+        this.textVisible = compound.getBoolean("TextVisible");
 
 
         // this.packedFrontLight = compound.getInt("light");
@@ -173,12 +172,12 @@ public class NoticeBoardBlockTile extends LockableLootTileEntity implements INam
             ItemStackHelper.saveAllItems(compound, this.stacks);
         }
         if (this.txt != null) {
-            compound.putString("txt", this.txt);
+            compound.putString("Text", this.txt);
         }
-        compound.putInt("fontscale", this.fontScale);
+        compound.putInt("FontScale", this.fontScale);
         compound.putBoolean("invchanged", this.inventoryChanged);
-        compound.putString("color", this.textColor.getTranslationKey());
-        compound.putBoolean("textvisible", this.textVisible);
+        compound.putString("Color", this.textColor.getTranslationKey());
+        compound.putBoolean("TextVisible", this.textVisible);
 
         // compound.putInt("light", this.packedFrontLight);
 
@@ -220,7 +219,7 @@ public class NoticeBoardBlockTile extends LockableLootTileEntity implements INam
 
     @Override
     public Container createMenu(int id, PlayerInventory player) {
-        return new NoticeBoardContainer(id, player, new PacketBuffer(Unpooled.buffer()).writeBlockPos(this.getPos()));
+        return new NoticeBoardContainer(id, player,this);
     }
 
     @Override
@@ -282,6 +281,7 @@ public class NoticeBoardBlockTile extends LockableLootTileEntity implements INam
         }
     }
 
+    //do this inside here
     public void setFontScale(int s) {
         this.fontScale = s;
     }

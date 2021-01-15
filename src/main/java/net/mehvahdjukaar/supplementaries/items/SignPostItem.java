@@ -27,10 +27,6 @@ public class SignPostItem  extends Item {
     }
 
     @Override
-    public int getUseDuration(ItemStack itemstack) {
-        return 0;
-    }
-    @Override
     public ActionResultType onItemUse(ItemUseContext context) {
         //if (!context.canPlace()) return ActionResultType.FAIL;
 

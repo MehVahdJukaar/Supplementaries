@@ -2,36 +2,17 @@ package net.mehvahdjukaar.supplementaries.gui;
 
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
-import net.mehvahdjukaar.supplementaries.blocks.HangingSignBlock;
 import net.mehvahdjukaar.supplementaries.blocks.tiles.BlackboardBlockTile;
-import net.mehvahdjukaar.supplementaries.blocks.tiles.HangingSignBlockTile;
 import net.mehvahdjukaar.supplementaries.network.Networking;
 import net.mehvahdjukaar.supplementaries.network.UpdateServerBlackboardPacket;
-import net.mehvahdjukaar.supplementaries.network.UpdateServerHangingSignPacket;
-import net.mehvahdjukaar.supplementaries.network.UpdateServerSignPostPacket;
-import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.DialogTexts;
-import net.minecraft.client.gui.fonts.TextInputUtil;
-import net.minecraft.client.gui.screen.EditSignScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.data.EmptyModelData;
-
-import java.util.ArrayList;
-import java.util.stream.IntStream;
 
 @OnlyIn(Dist.CLIENT)
 public class BlackBoardGui extends Screen {

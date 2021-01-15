@@ -50,7 +50,6 @@ public class SignPostBlock extends Block implements IWaterLoggable, IForgeBlock 
     protected static final VoxelShape SHAPE = Block.makeCuboidShape(5D, 0.0D, 5D, 11D, 16.0D, 11D);
     protected static final VoxelShape COLLISION_SHAPE = Block.makeCuboidShape(5D, 0.0D, 5D, 11D, 24.0D, 11D);
 
-
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final EnumProperty<WoodType> WOOD_TYPE = Resources.WOOD_TYPE; //null = rendered by te. other states hold all the wood types sign models
     public SignPostBlock(Properties properties) {

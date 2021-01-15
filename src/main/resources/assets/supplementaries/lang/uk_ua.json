@@ -53,6 +53,7 @@
   "message.supplementaries.command.globe_changed": "Ключ для генерації світу глобусу змінено",
   "message.supplementaries.command.globe_reset": "Ключ для генерації світу глобусу скинутий",
   "message.supplementaries.safe": "Власником цього сейфу є",
+  "message.supplementaries.safe_cleared": "Власника видалено",
   "container.supplementaries.safe": "Власник",
 
   "block.supplementaries.hourglass": "Пісочний годинник",
@@ -69,6 +70,12 @@
   "gui.supplementaries.blackboard.edit": "Редагувати малюнок на дошці",
   "block.supplementaries.safe": "Сейф",
   "block.supplementaries.blackboard": "Дошка",
+  "block.supplementaries.soul_jar": "Банка з душею",
+  "item.supplementaries.flute": "Бамбукова флейта",
+  "message.supplementaries.throwable_brick": "Можна кидати",
+  "message.supplementaries.wall_lantern": "Можна повісити на стіну",
+  "message.supplementaries.command.configs_reloaded": "Конфігурації перезавантажені",
+  "block.supplementaries.copper_lantern": "Мідний ліхтар",
 
   "block.supplementaries.flag": "Прапор (Робота в процесі)",
   "block.supplementaries.laser_block": "Лазерний блок (Робота в процесі)",

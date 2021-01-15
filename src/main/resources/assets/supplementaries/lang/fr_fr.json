@@ -54,6 +54,7 @@
   "message.supplementaries.command.globe_reset": "Graine pour la génération du globe a été réinitialisée",
   "message.supplementaries.safe": "Le propriétaire de ce coffre-fort est",
   "container.supplementaries.safe": "Propriétaire",
+  "message.supplementaries.safe_cleared": "Propriétaire supprimé",
 
   "block.supplementaries.hourglass": "Sablier",
   "block.supplementaries.globe": "Globe",
@@ -69,6 +70,12 @@
   "gui.supplementaries.blackboard.edit": "Dessin sur le tableau noir",
   "block.supplementaries.safe": "Coffre-fort",
   "block.supplementaries.blackboard": "Tableau noir",
+  "block.supplementaries.soul_jar": "Pot avec une âme",
+  "item.supplementaries.flute": "Flûte",
+  "message.supplementaries.throwable_brick": "La brique peut être jetée",
+  "message.supplementaries.wall_lantern": "Les lanternes peuvent être accrochées au mur",
+  "message.supplementaries.command.configs_reloaded": "Configs reloaded",
+  "block.supplementaries.copper_lantern": "Lanterne en cuivre",
 
   "block.supplementaries.flag": "Drapeau (Travail en cours)",
   "block.supplementaries.laser_block": "Bloc laser (Travail en cours)",

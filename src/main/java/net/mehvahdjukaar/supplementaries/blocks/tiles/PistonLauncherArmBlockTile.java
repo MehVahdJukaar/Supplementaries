@@ -28,7 +28,8 @@ import java.util.Random;
 
 public class PistonLauncherArmBlockTile extends TileEntity implements ITickableTileEntity {
     public int age = 0;
-    private double increment = 0;
+    //maybe replace this with boolean?
+    private final double increment;
     public double offset = 0;
     public double prevOffset = 0;
     private int dx = 0;
@@ -36,12 +37,26 @@ public class PistonLauncherArmBlockTile extends TileEntity implements ITickableT
     private int dz = 0;
     protected final Random rand = new Random();
     public PistonLauncherArmBlockTile() {
-        super(Registry.PISTON_LAUNCHER_ARM_TILE);
+        this(true, Direction.UP);
         //this.setParameters();
     }
+
+    //TODO rewrite this old code
     public PistonLauncherArmBlockTile(boolean extending, Direction dir) {
-        this();
-        this.setParameters(extending, dir);
+        super(Registry.PISTON_LAUNCHER_ARM_TILE);
+        Vector3i v = dir.getDirectionVec();
+        this.dx = v.getX();
+        this.dy = v.getY();
+        this.dz = v.getZ();
+        if (extending) {
+            this.increment = 0.5;
+            this.offset = -1;
+            this.prevOffset = -1;
+        } else {
+            this.increment = -0.5;
+            this.offset = 0;
+            this.prevOffset = 0;
+        }
     }
 
     @Override
@@ -154,25 +169,6 @@ public class PistonLauncherArmBlockTile extends TileEntity implements ITickableT
         entity.move(MoverType.PISTON, new Vector3d(dx, dy, dz));
     }
 
-    private void setParameters(boolean extending, Direction dir){
-        // boolean extending = this.getExtending();
-        //Direction dir = this.getDirection();
-        this.age = 0;
-        if (extending) {
-            this.increment = 0.5;
-            this.offset = -1;
-            this.prevOffset = -1;
-        } else {
-            this.increment = -0.5;
-            this.offset = 0;
-            this.prevOffset = 0;
-        }
-        Vector3i v = dir.getDirectionVec();
-        this.dx = v.getX();
-        this.dy = v.getY();
-        this.dz = v.getZ();
-    }
-
     public Direction getDirection() {
         return this.getBlockState().get(PistonLauncherArmBlock.FACING);
     }
@@ -181,40 +177,26 @@ public class PistonLauncherArmBlockTile extends TileEntity implements ITickableT
         return this.getBlockState().get(PistonLauncherArmBlock.EXTENDING);
     }
 
-    public int getAge() {
-        return this.age;
-    }
-
-    public double getOffset() {
-        return this.offset;
-    }
-
-    public double getPrevOffset() {
-        return this.prevOffset;
-    }
-
     @Override
     public void read(BlockState state, CompoundNBT compound) {
         super.read(state, compound);
-        this.age = compound.getInt("age");
-        this.increment = compound.getDouble("increment");
-        this.offset = compound.getDouble("offset");
-        this.prevOffset = compound.getDouble("prevOffset");
-        this.dx = compound.getInt("dx");
-        this.dy = compound.getInt("dy");
-        this.dz = compound.getInt("dz");
+        this.age = compound.getInt("Age");
+        this.offset = compound.getDouble("Offset");
+        this.prevOffset = compound.getDouble("PrevOffset");
+        this.dx = compound.getInt("Dx");
+        this.dy = compound.getInt("Dy");
+        this.dz = compound.getInt("Dz");
     }
 
     @Override
     public CompoundNBT write(CompoundNBT compound) {
         super.write(compound);
-        compound.putInt("age", this.age);
-        compound.putDouble("increment", this.increment);
-        compound.putDouble("offset", this.offset);
-        compound.putDouble("prevOffset", this.prevOffset);
-        compound.putInt("dx", this.dx);
-        compound.putInt("dy", this.dy);
-        compound.putInt("dz", this.dz);
+        compound.putInt("Age", this.age);
+        compound.putDouble("Offset", this.offset);
+        compound.putDouble("PrevOffset", this.prevOffset);
+        compound.putInt("Dx", this.dx);
+        compound.putInt("Dy", this.dy);
+        compound.putInt("Dz", this.dz);
         return compound;
     }
 

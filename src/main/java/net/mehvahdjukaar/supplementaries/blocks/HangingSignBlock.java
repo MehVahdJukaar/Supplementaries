@@ -3,20 +3,19 @@ package net.mehvahdjukaar.supplementaries.blocks;
 import net.mehvahdjukaar.supplementaries.blocks.tiles.HangingSignBlockTile;
 import net.mehvahdjukaar.supplementaries.common.Resources;
 import net.mehvahdjukaar.supplementaries.gui.HangingSignGui;
-import net.minecraft.block.*;
-import net.minecraft.entity.Entity;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
@@ -26,41 +25,27 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
 
-public class HangingSignBlock extends Block implements  IWaterLoggable {
+public class HangingSignBlock extends SwayingBlock {
     //protected static final VoxelShape SHAPE_SOUTH = VoxelShapes.create(0.5625D, 0D, 1D, 0.4375D, 1D, 0D);
     protected static final VoxelShape SHAPE_NORTH = VoxelShapes.create(0.4375D, 0D, 0D, 0.5625D, 1D, 1D);
     //protected static final VoxelShape SHAPE_EAST = VoxelShapes.create(1D, 0D, 0.4375D, 0D, 1D, 0.5625D);
     protected static final VoxelShape SHAPE_WEST = VoxelShapes.create(0D, 0D, 0.5625D, 1D, 1D, 0.4375D);
 
-
-    public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
-    public static final BooleanProperty UP = BlockStateProperties.UP;
+    public static final BooleanProperty HANGING = BlockStateProperties.HANGING;
     public static final BooleanProperty TILE = Resources.TILE; // is it renderer by tile entity? animated part
-    public static final IntegerProperty EXTENSION = Resources.EXTENSION;
-    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+
     public HangingSignBlock(Properties properties) {
         super(properties);
         this.setDefaultState(this.stateContainer.getBaseState().with(WATERLOGGED, false)
-                .with(EXTENSION, 0).with(FACING, Direction.NORTH).with(TILE, false).with(UP,false));
+                .with(EXTENSION, 0).with(FACING, Direction.NORTH).with(TILE, false).with(HANGING,false));
     }
 
-    @Override
-    public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
-    }
-
-    //for player bed spawn
-    @Override
-    public boolean canSpawnInBlock() {
-        return true;
-    }
 
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
@@ -121,8 +106,9 @@ public class HangingSignBlock extends Block implements  IWaterLoggable {
         return ActionResultType.PASS;
     }
 
+    @Override
     public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-        if(state.get(UP)){
+        if(state.get(HANGING)){
             return worldIn.getBlockState(pos.up()).isSolidSide(worldIn, pos.up(), Direction.DOWN);
         }
         else {
@@ -144,16 +130,8 @@ public class HangingSignBlock extends Block implements  IWaterLoggable {
         else {
             return facing == stateIn.get(FACING).getOpposite()? !stateIn.isValidPosition(worldIn, currentPos)
                     ? Blocks.AIR.getDefaultState()
-                    : this.getConnectedState(stateIn,facingState) : stateIn;
+                    : this.getConnectedState(stateIn,facingState, (World) worldIn,facingPos) : stateIn;
         }
-    }
-
-    public BlockState getConnectedState(BlockState state, BlockState facingState){
-        Block block = facingState.getBlock();
-        int flag = 0;
-        if(block instanceof FenceBlock || block instanceof SignPostBlock) flag = 1;
-        else if(block instanceof WallBlock) flag = 2;
-        return state.with(EXTENSION, flag);
     }
 
     @Override
@@ -169,49 +147,36 @@ public class HangingSignBlock extends Block implements  IWaterLoggable {
 
     @Override
     public BlockRenderType getRenderType(BlockState state) {
-        return state.get(UP) ? BlockRenderType.ENTITYBLOCK_ANIMATED : BlockRenderType.MODEL;
+        return state.get(HANGING) ? BlockRenderType.ENTITYBLOCK_ANIMATED : BlockRenderType.MODEL;
     }
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(FACING, TILE, EXTENSION, WATERLOGGED, UP);
+        super.fillStateContainer(builder);
+        builder.add(HANGING,TILE);
     }
 
-    public BlockState rotate(BlockState state, Rotation rot) {
-        return state.with(FACING, rot.rotate(state.get(FACING)));
-    }
-
-    public BlockState mirror(BlockState state, Mirror mirrorIn) {
-        return state.rotate(mirrorIn.toRotation(state.get(FACING)));
-    }
-
-    @Override
-    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        super.onEntityCollision(state, world, pos, entity);
-
-        TileEntity tileentity = world.getTileEntity(pos);
-        if (tileentity instanceof HangingSignBlockTile) {
-            HangingSignBlockTile te = ((HangingSignBlockTile) tileentity);
-            te.counter = 0;
-            double v = entity.getMotion().dotProduct(Vector3d.copyCentered(te.getDirection().rotateY().getDirectionVec()));
-            if(v!=0){
-                te.inv=v<0;
-            }
-        }
-    }
-
+    //TODO: merge with lantern
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         boolean water = context.getWorld().getFluidState(context.getPos()).getFluid() == Fluids.WATER;
         if (context.getFace() == Direction.DOWN||context.getFace() == Direction.UP) {
             return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing().rotateYCCW())
-                    .with(UP, context.getFace()==Direction.DOWN).with(WATERLOGGED, water);
+                    .with(HANGING, context.getFace()==Direction.DOWN).with(WATERLOGGED, water);
         }
         BlockPos blockpos = context.getPos();
-        IBlockReader world = context.getWorld();
-        BlockState facingState = world.getBlockState(blockpos.offset(context.getFace().getOpposite()));
+        World world = context.getWorld();
+        BlockPos facingpos = blockpos.offset(context.getFace().getOpposite());
+        BlockState facingState = world.getBlockState(facingpos);
 
-        return this.getConnectedState(this.getDefaultState(),facingState).with(FACING, context.getFace()).with(WATERLOGGED,water);
+        return this.getConnectedState(this.getDefaultState(),facingState, world,facingpos).with(FACING, context.getFace()).with(WATERLOGGED,water);
+    }
+
+
+    //for player bed spawn
+    @Override
+    public boolean canSpawnInBlock() {
+        return true;
     }
 
     @Override
@@ -236,20 +201,10 @@ public class HangingSignBlock extends Block implements  IWaterLoggable {
     }
 
     @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
-
-    @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
         return new HangingSignBlockTile();
     }
 
-    @Override
-    public boolean eventReceived(BlockState state, World world, BlockPos pos, int eventID, int eventParam) {
-        super.eventReceived(state, world, pos, eventID, eventParam);
-        TileEntity tileentity = world.getTileEntity(pos);
-        return tileentity != null && tileentity.receiveClientEvent(eventID, eventParam);
-    }
+
 }
 

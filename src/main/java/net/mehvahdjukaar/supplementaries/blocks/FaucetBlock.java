@@ -30,8 +30,6 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
@@ -48,7 +46,7 @@ public class FaucetBlock extends Block implements  IWaterLoggable{
     protected static final VoxelShape SHAPE_WEST_JAR = VoxelShapes.create(1D, 0, 0.3125D, 0.3125D, 0.625D, 0.6875D);
     protected static final VoxelShape SHAPE_EAST_JAR = VoxelShapes.create(0D, 0, 0.6875D, 0.6875D, 0.625D, 0.3125D);
 
-    public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
+    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty ENABLED = BlockStateProperties.ENABLED;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     public static final BooleanProperty HAS_WATER = Resources.HAS_WATER;

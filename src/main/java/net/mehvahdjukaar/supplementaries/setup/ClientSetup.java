@@ -10,13 +10,14 @@ import net.mehvahdjukaar.supplementaries.gui.SackContainer;
 import net.mehvahdjukaar.supplementaries.gui.SackGui;
 import net.mehvahdjukaar.supplementaries.particles.FireflyGlowParticle;
 import net.mehvahdjukaar.supplementaries.particles.SpeakerSoundParticle;
-import net.mehvahdjukaar.supplementaries.renderers.blocks.*;
 import net.mehvahdjukaar.supplementaries.renderers.entities.FireflyEntityRenderer;
+import net.mehvahdjukaar.supplementaries.renderers.tiles.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.particle.FlameParticle;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.client.renderer.entity.SpriteRenderer;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.container.ContainerType;
@@ -43,13 +44,19 @@ public class ClientSetup {
         RenderingRegistry.registerEntityRenderingHandler( (EntityType<FireflyEntity>) Registry.FIREFLY_TYPE, FireflyEntityRenderer::new);
         RenderTypeLookup.setRenderLayer(Registry.FIREFLY_JAR, RenderType.getCutout());
 
+        //throwable brick
+        RenderingRegistry.registerEntityRenderingHandler(Registry.THROWABLE_BRICK,
+                renderManager -> new SpriteRenderer(renderManager, Minecraft.getInstance().getItemRenderer()));
+
+
+
         //planter
-        RenderTypeLookup.setRenderLayer(Registry.PLANTER, RenderType.getCutout());
+        //RenderTypeLookup.setRenderLayer(Registry.PLANTER, RenderType.getCutout());
         //clock
-        RenderTypeLookup.setRenderLayer(Registry.CLOCK_BLOCK, RenderType.getCutout());
+        //RenderTypeLookup.setRenderLayer(Registry.CLOCK_BLOCK, RenderType.getCutout());
         ClientRegistry.bindTileEntityRenderer((TileEntityType<ClockBlockTile>)Registry.CLOCK_BLOCK_TILE, ClockBlockTileRenderer::new);
         //pedestal
-        RenderTypeLookup.setRenderLayer(Registry.PEDESTAL, RenderType.getCutout());
+        //RenderTypeLookup.setRenderLayer(Registry.PEDESTAL, RenderType.getCutout());
         ClientRegistry.bindTileEntityRenderer((TileEntityType<PedestalBlockTile>)Registry.PEDESTAL_TILE, PedestalBlockTileRenderer::new);
         //wind vane
         RenderTypeLookup.setRenderLayer(Registry.WIND_VANE, RenderType.getCutout());
@@ -58,17 +65,17 @@ public class ClientSetup {
         ClientRegistry.bindTileEntityRenderer((TileEntityType<NoticeBoardBlockTile>)Registry.NOTICE_BOARD_TILE, NoticeBoardBlockTileRenderer::new);
         ScreenManager.registerFactory((ContainerType<NoticeBoardContainer>)Registry.NOTICE_BOARD_CONTAINER, NoticeBoardGui::new);
         //crank
-        RenderTypeLookup.setRenderLayer(Registry.CRANK, RenderType.getCutout());
+        //RenderTypeLookup.setRenderLayer(Registry.CRANK, RenderType.getCutout());
         //jar
         RenderTypeLookup.setRenderLayer(Registry.JAR, RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(Registry.JAR_TINTED, RenderType.getTranslucent());
         ClientRegistry.bindTileEntityRenderer((TileEntityType<JarBlockTile>)Registry.JAR_TILE, JarBlockTileRenderer::new);
         //faucet
-        RenderTypeLookup.setRenderLayer(Registry.FAUCET, RenderType.getCutout());
+        //RenderTypeLookup.setRenderLayer(Registry.FAUCET, RenderType.getCutout());
         ClientRegistry.bindTileEntityRenderer((TileEntityType<FaucetBlockTile>)Registry.FAUCET_TILE, FaucetBlockTileRenderer::new);
         //piston launcher
-        RenderTypeLookup.setRenderLayer(Registry.PISTON_LAUNCHER, RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(Registry.PISTON_LAUNCHER_HEAD, RenderType.getCutout());
+        //RenderTypeLookup.setRenderLayer(Registry.PISTON_LAUNCHER, RenderType.getCutout());
+        //RenderTypeLookup.setRenderLayer(Registry.PISTON_LAUNCHER_HEAD, RenderType.getCutout());
         ClientRegistry.bindTileEntityRenderer((TileEntityType<PistonLauncherArmBlockTile>)Registry.PISTON_LAUNCHER_ARM_TILE, PistonLauncherArmBlockTileRenderer::new);
         //sign post
         RenderTypeLookup.setRenderLayer(Registry.SIGN_POST, RenderType.getCutout());
@@ -102,7 +109,7 @@ public class ClientSetup {
         //candelabra
         RenderTypeLookup.setRenderLayer(Registry.CANDELABRA, RenderType.getCutout());
         //item shelf
-        RenderTypeLookup.setRenderLayer(Registry.ITEM_SHELF, RenderType.getCutout());
+        //RenderTypeLookup.setRenderLayer(Registry.ITEM_SHELF, RenderType.getCutout());
         ClientRegistry.bindTileEntityRenderer((TileEntityType<ItemShelfBlockTile>)Registry.ITEM_SHELF_TILE, ItemShelfBlockTileRenderer::new);
         //cage
         RenderTypeLookup.setRenderLayer(Registry.CAGE, RenderType.getCutout());
@@ -110,18 +117,22 @@ public class ClientSetup {
         //sconce lever
         RenderTypeLookup.setRenderLayer(Registry.SCONCE_LEVER, RenderType.getCutout());
         //globe
-        RenderTypeLookup.setRenderLayer(Registry.GLOBE, RenderType.getCutout());
+        //RenderTypeLookup.setRenderLayer(Registry.GLOBE, RenderType.getCutout());
         ClientRegistry.bindTileEntityRenderer((TileEntityType<GlobeBlockTile>)Registry.GLOBE_TILE, GlobeBlockTileRenderer::new);
         //hourglass
         RenderTypeLookup.setRenderLayer(Registry.HOURGLASS, RenderType.getCutout());
         ClientRegistry.bindTileEntityRenderer((TileEntityType<HourGlassBlockTile>)Registry.HOURGLASS_TILE, HourGlassBlockTileRenderer::new);
         //sack
-        RenderTypeLookup.setRenderLayer(Registry.SACK, RenderType.getCutout());
+        //RenderTypeLookup.setRenderLayer(Registry.SACK, RenderType.getCutout());
         ScreenManager.registerFactory((ContainerType<SackContainer>)Registry.SACK_CONTAINER, SackGui::new);
         //blackboard
         RenderTypeLookup.setRenderLayer(Registry.BLACKBOARD, RenderType.getCutout());
         ClientRegistry.bindTileEntityRenderer((TileEntityType<BlackboardBlockTile>)Registry.BLACKBOARD_TILE, BlackboardBlockTileRenderer::new);
-
+        //soul jar
+        RenderTypeLookup.setRenderLayer(Registry.SOUL_JAR, RenderType.getTranslucent());
+        //copper lantern
+        RenderTypeLookup.setRenderLayer(Registry.COPPER_LANTERN, RenderType.getCutout());
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<OilLanternBlockTile>)Registry.COPPER_LANTERN_TILE, OilLanternBlockTileRenderer::new);
 
     }
 

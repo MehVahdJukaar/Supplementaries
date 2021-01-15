@@ -4,25 +4,43 @@ import net.mehvahdjukaar.supplementaries.blocks.tiles.FireflyJarBlockTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.PushReaction;
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathType;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import java.util.List;
 import java.util.Random;
 
 
 public class FireflyJarBlock extends Block {
     protected static final VoxelShape SHAPE = VoxelShapes.or(VoxelShapes.create(0.1875D, 0D, 0.1875D, 0.8125D, 0.875D, 0.8125D),
             VoxelShapes.create(0.3125, 0.875, 0.3125, 0.6875, 1, 0.6875));
-    public FireflyJarBlock(Properties properties) {
+
+    protected final boolean soul;
+
+    public FireflyJarBlock(Properties properties, boolean isSoul) {
         super(properties);
+        soul=isSoul;
+    }
+
+    @Override
+    public void addInformation(ItemStack stack,  IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        if(soul){
+            tooltip.add(new StringTextComponent("Use Fabulous graphics").mergeStyle(TextFormatting.GRAY));
+        }
+        super.addInformation(stack, worldIn, tooltip, flagIn);
     }
 
     @Override
@@ -48,7 +66,7 @@ public class FireflyJarBlock extends Block {
 
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new FireflyJarBlockTile();
+        return new FireflyJarBlockTile(soul);
     }
 
     @Override

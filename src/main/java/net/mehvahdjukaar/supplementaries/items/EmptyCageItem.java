@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.items;
 
 
-import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.MobHolder;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
@@ -21,12 +21,10 @@ public class EmptyCageItem extends BlockItem {
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, PlayerEntity player, Entity entity) {
-        if(!(entity instanceof LivingEntity))return false;
+        if(!(entity instanceof LivingEntity)||player.getActiveHand()==null)return false;
         return this.itemInteractionForEntity(stack,player, ((LivingEntity) entity),player.getActiveHand()).isSuccessOrConsume();
     }
 
-
-//TODO: replace all actionresourl.SUCCESS with ActionResultType.func_233537a(World::isRemote). CONSUME=server, SUCCESS=client
 
     @Override
     public ActionResultType itemInteractionForEntity(ItemStack stack, PlayerEntity player, LivingEntity entity, Hand hand) {
@@ -47,7 +45,7 @@ public class EmptyCageItem extends BlockItem {
 
         if (stack.hasDisplayName()) returnStack.setDisplayName(stack.getDisplayName());
 
-        CommonUtil.createJarMobItemNBT(returnStack, entity, 1f, 0.875f);
+        MobHolder.createMobHolderItemNBT(returnStack, entity, 1f, 0.875f);
 
         player.setHeldItem(hand, DrinkHelper.fill(stack.copy(),player,returnStack,false));
         //TODO: cage sound here

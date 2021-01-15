@@ -1,9 +1,0 @@
-{
-  "parent": "supplementaries:custom/clover",
-  "textures": {
-    "all": "supplementaries:blocks/clover_top",
-    "particle": "supplementaries:blocks/clover_top",
-    "1": "supplementaries:blocks/clover_top",
-    "2": "supplementaries:blocks/clover_side"
-  }
-}

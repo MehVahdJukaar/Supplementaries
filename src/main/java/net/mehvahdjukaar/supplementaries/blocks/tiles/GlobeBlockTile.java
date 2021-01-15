@@ -54,9 +54,9 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, I
         if (compound.contains("CustomName", 8)) {
             this.customName = ITextComponent.Serializer.getComponentFromJson(compound.getString("CustomName"));
         }
-        this.face = compound.getInt("face");
-        this.yaw = compound.getFloat("yaw");
-        this.type = GlobeType.values()[compound.getInt("globe_type")];
+        this.face = compound.getInt("Face");
+        this.yaw = compound.getFloat("Yaw");
+        this.type = GlobeType.values()[compound.getInt("GlobeType")];
     }
 
     @Override
@@ -65,9 +65,9 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, I
         if (this.customName != null) {
             compound.putString("CustomName", ITextComponent.Serializer.toJson(this.customName));
         }
-        compound.putInt("face",this.face);
-        compound.putFloat("yaw",this.yaw);
-        compound.putInt("globe_type", this.type.ordinal());
+        compound.putInt("Face",this.face);
+        compound.putFloat("Yaw",this.yaw);
+        compound.putInt("GlobeType", this.type.ordinal());
         return compound;
     }
 
@@ -80,6 +80,7 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, I
         this.markDirty();
     }
 
+    @Override
     public boolean receiveClientEvent(int id, int type) {
         if (id == 1) {
             this.spin();

@@ -1,21 +1,14 @@
 package net.mehvahdjukaar.supplementaries.blocks.tiles;
 
 import net.mehvahdjukaar.supplementaries.blocks.ClockBlock;
-import net.mehvahdjukaar.supplementaries.blocks.JarBlock;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil.JarLiquidType;
-import net.mehvahdjukaar.supplementaries.common.CommonUtil.JarMobType;
+import net.mehvahdjukaar.supplementaries.common.IMobHolder;
+import net.mehvahdjukaar.supplementaries.common.LiquidHolder;
+import net.mehvahdjukaar.supplementaries.common.MobHolder;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.monster.SlimeEntity;
-import net.minecraft.entity.passive.BeeEntity;
-import net.minecraft.entity.passive.CatEntity;
-import net.minecraft.entity.passive.ParrotEntity;
-import net.minecraft.entity.passive.RabbitEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -27,7 +20,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.PotionUtils;
@@ -36,7 +28,6 @@ import net.minecraft.stats.Stats;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.LockableLootTileEntity;
 import net.minecraft.util.*;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.biome.BiomeColors;
@@ -50,36 +41,34 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 
 import javax.annotation.Nullable;
-import java.util.Random;
-import java.util.UUID;
 import java.util.stream.IntStream;
 
-public class JarBlockTile extends LockableLootTileEntity implements ISidedInventory, ITickableTileEntity {
+public class JarBlockTile extends LockableLootTileEntity implements ISidedInventory, ITickableTileEntity, IMobHolder {
     private NonNullList<ItemStack> stacks = NonNullList.withSize(1, ItemStack.EMPTY);
     public int color = 0xffffff;
     public float liquidLevel = 0;
     public JarLiquidType liquidType = JarLiquidType.EMPTY;
 
-    //mob jar code
-    public Entity mob = null;
-    public CompoundNBT entityData = null;
-    public UUID uuid;
-    public boolean entityChanged = true;
-    public float yOffset = 1;
-    public float scale = 1;
-    public float jumpY = 0;
-    public float prevJumpY = 0;
-    public float yVel = 0;
-    private final Random rand = new Random();
-    public JarMobType animationType = CommonUtil.JarMobType.DEFAULT;
+    public MobHolder mobHolder;
+    public LiquidHolder liquidHolder;
 
     public JarBlockTile() {
         super(Registry.JAR_TILE);
+        this.mobHolder = new MobHolder(this.world,this.pos);
+        this.liquidHolder = new LiquidHolder(this.world,this.pos);
     }
+
+    public MobHolder getMobHolder(){return this.mobHolder;}
 
     @Override
     public double getMaxRenderDistanceSquared() {
         return 80;
+    }
+
+    @Override
+    public void onLoad() {
+        this.mobHolder.setWorldAndPos(this.world,this.pos);
+        this.liquidHolder.setWorldAndPos(this.world,this.pos);
     }
 
     // hijacking this method to work with hoppers
@@ -95,6 +84,8 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
     //called by markdirty. server side. client will receive updated values via update packet and read()
     public void updateTile() {
         ItemStack stack = this.getStackInSlot(0);
+
+        this.liquidHolder.updateLiquid(stack);
 
         this.liquidType = CommonUtil.getJarContentTypeFromItem(stack);
         //level
@@ -115,13 +106,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
             this.color = this.liquidType.color;
         }
         //lava light
-        if(!this.world.isRemote && this.liquidType.isLava()){
-            BlockState bs = this.getBlockState();
-            if (bs.get(JarBlock.LIGHT_LEVEL)!=15) {
-                this.world.setBlockState(this.pos, bs.with(JarBlock.LIGHT_LEVEL, 15), 4|16);
-            }
-
-        }
+        //dis
 
     }
 
@@ -322,7 +307,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
         //c*m jar easter egg XD. so funi XDD
-        if(!this.hasNoMob()){
+        if(!this.mobHolder.isEmpty()){
             if(!this.hasCustomName())return false;
             else if(!this.getCustomName().toString().toLowerCase().contains("cum"))return false;
         }
@@ -344,10 +329,11 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
         return false;
     }
 
-    //TODO: ise write instead so you can pass stuff directly when usign blockEntityTag
+    //TODO: use write instead so you can pass stuff directly when usign blockEntityTag
 
     // save to itemstack
     public void saveToNbt(ItemStack stack) {
+        //TODO: replace with write
         //liquid stuff
         CompoundNBT compound = new CompoundNBT();
         if (!this.checkLootAndWrite(compound)) {
@@ -358,20 +344,15 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
                 compound.putInt("liquidColor", this.liquidType.bucket ? this.liquidType.color : this.color);
             }
         }
+        this.mobHolder.write(compound);
+        this.liquidHolder.write(compound);
+
         if (!compound.isEmpty())
             stack.setTagInfo("BlockEntityTag", compound);
-        //jar mob stuff
-        if(this.mob==null||entityData==null)return;
-        CompoundNBT cmp = new CompoundNBT();
-        cmp.putFloat("Scale", this.scale);
-        cmp.putFloat("YOffset", this.yOffset);
-        cmp.putString("Name",this.mob.getName().getString());
-        if(this.uuid!=null)
-            cmp.putUniqueId("oldID",this.uuid);
-        stack.setTagInfo("CachedJarMobValues", cmp);
-        stack.setTagInfo("JarMob", entityData);
+
     }
 
+    //TODO: convert to liquid holder
     @Override
     public void read(BlockState state, CompoundNBT compound) {
         super.read(state, compound);
@@ -379,21 +360,13 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
             this.stacks = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
         }
         ItemStackHelper.loadAllItems(compound, this.stacks);
+
         this.liquidLevel = compound.getFloat("liquid_level");
         this.color = compound.getInt("liquid_color");
         this.liquidType = JarLiquidType.values()[compound.getInt("liquid_type")];
-        //mob jar
-        //TODO: reformat all nbts to be consistent
-        if(compound.contains("jar_mob")){
-            this.entityData = compound.getCompound("jar_mob");
-            //this.updateMob();
-            this.entityChanged = true;
-        }
-        this.scale = compound.getFloat("scale");
-        this.yOffset = compound.getFloat("y_offset");
-        this.animationType = JarMobType.values()[compound.getInt("animation_type")];
-        if(compound.contains("uuid"))
-            this.uuid = compound.getUniqueId("uuid");
+
+        this.mobHolder.read(compound);
+        this.liquidHolder.read(compound);
     }
 
     @Override
@@ -405,14 +378,10 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
         compound.putInt("liquid_color", this.color);
         compound.putFloat("liquid_level", this.liquidLevel);
         compound.putInt("liquid_type", this.liquidType.ordinal());
-        //mob jar
-        if(this.entityData!=null)
-            compound.put("jar_mob", this.entityData);
-        compound.putFloat("scale",this.scale);
-        compound.putFloat("y_offset",this.yOffset);
-        compound.putInt("animation_type", this.animationType.ordinal());
-        if(this.uuid!=null)
-            compound.putUniqueId("uuid",this.uuid);
+
+        this.mobHolder.write(compound);
+        this.liquidHolder.write(compound);
+
         return compound;
     }
 
@@ -444,6 +413,11 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
         return true;
     }
 
+
+    public boolean hasContent(){
+        return !(this.isEmpty()&&this.mobHolder.isEmpty());
+    }
+
     @Override
     public int getInventoryStackLimit() {
         return ServerConfigs.cached.JAR_CAPACITY;
@@ -456,7 +430,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
 
     @Override
     public ITextComponent getDefaultName() {
-        return new StringTextComponent("jar");
+        return new StringTextComponent("Jar");
     }
 
     @Override
@@ -510,142 +484,13 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
         return this.color;
     }
 
-    //mob jar code
-
     public Direction getDirection() {
         return this.getBlockState().get(ClockBlock.FACING);
     }
 
+    @Override
     public void tick() {
-        if(this.entityChanged && this.entityData!=null)this.updateMob();
-        if (!this.world.isRemote) return;
-        //for client side animation
-        if (this.mob != null) {
-            this.mob.ticksExisted++;
-            this.prevJumpY = this.jumpY;
-            switch (this.animationType) {
-                default:
-                case DEFAULT:
-                    break;
-                case SLIME:
-                case MAGMA_CUBE:
-                    SlimeEntity slime = (SlimeEntity) this.mob;
-                    slime.squishFactor += (slime.squishAmount - slime.squishFactor) * 0.5F;
-                    slime.prevSquishFactor = slime.squishFactor;
-                    //move
-                    if (this.yVel != 0)
-                        this.jumpY = Math.max(0, this.jumpY + this.yVel);
-                    if (jumpY != 0) {
-                        //decelerate
-                        this.yVel = this.yVel - 0.010f;
-                    }
-                    //on ground
-                    else {
-                        if (this.yVel != 0) {
-                            //land
-                            this.yVel = 0;
-                            slime.squishAmount = -0.5f;
-                        }
-                        if (this.rand.nextFloat() > 0.985) {
-                            //jump
-                            this.yVel = 0.08f;
-                            slime.squishAmount = 1.0F;
-                        }
-                    }
-                    slime.squishAmount *= 0.6F;
-                    break;
-                case VEX:
-                    this.jumpY = 0.04f * MathHelper.sin(this.mob.ticksExisted / 10f) - 0.03f;
-                    break;
-                case ENDERMITE:
-                    if (this.rand.nextFloat() > 0.7f) {
-                        this.world.addParticle(ParticleTypes.PORTAL, this.pos.getX() + 0.5f, this.pos.getY() + 0.2f,
-                                this.pos.getZ() + 0.5f, (this.rand.nextDouble() - 0.5D) * 2.0D, -this.rand.nextDouble(), (this.rand.nextDouble() - 0.5D) * 2.0D);
-                    }
-                    break;
-                case PARROT:
-                    ParrotEntity parrot = (ParrotEntity) this.mob;
-                    parrot.livingTick();
-                    parrot.setOnGround(false);
-                    break;
-                case PIXIE:
-                    LivingEntity le = ((LivingEntity)this.mob);
-                    le.livingTick();
-                    le.lastTickPosY=this.pos.getY();
-                    le.setPosition(le.getPosX(),this.pos.getY(),le.getPosZ());
-                    break;
-                case RABBIT:
-                    RabbitEntity rabbit = (RabbitEntity) this.mob;
-                    //move
-                    if (this.yVel != 0)
-                        this.jumpY = Math.max(0, this.jumpY + this.yVel);
-                    if (jumpY != 0) {
-                        //decelerate
-                        this.yVel = this.yVel - 0.017f;
-                    }
-                    //on ground
-                    else {
-                        if (this.yVel != 0) {
-                            //land
-                            this.yVel = 0;
-                        }
-                        if (this.rand.nextFloat() > 0.985) {
-                            //jump
-                            this.yVel = 0.093f;
-                            rabbit.startJumping();
-                        }
-                    }
-                    //handles animation without using reflections
-                    rabbit.livingTick();
-                    break;
-                case CAT:
-                    CatEntity cat = (CatEntity) this.mob;
-                    //cat.func_233687_w_(true);
-                    cat.setSleeping(true);
-                    break;
-                //TODO: move jump position & stuff inside entity. merge with jar one
-            }
-        }
+        this.mobHolder.tick();
     }
-
-    //only client side. cached mob from entitydata
-    public void updateMob(){
-        if(this.entityData.contains("id")) {
-            Entity entity;
-            if(this.entityData.get("id").getString().equals("minecraft:bee")){
-                entity = new BeeEntity(EntityType.BEE, this.world);
-            }
-            else{
-                entity  = EntityType.loadEntityAndExecute(this.entityData, this.world, o -> o);
-            }
-            if (entity==null)return;
-
-            if(this.uuid!=null) {
-                entity.setUniqueId(this.uuid);
-            }
-
-            //TODO: add shadows
-            double px = this.pos.getX() + 0.5;
-            double py = this.pos.getY() + 0.5 + 0.0625;
-            double pz = this.pos.getZ() + 0.5;
-            entity.setPosition(px, py, pz);
-            //entity.setMotion(0,0,0);
-            entity.lastTickPosX = px;
-            entity.lastTickPosY = py;
-            entity.lastTickPosZ = pz;
-            entity.prevPosX = px;
-            entity.prevPosY = py;
-            entity.prevPosZ = pz;
-
-            this.mob = entity;
-            this.animationType = JarMobType.getJarMobType(entity);
-            this.entityChanged = false;
-        }
-    }
-
-    public boolean hasNoMob(){
-        return this.entityData==null;
-    }
-
 
 }

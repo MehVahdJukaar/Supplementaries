@@ -14,7 +14,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.monster.piglin.PiglinEntity;
 import net.minecraft.item.BlockItem;
-import net.minecraft.item.CrossbowItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
@@ -40,31 +39,36 @@ public class CageItemRenderer extends ItemStackTileEntityRenderer {
         if(compound == null || compound.isEmpty())return;
 
         //render mob
-        if(compound.contains("CachedJarMobValues") && compound.contains("JarMob")) {
-            CompoundNBT cmp = compound.getCompound("JarMob");
-            CompoundNBT cmp2 = compound.getCompound("CachedJarMobValues");
+        if(compound.contains("BlockEntityTag")) {
+            CompoundNBT cmp = compound.getCompound("BlockEntityTag");
+            if (cmp.contains("MobHolder")) {
+                CompoundNBT cmp2 = cmp.getCompound("MobHolder");
 
-            EntityType<?> type = net.minecraft.util.registry.Registry.ENTITY_TYPE.getOrDefault(new ResourceLocation(cmp.getString("id")));
+                CompoundNBT mobData = cmp2.getCompound("EntityData");
 
-            World world = Minecraft.getInstance().world;
-            if (world != null) {
-                Entity e = type.create(world);
-                if(e instanceof AgeableEntity)((AgeableEntity)e).setGrowingAge(cmp.getInt("Age"));
-                else if(e instanceof ZombieEntity)((ZombieEntity) e).setChild(cmp.getBoolean("IsBaby"));
-                else if(e instanceof PiglinEntity)((PiglinEntity) e).setChild(cmp.getBoolean("IsBaby"));
-                if(cmp2.contains("oldID"))
-                    e.setUniqueId(cmp2.getUniqueId("oldID"));
+                EntityType<?> type = net.minecraft.util.registry.Registry.ENTITY_TYPE.getOrDefault(new ResourceLocation(mobData.getString("id")));
 
-                if (e != null) {
-                    float y = cmp2.getFloat("YOffset");
-                    float s = cmp2.getFloat("Scale");
-                    matrixStackIn.push();
-                    matrixStackIn.translate(0.5, y, 0.5);
-                    matrixStackIn.scale(-s, s, -s);
-                    Minecraft.getInstance().getRenderManager().renderEntityStatic(e, 0.0D, 0.0D, 0.0D, 0.0F, 0, matrixStackIn, bufferIn, combinedLightIn);
-                    matrixStackIn.pop();
+                World world = Minecraft.getInstance().world;
+                if (world != null) {
+                    Entity e = type.create(world);
+                    if (e instanceof AgeableEntity) ((AgeableEntity) e).setGrowingAge(mobData.getInt("Age"));
+                    else if (e instanceof ZombieEntity) ((ZombieEntity) e).setChild(mobData.getBoolean("IsBaby"));
+                    else if (e instanceof PiglinEntity) ((PiglinEntity) e).setChild(mobData.getBoolean("IsBaby"));
+
+                    if(cmp2.contains("UUID"))
+                        e.setUniqueId(cmp2.getUniqueId("UUID"));
+
+                    if (e != null) {
+                        float y = cmp2.getFloat("YOffset");
+                        float s = cmp2.getFloat("Scale");
+                        matrixStackIn.push();
+                        matrixStackIn.translate(0.5, y, 0.5);
+                        matrixStackIn.scale(-s, s, -s);
+                        Minecraft.getInstance().getRenderManager().renderEntityStatic(e, 0.0D, 0.0D, 0.0D, 0.0F, 0, matrixStackIn, bufferIn, combinedLightIn);
+                        matrixStackIn.pop();
 
 
+                    }
                 }
             }
         }

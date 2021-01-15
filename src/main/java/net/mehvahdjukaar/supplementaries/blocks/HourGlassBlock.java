@@ -2,7 +2,10 @@ package net.mehvahdjukaar.supplementaries.blocks;
 
 import net.mehvahdjukaar.supplementaries.blocks.tiles.HourGlassBlockTile;
 import net.mehvahdjukaar.supplementaries.common.Resources;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.IWaterLoggable;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -32,7 +35,7 @@ public class HourGlassBlock extends Block implements IWaterLoggable, IForgeBlock
     protected static final VoxelShape SHAPE_Y = Block.makeCuboidShape(4D, 0D, 4.0D, 12.0D, 16D, 12.0D);
     protected static final VoxelShape SHAPE_Z = Block.makeCuboidShape(4D, 4D, 0.0D, 12.0D, 12D, 16.0D);
     protected static final VoxelShape SHAPE_X = Block.makeCuboidShape(0D, 4D, 4D, 16D, 12D, 12.0D);
-    public static final DirectionProperty FACING = DirectionalBlock.FACING;
+    public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final IntegerProperty LIGHT_LEVEL = Resources.LIGHT_LEVEL_0_15;
 

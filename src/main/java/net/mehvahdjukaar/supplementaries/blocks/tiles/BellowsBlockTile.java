@@ -131,28 +131,28 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
             Direction facing = this.getDirection();
 
             //slope of animation. for particles and pusing entities
-            float j = MathHelper.sin((float)Math.PI*2* this.counter / period);
+            float arg = (float)Math.PI*2*((this.counter / period)%1);
+            float sin = MathHelper.sin(arg);
+            float cos = MathHelper.cos(arg);
 
             //client
             if (this.world.isRemote && this.world.rand.nextInt(2) == 0 &&
-                    this.world.rand.nextFloat() < j &&
+                    this.world.rand.nextFloat() < sin &&
                     ! Block.hasEnoughSolidSide(this.world, this.pos.offset(facing), facing.getOpposite()))
                 this.spawnParticles(this.world, this.pos);
 
 
             final float dh = 1 / 16f;//0.09375f;
-            this.height = dh * MathHelper.cos((float)Math.PI*2* this.counter / period) - dh;
-
+            this.height = dh * cos - dh;
 
 
             //server
             if (!this.world.isRemote) {
 
 
-
                 //push entities (only if pushing air)
-                float g = this.counter%period;
-                if ( g< 0.5f*period) {
+
+                if ( sin> 0) {
                     List<Entity> list = this.world.getEntitiesWithinAABB(Entity.class,
                             CommonUtil.getDirectionBB(this.pos, facing, (int)RANGE));
 

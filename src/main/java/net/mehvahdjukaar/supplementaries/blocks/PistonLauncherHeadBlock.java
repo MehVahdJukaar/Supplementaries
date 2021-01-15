@@ -58,7 +58,7 @@ public class PistonLauncherHeadBlock extends DirectionalBlock {
     private static final VoxelShape[] EXTENDED_SHAPES = getShapesForExtension(true);
     private static final VoxelShape[] UNEXTENDED_SHAPES = getShapesForExtension(false);
 
-    public static final DirectionProperty FACING = DirectionalBlock.FACING;
+    public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final BooleanProperty SHORT = BlockStateProperties.SHORT; // is not small? (only used for
     // tile entity, leave true
     public PistonLauncherHeadBlock(Properties properties) {

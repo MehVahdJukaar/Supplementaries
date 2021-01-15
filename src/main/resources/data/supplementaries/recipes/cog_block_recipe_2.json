@@ -23,7 +23,7 @@
       "values": [
         {
           "type": "supplementaries:flag",
-          "flag": "candelabra"
+          "flag": "cog_block"
         },
         {
           "type": "forge:tag_empty",

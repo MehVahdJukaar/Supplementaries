@@ -1,23 +1,27 @@
 package net.mehvahdjukaar.supplementaries.common;
 
+import net.mehvahdjukaar.supplementaries.blocks.SignPostBlock;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
-import net.minecraft.entity.AgeableEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.merchant.villager.VillagerEntity;
-import net.minecraft.entity.passive.IFlyingAnimal;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.FenceBlock;
+import net.minecraft.block.WallBlock;
 import net.minecraft.item.*;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.potion.Potions;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tileentity.ShulkerBoxTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.World;
+import net.minecraftforge.common.Tags;
 
 import java.util.Calendar;
-import java.util.UUID;
 
 import static net.mehvahdjukaar.supplementaries.common.Resources.*;
 
@@ -96,6 +100,10 @@ public class CommonUtil {
 
         public boolean isWater() {
             return this.isFish() || this == JarLiquidType.WATER;
+        }
+
+        public int getLightLevel(){
+            return this.isLava()?15:0;
         }
 
         public Item getReturnItem() {
@@ -379,120 +387,36 @@ public class CommonUtil {
     }
 
 
-    //used for animation only (maybe caching item renderer later)
-    public enum JarMobType {
-        DEFAULT(null,0,0),
-        SLIME("minecraft:slime",0,0),
-        MAGMA_CUBE("minecraft:magma_cube",0,0),
-        BEE("minecraft:bee",0.3125f,0),
-        BAT("minecraft:bat",0,0),
-        VEX("minecraft:vex",0,0.125f),
-        ENDERMITE("minecraft:endermite",0,0),
-        SILVERFISH("minecraft:silverfish",0,0.25f),
-        PARROT("minecraft:parrot",0,0),
-        CAT("minecraft:cat",0,0.1875f),
-        RABBIT("minecraft:rabbit",0,0),
-        CHICKEN("minecraft:chicken",0.25f,0.3125f),
-        PIXIE("iceandfire:pixie",0,0);
 
+    //equals is not working...
+    public static boolean isShapeEqual(AxisAlignedBB s1, AxisAlignedBB s2){
+        return s1.minX==s2.minX&&s1.minY==s2.minY&&s1.minZ==s2.minZ&&s1.maxX==s2.maxX&&s1.maxY==s2.maxY&&s1.maxZ==s2.maxZ;
+    }
+    public static final AxisAlignedBB FENCE_SHAPE = Block.makeCuboidShape(6,0,6,10,16,10).getBoundingBox();
+    public static final AxisAlignedBB POST_SHAPE = Block.makeCuboidShape(5,0,5,11,16,11).getBoundingBox();
+    public static final AxisAlignedBB WALL_SHAPE = Block.makeCuboidShape(7,0,7,12,16,12).getBoundingBox();
+    //0 normal, 1 fence, 2 walls TODO: change 1 with 2
+    public static int getPostSize(BlockState state, BlockPos pos, World world){
+        Block block = state.getBlock();
 
-        public final String type;
-        public final float adjHeight;
-        public final float adjWidth;
-
-        JarMobType(String type, float h, float w){
-            this.type = type;
-            this.adjHeight =h;
-            this.adjWidth = w;
+        VoxelShape shape = state.getShape(world, pos);
+        if(shape!= VoxelShapes.empty()) {
+            AxisAlignedBB s = shape.getBoundingBox();
+            if (block instanceof FenceBlock || block instanceof SignPostBlock || block.isIn(Tags.Blocks.FENCES) || isShapeEqual(FENCE_SHAPE, s))
+                return 1;
+            if (block instanceof WallBlock || block.isIn(BlockTags.WALLS) ||
+                    (isShapeEqual(WALL_SHAPE, s))) return 2;
+            if (isShapeEqual(POST_SHAPE, s)) return 1;
         }
 
-        public static JarMobType getJarMobType(Entity e){
-            String name = e.getType().getRegistryName().toString();
-            for (JarMobType n : JarMobType.values()){
-                if(name.equals(n.type)){
-                    return n;
-                }
-            }
-            return JarMobType.DEFAULT;
-        }
+        return 0;
     }
 
-
-    public static void createJarMobItemNBT(ItemStack stack, Entity mob, float blockh, float blockw){
-        if(mob==null)return;
-        if(mob instanceof LivingEntity){
-            LivingEntity le = (LivingEntity) mob;
-            le.prevRotationYawHead = 0;
-            le.rotationYawHead = 0;
-            le.limbSwingAmount = 0;
-            le.prevLimbSwingAmount = 0;
-            le.limbSwing = 0;
-            le.hurtTime=0;
-            le.maxHurtTime=0;
-            le.hurtTime=0;
-        }
-        mob.rotationYaw = 0;
-        mob.prevRotationYaw = 0;
-        mob.prevRotationPitch = 0;
-        mob.rotationPitch = 0;
-        mob.extinguish();
-        mob.hurtResistantTime=0;
-
-        UUID id = mob.getUniqueID();
-
-        CompoundNBT mobCompound = new CompoundNBT();
-        mob.writeUnlessPassenger(mobCompound);
-        if (!mobCompound.isEmpty()) {
-
-            mobCompound.remove("Passengers");
-            mobCompound.remove("Leash");
-            mobCompound.remove("UUID");
-
-
-            CompoundNBT cacheCompound = new CompoundNBT();
-
-            boolean flag = mob.hasNoGravity() || mob instanceof IFlyingAnimal||mob.doesEntityNotTriggerPressurePlate();
-
-            JarMobType type = JarMobType.getJarMobType(mob);
-            float babyscale = 1;
-            //non ageable
-
-            if(mob instanceof AgeableEntity && ((AgeableEntity) mob).isChild()) babyscale = 2f;
-            if(mobCompound.contains("IsBaby")&&mobCompound.getBoolean("IsBaby")||
-                    (mob instanceof VillagerEntity && ((VillagerEntity) mob).isChild())) babyscale = 1.125f;
-
-            float s = 1;
-            float w = mob.getWidth() *babyscale;
-            float h = mob.getHeight() *babyscale;
-            //float maxh = flag ? 0.5f : 0.75f;
-            //1 px border
-            float maxh = blockh - (flag ? 0.25f : 0.125f) - type.adjHeight;
-            float maxw = blockw - 0.25f - type.adjWidth;
-            if (w > maxw || h > maxh) {
-                if (w - maxw > h - maxh)
-                    s = maxw / w;
-                else
-                    s = maxh / h;
-            }
-            //TODO: rewrite this to account for adjValues
-            float y = flag ? (blockh/2f) - h * s / 2f : 0.0626f;
-
-            //ice&fire dragons
-            String name = mob.getType().getRegistryName().toString();
-            if(name.equals("iceandfire:fire_dragon")||name.equals("iceandfire:ice_dragon")||name.equals("iceandfire:lightning_dragon")){
-                s*=0.45;
-            }
-
-            cacheCompound.putFloat("Scale", s);
-            cacheCompound.putFloat("YOffset", y);
-            cacheCompound.putString("Name",mob.getName().getString());
-            cacheCompound.putUniqueId("oldID",id);
-            stack.setTagInfo("CachedJarMobValues", cacheCompound);
-            stack.setTagInfo("JarMob", mobCompound);
-        }
+    //this is how you do it :D
+    private static final ShulkerBoxTileEntity SHULKER_TILE = new ShulkerBoxTileEntity();
+    public static boolean isAllowedInShulker(ItemStack stack){
+        return SHULKER_TILE.canInsertItem(0,stack,null);
     }
-
-
 
 
 

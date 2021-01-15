@@ -6,7 +6,6 @@ import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.DirectionalBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MoverType;
@@ -29,11 +28,11 @@ import net.minecraft.world.World;
 
 
 
-public class TurnTableBlock  extends Block {
+public class TurnTableBlock extends Block {
 
     //TODO:figure out why these two don't match up
 
-    public static final DirectionProperty FACING = DirectionalBlock.FACING;
+    public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final IntegerProperty POWER = BlockStateProperties.POWER_0_15;
     public static final BooleanProperty INVERTED = BlockStateProperties.INVERTED;
     public TurnTableBlock(Properties properties) {

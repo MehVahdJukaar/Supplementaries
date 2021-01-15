@@ -120,13 +120,13 @@ public class LaserBlockTile extends TileEntity implements ITickableTileEntity {
     @Override
     public void read(BlockState state, CompoundNBT compound) {
         super.read(state, compound);
-        this.lenght = compound.getInt("lenght");
+        this.lenght = compound.getInt("Length");
     }
 
     @Override
     public CompoundNBT write(CompoundNBT compound) {
         super.write(compound);
-        compound.putInt("lenght", this.lenght);
+        compound.putInt("Length", this.lenght);
         return compound;
     }
 

@@ -1,33 +1,27 @@
 package net.mehvahdjukaar.supplementaries.events;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import net.mehvahdjukaar.supplementaries.blocks.WallLanternBlock;
 import net.mehvahdjukaar.supplementaries.blocks.tiles.WallLanternBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.items.Flute;
+import net.mehvahdjukaar.supplementaries.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LanternBlock;
-import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.client.renderer.entity.PlayerRenderer;
-import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.common.Tags;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -97,6 +91,51 @@ public class RightClickEvent {
         }
     }
 
+
+
+
+
+    @SubscribeEvent
+    public static void onRightClickItem(PlayerInteractEvent.RightClickItem event) {
+        if(!ServerConfigs.cached.THROWABLE_BRICKS)return;
+        PlayerEntity playerIn = event.getPlayer();
+        Hand handIn = event.getHand();
+        ItemStack itemstack = playerIn.getHeldItem(handIn);
+        Item i = itemstack.getItem();
+        if(i.isIn(Tags.Items.INGOTS_BRICK)||i.isIn(Tags.Items.INGOTS_NETHER_BRICK)) {
+            World worldIn = event.getWorld();
+            worldIn.playSound(null, playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ(), SoundEvents.ENTITY_SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (playerIn.getRNG().nextFloat() * 0.4F + 0.8F ));
+            if (!worldIn.isRemote) {
+                ThrowableBrickEntity brickEntity = new ThrowableBrickEntity(worldIn, playerIn);
+                brickEntity.setItem(itemstack);
+                float pow = 0.7f;
+                brickEntity.func_234612_a_(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F*pow, 1.0F*pow);
+                worldIn.addEntity(brickEntity);
+            }
+
+            if (!playerIn.abilities.isCreativeMode) {
+                itemstack.shrink(1);
+            }
+
+            //playerIn.swingArm(handIn);
+            event.setCanceled(true);
+            event.setCancellationResult(ActionResultType.func_233537_a_(worldIn.isRemote));
+
+        }
+
+    }
+
+
+    @SubscribeEvent
+    public static void onItemTooltip(ItemTooltipEvent event) {
+        Item i = event.getItemStack().getItem();
+        if(ServerConfigs.cached.WALL_LANTERN_PLACEMENT && i instanceof BlockItem && ((BlockItem) i).getBlock() instanceof LanternBlock){
+            event.getToolTip().add(new TranslationTextComponent("message.supplementaries.wall_lantern").mergeStyle(TextFormatting.GRAY));
+        }
+        else if(ServerConfigs.cached.WALL_LANTERN_PLACEMENT && (i.isIn(Tags.Items.INGOTS_BRICK)||i.isIn(Tags.Items.INGOTS_NETHER_BRICK))){
+            event.getToolTip().add(new TranslationTextComponent("message.supplementaries.throwable_brick").mergeStyle(TextFormatting.GRAY));
+        }
+    }
 
     /*
     @SubscribeEvent
