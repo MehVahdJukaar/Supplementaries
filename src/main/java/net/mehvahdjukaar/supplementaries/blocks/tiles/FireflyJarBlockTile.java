@@ -14,7 +14,7 @@ import java.util.Random;
 
 public class FireflyJarBlockTile extends TileEntity implements ITickableTileEntity {
     protected final Random rand = new Random();
-    protected final boolean soul;
+    public final boolean soul;
     public FireflyJarBlockTile(boolean isSoul) {
         super(Registry.FIREFLY_JAR_TILE);
         soul=isSoul;
@@ -22,6 +22,12 @@ public class FireflyJarBlockTile extends TileEntity implements ITickableTileEnti
     public FireflyJarBlockTile() {
         this(false);
     }
+
+    @Override
+    public double getMaxRenderDistanceSquared() {
+        return 64;
+    }
+
     @Override
     public void read(BlockState state, CompoundNBT compound) {
         super.read(state, compound);

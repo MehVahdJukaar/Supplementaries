@@ -9,6 +9,7 @@ import net.minecraft.tags.ITag;
 import net.minecraft.tags.TagCollectionManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLPaths;
 
@@ -33,6 +34,9 @@ public class RegistryConfigs {
             //TODO: properly fix forge:ingots/silver used before it was bound
             ITag<Item> tag = TagCollectionManager.getManager().getItemTags().get(new ResourceLocation("forge:ingots/silver"));
             reg.HAS_SILVER = tag != null;
+            if(ModList.get().isLoaded("mysticalworld")||ModList.get().isLoaded("immersiveengineering")){
+                reg.HAS_SILVER=true;
+            }
         }
         catch(Exception ignored){};
 

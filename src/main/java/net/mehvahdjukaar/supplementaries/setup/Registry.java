@@ -169,6 +169,8 @@ public class Registry {
             .setRegistryName(FIREFLY_NAME);
     public static final Item FIREFLY_SPAWN_EGG_ITEM = new SpawnEggItem(FIREFLY_TYPE,  -5048018, -14409439, //-4784384, -16777216,
             new Item.Properties().group(getTab(ItemGroup.MISC,FIREFLY_NAME))).setRegistryName(FIREFLY_NAME);
+
+
     //brick
     public static final String THROWABLE_BRICK_NAME = "brick_projectile";
     public static final EntityType<?> THROWABLE_BRICK =  (EntityType.Builder.<ThrowableBrickEntity>create(ThrowableBrickEntity::new, EntityClassification.MISC)

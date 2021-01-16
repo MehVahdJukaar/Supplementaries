@@ -72,7 +72,7 @@ public class SafeBlockTile extends LockableLootTileEntity implements ISidedInven
     }
     //owner==null is public
     public boolean isNotOwnedBy(PlayerEntity player){
-        return (this.owner!=null && this.owner!=player.getUniqueID());
+        return (this.owner!=null && !this.owner.equals(player.getUniqueID()));
     }
 
     @Override

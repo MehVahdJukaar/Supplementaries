@@ -2,10 +2,7 @@ package net.mehvahdjukaar.supplementaries.common;
 
 import net.mehvahdjukaar.supplementaries.blocks.SignPostBlock;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.FenceBlock;
-import net.minecraft.block.WallBlock;
+import net.minecraft.block.*;
 import net.minecraft.item.*;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.potion.Potions;
@@ -21,6 +18,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Tags;
 
+import javax.annotation.Nullable;
 import java.util.Calendar;
 
 import static net.mehvahdjukaar.supplementaries.common.Resources.*;
@@ -357,7 +355,6 @@ public class CommonUtil {
         BLAZE_POWDER(HOURGLASS_BLAZE,"minecraft:blaze_powder", 100);
 
 
-
         public final ResourceLocation texture;
         public final String name;
         public final float increment;
@@ -375,14 +372,19 @@ public class CommonUtil {
             return 0;
         }
 
+        public boolean isSand(){
+            return this==SAND;
+        }
+
         public static HourGlassSandType getHourGlassSandType(Item i){
+            if(i instanceof BlockItem && ((BlockItem) i).getBlock().isIn(Tags.Blocks.SAND))return SAND;
             String name = i.getRegistryName().toString();
             for (HourGlassSandType n : HourGlassSandType.values()){
                 if(name.equals(n.name)){
                     return n;
                 }
             }
-            return HourGlassSandType.DEFAULT;
+            return DEFAULT;
         }
     }
 
@@ -417,7 +419,6 @@ public class CommonUtil {
     public static boolean isAllowedInShulker(ItemStack stack){
         return SHULKER_TILE.canInsertItem(0,stack,null);
     }
-
 
 
 }

@@ -1,11 +1,10 @@
 package net.mehvahdjukaar.supplementaries.items;
 
-import net.minecraft.client.gui.screen.EditBookScreen;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
@@ -40,8 +39,6 @@ public class Flute extends Item {
         return this.itemInteractionForEntity(stack,player, ((LivingEntity) entity),player.getActiveHand()).isSuccessOrConsume();
     }
 
-
-
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
 
@@ -50,12 +47,12 @@ public class Flute extends Item {
             double x = playerIn.getPosX();
             double y = playerIn.getPosY();
             double z = playerIn.getPosZ();
-            int r=64;
-            int maxdistsq = r*r;
+            int r=ServerConfigs.cached.FLUTE_RADIUS;
             CompoundNBT com = stack.getChildTag("Pet");
             if(com!=null){
                 Entity entity = worldIn.getEntityByID(com.getInt("ID"));
                 if(entity instanceof TameableEntity){
+                    int maxdistsq = ServerConfigs.cached.FLUTE_DISTANCE*ServerConfigs.cached.FLUTE_DISTANCE;
                     TameableEntity pet1 = ((TameableEntity) entity);
                     if (pet1.world==playerIn.world && pet1.isTamed() && pet1.getOwnerId().equals(playerIn.getUniqueID())&&pet1.getDistanceSq(playerIn)<maxdistsq) {
                         if(pet1.attemptTeleport(x, y, z, false)){

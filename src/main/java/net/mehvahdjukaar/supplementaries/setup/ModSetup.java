@@ -21,7 +21,7 @@ public class ModSetup {
     public static void init(final FMLCommonSetupEvent event) {
 
         Spawns.registerSpawningStuff();
-        DeferredWorkQueue.runLater(Dispenser::registerBehaviors);
+        event.enqueueWork(Dispenser::registerBehaviors);
         //Dispenser.registerBehaviors();
 
 

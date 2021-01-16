@@ -3,14 +3,16 @@ package net.mehvahdjukaar.supplementaries.events;
 import net.mehvahdjukaar.supplementaries.blocks.WallLanternBlock;
 import net.mehvahdjukaar.supplementaries.blocks.tiles.WallLanternBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+
 import net.mehvahdjukaar.supplementaries.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.LanternBlock;
+import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.*;
+import net.minecraft.stats.Stats;
+import net.minecraft.tileentity.BellTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -19,6 +21,8 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -28,17 +32,58 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.FORGE)
 public class RightClickEvent {
 
+    private static boolean isLantern(Item i){
+        if(i instanceof BlockItem){
+            Block b =  ((BlockItem) i).getBlock();
+            String namespace = b.getRegistryName().getNamespace();
+            return ((b instanceof LanternBlock || namespace.equals("skinnedlanterns"))
+                    && !ServerConfigs.cached.WALL_LANTERN_BLACKLIST.contains(namespace));
+        }
+        return false;
+    }
+
+
+    private static boolean findConnectedBell(World world, BlockPos pos, PlayerEntity player, int it){
+        if(it>ServerConfigs.cached.BELL_CHAIN_LENGTH)return false;
+        BlockState state = world.getBlockState(pos);
+        Block b = state.getBlock();
+        if(b instanceof ChainBlock){
+            return findConnectedBell(world,pos.up(),player,it+1);
+        }
+        else if(b instanceof BellBlock && it !=0){
+            boolean success = ((BellBlock) b).ring(world, pos, state.get(BellBlock.HORIZONTAL_FACING).rotateY());
+            if (success && player != null) {
+                player.addStat(Stats.BELL_RING);
+            }
+            return true;
+        }
+        return false;
+    }
+
     @SubscribeEvent
     public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
-        if(!ServerConfigs.cached.WALL_LANTERN_PLACEMENT)return;
         PlayerEntity player = event.getPlayer();
-        if(!player.abilities.allowEdit)return;
-
         Hand hand = event.getHand();
         ItemStack stack = event.getItemStack();
         Item i = stack.getItem();
+        if(stack.isEmpty()){
+            if(!ServerConfigs.cached.BELL_CHAIN)return;
+            World world = event.getWorld();
+            BlockPos pos = event.getPos();
+            if(findConnectedBell(world,pos,player,0)){
+                event.setCanceled(true);
+                event.setCancellationResult(ActionResultType.func_233537_a_(world.isRemote));
+            }
+            return;
+        }
+
+        if(!ServerConfigs.cached.WALL_LANTERN_PLACEMENT)return;
+
+        if(!player.abilities.allowEdit)return;
+
+
         //is lantern
-        if(i instanceof BlockItem && (((BlockItem) i).getBlock() instanceof LanternBlock || ((BlockItem) i).getBlock().getRegistryName().getNamespace().equals("skinnedlanterns"))) {
+        if(isLantern(i)) {
             Direction dir = event.getFace();
             //is wall face
             if (dir != Direction.UP && dir != Direction.DOWN && dir != null) {
@@ -51,7 +96,7 @@ public class RightClickEvent {
                 BlockRayTraceResult raytrace = new BlockRayTraceResult(
                         new Vector3d(pos.getX(), pos.getY(), pos.getZ()), dir, pos, false);
 
-               if(!player.isSneaking()) {
+                if(!player.isSneaking()) {
                     ActionResultType interactresult = blockstate.onBlockActivated(worldIn, player, hand, raytrace);
                     //interacted with block
                     if (interactresult.isSuccessOrConsume()) {
@@ -125,14 +170,14 @@ public class RightClickEvent {
 
     }
 
-
+    @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public static void onItemTooltip(ItemTooltipEvent event) {
         Item i = event.getItemStack().getItem();
-        if(ServerConfigs.cached.WALL_LANTERN_PLACEMENT && i instanceof BlockItem && ((BlockItem) i).getBlock() instanceof LanternBlock){
+        if(ServerConfigs.cached.WALL_LANTERN_PLACEMENT && isLantern(i)){
             event.getToolTip().add(new TranslationTextComponent("message.supplementaries.wall_lantern").mergeStyle(TextFormatting.GRAY));
         }
-        else if(ServerConfigs.cached.WALL_LANTERN_PLACEMENT && (i.isIn(Tags.Items.INGOTS_BRICK)||i.isIn(Tags.Items.INGOTS_NETHER_BRICK))){
+        else if(ServerConfigs.cached.THROWABLE_BRICKS && (i.isIn(Tags.Items.INGOTS_BRICK)||i.isIn(Tags.Items.INGOTS_NETHER_BRICK))){
             event.getToolTip().add(new TranslationTextComponent("message.supplementaries.throwable_brick").mergeStyle(TextFormatting.GRAY));
         }
     }

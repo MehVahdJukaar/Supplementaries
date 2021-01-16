@@ -80,6 +80,10 @@ public class Resources {
     public static final ResourceLocation HOURGLASS_GUNPOWDER = new ResourceLocation(Supplementaries.MOD_ID, "blocks/hourglass_gunpowder");
     public static final ResourceLocation BLACKBOARD_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID+":textures/entity/blackboard.png");
     public static final ResourceLocation BLACKBOARD_WHITE_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID+":textures/entity/blackboard_white.png");
+    public static final ResourceLocation SOUL_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID, "blocks/soul");
+    public static final ResourceLocation CHAIN_TEXTURE = new ResourceLocation("minecraft:block/chain");
+    public static final ResourceLocation BELL_CHAIN_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID+":textures/entity/bell_chain.png");
+
 
     public static final ResourceLocation NOTICE_BOARD_GUI_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID+":textures/gui/notice_board_gui.png");
     public static final ResourceLocation SACK_GUI_TEXTURE = new ResourceLocation(Supplementaries.MOD_ID+":textures/gui/sack_gui.png");

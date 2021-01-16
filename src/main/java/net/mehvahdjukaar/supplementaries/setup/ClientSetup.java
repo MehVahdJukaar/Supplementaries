@@ -4,6 +4,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.blocks.tiles.*;
 import net.mehvahdjukaar.supplementaries.common.Resources;
 import net.mehvahdjukaar.supplementaries.entities.FireflyEntity;
+import net.mehvahdjukaar.supplementaries.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.gui.NoticeBoardContainer;
 import net.mehvahdjukaar.supplementaries.gui.NoticeBoardGui;
 import net.mehvahdjukaar.supplementaries.gui.SackContainer;
@@ -24,6 +25,7 @@ import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -35,10 +37,20 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 import java.util.List;
 
+
 @Mod.EventBusSubscriber(modid = Supplementaries.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientSetup {
 
+
+    //TODO: figure out why this is making everything crash without ONLY in
+
     public static void init(final FMLClientSetupEvent event){
+        onlyClientPls(event);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public static void onlyClientPls(final FMLClientSetupEvent event){
+
 
         //firefly & jar
         RenderingRegistry.registerEntityRenderingHandler( (EntityType<FireflyEntity>) Registry.FIREFLY_TYPE, FireflyEntityRenderer::new);
@@ -46,10 +58,7 @@ public class ClientSetup {
 
         //throwable brick
         RenderingRegistry.registerEntityRenderingHandler(Registry.THROWABLE_BRICK,
-                renderManager -> new SpriteRenderer(renderManager, Minecraft.getInstance().getItemRenderer()));
-
-
-
+                renderManager -> new SpriteRenderer(renderManager, event.getMinecraftSupplier().get().getItemRenderer()));
         //planter
         //RenderTypeLookup.setRenderLayer(Registry.PLANTER, RenderType.getCutout());
         //clock
@@ -130,6 +139,8 @@ public class ClientSetup {
         ClientRegistry.bindTileEntityRenderer((TileEntityType<BlackboardBlockTile>)Registry.BLACKBOARD_TILE, BlackboardBlockTileRenderer::new);
         //soul jar
         RenderTypeLookup.setRenderLayer(Registry.SOUL_JAR, RenderType.getTranslucent());
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<FireflyJarBlockTile>)Registry.FIREFLY_JAR_TILE, SoulJarBlockTileRenderer::new);
+
         //copper lantern
         RenderTypeLookup.setRenderLayer(Registry.COPPER_LANTERN, RenderType.getCutout());
         ClientRegistry.bindTileEntityRenderer((TileEntityType<OilLanternBlockTile>)Registry.COPPER_LANTERN_TILE, OilLanternBlockTileRenderer::new);

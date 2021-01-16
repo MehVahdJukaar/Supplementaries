@@ -11,9 +11,13 @@
         "ShulkerBoxTileEntityMixin",
         "MapMixin",
         "ShulkerBoxSlotMixin",
-        "ParrotPartyMixin"
+        "BellBlockMixin",
+        "BellTileEntityMixin"
+
     ],
     "client": [
+        "ParrotPartyMixin",
+        "BellTileEntityRendererMixin"
     ],
     "injectors": {
         "defaultRequire": 1

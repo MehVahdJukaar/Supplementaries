@@ -12,6 +12,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class RendererUtil {
     //centered on x,z. aligned on y=0
+
+    //TODO: cache sprite coordinates
     @OnlyIn(Dist.CLIENT)
     public static void addCube(IVertexBuilder builder, MatrixStack matrixStackIn, float w, float h, TextureAtlasSprite sprite, int combinedLightIn,
                                int color, float a, int combinedOverlayIn, boolean up, boolean down, boolean fakeshading, boolean flippedY) {

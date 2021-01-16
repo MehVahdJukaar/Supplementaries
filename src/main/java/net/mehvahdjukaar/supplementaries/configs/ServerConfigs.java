@@ -20,13 +20,40 @@ public class ServerConfigs {
         spawn.init(SERVER_BUILDER);
         entity.init(SERVER_BUILDER);
         tweaks.init(SERVER_BUILDER);
+        item.init(SERVER_BUILDER);
 
         SERVER_CONFIG = SERVER_BUILDER.build();
+    }
+
+    public static class item {
+        public static ForgeConfigSpec.IntValue FLUTE_RADIUS;
+        public static ForgeConfigSpec.IntValue FLUTE_DISTANCE;
+
+
+        private static void init(ForgeConfigSpec.Builder builder){
+            builder.push("items");
+
+            //flute
+            builder.push("flute");
+            FLUTE_RADIUS = builder.comment("radius in which an unbound flute will search pets")
+                    .defineInRange("unbound_radius",64, 0, 500);
+            FLUTE_DISTANCE = builder.comment("max distance at which a bound flute will allow a pet to teleport")
+                    .defineInRange("bound_distance",64, 0, 500);
+            builder.pop();
+
+
+
+            builder.pop();
+        }
+
     }
 
     public static class tweaks {
         public static ForgeConfigSpec.BooleanValue WALL_LANTERN_PLACEMENT;
         public static ForgeConfigSpec.BooleanValue THROWABLE_BRICKS;
+        public static ForgeConfigSpec.ConfigValue<List<? extends String>> WALL_LANTERN_BLACKLIST;
+        public static ForgeConfigSpec.BooleanValue BELL_CHAIN;
+        public static ForgeConfigSpec.IntValue BELL_CHAIN_LENGTH;
 
         private static void init(ForgeConfigSpec.Builder builder){
             builder.comment("Vanilla tweaks")
@@ -41,6 +68,17 @@ public class ServerConfigs {
             builder.push("wall_lantern");
             WALL_LANTERN_PLACEMENT = builder.comment("allow wall lanterns placement")
                     .define("enabled",true);
+
+            List<String> modBlacklist = Arrays.asList("extlights");
+            WALL_LANTERN_BLACKLIST = builder.comment("mod ids of mods that have lantern block that extend the base lantern class but don't look like one")
+                    .defineList("mod_blacklist", modBlacklist,s -> true);
+            builder.pop();
+            //bells
+            builder.push("bells_tweaks");
+            BELL_CHAIN = builder.comment("ring a bell by clicking on a chain that's connected to it")
+                    .define("chain_ringing",true);
+            BELL_CHAIN_LENGTH = builder.comment("max chain length that allows a bell to ring")
+                    .defineInRange("chain_length",32,0,1024);
             builder.pop();
 
 
@@ -271,12 +309,17 @@ public class ServerConfigs {
 
 
 
-
     //maybe not need but hey
     public static class cached{
+        //items
+        public static int FLUTE_RADIUS;
+        public static int FLUTE_DISTANCE;
         //tweaks
         public static boolean THROWABLE_BRICKS;
         public static boolean WALL_LANTERN_PLACEMENT;
+        public static List<? extends String> WALL_LANTERN_BLACKLIST;
+        public static boolean BELL_CHAIN;
+        public static int BELL_CHAIN_LENGTH;
         //spawns
         public static int FIREFLY_MIN;
         public static int FIREFLY_MAX;
@@ -306,7 +349,7 @@ public class ServerConfigs {
         public static List<? extends String> CAGE_ALLOWED_BABY_MOBS;
         public static boolean CAGE_ALL_MOBS;
         public static int SACK_INCREMENT;
-        public static boolean SACK_PENALITY;
+        public static boolean SACK_PENALTY;
         public static int SACK_SLOTS;
         public static boolean SAFE_UNBREAKABLE;
         //entity
@@ -314,8 +357,14 @@ public class ServerConfigs {
         public static double FIREFLY_SPEED;
 
         public static void refresh(){
+            FLUTE_DISTANCE = item.FLUTE_DISTANCE.get();
+            FLUTE_RADIUS = item.FLUTE_RADIUS.get();
+
             WALL_LANTERN_PLACEMENT = tweaks.WALL_LANTERN_PLACEMENT.get();
             THROWABLE_BRICKS = tweaks.THROWABLE_BRICKS.get();
+            WALL_LANTERN_BLACKLIST = tweaks.WALL_LANTERN_BLACKLIST.get();
+            BELL_CHAIN = tweaks.BELL_CHAIN.get();
+            BELL_CHAIN_LENGTH = tweaks.BELL_CHAIN_LENGTH.get();
 
             FIREFLY_MIN = spawn.FIREFLY_MIN.get();
             FIREFLY_MAX = spawn.FIREFLY_MAX.get();
@@ -353,7 +402,7 @@ public class ServerConfigs {
             CAGE_ALL_MOBS = block.CAGE_ALL_MOBS.get();
 
             SACK_INCREMENT = block.SACK_INCREMENT.get();
-            SACK_PENALITY = block.SACK_PENALITY.get();
+            SACK_PENALTY = block.SACK_PENALITY.get();
             SACK_SLOTS = block.SACK_SLOTS.get();
 
             SAFE_UNBREAKABLE= block.SAFE_UNBREAKABLE.get();

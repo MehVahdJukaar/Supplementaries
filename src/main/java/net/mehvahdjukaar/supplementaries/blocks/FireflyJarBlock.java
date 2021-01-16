@@ -36,14 +36,6 @@ public class FireflyJarBlock extends Block {
     }
 
     @Override
-    public void addInformation(ItemStack stack,  IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        if(soul){
-            tooltip.add(new StringTextComponent("Use Fabulous graphics").mergeStyle(TextFormatting.GRAY));
-        }
-        super.addInformation(stack, worldIn, tooltip, flagIn);
-    }
-
-    @Override
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
         return SHAPE;
     }

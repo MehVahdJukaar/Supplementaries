@@ -64,10 +64,8 @@ public class ThrowableBrickEntity extends ProjectileItemEntity implements IRende
         return itemstack.isEmpty() ? new ItemParticleData(ParticleTypes.ITEM, new ItemStack(this.getDefaultItem())) : new ItemParticleData(ParticleTypes.ITEM, itemstack);
     }
 
-    /**
-     * Handler for {@link World#setEntityState}
-     */
-    @OnlyIn(Dist.CLIENT)
+
+    //@OnlyIn(Dist.CLIENT)
     public void handleStatusUpdate(byte id) {
         if (id == 3) {
             IParticleData iparticledata = this.makeParticle();
@@ -110,9 +108,7 @@ public class ThrowableBrickEntity extends ProjectileItemEntity implements IRende
 
     }
 
-    /**
-     * Called when the arrow hits an entity
-     */
+
     @Override
     protected void onEntityHit(EntityRayTraceResult p_213868_1_) {
         super.onEntityHit(p_213868_1_);
@@ -121,9 +117,7 @@ public class ThrowableBrickEntity extends ProjectileItemEntity implements IRende
         entity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.func_234616_v_()), (float)i);
     }
 
-    /**
-     * Called when this EntityFireball hits a block or entity.
-     */
+
     @Override
     protected void onImpact(RayTraceResult result) {
         super.onImpact(result);
