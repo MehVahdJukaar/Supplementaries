@@ -42,7 +42,7 @@ public class NoticeBoardContainer extends Container  {
             @Override
             public boolean isItemValid(ItemStack stack) {
                 if(!stack.isEmpty()&& ServerConfigs.cached.NOTICE_BOARDS_UNRESTRICTED)return true;
-                return (stack.getItem().isIn(ItemTags.LECTERN_BOOKS) || stack.getItem() instanceof FilledMapItem);
+                return ((ItemTags.LECTERN_BOOKS!=null&&stack.getItem().isIn(ItemTags.LECTERN_BOOKS)) || stack.getItem() instanceof FilledMapItem);
             }
         });
 

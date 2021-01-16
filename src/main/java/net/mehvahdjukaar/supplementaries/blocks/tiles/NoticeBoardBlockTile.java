@@ -235,7 +235,7 @@ public class NoticeBoardBlockTile extends LockableLootTileEntity implements INam
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
         if(!stack.isEmpty()&&this.isEmpty()&&ServerConfigs.cached.NOTICE_BOARDS_UNRESTRICTED)return true;
-        return (this.isEmpty()&&(stack.getItem().isIn(ItemTags.LECTERN_BOOKS)|| stack.getItem() instanceof FilledMapItem));
+        return (this.isEmpty()&&((ItemTags.LECTERN_BOOKS!=null&&stack.getItem().isIn(ItemTags.LECTERN_BOOKS))|| stack.getItem() instanceof FilledMapItem));
     }
 
     @Override

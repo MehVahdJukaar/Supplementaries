@@ -23,14 +23,18 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.FORGE)
 public class RightClickEvent {
+
 
     private static boolean isLantern(Item i){
         if(i instanceof BlockItem){
@@ -40,6 +44,11 @@ public class RightClickEvent {
                     && !ServerConfigs.cached.WALL_LANTERN_BLACKLIST.contains(namespace));
         }
         return false;
+    }
+
+    private static boolean isBrick(Item i){
+        return ((Tags.Items.INGOTS_BRICK!=null&&i.isIn(Tags.Items.INGOTS_BRICK))
+                ||(Tags.Items.INGOTS_NETHER_BRICK!=null&&i.isIn(Tags.Items.INGOTS_NETHER_BRICK)));
     }
 
 
@@ -147,7 +156,7 @@ public class RightClickEvent {
         Hand handIn = event.getHand();
         ItemStack itemstack = playerIn.getHeldItem(handIn);
         Item i = itemstack.getItem();
-        if(i.isIn(Tags.Items.INGOTS_BRICK)||i.isIn(Tags.Items.INGOTS_NETHER_BRICK)) {
+        if(isBrick(i)) {
             World worldIn = event.getWorld();
             worldIn.playSound(null, playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ(), SoundEvents.ENTITY_SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (playerIn.getRNG().nextFloat() * 0.4F + 0.8F ));
             if (!worldIn.isRemote) {
@@ -177,7 +186,7 @@ public class RightClickEvent {
         if(ServerConfigs.cached.WALL_LANTERN_PLACEMENT && isLantern(i)){
             event.getToolTip().add(new TranslationTextComponent("message.supplementaries.wall_lantern").mergeStyle(TextFormatting.GRAY));
         }
-        else if(ServerConfigs.cached.THROWABLE_BRICKS && (i.isIn(Tags.Items.INGOTS_BRICK)||i.isIn(Tags.Items.INGOTS_NETHER_BRICK))){
+        else if(ServerConfigs.cached.THROWABLE_BRICKS && isBrick(i)){
             event.getToolTip().add(new TranslationTextComponent("message.supplementaries.throwable_brick").mergeStyle(TextFormatting.GRAY));
         }
     }
