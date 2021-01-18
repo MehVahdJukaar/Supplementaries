@@ -22,6 +22,7 @@ public class RedstoneIlluminatorBlock extends Block implements IForgeBlock {
         this.setDefaultState(this.stateContainer.getBaseState().with(POWER, 0));
     }
 
+
     @Override
     public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
         return 15 - state.get(POWER);

@@ -1,42 +1,24 @@
 package net.mehvahdjukaar.supplementaries.blocks.tiles;
 
 
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil.WoodType;
+import net.mehvahdjukaar.supplementaries.common.ITextHolder;
+import net.mehvahdjukaar.supplementaries.common.TextHolder;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.ICommandSource;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.DyeColor;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.vector.Vector2f;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextComponentUtils;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants;
 
-import javax.annotation.Nullable;
-import java.util.function.Function;
 
+public class SignPostBlockTile extends TileEntity implements ITextHolder {
 
-public class SignPostBlockTile extends TileEntity {
-    public final ITextComponent[] signText = new ITextComponent[]{new StringTextComponent(""), new StringTextComponent("")};
-    private boolean isEditable = true;
-    //private final String[] renderText = new String[2];
-    private final IReorderingProcessor[] renderText = new IReorderingProcessor[2];
-    private DyeColor textColor = DyeColor.BLACK;
+    public TextHolder textHolder;
 
     public BlockState fenceBlock = Blocks.OAK_FENCE.getDefaultState();
     public float yawUp = 0;
@@ -45,12 +27,17 @@ public class SignPostBlockTile extends TileEntity {
     public boolean leftDown = false;
     public boolean up = false;
     public boolean down = false;
+
     public WoodType woodTypeUp = WoodType.OAK;
     public WoodType woodTypeDown = WoodType.OAK;
 
     public SignPostBlockTile() {
         super(Registry.SIGN_POST_TILE);
+        this.textHolder = new TextHolder(2);
     }
+
+    @Override
+    public TextHolder getTextHolder(){return this.textHolder;}
 
     @Override
     public double getMaxRenderDistanceSquared() {
@@ -71,25 +58,8 @@ public class SignPostBlockTile extends TileEntity {
     @Override
     public void read(BlockState state, CompoundNBT compound) {
         super.read(state, compound);
-        // sign code
-        this.isEditable = false;
-        this.textColor = DyeColor.byTranslationKey(compound.getString("Color"), DyeColor.BLACK);
 
-        for(int i = 0; i < 2; ++i) {
-            String s = compound.getString("Text" + (i + 1));
-            ITextComponent itextcomponent = ITextComponent.Serializer.getComponentFromJson(s.isEmpty() ? "\"\"" : s);
-            if (this.world instanceof ServerWorld) {
-                try {
-                    this.signText[i] = TextComponentUtils.func_240645_a_(this.getCommandSource(null), itextcomponent, null, 0);
-                } catch (CommandSyntaxException commandsyntaxexception) {
-                    this.signText[i] = itextcomponent;
-                }
-            } else {
-                this.signText[i] = itextcomponent;
-            }
-
-            this.renderText[i] = null;
-        }
+        this.textHolder.read(compound);
 
         this.fenceBlock = NBTUtil.readBlockState(compound.getCompound("Fence"));
         this.yawUp = compound.getFloat("YawUp");
@@ -98,6 +68,7 @@ public class SignPostBlockTile extends TileEntity {
         this.leftDown = compound.getBoolean("LeftDown");
         this.up = compound.getBoolean("Up");
         this.down = compound.getBoolean("Down");
+        //TODO:replace this with something else for modded woods
         this.woodTypeUp = WoodType.values()[compound.getInt("WoodTypeUp")];
         this.woodTypeDown = WoodType.values()[compound.getInt("WoodTypeDown")];
 
@@ -105,21 +76,22 @@ public class SignPostBlockTile extends TileEntity {
         //remove in the future
         if(compound.contains("Wood_type_up"))this.woodTypeUp = WoodType.values()[compound.getInt("Wood_type_up")];
         if(compound.contains("Wood_type_down"))this.woodTypeDown = WoodType.values()[compound.getInt("Wood_type_down")];
+        if(compound.contains("Left_up"))this.leftUp=compound.getBoolean("Left_up");
+        if(compound.contains("Left_down"))this.leftDown=compound.getBoolean("Left_down");
+        if(compound.contains("Yaw_up"))this.yawUp=compound.getFloat("Yaw_up");
+        if(compound.contains("Yaw_down"))this.yawDown=compound.getFloat("Yaw_down");
+
     }
 
     @Override
     public CompoundNBT write(CompoundNBT compound) {
         super.write(compound);
 
-        for (int i = 0; i < 2; ++i) {
-            String s = ITextComponent.Serializer.toJson(this.signText[i]);
-            compound.putString("Text" + (i + 1), s);
-        }
+        this.textHolder.write(compound);
 
-        compound.putString("Color", this.textColor.getTranslationKey());
         compound.put("Fence", NBTUtil.writeBlockState(fenceBlock));
         compound.putFloat("YawUp",this.yawUp);
-        compound.putFloat("TawDown",this.yawDown);
+        compound.putFloat("YawDown",this.yawDown);
         compound.putBoolean("LeftUp",this.leftUp);
         compound.putBoolean("LeftDown",this.leftDown);
         compound.putBoolean("Up", this.up);
@@ -129,68 +101,6 @@ public class SignPostBlockTile extends TileEntity {
 
         return compound;
     }
-
-    // lots of sign code coming up
-    @OnlyIn(Dist.CLIENT)
-    public ITextComponent getText(int line) {
-        return this.signText[line];
-    }
-
-    public void setText(int line, ITextComponent p_212365_2_) {
-        this.signText[line] = p_212365_2_;
-        this.renderText[line] = null;
-    }
-
-    @Nullable
-    @OnlyIn(Dist.CLIENT)
-    public IReorderingProcessor getRenderText(int line, Function<ITextComponent, IReorderingProcessor> p_242686_2_) {
-        if (this.renderText[line] == null && this.signText[line] != null) {
-            this.renderText[line] = p_242686_2_.apply(this.signText[line]);
-        }
-
-        return this.renderText[line];
-    }
-
-    public boolean getIsEditable() {
-        return this.isEditable;
-    }
-
-    /**
-     * Sets the sign's isEditable flag to the specified parameter.
-     */
-    @OnlyIn(Dist.CLIENT)
-    public void setEditable(boolean isEditableIn) {
-        this.isEditable = isEditableIn;
-    }
-
-    public CommandSource getCommandSource(@Nullable ServerPlayerEntity playerIn) {
-        String s = playerIn == null ? "Sign" : playerIn.getName().getString();
-        ITextComponent itextcomponent = playerIn == null ? new StringTextComponent("Sign") : playerIn.getDisplayName();
-        return new CommandSource(ICommandSource.DUMMY,
-                new Vector3d((double) this.pos.getX() + 0.5D, (double) this.pos.getY() + 0.5D, (double) this.pos.getZ() + 0.5D), Vector2f.ZERO,
-                (ServerWorld) this.world, 2, s, itextcomponent, this.world.getServer(), playerIn);
-    }
-
-    public DyeColor getTextColor() {
-        return this.textColor;
-    }
-
-    public boolean setTextColor(DyeColor newColor) {
-        if (newColor != this.getTextColor()) {
-            this.textColor = newColor;
-            this.markDirty();
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public boolean onlyOpsCanSetNbt() {
-        return true;
-    }
-
-    // end of sign code
 
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {

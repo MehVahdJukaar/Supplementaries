@@ -29,7 +29,7 @@ public class Flute extends Item {
 
     @Override
     public boolean hasEffect(ItemStack stack) {
-        CompoundNBT compoundnbt = stack.getTag();
+        CompoundNBT compoundnbt = stack.getChildTag("Enchantments");
         return compoundnbt != null && (compoundnbt.contains("Pet") || super.hasEffect(stack));
     }
 
@@ -48,8 +48,9 @@ public class Flute extends Item {
             double y = playerIn.getPosY();
             double z = playerIn.getPosZ();
             int r=ServerConfigs.cached.FLUTE_RADIUS;
-            CompoundNBT com = stack.getChildTag("Pet");
-            if(com!=null){
+            CompoundNBT com1 = stack.getChildTag("Enchantments");
+            if(com1!=null&&com1.contains("Pet")){
+                CompoundNBT com = com1.getCompound("Pet");
                 Entity entity = worldIn.getEntityByID(com.getInt("ID"));
                 if(entity instanceof TameableEntity){
                     int maxdistsq = ServerConfigs.cached.FLUTE_DISTANCE*ServerConfigs.cached.FLUTE_DISTANCE;
@@ -85,13 +86,17 @@ public class Flute extends Item {
 
     @Override
     public ActionResultType itemInteractionForEntity(ItemStack stack, PlayerEntity playerIn, LivingEntity target, Hand hand) {
-        if(stack.getChildTag("Pet")==null && target instanceof TameableEntity && ((TameableEntity) target).isTamed() &&
+        CompoundNBT c = stack.getChildTag("Enchantments");
+        if((c==null||!c.contains("Pet")) && target instanceof TameableEntity && ((TameableEntity) target).isTamed() &&
                 ((TameableEntity) target).getOwnerId().equals(playerIn.getUniqueID())) {
             CompoundNBT com = new CompoundNBT();
             com.putString("Name", target.getName().getString());
             com.putUniqueId("UUID", target.getUniqueID());
             com.putInt("ID", target.getEntityId());
-            stack.setTagInfo("Pet",com);
+            CompoundNBT com2 = new CompoundNBT();
+            com2.put("Pet",com);
+
+            stack.setTagInfo("Enchantments",com2);
             playerIn.setHeldItem(hand, stack);
             playerIn.getCooldownTracker().setCooldown(this, 20);
             return ActionResultType.func_233537_a_(playerIn.world.isRemote);
@@ -102,9 +107,10 @@ public class Flute extends Item {
     @OnlyIn(Dist.CLIENT)
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
-        CompoundNBT compoundnbt = stack.getChildTag("Pet");
-            if (compoundnbt !=null && compoundnbt.contains("Name")){
-                tooltip.add(new StringTextComponent(compoundnbt.getString("Name")).mergeStyle(TextFormatting.GRAY));
+        CompoundNBT compoundnbt = stack.getChildTag("Enchantments");
+            if (compoundnbt !=null && compoundnbt.contains("Pet")){
+                CompoundNBT com = compoundnbt.getCompound("Pet");
+                tooltip.add(new StringTextComponent(com.getString("Name")).mergeStyle(TextFormatting.GRAY));
             }
     }
 

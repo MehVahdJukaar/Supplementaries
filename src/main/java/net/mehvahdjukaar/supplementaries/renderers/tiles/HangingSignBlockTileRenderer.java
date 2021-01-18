@@ -102,7 +102,7 @@ public class HangingSignBlockTileRenderer extends TileEntityRenderer<HangingSign
         else {
             // sign code
             FontRenderer fontrenderer = this.renderDispatcher.getFontRenderer();
-            int i = tile.getTextColor().getTextColor();
+            int i = tile.textHolder.textColor.getTextColor();
             int j = (int) ((double) NativeImage.getRed(i) * 0.4D);
             int k = (int) ((double) NativeImage.getGreen(i) * 0.4D);
             int l = (int) ((double) NativeImage.getBlue(i) * 0.4D);
@@ -114,7 +114,7 @@ public class HangingSignBlockTileRenderer extends TileEntityRenderer<HangingSign
                 matrixStackIn.scale(0.010416667F, -0.010416667F, 0.010416667F);
 
                 for(int k1 = 0; k1 < MAXLINES; ++k1) {
-                    IReorderingProcessor ireorderingprocessor = tile.getRenderText(k1, (p_243502_1_) -> {
+                    IReorderingProcessor ireorderingprocessor = tile.textHolder.getRenderText(k1, (p_243502_1_) -> {
                         List<IReorderingProcessor> list = fontrenderer.trimStringToWidth(p_243502_1_, 75);
                         return list.isEmpty() ? IReorderingProcessor.field_242232_a : list.get(0);
                     });

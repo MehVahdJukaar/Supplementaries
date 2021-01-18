@@ -4,10 +4,6 @@ import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
-import net.minecraft.item.Item;
-import net.minecraft.tags.ITag;
-import net.minecraft.tags.TagCollectionManager;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
@@ -26,21 +22,28 @@ public class RegistryConfigs {
         reg.init(REGISTRY_BUILDER);
 
         REGISTRY_CONFIG = REGISTRY_BUILDER.build();
-
-        //extra variables
-        reg.FIREFLY_JAR = reg.FIREFLY_ENABLED.get() && reg.JAR_ENABLED.get();
-
+        //remove try?
         try{
-            //TODO: properly fix forge:ingots/silver used before it was bound
-            ITag<Item> tag = TagCollectionManager.getManager().getItemTags().get(new ResourceLocation("forge:ingots/silver"));
-            reg.HAS_SILVER = tag != null;
-            if(ModList.get().isLoaded("mysticalworld")||ModList.get().isLoaded("immersiveengineering")){
+            //extra variables
+
+            //TODO: properly fix forge:ingots/silver used before it was bound. this is a no no, don't do it again
+            //TODO: find a way to do this ^ without using tags
+            //ITag<Item> tag = TagCollectionManager.getManager().getItemTags().get(new ResourceLocation("forge:ingots/silver"));
+            //reg.HAS_SILVER = tag != null;
+            //why use arrays smh
+            //hardcoding it is
+            if(ModList.get().isLoaded("mysticalworld")||ModList.get().isLoaded("immersiveengineering")||
+                    ModList.get().isLoaded("bluepower")||ModList.get().isLoaded("silents_mechanisms ")||
+                    ModList.get().isLoaded("thermal")||ModList.get().isLoaded("iceandfire")
+                    ||ModList.get().isLoaded("silentgems")||ModList.get().isLoaded("occultism")){
                 reg.HAS_SILVER=true;
             }
+
+            reg.FIREFLY_JAR = reg.FIREFLY_ENABLED.get() && reg.JAR_ENABLED.get();
+            reg.SILVER_CANDELABRA = reg.CANDELABRA_ENABLED.get() && reg.HAS_SILVER;
         }
         catch(Exception ignored){};
 
-        reg.SILVER_CANDELABRA = reg.CANDELABRA_ENABLED.get() && reg.HAS_SILVER;
 
     }
     public static void registerConfig(){
@@ -96,9 +99,9 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue CREATIVE_TAB;
         public static ForgeConfigSpec.BooleanValue DISPENSERS;
 
-        public static boolean FIREFLY_JAR;
-        public static boolean SILVER_CANDELABRA;
-        public static boolean HAS_COPPER;
+        public static boolean FIREFLY_JAR = true;
+        public static boolean SILVER_CANDELABRA = false;
+        public static boolean HAS_COPPER = false;
         public static boolean HAS_SILVER = false;
 
 

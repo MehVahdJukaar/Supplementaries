@@ -1,0 +1,44 @@
+{
+  "group": "candelabra",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "111",
+    "222",
+    " 2 "
+  ],
+  "key": {
+    "1": {
+      "tag": "cavesandcliffs:candles"
+    },
+    "2": {
+      "tag": "forge:ingots/silver"
+    }
+  },
+  "result": {
+    "item": "supplementaries:candelabra_silver",
+    "count": 1
+  },
+  "conditions": [
+    {
+      "type": "forge:and",
+      "values": [
+        {
+          "type":"forge:mod_loaded",
+          "modid":"cavesandcliffs"
+        },
+        {
+          "type": "supplementaries:flag",
+          "flag": "candelabra"
+        },
+        {
+          "type": "forge:not",
+          "value": {
+            "type": "forge:tag_empty",
+            "tag": "forge:ingots/silver"
+          }
+        }
+      ]
+    }
+  ]
+}
+

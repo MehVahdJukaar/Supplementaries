@@ -32,9 +32,7 @@ import net.minecraft.world.World;
 
 
 public class HangingSignBlock extends SwayingBlock {
-    //protected static final VoxelShape SHAPE_SOUTH = VoxelShapes.create(0.5625D, 0D, 1D, 0.4375D, 1D, 0D);
     protected static final VoxelShape SHAPE_NORTH = VoxelShapes.create(0.4375D, 0D, 0D, 0.5625D, 1D, 1D);
-    //protected static final VoxelShape SHAPE_EAST = VoxelShapes.create(1D, 0D, 0.4375D, 0D, 1D, 0.5625D);
     protected static final VoxelShape SHAPE_WEST = VoxelShapes.create(0D, 0D, 0.5625D, 1D, 1D, 0.4375D);
 
     public static final BooleanProperty HANGING = BlockStateProperties.HANGING;
@@ -45,7 +43,6 @@ public class HangingSignBlock extends SwayingBlock {
         this.setDefaultState(this.stateContainer.getBaseState().with(WATERLOGGED, false)
                 .with(EXTENSION, 0).with(FACING, Direction.NORTH).with(TILE, false).with(HANGING,false));
     }
-
 
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
@@ -61,13 +58,11 @@ public class HangingSignBlock extends SwayingBlock {
             boolean flag2 = !te.isEmpty() && emptyhand;
             //color
             if (flag){
-                if(te.setTextColor(((DyeItem) itemstack.getItem()).getDyeColor())){
+                if(te.textHolder.setTextColor(((DyeItem) itemstack.getItem()).getDyeColor())){
                     if (!player.isCreative()) {
                         itemstack.shrink(1);
                     }
-                    if(server){
-                        te.markDirty();
-                    }
+                    if(server)te.markDirty();
                     return ActionResultType.func_233537_a_(worldIn.isRemote);
                 }
             }
@@ -92,9 +87,7 @@ public class HangingSignBlock extends SwayingBlock {
             else if (flag2) {
                 ItemStack it = te.removeStackFromSlot(0);
                 player.setHeldItem(handIn, it);
-                if (!worldIn.isRemote()) {
-                    te.markDirty();
-                }
+                if(server)te.markDirty();
                 return ActionResultType.func_233537_a_(worldIn.isRemote);
             }
             // open gui (edit sign with empty hand)
@@ -171,7 +164,6 @@ public class HangingSignBlock extends SwayingBlock {
 
         return this.getConnectedState(this.getDefaultState(),facingState, world,facingpos).with(FACING, context.getFace()).with(WATERLOGGED,water);
     }
-
 
     //for player bed spawn
     @Override

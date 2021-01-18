@@ -6,7 +6,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.mehvahdjukaar.supplementaries.blocks.SignPostBlock;
 import net.mehvahdjukaar.supplementaries.blocks.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.network.Networking;
-import net.mehvahdjukaar.supplementaries.network.UpdateServerSignPostPacket;
+import net.mehvahdjukaar.supplementaries.network.UpdateServerTextHolderPacket;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -41,7 +41,7 @@ public class SignPostGui extends Screen {
     public SignPostGui(SignPostBlockTile teSign) {
         super(new TranslationTextComponent("sign.edit"));
         this.tileSign = teSign;
-        this.cachedLines = IntStream.range(0, MAXLINES).mapToObj(teSign::getText).map(ITextComponent::getString).toArray(String[]::new);
+        this.cachedLines = IntStream.range(0, MAXLINES).mapToObj(teSign.textHolder::getText).map(ITextComponent::getString).toArray(String[]::new);
 
         editLine = !this.tileSign.up ? 1 : 0;
     }
@@ -105,8 +105,8 @@ public class SignPostGui extends Screen {
     public void onClose() {
         this.minecraft.keyboardListener.enableRepeatEvents(false);
         // send new text to the server
-        Networking.INSTANCE.sendToServer(new UpdateServerSignPostPacket(this.tileSign.getPos(), this.tileSign.getText(0), this.tileSign.getText(1)));
-        this.tileSign.setEditable(true);
+        Networking.INSTANCE.sendToServer(new UpdateServerTextHolderPacket(this.tileSign.getPos(), this.tileSign.textHolder.signText, this.tileSign.textHolder.lines));
+        //this.tileSign.textHolder.setEditable(true);
     }
 
     private void close() {
@@ -118,10 +118,10 @@ public class SignPostGui extends Screen {
     protected void init() {
         this.minecraft.keyboardListener.enableRepeatEvents(true);
         this.addButton(new Button(this.width / 2 - 100, this.height / 4 + 120, 200, 20, DialogTexts.GUI_DONE, (p_238847_1_) -> this.close()));
-        this.tileSign.setEditable(false);
+        //this.tileSign.textHolder.setEditable(false);
         this.textInputUtil = new TextInputUtil(() -> this.cachedLines[this.editLine], (p_238850_1_) -> {
             this.cachedLines[this.editLine] = p_238850_1_;
-            this.tileSign.setText(this.editLine, new StringTextComponent(p_238850_1_));
+            this.tileSign.textHolder.setText(this.editLine, new StringTextComponent(p_238850_1_));
         }, TextInputUtil.getClipboardTextSupplier(this.minecraft), TextInputUtil.getClipboardTextSetter(this.minecraft), (p_238848_1_) -> this.minecraft.fontRenderer.getStringWidth(p_238848_1_) <= 90);
     }
 
@@ -198,11 +198,11 @@ public class SignPostGui extends Screen {
 
         Matrix4f matrix4f = matrixstack.getLast().getMatrix();
 
-        int i = this.tileSign.getTextColor().getTextColor();
+        int i = this.tileSign.textHolder.textColor.getTextColor();
         int j = this.textInputUtil.getEndIndex();
         int k = this.textInputUtil.getStartIndex();
         //int i1 = this.minecraft.fontRenderer.getBidiFlag() ? -1 : 1;
-        int l = this.editLine * 48 - this.tileSign.signText.length * 5;
+        int l = this.editLine * 48 - this.tileSign.textHolder.lines * 5;
 
         for(int i1 = 0; i1 < this.cachedLines.length; ++i1) {
             String s = this.cachedLines[i1];

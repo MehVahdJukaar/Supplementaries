@@ -36,9 +36,9 @@ public class MapPost {
             SignPostBlockTile te = (SignPostBlockTile)tileentity;
 
             ITextComponent t = new StringTextComponent("");
-            if(te.up)t=te.signText[0];
+            if(te.up)t=te.textHolder.signText[0];
             if(te.down && t.getString().isEmpty())
-                t=te.signText[1];
+                t=te.textHolder.signText[1];
             if(t.getString().isEmpty())t=null;
 
             return new MapPost(pos, t);

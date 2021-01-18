@@ -13,16 +13,23 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class RendererUtil {
     //centered on x,z. aligned on y=0
 
-    //TODO: cache sprite coordinates
     @OnlyIn(Dist.CLIENT)
     public static void addCube(IVertexBuilder builder, MatrixStack matrixStackIn, float w, float h, TextureAtlasSprite sprite, int combinedLightIn,
+                               int color, float a, int combinedOverlayIn, boolean up, boolean down, boolean fakeshading, boolean flippedY) {
+        addCube(builder,matrixStackIn,0,0,w,h,sprite,combinedLightIn,color,a,combinedOverlayIn,up,down,fakeshading,flippedY);
+    }
+
+
+    //TODO: cache sprite coordinates?
+    @OnlyIn(Dist.CLIENT)
+    public static void addCube(IVertexBuilder builder, MatrixStack matrixStackIn,float uOff, float vOff, float w, float h, TextureAtlasSprite sprite, int combinedLightIn,
                                int color, float a, int combinedOverlayIn, boolean up, boolean down, boolean fakeshading, boolean flippedY) {
         int lu = combinedLightIn & '\uffff';
         int lv = combinedLightIn >> 16 & '\uffff'; // ok
         float atlasscaleU = sprite.getMaxU() - sprite.getMinU();
         float atlasscaleV = sprite.getMaxV() - sprite.getMinV();
-        float minu = sprite.getMinU();
-        float minv = sprite.getMinV();
+        float minu = sprite.getMinU() + atlasscaleU * uOff;
+        float minv = sprite.getMinV() + atlasscaleV * vOff;
         float maxu = minu + atlasscaleU * w;
         float maxv = minv + atlasscaleV * h;
         float maxv2 = minv + atlasscaleV * w;

@@ -4,7 +4,8 @@
     "recipes": [
       "supplementaries:candelabra_silver_recipe_2",
       "supplementaries:candelabra_silver_recipe",
-      "supplementaries:candelabra_silver_recipe_3"
+      "supplementaries:candelabra_silver_recipe_3",
+      "supplementaries:candelabra_silver_recipe_4"
     ]
   },
   "criteria": {

@@ -22,6 +22,18 @@
     {
       "type": "supplementaries:flag",
       "flag": "jar"
+    },
+    {
+      "type": "forge:not",
+      "value": {
+        "type": "forge:or",
+        "values": [
+          {
+            "type": "forge:mod_loaded",
+            "modid": "cavesandcliffs"
+          }
+        ]
+      }
     }
   ]
 }

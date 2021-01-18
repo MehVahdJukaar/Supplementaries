@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.events;
 import net.mehvahdjukaar.supplementaries.blocks.WallLanternBlock;
 import net.mehvahdjukaar.supplementaries.blocks.tiles.WallLanternBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-
 import net.mehvahdjukaar.supplementaries.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -12,7 +11,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.stats.Stats;
-import net.minecraft.tileentity.BellTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -23,12 +21,9 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -47,8 +42,13 @@ public class RightClickEvent {
     }
 
     private static boolean isBrick(Item i){
-        return ((Tags.Items.INGOTS_BRICK!=null&&i.isIn(Tags.Items.INGOTS_BRICK))
-                ||(Tags.Items.INGOTS_NETHER_BRICK!=null&&i.isIn(Tags.Items.INGOTS_NETHER_BRICK)));
+        try {
+            return ((Tags.Items.INGOTS_BRICK != null && i.isIn(Tags.Items.INGOTS_BRICK))
+                    || (Tags.Items.INGOTS_NETHER_BRICK != null && i.isIn(Tags.Items.INGOTS_NETHER_BRICK))||
+                    ServerConfigs.cached.BRICKS_LIST.contains(i.getRegistryName().toString()));
+        }catch (Exception e){
+            return false;
+        }
     }
 
 
@@ -75,7 +75,7 @@ public class RightClickEvent {
         Hand hand = event.getHand();
         ItemStack stack = event.getItemStack();
         Item i = stack.getItem();
-        if(stack.isEmpty()){
+        if(stack.isEmpty()&&hand==Hand.MAIN_HAND){
             if(!ServerConfigs.cached.BELL_CHAIN)return;
             World world = event.getWorld();
             BlockPos pos = event.getPos();
@@ -151,7 +151,7 @@ public class RightClickEvent {
 
     @SubscribeEvent
     public static void onRightClickItem(PlayerInteractEvent.RightClickItem event) {
-        if(!ServerConfigs.cached.THROWABLE_BRICKS)return;
+        if(!ServerConfigs.cached.THROWABLE_BRICKS_ENABLED)return;
         PlayerEntity playerIn = event.getPlayer();
         Hand handIn = event.getHand();
         ItemStack itemstack = playerIn.getHeldItem(handIn);
@@ -182,11 +182,12 @@ public class RightClickEvent {
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public static void onItemTooltip(ItemTooltipEvent event) {
+        if((event.getPlayer()==null)||(event.getPlayer().world==null))return;
         Item i = event.getItemStack().getItem();
         if(ServerConfigs.cached.WALL_LANTERN_PLACEMENT && isLantern(i)){
             event.getToolTip().add(new TranslationTextComponent("message.supplementaries.wall_lantern").mergeStyle(TextFormatting.GRAY));
         }
-        else if(ServerConfigs.cached.THROWABLE_BRICKS && isBrick(i)){
+        else if(ServerConfigs.cached.THROWABLE_BRICKS_ENABLED && isBrick(i)){
             event.getToolTip().add(new TranslationTextComponent("message.supplementaries.throwable_brick").mergeStyle(TextFormatting.GRAY));
         }
     }
@@ -194,7 +195,7 @@ public class RightClickEvent {
     /*
     @SubscribeEvent
     public static void onRenderPlayer(RenderPlayerEvent event) {
-
+        renderer.getEntityModel().bipedLeftLeg.showModel=false;
         MatrixStack matrixStack = event.getMatrixStack();
         PlayerEntity player = event.getPlayer();
         PlayerRenderer renderer = event.getRenderer();
@@ -203,7 +204,7 @@ public class RightClickEvent {
         int light = event.getLight();
 
         //renderer.getEntityModel().rightArmPose= BipedModel.ArmPose.CROSSBOW_CHARGE;
-        renderer.getEntityModel().bipedLeftLeg.showModel=false;
+
         if (player.getHeldItem(Hand.MAIN_HAND).getItem() instanceof Flute) {
             renderer.getEntityModel().bipedLeftArm.rotateAngleZ = 20;
 
@@ -211,4 +212,43 @@ public class RightClickEvent {
      }
 
     }*/
+
+
+    //enderman hold block in rain
+/*
+    @SubscribeEvent
+    public static void onRenderEnderman(RenderLivingEvent<EndermanEntity, EndermanModel<EndermanEntity>> event) {
+        if(event.getEntity()instanceof EndermanEntity){
+            LivingRenderer<EndermanEntity, EndermanModel<EndermanEntity>> renderer = event.getRenderer();
+            if(renderer instanceof EndermanRenderer) {
+                MatrixStack matrixStack = event.getMatrixStack();
+                matrixStack.push();
+
+                //renderer.getEntityModel().bipedLeftArm.showModel=false;
+
+                //event.getRenderer().getEntityModel().bipedLeftArm.rotateAngleX=180;
+
+
+                event.getRenderer().getEntityModel().bipedLeftArm.showModel=true;
+                //bipedRightArm.rotateAngleX=100;
+                int i = getPackedOverlay(event.getEntity(), 0);
+                //event.getRenderer().getEntityModel().bipedLeftArm.render(event.getMatrixStack(),event.getBuffers().getBuffer(RenderType.getEntityCutout(new ResourceLocation("textures/entity/enderman/enderman.png"))), event.getLight(),i);
+                event.getRenderer().getEntityModel().bipedLeftArm.showModel=false;
+                matrixStack.pop();
+            }
+        }
+    }*/
+    /*
+    @SubscribeEvent
+    public static void onRenderEnderman(PlayerInteractEvent.EntityInteractSpecific event) {
+
+        Entity e = event.getTarget();
+        if(e instanceof MobEntity && event.getItemStack().getItem() instanceof CompassItem){
+            ((MobEntity) e).setHomePosAndDistance(new BlockPos(0,63,0),100);
+            event.setCanceled(true);
+            event.setCancellationResult(ActionResultType.SUCCESS);
+        }
+    }*/
+
+
 }

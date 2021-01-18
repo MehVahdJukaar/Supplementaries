@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import javafx.geometry.BoundingBox;
 import net.mehvahdjukaar.supplementaries.common.IBellConnection;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
@@ -10,10 +9,6 @@ import net.minecraft.tileentity.BellTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(BellTileEntity.class)

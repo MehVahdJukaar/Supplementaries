@@ -4,7 +4,8 @@
     "recipes": [
       "supplementaries:candle_holder_recipe_2",
       "supplementaries:candle_holder_recipe_3",
-      "supplementaries:candle_holder_recipe"
+      "supplementaries:candle_holder_recipe",
+      "supplementaries:candle_holder_recipe_4"
     ]
   },
   "criteria": {

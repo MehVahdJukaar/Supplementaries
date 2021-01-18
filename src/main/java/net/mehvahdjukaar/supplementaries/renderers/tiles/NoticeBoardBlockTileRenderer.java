@@ -51,7 +51,7 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
                        int combinedOverlayIn) {
 
         if(tile.textVisible){
-
+            //TODO: fix book with nothing in it
             int newl = tile.getFrontLight();
             ItemStack stack = tile.getStackInSlot(0);
 

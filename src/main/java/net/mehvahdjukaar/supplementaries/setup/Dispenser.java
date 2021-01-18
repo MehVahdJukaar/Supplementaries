@@ -96,7 +96,6 @@ public class Dispenser {
         }
     }
 
-
     //add item to dispenser and merges it if there's one already
     public static boolean MergeDispenserItem(DispenserTileEntity te, ItemStack filled) {
         try {
@@ -118,14 +117,14 @@ public class Dispenser {
         return false;
     }
 
-    //returns full bottle to dispenser
+    //returns full bottle to dispenser. same function that's in IDispenseritemBehavior
     public static ItemStack glassBottleFill(IBlockSource source, ItemStack empty, ItemStack filled) {
         empty.shrink(1);
         if (empty.isEmpty()) {
             return filled.copy();
         } else {
             if (!Dispenser.MergeDispenserItem(source.getBlockTileEntity(), filled)) {
-                //Dispenser.defaultBehaviour.dispense(source, filled.copy());
+                Dispenser.defaultBehaviour.dispense(source, filled.copy());
             }
             return empty;
         }
@@ -149,6 +148,7 @@ public class Dispenser {
 
     public static class FillJarDispenserBehavior extends AdditionalDispenserBehavior {
 
+        @Override
         protected ItemStack customBehavior(IBlockSource source, ItemStack stack) {
             //this.setSuccessful(false);
             ServerWorld world = source.getWorld();
@@ -171,6 +171,7 @@ public class Dispenser {
 
     public static class BucketJarDispenserBehavior extends  AdditionalDispenserBehavior{
 
+        @Override
         protected ItemStack customBehavior(IBlockSource source, ItemStack stack) {
             //this.setSuccessful(false);
             ServerWorld world = source.getWorld();

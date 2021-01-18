@@ -2,7 +2,14 @@ package net.mehvahdjukaar.supplementaries.common;
 
 import net.mehvahdjukaar.supplementaries.blocks.SignPostBlock;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.FenceBlock;
+import net.minecraft.block.WallBlock;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.renderer.texture.MissingTextureSprite;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.item.*;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.potion.Potions;
@@ -16,9 +23,10 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.Tags;
 
-import javax.annotation.Nullable;
 import java.util.Calendar;
 
 import static net.mehvahdjukaar.supplementaries.common.Resources.*;
@@ -352,7 +360,8 @@ public class CommonUtil {
         SUGAR(HOURGLASS_SUGAR,"minecraft:sugar", 40),
         GLOWSTONE_DUST(HOURGLASS_GLOWSTONE,"minecraft:glowstone_dust", 120),
         REDSTONE_DUST(HOURGLASS_REDSTONE,"minecraft:redstone", 200),
-        BLAZE_POWDER(HOURGLASS_BLAZE,"minecraft:blaze_powder", 100);
+        BLAZE_POWDER(HOURGLASS_BLAZE,"minecraft:blaze_powder", 100),
+        FORGE_DUST(HOURGLASS_GUNPOWDER,"minecraft:gunpowder", 150);
 
 
         public final ResourceLocation texture;
@@ -372,6 +381,37 @@ public class CommonUtil {
             return 0;
         }
 
+        @OnlyIn(Dist.CLIENT)
+        public TextureAtlasSprite getSprite(Item i){
+            ResourceLocation reg = i.getRegistryName();
+            if(this==SAND||this==FORGE_DUST){
+                ResourceLocation texture;
+                TextureAtlasSprite sprite;
+                if(this==SAND) {
+                    texture = new ResourceLocation(reg.getNamespace(), "block/" + reg.getPath());
+                    sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(texture);
+                }
+                else{
+                    if(reg.getNamespace().equals("thermal")){
+                        texture = new ResourceLocation(reg.getNamespace(), "item/dusts/" + reg.getPath());
+                        sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(texture);
+                    }
+                    else {
+                        texture = new ResourceLocation(reg.getNamespace(), "item/" + reg.getPath());
+                        sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(texture);
+                        if (sprite instanceof MissingTextureSprite) {
+                            texture = new ResourceLocation(reg.getNamespace(), "items/" + reg.getPath());
+                            sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(texture);
+                        }
+                    }
+                }
+
+                if(sprite instanceof MissingTextureSprite)sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(this.texture);
+                return sprite;
+            }
+            return Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(this.texture);
+        }
+
         public boolean isSand(){
             return this==SAND;
         }
@@ -384,6 +424,8 @@ public class CommonUtil {
                     return n;
                 }
             }
+            if(name.equals("astralsorcery:stardust"))return FORGE_DUST;
+            if(i.isIn(Tags.Items.DUSTS))return FORGE_DUST;
             return DEFAULT;
         }
     }
@@ -419,6 +461,7 @@ public class CommonUtil {
     public static boolean isAllowedInShulker(ItemStack stack){
         return SHULKER_TILE.canInsertItem(0,stack,null);
     }
+
 
 
 }

@@ -3,9 +3,9 @@ package net.mehvahdjukaar.supplementaries.items;
 import net.mehvahdjukaar.supplementaries.blocks.SignPostBlock;
 import net.mehvahdjukaar.supplementaries.blocks.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.FenceBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -15,15 +15,26 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.common.Tags;
 
 
 public class SignPostItem  extends Item {
     public SignPostItem(Properties properties) {
         super(properties);
+    }
+
+
+    private boolean isFence(Block b){
+        ResourceLocation res = b.getRegistryName();
+        if(res.getNamespace().equals("blockcarpentry"))return false;
+        return (b instanceof FenceBlock || ServerConfigs.cached.SIGN_POST_ADDITIONAL.contains(res.toString())
+                || (Tags.Blocks.FENCES!=null && b.isIn(Tags.Blocks.FENCES)));
     }
 
     @Override
@@ -38,7 +49,7 @@ public class SignPostItem  extends Item {
 
         Block targetblock = world.getBlockState(blockpos).getBlock();
 
-        boolean isfence = targetblock instanceof FenceBlock;
+        boolean isfence = isFence(targetblock);
         boolean issignpost = targetblock instanceof SignPostBlock;
         if(isfence || issignpost){
 
@@ -81,9 +92,8 @@ public class SignPostItem  extends Item {
             }
             if(flag){
                 if(world.isRemote()){
-                    BlockState newstate = world.getBlockState(blockpos);
-                    SoundType soundtype = newstate.getSoundType(world, blockpos, playerentity);
-                    world.playSound(playerentity, blockpos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+                    SoundType soundtype = SoundType.WOOD;
+                    world.playSound(playerentity, blockpos, SoundEvents.BLOCK_WOOD_PLACE, SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
                 }
                 if(!context.getPlayer().isCreative()) itemstack.shrink(1);
                 return ActionResultType.SUCCESS;

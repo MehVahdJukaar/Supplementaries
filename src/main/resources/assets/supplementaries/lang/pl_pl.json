@@ -15,8 +15,8 @@
   "block.supplementaries.bellows": "Miech",
   "block.supplementaries.wind_vane": "Wiatrowskaz",
   "block.supplementaries.clock_block": "Blok zegara",
-  "block.supplementaries.piston_launcher_arm": "Ramię tłoka sprężynowego",
-  "block.supplementaries.piston_launcher": "Tłok sprężynowy",
+  "block.supplementaries.piston_launcher_arm": "Wyrzutnia wyrzutni sprężynowej",
+  "block.supplementaries.piston_launcher": "Wyrzutnia spręzynowa",
   "block.supplementaries.crank": "Korba",
   "block.supplementaries.jar": "Słój",
   "block.supplementaries.jar_tinted": "Przyciemniony słój",
@@ -78,7 +78,7 @@
   "block.supplementaries.copper_lantern": "Miedziana latarenka",
 
   "block.supplementaries.flag": "Flaga (Praca w toku)",
-  "block.supplementaries.laser_block": "Blok laseru (Praca w toku)",
+  "block.supplementaries.laser_block": "Laser (Praca w toku)",
   "block.supplementaries.fancy_lamp": "Nastrojowa latarenka",
-  "block.supplementaries.skull_lantern": "Latarenka czaszka"
+  "block.supplementaries.skull_lantern": "Latarenka z czaszki"
  }

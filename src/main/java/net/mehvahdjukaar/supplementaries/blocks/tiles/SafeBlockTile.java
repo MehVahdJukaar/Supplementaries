@@ -75,6 +75,16 @@ public class SafeBlockTile extends LockableLootTileEntity implements ISidedInven
         return (this.owner!=null && !this.owner.equals(player.getUniqueID()));
     }
 
+
+    @Override
+    public ITextComponent getDisplayName() {
+        if(this.ownerName!=null){
+            return (new TranslationTextComponent("gui.supplementaries.safe.name",this.ownerName,super.getDisplayName()));
+
+        }
+        return super.getDisplayName();
+    }
+
     @Override
     protected ITextComponent getDefaultName() {
         return new TranslationTextComponent("block.supplementaries.safe");

@@ -35,7 +35,7 @@ public abstract class MapMixin extends WorldSavedData {
     @Final
     private void updateDecorations(MapDecoration.Type type, @Nullable IWorld worldIn, String decorationName, double worldX, double worldZ, double rotationIn, @Nullable ITextComponent name){};
 
-
+    @Final
     private final Map<String, MapPost> posts = Maps.newHashMap();
 
     @Shadow
@@ -53,7 +53,7 @@ public abstract class MapMixin extends WorldSavedData {
     @Shadow
     @Final
     public final Map<String, MapDecoration> mapDecorations;
-
+    //TODO: it says this should fe final but as you can see it clearly is. if you know a solution tell me
 
 
 

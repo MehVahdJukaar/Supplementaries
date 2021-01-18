@@ -44,7 +44,7 @@ public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockT
 
             // sign code
             FontRenderer fontrenderer = this.renderDispatcher.getFontRenderer();
-            int i = tile.getTextColor().getTextColor();
+            int i = tile.textHolder.textColor.getTextColor();
             int j = (int) ((double) NativeImage.getRed(i) * 0.4D);
             int k = (int) ((double) NativeImage.getGreen(i) * 0.4D);
             int l = (int) ((double) NativeImage.getBlue(i) * 0.4D);
@@ -82,7 +82,7 @@ public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockT
                 matrixStackIn.translate(0, 1, 0);
 
 
-                    IReorderingProcessor ireorderingprocessor = tile.getRenderText(0, (p_243502_1_) -> {
+                    IReorderingProcessor ireorderingprocessor = tile.textHolder.getRenderText(0, (p_243502_1_) -> {
                         List<IReorderingProcessor> list = fontrenderer.trimStringToWidth(p_243502_1_, 90);
                         return list.isEmpty() ? IReorderingProcessor.field_242232_a : list.get(0);
                     });
@@ -121,7 +121,7 @@ public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockT
                 matrixStackIn.scale(0.010416667F, -0.010416667F, 0.010416667F);
                 matrixStackIn.translate(0, 1, 0);
 
-                IReorderingProcessor ireorderingprocessor = tile.getRenderText(1, (p_243502_1_) -> {
+                IReorderingProcessor ireorderingprocessor = tile.textHolder.getRenderText(1, (p_243502_1_) -> {
                     List<IReorderingProcessor> list = fontrenderer.trimStringToWidth(p_243502_1_, 90);
                     return list.isEmpty() ? IReorderingProcessor.field_242232_a : list.get(0);
                 });

@@ -65,6 +65,10 @@ public class MobHolder {
             this.animationType=MobHolderType.DEFAULT;
             this.name="reload needed";
         }
+        if(compound.contains("animation_type")) this.animationType=MobHolderType.values()[compound.getInt("animation_type")];
+        if(compound.contains("scale"))this.scale=compound.getFloat("scale");
+
+
 
         if(compound.contains("MobHolder")){
             CompoundNBT cmp = compound.getCompound("MobHolder");
@@ -248,7 +252,7 @@ public class MobHolder {
                 int light = this.animationType.getLightLevel();
                 BlockState state = this.world.getBlockState(this.pos);
                 if(state.get(Resources.LIGHT_LEVEL_0_15)!=light){
-                    this.world.setBlockState(this.pos, state.with(Resources.LIGHT_LEVEL_0_15,light),4|16);
+                    this.world.setBlockState(this.pos, state.with(Resources.LIGHT_LEVEL_0_15,light),2|4|16);
                 }
             }
             this.entityChanged = false;

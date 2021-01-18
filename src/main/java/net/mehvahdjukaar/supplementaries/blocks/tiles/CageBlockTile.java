@@ -22,6 +22,7 @@ public class CageBlockTile extends TileEntity implements ITickableTileEntity, IM
         this.mobHolder = new MobHolder(this.world,this.pos);
     }
 
+    @Override
     public MobHolder getMobHolder(){return this.mobHolder;}
 
     @Override

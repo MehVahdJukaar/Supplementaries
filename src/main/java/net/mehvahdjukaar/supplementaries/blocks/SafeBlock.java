@@ -141,7 +141,7 @@ public class SafeBlock extends Block implements IWaterLoggable{
                 if(item instanceof BlockItem && ((BlockItem) item).getBlock() instanceof TripWireHookBlock &&
                         (safe.isOwnedBy(player)||(safe.isNotOwnedBy(player)&&player.isCreative()))){
                     safe.clearOwner();
-                    player.sendStatusMessage(new TranslationTextComponent("message.supplementaries.safe_cleared"),true);
+                    player.sendStatusMessage(new TranslationTextComponent("message.supplementaries.safe.cleared"),true);
                     worldIn.playSound(null, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5,
                             SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN, SoundCategory.BLOCKS, 0.5F, 1.5F);
                     return ActionResultType.CONSUME;
@@ -154,8 +154,7 @@ public class SafeBlock extends Block implements IWaterLoggable{
                         safe.setOwner(owner);
                     }
                     if (!owner.equals(player.getUniqueID())) {
-                        player.sendStatusMessage(new TranslationTextComponent("message.supplementaries.safe")
-                                .appendString(" " + safe.ownerName), true);
+                        player.sendStatusMessage(new TranslationTextComponent("message.supplementaries.safe.owner",safe.ownerName), true);
                         if (!player.isCreative()) return ActionResultType.CONSUME;
                     }
                     player.openContainer((INamedContainerProvider) tileentity);
@@ -178,7 +177,7 @@ public class SafeBlock extends Block implements IWaterLoggable{
                 UUID id = compoundnbt.getUniqueId("Owner");
                 if(!id.equals(Minecraft.getInstance().player.getUniqueID())){
                     String name = compoundnbt.getString("OwnerName");
-                    tooltip.add((new TranslationTextComponent("container.supplementaries.safe").appendString(" "+name)).mergeStyle(TextFormatting.GRAY));
+                    tooltip.add((new TranslationTextComponent("container.supplementaries.safe.owner", name)).mergeStyle(TextFormatting.GRAY));
                     return;
                 }
             }
@@ -232,8 +231,7 @@ public class SafeBlock extends Block implements IWaterLoggable{
             if (tileentity instanceof SafeBlockTile) {
                 SafeBlockTile te = (SafeBlockTile) tileentity;
                 if (!player.isCreative() && te.isNotOwnedBy(player)) {
-                    player.sendStatusMessage(new TranslationTextComponent("message.supplementaries.safe")
-                            .appendString(" " + te.ownerName), true);
+                    player.sendStatusMessage(new TranslationTextComponent("message.supplementaries.safe.owner",te.ownerName), true);
                     return false;
                 }
             }

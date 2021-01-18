@@ -4,7 +4,6 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.blocks.tiles.*;
 import net.mehvahdjukaar.supplementaries.common.Resources;
 import net.mehvahdjukaar.supplementaries.entities.FireflyEntity;
-import net.mehvahdjukaar.supplementaries.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.gui.NoticeBoardContainer;
 import net.mehvahdjukaar.supplementaries.gui.NoticeBoardGui;
 import net.mehvahdjukaar.supplementaries.gui.SackContainer;
@@ -74,13 +73,13 @@ public class ClientSetup {
         ClientRegistry.bindTileEntityRenderer((TileEntityType<NoticeBoardBlockTile>)Registry.NOTICE_BOARD_TILE, NoticeBoardBlockTileRenderer::new);
         ScreenManager.registerFactory((ContainerType<NoticeBoardContainer>)Registry.NOTICE_BOARD_CONTAINER, NoticeBoardGui::new);
         //crank
-        //RenderTypeLookup.setRenderLayer(Registry.CRANK, RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(Registry.CRANK, RenderType.getCutout());
         //jar
         RenderTypeLookup.setRenderLayer(Registry.JAR, RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(Registry.JAR_TINTED, RenderType.getTranslucent());
         ClientRegistry.bindTileEntityRenderer((TileEntityType<JarBlockTile>)Registry.JAR_TILE, JarBlockTileRenderer::new);
         //faucet
-        //RenderTypeLookup.setRenderLayer(Registry.FAUCET, RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(Registry.FAUCET, RenderType.getCutout());
         ClientRegistry.bindTileEntityRenderer((TileEntityType<FaucetBlockTile>)Registry.FAUCET_TILE, FaucetBlockTileRenderer::new);
         //piston launcher
         //RenderTypeLookup.setRenderLayer(Registry.PISTON_LAUNCHER, RenderType.getCutout());
@@ -118,7 +117,7 @@ public class ClientSetup {
         //candelabra
         RenderTypeLookup.setRenderLayer(Registry.CANDELABRA, RenderType.getCutout());
         //item shelf
-        //RenderTypeLookup.setRenderLayer(Registry.ITEM_SHELF, RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(Registry.ITEM_SHELF, RenderType.getCutout());
         ClientRegistry.bindTileEntityRenderer((TileEntityType<ItemShelfBlockTile>)Registry.ITEM_SHELF_TILE, ItemShelfBlockTileRenderer::new);
         //cage
         RenderTypeLookup.setRenderLayer(Registry.CAGE, RenderType.getCutout());

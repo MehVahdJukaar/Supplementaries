@@ -50,7 +50,8 @@ public class ServerConfigs {
 
     public static class tweaks {
         public static ForgeConfigSpec.BooleanValue WALL_LANTERN_PLACEMENT;
-        public static ForgeConfigSpec.BooleanValue THROWABLE_BRICKS;
+        public static ForgeConfigSpec.BooleanValue THROWABLE_BRICKS_ENABLED;
+        public static ForgeConfigSpec.ConfigValue<List<? extends String>> BRICKS_LIST;
         public static ForgeConfigSpec.ConfigValue<List<? extends String>> WALL_LANTERN_BLACKLIST;
         public static ForgeConfigSpec.BooleanValue BELL_CHAIN;
         public static ForgeConfigSpec.IntValue BELL_CHAIN_LENGTH;
@@ -61,8 +62,12 @@ public class ServerConfigs {
 
             //throwable bricks
             builder.push("throwable_bricks");
-            THROWABLE_BRICKS = builder.comment("throw bricks at your foes! Might glass blocks")
+            THROWABLE_BRICKS_ENABLED = builder.comment("throw bricks at your foes! Might glass blocks")
                     .define("enabled",true);
+            List<String> bricksList = Arrays.asList("biomesoplenty:mud_brick","byg:yellow_nether_brick",
+                    "byg:blue_nether_brick");
+            BRICKS_LIST = builder.comment("additional items that will be able to be thrown (will work with any item). Items tagges as forge/ingots/bricks or nether bricks will be automatically added")
+                    .defineList("whitelist",bricksList,s -> true);
             builder.pop();
             //wall lantern
             builder.push("wall_lantern");
@@ -78,7 +83,7 @@ public class ServerConfigs {
             BELL_CHAIN = builder.comment("ring a bell by clicking on a chain that's connected to it")
                     .define("chain_ringing",true);
             BELL_CHAIN_LENGTH = builder.comment("max chain length that allows a bell to ring")
-                    .defineInRange("chain_length",32,0,1024);
+                    .defineInRange("chain_length",16,0,1024);
             builder.pop();
 
 
@@ -88,6 +93,8 @@ public class ServerConfigs {
     }
 
     public static class block {
+        public static ForgeConfigSpec.ConfigValue<List<? extends String>> SIGN_POST_ADDITIONAL;
+
         public static ForgeConfigSpec.IntValue SPEAKER_RANGE;
 
         public static ForgeConfigSpec.IntValue BELLOWS_PERIOD;
@@ -116,7 +123,7 @@ public class ServerConfigs {
 
         public static ForgeConfigSpec.BooleanValue NOTICE_BOARDS_UNRESTRICTED;
 
-        public static ForgeConfigSpec.BooleanValue SACK_PENALITY;
+        public static ForgeConfigSpec.BooleanValue SACK_PENALTY;
         public static ForgeConfigSpec.IntValue SACK_INCREMENT;
         public static ForgeConfigSpec.IntValue SACK_SLOTS;
 
@@ -126,6 +133,14 @@ public class ServerConfigs {
 
             builder.comment("Server side blocks configs")
                     .push("blocks");
+
+            //sign post
+            builder.push("speaker_block");
+            List<String> signPostWhitelist = Arrays.asList("quark:oak_post","quark:birch_post","quark:spruce_post","quark:acacia_post",
+                    "quark:dark_oak_post","quark:jungle_post","quark:warped_post","quark:crimson_post");
+            SIGN_POST_ADDITIONAL = builder.comment("additional blocks besides fences that can accept a sign post")
+                    .defineList("whitelist", signPostWhitelist,s -> true);
+            builder.pop();
 
             //speaker
             builder.push("speaker_block");
@@ -180,15 +195,15 @@ public class ServerConfigs {
 
 
             List<String> defaultMobs = Arrays.asList("minecraft:slime",
-                    "minecraft:bee","minecraft:magma_cube","iceandfire:pixie","alexmobs:crimson_mosquito",
-                    "mysticalworld:frog","mysticalworld:beetle", "druidcraft:lunar_moth", "druidcraft:dreadfish","swampexpansion:slabfish",
+                    "minecraft:bee","minecraft:magma_cube","iceandfire:pixie","alexsmobs:crimson_mosquito",
+                    "mysticalworld:frog","mysticalworld:beetle","mysticalworld:silkworm", "druidcraft:lunar_moth", "druidcraft:dreadfish","swampexpansion:slabfish",
                     "savageandravage:creepie","betteranimalsplus:butterfly","whisperwoods:moth");
             MOB_JAR_ALLOWED_MOBS = builder.comment("catchable mobs \n"+
                     "due to a vanilla bug some mobs might not render correctly or at all")
                     .defineList("mobs", defaultMobs,s -> true);
             List<String> defaultMobsTinted = Arrays.asList("minecraft:endermite","minecraft:slime",
-                    "minecraft:bee","minecraft:magma_cube", "minecraft:vex","iceandfire:pixie","alexmobs:crimson_mosquito",
-                    "mysticalworld:frog","mysticalworld:beetle", "druidcraft:lunar_moth", "druidcraft:dreadfish","swampexpansion:slabfish",
+                    "minecraft:bee","minecraft:magma_cube", "minecraft:vex","iceandfire:pixie","alexsmobs:crimson_mosquito","alexsmobs:mimicube",
+                    "mysticalworld:frog","mysticalworld:beetle","mysticalworld:silkworm", "druidcraft:lunar_moth", "druidcraft:dreadfish","swampexpansion:slabfish",
                     "savageandravage:creepie","betteranimalsplus:butterfly","whisperwoods:moth");
             MOB_JAR_TINTED_ALLOWED_MOBS = builder.comment("tinted jar catchable mobs")
                     .defineList("tinted_jar_mobs", defaultMobsTinted,s -> true);
@@ -201,7 +216,7 @@ public class ServerConfigs {
                     "minecraft:bee","minecraft:magma_cube", "minecraft:vex","minecraft:rabbit", "minecraft:cat",
                     "minecraft:chicken","minecraft:bat","iceandfire:pixie","minecraft:fox","minecraft:ocelot",
                     "alexsmobs:roadrunner", "alexsmobs:hummingbird", "alexsmobs:crimson_mosquito", "alexsmobs:rattlesnake", "alexsmobs:lobster",
-                    "alexsmobs:capuchin_monkey", "alexsmobs:warped_toad","mysticalworld:beetle",
+                    "alexsmobs:capuchin_monkey", "alexsmobs:warped_toad","alexsmobs:mimicube","mysticalworld:beetle","mysticalworld:silkworm",
                     "mysticalworld:frog", "mysticalworld:silver_fox", "mysticalworld:sprout", "mysticalworld:endermini", "mysticalworld:lava_cat",
                     "mysticalworld:owl", "mysticalworld:silkworm", "mysticalworld:hell_sprout","quark:toretoise",
                     "quark:crab", "quark:foxhound", "quark:stoneling", "quark:frog","rats:rat", "rats:piper",
@@ -220,7 +235,7 @@ public class ServerConfigs {
             List<String> defaultCageBabyMobs = Arrays.asList("minecraft:cow","minecraft:sheep","minecraft:pig");
             CAGE_ALLOWED_BABY_MOBS = builder.comment("additional mobs that you'll be able to catch with the added condition that it has to be a baby variant. No need to include the ones already in cage_mobs")
                     .defineList("cage_baby_mobs", defaultCageBabyMobs,s -> true);
-            CAGE_ALL_MOBS = builder.comment("allow all mobs to be captured by jars")
+            CAGE_ALL_MOBS = builder.comment("allow all mobs to be captured by cages")
                     .define("cage_allow_all_mobs", false);
             builder.pop();
 
@@ -231,7 +246,7 @@ public class ServerConfigs {
             builder.pop();
 
             builder.push("sack");
-            SACK_PENALITY = builder.comment("penalize the player with slowness effecn when carring too many sacks")
+            SACK_PENALTY = builder.comment("penalize the player with slowness effecn when carring too many sacks")
                     .define("sack_penality", true);
             SACK_INCREMENT = builder.comment("maximum number of sacks after which the slowness effect will be applied. each multiple of this number will further slow the player down")
                     .defineInRange("sack_increment",2,0,50);
@@ -315,7 +330,8 @@ public class ServerConfigs {
         public static int FLUTE_RADIUS;
         public static int FLUTE_DISTANCE;
         //tweaks
-        public static boolean THROWABLE_BRICKS;
+        public static boolean THROWABLE_BRICKS_ENABLED;
+        public static List<? extends String> BRICKS_LIST;
         public static boolean WALL_LANTERN_PLACEMENT;
         public static List<? extends String> WALL_LANTERN_BLACKLIST;
         public static boolean BELL_CHAIN;
@@ -328,6 +344,7 @@ public class ServerConfigs {
         public static List<? extends String> FIREFLY_MOD_WHITELIST;
         public static boolean FIREFLY_DESPAWN;
         //blocks
+        public static List<? extends String> SIGN_POST_ADDITIONAL;
         public static int SPEAKER_RANGE;
         public static int BELLOWS_PERIOD;
         public static int BELLOWS_POWER_SCALING;
@@ -361,7 +378,8 @@ public class ServerConfigs {
             FLUTE_RADIUS = item.FLUTE_RADIUS.get();
 
             WALL_LANTERN_PLACEMENT = tweaks.WALL_LANTERN_PLACEMENT.get();
-            THROWABLE_BRICKS = tweaks.THROWABLE_BRICKS.get();
+            THROWABLE_BRICKS_ENABLED = tweaks.THROWABLE_BRICKS_ENABLED.get();
+            BRICKS_LIST = tweaks.BRICKS_LIST.get();
             WALL_LANTERN_BLACKLIST = tweaks.WALL_LANTERN_BLACKLIST.get();
             BELL_CHAIN = tweaks.BELL_CHAIN.get();
             BELL_CHAIN_LENGTH = tweaks.BELL_CHAIN_LENGTH.get();
@@ -371,6 +389,8 @@ public class ServerConfigs {
             FIREFLY_WEIGHT = spawn.FIREFLY_WEIGHT.get();
             FIREFLY_BIOMES = spawn.FIREFLY_BIOMES.get();
             FIREFLY_MOD_WHITELIST = spawn.FIREFLY_MOD_WHITELIST.get();
+
+            SIGN_POST_ADDITIONAL= block.SIGN_POST_ADDITIONAL.get();
 
             SPEAKER_RANGE = block.SPEAKER_RANGE.get();
 
@@ -402,7 +422,7 @@ public class ServerConfigs {
             CAGE_ALL_MOBS = block.CAGE_ALL_MOBS.get();
 
             SACK_INCREMENT = block.SACK_INCREMENT.get();
-            SACK_PENALTY = block.SACK_PENALITY.get();
+            SACK_PENALTY = block.SACK_PENALTY.get();
             SACK_SLOTS = block.SACK_SLOTS.get();
 
             SAFE_UNBREAKABLE= block.SAFE_UNBREAKABLE.get();

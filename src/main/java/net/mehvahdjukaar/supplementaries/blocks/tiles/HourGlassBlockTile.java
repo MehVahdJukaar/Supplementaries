@@ -5,6 +5,7 @@ import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil.HourGlassSandType;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.ItemStackHelper;
@@ -20,6 +21,8 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.LazyOptional;
@@ -36,6 +39,8 @@ public class HourGlassBlockTile extends LockableLootTileEntity implements ISided
     public float progress = 0; //0-1 percentage of progress
     public float prevProgress = 0;
     public int power = 0;
+    //client
+    private TextureAtlasSprite cachedTexture = null;
     public HourGlassBlockTile() {
         super(Registry.HOURGLASS_TILE);
     }
@@ -58,6 +63,14 @@ public class HourGlassBlockTile extends LockableLootTileEntity implements ISided
         }
         this.prevProgress=p;
         this.progress=p;
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public TextureAtlasSprite getOrCreateSprite(){
+        if(this.cachedTexture==null){
+            this.cachedTexture = this.sandType.getSprite(this.getStackInSlot(0).getItem());
+        }
+        return this.cachedTexture;
     }
 
     @Override
@@ -123,6 +136,7 @@ public class HourGlassBlockTile extends LockableLootTileEntity implements ISided
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         this.read(this.getBlockState(),pkt.getNbtCompound());
+        this.cachedTexture=null;
     }
 
     @Override

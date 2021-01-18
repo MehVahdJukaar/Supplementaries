@@ -1,10 +1,12 @@
 package net.mehvahdjukaar.supplementaries.items;
 
 
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.MobHolder;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -27,6 +29,15 @@ public class EmptyJarItem extends BlockItem {
 
     //TODO: merge with jar
 
+    private static boolean isSoulSand(BlockState s){
+        try {
+            return (BlockTags.SOUL_SPEED_BLOCKS != null && s.isIn(BlockTags.SOUL_SPEED_BLOCKS));
+        }catch (Exception e){
+            Supplementaries.LOGGER.warn("Supplementaries: tag fix still not working. Notify mod author please");
+            return false;
+        }
+    }
+
     //soul jar
     @Override
     public ActionResultType onItemUse(ItemUseContext context) {
@@ -34,7 +45,7 @@ public class EmptyJarItem extends BlockItem {
 
         BlockPos pos = context.getPos();
         PlayerEntity player = context.getPlayer();
-        if (player.isOnGround() && this.getItem() == Registry.EMPTY_JAR_ITEM_TINTED && EnchantmentHelper.hasSoulSpeed(player) && world.getBlockState(pos).isIn(BlockTags.SOUL_SPEED_BLOCKS)) {
+        if (player.isOnGround() && this.getItem() == Registry.EMPTY_JAR_ITEM_TINTED && EnchantmentHelper.hasSoulSpeed(player) && isSoulSand(world.getBlockState(pos))) {
 
             BlockPos p = new BlockPos(player.getPosX(), player.getBoundingBox().minY - 0.5000001D, player.getPosZ());
             //Vector3d motion = player.getMotion();

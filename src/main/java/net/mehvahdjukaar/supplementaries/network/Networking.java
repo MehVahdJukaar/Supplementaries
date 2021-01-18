@@ -22,11 +22,8 @@ public class Networking{
         INSTANCE.registerMessage(nextID(), UpdateServerSpeakerBlockPacket.class, UpdateServerSpeakerBlockPacket::buffer,
                 UpdateServerSpeakerBlockPacket::new, UpdateServerSpeakerBlockPacket::handler);
 
-        INSTANCE.registerMessage(nextID(), UpdateServerSignPostPacket.class, UpdateServerSignPostPacket::buffer,
-                UpdateServerSignPostPacket::new, UpdateServerSignPostPacket::handler);
-
-        INSTANCE.registerMessage(nextID(), UpdateServerHangingSignPacket.class, UpdateServerHangingSignPacket::buffer,
-                UpdateServerHangingSignPacket::new, UpdateServerHangingSignPacket::handler);
+        INSTANCE.registerMessage(nextID(), UpdateServerTextHolderPacket.class, UpdateServerTextHolderPacket::buffer,
+                UpdateServerTextHolderPacket::new, UpdateServerTextHolderPacket::handler);
 
         INSTANCE.registerMessage(nextID(), SyncGlobeDataPacket.class, SyncGlobeDataPacket::buffer,
                 SyncGlobeDataPacket::new, SyncGlobeDataPacket::handler);

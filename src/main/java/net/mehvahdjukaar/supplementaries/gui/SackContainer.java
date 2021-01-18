@@ -61,11 +61,12 @@ public class SackContainer extends Container  {
         if (slot != null && slot.getHasStack()) {
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
-            if (index < this.inventory.getSizeInventory()) {
-                if (!this.mergeItemStack(itemstack1, this.inventory.getSizeInventory(), this.inventorySlots.size(), true)) {
+            int activeSlots = (5+(ServerConfigs.cached.SACK_SLOTS*2));
+            if (index < activeSlots) {
+                if (!this.mergeItemStack(itemstack1, activeSlots, this.inventorySlots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.mergeItemStack(itemstack1, 0, this.inventory.getSizeInventory(), false)) {
+            } else if (!this.mergeItemStack(itemstack1, 0, activeSlots, false)) {
                 return ItemStack.EMPTY;
             }
 
@@ -78,6 +79,7 @@ public class SackContainer extends Container  {
 
         return itemstack;
     }
+
 
     /**
      * Called when the container is closed.

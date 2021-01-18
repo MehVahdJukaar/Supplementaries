@@ -8,10 +8,8 @@ import net.mehvahdjukaar.supplementaries.common.Resources;
 import net.mehvahdjukaar.supplementaries.gui.SignPostGui;
 import net.mehvahdjukaar.supplementaries.items.SignPostItem;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.IWaterLoggable;
+import net.minecraft.block.*;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -36,6 +34,7 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.MapData;
 import net.minecraftforge.common.extensions.IForgeBlock;
@@ -46,7 +45,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-public class SignPostBlock extends Block implements IWaterLoggable, IForgeBlock {
+public class SignPostBlock extends Block implements IWaterLoggable, IForgeBlock{
     protected static final VoxelShape SHAPE = Block.makeCuboidShape(5D, 0.0D, 5D, 11D, 16.0D, 11D);
     protected static final VoxelShape COLLISION_SHAPE = Block.makeCuboidShape(5D, 0.0D, 5D, 11D, 24.0D, 11D);
 
@@ -64,6 +63,17 @@ public class SignPostBlock extends Block implements IWaterLoggable, IForgeBlock 
             return ((SignPostBlockTile)te).fenceBlock.getPlayerRelativeBlockHardness(player,worldIn,pos);
         }
         return super.getPlayerRelativeBlockHardness(state, player, worldIn, pos);
+    }
+
+    //might cause lag when breaking?
+    @Override
+    public SoundType getSoundType(BlockState state, IWorldReader world, BlockPos pos, Entity entity) {
+        TileEntity te = world.getTileEntity(pos);
+        if(te instanceof SignPostBlockTile){
+            BlockState s = ((SignPostBlockTile) te).fenceBlock;
+            if(s!=null)return s.getSoundType(world,pos,entity);
+        }
+        return super.getSoundType(state,world,pos,entity);
     }
 
     @Override
@@ -96,9 +106,6 @@ public class SignPostBlock extends Block implements IWaterLoggable, IForgeBlock 
             ItemStack itemstack = player.getHeldItem(handIn);
             Item item = itemstack.getItem();
 
-
-
-
             //put post on map
             if(item instanceof FilledMapItem){
                 MapData data = FilledMapItem.getMapData(itemstack,worldIn);
@@ -117,13 +124,11 @@ public class SignPostBlock extends Block implements IWaterLoggable, IForgeBlock 
             boolean isCompass = item instanceof CompassItem;
             //color
             if (isDye){
-                if(te.setTextColor(((DyeItem) itemstack.getItem()).getDyeColor())){
+                if(te.textHolder.setTextColor(((DyeItem) itemstack.getItem()).getDyeColor())){
                     if (!player.isCreative()) {
                         itemstack.shrink(1);
                     }
-                    if(server){
-                        te.markDirty();
-                    }
+                    if(server)te.markDirty();
                     return ActionResultType.func_233537_a_(worldIn.isRemote);
                 }
             }
@@ -137,9 +142,7 @@ public class SignPostBlock extends Block implements IWaterLoggable, IForgeBlock 
                 else{
                     te.leftDown = !te.leftDown;
                 }
-                if(server){
-                    te.markDirty();
-                }
+                if(server)te.markDirty();
                 return ActionResultType.func_233537_a_(worldIn.isRemote);
             }
             //change direction with compass
@@ -150,19 +153,18 @@ public class SignPostBlock extends Block implements IWaterLoggable, IForgeBlock 
 
                 if(pointingPos!=null) {
                     double yaw = Math.atan2(pointingPos.getX() - pos.getX(), pointingPos.getZ() - pos.getZ()) * 180d / Math.PI;
-                    //System.out.print("@"+yaw+"-"+pointingPos+"\n");
-                    //this could probably be simplified
                     //int r = MathHelper.floor((double) ((180.0F + yaw) * 16.0F / 360.0F) + 0.5D) & 15;
-
                     double y = hit.getHitVec().y;
                     boolean up = y % ((int) y) > 0.5d;
                     if (up && te.up) {
                         int d = te.leftUp ? 180 : 0;
                         te.yawUp = (float) yaw - d;// r*-22.5f;
+                        if(server)te.markDirty();
                         return ActionResultType.func_233537_a_(worldIn.isRemote);
                     } else if (!up && te.down) {
                         int d = te.leftDown ? 180 : 0;
                         te.yawDown = (float) yaw - d;// r*-22.5f;
+                        if(server)te.markDirty();
                         return ActionResultType.func_233537_a_(worldIn.isRemote);
                     }
                 }
@@ -181,9 +183,7 @@ public class SignPostBlock extends Block implements IWaterLoggable, IForgeBlock 
         boolean flag = cmp.contains("LodestonePos");
         boolean flag1 = cmp.contains("LodestoneDimension");
         if (flag && flag1) {
-
             Optional<RegistryKey<World>> optional = CompassItem.func_234667_a_(cmp);
-
             if ( optional.isPresent() && world.getDimensionKey() == optional.get() ) {
                 return NBTUtil.readBlockPos(cmp.getCompound("LodestonePos"));
             }
@@ -195,11 +195,6 @@ public class SignPostBlock extends Block implements IWaterLoggable, IForgeBlock 
     private BlockPos getWorldSpawnPos(World world) {
         return world.getDimensionType().isNatural() ? new BlockPos(world.getWorldInfo().getSpawnX(),
                 world.getWorldInfo().getSpawnY(),world.getWorldInfo().getSpawnZ()) : null;
-    }
-
-    @Override
-    public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
-        return true;
     }
 
     @Override

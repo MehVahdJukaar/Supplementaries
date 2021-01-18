@@ -179,13 +179,13 @@ public class CrankBlock extends Block implements IWaterLoggable{
         Direction[] adirection = context.getNearestLookingDirections();
 
         for(Direction direction : adirection) {
-            if (direction.getAxis().isHorizontal()) {
-                Direction direction1 = direction.getOpposite();
-                blockstate = blockstate.with(FACING, direction1);
-                if (blockstate.isValidPosition(iworldreader, blockpos)) {
-                    return blockstate.with(WATERLOGGED, flag);
-                }
+
+            Direction direction1 = direction.getOpposite();
+            blockstate = blockstate.with(FACING, direction1);
+            if (blockstate.isValidPosition(iworldreader, blockpos)) {
+                return blockstate.with(WATERLOGGED, flag);
             }
+
         }
         return null;
     }

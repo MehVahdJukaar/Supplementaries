@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.entities;
 
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
@@ -92,11 +93,21 @@ public class ThrowableBrickEntity extends ProjectileItemEntity implements IRende
         }
     }
 
+    private static boolean isGlass(BlockState s){
+        try {
+            return ((Tags.Blocks.GLASS_PANES != null && s.isIn(Tags.Blocks.GLASS_PANES))
+                    || (Tags.Blocks.GLASS != null && s.isIn(Tags.Blocks.GLASS)));
+        }catch (Exception e){
+            Supplementaries.LOGGER.warn("Supplementaries: tag fix still not working. Notify mod author please");
+            return false;
+        }
+    }
+
     private void breakGlass(BlockPos pos, int chance){
         int c = chance -1 -this.rand.nextInt(4);
         BlockState state = world.getBlockState(pos);
 
-        if(c<0 || !(state.isIn(Tags.Blocks.GLASS_PANES)||state.isIn(Tags.Blocks.GLASS)))return;
+        if(c < 0 || !isGlass(state))return;
 
         world.destroyBlock(pos,true);
         breakGlass(pos.up(),c);

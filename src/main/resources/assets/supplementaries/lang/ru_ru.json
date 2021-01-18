@@ -12,11 +12,10 @@
   "block.supplementaries.hanging_sign_warped": "Искажённая вывеска",
   "block.supplementaries.wall_lantern": "Настенный фонарь",
   "block.supplementaries.planter": "Вазон",
-  "block.supplementaries.bellows": "Меха",
+  "block.supplementaries.bellows": "Мехи",
   "block.supplementaries.wind_vane": "Флюгер",
   "block.supplementaries.clock_block": "Блок часов",
   "block.supplementaries.piston_launcher_arm": "Рука пружинного поршня",
-  "block.supplementaries.piston_launcher_head": "Пружинный поршень",
   "block.supplementaries.piston_launcher": "Пружинный поршень",
   "block.supplementaries.crank": "Поворотный рычаг",
   "block.supplementaries.jar": "Баночка",
@@ -53,7 +52,7 @@
   "globe.supplementaries.flat": "Плоская земля",
   "message.supplementaries.command.globe_changed": "Изменен ключ для генератора мира глобуса",
   "message.supplementaries.command.globe_reset": "Обновлено ключ для генератора мира глобуса",
-  "message.supplementaries.safe": "Владелец сейфа - ",
+  "message.supplementaries.safe": "Владелец сейфа -",
   "message.supplementaries.safe_cleared": "Владелец удален",
   "container.supplementaries.safe": "Владелец",
 
@@ -79,7 +78,7 @@
   "block.supplementaries.copper_lantern": "Медный фонарь",
 
   "block.supplementaries.flag": "Флаг (WIP)",
-  "block.supplementaries.laser_block": "Лазерный блок",
+  "block.supplementaries.laser_block": "Лазерный блок (WIP)",
   "block.supplementaries.fancy_lamp": "Атмосферный фонарь",
   "block.supplementaries.skull_lantern": "Черепной фонарь"
 }
