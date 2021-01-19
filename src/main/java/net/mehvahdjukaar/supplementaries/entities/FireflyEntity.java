@@ -14,10 +14,13 @@ import net.minecraft.entity.ai.goal.LookRandomlyGoal;
 import net.minecraft.entity.passive.IFlyingAnimal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ArrowEntity;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.pathfinding.FlyingPathNavigator;
+import net.minecraft.pathfinding.PathNavigator;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ITag;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -44,8 +47,21 @@ public class FireflyEntity extends CreatureEntity implements IFlyingAnimal, IEnt
         experienceValue = 1;
         setNoAI(false);
         this.moveController = new FlyingMovementController(this, 10, true);
-        this.navigator = new FlyingPathNavigator(this, this.world);
+        //this.navigator = new FlyingPathNavigator(this, this.world);
 
+    }
+
+    @Override
+    protected PathNavigator createNavigator(World worldIn) {
+        FlyingPathNavigator flyingpathnavigator = new FlyingPathNavigator(this, worldIn) {
+            public boolean canEntityStandOnPos(BlockPos pos) {
+                return !this.world.getBlockState(pos.down()).isAir();
+            }
+        };
+        flyingpathnavigator.setCanOpenDoors(false);
+        flyingpathnavigator.setCanSwim(false);
+        flyingpathnavigator.setCanEnterDoors(true);
+        return flyingpathnavigator;
     }
 
 
@@ -96,9 +112,11 @@ public class FireflyEntity extends CreatureEntity implements IFlyingAnimal, IEnt
         if (this.alpha!=0)this.alpha= (float) Math.pow(this.alpha,p);
         //this.alpha =  Math.max( ( (1-p)*MathHelper.sin(this.ticksExisted * ((float) Math.PI / this.flickerPeriod))+p), 0);
 
+
         this.setMotion(this.getMotion().mul(1.0D, 0.65D, 1.0D));
         this.setMotion(this.getMotion().add(0.02 * (this.rand.nextDouble() - 0.5), 0.03 * (this.rand.nextDouble() - 0.5),
                 0.02 * (this.rand.nextDouble() - 0.5)));
+
 
     }
 
@@ -164,7 +182,7 @@ public class FireflyEntity extends CreatureEntity implements IFlyingAnimal, IEnt
         super.registerGoals();
         this.goalSelector.addGoal(0, new LookRandomlyGoal(this));
         // this.goalSelector.addGoal(1, new SwimGoal(this));
-        this.goalSelector.addGoal(2, new FireflyEntity.WanderGoal());
+        this.goalSelector.addGoal(1, new FireflyEntity.WanderGoal());
     }
 
     protected void updateAITasks() {
@@ -188,6 +206,11 @@ public class FireflyEntity extends CreatureEntity implements IFlyingAnimal, IEnt
     @Override
     public net.minecraft.util.SoundEvent getDeathSound() {
         return ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("entity.bat.death"));
+    }
+
+    //TODO: test this
+    protected void handleFluidJump(ITag<Fluid> fluidTag) {
+        this.setMotion(this.getMotion().add(0.0D, 0.01D, 0.0D));
     }
 
     @Override
@@ -246,7 +269,7 @@ public class FireflyEntity extends CreatureEntity implements IFlyingAnimal, IEnt
         //necessary for execution in this method as well.
 
         public boolean shouldExecute() {
-            return FireflyEntity.this.navigator.noPath() && FireflyEntity.this.rand.nextInt(10) == 0;
+            return FireflyEntity.this.navigator.noPath() && FireflyEntity.this.rand.nextInt(50) == 0;
         }
 
 
@@ -259,6 +282,7 @@ public class FireflyEntity extends CreatureEntity implements IFlyingAnimal, IEnt
 
         //Execute a one shot task or start executing a continuous task
 
+        //TODO: seems to lag servers->getPathToPos
         public void startExecuting() {
             Vector3d vec3d = this.getRandomLocation();
             if (vec3d != null) {

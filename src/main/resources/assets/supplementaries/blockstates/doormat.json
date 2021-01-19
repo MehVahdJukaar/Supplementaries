@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "supplementaries:block/doormat"
+    },
+    "facing=east": {
+      "model": "supplementaries:block/doormat",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "supplementaries:block/doormat",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "supplementaries:block/doormat",
+      "y": 270
+    }
+  }
+}

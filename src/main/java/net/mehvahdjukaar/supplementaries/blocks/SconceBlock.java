@@ -3,9 +3,11 @@ package net.mehvahdjukaar.supplementaries.blocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -55,5 +57,15 @@ public class SconceBlock extends LightUpBlock{
             worldIn.addParticle(ParticleTypes.SMOKE, d0, d1, d2, 0.0D, 0.0D, 0.0D);
             worldIn.addParticle(this.particleData, d0, d1, d2, 0.0D, 0.0D, 0.0D);
         }
+    }
+
+    @Override
+    public boolean canSpawnInBlock() {
+        return true;
+    }
+
+    @Override
+    public PathNodeType getAiPathNodeType(BlockState state, IBlockReader world, BlockPos pos, MobEntity entity) {
+        return PathNodeType.OPEN;
     }
 }

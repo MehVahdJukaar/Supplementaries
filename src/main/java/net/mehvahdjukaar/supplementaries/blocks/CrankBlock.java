@@ -6,11 +6,14 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.IWaterLoggable;
 import net.minecraft.block.material.PushReaction;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.particles.RedstoneParticleData;
+import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.IntegerProperty;
@@ -26,8 +29,11 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
+import java.util.Random;
 
 
 public class CrankBlock extends Block implements IWaterLoggable{
@@ -131,6 +137,33 @@ public class CrankBlock extends Block implements IWaterLoggable{
             }
             super.onReplaced(state, worldIn, pos, newState, isMoving);
         }
+    }
+
+    @Override
+    public boolean isTransparent(BlockState state) {
+        return true;
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
+        if (stateIn.get(POWER)>0 && rand.nextFloat() < 0.25F) {
+            Direction direction = stateIn.get(FACING).getOpposite();
+            // Direction direction1 = getFacing(state).getOpposite();
+            double d0 = (double) pos.getX() + 0.5D + 0.1D * (double) direction.getXOffset() + 0.2D * (double) direction.getXOffset();
+            double d1 = (double) pos.getY() + 0.5D + 0.1D * (double) direction.getYOffset() + 0.2D * (double) direction.getYOffset();
+            double d2 = (double) pos.getZ() + 0.5D + 0.1D * (double) direction.getZOffset() + 0.2D * (double) direction.getZOffset();
+            worldIn.addParticle(new RedstoneParticleData(1.0F, 0.0F, 0.0F, 0.5f), d0, d1, d2, 0.0D, 0.0D, 0.0D);
+        }
+    }
+
+    @Override
+    public boolean canSpawnInBlock() {
+        return true;
+    }
+
+    @Override
+    public PathNodeType getAiPathNodeType(BlockState state, IBlockReader world, BlockPos pos, MobEntity entity) {
+        return PathNodeType.OPEN;
     }
 
     @Override

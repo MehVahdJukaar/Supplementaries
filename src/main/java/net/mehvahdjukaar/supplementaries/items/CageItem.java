@@ -45,9 +45,12 @@ public class CageItem extends BlockItem {
                 if (com.contains("Name")) {
                     tooltip.add(new StringTextComponent(com.getString("Name")).mergeStyle(TextFormatting.GRAY));
                     tooltip.add(new TranslationTextComponent("message.supplementaries.cage").mergeStyle(TextFormatting.ITALIC).mergeStyle(TextFormatting.GRAY));
+                    return;
                 }
             }
         }
+        tooltip.add(new StringTextComponent("try placing me down").mergeStyle(TextFormatting.GRAY));
+
     }
 
     //free mob

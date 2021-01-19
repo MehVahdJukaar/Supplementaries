@@ -77,6 +77,12 @@
   "message.supplementaries.command.configs_reloaded": "Конфиги перезагружены",
   "block.supplementaries.copper_lantern": "Медный фонарь",
 
+  "message.supplementaries.hourglass": "Высыпают пыль, песок или порошок",
+  "message.supplementaries.cage": "Удерживайте [Shift], чтобы поставить",
+  "gui.supplementaries.safe.name": "%1$s'а %2$s",
+  "gui.supplementaries.doormat.edit": "Отредактируйте текст на половике",
+  "block.supplementaries.doormat": "Половик",
+
   "block.supplementaries.flag": "Флаг (WIP)",
   "block.supplementaries.laser_block": "Лазерный блок (WIP)",
   "block.supplementaries.fancy_lamp": "Атмосферный фонарь",

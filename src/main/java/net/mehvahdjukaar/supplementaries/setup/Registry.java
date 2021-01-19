@@ -993,6 +993,21 @@ public class Registry {
             (new Item.Properties()).group(getTab(ItemGroup.DECORATIONS,COPPER_LANTERN_NAME))
     ).setRegistryName(COPPER_LANTERN_NAME);
 
+    //doormat
+    public static final String DOORMAT_NAME = "doormat";
+    public static final Block DOORMAT = new DoormatBlock(
+            AbstractBlock.Properties.create(Material.CARPET, MaterialColor.YELLOW)
+                    .hardnessAndResistance(0.1F)
+                    .sound(SoundType.CLOTH)
+                    .notSolid()
+    ).setRegistryName(DOORMAT_NAME);
+    public static final TileEntityType<?> DOORMAT_TILE = TileEntityType.Builder.create(
+            DoormatBlockTile::new, DOORMAT).build(null).setRegistryName(DOORMAT_NAME);
+    public static final Item DOORMAT_ITEM = new BlockItem(DOORMAT,
+            (new Item.Properties()).group(getTab(ItemGroup.DECORATIONS,DOORMAT_NAME))
+    ).setRegistryName(DOORMAT_NAME);
+
+
     /*
     //launcher rail
     public static final String LAUNCHER_RAIL_NAME = "launcher_rail";

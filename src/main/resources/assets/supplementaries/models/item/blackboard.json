@@ -6,6 +6,21 @@
 		"2": "supplementaries:entity/blackboard",
 		"particle": "supplementaries:blocks/blackboard_side"
 	},
+	"elements": [
+		{
+			"from": [0, 0, 6],
+			"to": [16, 16, 10],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 17]},
+			"faces": {
+				"north": {"uv": [0, 0, 8, 16], "texture": "#2"},
+				"east": {"uv": [0, 0, 4, 16], "rotation": 180, "texture": "#0"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#1"},
+				"west": {"uv": [0, 0, 4, 16], "texture": "#0"},
+				"up": {"uv": [0, 0, 4, 16], "rotation": 90, "texture": "#0"},
+				"down": {"uv": [0, 0, 4, 16], "rotation": 270, "texture": "#0"}
+			}
+		}
+	],
 	"display": {
 		"thirdperson_righthand": {
 			"rotation": [75, 45, 0],
@@ -36,21 +51,5 @@
 		"fixed": {
 			"scale": [0.5, 0.5, 0.5]
 		}
-	},
-	"elements": [
-		{
-			"from": [0, 0, 6],
-			"to": [16, 16, 10],
-			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 17]},
-			"faces": {
-				"north": {"uv": [0, 0, 8, 16], "texture": "#2"},
-				"east": {"uv": [0, 0, 4, 16], "rotation": 180, "texture": "#0"},
-				"south": {"uv": [0, 0, 16, 16], "rotation": 90, "texture": "#1"},
-				"west": {"uv": [0, 0, 4, 16], "texture": "#0"},
-				"up": {"uv": [0, 0, 4, 16], "rotation": 90, "texture": "#0"},
-				"down": {"uv": [0, 0, 4, 16], "rotation": 270, "texture": "#0"}
-			}
-		}
-	]
-	
+	}
 }

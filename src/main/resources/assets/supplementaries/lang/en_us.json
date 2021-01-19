@@ -79,6 +79,10 @@
   "gui.supplementaries.safe.name": "%1$s's %2$s",
   "message.supplementaries.safe.cleared": "Cleared ownership",
   "message.supplementaries.safe.owner": "This safe is owned by %s",
+  "gui.supplementaries.doormat.edit": "Edit Doormat message",
+  "block.supplementaries.doormat": "Doormat",
+  "message.supplementaries.sack": "Quite heavy to carry",
+
 
   "block.supplementaries.flag": "Flag",
   "block.supplementaries.laser_block": "Laser Block",

@@ -77,6 +77,12 @@
   "message.supplementaries.command.configs_reloaded": "Konfigy znovu načteny",
   "block.supplementaries.copper_lantern": "Měděná lucerna",
 
+  "message.supplementaries.hourglass": "Sypou prach, písek nebo prášek",
+  "message.supplementaries.cage": "Podržte [Shift] a umístěte mobovou klec",
+  "gui.supplementaries.safe.name": "%1$s'a %2$s",
+  "gui.supplementaries.doormat.edit": "Napiš nápis na rohožku",
+  "block.supplementaries.doormat": "Rohožka",
+
   "block.supplementaries.flag": "Vlajka (WIP)",
   "block.supplementaries.laser_block": "Laserový blok (WIP)",
   "block.supplementaries.fancy_lamp": "Atmosférická lucerna",

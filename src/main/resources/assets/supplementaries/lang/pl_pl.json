@@ -77,6 +77,13 @@
   "message.supplementaries.command.configs_reloaded": "Konfiguracja została ponownie załadowana",
   "block.supplementaries.copper_lantern": "Miedziana latarenka",
 
+  "message.supplementaries.hourglass": "Przesypuje każdy pył, piasek, czy proszek",
+  "message.supplementaries.cage": "Przytrzymaj [Shift], aby postawić",
+  "gui.supplementaries.safe.name": "%1$s'a %2$s",
+  "gui.supplementaries.doormat.edit": "Edytuj napis na wycieraczce",
+  "block.supplementaries.doormat": "Wycieraczka",
+
+
   "block.supplementaries.flag": "Flaga (Praca w toku)",
   "block.supplementaries.laser_block": "Laser (Praca w toku)",
   "block.supplementaries.fancy_lamp": "Nastrojowa latarenka",

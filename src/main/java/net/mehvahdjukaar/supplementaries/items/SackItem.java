@@ -90,6 +90,7 @@ public class SackItem extends BlockItem {
                 }
             }
         }
+        tooltip.add(new TranslationTextComponent("message.supplementaries.sack").mergeStyle(TextFormatting.ITALIC).mergeStyle(TextFormatting.GRAY));
     }
 
 }

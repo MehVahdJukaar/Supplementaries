@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.blocks.HangingSignBlock;
 import net.mehvahdjukaar.supplementaries.blocks.tiles.HangingSignBlockTile;
 import net.mehvahdjukaar.supplementaries.network.Networking;
 import net.mehvahdjukaar.supplementaries.network.UpdateServerTextHolderPacket;
+import net.mehvahdjukaar.supplementaries.renderers.Const;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.DialogTexts;
@@ -18,7 +19,6 @@ import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -143,7 +143,7 @@ public class HangingSignGui extends Screen {
         // renders sign
         matrixstack.push();
         // matrixstack.scale(0.6666667F, 0.6666667F, 0.6666667F);
-        matrixstack.rotate(Vector3f.YP.rotationDegrees(90));
+        matrixstack.rotate(Const.Y90);
         matrixstack.translate(0, - 0.5 + 0.1875, -0.5);
         BlockRendererDispatcher blockRenderer = Minecraft.getInstance().getBlockRendererDispatcher();
         BlockState state = this.tileSign.getBlockState().getBlock().getDefaultState().with(HangingSignBlock.TILE, true);

@@ -54,33 +54,6 @@ public class PlayerModelMixin<T extends LivingEntity> extends BipedModel<T> {
         //this.do3rdPersonMapFilledAnim(Hand.MAIN_HAND, entityIn);
     }
 
-    public void eatingAnimationRightHand(Hand hand, LivingEntity entity, float ageInTicks) {
-        ItemStack itemstack = entity.getHeldItem(hand);
-        boolean drinkingoreating = itemstack.getUseAction() == UseAction.EAT || itemstack.getUseAction() == UseAction.DRINK;
-        if (entity.getItemInUseCount() > 0 && drinkingoreating && entity.getActiveHand() == hand) {
-            this.bipedRightArm.rotateAngleY = -0.5F;
-            this.bipedRightArm.rotateAngleX = -1.3F;
-            this.bipedRightArm.rotateAngleZ = MathHelper.cos(ageInTicks) * 0.1F;
-            this.bipedRightArmwear.copyModelAngles(bipedRightArm);
-            this.bipedHead.rotateAngleX = MathHelper.cos(ageInTicks) * 0.2F;
-            this.bipedHead.rotateAngleY = 0.0F;
-            this.bipedHeadwear.copyModelAngles(bipedHead);
-        }
-    }
-
-    public void eatingAnimationLeftHand(Hand hand, LivingEntity entity, float ageInTicks) {
-        ItemStack itemstack = entity.getHeldItem(hand);
-        boolean drinkingoreating = itemstack.getUseAction() == UseAction.EAT || itemstack.getUseAction() == UseAction.DRINK;
-        if (entity.getItemInUseCount() > 0 && drinkingoreating && entity.getActiveHand() == hand) {
-            this.bipedLeftArm.rotateAngleY = 0.5F;
-            this.bipedLeftArm.rotateAngleX = -1.3F;
-            this.bipedLeftArm.rotateAngleZ = MathHelper.cos(ageInTicks) * 0.1F;
-            this.bipedLeftArmwear.copyModelAngles(bipedLeftArm);
-            this.bipedHead.rotateAngleX = MathHelper.cos(ageInTicks) * 0.2F;
-            this.bipedHead.rotateAngleY = 0.0F;
-            this.bipedHeadwear.copyModelAngles(bipedHead);
-        }
-    }
 
 /*public void do3rdPersonMapFilledAnim(Hand hand, LivingEntity entity) {
    ItemStack itemstack = entity.getHeldItem(hand);

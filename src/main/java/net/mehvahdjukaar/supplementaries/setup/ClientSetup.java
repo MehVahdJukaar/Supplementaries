@@ -139,10 +139,12 @@ public class ClientSetup {
         //soul jar
         RenderTypeLookup.setRenderLayer(Registry.SOUL_JAR, RenderType.getTranslucent());
         ClientRegistry.bindTileEntityRenderer((TileEntityType<FireflyJarBlockTile>)Registry.FIREFLY_JAR_TILE, SoulJarBlockTileRenderer::new);
-
         //copper lantern
         RenderTypeLookup.setRenderLayer(Registry.COPPER_LANTERN, RenderType.getCutout());
         ClientRegistry.bindTileEntityRenderer((TileEntityType<OilLanternBlockTile>)Registry.COPPER_LANTERN_TILE, OilLanternBlockTileRenderer::new);
+        //doormat
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<DoormatBlockTile>)Registry.DOORMAT_TILE, DoormatBlockTileRenderer::new);
+
 
     }
 

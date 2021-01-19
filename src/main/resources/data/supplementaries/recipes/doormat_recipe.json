@@ -1,0 +1,24 @@
+{
+  "group": "jar",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "   ",
+    "   ",
+    "11 "
+  ],
+  "key": {
+    "1": {
+      "tag": "minecraft:carpets"
+    }
+  },
+  "result": {
+    "item": "supplementaries:doormat",
+    "count": 1
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "doormat"
+    }
+  ]
+}

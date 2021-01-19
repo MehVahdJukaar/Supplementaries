@@ -77,6 +77,12 @@
   "message.supplementaries.command.configs_reloaded": "Конфігурації перезавантажені",
   "block.supplementaries.copper_lantern": "Мідний ліхтар",
 
+  "message.supplementaries.hourglass": "Насипає пил, пісок або порошок",
+  "message.supplementaries.cage": "Утримуйте [Shift], щоб покласти",
+  "gui.supplementaries.safe.name": "%1$s'a %2$s",
+  "gui.supplementaries.doormat.edit": "Напишіть напис на килимку",
+  "block.supplementaries.doormat": "Килимок",
+
   "block.supplementaries.flag": "Прапор (Робота в процесі)",
   "block.supplementaries.laser_block": "Лазерний блок (Робота в процесі)",
   "block.supplementaries.fancy_lamp": "Атмосферний ліхтар",
