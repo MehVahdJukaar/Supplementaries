@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.blocks;
 
 import net.mehvahdjukaar.supplementaries.blocks.tiles.PedestalBlockTile;
 import net.mehvahdjukaar.supplementaries.common.Resources;
+import net.mehvahdjukaar.supplementaries.items.SackItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IWaterLoggable;
@@ -145,6 +146,24 @@ public class PedestalBlock extends Block implements IWaterLoggable {
                 ItemStack it = te.removeStackFromSlot(0);
                 player.setHeldItem(handIn, it);
                 if(!worldIn.isRemote()){
+                    te.markDirty();
+                }
+                return ActionResultType.func_233537_a_(worldIn.isRemote);
+            }
+            //Indiana Jones swap
+            else if(itemstack.getItem() instanceof SackItem){
+                ItemStack it = itemstack.copy();
+                it.setCount(1);
+                NonNullList<ItemStack> stacks = NonNullList.withSize(1, it);
+                ItemStack removed = te.removeStackFromSlot(0);
+                player.setHeldItem(handIn, removed);
+                te.setItems(stacks);
+                if (!player.isCreative()) {
+                    itemstack.shrink(1);
+                }
+                if(!worldIn.isRemote()){
+                    worldIn.playSound(null, pos,SoundEvents.ENTITY_ITEM_FRAME_ADD_ITEM,SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.10F + 0.95F);
+                    te.yaw=player.getHorizontalFacing().getAxis() == Direction.Axis.X ? 90 : 0;
                     te.markDirty();
                 }
                 return ActionResultType.func_233537_a_(worldIn.isRemote);

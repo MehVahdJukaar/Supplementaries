@@ -33,7 +33,7 @@ public class SackItem extends BlockItem {
     public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
         super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
         if(!ServerConfigs.cached.SACK_PENALTY)return;
-        if(entityIn instanceof ServerPlayerEntity && !((ServerPlayerEntity) entityIn).isCreative() && worldIn.getGameTime() % 20L == 0L){
+        if(entityIn instanceof ServerPlayerEntity && !((ServerPlayerEntity) entityIn).isCreative() && !entityIn.isSpectator() && worldIn.getGameTime() % 20L == 0L){
             ServerPlayerEntity player = (ServerPlayerEntity) entityIn;
             Collection<EffectInstance> effects = player.getActivePotionEffects();
             for (EffectInstance effect : effects) {

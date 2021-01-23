@@ -6,12 +6,15 @@ import net.mehvahdjukaar.supplementaries.blocks.tiles.HangingSignBlockTile;
 import net.mehvahdjukaar.supplementaries.network.Networking;
 import net.mehvahdjukaar.supplementaries.network.RequestMapDataFromServerPacket;
 import net.mehvahdjukaar.supplementaries.renderers.Const;
+import net.mehvahdjukaar.supplementaries.renderers.RendererUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.screen.EditSignScreen;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.NativeImage;
@@ -56,7 +59,8 @@ public class HangingSignBlockTileRenderer extends TileEntityRenderer<HangingSign
         //render block
         BlockRendererDispatcher blockRenderer = Minecraft.getInstance().getBlockRendererDispatcher();
         BlockState state = tile.getBlockState().getBlock().getDefaultState().with(HangingSignBlock.TILE, true);
-        blockRenderer.renderBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
+        //blockRenderer.renderBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
+        RendererUtil.renderBlockPlus(state, matrixStackIn, bufferIn, blockRenderer, tile.getWorld(), tile.getPos(), RenderType.getCutout());
         matrixStackIn.translate(0.5, 0.5 - 0.1875, 0.5);
         matrixStackIn.rotate(Const.YN90);
         // render item

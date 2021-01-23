@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.items;
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.inventory.ItemStackHelper;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
@@ -13,10 +14,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class JarItem extends CageItem {
-    public JarItem(Block blockIn, Properties properties) {
-        super(blockIn, properties);
+    public JarItem(Block blockIn, Properties properties, Supplier<Item> empty) {
+        super(blockIn, properties,empty);
     }
 
 

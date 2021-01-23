@@ -81,6 +81,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
         super.markDirty();
     }
 
+    //TODO: rework this
     //called by markdirty. server side. client will receive updated values via update packet and read()
     public void updateTile() {
         ItemStack stack = this.getStackInSlot(0);
@@ -456,7 +457,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
     @Override
     public boolean canInsertItem(int index, ItemStack stack, @Nullable Direction direction) {
         //can only insert cookies
-        return stack.getItem() == Items.COOKIE;
+        return CommonUtil.isCookie(stack.getItem());
     }
 
     @Override

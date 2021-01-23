@@ -63,9 +63,7 @@
   "block.supplementaries.sack": "Saco",
   "gui.supplementaries.blackboard.edit": "Editar Quadro-Negro",
   "block.supplementaries.safe": "Cofre",
-  "block.supplementaries.blackboard": "Quadro-Negro",
-  "message.supplementaries.safe": "Este cofre é propriedade de",
-  "message.supplementaries.safe_cleared": "Propriedade liberada",
+  "block.supplementaries.blackboard": "Quadro-Negro",  
   "container.supplementaries.safe": "Proprietário",
   "gui.supplementaries.speaker_block.volume" : "Volume: ",
   "gui.supplementaries.speaker_block.blocks": " blocos",
@@ -75,8 +73,17 @@
   "message.supplementaries.wall_lantern": "Pode ser colocado nas paredes",
   "message.supplementaries.command.configs_reloaded": "Configurações recarregadas",
   "block.supplementaries.copper_lantern": "Lanterna de Cobre",
- 
-  "block.supplementaries.flag": "WIP Bandeira",
+
+  "message.supplementaries.hourglass": "Aceita qualquer pó, areia ou pólvora",
+  "message.supplementaries.cage": "[Shift] para colocar",
+  "gui.supplementaries.safe.name": "%1$s de %2$s",
+  "message.supplementaries.safe.cleared": "Propriedade liberada",
+  "message.supplementaries.safe.owner": "Este cofre é propriedade de %s",
+  "gui.supplementaries.doormat.edit": "Editar mensagem de capacho",
+  "block.supplementaries.doormat": "Capacho",
+
+
+  "block.supplementaries.flag": "Bandeira",
   "block.supplementaries.laser_block": "Bloco de Laser",
   "block.supplementaries.fancy_lamp": "Lâmpada Chique",
   "block.supplementaries.skull_lantern": "Lanterna de Caveira"

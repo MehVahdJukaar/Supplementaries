@@ -59,7 +59,7 @@ public class HourGlassBlockTile extends LockableLootTileEntity implements ISided
         int p = this.getDirection()==Direction.DOWN?1:0;
         int l = this.sandType.getLight();
         if(l!=this.getBlockState().get(HourGlassBlock.LIGHT_LEVEL)){
-            world.setBlockState(this.pos, this.getBlockState().with(HourGlassBlock.LIGHT_LEVEL,l),4);
+            world.setBlockState(this.pos, this.getBlockState().with(HourGlassBlock.LIGHT_LEVEL,l),4|16);
         }
         this.prevProgress=p;
         this.progress=p;

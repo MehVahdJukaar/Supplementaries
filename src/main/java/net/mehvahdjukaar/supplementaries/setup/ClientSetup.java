@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.setup;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.blocks.tiles.*;
 import net.mehvahdjukaar.supplementaries.common.Resources;
+import net.mehvahdjukaar.supplementaries.entities.FallingBlockTileEntity;
 import net.mehvahdjukaar.supplementaries.entities.FireflyEntity;
 import net.mehvahdjukaar.supplementaries.gui.NoticeBoardContainer;
 import net.mehvahdjukaar.supplementaries.gui.NoticeBoardGui;
@@ -17,6 +18,7 @@ import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.particle.FlameParticle;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.client.renderer.entity.FallingBlockRenderer;
 import net.minecraft.client.renderer.entity.SpriteRenderer;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.entity.EntityType;
@@ -49,6 +51,10 @@ public class ClientSetup {
 
     @OnlyIn(Dist.CLIENT)
     public static void onlyClientPls(final FMLClientSetupEvent event){
+
+        //falling block tile entity
+        //RenderingRegistry.registerEntityRenderingHandler( (EntityType<FallingBlockTileEntity>) Registry.FALLING_BLOCK_TILE_ENTITY,
+        //        FallingBlockRenderer::new);
 
 
         //firefly & jar
@@ -144,6 +150,10 @@ public class ClientSetup {
         ClientRegistry.bindTileEntityRenderer((TileEntityType<OilLanternBlockTile>)Registry.COPPER_LANTERN_TILE, OilLanternBlockTileRenderer::new);
         //doormat
         ClientRegistry.bindTileEntityRenderer((TileEntityType<DoormatBlockTile>)Registry.DOORMAT_TILE, DoormatBlockTileRenderer::new);
+        //hanging flower pot
+        RenderTypeLookup.setRenderLayer(Registry.HANGING_FLOWER_POT, RenderType.getCutout());
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<HangingFlowerPotBlockTile>)Registry.HANGING_FLOWER_POT_TILE, HangingFlowerPotBlockTileRenderer::new);
+
 
 
     }
@@ -171,6 +181,5 @@ public class ClientSetup {
             event.addSprite(r);
         }
     }
-
 
 }

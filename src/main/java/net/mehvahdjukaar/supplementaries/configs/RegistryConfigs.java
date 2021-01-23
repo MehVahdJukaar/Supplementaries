@@ -18,20 +18,12 @@ public class RegistryConfigs {
 
     static {
         ForgeConfigSpec.Builder REGISTRY_BUILDER = new ForgeConfigSpec.Builder();
-
+        //TODO: see how block carpentry mod extrapolates textures from items to use on hourglass
         reg.init(REGISTRY_BUILDER);
 
         REGISTRY_CONFIG = REGISTRY_BUILDER.build();
         //remove try?
         try{
-            //extra variables
-
-            //TODO: properly fix forge:ingots/silver used before it was bound. this is a no no, don't do it again
-            //TODO: find a way to do this ^ without using tags
-            //ITag<Item> tag = TagCollectionManager.getManager().getItemTags().get(new ResourceLocation("forge:ingots/silver"));
-            //reg.HAS_SILVER = tag != null;
-            //why use arrays smh
-            //hardcoding it is
             if(ModList.get().isLoaded("mysticalworld")||ModList.get().isLoaded("immersiveengineering")||
                     ModList.get().isLoaded("bluepower")||ModList.get().isLoaded("silents_mechanisms ")||
                     ModList.get().isLoaded("thermal")||ModList.get().isLoaded("iceandfire")
@@ -109,10 +101,13 @@ public class RegistryConfigs {
         public static boolean isEnabled(String path){
             //special double condition cases
             if(path.equals(Registry.FIREFLY_JAR_NAME)){
-                return RegistryConfigs.reg.FIREFLY_JAR;
+                return reg.FIREFLY_JAR;
             }
             if(path.equals(Registry.CANDELABRA_NAME_SILVER)){
                 return reg.SILVER_CANDELABRA;
+            }
+            if(path.equals(Registry.SOUL_JAR_NAME)){
+                return reg.JAR_ENABLED.get();
             }
             for (Field f : reg.class.getDeclaredFields()) {
                 try{

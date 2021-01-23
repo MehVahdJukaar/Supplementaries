@@ -41,12 +41,14 @@ public class BellBlockMixin extends Block{
     @Inject(method = "updatePostPlacement", at = @At("HEAD"), cancellable = true)
     public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn,
                                           BlockPos currentPos, BlockPos facingPos, CallbackInfoReturnable<BlockState> info) {
-
-        if(facing==Direction.DOWN){
-            if(this.tryConnect(currentPos,facingState,worldIn)){
-                ((World)worldIn).notifyBlockUpdate(currentPos, stateIn, stateIn, Constants.BlockFlags.BLOCK_UPDATE);
+        try{
+            if (facing == Direction.DOWN) {
+                if (this.tryConnect(currentPos, facingState, worldIn)) {
+                    if (worldIn instanceof World)
+                        ((World) worldIn).notifyBlockUpdate(currentPos, stateIn, stateIn, Constants.BlockFlags.BLOCK_UPDATE);
+                }
             }
-        }
+        }catch (Exception ignored){};
         return stateIn;
     }
 

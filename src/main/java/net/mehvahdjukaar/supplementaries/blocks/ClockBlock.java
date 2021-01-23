@@ -167,12 +167,15 @@ public class ClockBlock extends Block implements IWaterLoggable {
         return super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
 
-    @Deprecated
-    public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        TileEntity te = world.getTileEntity(pos);
+    @Override
+    public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+        super.onBlockAdded(state, worldIn, pos, oldState, isMoving);
+        TileEntity te = worldIn.getTileEntity(pos);
         if(te instanceof ClockBlockTile){
             ((ClockBlockTile) te).updateInitialTime();
 
         }
     }
+
+
 }

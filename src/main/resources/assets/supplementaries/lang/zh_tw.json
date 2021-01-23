@@ -73,7 +73,18 @@
   "block.supplementaries.soul_jar": "靈魂罐子",
   "item.supplementaries.flute": "長笛",
   "message.supplementaries.throwable_brick": "可以扔",
-  "message.supplementaries.command.configs_reloaded": "Configs重裝",
+  "message.supplementaries.wall_lantern": "可以放在牆上",
+  "message.supplementaries.command.configs_reloaded": "重新加載配置",
+  "block.supplementaries.copper_lantern": "銅燈籠",
+
+  "message.supplementaries.hourglass": "接受任何灰塵，沙子或粉末",
+  "message.supplementaries.cage": "[Shift] 放置",
+  "gui.supplementaries.safe.name": "%1$s's %2$s",
+  "message.supplementaries.safe.cleared": "清除所有權",
+  "message.supplementaries.safe.owner": "這個保險箱歸擁有者所有 %s",
+  "gui.supplementaries.doormat.edit": "編輯門墊消息",
+  "block.supplementaries.doormat": "門墊",
+
 
   "block.supplementaries.flag": "WIP旗帜",
   "block.supplementaries.laser_block": "WIP激光块",

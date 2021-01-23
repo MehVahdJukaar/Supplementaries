@@ -142,6 +142,7 @@ public class SackBlockTile extends LockableLootTileEntity implements INameable, 
         this.loadFromNbt(nbt);
     }
 
+    //TODO: separate save to nbt from write so you don't write data you don't need. it update packet too
     @Override
     public CompoundNBT write(CompoundNBT compound) {
         super.write(compound);

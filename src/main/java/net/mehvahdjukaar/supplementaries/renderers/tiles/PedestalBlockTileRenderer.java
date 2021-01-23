@@ -81,6 +81,7 @@ public class PedestalBlockTileRenderer extends TileEntityRenderer<PedestalBlockT
             matrixStackIn.translate(0, 0.25, 0);
             matrixStackIn.rotate(Vector3f.YP.rotationDegrees(tile.yaw));
 
+
             ItemCameraTransforms.TransformType transform = ItemCameraTransforms.TransformType.FIXED;
             if(tile.type==2 && ClientConfigs.cached.PEDESTAL_SWORD){
                 //sword
@@ -118,6 +119,11 @@ public class PedestalBlockTileRenderer extends TileEntityRenderer<PedestalBlockT
                     //long t = blockoffset + time;
                     float angle = (tt * (float)ClientConfigs.cached.PEDESTAL_SPEED ) % 360f;
                     Quaternion rotation = Vector3f.YP.rotationDegrees(angle);
+
+                    //matrixStackIn.scale(1,1,0.f);
+                    //matrixStackIn.rotate(Const.XN22);
+                    //matrixStackIn.rotate(Const.Y45);
+
 
                     matrixStackIn.rotate(rotation);
                 }

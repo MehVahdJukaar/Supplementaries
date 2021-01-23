@@ -77,6 +77,11 @@
   "gui.supplementaries.safe.name": "%2$s di %1$s",
   "message.supplementaries.safe.owner": "Questa cassaforte è di %s",
   "message.supplementaries.safe.cleared": "Questa cassaforte non è più di nessuno",
+  "gui.supplementaries.doormat.edit": "Modifica il messaggio dello zerbino",
+  "block.supplementaries.doormat": "Zerbino",
+  "message.supplementaries.sack": "Abbastanza pesante",
+  "message.supplementaries.globe": "Venduto dal mercante ambulante",
+  "message.supplementaries.wind_vane": "Reagisce alla piggia",
 
 
   "block.supplementaries.flag": "Bandiera",

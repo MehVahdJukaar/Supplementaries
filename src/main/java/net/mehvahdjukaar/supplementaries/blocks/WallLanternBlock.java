@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.common.Resources;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.WallTorchBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
@@ -22,10 +23,12 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -42,6 +45,9 @@ public class WallLanternBlock extends SwayingBlock {
         this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(LIGHT_LEVEL, 15).with(WATERLOGGED,false));
     }
 
+    //update light level. TODO: maybe use this to update jars (onBlockAdded)
+
+
     @Override
     public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
         /*
@@ -53,6 +59,7 @@ public class WallLanternBlock extends SwayingBlock {
         return state.get(LIGHT_LEVEL);
     }
 
+    //TODO: replace getItem with getPickBlock
     @Override
     public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
         TileEntity te = world.getTileEntity(pos);
@@ -62,6 +69,10 @@ public class WallLanternBlock extends SwayingBlock {
         return new ItemStack(Blocks.LANTERN, 1);
     }
 
+    @Override
+    public ItemStack getItem(IBlockReader worldIn, BlockPos pos, BlockState state) {
+        return super.getItem(worldIn, pos, state);
+    }
 
     @Override
     public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
@@ -99,10 +110,10 @@ public class WallLanternBlock extends SwayingBlock {
         builder.add(LIGHT_LEVEL);
     }
 
+    @Nullable
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        if (context.getFace() == Direction.UP || context.getFace() == Direction.DOWN)
-            return this.getDefaultState().with(FACING, Direction.NORTH);
+        if (context.getFace() == Direction.UP || context.getFace() == Direction.DOWN) return null;
         BlockPos blockpos = context.getPos();
         World world = context.getWorld();
         BlockPos facingpos = blockpos.offset(context.getFace().getOpposite());

@@ -1,11 +1,13 @@
 package net.mehvahdjukaar.supplementaries.blocks;
 
+import com.google.common.collect.Lists;
 import net.mehvahdjukaar.supplementaries.blocks.tiles.SackBlockTile;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
+import net.mehvahdjukaar.supplementaries.entities.FallingBlockTileEntity;
+import net.minecraft.block.*;
 import net.minecraft.block.material.PushReaction;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.item.FallingBlockEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.monster.piglin.PiglinTasks;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,14 +25,14 @@ import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tileentity.ShulkerBoxTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
@@ -38,10 +40,11 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
-public class SackBlock extends Block {
+public class SackBlock extends FallingBlock {
     public static final VoxelShape SHAPE = Block.makeCuboidShape(2,0,2,14,12,14);
     public static final ResourceLocation CONTENTS = new ResourceLocation("contents");
     public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
@@ -76,12 +79,55 @@ public class SackBlock extends Block {
         return this.getDefaultState().with(WATERLOGGED, flag);
     }
 
+    //@Override
+    //protected void onStartFalling(FallingBlockEntity fallingEntity) { fallingEntity.setHurtEntities(true); }
+
+    public boolean canFall(BlockPos pos, World world){
+        return (world.isAirBlock(pos.down()) || canFallThrough(world.getBlockState(pos.down()))) &&
+                !hasEnoughSolidSide(world, pos.up(), Direction.DOWN) && pos.getY() >= 0;
+    }
+
     //schedule block tick
     @Override
     public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
         TileEntity tileentity = worldIn.getTileEntity(pos);
         if (tileentity instanceof SackBlockTile) {
-            ((SackBlockTile)tileentity).barrelTick();
+            SackBlockTile te = ((SackBlockTile)tileentity);
+            te.barrelTick();
+
+            if (this.canFall(pos,worldIn)) {
+                FallingBlockEntity fallingblockentity = new FallingBlockEntity(worldIn, (double)pos.getX() + 0.5D, pos.getY(), (double)pos.getZ() + 0.5D, worldIn.getBlockState(pos)){
+                    @Override
+                    public ItemEntity entityDropItem(IItemProvider itemIn, int offset) {
+                        ItemStack stack = new ItemStack(itemIn);
+                        if(itemIn instanceof Block && ((Block) itemIn).getDefaultState().hasTileEntity()){
+                            stack.setTagInfo("BlockEntityTag", this.tileEntityData);
+                        }
+                        return this.entityDropItem(stack, (float)offset);
+                    }
+                    //why are values private?? I have to do this...
+                    @Override
+                    public boolean onLivingFall(float distance, float damageMultiplier) {
+                        int i = MathHelper.ceil(distance - 1.0F);
+                        if (i > 0) {
+                            List<Entity> list = Lists.newArrayList(this.world.getEntitiesWithinAABBExcludingEntity(this, this.getBoundingBox()));
+                            DamageSource damagesource =  DamageSource.FALLING_BLOCK;
+                            //half anvil damage
+                            for(Entity entity : list) {
+                                entity.attackEntityFrom(damagesource, (float)Math.min(MathHelper.floor((float)i * 1), 20));
+                            }
+                        }
+                        return false;
+                    }
+
+                };
+                CompoundNBT com = new CompoundNBT();
+                te.write(com);
+                fallingblockentity.tileEntityData = com;
+                this.onStartFalling(fallingblockentity);
+                worldIn.addEntity(fallingblockentity);
+            }
+
         }
     }
 
@@ -162,9 +208,9 @@ public class SackBlock extends Block {
 
     //pick block
     @Override
-    public ItemStack getItem(IBlockReader worldIn, BlockPos pos, BlockState state) {
-        ItemStack itemstack = super.getItem(worldIn, pos, state);
-        TileEntity te = worldIn.getTileEntity(pos);
+    public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
+        ItemStack itemstack = super.getItem(world, pos, state);
+        TileEntity te = world.getTileEntity(pos);
         if (te instanceof SackBlockTile){
             CompoundNBT compoundnbt = ((SackBlockTile)te).saveToNbt(new CompoundNBT());
             if (!compoundnbt.isEmpty()) {

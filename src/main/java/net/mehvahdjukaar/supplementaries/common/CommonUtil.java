@@ -1,15 +1,15 @@
 package net.mehvahdjukaar.supplementaries.common;
 
 import net.mehvahdjukaar.supplementaries.blocks.SignPostBlock;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.FenceBlock;
-import net.minecraft.block.WallBlock;
+import net.minecraft.block.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.MissingTextureSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.*;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.potion.Potions;
@@ -21,12 +21,15 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.Tags;
 
+import java.lang.reflect.Field;
 import java.util.Calendar;
 
 import static net.mehvahdjukaar.supplementaries.common.Resources.*;
@@ -135,6 +138,10 @@ public class CommonUtil {
 
     }
 
+    public static boolean isCookie(Item i){
+        return ServerConfigs.cached.JAR_COOKIES.contains(i.getRegistryName().toString());
+    }
+
     public static JarLiquidType getJarContentTypeFromItem(ItemStack stack) {
         Item i = stack.getItem();
         if (i instanceof PotionItem) {
@@ -171,7 +178,7 @@ public class CommonUtil {
             return JarLiquidType.BEETROOT_SOUP;
         } else if (i instanceof SuspiciousStewItem) {
             return JarLiquidType.SUSPICIOUS_STEW;
-        } else if (i == Items.COOKIE) {
+        } else if (isCookie(i)) {
             return JarLiquidType.COOKIES;
         }else if (i == Items.WATER_BUCKET){
             return JarLiquidType.WATER;
@@ -463,5 +470,13 @@ public class CommonUtil {
     }
 
 
+    //cylinder distance
+    public static boolean withinDistanceDown(BlockPos pos, Vector3d vector, double distW, double distDown) {
+        double dx = vector.getX() - ((double)pos.getX() + 0.5);
+        double dy = vector.getY() - ((double)pos.getY() + 0.5);
+        double dz = vector.getZ() - ((double)pos.getZ() + 0.5);
+        double mydistW = (dx*dx + dz*dz);
+        return (mydistW<(distW*distW) && (dy<distW && dy>-distDown));
+    }
 
 }

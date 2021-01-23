@@ -3,21 +3,54 @@ package net.mehvahdjukaar.supplementaries.renderers;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.mehvahdjukaar.supplementaries.common.Resources;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BlockRendererDispatcher;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.model.data.EmptyModelData;
+
+import java.util.Random;
 
 public class RendererUtil {
     //centered on x,z. aligned on y=0
+
+    //stuff that falling sand uses. for some reason renderBlock doesn't use correct light level
+    public static void renderBlockPlus(BlockState state, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn,
+                                       BlockRendererDispatcher blockRenderer, World world, BlockPos pos){
+        for (RenderType type : RenderType.getBlockRenderTypes()) {
+            if (RenderTypeLookup.canRenderInLayer(state, type)) {
+                renderBlockPlus(state,matrixStackIn,bufferIn,blockRenderer,world,pos,type);
+            }
+        }
+
+    }
+
+    public static void renderBlockPlus(BlockState state, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn,
+                                       BlockRendererDispatcher blockRenderer, World world, BlockPos pos, RenderType type){
+        net.minecraftforge.client.ForgeHooksClient.setRenderLayer(type);
+        blockRenderer.getBlockModelRenderer().renderModel(world,
+                blockRenderer.getModelForState(state), state, pos, matrixStackIn,
+                bufferIn.getBuffer(type), false, new Random(),0,
+                OverlayTexture.NO_OVERLAY);
+        net.minecraftforge.client.ForgeHooksClient.setRenderLayer(null);
+    }
 
     @OnlyIn(Dist.CLIENT)
     public static void addCube(IVertexBuilder builder, MatrixStack matrixStackIn, float w, float h, TextureAtlasSprite sprite, int combinedLightIn,
                                int color, float a, int combinedOverlayIn, boolean up, boolean down, boolean fakeshading, boolean flippedY) {
         addCube(builder,matrixStackIn,0,0,w,h,sprite,combinedLightIn,color,a,combinedOverlayIn,up,down,fakeshading,flippedY);
     }
+
+
 
 
     //TODO: cache sprite coordinates?

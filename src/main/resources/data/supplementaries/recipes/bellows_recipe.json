@@ -20,7 +20,7 @@
   "conditions": [
     {
       "type": "supplementaries:flag",
-      "flag": "candelabra_silver"
+      "flag": "bellows"
     }
   ]
 }

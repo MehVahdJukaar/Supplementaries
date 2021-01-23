@@ -9,9 +9,11 @@ import net.mehvahdjukaar.supplementaries.setup.ClientSetup;
 import net.mehvahdjukaar.supplementaries.setup.ModSetup;
 import net.mehvahdjukaar.supplementaries.world.data.GlobeData;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -41,6 +43,7 @@ public class Supplementaries{
 
         bus.addListener(ModSetup::init);
         bus.addListener(ClientSetup::init);
+        //DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> ClientSetup::init);
 
         bus.addListener(ServerConfigs::configEvent);
 

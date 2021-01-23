@@ -79,6 +79,9 @@
   "gui.supplementaries.safe.name": "%1$s的 %2$s",
   "message.supplementaries.safe.cleared": "已清除所有权",
   "message.supplementaries.safe.owner": "这个保险箱的主人是 %s",
+  "gui.supplementaries.doormat.edit": "编辑门垫信息",
+  "block.supplementaries.doormat": "门垫",
+
 
   "block.supplementaries.flag": "WIP旗帜",
   "block.supplementaries.laser_block": "WIP激光块",

@@ -3,20 +3,32 @@ package net.mehvahdjukaar.supplementaries.renderers.tiles;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.mehvahdjukaar.supplementaries.blocks.OilLanternBlock;
 import net.mehvahdjukaar.supplementaries.blocks.tiles.OilLanternBlockTile;
+import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.renderers.Const;
-import net.minecraft.block.BlockState;
+import net.mehvahdjukaar.supplementaries.renderers.RendererUtil;
+import net.minecraft.block.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.state.properties.AttachFace;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.EmptyModelData;
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+
+import java.lang.reflect.Field;
+import java.util.Map;
+import java.util.function.Supplier;
 
 @OnlyIn(Dist.CLIENT)
 public class OilLanternBlockTileRenderer extends TileEntityRenderer<OilLanternBlockTile> {
@@ -49,7 +61,9 @@ public class OilLanternBlockTileRenderer extends TileEntityRenderer<OilLanternBl
             matrixStackIn.translate(-0.5, -0.5625, -0.5);
         }
         // render block
-        blockRenderer.renderBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
+        RendererUtil.renderBlockPlus(state, matrixStackIn, bufferIn,
+                blockRenderer, tile.getWorld(), tile.getPos(),  RenderType.getCutout());
+        //blockRenderer.renderBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
         matrixStackIn.pop();
 
 

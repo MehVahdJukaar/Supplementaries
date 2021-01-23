@@ -49,6 +49,7 @@ public class ServerConfigs {
     }
 
     public static class tweaks {
+        public static ForgeConfigSpec.BooleanValue HANGING_POT_PLACEMENT;
         public static ForgeConfigSpec.BooleanValue WALL_LANTERN_PLACEMENT;
         public static ForgeConfigSpec.BooleanValue THROWABLE_BRICKS_ENABLED;
         public static ForgeConfigSpec.ConfigValue<List<? extends String>> BRICKS_LIST;
@@ -59,6 +60,12 @@ public class ServerConfigs {
         private static void init(ForgeConfigSpec.Builder builder){
             builder.comment("Vanilla tweaks")
                     .push("tweaks");
+
+            //hanging pot
+            builder.push("hanging_flower_pots");
+            HANGING_POT_PLACEMENT = builder.comment("allows you to place hanging flower pots. Works with any modded pot too")
+                    .define("enabled",true);
+            builder.pop();
 
             //throwable bricks
             builder.push("throwable_bricks");
@@ -113,6 +120,7 @@ public class ServerConfigs {
 
         public static ForgeConfigSpec.IntValue JAR_CAPACITY;
         public static ForgeConfigSpec.BooleanValue JAR_EAT;
+        public static ForgeConfigSpec.ConfigValue<List<? extends String>> JAR_COOKIES;
 
         public static ForgeConfigSpec.ConfigValue<List<? extends String>> MOB_JAR_ALLOWED_MOBS;
         public static ForgeConfigSpec.ConfigValue<List<? extends String>> MOB_JAR_TINTED_ALLOWED_MOBS;
@@ -192,6 +200,10 @@ public class ServerConfigs {
             JAR_EAT = builder.comment("allow right click to instantly eat or drink food or potions inside a jar.\n" +
                     "Disable if you think this ability is op. Cookies are excluded")
                     .define("drink_from_jar",true);
+
+            List<String> cookies = Arrays.asList("minecraft:cookie");
+            JAR_COOKIES = builder.comment("any item can work here, ideally you should only put cookies and alike")
+                    .defineList("cookies", cookies,s -> true);
 
 
             List<String> defaultMobs = Arrays.asList("minecraft:slime",
@@ -330,6 +342,7 @@ public class ServerConfigs {
         public static int FLUTE_RADIUS;
         public static int FLUTE_DISTANCE;
         //tweaks
+        public static boolean HANGING_POT_PLACEMENT;
         public static boolean THROWABLE_BRICKS_ENABLED;
         public static List<? extends String> BRICKS_LIST;
         public static boolean WALL_LANTERN_PLACEMENT;
@@ -359,6 +372,7 @@ public class ServerConfigs {
         public static List<? extends String> TURN_TABLE_BLACKLIST;
         public static int JAR_CAPACITY;
         public static boolean JAR_EAT;
+        public static List<? extends String> JAR_COOKIES;
         public static boolean NOTICE_BOARDS_UNRESTRICTED;
         public static List<? extends String> MOB_JAR_ALLOWED_MOBS;
         public static List<? extends String> MOB_JAR_TINTED_ALLOWED_MOBS;
@@ -377,6 +391,7 @@ public class ServerConfigs {
             FLUTE_DISTANCE = item.FLUTE_DISTANCE.get();
             FLUTE_RADIUS = item.FLUTE_RADIUS.get();
 
+            HANGING_POT_PLACEMENT = tweaks.WALL_LANTERN_PLACEMENT.get();
             WALL_LANTERN_PLACEMENT = tweaks.WALL_LANTERN_PLACEMENT.get();
             THROWABLE_BRICKS_ENABLED = tweaks.THROWABLE_BRICKS_ENABLED.get();
             BRICKS_LIST = tweaks.BRICKS_LIST.get();
@@ -409,8 +424,8 @@ public class ServerConfigs {
             TURN_TABLE_BLACKLIST = block.TURN_TABLE_BLACKLIST.get();
 
             JAR_CAPACITY = block.JAR_CAPACITY.get();
-
             JAR_EAT = block.JAR_EAT.get();
+            JAR_COOKIES = block.JAR_COOKIES.get();
 
             NOTICE_BOARDS_UNRESTRICTED = block.NOTICE_BOARDS_UNRESTRICTED.get();
 

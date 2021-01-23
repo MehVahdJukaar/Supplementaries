@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.blocks.tiles;
 
 
 import net.mehvahdjukaar.supplementaries.common.CommonUtil.WoodType;
+import net.mehvahdjukaar.supplementaries.common.IBlockHolder;
 import net.mehvahdjukaar.supplementaries.common.ITextHolder;
 import net.mehvahdjukaar.supplementaries.common.TextHolder;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
@@ -16,7 +17,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.common.util.Constants;
 
 
-public class SignPostBlockTile extends TileEntity implements ITextHolder {
+public class SignPostBlockTile extends TileEntity implements ITextHolder, IBlockHolder {
 
     public TextHolder textHolder;
 
@@ -37,7 +38,18 @@ public class SignPostBlockTile extends TileEntity implements ITextHolder {
     }
 
     @Override
-    public TextHolder getTextHolder(){return this.textHolder;}
+    public BlockState getHeldBlock() {
+        return this.fenceBlock;
+    }
+
+    @Override
+    public boolean setHeldBlock(BlockState state) {
+        this.fenceBlock = state;
+        return true;
+    }
+
+    @Override
+    public TextHolder getTextHolder(){ return this.textHolder; }
 
     @Override
     public double getMaxRenderDistanceSquared() {

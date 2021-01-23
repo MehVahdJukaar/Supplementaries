@@ -13,6 +13,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.monster.SlimeEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.tags.BlockTags;
@@ -20,22 +21,20 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class EmptyJarItem extends BlockItem {
+import java.util.function.Supplier;
 
-    public EmptyJarItem(Block blockIn, Properties properties) {
-        super(blockIn, properties);
+public class EmptyJarItem extends EmptyCageItem {
+    public EmptyJarItem(Block blockIn, Properties properties, Supplier<Item> full, CageWhitelist whitelist) {
+        super(blockIn, properties, full, whitelist);
     }
 
-
-    //TODO: merge with jar
+    //TODO: merge with full jars?
 
     private static boolean isSoulSand(BlockState s){
         try {
             return (BlockTags.SOUL_SPEED_BLOCKS != null && s.isIn(BlockTags.SOUL_SPEED_BLOCKS));
-        }catch (Exception e){
-            Supplementaries.LOGGER.warn("Supplementaries: tag fix still not working. Notify mod author please");
-            return false;
-        }
+        }catch (Exception ignored){ }
+        return false;
     }
 
     //soul jar
@@ -62,51 +61,8 @@ public class EmptyJarItem extends BlockItem {
                 return ActionResultType.SUCCESS;
             }
 
-
-
         }
         return super.onItemUse(context);
-    }
-
-    //catch entity
-    @Override
-    public boolean onLeftClickEntity(ItemStack stack, PlayerEntity player, Entity entity) {
-        if(!(entity instanceof LivingEntity))return false;
-        return this.itemInteractionForEntity(stack,player, ((LivingEntity) entity),player.getActiveHand()).isSuccessOrConsume();
-    }
-
-    @Override
-    public ActionResultType itemInteractionForEntity(ItemStack stack, PlayerEntity player, LivingEntity entity, Hand hand) {
-
-        ResourceLocation n =  entity.getType().getRegistryName();
-        if(n==null)return ActionResultType.PASS;
-        String name = n.toString();
-        //Fireflies
-        boolean flag = this.getItem() == Registry.EMPTY_JAR_ITEM;
-        boolean isFirefly = entity.getType().getRegistryName().getPath().toLowerCase().contains("firefl") && flag;
-        if(!isFirefly) {
-            if (flag ? !ServerConfigs.cached.MOB_JAR_ALLOWED_MOBS.contains(name) :
-                    !ServerConfigs.cached.MOB_JAR_TINTED_ALLOWED_MOBS.contains(name)) {
-                return ActionResultType.PASS;
-                //TODO: figure out diccerence between ActionResultType.SUCCESS and CONSUME
-            }
-        }
-
-        if(entity instanceof SlimeEntity && ((SlimeEntity)entity).getSlimeSize()>1) return ActionResultType.PASS;
-
-        if(player.world.isRemote)return ActionResultType.SUCCESS;
-        ItemStack returnStack = new ItemStack(isFirefly?  Registry.FIREFLY_JAR_ITEM : (flag ? Registry.JAR_ITEM : Registry.JAR_ITEM_TINTED));
-        if(!isFirefly) {
-
-            if (stack.hasDisplayName()) returnStack.setDisplayName(stack.getDisplayName());
-
-            MobHolder.createMobHolderItemNBT(returnStack, entity, 0.875f, 0.625f);
-        }
-        player.setHeldItem(hand, DrinkHelper.fill(stack.copy(),player,returnStack,isFirefly));
-        player.world.playSound(null, player.getPosition(),  SoundEvents.ITEM_BOTTLE_FILL_DRAGONBREATH, SoundCategory.BLOCKS,1,1);
-
-        entity.remove();
-        return ActionResultType.CONSUME;
     }
 
 }

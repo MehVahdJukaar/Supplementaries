@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.renderers;
+package net.mehvahdjukaar.supplementaries.renderers.tiles;
 /*
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.mehvahdjukaar.supplementaries.blocks.DrawersBlock;

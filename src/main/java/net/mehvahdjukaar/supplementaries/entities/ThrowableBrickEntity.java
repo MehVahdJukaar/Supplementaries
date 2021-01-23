@@ -47,7 +47,6 @@ public class ThrowableBrickEntity extends ProjectileItemEntity implements IRende
         super((EntityType<? extends ProjectileItemEntity>) Registry.THROWABLE_BRICK, world);
     }
 
-
     @Override
     public IPacket<?> createSpawnPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);

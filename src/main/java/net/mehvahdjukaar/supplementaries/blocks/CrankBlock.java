@@ -96,16 +96,16 @@ public class CrankBlock extends Block implements IWaterLoggable{
             worldIn.addParticle(ParticleTypes.SMOKE, d0, d1, d2, 0, 0, 0);
             return ActionResultType.SUCCESS;
         } else {
-            this.activate(state, worldIn, pos);
+            this.activate(state, worldIn, pos, player.isSneaking());
             float f = 0.4f;
             worldIn.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 0.3F, f);
             return ActionResultType.CONSUME;
         }
     }
 
-    public void activate(BlockState state, World world, BlockPos pos) {
+    public void activate(BlockState state, World world, BlockPos pos, boolean ccw) {
         //func_235896_a_ == cycle
-        state = state.func_235896_a_(POWER);
+        state = state.with(POWER, (16+state.get(POWER)+(ccw?-1:1))%16);
         world.setBlockState(pos, state, 3);
         this.updateNeighbors(state, world, pos);
     }

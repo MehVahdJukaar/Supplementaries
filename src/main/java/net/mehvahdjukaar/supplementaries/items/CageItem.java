@@ -2,14 +2,13 @@ package net.mehvahdjukaar.supplementaries.items;
 
 import net.mehvahdjukaar.supplementaries.blocks.tiles.CageBlockTile;
 import net.mehvahdjukaar.supplementaries.common.MobHolder;
+import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
+import net.minecraft.block.TorchBlock;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
+import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
@@ -28,10 +27,13 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 public class CageItem extends BlockItem {
-    public CageItem(Block blockIn, Properties properties) {
+    public final Supplier<Item> empty;
+    public CageItem(Block blockIn, Properties properties, Supplier<Item> empty) {
         super(blockIn, properties);
+        this.empty = empty;
     }
 
 
@@ -45,11 +47,15 @@ public class CageItem extends BlockItem {
                 if (com.contains("Name")) {
                     tooltip.add(new StringTextComponent(com.getString("Name")).mergeStyle(TextFormatting.GRAY));
                     tooltip.add(new TranslationTextComponent("message.supplementaries.cage").mergeStyle(TextFormatting.ITALIC).mergeStyle(TextFormatting.GRAY));
-                    return;
                 }
             }
         }
-        tooltip.add(new StringTextComponent("try placing me down").mergeStyle(TextFormatting.GRAY));
+        else{
+            CompoundNBT c = stack.getTag();
+            if(c!=null&&(c.contains("JarMob")||c.contains("CachedJarMobValues")))
+                tooltip.add(new StringTextComponent("try placing me down").mergeStyle(TextFormatting.GRAY));
+        }
+
 
     }
 
@@ -82,7 +88,7 @@ public class CageItem extends BlockItem {
 
                 }
                 if(!context.getPlayer().isCreative()) {
-                   ItemStack returnItem = new ItemStack(((BlockItem)stack.getItem()).getBlock().asItem());
+                   ItemStack returnItem = new ItemStack(empty.get());
                    if(stack.hasDisplayName())returnItem.setDisplayName(stack.getDisplayName());
                    context.getPlayer().setHeldItem(context.getHand(), returnItem);
                 }

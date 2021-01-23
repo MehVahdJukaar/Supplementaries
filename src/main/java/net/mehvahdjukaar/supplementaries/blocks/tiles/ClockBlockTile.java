@@ -2,19 +2,27 @@ package net.mehvahdjukaar.supplementaries.blocks.tiles;
 
 import net.mehvahdjukaar.supplementaries.blocks.ClockBlock;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
-import net.minecraft.block.BlockState;
+import net.minecraft.block.*;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.GameRules;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import javax.annotation.Nonnull;
+import java.lang.reflect.Field;
+import java.util.Map;
+import java.util.function.Supplier;
 
 public class ClockBlockTile extends TileEntity implements ITickableTileEntity {
     public float roll = 0;
@@ -122,6 +130,7 @@ public class ClockBlockTile extends TileEntity implements ITickableTileEntity {
 
     @Override
     public void tick() {
+
         int time = this.world.getGameRules().getBoolean(GameRules.DO_DAYLIGHT_CYCLE)?
                 (int) (world.getDayTime() % 24000) : (int) (world.getGameTime() % 24000);
         if (this.world != null && (time) % 20 == 0) {

@@ -9,6 +9,14 @@ public class OilLanternBlockTile extends SwayingBlockTile{
         super(Registry.COPPER_LANTERN_TILE);
     }
 
+    static {
+        maxSwingAngle = 45f;
+        minSwingAngle = 1.9f;
+        maxPeriod = 28f;
+        angleDamping = 80f;
+        periodDamping = 70f;
+    }
+
     @Override
     public void tick() {
         if(this.getBlockState().get(OilLanternBlock.FACE)!=AttachFace.FLOOR)

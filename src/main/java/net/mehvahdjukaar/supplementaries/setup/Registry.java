@@ -4,6 +4,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.blocks.*;
 import net.mehvahdjukaar.supplementaries.blocks.tiles.*;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.entities.FallingBlockTileEntity;
 import net.mehvahdjukaar.supplementaries.entities.FireflyEntity;
 import net.mehvahdjukaar.supplementaries.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.gui.NoticeBoardContainer;
@@ -12,16 +13,14 @@ import net.mehvahdjukaar.supplementaries.items.*;
 import net.mehvahdjukaar.supplementaries.renderers.items.CageItemRenderer;
 import net.mehvahdjukaar.supplementaries.renderers.items.FireflyJarItemRenderer;
 import net.mehvahdjukaar.supplementaries.renderers.items.JarItemRenderer;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.SoundType;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
+import net.minecraft.entity.item.FallingBlockEntity;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.*;
 import net.minecraft.particles.BasicParticleType;
@@ -72,7 +71,7 @@ public class Registry {
         event.getRegistry().register(TICK_2_SOUND_EVENT);
 
     }
-    //TODO: figure out sound
+    //TODO: figure out sounds
     //these are the names in sound.json. not actual location
     public static final SoundEvent TICK_SOUND_EVENT = makeSoundEvent("block.tick_1");
     public static final SoundEvent TICK_2_SOUND_EVENT = makeSoundEvent("block.tick_2");
@@ -178,6 +177,13 @@ public class Registry {
             .setTrackingRange(64).setUpdateInterval(1).size(0.5f, 0.5f))//.size(0.25F, 0.25F).trackingRange(4).func_233608_b_(10))
             .build(THROWABLE_BRICK_NAME).setRegistryName(THROWABLE_BRICK_NAME);
 
+    //falling block tile
+    /*
+    public static final String FALLING_BLOCK_TILE_NAME = "falling_block_tile_entity";
+    public static final EntityType<?> FALLING_BLOCK_TILE_ENTITY =  (EntityType.Builder.<FallingBlockTileEntity>create(FallingBlockTileEntity::new, EntityClassification.MISC)
+            .setShouldReceiveVelocityUpdates(true).setCustomClientFactory(FallingBlockTileEntity::new)
+            .size(0.98F, 0.98F).trackingRange(10).func_233608_b_(20))
+            .build(FALLING_BLOCK_TILE_NAME).setRegistryName(FALLING_BLOCK_TILE_NAME);*/
 
 
     //particles
@@ -319,17 +325,17 @@ public class Registry {
             JarBlockTile::new, JAR,JAR_TINTED).build(null).setRegistryName(JAR_NAME);
 
     public static final Item JAR_ITEM = new JarItem(JAR, new Item.Properties().group(null)
-            .maxStackSize(1).setISTER(()-> JarItemRenderer::new)).setRegistryName("jar_full");
+            .maxStackSize(1).setISTER(()-> JarItemRenderer::new),()->Registry.EMPTY_JAR_ITEM).setRegistryName("jar_full");
 
     public static final Item JAR_ITEM_TINTED = new JarItem(JAR_TINTED, new Item.Properties().group(null)
-            .maxStackSize(1).setISTER(()-> JarItemRenderer::new)).setRegistryName("jar_full_tinted");
+            .maxStackSize(1).setISTER(()-> JarItemRenderer::new),()->Registry.EMPTY_JAR_ITEM_TINTED).setRegistryName("jar_full_tinted");
 
 
     public static final Item EMPTY_JAR_ITEM = new EmptyJarItem(JAR, new Item.Properties().group(
-            getTab(ItemGroup.DECORATIONS,JAR_NAME)).maxStackSize(16)).setRegistryName(JAR_NAME);
+            getTab(ItemGroup.DECORATIONS,JAR_NAME)).maxStackSize(16), ()->Registry.JAR_ITEM, EmptyCageItem.CageWhitelist.JAR).setRegistryName(JAR_NAME);
 
     public static final Item EMPTY_JAR_ITEM_TINTED = new EmptyJarItem(JAR_TINTED, new Item.Properties().group(
-            getTab(ItemGroup.DECORATIONS,JAR_NAME)).maxStackSize(16)).setRegistryName(JAR_NAME_TINTED);
+            getTab(ItemGroup.DECORATIONS,JAR_NAME)).maxStackSize(16), ()->Registry.JAR_ITEM_TINTED,EmptyCageItem.CageWhitelist.TINTED_JAR).setRegistryName(JAR_NAME_TINTED);
 
 
     //firefly jar
@@ -639,7 +645,7 @@ public class Registry {
     ).setRegistryName(WALL_LANTERN_NAME);
     public static final TileEntityType<?> WALL_LANTERN_TILE =  TileEntityType.Builder.create(
             WallLanternBlockTile::new, WALL_LANTERN).build(null).setRegistryName(WALL_LANTERN_NAME);
-    public static final Item WALL_LANTERN_ITEM = new BlockItem(WALL_LANTERN,
+    public static final Item WALL_LANTERN_ITEM = new BlockHolderItem(WALL_LANTERN,
             new Item.Properties().group(null)).setRegistryName(WALL_LANTERN_NAME);
 
     //bellows
@@ -862,9 +868,9 @@ public class Registry {
             CageBlockTile::new, CAGE).build(null).setRegistryName(CAGE_NAME);
     public static final Item CAGE_ITEM = new CageItem(CAGE,
             new Item.Properties().maxStackSize(1).setISTER(()-> CageItemRenderer::new)
-                    .group(null)).setRegistryName("cage_full");
+                    .group(null),()->Registry.EMPTY_CAGE_ITEM).setRegistryName("cage_full");
     public static final Item EMPTY_CAGE_ITEM = new EmptyCageItem(CAGE,
-            new Item.Properties().maxStackSize(16).group(getTab(ItemGroup.DECORATIONS,CAGE_NAME))
+            new Item.Properties().maxStackSize(16).group(getTab(ItemGroup.DECORATIONS,CAGE_NAME)),()->Registry.CAGE_ITEM, EmptyCageItem.CageWhitelist.CAGE
     ).setRegistryName(CAGE_NAME);
 
     //sconce lever
@@ -1008,16 +1014,16 @@ public class Registry {
     ).setRegistryName(DOORMAT_NAME);
 
 
-    /*
-    //launcher rail
-    public static final String LAUNCHER_RAIL_NAME = "launcher_rail";
-    public static final Block LAUNCHER_RAIL = new LauncherRailBlock(
+    public static final String HANGING_FLOWER_POT_NAME = "hanging_flower_pot";
+    public static final Block HANGING_FLOWER_POT = new HangingFlowerPotBlock(
             AbstractBlock.Properties.create(Material.MISCELLANEOUS)
-                    .doesNotBlockMovement()
-                    .hardnessAndResistance(0.7F)
-                    .sound(SoundType.METAL)
-    ).setRegistryName(LAUNCHER_RAIL_NAME);
-    public static final Item LAUNCHER_RAIL_ITEM = new BlockItem(LAUNCHER_RAIL,
-            new Item.Properties().group(null)).setRegistryName(LAUNCHER_RAIL_NAME);
-    */
+                    .zeroHardnessAndResistance().notSolid()
+    ).setRegistryName(HANGING_FLOWER_POT_NAME);
+    public static final TileEntityType<?> HANGING_FLOWER_POT_TILE = TileEntityType.Builder.create(
+            HangingFlowerPotBlockTile::new, HANGING_FLOWER_POT).build(null).setRegistryName(HANGING_FLOWER_POT_NAME);
+    public static final Item HANGING_FLOWER_POT_ITEM = new BlockItem(HANGING_FLOWER_POT,
+            (new Item.Properties()).group(null)
+    ).setRegistryName(HANGING_FLOWER_POT_NAME);
+
+
 }

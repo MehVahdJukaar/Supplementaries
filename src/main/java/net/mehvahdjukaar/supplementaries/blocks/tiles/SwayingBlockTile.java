@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.blocks.tiles;
 
+import net.mehvahdjukaar.supplementaries.blocks.SwayingBlock;
 import net.mehvahdjukaar.supplementaries.blocks.WallLanternBlock;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
@@ -51,7 +52,7 @@ public abstract class SwayingBlockTile extends TileEntity implements ITickableTi
     }
 
     public Direction getDirection() {
-        return this.getBlockState().get(WallLanternBlock.FACING);
+        return this.getBlockState().get(SwayingBlock.FACING);
     }
 
     @Override
