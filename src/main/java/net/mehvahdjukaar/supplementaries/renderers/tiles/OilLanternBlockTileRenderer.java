@@ -3,10 +3,9 @@ package net.mehvahdjukaar.supplementaries.renderers.tiles;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.mehvahdjukaar.supplementaries.blocks.OilLanternBlock;
 import net.mehvahdjukaar.supplementaries.blocks.tiles.OilLanternBlockTile;
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.renderers.Const;
 import net.mehvahdjukaar.supplementaries.renderers.RendererUtil;
-import net.minecraft.block.*;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -15,22 +14,10 @@ import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.state.properties.AttachFace;
 import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.data.EmptyModelData;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
-import java.lang.reflect.Field;
-import java.util.Map;
-import java.util.function.Supplier;
 
-@OnlyIn(Dist.CLIENT)
 public class OilLanternBlockTileRenderer extends TileEntityRenderer<OilLanternBlockTile> {
     public OilLanternBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);

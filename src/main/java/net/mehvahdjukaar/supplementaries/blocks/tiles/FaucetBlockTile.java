@@ -28,8 +28,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.biome.BiomeColors;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.Random;
 import java.util.stream.IntStream;
@@ -218,7 +216,7 @@ public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
         this.read(this.getBlockState(), pkt.getNbtCompound());
     }
 
-    @OnlyIn(Dist.CLIENT)
+
     public int updateClientWaterColor(){
         this.watercolor = BiomeColors.getWaterColor(this.world, this.pos);
         return this.watercolor;

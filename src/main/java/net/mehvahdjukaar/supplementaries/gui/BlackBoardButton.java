@@ -11,10 +11,8 @@ import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.IRenderable;
 import net.minecraft.util.SoundEvents;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
+
 public class BlackBoardButton extends AbstractGui implements IRenderable, IGuiEventListener {
 
     public int u;
@@ -150,12 +148,12 @@ public class BlackBoardButton extends AbstractGui implements IRenderable, IGuiEv
     }
 
 
-    @OnlyIn(Dist.CLIENT)
+
     public interface IPressable {
         void onPress(int x, int y, boolean on);
     }
 
-    @OnlyIn(Dist.CLIENT)
+
     public interface IDraggable {
         void onPress(double mouseX, double mouseY, boolean on);
     }

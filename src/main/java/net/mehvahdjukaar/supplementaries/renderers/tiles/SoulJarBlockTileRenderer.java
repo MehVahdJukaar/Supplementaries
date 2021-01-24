@@ -14,10 +14,8 @@ import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.settings.GraphicsFanciness;
 import net.minecraft.util.math.vector.Quaternion;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
+
 public class SoulJarBlockTileRenderer extends TileEntityRenderer<FireflyJarBlockTile> {
 
 
@@ -141,7 +139,7 @@ public class SoulJarBlockTileRenderer extends TileEntityRenderer<FireflyJarBlock
     }
 
 /*
-    @OnlyIn(Dist.CLIENT)
+
     public static final class PortalTexturingState extends RenderState.TexturingState {
         private final int iteration;
 

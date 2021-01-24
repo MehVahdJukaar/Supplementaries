@@ -16,13 +16,11 @@ import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.vector.Quaternion;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.EmptyModelData;
 
 
 
-@OnlyIn(Dist.CLIENT)
+
 public class FireflyJarItemRenderer extends ItemStackTileEntityRenderer {
 
     @Override

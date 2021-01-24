@@ -6,7 +6,6 @@ import net.mehvahdjukaar.supplementaries.common.Resources;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.WallTorchBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
@@ -23,7 +22,6 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
@@ -79,7 +77,7 @@ public class WallLanternBlock extends SwayingBlock {
         Direction direction = state.get(FACING);
         BlockPos blockpos = pos.offset(direction.getOpposite());
         BlockState blockstate = worldIn.getBlockState(blockpos);
-        return (blockstate.isSolidSide(worldIn, blockpos, direction) || CommonUtil.getPostSize(blockstate,blockpos, (World) worldIn)>0);
+        return (blockstate.isSolidSide(worldIn, blockpos, direction) || CommonUtil.getPostSize(blockstate,blockpos, worldIn)>0);
     }
 
     @Override

@@ -11,8 +11,21 @@ public class ClientConfigs {
         block.init(CLIENT_BUILDER);
         particle.init(CLIENT_BUILDER);
         entity.init(CLIENT_BUILDER);
+        general.init(CLIENT_BUILDER);
 
         CLIENT_CONFIG = CLIENT_BUILDER.build();
+    }
+
+    public static class general {
+        public static ForgeConfigSpec.BooleanValue TOOLTIP_HINTS;
+        private static void init(ForgeConfigSpec.Builder builder) {
+            builder.comment("general settings")
+                    .push("general");
+            TOOLTIP_HINTS = builder.comment("show some tooltip hints to guide player through the mod")
+                    .define("tooltip_hints",true);
+
+            builder.pop();
+        }
     }
 
     public static class block {
@@ -154,6 +167,7 @@ public class ClientConfigs {
 
 
     public static class cached {
+        public static boolean TOOLTIP_HINTS;
         public static int FIREFLY_PAR_MAXAGE;
         public static double FIREFLY_PAR_SCALE;
         public static double FIREFLY_SCALE;
@@ -174,6 +188,8 @@ public class ClientConfigs {
         public static boolean GLOBE_RANDOM;
 
         public static void refresh(){
+            //general
+            TOOLTIP_HINTS = general.TOOLTIP_HINTS.get();
             //particles
             FIREFLY_PAR_MAXAGE = particle.FIREFLY_PAR_MAXAGE.get();
             FIREFLY_PAR_SCALE = particle.FIREFLY_PAR_SCALE.get();

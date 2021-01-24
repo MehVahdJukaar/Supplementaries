@@ -1,52 +1,34 @@
 package net.mehvahdjukaar.supplementaries.events;
 
-import net.mehvahdjukaar.supplementaries.blocks.WallLanternBlock;
-import net.mehvahdjukaar.supplementaries.blocks.tiles.WallLanternBlockTile;
+import net.mehvahdjukaar.supplementaries.blocks.DirectionalCakeBlock;
+import net.mehvahdjukaar.supplementaries.blocks.DoubleCakeBlock;
+import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.items.BlockHolderItem;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
-import net.mehvahdjukaar.supplementaries.world.data.GlobeData;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.stats.Stats;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.RenderPlayerEvent;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.FORGE)
-public class ForgeEvents {
+public class ServerEvents {
 
-
-
-
-
-
+    //TODO: split into different classes
 
     private static ActionResultType paceBlockOverride(Item itemOverride, PlayerEntity player, Hand hand,
                                                       BlockItem heldItem, BlockPos pos, Direction dir, World world ){
-
             if (dir != null) {
                 //try interact with block behind
                 BlockState blockstate = world.getBlockState(pos);
@@ -72,50 +54,26 @@ public class ForgeEvents {
         return  ActionResultType.PASS;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-    //TODO: split into different classes
-
-    private static boolean isLantern(Item i){
-        if(i instanceof BlockItem){
-            Block b =  ((BlockItem) i).getBlock();
-            String namespace = b.getRegistryName().getNamespace();
-            return ((b instanceof LanternBlock || namespace.equals("skinnedlanterns"))
-                    && !ServerConfigs.cached.WALL_LANTERN_BLACKLIST.contains(namespace));
+    public static ActionResultType placeDoubleCake(PlayerEntity player, ItemStack stack, BlockPos pos, World world ){
+        BlockState state1 = world.getBlockState(pos);
+        boolean d = state1.getBlock()==Registry.DIRECTIONAL_CAKE;
+        if((d && state1.get(DirectionalCakeBlock.BITES)==0) || state1==Blocks.CAKE.getDefaultState()) {
+            BlockState state = Registry.DOUBLE_CAKE.getDefaultState().with(DoubleCakeBlock.FACING,d?state1.get(DoubleCakeBlock.FACING):Direction.WEST);
+            if (!world.setBlockState(pos, state, 3)) {
+                return ActionResultType.FAIL;
+            }
+            if (player instanceof ServerPlayerEntity) {
+                CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayerEntity) player, pos, stack);
+            }
+            SoundType soundtype = state.getSoundType(world, pos, player);
+            world.playSound(player, pos, state.getSoundType(world, pos, player).getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+            if (player == null || !player.abilities.isCreativeMode) {
+                stack.shrink(1);
+            }
+            return ActionResultType.func_233537_a_(world.isRemote);
         }
-        return false;
+        return ActionResultType.PASS;
     }
-
-    private static boolean isBrick(Item i){
-        try {
-            return ((Tags.Items.INGOTS_BRICK != null && i.isIn(Tags.Items.INGOTS_BRICK))
-                    || (Tags.Items.INGOTS_NETHER_BRICK != null && i.isIn(Tags.Items.INGOTS_NETHER_BRICK))||
-                    ServerConfigs.cached.BRICKS_LIST.contains(i.getRegistryName().toString()));
-        }catch (Exception e){
-            return false;
-        }
-    }
-
-    private static boolean isPot(Item i){
-        if(i instanceof BlockItem){
-            Block b =  ((BlockItem) i).getBlock();
-            //String namespace = b.getRegistryName().getNamespace();
-            return ((b instanceof FlowerPotBlock));
-        }
-        return false;
-    }
-
-
 
 
     private static boolean findConnectedBell(World world, BlockPos pos, PlayerEntity player, int it){
@@ -145,25 +103,46 @@ public class ForgeEvents {
         World world = event.getWorld();
         BlockPos pos = event.getPos();
 
-        //bell chains
-        if(stack.isEmpty() && hand==Hand.MAIN_HAND){
-            if(!ServerConfigs.cached.BELL_CHAIN)return;
-            if(findConnectedBell(world,pos,player,0)){
+        //order matters here
+        if (!player.isSneaking()) {
+            //directional cake conversion
+            if (ServerConfigs.cached.DIRECTIONAL_CAKE && world.getBlockState(pos) == Blocks.CAKE.getDefaultState()) {
+                world.setBlockState(pos, Registry.DIRECTIONAL_CAKE.getDefaultState(), 4);
+                BlockState blockstate = world.getBlockState(pos);
+                BlockRayTraceResult raytrace = new BlockRayTraceResult(
+                        new Vector3d(pos.getX(), pos.getY(), pos.getZ()), dir, pos, false);
+                event.setCancellationResult(blockstate.onBlockActivated(world, player, hand, raytrace));
                 event.setCanceled(true);
-                event.setCancellationResult(ActionResultType.func_233537_a_(world.isRemote));
+                return;
             }
-            return;
+
+            //bell chains
+            if (stack.isEmpty() && hand == Hand.MAIN_HAND) {
+                if (ServerConfigs.cached.BELL_CHAIN) {
+                    if (findConnectedBell(world, pos, player, 0)) {
+                        event.setCanceled(true);
+                        event.setCancellationResult(ActionResultType.func_233537_a_(world.isRemote));
+                    }
+                    return;
+                }
+            }
         }
 
         //block overrides
         if(player.abilities.allowEdit && i instanceof BlockItem) {
             BlockItem bi = (BlockItem) i;
             ActionResultType result = ActionResultType.PASS;
-            if (ServerConfigs.cached.WALL_LANTERN_PLACEMENT && isLantern(bi)) {
+            if (ServerConfigs.cached.WALL_LANTERN_PLACEMENT && CommonUtil.isLantern(bi)) {
                 result = paceBlockOverride(Registry.WALL_LANTERN_ITEM, player, hand, bi, pos, dir, world);
             }
-            else if (ServerConfigs.cached.HANGING_POT_PLACEMENT && isPot(bi)) {
+            else if (ServerConfigs.cached.HANGING_POT_PLACEMENT && CommonUtil.isPot(bi)) {
                 result = paceBlockOverride(Registry.HANGING_FLOWER_POT_ITEM, player, hand, bi, pos, dir, world);
+            }
+            else if (CommonUtil.isCake(bi)) {
+                if(ServerConfigs.cached.DOUBLE_CAKE_PLACEMENT)
+                    result = placeDoubleCake(player, stack, pos, world);
+                if(!result.isSuccessOrConsume() && ServerConfigs.cached.DIRECTIONAL_CAKE)
+                    result = paceBlockOverride(Registry.DIRECTIONAL_CAKE_ITEM, player, hand, bi, pos, dir, world);
             }
 
             if (result.isSuccessOrConsume()) {
@@ -184,7 +163,7 @@ public class ForgeEvents {
         Hand handIn = event.getHand();
         ItemStack itemstack = playerIn.getHeldItem(handIn);
         Item i = itemstack.getItem();
-        if(isBrick(i)) {
+        if(CommonUtil.isBrick(i)) {
             World worldIn = event.getWorld();
             worldIn.playSound(null, playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ(), SoundEvents.ENTITY_SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (playerIn.getRNG().nextFloat() * 0.4F + 0.8F ));
             if (!worldIn.isRemote) {
@@ -205,62 +184,4 @@ public class ForgeEvents {
         }
 
     }
-
-    @OnlyIn(Dist.CLIENT)
-    @SubscribeEvent
-    public static void onItemTooltip(ItemTooltipEvent event) {
-        if((event.getPlayer()==null)||(event.getPlayer().world==null))return;
-        Item i = event.getItemStack().getItem();
-        if(ServerConfigs.cached.WALL_LANTERN_PLACEMENT && isLantern(i)){
-            event.getToolTip().add(new TranslationTextComponent("message.supplementaries.wall_lantern").mergeStyle(TextFormatting.GRAY));
-        }
-        else if(ServerConfigs.cached.THROWABLE_BRICKS_ENABLED && isBrick(i)){
-            event.getToolTip().add(new TranslationTextComponent("message.supplementaries.throwable_brick").mergeStyle(TextFormatting.GRAY));
-        }
-        else if(ServerConfigs.cached.HANGING_POT_PLACEMENT && isPot(i)){
-            event.getToolTip().add(new TranslationTextComponent("message.supplementaries.hanging_pot").mergeStyle(TextFormatting.GRAY));
-        }
-    }
-
-
-
-
-
-    //enderman hold block in rain
-/*
-    @SubscribeEvent
-    public static void onRenderEnderman(RenderLivingEvent<EndermanEntity, EndermanModel<EndermanEntity>> event) {
-        if(event.getEntity()instanceof EndermanEntity){
-            LivingRenderer<EndermanEntity, EndermanModel<EndermanEntity>> renderer = event.getRenderer();
-            if(renderer instanceof EndermanRenderer) {
-                MatrixStack matrixStack = event.getMatrixStack();
-                matrixStack.push();
-
-                //renderer.getEntityModel().bipedLeftArm.showModel=false;
-
-                //event.getRenderer().getEntityModel().bipedLeftArm.rotateAngleX=180;
-
-
-                event.getRenderer().getEntityModel().bipedLeftArm.showModel=true;
-                //bipedRightArm.rotateAngleX=100;
-                int i = getPackedOverlay(event.getEntity(), 0);
-                //event.getRenderer().getEntityModel().bipedLeftArm.render(event.getMatrixStack(),event.getBuffers().getBuffer(RenderType.getEntityCutout(new ResourceLocation("textures/entity/enderman/enderman.png"))), event.getLight(),i);
-                event.getRenderer().getEntityModel().bipedLeftArm.showModel=false;
-                matrixStack.pop();
-            }
-        }
-    }*/
-    /*
-    @SubscribeEvent
-    public static void onRenderEnderman(PlayerInteractEvent.EntityInteractSpecific event) {
-
-        Entity e = event.getTarget();
-        if(e instanceof MobEntity && event.getItemStack().getItem() instanceof CompassItem){
-            ((MobEntity) e).setHomePosAndDistance(new BlockPos(0,63,0),100);
-            event.setCanceled(true);
-            event.setCancellationResult(ActionResultType.SUCCESS);
-        }
-    }*/
-
-
 }

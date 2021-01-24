@@ -16,10 +16,8 @@ import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3f;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
+
 public class GlobeBlockTileRenderer extends TileEntityRenderer<GlobeBlockTile> {
 
     public final ModelRenderer globe = new ModelRenderer(32, 16, 0, 0);

@@ -9,6 +9,7 @@ import net.minecraft.block.IWaterLoggable;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
@@ -76,7 +77,7 @@ public class PedestalBlock extends Block implements IWaterLoggable {
                 .with(DOWN, canConnect(world.getBlockState(pos.down()), pos, world, Direction.DOWN, false));
     }
 
-    public static boolean canConnect(BlockState state, BlockPos pos, World world, Direction dir, boolean hasItem){
+    public static boolean canConnect(BlockState state, BlockPos pos, IWorld world, Direction dir, boolean hasItem){
         if(state.getBlock() instanceof  PedestalBlock) {
             if (dir == Direction.DOWN) {
                         return !state.get(HAS_ITEM);
@@ -96,10 +97,10 @@ public class PedestalBlock extends Block implements IWaterLoggable {
         }
 
         if(facing==Direction.UP){
-            return stateIn.with(UP, canConnect(facingState, currentPos, (World)worldIn, facing, stateIn.get(HAS_ITEM)));
+            return stateIn.with(UP, canConnect(facingState, currentPos, worldIn, facing, stateIn.get(HAS_ITEM)));
         }
         else if(facing==Direction.DOWN){
-            return stateIn.with(DOWN, canConnect(facingState, currentPos, (World)worldIn, facing,stateIn.get(HAS_ITEM)));
+            return stateIn.with(DOWN, canConnect(facingState, currentPos, worldIn, facing,stateIn.get(HAS_ITEM)));
         }
         return stateIn;
     }
@@ -109,7 +110,7 @@ public class PedestalBlock extends Block implements IWaterLoggable {
         TileEntity te = world.getTileEntity(pos);
         if(target.getHitVec().getY() > pos.getY()+1-0.1875) {
             if (te instanceof PedestalBlockTile) {
-                ItemStack i = ((PedestalBlockTile) te).getStackInSlot(0);
+                ItemStack i = ((IInventory) te).getStackInSlot(0);
                 if (!i.isEmpty()) return i;
             }
         }

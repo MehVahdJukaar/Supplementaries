@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.blocks;
 
 import net.mehvahdjukaar.supplementaries.blocks.tiles.GlobeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -55,7 +56,7 @@ public class GlobeBlock extends Block implements IWaterLoggable {
     @Override
     public void addInformation(ItemStack stack, IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
-        //TODO: add option to disable help tooltips
+        if(!ClientConfigs.cached.TOOLTIP_HINTS)return;
         tooltip.add(new TranslationTextComponent("message.supplementaries.globe").mergeStyle(TextFormatting.ITALIC).mergeStyle(TextFormatting.GRAY));
 
     }

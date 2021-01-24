@@ -31,6 +31,7 @@ public class Resources {
     public static final IntegerProperty RECEIVING = IntegerProperty.create("laser_receiving", 0, 15);
     public static final IntegerProperty LIGHT_LEVEL_0_15 = IntegerProperty.create("light_level", 0, 15);
     public static final BooleanProperty HAS_ITEM = BooleanProperty.create("has_item");
+    public static final IntegerProperty BITES_0_4 = IntegerProperty.create("bites", 0, 6);
 
 
 

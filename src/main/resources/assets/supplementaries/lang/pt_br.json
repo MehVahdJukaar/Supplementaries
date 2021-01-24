@@ -81,6 +81,12 @@
   "message.supplementaries.safe.owner": "Este cofre é propriedade de %s",
   "gui.supplementaries.doormat.edit": "Editar mensagem de capacho",
   "block.supplementaries.doormat": "Capacho",
+  "message.supplementaries.sack": "Muito pesado para carregar",
+  "message.supplementaries.globe": "Vendido pelo Vendedor Ambulante",
+  "message.supplementaries.wind_vane": "Reage ao clima",
+  "message.supplementaries.hanging_pot": "Pode ser pendurado",
+  "message.supplementaries.double_cake": "Pode ser empilhado",
+
 
 
   "block.supplementaries.flag": "Bandeira",

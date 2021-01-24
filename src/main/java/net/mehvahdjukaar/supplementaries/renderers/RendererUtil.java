@@ -14,9 +14,6 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.data.EmptyModelData;
 
 import java.util.Random;
 
@@ -44,7 +41,7 @@ public class RendererUtil {
         net.minecraftforge.client.ForgeHooksClient.setRenderLayer(null);
     }
 
-    @OnlyIn(Dist.CLIENT)
+
     public static void addCube(IVertexBuilder builder, MatrixStack matrixStackIn, float w, float h, TextureAtlasSprite sprite, int combinedLightIn,
                                int color, float a, int combinedOverlayIn, boolean up, boolean down, boolean fakeshading, boolean flippedY) {
         addCube(builder,matrixStackIn,0,0,w,h,sprite,combinedLightIn,color,a,combinedOverlayIn,up,down,fakeshading,flippedY);
@@ -54,7 +51,7 @@ public class RendererUtil {
 
 
     //TODO: cache sprite coordinates?
-    @OnlyIn(Dist.CLIENT)
+
     public static void addCube(IVertexBuilder builder, MatrixStack matrixStackIn,float uOff, float vOff, float w, float h, TextureAtlasSprite sprite, int combinedLightIn,
                                int color, float a, int combinedOverlayIn, boolean up, boolean down, boolean fakeshading, boolean flippedY) {
         int lu = combinedLightIn & '\uffff';
@@ -127,14 +124,14 @@ public class RendererUtil {
     }
 
     /*
-        @OnlyIn(Dist.CLIENT)
+
         public static void addDoubleQuadSide(IVertexBuilder builder, MatrixStack matrixStackIn, float x0, float y0, float z0, float x1, float y1, float z1, float u0, float v0, float u1, float v1, float r, float g,
                                              float b, float a, int lu, int lv){
             addQuadSide(builder, matrixStackIn, x0, y0, z0, x1, y1, z1, u0, v0, u1, v1, r, g, b, a, lu, lv);
             addQuadSide(builder, matrixStackIn, x1, y0, z1, x0, y1, z0, u0, v0, u1, v1, r, g, b, a, lu, lv);
         }
     */
-    @OnlyIn(Dist.CLIENT)
+
     public static void addQuadSide(IVertexBuilder builder, MatrixStack matrixStackIn, float x0, float y0, float z0, float x1, float y1, float z1, float u0, float v0, float u1, float v1, float r, float g,
                                    float b, float a, int lu, int lv, float nx, float ny, float nz) {
         addVert(builder, matrixStackIn, x0, y0, z0, u0, v1, r, g, b, a, lu, lv, nx, ny, nz);
@@ -144,7 +141,7 @@ public class RendererUtil {
     }
 
     /*
-        @OnlyIn(Dist.CLIENT)
+
         public static void addQuadSideF(IVertexBuilder builder, MatrixStack matrixStackIn, float x0, float y0, float z0, float x1, float y1, float z1, float u0, float v0, float u1, float v1, float r, float g,
                                         float b, float a, int lu, int lv) {
             addVert(builder, matrixStackIn, x0, y0, z0, u0, v0, r, g, b, a, lu, lv);
@@ -153,7 +150,7 @@ public class RendererUtil {
             addVert(builder, matrixStackIn, x0, y1, z0, u0, v1, r, g, b, a, lu, lv);
         }
     */
-    @OnlyIn(Dist.CLIENT)
+
     public static void addQuadTop(IVertexBuilder builder, MatrixStack matrixStackIn, float x0, float y0, float z0, float x1, float y1, float z1, float u0, float v0, float u1, float v1, float r, float g,
                                   float b, float a, int lu, int lv, float nx, float ny, float nz) {
         addVert(builder, matrixStackIn, x0, y0, z0, u0, v1, r, g, b, a, lu, lv, nx, ny, nz);
@@ -162,14 +159,14 @@ public class RendererUtil {
         addVert(builder, matrixStackIn, x0, y1, z1, u0, v0, r, g, b, a, lu, lv, nx, ny, nz);
     }
 
-    @OnlyIn(Dist.CLIENT)
+
     public static void addVert(IVertexBuilder builder, MatrixStack matrixStackIn, float x, float y, float z, float u, float v, float r, float g,
                                float b, float a, int lu, int lv, float nx, float ny, float nz) {
         builder.pos(matrixStackIn.getLast().getMatrix(), x, y, z).color(r, g, b, a).tex(u, v).overlay(OverlayTexture.NO_OVERLAY).lightmap(lu, lv)
                 .normal(matrixStackIn.getLast().getNormal(), nx, ny, nz).endVertex();
     }
 
-    @OnlyIn(Dist.CLIENT)
+
     public static void renderFish(IVertexBuilder builder, MatrixStack matrixStackIn, float wo, float ho, int fishType, int combinedLightIn,
                                   int combinedOverlayIn) {
         TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(Resources.FISHIES_TEXTURE);

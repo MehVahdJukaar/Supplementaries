@@ -16,8 +16,6 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.Random;
 
@@ -48,7 +46,7 @@ public class SconceBlock extends LightUpBlock{
         return SHAPE;
     }
 
-    @OnlyIn(Dist.CLIENT)
+
     public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
         if(stateIn.get(LIT)) {
             double d0 = (double) pos.getX() + 0.5D;

@@ -22,13 +22,11 @@ import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.EmptyModelData;
 
 import java.util.stream.IntStream;
 
-@OnlyIn(Dist.CLIENT)
+
 public class HangingSignGui extends Screen {
     private TextInputUtil textInputUtil;
     // The index of the line that is being edited.
@@ -126,7 +124,7 @@ public class HangingSignGui extends Screen {
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
+
     public void render(MatrixStack matrixstack, int  mouseX, int mouseY, float partialTicks) {
         RenderHelper.setupGuiFlatDiffuseLighting();
         this.renderBackground(matrixstack);

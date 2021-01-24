@@ -1,9 +1,0 @@
-{
-  "parent": "supplementaries:custom/wind_vane",
-  "textures": {
-    "all": "supplementaries:blocks/wind_vane",
-    "particle": "supplementaries:blocks/wind_vane",
-    "0": "supplementaries:blocks/wind_vane",
-    "1": "supplementaries:blocks/wind_vane_details"
-  }
-}

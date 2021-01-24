@@ -12,8 +12,6 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.Map;
 import java.util.Random;
@@ -38,7 +36,7 @@ public class CandleHolderBlock extends SconceWallBlock {
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
+
     public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
         if(stateIn.get(LIT)){
             Direction direction = stateIn.get(FACING);

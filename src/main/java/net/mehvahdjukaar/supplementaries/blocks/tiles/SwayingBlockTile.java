@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.blocks.tiles;
 
 import net.mehvahdjukaar.supplementaries.blocks.SwayingBlock;
-import net.mehvahdjukaar.supplementaries.blocks.WallLanternBlock;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;

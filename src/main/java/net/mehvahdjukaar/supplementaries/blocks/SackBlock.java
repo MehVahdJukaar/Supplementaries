@@ -2,8 +2,10 @@ package net.mehvahdjukaar.supplementaries.blocks;
 
 import com.google.common.collect.Lists;
 import net.mehvahdjukaar.supplementaries.blocks.tiles.SackBlockTile;
-import net.mehvahdjukaar.supplementaries.entities.FallingBlockTileEntity;
-import net.minecraft.block.*;
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.FallingBlock;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -25,7 +27,6 @@ import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.tileentity.ShulkerBoxTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
@@ -40,7 +41,6 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
@@ -53,6 +53,10 @@ public class SackBlock extends FallingBlock {
     public SackBlock(AbstractBlock.Properties properties) {
         super(properties);
         this.setDefaultState(this.stateContainer.getBaseState().with(OPEN, false));
+    }
+
+    public int getDustColor(BlockState state, IBlockReader reader, BlockPos pos) {
+        return -5671355;
     }
 
     @Override

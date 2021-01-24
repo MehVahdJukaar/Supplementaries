@@ -115,6 +115,7 @@ public class HangingSignBlock extends SwayingBlock {
         if (stateIn.get(WATERLOGGED)) {
             worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
         }
+
         if(facing==Direction.UP){
             return !stateIn.isValidPosition(worldIn, currentPos)
                     ? Blocks.AIR.getDefaultState()
@@ -123,7 +124,7 @@ public class HangingSignBlock extends SwayingBlock {
         else {
             return facing == stateIn.get(FACING).getOpposite()? !stateIn.isValidPosition(worldIn, currentPos)
                     ? Blocks.AIR.getDefaultState()
-                    : this.getConnectedState(stateIn,facingState, (World) worldIn,facingPos) : stateIn;
+                    : this.getConnectedState(stateIn,facingState, worldIn,facingPos) : stateIn;
         }
     }
 

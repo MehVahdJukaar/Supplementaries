@@ -4,11 +4,9 @@ import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particles.BasicParticleType;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 
-@OnlyIn(Dist.CLIENT)
+
 public class SpeakerSoundParticle extends SpriteTexturedParticle {
     protected SpeakerSoundParticle(ClientWorld worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn) {
         super(worldIn, xCoordIn, yCoordIn, zCoordIn, 0, 0, 0);
@@ -58,7 +56,7 @@ public class SpeakerSoundParticle extends SpriteTexturedParticle {
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
+
     public static class Factory implements IParticleFactory<BasicParticleType> {
         private final IAnimatedSprite spriteSet;
 

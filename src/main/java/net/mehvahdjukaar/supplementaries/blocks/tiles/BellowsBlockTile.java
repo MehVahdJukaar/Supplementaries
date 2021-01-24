@@ -25,8 +25,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.List;
 
@@ -260,7 +258,7 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
         return flag;
     }
 
-    @OnlyIn(Dist.CLIENT)
+
     public  void spawnParticles(World world, BlockPos pos) {
         Direction dir = this.getDirection();
         double xo = dir.getXOffset();

@@ -1,13 +1,10 @@
 package net.mehvahdjukaar.supplementaries.blocks;
 
 import net.mehvahdjukaar.supplementaries.blocks.tiles.HangingFlowerPotBlockTile;
-import net.mehvahdjukaar.supplementaries.blocks.tiles.WallLanternBlockTile;
 import net.mehvahdjukaar.supplementaries.common.FlowerPotHelper;
 import net.mehvahdjukaar.supplementaries.common.Resources;
 import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -27,6 +24,8 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.util.text.IFormattableTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
@@ -34,7 +33,6 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class HangingFlowerPotBlock extends Block{
@@ -44,6 +42,11 @@ public class HangingFlowerPotBlock extends Block{
     public HangingFlowerPotBlock(Properties properties) {
         super(properties);
         this.setDefaultState(this.stateContainer.getBaseState().with(TILE, false));
+    }
+
+    @Override
+    public IFormattableTextComponent getTranslatedName() {
+        return new TranslationTextComponent("minecraft:flower_pot");
     }
 
     @Nullable
@@ -68,7 +71,7 @@ public class HangingFlowerPotBlock extends Block{
                 Item item = itemstack.getItem();
 
                 if (FlowerPotHelper.isEmptyPot(pot)) {
-                    Block newPot = item instanceof BlockItem ? FlowerPotHelper.fullPots.get(pot).getOrDefault(item.getRegistryName(), Blocks.AIR.delegate).get() : Blocks.AIR;
+                    Block newPot = FlowerPotHelper.fullPots.get(pot).getOrDefault(item.getRegistryName(), Blocks.AIR.delegate).get();
                     if (newPot != Blocks.AIR) {
                         te.setHeldBlock(newPot.getDefaultState());
                         player.addStat(Stats.POT_FLOWER);
@@ -118,7 +121,12 @@ public class HangingFlowerPotBlock extends Block{
     public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
         TileEntity te = world.getTileEntity(pos);
         if (te instanceof HangingFlowerPotBlockTile) {
-            return new ItemStack(((HangingFlowerPotBlockTile) te).pot.getBlock());
+            Block b = ((HangingFlowerPotBlockTile) te).pot.getBlock();
+            if(b instanceof FlowerPotBlock){
+                Block flower = ((FlowerPotBlock) b).getFlower();
+                if(flower==Blocks.AIR)return new ItemStack(((FlowerPotBlock) b).getEmptyPot());
+                return new ItemStack(flower);
+            }
         }
         return new ItemStack(Blocks.FLOWER_POT, 1);
     }

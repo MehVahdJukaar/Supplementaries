@@ -29,8 +29,6 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.Random;
@@ -144,7 +142,7 @@ public class CrankBlock extends Block implements IWaterLoggable{
         return true;
     }
 
-    @OnlyIn(Dist.CLIENT)
+
     public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
         if (stateIn.get(POWER)>0 && rand.nextFloat() < 0.25F) {
             Direction direction = stateIn.get(FACING).getOpposite();

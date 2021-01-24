@@ -15,7 +15,9 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
+import java.lang.reflect.Field;
 import java.util.Random;
 import java.util.UUID;
 
@@ -215,6 +217,19 @@ public class MobHolder {
         }
     }
 
+    //TODO: react to fluid change
+    public void setWaterMobInWater(boolean w){
+        if(this.mob != null && this.mob instanceof WaterMobEntity && this.mob.isInWater()!=w){
+            try {
+                Field f = ObfuscationReflectionHelper.findField(Entity.class, "field_70171_ac");
+                f.setAccessible(true);
+                f.setBoolean(this.mob,w);
+            }
+            catch (Exception ignored){};
+        }
+    }
+
+
     //todo: replace with markdirty like liquid holder
     //client and server. cached mob from entitydata
     public void updateMob(){
@@ -257,6 +272,8 @@ public class MobHolder {
             }
             this.entityChanged = false;
         }
+
+        this.setWaterMobInWater(!this.world.getFluidState(pos).isEmpty());
     }
 
     public boolean isEmpty(){
@@ -307,7 +324,8 @@ public class MobHolder {
             mobCompound.remove("Leash");
             mobCompound.remove("UUID");
 
-            boolean flag = mob.hasNoGravity() || mob instanceof IFlyingAnimal||mob.doesEntityNotTriggerPressurePlate();
+            //TODO: improve for acquatic entities to react and not fly when not in water
+            boolean flag = mob.hasNoGravity() || mob instanceof IFlyingAnimal || mob.doesEntityNotTriggerPressurePlate() || mob instanceof WaterMobEntity;
 
             MobHolderType type = MobHolderType.getType(mob);
             float babyscale = 1;
@@ -360,7 +378,8 @@ public class MobHolder {
         RABBIT("minecraft:rabbit",0,0),
         CHICKEN("minecraft:chicken",0.25f,0.3125f),
         PIXIE("iceandfire:pixie",0,0),
-        MOTH("druidcraft:lunar_moth",0.375f,0.1375f);
+        MOTH("druidcraft:lunar_moth",0.375f,0.1375f),
+        WATER_MOB("minecraft:tropical_fish",0,0.125f);
 
 
         public final String type;
@@ -382,6 +401,7 @@ public class MobHolder {
         }
 
         public static MobHolderType getType(Entity e){
+            if(e instanceof WaterMobEntity)return WATER_MOB;
             String name = e.getType().getRegistryName().toString();
             for (MobHolderType n : MobHolderType.values()){
                 if(name.equals(n.type)){

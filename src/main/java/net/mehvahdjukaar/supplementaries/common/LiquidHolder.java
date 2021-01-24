@@ -8,8 +8,6 @@ import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeColors;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class LiquidHolder {
     private World world;
@@ -50,7 +48,7 @@ public class LiquidHolder {
         return compound;
     }
 
-    @OnlyIn(Dist.CLIENT)
+
     public int updateClientWaterColor(){
         this.color = BiomeColors.getWaterColor(this.world, this.pos);
         return this.color;

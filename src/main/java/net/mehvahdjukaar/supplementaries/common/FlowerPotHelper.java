@@ -3,8 +3,6 @@ package net.mehvahdjukaar.supplementaries.common;
 import com.google.common.collect.Maps;
 import net.minecraft.block.Block;
 import net.minecraft.block.FlowerPotBlock;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.server.ServerWorld;
@@ -27,9 +25,6 @@ public class FlowerPotHelper {
     //vanilla pot flower pots
     //empty pot, map(flower item registry name, full block provider)
     public static Map<Block,Map<ResourceLocation, Supplier<? extends Block>> > fullPots;
-
-    //empty pot, map(full pot, return item)
-    //public static Map<Block,Map<Block,Item>> drops;
 
     public static boolean isEmptyPot(Block b){
         return emptyPots.contains(b);
@@ -62,18 +57,6 @@ public class FlowerPotHelper {
 
             } catch (Exception ignored) {}
         }
-        //reverse map for drops
-        /*
-        drops = Maps.newHashMap();
-        for (Block block : fullPots.keySet()) {
-            Map<Block,Item> map = Maps.newHashMap();
-            for(ResourceLocation res : fullPots.get(block).keySet()){
-                Block b = fullPots.get(block).get(res).get();
-                Item i = ForgeRegistries.ITEMS.getValue(res);
-                map.put(b,i);
-            }
-            drops.put(block, map);
-        }*/
     }
 
 
@@ -85,6 +68,5 @@ public class FlowerPotHelper {
             refresh();
         }
     }
-
 
 }

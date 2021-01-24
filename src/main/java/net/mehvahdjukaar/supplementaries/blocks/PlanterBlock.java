@@ -15,7 +15,6 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
 import net.minecraftforge.common.IPlantable;
 
 
@@ -70,12 +69,12 @@ public class PlanterBlock extends Block implements IWaterLoggable{
             worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
         }
         if(facing==Direction.UP){
-            return this.updatedState(stateIn, (World) worldIn, currentPos);
+            return this.updatedState(stateIn, worldIn, currentPos);
         }
         return stateIn;
     }
 
-    public BlockState updatedState(BlockState state, World world, BlockPos pos){
+    public BlockState updatedState(BlockState state, IWorld world, BlockPos pos){
         return state.with(EXTENDED, this.canConnect(world.getBlockState(pos.up()).getBlock()));
     }
 

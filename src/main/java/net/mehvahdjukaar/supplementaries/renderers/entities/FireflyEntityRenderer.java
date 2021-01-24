@@ -14,9 +14,7 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-@OnlyIn(Dist.CLIENT)
+
 public class FireflyEntityRenderer extends EntityRenderer<FireflyEntity> {
     public FireflyEntityRenderer(EntityRendererManager renderManager) {
         super(renderManager);

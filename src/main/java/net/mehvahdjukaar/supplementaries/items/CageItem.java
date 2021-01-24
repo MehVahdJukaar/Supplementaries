@@ -2,9 +2,7 @@ package net.mehvahdjukaar.supplementaries.items;
 
 import net.mehvahdjukaar.supplementaries.blocks.tiles.CageBlockTile;
 import net.mehvahdjukaar.supplementaries.common.MobHolder;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
-import net.minecraft.block.TorchBlock;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -21,8 +19,6 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -37,7 +33,7 @@ public class CageItem extends BlockItem {
     }
 
 
-    @OnlyIn(Dist.CLIENT)
+
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
         CompoundNBT compoundnbt = stack.getChildTag("BlockEntityTag");

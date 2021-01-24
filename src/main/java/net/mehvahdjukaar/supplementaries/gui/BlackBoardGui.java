@@ -11,10 +11,8 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
+
 public class BlackBoardGui extends Screen {
     private final BlackboardBlockTile tileBoard;
 
@@ -95,7 +93,7 @@ public class BlackBoardGui extends Screen {
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
+
     public void render(MatrixStack matrixstack, int  mouseX, int mouseY, float partialTicks) {
         RenderHelper.setupGuiFlatDiffuseLighting();
         this.renderBackground(matrixstack);

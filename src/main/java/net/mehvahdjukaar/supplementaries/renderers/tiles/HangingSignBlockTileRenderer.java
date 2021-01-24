@@ -10,7 +10,6 @@ import net.mehvahdjukaar.supplementaries.renderers.RendererUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.screen.EditSignScreen;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
@@ -28,13 +27,10 @@ import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.world.storage.MapData;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.data.EmptyModelData;
 
 import java.util.List;
 
-@OnlyIn(Dist.CLIENT)
+
 public class HangingSignBlockTileRenderer extends TileEntityRenderer<HangingSignBlockTile> {
     private static final int MAXLINES = 5;
     

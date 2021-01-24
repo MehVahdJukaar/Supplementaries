@@ -20,17 +20,14 @@ import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.Random;
 
-@OnlyIn(Dist.CLIENT)
+
 public class JarBlockTileRenderer extends TileEntityRenderer<JarBlockTile> {
 
 
@@ -57,7 +54,7 @@ public class JarBlockTileRenderer extends TileEntityRenderer<JarBlockTile> {
                 // matrixStackIn.translate(0, 0, 0.0625);
                 matrixStackIn.translate(0, 0, 1 / (16f * scale));
                 ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-                ItemStack stack = new ItemStack(Items.COOKIE);
+                ItemStack stack = tile.getStackInSlot(0);
                 IBakedModel ibakedmodel = itemRenderer.getItemModelWithOverrides(stack, tile.getWorld(), null);
                 itemRenderer.renderItem(stack, ItemCameraTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
                         combinedOverlayIn, ibakedmodel);

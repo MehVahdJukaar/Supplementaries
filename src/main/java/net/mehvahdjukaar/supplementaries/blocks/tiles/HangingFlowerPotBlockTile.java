@@ -2,7 +2,9 @@ package net.mehvahdjukaar.supplementaries.blocks.tiles;
 
 import net.mehvahdjukaar.supplementaries.common.IBlockHolder;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
-import net.minecraft.block.*;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.FlowerPotBlock;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.math.AxisAlignedBB;

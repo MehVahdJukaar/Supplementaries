@@ -6,8 +6,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants;
 
 
@@ -62,7 +60,7 @@ public class BlackboardBlockTile extends TileEntity {
     /**
      * Sets the sign's isEditable flag to the specified parameter.
      */
-    @OnlyIn(Dist.CLIENT)
+
     public void setEditable(boolean isEditableIn) {
         this.isEditable = isEditableIn;
     }

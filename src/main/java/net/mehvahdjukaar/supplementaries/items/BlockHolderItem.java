@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.items;
 
-import net.mehvahdjukaar.supplementaries.blocks.WallLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.IBlockHolder;
 import net.mehvahdjukaar.supplementaries.common.ILightMimic;
 import net.minecraft.block.Block;

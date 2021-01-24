@@ -58,14 +58,14 @@ public class ThrowableBrickEntity extends ProjectileItemEntity implements IRende
         return Items.BRICK;
     }
 
-    @OnlyIn(Dist.CLIENT)
+
     private IParticleData makeParticle() {
         ItemStack itemstack = this.func_213882_k();
         return itemstack.isEmpty() ? new ItemParticleData(ParticleTypes.ITEM, new ItemStack(this.getDefaultItem())) : new ItemParticleData(ParticleTypes.ITEM, itemstack);
     }
 
 
-    //@OnlyIn(Dist.CLIENT)
+    //
     public void handleStatusUpdate(byte id) {
         if (id == 3) {
             IParticleData iparticledata = this.makeParticle();

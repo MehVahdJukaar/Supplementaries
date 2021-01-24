@@ -79,9 +79,14 @@
 
   "message.supplementaries.hourglass": "Насипає пил, пісок або порошок",
   "message.supplementaries.cage": "Утримуйте [Shift], щоб покласти",
-  "gui.supplementaries.safe.name": "%1$s'a %2$s",
+  "gui.supplementaries.safe.name": "%2$s %1$s'a",
   "gui.supplementaries.doormat.edit": "Напишіть напис на килимку",
   "block.supplementaries.doormat": "Килимок",
+  "message.supplementaries.sack": "Важкий для перенесення",
+  "message.supplementaries.globe": "Продається мандрівним торговцем",
+  "message.supplementaries.wind_vane": "Реагує на погоду",
+  "message.supplementaries.hanging_pot": "Можна повісити",
+  "message.supplementaries.double_cake": "Складається",
 
   "block.supplementaries.flag": "Прапор (Робота в процесі)",
   "block.supplementaries.laser_block": "Лазерний блок (Робота в процесі)",

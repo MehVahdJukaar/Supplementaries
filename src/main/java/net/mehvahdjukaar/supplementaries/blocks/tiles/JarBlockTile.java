@@ -31,8 +31,6 @@ import net.minecraft.util.*;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.biome.BiomeColors;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.LazyOptional;
@@ -479,7 +477,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
             handler.invalidate();
     }
 
-    @OnlyIn(Dist.CLIENT)
+
     public int updateClientWaterColor(){
         this.color = BiomeColors.getWaterColor(this.world, this.pos);
         return this.color;

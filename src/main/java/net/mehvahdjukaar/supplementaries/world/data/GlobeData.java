@@ -78,7 +78,7 @@ public class GlobeData extends WorldSavedData {
     public static void onWorldLoad(WorldEvent.Load event) {
         IWorld world = event.getWorld();
         //TODO: might remove this on final release
-        if(world instanceof ServerWorld && ((ServerWorld) world).getDimensionKey()==World.OVERWORLD){
+        if(world instanceof ServerWorld && ((World) world).getDimensionKey()==World.OVERWORLD){
             GlobeData.get((World) world).updateData();
         }
     }

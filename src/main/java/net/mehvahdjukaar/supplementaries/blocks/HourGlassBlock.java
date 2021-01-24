@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.blocks;
 
 import net.mehvahdjukaar.supplementaries.blocks.tiles.HourGlassBlockTile;
 import net.mehvahdjukaar.supplementaries.common.Resources;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -32,8 +33,6 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.extensions.IForgeBlock;
 
 import javax.annotation.Nullable;
@@ -213,9 +212,10 @@ public class HourGlassBlock extends Block implements IWaterLoggable, IForgeBlock
 
 
     //TODO: camelcase all nbts 4 consistency
-    @OnlyIn(Dist.CLIENT)
+
     public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
+        if(!ClientConfigs.cached.TOOLTIP_HINTS)return;
         tooltip.add((new TranslationTextComponent(  "message.supplementaries.hourglass")).mergeStyle(TextFormatting.GRAY));
     }
 

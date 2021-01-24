@@ -21,8 +21,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.LazyOptional;
@@ -65,7 +63,7 @@ public class HourGlassBlockTile extends LockableLootTileEntity implements ISided
         this.progress=p;
     }
 
-    @OnlyIn(Dist.CLIENT)
+
     public TextureAtlasSprite getOrCreateSprite(){
         if(this.cachedTexture==null){
             this.cachedTexture = this.sandType.getSprite(this.getStackInSlot(0).getItem());

@@ -49,6 +49,8 @@ public class ServerConfigs {
     }
 
     public static class tweaks {
+        public static ForgeConfigSpec.BooleanValue DIRECTIONAL_CAKE;
+        public static ForgeConfigSpec.BooleanValue DOUBLE_CAKE_PLACEMENT;
         public static ForgeConfigSpec.BooleanValue HANGING_POT_PLACEMENT;
         public static ForgeConfigSpec.BooleanValue WALL_LANTERN_PLACEMENT;
         public static ForgeConfigSpec.BooleanValue THROWABLE_BRICKS_ENABLED;
@@ -60,6 +62,14 @@ public class ServerConfigs {
         private static void init(ForgeConfigSpec.Builder builder){
             builder.comment("Vanilla tweaks")
                     .push("tweaks");
+
+            //double cake
+            builder.push("cake_tweaks");
+            DOUBLE_CAKE_PLACEMENT = builder.comment("allows you to place a cake ontop of another")
+                    .define("double_cake",true);
+            DIRECTIONAL_CAKE = builder.comment("replaces normal cake placement with a directional one")
+                    .define("directional_cake",true);
+            builder.pop();
 
             //hanging pot
             builder.push("hanging_flower_pots");
@@ -201,7 +211,17 @@ public class ServerConfigs {
                     "Disable if you think this ability is op. Cookies are excluded")
                     .define("drink_from_jar",true);
 
-            List<String> cookies = Arrays.asList("minecraft:cookie");
+            List<String> cookies = Arrays.asList("minecraft:cookie","farmersdelight:honey_cookie","farmersdelight:sweet_berry_cookie",
+                    "farmersdelight:peanut_butter_cookie","pamhc2crops:beanitem", "pamhc2crops:chickpeaitem",
+                    "cookielicious:strawberry_cookie", "cookielicious:vanilla_cookie", "cookielicious:sandwich_cookie",
+                    "pamhc2crops:garlicitem","pamhc2crops:jicamaitem","pamhc2crops:roastedmushroomitem",
+                    "pamhc2crops:bakedwaterchestnutitem","pamhc2crops:waterchestnutitem","pamhc2crops:chocolatemuffinitem",
+                    "pamhc2crops:donutitem","pamhc2crops:chocolatedonutitem","pamhc2crops:jellydonutitem","pamhc2crops:crackeritem",
+                    "pamhc2crops:pretzelitem","pamhc2crops:chocolatebaritem","pamhc2crops:chocolaterollitem","pamhc2crops:chocolatecaramelfudgeitem",
+                    "pamhc2crops:smoresitem","pamhc2crops:trailmixitem","pamhc2crops:candiedpecansitem",
+                    "pamhc2crops:candiedsweetpotatoesitem","pamhc2crops:candiedwalnutsitem","pamhc2crops:chocolateorangeitem",
+                    "pamhc2crops:chocolatepeanutbaritem","pamhc2crops:chocolatestrawberryitem","pamhc2crops:peanutbuttercupitem",
+                    "pamhc2crops:pralinesitem","pamhc2crops:pinenutitem","pamhc2crops:roastedalmonditem","pamhc2crops:roastedpinenutitem");
             JAR_COOKIES = builder.comment("any item can work here, ideally you should only put cookies and alike")
                     .defineList("cookies", cookies,s -> true);
 
@@ -292,12 +312,12 @@ public class ServerConfigs {
                     .push("spawns");
             builder.push("firefly");
             List<String> defaultBiomes = Arrays.asList("minecraft:swamp","minecraft:swamp_hills","minecraft:plains","minecraft:sunflower_plains","minecraft:dark_forest","minecraft:dark_forest_hills", "byg:bayou", "byg:cypress_swamplands", "byg:glowshroom_bayou", "byg:mangrove_marshes", "byg:vibrant_swamplands", "byg:fresh_water_lake", "byg:grassland_plateau", "byg:wooded_grassland_plateau", "byg:flowering_grove", "byg:guiana_shield", "byg:guiana_clearing", "byg:meadow", "byg:orchard", "byg:seasonal_birch_forest", "byg:seasonal_deciduous_forest", "byg:seasonal_forest", "biomesoplenty:flower_meadow", "biomesoplenty:fir_clearing", "biomesoplenty:grove_lakes", "biomesoplenty:grove", "biomesoplenty:highland_moor", "biomesoplenty:wetland_marsh", "biomesoplenty:deep_bayou");
-            List<String> defaultMods = Arrays.asList();
+            List<String> fireflyModWhitelist = Arrays.asList();
             //TODO add validation for biomes
             FIREFLY_BIOMES = builder.comment("Spawnable biomes")
                     .defineList("biomes", defaultBiomes, s -> true);
             FIREFLY_MOD_WHITELIST = builder.comment("Whitelisted mods. All biomes from said mods will be able to spawn fireflies. Use the one above for more control")
-                    .defineList("mod_whitelist", defaultMods, s -> true);
+                    .defineList("mod_whitelist", fireflyModWhitelist, s -> true);
             FIREFLY_WEIGHT = builder.comment("Spawn weight \n"+
                     "Set to 0 to disable spawning entirely")
                     .defineInRange("weight", 3, 0, 100);
@@ -342,6 +362,8 @@ public class ServerConfigs {
         public static int FLUTE_RADIUS;
         public static int FLUTE_DISTANCE;
         //tweaks
+        public static boolean DIRECTIONAL_CAKE;
+        public static boolean DOUBLE_CAKE_PLACEMENT;
         public static boolean HANGING_POT_PLACEMENT;
         public static boolean THROWABLE_BRICKS_ENABLED;
         public static List<? extends String> BRICKS_LIST;
@@ -391,6 +413,8 @@ public class ServerConfigs {
             FLUTE_DISTANCE = item.FLUTE_DISTANCE.get();
             FLUTE_RADIUS = item.FLUTE_RADIUS.get();
 
+            DIRECTIONAL_CAKE = tweaks.DIRECTIONAL_CAKE.get();
+            DOUBLE_CAKE_PLACEMENT = tweaks.DOUBLE_CAKE_PLACEMENT.get();
             HANGING_POT_PLACEMENT = tweaks.WALL_LANTERN_PLACEMENT.get();
             WALL_LANTERN_PLACEMENT = tweaks.WALL_LANTERN_PLACEMENT.get();
             THROWABLE_BRICKS_ENABLED = tweaks.THROWABLE_BRICKS_ENABLED.get();

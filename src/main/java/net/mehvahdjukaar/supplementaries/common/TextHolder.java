@@ -5,8 +5,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.function.Function;
@@ -70,7 +68,7 @@ public class TextHolder {
     }
 
     //remove these for direct access?
-    @OnlyIn(Dist.CLIENT)
+
     public ITextComponent getText(int line) {
         return this.signText[line];
     }
@@ -81,7 +79,7 @@ public class TextHolder {
     }
 
     @Nullable
-    @OnlyIn(Dist.CLIENT)
+
     public IReorderingProcessor getRenderText(int line, Function<ITextComponent, IReorderingProcessor> f) {
         if (this.renderText[line] == null && this.signText[line] != null) {
             this.renderText[line] = f.apply(this.signText[line]);

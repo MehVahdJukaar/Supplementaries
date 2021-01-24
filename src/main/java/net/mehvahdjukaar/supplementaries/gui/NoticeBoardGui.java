@@ -7,10 +7,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
+
 public class NoticeBoardGui extends ContainerScreen<NoticeBoardContainer> {
 
     public NoticeBoardGui(NoticeBoardContainer container, PlayerInventory inventory, ITextComponent text) {

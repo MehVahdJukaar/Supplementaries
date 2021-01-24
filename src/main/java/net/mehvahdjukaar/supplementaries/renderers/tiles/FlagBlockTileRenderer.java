@@ -17,10 +17,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
 public class FlagBlockTileRenderer extends TileEntityRenderer<FlagBlockTile> {
     public FlagBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
@@ -106,7 +103,7 @@ public class FlagBlockTileRenderer extends TileEntityRenderer<FlagBlockTile> {
 
 
 
-    @OnlyIn(Dist.CLIENT)
+
     private static void renderCurvedSegment(IVertexBuilder builder, MatrixStack matrixStackIn, float angle, int posz, int lenght, int height, int lu, int lv, boolean end, boolean zAxis) {
         float textw = 32f;
 

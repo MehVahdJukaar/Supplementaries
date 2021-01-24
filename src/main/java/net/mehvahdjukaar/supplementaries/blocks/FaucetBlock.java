@@ -28,8 +28,6 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
@@ -232,7 +230,7 @@ public class FaucetBlock extends Block implements  IWaterLoggable{
         return this.getDefaultState().with(FACING, dir).with(EXTENDED, jarbehind).with(HAS_JAR,hasjar).with(WATERLOGGED,flag);
     }
 
-    @OnlyIn(Dist.CLIENT)
+
     @Override
     public void animateTick(BlockState state, World world, BlockPos pos, Random random) {
         super.animateTick(state, world, pos, random);

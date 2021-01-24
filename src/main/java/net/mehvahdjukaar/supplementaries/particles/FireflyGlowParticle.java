@@ -6,13 +6,11 @@ import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particles.BasicParticleType;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.Random;
 
 
-@OnlyIn(Dist.CLIENT)
+
 public class FireflyGlowParticle extends SpriteTexturedParticle {
     protected FireflyGlowParticle(ClientWorld worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn) {
         super(worldIn, xCoordIn, yCoordIn, zCoordIn, xSpeedIn, ySpeedIn, zSpeedIn);
@@ -69,7 +67,7 @@ public class FireflyGlowParticle extends SpriteTexturedParticle {
         j = Math.max(i>>0 & 255, j);
         return j | k << 16;
     }
-    @OnlyIn(Dist.CLIENT)
+
     public static class Factory implements IParticleFactory<BasicParticleType> {
         private final IAnimatedSprite spriteSet;
         public Factory(IAnimatedSprite sprite) {

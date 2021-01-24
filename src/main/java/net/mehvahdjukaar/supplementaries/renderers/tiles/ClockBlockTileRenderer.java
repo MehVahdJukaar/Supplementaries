@@ -14,11 +14,8 @@ import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3f;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 
-@OnlyIn(Dist.CLIENT)
 public class ClockBlockTileRenderer extends TileEntityRenderer<ClockBlockTile> {
     public static final RenderMaterial HAND_TEXTURE = new RenderMaterial(AtlasTexture.LOCATION_BLOCKS_TEXTURE, Resources.CLOCK_HAND_TEXTURE);
     public final ModelRenderer hourHand = new ModelRenderer(16, 16, 0, 0);
@@ -36,7 +33,7 @@ public class ClockBlockTileRenderer extends TileEntityRenderer<ClockBlockTile> {
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
+
     public void render(ClockBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
 

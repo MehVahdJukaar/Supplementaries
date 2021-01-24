@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.blocks;
 
 import net.mehvahdjukaar.supplementaries.blocks.tiles.OilLanternBlockTile;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.block.*;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -54,6 +55,7 @@ public class OilLanternBlock extends SwayingBlock {
     @Override
     public void addInformation(ItemStack stack, IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
+        if(!ClientConfigs.cached.TOOLTIP_HINTS)return;
         tooltip.add(new TranslationTextComponent("message.supplementaries.wall_lantern").mergeStyle(TextFormatting.GRAY));
 
     }
@@ -128,7 +130,7 @@ public class OilLanternBlock extends SwayingBlock {
             case WALL:
             return facing == stateIn.get(FACING).getOpposite() ? !stateIn.isValidPosition(worldIn, currentPos)
                     ? Blocks.AIR.getDefaultState()
-                    : this.getConnectedState(stateIn, facingState, (World) worldIn, facingPos) : stateIn;
+                    : this.getConnectedState(stateIn, facingState, worldIn, facingPos) : stateIn;
             case CEILING:
                 return facing == Direction.UP && !stateIn.isValidPosition(worldIn, currentPos) ? Blocks.AIR.getDefaultState() : stateIn;
             case FLOOR:
@@ -148,7 +150,7 @@ public class OilLanternBlock extends SwayingBlock {
                 Direction direction = state.get(FACING);
                 BlockPos blockpos = pos.offset(direction.getOpposite());
                 BlockState blockstate = worldIn.getBlockState(blockpos);
-                return (blockstate.isSolidSide(worldIn, blockpos, direction) || CommonUtil.getPostSize(blockstate, blockpos, (World) worldIn) > 0);
+                return (blockstate.isSolidSide(worldIn, blockpos, direction) || CommonUtil.getPostSize(blockstate, blockpos, worldIn) > 0);
         }
     }
 

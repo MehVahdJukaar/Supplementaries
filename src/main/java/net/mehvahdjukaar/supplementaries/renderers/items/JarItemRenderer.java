@@ -15,17 +15,14 @@ import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3f;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.Random;
 
 
-@OnlyIn(Dist.CLIENT)
+
 public class JarItemRenderer extends CageItemRenderer {
 
 
@@ -55,23 +52,26 @@ public class JarItemRenderer extends CageItemRenderer {
             Random rand = new Random(420);
             //cookies
             if (lt == JarLiquidType.COOKIES) {
-                matrixStackIn.push();
-                matrixStackIn.translate(0.5, 0.5, 0.5);
-                matrixStackIn.rotate(Const.YN90);
-                matrixStackIn.translate(0, 0, -0.5);
-                float scale = 8f / 14f;
-                matrixStackIn.scale(scale, scale, scale);
-                for (float i = 0; i < height; i += 0.0625) {
-                    matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(rand.nextInt(360)));
-                    matrixStackIn.translate(0, 0, 0.0625);
+                if(compound.contains("Items")) {
+                    ItemStack itemStack = ItemStack.read((compound.getList("Items", 10)).getCompound(0));
                     ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-                    ItemStack itemstack = new ItemStack(Items.COOKIE);
-                    IBakedModel ibakedmodel = itemRenderer.getItemModelWithOverrides(itemstack, null, null);
-                    itemRenderer.renderItem(itemstack, ItemCameraTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
-                            combinedOverlayIn, ibakedmodel);
-                    matrixStackIn.translate(0, 0, scale / 16f);
+                    IBakedModel ibakedmodel = itemRenderer.getItemModelWithOverrides(itemStack, null, null);
+                    matrixStackIn.push();
+                    matrixStackIn.translate(0.5, 0.5, 0.5);
+                    matrixStackIn.rotate(Const.XN90);
+                    matrixStackIn.translate(0, 0, -0.5);
+                    float scale = 8f / 14f;
+                    matrixStackIn.scale(scale, scale, scale);
+                    for (float i = 0; i < height; i += 0.0625) {
+                        matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(rand.nextInt(360)));
+                        matrixStackIn.translate(0, 0, 0.0625);
+                        itemRenderer.renderItem(itemStack, ItemCameraTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
+                                combinedOverlayIn, ibakedmodel);
+                        matrixStackIn.translate(0, 0, scale / 16f);
+                    }
+                    matrixStackIn.pop();
                 }
-                matrixStackIn.pop();
+
             }
             //liquid
             else {

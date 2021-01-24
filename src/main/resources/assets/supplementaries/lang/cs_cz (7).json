@@ -79,9 +79,14 @@
 
   "message.supplementaries.hourglass": "Sypou prach, písek nebo prášek",
   "message.supplementaries.cage": "Podržte [Shift] a umístěte mobovou klec",
-  "gui.supplementaries.safe.name": "%1$s'a %2$s",
+  "gui.supplementaries.safe.name": "%2$s %1$s'a",
   "gui.supplementaries.doormat.edit": "Napiš nápis na rohožku",
   "block.supplementaries.doormat": "Rohožka",
+  "message.supplementaries.sack": "Těžko se nosí",
+  "message.supplementaries.globe": "Prodává se u potulného obchodníka",
+  "message.supplementaries.wind_vane": "Reaguje na počasí",
+  "message.supplementaries.hanging_pot": "Můžete pověsit",
+  "message.supplementaries.double_cake": "Seskupitelné",
 
   "block.supplementaries.flag": "Vlajka (WIP)",
   "block.supplementaries.laser_block": "Laserový blok (WIP)",

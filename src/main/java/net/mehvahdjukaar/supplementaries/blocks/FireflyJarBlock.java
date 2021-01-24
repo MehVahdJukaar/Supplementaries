@@ -12,8 +12,6 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.Random;
 
@@ -39,7 +37,7 @@ public class FireflyJarBlock extends Block {
         return false;
     }
 
-    @OnlyIn(Dist.CLIENT)
+
     @Override
     public void animateTick(BlockState state, World world, BlockPos pos, Random random) {
         super.animateTick(state, world, pos, random);

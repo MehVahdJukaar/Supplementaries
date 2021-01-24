@@ -79,9 +79,14 @@
 
   "message.supplementaries.hourglass": "Высыпают пыль, песок или порошок",
   "message.supplementaries.cage": "Удерживайте [Shift], чтобы поставить",
-  "gui.supplementaries.safe.name": "%1$s'а %2$s",
+  "gui.supplementaries.safe.name": "%2$s %1$s'а",
   "gui.supplementaries.doormat.edit": "Отредактируйте текст на половике",
   "block.supplementaries.doormat": "Половик",
+  "message.supplementaries.sack": "Тяжело нести",
+  "message.supplementaries.globe": "Продается у странствующего торговца",
+  "message.supplementaries.wind_vane": "Реагирует на погоду",
+  "message.supplementaries.hanging_pot": "Можно повесить",
+  "message.supplementaries.double_cake": "Складываемый",
 
   "block.supplementaries.flag": "Флаг (WIP)",
   "block.supplementaries.laser_block": "Лазерный блок (WIP)",

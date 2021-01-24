@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.blocks;
 
 import net.mehvahdjukaar.supplementaries.blocks.tiles.WindVaneBlockTile;
 import net.mehvahdjukaar.supplementaries.common.Resources;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -48,7 +49,7 @@ public class WindVaneBlock extends Block implements IWaterLoggable {
     @Override
     public void addInformation(ItemStack stack, IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
-        //TODO: decide italic or not on tooltips tips
+        if(!ClientConfigs.cached.TOOLTIP_HINTS)return;
         tooltip.add(new TranslationTextComponent("message.supplementaries.wind_vane").mergeStyle(TextFormatting.ITALIC).mergeStyle(TextFormatting.GRAY));
 
     }

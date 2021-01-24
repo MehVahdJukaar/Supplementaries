@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.setup;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.blocks.tiles.*;
 import net.mehvahdjukaar.supplementaries.common.Resources;
-import net.mehvahdjukaar.supplementaries.entities.FallingBlockTileEntity;
 import net.mehvahdjukaar.supplementaries.entities.FireflyEntity;
 import net.mehvahdjukaar.supplementaries.gui.NoticeBoardContainer;
 import net.mehvahdjukaar.supplementaries.gui.NoticeBoardGui;
@@ -18,7 +17,6 @@ import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.particle.FlameParticle;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.client.renderer.entity.FallingBlockRenderer;
 import net.minecraft.client.renderer.entity.SpriteRenderer;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.entity.EntityType;
@@ -44,13 +42,15 @@ public class ClientSetup {
 
 
     //TODO: figure out why this is making everything crash without ONLY in
+    //TODO: remove this onlyIn
+    @OnlyIn(Dist.CLIENT)
+    public static void onlyClientPls(final FMLClientSetupEvent event) {
+        RenderingRegistry.registerEntityRenderingHandler(Registry.THROWABLE_BRICK,
+                renderManager -> new SpriteRenderer(renderManager, event.getMinecraftSupplier().get().getItemRenderer()));
 
-    public static void init(final FMLClientSetupEvent event){
-        onlyClientPls(event);
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public static void onlyClientPls(final FMLClientSetupEvent event){
+    public static void init(final FMLClientSetupEvent event) {
 
         //falling block tile entity
         //RenderingRegistry.registerEntityRenderingHandler( (EntityType<FallingBlockTileEntity>) Registry.FALLING_BLOCK_TILE_ENTITY,
@@ -58,56 +58,55 @@ public class ClientSetup {
 
 
         //firefly & jar
-        RenderingRegistry.registerEntityRenderingHandler( (EntityType<FireflyEntity>) Registry.FIREFLY_TYPE, FireflyEntityRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler((EntityType<FireflyEntity>) Registry.FIREFLY_TYPE, FireflyEntityRenderer::new);
         RenderTypeLookup.setRenderLayer(Registry.FIREFLY_JAR, RenderType.getCutout());
 
         //throwable brick
-        RenderingRegistry.registerEntityRenderingHandler(Registry.THROWABLE_BRICK,
-                renderManager -> new SpriteRenderer(renderManager, event.getMinecraftSupplier().get().getItemRenderer()));
+        onlyClientPls(event);
         //planter
         //RenderTypeLookup.setRenderLayer(Registry.PLANTER, RenderType.getCutout());
         //clock
         //RenderTypeLookup.setRenderLayer(Registry.CLOCK_BLOCK, RenderType.getCutout());
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<ClockBlockTile>)Registry.CLOCK_BLOCK_TILE, ClockBlockTileRenderer::new);
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<ClockBlockTile>) Registry.CLOCK_BLOCK_TILE, ClockBlockTileRenderer::new);
         //pedestal
         //RenderTypeLookup.setRenderLayer(Registry.PEDESTAL, RenderType.getCutout());
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<PedestalBlockTile>)Registry.PEDESTAL_TILE, PedestalBlockTileRenderer::new);
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<PedestalBlockTile>) Registry.PEDESTAL_TILE, PedestalBlockTileRenderer::new);
         //wind vane
         RenderTypeLookup.setRenderLayer(Registry.WIND_VANE, RenderType.getCutout());
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<WindVaneBlockTile>)Registry.WIND_VANE_TILE, WindVaneBlockTileRenderer::new);
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<WindVaneBlockTile>) Registry.WIND_VANE_TILE, WindVaneBlockTileRenderer::new);
         //notice board
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<NoticeBoardBlockTile>)Registry.NOTICE_BOARD_TILE, NoticeBoardBlockTileRenderer::new);
-        ScreenManager.registerFactory((ContainerType<NoticeBoardContainer>)Registry.NOTICE_BOARD_CONTAINER, NoticeBoardGui::new);
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<NoticeBoardBlockTile>) Registry.NOTICE_BOARD_TILE, NoticeBoardBlockTileRenderer::new);
+        ScreenManager.registerFactory((ContainerType<NoticeBoardContainer>) Registry.NOTICE_BOARD_CONTAINER, NoticeBoardGui::new);
         //crank
         RenderTypeLookup.setRenderLayer(Registry.CRANK, RenderType.getCutout());
         //jar
         RenderTypeLookup.setRenderLayer(Registry.JAR, RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(Registry.JAR_TINTED, RenderType.getTranslucent());
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<JarBlockTile>)Registry.JAR_TILE, JarBlockTileRenderer::new);
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<JarBlockTile>) Registry.JAR_TILE, JarBlockTileRenderer::new);
         //faucet
         RenderTypeLookup.setRenderLayer(Registry.FAUCET, RenderType.getCutout());
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<FaucetBlockTile>)Registry.FAUCET_TILE, FaucetBlockTileRenderer::new);
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<FaucetBlockTile>) Registry.FAUCET_TILE, FaucetBlockTileRenderer::new);
         //piston launcher
         //RenderTypeLookup.setRenderLayer(Registry.PISTON_LAUNCHER, RenderType.getCutout());
         //RenderTypeLookup.setRenderLayer(Registry.PISTON_LAUNCHER_HEAD, RenderType.getCutout());
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<PistonLauncherArmBlockTile>)Registry.PISTON_LAUNCHER_ARM_TILE, PistonLauncherArmBlockTileRenderer::new);
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<PistonLauncherArmBlockTile>) Registry.PISTON_LAUNCHER_ARM_TILE, PistonLauncherArmBlockTileRenderer::new);
         //sign post
         RenderTypeLookup.setRenderLayer(Registry.SIGN_POST, RenderType.getCutout());
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<SignPostBlockTile>)Registry.SIGN_POST_TILE, SignPostBlockTileRenderer::new);
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<SignPostBlockTile>) Registry.SIGN_POST_TILE, SignPostBlockTileRenderer::new);
         //hanging sign
         RenderTypeLookup.setRenderLayer(Registry.SIGN_POST, RenderType.getCutout());
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<HangingSignBlockTile>)Registry.HANGING_SIGN_TILE, HangingSignBlockTileRenderer::new);
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<HangingSignBlockTile>) Registry.HANGING_SIGN_TILE, HangingSignBlockTileRenderer::new);
         //wall lantern
         RenderTypeLookup.setRenderLayer(Registry.WALL_LANTERN, RenderType.getCutout());
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<WallLanternBlockTile>)Registry.WALL_LANTERN_TILE, WallLanternBlockTileRenderer::new);
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<WallLanternBlockTile>) Registry.WALL_LANTERN_TILE, WallLanternBlockTileRenderer::new);
         //bellows
         RenderTypeLookup.setRenderLayer(Registry.BELLOWS, RenderType.getCutout());
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<BellowsBlockTile>)Registry.BELLOWS_TILE, BellowsBlockTileRenderer::new);
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<BellowsBlockTile>) Registry.BELLOWS_TILE, BellowsBlockTileRenderer::new);
         //laser
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<LaserBlockTile>)Registry.LASER_BLOCK_TILE, LaserBlockTileRenderer::new);
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<LaserBlockTile>) Registry.LASER_BLOCK_TILE, LaserBlockTileRenderer::new);
         //flag
         RenderTypeLookup.setRenderLayer(Registry.FLAG, RenderType.getCutout());
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<FlagBlockTile>)Registry.FLAG_TILE, FlagBlockTileRenderer::new);
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<FlagBlockTile>) Registry.FLAG_TILE, FlagBlockTileRenderer::new);
         //drawers
         //RenderTypeLookup.setRenderLayer(Registry.DRAWERS, RenderType.getCutout());
         //ClientRegistry.bindTileEntityRenderer(Registry.DRAWERS_TILE, DrawerBlockTileRenderer::new);
@@ -124,36 +123,35 @@ public class ClientSetup {
         RenderTypeLookup.setRenderLayer(Registry.CANDELABRA, RenderType.getCutout());
         //item shelf
         RenderTypeLookup.setRenderLayer(Registry.ITEM_SHELF, RenderType.getCutout());
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<ItemShelfBlockTile>)Registry.ITEM_SHELF_TILE, ItemShelfBlockTileRenderer::new);
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<ItemShelfBlockTile>) Registry.ITEM_SHELF_TILE, ItemShelfBlockTileRenderer::new);
         //cage
         RenderTypeLookup.setRenderLayer(Registry.CAGE, RenderType.getCutout());
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<CageBlockTile>)Registry.CAGE_TILE, CageBlockTileRenderer::new);
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<CageBlockTile>) Registry.CAGE_TILE, CageBlockTileRenderer::new);
         //sconce lever
         RenderTypeLookup.setRenderLayer(Registry.SCONCE_LEVER, RenderType.getCutout());
         //globe
         //RenderTypeLookup.setRenderLayer(Registry.GLOBE, RenderType.getCutout());
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<GlobeBlockTile>)Registry.GLOBE_TILE, GlobeBlockTileRenderer::new);
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<GlobeBlockTile>) Registry.GLOBE_TILE, GlobeBlockTileRenderer::new);
         //hourglass
         RenderTypeLookup.setRenderLayer(Registry.HOURGLASS, RenderType.getCutout());
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<HourGlassBlockTile>)Registry.HOURGLASS_TILE, HourGlassBlockTileRenderer::new);
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<HourGlassBlockTile>) Registry.HOURGLASS_TILE, HourGlassBlockTileRenderer::new);
         //sack
         //RenderTypeLookup.setRenderLayer(Registry.SACK, RenderType.getCutout());
-        ScreenManager.registerFactory((ContainerType<SackContainer>)Registry.SACK_CONTAINER, SackGui::new);
+        ScreenManager.registerFactory((ContainerType<SackContainer>) Registry.SACK_CONTAINER, SackGui::new);
         //blackboard
         RenderTypeLookup.setRenderLayer(Registry.BLACKBOARD, RenderType.getCutout());
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<BlackboardBlockTile>)Registry.BLACKBOARD_TILE, BlackboardBlockTileRenderer::new);
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<BlackboardBlockTile>) Registry.BLACKBOARD_TILE, BlackboardBlockTileRenderer::new);
         //soul jar
         RenderTypeLookup.setRenderLayer(Registry.SOUL_JAR, RenderType.getTranslucent());
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<FireflyJarBlockTile>)Registry.FIREFLY_JAR_TILE, SoulJarBlockTileRenderer::new);
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<FireflyJarBlockTile>) Registry.FIREFLY_JAR_TILE, SoulJarBlockTileRenderer::new);
         //copper lantern
         RenderTypeLookup.setRenderLayer(Registry.COPPER_LANTERN, RenderType.getCutout());
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<OilLanternBlockTile>)Registry.COPPER_LANTERN_TILE, OilLanternBlockTileRenderer::new);
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<OilLanternBlockTile>) Registry.COPPER_LANTERN_TILE, OilLanternBlockTileRenderer::new);
         //doormat
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<DoormatBlockTile>)Registry.DOORMAT_TILE, DoormatBlockTileRenderer::new);
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<DoormatBlockTile>) Registry.DOORMAT_TILE, DoormatBlockTileRenderer::new);
         //hanging flower pot
         RenderTypeLookup.setRenderLayer(Registry.HANGING_FLOWER_POT, RenderType.getCutout());
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<HangingFlowerPotBlockTile>)Registry.HANGING_FLOWER_POT_TILE, HangingFlowerPotBlockTileRenderer::new);
-
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<HangingFlowerPotBlockTile>) Registry.HANGING_FLOWER_POT_TILE, HangingFlowerPotBlockTileRenderer::new);
 
 
     }
@@ -169,7 +167,6 @@ public class ClientSetup {
     }
 
 
-
     //textures
     @SubscribeEvent
     public static void onTextureStitch(TextureStitchEvent.Pre event) {
@@ -177,7 +174,7 @@ public class ClientSetup {
             return;
         }
         List<ResourceLocation> l = Resources.getTextures();
-        for(ResourceLocation r : l) {
+        for (ResourceLocation r : l) {
             event.addSprite(r);
         }
     }

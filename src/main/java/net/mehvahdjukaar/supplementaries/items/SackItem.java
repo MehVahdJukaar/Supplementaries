@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.items;
 
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
@@ -14,8 +15,6 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.*;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
@@ -59,9 +58,10 @@ public class SackItem extends BlockItem {
     }
 
 
-    @OnlyIn(Dist.CLIENT)
+
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
+        if(!ClientConfigs.cached.TOOLTIP_HINTS)return;
         CompoundNBT compoundnbt = stack.getChildTag("BlockEntityTag");
         if (compoundnbt != null) {
             if (compoundnbt.contains("LootTable", 8)) {

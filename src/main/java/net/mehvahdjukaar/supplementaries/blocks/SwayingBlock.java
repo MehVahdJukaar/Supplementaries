@@ -38,7 +38,7 @@ public abstract class SwayingBlock extends Block implements IWaterLoggable {
         }
         return facing == stateIn.get(FACING).getOpposite()?  !stateIn.isValidPosition(worldIn, currentPos)
                 ? Blocks.AIR.getDefaultState()
-                : this.getConnectedState(stateIn,facingState, (World) worldIn,facingPos) : stateIn;
+                : this.getConnectedState(stateIn,facingState, worldIn,facingPos) : stateIn;
     }
 
     @Override
@@ -61,7 +61,7 @@ public abstract class SwayingBlock extends Block implements IWaterLoggable {
         return state.rotate(mirrorIn.toRotation(state.get(FACING)));
     }
 
-    public BlockState getConnectedState(BlockState state, BlockState facingState, World world, BlockPos pos){
+    public BlockState getConnectedState(BlockState state, BlockState facingState, IWorld world, BlockPos pos){
         int ext = CommonUtil.getPostSize(facingState,pos,world);
         return state.with(EXTENSION, ext);
     }

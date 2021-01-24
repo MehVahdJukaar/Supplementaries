@@ -18,12 +18,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.EmptyModelData;
 
 
-@OnlyIn(Dist.CLIENT)
+
 public class CageItemRenderer extends ItemStackTileEntityRenderer {
 
     @Override

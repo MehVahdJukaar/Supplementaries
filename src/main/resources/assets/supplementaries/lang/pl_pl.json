@@ -79,9 +79,14 @@
 
   "message.supplementaries.hourglass": "Przesypuje każdy pył, piasek, czy proszek",
   "message.supplementaries.cage": "Przytrzymaj [Shift], aby postawić",
-  "gui.supplementaries.safe.name": "%1$s'a %2$s",
-  "gui.supplementaries.doormat.edit": "Edytuj napis na wycieraczce",
+  "gui.supplementaries.safe.name": "%2$s %1$s'a",
+  "gui.supplementaries.doormat.edit": "Edytuj treść wycieraczki",
   "block.supplementaries.doormat": "Wycieraczka",
+  "message.supplementaries.sack": "Ciężki do przenoszenia",
+  "message.supplementaries.globe": "Sprzedawany przez wędrownego handlarza",
+  "message.supplementaries.wind_vane": "Reaguje na pogodę",
+  "message.supplementaries.hanging_pot": "Można zawiesić",
+  "message.supplementaries.double_cake": "Może być grupowany",
 
 
   "block.supplementaries.flag": "Flaga (Praca w toku)",

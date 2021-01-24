@@ -4,7 +4,6 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.blocks.*;
 import net.mehvahdjukaar.supplementaries.blocks.tiles.*;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
-import net.mehvahdjukaar.supplementaries.entities.FallingBlockTileEntity;
 import net.mehvahdjukaar.supplementaries.entities.FireflyEntity;
 import net.mehvahdjukaar.supplementaries.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.gui.NoticeBoardContainer;
@@ -13,14 +12,16 @@ import net.mehvahdjukaar.supplementaries.items.*;
 import net.mehvahdjukaar.supplementaries.renderers.items.CageItemRenderer;
 import net.mehvahdjukaar.supplementaries.renderers.items.FireflyJarItemRenderer;
 import net.mehvahdjukaar.supplementaries.renderers.items.JarItemRenderer;
-import net.minecraft.block.*;
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
-import net.minecraft.entity.item.FallingBlockEntity;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.*;
 import net.minecraft.particles.BasicParticleType;
@@ -30,8 +31,6 @@ import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
@@ -46,12 +45,12 @@ public class Registry {
     private static final boolean tab = RegistryConfigs.reg.CREATIVE_TAB.get();
     public static final ItemGroup MYTAB = !tab?null:
     new ItemGroup("supplementaries") {
-        @OnlyIn(Dist.CLIENT)
+
         @Override
         public ItemStack createIcon() {
             return new ItemStack(Registry.GLOBE_ITEM);
         }
-        @OnlyIn(Dist.CLIENT)
+
         public boolean hasSearchBar() {
             return false;
         }
@@ -1013,7 +1012,7 @@ public class Registry {
             (new Item.Properties()).group(getTab(ItemGroup.DECORATIONS,DOORMAT_NAME))
     ).setRegistryName(DOORMAT_NAME);
 
-
+    //hanging flower pot
     public static final String HANGING_FLOWER_POT_NAME = "hanging_flower_pot";
     public static final Block HANGING_FLOWER_POT = new HangingFlowerPotBlock(
             AbstractBlock.Properties.create(Material.MISCELLANEOUS)
@@ -1024,6 +1023,23 @@ public class Registry {
     public static final Item HANGING_FLOWER_POT_ITEM = new BlockItem(HANGING_FLOWER_POT,
             (new Item.Properties()).group(null)
     ).setRegistryName(HANGING_FLOWER_POT_NAME);
+
+    //double cake
+    public static final String DOUBLE_CAKE_NAME = "double_cake";
+    public static final Block DOUBLE_CAKE = new DoubleCakeBlock(AbstractBlock.Properties.create(Material.CAKE).
+            hardnessAndResistance(0.5F)
+            .sound(SoundType.CLOTH)
+    ).setRegistryName(DOUBLE_CAKE_NAME);
+    //directional cake
+    public static final String DIRECTIONAL_CAKE_NAME = "directional_cake";
+    public static final Block DIRECTIONAL_CAKE = new DirectionalCakeBlock(AbstractBlock.Properties.create(Material.CAKE).
+            hardnessAndResistance(0.5F)
+            .sound(SoundType.CLOTH)
+            .lootFrom(Blocks.CAKE)
+    ).setRegistryName(DIRECTIONAL_CAKE_NAME);
+    public static final Item DIRECTIONAL_CAKE_ITEM = new BlockItem(DIRECTIONAL_CAKE,
+            (new Item.Properties()).group(null)
+    ).setRegistryName(DIRECTIONAL_CAKE_NAME);
 
 
 }

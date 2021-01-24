@@ -8,8 +8,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.MissingTextureSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.Entity;
 import net.minecraft.item.*;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.potion.Potions;
@@ -22,14 +20,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraft.world.IWorldReader;
 import net.minecraftforge.common.Tags;
 
-import java.lang.reflect.Field;
 import java.util.Calendar;
 
 import static net.mehvahdjukaar.supplementaries.common.Resources.*;
@@ -141,6 +135,45 @@ public class CommonUtil {
     public static boolean isCookie(Item i){
         return ServerConfigs.cached.JAR_COOKIES.contains(i.getRegistryName().toString());
     }
+
+
+    public static boolean isLantern(Item i){
+        if(i instanceof BlockItem){
+            Block b =  ((BlockItem) i).getBlock();
+            String namespace = b.getRegistryName().getNamespace();
+            return ((b instanceof LanternBlock || namespace.equals("skinnedlanterns"))
+                    && !ServerConfigs.cached.WALL_LANTERN_BLACKLIST.contains(namespace));
+        }
+        return false;
+    }
+
+    public static boolean isBrick(Item i){
+        try {
+            return ((Tags.Items.INGOTS_BRICK != null && i.isIn(Tags.Items.INGOTS_BRICK))
+                    || (Tags.Items.INGOTS_NETHER_BRICK != null && i.isIn(Tags.Items.INGOTS_NETHER_BRICK))||
+                    ServerConfigs.cached.BRICKS_LIST.contains(i.getRegistryName().toString()));
+        }catch (Exception e){
+            return false;
+        }
+    }
+
+    public static boolean isCake(Item i){
+        if(i instanceof BlockItem){
+            Block b = ((BlockItem) i).getBlock();
+            return ((b == Blocks.CAKE)||b == Registry.DIRECTIONAL_CAKE);
+        }
+        return false;
+    }
+
+    public static boolean isPot(Item i){
+        if(i instanceof BlockItem){
+            Block b =  ((BlockItem) i).getBlock();
+            //String namespace = b.getRegistryName().getNamespace();
+            return ((b instanceof FlowerPotBlock));
+        }
+        return false;
+    }
+
 
     public static JarLiquidType getJarContentTypeFromItem(ItemStack stack) {
         Item i = stack.getItem();
@@ -388,7 +421,7 @@ public class CommonUtil {
             return 0;
         }
 
-        @OnlyIn(Dist.CLIENT)
+
         public TextureAtlasSprite getSprite(Item i){
             ResourceLocation reg = i.getRegistryName();
             if(this==SAND||this==FORGE_DUST){
@@ -447,7 +480,7 @@ public class CommonUtil {
     public static final AxisAlignedBB POST_SHAPE = Block.makeCuboidShape(5,0,5,11,16,11).getBoundingBox();
     public static final AxisAlignedBB WALL_SHAPE = Block.makeCuboidShape(7,0,7,12,16,12).getBoundingBox();
     //0 normal, 1 fence, 2 walls TODO: change 1 with 2
-    public static int getPostSize(BlockState state, BlockPos pos, World world){
+    public static int getPostSize(BlockState state, BlockPos pos, IWorldReader world){
         Block block = state.getBlock();
 
         VoxelShape shape = state.getShape(world, pos);

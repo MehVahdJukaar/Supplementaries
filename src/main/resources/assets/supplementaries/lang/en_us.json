@@ -85,6 +85,8 @@
   "message.supplementaries.globe": "Sold by the Wandering Trader",
   "message.supplementaries.wind_vane": "Reacts to weather",
   "message.supplementaries.hanging_pot": "Can be hanged",
+  "message.supplementaries.double_cake": "Can be stacked",
+
 
 
   "block.supplementaries.flag": "Flag",

@@ -23,12 +23,10 @@ import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.ITextProperties;
 import net.minecraft.world.storage.MapData;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.List;
 
-@OnlyIn(Dist.CLIENT)
+
 public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoardBlockTile> {
 
     public NoticeBoardBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
