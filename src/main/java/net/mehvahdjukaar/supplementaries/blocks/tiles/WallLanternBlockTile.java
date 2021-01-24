@@ -13,7 +13,7 @@ import net.minecraft.tileentity.ITickableTileEntity;
 
 public class WallLanternBlockTile extends SwayingBlockTile implements ITickableTileEntity, IBlockHolder, ILightMimic {
 
-    public BlockState lanternBlock = Blocks.LANTERN.getDefaultState();
+    public BlockState lanternBlock = Blocks.LANTERN.getDefaultState();//Blocks.AIR.getDefaultState();
 
     static {
         maxSwingAngle = 45f;

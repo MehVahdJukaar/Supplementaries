@@ -40,7 +40,7 @@ public class WallLanternBlock extends SwayingBlock {
     public static final IntegerProperty LIGHT_LEVEL = Resources.LIGHT_LEVEL_0_15;
     public WallLanternBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(LIGHT_LEVEL, 15).with(WATERLOGGED,false));
+        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(LIGHT_LEVEL, 0).with(WATERLOGGED,false));
     }
 
     //update light level. TODO: maybe use this to update jars (onBlockAdded)

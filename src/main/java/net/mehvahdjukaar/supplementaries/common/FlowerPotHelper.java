@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common;
 
 import com.google.common.collect.Maps;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.block.Block;
 import net.minecraft.block.FlowerPotBlock;
 import net.minecraft.util.ResourceLocation;
@@ -26,8 +27,10 @@ public class FlowerPotHelper {
     //empty pot, map(flower item registry name, full block provider)
     public static Map<Block,Map<ResourceLocation, Supplier<? extends Block>> > fullPots;
 
+    //TODO: maybe just use 1 map (fullpots) anc check its keys
     public static boolean isEmptyPot(Block b){
-        return emptyPots.contains(b);
+        //return (emptyPots!=null&&b!=null&&emptyPots.contains(b));
+        return (fullPots!=null&&b!=null&& fullPots.containsKey(b));
     }
 
 
@@ -57,6 +60,8 @@ public class FlowerPotHelper {
 
             } catch (Exception ignored) {}
         }
+        emptyPots.removeIf(pot -> !fullPots.containsKey(pot));
+        //Supplementaries.LOGGER.info(fullPots.toString());
     }
 
 

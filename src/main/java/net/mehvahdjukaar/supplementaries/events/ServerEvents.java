@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.events;
 
 import net.mehvahdjukaar.supplementaries.blocks.DirectionalCakeBlock;
 import net.mehvahdjukaar.supplementaries.blocks.DoubleCakeBlock;
+import net.mehvahdjukaar.supplementaries.blocks.WallLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.entities.ThrowableBrickEntity;
@@ -13,6 +14,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.stats.Stats;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -49,6 +51,7 @@ public class ServerEvents {
                 else if(itemOverride instanceof BlockItem) {
                     return ((BlockItem) itemOverride).tryPlace(ctx);
                 }
+
 
         }
         return  ActionResultType.PASS;
@@ -152,6 +155,7 @@ public class ServerEvents {
                 event.setCanceled(true);
                 event.setCancellationResult(result);
             }
+
         }
     }
 

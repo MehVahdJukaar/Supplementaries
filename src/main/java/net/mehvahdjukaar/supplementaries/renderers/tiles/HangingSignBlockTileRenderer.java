@@ -27,6 +27,7 @@ import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.world.storage.MapData;
+import net.minecraftforge.client.model.data.EmptyModelData;
 
 import java.util.List;
 
@@ -55,8 +56,8 @@ public class HangingSignBlockTileRenderer extends TileEntityRenderer<HangingSign
         //render block
         BlockRendererDispatcher blockRenderer = Minecraft.getInstance().getBlockRendererDispatcher();
         BlockState state = tile.getBlockState().getBlock().getDefaultState().with(HangingSignBlock.TILE, true);
-        //blockRenderer.renderBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
-        RendererUtil.renderBlockPlus(state, matrixStackIn, bufferIn, blockRenderer, tile.getWorld(), tile.getPos(), RenderType.getCutout());
+        blockRenderer.renderBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
+        //RendererUtil.renderBlockPlus(state, matrixStackIn, bufferIn, blockRenderer, tile.getWorld(), tile.getPos(), RenderType.getCutout());
         matrixStackIn.translate(0.5, 0.5 - 0.1875, 0.5);
         matrixStackIn.rotate(Const.YN90);
         // render item

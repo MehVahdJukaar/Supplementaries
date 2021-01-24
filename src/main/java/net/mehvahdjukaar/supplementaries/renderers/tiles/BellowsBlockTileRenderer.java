@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.client.model.data.EmptyModelData;
 
 
 public class BellowsBlockTileRenderer extends TileEntityRenderer<BellowsBlockTile> {
@@ -23,6 +24,7 @@ public class BellowsBlockTileRenderer extends TileEntityRenderer<BellowsBlockTil
         super(rendererDispatcherIn);
     }
 
+    //TODO: fix shading and maybe add java models for all tile entity blocks
     @Override
     public void render(BellowsBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
@@ -46,8 +48,8 @@ public class BellowsBlockTileRenderer extends TileEntityRenderer<BellowsBlockTil
         matrixStackIn.translate(-0.5, -0.5, -0.5);
         matrixStackIn.translate(0, -dh,0);
 
-        //blockRenderer.renderBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
-        RendererUtil.renderBlockPlus(state, matrixStackIn, bufferIn, blockRenderer, tile.getWorld(), tile.getPos(), RenderType.getSolid());
+        blockRenderer.renderBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
+        //RendererUtil.renderBlockPlus(state, matrixStackIn, bufferIn, blockRenderer, tile.getWorld(), tile.getPos(), RenderType.getSolid());
 
         matrixStackIn.pop();
 
@@ -56,8 +58,8 @@ public class BellowsBlockTileRenderer extends TileEntityRenderer<BellowsBlockTil
         matrixStackIn.translate(-0.5, -0.5, -0.5);
         matrixStackIn.translate(0, dh,0);
 
-        //blockRenderer.renderBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
-        RendererUtil.renderBlockPlus(state, matrixStackIn, bufferIn, blockRenderer, tile.getWorld(), tile.getPos(), RenderType.getSolid());
+        blockRenderer.renderBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
+        //RendererUtil.renderBlockPlus(state, matrixStackIn, bufferIn, blockRenderer, tile.getWorld(), tile.getPos(), RenderType.getSolid());
         matrixStackIn.pop();
 
         float j = 3.2f;
@@ -66,8 +68,8 @@ public class BellowsBlockTileRenderer extends TileEntityRenderer<BellowsBlockTil
 
 
         BlockState state1 = Registry.BELLOWS.getDefaultState().with(BellowsBlock.TILE, 2);
-        //blockRenderer.renderBlock(state1, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
-        RendererUtil.renderBlockPlus(state1, matrixStackIn, bufferIn, blockRenderer, tile.getWorld(), tile.getPos(), RenderType.getSolid());
+        blockRenderer.renderBlock(state1, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
+        //RendererUtil.renderBlockPlus(state1, matrixStackIn, bufferIn, blockRenderer, tile.getWorld(), tile.getPos(), RenderType.getSolid());
 
         matrixStackIn.pop();
     }

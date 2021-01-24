@@ -322,6 +322,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
             ItemStack currentStack = this.getStackInSlot(0);
             if (this.isEmpty()) return true;
             else if(!this.isFull()&&this.liquidType==lt){
+                if(this.liquidType==JarLiquidType.COOKIES&&!this.canInsertItem(0,stack,null))return false;
                 return currentStack.getOrCreateTag().equals(stack.getOrCreateTag());
             }
         }
@@ -455,7 +456,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
     @Override
     public boolean canInsertItem(int index, ItemStack stack, @Nullable Direction direction) {
         //can only insert cookies
-        return CommonUtil.isCookie(stack.getItem());
+        return CommonUtil.isCookie(stack.getItem())&&(this.isEmpty()||stack.getItem()==this.getStackInSlot(0).getItem());
     }
 
     @Override

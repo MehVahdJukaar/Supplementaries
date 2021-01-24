@@ -205,6 +205,7 @@ public class SafeBlock extends Block implements IWaterLoggable{
                 }
             }
         }
+        tooltip.add((new TranslationTextComponent("message.supplementaries.safe.unbound")).mergeStyle(TextFormatting.GRAY));
 
     }
 

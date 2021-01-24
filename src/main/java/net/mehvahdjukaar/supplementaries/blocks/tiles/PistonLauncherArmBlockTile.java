@@ -29,7 +29,7 @@ import java.util.Random;
 public class PistonLauncherArmBlockTile extends TileEntity implements ITickableTileEntity {
     public int age = 0;
     //maybe replace this with boolean?
-    private final double increment;
+    private double increment = 0;
     public double offset = 0;
     public double prevOffset = 0;
     private int dx = 0;
@@ -37,13 +37,15 @@ public class PistonLauncherArmBlockTile extends TileEntity implements ITickableT
     private int dz = 0;
     protected final Random rand = new Random();
     public PistonLauncherArmBlockTile() {
-        this(true, Direction.UP);
+        super(Registry.PISTON_LAUNCHER_ARM_TILE);
         //this.setParameters();
     }
 
     //TODO rewrite this old code
     public PistonLauncherArmBlockTile(boolean extending, Direction dir) {
-        super(Registry.PISTON_LAUNCHER_ARM_TILE);
+        this();
+        this.setParameters(extending,dir);
+        if(true)return;
         Vector3i v = dir.getDirectionVec();
         this.dx = v.getX();
         this.dy = v.getY();
@@ -57,6 +59,27 @@ public class PistonLauncherArmBlockTile extends TileEntity implements ITickableT
             this.offset = 0;
             this.prevOffset = 0;
         }
+    }
+
+
+
+    private void setParameters(boolean extending, Direction dir){
+        // boolean extending = this.getExtending();
+        //Direction dir = this.getDirection();
+        this.age = 0;
+        if (extending) {
+            this.increment = 0.5;
+            this.offset = -1;
+            this.prevOffset = -1;
+        } else {
+            this.increment = -0.5;
+            this.offset = 0;
+            this.prevOffset = 0;
+        }
+        Vector3i v = dir.getDirectionVec();
+        this.dx = v.getX();
+        this.dy = v.getY();
+        this.dz = v.getZ();
     }
 
     @Override
@@ -183,6 +206,7 @@ public class PistonLauncherArmBlockTile extends TileEntity implements ITickableT
         this.age = compound.getInt("Age");
         this.offset = compound.getDouble("Offset");
         this.prevOffset = compound.getDouble("PrevOffset");
+        this.increment = compound.getDouble("Increment");
         this.dx = compound.getInt("Dx");
         this.dy = compound.getInt("Dy");
         this.dz = compound.getInt("Dz");
@@ -194,6 +218,7 @@ public class PistonLauncherArmBlockTile extends TileEntity implements ITickableT
         compound.putInt("Age", this.age);
         compound.putDouble("Offset", this.offset);
         compound.putDouble("PrevOffset", this.prevOffset);
+        compound.putDouble("Increment", this.increment);
         compound.putInt("Dx", this.dx);
         compound.putInt("Dy", this.dy);
         compound.putInt("Dz", this.dz);

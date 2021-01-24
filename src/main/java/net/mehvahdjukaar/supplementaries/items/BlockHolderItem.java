@@ -16,7 +16,7 @@ public class BlockHolderItem extends BlockItem {
 
     public ActionResultType tryPlace(BlockItemUseContext context, Block mimicBlock) {
         ActionResultType result = super.tryPlace(context);
-        if(result.isSuccessOrConsume() && !context.getWorld().isRemote){
+        if(result.isSuccessOrConsume()){
             TileEntity te = context.getWorld().getTileEntity(context.getPos());
             if(te instanceof IBlockHolder){
                 BlockState state = mimicBlock.getDefaultState();

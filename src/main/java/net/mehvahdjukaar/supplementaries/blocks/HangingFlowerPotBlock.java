@@ -5,6 +5,7 @@ import net.mehvahdjukaar.supplementaries.common.FlowerPotHelper;
 import net.mehvahdjukaar.supplementaries.common.Resources;
 import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -66,32 +67,39 @@ public class HangingFlowerPotBlock extends Block{
         if(tileEntity instanceof HangingFlowerPotBlockTile) {
             HangingFlowerPotBlockTile te = ((HangingFlowerPotBlockTile)tileEntity);
             Block pot = te.pot.getBlock();
-            if(pot instanceof FlowerPotBlock) {
+            if(pot instanceof FlowerPotBlock && FlowerPotHelper.isEmptyPot(((FlowerPotBlock) pot).getEmptyPot())) {
                 ItemStack itemstack = player.getHeldItem(handIn);
                 Item item = itemstack.getItem();
+                //mimics flowerPorBlock behavior
+                Block newPot = item instanceof BlockItem ? FlowerPotHelper.fullPots.get(((FlowerPotBlock) pot).getEmptyPot())
+                        .getOrDefault(((BlockItem)item).getBlock().getRegistryName(), Blocks.AIR.delegate).get() : Blocks.AIR;
 
-                if (FlowerPotHelper.isEmptyPot(pot)) {
-                    Block newPot = FlowerPotHelper.fullPots.get(pot).getOrDefault(item.getRegistryName(), Blocks.AIR.delegate).get();
-                    if (newPot != Blocks.AIR) {
+                boolean isEmptyFlower = newPot == Blocks.AIR;
+                boolean isPotEmpty = FlowerPotHelper.isEmptyPot(pot);
+
+                if (isEmptyFlower != isPotEmpty) {
+                    if (isPotEmpty) {
                         te.setHeldBlock(newPot.getDefaultState());
                         player.addStat(Stats.POT_FLOWER);
                         if (!player.abilities.isCreativeMode) {
                             itemstack.shrink(1);
                         }
-                    }
-                } else {
-                    //drop item
-                    ItemStack flowerItem = pot.getItem(worldIn, pos, state);
-                    if (!flowerItem.equals(new ItemStack(this))) {
-                        if (itemstack.isEmpty()) {
-                            player.setHeldItem(handIn, flowerItem);
-                        } else if (!player.addItemStackToInventory(flowerItem)) {
-                            player.dropItem(flowerItem, false);
+                    } else {
+                        //drop item
+                        ItemStack flowerItem = pot.getItem(worldIn, pos, state);
+                        if (!flowerItem.equals(new ItemStack(this))) {
+                            if (itemstack.isEmpty()) {
+                                player.setHeldItem(handIn, flowerItem);
+                            } else if (!player.addItemStackToInventory(flowerItem)) {
+                                player.dropItem(flowerItem, false);
+                            }
                         }
+                        te.setHeldBlock(((FlowerPotBlock) pot).getEmptyPot().getDefaultState());
                     }
-                    te.setHeldBlock(((FlowerPotBlock) pot).getEmptyPot().getDefaultState());
+                    return ActionResultType.func_233537_a_(worldIn.isRemote);
+                } else {
+                    return ActionResultType.CONSUME;
                 }
-                return ActionResultType.func_233537_a_(worldIn.isRemote);
             }
         }
         return ActionResultType.PASS;

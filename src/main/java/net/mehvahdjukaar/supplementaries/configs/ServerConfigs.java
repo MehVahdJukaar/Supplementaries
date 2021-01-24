@@ -153,7 +153,7 @@ public class ServerConfigs {
                     .push("blocks");
 
             //sign post
-            builder.push("speaker_block");
+            builder.push("sign_post");
             List<String> signPostWhitelist = Arrays.asList("quark:oak_post","quark:birch_post","quark:spruce_post","quark:acacia_post",
                     "quark:dark_oak_post","quark:jungle_post","quark:warped_post","quark:crimson_post");
             SIGN_POST_ADDITIONAL = builder.comment("additional blocks besides fences that can accept a sign post")
@@ -227,14 +227,14 @@ public class ServerConfigs {
 
 
             List<String> defaultMobs = Arrays.asList("minecraft:slime",
-                    "minecraft:bee","minecraft:magma_cube","iceandfire:pixie","alexsmobs:crimson_mosquito",
+                    "minecraft:bee","minecraft:magma_cube","iceandfire:pixie",
                     "mysticalworld:frog","mysticalworld:beetle","mysticalworld:silkworm", "druidcraft:lunar_moth", "druidcraft:dreadfish","swampexpansion:slabfish",
                     "savageandravage:creepie","betteranimalsplus:butterfly","whisperwoods:moth");
             MOB_JAR_ALLOWED_MOBS = builder.comment("catchable mobs \n"+
                     "due to a vanilla bug some mobs might not render correctly or at all")
                     .defineList("mobs", defaultMobs,s -> true);
             List<String> defaultMobsTinted = Arrays.asList("minecraft:endermite","minecraft:slime",
-                    "minecraft:bee","minecraft:magma_cube", "minecraft:vex","iceandfire:pixie","alexsmobs:crimson_mosquito","alexsmobs:mimicube",
+                    "minecraft:bee","minecraft:magma_cube", "minecraft:vex","iceandfire:pixie","alexsmobs:mimicube",
                     "mysticalworld:frog","mysticalworld:beetle","mysticalworld:silkworm", "druidcraft:lunar_moth", "druidcraft:dreadfish","swampexpansion:slabfish",
                     "savageandravage:creepie","betteranimalsplus:butterfly","whisperwoods:moth");
             MOB_JAR_TINTED_ALLOWED_MOBS = builder.comment("tinted jar catchable mobs")
@@ -247,7 +247,7 @@ public class ServerConfigs {
             List<String> defaultCageMobs = Arrays.asList("minecraft:endermite","minecraft:slime","minecraft:parrot",
                     "minecraft:bee","minecraft:magma_cube", "minecraft:vex","minecraft:rabbit", "minecraft:cat",
                     "minecraft:chicken","minecraft:bat","iceandfire:pixie","minecraft:fox","minecraft:ocelot",
-                    "alexsmobs:roadrunner", "alexsmobs:hummingbird", "alexsmobs:crimson_mosquito", "alexsmobs:rattlesnake", "alexsmobs:lobster",
+                    "alexsmobs:roadrunner", "alexsmobs:hummingbird", "alexsmobs:rattlesnake", "alexsmobs:lobster",
                     "alexsmobs:capuchin_monkey", "alexsmobs:warped_toad","alexsmobs:mimicube","mysticalworld:beetle","mysticalworld:silkworm",
                     "mysticalworld:frog", "mysticalworld:silver_fox", "mysticalworld:sprout", "mysticalworld:endermini", "mysticalworld:lava_cat",
                     "mysticalworld:owl", "mysticalworld:silkworm", "mysticalworld:hell_sprout","quark:toretoise",

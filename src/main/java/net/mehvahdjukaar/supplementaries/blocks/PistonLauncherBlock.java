@@ -68,7 +68,7 @@ public class PistonLauncherBlock extends Block {
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
         if (state.get(EXTENDED)) {
-            switch((Direction)state.get(FACING)) {
+            switch(state.get(FACING)) {
                 case DOWN:
                     return PISTON_BASE_DOWN_AABB;
                 case UP:

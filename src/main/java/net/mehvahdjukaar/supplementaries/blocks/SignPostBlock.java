@@ -57,6 +57,11 @@ public class SignPostBlock extends Block implements IWaterLoggable, IForgeBlock{
     }
 
     @Override
+    public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
+        return true;
+    }
+
+    @Override
     public float getPlayerRelativeBlockHardness(BlockState state, PlayerEntity player, IBlockReader worldIn, BlockPos pos) {
         TileEntity te = worldIn.getTileEntity(pos);
         if(te instanceof SignPostBlockTile){
