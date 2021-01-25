@@ -3,8 +3,11 @@ package net.mehvahdjukaar.supplementaries.client.gui;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.mehvahdjukaar.supplementaries.block.blocks.SignPostBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.SignPostBlockTile;
+import net.mehvahdjukaar.supplementaries.client.Textures;
+import net.mehvahdjukaar.supplementaries.client.renderers.tiles.SignPostBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.network.Networking;
 import net.mehvahdjukaar.supplementaries.network.UpdateServerTextHolderPacket;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
@@ -16,6 +19,7 @@ import net.minecraft.client.gui.fonts.TextInputUtil;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.model.RenderMaterial;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.vector.Matrix4f;
@@ -139,8 +143,8 @@ public class SignPostGui extends Screen {
         matrixstack.translate(0.0D, -1.3125D, 0.0D);
         // renders sign
         matrixstack.push();
-        // matrixstack.scale(0.6666667F, 0.6666667F, 0.6666667F);
-        matrixstack.rotate(Const.Y90);
+        //matrixstack.scale(0.6666667F, 0.6666667F, 0.6666667F);
+        //matrixstack.rotate(Const.Y90);
 
         BlockRendererDispatcher blockRenderer = Minecraft.getInstance().getBlockRendererDispatcher();
 
@@ -154,34 +158,37 @@ public class SignPostGui extends Screen {
         //render signs
 
         if(this.tileSign.up){
-            BlockState state = Registry.SIGN_POST.get().getDefaultState().with(SignPostBlock.WOOD_TYPE, tileSign.woodTypeUp);
 
             matrixstack.push();
             if(!leftup){
-                matrixstack.translate(0.15625, 0, 0);
                 matrixstack.rotate(Const.YN180);
-                matrixstack.translate(-0.15625, 0, 0);
+                matrixstack.translate(0, 0, -0.3125);
             }
-            matrixstack.translate(0, - 0.5, -0.5);
-            blockRenderer.renderBlock(state, matrixstack, irendertypebuffer$impl, 15728880, OverlayTexture.NO_OVERLAY, EmptyModelData.INSTANCE);
+            matrixstack.scale(1,-1,-1);
+            RenderMaterial material = Textures.SIGN_POSTS_MATERIAL.get(this.tileSign.woodTypeDown);
+            IVertexBuilder builder =  material.getBuffer(irendertypebuffer$impl, RenderType::getEntitySolid);
+            SignPostBlockTileRenderer.signModel.render(matrixstack, builder, 15728880, OverlayTexture.NO_OVERLAY);
+
+
             matrixstack.pop();
         }
         if(this.tileSign.down){
-            BlockState state = Registry.SIGN_POST.get().getDefaultState().with(SignPostBlock.WOOD_TYPE, tileSign.woodTypeDown);
 
             matrixstack.push();
             if(!leftdown){
-                matrixstack.translate(0.15625, 0, 0);
                 matrixstack.rotate(Const.YN180);
-                matrixstack.translate(-0.15625, 0, 0);
+                matrixstack.translate(0, 0, -0.3125);
             }
-            matrixstack.translate(0, -1, -0.5);
-            blockRenderer.renderBlock(state, matrixstack, irendertypebuffer$impl, 15728880, OverlayTexture.NO_OVERLAY, EmptyModelData.INSTANCE);
-            matrixstack.pop();
+            matrixstack.translate(0, -0.5, 0);
+            matrixstack.scale(1,-1,-1);
+            RenderMaterial material = Textures.SIGN_POSTS_MATERIAL.get(this.tileSign.woodTypeDown);
+            IVertexBuilder builder =  material.getBuffer(irendertypebuffer$impl, RenderType::getEntitySolid);
+            SignPostBlockTileRenderer.signModel.render(matrixstack, builder, 15728880, OverlayTexture.NO_OVERLAY);
+             matrixstack.pop();
         }
 
         //render fence
-        matrixstack.translate(0, -0.5, -0.5);
+        matrixstack.translate(-0.5, -0.5, -0.5);
         BlockState fence = this.tileSign.fenceBlock;
         if(fence !=null)blockRenderer.renderBlock(fence, matrixstack, irendertypebuffer$impl, 15728880, OverlayTexture.NO_OVERLAY, EmptyModelData.INSTANCE);
 

@@ -81,6 +81,12 @@
   "message.supplementaries.safe.owner": "这个保险箱的主人是 %s",
   "gui.supplementaries.doormat.edit": "编辑门垫信息",
   "block.supplementaries.doormat": "门垫",
+  "message.supplementaries.sack": "随身携带会很重",
+  "message.supplementaries.globe": "可在流浪商人处购买",
+  "message.supplementaries.wind_vane": "对天气做出反应",
+  "message.supplementaries.hanging_pot": "可悬挂",
+  "message.supplementaries.double_cake": "可堆叠",
+
 
 
   "block.supplementaries.flag": "WIP旗帜",

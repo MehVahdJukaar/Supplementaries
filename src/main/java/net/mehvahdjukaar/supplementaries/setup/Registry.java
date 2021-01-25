@@ -165,8 +165,25 @@ public class Registry {
     public static final String HANGING_SIGN_NAME = "hanging_sign";
     public static final Map<IWoodType, RegistryObject<Block>> HANGING_SIGNS = Variants.makeHangingSingsBlocks();
     public static final Map<IWoodType, RegistryObject<Item>> HANGING_SIGNS_ITEMS = Variants.makeHangingSignsItems();
+
     public static final RegistryObject<TileEntityType<?>> HANGING_SIGN_TILE = TILES.register(HANGING_SIGN_NAME, ()-> TileEntityType.Builder.create(HangingSignBlockTile::new,
             HANGING_SIGNS.values().stream().map(RegistryObject::get).toArray(Block[]::new)).build(null));
+
+    //sign posts
+    public static final String SIGN_POST_NAME = "sign_post";
+    public static final RegistryObject<Block> SIGN_POST = BLOCKS.register(SIGN_POST_NAME,()-> new SignPostBlock(
+            AbstractBlock.Properties.create(Material.WOOD, MaterialColor.BROWN)
+                    .hardnessAndResistance(2f, 3f)
+                    .sound(SoundType.WOOD)
+                    .harvestTool(ToolType.AXE)
+                    .notSolid()
+    ));
+    public static final RegistryObject<TileEntityType<?>> SIGN_POST_TILE = TILES.register(SIGN_POST_NAME,()-> TileEntityType.Builder.create(
+            SignPostBlockTile::new, SIGN_POST.get()).build(null));
+
+    public static final Map<IWoodType, RegistryObject<Item>> SIGN_POST_ITEMS = Variants.makeSignPostItems();
+
+
 
     //planter
     public static final String PLANTER_NAME = "planter";
@@ -431,52 +448,6 @@ public class Registry {
 
     public static final RegistryObject<Item> SPEAKER_BLOCK_ITEM = ITEMS.register(SPEAKER_BLOCK_NAME,()-> new BlockItem(SPEAKER_BLOCK.get(),
             new Item.Properties().group(getTab(ItemGroup.REDSTONE,SPEAKER_BLOCK_NAME))
-    ));
-
-    //sign post
-    public static final String SIGN_POST_NAME = "sign_post";
-    public static final RegistryObject<Block> SIGN_POST = BLOCKS.register(SIGN_POST_NAME,()-> new SignPostBlock(
-            AbstractBlock.Properties.create(Material.WOOD, MaterialColor.BROWN)
-                    .hardnessAndResistance(2f, 3f)
-                    .sound(SoundType.WOOD)
-                    .harvestTool(ToolType.AXE)
-                    .notSolid()
-    ));
-    public static final RegistryObject<TileEntityType<?>> SIGN_POST_TILE = TILES.register(SIGN_POST_NAME,()-> TileEntityType.Builder.create(
-            SignPostBlockTile::new, SIGN_POST.get()).build(null));
-
-    //items
-    //oak
-    public static final RegistryObject<Item> SIGN_POST_ITEM_OAK = ITEMS.register("sign_post_oak",()-> new SignPostItem(
-            new Item.Properties().group(getTab(ItemGroup.DECORATIONS,SIGN_POST_NAME)).maxStackSize(64)
-    ));
-    //spruce
-    public static final RegistryObject<Item> SIGN_POST_ITEM_SPRUCE = ITEMS.register("sign_post_spruce",()-> new SignPostItem(
-            new Item.Properties().group(getTab(ItemGroup.DECORATIONS,SIGN_POST_NAME)).maxStackSize(64)
-    ));
-    //birch
-    public static final RegistryObject<Item> SIGN_POST_ITEM_BIRCH = ITEMS.register("sign_post_birch",()-> new SignPostItem(
-            new Item.Properties().group(getTab(ItemGroup.DECORATIONS,SIGN_POST_NAME)).maxStackSize(64)
-    ));
-    //jungle
-    public static final RegistryObject<Item> SIGN_POST_ITEM_JUNGLE = ITEMS.register("sign_post_jungle",()-> new SignPostItem(
-            new Item.Properties().group(getTab(ItemGroup.DECORATIONS,SIGN_POST_NAME)).maxStackSize(64)
-    ));
-    //acacia
-    public static final RegistryObject<Item> SIGN_POST_ITEM_ACACIA = ITEMS.register("sign_post_acacia",()-> new SignPostItem(
-            new Item.Properties().group(getTab(ItemGroup.DECORATIONS,SIGN_POST_NAME)).maxStackSize(64)
-    ));
-    //dark oak
-    public static final RegistryObject<Item> SIGN_POST_ITEM_DARK_OAK = ITEMS.register("sign_post_dark_oak",()-> new SignPostItem(
-            new Item.Properties().group(getTab(ItemGroup.DECORATIONS,SIGN_POST_NAME)).maxStackSize(64)
-    ));
-    //crimson
-    public static final RegistryObject<Item> SIGN_POST_ITEM_CRIMSON = ITEMS.register("sign_post_crimson",()-> new SignPostItem(
-            new Item.Properties().group(getTab(ItemGroup.DECORATIONS,SIGN_POST_NAME)).maxStackSize(64)
-    ));
-    //warped
-    public static final RegistryObject<Item> SIGN_POST_ITEM_WARPED = ITEMS.register("sign_post_warped",()-> new SignPostItem(
-            new Item.Properties().group(getTab(ItemGroup.DECORATIONS,SIGN_POST_NAME)).maxStackSize(64)
     ));
 
 

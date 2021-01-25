@@ -2,8 +2,9 @@ package net.mehvahdjukaar.supplementaries.items;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.SignPostBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.SignPostBlockTile;
-import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.block.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
 import net.minecraft.block.FenceBlock;
@@ -25,8 +26,10 @@ import net.minecraftforge.common.Tags;
 
 
 public class SignPostItem  extends Item {
-    public SignPostItem(Properties properties) {
+    public final IWoodType type;
+    public SignPostItem(Properties properties, IWoodType wood) {
         super(properties);
+        type = wood;
     }
 
 
@@ -73,14 +76,14 @@ public class SignPostItem  extends Item {
                 if(up){
                     if(signtile.up != up){
                         signtile.up = true;
-                        signtile.woodTypeUp = CommonUtil.getWoodTypeFromSignPostItem(this.getItem());
+                        signtile.woodTypeUp = this.type;
                         signtile.yawUp = 90 + r*-22.5f;
                         flag = true;
                     }
                 }
                 else if(signtile.down == up){
                     signtile.down = true;
-                    signtile.woodTypeDown = CommonUtil.getWoodTypeFromSignPostItem(this.getItem());
+                    signtile.woodTypeDown = this.type;
                     signtile.yawDown = 90 + r*-22.5f;
                     flag = true;
                 }

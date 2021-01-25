@@ -3,10 +3,10 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.SignPostBlockTile;
-import net.mehvahdjukaar.supplementaries.common.CommonUtil;
-import net.mehvahdjukaar.supplementaries.common.CommonUtil.WoodType;
-import net.mehvahdjukaar.supplementaries.client.Textures;
+import net.mehvahdjukaar.supplementaries.block.CommonUtil;
+import net.mehvahdjukaar.supplementaries.block.CommonUtil.WoodType;
 import net.mehvahdjukaar.supplementaries.client.gui.SignPostGui;
+import net.mehvahdjukaar.supplementaries.datagen.types.VanillaWoodTypes;
 import net.mehvahdjukaar.supplementaries.items.SignPostItem;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.*;
@@ -51,10 +51,10 @@ public class SignPostBlock extends Block implements IWaterLoggable, IForgeBlock{
     protected static final VoxelShape COLLISION_SHAPE = Block.makeCuboidShape(5D, 0.0D, 5D, 11D, 24.0D, 11D);
 
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
-    public static final EnumProperty<WoodType> WOOD_TYPE = BlockProperties.WOOD_TYPE; //null = rendered by te. other states hold all the wood types sign models
+
     public SignPostBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(WOOD_TYPE, WoodType.NONE).with(WATERLOGGED, false));
+        this.setDefaultState(this.stateContainer.getBaseState().with(WATERLOGGED, false));
     }
 
     @Override
@@ -214,12 +214,12 @@ public class SignPostBlock extends Block implements IWaterLoggable, IForgeBlock{
 
     @Override
     public BlockRenderType getRenderType(BlockState state){
-        return state.get(WOOD_TYPE)==WoodType.NONE ? BlockRenderType.INVISIBLE : super.getRenderType(state);
+        return BlockRenderType.INVISIBLE;
     }
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(WOOD_TYPE,WATERLOGGED);
+        builder.add(WATERLOGGED);
     }
 
     @Override
@@ -235,14 +235,14 @@ public class SignPostBlock extends Block implements IWaterLoggable, IForgeBlock{
             double y = target.getHitVec().y;
             boolean up = y%((int)y) > 0.5d;
             if(up && tile.up){
-                return new ItemStack(CommonUtil.getSignPostItemFromWoodType(tile.woodTypeUp));
+                return new ItemStack(Registry.SIGN_POST_ITEMS.get(tile.woodTypeUp).get());
             }
             else if(!up && tile.down){
-                return new ItemStack(CommonUtil.getSignPostItemFromWoodType(tile.woodTypeDown));
+                return new ItemStack(Registry.SIGN_POST_ITEMS.get(tile.woodTypeDown).get());
             }
             else return new ItemStack(tile.fenceBlock.getBlock());
         }
-        return new ItemStack(Registry.SIGN_POST_ITEM_OAK.get());
+        return new ItemStack(Registry.SIGN_POST_ITEMS.get(VanillaWoodTypes.OAK).get());
     }
 
     @Override
@@ -254,11 +254,11 @@ public class SignPostBlock extends Block implements IWaterLoggable, IForgeBlock{
             list.add(new ItemStack(tile.fenceBlock.getBlock()));
 
             if (tile.up) {
-                ItemStack s = new ItemStack(CommonUtil.getSignPostItemFromWoodType(tile.woodTypeUp));
+                ItemStack s = new ItemStack(Registry.SIGN_POST_ITEMS.get(tile.woodTypeUp).get());
                 list.add(s);
             }
             if (tile.down) {
-                ItemStack s = new ItemStack(CommonUtil.getSignPostItemFromWoodType(tile.woodTypeDown));
+                ItemStack s = new ItemStack(Registry.SIGN_POST_ITEMS.get(tile.woodTypeDown).get());
                 list.add(s);
             }
             return list;

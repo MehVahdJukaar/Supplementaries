@@ -7,6 +7,7 @@ import net.minecraftforge.fml.config.ModConfig;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
@@ -121,6 +122,7 @@ public class ServerConfigs {
         public static ForgeConfigSpec.DoubleValue BELLOWS_BASE_VEL_SCALING;
         public static ForgeConfigSpec.BooleanValue BELLOWS_FLAG;
         public static ForgeConfigSpec.IntValue BELLOWS_RANGE;
+        public static ForgeConfigSpec.ConfigValue<List<? extends String>> BELLOWS_WHITELIST;
 
         public static ForgeConfigSpec.DoubleValue LAUNCHER_VEL;
         public static ForgeConfigSpec.IntValue LAUNCHER_HEIGHT;
@@ -142,6 +144,7 @@ public class ServerConfigs {
 
         public static ForgeConfigSpec.BooleanValue NOTICE_BOARDS_UNRESTRICTED;
 
+        public static ForgeConfigSpec.ConfigValue<List<? extends String>> SACK_WHITELIST;
         public static ForgeConfigSpec.BooleanValue SACK_PENALTY;
         public static ForgeConfigSpec.IntValue SACK_INCREMENT;
         public static ForgeConfigSpec.IntValue SACK_SLOTS;
@@ -168,6 +171,8 @@ public class ServerConfigs {
             builder.pop();
             //bellows
             builder.push("bellows");
+            BELLOWS_WHITELIST = builder.comment("additional blocks that will be ticked by bellows")
+                    .defineList("whitelist", Collections.emptyList(),s -> true);
             BELLOWS_PERIOD = builder.comment("bellows pushes air following this equation: \n"+
                     "air=(sin(2PI*ticks/period)<0), with period = base_period-(redstone_power-1)*power_scaling \n"+
                     "represents base period at 1 power")
@@ -280,6 +285,8 @@ public class ServerConfigs {
             builder.pop();
 
             builder.push("sack");
+            SACK_WHITELIST = builder.comment("additional blocks that can support a sack")
+                    .defineList("whitelist", Collections.emptyList(),s -> true);
             SACK_PENALTY = builder.comment("penalize the player with slowness effecn when carring too many sacks")
                     .define("sack_penality", true);
             SACK_INCREMENT = builder.comment("maximum number of sacks after which the slowness effect will be applied. each multiple of this number will further slow the player down")
@@ -383,6 +390,7 @@ public class ServerConfigs {
         //blocks
         public static List<? extends String> SIGN_POST_ADDITIONAL;
         public static int SPEAKER_RANGE;
+        public static List<? extends String>  BELLOWS_WHITELIST;
         public static int BELLOWS_PERIOD;
         public static int BELLOWS_POWER_SCALING;
         public static double BELLOWS_MAX_VEL;
@@ -403,6 +411,7 @@ public class ServerConfigs {
         public static List<? extends String> CAGE_ALLOWED_MOBS;
         public static List<? extends String> CAGE_ALLOWED_BABY_MOBS;
         public static boolean CAGE_ALL_MOBS;
+        public static List<? extends String> SACK_WHITELIST;
         public static int SACK_INCREMENT;
         public static boolean SACK_PENALTY;
         public static int SACK_SLOTS;
@@ -435,6 +444,7 @@ public class ServerConfigs {
 
             SPEAKER_RANGE = block.SPEAKER_RANGE.get();
 
+            BELLOWS_WHITELIST = block.BELLOWS_WHITELIST.get();
             BELLOWS_PERIOD = block.BELLOWS_PERIOD.get();
             BELLOWS_POWER_SCALING = block.BELLOWS_POWER_SCALING.get();
             BELLOWS_MAX_VEL = block.BELLOWS_MAX_VEL.get();
@@ -462,6 +472,7 @@ public class ServerConfigs {
             CAGE_ALLOWED_BABY_MOBS = block.CAGE_ALLOWED_BABY_MOBS.get();
             CAGE_ALL_MOBS = block.CAGE_ALL_MOBS.get();
 
+            SACK_WHITELIST = block.SACK_WHITELIST.get();
             SACK_INCREMENT = block.SACK_INCREMENT.get();
             SACK_PENALTY = block.SACK_PENALTY.get();
             SACK_SLOTS = block.SACK_SLOTS.get();

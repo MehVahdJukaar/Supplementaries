@@ -55,11 +55,13 @@ public enum VanillaWoodTypes implements IWoodType {
         return this.material;
     }
 
+    @Override
     public String toString() {
-        return this.getName();
+        return this.name;
     }
 
-    public String getName() {
-        return this.name;
+    @Override
+    public String getLocation() {
+        return "";
     }
 }

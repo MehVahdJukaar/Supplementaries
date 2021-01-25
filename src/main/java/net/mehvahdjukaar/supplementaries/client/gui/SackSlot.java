@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.gui;
 
-import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.block.CommonUtil;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;

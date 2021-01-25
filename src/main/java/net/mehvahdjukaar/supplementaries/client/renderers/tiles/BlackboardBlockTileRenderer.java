@@ -22,6 +22,7 @@ public class BlackboardBlockTileRenderer extends TileEntityRenderer<BlackboardBl
     public void render(BlackboardBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
 
+        //TODO: use render material
         IVertexBuilder builder = bufferIn.getBuffer(RenderType.getEntitySolid(Textures.BLACKBOARD_TEXTURE));
 
         int lu = combinedLightIn & '\uffff';

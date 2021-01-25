@@ -171,7 +171,9 @@ public class ClientSetup {
     //textures
     @SubscribeEvent
     public static void onTextureStitch(TextureStitchEvent.Pre event) {
+
         Textures.stitchAll(event);
+
 
 
     }

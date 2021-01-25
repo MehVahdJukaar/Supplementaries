@@ -12,5 +12,7 @@ public interface IWoodType {
 
     MaterialColor getColor();
 
+    String getLocation();
+
 
 }

@@ -1,7 +1,9 @@
-package net.mehvahdjukaar.supplementaries.common;
+package net.mehvahdjukaar.supplementaries.block;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.SignPostBlock;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
+import net.mehvahdjukaar.supplementaries.datagen.types.VanillaWoodTypes;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.*;
 import net.minecraft.item.*;
@@ -249,53 +251,30 @@ public class CommonUtil {
             return this.name;
         }
 
+        public IWoodType convertWoodType(){
+            switch (this){
+                default:
+                case OAK:
+                    return VanillaWoodTypes.OAK;
+                case BIRCH:
+                    return VanillaWoodTypes.BIRCH;
+                case SPRUCE:
+                    return VanillaWoodTypes.SPRUCE;
+                case JUNGLE:
+                    return VanillaWoodTypes.JUNGLE;
+                case DARK_OAK:
+                    return VanillaWoodTypes.DARK_OAK;
+                case WARPED:
+                    return VanillaWoodTypes.WARPED;
+                case CRIMSON:
+                    return VanillaWoodTypes.CRIMSON;
+                case ACACIA:
+                    return VanillaWoodTypes.ACACIA;
+            }
+        }
+
     }
 
-    //else if else if else if
-    public static WoodType getWoodTypeFromSignPostItem(Item item) {
-        if (item == Registry.SIGN_POST_ITEM_OAK.get()) {
-            return WoodType.OAK;
-        } else if (item == Registry.SIGN_POST_ITEM_BIRCH.get()) {
-            return WoodType.BIRCH;
-        } else if (item == Registry.SIGN_POST_ITEM_SPRUCE.get()) {
-            return WoodType.SPRUCE;
-        } else if (item == Registry.SIGN_POST_ITEM_JUNGLE.get()) {
-            return WoodType.JUNGLE;
-        } else if (item == Registry.SIGN_POST_ITEM_ACACIA.get()) {
-            return WoodType.ACACIA;
-        } else if (item == Registry.SIGN_POST_ITEM_DARK_OAK.get()) {
-            return WoodType.DARK_OAK;
-        } else if (item == Registry.SIGN_POST_ITEM_CRIMSON.get()) {
-            return WoodType.CRIMSON;
-        } else if (item == Registry.SIGN_POST_ITEM_WARPED.get()) {
-            return WoodType.WARPED;
-        }
-        return WoodType.NONE;
-    }
-
-    public static Item getSignPostItemFromWoodType(WoodType wood) {
-        switch (wood) {
-            case OAK:
-                return Registry.SIGN_POST_ITEM_OAK.get();
-            case BIRCH:
-                return Registry.SIGN_POST_ITEM_BIRCH.get();
-            case SPRUCE:
-                return Registry.SIGN_POST_ITEM_SPRUCE.get();
-            case JUNGLE:
-                return Registry.SIGN_POST_ITEM_JUNGLE.get();
-            case ACACIA:
-                return Registry.SIGN_POST_ITEM_ACACIA.get();
-            case DARK_OAK:
-                return Registry.SIGN_POST_ITEM_DARK_OAK.get();
-            case CRIMSON:
-                return Registry.SIGN_POST_ITEM_CRIMSON.get();
-            case WARPED:
-                return Registry.SIGN_POST_ITEM_WARPED.get();
-            default:
-            case NONE:
-                return Items.AIR.getItem();
-        }
-    }
 
     //bounding box
     public static AxisAlignedBB getDirectionBB(BlockPos pos, Direction facing, int offset) {

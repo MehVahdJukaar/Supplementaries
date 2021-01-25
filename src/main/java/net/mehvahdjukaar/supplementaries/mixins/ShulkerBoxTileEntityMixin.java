@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.client.Textures;
-import net.mehvahdjukaar.supplementaries.world.data.Tags;
+import net.mehvahdjukaar.supplementaries.world.data.ModTags;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tags.ITag;
@@ -19,7 +18,7 @@ public abstract class ShulkerBoxTileEntityMixin {
 
     @Inject(method = "canInsertItem", at = @At("HEAD"), cancellable = true)
     public void canInsertItem(int index, ItemStack itemStackIn, Direction direction, CallbackInfoReturnable<Boolean> info ) {
-        ITag<Item> t = ItemTags.getCollection().get(Tags.SHULKER_BLACKLIST_TAG);
+        ITag<Item> t = ItemTags.getCollection().get(ModTags.SHULKER_BLACKLIST_TAG);
         if(t!=null && itemStackIn.getItem().isIn(t))
             info.setReturnValue(false);
     }

@@ -1,12 +1,17 @@
 package net.mehvahdjukaar.supplementaries.setup.registration;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.HangingSignBlock;
+import net.mehvahdjukaar.supplementaries.block.blocks.SignPostBlock;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.VanillaWoodTypes;
+import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
+import net.mehvahdjukaar.supplementaries.items.SignPostItem;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.material.MaterialColor;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -23,7 +28,7 @@ public class Variants {
     public static<T extends IForgeRegistryEntry<T>> Map<IWoodType, RegistryObject<T>> makeVariants(DeferredRegister<T> registry, String name, Supplier<T> supplier){
         Map<IWoodType, RegistryObject<T>> map = new HashMap<>();
 
-        for(IWoodType wood : VanillaWoodTypes.values()){
+        for(IWoodType wood : WoodTypes.TYPES.values()){
             String s = name+"_"+wood;
             map.put(wood, registry.register(s, supplier));
         }
@@ -34,7 +39,7 @@ public class Variants {
     public static Map<IWoodType, RegistryObject<Block>> makeHangingSingsBlocks(){
         Map<IWoodType, RegistryObject<Block>> map = new HashMap<>();
 
-        for(IWoodType wood : VanillaWoodTypes.values()){
+        for(IWoodType wood : WoodTypes.TYPES.values()){
             String name = getHangingSignName(wood);
             map.put(wood, Registry.BLOCKS.register(name, ()-> new HangingSignBlock(
                     AbstractBlock.Properties.create(wood.getMaterial(), wood.getColor())
@@ -51,7 +56,7 @@ public class Variants {
     public static Map<IWoodType, RegistryObject<Item>> makeHangingSignsItems(){
         Map<IWoodType, RegistryObject<Item>> map = new HashMap<>();
 
-        for(IWoodType wood : VanillaWoodTypes.values()){
+        for(IWoodType wood : WoodTypes.TYPES.values()){
             String name = getHangingSignName(wood);
             map.put(wood, Registry.ITEMS.register(name, ()-> new BlockItem(Registry.HANGING_SIGNS.get(wood).get(),
                     new Item.Properties().group(Registry.getTab(ItemGroup.DECORATIONS,Registry.HANGING_SIGN_NAME))
@@ -59,6 +64,20 @@ public class Variants {
         }
         return map;
     }
+
+    //sign posts
+    public static Map<IWoodType, RegistryObject<Item>> makeSignPostItems(){
+        Map<IWoodType, RegistryObject<Item>> map = new HashMap<>();
+
+        for(IWoodType wood : WoodTypes.TYPES.values()){
+            String name = getSignPostName(wood);
+            map.put(wood, Registry.ITEMS.register(name, ()-> new SignPostItem(
+                    new Item.Properties().group(Registry.getTab(ItemGroup.DECORATIONS,Registry.SIGN_POST_NAME)),wood
+            )));
+        }
+        return map;
+    }
+
 
     public static String getHangingSignName(IWoodType type){
         return Registry.HANGING_SIGN_NAME+"_"+type.toString();

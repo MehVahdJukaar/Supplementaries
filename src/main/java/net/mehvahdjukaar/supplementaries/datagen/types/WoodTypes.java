@@ -1,13 +1,23 @@
 package net.mehvahdjukaar.supplementaries.datagen.types;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class WoodTypes {
-    public static final Set<IWoodType> TYPES = new HashSet<>();
+    //nbt translation map
+    public static final Map<String,IWoodType> TYPES = new HashMap<>();
+
     static {
-        TYPES.addAll(Arrays.stream(VanillaWoodTypes.values()).collect(Collectors.toSet()));
+        for (IWoodType w : VanillaWoodTypes.values()){
+            TYPES.put(w.toString(),w);
+        }
+        for (IWoodType w : AtmosphericWoodTypes.values()){
+            TYPES.put(w.toString(),w);
+        }
     }
+    public static IWoodType fromString(String s){
+        return TYPES.getOrDefault(s, VanillaWoodTypes.OAK);
+    }
+
+
 }

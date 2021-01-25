@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import com.google.common.collect.Lists;
 import net.mehvahdjukaar.supplementaries.block.tiles.SackBlockTile;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -88,7 +89,8 @@ public class SackBlock extends FallingBlock {
 
     public boolean canFall(BlockPos pos, World world){
         return (world.isAirBlock(pos.down()) || canFallThrough(world.getBlockState(pos.down()))) &&
-                !hasEnoughSolidSide(world, pos.up(), Direction.DOWN) && pos.getY() >= 0;
+                !hasEnoughSolidSide(world, pos.up(), Direction.DOWN) && pos.getY() >= 0 &&
+                !ServerConfigs.cached.SACK_WHITELIST.contains(world.getBlockState(pos.up()).getBlock().getRegistryName().toString());
     }
 
     //schedule block tick

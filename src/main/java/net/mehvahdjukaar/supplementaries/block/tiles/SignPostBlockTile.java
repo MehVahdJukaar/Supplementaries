@@ -1,10 +1,13 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
 
-import net.mehvahdjukaar.supplementaries.common.CommonUtil.WoodType;
+import net.mehvahdjukaar.supplementaries.block.CommonUtil.WoodType;
 import net.mehvahdjukaar.supplementaries.block.util.IBlockHolder;
 import net.mehvahdjukaar.supplementaries.block.util.ITextHolder;
 import net.mehvahdjukaar.supplementaries.block.util.TextHolder;
+import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
+import net.mehvahdjukaar.supplementaries.datagen.types.VanillaWoodTypes;
+import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -29,8 +32,8 @@ public class SignPostBlockTile extends TileEntity implements ITextHolder, IBlock
     public boolean up = false;
     public boolean down = false;
 
-    public WoodType woodTypeUp = WoodType.OAK;
-    public WoodType woodTypeDown = WoodType.OAK;
+    public IWoodType woodTypeUp = VanillaWoodTypes.OAK;
+    public IWoodType woodTypeDown = VanillaWoodTypes.OAK;
 
     public SignPostBlockTile() {
         super(Registry.SIGN_POST_TILE.get());
@@ -80,14 +83,18 @@ public class SignPostBlockTile extends TileEntity implements ITextHolder, IBlock
         this.leftDown = compound.getBoolean("LeftDown");
         this.up = compound.getBoolean("Up");
         this.down = compound.getBoolean("Down");
-        //TODO:replace this with something else for modded woods
-        this.woodTypeUp = WoodType.values()[compound.getInt("WoodTypeUp")];
-        this.woodTypeDown = WoodType.values()[compound.getInt("WoodTypeDown")];
+        this.woodTypeUp = WoodTypes.fromString(compound.getString("TypeUp"));
+        this.woodTypeDown = WoodTypes.fromString(compound.getString("TypeDown"));
 
 
         //remove in the future
-        if(compound.contains("Wood_type_up"))this.woodTypeUp = WoodType.values()[compound.getInt("Wood_type_up")];
-        if(compound.contains("Wood_type_down"))this.woodTypeDown = WoodType.values()[compound.getInt("Wood_type_down")];
+        if(compound.contains("WoodTypeUp"))
+        this.woodTypeUp = WoodType.values()[compound.getInt("WoodTypeUp")].convertWoodType();
+        if(compound.contains("WoodTypeDown"))
+        this.woodTypeDown = WoodType.values()[compound.getInt("WoodTypeDown")].convertWoodType();
+
+        if(compound.contains("Wood_type_up"))this.woodTypeUp = WoodType.values()[compound.getInt("Wood_type_up")].convertWoodType();
+        if(compound.contains("Wood_type_down"))this.woodTypeDown = WoodType.values()[compound.getInt("Wood_type_down")].convertWoodType();
         if(compound.contains("Left_up"))this.leftUp=compound.getBoolean("Left_up");
         if(compound.contains("Left_down"))this.leftDown=compound.getBoolean("Left_down");
         if(compound.contains("Yaw_up"))this.yawUp=compound.getFloat("Yaw_up");
@@ -108,8 +115,8 @@ public class SignPostBlockTile extends TileEntity implements ITextHolder, IBlock
         compound.putBoolean("LeftDown",this.leftDown);
         compound.putBoolean("Up", this.up);
         compound.putBoolean("Down", this.down);
-        compound.putInt("WoodTypeUp", this.woodTypeUp.ordinal());
-        compound.putInt("WoodTypeDown", this.woodTypeDown.ordinal());
+        compound.putString("TypeUp", this.woodTypeUp.toString());
+        compound.putString("TypeDown", this.woodTypeDown.toString());
 
         return compound;
     }
