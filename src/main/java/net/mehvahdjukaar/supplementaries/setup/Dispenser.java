@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.blocks.FireflyJarBlock;
-import net.mehvahdjukaar.supplementaries.blocks.tiles.JarBlockTile;
+import net.mehvahdjukaar.supplementaries.block.blocks.FireflyJarBlock;
+import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.items.EmptyJarItem;
@@ -64,7 +64,7 @@ public class Dispenser {
         }
         //firefly
         if(RegistryConfigs.reg.FIREFLY_ENABLED.get()) {
-            DispenserBlock.registerDispenseBehavior(Registry.FIREFLY_SPAWN_EGG_ITEM, spawneggBehavior);
+            DispenserBlock.registerDispenseBehavior(Registry.FIREFLY_SPAWN_EGG_ITEM.get(), spawneggBehavior);
         }
 
     }

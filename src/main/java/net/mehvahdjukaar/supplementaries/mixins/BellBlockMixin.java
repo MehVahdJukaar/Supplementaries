@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.common.IBellConnection;
+import net.mehvahdjukaar.supplementaries.block.util.IBellConnection;
 import net.minecraft.block.BellBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(BellBlock.class)
-public class BellBlockMixin extends Block{
+public abstract class BellBlockMixin extends Block{
 
     public BellBlockMixin(Properties properties) {
         super(properties);

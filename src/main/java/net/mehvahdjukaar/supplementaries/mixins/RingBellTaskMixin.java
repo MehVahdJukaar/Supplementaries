@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Map;
 
 @Mixin(RingBellTask.class)
-public class RingBellTaskMixin extends Task<LivingEntity> {
+public abstract class RingBellTaskMixin extends Task<LivingEntity> {
 
 
     public RingBellTaskMixin(Map<MemoryModuleType<?>, MemoryModuleStatus> requiredMemoryStateIn) {

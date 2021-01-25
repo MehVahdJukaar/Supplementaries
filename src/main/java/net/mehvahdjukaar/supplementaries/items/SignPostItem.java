@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.items;
 
-import net.mehvahdjukaar.supplementaries.blocks.SignPostBlock;
-import net.mehvahdjukaar.supplementaries.blocks.tiles.SignPostBlockTile;
+import net.mehvahdjukaar.supplementaries.block.blocks.SignPostBlock;
+import net.mehvahdjukaar.supplementaries.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
@@ -55,7 +55,7 @@ public class SignPostItem  extends Item {
 
             //if(!world.isRemote) world.setBlockState(blockpos, Registry.SIGN_POST.get().getDefaultState(), 3);
 
-            world.setBlockState(blockpos, Registry.SIGN_POST.getStateForPlacement(new BlockItemUseContext(context)), 3);
+            world.setBlockState(blockpos, Registry.SIGN_POST.get().getStateForPlacement(new BlockItemUseContext(context)), 3);
 
             boolean flag = false;
 

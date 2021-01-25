@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.common.IMobHolder;
+import net.mehvahdjukaar.supplementaries.block.util.IMobHolder;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(WorldRenderer.class)
-public class ParrotPartyMixin {
+public abstract class ParrotPartyMixin {
 
     @Inject(method = "setPartying", at = @At("HEAD"), cancellable = true)
     private void setPartying(World worldIn, BlockPos pos, boolean isPartying, CallbackInfo info) {

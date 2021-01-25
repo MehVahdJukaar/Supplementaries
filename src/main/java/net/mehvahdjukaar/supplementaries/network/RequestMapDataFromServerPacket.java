@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.network;
 
-import net.mehvahdjukaar.supplementaries.common.IMapDisplay;
+import net.mehvahdjukaar.supplementaries.block.util.IMapDisplay;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.FilledMapItem;

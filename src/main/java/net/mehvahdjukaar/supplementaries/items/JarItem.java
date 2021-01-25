@@ -19,8 +19,6 @@ public class JarItem extends CageItem {
         super(blockIn, properties,empty);
     }
 
-
-
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
         CompoundNBT compoundnbt = stack.getChildTag("BlockEntityTag");

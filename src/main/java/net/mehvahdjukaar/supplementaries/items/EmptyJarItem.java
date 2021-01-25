@@ -37,7 +37,7 @@ public class EmptyJarItem extends EmptyCageItem {
 
         BlockPos pos = context.getPos();
         PlayerEntity player = context.getPlayer();
-        if (player.isOnGround() && this.getItem() == Registry.EMPTY_JAR_ITEM_TINTED && EnchantmentHelper.hasSoulSpeed(player) && isSoulSand(world.getBlockState(pos))) {
+        if (player.isOnGround() && this.getItem() == Registry.EMPTY_JAR_ITEM_TINTED.get() && EnchantmentHelper.hasSoulSpeed(player) && isSoulSand(world.getBlockState(pos))) {
 
             BlockPos p = new BlockPos(player.getPosX(), player.getBoundingBox().minY - 0.5000001D, player.getPosZ());
             //Vector3d motion = player.getMotion();
@@ -45,7 +45,7 @@ public class EmptyJarItem extends EmptyCageItem {
             if(Math.abs(p.getX()-pos.getX())<2 && Math.abs(p.getZ()-pos.getZ())<2 && pos.getY()==p.getY()){
                 if(!world.isRemote) {
                     Hand hand = context.getHand();
-                    player.setHeldItem(context.getHand(), DrinkHelper.fill(player.getHeldItem(hand).copy(), player, new ItemStack(Registry.SOUL_JAR_ITEM), true));
+                    player.setHeldItem(context.getHand(), DrinkHelper.fill(player.getHeldItem(hand).copy(), player, new ItemStack(Registry.SOUL_JAR_ITEM.get()), true));
                     player.world.playSound(null, player.getPosition(), SoundEvents.ITEM_BOTTLE_FILL_DRAGONBREATH, SoundCategory.BLOCKS, 1, 1);
                     player.world.playSound(null, player.getPosition(), SoundEvents.BLOCK_SOUL_SAND_BREAK, SoundCategory.BLOCKS, 1f, 1.3f);
                     player.world.playSound(null, player.getPosition(), SoundEvents.PARTICLE_SOUL_ESCAPE, SoundCategory.BLOCKS, 0.8f, 1.5f);

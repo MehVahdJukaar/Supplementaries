@@ -1,5 +1,9 @@
 {
   "credit": "Made with Blockbench",
+    "textures": {
+    "particle": "supplementaries:blocks/sing_post_acacia",
+    "0": "supplementaries:blocks/sing_post_acacia"
+  },
   "elements": [
     {
       "from": [

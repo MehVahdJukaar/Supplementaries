@@ -1,8 +1,7 @@
 package net.mehvahdjukaar.supplementaries.events;
 
-import net.mehvahdjukaar.supplementaries.blocks.DirectionalCakeBlock;
-import net.mehvahdjukaar.supplementaries.blocks.DoubleCakeBlock;
-import net.mehvahdjukaar.supplementaries.blocks.WallLanternBlock;
+import net.mehvahdjukaar.supplementaries.block.blocks.DirectionalCakeBlock;
+import net.mehvahdjukaar.supplementaries.block.blocks.DoubleCakeBlock;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.entities.ThrowableBrickEntity;
@@ -14,7 +13,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.stats.Stats;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -59,9 +57,9 @@ public class ServerEvents {
 
     public static ActionResultType placeDoubleCake(PlayerEntity player, ItemStack stack, BlockPos pos, World world ){
         BlockState state1 = world.getBlockState(pos);
-        boolean d = state1.getBlock()==Registry.DIRECTIONAL_CAKE;
+        boolean d = state1.getBlock()==Registry.DIRECTIONAL_CAKE.get();
         if((d && state1.get(DirectionalCakeBlock.BITES)==0) || state1==Blocks.CAKE.getDefaultState()) {
-            BlockState state = Registry.DOUBLE_CAKE.getDefaultState().with(DoubleCakeBlock.FACING,d?state1.get(DoubleCakeBlock.FACING):Direction.WEST);
+            BlockState state = Registry.DOUBLE_CAKE.get().getDefaultState().with(DoubleCakeBlock.FACING,d?state1.get(DoubleCakeBlock.FACING):Direction.WEST);
             if (!world.setBlockState(pos, state, 3)) {
                 return ActionResultType.FAIL;
             }
@@ -109,8 +107,9 @@ public class ServerEvents {
         //order matters here
         if (!player.isSneaking()) {
             //directional cake conversion
-            if (ServerConfigs.cached.DIRECTIONAL_CAKE && world.getBlockState(pos) == Blocks.CAKE.getDefaultState()) {
-                world.setBlockState(pos, Registry.DIRECTIONAL_CAKE.getDefaultState(), 4);
+            if (ServerConfigs.cached.DIRECTIONAL_CAKE && world.getBlockState(pos) == Blocks.CAKE.getDefaultState() &&
+                    !(ServerConfigs.cached.DOUBLE_CAKE_PLACEMENT && i == Items.CAKE)) {
+                world.setBlockState(pos, Registry.DIRECTIONAL_CAKE.get().getDefaultState(), 4);
                 BlockState blockstate = world.getBlockState(pos);
                 BlockRayTraceResult raytrace = new BlockRayTraceResult(
                         new Vector3d(pos.getX(), pos.getY(), pos.getZ()), dir, pos, false);
@@ -136,16 +135,16 @@ public class ServerEvents {
             BlockItem bi = (BlockItem) i;
             ActionResultType result = ActionResultType.PASS;
             if (ServerConfigs.cached.WALL_LANTERN_PLACEMENT && CommonUtil.isLantern(bi)) {
-                result = paceBlockOverride(Registry.WALL_LANTERN_ITEM, player, hand, bi, pos, dir, world);
+                result = paceBlockOverride(Registry.WALL_LANTERN_ITEM.get(), player, hand, bi, pos, dir, world);
             }
             else if (ServerConfigs.cached.HANGING_POT_PLACEMENT && CommonUtil.isPot(bi)) {
-                result = paceBlockOverride(Registry.HANGING_FLOWER_POT_ITEM, player, hand, bi, pos, dir, world);
+                result = paceBlockOverride(Registry.HANGING_FLOWER_POT_ITEM.get(), player, hand, bi, pos, dir, world);
             }
             else if (CommonUtil.isCake(bi)) {
                 if(ServerConfigs.cached.DOUBLE_CAKE_PLACEMENT)
                     result = placeDoubleCake(player, stack, pos, world);
                 if(!result.isSuccessOrConsume() && ServerConfigs.cached.DIRECTIONAL_CAKE)
-                    result = paceBlockOverride(Registry.DIRECTIONAL_CAKE_ITEM, player, hand, bi, pos, dir, world);
+                    result = paceBlockOverride(Registry.DIRECTIONAL_CAKE_ITEM.get(), player, hand, bi, pos, dir, world);
             }
 
             if (result.isSuccessOrConsume()) {

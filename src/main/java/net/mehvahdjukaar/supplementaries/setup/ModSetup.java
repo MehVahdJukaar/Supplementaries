@@ -37,9 +37,9 @@ public class ModSetup {
     public static void registerWanderingTraderTrades(WandererTradesEvent event) {
         //adding twice cause it's showing up too rarely
         event.getRareTrades()
-                .add(new BasicTrade(10, new ItemStack(Registry.GLOBE_ITEM, 1), 2, 20));
+                .add(new BasicTrade(10, new ItemStack(Registry.GLOBE_ITEM.get(), 1), 2, 20));
         event.getRareTrades()
-                .add(new BasicTrade(10, new ItemStack(Registry.GLOBE_ITEM, 1), 2, 20));
+                .add(new BasicTrade(10, new ItemStack(Registry.GLOBE_ITEM.get(), 1), 2, 20));
     }
 
     public static void reflectionStuff(){

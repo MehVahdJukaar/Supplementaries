@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.blocks.DoormatBlock;
-import net.mehvahdjukaar.supplementaries.blocks.PlanterBlock;
+import net.mehvahdjukaar.supplementaries.block.blocks.DoormatBlock;
+import net.mehvahdjukaar.supplementaries.block.blocks.PlanterBlock;
 import net.minecraft.block.Block;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.ai.goal.CatSitOnBlockGoal;
@@ -33,7 +33,7 @@ public abstract class CatSitOnBlockMixin extends MoveToBlockGoal {
 
     @Override
     public double getTargetDistanceSq() {
-        return this.doormat?0.8:this.getTargetDistanceSq();
+        return this.doormat?0.8:super.getTargetDistanceSq();
     }
 
     //bug fix
@@ -42,38 +42,4 @@ public abstract class CatSitOnBlockMixin extends MoveToBlockGoal {
         return this.destinationBlock;
     }
 
-    /*
-    @Override
-    public double getTargetDistanceSq() {
-        return this.doormat?1.5:this.getTargetDistanceSq();
-    }*/
-
-    /*
-    public void tick() {
-        try {
-            Field f = ObfuscationReflectionHelper.findField(MoveToBlockGoal.class,"field_179491_g");
-            CommonUtil.deb(1);
-            f.setAccessible(true);
-
-            BlockPos blockpos = this.func_241846_j();//
-            if (!CommonUtil.withinDistanceDown(blockpos,this.creature.getPositionVec(),this.getTargetDistanceSq(),2)) {
-                CommonUtil.deb(2);
-                f.setBoolean(this, false);
-                ++this.timeoutCounter;
-                if (this.shouldMove()) {
-                    this.creature.getNavigator().tryMoveToXYZ((double)((float)blockpos.getX()) + 0.5D, (double)blockpos.getY(), (double)((float)blockpos.getZ()) + 0.5D, this.movementSpeed);
-                }
-            } else {
-                CommonUtil.deb(3);
-                f.setBoolean(this, true);
-                --this.timeoutCounter;
-            }
-
-        }
-        catch (Exception ignored){
-            super.tick();
-        };
-
-
-    }*/
 }

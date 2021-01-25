@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.items;
 
-import net.mehvahdjukaar.supplementaries.common.IBlockHolder;
-import net.mehvahdjukaar.supplementaries.common.ILightMimic;
+import net.mehvahdjukaar.supplementaries.block.util.IBlockHolder;
+import net.mehvahdjukaar.supplementaries.block.util.ILightMimic;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItem;

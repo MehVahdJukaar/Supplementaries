@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.network.Networking;
 import net.mehvahdjukaar.supplementaries.setup.ClientSetup;
 import net.mehvahdjukaar.supplementaries.setup.ModSetup;
+import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.mehvahdjukaar.supplementaries.world.data.GlobeData;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -38,6 +39,8 @@ public class Supplementaries{
         Networking.registerMessages();
 
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+
+        Registry.init(bus);
 
         bus.addListener(ModSetup::init);
         bus.addListener(ClientSetup::init);

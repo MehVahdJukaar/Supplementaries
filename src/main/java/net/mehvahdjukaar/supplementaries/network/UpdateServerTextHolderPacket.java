@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.network;
 
-import net.mehvahdjukaar.supplementaries.common.ITextHolder;
+import net.mehvahdjukaar.supplementaries.block.util.ITextHolder;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;

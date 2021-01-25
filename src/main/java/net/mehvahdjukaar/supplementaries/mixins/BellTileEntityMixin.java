@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.common.IBellConnection;
+import net.mehvahdjukaar.supplementaries.block.util.IBellConnection;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
@@ -12,7 +12,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(BellTileEntity.class)
-public class BellTileEntityMixin extends TileEntity  implements IBellConnection {
+public abstract class BellTileEntityMixin extends TileEntity  implements IBellConnection {
     public boolean hasChain;
 
 

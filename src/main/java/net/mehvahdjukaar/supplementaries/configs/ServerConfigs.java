@@ -5,6 +5,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -226,47 +227,48 @@ public class ServerConfigs {
                     .defineList("cookies", cookies,s -> true);
 
 
-            List<String> defaultMobs = Arrays.asList("minecraft:slime",
-                    "minecraft:bee","minecraft:magma_cube","iceandfire:pixie",
-                    "mysticalworld:frog","mysticalworld:beetle","mysticalworld:silkworm", "druidcraft:lunar_moth", "druidcraft:dreadfish","swampexpansion:slabfish",
+            List<String> jarMobs = Arrays.asList("minecraft:slime",
+                    "minecraft:bee","minecraft:magma_cube","iceandfire:pixie","alexsmobs:fly", "alexsmobs:hummingbird","alexsmobs:cockroach",
+                    "buzzierbees:honey_slime", "mysticalworld:frog","mysticalworld:beetle","mysticalworld:silkworm",
+                    "druidcraft:lunar_moth", "druidcraft:dreadfish","swampexpansion:slabfish",
                     "savageandravage:creepie","betteranimalsplus:butterfly","whisperwoods:moth");
             MOB_JAR_ALLOWED_MOBS = builder.comment("catchable mobs \n"+
                     "due to a vanilla bug some mobs might not render correctly or at all")
-                    .defineList("mobs", defaultMobs,s -> true);
-            List<String> defaultMobsTinted = Arrays.asList("minecraft:endermite","minecraft:slime",
-                    "minecraft:bee","minecraft:magma_cube", "minecraft:vex","iceandfire:pixie","alexsmobs:mimicube",
-                    "mysticalworld:frog","mysticalworld:beetle","mysticalworld:silkworm", "druidcraft:lunar_moth", "druidcraft:dreadfish","swampexpansion:slabfish",
-                    "savageandravage:creepie","betteranimalsplus:butterfly","whisperwoods:moth");
+                    .defineList("mobs", jarMobs,s -> true);
+            List<String> tintedMobs = new ArrayList<>(jarMobs);
+            List<String> additionalTinted = Arrays.asList("minecraft:endermite","minecraft:vex","alexsmobs:mimicube");
+            tintedMobs.addAll(additionalTinted);
             MOB_JAR_TINTED_ALLOWED_MOBS = builder.comment("tinted jar catchable mobs")
-                    .defineList("tinted_jar_mobs", defaultMobsTinted,s -> true);
+                    .defineList("tinted_jar_mobs", tintedMobs,s -> true);
             builder.pop();
 
             //cage
             builder.comment("I haven't tested most of the mods included here. let me know if they work")
                     .push("cage");
-            List<String> defaultCageMobs = Arrays.asList("minecraft:endermite","minecraft:slime","minecraft:parrot",
-                    "minecraft:bee","minecraft:magma_cube", "minecraft:vex","minecraft:rabbit", "minecraft:cat",
-                    "minecraft:chicken","minecraft:bat","iceandfire:pixie","minecraft:fox","minecraft:ocelot",
-                    "alexsmobs:roadrunner", "alexsmobs:hummingbird", "alexsmobs:rattlesnake", "alexsmobs:lobster",
-                    "alexsmobs:capuchin_monkey", "alexsmobs:warped_toad","alexsmobs:mimicube","mysticalworld:beetle","mysticalworld:silkworm",
-                    "mysticalworld:frog", "mysticalworld:silver_fox", "mysticalworld:sprout", "mysticalworld:endermini", "mysticalworld:lava_cat",
-                    "mysticalworld:owl", "mysticalworld:silkworm", "mysticalworld:hell_sprout","quark:toretoise",
-                    "quark:crab", "quark:foxhound", "quark:stoneling", "quark:frog","rats:rat", "rats:piper",
-                    "rats:plague_doctor", "rats:black_death", "rats:plague_cloud", "rats:plague_beast", "rats:rat_king", "rats:demon_rat", "rats:ratlantean_spirit",
-                    "rats:ratlantean_automation", "rats:feral_ratlantean", "rats:neo_ratlantean", "rats:pirat", "rats:ghost_pirat", "rats:dutchrat", "rats:ratfish",
-                    "rats:ratlantean_ratbot", "rats:rat_baron", "goblintraders:goblin_trader", "goblintraders:vein_goblin_trader",
-                    "autumnity:snail","buzzierbees:honey_slime", "betteranimalsplus:lammergeier","betteranimalsplus:songbird",
+            List<String> cageMobs = new ArrayList<>(tintedMobs);
+            List<String> additionalCageMobs = Arrays.asList("minecraft:parrot","minecraft:rabbit", "minecraft:cat", "minecraft:chicken",
+                    "minecraft:bat","minecraft:fox","minecraft:ocelot",
+                    "alexsmobs:roadrunner", "alexsmobs:rattlesnake", "alexsmobs:lobster", "alexsmobs:capuchin_monkey",
+                    "mysticalworld:silver_fox", "mysticalworld:sprout", "mysticalworld:endermini", "mysticalworld:lava_cat",
+                    "mysticalworld:owl","mysticalworld:hell_sprout",
+                    "quark:toretoise", "quark:crab", "quark:foxhound", "quark:stoneling", "quark:frog","rats:rat",
+                    "rats:piper", "rats:plague_doctor", "rats:black_death", "rats:plague_cloud", "rats:plague_beast", "rats:rat_king",
+                    "rats:demon_rat", "rats:ratlantean_spirit", "rats:ratlantean_automation", "rats:feral_ratlantean", "rats:neo_ratlantean",
+                    "rats:pirat", "rats:ghost_pirat", "rats:dutchrat", "rats:ratfish", "rats:ratlantean_ratbot", "rats:rat_baron",
+                    "goblintraders:goblin_trader", "goblintraders:vein_goblin_trader",
+                    "autumnity:snail","betteranimalsplus:lammergeier","betteranimalsplus:songbird",
                     "betteranimalsplus:pheasant", "betteranimalsplus:squirrel", "betteranimalsplus:badger", "betteranimalsplus:turkey",
                     "exoticbirds:roadrunner","exoticbirds:hummingbird","exoticbirds:woodpecker","exoticbirds:kingfisher",
                     "exoticbirds:toucan","exoticbirds:macaw","exoticbirds:magpie", "exoticbirds:kiwi", "exoticbirds:owl",
                     "exoticbirds:gouldianfinch", "exoticbirds:gull", "exoticbirds:pigeon", "exoticbirds:penguin", "exoticbirds:duck",
                     "exoticbirds:booby", "exoticbirds:cardinal", "exoticbirds:bluejay", "exoticbirds:robin", "exoticbirds:kookaburra",
                     "exoticbirds:budgerigar", "exoticbirds:cockatoo","swampexpansion:slabfish");
+            cageMobs.addAll(additionalCageMobs);
             CAGE_ALLOWED_MOBS = builder.comment("catchable mobs")
-                    .defineList("cage_mobs", defaultCageMobs,s -> true);
-            List<String> defaultCageBabyMobs = Arrays.asList("minecraft:cow","minecraft:sheep","minecraft:pig");
+                    .defineList("cage_mobs", cageMobs,s -> true);
+            List<String> cageBabyMobs = Arrays.asList("minecraft:cow","minecraft:sheep","minecraft:pig","alexsmobs:crocodile", "alexsmobs:endergrade", "alexsmobs:gazelle", "alexsmobs:gorilla", "alexsmobs:komodo_dragon", "alexsmobs:raccoon", "alexsmobs:seal", "alexsmobs:warped_toad");
             CAGE_ALLOWED_BABY_MOBS = builder.comment("additional mobs that you'll be able to catch with the added condition that it has to be a baby variant. No need to include the ones already in cage_mobs")
-                    .defineList("cage_baby_mobs", defaultCageBabyMobs,s -> true);
+                    .defineList("cage_baby_mobs", cageBabyMobs,s -> true);
             CAGE_ALL_MOBS = builder.comment("allow all mobs to be captured by cages")
                     .define("cage_allow_all_mobs", false);
             builder.pop();

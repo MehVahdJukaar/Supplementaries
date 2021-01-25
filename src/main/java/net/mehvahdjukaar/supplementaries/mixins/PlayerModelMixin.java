@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PlayerModel.class)
-public class PlayerModelMixin<T extends LivingEntity> extends BipedModel<T> {
+public abstract class PlayerModelMixin<T extends LivingEntity> extends BipedModel<T> {
     public PlayerModelMixin(float p_i1148_1_) {
         super(p_i1148_1_);
     }

@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import net.mehvahdjukaar.supplementaries.renderers.tiles.BellTileMixinRenderer;
+import net.mehvahdjukaar.supplementaries.client.renderers.tiles.BellTileMixinRenderer;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.tileentity.BellTileEntityRenderer;
 import net.minecraft.tileentity.BellTileEntity;
@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BellTileEntityRenderer.class)
-public class BellTileEntityRendererMixin {
+public abstract class BellTileEntityRendererMixin {
 
     @Inject(method = "render", at = @At("HEAD"), cancellable = true)
     public void render(BellTileEntity tile, float partialTicks, MatrixStack matrixStackIn,

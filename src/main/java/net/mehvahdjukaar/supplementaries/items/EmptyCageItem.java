@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.items;
 
 
-import net.mehvahdjukaar.supplementaries.common.MobHolder;
+import net.mehvahdjukaar.supplementaries.block.util.MobHolder;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
@@ -62,7 +62,7 @@ public class EmptyCageItem extends BlockItem {
 
         if(player.world.isRemote)return ActionResultType.SUCCESS;
 
-        ItemStack returnStack = new ItemStack(isFirefly?  Registry.FIREFLY_JAR_ITEM : this.full.get());
+        ItemStack returnStack = new ItemStack(isFirefly?  Registry.FIREFLY_JAR_ITEM.get() : this.full.get());
 
         if(!isFirefly) {
 

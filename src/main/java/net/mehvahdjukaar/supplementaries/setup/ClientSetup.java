@@ -1,20 +1,21 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.blocks.tiles.*;
-import net.mehvahdjukaar.supplementaries.common.Resources;
+import net.mehvahdjukaar.supplementaries.block.tiles.*;
+import net.mehvahdjukaar.supplementaries.client.Textures;
 import net.mehvahdjukaar.supplementaries.entities.FireflyEntity;
-import net.mehvahdjukaar.supplementaries.gui.NoticeBoardContainer;
-import net.mehvahdjukaar.supplementaries.gui.NoticeBoardGui;
-import net.mehvahdjukaar.supplementaries.gui.SackContainer;
-import net.mehvahdjukaar.supplementaries.gui.SackGui;
-import net.mehvahdjukaar.supplementaries.particles.FireflyGlowParticle;
-import net.mehvahdjukaar.supplementaries.particles.SpeakerSoundParticle;
-import net.mehvahdjukaar.supplementaries.renderers.entities.FireflyEntityRenderer;
-import net.mehvahdjukaar.supplementaries.renderers.tiles.*;
+import net.mehvahdjukaar.supplementaries.client.gui.NoticeBoardContainer;
+import net.mehvahdjukaar.supplementaries.client.gui.NoticeBoardGui;
+import net.mehvahdjukaar.supplementaries.client.gui.SackContainer;
+import net.mehvahdjukaar.supplementaries.client.gui.SackGui;
+import net.mehvahdjukaar.supplementaries.client.particles.FireflyGlowParticle;
+import net.mehvahdjukaar.supplementaries.client.particles.SpeakerSoundParticle;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.FireflyEntityRenderer;
+import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.particle.FlameParticle;
+import net.minecraft.client.renderer.Atlases;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.entity.SpriteRenderer;
@@ -53,105 +54,105 @@ public class ClientSetup {
     public static void init(final FMLClientSetupEvent event) {
 
         //falling block tile entity
-        //RenderingRegistry.registerEntityRenderingHandler( (EntityType<FallingBlockTileEntity>) Registry.FALLING_BLOCK_TILE_ENTITY,
+        //RenderingRegistry.registerEntityRenderingHandler( (EntityType<FallingBlockTileEntity>) Registry.FALLING_BLOCK_TILE_ENTITY.get(),
         //        FallingBlockRenderer::new);
 
 
         //firefly & jar
         RenderingRegistry.registerEntityRenderingHandler((EntityType<FireflyEntity>) Registry.FIREFLY_TYPE, FireflyEntityRenderer::new);
-        RenderTypeLookup.setRenderLayer(Registry.FIREFLY_JAR, RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(Registry.FIREFLY_JAR.get(), RenderType.getCutout());
 
         //throwable brick
         onlyClientPls(event);
         //planter
-        //RenderTypeLookup.setRenderLayer(Registry.PLANTER, RenderType.getCutout());
+        //RenderTypeLookup.setRenderLayer(Registry.PLANTER.get(), RenderType.getCutout());
         //clock
-        //RenderTypeLookup.setRenderLayer(Registry.CLOCK_BLOCK, RenderType.getCutout());
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<ClockBlockTile>) Registry.CLOCK_BLOCK_TILE, ClockBlockTileRenderer::new);
+        //RenderTypeLookup.setRenderLayer(Registry.CLOCK_BLOCK.get(), RenderType.getCutout());
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<ClockBlockTile>) Registry.CLOCK_BLOCK_TILE.get(), ClockBlockTileRenderer::new);
         //pedestal
-        //RenderTypeLookup.setRenderLayer(Registry.PEDESTAL, RenderType.getCutout());
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<PedestalBlockTile>) Registry.PEDESTAL_TILE, PedestalBlockTileRenderer::new);
+        //RenderTypeLookup.setRenderLayer(Registry.PEDESTAL.get(), RenderType.getCutout());
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<PedestalBlockTile>) Registry.PEDESTAL_TILE.get(), PedestalBlockTileRenderer::new);
         //wind vane
-        RenderTypeLookup.setRenderLayer(Registry.WIND_VANE, RenderType.getCutout());
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<WindVaneBlockTile>) Registry.WIND_VANE_TILE, WindVaneBlockTileRenderer::new);
+        RenderTypeLookup.setRenderLayer(Registry.WIND_VANE.get(), RenderType.getCutout());
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<WindVaneBlockTile>) Registry.WIND_VANE_TILE.get(), WindVaneBlockTileRenderer::new);
         //notice board
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<NoticeBoardBlockTile>) Registry.NOTICE_BOARD_TILE, NoticeBoardBlockTileRenderer::new);
-        ScreenManager.registerFactory((ContainerType<NoticeBoardContainer>) Registry.NOTICE_BOARD_CONTAINER, NoticeBoardGui::new);
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<NoticeBoardBlockTile>) Registry.NOTICE_BOARD_TILE.get(), NoticeBoardBlockTileRenderer::new);
+        ScreenManager.registerFactory((ContainerType<NoticeBoardContainer>) Registry.NOTICE_BOARD_CONTAINER.get(), NoticeBoardGui::new);
         //crank
-        RenderTypeLookup.setRenderLayer(Registry.CRANK, RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(Registry.CRANK.get(), RenderType.getCutout());
         //jar
-        RenderTypeLookup.setRenderLayer(Registry.JAR, RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(Registry.JAR_TINTED, RenderType.getTranslucent());
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<JarBlockTile>) Registry.JAR_TILE, JarBlockTileRenderer::new);
+        RenderTypeLookup.setRenderLayer(Registry.JAR.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(Registry.JAR_TINTED.get(), RenderType.getTranslucent());
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<JarBlockTile>) Registry.JAR_TILE.get(), JarBlockTileRenderer::new);
         //faucet
-        RenderTypeLookup.setRenderLayer(Registry.FAUCET, RenderType.getCutout());
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<FaucetBlockTile>) Registry.FAUCET_TILE, FaucetBlockTileRenderer::new);
+        RenderTypeLookup.setRenderLayer(Registry.FAUCET.get(), RenderType.getCutout());
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<FaucetBlockTile>) Registry.FAUCET_TILE.get(), FaucetBlockTileRenderer::new);
         //piston launcher
-        //RenderTypeLookup.setRenderLayer(Registry.PISTON_LAUNCHER, RenderType.getCutout());
-        //RenderTypeLookup.setRenderLayer(Registry.PISTON_LAUNCHER_HEAD, RenderType.getCutout());
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<PistonLauncherArmBlockTile>) Registry.PISTON_LAUNCHER_ARM_TILE, PistonLauncherArmBlockTileRenderer::new);
+        //RenderTypeLookup.setRenderLayer(Registry.PISTON_LAUNCHER.get(), RenderType.getCutout());
+        //RenderTypeLookup.setRenderLayer(Registry.PISTON_LAUNCHER_HEAD.get(), RenderType.getCutout());
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<PistonLauncherArmBlockTile>) Registry.PISTON_LAUNCHER_ARM_TILE.get(), PistonLauncherArmBlockTileRenderer::new);
         //sign post
-        RenderTypeLookup.setRenderLayer(Registry.SIGN_POST, RenderType.getCutout());
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<SignPostBlockTile>) Registry.SIGN_POST_TILE, SignPostBlockTileRenderer::new);
+        RenderTypeLookup.setRenderLayer(Registry.SIGN_POST.get(), RenderType.getCutout());
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<SignPostBlockTile>) Registry.SIGN_POST_TILE.get(), SignPostBlockTileRenderer::new);
         //hanging sign
-        RenderTypeLookup.setRenderLayer(Registry.SIGN_POST, RenderType.getCutout());
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<HangingSignBlockTile>) Registry.HANGING_SIGN_TILE, HangingSignBlockTileRenderer::new);
+        RenderTypeLookup.setRenderLayer(Registry.SIGN_POST.get(), RenderType.getCutout());
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<HangingSignBlockTile>) Registry.HANGING_SIGN_TILE.get(), HangingSignBlockTileRenderer::new);
         //wall lantern
-        RenderTypeLookup.setRenderLayer(Registry.WALL_LANTERN, RenderType.getCutout());
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<WallLanternBlockTile>) Registry.WALL_LANTERN_TILE, WallLanternBlockTileRenderer::new);
+        RenderTypeLookup.setRenderLayer(Registry.WALL_LANTERN.get(), RenderType.getCutout());
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<WallLanternBlockTile>) Registry.WALL_LANTERN_TILE.get(), WallLanternBlockTileRenderer::new);
         //bellows
-        RenderTypeLookup.setRenderLayer(Registry.BELLOWS, RenderType.getCutout());
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<BellowsBlockTile>) Registry.BELLOWS_TILE, BellowsBlockTileRenderer::new);
+        RenderTypeLookup.setRenderLayer(Registry.BELLOWS.get(), RenderType.getCutout());
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<BellowsBlockTile>) Registry.BELLOWS_TILE.get(), BellowsBlockTileRenderer::new);
         //laser
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<LaserBlockTile>) Registry.LASER_BLOCK_TILE, LaserBlockTileRenderer::new);
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<LaserBlockTile>) Registry.LASER_BLOCK_TILE.get(), LaserBlockTileRenderer::new);
         //flag
-        RenderTypeLookup.setRenderLayer(Registry.FLAG, RenderType.getCutout());
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<FlagBlockTile>) Registry.FLAG_TILE, FlagBlockTileRenderer::new);
+        RenderTypeLookup.setRenderLayer(Registry.FLAG.get(), RenderType.getCutout());
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<FlagBlockTile>) Registry.FLAG_TILE.get(), FlagBlockTileRenderer::new);
         //drawers
-        //RenderTypeLookup.setRenderLayer(Registry.DRAWERS, RenderType.getCutout());
-        //ClientRegistry.bindTileEntityRenderer(Registry.DRAWERS_TILE, DrawerBlockTileRenderer::new);
+        //RenderTypeLookup.setRenderLayer(Registry.DRAWERS.get(), RenderType.getCutout());
+        //ClientRegistry.bindTileEntityRenderer(Registry.DRAWERS_TILE.get(), DrawerBlockTileRenderer::new);
         //sconce
-        RenderTypeLookup.setRenderLayer(Registry.SCONCE_WALL, RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(Registry.SCONCE, RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(Registry.SCONCE_WALL_SOUL, RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(Registry.SCONCE_SOUL, RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(Registry.SCONCE_WALL_ENDER, RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(Registry.SCONCE_ENDER, RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(Registry.SCONCE_WALL_GREEN, RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(Registry.SCONCE_GREEN, RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(Registry.SCONCE_WALL.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(Registry.SCONCE.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(Registry.SCONCE_WALL_SOUL.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(Registry.SCONCE_SOUL.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(Registry.SCONCE_WALL_ENDER.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(Registry.SCONCE_ENDER.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(Registry.SCONCE_WALL_GREEN.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(Registry.SCONCE_GREEN.get(), RenderType.getCutout());
         //candelabra
-        RenderTypeLookup.setRenderLayer(Registry.CANDELABRA, RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(Registry.CANDELABRA.get(), RenderType.getCutout());
         //item shelf
-        RenderTypeLookup.setRenderLayer(Registry.ITEM_SHELF, RenderType.getCutout());
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<ItemShelfBlockTile>) Registry.ITEM_SHELF_TILE, ItemShelfBlockTileRenderer::new);
+        RenderTypeLookup.setRenderLayer(Registry.ITEM_SHELF.get(), RenderType.getCutout());
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<ItemShelfBlockTile>) Registry.ITEM_SHELF_TILE.get(), ItemShelfBlockTileRenderer::new);
         //cage
-        RenderTypeLookup.setRenderLayer(Registry.CAGE, RenderType.getCutout());
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<CageBlockTile>) Registry.CAGE_TILE, CageBlockTileRenderer::new);
+        RenderTypeLookup.setRenderLayer(Registry.CAGE.get(), RenderType.getCutout());
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<CageBlockTile>) Registry.CAGE_TILE.get(), CageBlockTileRenderer::new);
         //sconce lever
-        RenderTypeLookup.setRenderLayer(Registry.SCONCE_LEVER, RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(Registry.SCONCE_LEVER.get(), RenderType.getCutout());
         //globe
-        //RenderTypeLookup.setRenderLayer(Registry.GLOBE, RenderType.getCutout());
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<GlobeBlockTile>) Registry.GLOBE_TILE, GlobeBlockTileRenderer::new);
+        //RenderTypeLookup.setRenderLayer(Registry.GLOBE.get(), RenderType.getCutout());
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<GlobeBlockTile>) Registry.GLOBE_TILE.get(), GlobeBlockTileRenderer::new);
         //hourglass
-        RenderTypeLookup.setRenderLayer(Registry.HOURGLASS, RenderType.getCutout());
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<HourGlassBlockTile>) Registry.HOURGLASS_TILE, HourGlassBlockTileRenderer::new);
+        RenderTypeLookup.setRenderLayer(Registry.HOURGLASS.get(), RenderType.getCutout());
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<HourGlassBlockTile>) Registry.HOURGLASS_TILE.get(), HourGlassBlockTileRenderer::new);
         //sack
-        //RenderTypeLookup.setRenderLayer(Registry.SACK, RenderType.getCutout());
-        ScreenManager.registerFactory((ContainerType<SackContainer>) Registry.SACK_CONTAINER, SackGui::new);
+        //RenderTypeLookup.setRenderLayer(Registry.SACK.get(), RenderType.getCutout());
+        ScreenManager.registerFactory((ContainerType<SackContainer>) Registry.SACK_CONTAINER.get(), SackGui::new);
         //blackboard
-        RenderTypeLookup.setRenderLayer(Registry.BLACKBOARD, RenderType.getCutout());
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<BlackboardBlockTile>) Registry.BLACKBOARD_TILE, BlackboardBlockTileRenderer::new);
+        RenderTypeLookup.setRenderLayer(Registry.BLACKBOARD.get(), RenderType.getCutout());
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<BlackboardBlockTile>) Registry.BLACKBOARD_TILE.get(), BlackboardBlockTileRenderer::new);
         //soul jar
-        RenderTypeLookup.setRenderLayer(Registry.SOUL_JAR, RenderType.getTranslucent());
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<FireflyJarBlockTile>) Registry.FIREFLY_JAR_TILE, SoulJarBlockTileRenderer::new);
+        RenderTypeLookup.setRenderLayer(Registry.SOUL_JAR.get(), RenderType.getTranslucent());
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<FireflyJarBlockTile>) Registry.FIREFLY_JAR_TILE.get(), SoulJarBlockTileRenderer::new);
         //copper lantern
-        RenderTypeLookup.setRenderLayer(Registry.COPPER_LANTERN, RenderType.getCutout());
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<OilLanternBlockTile>) Registry.COPPER_LANTERN_TILE, OilLanternBlockTileRenderer::new);
+        RenderTypeLookup.setRenderLayer(Registry.COPPER_LANTERN.get(), RenderType.getCutout());
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<OilLanternBlockTile>) Registry.COPPER_LANTERN_TILE.get(), OilLanternBlockTileRenderer::new);
         //doormat
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<DoormatBlockTile>) Registry.DOORMAT_TILE, DoormatBlockTileRenderer::new);
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<DoormatBlockTile>) Registry.DOORMAT_TILE.get(), DoormatBlockTileRenderer::new);
         //hanging flower pot
-        RenderTypeLookup.setRenderLayer(Registry.HANGING_FLOWER_POT, RenderType.getCutout());
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<HangingFlowerPotBlockTile>) Registry.HANGING_FLOWER_POT_TILE, HangingFlowerPotBlockTileRenderer::new);
+        RenderTypeLookup.setRenderLayer(Registry.HANGING_FLOWER_POT.get(), RenderType.getCutout());
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<HangingFlowerPotBlockTile>) Registry.HANGING_FLOWER_POT_TILE.get(), HangingFlowerPotBlockTileRenderer::new);
 
 
     }
@@ -170,13 +171,9 @@ public class ClientSetup {
     //textures
     @SubscribeEvent
     public static void onTextureStitch(TextureStitchEvent.Pre event) {
-        if (!event.getMap().getTextureLocation().equals(AtlasTexture.LOCATION_BLOCKS_TEXTURE)) {
-            return;
-        }
-        List<ResourceLocation> l = Resources.getTextures();
-        for (ResourceLocation r : l) {
-            event.addSprite(r);
-        }
+        Textures.stitchAll(event);
+
+
     }
 
 }
