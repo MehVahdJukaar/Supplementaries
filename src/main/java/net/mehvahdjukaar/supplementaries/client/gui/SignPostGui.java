@@ -4,14 +4,12 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.mehvahdjukaar.supplementaries.block.blocks.SignPostBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.client.Textures;
+import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.SignPostBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.network.Networking;
 import net.mehvahdjukaar.supplementaries.network.UpdateServerTextHolderPacket;
-import net.mehvahdjukaar.supplementaries.client.renderers.Const;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.DialogTexts;
@@ -165,7 +163,7 @@ public class SignPostGui extends Screen {
                 matrixstack.translate(0, 0, -0.3125);
             }
             matrixstack.scale(1,-1,-1);
-            RenderMaterial material = Textures.SIGN_POSTS_MATERIAL.get(this.tileSign.woodTypeDown);
+            RenderMaterial material = Textures.SIGN_POSTS_MATERIAL.get(this.tileSign.woodTypeUp);
             IVertexBuilder builder =  material.getBuffer(irendertypebuffer$impl, RenderType::getEntitySolid);
             SignPostBlockTileRenderer.signModel.render(matrixstack, builder, 15728880, OverlayTexture.NO_OVERLAY);
 

@@ -2,9 +2,7 @@ package net.mehvahdjukaar.supplementaries.client;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
-import net.mehvahdjukaar.supplementaries.datagen.types.VanillaWoodTypes;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.mehvahdjukaar.supplementaries.setup.registration.Variants;
 import net.minecraft.client.renderer.Atlases;
 import net.minecraft.client.renderer.model.RenderMaterial;

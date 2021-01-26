@@ -1,10 +1,10 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import net.mehvahdjukaar.supplementaries.block.tiles.PedestalBlockTile;
 import net.mehvahdjukaar.supplementaries.block.CommonUtil;
-import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.block.tiles.PedestalBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.IRenderTypeBuffer;

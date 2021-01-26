@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.datagen.types;
 
-import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 
@@ -17,29 +17,11 @@ public enum AtmosphericWoodTypes implements IWoodType {
     private final MaterialColor color;
     private final Material material;
 
-
-    AtmosphericWoodTypes(String name, Block plank) {
-        this.name = name;
-        this.color = plank.getMaterialColor();
-        this.material = plank.getDefaultState().getMaterial();
-    }
-
-    AtmosphericWoodTypes(String name, MaterialColor color, Material material) {
-        this.name = name;
-        this.color = color;
-        this.material = material;
-    }
-    AtmosphericWoodTypes(String name, MaterialColor color) {
-        this.name = name;
-        this.color = color;
-        this.material = Material.WOOD;
-    }
     AtmosphericWoodTypes(String name) {
         this.name = name;
-        this.color = MaterialColor.WOOD;
-        this.material = Material.WOOD;
+        this.color = Blocks.OAK_PLANKS.getMaterialColor();
+        this.material = Blocks.OAK_PLANKS.getDefaultState().getMaterial();
     }
-
 
     @Override
     public MaterialColor getColor() {
@@ -57,7 +39,7 @@ public enum AtmosphericWoodTypes implements IWoodType {
     }
 
     @Override
-    public String getLocation() {
-        return "atmospheric/";
+    public String getNamespace() {
+        return "atmospheric";
     }
 }

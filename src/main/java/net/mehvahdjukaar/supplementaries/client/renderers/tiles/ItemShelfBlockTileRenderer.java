@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import net.mehvahdjukaar.supplementaries.block.tiles.ItemShelfBlockTile;
 import net.mehvahdjukaar.supplementaries.block.CommonUtil;
+import net.mehvahdjukaar.supplementaries.block.tiles.ItemShelfBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;

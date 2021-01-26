@@ -1,0 +1,26 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "modid": "autumnity",
+          "type": "forge:mod_loaded"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shapeless",
+        "group": "sign_post",
+        "ingredients": [
+          {
+            "item": "autumnity:maple_sign"
+          }
+        ],
+        "result": {
+          "item": "supplementaries:sign_post_maple",
+          "count": 2
+        }
+      }
+    }
+  ]
+}

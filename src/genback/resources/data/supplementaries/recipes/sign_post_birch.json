@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "sign_post",
+  "ingredients": [
+    {
+      "item": "minecraft:birch_sign"
+    }
+  ],
+  "result": {
+    "item": "supplementaries:sign_post_birch",
+    "count": 2
+  }
+}

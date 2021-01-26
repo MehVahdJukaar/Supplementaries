@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.items;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.SignPostBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.SignPostBlockTile;
-import net.mehvahdjukaar.supplementaries.block.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
@@ -32,6 +31,10 @@ public class SignPostItem  extends Item {
         type = wood;
     }
 
+    @Override
+    public int getBurnTime(ItemStack itemStack) {
+        return 100;
+    }
 
     private boolean isFence(Block b){
         ResourceLocation res = b.getRegistryName();

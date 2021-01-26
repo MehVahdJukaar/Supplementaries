@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.setup;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.tiles.*;
 import net.mehvahdjukaar.supplementaries.client.Textures;
-import net.mehvahdjukaar.supplementaries.entities.FireflyEntity;
 import net.mehvahdjukaar.supplementaries.client.gui.NoticeBoardContainer;
 import net.mehvahdjukaar.supplementaries.client.gui.NoticeBoardGui;
 import net.mehvahdjukaar.supplementaries.client.gui.SackContainer;
@@ -12,18 +11,16 @@ import net.mehvahdjukaar.supplementaries.client.particles.FireflyGlowParticle;
 import net.mehvahdjukaar.supplementaries.client.particles.SpeakerSoundParticle;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.FireflyEntityRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
+import net.mehvahdjukaar.supplementaries.entities.FireflyEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.particle.FlameParticle;
-import net.minecraft.client.renderer.Atlases;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.entity.SpriteRenderer;
-import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
@@ -34,8 +31,6 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-
-import java.util.List;
 
 
 @Mod.EventBusSubscriber(modid = Supplementaries.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)

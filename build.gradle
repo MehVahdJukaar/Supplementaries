@@ -21,7 +21,7 @@ mixin {
     add sourceSets.main, "supplementaries.refmap.json"
 }
 
-version = '0.9.22c'
+version = '1.16.5-0.9.22c'
 group = 'net.mehvahdjukaar.supplementaries' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'supplementaries'
 
@@ -91,7 +91,8 @@ minecraft {
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
-            args '--mod', 'supplementaries', '--all', '--output', file('src/generated/resources/')
+            //args "--mod", "supplementaries", "--all", "--output", "\"" + file("src/generated/resources").toString() + "\"", "--validate", "--existing", "\"" + sourceSets.main.resources.srcDirs[0] + "\""
+            args '--mod', 'supplementaries', '--all', '--output', file('src/generated/resources/'), '--existing', sourceSets.main.resources.srcDirs[0]   //args "--mod", "usefulbackpacks", "--all", "--output", "\"" + file("src/generated/resources").toString() + "\"", "--validate", "--existing", "\"" + sourceSets.main.resources.srcDirs[0] + "\""
 
             mods {
                 supplementaries {
@@ -109,7 +110,8 @@ dependencies {
     // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-    minecraft 'net.minecraftforge:forge:1.16.4-35.0.1'
+    //minecraft 'net.minecraftforge:forge:1.16.4-35.0.1'
+    minecraft 'net.minecraftforge:forge:1.16.4-35.1.37'
     //1.16.3-34.1.0   1.16.4-35.0.1
 
     // You may put jars on which you depend on in ./libs or you may define them like so..
@@ -192,4 +194,65 @@ repositories {
         name 'tterrag maven'
         url "http://maven.tterrag.com/"
     }
+}
+
+
+
+// Loads files in the format {modid}-{version}.jar, MC version optional but picky about hyphens.
+// See the regex pattern.
+def getModVersion(filename) {
+    // println(filename);
+    def pattern = /^(?<modid>[^-]+)(?:-(?<mcversion>[0-9.]+))?(?:-(?<modver>[0-9.\-]+))\.jar$/;
+
+    def matcher = filename =~ pattern
+
+    def found = matcher.find()
+
+    if(found) {
+        def mod = matcher.group("modid");
+
+        // Extract MC version or default
+        def mcVersion = matcher.group("mcversion");
+
+        // Extract mod version
+        def version = matcher.group("modver");
+
+        // println("> mod: ${mod}; mc: ${mcVersion}; version: ${version}");
+
+        if(mcVersion == null)
+            return "${mod}:${mod}:${version}";
+        else
+            return "${mod}:${mod}-${mcVersion}:${version}";
+
+    } else {
+        println(" >not a mod filename")
+        return filename;
+    }
+}
+
+def dev_mods_dir = "mods"
+
+repositories {
+    // Built mods
+    flatDir {
+        dirs dev_mods_dir
+    }
+
+    // Other repositories (standard build gradle)
+}
+
+def dev_mods = fileTree(dev_mods_dir).filter { it -> it.isFile() }.files.name.collect( { getModVersion(it) } )
+
+dependencies {
+
+    // Snip: Minecraft dependencies, Forge
+
+    // Deobfuscate each dev mod for runtime
+    dev_mods.each {
+        compileOnly fg.deobf(it)
+        runtimeOnly fg.deobf(it)
+    }
+
+    // Other standard gradle dependencies
+
 }

@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.world.data;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.util.ResourceLocation;
 
 public class ModTags {

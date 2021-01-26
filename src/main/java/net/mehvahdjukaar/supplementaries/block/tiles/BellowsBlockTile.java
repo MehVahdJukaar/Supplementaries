@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
-import net.mehvahdjukaar.supplementaries.block.blocks.BellowsBlock;
 import net.mehvahdjukaar.supplementaries.block.CommonUtil;
+import net.mehvahdjukaar.supplementaries.block.blocks.BellowsBlock;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.mehvahdjukaar.supplementaries.world.data.ModTags;
@@ -11,13 +11,11 @@ import net.minecraft.block.FireBlock;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
-import net.minecraft.item.Item;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.tileentity.AbstractFurnaceTileEntity;
 import net.minecraft.tileentity.CampfireTileEntity;
 import net.minecraft.tileentity.ITickableTileEntity;

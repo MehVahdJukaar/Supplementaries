@@ -1,33 +1,7 @@
-
-
 {
   "variants": {
-    "wood_type=none": {
+    "": {
       "model": "minecraft:block/oak_fence_post"
-    },
-    "wood_type=oak": {
-      "model": "supplementaries:block/sign_post_oak"
-    },
-    "wood_type=birch": {
-      "model": "supplementaries:block/sign_post_birch"
-    },
-    "wood_type=spruce": {
-      "model": "supplementaries:block/sign_post_spruce"
-    },
-    "wood_type=jungle": {
-      "model": "supplementaries:block/sign_post_jungle"
-    },
-    "wood_type=acacia": {
-      "model": "supplementaries:block/sign_post_acacia"
-    },
-    "wood_type=dark_oak": {
-      "model": "supplementaries:block/sign_post_dark_oak"
-    },
-    "wood_type=crimson": {
-      "model": "supplementaries:block/sign_post_crimson"
-    },
-    "wood_type=warped": {
-      "model": "supplementaries:block/sign_post_warped"
     }
   }
 }

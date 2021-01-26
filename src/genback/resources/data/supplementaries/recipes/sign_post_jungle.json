@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "sign_post",
+  "ingredients": [
+    {
+      "item": "minecraft:jungle_sign"
+    }
+  ],
+  "result": {
+    "item": "supplementaries:sign_post_jungle",
+    "count": 2
+  }
+}

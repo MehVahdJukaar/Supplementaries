@@ -1,12 +1,9 @@
 package net.mehvahdjukaar.supplementaries.datagen;
 
 
-
-import net.mehvahdjukaar.supplementaries.block.CommonUtil;
 import net.mehvahdjukaar.supplementaries.client.Textures;
-import net.mehvahdjukaar.supplementaries.datagen.types.VanillaWoodTypes;
-import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
+import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.setup.registration.Variants;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
@@ -22,24 +19,20 @@ public class ModItemModelProvider extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
-        //getBuilder("test").parent(getExistingFile(modLoc("item/generated"))).texture("layer0", "item/redstone");
-        getBuilder("test").parent(new ModelFile.UncheckedModelFile(modLoc("block/cube")));
-        getBuilder("test2");
+        makeSignPostItems();
     }
 
 
-    private void makeHangingSignsItems(){
-
+    private void makeSignPostItems(){
         for (IWoodType wood : WoodTypes.TYPES.values()) {
-           //withExistingParent(,modLoc("sign_post_template"));
-
+            getBuilder(Variants.getSignPostName(wood)).parent(new ModelFile.UncheckedModelFile(
+                    modLoc("item/sign_post_template")))
+                    .texture("0", Textures.SIGN_POSTS_TEXTURES.get(wood));
         }
     }
 
-
-
     @Override
     public String getName() {
-        return "Decorative Block Item Models";
+        return "generated_"+modid+"_items";
     }
 }

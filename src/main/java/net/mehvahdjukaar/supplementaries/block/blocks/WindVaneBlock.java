@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.WindVaneBlockTile;
-import net.mehvahdjukaar.supplementaries.client.Textures;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;

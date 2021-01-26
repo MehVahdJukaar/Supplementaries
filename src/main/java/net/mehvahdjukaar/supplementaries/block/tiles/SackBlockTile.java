@@ -1,9 +1,9 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
-import net.mehvahdjukaar.supplementaries.block.blocks.SackBlock;
 import net.mehvahdjukaar.supplementaries.block.CommonUtil;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.block.blocks.SackBlock;
 import net.mehvahdjukaar.supplementaries.client.gui.SackContainer;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;

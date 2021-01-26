@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "sign_post",
+  "ingredients": [
+    {
+      "item": "atmospheric:morado_sign"
+    }
+  ],
+  "result": {
+    "item": "supplementaries:sign_post_morado",
+    "count": 2
+  }
+}

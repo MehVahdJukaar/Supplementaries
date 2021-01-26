@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.world.data;
 
 import com.google.common.collect.Maps;
-import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.block.Block;
 import net.minecraft.block.FlowerPotBlock;
 import net.minecraft.util.ResourceLocation;
@@ -14,7 +13,6 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;

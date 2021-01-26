@@ -1,10 +1,7 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 
-import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.SignPostBlockTile;
-import net.mehvahdjukaar.supplementaries.block.CommonUtil;
-import net.mehvahdjukaar.supplementaries.block.CommonUtil.WoodType;
 import net.mehvahdjukaar.supplementaries.client.gui.SignPostGui;
 import net.mehvahdjukaar.supplementaries.datagen.types.VanillaWoodTypes;
 import net.mehvahdjukaar.supplementaries.items.SignPostItem;
@@ -22,7 +19,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;

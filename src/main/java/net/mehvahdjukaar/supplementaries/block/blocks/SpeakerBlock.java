@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.tiles.SpeakerBlockTile;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.client.gui.SpeakerBlockGui;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.network.Networking;
 import net.mehvahdjukaar.supplementaries.network.SendSpeakerBlockMessagePacket;
 import net.mehvahdjukaar.supplementaries.setup.Registry;

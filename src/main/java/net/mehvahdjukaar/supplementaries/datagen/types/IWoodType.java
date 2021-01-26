@@ -1,7 +1,5 @@
 package net.mehvahdjukaar.supplementaries.datagen.types;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 
@@ -12,7 +10,24 @@ public interface IWoodType {
 
     MaterialColor getColor();
 
-    String getLocation();
+    String getNamespace();
+
+    default String getLocation(){
+        return this.getNamespace()+"/";
+    }
+
+    default String getPlankRegName() {
+        return this.getNamespace()+":"+this.toString()+"_planks";
+    }
+
+    default String getSignRegName(){
+        return this.getNamespace()+":"+this.toString()+"_sign";
+    }
+
+    default String getTranslationName(){
+        return this.toString();
+
+    }
 
 
 }

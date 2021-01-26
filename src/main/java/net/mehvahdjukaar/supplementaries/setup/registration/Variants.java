@@ -1,18 +1,14 @@
 package net.mehvahdjukaar.supplementaries.setup.registration;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.HangingSignBlock;
-import net.mehvahdjukaar.supplementaries.block.blocks.SignPostBlock;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
-import net.mehvahdjukaar.supplementaries.datagen.types.VanillaWoodTypes;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
+import net.mehvahdjukaar.supplementaries.items.BurnableBlockItem;
 import net.mehvahdjukaar.supplementaries.items.SignPostItem;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.material.MaterialColor;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraftforge.common.ToolType;
@@ -20,7 +16,8 @@ import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Supplier;
 
 public class Variants {
@@ -58,8 +55,8 @@ public class Variants {
 
         for(IWoodType wood : WoodTypes.TYPES.values()){
             String name = getHangingSignName(wood);
-            map.put(wood, Registry.ITEMS.register(name, ()-> new BlockItem(Registry.HANGING_SIGNS.get(wood).get(),
-                    new Item.Properties().group(Registry.getTab(ItemGroup.DECORATIONS,Registry.HANGING_SIGN_NAME))
+            map.put(wood, Registry.ITEMS.register(name, ()-> new BurnableBlockItem(Registry.HANGING_SIGNS.get(wood).get(),
+                    new Item.Properties().group(Registry.getTab(ItemGroup.DECORATIONS,Registry.HANGING_SIGN_NAME)),200
             )));
         }
         return map;

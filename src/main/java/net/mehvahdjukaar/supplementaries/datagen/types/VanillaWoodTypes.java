@@ -64,4 +64,10 @@ public enum VanillaWoodTypes implements IWoodType {
     public String getLocation() {
         return "";
     }
+
+    @Override
+    public String getNamespace() {
+        return "minecraft";
+    }
+
 }

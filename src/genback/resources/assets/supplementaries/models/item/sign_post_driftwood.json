@@ -1,0 +1,6 @@
+{
+  "parent": "supplementaries:item/sign_post_template",
+  "textures": {
+    "0": "supplementaries:entity/sign_posts/upgrade_aquatic/sign_post_driftwood"
+  }
+}

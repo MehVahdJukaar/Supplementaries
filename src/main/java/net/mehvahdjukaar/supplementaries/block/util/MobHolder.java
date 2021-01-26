@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.block.util;
 
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
-import net.mehvahdjukaar.supplementaries.client.Textures;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.Entity;

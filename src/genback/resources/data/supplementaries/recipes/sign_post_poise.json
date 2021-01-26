@@ -1,0 +1,26 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "modid": "endergetic",
+          "type": "forge:mod_loaded"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shapeless",
+        "group": "sign_post",
+        "ingredients": [
+          {
+            "item": "endergetic:poise_sign"
+          }
+        ],
+        "result": {
+          "item": "supplementaries:sign_post_poise",
+          "count": 2
+        }
+      }
+    }
+  ]
+}

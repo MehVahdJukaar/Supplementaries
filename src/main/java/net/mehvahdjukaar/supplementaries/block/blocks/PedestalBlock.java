@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.PedestalBlockTile;
-import net.mehvahdjukaar.supplementaries.client.Textures;
 import net.mehvahdjukaar.supplementaries.items.SackItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "sign_post",
+  "ingredients": [
+    {
+      "item": "minecraft:crimson_sign"
+    }
+  ],
+  "result": {
+    "item": "supplementaries:sign_post_crimson",
+    "count": 2
+  }
+}

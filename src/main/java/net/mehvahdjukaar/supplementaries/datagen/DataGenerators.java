@@ -7,10 +7,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
 
-import java.nio.file.Path;
-import java.util.Collection;
-
-@Mod.EventBusSubscriber(modid = Supplementaries.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@Mod.EventBusSubscriber(modid = Supplementaries.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public final class DataGenerators {
     public DataGenerators(){}
 
@@ -19,6 +16,8 @@ public final class DataGenerators {
         DataGenerator gen = event.getGenerator();
         ExistingFileHelper helper = event.getExistingFileHelper();
         gen.addProvider(new ModItemModelProvider(gen,Supplementaries.MOD_ID,helper));
+        gen.addProvider(new ModRecipeProvider(gen));
+        gen.addProvider(new ModLanguageProvider(gen,Supplementaries.MOD_ID,"en_us"));
 
         //https://www.youtube.com/watch?v=YD_ajlZ5TdY
     }

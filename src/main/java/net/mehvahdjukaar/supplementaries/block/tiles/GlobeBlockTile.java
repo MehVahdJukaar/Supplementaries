@@ -15,7 +15,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
 import static net.mehvahdjukaar.supplementaries.client.Textures.*;
-import static net.mehvahdjukaar.supplementaries.client.Textures.GLOBE_TEXTURE;
 
 public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, INameable {
     public float yaw = 0;

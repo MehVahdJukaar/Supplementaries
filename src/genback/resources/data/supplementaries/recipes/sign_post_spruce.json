@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "sign_post",
+  "ingredients": [
+    {
+      "item": "minecraft:spruce_sign"
+    }
+  ],
+  "result": {
+    "item": "supplementaries:sign_post_spruce",
+    "count": 2
+  }
+}

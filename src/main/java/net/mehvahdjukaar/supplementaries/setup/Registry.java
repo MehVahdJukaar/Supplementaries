@@ -3,16 +3,16 @@ package net.mehvahdjukaar.supplementaries.setup;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.block.tiles.*;
+import net.mehvahdjukaar.supplementaries.client.gui.NoticeBoardContainer;
+import net.mehvahdjukaar.supplementaries.client.gui.SackContainer;
+import net.mehvahdjukaar.supplementaries.client.renderers.items.CageItemRenderer;
+import net.mehvahdjukaar.supplementaries.client.renderers.items.FireflyJarItemRenderer;
+import net.mehvahdjukaar.supplementaries.client.renderers.items.JarItemRenderer;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.entities.FireflyEntity;
 import net.mehvahdjukaar.supplementaries.entities.ThrowableBrickEntity;
-import net.mehvahdjukaar.supplementaries.client.gui.NoticeBoardContainer;
-import net.mehvahdjukaar.supplementaries.client.gui.SackContainer;
 import net.mehvahdjukaar.supplementaries.items.*;
-import net.mehvahdjukaar.supplementaries.client.renderers.items.CageItemRenderer;
-import net.mehvahdjukaar.supplementaries.client.renderers.items.FireflyJarItemRenderer;
-import net.mehvahdjukaar.supplementaries.client.renderers.items.JarItemRenderer;
 import net.mehvahdjukaar.supplementaries.setup.registration.Variants;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
@@ -199,6 +199,7 @@ public class Registry {
             new Item.Properties().group(getTab(ItemGroup.DECORATIONS,PLANTER_NAME))
     ));
 
+
     //clock
     public static final String CLOCK_BLOCK_NAME = "clock_block";
     public static final RegistryObject<Block> CLOCK_BLOCK = BLOCKS.register(CLOCK_BLOCK_NAME,()-> new ClockBlock(
@@ -274,8 +275,8 @@ public class Registry {
     public static final RegistryObject<TileEntityType<?>> NOTICE_BOARD_TILE = TILES.register(NOTICE_BOARD_NAME,()-> TileEntityType.Builder.create(
             NoticeBoardBlockTile::new, NOTICE_BOARD.get()).build(null));
 
-    public static final RegistryObject<Item> NOTICE_BOARD_ITEM = ITEMS.register(NOTICE_BOARD_NAME,()-> new BlockItem(NOTICE_BOARD.get(),
-            new Item.Properties().group(getTab(ItemGroup.DECORATIONS,NOTICE_BOARD_NAME))
+    public static final RegistryObject<Item> NOTICE_BOARD_ITEM = ITEMS.register(NOTICE_BOARD_NAME,()-> new BurnableBlockItem(NOTICE_BOARD.get(),
+            new Item.Properties().group(getTab(ItemGroup.DECORATIONS,NOTICE_BOARD_NAME)),300
     ));
 
     public static final RegistryObject<ContainerType<?>> NOTICE_BOARD_CONTAINER = CONTAINERS.register(NOTICE_BOARD_NAME,()-> IForgeContainerType.create(
@@ -446,8 +447,8 @@ public class Registry {
     public static final RegistryObject<TileEntityType<?>> SPEAKER_BLOCK_TILE = TILES.register(SPEAKER_BLOCK_NAME,()-> TileEntityType.Builder.create(
             SpeakerBlockTile::new, SPEAKER_BLOCK.get()).build(null));
 
-    public static final RegistryObject<Item> SPEAKER_BLOCK_ITEM = ITEMS.register(SPEAKER_BLOCK_NAME,()-> new BlockItem(SPEAKER_BLOCK.get(),
-            new Item.Properties().group(getTab(ItemGroup.REDSTONE,SPEAKER_BLOCK_NAME))
+    public static final RegistryObject<Item> SPEAKER_BLOCK_ITEM = ITEMS.register(SPEAKER_BLOCK_NAME,()-> new BurnableBlockItem(SPEAKER_BLOCK.get(),
+            new Item.Properties().group(getTab(ItemGroup.REDSTONE,SPEAKER_BLOCK_NAME)),300
     ));
 
 
@@ -480,8 +481,8 @@ public class Registry {
     ));
     public static final RegistryObject<TileEntityType<?>> BELLOWS_TILE = TILES.register(BELLOWS_NAME,()->  TileEntityType.Builder.create(
             BellowsBlockTile::new, BELLOWS.get()).build(null));
-    public static final RegistryObject<Item> BELLOWS_ITEM = ITEMS.register(BELLOWS_NAME,()-> new BlockItem(BELLOWS.get(),
-            new Item.Properties().group(getTab(ItemGroup.REDSTONE,BELLOWS_NAME))
+    public static final RegistryObject<Item> BELLOWS_ITEM = ITEMS.register(BELLOWS_NAME,()-> new BurnableBlockItem(BELLOWS.get(),
+            new Item.Properties().group(getTab(ItemGroup.REDSTONE,BELLOWS_NAME)),300
     ));
 
     //laser
@@ -646,8 +647,8 @@ public class Registry {
     ));
     public static final RegistryObject<TileEntityType<?>> ITEM_SHELF_TILE = TILES.register(ITEM_SHELF_NAME,()-> TileEntityType.Builder.create(
             ItemShelfBlockTile::new, ITEM_SHELF.get()).build(null));
-    public static final RegistryObject<Item> ITEM_SHELF_ITEM = ITEMS.register(ITEM_SHELF_NAME,()-> new BlockItem(ITEM_SHELF.get(),
-            new Item.Properties().group(getTab(ItemGroup.DECORATIONS,ITEM_SHELF_NAME))
+    public static final RegistryObject<Item> ITEM_SHELF_ITEM = ITEMS.register(ITEM_SHELF_NAME,()-> new BurnableBlockItem(ITEM_SHELF.get(),
+            new Item.Properties().group(getTab(ItemGroup.DECORATIONS,ITEM_SHELF_NAME)),100
     ));
 
     //cog block
@@ -829,8 +830,8 @@ public class Registry {
     ));
     public static final RegistryObject<TileEntityType<?>> DOORMAT_TILE = TILES.register(DOORMAT_NAME,()-> TileEntityType.Builder.create(
             DoormatBlockTile::new, DOORMAT.get()).build(null));
-    public static final RegistryObject<Item> DOORMAT_ITEM = ITEMS.register(DOORMAT_NAME,()-> new BlockItem(DOORMAT.get(),
-            (new Item.Properties()).group(getTab(ItemGroup.DECORATIONS,DOORMAT_NAME))
+    public static final RegistryObject<Item> DOORMAT_ITEM = ITEMS.register(DOORMAT_NAME,()-> new BurnableBlockItem(DOORMAT.get(),
+            (new Item.Properties()).group(getTab(ItemGroup.DECORATIONS,DOORMAT_NAME)),134
     ));
 
     //hanging flower pot

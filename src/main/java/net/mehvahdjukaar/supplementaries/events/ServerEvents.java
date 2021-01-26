@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.events;
 
+import net.mehvahdjukaar.supplementaries.block.CommonUtil;
 import net.mehvahdjukaar.supplementaries.block.blocks.DirectionalCakeBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.DoubleCakeBlock;
-import net.mehvahdjukaar.supplementaries.block.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.items.BlockHolderItem;

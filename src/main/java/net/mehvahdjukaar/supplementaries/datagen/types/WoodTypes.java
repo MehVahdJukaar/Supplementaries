@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.datagen.types;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.Map;
 
 public class WoodTypes {
     //nbt translation map
@@ -13,6 +13,18 @@ public class WoodTypes {
         }
         for (IWoodType w : AtmosphericWoodTypes.values()){
             TYPES.put(w.toString(),w);
+        }
+        for (IWoodType w : AutumnityWoodTypes.values()){
+            TYPES.put(w.toString(),w);
+        }
+        for (IWoodType w : EndergeticWoodTypes.values()){
+            TYPES.put(w.toString(),w);
+        }
+        for (IWoodType w : UpgradeAquaticWoodTypes.values()){
+            TYPES.put(w.toString(),w);
+        }
+        for (IWoodType w : EnhancedMushroomsWoodTypes.values()){
+            //TYPES.put(w.toString(),w);
         }
     }
     public static IWoodType fromString(String s){
