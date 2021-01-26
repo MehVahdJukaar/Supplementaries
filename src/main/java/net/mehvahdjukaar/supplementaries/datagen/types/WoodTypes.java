@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.datagen.types;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,11 +25,18 @@ public class WoodTypes {
             TYPES.put(w.toString(),w);
         }
         for (IWoodType w : EnhancedMushroomsWoodTypes.values()){
-            //TYPES.put(w.toString(),w);
+            TYPES.put(w.toString(),w);
+        }
+        for (IWoodType w : OuterEndWoodTypes.values()){
+            TYPES.put(w.toString(),w);
         }
     }
     public static IWoodType fromString(String s){
         return TYPES.getOrDefault(s, VanillaWoodTypes.OAK);
+    }
+
+    public static Collection<IWoodType> all(){
+        return TYPES.values();
     }
 
 

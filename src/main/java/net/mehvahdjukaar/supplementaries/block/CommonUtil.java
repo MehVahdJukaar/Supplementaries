@@ -223,7 +223,7 @@ public class CommonUtil {
         else return 1;
     }
 
-    public enum WoodType implements IStringSerializable {
+    public enum TempWoodType implements IStringSerializable {
         NONE("none"),
         OAK("oak"),
         BIRCH("birch"),
@@ -235,7 +235,7 @@ public class CommonUtil {
         WARPED("warped");
         private final String name;
 
-        WoodType(String name) {
+        TempWoodType(String name) {
             this.name = name;
         }
 

@@ -16,7 +16,7 @@ public class BlockProperties {
     public static final IntegerProperty TILE_3 = IntegerProperty.create("tile_3", 0, 2);
     public static final BooleanProperty HAS_WATER = BooleanProperty.create("has_water");
     public static final BooleanProperty HAS_JAR = BooleanProperty.create("has_jar");
-    public static final EnumProperty<CommonUtil.WoodType> WOOD_TYPE = EnumProperty.create("wood_type", CommonUtil.WoodType.class);
+    public static final EnumProperty<CommonUtil.TempWoodType> WOOD_TYPE = EnumProperty.create("wood_type", CommonUtil.TempWoodType.class);
     // it's detecting incoming laser and its distance
     public static final IntegerProperty RECEIVING = IntegerProperty.create("laser_receiving", 0, 15);
     public static final IntegerProperty LIGHT_LEVEL_0_15 = IntegerProperty.create("light_level", 0, 15);

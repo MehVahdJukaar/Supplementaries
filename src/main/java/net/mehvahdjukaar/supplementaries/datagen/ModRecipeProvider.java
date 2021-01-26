@@ -3,12 +3,10 @@ package net.mehvahdjukaar.supplementaries.datagen;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
-import net.mehvahdjukaar.supplementaries.setup.registration.Variants;
 import net.minecraft.advancements.criterion.InventoryChangeTrigger;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.data.IFinishedRecipe;
-import net.minecraft.data.RecipeProvider;
-import net.minecraft.data.ShapelessRecipeBuilder;
+import net.minecraft.data.*;
+import net.minecraft.item.Item;
+import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.ConditionalRecipe;
 import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
@@ -22,25 +20,56 @@ public class ModRecipeProvider extends RecipeProvider {
     }
     @Override
     protected void registerRecipes(Consumer<IFinishedRecipe> consumerIn) {
-
-
         for (IWoodType wood : WoodTypes.TYPES.values()) {
             makeSignPostRecipe(wood, consumerIn);
+            makeHangingSignRecipe(wood,consumerIn);
+
         }
     }
 
-    public static void makeConditionalRec(IFinishedRecipe r, IWoodType wood,Consumer<IFinishedRecipe> consumer){
-        ConditionalRecipe.builder().addCondition(new ModLoadedCondition(wood.getNamespace())).addRecipe(r).build(consumer,"supplementaries",Variants.getSignPostName(wood));
+    public static void makeConditionalRec(IFinishedRecipe r, IWoodType wood,Consumer<IFinishedRecipe> consumer,String name){
+        ConditionalRecipe.builder().addCondition(new RecipeCondition(name, RecipeCondition.MY_FLAG))
+                .addCondition(new ModLoadedCondition(wood.getNamespace()))
+                .addRecipe(r)
+                .generateAdvancement()
+                .build(consumer,"supplementaries",name+"_"+wood.toString());
     }
 
     private static void makeSignPostRecipe(IWoodType wood, Consumer<IFinishedRecipe> consumer) {
-
-        ShapelessRecipeBuilder.shapelessRecipe(Registry.SIGN_POST_ITEMS.get(wood).get(), 2)
-                .addIngredient(ForgeRegistries.ITEMS.getValue(new ResourceLocation(wood.getNamespace()+":"+wood.toString()+"_sign")))
-                .setGroup(Registry.SIGN_POST_NAME)
-                .addCriterion("has_plank", InventoryChangeTrigger.Instance.forItems(ForgeRegistries.ITEMS.getValue(new ResourceLocation(wood.getNamespace()+":"+wood.toString()+"_planks"))))
-                .build((s)->makeConditionalRec(s,wood,consumer)); //
+        try{
+            Item plank = ForgeRegistries.ITEMS.getValue(new ResourceLocation(wood.getNamespace() + ":" + wood.toString() + "_planks"));
+            Item sign = ForgeRegistries.ITEMS.getValue(new ResourceLocation(wood.getNamespace() + ":" + wood.toString() + "_sign"));
+            if (plank == null || sign == null) return;
+            ShapelessRecipeBuilder.shapelessRecipe(Registry.SIGN_POST_ITEMS.get(wood).get(), 2)
+                    .addIngredient(sign)
+                    .setGroup(Registry.SIGN_POST_NAME)
+                    .addCriterion("has_plank", InventoryChangeTrigger.Instance.forItems(plank))
+                    //.build(consumer);
+                    .build((s) -> makeConditionalRec(s, wood, consumer,Registry.SIGN_POST_NAME)); //
+        }
+        catch (Exception ignored){}
     }
+
+
+    private static void makeHangingSignRecipe(IWoodType wood, Consumer<IFinishedRecipe> consumer) {
+
+            Item plank = ForgeRegistries.ITEMS.getValue(new ResourceLocation(wood.getNamespace() + ":" + wood.toString() + "_planks"));
+            if (plank == null) return;
+            ShapedRecipeBuilder.shapedRecipe(Registry.HANGING_SIGNS.get(wood).get(), 2)
+                    .patternLine("010")
+                    .patternLine("222")
+                    .patternLine("222")
+                    .key('0', Items.IRON_NUGGET)
+                    .key('1', Items.STICK)
+                    .key('2', plank)
+                    .setGroup(Registry.HANGING_SIGN_NAME)
+                    .addCriterion("has_plank", InventoryChangeTrigger.Instance.forItems(plank))
+                    //.build(consumer);
+                    .build((s) -> makeConditionalRec(s, wood, consumer,Registry.HANGING_SIGN_NAME)); //
+
+
+    }
+
 
 
 }

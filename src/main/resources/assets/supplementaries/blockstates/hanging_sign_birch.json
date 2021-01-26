@@ -1,64 +1,94 @@
 {
   "variants": {
-    "facing=north,tile=false,extension=0": {
-      "model": "supplementaries:block/hanging_sign_birch"
+    "extension=0,facing=north,tile=false": {
+      "model": "supplementaries:block/hanging_sign_0_birch"
     },
-    "facing=east,tile=false,extension=0": {
-      "model": "supplementaries:block/hanging_sign_birch",
-      "y": 90
+    "extension=1,facing=north,tile=false": {
+      "model": "supplementaries:block/hanging_sign_1_birch"
     },
-    "facing=south,tile=false,extension=0": {
-      "model": "supplementaries:block/hanging_sign_birch",
+    "extension=2,facing=north,tile=false": {
+      "model": "supplementaries:block/hanging_sign_2_birch"
+    },
+    "extension=0,facing=south,tile=false": {
+      "model": "supplementaries:block/hanging_sign_0_birch",
       "y": 180
     },
-    "facing=west,tile=false,extension=0": {
-      "model": "supplementaries:block/hanging_sign_birch",
-      "y": 270
-    },
-    "facing=north,tile=false,extension=1": {
-      "model": "supplementaries:block/hanging_sign_extended_birch"
-    },
-    "facing=east,tile=false,extension=1": {
-      "model": "supplementaries:block/hanging_sign_extended_birch",
-      "y": 90
-    },
-    "facing=south,tile=false,extension=1": {
-      "model": "supplementaries:block/hanging_sign_extended_birch",
+    "extension=1,facing=south,tile=false": {
+      "model": "supplementaries:block/hanging_sign_1_birch",
       "y": 180
     },
-    "facing=west,tile=false,extension=1": {
-      "model": "supplementaries:block/hanging_sign_extended_birch",
-      "y": 270
-    },
-    "facing=north,tile=false,extension=2": {
-      "model": "supplementaries:block/hanging_sign_extended_2_birch"
-    },
-    "facing=east,tile=false,extension=2": {
-      "model": "supplementaries:block/hanging_sign_extended_2_birch",
-      "y": 90
-    },
-    "facing=south,tile=false,extension=2": {
-      "model": "supplementaries:block/hanging_sign_extended_2_birch",
+    "extension=2,facing=south,tile=false": {
+      "model": "supplementaries:block/hanging_sign_2_birch",
       "y": 180
     },
-    "facing=west,tile=false,extension=2": {
-      "model": "supplementaries:block/hanging_sign_extended_2_birch",
+    "extension=0,facing=west,tile=false": {
+      "model": "supplementaries:block/hanging_sign_0_birch",
       "y": 270
     },
-    "facing=north,tile=true": {
+    "extension=1,facing=west,tile=false": {
+      "model": "supplementaries:block/hanging_sign_1_birch",
+      "y": 270
+    },
+    "extension=2,facing=west,tile=false": {
+      "model": "supplementaries:block/hanging_sign_2_birch",
+      "y": 270
+    },
+    "extension=0,facing=east,tile=false": {
+      "model": "supplementaries:block/hanging_sign_0_birch",
+      "y": 90
+    },
+    "extension=1,facing=east,tile=false": {
+      "model": "supplementaries:block/hanging_sign_1_birch",
+      "y": 90
+    },
+    "extension=2,facing=east,tile=false": {
+      "model": "supplementaries:block/hanging_sign_2_birch",
+      "y": 90
+    },
+    "extension=0,facing=north,tile=true": {
       "model": "supplementaries:block/hanging_sign_tile_birch"
     },
-    "facing=east,tile=true": {
-      "model": "supplementaries:block/hanging_sign_tile_birch",
-      "y": 90
+    "extension=1,facing=north,tile=true": {
+      "model": "supplementaries:block/hanging_sign_tile_birch"
     },
-    "facing=south,tile=true": {
+    "extension=2,facing=north,tile=true": {
+      "model": "supplementaries:block/hanging_sign_tile_birch"
+    },
+    "extension=0,facing=south,tile=true": {
       "model": "supplementaries:block/hanging_sign_tile_birch",
       "y": 180
     },
-    "facing=west,tile=true": {
+    "extension=1,facing=south,tile=true": {
+      "model": "supplementaries:block/hanging_sign_tile_birch",
+      "y": 180
+    },
+    "extension=2,facing=south,tile=true": {
+      "model": "supplementaries:block/hanging_sign_tile_birch",
+      "y": 180
+    },
+    "extension=0,facing=west,tile=true": {
       "model": "supplementaries:block/hanging_sign_tile_birch",
       "y": 270
+    },
+    "extension=1,facing=west,tile=true": {
+      "model": "supplementaries:block/hanging_sign_tile_birch",
+      "y": 270
+    },
+    "extension=2,facing=west,tile=true": {
+      "model": "supplementaries:block/hanging_sign_tile_birch",
+      "y": 270
+    },
+    "extension=0,facing=east,tile=true": {
+      "model": "supplementaries:block/hanging_sign_tile_birch",
+      "y": 90
+    },
+    "extension=1,facing=east,tile=true": {
+      "model": "supplementaries:block/hanging_sign_tile_birch",
+      "y": 90
+    },
+    "extension=2,facing=east,tile=true": {
+      "model": "supplementaries:block/hanging_sign_tile_birch",
+      "y": 90
     }
   }
 }

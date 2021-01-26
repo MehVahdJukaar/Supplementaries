@@ -1,0 +1,30 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "flag": "sign_post",
+          "type": "supplementaries:flag"
+        },
+        {
+          "modid": "minecraft",
+          "type": "forge:mod_loaded"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shapeless",
+        "group": "sign_post",
+        "ingredients": [
+          {
+            "item": "minecraft:warped_sign"
+          }
+        ],
+        "result": {
+          "item": "supplementaries:sign_post_warped",
+          "count": 2
+        }
+      }
+    }
+  ]
+}

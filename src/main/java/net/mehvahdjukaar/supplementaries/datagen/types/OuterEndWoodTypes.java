@@ -6,7 +6,7 @@ import net.minecraft.block.material.MaterialColor;
 
 
 public enum OuterEndWoodTypes implements IWoodType {
-    AZURE("azure", MaterialColor.CYAN, Material.WOOD);
+    AZURE("azure");
 
     private final String name;
     private final MaterialColor color;

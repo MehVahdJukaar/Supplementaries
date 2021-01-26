@@ -166,7 +166,8 @@ public class Registry {
     public static final Map<IWoodType, RegistryObject<Block>> HANGING_SIGNS = Variants.makeHangingSingsBlocks();
     public static final Map<IWoodType, RegistryObject<Item>> HANGING_SIGNS_ITEMS = Variants.makeHangingSignsItems();
 
-    public static final RegistryObject<TileEntityType<?>> HANGING_SIGN_TILE = TILES.register(HANGING_SIGN_NAME, ()-> TileEntityType.Builder.create(HangingSignBlockTile::new,
+    //keeping "hanging_sign_oak" for compatibility even if it should be just hanging_sign
+    public static final RegistryObject<TileEntityType<?>> HANGING_SIGN_TILE = TILES.register(HANGING_SIGN_NAME+"_oak", ()-> TileEntityType.Builder.create(HangingSignBlockTile::new,
             HANGING_SIGNS.values().stream().map(RegistryObject::get).toArray(Block[]::new)).build(null));
 
     //sign posts

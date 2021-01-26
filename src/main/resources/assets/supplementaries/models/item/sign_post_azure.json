@@ -1,0 +1,6 @@
+{
+  "parent": "supplementaries:item/sign_post_template",
+  "textures": {
+    "0": "supplementaries:entity/sign_posts/outer_end/sign_post_azure"
+  }
+}

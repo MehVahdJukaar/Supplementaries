@@ -1,32 +1,48 @@
 {
-  "parent": "minecraft:recipes/root",
-  "rewards": {
-    "recipes": [
-      "supplementaries:sconce_ender_recipe"
-    ]
-  },
-  "criteria": {
-    "has_item": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
-          {
-			"item": "endergetic:ender_torch"
+  "advancements": [
+    {
+      "conditions": [
+        {
+          "flag": "sconce",
+          "type": "supplementaries:flag"
+        },
+        {
+          "modid": "endergetic",
+          "type": "forge:mod_loaded"
+        }
+      ],
+      "advancement": {
+        "parent": "minecraft:recipes/root",
+        "rewards": {
+          "recipes": [
+            "supplementaries:sconce_ender_recipe"
+          ]
+        },
+        "criteria": {
+          "has_item": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+              "items": [
+                {
+                  "item": "endergetic:ender_torch"
+                }
+              ]
+            }
+          },
+          "has_the_recipe": {
+            "trigger": "minecraft:recipe_unlocked",
+            "conditions": {
+              "recipe": "supplementaries:sconce_ender_recipe"
+            }
           }
+        },
+        "requirements": [
+          [
+            "has_item",
+            "has_the_recipe"
+          ]
         ]
       }
-    },
-    "has_the_recipe": {
-      "trigger": "minecraft:recipe_unlocked",
-      "conditions": {
-        "recipe": "supplementaries:sconce_ender_recipe"
-      }
     }
-  },
-  "requirements": [
-    [
-      "has_item",
-      "has_the_recipe"
-    ]
   ]
 }

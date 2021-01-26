@@ -11,8 +11,6 @@ import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.controller.FlyingMovementController;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.LookRandomlyGoal;
-import net.minecraft.entity.passive.BatEntity;
-import net.minecraft.entity.passive.BeeEntity;
 import net.minecraft.entity.passive.IFlyingAnimal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ArrowEntity;
@@ -252,8 +250,6 @@ public class FireflyEntity extends CreatureEntity implements IFlyingAnimal, IEnt
 
     public void livingTick() {
         super.livingTick();
-        this.setNoGravity(true);
-
         //this.particleCooldown--;
 
     }

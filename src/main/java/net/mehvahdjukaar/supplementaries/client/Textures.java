@@ -99,7 +99,8 @@ public class Textures {
     public static void stitchAll(TextureStitchEvent.Pre event){
         if(event.getMap().getTextureLocation().equals(Atlases.SIGN_ATLAS)){
             for(IWoodType type : WoodTypes.TYPES.values()){
-                event.addSprite(HANGING_SIGNS_TEXTURES.get(type));
+                //TODO: make hanging sign use java model
+                //event.addSprite(HANGING_SIGNS_TEXTURES.get(type));
                 event.addSprite(SIGN_POSTS_TEXTURES.get(type));
             }
 

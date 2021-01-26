@@ -36,10 +36,9 @@ public abstract class CatSitOnBlockMixin extends MoveToBlockGoal {
         return this.doormat?0.8:super.getTargetDistanceSq();
     }
 
-    //bug fix
     @Override
     protected BlockPos func_241846_j() {
-        return this.destinationBlock;
+        return this.doormat?this.destinationBlock:super.func_241846_j();
     }
 
 }

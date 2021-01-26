@@ -15,6 +15,8 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootContext;
+import net.minecraft.loot.LootParameters;
 import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
@@ -32,6 +34,9 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+
+import java.util.Collections;
+import java.util.List;
 
 
 public class CageBlock extends Block implements IWaterLoggable {
@@ -103,8 +108,8 @@ public class CageBlock extends Block implements IWaterLoggable {
     }
 
 
-    //loot table does the same
-    /*
+    //loot table does the same. frick the loot table
+
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         TileEntity tileentity = builder.get(LootParameters.BLOCK_ENTITY);
@@ -116,7 +121,7 @@ public class CageBlock extends Block implements IWaterLoggable {
             return Collections.singletonList(itemstack);
         }
         return super.getDrops(state, builder);
-    }*/
+    }
 
     //for pick block
     @Override

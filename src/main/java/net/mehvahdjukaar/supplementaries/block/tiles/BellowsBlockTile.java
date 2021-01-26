@@ -191,7 +191,7 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
                     TileEntity te = world.getTileEntity(frontpos);
                     Block b = world.getBlockState(frontpos).getBlock();
                     if (te instanceof ITickableTileEntity && (te instanceof AbstractFurnaceTileEntity || te instanceof CampfireTileEntity ||
-                            b.isIn(BlockTags.getCollection().get(ModTags.SHULKER_BLACKLIST_TAG)) ||
+                            (BlockTags.getCollection().get(ModTags.BELLOWS_TICKABLE_TAG) != null && b.isIn(BlockTags.getCollection().get(ModTags.BELLOWS_TICKABLE_TAG))) ||
                             ServerConfigs.cached.BELLOWS_WHITELIST.contains(b.getRegistryName().toString()))) {
                         ((ITickableTileEntity) te).tick();
                     }

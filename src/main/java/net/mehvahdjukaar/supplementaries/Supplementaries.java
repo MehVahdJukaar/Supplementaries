@@ -1,15 +1,14 @@
 package net.mehvahdjukaar.supplementaries;
 
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.configs.RecipeCondition;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.datagen.RecipeCondition;
 import net.mehvahdjukaar.supplementaries.network.Networking;
 import net.mehvahdjukaar.supplementaries.setup.ClientSetup;
 import net.mehvahdjukaar.supplementaries.setup.ModSetup;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.mehvahdjukaar.supplementaries.world.data.GlobeData;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -34,7 +33,7 @@ public class Supplementaries{
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ServerConfigs.SERVER_CONFIG);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfigs.CLIENT_CONFIG);
 
-        CraftingHelper.register(new RecipeCondition.Serializer(new ResourceLocation(MOD_ID, "flag")));
+        CraftingHelper.register(new RecipeCondition.Serializer(RecipeCondition.MY_FLAG));
 
         Networking.registerMessages();
 

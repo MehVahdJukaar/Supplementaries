@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
 
-import net.mehvahdjukaar.supplementaries.block.CommonUtil.WoodType;
+import net.mehvahdjukaar.supplementaries.block.CommonUtil.TempWoodType;
 import net.mehvahdjukaar.supplementaries.block.util.IBlockHolder;
 import net.mehvahdjukaar.supplementaries.block.util.ITextHolder;
 import net.mehvahdjukaar.supplementaries.block.util.TextHolder;
@@ -89,12 +89,12 @@ public class SignPostBlockTile extends TileEntity implements ITextHolder, IBlock
 
         //remove in the future
         if(compound.contains("WoodTypeUp"))
-        this.woodTypeUp = WoodType.values()[compound.getInt("WoodTypeUp")].convertWoodType();
+        this.woodTypeUp = TempWoodType.values()[compound.getInt("WoodTypeUp")].convertWoodType();
         if(compound.contains("WoodTypeDown"))
-        this.woodTypeDown = WoodType.values()[compound.getInt("WoodTypeDown")].convertWoodType();
+        this.woodTypeDown = TempWoodType.values()[compound.getInt("WoodTypeDown")].convertWoodType();
 
-        if(compound.contains("Wood_type_up"))this.woodTypeUp = WoodType.values()[compound.getInt("Wood_type_up")].convertWoodType();
-        if(compound.contains("Wood_type_down"))this.woodTypeDown = WoodType.values()[compound.getInt("Wood_type_down")].convertWoodType();
+        if(compound.contains("Wood_type_up"))this.woodTypeUp = TempWoodType.values()[compound.getInt("Wood_type_up")].convertWoodType();
+        if(compound.contains("Wood_type_down"))this.woodTypeDown = TempWoodType.values()[compound.getInt("Wood_type_down")].convertWoodType();
         if(compound.contains("Left_up"))this.leftUp=compound.getBoolean("Left_up");
         if(compound.contains("Left_down"))this.leftDown=compound.getBoolean("Left_down");
         if(compound.contains("Yaw_up"))this.yawUp=compound.getFloat("Yaw_up");
