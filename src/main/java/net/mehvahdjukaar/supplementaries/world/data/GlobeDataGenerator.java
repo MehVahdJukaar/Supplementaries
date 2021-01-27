@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.world.data;
 
-import net.mehvahdjukaar.supplementaries.block.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.minecraft.util.math.MathHelper;
 
 import java.util.Calendar;

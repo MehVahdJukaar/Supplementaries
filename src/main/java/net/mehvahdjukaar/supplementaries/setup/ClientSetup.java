@@ -2,25 +2,30 @@ package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.tiles.*;
-import net.mehvahdjukaar.supplementaries.client.Textures;
-import net.mehvahdjukaar.supplementaries.client.gui.NoticeBoardContainer;
+import net.mehvahdjukaar.supplementaries.inventories.NoticeBoardContainer;
 import net.mehvahdjukaar.supplementaries.client.gui.NoticeBoardGui;
-import net.mehvahdjukaar.supplementaries.client.gui.SackContainer;
+import net.mehvahdjukaar.supplementaries.inventories.SackContainer;
 import net.mehvahdjukaar.supplementaries.client.gui.SackGui;
 import net.mehvahdjukaar.supplementaries.client.particles.FireflyGlowParticle;
 import net.mehvahdjukaar.supplementaries.client.particles.SpeakerSoundParticle;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.FireflyEntityRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
+import net.mehvahdjukaar.supplementaries.common.Textures;
+import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
+import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.entities.FireflyEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.particle.FlameParticle;
+import net.minecraft.client.renderer.Atlases;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.entity.SpriteRenderer;
+import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
@@ -148,7 +153,9 @@ public class ClientSetup {
         //hanging flower pot
         RenderTypeLookup.setRenderLayer(Registry.HANGING_FLOWER_POT.get(), RenderType.getCutout());
         ClientRegistry.bindTileEntityRenderer((TileEntityType<HangingFlowerPotBlockTile>) Registry.HANGING_FLOWER_POT_TILE.get(), HangingFlowerPotBlockTileRenderer::new);
-
+        //gold door & trapdoor
+        RenderTypeLookup.setRenderLayer(Registry.GOLD_DOOR.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(Registry.GOLD_TRAPDOOR.get(), RenderType.getCutout());
 
     }
 
@@ -166,11 +173,18 @@ public class ClientSetup {
     //textures
     @SubscribeEvent
     public static void onTextureStitch(TextureStitchEvent.Pre event) {
-
-        Textures.stitchAll(event);
-
-
-
+        if(event.getMap().getTextureLocation().equals(Atlases.SIGN_ATLAS)){
+            for(IWoodType type : WoodTypes.TYPES.values()){
+                //TODO: make hanging sign use java model
+                //event.addSprite(HANGING_SIGNS_TEXTURES.get(type));
+                event.addSprite(Textures.SIGN_POSTS_TEXTURES.get(type));
+            }
+        }
+        if (event.getMap().getTextureLocation().equals(AtlasTexture.LOCATION_BLOCKS_TEXTURE)) {
+            for (ResourceLocation r : Textures.getBlockTextures()) {
+                event.addSprite(r);
+            }
+        }
     }
 
 }

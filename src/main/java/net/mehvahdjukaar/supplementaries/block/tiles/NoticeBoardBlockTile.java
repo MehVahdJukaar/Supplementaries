@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.block.util.IMapDisplay;
-import net.mehvahdjukaar.supplementaries.client.gui.NoticeBoardContainer;
+import net.mehvahdjukaar.supplementaries.inventories.NoticeBoardContainer;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;

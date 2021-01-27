@@ -2,10 +2,16 @@ package net.mehvahdjukaar.supplementaries.setup;
 
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.network.commands.ModCommands;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.loot.ConstantRange;
+import net.minecraft.loot.ItemLootEntry;
+import net.minecraft.loot.LootPool;
 import net.minecraft.tileentity.DispenserTileEntity;
 import net.minecraftforge.common.BasicTrade;
+import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.village.WandererTradesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -36,10 +42,10 @@ public class ModSetup {
     @SubscribeEvent
     public static void registerWanderingTraderTrades(WandererTradesEvent event) {
         //adding twice cause it's showing up too rarely
-        event.getRareTrades()
-                .add(new BasicTrade(10, new ItemStack(Registry.GLOBE_ITEM.get(), 1), 2, 20));
-        event.getRareTrades()
-                .add(new BasicTrade(10, new ItemStack(Registry.GLOBE_ITEM.get(), 1), 2, 20));
+        for(int i = 0; i<ServerConfigs.cached.GLOBE_TRADES; i++) {
+            event.getRareTrades()
+                    .add(new BasicTrade(10, new ItemStack(Registry.GLOBE_ITEM.get(), 1), 2, 20));
+        }
     }
 
     public static void reflectionStuff(){
@@ -49,6 +55,19 @@ public class ModSetup {
             String MethodName = method.getName();
             System.out.println("Name of the method: "
                     + MethodName);
+        }
+    }
+
+    //globe to shipwrecks
+    @SubscribeEvent
+    public static void onLootLoad(LootTableLoadEvent e) {
+        if (e.getName().toString().equals("minecraft:chests/shipwreck_treasure")) {
+            int chance = ServerConfigs.cached.GLOBE_TREASURE_CHANCE;
+            LootPool pool = LootPool.builder()
+                    .rolls(ConstantRange.of(1))
+                    .addEntry(ItemLootEntry.builder(Registry.GLOBE_ITEM.get()).weight(chance))
+                    .addEntry(ItemLootEntry.builder(Items.AIR).weight(100-chance)).build();
+            e.getTable().addPool(pool);
         }
     }
 

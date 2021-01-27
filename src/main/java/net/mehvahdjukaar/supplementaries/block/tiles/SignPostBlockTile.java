@@ -1,10 +1,10 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
 
-import net.mehvahdjukaar.supplementaries.block.CommonUtil.TempWoodType;
 import net.mehvahdjukaar.supplementaries.block.util.IBlockHolder;
 import net.mehvahdjukaar.supplementaries.block.util.ITextHolder;
 import net.mehvahdjukaar.supplementaries.block.util.TextHolder;
+import net.mehvahdjukaar.supplementaries.common.CommonUtil.TempWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.VanillaWoodTypes;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;

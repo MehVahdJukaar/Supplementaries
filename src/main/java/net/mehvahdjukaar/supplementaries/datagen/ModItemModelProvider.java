@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.datagen;
 
 
-import net.mehvahdjukaar.supplementaries.client.Textures;
+import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.setup.registration.Variants;

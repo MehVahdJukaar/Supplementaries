@@ -72,7 +72,8 @@
   "message.supplementaries.double_cake": "Can be stacked",
   "block.supplementaries.double_cake": "Double Cake",
   "message.supplementaries.safe.unbound": "Unbound",
-
+  "block.supplementaries.gold_door": "Gold Door",
+  "block.supplementaries.gold_trapdoor": "Gold Trapdoor",
 
 
   "block.supplementaries.flag": "Flag",

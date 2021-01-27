@@ -1,14 +1,10 @@
-package net.mehvahdjukaar.supplementaries.client;
+package net.mehvahdjukaar.supplementaries.common;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.setup.registration.Variants;
-import net.minecraft.client.renderer.Atlases;
-import net.minecraft.client.renderer.model.RenderMaterial;
-import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.event.TextureStitchEvent;
 
 import java.util.*;
 
@@ -74,19 +70,13 @@ public class Textures {
     public static final ResourceLocation SACK_GUI_TEXTURE_9 = new ResourceLocation(MOD_ID,"textures/gui/sack_gui_9.png");
 
     public static final Map<IWoodType,ResourceLocation> HANGING_SIGNS_TEXTURES = new HashMap<>();
-    public static final Map<IWoodType,RenderMaterial> HANGING_SIGNS_MATERIAL = new HashMap<>();
     public static final Map<IWoodType,ResourceLocation> SIGN_POSTS_TEXTURES = new HashMap<>();
-    public static final Map<IWoodType,RenderMaterial> SIGN_POSTS_MATERIAL = new HashMap<>();
     static {
         for(IWoodType type : WoodTypes.TYPES.values()){
             HANGING_SIGNS_TEXTURES.put(type, new ResourceLocation(MOD_ID, "entity/hanging_signs/"+type.getLocation()+Variants.getHangingSignName(type)));
             SIGN_POSTS_TEXTURES.put(type, new ResourceLocation(MOD_ID, "entity/sign_posts/"+type.getLocation()+Variants.getSignPostName(type)));
-
-            HANGING_SIGNS_MATERIAL.put(type, new RenderMaterial(Atlases.SIGN_ATLAS,HANGING_SIGNS_TEXTURES.get(type)));
-            SIGN_POSTS_MATERIAL.put(type, new RenderMaterial(Atlases.SIGN_ATLAS,SIGN_POSTS_TEXTURES.get(type)));
         }
     }
-
 
     //TODO: rethink this
     public static List<ResourceLocation> getBlockTextures() {
@@ -95,25 +85,6 @@ public class Textures {
                 XP_TEXTURE, FAUCET_TEXTURE, FISHIES_TEXTURE, BELLOWS_TEXTURE, LASER_BEAM_TEXTURE, LASER_BEAM_END_TEXTURE,LASER_OVERLAY_TEXTURE,
                 CLOCK_HAND_TEXTURE, HOURGLASS_REDSTONE, HOURGLASS_GLOWSTONE, HOURGLASS_SUGAR, HOURGLASS_BLAZE, HOURGLASS_GUNPOWDER));
     }
-
-    public static void stitchAll(TextureStitchEvent.Pre event){
-        if(event.getMap().getTextureLocation().equals(Atlases.SIGN_ATLAS)){
-            for(IWoodType type : WoodTypes.TYPES.values()){
-                //TODO: make hanging sign use java model
-                //event.addSprite(HANGING_SIGNS_TEXTURES.get(type));
-                event.addSprite(SIGN_POSTS_TEXTURES.get(type));
-            }
-
-
-        }
-        if (event.getMap().getTextureLocation().equals(AtlasTexture.LOCATION_BLOCKS_TEXTURE)) {
-            List<ResourceLocation> l = getBlockTextures();
-            for (ResourceLocation r : l) {
-                event.addSprite(r);
-            }
-        }
-    }
-
 
 
 

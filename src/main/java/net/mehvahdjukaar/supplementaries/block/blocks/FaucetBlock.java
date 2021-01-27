@@ -1,9 +1,9 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
-import net.mehvahdjukaar.supplementaries.block.CommonUtil;
 import net.mehvahdjukaar.supplementaries.block.tiles.FaucetBlockTile;
 import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
+import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.minecraft.block.*;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;

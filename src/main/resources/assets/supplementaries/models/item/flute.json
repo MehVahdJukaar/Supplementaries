@@ -1,6 +1,6 @@
 {
   "parent": "item/handheld",
   "textures": {
-    "layer0": "supplementaries:items/flute_item"
+    "layer0": "supplementaries:items/flute"
   }
 }

@@ -3,8 +3,8 @@ package net.mehvahdjukaar.supplementaries.setup;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.block.tiles.*;
-import net.mehvahdjukaar.supplementaries.client.gui.NoticeBoardContainer;
-import net.mehvahdjukaar.supplementaries.client.gui.SackContainer;
+import net.mehvahdjukaar.supplementaries.inventories.NoticeBoardContainer;
+import net.mehvahdjukaar.supplementaries.inventories.SackContainer;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.CageItemRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.FireflyJarItemRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.JarItemRenderer;
@@ -849,13 +849,15 @@ public class Registry {
 
     //double cake
     public static final String DOUBLE_CAKE_NAME = "double_cake";
-    public static final RegistryObject<Block> DOUBLE_CAKE = BLOCKS.register(DOUBLE_CAKE_NAME,()-> new DoubleCakeBlock(AbstractBlock.Properties.create(Material.CAKE).
+    public static final RegistryObject<Block> DOUBLE_CAKE = BLOCKS.register(DOUBLE_CAKE_NAME,()-> new DoubleCakeBlock(
+            AbstractBlock.Properties.create(Material.CAKE).
             hardnessAndResistance(0.5F)
             .sound(SoundType.CLOTH)
     ));
     //directional cake
     public static final String DIRECTIONAL_CAKE_NAME = "directional_cake";
-    public static final RegistryObject<Block> DIRECTIONAL_CAKE = BLOCKS.register(DIRECTIONAL_CAKE_NAME,()-> new DirectionalCakeBlock(AbstractBlock.Properties.create(Material.CAKE).
+    public static final RegistryObject<Block> DIRECTIONAL_CAKE = BLOCKS.register(DIRECTIONAL_CAKE_NAME,()-> new DirectionalCakeBlock(
+            AbstractBlock.Properties.create(Material.CAKE).
             hardnessAndResistance(0.5F)
             .sound(SoundType.CLOTH)
             .lootFrom(Blocks.CAKE)
@@ -863,6 +865,33 @@ public class Registry {
     public static final RegistryObject<Item> DIRECTIONAL_CAKE_ITEM = ITEMS.register(DIRECTIONAL_CAKE_NAME,()-> new BlockItem(DIRECTIONAL_CAKE.get(),
             (new Item.Properties()).group(null)
     ));
+
+    //gold door
+    public static final String GOLD_DOOR_NAME = "gold_door";
+    public static final RegistryObject<Block> GOLD_DOOR = BLOCKS.register(GOLD_DOOR_NAME, ()-> new GoldDoorBlock(
+            AbstractBlock.Properties.create(Material.IRON, MaterialColor.GOLD)
+            .setRequiresTool()
+            .hardnessAndResistance(5.0F)
+            .sound(SoundType.METAL)
+            .notSolid()));
+    public static final RegistryObject<Item> GOLD_DOOR_ITEM = ITEMS.register(GOLD_DOOR_NAME,()-> new BlockItem(GOLD_DOOR.get(),
+            (new Item.Properties()).group(getTab(ItemGroup.REDSTONE,GOLD_DOOR_NAME))
+    ));
+    //gold trapdoor
+    public static final String GOLD_TRAPDOOR_NAME = "gold_trapdoor";
+    public static final RegistryObject<Block> GOLD_TRAPDOOR = BLOCKS.register(GOLD_TRAPDOOR_NAME,()-> new GoldTrapdoorBlock(
+            AbstractBlock.Properties.create(Material.IRON, MaterialColor.GOLD)
+            .setRequiresTool()
+            .hardnessAndResistance(5.0F)
+            .sound(SoundType.METAL)
+            .notSolid()
+            .setAllowsSpawn((a,b,c,d)->false)));
+    public static final RegistryObject<Item> GOLD_TRAPDOOR_ITEM = ITEMS.register(GOLD_TRAPDOOR_NAME,()-> new BlockItem(GOLD_TRAPDOOR.get(),
+            (new Item.Properties()).group(getTab(ItemGroup.REDSTONE,GOLD_TRAPDOOR_NAME))
+    ));
+
+
+
 
 
 }

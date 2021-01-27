@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.block;
+package net.mehvahdjukaar.supplementaries.common;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.SignPostBlock;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
@@ -22,7 +22,7 @@ import net.minecraftforge.common.Tags;
 
 import java.util.Calendar;
 
-import static net.mehvahdjukaar.supplementaries.client.Textures.*;
+import static net.mehvahdjukaar.supplementaries.common.Textures.*;
 
 public class CommonUtil {
 
@@ -31,6 +31,7 @@ public class CommonUtil {
     public static boolean isearthday;
     public static boolean ischristmas;
     static{
+
         Calendar calendar = Calendar.getInstance();
         ishalloween = ((calendar.get(Calendar.MONTH)==Calendar.OCTOBER && calendar.get(Calendar.DATE)>=29)||
                         (calendar.get(Calendar.MONTH)== Calendar.NOVEMBER&&calendar.get(Calendar.DATE) <= 1));

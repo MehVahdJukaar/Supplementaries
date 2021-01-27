@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.client.gui;
+package net.mehvahdjukaar.supplementaries.inventories;
 
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
@@ -8,34 +8,43 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
+import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.tags.ItemTags;
 
 
-public class SackContainer extends Container  {
+public class NoticeBoardContainer extends Container  {
     public final IInventory inventory;
 
-    public SackContainer(int id, PlayerInventory playerInventory, PacketBuffer packetBuffer) {
+    public NoticeBoardContainer(int id, PlayerInventory playerInventory, PacketBuffer packetBuffer) {
         this(id,playerInventory);
     }
 
-    public SackContainer(int id, PlayerInventory playerInventory) {
-        this(id, playerInventory, new Inventory(9));
+    public NoticeBoardContainer(int id, PlayerInventory playerInventory) {
+        this(id, playerInventory, new Inventory(1));
     }
 
-    public SackContainer(int id, PlayerInventory playerInventory, IInventory inventory) {
+    public NoticeBoardContainer(int id, PlayerInventory playerInventory, IInventory inventory) {
 
-        super(Registry.SACK_CONTAINER.get(), id);
+        super(Registry.NOTICE_BOARD_CONTAINER.get(), id);
         //tile inventory
         this.inventory = inventory;
-        assertInventorySize(inventory, 9);
+        assertInventorySize(inventory, 1);
         inventory.openInventory(playerInventory.player);
 
-        int add = ServerConfigs.cached.SACK_SLOTS;
-        int xp = 44-(add*18);
-        for(int j = 0; j < (5+(add*2)); ++j) {
-            this.addSlot(new SackSlot(inventory, j, xp + j * 18, 35));
-        }
+        this.addSlot(new Slot(inventory, 0, 79, 39) {
+            @Override
+            public void onSlotChanged() {
+                super.onSlotChanged();
+                //NoticeBoardContainer.this.slotChanged(0, 0, 0);
+            }
+            @Override
+            public boolean isItemValid(ItemStack stack) {
+                if(!stack.isEmpty()&& ServerConfigs.cached.NOTICE_BOARDS_UNRESTRICTED)return true;
+                return ((ItemTags.LECTERN_BOOKS!=null&&stack.getItem().isIn(ItemTags.LECTERN_BOOKS)) || stack.getItem() instanceof FilledMapItem);
+            }
+        });
 
 
         for (int si = 0; si < 3; ++si)
@@ -61,12 +70,11 @@ public class SackContainer extends Container  {
         if (slot != null && slot.getHasStack()) {
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
-            int activeSlots = (5+(ServerConfigs.cached.SACK_SLOTS*2));
-            if (index < activeSlots) {
-                if (!this.mergeItemStack(itemstack1, activeSlots, this.inventorySlots.size(), true)) {
+            if (index < this.inventory.getSizeInventory()) {
+                if (!this.mergeItemStack(itemstack1, this.inventory.getSizeInventory(), this.inventorySlots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.mergeItemStack(itemstack1, 0, activeSlots, false)) {
+            } else if (!this.mergeItemStack(itemstack1, 0, this.inventory.getSizeInventory(), false)) {
                 return ItemStack.EMPTY;
             }
 
@@ -80,7 +88,6 @@ public class SackContainer extends Container  {
         return itemstack;
     }
 
-
     /**
      * Called when the container is closed.
      */
@@ -90,5 +97,3 @@ public class SackContainer extends Container  {
     }
 
 }
-
-

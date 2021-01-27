@@ -3,9 +3,10 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.mehvahdjukaar.supplementaries.block.tiles.SignPostBlockTile;
-import net.mehvahdjukaar.supplementaries.client.Textures;
+import net.mehvahdjukaar.supplementaries.client.Materials;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
+import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -93,7 +94,7 @@ public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockT
                 }
 
                 matrixStackIn.scale(1,-1,-1);
-                RenderMaterial material = Textures.SIGN_POSTS_MATERIAL.get(tile.woodTypeUp);
+                RenderMaterial material = Materials.SIGN_POSTS_MATERIAL.get(tile.woodTypeUp);
                 IVertexBuilder builder =  material.getBuffer(bufferIn, RenderType::getEntitySolid);
                 signModel.render(matrixStackIn, builder, combinedLightIn, combinedOverlayIn);
 
@@ -134,7 +135,7 @@ public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockT
                 }
 
                 matrixStackIn.scale(1,-1,-1);
-                RenderMaterial material = Textures.SIGN_POSTS_MATERIAL.get(tile.woodTypeDown);
+                RenderMaterial material = Materials.SIGN_POSTS_MATERIAL.get(tile.woodTypeDown);
                 IVertexBuilder builder =  material.getBuffer(bufferIn, RenderType::getEntitySolid);
                 signModel.render(matrixStackIn, builder, combinedLightIn, combinedOverlayIn);
 

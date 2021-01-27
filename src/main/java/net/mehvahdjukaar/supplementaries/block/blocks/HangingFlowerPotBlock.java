@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.HangingFlowerPotBlockTile;
-import net.mehvahdjukaar.supplementaries.world.data.FlowerPotHelper;
+import net.mehvahdjukaar.supplementaries.common.FlowerPotHelper;
 import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;

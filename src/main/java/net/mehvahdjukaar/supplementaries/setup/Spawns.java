@@ -49,4 +49,9 @@ public class Spawns {
         EntitySpawnPlacementRegistry.register((EntityType<FireflyEntity>)Registry.FIREFLY_TYPE, EntitySpawnPlacementRegistry.PlacementType.NO_RESTRICTIONS,
                 Heightmap.Type.MOTION_BLOCKING, FireflyEntity::canSpawnOn);
     }
+
+
+
+
+
 }

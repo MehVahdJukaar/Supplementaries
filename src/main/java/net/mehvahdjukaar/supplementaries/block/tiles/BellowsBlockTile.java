@@ -1,10 +1,10 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
-import net.mehvahdjukaar.supplementaries.block.CommonUtil;
 import net.mehvahdjukaar.supplementaries.block.blocks.BellowsBlock;
+import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
-import net.mehvahdjukaar.supplementaries.world.data.ModTags;
+import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FireBlock;

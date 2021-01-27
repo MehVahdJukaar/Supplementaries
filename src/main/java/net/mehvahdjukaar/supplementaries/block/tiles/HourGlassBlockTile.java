@@ -36,7 +36,7 @@ import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import javax.annotation.Nullable;
 import java.util.stream.IntStream;
 
-import static net.mehvahdjukaar.supplementaries.client.Textures.*;
+import static net.mehvahdjukaar.supplementaries.common.Textures.*;
 
 public class HourGlassBlockTile extends LockableLootTileEntity implements ISidedInventory, ITickableTileEntity {
     private NonNullList<ItemStack> stacks = NonNullList.withSize(1, ItemStack.EMPTY);

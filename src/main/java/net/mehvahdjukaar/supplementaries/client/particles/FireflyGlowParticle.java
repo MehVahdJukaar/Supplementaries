@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.particles;
 
-import net.mehvahdjukaar.supplementaries.block.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;

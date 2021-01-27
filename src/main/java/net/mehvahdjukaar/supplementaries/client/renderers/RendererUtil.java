@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.mehvahdjukaar.supplementaries.client.Textures;
+import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;

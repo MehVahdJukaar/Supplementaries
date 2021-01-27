@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.world.data;
+package net.mehvahdjukaar.supplementaries.common;
 
 import com.google.common.collect.Maps;
 import net.minecraft.block.Block;

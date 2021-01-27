@@ -1,11 +1,11 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
-import net.mehvahdjukaar.supplementaries.block.CommonUtil;
-import net.mehvahdjukaar.supplementaries.block.CommonUtil.JarLiquidType;
 import net.mehvahdjukaar.supplementaries.block.blocks.ClockBlock;
 import net.mehvahdjukaar.supplementaries.block.util.IMobHolder;
 import net.mehvahdjukaar.supplementaries.block.util.LiquidHolder;
 import net.mehvahdjukaar.supplementaries.block.util.MobHolder;
+import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.CommonUtil.JarLiquidType;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;

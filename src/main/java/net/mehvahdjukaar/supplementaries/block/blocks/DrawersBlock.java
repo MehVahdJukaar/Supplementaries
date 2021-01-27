@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 /*
-import net.mehvahdjukaar.supplementaries.block.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;

@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.world.data.ModTags;
+import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.minecraft.inventory.container.ShulkerBoxSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

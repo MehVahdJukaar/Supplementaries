@@ -112,6 +112,9 @@ public class ServerConfigs {
     }
 
     public static class block {
+        public static ForgeConfigSpec.IntValue GLOBE_TRADES;
+        public static ForgeConfigSpec.IntValue GLOBE_TREASURE_CHANCHE;
+
         public static ForgeConfigSpec.ConfigValue<List<? extends String>> SIGN_POST_ADDITIONAL;
 
         public static ForgeConfigSpec.IntValue SPEAKER_RANGE;
@@ -155,6 +158,14 @@ public class ServerConfigs {
 
             builder.comment("Server side blocks configs")
                     .push("blocks");
+
+            //globe
+            builder.push("globe");
+            GLOBE_TRADES = builder.comment("how many gobe trades to give to the wandering trader. If you have mods that add more trades to him you might want to increase this so it's not as rare")
+                    .defineInRange("trades",2,0,50);
+            GLOBE_TREASURE_CHANCHE = builder.comment("chanche of finding a globe in a shipwreck treasure chest. default is 20%")
+                    .defineInRange("treasure_chance",20,0,100);
+            builder.pop();
 
             //sign post
             builder.push("sign_post");
@@ -285,8 +296,9 @@ public class ServerConfigs {
             builder.pop();
 
             builder.push("sack");
+            List<String> sackSupport = Arrays.asList("farmersdelight:rope");
             SACK_WHITELIST = builder.comment("additional blocks that can support a sack")
-                    .defineList("whitelist", Collections.emptyList(),s -> true);
+                    .defineList("whitelist", sackSupport,s -> true);
             SACK_PENALTY = builder.comment("penalize the player with slowness effecn when carring too many sacks")
                     .define("sack_penality", true);
             SACK_INCREMENT = builder.comment("maximum number of sacks after which the slowness effect will be applied. each multiple of this number will further slow the player down")
@@ -416,6 +428,8 @@ public class ServerConfigs {
         public static boolean SACK_PENALTY;
         public static int SACK_SLOTS;
         public static boolean SAFE_UNBREAKABLE;
+        public static int GLOBE_TRADES;
+        public static int GLOBE_TREASURE_CHANCE;
         //entity
         public static int FIREFLY_PERIOD;
         public static double FIREFLY_SPEED;
@@ -439,6 +453,9 @@ public class ServerConfigs {
             FIREFLY_WEIGHT = spawn.FIREFLY_WEIGHT.get();
             FIREFLY_BIOMES = spawn.FIREFLY_BIOMES.get();
             FIREFLY_MOD_WHITELIST = spawn.FIREFLY_MOD_WHITELIST.get();
+
+            GLOBE_TRADES = block.GLOBE_TRADES.get();
+            GLOBE_TREASURE_CHANCE = block.GLOBE_TREASURE_CHANCHE.get();
 
             SIGN_POST_ADDITIONAL= block.SIGN_POST_ADDITIONAL.get();
 
