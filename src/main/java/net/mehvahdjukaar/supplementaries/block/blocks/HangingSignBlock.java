@@ -81,20 +81,18 @@ public class HangingSignBlock extends SwayingBlock {
                             worldIn.rand.nextFloat() * 0.10F + 0.95F);
                     te.markDirty();
                 }
-                return ActionResultType.func_233537_a_(worldIn.isRemote);
             }
             //remove item
             else if (flag2) {
                 ItemStack it = te.removeStackFromSlot(0);
                 player.setHeldItem(handIn, it);
                 if(server)te.markDirty();
-                return ActionResultType.func_233537_a_(worldIn.isRemote);
             }
             // open gui (edit sign with empty hand)
-            else if (!server && emptyhand) {
-                HangingSignGui.open(te);
-                return ActionResultType.SUCCESS;
+            else if (emptyhand && !server) {
+                if(!server) HangingSignGui.open(te);
             }
+            return ActionResultType.func_233537_a_(worldIn.isRemote);
         }
         return ActionResultType.PASS;
     }

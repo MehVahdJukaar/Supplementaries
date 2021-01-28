@@ -52,14 +52,13 @@ public class DoormatBlock extends Block {
                         itemstack.shrink(1);
                     }
                     if(server)te.markDirty();
-                    return ActionResultType.func_233537_a_(worldIn.isRemote);
                 }
             }
             // open gui (edit sign with empty hand)
             else if (!server) {
                 DoormatGui.open(te);
-                return ActionResultType.SUCCESS;
             }
+            return ActionResultType.func_233537_a_(worldIn.isRemote);
         }
         return ActionResultType.PASS;
     }

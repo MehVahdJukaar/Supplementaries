@@ -317,6 +317,7 @@ public class CommonUtil {
     public static final AxisAlignedBB FENCE_SHAPE = Block.makeCuboidShape(6,0,6,10,16,10).getBoundingBox();
     public static final AxisAlignedBB POST_SHAPE = Block.makeCuboidShape(5,0,5,11,16,11).getBoundingBox();
     public static final AxisAlignedBB WALL_SHAPE = Block.makeCuboidShape(7,0,7,12,16,12).getBoundingBox();
+
     //0 normal, 1 fence, 2 walls TODO: change 1 with 2
     public static int getPostSize(BlockState state, BlockPos pos, IWorldReader world){
         Block block = state.getBlock();

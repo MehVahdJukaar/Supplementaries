@@ -80,7 +80,7 @@ public class PedestalBlock extends Block implements IWaterLoggable {
     public static boolean canConnect(BlockState state, BlockPos pos, IWorld world, Direction dir, boolean hasItem){
         if(state.getBlock() instanceof  PedestalBlock) {
             if (dir == Direction.DOWN) {
-                        return !state.get(HAS_ITEM);
+                return !state.get(HAS_ITEM);
             }
             else if (dir == Direction.UP) {
                 return !hasItem;

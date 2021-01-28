@@ -68,7 +68,7 @@ public class NoticeBoardBlockTile extends LockableLootTileEntity implements INam
 
     @Override
     public ITextComponent getDefaultName() {
-        return new TranslationTextComponent("block.supplementaries.notice_board");
+        return this.getBlockState().getBlock().getTranslatedName();
     }
 
     //update blockstate and plays sound

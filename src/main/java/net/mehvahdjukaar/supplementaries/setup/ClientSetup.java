@@ -148,6 +148,9 @@ public class ClientSetup {
         //copper lantern
         RenderTypeLookup.setRenderLayer(Registry.COPPER_LANTERN.get(), RenderType.getCutout());
         ClientRegistry.bindTileEntityRenderer((TileEntityType<OilLanternBlockTile>) Registry.COPPER_LANTERN_TILE.get(), OilLanternBlockTileRenderer::new);
+        //crimson lantern
+        RenderTypeLookup.setRenderLayer(Registry.CRIMSON_LANTERN.get(), RenderType.getCutout());
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<EnhancedLanternBlockTile>) Registry.CRIMSON_LANTERN_TILE.get(), EnhancedLanternBlockTileRenderer::new);
         //doormat
         ClientRegistry.bindTileEntityRenderer((TileEntityType<DoormatBlockTile>) Registry.DOORMAT_TILE.get(), DoormatBlockTileRenderer::new);
         //hanging flower pot

@@ -131,7 +131,6 @@ public class SignPostBlock extends Block implements IWaterLoggable, IForgeBlock{
                         itemstack.shrink(1);
                     }
                     if(server)te.markDirty();
-                    return ActionResultType.func_233537_a_(worldIn.isRemote);
                 }
             }
             //sneak right click rotates the sign on z axis
@@ -145,7 +144,6 @@ public class SignPostBlock extends Block implements IWaterLoggable, IForgeBlock{
                     te.leftDown = !te.leftDown;
                 }
                 if(server)te.markDirty();
-                return ActionResultType.func_233537_a_(worldIn.isRemote);
             }
             //change direction with compass
             else if (isCompass){
@@ -167,15 +165,14 @@ public class SignPostBlock extends Block implements IWaterLoggable, IForgeBlock{
                         int d = te.leftDown ? 180 : 0;
                         te.yawDown = (float) yaw - d;// r*-22.5f;
                         if(server)te.markDirty();
-                        return ActionResultType.func_233537_a_(worldIn.isRemote);
                     }
                 }
             }
             // open gui (edit sign with empty hand)
-            else if (!isSignPost) {
-                if(!server) SignPostGui.open(te);
-                return ActionResultType.SUCCESS;
+            else if (!isSignPost && !server) {
+                SignPostGui.open(te);
             }
+            return ActionResultType.func_233537_a_(worldIn.isRemote);
         }
         return ActionResultType.PASS;
     }

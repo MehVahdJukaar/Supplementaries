@@ -29,8 +29,6 @@ public class ModSetup {
         event.enqueueWork(Dispenser::registerBehaviors);
         //Dispenser.registerBehaviors();
 
-
-
     }
 
     @SubscribeEvent
@@ -48,6 +46,20 @@ public class ModSetup {
         }
     }
 
+    //globe to shipwrecks
+    @SubscribeEvent
+    public static void onLootLoad(LootTableLoadEvent e) {
+        if (e.getName().toString().equals("minecraft:chests/shipwreck_treasure")) {
+            int chance = ServerConfigs.cached.GLOBE_TREASURE_CHANCE;
+            LootPool pool = LootPool.builder()
+                    .name("globe_pool")
+                    .rolls(ConstantRange.of(1))
+                    .addEntry(ItemLootEntry.builder(Registry.GLOBE_ITEM.get()).weight(chance))
+                    .addEntry(ItemLootEntry.builder(Items.AIR).weight(100-chance)).build();
+            e.getTable().addPool(pool);
+        }
+    }
+
     public static void reflectionStuff(){
         Field[] methods = DispenserTileEntity.class.getDeclaredFields();
         // get the name of every method present in the list
@@ -57,20 +69,6 @@ public class ModSetup {
                     + MethodName);
         }
     }
-
-    //globe to shipwrecks
-    @SubscribeEvent
-    public static void onLootLoad(LootTableLoadEvent e) {
-        if (e.getName().toString().equals("minecraft:chests/shipwreck_treasure")) {
-            int chance = ServerConfigs.cached.GLOBE_TREASURE_CHANCE;
-            LootPool pool = LootPool.builder()
-                    .rolls(ConstantRange.of(1))
-                    .addEntry(ItemLootEntry.builder(Registry.GLOBE_ITEM.get()).weight(chance))
-                    .addEntry(ItemLootEntry.builder(Items.AIR).weight(100-chance)).build();
-            e.getTable().addPool(pool);
-        }
-    }
-
 
 
 

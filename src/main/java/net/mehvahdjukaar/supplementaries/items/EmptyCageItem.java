@@ -48,7 +48,7 @@ public class EmptyCageItem extends BlockItem {
                 break;
             case JAR:
                 isFirefly = entity.getType().getRegistryName().getPath().toLowerCase().contains("firefl");
-                if (!ServerConfigs.cached.MOB_JAR_ALLOWED_MOBS.contains(name)) {
+                if (!ServerConfigs.cached.MOB_JAR_ALLOWED_MOBS.contains(name) && !isFirefly) {
                     return ActionResultType.PASS;
                 }
                 break;

@@ -8,6 +8,7 @@ import net.minecraft.block.IWaterLoggable;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
@@ -90,7 +91,7 @@ public class ItemShelfBlock extends Block implements IWaterLoggable {
         TileEntity te = world.getTileEntity(pos);
         if(target.getHitVec().getY() >= pos.getY()+0.25) {
             if (te instanceof ItemShelfBlockTile) {
-                ItemStack i = ((ItemShelfBlockTile) te).getStackInSlot(0);
+                ItemStack i = ((IInventory) te).getStackInSlot(0);
                 if (!i.isEmpty()) return i;
             }
         }
@@ -182,7 +183,7 @@ public class ItemShelfBlock extends Block implements IWaterLoggable {
         if (state.getBlock() != newState.getBlock()) {
             TileEntity tileentity = world.getTileEntity(pos);
             if (tileentity instanceof ItemShelfBlockTile) {
-                InventoryHelper.dropInventoryItems(world, pos, (ItemShelfBlockTile) tileentity);
+                InventoryHelper.dropInventoryItems(world, pos, (IInventory) tileentity);
                 world.updateComparatorOutputLevel(pos, this);
             }
             super.onReplaced(state, world, pos, newState, isMoving);
@@ -198,7 +199,7 @@ public class ItemShelfBlock extends Block implements IWaterLoggable {
     public int getComparatorInputOverride(BlockState blockState, World world, BlockPos pos) {
         TileEntity tileentity = world.getTileEntity(pos);
         if (tileentity instanceof ItemShelfBlockTile)
-            return Container.calcRedstoneFromInventory((ItemShelfBlockTile) tileentity);
+            return Container.calcRedstoneFromInventory((IInventory) tileentity);
         else
             return 0;
     }

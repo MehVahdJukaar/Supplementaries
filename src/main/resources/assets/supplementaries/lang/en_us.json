@@ -74,14 +74,23 @@
   "message.supplementaries.safe.unbound": "Unbound",
   "block.supplementaries.gold_door": "Gold Door",
   "block.supplementaries.gold_trapdoor": "Gold Trapdoor",
+  "block.supplementaries.crimson_lantern": "Crimson Lantern",
 
+  "block.supplementaries.skull_candle": "Skull Candle",
+  "block.supplementaries.rope": "Rope",
+  "block.supplementaries.goblet": "Goblet",
 
   "block.supplementaries.flag": "Flag",
   "block.supplementaries.laser_block": "Laser Block",
   "block.supplementaries.fancy_lamp": "Fancy Lamp",
   "block.supplementaries.skull_lantern": "Skull Lantern",
 
-
+  "comment": "enhanced mushroosm: red mushroos, brown mushroom, glowsroom",
+  "comment2": "outer end: azure",
+  "comment3": "atmospheric: kousa, morado, rosewood, yucca, aspen",
+  "comment4": "autumnity: maple",
+  "comment5": "endergetic: poise",
+  "comment6": "upgrade aquatic: river, driftwood",
   "block.supplementaries.hanging_sign_acacia": "Acacia Hanging Sign",
   "block.supplementaries.hanging_sign_aspen": "Aspen Hanging Sign",
   "block.supplementaries.hanging_sign_azure": "Azure Hanging Sign",

@@ -17,6 +17,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.LazyOptional;
@@ -90,7 +91,7 @@ public class ItemShelfBlockTile extends LockableLootTileEntity implements ISided
 
     @Override
     public ITextComponent getDefaultName() {
-        return new StringTextComponent("itemshalf");
+        return this.getBlockState().getBlock().getTranslatedName();
     }
 
     @Override

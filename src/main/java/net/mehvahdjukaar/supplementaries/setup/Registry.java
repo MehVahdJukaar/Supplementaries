@@ -821,6 +821,22 @@ public class Registry {
             (new Item.Properties()).group(getTab(ItemGroup.DECORATIONS,COPPER_LANTERN_NAME))
     ));
 
+    //crimson lantern
+    public static final String CRIMSON_LANTERN_NAME = "crimson_lantern";
+    public static final RegistryObject<Block> CRIMSON_LANTERN = BLOCKS.register(CRIMSON_LANTERN_NAME,()-> new CrimsonLanternBlock(
+            AbstractBlock.Properties.create(Material.IRON, MaterialColor.RED)
+                    .hardnessAndResistance(3.5f)
+                    .setRequiresTool()
+                    .sound(SoundType.CLOTH)
+                    .setLightLevel((state)->15)
+                    .notSolid()
+    ));
+    public static final RegistryObject<TileEntityType<?>> CRIMSON_LANTERN_TILE = TILES.register(CRIMSON_LANTERN_NAME,()-> TileEntityType.Builder.create(
+            EnhancedLanternBlockTile::new, CRIMSON_LANTERN.get()).build(null));
+    public static final RegistryObject<Item> CRIMSON_LANTERN_ITEM = ITEMS.register(CRIMSON_LANTERN_NAME,()-> new BlockItem(CRIMSON_LANTERN.get(),
+            (new Item.Properties()).group(getTab(ItemGroup.DECORATIONS,CRIMSON_LANTERN_NAME))
+    ));
+
     //doormat
     public static final String DOORMAT_NAME = "doormat";
     public static final RegistryObject<Block> DOORMAT = BLOCKS.register(DOORMAT_NAME,()-> new DoormatBlock(
@@ -890,6 +906,28 @@ public class Registry {
             (new Item.Properties()).group(getTab(ItemGroup.REDSTONE,GOLD_TRAPDOOR_NAME))
     ));
 
+    //rope
+    public static final String ROPE_NAME = "rope";
+    public static final RegistryObject<Block> ROPE = BLOCKS.register(ROPE_NAME,()-> new RopeBlock(
+            AbstractBlock.Properties.create(Material.WOOL)
+                    .sound(SoundType.CLOTH)
+                    .doesNotBlockMovement()
+                    .setRequiresTool()
+                    .hardnessAndResistance(1)
+                    .notSolid()));
+    public static final RegistryObject<Item> ROPE_ITEM = ITEMS.register(ROPE_NAME,()-> new BlockItem(ROPE.get(),
+            (new Item.Properties()).group(getTab(ItemGroup.DECORATIONS,ROPE_NAME))
+    ));
+
+    //statue
+    public static final String STATUE_NAME = "statue";
+    public static final RegistryObject<Block> STATUE = BLOCKS.register(STATUE_NAME,()-> new StatueBlock(
+            AbstractBlock.Properties.create(Material.ROCK)
+                    .hardnessAndResistance(2)
+                    .notSolid()));
+    public static final RegistryObject<Item> STATUE_ITEM = ITEMS.register(STATUE_NAME,()-> new BlockItem(STATUE.get(),
+            (new Item.Properties()).group(getTab(ItemGroup.DECORATIONS,STATUE_NAME))
+    ));
 
 
 

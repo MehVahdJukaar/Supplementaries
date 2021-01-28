@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import com.google.common.collect.Lists;
 import net.mehvahdjukaar.supplementaries.block.tiles.SackBlockTile;
+import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
@@ -28,6 +29,7 @@ import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tileentity.ShulkerBoxTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
@@ -87,10 +89,19 @@ public class SackBlock extends FallingBlock {
     //@Override
     //protected void onStartFalling(FallingBlockEntity fallingEntity) { fallingEntity.setHurtEntities(true); }
 
-    public boolean canFall(BlockPos pos, World world){
+    public static boolean canFall(BlockPos pos, IWorld world){
         return (world.isAirBlock(pos.down()) || canFallThrough(world.getBlockState(pos.down()))) &&
-                !hasEnoughSolidSide(world, pos.up(), Direction.DOWN) && pos.getY() >= 0 &&
-                !ServerConfigs.cached.SACK_WHITELIST.contains(world.getBlockState(pos.up()).getBlock().getRegistryName().toString());
+                 pos.getY() >= 0 && !isSupportingCeiling(pos.up(),world);
+    }
+
+    //TODO: maybe put in rope
+    //TODO: merge rope tag and sack supporting whitelist
+    //check is block can support a rope or sack under it
+    public static boolean isSupportingCeiling(BlockPos pos, IWorld world){
+        Block b = world.getBlockState(pos).getBlock();
+        return hasEnoughSolidSide(world, pos, Direction.DOWN)||
+                (BlockTags.getCollection().get(ModTags.ROPE_TAG) != null && b.isIn(BlockTags.getCollection().get(ModTags.ROPE_TAG)))||
+                ServerConfigs.cached.SACK_WHITELIST.contains(b.getRegistryName().toString());
     }
 
     //schedule block tick
@@ -101,7 +112,7 @@ public class SackBlock extends FallingBlock {
             SackBlockTile te = ((SackBlockTile)tileentity);
             te.barrelTick();
 
-            if (this.canFall(pos,worldIn)) {
+            if (canFall(pos,worldIn)) {
                 FallingBlockEntity fallingblockentity = new FallingBlockEntity(worldIn, (double)pos.getX() + 0.5D, pos.getY(), (double)pos.getZ() + 0.5D, worldIn.getBlockState(pos)){
                     @Override
                     public ItemEntity entityDropItem(IItemProvider itemIn, int offset) {
