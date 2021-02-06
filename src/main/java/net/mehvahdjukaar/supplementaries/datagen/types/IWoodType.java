@@ -9,6 +9,8 @@ public interface IWoodType {
 
     default String getRegName(){return this.toString();}
 
+    default String toNBT(){return this.getNamespace()+":"+this.toString();}
+
     default ResourceLocation toResourceLocation(){
         return new ResourceLocation(this.getNamespace(),this.toString());
     }

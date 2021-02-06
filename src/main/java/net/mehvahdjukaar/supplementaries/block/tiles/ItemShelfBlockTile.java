@@ -16,6 +16,7 @@ import net.minecraft.tileentity.LockableLootTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.LazyOptional;
@@ -89,7 +90,7 @@ public class ItemShelfBlockTile extends LockableLootTileEntity implements ISided
 
     @Override
     public ITextComponent getDefaultName() {
-        return this.getBlockState().getBlock().getTranslatedName();
+        return new TranslationTextComponent("block.supplementaries.item_shelf");
     }
 
     @Override
@@ -97,12 +98,10 @@ public class ItemShelfBlockTile extends LockableLootTileEntity implements ISided
         return 1;
     }
 
-
     @Override
     public Container createMenu(int id, PlayerInventory player) {
         return ChestContainer.createGeneric9X3(id, player, this);
     }
-
 
     @Override
     protected NonNullList<ItemStack> getItems() {
@@ -133,6 +132,7 @@ public class ItemShelfBlockTile extends LockableLootTileEntity implements ISided
     public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
         return false;
     }
+
     private final LazyOptional<? extends IItemHandler>[] handlers = SidedInvWrapper.create(this, Direction.values());
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {

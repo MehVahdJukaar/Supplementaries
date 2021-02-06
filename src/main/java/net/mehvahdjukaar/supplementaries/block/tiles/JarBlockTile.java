@@ -29,7 +29,7 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.LockableLootTileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.biome.BiomeColors;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
@@ -430,12 +430,7 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
 
     @Override
     public ITextComponent getDefaultName() {
-        return new StringTextComponent("Jar");
-    }
-
-    @Override
-    public ITextComponent getDisplayName() {
-        return new StringTextComponent("Jar");
+        return new TranslationTextComponent("block.supplementaries.jar");
     }
 
     @Override

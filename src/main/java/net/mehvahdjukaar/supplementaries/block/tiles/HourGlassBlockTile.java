@@ -24,7 +24,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
@@ -161,7 +161,7 @@ public class HourGlassBlockTile extends LockableLootTileEntity implements ISided
 
     @Override
     public ITextComponent getDefaultName() {
-        return new StringTextComponent("hourglass");
+        return new TranslationTextComponent("block.supplementaries.hourglass");
     }
 
     @Override

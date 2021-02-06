@@ -40,8 +40,8 @@ public class ModRecipeProvider extends RecipeProvider {
 
     private static void makeSignPostRecipe(IWoodType wood, Consumer<IFinishedRecipe> consumer) {
         try{
-            Item plank = ForgeRegistries.ITEMS.getValue(new ResourceLocation(wood.getNamespace() + ":" + wood.toString() + "_planks"));
-            Item sign = ForgeRegistries.ITEMS.getValue(new ResourceLocation(wood.getNamespace() + ":" + wood.toString() + "_sign"));
+            Item plank = ForgeRegistries.ITEMS.getValue(new ResourceLocation(wood.getPlankRegName()));
+            Item sign = ForgeRegistries.ITEMS.getValue(new ResourceLocation(wood.getSignRegName()));
             if (plank == null || plank == Items.AIR) return;
             if(sign!=null && sign != Items.AIR) {
                 ShapelessRecipeBuilder.shapelessRecipe(Registry.SIGN_POST_ITEMS.get(wood).get(), 2)
@@ -70,7 +70,7 @@ public class ModRecipeProvider extends RecipeProvider {
 
     private static void makeHangingSignRecipe(IWoodType wood, Consumer<IFinishedRecipe> consumer) {
 
-            Item plank = ForgeRegistries.ITEMS.getValue(new ResourceLocation(wood.getNamespace() + ":" + wood.toString() + "_planks"));
+            Item plank = ForgeRegistries.ITEMS.getValue(new ResourceLocation(wood.getPlankRegName()));
             if (plank == null || plank == Items.AIR){
                 return;
             }

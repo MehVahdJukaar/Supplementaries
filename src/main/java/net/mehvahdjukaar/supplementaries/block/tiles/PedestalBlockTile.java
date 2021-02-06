@@ -18,7 +18,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.LazyOptional;
@@ -142,14 +142,13 @@ public class PedestalBlockTile extends LockableLootTileEntity implements ISidedI
 
     @Override
     public ITextComponent getDefaultName() {
-        return new StringTextComponent("pedestal");
+        return new TranslationTextComponent("block.supplementaries.pedestal");
     }
 
     @Override
     public int getInventoryStackLimit() {
         return 1;
     }
-
 
     @Override
     public Container createMenu(int id, PlayerInventory player) {

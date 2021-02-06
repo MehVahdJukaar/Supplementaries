@@ -171,8 +171,8 @@ public class RegistryConfigs {
             SAFE_ENABLED = builder.define(Registry.SAFE_NAME, true);
             COPPER_LANTERN_ENABLED = builder.define(Registry.COPPER_LANTERN_NAME, true);
             FLUTE_ENABLED = builder.define(Registry.FLUTE_NAME, true);
-            GOLD_TRAPDOOR_ENABLED = builder.define(Registry.GOLD_TRAPDOOR_NAME,false);
-            GOLD_DOOR_ENABLED = builder.define(Registry.GOLD_DOOR_NAME,false);
+            GOLD_TRAPDOOR_ENABLED = builder.define(Registry.GOLD_TRAPDOOR_NAME,true);
+            GOLD_DOOR_ENABLED = builder.define(Registry.GOLD_DOOR_NAME,true);
 
             STONE_LAMP_ENABLED = builder.define(Registry.STONE_LAMP_NAME, false);
             LASER_ENABLED = builder.comment("WIP")

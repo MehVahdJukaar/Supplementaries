@@ -20,6 +20,7 @@ public final class DataGenerators {
             gen.addProvider(new ModItemModelProvider(gen, Supplementaries.MOD_ID, helper));
             gen.addProvider(new ModRecipeProvider(gen));
             gen.addProvider(new ModLanguageProvider(gen, Supplementaries.MOD_ID, "en_us"));
+            gen.addProvider(new ModLootTableProvider(gen));
         }
     }
 }

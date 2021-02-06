@@ -9,5 +9,6 @@ public class ModTags {
 
     public static final ResourceLocation BELLOWS_TICKABLE_TAG = new ResourceLocation(Supplementaries.MOD_ID, "bellows_tickable");
     public static final ResourceLocation ROPE_TAG = new ResourceLocation(Supplementaries.MOD_ID, "ropes");
+    public static final ResourceLocation POSTS = new ResourceLocation(Supplementaries.MOD_ID, "posts");
 
 }

@@ -54,11 +54,6 @@ public class SackBlockTile extends LockableLootTileEntity implements INameable, 
     }
 
     @Override
-    public ITextComponent getName() {
-        return this.customName != null ? this.customName : this.getDefaultName();
-    }
-
-    @Override
     public ITextComponent getCustomName() {
         return this.customName;
     }

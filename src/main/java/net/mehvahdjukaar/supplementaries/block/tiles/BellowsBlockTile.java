@@ -16,6 +16,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ITag;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -195,9 +196,9 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
                 if(time % 9 - (power/2) == 0) {
                     TileEntity te = world.getTileEntity(frontPos);
                     Block b = world.getBlockState(frontPos).getBlock();
+                    ITag<Block> tag = BlockTags.getCollection().get(ModTags.BELLOWS_TICKABLE_TAG);
                     if (te instanceof ITickableTileEntity &&
-                            BlockTags.getCollection().get(ModTags.BELLOWS_TICKABLE_TAG) != null &&
-                            b.isIn(BlockTags.getCollection().get(ModTags.BELLOWS_TICKABLE_TAG))) {
+                             tag!= null && b.isIn(tag)) {
                         ((ITickableTileEntity) te).tick();
                     }
                 }

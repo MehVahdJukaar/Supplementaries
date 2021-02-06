@@ -33,10 +33,12 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, I
         this.type = GlobeType.getGlobeType(name.toString());
     }
 
+    @Override
     public ITextComponent getName() {
         return this.customName != null ? this.customName : this.getDefaultName();
     }
 
+    @Override
     public ITextComponent getCustomName() {
         return this.customName;
     }

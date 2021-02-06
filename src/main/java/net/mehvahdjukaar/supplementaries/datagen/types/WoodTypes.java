@@ -54,9 +54,6 @@ public class WoodTypes {
         for (IWoodType w : BetterEndWoodTypes.values()){
             TYPES.put(w.toResourceLocation(),w);
         }
-        for (IWoodType w : BotaniaWoodTypes.values()){
-            //TYPES.put(w.toResourceLocation(),w);
-        }
         for (IWoodType w : GreekFantasyWoodTypes.values()){
             TYPES.put(w.toResourceLocation(),w);
         }
@@ -69,32 +66,40 @@ public class WoodTypes {
         for (IWoodType w : MysticalWorldWoodTypes.values()){
             TYPES.put(w.toResourceLocation(),w);
         }
-        for (IWoodType w : RediscoveredWoodTypes.values()){
-            //TYPES.put(w.toResourceLocation(),w);
-        }
-        for (IWoodType w : PremiumWoodWoodTypes.values()){
-            //TYPES.put(w.toResourceLocation(),w);
-        }
-        for (IWoodType w : SilentGearWoodTypes.values()){
-            //TYPES.put(w.toResourceLocation(),w);
-        }
         for (IWoodType w : SimplyTeadWoodTypes.values()){
             TYPES.put(w.toResourceLocation(),w);
         }
         for (IWoodType w : StructurizeWoodTypes.values()){
+            TYPES.put(w.toResourceLocation(),w);
+        }
+        for (IWoodType w : RediscoveredWoodTypes.values()){
+            TYPES.put(w.toResourceLocation(),w);
+        }
+        for (IWoodType w : ArchitectsPaletteWoodTypes.values()){
+            TYPES.put(w.toResourceLocation(),w);
+        }
+        for (IWoodType w : BotaniaWoodTypes.values()){ //#
+            TYPES.put(w.toResourceLocation(),w);
+        }
+        for (IWoodType w : PremiumWoodWoodTypes.values()){ //#
             //TYPES.put(w.toResourceLocation(),w);
         }
-        for (IWoodType w : TerraqueousWoodTypes.values()){
-            //TYPES.put(w.toResourceLocation(),w);
+        for (IWoodType w : SilentGearWoodTypes.values()){ //#
+            TYPES.put(w.toResourceLocation(),w);
         }
+        for (IWoodType w : TerraqueousWoodTypes.values()){ //#
+            TYPES.put(w.toResourceLocation(),w);
+        }
+
     }
-    public static IWoodType fromString(String s){
-        if(TYPES.containsKey(new ResourceLocation(s))) return  TYPES.get(s);
+    public static IWoodType fromNBT(String s){
+        ResourceLocation res = new ResourceLocation(s);
+        if(TYPES.containsKey(res)) return TYPES.get(res);
         //remove in the future
         else {
-            for(ResourceLocation res : TYPES.keySet()) {
-                if(res.getPath().equals(s))
-                    return TYPES.get(res);
+            for(ResourceLocation r : TYPES.keySet()) {
+                if(r.getPath().equals(s))
+                    return TYPES.get(r);
             }
         }
         return VanillaWoodTypes.OAK;

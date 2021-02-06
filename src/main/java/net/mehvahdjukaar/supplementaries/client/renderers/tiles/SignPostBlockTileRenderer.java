@@ -42,10 +42,6 @@ public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockT
     public void render(SignPostBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
 
-
-
-
-
         BlockState fence = tile.fenceBlock;
         if(fence !=null){
             BlockRendererDispatcher blockRenderer = Minecraft.getInstance().getBlockRendererDispatcher();

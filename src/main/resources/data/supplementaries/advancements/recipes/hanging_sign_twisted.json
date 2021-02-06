@@ -1,0 +1,48 @@
+{
+  "advancements": [
+    {
+      "conditions": [
+        {
+          "flag": "hanging_sign",
+          "type": "supplementaries:flag"
+        },
+        {
+          "modid": "architects_palette",
+          "type": "forge:mod_loaded"
+        }
+      ],
+      "advancement": {
+        "parent": "minecraft:recipes/root",
+        "rewards": {
+          "recipes": [
+            "supplementaries:hanging_sign_twisted"
+          ]
+        },
+        "criteria": {
+          "has_plank": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+              "items": [
+                {
+                  "item": "architects_palette:twisted_planks"
+                }
+              ]
+            }
+          },
+          "has_the_recipe": {
+            "trigger": "minecraft:recipe_unlocked",
+            "conditions": {
+              "recipe": "supplementaries:hanging_sign_twisted"
+            }
+          }
+        },
+        "requirements": [
+          [
+            "has_plank",
+            "has_the_recipe"
+          ]
+        ]
+      }
+    }
+  ]
+}

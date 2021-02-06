@@ -51,6 +51,11 @@ public enum PokecubeWoodTypes implements IWoodType {
     }
 
     @Override
+    public String getSignRegName() {
+        return this.getNamespace()+":"+this.toString()+"_sign";
+    }
+
+    @Override
     public String getPlankRegName() {
         return this.getNamespace()+":plank_"+this.toString();
     }

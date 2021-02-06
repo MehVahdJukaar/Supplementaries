@@ -119,8 +119,6 @@ public class ServerConfigs {
         public static ForgeConfigSpec.IntValue GLOBE_TRADES;
         public static ForgeConfigSpec.DoubleValue GLOBE_TREASURE_CHANCHE;
 
-        public static ForgeConfigSpec.ConfigValue<List<? extends String>> SIGN_POST_ADDITIONAL;
-
         public static ForgeConfigSpec.IntValue SPEAKER_RANGE;
 
         public static ForgeConfigSpec.IntValue BELLOWS_PERIOD;
@@ -168,31 +166,6 @@ public class ServerConfigs {
                     .defineInRange("trades",2,0,50);
             GLOBE_TREASURE_CHANCHE = builder.comment("chanche of finding a globe in a shipwreck treasure chest.")
                     .defineInRange("shipwreck_treasure_chance",0.25,0,1);
-            builder.pop();
-
-            //sign post
-            builder.push("sign_post");
-            List<String> signPostWhitelist = Arrays.asList("adorn:oak_post", "adorn:birch_post", "adorn:spruce_post", "adorn:acacia_post",
-                    "adorn:dark_oak_post", "adorn:jungle_post", "adorn:warped_post", "adorn:crimson_post", "adorn:stone_post",
-                    "adorn:cobblestone_post", "adorn:sandstone_post", "adorn:diorite_post", "adorn:andesite_post", "adorn:granite_post",
-                    "adorn:brick_post", "adorn:stone_brick_post", "adorn:red_sandstone_post", "adorn:nether_brick_post", "adorn:basalt_post",
-                    "adorn:blackstone_post", "adorn:red_nether_brick_post", "adorn:prismarine_post", "adorn:quartz_post",
-                    "adorn:end_stone_brick_post", "adorn:purpur_post", "adorn:polished_blackstone_post", "adorn:polished_blackstone_brick_post",
-                    "adorn:polished_diorite_post", "adorn:polished_andesite_post", "adorn:polished_granite_post", "adorn:prismarine_brick_post",
-                    "adorn:dark_prismarine_post", "adorn:cut_snadstone_post", "adorn:smooth_sandstone_post", "adorn:cut_red_sandstone_post",
-                    "adorn:smooth_red_sandstone_post", "adorn:smooth_stone_post", "adorn:mossy_cobblestone_post", "adorn:mossy_stone_brick_post",
-                    "car:sign_post", "mysticalworld:thatch_small_post", "mysticalworld:red_mushroom_small_post", "mysticalworld:brown_mushroom_small_post",
-                    "mysticalworld:mushroom_stem_small_post", "mysticalworld:mushroom_inside_small_post", "mysticalworld:mud_block_small_post",
-                    "mysticalworld:mud_brick_small_post", "mysticalworld:charred_small_post", "mysticalworld:terracotta_brick_small_post",
-                    "mysticalworld:iron_brick_small_post", "mysticalworld:soft_stone_small_post", "mysticalworld:cracked_stone_small_post",
-                    "mysticalworld:blackened_stone_small_post", "mysticalworld:soft_obsidian_small_post", "mysticalworld:amethyst_small_post",
-                    "mysticalworld:copper_small_post", "mysticalworld:lead_small_post", "mysticalworld:quicksilver_small_post", "mysticalworld:silver_small_post",
-                    "mysticalworld:tin_small_post", "quark:oak_post", "quark:birch_post", "quark:spruce_post", "quark:acacia_post", "quark:dark_oak_post",
-                    "quark:jungle_post", "quark:warped_post", "quark:crimson_post", "quark:stripped_oak_post", "quark:stripped_birch_post",
-                    "quark:stripped_spruce_post", "quark:stripped_acacia_post", "quark:stripped_dark_oak_post", "quark:stripped_jungle_post",
-                    "quark:stripped_warped_post", "quark:stripped_crimson_post");
-            SIGN_POST_ADDITIONAL = builder.comment("additional blocks besides fences that can accept a sign post")
-                    .defineList("whitelist", signPostWhitelist,s -> true);
             builder.pop();
 
             //speaker
@@ -429,7 +402,6 @@ public class ServerConfigs {
         public static List<? extends String> FIREFLY_MOD_WHITELIST;
         public static boolean FIREFLY_DESPAWN;
         //blocks
-        public static List<? extends String> SIGN_POST_ADDITIONAL;
         public static int SPEAKER_RANGE;
         public static int BELLOWS_PERIOD;
         public static int BELLOWS_POWER_SCALING;
@@ -484,8 +456,6 @@ public class ServerConfigs {
 
             GLOBE_TRADES = block.GLOBE_TRADES.get();
             GLOBE_TREASURE_CHANCE = block.GLOBE_TREASURE_CHANCHE.get();
-
-            SIGN_POST_ADDITIONAL= block.SIGN_POST_ADDITIONAL.get();
 
             SPEAKER_RANGE = block.SPEAKER_RANGE.get();
 

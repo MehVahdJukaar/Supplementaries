@@ -17,13 +17,13 @@ public class ModLanguageProvider extends LanguageProvider {
     @Override
     protected void addTranslations() {
         for(IWoodType wood : WoodTypes.TYPES.values()){
-            add(Registry.SIGN_POST_ITEMS.get(wood).get(),capitalize(wood.toString()+"_"+Registry.SIGN_POST_NAME));
-            add(Registry.HANGING_SIGNS_ITEMS.get(wood).get(),capitalize(wood.toString()+"_"+Registry.HANGING_SIGN_NAME));
+            add(Registry.SIGN_POST_ITEMS.get(wood).get(), format(wood.toString()+"_"+Registry.SIGN_POST_NAME));
+            add(Registry.HANGING_SIGNS_ITEMS.get(wood).get(), format(wood.toString()+"_"+Registry.HANGING_SIGN_NAME));
         }
     }
 
 
-    public static String capitalize(String name){
+    public static String format(String name){
         String[] words = name.split("_");
 
         for (int i = 0; i < words.length; i++) {

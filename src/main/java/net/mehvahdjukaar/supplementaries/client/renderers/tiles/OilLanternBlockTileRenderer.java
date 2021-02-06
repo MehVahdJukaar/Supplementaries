@@ -20,7 +20,7 @@ public class OilLanternBlockTileRenderer extends EnhancedLanternBlockTileRendere
         AttachFace face = tile.getBlockState().get(OilLanternBlock.FACE);
         if(face==AttachFace.FLOOR)return;
 
-        BlockState state = tile.getBlockState().getBlock().getDefaultState();
+        BlockState state = tile.getBlockState().getBlock().getDefaultState().with(OilLanternBlock.LIT,tile.getBlockState().get(OilLanternBlock.LIT));
         this.renderLantern(tile,state,partialTicks,matrixStackIn,bufferIn,combinedLightIn,combinedOverlayIn,face==AttachFace.CEILING);
 
 

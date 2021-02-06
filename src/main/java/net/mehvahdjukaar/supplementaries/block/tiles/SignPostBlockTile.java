@@ -83,8 +83,8 @@ public class SignPostBlockTile extends TileEntity implements ITextHolder, IBlock
         this.leftDown = compound.getBoolean("LeftDown");
         this.up = compound.getBoolean("Up");
         this.down = compound.getBoolean("Down");
-        this.woodTypeUp = WoodTypes.fromString(compound.getString("TypeUp"));
-        this.woodTypeDown = WoodTypes.fromString(compound.getString("TypeDown"));
+        this.woodTypeUp = WoodTypes.fromNBT(compound.getString("TypeUp"));
+        this.woodTypeDown = WoodTypes.fromNBT(compound.getString("TypeDown"));
 
 
         //remove in the future
@@ -115,8 +115,8 @@ public class SignPostBlockTile extends TileEntity implements ITextHolder, IBlock
         compound.putBoolean("LeftDown",this.leftDown);
         compound.putBoolean("Up", this.up);
         compound.putBoolean("Down", this.down);
-        compound.putString("TypeUp", this.woodTypeUp.toString());
-        compound.putString("TypeDown", this.woodTypeDown.toString());
+        compound.putString("TypeUp", this.woodTypeUp.toNBT());
+        compound.putString("TypeDown", this.woodTypeDown.toNBT());
 
         return compound;
     }

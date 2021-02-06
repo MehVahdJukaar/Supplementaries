@@ -21,6 +21,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tileentity.LockableLootTileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.LazyOptional;
@@ -56,18 +57,13 @@ public class NoticeBoardBlockTile extends LockableLootTileEntity implements INam
     }
 
     @Override
-    public ITextComponent getName() {
-        return this.customName != null ? this.customName : this.getDefaultName();
-    }
-
-    @Override
     public ITextComponent getCustomName() {
         return this.customName;
     }
 
     @Override
     public ITextComponent getDefaultName() {
-        return this.getBlockState().getBlock().getTranslatedName();
+        return new TranslationTextComponent("block.supplementaries.notice_board");
     }
 
     //update blockstate and plays sound

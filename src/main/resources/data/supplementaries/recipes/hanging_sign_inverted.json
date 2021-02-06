@@ -27,7 +27,9 @@
           "1": {
             "item": "minecraft:stick"
           },
-          "2": []
+          "2": {
+            "item": "pokecube_legends:ultra_plank01"
+          }
         },
         "result": {
           "item": "supplementaries:hanging_sign_inverted",

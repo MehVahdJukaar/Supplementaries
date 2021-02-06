@@ -7,8 +7,8 @@ import net.minecraft.block.material.MaterialColor;
 
 public enum PokecubeLegendsWoodTypes implements IWoodType {
     INVERTED("inverted","ultra_plank01"),
-    TEMPORAL("inverted","ultra_plank02"),
-    AGED("inverted","ultra_plank03"),
+    TEMPORAL("temporal","ultra_plank02"),
+    AGED("aged","ultra_plank03"),
     DISTORTIC("distortic","distortic_plank");
 
     private final String name;
