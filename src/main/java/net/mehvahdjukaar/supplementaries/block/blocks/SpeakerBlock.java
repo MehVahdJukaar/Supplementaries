@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 import net.mehvahdjukaar.supplementaries.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.client.gui.SpeakerBlockGui;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.network.Networking;
+import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.SendSpeakerBlockMessagePacket;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
@@ -89,7 +89,7 @@ public class SpeakerBlock extends Block {
                             world.addBlockEvent(pos, this, 0, 0);
                             PlayerList players = mcserv.getPlayerList();
                             players.sendToAllNearExcept(null, pos.getX(), pos.getY(), pos.getZ(), ServerConfigs.cached.SPEAKER_RANGE*speaker.volume,
-                                    dimension, Networking.INSTANCE.toVanillaPacket(
+                                    dimension, NetworkHandler.INSTANCE.toVanillaPacket(
                                             new SendSpeakerBlockMessagePacket(speaker.getName().getString() + ": " + speaker.message,
                                                     speaker.narrator),
                                             NetworkDirection.PLAY_TO_CLIENT));

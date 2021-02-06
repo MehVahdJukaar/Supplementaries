@@ -18,6 +18,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.Random;
 import java.util.UUID;
@@ -231,47 +232,59 @@ public class MobHolder {
     }
 
 
-    //todo: replace with markdirty like liquid holder
-    //client and server. cached mob from entitydata
-    public void updateMob(){
-        if(this.entityData.contains("id")) {
+    @Nullable
+    public static Entity createEntityFromNBT(CompoundNBT com, UUID id, World world){
+        if(com.contains("id")) {
             Entity entity;
-            if(this.entityData.get("id").getString().equals("minecraft:bee")){
-                entity = new BeeEntity(EntityType.BEE, this.world);
+            if(com.get("id").getString().equals("minecraft:bee")){
+                entity = new BeeEntity(EntityType.BEE, world);
             }
             else{
-                entity  = EntityType.loadEntityAndExecute(this.entityData, this.world, o -> o);
+                entity  = EntityType.loadEntityAndExecute(com, world, o -> o);
             }
-            if (!(entity instanceof LivingEntity))return;
+            //if (!(entity instanceof LivingEntity))return;
 
-            if(this.uuid!=null) {
-                entity.setUniqueId(this.uuid);
+            if(id!=null) {
+                entity.setUniqueId(id);
             }
 
-            //TODO: add shadows
-            double px = this.pos.getX() + 0.5;
-            double py = this.pos.getY() + 0.5 + 0.0625;
-            double pz = this.pos.getZ() + 0.5;
-            entity.setPosition(px, py, pz);
-            //entity.setMotion(0,0,0);
-            entity.lastTickPosX = px;
-            entity.lastTickPosY = py;
-            entity.lastTickPosZ = pz;
-            entity.prevPosX = px;
-            entity.prevPosY = py;
-            entity.prevPosZ = pz;
-            entity.ticksExisted+=this.rand.nextInt(40);
+            return entity;
+        }
+        return null;
+    }
 
-            this.mob = (LivingEntity) entity;
-            this.animationType = MobHolderType.getType(entity);
-            if(!this.world.isRemote){
-                int light = this.animationType.getLightLevel();
-                BlockState state = this.world.getBlockState(this.pos);
-                if(state.get(BlockProperties.LIGHT_LEVEL_0_15)!=light){
-                    this.world.setBlockState(this.pos, state.with(BlockProperties.LIGHT_LEVEL_0_15,light),2|4|16);
-                }
+    //todo: replace with markdirty like liquid holder and rewrite
+    //client and server. cached mob from entitydata
+    public void updateMob(){
+        this.entityChanged = false;
+
+        Entity entity = createEntityFromNBT(this.entityData,this.uuid,this.world);
+
+        if(entity==null)return;
+
+
+        //TODO: add shadows
+        double px = this.pos.getX() + 0.5;
+        double py = this.pos.getY() + 0.5 + 0.0625;
+        double pz = this.pos.getZ() + 0.5;
+        entity.setPosition(px, py, pz);
+        //entity.setMotion(0,0,0);
+        entity.lastTickPosX = px;
+        entity.lastTickPosY = py;
+        entity.lastTickPosZ = pz;
+        entity.prevPosX = px;
+        entity.prevPosY = py;
+        entity.prevPosZ = pz;
+        entity.ticksExisted+=this.rand.nextInt(40);
+
+        this.mob = (LivingEntity) entity;
+        this.animationType = MobHolderType.getType(entity);
+        if(!this.world.isRemote){
+            int light = this.animationType.getLightLevel();
+            BlockState state = this.world.getBlockState(this.pos);
+            if(state.get(BlockProperties.LIGHT_LEVEL_0_15)!=light){
+                this.world.setBlockState(this.pos, state.with(BlockProperties.LIGHT_LEVEL_0_15,light),2|4|16);
             }
-            this.entityChanged = false;
         }
 
         this.setWaterMobInWater(!this.world.getFluidState(pos).isEmpty());
@@ -332,9 +345,9 @@ public class MobHolder {
             float babyscale = 1;
             //non ageable
 
-            if(mob instanceof AgeableEntity && ((AgeableEntity) mob).isChild()) babyscale = 2f;
+            if(mob instanceof AgeableEntity && ((LivingEntity) mob).isChild()) babyscale = 2f;
             if(mobCompound.contains("IsBaby")&&mobCompound.getBoolean("IsBaby")||
-                    (mob instanceof VillagerEntity && ((VillagerEntity) mob).isChild())) babyscale = 1.125f;
+                    (mob instanceof VillagerEntity && ((LivingEntity) mob).isChild())) babyscale = 1.125f;
 
             float s = 1;
             float w = mob.getWidth() *babyscale;

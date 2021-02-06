@@ -30,6 +30,7 @@ import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tileentity.LockableTileEntity;
 import net.minecraft.tileentity.ShulkerBoxTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
@@ -39,6 +40,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
@@ -48,14 +50,15 @@ import java.util.List;
 import java.util.Random;
 
 public class SackBlock extends FallingBlock {
-    public static final VoxelShape SHAPE = Block.makeCuboidShape(2,0,2,14,12,14);
+    public static final VoxelShape SHAPE = VoxelShapes.or(Block.makeCuboidShape(2,0,2,14,12,14),
+            Block.makeCuboidShape(6,12,6,10,13,10),Block.makeCuboidShape(5,13,5,11,16,11));
     public static final ResourceLocation CONTENTS = new ResourceLocation("contents");
     public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     public SackBlock(AbstractBlock.Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(OPEN, false));
+        this.setDefaultState(this.stateContainer.getBaseState().with(OPEN, false).with(WATERLOGGED,false));
     }
 
     public int getDustColor(BlockState state, IBlockReader reader, BlockPos pos) {
@@ -242,7 +245,7 @@ public class SackBlock extends FallingBlock {
         if (stack.hasDisplayName()) {
             TileEntity tileentity = worldIn.getTileEntity(pos);
             if (tileentity instanceof SackBlockTile) {
-                ((SackBlockTile)tileentity).setCustomName(stack.getDisplayName());
+                ((LockableTileEntity) tileentity).setCustomName(stack.getDisplayName());
             }
         }
     }

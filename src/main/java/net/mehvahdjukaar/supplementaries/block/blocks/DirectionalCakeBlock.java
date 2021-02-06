@@ -1,17 +1,18 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.CakeBlock;
-import net.minecraft.block.HorizontalBlock;
+import net.minecraft.block.*;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -26,7 +27,7 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class DirectionalCakeBlock extends CakeBlock {
+public class DirectionalCakeBlock extends CakeBlock implements IWaterLoggable {
     protected static final VoxelShape[] SHAPES_NORTH = new VoxelShape[]{
             Block.makeCuboidShape(1, 0, 1, 15, 8, 15),
             Block.makeCuboidShape(1, 0, 3, 15, 8, 15),
@@ -54,9 +55,24 @@ public class DirectionalCakeBlock extends CakeBlock {
 
 
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
+    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public DirectionalCakeBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(BITES, 0).with(FACING, Direction.WEST));
+        this.setDefaultState(this.stateContainer.getBaseState().with(BITES, 0)
+                .with(FACING, Direction.WEST).with(WATERLOGGED,false));
+    }
+
+    @Override
+    public FluidState getFluidState(BlockState state) {
+        return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
+    }
+
+    @Override
+    public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
+        if (stateIn.get(WATERLOGGED)) {
+            worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
+        }
+        return super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
 
     @Override
@@ -106,10 +122,11 @@ public class DirectionalCakeBlock extends CakeBlock {
         return new TranslationTextComponent("minecraft:cake");
     }
 
+
+
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        super.fillStateContainer(builder);
-        builder.add(FACING);
+        builder.add(FACING,BITES,WATERLOGGED);
     }
 
     @Override
@@ -129,7 +146,8 @@ public class DirectionalCakeBlock extends CakeBlock {
     
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return super.getStateForPlacement(context).with(FACING, context.getPlacementHorizontalFacing().getOpposite());
+        return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing().getOpposite())
+                .with(WATERLOGGED,context.getWorld().getFluidState(context.getPos()).getFluid()==Fluids.WATER);
     }
 
     @Override

@@ -5,10 +5,10 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.network.commands.ModCommands;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.loot.ConstantRange;
 import net.minecraft.loot.ItemLootEntry;
 import net.minecraft.loot.LootPool;
+import net.minecraft.loot.conditions.RandomChance;
 import net.minecraft.tileentity.DispenserTileEntity;
 import net.minecraftforge.common.BasicTrade;
 import net.minecraftforge.event.LootTableLoadEvent;
@@ -46,16 +46,18 @@ public class ModSetup {
         }
     }
 
+    //TODO: maybe move in /data json
     //globe to shipwrecks
     @SubscribeEvent
     public static void onLootLoad(LootTableLoadEvent e) {
         if (e.getName().toString().equals("minecraft:chests/shipwreck_treasure")) {
-            int chance = ServerConfigs.cached.GLOBE_TREASURE_CHANCE;
+            float chance = (float) ServerConfigs.cached.GLOBE_TREASURE_CHANCE;
             LootPool pool = LootPool.builder()
-                    .name("globe_pool")
+                    .name("supplementaries_injected")
                     .rolls(ConstantRange.of(1))
-                    .addEntry(ItemLootEntry.builder(Registry.GLOBE_ITEM.get()).weight(chance))
-                    .addEntry(ItemLootEntry.builder(Items.AIR).weight(100-chance)).build();
+                    .acceptCondition(RandomChance.builder(chance))
+                    .addEntry(ItemLootEntry.builder(Registry.GLOBE_ITEM.get()).weight(1))
+                    .build();
             e.getTable().addPool(pool);
         }
     }

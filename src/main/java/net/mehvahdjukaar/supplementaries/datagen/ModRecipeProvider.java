@@ -20,6 +20,7 @@ public class ModRecipeProvider extends RecipeProvider {
     }
     @Override
     protected void registerRecipes(Consumer<IFinishedRecipe> consumerIn) {
+
         for (IWoodType wood : WoodTypes.TYPES.values()) {
             makeSignPostRecipe(wood, consumerIn);
             makeHangingSignRecipe(wood,consumerIn);
@@ -27,25 +28,41 @@ public class ModRecipeProvider extends RecipeProvider {
         }
     }
 
+
+
     public static void makeConditionalRec(IFinishedRecipe r, IWoodType wood,Consumer<IFinishedRecipe> consumer,String name){
         ConditionalRecipe.builder().addCondition(new RecipeCondition(name, RecipeCondition.MY_FLAG))
                 .addCondition(new ModLoadedCondition(wood.getNamespace()))
                 .addRecipe(r)
                 .generateAdvancement()
-                .build(consumer,"supplementaries",name+"_"+wood.toString());
+                .build(consumer,"supplementaries",name+"_"+wood.getRegName());
     }
 
     private static void makeSignPostRecipe(IWoodType wood, Consumer<IFinishedRecipe> consumer) {
         try{
             Item plank = ForgeRegistries.ITEMS.getValue(new ResourceLocation(wood.getNamespace() + ":" + wood.toString() + "_planks"));
             Item sign = ForgeRegistries.ITEMS.getValue(new ResourceLocation(wood.getNamespace() + ":" + wood.toString() + "_sign"));
-            if (plank == null || sign == null) return;
-            ShapelessRecipeBuilder.shapelessRecipe(Registry.SIGN_POST_ITEMS.get(wood).get(), 2)
-                    .addIngredient(sign)
-                    .setGroup(Registry.SIGN_POST_NAME)
-                    .addCriterion("has_plank", InventoryChangeTrigger.Instance.forItems(plank))
-                    //.build(consumer);
-                    .build((s) -> makeConditionalRec(s, wood, consumer,Registry.SIGN_POST_NAME)); //
+            if (plank == null || plank == Items.AIR) return;
+            if(sign!=null && sign != Items.AIR) {
+                ShapelessRecipeBuilder.shapelessRecipe(Registry.SIGN_POST_ITEMS.get(wood).get(), 2)
+                        .addIngredient(sign)
+                        .setGroup(Registry.SIGN_POST_NAME)
+                        .addCriterion("has_plank", InventoryChangeTrigger.Instance.forItems(plank))
+                        //.build(consumer);
+                        .build((s) -> makeConditionalRec(s, wood, consumer, Registry.SIGN_POST_NAME)); //
+            }
+            else{
+                ShapedRecipeBuilder.shapedRecipe(Registry.SIGN_POST_ITEMS.get(wood).get(), 3)
+                        .patternLine("   ")
+                        .patternLine("222")
+                        .patternLine(" 1 ")
+                        .key('1', Items.STICK)
+                        .key('2', plank)
+                        .setGroup(Registry.SIGN_POST_NAME)
+                        .addCriterion("has_plank", InventoryChangeTrigger.Instance.forItems(plank))
+                        //.build(consumer);
+                        .build((s) -> makeConditionalRec(s, wood, consumer,Registry.SIGN_POST_NAME)); //
+            }
         }
         catch (Exception ignored){}
     }
@@ -54,7 +71,9 @@ public class ModRecipeProvider extends RecipeProvider {
     private static void makeHangingSignRecipe(IWoodType wood, Consumer<IFinishedRecipe> consumer) {
 
             Item plank = ForgeRegistries.ITEMS.getValue(new ResourceLocation(wood.getNamespace() + ":" + wood.toString() + "_planks"));
-            if (plank == null) return;
+            if (plank == null || plank == Items.AIR){
+                return;
+            }
             ShapedRecipeBuilder.shapedRecipe(Registry.HANGING_SIGNS.get(wood).get(), 2)
                     .patternLine("010")
                     .patternLine("222")

@@ -2,9 +2,9 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.BellowsBlock;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
-import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FireBlock;
@@ -16,14 +16,13 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tileentity.AbstractFurnaceTileEntity;
-import net.minecraft.tileentity.CampfireTileEntity;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
@@ -34,8 +33,7 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
 
     public float height = 0;
     public float prevHeight = 0;
-    public int counter = 0;
-    private boolean ITag;
+    private long offset = 0;
 
     public BellowsBlockTile() {
         super(Registry.BELLOWS_TILE.get());
@@ -46,207 +44,197 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
         return 128;
     }
 
-    public AxisAlignedBB getBoundingBox(BlockState state) {
-        return this.getBoundingBox(this.getDirection());
-    }
-
-    public AxisAlignedBB getBoundingBox(Direction direction) {
-        float f = this.height;
-        Direction.Axis axis = direction.getAxis();
-        return axis == Direction.Axis.Y ? VoxelShapes.fullCube().getBoundingBox().grow(0,0, f) :
-                VoxelShapes.fullCube().getBoundingBox().grow(0,f,0);
-    }
-
-    private AxisAlignedBB getTopBoundingBox(Direction directionIn) {
-        Direction direction = directionIn.getOpposite();
-        float f = this.height;
-        return VoxelShapes.fullCube().getBoundingBox().contract(0,-f,0).contract((1+f)*direction.getXOffset(),
-                (1+f)*direction.getYOffset(),(1+f)*direction.getZOffset());
-    }
-
-    //TODO: fix this.
-    private void moveCollidedEntities() {
-        boolean axis = this.getDirection().getAxis() == Direction.Axis.Y;
-        Direction direction = axis ? Direction.NORTH : Direction.UP;
-        for(int j=0; j<2; j++) {
-
-            AxisAlignedBB axisalignedbb = this.getTopBoundingBox(direction).offset(this.pos);
-            List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(null, axisalignedbb);
-
-            if (!list.isEmpty()) {
-                for (Entity entity : list) {
-                    if (entity.getPushReaction() != PushReaction.IGNORE) {
-                        double d0 = 0.0D;
-                        double d1 = 0.0D;
-                        double d2 = 0.0D;
-                        AxisAlignedBB axisalignedbb1 = entity.getBoundingBox();
-                        switch (direction.getAxis()) {
-                            case X:
-                                if (direction.getAxisDirection() == Direction.AxisDirection.POSITIVE) {
-                                    d0 = axisalignedbb.maxX - axisalignedbb1.minX;
-                                } else {
-                                    d0 = axisalignedbb1.maxX - axisalignedbb.minX;
-                                }
-
-                                d0 = d0 + 0.01D;
-                                break;
-                            case Y:
-                                if (direction.getAxisDirection() == Direction.AxisDirection.POSITIVE) {
-                                    d1 = axisalignedbb.maxY - axisalignedbb1.minY;
-                                } else {
-                                    d1 = axisalignedbb1.maxY - axisalignedbb.minY;
-                                }
-
-                                d1 = d1 + 0.01D;
-                                break;
-                            case Z:
-                                if (direction.getAxisDirection() == Direction.AxisDirection.POSITIVE) {
-                                    d2 = axisalignedbb.maxZ - axisalignedbb1.minZ;
-                                } else {
-                                    d2 = axisalignedbb1.maxZ - axisalignedbb.minZ;
-                                }
-
-                                d2 = d2 + 0.01D;
-                        }
-
-
-                        entity.move(MoverType.SHULKER_BOX, new Vector3d(d0 * (double) direction.getXOffset(), d1 * (double) direction.getYOffset(), d2 * (double) direction.getZOffset()));
-                    }
-                }
-            }
-            direction = direction.getOpposite();
+    public VoxelShape getVoxelShape(Direction direction) {
+        if(direction.getAxis() == Direction.Axis.Y){
+            return VoxelShapes.create(0,0,-this.height,1,1,1+this.height);
+        }
+        else{
+            return VoxelShapes.create(0,-this.height,0,1,1+this.height,1);
         }
     }
 
+    private AxisAlignedBB getHalfBoundingBox(Direction dir) {
+        return new AxisAlignedBB(this.pos)
+                .contract(-0.5*dir.getXOffset(),-0.5*dir.getYOffset(),-0.5*dir.getZOffset());
+    }
+
+    private void moveCollidedEntities(){
+        Direction dir = this.getDirection().getAxis() == Direction.Axis.Y ? Direction.SOUTH : Direction.UP;
+        for(int j=0; j<2; j++) {
+            AxisAlignedBB axisalignedbb = this.getHalfBoundingBox(dir);
+            List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(null, axisalignedbb);
+            if (!list.isEmpty()) {
+                for (Entity entity : list) {
+                    if (entity.getPushReaction() != PushReaction.IGNORE) {
+                        AxisAlignedBB entityBB = entity.getBoundingBox();
+                        double dy = 0.0D;
+                        double dz = 0.0D;
+                        float f  = this.height+0.01f;
+                        switch (dir) {
+                            case SOUTH:
+                                dz = axisalignedbb.maxZ+f - entityBB.minZ;
+                                if (dz < 0) continue;
+                                break;
+                            case NORTH:
+                                dz = axisalignedbb.minZ-f - entityBB.maxZ;
+                                if (dz > 0) continue;
+                                break;
+                            default:
+                            case UP:
+                                dy = axisalignedbb.maxY+f - entityBB.minY;
+                                if (dy < 0) continue;
+                                break;
+                            case DOWN:
+                                dy = axisalignedbb.minY-f - entityBB.maxY;
+                                if (dy > 0) continue;
+                                break;
+                        }
+                        entity.move(MoverType.SHULKER_BOX, new Vector3d(0, dy, dz));
+                    }
+                }
+            }
+            dir = dir.getOpposite();
+        }
+    }
+
+    private void pushEntities(Direction facing, float period, float range){
+
+        double velocity = ServerConfigs.cached.BELLOWS_BASE_VEL_SCALING/period; // Affects acceleration
+        double maxVelocity = ServerConfigs.cached.BELLOWS_MAX_VEL; // Affects max speed
+
+        AxisAlignedBB facingBox = CommonUtil.getDirectionBB(this.pos, facing, (int)range);
+        List<Entity> list = this.world.getEntitiesWithinAABB(Entity.class, facingBox);
+
+        for (Entity entity : list) {
+
+            if (!this.inLineOfSight(entity, facing)) continue;
+            if (facing == Direction.UP) maxVelocity *= 0.5D;
+            AxisAlignedBB entityBB = entity.getBoundingBox();
+            double dist;
+            double b;
+            switch(facing){
+                default:
+                case SOUTH:
+                    b = pos.getZ()+1;
+                    if(entityBB.minZ<b)continue;
+                    dist = entity.getPosZ() - b;
+                    break;
+                case NORTH:
+                    b = pos.getZ();
+                    if(entityBB.maxZ>b)continue;
+                    dist = b - entity.getPosZ();
+                    break;
+                case EAST:
+                    b = pos.getX()+1;
+                    if(entityBB.minX<b)continue;
+                    dist = entity.getPosX() - b;
+                    break;
+                case WEST:
+                    b = pos.getX();
+                    if(entityBB.maxX>b)continue;
+                    dist = b - entity.getPosX();
+                    break;
+                case UP:
+                    b = pos.getY()+1;
+                    if(entityBB.minY<b)continue;
+                    dist = entity.getPosY() - b;
+                    break;
+                case DOWN:
+                    b = pos.getY();
+                    if(entityBB.maxY>b)continue;
+                    dist = b - entity.getPosY();
+                    break;
+            }
+            //dist, vel>0
+            velocity *=(range-dist)/range;
+
+            if (Math.abs(entity.getMotion().getCoordinate(facing.getAxis())) < maxVelocity) {
+                entity.setMotion(entity.getMotion().add(facing.getXOffset() * velocity, facing.getYOffset() * velocity, facing.getZOffset() * velocity));
+                if(ServerConfigs.cached.BELLOWS_FLAG) entity.velocityChanged = true;
+            }
+        }
+    }
 
     public void tick() {
+
         int power = this.getBlockState().get(BellowsBlock.POWER);
         this.prevHeight = this.height;
-        //TODO: tick gets called 3 times on server side WTF. fix ASAP
-        if(power!=0){
-            this.counter++;
 
-            float RANGE = ServerConfigs.cached.BELLOWS_RANGE;
+        if(power!=0){
+            long time = this.world.getGameTime();
+            if(offset==0) offset = time;
 
             float period = ((float)ServerConfigs.cached.BELLOWS_PERIOD)-(power-1)*((float)ServerConfigs.cached.BELLOWS_POWER_SCALING);
-
             Direction facing = this.getDirection();
 
-            //slope of animation. for particles and pusing entities
-            float arg = (float)Math.PI*2*((this.counter / period)%1);
+            //slope of animation. for particles and pushing entities
+            float arg = (float)Math.PI*2*(((time-offset) / period)%1);
             float sin = MathHelper.sin(arg);
             float cos = MathHelper.cos(arg);
-
-            //client
-            if (this.world.isRemote && this.world.rand.nextInt(2) == 0 &&
-                    this.world.rand.nextFloat() < sin &&
-                    ! Block.hasEnoughSolidSide(this.world, this.pos.offset(facing), facing.getOpposite()))
-                this.spawnParticles(this.world, this.pos);
-
-
             final float dh = 1 / 16f;//0.09375f;
             this.height = dh * cos - dh;
 
-
+            //client. particles
+            if (this.world.isRemote) {
+                if (this.world.rand.nextInt(2) == 0 && this.world.rand.nextFloat() < sin &&
+                        !Block.hasEnoughSolidSide(this.world, this.pos.offset(facing), facing.getOpposite())) {
+                    this.spawnParticles(this.world, this.pos);
+                }
+            }
             //server
-            if (!this.world.isRemote) {
-
-
+            else{
+                float range = ServerConfigs.cached.BELLOWS_RANGE;
                 //push entities (only if pushing air)
-
                 if ( sin> 0) {
-                    List<Entity> list = this.world.getEntitiesWithinAABB(Entity.class,
-                            CommonUtil.getDirectionBB(this.pos, facing, (int)RANGE));
-
-                    for (Entity entity : list) {
-
-                        if (!this.inLineOfSight(entity, facing)) continue;
-
-                        double velocity = ServerConfigs.cached.BELLOWS_BASE_VEL_SCALING/period; // Affects acceleration
-                        double maxVelocity = ServerConfigs.cached.BELLOWS_MAX_VEL; // Affects max speed
-
-                        if (facing == Direction.UP) {
-                            maxVelocity *= 0.5D;
-                        }
-
-                        /*double dist =Math.min(RANGE,entity.getDistanceSq(this.pos.getX()+0.5+0.5*facing.getXOffset(),
-                                this.pos.getY()+0.5+0.5*facing.getYOffset(),this.pos.getZ()+0.5+0.5*facing.getZOffset()));*/
-
-                        double dist = Math.max(0.0D,getAxisDist(facing, this.pos, entity));
-
-                        velocity = velocity*(RANGE-dist)/RANGE;
-
-                        if (Math.abs(entity.getMotion().getCoordinate(facing.getAxis())) < maxVelocity) {
-                            entity.setMotion(entity.getMotion().add(facing.getXOffset() * velocity, facing.getYOffset() * velocity, facing.getZOffset() * velocity));
-                            if(ServerConfigs.cached.BELLOWS_FLAG) entity.velocityChanged = true;
-                        }
-                    }
+                    this.pushEntities(facing,period,range);
                 }
 
-                BlockPos frontpos = this.pos.offset(facing);
+                BlockPos frontPos = this.pos.offset(facing);
 
                 //speeds up furnaces
-                //TODO add configs
-                if(this.counter % 9- (power/2) == 0) {
-                    TileEntity te = world.getTileEntity(frontpos);
-                    Block b = world.getBlockState(frontpos).getBlock();
-                    if (te instanceof ITickableTileEntity && (te instanceof AbstractFurnaceTileEntity || te instanceof CampfireTileEntity ||
-                            (BlockTags.getCollection().get(ModTags.BELLOWS_TICKABLE_TAG) != null && b.isIn(BlockTags.getCollection().get(ModTags.BELLOWS_TICKABLE_TAG))) ||
-                            ServerConfigs.cached.BELLOWS_WHITELIST.contains(b.getRegistryName().toString()))) {
+                if(time % 9 - (power/2) == 0) {
+                    TileEntity te = world.getTileEntity(frontPos);
+                    Block b = world.getBlockState(frontPos).getBlock();
+                    if (te instanceof ITickableTileEntity &&
+                            BlockTags.getCollection().get(ModTags.BELLOWS_TICKABLE_TAG) != null &&
+                            b.isIn(BlockTags.getCollection().get(ModTags.BELLOWS_TICKABLE_TAG))) {
                         ((ITickableTileEntity) te).tick();
                     }
                 }
+
                 //refresh fire blocks
                 //update more frequently block closed to it
                 //fire updates (previous random tick) at a minimum of 30 ticks
                 int n = 0;
-                for (int a = 0; a <= RANGE; a++) {
-                    if (this.counter % (15 * (a + 1)) != 0) {
+                for (int a = 0; a <= range; a++) {
+                    if (time % (15 * (a + 1)) != 0) {
                         n = a;
                         break;
                     }
                 }
                 //only first 4 block will ultimately be kept active. this could change with random ticks if unlucky
                 for (int i = 0; i < n; i++) {
-                    BlockState fb = this.world.getBlockState(frontpos);
+                    BlockState fb = this.world.getBlockState(frontPos);
                     if (fb.getBlock() instanceof FireBlock) {
                         int age = fb.get(FireBlock.AGE);
                         if (age != 0) {
-                            world.setBlockState(frontpos, fb.with(FireBlock.AGE,
+                            world.setBlockState(frontPos, fb.with(FireBlock.AGE,
                                     MathHelper.clamp(age - 7, 0, 15)), 4);
                         }
                     }
-                    frontpos = frontpos.offset(facing);
+                    frontPos = frontPos.offset(facing);
                 }
-
 
             }
         }
         //resets counter when powered off
         else{
-            this.counter=0;
-            //closing animation only client side
-            if(this.world.isRemote && this.height < 0)
+            this.offset=0;
+            if(this.height < 0)
                 this.height = Math.min(this.height + 0.01f, 0);
         }
         if(this.height !=0){
             this.moveCollidedEntities();
-        }
-    }
-
-    private double getAxisDist(Direction facing, BlockPos pos, Entity entity){
-        switch(facing.getAxis()){
-            default:
-            case X:
-                double ex =entity.getPosX();
-                double px = pos.getX();
-                double px2 = px+0.5+facing.getXOffset()*0.5;
-                return ex-px2;
-                //return entity.getPosX() - pos.getX()+0.5+0.5*facing.getXOffset();
-            case Y:
-                return entity.getPosY() - pos.getY()+0.5+0.5*facing.getYOffset();
-            case Z:
-                return entity.getPosZ() - pos.getZ()+0.5+0.5*facing.getZOffset();
         }
     }
 
@@ -264,7 +252,6 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
         }
         return flag;
     }
-
 
     public  void spawnParticles(World world, BlockPos pos) {
         Direction dir = this.getDirection();
@@ -291,13 +278,13 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
     @Override
     public void read(BlockState state, CompoundNBT compound) {
         super.read(state, compound);
-        this.counter = compound.getInt("Progress");
+        this.offset = compound.getLong("Offset");
     }
 
     @Override
     public CompoundNBT write(CompoundNBT compound) {
         super.write(compound);
-        compound.putInt("Progress", this.counter);
+        compound.putLong("Offset", this.offset);
         return compound;
     }
 

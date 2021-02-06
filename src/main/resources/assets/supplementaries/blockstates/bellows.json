@@ -1,73 +1,7 @@
 {
   "variants": {
-    "tile_3=0,facing=north": {
-      "model": "supplementaries:block/bellows_nozzle"
-    },
-    "tile_3=0,facing=east": {
-      "model": "supplementaries:block/bellows_nozzle",
-      "y": 90
-    },
-    "tile_3=0,facing=south": {
-      "model": "supplementaries:block/bellows_nozzle",
-      "y": 180
-    },
-    "tile_3=0,facing=west": {
-      "model": "supplementaries:block/bellows_nozzle",
-      "y": 270
-    },
-    "tile_3=0,facing=up": {
-      "model": "supplementaries:block/bellows_nozzle",
-      "x": 270
-    },
-    "tile_3=0,facing=down": {
-      "model": "supplementaries:block/bellows_nozzle",
-      "x": 90
-    },
-    "tile_3=1,facing=north": {
-      "model": "supplementaries:block/bellows_top"
-    },
-    "tile_3=1,facing=east": {
-      "model": "supplementaries:block/bellows_top",
-      "y": 90
-    },
-    "tile_3=1,facing=south": {
-      "model": "supplementaries:block/bellows_top",
-      "y": 180
-    },
-    "tile_3=1,facing=west": {
-      "model": "supplementaries:block/bellows_top",
-      "y": 270
-    },
-    "tile_3=1,facing=up": {
-      "model": "supplementaries:block/bellows_top",
-      "x": 270
-    },
-    "tile_3=1,facing=down": {
-      "model": "supplementaries:block/bellows_top",
-      "x": 90
-    },
-    "tile_3=2,facing=north": {
+    "": {
       "model": "supplementaries:block/bellows"
-    },
-    "tile_3=2,facing=east": {
-      "model": "supplementaries:block/bellows",
-      "y": 90
-    },
-    "tile_3=2,facing=south": {
-      "model": "supplementaries:block/bellows",
-      "y": 180
-    },
-    "tile_3=2,facing=west": {
-      "model": "supplementaries:block/bellows",
-      "y": 270
-    },
-    "tile_3=2,facing=up": {
-      "model": "supplementaries:block/bellows",
-      "x": 270
-    },
-    "tile_3=2,facing=down": {
-      "model": "supplementaries:block/bellows",
-      "x": 90
     }
   }
 }

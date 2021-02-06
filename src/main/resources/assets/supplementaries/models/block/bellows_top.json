@@ -1,8 +1,0 @@
-{
-  "parent": "supplementaries:custom/bellows_top",
-  "textures": {
-    "particle": "supplementaries:blocks/bellows_front",
-    "0": "supplementaries:blocks/bellows_front",
-	"1": "supplementaries:blocks/bellows_top"
-  }
-}

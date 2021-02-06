@@ -3,8 +3,7 @@ package net.mehvahdjukaar.supplementaries.setup;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.block.tiles.*;
-import net.mehvahdjukaar.supplementaries.inventories.NoticeBoardContainer;
-import net.mehvahdjukaar.supplementaries.inventories.SackContainer;
+import net.mehvahdjukaar.supplementaries.client.renderers.items.BlackboardItemRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.CageItemRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.FireflyJarItemRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.JarItemRenderer;
@@ -12,7 +11,11 @@ import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.entities.FireflyEntity;
 import net.mehvahdjukaar.supplementaries.entities.ThrowableBrickEntity;
+import net.mehvahdjukaar.supplementaries.inventories.NoticeBoardContainer;
+import net.mehvahdjukaar.supplementaries.inventories.SackContainer;
 import net.mehvahdjukaar.supplementaries.items.*;
+import net.mehvahdjukaar.supplementaries.items.crafting.BlackboardClearRecipe;
+import net.mehvahdjukaar.supplementaries.items.crafting.BlackboardDuplicateRecipe;
 import net.mehvahdjukaar.supplementaries.setup.registration.Variants;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
@@ -26,6 +29,8 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.*;
+import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.item.crafting.SpecialRecipeSerializer;
 import net.minecraft.particles.BasicParticleType;
 import net.minecraft.particles.ParticleType;
 import net.minecraft.particles.ParticleTypes;
@@ -58,6 +63,8 @@ public class Registry {
     public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES, Supplementaries.MOD_ID);
     public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, Supplementaries.MOD_ID);
     public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, Supplementaries.MOD_ID);
+    public static final DeferredRegister<IRecipeSerializer<?>> RECIPES = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, Supplementaries.MOD_ID);
+
 
     public static void init(IEventBus bus) {
         BLOCKS.register(bus);
@@ -67,7 +74,9 @@ public class Registry {
         ENTITIES.register(bus);
         //PARTICLES.register(bus);
         SOUNDS.register(bus);
+        RECIPES.register(bus);
     }
+
 
     //creative tab
     private static final boolean tab = RegistryConfigs.reg.CREATIVE_TAB.get();
@@ -122,7 +131,6 @@ public class Registry {
         event.getRegistry().register(GREEN_FLAME);
     }
 
-
     //entities
 
     //firefly
@@ -155,6 +163,14 @@ public class Registry {
     public static final BasicParticleType FIREFLY_GLOW = (BasicParticleType) new BasicParticleType(true).setRegistryName("firefly_glow");
     public static final BasicParticleType SPEAKER_SOUND = (BasicParticleType) new BasicParticleType(true).setRegistryName("speaker_sound");
     public static final BasicParticleType GREEN_FLAME = (BasicParticleType) new BasicParticleType(true).setRegistryName("green_flame");
+
+
+
+    //recipes
+    public static final RegistryObject<IRecipeSerializer<?>> BLACKBOARD_DUPLICATE_RECIPE = RECIPES.register("blackboard_duplicate_recipe", ()->
+            new SpecialRecipeSerializer<>(BlackboardDuplicateRecipe::new));
+    public static final RegistryObject<IRecipeSerializer<?>> BLACKBOARD_CLEAR_RECIPE = RECIPES.register("blackboard_clear_recipe", ()->
+            new SpecialRecipeSerializer<>(BlackboardClearRecipe::new));
 
 
     //blocks
@@ -781,7 +797,7 @@ public class Registry {
     public static final RegistryObject<TileEntityType<?>> BLACKBOARD_TILE = TILES.register(BLACKBOARD_NAME,()-> TileEntityType.Builder.create(
             BlackboardBlockTile::new, BLACKBOARD.get()).build(null));
     public static final RegistryObject<Item> BLACKBOARD_ITEM = ITEMS.register(BLACKBOARD_NAME,()-> new BlockItem(BLACKBOARD.get(),
-            (new Item.Properties()).group(getTab(ItemGroup.DECORATIONS,BLACKBOARD_NAME))
+            (new Item.Properties()).group(getTab(ItemGroup.DECORATIONS,BLACKBOARD_NAME)).setISTER(()-> BlackboardItemRenderer::new)
     ));
 
     //safe
@@ -815,27 +831,28 @@ public class Registry {
                     .sound(SoundType.LANTERN)
                     .notSolid()
     ));
-    public static final RegistryObject<TileEntityType<?>> COPPER_LANTERN_TILE = TILES.register(COPPER_LANTERN_NAME,()-> TileEntityType.Builder.create(
-            OilLanternBlockTile::new, COPPER_LANTERN.get()).build(null));
+
     public static final RegistryObject<Item> COPPER_LANTERN_ITEM = ITEMS.register(COPPER_LANTERN_NAME,()-> new BlockItem(COPPER_LANTERN.get(),
             (new Item.Properties()).group(getTab(ItemGroup.DECORATIONS,COPPER_LANTERN_NAME))
     ));
 
     //crimson lantern
     public static final String CRIMSON_LANTERN_NAME = "crimson_lantern";
-    public static final RegistryObject<Block> CRIMSON_LANTERN = BLOCKS.register(CRIMSON_LANTERN_NAME,()-> new CrimsonLanternBlock(
+    public static final RegistryObject<Block> CRIMSON_LANTERN = BLOCKS.register(CRIMSON_LANTERN_NAME,()-> new OilLanternBlock(
             AbstractBlock.Properties.create(Material.IRON, MaterialColor.RED)
-                    .hardnessAndResistance(3.5f)
-                    .setRequiresTool()
+                    .hardnessAndResistance(1.5f)
                     .sound(SoundType.CLOTH)
                     .setLightLevel((state)->15)
                     .notSolid()
     ));
     public static final RegistryObject<TileEntityType<?>> CRIMSON_LANTERN_TILE = TILES.register(CRIMSON_LANTERN_NAME,()-> TileEntityType.Builder.create(
-            EnhancedLanternBlockTile::new, CRIMSON_LANTERN.get()).build(null));
+            OilLanternBlockTile::new, CRIMSON_LANTERN.get()).build(null));
     public static final RegistryObject<Item> CRIMSON_LANTERN_ITEM = ITEMS.register(CRIMSON_LANTERN_NAME,()-> new BlockItem(CRIMSON_LANTERN.get(),
-            (new Item.Properties()).group(getTab(ItemGroup.DECORATIONS,CRIMSON_LANTERN_NAME))
+            (new Item.Properties()).group(getTab(null,CRIMSON_LANTERN_NAME))
     ));
+
+    public static final RegistryObject<TileEntityType<?>> COPPER_LANTERN_TILE = TILES.register(COPPER_LANTERN_NAME,()-> TileEntityType.Builder.create(
+            OilLanternBlockTile::new, COPPER_LANTERN.get()).build(null));
 
     //doormat
     public static final String DOORMAT_NAME = "doormat";
@@ -911,14 +928,14 @@ public class Registry {
     public static final RegistryObject<Block> ROPE = BLOCKS.register(ROPE_NAME,()-> new RopeBlock(
             AbstractBlock.Properties.create(Material.WOOL)
                     .sound(SoundType.CLOTH)
-                    .doesNotBlockMovement()
-                    .setRequiresTool()
                     .hardnessAndResistance(1)
+                    .slipperiness(0.5f)
                     .notSolid()));
     public static final RegistryObject<Item> ROPE_ITEM = ITEMS.register(ROPE_NAME,()-> new BlockItem(ROPE.get(),
-            (new Item.Properties()).group(getTab(ItemGroup.DECORATIONS,ROPE_NAME))
+            (new Item.Properties()).group(getTab(null,ROPE_NAME))
     ));
 
+    /*
     //statue
     public static final String STATUE_NAME = "statue";
     public static final RegistryObject<Block> STATUE = BLOCKS.register(STATUE_NAME,()-> new StatueBlock(
@@ -928,7 +945,7 @@ public class Registry {
     public static final RegistryObject<Item> STATUE_ITEM = ITEMS.register(STATUE_NAME,()-> new BlockItem(STATUE.get(),
             (new Item.Properties()).group(getTab(ItemGroup.DECORATIONS,STATUE_NAME))
     ));
-
+    */
 
 
 

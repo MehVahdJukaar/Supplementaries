@@ -25,11 +25,11 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
 
     private ModelFile hangingSignModel(IWoodType wood, String baseName, String type){
-        return models().getBuilder(baseName+"_"+type+"_"+wood.toString())
+        return models().getBuilder(baseName+"_"+type+"_"+wood.getRegName())
                 .parent(new ModelFile.UncheckedModelFile(modLoc("block/"+baseName+"_"+type+"_template")))
-                .texture("particle", "blocks/hanging_signs/"+wood.getLocation()+"hanging_sign_front_"+wood.toString())
-                .texture("0", "blocks/hanging_signs/"+wood.getLocation()+"hanging_sign_front_"+wood.toString())
-                .texture("1", "blocks/hanging_signs/"+wood.getLocation()+"hanging_sign_details_"+wood.toString());
+                .texture("particle", "blocks/hanging_signs/"+wood.getLocation()+"hanging_sign_front_"+wood.getRegName())
+                .texture("0", "blocks/hanging_signs/"+wood.getLocation()+"hanging_sign_front_"+wood.getRegName())
+                .texture("1", "blocks/hanging_signs/"+wood.getLocation()+"hanging_sign_details_"+wood.getRegName());
     }
 
     private void makeHangingSignsBlock(IWoodType wood){

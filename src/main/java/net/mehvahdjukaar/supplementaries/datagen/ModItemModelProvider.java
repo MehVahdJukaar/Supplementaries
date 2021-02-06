@@ -36,8 +36,8 @@ public class ModItemModelProvider extends ItemModelProvider {
     private void makeHangingSignItem(IWoodType wood){
         getBuilder(Variants.getHangingSignName(wood)).parent(new ModelFile.UncheckedModelFile(
                 modLoc("item/hanging_sign_template")))
-                .texture("0", "blocks/hanging_signs/"+wood.getLocation()+"hanging_sign_front_"+wood.toString())
-                .texture("2", "blocks/hanging_signs/"+wood.getLocation()+"hanging_sign_details_"+wood.toString());
+                .texture("0", "blocks/hanging_signs/"+wood.getLocation()+"hanging_sign_front_"+wood.getRegName())
+                .texture("2", "blocks/hanging_signs/"+wood.getLocation()+"hanging_sign_details_"+wood.getRegName());
 
     }
 

@@ -38,7 +38,7 @@ public class RegistryConfigs {
 
 
     }
-    public static void registerConfig(){
+    public static void load(){
         CommentedFileConfig replacementConfig = CommentedFileConfig
                 .builder(FMLPaths.CONFIGDIR.get().resolve(Supplementaries.MOD_ID + "-registry.toml"))
                 .sync()
@@ -124,7 +124,8 @@ public class RegistryConfigs {
         }
 
         private static void init(ForgeConfigSpec.Builder builder) {
-            builder.comment("all these don't actually disable blocks anymore, they just remove their recipe and remove them from the creative tabs(like all other mods do)")
+            builder.comment("all these don't actually disable blocks anymore, they just remove their recipe and remove them from the creative tabs(like all other mods do)\n"+
+                    "to access server configuration go into /saves/serverconfigs")
                     .push("general");
             CREATIVE_TAB = builder.comment("enable creative tab").define("creative_tab",false);
 

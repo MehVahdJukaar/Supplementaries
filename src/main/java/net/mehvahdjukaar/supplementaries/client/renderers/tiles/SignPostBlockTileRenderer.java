@@ -6,7 +6,6 @@ import net.mehvahdjukaar.supplementaries.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.client.Materials;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
-import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -50,7 +49,7 @@ public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockT
         BlockState fence = tile.fenceBlock;
         if(fence !=null){
             BlockRendererDispatcher blockRenderer = Minecraft.getInstance().getBlockRendererDispatcher();
-            RendererUtil.renderBlockPlus(fence, matrixStackIn, bufferIn, blockRenderer, tile.getWorld(), tile.getPos(),  RenderType.getCutout());
+            RendererUtil.renderBlockPlus(fence, matrixStackIn, bufferIn, blockRenderer, tile.getWorld(), tile.getPos());
             //blockRenderer.renderBlock(fence, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
         }
 

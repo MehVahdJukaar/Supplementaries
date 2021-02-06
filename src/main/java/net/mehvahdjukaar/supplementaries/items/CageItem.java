@@ -1,11 +1,15 @@
 package net.mehvahdjukaar.supplementaries.items;
 
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.tiles.CageBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.MobHolder;
+import net.mehvahdjukaar.supplementaries.world.data.CagedMobHelper;
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.IAngerable;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
@@ -33,7 +37,7 @@ public class CageItem extends BlockItem {
     }
 
 
-
+    @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
         CompoundNBT compoundnbt = stack.getChildTag("BlockEntityTag");
@@ -60,12 +64,21 @@ public class CageItem extends BlockItem {
     public ActionResultType onItemUse(ItemUseContext context) {
         ItemStack stack = context.getItem();
         CompoundNBT com = stack.getChildTag("BlockEntityTag");
+        PlayerEntity player = context.getPlayer();
         if(!context.getPlayer().isSneaking() && com!=null && com.contains("MobHolder")){
             CompoundNBT nbt = com.getCompound("MobHolder");
             World world = context.getWorld();
             Entity entity  = EntityType.loadEntityAndExecute(nbt.getCompound("EntityData"), world, o -> o);
             if(entity!=null) {
                 if(!world.isRemote) {
+                    //anger entity
+                    if(!player.isCreative() && entity instanceof IAngerable){
+                        IAngerable ang = (IAngerable) entity;
+                        ang.func_241355_J__();
+                        ang.setAngerTarget(player.getUniqueID());
+                        ang.setRevengeTarget(player);
+                    }
+
                     Vector3d v = context.getHitVec();
                     entity.setPositionAndRotation(v.getX(), v.getY(), v.getZ(), context.getPlacementYaw(), 0);
 
@@ -77,16 +90,19 @@ public class CageItem extends BlockItem {
                     if(!world.addEntity(entity)){
                         //spawn failed, reverting to old UUID
                         entity.setUniqueId(temp);
-                        world.addEntity(entity);
+                        boolean fail = world.addEntity(entity);
+                        if(!fail) Supplementaries.LOGGER.warn("Failed to release caged mob");
                     }
                     //TODO fix sound categories
                     world.playSound(null,v.getX(), v.getY(), v.getZ(), SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.PLAYERS,1,0.05f);
 
                 }
-                if(!context.getPlayer().isCreative()) {
+                if(!player.isCreative()) {
                    ItemStack returnItem = new ItemStack(empty.get());
                    if(stack.hasDisplayName())returnItem.setDisplayName(stack.getDisplayName());
                    context.getPlayer().setHeldItem(context.getHand(), returnItem);
+
+                   CagedMobHelper.addMob(entity);
                 }
 
             }

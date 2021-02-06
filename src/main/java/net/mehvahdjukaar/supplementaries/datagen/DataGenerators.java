@@ -21,7 +21,5 @@ public final class DataGenerators {
             gen.addProvider(new ModRecipeProvider(gen));
             gen.addProvider(new ModLanguageProvider(gen, Supplementaries.MOD_ID, "en_us"));
         }
-
-        //https://www.youtube.com/watch?v=YD_ajlZ5TdY
     }
 }

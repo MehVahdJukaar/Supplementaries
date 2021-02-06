@@ -9,8 +9,6 @@ import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.GameRules;
 
@@ -97,8 +95,8 @@ public class ClockBlockTile extends TileEntity implements ITickableTileEntity {
                 this.power=p;
                 this.world.updateComparatorOutputLevel(this.pos, this.getBlockState().getBlock());
             }
-
-            this.world.playSound(null, this.pos, SoundEvents.BLOCK_NOTE_BLOCK_SNARE, SoundCategory.BLOCKS,0.03f,time%40==0?2:1.92f);
+            //TODO: add proper sounds
+            //this.world.playSound(null, this.pos, SoundEvents.BLOCK_NOTE_BLOCK_SNARE, SoundCategory.BLOCKS,0.03f,time%40==0?2:1.92f);
 
         }
         //hours

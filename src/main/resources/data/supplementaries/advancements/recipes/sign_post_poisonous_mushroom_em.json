@@ -1,0 +1,48 @@
+{
+  "advancements": [
+    {
+      "conditions": [
+        {
+          "flag": "sign_post",
+          "type": "supplementaries:flag"
+        },
+        {
+          "modid": "extendedmushrooms",
+          "type": "forge:mod_loaded"
+        }
+      ],
+      "advancement": {
+        "parent": "minecraft:recipes/root",
+        "rewards": {
+          "recipes": [
+            "supplementaries:sign_post_poisonous_mushroom_em"
+          ]
+        },
+        "criteria": {
+          "has_plank": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+              "items": [
+                {
+                  "item": "extendedmushrooms:poisonous_mushroom_planks"
+                }
+              ]
+            }
+          },
+          "has_the_recipe": {
+            "trigger": "minecraft:recipe_unlocked",
+            "conditions": {
+              "recipe": "supplementaries:sign_post_poisonous_mushroom_em"
+            }
+          }
+        },
+        "requirements": [
+          [
+            "has_plank",
+            "has_the_recipe"
+          ]
+        ]
+      }
+    }
+  ]
+}

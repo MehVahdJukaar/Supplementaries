@@ -22,6 +22,14 @@ public class FlagBlockTile extends TileEntity implements ITickableTileEntity {
     }
 
     public void tick() {
+
+        if(!this.world.isRemote){
+            int b = 1;
+        }
+        else{
+            int c = 1;
+        }
+
         if(this.world.isRemote) {
             //TODO:cache?
             //TODO: make long or float. wind vane too

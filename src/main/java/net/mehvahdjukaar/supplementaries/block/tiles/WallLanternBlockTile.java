@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 import net.mehvahdjukaar.supplementaries.block.blocks.WallLanternBlock;
 import net.mehvahdjukaar.supplementaries.block.util.IBlockHolder;
 import net.mehvahdjukaar.supplementaries.block.util.ILightMimic;
-import net.mehvahdjukaar.supplementaries.client.renderers.tiles.EnhancedLanternBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;

@@ -6,14 +6,20 @@ import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.IAngerable;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.monster.SlimeEntity;
+import net.minecraft.entity.monster.piglin.PiglinEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
+import net.minecraft.util.math.AxisAlignedBB;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 public class EmptyCageItem extends BlockItem {
@@ -25,16 +31,24 @@ public class EmptyCageItem extends BlockItem {
         this.cageType = whitelist;
     }
 
+    private static List<MobEntity> getEntitiesInRange(MobEntity e) {
+        double d0 = e.getAttributeValue(Attributes.FOLLOW_RANGE);
+        AxisAlignedBB axisalignedbb = AxisAlignedBB.fromVector(e.getPositionVec()).grow(d0, 10.0D, d0);
+        return e.world.getLoadedEntitiesWithinAABB(e.getClass(), axisalignedbb);
+    }
+
     @Override
     public boolean onLeftClickEntity(ItemStack stack, PlayerEntity player, Entity entity) {
         if(!(entity instanceof LivingEntity)||player.getActiveHand()==null)return false;
+
         return this.itemInteractionForEntity(stack,player, ((LivingEntity) entity),player.getActiveHand()).isSuccessOrConsume();
+
     }
 
 
     @Override
     public ActionResultType itemInteractionForEntity(ItemStack stack, PlayerEntity player, LivingEntity entity, Hand hand) {
-        ResourceLocation n =  entity.getType().getRegistryName();
+        ResourceLocation n = entity.getType().getRegistryName();
         if(n==null)return ActionResultType.PASS;
         String name = n.toString();
 
@@ -74,6 +88,23 @@ public class EmptyCageItem extends BlockItem {
         player.setHeldItem(hand, DrinkHelper.fill(stack.copy(),player,returnStack,false));
         //TODO: cage sound here
         player.world.playSound(null, player.getPosition(),  SoundEvents.ITEM_BOTTLE_FILL_DRAGONBREATH, SoundCategory.BLOCKS,1,1);
+
+
+        //anger entities
+        if(entity instanceof IAngerable && entity instanceof MobEntity){
+            getEntitiesInRange((MobEntity) entity).stream()
+                    .filter((mob) -> mob != entity).map(
+                    (mob) -> (IAngerable)mob).forEach((mob)->{
+                mob.func_241355_J__();
+                mob.setAngerTarget(player.getUniqueID());
+                mob.setRevengeTarget(player);
+            });
+        }
+        //piglin workaround. don't know why they are IAngerable
+        if(entity instanceof PiglinEntity){
+            entity.attackEntityFrom(DamageSource.causePlayerDamage(player), 0);
+        }
+
 
         entity.remove();
         return ActionResultType.CONSUME;

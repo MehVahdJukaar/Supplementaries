@@ -2,24 +2,22 @@ package net.mehvahdjukaar.supplementaries.client.renderers.items;
 
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import net.mehvahdjukaar.supplementaries.block.util.MobHolder;
+import net.mehvahdjukaar.supplementaries.world.data.CagedMobHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
-import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.monster.ZombieEntity;
-import net.minecraft.entity.monster.piglin.PiglinEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.data.EmptyModelData;
 
+import java.util.UUID;
 
 
 public class CageItemRenderer extends ItemStackTileEntityRenderer {
@@ -42,20 +40,19 @@ public class CageItemRenderer extends ItemStackTileEntityRenderer {
             if (cmp.contains("MobHolder")) {
                 CompoundNBT cmp2 = cmp.getCompound("MobHolder");
 
-                CompoundNBT mobData = cmp2.getCompound("EntityData");
+                if (cmp2.contains("UUID")) {
+                    UUID id = cmp2.getUniqueId("UUID");
+                    Entity e = CagedMobHelper.getCachedMob(id);
 
-                EntityType<?> type = net.minecraft.util.registry.Registry.ENTITY_TYPE.getOrDefault(new ResourceLocation(mobData.getString("id")));
+                    if (e == null) {
+                        World world = Minecraft.getInstance().world;
+                        if(world != null) {
+                            CompoundNBT mobData = cmp2.getCompound("EntityData");
 
-                World world = Minecraft.getInstance().world;
-                if (world != null) {
-                    Entity e = type.create(world);
-                    if (e instanceof AgeableEntity) ((AgeableEntity) e).setGrowingAge(mobData.getInt("Age"));
-                    else if (e instanceof ZombieEntity) ((ZombieEntity) e).setChild(mobData.getBoolean("IsBaby"));
-                    else if (e instanceof PiglinEntity) ((PiglinEntity) e).setChild(mobData.getBoolean("IsBaby"));
-
-                    if(cmp2.contains("UUID"))
-                        e.setUniqueId(cmp2.getUniqueId("UUID"));
-
+                            e = MobHolder.createEntityFromNBT(mobData,id,world);
+                            CagedMobHelper.addMob(e);
+                        }
+                    }
                     if (e != null) {
                         float y = cmp2.getFloat("YOffset");
                         float s = cmp2.getFloat("Scale");
@@ -64,8 +61,6 @@ public class CageItemRenderer extends ItemStackTileEntityRenderer {
                         matrixStackIn.scale(-s, s, -s);
                         Minecraft.getInstance().getRenderManager().renderEntityStatic(e, 0.0D, 0.0D, 0.0D, 0.0F, 0, matrixStackIn, bufferIn, combinedLightIn);
                         matrixStackIn.pop();
-
-
                     }
                 }
             }

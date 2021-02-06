@@ -2,9 +2,7 @@ package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.tiles.*;
-import net.mehvahdjukaar.supplementaries.inventories.NoticeBoardContainer;
 import net.mehvahdjukaar.supplementaries.client.gui.NoticeBoardGui;
-import net.mehvahdjukaar.supplementaries.inventories.SackContainer;
 import net.mehvahdjukaar.supplementaries.client.gui.SackGui;
 import net.mehvahdjukaar.supplementaries.client.particles.FireflyGlowParticle;
 import net.mehvahdjukaar.supplementaries.client.particles.SpeakerSoundParticle;
@@ -14,6 +12,8 @@ import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.entities.FireflyEntity;
+import net.mehvahdjukaar.supplementaries.inventories.NoticeBoardContainer;
+import net.mehvahdjukaar.supplementaries.inventories.SackContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.particle.FlameParticle;
@@ -150,7 +150,6 @@ public class ClientSetup {
         ClientRegistry.bindTileEntityRenderer((TileEntityType<OilLanternBlockTile>) Registry.COPPER_LANTERN_TILE.get(), OilLanternBlockTileRenderer::new);
         //crimson lantern
         RenderTypeLookup.setRenderLayer(Registry.CRIMSON_LANTERN.get(), RenderType.getCutout());
-        ClientRegistry.bindTileEntityRenderer((TileEntityType<EnhancedLanternBlockTile>) Registry.CRIMSON_LANTERN_TILE.get(), EnhancedLanternBlockTileRenderer::new);
         //doormat
         ClientRegistry.bindTileEntityRenderer((TileEntityType<DoormatBlockTile>) Registry.DOORMAT_TILE.get(), DoormatBlockTileRenderer::new);
         //hanging flower pot

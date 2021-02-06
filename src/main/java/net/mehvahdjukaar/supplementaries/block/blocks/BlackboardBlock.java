@@ -4,10 +4,15 @@ import net.mehvahdjukaar.supplementaries.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.client.gui.BlackBoardGui;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootContext;
+import net.minecraft.loot.LootParameters;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
@@ -19,15 +24,22 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.List;
+
 public class BlackboardBlock extends Block {
-    public static final VoxelShape SHAPE_SOUTH = Block.makeCuboidShape(0.0D,0.0D,0.0D,16.0D,16.0D,4.0D);
-    public static final VoxelShape SHAPE_NORTH= Block.makeCuboidShape(0.0D,0.0D,12.0D,16.0D,16.0D,16.0D);
-    public static final VoxelShape SHAPE_EAST = Block.makeCuboidShape(0.0D,0.0D,0.0D,4.0D,16.0D,16.0D);
-    public static final VoxelShape SHAPE_WEST = Block.makeCuboidShape(12.0D,0.0D,0.0D,16.0D,16.0D,16.0D);
+    public static final VoxelShape SHAPE_SOUTH = Block.makeCuboidShape(0.0D,0.0D,0.0D,16.0D,16.0D,5.0D);
+    public static final VoxelShape SHAPE_NORTH= Block.makeCuboidShape(0.0D,0.0D,11.0D,16.0D,16.0D,16.0D);
+    public static final VoxelShape SHAPE_EAST = Block.makeCuboidShape(0.0D,0.0D,0.0D,5.0D,16.0D,16.0D);
+    public static final VoxelShape SHAPE_WEST = Block.makeCuboidShape(11.0D,0.0D,0.0D,16.0D,16.0D,16.0D);
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
@@ -136,5 +148,49 @@ public class BlackboardBlock extends Block {
         TileEntity tileentity = world.getTileEntity(pos);
         return tileentity != null && tileentity.receiveClientEvent(eventID, eventParam);
     }
+
+    public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.addInformation(stack, worldIn, tooltip, flagIn);
+        CompoundNBT compoundnbt = stack.getChildTag("BlockEntityTag");
+        if (compoundnbt != null) {
+            tooltip.add((new TranslationTextComponent("message.supplementaries.blackboard")).mergeStyle(TextFormatting.GRAY));
+        }
+    }
+
+    //TODO: create crafting to duplicate drawn blackboards
+    public ItemStack getBlackboardItem(BlackboardBlockTile te) {
+        ItemStack itemstack = new ItemStack(this);
+        if(!te.isEmpty()) {
+            CompoundNBT compoundnbt = te.saveItemNBT(new CompoundNBT());
+            if (!compoundnbt.isEmpty()) {
+                itemstack.setTagInfo("BlockEntityTag", compoundnbt);
+            }
+        }
+        return itemstack;
+    }
+
+    //normal drop
+    @Override
+    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
+        TileEntity tileentity = builder.get(LootParameters.BLOCK_ENTITY);
+        if (tileentity instanceof BlackboardBlockTile) {
+            ItemStack itemstack = this.getBlackboardItem((BlackboardBlockTile) tileentity);
+
+            return Collections.singletonList(itemstack);
+        }
+        return super.getDrops(state, builder);
+    }
+
+
+    //pick block. TODO: maybe replace with getpickblock
+    @Override
+    public ItemStack getItem(IBlockReader worldIn, BlockPos pos, BlockState state) {
+        TileEntity te = worldIn.getTileEntity(pos);
+        if (te instanceof BlackboardBlockTile){
+            return this.getBlackboardItem((BlackboardBlockTile) te);
+        }
+        return super.getItem(worldIn,pos,state);
+    }
+
 
 }

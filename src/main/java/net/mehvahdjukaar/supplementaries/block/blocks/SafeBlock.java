@@ -31,6 +31,7 @@ import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.tileentity.LockableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -224,6 +225,7 @@ public class SafeBlock extends Block implements IWaterLoggable{
     }
 
 
+    //break protection
     @Override
     public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, FluidState fluid) {
         if(ServerConfigs.cached.SAFE_UNBREAKABLE) {
@@ -271,7 +273,7 @@ public class SafeBlock extends Block implements IWaterLoggable{
         return super.getDrops(state, builder);
     }
 
-    //pick block
+    //pick block. TODO: use getsafe item here. clean up
     @Override
     public ItemStack getItem(IBlockReader worldIn, BlockPos pos, BlockState state) {
         ItemStack itemstack = super.getItem(worldIn, pos, state);
@@ -292,7 +294,7 @@ public class SafeBlock extends Block implements IWaterLoggable{
         TileEntity tileentity = worldIn.getTileEntity(pos);
         if (tileentity instanceof SafeBlockTile) {
             if (stack.hasDisplayName()) {
-                ((SafeBlockTile) tileentity).setCustomName(stack.getDisplayName());
+                ((LockableTileEntity) tileentity).setCustomName(stack.getDisplayName());
             }
             if (placer instanceof PlayerEntity) {
                 if(((SafeBlockTile) tileentity).owner==null)

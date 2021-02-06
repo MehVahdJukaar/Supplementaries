@@ -9,7 +9,7 @@
     "mixins": [
         "CatSitOnBlockMixin",
         "ShulkerBoxTileEntityMixin",
-        "MapMixin",
+        "MapDataMixin",
         "ShulkerBoxSlotMixin",
         "BellBlockMixin",
         "BellTileEntityMixin"

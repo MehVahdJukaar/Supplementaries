@@ -1,0 +1,7 @@
+{
+  "parent": "supplementaries:item/hanging_sign_template",
+  "textures": {
+    "0": "supplementaries:blocks/hanging_signs/druidcraft/hanging_sign_front_elder",
+    "2": "supplementaries:blocks/hanging_signs/druidcraft/hanging_sign_details_elder"
+  }
+}

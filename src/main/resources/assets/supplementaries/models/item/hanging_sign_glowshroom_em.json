@@ -1,0 +1,7 @@
+{
+  "parent": "supplementaries:item/hanging_sign_template",
+  "textures": {
+    "0": "supplementaries:blocks/hanging_signs/extendedmushrooms/hanging_sign_front_glowshroom_em",
+    "2": "supplementaries:blocks/hanging_signs/extendedmushrooms/hanging_sign_details_glowshroom_em"
+  }
+}

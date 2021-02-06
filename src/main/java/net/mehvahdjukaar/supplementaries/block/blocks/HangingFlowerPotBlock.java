@@ -2,8 +2,9 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.HangingFlowerPotBlockTile;
-import net.mehvahdjukaar.supplementaries.common.FlowerPotHelper;
+import net.mehvahdjukaar.supplementaries.world.data.FlowerPotHelper;
 import net.minecraft.block.*;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;
@@ -25,8 +26,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.util.text.*;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
@@ -43,6 +43,12 @@ public class HangingFlowerPotBlock extends Block{
     public HangingFlowerPotBlock(Properties properties) {
         super(properties);
         this.setDefaultState(this.stateContainer.getBaseState().with(TILE, false));
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.addInformation(stack, worldIn, tooltip, flagIn);
+        tooltip.add((new StringTextComponent("You shouldn't have this")).mergeStyle(TextFormatting.GRAY));
     }
 
     @Override

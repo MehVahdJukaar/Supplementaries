@@ -1,10 +1,8 @@
 package net.mehvahdjukaar.supplementaries.block;
 
-import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.Property;
 import net.minecraft.util.IStringSerializable;
 
 public class BlockProperties {

@@ -19,7 +19,7 @@ public class BlackBoardButton extends AbstractGui implements IRenderable, IGuiEv
     public int v;
     public int x;
     public int y;
-    public static final int width=6;
+    public static final int WIDTH =6;
     private boolean wasHovered;
     protected boolean isHovered;
     public boolean on = false;
@@ -31,8 +31,8 @@ public class BlackBoardButton extends AbstractGui implements IRenderable, IGuiEv
 
     public BlackBoardButton(int center_x, int center_y, int u, int v, BlackBoardButton.IPressable pressedAction,
                             BlackBoardButton.IDraggable dragAction) {
-        this.x = center_x-((8-u)*width);
-        this.y = center_y-((-v)*width);
+        this.x = center_x-((8-u)* WIDTH);
+        this.y = center_y-((-v)* WIDTH);
         this.u = u;
         this.v = v;
         this.onPress = pressedAction;
@@ -59,7 +59,7 @@ public class BlackBoardButton extends AbstractGui implements IRenderable, IGuiEv
 
 
         RenderSystem.color4f(1, 1, 1, 1);
-        blit(matrixStack, this.x, this.y, (this.u+b)*width, this.v*width, width, width,32*width,16*width);
+        blit(matrixStack, this.x, this.y, (this.u+b)* WIDTH, this.v* WIDTH, WIDTH, WIDTH,32* WIDTH,16* WIDTH);
 
     }
 
@@ -69,7 +69,7 @@ public class BlackBoardButton extends AbstractGui implements IRenderable, IGuiEv
         RenderSystem.defaultBlendFunc();
 
         RenderSystem.color4f(0.5f, 0.5f, 0.5f, 1);
-        blit(matrixStack, this.x-1, this.y-1, 16*width, 0, width+2 , width+2,32*width,16*width);
+        blit(matrixStack, this.x-1, this.y-1, 16* WIDTH, 0, WIDTH +2 , WIDTH +2,32* WIDTH,16* WIDTH);
         this.renderButton(matrixStack);
     }
 
@@ -139,7 +139,7 @@ public class BlackBoardButton extends AbstractGui implements IRenderable, IGuiEv
 
     @Override
     public boolean isMouseOver(double mouseX, double mouseY) {
-        return mouseX >= (double)this.x && mouseY >= (double)this.y && mouseX < (double)(this.x + width) && mouseY < (double)(this.y + width);
+        return mouseX >= (double)this.x && mouseY >= (double)this.y && mouseX < (double)(this.x + WIDTH) && mouseY < (double)(this.y + WIDTH);
     }
 
 

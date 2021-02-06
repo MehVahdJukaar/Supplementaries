@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.mehvahdjukaar.supplementaries.block.tiles.BlackboardBlockTile;
-import net.mehvahdjukaar.supplementaries.network.Networking;
+import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.UpdateServerBlackboardPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.DialogTexts;
@@ -53,7 +53,7 @@ public class BlackBoardGui extends Screen {
                 pixels[xx][yy]= (byte) (this.buttons[xx][yy].on?1:0);
             }
         }
-        Networking.INSTANCE.sendToServer(new UpdateServerBlackboardPacket(this.tileBoard.getPos(),pixels));
+        NetworkHandler.INSTANCE.sendToServer(new UpdateServerBlackboardPacket(this.tileBoard.getPos(),pixels));
         this.tileBoard.setEditable(true);
     }
 
@@ -77,6 +77,15 @@ public class BlackBoardGui extends Screen {
         }
     }
 
+    private void clear(){
+        for (int xx=0; xx < 16; xx++) {
+            for (int yy = 0; yy < 16; yy++) {
+                setPixel(xx,yy,false);
+                this.buttons[xx][yy].on = false;
+            }
+        }
+    }
+
     @Override
     protected void init() {
         for (int xx=0; xx < 16; xx++) {
@@ -88,12 +97,12 @@ public class BlackBoardGui extends Screen {
         }
 
         this.minecraft.keyboardListener.enableRepeatEvents(true);
-        this.addButton(new Button(this.width / 2 - 100, this.height / 4 + 120, 200, 20, DialogTexts.GUI_DONE, (p_238847_1_) -> this.close()));
+        this.addButton(new Button(this.width / 2 - 100, this.height / 4 + 120, 100-4, 20, new TranslationTextComponent("gui.supplementaries.blackboard.clear"), (b) -> this.clear()));
+        this.addButton(new Button(this.width / 2 + 4, this.height / 4 + 120, 100-4, 20, DialogTexts.GUI_DONE, (p_238847_1_) -> this.close()));
         this.tileBoard.setEditable(false);
     }
 
     @Override
-
     public void render(MatrixStack matrixstack, int  mouseX, int mouseY, float partialTicks) {
         RenderHelper.setupGuiFlatDiffuseLighting();
         this.renderBackground(matrixstack);

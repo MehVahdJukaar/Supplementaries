@@ -1,31 +1,35 @@
 package net.mehvahdjukaar.supplementaries.configs;
 
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-@Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
+
 public class ServerConfigs {
     public static ForgeConfigSpec SERVER_CONFIG;
 
+    public static ForgeConfigSpec.BooleanValue comment;
+
     static {
-        ForgeConfigSpec.Builder SERVER_BUILDER = new ForgeConfigSpec.Builder();
+        ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
+        builder.push("comment");
+        builder.comment("This config is synced server side. If you are on a server you'll get its own version");
+        comment = builder.define("comment",true);
+        builder.pop();
 
         //reg.init(SERVER_BUILDER);
-        block.init(SERVER_BUILDER);
-        spawn.init(SERVER_BUILDER);
-        entity.init(SERVER_BUILDER);
-        tweaks.init(SERVER_BUILDER);
-        item.init(SERVER_BUILDER);
 
-        SERVER_CONFIG = SERVER_BUILDER.build();
+        block.init(builder);
+        spawn.init(builder);
+        entity.init(builder);
+        tweaks.init(builder);
+        item.init(builder);
+
+        SERVER_CONFIG = builder.build();
     }
+
 
     public static class item {
         public static ForgeConfigSpec.IntValue FLUTE_RADIUS;
@@ -83,8 +87,8 @@ public class ServerConfigs {
             builder.push("throwable_bricks");
             THROWABLE_BRICKS_ENABLED = builder.comment("throw bricks at your foes! Might glass blocks")
                     .define("enabled",true);
-            List<String> bricksList = Arrays.asList("biomesoplenty:mud_brick","byg:yellow_nether_brick",
-                    "byg:blue_nether_brick");
+            List<String> bricksList = Arrays.asList("architects_palette:algal_brick", "architects_palette:sunmetal_brick", "ars_nouveau:arcane_brick", "biomesoplenty:mud_brick", "byg:yellow_nether_brick",
+                    "byg:blue_nether_brick", "endergetic:eumus_brick", "extcaves:half_brick");
             BRICKS_LIST = builder.comment("additional items that will be able to be thrown (will work with any item). Items tagges as forge/ingots/bricks or nether bricks will be automatically added")
                     .defineList("whitelist",bricksList,s -> true);
             builder.pop();
@@ -113,7 +117,7 @@ public class ServerConfigs {
 
     public static class block {
         public static ForgeConfigSpec.IntValue GLOBE_TRADES;
-        public static ForgeConfigSpec.IntValue GLOBE_TREASURE_CHANCHE;
+        public static ForgeConfigSpec.DoubleValue GLOBE_TREASURE_CHANCHE;
 
         public static ForgeConfigSpec.ConfigValue<List<? extends String>> SIGN_POST_ADDITIONAL;
 
@@ -125,7 +129,6 @@ public class ServerConfigs {
         public static ForgeConfigSpec.DoubleValue BELLOWS_BASE_VEL_SCALING;
         public static ForgeConfigSpec.BooleanValue BELLOWS_FLAG;
         public static ForgeConfigSpec.IntValue BELLOWS_RANGE;
-        public static ForgeConfigSpec.ConfigValue<List<? extends String>> BELLOWS_WHITELIST;
 
         public static ForgeConfigSpec.DoubleValue LAUNCHER_VEL;
         public static ForgeConfigSpec.IntValue LAUNCHER_HEIGHT;
@@ -161,16 +164,33 @@ public class ServerConfigs {
 
             //globe
             builder.push("globe");
-            GLOBE_TRADES = builder.comment("how many gobe trades to give to the wandering trader. If you have mods that add more trades to him you might want to increase this so it's not as rare")
+            GLOBE_TRADES = builder.comment("how many globe trades to give to the wandering trader. If you have mods that add more trades to him you might want to increase this so it's not as rare")
                     .defineInRange("trades",2,0,50);
-            GLOBE_TREASURE_CHANCHE = builder.comment("chanche of finding a globe in a shipwreck treasure chest. default is 20%")
-                    .defineInRange("treasure_chance",20,0,100);
+            GLOBE_TREASURE_CHANCHE = builder.comment("chanche of finding a globe in a shipwreck treasure chest.")
+                    .defineInRange("shipwreck_treasure_chance",0.25,0,1);
             builder.pop();
 
             //sign post
             builder.push("sign_post");
-            List<String> signPostWhitelist = Arrays.asList("quark:oak_post","quark:birch_post","quark:spruce_post","quark:acacia_post",
-                    "quark:dark_oak_post","quark:jungle_post","quark:warped_post","quark:crimson_post");
+            List<String> signPostWhitelist = Arrays.asList("adorn:oak_post", "adorn:birch_post", "adorn:spruce_post", "adorn:acacia_post",
+                    "adorn:dark_oak_post", "adorn:jungle_post", "adorn:warped_post", "adorn:crimson_post", "adorn:stone_post",
+                    "adorn:cobblestone_post", "adorn:sandstone_post", "adorn:diorite_post", "adorn:andesite_post", "adorn:granite_post",
+                    "adorn:brick_post", "adorn:stone_brick_post", "adorn:red_sandstone_post", "adorn:nether_brick_post", "adorn:basalt_post",
+                    "adorn:blackstone_post", "adorn:red_nether_brick_post", "adorn:prismarine_post", "adorn:quartz_post",
+                    "adorn:end_stone_brick_post", "adorn:purpur_post", "adorn:polished_blackstone_post", "adorn:polished_blackstone_brick_post",
+                    "adorn:polished_diorite_post", "adorn:polished_andesite_post", "adorn:polished_granite_post", "adorn:prismarine_brick_post",
+                    "adorn:dark_prismarine_post", "adorn:cut_snadstone_post", "adorn:smooth_sandstone_post", "adorn:cut_red_sandstone_post",
+                    "adorn:smooth_red_sandstone_post", "adorn:smooth_stone_post", "adorn:mossy_cobblestone_post", "adorn:mossy_stone_brick_post",
+                    "car:sign_post", "mysticalworld:thatch_small_post", "mysticalworld:red_mushroom_small_post", "mysticalworld:brown_mushroom_small_post",
+                    "mysticalworld:mushroom_stem_small_post", "mysticalworld:mushroom_inside_small_post", "mysticalworld:mud_block_small_post",
+                    "mysticalworld:mud_brick_small_post", "mysticalworld:charred_small_post", "mysticalworld:terracotta_brick_small_post",
+                    "mysticalworld:iron_brick_small_post", "mysticalworld:soft_stone_small_post", "mysticalworld:cracked_stone_small_post",
+                    "mysticalworld:blackened_stone_small_post", "mysticalworld:soft_obsidian_small_post", "mysticalworld:amethyst_small_post",
+                    "mysticalworld:copper_small_post", "mysticalworld:lead_small_post", "mysticalworld:quicksilver_small_post", "mysticalworld:silver_small_post",
+                    "mysticalworld:tin_small_post", "quark:oak_post", "quark:birch_post", "quark:spruce_post", "quark:acacia_post", "quark:dark_oak_post",
+                    "quark:jungle_post", "quark:warped_post", "quark:crimson_post", "quark:stripped_oak_post", "quark:stripped_birch_post",
+                    "quark:stripped_spruce_post", "quark:stripped_acacia_post", "quark:stripped_dark_oak_post", "quark:stripped_jungle_post",
+                    "quark:stripped_warped_post", "quark:stripped_crimson_post");
             SIGN_POST_ADDITIONAL = builder.comment("additional blocks besides fences that can accept a sign post")
                     .defineList("whitelist", signPostWhitelist,s -> true);
             builder.pop();
@@ -182,8 +202,6 @@ public class ServerConfigs {
             builder.pop();
             //bellows
             builder.push("bellows");
-            BELLOWS_WHITELIST = builder.comment("additional blocks that will be ticked by bellows")
-                    .defineList("whitelist", Collections.emptyList(),s -> true);
             BELLOWS_PERIOD = builder.comment("bellows pushes air following this equation: \n"+
                     "air=(sin(2PI*ticks/period)<0), with period = base_period-(redstone_power-1)*power_scaling \n"+
                     "represents base period at 1 power")
@@ -238,7 +256,11 @@ public class ServerConfigs {
                     "pamhc2crops:smoresitem","pamhc2crops:trailmixitem","pamhc2crops:candiedpecansitem",
                     "pamhc2crops:candiedsweetpotatoesitem","pamhc2crops:candiedwalnutsitem","pamhc2crops:chocolateorangeitem",
                     "pamhc2crops:chocolatepeanutbaritem","pamhc2crops:chocolatestrawberryitem","pamhc2crops:peanutbuttercupitem",
-                    "pamhc2crops:pralinesitem","pamhc2crops:pinenutitem","pamhc2crops:roastedalmonditem","pamhc2crops:roastedpinenutitem");
+                    "pamhc2crops:pralinesitem","pamhc2crops:pinenutitem","pamhc2crops:roastedalmonditem","pamhc2crops:roastedpinenutitem",
+                    "cookielicious:strawberry_cookie", "cookielicious:vanilla_cookie", "croptopia:raisin_oatmeal_cookie",
+                    "croptopia:nutty_cookie", "cspirit:sugar_cookie_santa", "cspirit:sugar_cookie_circle", "cspirit:sugar_cookie_ornament",
+                    "cspirit:sugar_cookie_star", "cspirit:sugar_cookie_man", "cspirit:sugar_cookie_snowman", "cspirit:gingerbread_cookie_circle",
+                    "inventorypets:holiday_cookie", "simplefarming:peanut_butter_cookie", "teletubbies:toast", "tofucraft:tofucookie");
             JAR_COOKIES = builder.comment("any item can work here, ideally you should only put cookies and alike")
                     .defineList("cookies", cookies,s -> true);
 
@@ -332,7 +354,14 @@ public class ServerConfigs {
             builder.comment("Configure spawning conditions")
                     .push("spawns");
             builder.push("firefly");
-            List<String> defaultBiomes = Arrays.asList("minecraft:swamp","minecraft:swamp_hills","minecraft:plains","minecraft:sunflower_plains","minecraft:dark_forest","minecraft:dark_forest_hills", "byg:bayou", "byg:cypress_swamplands", "byg:glowshroom_bayou", "byg:mangrove_marshes", "byg:vibrant_swamplands", "byg:fresh_water_lake", "byg:grassland_plateau", "byg:wooded_grassland_plateau", "byg:flowering_grove", "byg:guiana_shield", "byg:guiana_clearing", "byg:meadow", "byg:orchard", "byg:seasonal_birch_forest", "byg:seasonal_deciduous_forest", "byg:seasonal_forest", "biomesoplenty:flower_meadow", "biomesoplenty:fir_clearing", "biomesoplenty:grove_lakes", "biomesoplenty:grove", "biomesoplenty:highland_moor", "biomesoplenty:wetland_marsh", "biomesoplenty:deep_bayou");
+            List<String> defaultBiomes = Arrays.asList("minecraft:swamp","minecraft:swamp_hills","minecraft:plains",
+                    "minecraft:sunflower_plains","minecraft:dark_forest","minecraft:dark_forest_hills", "byg:bayou",
+                    "byg:cypress_swamplands", "byg:glowshroom_bayou", "byg:mangrove_marshes", "byg:vibrant_swamplands",
+                    "byg:fresh_water_lake", "byg:grassland_plateau", "byg:wooded_grassland_plateau", "byg:flowering_grove",
+                    "byg:guiana_shield", "byg:guiana_clearing", "byg:meadow", "byg:orchard", "byg:seasonal_birch_forest",
+                    "byg:seasonal_deciduous_forest", "byg:seasonal_forest", "biomesoplenty:flower_meadow", "biomesoplenty:fir_clearing",
+                    "biomesoplenty:grove_lakes", "biomesoplenty:grove", "biomesoplenty:highland_moor", "biomesoplenty:wetland_marsh",
+                    "biomesoplenty:deep_bayou");
             List<String> fireflyModWhitelist = Arrays.asList();
             //TODO add validation for biomes
             FIREFLY_BIOMES = builder.comment("Spawnable biomes")
@@ -402,7 +431,6 @@ public class ServerConfigs {
         //blocks
         public static List<? extends String> SIGN_POST_ADDITIONAL;
         public static int SPEAKER_RANGE;
-        public static List<? extends String>  BELLOWS_WHITELIST;
         public static int BELLOWS_PERIOD;
         public static int BELLOWS_POWER_SCALING;
         public static double BELLOWS_MAX_VEL;
@@ -429,7 +457,7 @@ public class ServerConfigs {
         public static int SACK_SLOTS;
         public static boolean SAFE_UNBREAKABLE;
         public static int GLOBE_TRADES;
-        public static int GLOBE_TREASURE_CHANCE;
+        public static double GLOBE_TREASURE_CHANCE;
         //entity
         public static int FIREFLY_PERIOD;
         public static double FIREFLY_SPEED;
@@ -461,7 +489,6 @@ public class ServerConfigs {
 
             SPEAKER_RANGE = block.SPEAKER_RANGE.get();
 
-            BELLOWS_WHITELIST = block.BELLOWS_WHITELIST.get();
             BELLOWS_PERIOD = block.BELLOWS_PERIOD.get();
             BELLOWS_POWER_SCALING = block.BELLOWS_POWER_SCALING.get();
             BELLOWS_MAX_VEL = block.BELLOWS_MAX_VEL.get();
@@ -502,27 +529,4 @@ public class ServerConfigs {
 
         }
     }
-
-    /*
-    @SubscribeEvent
-    public static void loadConfig(ModConfig.Loading event) {
-        if(event.getConfig().getType() == ModConfig.Type.COMMON)
-            cached.refresh();
-    }
-
-    @SubscribeEvent
-    public static void reloadConfig(ModConfig.Reloading event) {
-
-        if(event.getConfig().getType() == ModConfig.Type.COMMON)
-            cached.refresh();
-    }*/
-
-    @SubscribeEvent
-    public static void configEvent(ModConfig.ModConfigEvent event) {
-        if(event.getConfig().getSpec() == SERVER_CONFIG)
-            cached.refresh();
-        else if(event.getConfig().getSpec() == ClientConfigs.CLIENT_CONFIG)
-            ClientConfigs.cached.refresh();
-    }
-
 }

@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
-import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.BellowsBlockTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -29,11 +28,10 @@ public class BellowsBlock extends Block {
 
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final IntegerProperty POWER = BlockStateProperties.POWER_0_15;
-    public static final IntegerProperty TILE = BlockProperties.TILE_3;
 
     public BellowsBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(POWER, 0).with(TILE, 0));
+        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(POWER, 0));
     }
 
     @Override
@@ -43,13 +41,16 @@ public class BellowsBlock extends Block {
 
     @Override
     public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+        return BlockRenderType.INVISIBLE;
     }
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+
         TileEntity te = worldIn.getTileEntity(pos);
-        return te instanceof BellowsBlockTile ? VoxelShapes.create(((BellowsBlockTile)te).getBoundingBox(state)) : VoxelShapes.create(VoxelShapes.fullCube().getBoundingBox().grow(0.1f));
+        return te instanceof BellowsBlockTile ? ((BellowsBlockTile)te).getVoxelShape(state.get(FACING)) : VoxelShapes.create(VoxelShapes.fullCube().getBoundingBox().grow(0.1f));
+
+        //return te instanceof BellowsBlockTile ? VoxelShapes.create(((BellowsBlockTile)te).getBoundingBox(state.get(FACING))) : VoxelShapes.create(VoxelShapes.fullCube().getBoundingBox().grow(0.1f));
 
     }
 
@@ -66,7 +67,7 @@ public class BellowsBlock extends Block {
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(FACING, POWER, TILE);
+        builder.add(FACING, POWER);
     }
 
     public BlockState rotate(BlockState state, Rotation rot) {

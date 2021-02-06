@@ -43,7 +43,7 @@ public class Textures {
     public static final ResourceLocation XP_TEXTURE = new ResourceLocation(MOD_ID, "blocks/xp_liquid");
     public static final ResourceLocation FAUCET_TEXTURE = new ResourceLocation(MOD_ID, "blocks/faucet_water");
     public static final ResourceLocation FISHIES_TEXTURE = new ResourceLocation(MOD_ID, "blocks/fishies");
-    public static final ResourceLocation BELLOWS_TEXTURE = new ResourceLocation(MOD_ID, "blocks/bellows");
+    public static final ResourceLocation BELLOWS_TEXTURE = new ResourceLocation(MOD_ID, "entity/bellows");
     public static final ResourceLocation LASER_BEAM_TEXTURE = new ResourceLocation(MOD_ID, "blocks/laser_beam");
     public static final ResourceLocation LASER_OVERLAY_TEXTURE = new ResourceLocation(MOD_ID, "blocks/laser_overlay");
     public static final ResourceLocation LASER_BEAM_END_TEXTURE = new ResourceLocation(MOD_ID, "blocks/laser_beam_end");

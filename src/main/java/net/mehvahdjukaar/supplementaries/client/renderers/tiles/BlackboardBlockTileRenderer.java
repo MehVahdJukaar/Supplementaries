@@ -33,7 +33,7 @@ public class BlackboardBlockTileRenderer extends TileEntityRenderer<BlackboardBl
 
         matrixStackIn.rotate(tile.getBlockState().get(BlackboardBlock.FACING).getOpposite().getRotation());
         matrixStackIn.rotate(Const.XN90);
-        matrixStackIn.translate(0.5,0.5,0.25);
+        matrixStackIn.translate(0.5,0.5,0.1875);
         matrixStackIn.scale(-1,-1,1);
 
         float w = 1/16f;

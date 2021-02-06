@@ -7,7 +7,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.mehvahdjukaar.supplementaries.block.blocks.DoormatBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.DoormatBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
-import net.mehvahdjukaar.supplementaries.network.Networking;
+import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.UpdateServerTextHolderPacket;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -103,7 +103,7 @@ public class DoormatGui extends Screen {
     public void onClose() {
         this.minecraft.keyboardListener.enableRepeatEvents(false);
         // send new text to the server
-        Networking.INSTANCE.sendToServer(new UpdateServerTextHolderPacket(this.tileSign.getPos(), this.tileSign.textHolder.signText, this.tileSign.textHolder.lines));
+        NetworkHandler.INSTANCE.sendToServer(new UpdateServerTextHolderPacket(this.tileSign.getPos(), this.tileSign.textHolder.signText, this.tileSign.textHolder.lines));
         //this.tileSign.setEditable(true);
     }
 

@@ -84,12 +84,12 @@ public class Variants {
 
 
     public static String getHangingSignName(IWoodType type){
-        return Registry.HANGING_SIGN_NAME+"_"+type.toString();
+        return Registry.HANGING_SIGN_NAME+"_"+type.getRegName();
     }
 
 
     public static String getSignPostName(IWoodType type){
-        return Registry.SIGN_POST_NAME+"_"+type.toString();
+        return Registry.SIGN_POST_NAME+"_"+type.getRegName();
     }
 
 

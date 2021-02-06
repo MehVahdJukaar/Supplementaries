@@ -1,0 +1,48 @@
+{
+  "advancements": [
+    {
+      "conditions": [
+        {
+          "flag": "hanging_sign",
+          "type": "supplementaries:flag"
+        },
+        {
+          "modid": "atmospheric",
+          "type": "forge:mod_loaded"
+        }
+      ],
+      "advancement": {
+        "parent": "minecraft:recipes/root",
+        "rewards": {
+          "recipes": [
+            "supplementaries:hanging_sign_yucca"
+          ]
+        },
+        "criteria": {
+          "has_plank": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+              "items": [
+                {
+                  "item": "atmospheric:yucca_planks"
+                }
+              ]
+            }
+          },
+          "has_the_recipe": {
+            "trigger": "minecraft:recipe_unlocked",
+            "conditions": {
+              "recipe": "supplementaries:hanging_sign_yucca"
+            }
+          }
+        },
+        "requirements": [
+          [
+            "has_plank",
+            "has_the_recipe"
+          ]
+        ]
+      }
+    }
+  ]
+}

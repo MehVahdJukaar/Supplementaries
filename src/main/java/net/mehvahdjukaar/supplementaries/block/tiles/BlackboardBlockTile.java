@@ -25,6 +25,21 @@ public class BlackboardBlockTile extends TileEntity {
         }
     }
 
+    public boolean isEmpty(){
+        boolean flag = false;
+        for (byte[] pixel : pixels) {
+            for (byte b : pixel) {
+                if (b != 0) {
+                    flag = true;
+                    break;
+                }
+            }
+        }
+        return !flag;
+    }
+
+
+    //TODO: optimize update packets
     @Override
     public void markDirty() {
         this.world.notifyBlockUpdate(this.pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
@@ -47,19 +62,22 @@ public class BlackboardBlockTile extends TileEntity {
     @Override
     public CompoundNBT write(CompoundNBT compound) {
         super.write(compound);
+        this.saveItemNBT(compound);
+        return compound;
+    }
+
+    //doesn't save stuff it doesn't need. TODO: use this for update packet
+    public CompoundNBT saveItemNBT(CompoundNBT compound){
         for(int i = 0; i<16; i++) {
             compound.putByteArray("pixels_"+i, this.pixels[i]);
         }
         return compound;
     }
 
+    //not sure if needed
     public boolean getIsEditable() {
         return this.isEditable;
     }
-
-    /**
-     * Sets the sign's isEditable flag to the specified parameter.
-     */
 
     public void setEditable(boolean isEditableIn) {
         this.isEditable = isEditableIn;

@@ -11,6 +11,7 @@ import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.*;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.*;
@@ -59,7 +60,9 @@ public class ServerEvents {
         BlockState state1 = world.getBlockState(pos);
         boolean d = state1.getBlock()==Registry.DIRECTIONAL_CAKE.get();
         if((d && state1.get(DirectionalCakeBlock.BITES)==0) || state1==Blocks.CAKE.getDefaultState()) {
-            BlockState state = Registry.DOUBLE_CAKE.get().getDefaultState().with(DoubleCakeBlock.FACING,d?state1.get(DoubleCakeBlock.FACING):Direction.WEST);
+            BlockState state = Registry.DOUBLE_CAKE.get().getDefaultState()
+                    .with(DoubleCakeBlock.FACING,d?state1.get(DoubleCakeBlock.FACING):Direction.WEST)
+                    .with(DoubleCakeBlock.WATERLOGGED, world.getFluidState(pos).getFluid()==Fluids.WATER);
             if (!world.setBlockState(pos, state, 3)) {
                 return ActionResultType.FAIL;
             }
@@ -97,6 +100,7 @@ public class ServerEvents {
     @SubscribeEvent
     public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
         PlayerEntity player = event.getPlayer();
+        if(player.isSpectator())return;
         Hand hand = event.getHand();
         ItemStack stack = event.getItemStack();
         Item i = stack.getItem();

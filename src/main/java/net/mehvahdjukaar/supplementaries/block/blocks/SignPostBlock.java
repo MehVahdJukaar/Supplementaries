@@ -168,8 +168,12 @@ public class SignPostBlock extends Block implements IWaterLoggable, IForgeBlock{
                     }
                 }
             }
+            else if (isSignPost){
+                //let sign item handle this one
+                return ActionResultType.PASS;
+            }
             // open gui (edit sign with empty hand)
-            else if (!isSignPost && !server) {
+            else if (!server) {
                 SignPostGui.open(te);
             }
             return ActionResultType.func_233537_a_(worldIn.isRemote);

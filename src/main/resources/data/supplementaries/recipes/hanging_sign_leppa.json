@@ -1,0 +1,39 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "flag": "hanging_sign",
+          "type": "supplementaries:flag"
+        },
+        {
+          "modid": "pokecube",
+          "type": "forge:mod_loaded"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "group": "hanging_sign",
+        "pattern": [
+          "010",
+          "222",
+          "222"
+        ],
+        "key": {
+          "0": {
+            "item": "minecraft:iron_nugget"
+          },
+          "1": {
+            "item": "minecraft:stick"
+          },
+          "2": []
+        },
+        "result": {
+          "item": "supplementaries:hanging_sign_leppa",
+          "count": 2
+        }
+      }
+    }
+  ]
+}

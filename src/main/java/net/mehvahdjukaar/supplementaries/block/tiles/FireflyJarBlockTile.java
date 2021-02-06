@@ -15,6 +15,7 @@ import java.util.Random;
 public class FireflyJarBlockTile extends TileEntity implements ITickableTileEntity {
     protected final Random rand = new Random();
     public final boolean soul;
+
     public FireflyJarBlockTile(boolean isSoul) {
         super(Registry.FIREFLY_JAR_TILE.get());
         soul=isSoul;
@@ -55,6 +56,7 @@ public class FireflyJarBlockTile extends TileEntity implements ITickableTileEnti
     }
 
     public void tick() {
+
         if (this.world.isRemote()){
             int p = ClientConfigs.cached.FIREFLY_SPAWN_PERIOD;
             float c = (float) ClientConfigs.cached.FIREFLY_SPAWN_CHANCE;

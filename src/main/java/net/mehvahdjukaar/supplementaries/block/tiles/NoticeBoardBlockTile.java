@@ -2,8 +2,8 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.block.util.IMapDisplay;
-import net.mehvahdjukaar.supplementaries.inventories.NoticeBoardContainer;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.inventories.NoticeBoardContainer;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.WorldRenderer;
@@ -21,7 +21,6 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tileentity.LockableLootTileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.LazyOptional;

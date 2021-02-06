@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.mehvahdjukaar.supplementaries.block.tiles.NoticeBoardBlockTile;
-import net.mehvahdjukaar.supplementaries.network.Networking;
+import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.RequestMapDataFromServerPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -73,7 +73,7 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
                 else{
                     //request map data from server
                     PlayerEntity player = Minecraft.getInstance().player;
-                    Networking.INSTANCE.sendToServer(new RequestMapDataFromServerPacket(tile.getPos(),player.getUniqueID()));
+                    NetworkHandler.INSTANCE.sendToServer(new RequestMapDataFromServerPacket(tile.getPos(),player.getUniqueID()));
                 }
                 matrixStackIn.pop();
                 return;

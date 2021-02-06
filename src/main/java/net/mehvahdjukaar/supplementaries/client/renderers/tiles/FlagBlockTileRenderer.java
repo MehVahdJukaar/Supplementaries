@@ -27,6 +27,7 @@ public class FlagBlockTileRenderer extends TileEntityRenderer<FlagBlockTile> {
     public void render(FlagBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
 
+
         IVertexBuilder builder = bufferIn.getBuffer(RenderType.getEntitySolid(new ResourceLocation("supplementaries:textures/entity/flag.png")));
 
         int lu = combinedLightIn & '\uffff';

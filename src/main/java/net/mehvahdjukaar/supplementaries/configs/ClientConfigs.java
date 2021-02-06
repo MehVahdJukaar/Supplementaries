@@ -54,10 +54,11 @@ public class ClientConfigs {
 
 
         private static void init(ForgeConfigSpec.Builder builder) {
+
+
             builder.comment("Tweak and change the various block animations +\n" +
-                    "IF YOU FIND A CONFIG THAT LOOKS BETTER THAT THESE DEFAULTS, SEND IT TO ME AND I'LL MAKE IT THE NEW DEFAUL\n"+
-                    "lots configs more coming next updates \n"+
-                    "only cosmetic stuff here. Lots of maths to tweak every aspect of the animation. leave default if not interested")
+                    "only cosmetic stuff here. Lots of maths to tweak every aspect of the animation. leave default if not interested \n"+
+                    "remember to delete this and server configs and let it refresh every once in a while cause I might have tweaked it")
 
                     .push("blocks");
 

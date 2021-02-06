@@ -104,7 +104,8 @@ public class DoubleCakeBlock extends DirectionalCakeBlock {
             world.setBlockState(pos, state.with(BITES, i + 1), 3);
         } else {
             if(ServerConfigs.cached.DIRECTIONAL_CAKE){
-                world.setBlockState(pos, Registry.DIRECTIONAL_CAKE.get().getDefaultState().with(FACING,state.get(FACING)), 3);
+                world.setBlockState(pos, Registry.DIRECTIONAL_CAKE.get().getDefaultState()
+                        .with(FACING,state.get(FACING)).with(WATERLOGGED,state.get(WATERLOGGED)), 3);
             }
             else {
                 world.setBlockState(pos, Blocks.CAKE.getDefaultState(), 3);
