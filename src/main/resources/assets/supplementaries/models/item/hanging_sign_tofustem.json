@@ -1,0 +1,7 @@
+{
+  "parent": "supplementaries:item/hanging_sign_template",
+  "textures": {
+    "0": "supplementaries:blocks/hanging_signs/tofucraft/hanging_sign_front_tofustem",
+    "2": "supplementaries:blocks/hanging_signs/tofucraft/hanging_sign_details_tofustem"
+  }
+}

@@ -31,7 +31,7 @@ public class FireflyGlowParticle extends SpriteTexturedParticle {
     }
     @Override
     public float getScale(float partialTicks) {
-        if(CommonUtil.ishalloween){
+        if(CommonUtil.FESTIVITY.isHalloween()){
             this.particleRed=0.3f;
             this.particleGreen=0;
         }

@@ -15,8 +15,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ITag;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -35,6 +33,7 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
     public float height = 0;
     public float prevHeight = 0;
     private long offset = 0;
+    public boolean isPressed = false;
 
     public BellowsBlockTile() {
         super(Registry.BELLOWS_TILE.get());
@@ -156,14 +155,46 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
         }
     }
 
+    private void blowParticles(float air, Direction facing){
+        if (this.world.rand.nextInt(2) == 0 && this.world.rand.nextFloat() < air &&
+                !Block.hasEnoughSolidSide(this.world, this.pos.offset(facing), facing.getOpposite())) {
+            this.spawnParticle(this.world, this.pos);
+        }
+    }
+
+    private void tickFurnaces(BlockPos frontPos){
+        TileEntity te = world.getTileEntity(frontPos);
+        Block b = world.getBlockState(frontPos).getBlock();
+        if (te instanceof ITickableTileEntity &&
+                ModTags.isTagged(ModTags.BELLOWS_TICKABLE_TAG,b)) {
+            ((ITickableTileEntity) te).tick();
+        }
+    }
+
+    private void refreshFire(int n, Direction facing, BlockPos frontPos){
+        for (int i = 0; i < n; i++) {
+            BlockState fb = this.world.getBlockState(frontPos);
+            if (fb.getBlock() instanceof FireBlock) {
+                int age = fb.get(FireBlock.AGE);
+                if (age != 0) {
+                    world.setBlockState(frontPos, fb.with(FireBlock.AGE,
+                            MathHelper.clamp(age - 7, 0, 15)), 4);
+                }
+            }
+            frontPos = frontPos.offset(facing);
+        }
+    }
+
     public void tick() {
 
         int power = this.getBlockState().get(BellowsBlock.POWER);
         this.prevHeight = this.height;
 
-        if(power!=0){
+        if(power!=0 && !(this.offset==0&&this.height!=0)){
             long time = this.world.getGameTime();
-            if(offset==0) offset = time;
+            if(this.offset==0){
+                this.offset = time;
+            }
 
             float period = ((float)ServerConfigs.cached.BELLOWS_PERIOD)-(power-1)*((float)ServerConfigs.cached.BELLOWS_POWER_SCALING);
             Direction facing = this.getDirection();
@@ -177,10 +208,7 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
 
             //client. particles
             if (this.world.isRemote) {
-                if (this.world.rand.nextInt(2) == 0 && this.world.rand.nextFloat() < sin &&
-                        !Block.hasEnoughSolidSide(this.world, this.pos.offset(facing), facing.getOpposite())) {
-                    this.spawnParticles(this.world, this.pos);
-                }
+                this.blowParticles(sin,facing);
             }
             //server
             else{
@@ -194,13 +222,7 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
 
                 //speeds up furnaces
                 if(time % 9 - (power/2) == 0) {
-                    TileEntity te = world.getTileEntity(frontPos);
-                    Block b = world.getBlockState(frontPos).getBlock();
-                    ITag<Block> tag = BlockTags.getCollection().get(ModTags.BELLOWS_TICKABLE_TAG);
-                    if (te instanceof ITickableTileEntity &&
-                             tag!= null && b.isIn(tag)) {
-                        ((ITickableTileEntity) te).tick();
-                    }
+                    this.tickFurnaces(frontPos);
                 }
 
                 //refresh fire blocks
@@ -214,18 +236,33 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
                     }
                 }
                 //only first 4 block will ultimately be kept active. this could change with random ticks if unlucky
-                for (int i = 0; i < n; i++) {
-                    BlockState fb = this.world.getBlockState(frontPos);
-                    if (fb.getBlock() instanceof FireBlock) {
-                        int age = fb.get(FireBlock.AGE);
-                        if (age != 0) {
-                            world.setBlockState(frontPos, fb.with(FireBlock.AGE,
-                                    MathHelper.clamp(age - 7, 0, 15)), 4);
-                        }
-                    }
-                    frontPos = frontPos.offset(facing);
-                }
+                this.refreshFire(n, facing, frontPos);
 
+            }
+        }
+        else if(isPressed){
+            float minH = -2/16f;
+            this.height = Math.max(this.height - 0.01f, minH);
+
+            if(this.height>minH){
+                Direction facing = this.getDirection();
+                if (this.world.isRemote) {
+                    this.blowParticles(0.8f, facing);
+                }
+                else{
+                    float range = ServerConfigs.cached.BELLOWS_RANGE;
+                    this.pushEntities(facing,ServerConfigs.cached.BELLOWS_PERIOD,range);
+
+                    BlockPos frontPos = this.pos.offset(facing);
+
+                    if(this.height%0.04==0) {
+                        this.tickFurnaces(frontPos);
+                    }
+
+                    if(this.height%0.15==0) {
+                        this.refreshFire((int) range, facing, frontPos);
+                    }
+                }
             }
         }
         //resets counter when powered off
@@ -234,9 +271,10 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
             if(this.height < 0)
                 this.height = Math.min(this.height + 0.01f, 0);
         }
-        if(this.height !=0){
+        if(this.prevHeight !=0 && this.height!=0){
             this.moveCollidedEntities();
         }
+        this.isPressed=false;
     }
 
     public boolean inLineOfSight(Entity entity, Direction facing) {
@@ -254,7 +292,7 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
         return flag;
     }
 
-    public  void spawnParticles(World world, BlockPos pos) {
+    public  void spawnParticle(World world, BlockPos pos) {
         Direction dir = this.getDirection();
         double xo = dir.getXOffset();
         double yo = dir.getYOffset();
@@ -302,5 +340,13 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         this.read(this.getBlockState(), pkt.getNbtCompound());
+    }
+
+    public void onSteppedOn(Entity entityIn) {
+        if(this.isPressed)return;
+        double b = entityIn.getBoundingBox().getAverageEdgeLength();
+        if(b>0.8 && this.getBlockState().get(BellowsBlock.FACING).getAxis()!= Direction.Axis.Y){
+            this.isPressed = true;
+        }
     }
 }

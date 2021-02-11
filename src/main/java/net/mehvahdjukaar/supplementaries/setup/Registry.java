@@ -16,11 +16,9 @@ import net.mehvahdjukaar.supplementaries.inventories.SackContainer;
 import net.mehvahdjukaar.supplementaries.items.*;
 import net.mehvahdjukaar.supplementaries.items.crafting.BlackboardClearRecipe;
 import net.mehvahdjukaar.supplementaries.items.crafting.BlackboardDuplicateRecipe;
+import net.mehvahdjukaar.supplementaries.items.crafting.TippedBambooSpikesRecipe;
 import net.mehvahdjukaar.supplementaries.setup.registration.Variants;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.SoundType;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.entity.EntityClassification;
@@ -171,6 +169,9 @@ public class Registry {
             new SpecialRecipeSerializer<>(BlackboardDuplicateRecipe::new));
     public static final RegistryObject<IRecipeSerializer<?>> BLACKBOARD_CLEAR_RECIPE = RECIPES.register("blackboard_clear_recipe", ()->
             new SpecialRecipeSerializer<>(BlackboardClearRecipe::new));
+    public static final RegistryObject<IRecipeSerializer<?>> BAMBOO_SPIKES_TIPPED_RECIPE = RECIPES.register("bamboo_spikes_tipped_recipe", ()->
+            new SpecialRecipeSerializer<>(TippedBambooSpikesRecipe::new));
+
 
 
     //blocks
@@ -779,7 +780,7 @@ public class Registry {
             AbstractBlock.Properties.create(Material.MISCELLANEOUS)
                     .zeroHardnessAndResistance()
                     .doesNotBlockMovement()
-                    .setLightLevel((state) -> state.get(BlockStateProperties.LIT)? 9 : 0)
+                    .setLightLevel((state) -> state.get(BlockStateProperties.LIT)? 14 : 0)
                     .sound(SoundType.LANTERN), ParticleTypes.FLAME));
     public static final RegistryObject<Item> CANDLE_HOLDER_ITEM = ITEMS.register(CANDLE_HOLDER_NAME,()-> new BlockItem(CANDLE_HOLDER.get(),
             (new Item.Properties()).group(getTab(ItemGroup.DECORATIONS,CANDLE_HOLDER_NAME))
@@ -838,7 +839,7 @@ public class Registry {
 
     //crimson lantern
     public static final String CRIMSON_LANTERN_NAME = "crimson_lantern";
-    public static final RegistryObject<Block> CRIMSON_LANTERN = BLOCKS.register(CRIMSON_LANTERN_NAME,()-> new OilLanternBlock(
+    public static final RegistryObject<Block> CRIMSON_LANTERN = BLOCKS.register(CRIMSON_LANTERN_NAME,()-> new CrimsonLanternBlock(
             AbstractBlock.Properties.create(Material.IRON, MaterialColor.RED)
                     .hardnessAndResistance(1.5f)
                     .sound(SoundType.CLOTH)
@@ -923,17 +924,41 @@ public class Registry {
             (new Item.Properties()).group(getTab(ItemGroup.REDSTONE,GOLD_TRAPDOOR_NAME))
     ));
 
+
     //rope
     public static final String ROPE_NAME = "rope";
     public static final RegistryObject<Block> ROPE = BLOCKS.register(ROPE_NAME,()-> new RopeBlock(
             AbstractBlock.Properties.create(Material.WOOL)
                     .sound(SoundType.CLOTH)
                     .hardnessAndResistance(1)
-                    .slipperiness(0.5f)
+                    .speedFactor(0.8f)
                     .notSolid()));
     public static final RegistryObject<Item> ROPE_ITEM = ITEMS.register(ROPE_NAME,()-> new BlockItem(ROPE.get(),
             (new Item.Properties()).group(getTab(null,ROPE_NAME))
     ));
+
+    //spikes
+    public static final String BAMBOO_SPIKES_NAME = "bamboo_spikes";
+    public static final RegistryObject<Block> BAMBOO_SPIKES = BLOCKS.register(BAMBOO_SPIKES_NAME,()-> new BambooSpikesBlock(
+            AbstractBlock.Properties.create(Material.WOOD, MaterialColor.SAND)
+                    .sound(SoundType.SCAFFOLDING)
+                    .harvestTool(ToolType.AXE)
+                    .setOpaque((a,b,c)->false)
+                    .hardnessAndResistance(1)
+                    .notSolid()));
+    public static final RegistryObject<Item> BAMBOO_SPIKES_ITEM = ITEMS.register(BAMBOO_SPIKES_NAME,()-> new BurnableBlockItem(BAMBOO_SPIKES.get(),
+            (new Item.Properties()).group(null),150
+    ));
+    public static final RegistryObject<Item> BAMBOO_SPIKES_TIPPED_ITEM = ITEMS.register("bamboo_spikes_tipped",()-> new BambooSpikesTippedItem(BAMBOO_SPIKES.get(),
+            (new Item.Properties()).defaultMaxDamage(15).group(getTab(ItemGroup.DECORATIONS,BAMBOO_SPIKES_NAME))
+    ));
+
+    //key
+    public static final String KEY_NAME = "key";
+    public static final RegistryObject<Item> KEY_ITEM = ITEMS.register(KEY_NAME,()-> new KeyItem(
+            (new Item.Properties()).group(getTab(ItemGroup.MISC,KEY_NAME))
+    ));
+
 
     /*
     //statue

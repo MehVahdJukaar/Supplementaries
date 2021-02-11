@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.HorizontalBlock;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.DyeItem;
@@ -45,6 +46,31 @@ public class DoormatBlock extends Block {
             ItemStack itemstack = player.getHeldItem(handIn);
             boolean server = !worldIn.isRemote();
             boolean flag = itemstack.getItem() instanceof DyeItem && player.abilities.allowEdit;
+            boolean sideHit = hit.getFace()!=Direction.UP;
+            boolean canExtract = itemstack.isEmpty() && (player.isSneaking()||sideHit);
+            boolean canInsert = te.isEmpty() && sideHit;
+            if(canExtract ^ canInsert){
+                if(!server)return ActionResultType.SUCCESS;
+                if(canExtract) {
+                    ItemStack dropStack = te.removeStackFromSlot(0);
+                    ItemEntity drop = new ItemEntity(worldIn, pos.getX() + 0.5, pos.getY() + 0.125, pos.getZ() + 0.5, dropStack);
+                    drop.setDefaultPickupDelay();
+                    worldIn.addEntity(drop);
+                }
+                else{
+                    ItemStack newStack = itemstack.copy();
+                    newStack.setCount(1);
+                    te.setItems(NonNullList.withSize(1, newStack));
+                    if (!player.isCreative()) {
+                        itemstack.shrink(1);
+                    }
+                }
+                te.markDirty();
+                worldIn.playSound(null, pos, SoundEvents.BLOCK_WOOL_PLACE, SoundCategory.BLOCKS, 1.0F,
+                        1.2f);
+                return ActionResultType.CONSUME;
+
+            }
             //color
             if (flag){
                 if(te.textHolder.setTextColor(((DyeItem) itemstack.getItem()).getDyeColor())){

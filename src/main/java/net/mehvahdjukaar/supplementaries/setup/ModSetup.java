@@ -13,6 +13,7 @@ import net.minecraft.tileentity.DispenserTileEntity;
 import net.minecraftforge.common.BasicTrade;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.event.village.WandererTradesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -26,8 +27,8 @@ public class ModSetup {
     public static void init(final FMLCommonSetupEvent event) {
 
         Spawns.registerSpawningStuff();
-        event.enqueueWork(Dispenser::registerBehaviors);
-        //Dispenser.registerBehaviors();
+        //event.enqueueWork(Dispenser::registerBehaviors);
+        Dispenser.registerBehaviors();
 
     }
 
@@ -36,6 +37,11 @@ public class ModSetup {
         ModCommands.register(event.getDispatcher());
     }
 
+    @SubscribeEvent
+    public static void registerWanderingTraderTrades(VillagerTradesEvent event) {
+        event.getType();
+        //TODO: add villager trades
+    }
 
     @SubscribeEvent
     public static void registerWanderingTraderTrades(WandererTradesEvent event) {

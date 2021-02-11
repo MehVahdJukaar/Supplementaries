@@ -381,10 +381,10 @@ public class GlobeDataGenerator {
         generateIcebergs2();
 
         Calendar calendar = Calendar.getInstance();
-        if(CommonUtil.ischristmas){
+        if(CommonUtil.FESTIVITY.isChristmas()){
            christmas();
         }
-        else if(CommonUtil.isearthday){
+        else if(CommonUtil.FESTIVITY.isEarthDay()){
             meltice();
         }
     }

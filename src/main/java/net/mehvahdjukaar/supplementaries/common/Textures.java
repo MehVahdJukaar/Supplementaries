@@ -57,9 +57,13 @@ public class Textures {
     public static final ResourceLocation HOURGLASS_GUNPOWDER = new ResourceLocation(MOD_ID, "blocks/hourglass_gunpowder");
 
     public static final ResourceLocation BLACKBOARD_TEXTURE = new ResourceLocation(MOD_ID,"textures/entity/blackboard.png");
-    public static final ResourceLocation GLOBE_TEXTURE = new ResourceLocation(MOD_ID,"textures/entity/globe_the_world.png");
-    public static final ResourceLocation GLOBE_FLAT_TEXTURE = new ResourceLocation(MOD_ID,"textures/entity/globe_flat.png");
-    public static final ResourceLocation GLOBE_MOON_TEXTURE = new ResourceLocation(MOD_ID,"textures/entity/globe_moon.png");
+    public static final ResourceLocation GLOBE_TEXTURE = new ResourceLocation(MOD_ID,"textures/entity/globes/globe_the_world.png");
+    public static final ResourceLocation GLOBE_FLAT_TEXTURE = new ResourceLocation(MOD_ID,"textures/entity/globes/globe_flat.png");
+    public static final ResourceLocation GLOBE_MOON_TEXTURE = new ResourceLocation(MOD_ID,"textures/entity/globes/globe_moon.png");
+    public static final ResourceLocation GLOBE_SHEARED_TEXTURE = new ResourceLocation(MOD_ID,"textures/entity/globes/globe_sheared.png");
+    public static final ResourceLocation GLOBE_CUSTOM_1 = new ResourceLocation(MOD_ID,"textures/entity/globes/globe_plantkillable.png");
+    public static final ResourceLocation GLOBE_CUSTOM_2 = new ResourceLocation(MOD_ID,"textures/entity/globes/globe_toffanelly.png");
+
     public static final ResourceLocation FIREFLY_TEXTURE =  new ResourceLocation(MOD_ID,"textures/entity/firefly.png");
     public static final ResourceLocation BELL_CHAIN_TEXTURE = new ResourceLocation(MOD_ID,"textures/entity/bell_chain.png");
 

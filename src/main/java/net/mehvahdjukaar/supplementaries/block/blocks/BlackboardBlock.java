@@ -4,6 +4,7 @@ import net.mehvahdjukaar.supplementaries.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.client.gui.BlackBoardGui;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.IWaterLoggable;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
@@ -35,7 +36,7 @@ import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-public class BlackboardBlock extends Block {
+public class BlackboardBlock extends Block implements IWaterLoggable {
     public static final VoxelShape SHAPE_SOUTH = Block.makeCuboidShape(0.0D,0.0D,0.0D,16.0D,16.0D,5.0D);
     public static final VoxelShape SHAPE_NORTH= Block.makeCuboidShape(0.0D,0.0D,11.0D,16.0D,16.0D,16.0D);
     public static final VoxelShape SHAPE_EAST = Block.makeCuboidShape(0.0D,0.0D,0.0D,5.0D,16.0D,16.0D);
@@ -157,7 +158,6 @@ public class BlackboardBlock extends Block {
         }
     }
 
-    //TODO: create crafting to duplicate drawn blackboards
     public ItemStack getBlackboardItem(BlackboardBlockTile te) {
         ItemStack itemstack = new ItemStack(this);
         if(!te.isEmpty()) {

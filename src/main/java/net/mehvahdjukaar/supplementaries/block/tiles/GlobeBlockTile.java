@@ -135,13 +135,16 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, I
         MOON(new String[]{"moon","luna","selene","cynthia"},
                 new TranslationTextComponent("globe.supplementaries.moon"),GLOBE_MOON_TEXTURE),
         EARTH(new String[]{"earth","terra","gaia","gaea","tierra","tellus","terre"},
-                new TranslationTextComponent("globe.supplementaries.earth"),GLOBE_TEXTURE); //TODO: add via translationtext
+                new TranslationTextComponent("globe.supplementaries.earth"),GLOBE_TEXTURE), //TODO: add via translationtext
+        SHEARED(null,null,GLOBE_SHEARED_TEXTURE),
+        CUSTOM_1(new String[]{"plantkillable"}, null, GLOBE_CUSTOM_1),
+        CUSTOM_2(new String[]{"toffanelly"}, null, GLOBE_CUSTOM_2);
 
 
-        GlobeType(String[] k, TranslationTextComponent t, ResourceLocation r){
-            this.keyWords = k;
-            this.transKeyWord = t;
-            this.texture = r;
+        GlobeType(String[] key, TranslationTextComponent tr, ResourceLocation res){
+            this.keyWords = key;
+            this.transKeyWord = tr;
+            this.texture = res;
         }
 
         public final String[] keyWords;
@@ -151,10 +154,10 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, I
         public static GlobeType getGlobeType(String text){
             String name = text.toLowerCase();
             for (GlobeType n : GlobeType.values()) {
-                if(n==DEFAULT)continue;
-                if(name.contains(n.transKeyWord.getString().toLowerCase()))return n;
+                if(n.keyWords==null)continue;
+                if(n.transKeyWord!=null && !n.transKeyWord.getString().equals("") && name.contains(n.transKeyWord.getString().toLowerCase()))return n;
                 for (String s : n.keyWords) {
-                    if (name.contains(s)) {
+                    if (!s.equals("") && name.contains(s)) {
                         return n;
                     }
                 }

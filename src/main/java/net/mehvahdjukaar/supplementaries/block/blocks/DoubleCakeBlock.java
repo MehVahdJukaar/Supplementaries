@@ -1,9 +1,11 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
+import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -11,6 +13,9 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.World;
+
+import java.util.Random;
 
 
 public class DoubleCakeBlock extends DirectionalCakeBlock {
@@ -109,6 +114,18 @@ public class DoubleCakeBlock extends DirectionalCakeBlock {
             }
             else {
                 world.setBlockState(pos, Blocks.CAKE.getDefaultState(), 3);
+            }
+        }
+    }
+
+    @Override
+    public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
+        if(CommonUtil.FESTIVITY.isStValentine()){
+            if(rand.nextFloat()>0.8) {
+                double d0 = (pos.getX() + 0.5 + (rand.nextFloat() - 0.5));
+                double d1 = (pos.getY() + 0.5 + (rand.nextFloat() - 0.5));
+                double d2 = (pos.getZ() + 0.5 + (rand.nextFloat() - 0.5));
+                worldIn.addParticle(ParticleTypes.HEART, d0, d1, d2, 0, 0, 0);
             }
         }
     }

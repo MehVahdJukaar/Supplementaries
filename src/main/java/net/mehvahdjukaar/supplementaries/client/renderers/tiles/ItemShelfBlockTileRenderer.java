@@ -89,7 +89,7 @@ public class ItemShelfBlockTileRenderer extends TileEntityRenderer<ItemShelfBloc
 
             ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
             ItemStack stack = tile.getStackInSlot(0);
-            if(CommonUtil.aprilfool)stack= new ItemStack(Items.DIAMOND);
+            if(CommonUtil.FESTIVITY.isAprilsFool())stack= new ItemStack(Items.DIAMOND);
             IBakedModel ibakedmodel = itemRenderer.getItemModelWithOverrides(stack, tile.getWorld(), null);
             if(ibakedmodel.isGui3d()&&ClientConfigs.cached.SHELF_TRANSLATE)matrixStackIn.translate(0,-0.25,0);
             itemRenderer.renderItem(stack, ItemCameraTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,

@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.items;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.tiles.CageBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.MobHolder;
-import net.mehvahdjukaar.supplementaries.world.data.CagedMobHelper;
+import net.mehvahdjukaar.supplementaries.common.CagedMobHelper;
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;

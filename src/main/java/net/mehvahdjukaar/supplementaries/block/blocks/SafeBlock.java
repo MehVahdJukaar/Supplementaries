@@ -2,6 +2,8 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.tiles.SafeBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.items.KeyItem;
+import net.mehvahdjukaar.supplementaries.items.SackItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IWaterLoggable;
@@ -43,12 +45,15 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class SafeBlock extends Block implements IWaterLoggable{
     public static final VoxelShape SHAPE = Block.makeCuboidShape(1,0,1,15,16,15);
@@ -135,26 +140,59 @@ public class SafeBlock extends Block implements IWaterLoggable{
             TileEntity tileentity = worldIn.getTileEntity(pos);
             if (tileentity instanceof SafeBlockTile) {
                 SafeBlockTile safe = ((SafeBlockTile) tileentity);
-                Item item = player.getHeldItem(handIn).getItem();
+                ItemStack stack = player.getHeldItem(handIn);
+                Item item = stack.getItem();
+
                 //clear ownership with tripwire
-                if(item instanceof BlockItem && ((BlockItem) item).getBlock() instanceof TripWireHookBlock &&
-                        (safe.isOwnedBy(player)||(safe.isNotOwnedBy(player)&&player.isCreative()))){
+                boolean cleared = false;
+                if(ServerConfigs.cached.SAFE_SIMPLE){
+                    if(((item instanceof BlockItem && ((BlockItem) item).getBlock() instanceof TripWireHookBlock)||
+                            item instanceof KeyItem) &&
+                            (safe.isOwnedBy(player)||(safe.isNotOwnedBy(player)&&player.isCreative()))){
+                        cleared = true;
+                    }
+                }
+                else{
+                    if(player.isSneaking() && item instanceof KeyItem && (player.isCreative() ||
+                            stack.getDisplayName().getString().equals(safe.password))){
+                        cleared = true;
+                    }
+                }
+                if(cleared){
                     safe.clearOwner();
                     player.sendStatusMessage(new TranslationTextComponent("message.supplementaries.safe.cleared"),true);
                     worldIn.playSound(null, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5,
                             SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN, SoundCategory.BLOCKS, 0.5F, 1.5F);
                     return ActionResultType.CONSUME;
                 }
+
                 BlockPos p = pos.offset(state.get(FACING));
                 if (!worldIn.getBlockState(p).isNormalCube(worldIn, p)){
-                    UUID owner = safe.owner;
-                    if (owner == null) {
-                        owner = player.getUniqueID();
-                        safe.setOwner(owner);
+                    if(ServerConfigs.cached.SAFE_SIMPLE) {
+                        UUID owner = safe.owner;
+                        if (owner == null) {
+                            owner = player.getUniqueID();
+                            safe.setOwner(owner);
+                        }
+                        if (!owner.equals(player.getUniqueID())) {
+                            player.sendStatusMessage(new TranslationTextComponent("message.supplementaries.safe.owner", safe.ownerName), true);
+                            if (!player.isCreative()) return ActionResultType.CONSUME;
+                        }
                     }
-                    if (!owner.equals(player.getUniqueID())) {
-                        player.sendStatusMessage(new TranslationTextComponent("message.supplementaries.safe.owner",safe.ownerName), true);
-                        if (!player.isCreative()) return ActionResultType.CONSUME;
+                    else{
+                        String key = safe.password;
+                        if(key==null){
+                            if(item instanceof KeyItem){
+                                safe.password=stack.getDisplayName().getString();
+                                player.sendStatusMessage(new TranslationTextComponent("message.supplementaries.safe.assigned_key",safe.password), true);
+                                worldIn.playSound(null, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5,
+                                        SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN, SoundCategory.BLOCKS, 0.5F, 1.5F);
+                                return ActionResultType.CONSUME;
+                            }
+                        }
+                        else if(!isKeyInInventory(player, safe.password)&&!player.isCreative()){
+                            return ActionResultType.CONSUME;
+                        }
                     }
                     player.openContainer((INamedContainerProvider) tileentity);
                     PiglinTasks.func_234478_a_(player, true);
@@ -166,49 +204,80 @@ public class SafeBlock extends Block implements IWaterLoggable{
             }
         }
     }
-    //TODO: camelcase all nbts 4 consistency
+
+
+    public static boolean isKeyInInventory(PlayerEntity player, String key){
+        AtomicReference<IItemHandler> _iitemhandlerref = new AtomicReference<>();
+        player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent(_iitemhandlerref::set);
+        if (_iitemhandlerref.get() != null) {
+            boolean hasKey = false;
+            for (int _idx = 0; _idx < _iitemhandlerref.get().getSlots(); _idx++) {
+                ItemStack stack = _iitemhandlerref.get().getStackInSlot(_idx);
+                if(stack.getItem() instanceof KeyItem){
+                    hasKey = true;
+                    String s = stack.getDisplayName().getString();
+                    if(s.equals(key))return true;
+                }
+            }
+            if(hasKey){
+                player.sendStatusMessage(new TranslationTextComponent("message.supplementaries.safe.incorrect_key"), true);
+                return false;
+            }
+        }
+        player.sendStatusMessage(new TranslationTextComponent("message.supplementaries.safe.locked"), true);
+        return false;
+    }
 
     public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
+
         CompoundNBT compoundnbt = stack.getChildTag("BlockEntityTag");
         if (compoundnbt != null) {
-            if(compoundnbt.contains("Owner")){
-                UUID id = compoundnbt.getUniqueId("Owner");
-                if(!id.equals(Minecraft.getInstance().player.getUniqueID())){
-                    String name = compoundnbt.getString("OwnerName");
-                    tooltip.add((new TranslationTextComponent("container.supplementaries.safe.owner", name)).mergeStyle(TextFormatting.GRAY));
+            if(ServerConfigs.cached.SAFE_SIMPLE) {
+                if (compoundnbt.contains("Owner")) {
+                    UUID id = compoundnbt.getUniqueId("Owner");
+                    if (!id.equals(Minecraft.getInstance().player.getUniqueID())) {
+                        String name = compoundnbt.getString("OwnerName");
+                        tooltip.add((new TranslationTextComponent("container.supplementaries.safe.owner", name)).mergeStyle(TextFormatting.GRAY));
+                        return;
+                    }
+                }
+                if (compoundnbt.contains("LootTable", 8)) {
+                    tooltip.add(new StringTextComponent("???????").mergeStyle(TextFormatting.GRAY));
+                }
+                if (compoundnbt.contains("Items", 9)) {
+                    NonNullList<ItemStack> nonnulllist = NonNullList.withSize(27, ItemStack.EMPTY);
+                    ItemStackHelper.loadAllItems(compoundnbt, nonnulllist);
+                    int i = 0;
+                    int j = 0;
+
+                    for (ItemStack itemstack : nonnulllist) {
+                        if (!itemstack.isEmpty()) {
+                            ++j;
+                            if (i <= 4) {
+                                ++i;
+                                IFormattableTextComponent iformattabletextcomponent = itemstack.getDisplayName().deepCopy();
+                                iformattabletextcomponent.appendString(" x").appendString(String.valueOf(itemstack.getCount()));
+                                tooltip.add(iformattabletextcomponent.mergeStyle(TextFormatting.GRAY));
+                            }
+                        }
+                    }
+
+                    if (j - i > 0) {
+                        tooltip.add((new TranslationTextComponent("container.shulkerBox.more", j - i)).mergeStyle(TextFormatting.ITALIC).mergeStyle(TextFormatting.GRAY));
+                    }
+                }
+                return;
+            }
+            else{
+                if (compoundnbt.contains("Password")) {
+                    tooltip.add((new TranslationTextComponent("message.supplementaries.safe.bound")).mergeStyle(TextFormatting.GRAY));
                     return;
                 }
             }
-            if (compoundnbt.contains("LootTable", 8)) {
-                tooltip.add(new StringTextComponent("???????").mergeStyle(TextFormatting.GRAY));
-            }
-            if (compoundnbt.contains("Items", 9)) {
-                NonNullList<ItemStack> nonnulllist = NonNullList.withSize(27, ItemStack.EMPTY);
-                ItemStackHelper.loadAllItems(compoundnbt, nonnulllist);
-                int i = 0;
-                int j = 0;
-
-                for(ItemStack itemstack : nonnulllist) {
-                    if (!itemstack.isEmpty()) {
-                        ++j;
-                        if (i <= 4) {
-                            ++i;
-                            IFormattableTextComponent iformattabletextcomponent = itemstack.getDisplayName().deepCopy();
-                            iformattabletextcomponent.appendString(" x").appendString(String.valueOf(itemstack.getCount()));
-                            tooltip.add(iformattabletextcomponent.mergeStyle(TextFormatting.GRAY));
-                        }
-                    }
-                }
-
-                if (j - i > 0) {
-                    tooltip.add((new TranslationTextComponent("container.shulkerBox.more", j - i)).mergeStyle(TextFormatting.ITALIC).mergeStyle(TextFormatting.GRAY));
-                }
-            }
         }
-        else {
-            tooltip.add((new TranslationTextComponent("message.supplementaries.safe.unbound")).mergeStyle(TextFormatting.GRAY));
-        }
+        tooltip.add((new TranslationTextComponent("message.supplementaries.safe.unbound")).mergeStyle(TextFormatting.GRAY));
+
     }
 
     public ItemStack getSafeItem(SafeBlockTile te) {
@@ -232,9 +301,17 @@ public class SafeBlock extends Block implements IWaterLoggable{
             TileEntity tileentity = world.getTileEntity(pos);
             if (tileentity instanceof SafeBlockTile) {
                 SafeBlockTile te = (SafeBlockTile) tileentity;
-                if (!player.isCreative() && te.isNotOwnedBy(player)) {
-                    player.sendStatusMessage(new TranslationTextComponent("message.supplementaries.safe.owner",te.ownerName), true);
-                    return false;
+                if(ServerConfigs.cached.SAFE_SIMPLE) {
+                    if (!player.isCreative() && te.isNotOwnedBy(player)) {
+                        player.sendStatusMessage(new TranslationTextComponent("message.supplementaries.safe.owner", te.ownerName), true);
+                        return false;
+                    }
+                }
+                else{
+                    if (!player.isCreative() && !isKeyInInventory(player,te.password)) {
+                        player.sendStatusMessage(new TranslationTextComponent("message.supplementaries.safe.locked", te.ownerName), true);
+                        return false;
+                    }
                 }
             }
         }

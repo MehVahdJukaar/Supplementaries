@@ -5,13 +5,13 @@ import com.google.common.collect.Maps;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.HorizontalBlock;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.Random;
 
 public class SconceWallBlock extends SconceBlock {
-    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
     //TODO: make map for other blocks
     private static final Map<Direction, VoxelShape> SHAPES = Maps.newEnumMap(ImmutableMap.of(
             Direction.NORTH, makeCuboidShape(6D, 2.0D, 10D, 10D, 13.0D, 16.0D),
@@ -51,7 +51,6 @@ public class SconceWallBlock extends SconceBlock {
     }
 
     @Override
-
     public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
         if(stateIn.get(LIT)){
             Direction direction = stateIn.get(FACING);
@@ -103,10 +102,12 @@ public class SconceWallBlock extends SconceBlock {
         builder.add(LIT,FACING,WATERLOGGED);
     }
 
+    @Override
     public BlockState rotate(BlockState state, Rotation rot) {
         return state.with(FACING, rot.rotate(state.get(FACING)));
     }
 
+    @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
         return state.rotate(mirrorIn.toRotation(state.get(FACING)));
     }

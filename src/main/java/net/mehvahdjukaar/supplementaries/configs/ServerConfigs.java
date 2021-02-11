@@ -34,6 +34,7 @@ public class ServerConfigs {
     public static class item {
         public static ForgeConfigSpec.IntValue FLUTE_RADIUS;
         public static ForgeConfigSpec.IntValue FLUTE_DISTANCE;
+        public static ForgeConfigSpec.ConfigValue<List<? extends String>> FLUTE_EXTRA_MOBS;
 
 
         private static void init(ForgeConfigSpec.Builder builder){
@@ -45,6 +46,8 @@ public class ServerConfigs {
                     .defineInRange("unbound_radius",64, 0, 500);
             FLUTE_DISTANCE = builder.comment("max distance at which a bound flute will allow a pet to teleport")
                     .defineInRange("bound_distance",64, 0, 500);
+            FLUTE_EXTRA_MOBS = builder.comment("additional non tameable entities that you can bind to flutes")
+                    .defineList("flute_extra_mobs", Arrays.asList("minecraft:horse","minecraft:llama","minecraft:donkey","minecraft:fox"),s->true);
             builder.pop();
 
 
@@ -60,7 +63,6 @@ public class ServerConfigs {
         public static ForgeConfigSpec.BooleanValue HANGING_POT_PLACEMENT;
         public static ForgeConfigSpec.BooleanValue WALL_LANTERN_PLACEMENT;
         public static ForgeConfigSpec.BooleanValue THROWABLE_BRICKS_ENABLED;
-        public static ForgeConfigSpec.ConfigValue<List<? extends String>> BRICKS_LIST;
         public static ForgeConfigSpec.ConfigValue<List<? extends String>> WALL_LANTERN_BLACKLIST;
         public static ForgeConfigSpec.BooleanValue BELL_CHAIN;
         public static ForgeConfigSpec.IntValue BELL_CHAIN_LENGTH;
@@ -87,10 +89,6 @@ public class ServerConfigs {
             builder.push("throwable_bricks");
             THROWABLE_BRICKS_ENABLED = builder.comment("throw bricks at your foes! Might glass blocks")
                     .define("enabled",true);
-            List<String> bricksList = Arrays.asList("architects_palette:algal_brick", "architects_palette:sunmetal_brick", "ars_nouveau:arcane_brick", "biomesoplenty:mud_brick", "byg:yellow_nether_brick",
-                    "byg:blue_nether_brick", "endergetic:eumus_brick", "extcaves:half_brick");
-            BRICKS_LIST = builder.comment("additional items that will be able to be thrown (will work with any item). Items tagges as forge/ingots/bricks or nether bricks will be automatically added")
-                    .defineList("whitelist",bricksList,s -> true);
             builder.pop();
             //wall lantern
             builder.push("wall_lantern");
@@ -137,7 +135,6 @@ public class ServerConfigs {
 
         public static ForgeConfigSpec.IntValue JAR_CAPACITY;
         public static ForgeConfigSpec.BooleanValue JAR_EAT;
-        public static ForgeConfigSpec.ConfigValue<List<? extends String>> JAR_COOKIES;
 
         public static ForgeConfigSpec.ConfigValue<List<? extends String>> MOB_JAR_ALLOWED_MOBS;
         public static ForgeConfigSpec.ConfigValue<List<? extends String>> MOB_JAR_TINTED_ALLOWED_MOBS;
@@ -154,6 +151,7 @@ public class ServerConfigs {
         public static ForgeConfigSpec.IntValue SACK_SLOTS;
 
         public static ForgeConfigSpec.BooleanValue SAFE_UNBREAKABLE;
+        public static ForgeConfigSpec.BooleanValue SAFE_SIMPLE;
 
         private static void  init(ForgeConfigSpec.Builder builder){
 
@@ -219,30 +217,11 @@ public class ServerConfigs {
                     "Disable if you think this ability is op. Cookies are excluded")
                     .define("drink_from_jar",true);
 
-            List<String> cookies = Arrays.asList("minecraft:cookie","farmersdelight:honey_cookie","farmersdelight:sweet_berry_cookie",
-                    "farmersdelight:peanut_butter_cookie","pamhc2crops:beanitem", "pamhc2crops:chickpeaitem",
-                    "cookielicious:strawberry_cookie", "cookielicious:vanilla_cookie", "cookielicious:sandwich_cookie",
-                    "pamhc2crops:garlicitem","pamhc2crops:jicamaitem","pamhc2crops:roastedmushroomitem",
-                    "pamhc2crops:bakedwaterchestnutitem","pamhc2crops:waterchestnutitem","pamhc2crops:chocolatemuffinitem",
-                    "pamhc2crops:donutitem","pamhc2crops:chocolatedonutitem","pamhc2crops:jellydonutitem","pamhc2crops:crackeritem",
-                    "pamhc2crops:pretzelitem","pamhc2crops:chocolatebaritem","pamhc2crops:chocolaterollitem","pamhc2crops:chocolatecaramelfudgeitem",
-                    "pamhc2crops:smoresitem","pamhc2crops:trailmixitem","pamhc2crops:candiedpecansitem",
-                    "pamhc2crops:candiedsweetpotatoesitem","pamhc2crops:candiedwalnutsitem","pamhc2crops:chocolateorangeitem",
-                    "pamhc2crops:chocolatepeanutbaritem","pamhc2crops:chocolatestrawberryitem","pamhc2crops:peanutbuttercupitem",
-                    "pamhc2crops:pralinesitem","pamhc2crops:pinenutitem","pamhc2crops:roastedalmonditem","pamhc2crops:roastedpinenutitem",
-                    "cookielicious:strawberry_cookie", "cookielicious:vanilla_cookie", "croptopia:raisin_oatmeal_cookie",
-                    "croptopia:nutty_cookie", "cspirit:sugar_cookie_santa", "cspirit:sugar_cookie_circle", "cspirit:sugar_cookie_ornament",
-                    "cspirit:sugar_cookie_star", "cspirit:sugar_cookie_man", "cspirit:sugar_cookie_snowman", "cspirit:gingerbread_cookie_circle",
-                    "inventorypets:holiday_cookie", "simplefarming:peanut_butter_cookie", "teletubbies:toast", "tofucraft:tofucookie");
-            JAR_COOKIES = builder.comment("any item can work here, ideally you should only put cookies and alike")
-                    .defineList("cookies", cookies,s -> true);
-
-
             List<String> jarMobs = Arrays.asList("minecraft:slime",
                     "minecraft:bee","minecraft:magma_cube","iceandfire:pixie","alexsmobs:fly", "alexsmobs:hummingbird","alexsmobs:cockroach",
                     "buzzierbees:honey_slime", "mysticalworld:frog","mysticalworld:beetle","mysticalworld:silkworm",
                     "druidcraft:lunar_moth", "druidcraft:dreadfish","swampexpansion:slabfish",
-                    "savageandravage:creepie","betteranimalsplus:butterfly","whisperwoods:moth");
+                    "savageandravage:creepie","betteranimalsplus:butterfly","whisperwoods:moth","fins:river_pebble_snail");
             MOB_JAR_ALLOWED_MOBS = builder.comment("catchable mobs \n"+
                     "due to a vanilla bug some mobs might not render correctly or at all")
                     .defineList("mobs", jarMobs,s -> true);
@@ -273,7 +252,8 @@ public class ServerConfigs {
                     "exoticbirds:toucan","exoticbirds:macaw","exoticbirds:magpie", "exoticbirds:kiwi", "exoticbirds:owl",
                     "exoticbirds:gouldianfinch", "exoticbirds:gull", "exoticbirds:pigeon", "exoticbirds:penguin", "exoticbirds:duck",
                     "exoticbirds:booby", "exoticbirds:cardinal", "exoticbirds:bluejay", "exoticbirds:robin", "exoticbirds:kookaburra",
-                    "exoticbirds:budgerigar", "exoticbirds:cockatoo","swampexpansion:slabfish");
+                    "exoticbirds:budgerigar", "exoticbirds:cockatoo","swampexpansion:slabfish",
+                    "fins:flatback_leaf_snail","fins:penglil", "fins:river_pebble_snail", "fins:siderol_whiskered_snail", "fins:red_bull_crab", "fins:white_bull_crab");
             cageMobs.addAll(additionalCageMobs);
             CAGE_ALLOWED_MOBS = builder.comment("catchable mobs")
                     .defineList("cage_mobs", cageMobs,s -> true);
@@ -305,6 +285,9 @@ public class ServerConfigs {
             builder.push("safe");
             SAFE_UNBREAKABLE = builder.comment("makes safes only breakable by their owner or by a player in creative")
                     .define("prevent_breaking",false);
+            SAFE_SIMPLE = builder.comment("make safes simpler so they do not require keys:\n" +
+                    "they will be bound to the first person that opens one and only that person will be able to interact with them")
+                    .define("simple_safes",false);
             builder.pop();
 
 
@@ -384,12 +367,12 @@ public class ServerConfigs {
         //items
         public static int FLUTE_RADIUS;
         public static int FLUTE_DISTANCE;
+        public static List<? extends String> FLUTE_EXTRA_MOBS;
         //tweaks
         public static boolean DIRECTIONAL_CAKE;
         public static boolean DOUBLE_CAKE_PLACEMENT;
         public static boolean HANGING_POT_PLACEMENT;
         public static boolean THROWABLE_BRICKS_ENABLED;
-        public static List<? extends String> BRICKS_LIST;
         public static boolean WALL_LANTERN_PLACEMENT;
         public static List<? extends String> WALL_LANTERN_BLACKLIST;
         public static boolean BELL_CHAIN;
@@ -416,7 +399,6 @@ public class ServerConfigs {
         public static List<? extends String> TURN_TABLE_BLACKLIST;
         public static int JAR_CAPACITY;
         public static boolean JAR_EAT;
-        public static List<? extends String> JAR_COOKIES;
         public static boolean NOTICE_BOARDS_UNRESTRICTED;
         public static List<? extends String> MOB_JAR_ALLOWED_MOBS;
         public static List<? extends String> MOB_JAR_TINTED_ALLOWED_MOBS;
@@ -428,6 +410,7 @@ public class ServerConfigs {
         public static boolean SACK_PENALTY;
         public static int SACK_SLOTS;
         public static boolean SAFE_UNBREAKABLE;
+        public static boolean SAFE_SIMPLE;
         public static int GLOBE_TRADES;
         public static double GLOBE_TREASURE_CHANCE;
         //entity
@@ -437,13 +420,13 @@ public class ServerConfigs {
         public static void refresh(){
             FLUTE_DISTANCE = item.FLUTE_DISTANCE.get();
             FLUTE_RADIUS = item.FLUTE_RADIUS.get();
+            FLUTE_EXTRA_MOBS = item.FLUTE_EXTRA_MOBS.get();
 
             DIRECTIONAL_CAKE = tweaks.DIRECTIONAL_CAKE.get();
             DOUBLE_CAKE_PLACEMENT = tweaks.DOUBLE_CAKE_PLACEMENT.get();
             HANGING_POT_PLACEMENT = tweaks.WALL_LANTERN_PLACEMENT.get();
             WALL_LANTERN_PLACEMENT = tweaks.WALL_LANTERN_PLACEMENT.get();
             THROWABLE_BRICKS_ENABLED = tweaks.THROWABLE_BRICKS_ENABLED.get();
-            BRICKS_LIST = tweaks.BRICKS_LIST.get();
             WALL_LANTERN_BLACKLIST = tweaks.WALL_LANTERN_BLACKLIST.get();
             BELL_CHAIN = tweaks.BELL_CHAIN.get();
             BELL_CHAIN_LENGTH = tweaks.BELL_CHAIN_LENGTH.get();
@@ -475,7 +458,6 @@ public class ServerConfigs {
 
             JAR_CAPACITY = block.JAR_CAPACITY.get();
             JAR_EAT = block.JAR_EAT.get();
-            JAR_COOKIES = block.JAR_COOKIES.get();
 
             NOTICE_BOARDS_UNRESTRICTED = block.NOTICE_BOARDS_UNRESTRICTED.get();
 
@@ -492,6 +474,7 @@ public class ServerConfigs {
             SACK_SLOTS = block.SACK_SLOTS.get();
 
             SAFE_UNBREAKABLE= block.SAFE_UNBREAKABLE.get();
+            SAFE_SIMPLE = block.SAFE_SIMPLE.get();
 
             FIREFLY_PERIOD = entity.FIREFLY_PERIOD.get();
             FIREFLY_SPEED = entity.FIREFLY_SPEED.get();

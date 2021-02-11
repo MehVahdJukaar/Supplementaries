@@ -16,8 +16,7 @@ public abstract class ShulkerBoxSlotMixin {
 
     @Inject(method = "isItemValid", at = @At("HEAD"), cancellable = true)
     public void isItemValid(ItemStack itemStackIn, CallbackInfoReturnable<Boolean> info ) {
-        ITag<Item> t = ItemTags.getCollection().get(ModTags.SHULKER_BLACKLIST_TAG);
-        if(t!=null && itemStackIn.getItem().isIn(t))
+        if(ModTags.isTagged(ModTags.SHULKER_BLACKLIST_TAG,itemStackIn.getItem()))
             info.setReturnValue(false);
     }
 }

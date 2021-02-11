@@ -1,0 +1,9 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "supplementaries:block/bamboo_spikes_tipped",
+	"textures": {
+		"0": "supplementaries:blocks/bamboo_spikes_base",
+		"1": "supplementaries:blocks/bamboo_spikes",
+		"particle": "supplementaries:blocks/bamboo_spikes"
+	}
+}

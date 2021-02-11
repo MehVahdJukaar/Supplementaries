@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "1 1",
+    "1 1",
+    "000"
+  ],
+  "key": {
+    "0": {
+      "tag": "minecraft:wooden_slabs"
+    },
+    "1": {
+      "item": "minecraft:bamboo"
+    }
+  },
+  "result": {
+    "item": "supplementaries:bamboo_spikes",
+    "count": 2
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "bamboo_spikes"
+    }
+  ]
+}

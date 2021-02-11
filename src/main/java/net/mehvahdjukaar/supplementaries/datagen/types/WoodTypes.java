@@ -90,6 +90,15 @@ public class WoodTypes {
         for (IWoodType w : TerraqueousWoodTypes.values()){ //#
             TYPES.put(w.toResourceLocation(),w);
         }
+        for (IWoodType w : TheBumblezoneWoodTypes.values()){
+            TYPES.put(w.toResourceLocation(),w);
+        }
+        for (IWoodType w : TraverseWoodTypes.values()){ //#
+            //TYPES.put(w.toResourceLocation(),w);
+        }
+        for (IWoodType w : ToufucraftWoodTypes.values()){
+            TYPES.put(w.toResourceLocation(),w);
+        }
 
     }
     public static IWoodType fromNBT(String s){

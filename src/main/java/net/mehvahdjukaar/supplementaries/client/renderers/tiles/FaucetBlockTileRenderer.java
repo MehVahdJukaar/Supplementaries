@@ -23,7 +23,7 @@ public class FaucetBlockTileRenderer extends TileEntityRenderer<FaucetBlockTile>
     @Override
     public void render(FaucetBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
-        if (tile.hasWater() && tile.isOpen() && !tile.hasJar() && !CommonUtil.isearthday) {
+        if (tile.hasWater() && tile.isOpen() && !tile.hasJar() && !CommonUtil.FESTIVITY.isEarthDay()) {
             TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(Textures.FAUCET_TEXTURE);
             // TODO:remove breaking animation
             IVertexBuilder builder = bufferIn.getBuffer(RenderType.getTranslucentMovingBlock());

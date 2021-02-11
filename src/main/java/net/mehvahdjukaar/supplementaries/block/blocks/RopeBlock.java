@@ -22,6 +22,9 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
@@ -29,6 +32,7 @@ import net.minecraft.world.World;
 import java.util.Map;
 
 public class RopeBlock extends Block implements IWaterLoggable{
+    private static final VoxelShape SHAPE = Block.makeCuboidShape(1,1,1,15,15,15);
     public static final EnumProperty<Attachment> NORTH = BlockProperties.CONNECTION_NORTH;
     public static final EnumProperty<Attachment> SOUTH = BlockProperties.CONNECTION_SOUTH;
     public static final EnumProperty<Attachment> EAST = BlockProperties.CONNECTION_EAST;
@@ -48,6 +52,11 @@ public class RopeBlock extends Block implements IWaterLoggable{
         this.setDefaultState(this.stateContainer.getBaseState()
                 .with(UP,true).with(DOWN,true).with(DISTANCE,7).with(WATERLOGGED,false)
                 .with(NORTH,Attachment.NONE).with(SOUTH,Attachment.NONE).with(EAST,Attachment.NONE).with(WEST,Attachment.NONE));
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        return SHAPE;
     }
 
     @Override

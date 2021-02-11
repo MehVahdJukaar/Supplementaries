@@ -1,0 +1,55 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "Desktop/spikes_base",
+		"1": "Desktop/spikes",
+		"particle": "Desktop/spikes_base"
+	},
+	"elements": [
+		{
+			"from": [0, 0, 0],
+			"to": [16, 1, 16],
+			"faces": {
+				"north": {"uv": [0, 15, 16, 16], "texture": "#1"},
+				"east": {"uv": [0, 15, 16, 16], "texture": "#1"},
+				"south": {"uv": [0, 15, 16, 16], "texture": "#1"},
+				"west": {"uv": [0, 15, 16, 16], "texture": "#1"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#0"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#0"}
+			}
+		},
+		{
+			"from": [0, 1, 13.5],
+			"to": [5, 16, 13.5],
+			"rotation": {"angle": 0, "axis": "y", "origin": [2.5, 8.5, 13.5]},
+			"faces": {
+				"north": {"uv": [0, 0, 5, 15], "texture": "#1"},
+				"east": {"uv": [0, 0, 0, 15], "texture": "#missing"},
+				"south": {"uv": [0, 0, 5, 15], "texture": "#1"},
+				"west": {"uv": [0, 0, 0, 15], "texture": "#missing"},
+				"up": {"uv": [0, 0, 5, 0], "texture": "#missing"},
+				"down": {"uv": [0, 0, 5, 0], "texture": "#missing"}
+			}
+		},
+		{
+			"from": [2.5, 1, 11],
+			"to": [2.5, 16, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [2.5, 8.5, 13.5]},
+			"faces": {
+				"north": {"uv": [0, 0, 0, 15], "texture": "#missing"},
+				"east": {"uv": [0, 0, 5, 15], "texture": "#1"},
+				"south": {"uv": [0, 0, 0, 15], "texture": "#missing"},
+				"west": {"uv": [0, 0, 5, 15], "texture": "#1"},
+				"up": {"uv": [0, 0, 5, 0], "rotation": 90, "texture": "#missing"},
+				"down": {"uv": [0, 0, 5, 0], "rotation": 270, "texture": "#missing"}
+			}
+		}
+	],
+	"groups": [0,
+		{
+			"name": "group",
+			"origin": [2.5, 8.5, 13.5],
+			"children": [1, 2]
+		}
+	]
+}

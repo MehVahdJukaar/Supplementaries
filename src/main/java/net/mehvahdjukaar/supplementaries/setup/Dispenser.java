@@ -1,13 +1,16 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.FireflyJarBlock;
+import net.mehvahdjukaar.supplementaries.block.blocks.LightUpBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.items.EmptyJarItem;
 import net.mehvahdjukaar.supplementaries.items.JarItem;
 import net.mehvahdjukaar.supplementaries.items.SackItem;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.dispenser.IBlockSource;
@@ -15,6 +18,7 @@ import net.minecraft.dispenser.IDispenseItemBehavior;
 import net.minecraft.dispenser.OptionalDispenseBehavior;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.tileentity.DispenserTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -53,14 +57,16 @@ public class Dispenser {
                 if (item instanceof JarItem || item instanceof EmptyJarItem || item instanceof SackItem ||
                         (item instanceof BlockItem && ((BlockItem) item).getBlock() instanceof FireflyJarBlock)) {
                     DispenserBlock.registerDispenseBehavior(item, new PlaceBlockDispenseBehavior());
-                } else if (!CommonUtil.getJarContentTypeFromItem(new ItemStack(item)).isEmpty()) {
+                }
+                else if (!CommonUtil.getJarContentTypeFromItem(new ItemStack(item)).isEmpty()) {
                     DispenserBlock.registerDispenseBehavior(item, new FillJarDispenserBehavior());
                 }
             }
             DispenserBlock.registerDispenseBehavior(Items.BUCKET, new BucketJarDispenserBehavior());
             DispenserBlock.registerDispenseBehavior(Items.BOWL, new BowlJarDispenserBehavior());
             DispenserBlock.registerDispenseBehavior(Items.GLASS_BOTTLE, new BottleJarDispenserBehavior());
-
+            DispenserBlock.registerDispenseBehavior(Items.FLINT_AND_STEEL, new FlintAndSteelDispenserBehavior());
+            DispenserBlock.registerDispenseBehavior(Items.LINGERING_POTION, new BambooSpikesDispenserBehavior());
         }
         //firefly
         if(RegistryConfigs.reg.FIREFLY_ENABLED.get()) {
@@ -169,6 +175,45 @@ public class Dispenser {
     }
 
 
+    public static class FlintAndSteelDispenserBehavior extends AdditionalDispenserBehavior{
+
+        @Override
+        protected ItemStack customBehavior(IBlockSource source, ItemStack stack) {
+            //this.setSuccessful(false);
+            ServerWorld world = source.getWorld();
+            BlockPos blockpos = source.getBlockPos().offset(source.getBlockState().get(DispenserBlock.FACING));
+            BlockState state = world.getBlockState(blockpos);
+            if(state.getBlock() instanceof LightUpBlock){
+                if(LightUpBlock.lightUp(state,blockpos,world,LightUpBlock.FireSound.FLINT_AND_STEEL)){
+                    if(stack.attemptDamageItem(1, world.rand, (ServerPlayerEntity)null)){
+                        stack.setCount(0);
+                    }
+                }
+                return stack;
+            }
+            return super.customBehavior(source,stack);
+        }
+    }
+
+    public static class BambooSpikesDispenserBehavior extends AdditionalDispenserBehavior{
+
+        @Override
+        protected ItemStack customBehavior(IBlockSource source, ItemStack stack) {
+            //this.setSuccessful(false);
+            ServerWorld world = source.getWorld();
+            BlockPos blockpos = source.getBlockPos().offset(source.getBlockState().get(DispenserBlock.FACING));
+            BlockState state = world.getBlockState(blockpos);
+            if(state.getBlock() instanceof BambooSpikesBlock && BambooSpikesBlock.isLingeringPoison(stack)){
+                if(BambooSpikesBlock.addPoison(state,world,blockpos,stack)){
+                    return Dispenser.glassBottleFill(source, stack, new ItemStack(Items.GLASS_BOTTLE));
+                }
+                return stack;
+            }
+
+            return super.customBehavior(source,stack);
+        }
+    }
+
     public static class BucketJarDispenserBehavior extends  AdditionalDispenserBehavior{
 
         @Override
@@ -194,10 +239,6 @@ public class Dispenser {
         }
 
     }
-
-
-
-
 
     public static class BottleJarDispenserBehavior extends  AdditionalDispenserBehavior{
 

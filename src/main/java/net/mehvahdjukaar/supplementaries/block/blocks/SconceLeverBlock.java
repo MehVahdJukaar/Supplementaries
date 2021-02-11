@@ -2,14 +2,9 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.PotionEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.potion.PotionUtils;
-import net.minecraft.potion.Potions;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -17,6 +12,7 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import java.util.Random;
@@ -31,30 +27,10 @@ public class SconceLeverBlock extends SconceWallBlock{
 
     //need to update neighbours too
     @Override
-    public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
-        if(!worldIn.isRemote && entityIn instanceof ProjectileEntity) {
-            ProjectileEntity projectile = (ProjectileEntity)entityIn;
-            if (projectile.isBurning()) {
-                Entity entity = projectile.func_234616_v_();
-                boolean flag = entity == null || entity instanceof PlayerEntity || net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(worldIn, entity);
-                if (flag && !state.get(LIT) && !state.get(WATERLOGGED)) {
-                    worldIn.setBlockState(pos, state.with(BlockStateProperties.LIT, true), 11);
-                    this.updateNeighbors(state, worldIn, pos);
-                    worldIn.playSound(null, pos, SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.BLOCKS, 0.5F, 1.4F);
-                }
-            }
-            else if (projectile instanceof PotionEntity && PotionUtils.getPotionFromItem(((PotionEntity)projectile).getItem()).equals(Potions.WATER)) {
-                Entity entity = projectile.func_234616_v_();
-                boolean flag = entity == null || entity instanceof PlayerEntity || net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(worldIn, entity);
-                if (flag && state.get(LIT)) {
-                    worldIn.setBlockState(pos, state.with(BlockStateProperties.LIT, false), 11);
-                    this.updateNeighbors(state, worldIn, pos);
-                    extinguish(worldIn, pos);
-                }
-            }
-        }
+    public void onChange(BlockState state, IWorld world, BlockPos pos) {
+        if(world instanceof World)
+            this.updateNeighbors(state, (World) world, pos);
     }
-
 
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {

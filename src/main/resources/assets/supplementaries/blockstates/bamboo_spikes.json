@@ -1,0 +1,372 @@
+{
+  "variants": {
+    "facing=north,poison=0": {
+      "model": "supplementaries:block/bamboo_spikes"
+    },
+    "facing=east,poison=0": {
+      "model": "supplementaries:block/bamboo_spikes",
+      "y": 90
+    },
+    "facing=south,poison=0": {
+      "model": "supplementaries:block/bamboo_spikes",
+      "y": 180
+    },
+    "facing=west,poison=0": {
+      "model": "supplementaries:block/bamboo_spikes",
+      "y": 270
+    },
+    "facing=up,poison=0": {
+      "model": "supplementaries:block/bamboo_spikes",
+      "x": 270
+    },
+    "facing=down,poison=0": {
+      "model": "supplementaries:block/bamboo_spikes",
+      "x": 90
+    },
+    "facing=north,poison=1": {
+      "model": "supplementaries:block/bamboo_spikes_tipped"
+    },
+    "facing=east,poison=1": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 90
+    },
+    "facing=south,poison=1": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 180
+    },
+    "facing=west,poison=1": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 270
+    },
+    "facing=up,poison=1": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "x": 270
+    },
+    "facing=down,poison=1": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "x": 90
+    },
+    "facing=north,poison=2": {
+      "model": "supplementaries:block/bamboo_spikes_tipped"
+    },
+    "facing=east,poison=2": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 90
+    },
+    "facing=south,poison=2": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 180
+    },
+    "facing=west,poison=2": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 270
+    },
+    "facing=up,poison=2": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "x": 270
+    },
+    "facing=down,poison=2": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "x": 90
+    },
+    "facing=north,poison=3": {
+      "model": "supplementaries:block/bamboo_spikes_tipped"
+    },
+    "facing=east,poison=3": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 90
+    },
+    "facing=south,poison=3": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 180
+    },
+    "facing=west,poison=3": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 270
+    },
+    "facing=up,poison=3": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "x": 270
+    },
+    "facing=down,poison=3": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "x": 90
+    },
+    "facing=north,poison=4": {
+      "model": "supplementaries:block/bamboo_spikes_tipped"
+    },
+    "facing=east,poison=4": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 90
+    },
+    "facing=south,poison=4": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 180
+    },
+    "facing=west,poison=4": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 270
+    },
+    "facing=up,poison=4": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "x": 270
+    },
+    "facing=down,poison=4": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "x": 90
+    },
+    "facing=east,poison=5": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 90
+    },
+    "facing=north,poison=5": {
+      "model": "supplementaries:block/bamboo_spikes_tipped"
+    },
+    "facing=south,poison=5": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 180
+    },
+    "facing=west,poison=5": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 270
+    },
+    "facing=up,poison=5": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "x": 270
+    },
+    "facing=down,poison=5": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "x": 90
+    },
+    "facing=north,poison=6": {
+      "model": "supplementaries:block/bamboo_spikes_tipped"
+    },
+    "facing=east,poison=6": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 90
+    },
+    "facing=south,poison=6": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 180
+    },
+    "facing=west,poison=6": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 270
+    },
+    "facing=up,poison=6": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "x": 270
+    },
+    "facing=down,poison=6": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "x": 90
+    },
+    "facing=north,poison=7": {
+      "model": "supplementaries:block/bamboo_spikes_tipped"
+    },
+    "facing=east,poison=7": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 90
+    },
+    "facing=south,poison=7": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 180
+    },
+    "facing=west,poison=7": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 270
+    },
+    "facing=up,poison=7": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "x": 270
+    },
+    "facing=down,poison=7": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "x": 90
+    },
+    "facing=north,poison=8": {
+      "model": "supplementaries:block/bamboo_spikes_tipped"
+    },
+    "facing=east,poison=8": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 90
+    },
+    "facing=south,poison=8": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 180
+    },
+    "facing=west,poison=8": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 270
+    },
+    "facing=up,poison=8": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "x": 270
+    },
+    "facing=down,poison=8": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "x": 90
+    },
+    "facing=north,poison=9": {
+      "model": "supplementaries:block/bamboo_spikes_tipped"
+    },
+    "facing=east,poison=9": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 90
+    },
+    "facing=south,poison=9": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 180
+    },
+    "facing=west,poison=9": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 270
+    },
+    "facing=up,poison=9": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "x": 270
+    },
+    "facing=down,poison=9": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "x": 90
+    },
+    "facing=north,poison=10": {
+      "model": "supplementaries:block/bamboo_spikes_tipped"
+    },
+    "facing=east,poison=10": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 90
+    },
+    "facing=south,poison=10": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 180
+    },
+    "facing=west,poison=10": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 270
+    },
+    "facing=up,poison=10": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "x": 270
+    },
+    "facing=down,poison=10": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "x": 90
+    },
+    "facing=north,poison=11": {
+      "model": "supplementaries:block/bamboo_spikes_tipped"
+    },
+    "facing=east,poison=11": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 90
+    },
+    "facing=south,poison=11": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 180
+    },
+    "facing=west,poison=11": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 270
+    },
+    "facing=up,poison=11": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "x": 270
+    },
+    "facing=down,poison=11": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "x": 90
+    },
+    "facing=north,poison=12": {
+      "model": "supplementaries:block/bamboo_spikes_tipped"
+    },
+    "facing=east,poison=12": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 90
+    },
+    "facing=south,poison=12": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 180
+    },
+    "facing=west,poison=12": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 270
+    },
+    "facing=up,poison=12": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "x": 270
+    },
+    "facing=down,poison=12": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "x": 90
+    },
+    "facing=north,poison=13": {
+      "model": "supplementaries:block/bamboo_spikes_tipped"
+    },
+    "facing=east,poison=13": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 90
+    },
+    "facing=south,poison=13": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 180
+    },
+    "facing=west,poison=13": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 270
+    },
+    "facing=up,poison=13": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "x": 270
+    },
+    "facing=down,poison=13": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "x": 90
+    },
+    "facing=north,poison=14": {
+      "model": "supplementaries:block/bamboo_spikes_tipped"
+    },
+    "facing=east,poison=14": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 90
+    },
+    "facing=south,poison=14": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 180
+    },
+    "facing=west,poison=14": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 270
+    },
+    "facing=up,poison=14": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "x": 270
+    },
+    "facing=down,poison=14": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "x": 90
+    },
+    "facing=north,poison=15": {
+      "model": "supplementaries:block/bamboo_spikes_tipped"
+    },
+    "facing=east,poison=15": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 90
+    },
+    "facing=south,poison=15": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 180
+    },
+    "facing=west,poison=15": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 270
+    },
+    "facing=up,poison=15": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "x": 270
+    },
+    "facing=down,poison=15": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "x": 90
+    }
+  }
+}

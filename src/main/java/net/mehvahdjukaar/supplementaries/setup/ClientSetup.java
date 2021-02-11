@@ -150,6 +150,7 @@ public class ClientSetup {
         ClientRegistry.bindTileEntityRenderer((TileEntityType<OilLanternBlockTile>) Registry.COPPER_LANTERN_TILE.get(), OilLanternBlockTileRenderer::new);
         //crimson lantern
         RenderTypeLookup.setRenderLayer(Registry.CRIMSON_LANTERN.get(), RenderType.getCutout());
+        ClientRegistry.bindTileEntityRenderer((TileEntityType<OilLanternBlockTile>) Registry.CRIMSON_LANTERN_TILE.get(), CrimsonLanternBlockTileRenderer::new);
         //doormat
         ClientRegistry.bindTileEntityRenderer((TileEntityType<DoormatBlockTile>) Registry.DOORMAT_TILE.get(), DoormatBlockTileRenderer::new);
         //hanging flower pot
@@ -158,7 +159,8 @@ public class ClientSetup {
         //gold door & trapdoor
         RenderTypeLookup.setRenderLayer(Registry.GOLD_DOOR.get(), RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(Registry.GOLD_TRAPDOOR.get(), RenderType.getCutout());
-
+        //spikes
+        RenderTypeLookup.setRenderLayer(Registry.BAMBOO_SPIKES.get(), RenderType.getCutout());
     }
 
     //particles

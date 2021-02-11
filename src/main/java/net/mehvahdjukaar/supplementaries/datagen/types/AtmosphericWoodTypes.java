@@ -39,6 +39,12 @@ public enum AtmosphericWoodTypes implements IWoodType {
     }
 
     @Override
+    public String getRegName() {
+        if(this.name.equals("aspen"))return this.name+"_atm";
+        return this.name;
+    }
+
+    @Override
     public String getNamespace() {
         return "atmospheric";
     }

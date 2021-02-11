@@ -91,7 +91,7 @@ public class ClockBlock extends Block implements IWaterLoggable {
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        boolean flag = context.getWorld().getFluidState(context.getPos()).getFluid() == Fluids.WATER;;
+        boolean flag = context.getWorld().getFluidState(context.getPos()).getFluid() == Fluids.WATER;
         return this.getDefaultState().with(WATERLOGGED, flag).with(FACING, context.getPlacementHorizontalFacing().getOpposite());
     }
 

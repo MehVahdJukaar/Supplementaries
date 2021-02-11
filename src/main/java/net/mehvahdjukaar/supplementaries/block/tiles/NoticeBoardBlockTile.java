@@ -8,34 +8,22 @@ import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tileentity.LockableLootTileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.wrapper.SidedInvWrapper;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.IntStream;
 
 
-public class NoticeBoardBlockTile extends LockableLootTileEntity implements INameable, ISidedInventory, IMapDisplay {
+public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, IMapDisplay {
     private NonNullList<ItemStack> stacks = NonNullList.withSize(1, ItemStack.EMPTY);
     private String txt = null;
     private int fontScale = 1;
@@ -87,8 +75,7 @@ public class NoticeBoardBlockTile extends LockableLootTileEntity implements INam
     @Override
     public void markDirty() {
         this.updateTile();
-        this.world.notifyBlockUpdate(this.pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
-        //this.updateServerAndClient();
+       //this.updateServerAndClient();
         super.markDirty();
     }
 
@@ -142,10 +129,6 @@ public class NoticeBoardBlockTile extends LockableLootTileEntity implements INam
         if (compound.contains("CustomName", 8)) {
             this.customName = ITextComponent.Serializer.getComponentFromJson(compound.getString("CustomName"));
         }
-        if (!this.checkLootAndRead(compound)) {
-            this.stacks = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
-        }
-        ItemStackHelper.loadAllItems(compound, this.stacks);
         this.txt = compound.getString("Text");
         this.fontScale = compound.getInt("FontScale");
         //TODO: rework this
@@ -163,9 +146,6 @@ public class NoticeBoardBlockTile extends LockableLootTileEntity implements INam
         if (this.customName != null) {
             compound.putString("CustomName", ITextComponent.Serializer.toJson(this.customName));
         }
-        if (!this.checkLootAndWrite(compound)) {
-            ItemStackHelper.saveAllItems(compound, this.stacks);
-        }
         if (this.txt != null) {
             compound.putString("Text", this.txt);
         }
@@ -179,38 +159,6 @@ public class NoticeBoardBlockTile extends LockableLootTileEntity implements INam
         return compound;
     }
 
-    @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.pos, 0, this.getUpdateTag());
-    }
-
-    @Override
-    public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
-    }
-
-    @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.read(this.getBlockState(), pkt.getNbtCompound());
-    }
-
-    @Override
-    public int getSizeInventory() {
-        return stacks.size();
-    }
-
-    @Override
-    public boolean isEmpty() {
-        for (ItemStack itemstack : this.stacks)
-            if (!itemstack.isEmpty())
-                return false;
-        return true;
-    }
-
-    @Override
-    public int getInventoryStackLimit() {
-        return 1;
-    }
 
     @Override
     public Container createMenu(int id, PlayerInventory player) {
@@ -218,24 +166,9 @@ public class NoticeBoardBlockTile extends LockableLootTileEntity implements INam
     }
 
     @Override
-    protected NonNullList<ItemStack> getItems() {
-        return this.stacks;
-    }
-
-    @Override
-    public void setItems(NonNullList<ItemStack> stacks) {
-        this.stacks = stacks;
-    }
-
-    @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
         if(!stack.isEmpty()&&this.isEmpty()&&ServerConfigs.cached.NOTICE_BOARDS_UNRESTRICTED)return true;
         return (this.isEmpty()&&((ItemTags.LECTERN_BOOKS!=null&&stack.getItem().isIn(ItemTags.LECTERN_BOOKS))|| stack.getItem() instanceof FilledMapItem));
-    }
-
-    @Override
-    public int[] getSlotsForFace(Direction side) {
-        return IntStream.range(0, this.getSizeInventory()).toArray();
     }
 
     @Override
@@ -247,21 +180,8 @@ public class NoticeBoardBlockTile extends LockableLootTileEntity implements INam
     public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
         return true;
     }
-    private final LazyOptional<? extends IItemHandler>[] handlers = SidedInvWrapper.create(this, Direction.values());
-    @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
-        if (!this.removed && facing != null && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-            return handlers[facing.ordinal()].cast();
-        return super.getCapability(capability, facing);
-    }
 
-    @Override
-    public void remove() {
-        super.remove();
-        for (LazyOptional<? extends IItemHandler> handler : handlers)
-            handler.invalidate();
-    }
-
+    //TODO: remove some of these
     public DyeColor getTextColor() {
         return this.textColor;
     }
@@ -269,14 +189,12 @@ public class NoticeBoardBlockTile extends LockableLootTileEntity implements INam
     public boolean setTextColor(DyeColor newColor) {
         if (newColor != this.getTextColor()) {
             this.textColor = newColor;
-            //this.world.notifyBlockUpdate(this.getPos(), this.getBlockState(), this.getBlockState(), 3);
             return true;
         } else {
             return false;
         }
     }
 
-    //do this inside here
     public void setFontScale(int s) {
         this.fontScale = s;
     }

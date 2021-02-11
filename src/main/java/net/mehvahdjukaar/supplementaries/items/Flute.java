@@ -4,7 +4,11 @@ import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.passive.FoxEntity;
 import net.minecraft.entity.passive.TameableEntity;
+import net.minecraft.entity.passive.horse.AbstractHorseEntity;
+import net.minecraft.entity.passive.horse.HorseEntity;
+import net.minecraft.entity.passive.horse.LlamaEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
@@ -50,15 +54,14 @@ public class Flute extends Item {
             if(com1!=null&&com1.contains("Pet")){
                 CompoundNBT com = com1.getCompound("Pet");
                 Entity entity = worldIn.getEntityByID(com.getInt("ID"));
-                if(entity instanceof TameableEntity){
-                    int maxdistsq = ServerConfigs.cached.FLUTE_DISTANCE*ServerConfigs.cached.FLUTE_DISTANCE;
-                    TameableEntity pet1 = ((TameableEntity) entity);
-                    if (pet1.world==playerIn.world && pet1.isTamed() && pet1.getOwnerId().equals(playerIn.getUniqueID())&&pet1.getDistanceSq(playerIn)<maxdistsq) {
-                        if(pet1.attemptTeleport(x, y, z, false)){
-                            //pet1.setSleeping(false);
-                        }
+                int maxdistsq = ServerConfigs.cached.FLUTE_DISTANCE*ServerConfigs.cached.FLUTE_DISTANCE;
+                LivingEntity pet1 = ((LivingEntity) entity);
+                if (pet1.world==playerIn.world&&pet1.getDistanceSq(playerIn)<maxdistsq) {
+                    if(pet1.attemptTeleport(x, y, z, false)){
+                        //pet1.setSleeping(false);
                     }
                 }
+
             }
             else {
                 AxisAlignedBB bb = new AxisAlignedBB(x - r, y - r, z - r, x + r, y + r, z + r);
@@ -85,8 +88,12 @@ public class Flute extends Item {
     @Override
     public ActionResultType itemInteractionForEntity(ItemStack stack, PlayerEntity playerIn, LivingEntity target, Hand hand) {
         CompoundNBT c = stack.getChildTag("Enchantments");
-        if((c==null||!c.contains("Pet")) && target instanceof TameableEntity && ((TameableEntity) target).isTamed() &&
-                ((TameableEntity) target).getOwnerId().equals(playerIn.getUniqueID())) {
+        String s  = target.getType().getRegistryName().toString();
+        if((c==null||!c.contains("Pet")) && (target instanceof TameableEntity && ((TameableEntity) target).isTamed() &&
+                ((TameableEntity) target).getOwnerId().equals(playerIn.getUniqueID())) ||
+                ServerConfigs.cached.FLUTE_EXTRA_MOBS.contains(target.getType().getRegistryName().toString())) {
+            if(target instanceof AbstractHorseEntity && !((AbstractHorseEntity) target).isTame())return ActionResultType.PASS;
+            //if(target instanceof FoxEntity && ! ((FoxEntity)target).isTrustedUUID(p_213497_1_.getUniqueID())return ActionResultType.PASS;
             CompoundNBT com = new CompoundNBT();
             com.putString("Name", target.getName().getString());
             com.putUniqueId("UUID", target.getUniqueID());
@@ -110,6 +117,7 @@ public class Flute extends Item {
                 CompoundNBT com = compoundnbt.getCompound("Pet");
                 tooltip.add(new StringTextComponent(com.getString("Name")).mergeStyle(TextFormatting.GRAY));
             }
+
     }
 
     @Override

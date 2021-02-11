@@ -1,0 +1,48 @@
+{
+  "advancements": [
+    {
+      "conditions": [
+        {
+          "flag": "sign_post",
+          "type": "supplementaries:flag"
+        },
+        {
+          "modid": "byg",
+          "type": "forge:mod_loaded"
+        }
+      ],
+      "advancement": {
+        "parent": "minecraft:recipes/root",
+        "rewards": {
+          "recipes": [
+            "supplementaries:sign_post_ebony"
+          ]
+        },
+        "criteria": {
+          "has_plank": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+              "items": [
+                {
+                  "item": "byg:ebony_planks"
+                }
+              ]
+            }
+          },
+          "has_the_recipe": {
+            "trigger": "minecraft:recipe_unlocked",
+            "conditions": {
+              "recipe": "supplementaries:sign_post_ebony"
+            }
+          }
+        },
+        "requirements": [
+          [
+            "has_plank",
+            "has_the_recipe"
+          ]
+        ]
+      }
+    }
+  ]
+}

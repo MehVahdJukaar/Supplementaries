@@ -26,19 +26,33 @@ import static net.mehvahdjukaar.supplementaries.common.Textures.*;
 
 public class CommonUtil {
 
-    public static boolean ishalloween;
-    public static boolean aprilfool;
-    public static boolean isearthday;
-    public static boolean ischristmas;
-    static{
+    public enum Festivity{
+        NONE,
+        HALLOWEEN,
+        APRILS_FOOL,
+        CHRISTMAS,
+        EARTH_DAY,
+        ST_VALENTINE;
+        public boolean isHalloween(){return this==HALLOWEEN;}
+        public boolean isAprilsFool(){return this==APRILS_FOOL;}
+        public boolean isStValentine(){return this==ST_VALENTINE;}
+        public boolean isChristmas(){return this==CHRISTMAS;}
+        public boolean isEarthDay(){return this==EARTH_DAY;}
+        public static Festivity get(){
+            Calendar calendar = Calendar.getInstance();
+            if((calendar.get(Calendar.MONTH)==Calendar.OCTOBER && calendar.get(Calendar.DATE)>=29)||
+                    (calendar.get(Calendar.MONTH)== Calendar.NOVEMBER&&calendar.get(Calendar.DATE) <= 1))return HALLOWEEN;
+            if(calendar.get(Calendar.MONTH)==Calendar.APRIL&&calendar.get(Calendar.DATE)==1)return APRILS_FOOL;
+            if(calendar.get(Calendar.MONTH)==Calendar.FEBRUARY&&calendar.get(Calendar.DATE)==14)return ST_VALENTINE;
+            if(calendar.get(Calendar.MONTH)==Calendar.APRIL&&calendar.get(Calendar.DATE)==22)return EARTH_DAY;
+            if(calendar.get(Calendar.MONTH) + 1 == 12 && calendar.get(Calendar.DATE) >= 24 && calendar.get(Calendar.DATE) <= 26)return CHRISTMAS;
+            return NONE;
+        }
 
-        Calendar calendar = Calendar.getInstance();
-        ishalloween = ((calendar.get(Calendar.MONTH)==Calendar.OCTOBER && calendar.get(Calendar.DATE)>=29)||
-                        (calendar.get(Calendar.MONTH)== Calendar.NOVEMBER&&calendar.get(Calendar.DATE) <= 1));
-        aprilfool = (calendar.get(Calendar.MONTH)==Calendar.APRIL&&calendar.get(Calendar.DATE)==1);
-        isearthday = (calendar.get(Calendar.MONTH)==Calendar.APRIL&&calendar.get(Calendar.DATE)==22);
-        ischristmas = (calendar.get(Calendar.MONTH) + 1 == 12 && calendar.get(Calendar.DATE) >= 24 && calendar.get(Calendar.DATE) <= 26);
     }
+
+    public static Festivity FESTIVITY = Festivity.get();
+
 
     //TODO: I hope nobody is reading this
 
@@ -130,7 +144,7 @@ public class CommonUtil {
     }
 
     public static boolean isCookie(Item i){
-        return ServerConfigs.cached.JAR_COOKIES.contains(i.getRegistryName().toString());
+        return (ModTags.isTagged(ModTags.COOKIES,i));
     }
 
 
@@ -145,13 +159,7 @@ public class CommonUtil {
     }
 
     public static boolean isBrick(Item i){
-        try {
-            return ((Tags.Items.INGOTS_BRICK != null && i.isIn(Tags.Items.INGOTS_BRICK))
-                    || (Tags.Items.INGOTS_NETHER_BRICK != null && i.isIn(Tags.Items.INGOTS_NETHER_BRICK))||
-                    ServerConfigs.cached.BRICKS_LIST.contains(i.getRegistryName().toString()));
-        }catch (Exception e){
-            return false;
-        }
+        return (ModTags.isTagged(ModTags.BRICKS,i));
     }
 
     public static boolean isCake(Item i){

@@ -29,7 +29,6 @@ import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.tileentity.LockableTileEntity;
 import net.minecraft.tileentity.ShulkerBoxTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -103,7 +102,7 @@ public class SackBlock extends FallingBlock {
     public static boolean isSupportingCeiling(BlockPos pos, IWorld world){
         Block b = world.getBlockState(pos).getBlock();
         return hasEnoughSolidSide(world, pos, Direction.DOWN)||
-                (BlockTags.getCollection().get(ModTags.ROPE_TAG) != null && b.isIn(BlockTags.getCollection().get(ModTags.ROPE_TAG)))||
+                ModTags.isTagged(ModTags.ROPE_TAG,b)||
                 ServerConfigs.cached.SACK_WHITELIST.contains(b.getRegistryName().toString());
     }
 

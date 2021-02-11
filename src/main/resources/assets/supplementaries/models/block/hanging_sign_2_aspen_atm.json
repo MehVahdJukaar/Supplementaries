@@ -1,0 +1,8 @@
+{
+  "parent": "supplementaries:block/hanging_sign_2_template",
+  "textures": {
+    "particle": "supplementaries:blocks/hanging_signs/atmospheric/hanging_sign_front_aspen_atm",
+    "0": "supplementaries:blocks/hanging_signs/atmospheric/hanging_sign_front_aspen_atm",
+    "1": "supplementaries:blocks/hanging_signs/atmospheric/hanging_sign_details_aspen_atm"
+  }
+}

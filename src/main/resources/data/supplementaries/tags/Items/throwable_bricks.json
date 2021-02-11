@@ -1,0 +1,39 @@
+{
+  "replace": false,
+  "values": [
+    "#forge:ingots/nether_brick",
+    "#forge:ingots/brick",
+    {
+      "id":"architects_palette:algal_brick",
+      "required":false
+    },
+    {
+      "id":"architects_palette:sunmetal_brick",
+      "required":false
+    },
+    {
+      "id":"ars_nouveau:arcane_brick",
+      "required":false
+    },
+    {
+      "id":"biomesoplenty:mud_brick",
+      "required":false
+    },
+    {
+      "id":"byg:yellow_nether_brick",
+      "required":false
+    },
+    {
+      "id":"byg:blue_nether_brick",
+      "required":false
+    },
+    {
+      "id":"endergetic:eumus_brick",
+      "required":false
+    },
+    {
+      "id":"extcaves:half_brick",
+      "required":false
+    }
+  ]
+}

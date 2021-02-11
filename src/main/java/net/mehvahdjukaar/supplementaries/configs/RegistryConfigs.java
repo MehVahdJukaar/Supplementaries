@@ -89,6 +89,7 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue FLUTE_ENABLED;
         public static ForgeConfigSpec.BooleanValue GOLD_TRAPDOOR_ENABLED;
         public static ForgeConfigSpec.BooleanValue GOLD_DOOR_ENABLED;
+        public static ForgeConfigSpec.BooleanValue BAMBOO_SPIKES_ENABLED;
 
         public static ForgeConfigSpec.BooleanValue CREATIVE_TAB;
         public static ForgeConfigSpec.BooleanValue DISPENSERS;
@@ -173,8 +174,9 @@ public class RegistryConfigs {
             FLUTE_ENABLED = builder.define(Registry.FLUTE_NAME, true);
             GOLD_TRAPDOOR_ENABLED = builder.define(Registry.GOLD_TRAPDOOR_NAME,true);
             GOLD_DOOR_ENABLED = builder.define(Registry.GOLD_DOOR_NAME,true);
+            BAMBOO_SPIKES_ENABLED = builder.define(Registry.BAMBOO_SPIKES_NAME,true);
+            STONE_LAMP_ENABLED = builder.define(Registry.STONE_LAMP_NAME, true);
 
-            STONE_LAMP_ENABLED = builder.define(Registry.STONE_LAMP_NAME, false);
             LASER_ENABLED = builder.comment("WIP")
                     .define(Registry.LASER_NAME, false);
             FLAG_ENABLED = builder.comment("WIP")

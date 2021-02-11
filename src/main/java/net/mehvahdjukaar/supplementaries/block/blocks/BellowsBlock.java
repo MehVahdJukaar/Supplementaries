@@ -4,6 +4,7 @@ import net.mehvahdjukaar.supplementaries.block.tiles.BellowsBlockTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
@@ -59,21 +60,18 @@ public class BellowsBlock extends Block {
         return true;
     }
 
-    /*
-    @Override
-    public BlockRenderType getRenderType(BlockState state){
-        return state.get(TILE) == 0? BlockRenderType.INVISIBLE : super.getRenderType(state);
-    }*/
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(FACING, POWER);
     }
 
+    @Override
     public BlockState rotate(BlockState state, Rotation rot) {
         return state.with(FACING, rot.rotate(state.get(FACING)));
     }
 
+    @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
         return state.rotate(mirrorIn.toRotation(state.get(FACING)));
     }
@@ -89,7 +87,6 @@ public class BellowsBlock extends Block {
 
     }
 
-
     public void updatePower(BlockState state, World world, BlockPos pos) {
         int newpower = world.getRedstonePowerFromNeighbors(pos);
         int currentpower = state.get(POWER);
@@ -99,7 +96,6 @@ public class BellowsBlock extends Block {
             //returns if state changed
         }
     }
-
 
     @Override
     public void neighborChanged(BlockState state, World world, BlockPos pos, Block neighborBlock, BlockPos fromPos, boolean moving) {
@@ -123,5 +119,19 @@ public class BellowsBlock extends Block {
         super.eventReceived(state, world, pos, eventID, eventParam);
         TileEntity tileentity = world.getTileEntity(pos);
         return tileentity != null && tileentity.receiveClientEvent(eventID, eventParam);
+    }
+
+    @Override
+    public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
+        super.onEntityCollision(state, worldIn, pos, entityIn);
+        TileEntity te = worldIn.getTileEntity(pos);
+        if(te instanceof BellowsBlockTile)((BellowsBlockTile) te).onSteppedOn(entityIn);
+    }
+
+
+    @Override
+    public void onEntityWalk(World worldIn, BlockPos pos, Entity entityIn) {
+        TileEntity te = worldIn.getTileEntity(pos);
+        if(te instanceof BellowsBlockTile)((BellowsBlockTile) te).onSteppedOn(entityIn);
     }
 }

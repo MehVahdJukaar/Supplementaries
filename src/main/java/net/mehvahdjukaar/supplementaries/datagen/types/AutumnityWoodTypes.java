@@ -35,6 +35,11 @@ public enum AutumnityWoodTypes implements IWoodType {
     }
 
     @Override
+    public String getRegName() {
+        return this.name+"_aut";
+    }
+
+    @Override
     public String toString() {
         return this.name;
     }

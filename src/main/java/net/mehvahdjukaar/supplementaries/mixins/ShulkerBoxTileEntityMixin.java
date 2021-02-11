@@ -18,8 +18,7 @@ public abstract class ShulkerBoxTileEntityMixin {
 
     @Inject(method = "canInsertItem", at = @At("HEAD"), cancellable = true)
     public void canInsertItem(int index, ItemStack itemStackIn, Direction direction, CallbackInfoReturnable<Boolean> info ) {
-        ITag<Item> t = ItemTags.getCollection().get(ModTags.SHULKER_BLACKLIST_TAG);
-        if(t!=null && itemStackIn.getItem().isIn(t))
+        if(ModTags.isTagged(ModTags.SHULKER_BLACKLIST_TAG,itemStackIn.getItem()))
             info.setReturnValue(false);
     }
 }

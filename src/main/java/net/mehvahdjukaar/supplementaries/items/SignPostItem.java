@@ -39,8 +39,7 @@ public class SignPostItem  extends Item {
     private boolean isFence(Block b){
         ResourceLocation res = b.getRegistryName();
         if(res.getNamespace().equals("blockcarpentry"))return false;
-        ITag<Block> tag = BlockTags.getCollection().get(ModTags.POSTS);
-        return (tag!= null && b.isIn(tag));
+        return (ModTags.isTagged(ModTags.POSTS,b));
     }
 
     @Override

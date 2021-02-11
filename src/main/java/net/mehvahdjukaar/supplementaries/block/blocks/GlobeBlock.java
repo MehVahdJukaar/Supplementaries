@@ -8,6 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.IWaterLoggable;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -15,6 +16,7 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ShearsItem;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.BooleanProperty;
@@ -91,6 +93,17 @@ public class GlobeBlock extends Block implements IWaterLoggable {
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
                                              BlockRayTraceResult hit) {
+        if(player.getHeldItem(handIn).getItem() instanceof ShearsItem){
+            TileEntity te = worldIn.getTileEntity(pos);
+            if(te instanceof GlobeBlockTile && ((GlobeBlockTile) te).type == GlobeBlockTile.GlobeType.DEFAULT){
+                ((GlobeBlockTile) te).type= GlobeBlockTile.GlobeType.SHEARED;
+                if(worldIn.isRemote){
+                    Minecraft.getInstance().particles.addBlockDestroyEffects(pos, state);
+                }
+                return ActionResultType.func_233537_a_(worldIn.isRemote);
+            }
+        }
+
         if (!worldIn.isRemote) {
             worldIn.addBlockEvent(pos, state.getBlock(), 1, 0);
         }
@@ -102,7 +115,7 @@ public class GlobeBlock extends Block implements IWaterLoggable {
 
     @Override
     public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
-        if(CommonUtil.isearthday && worldIn.isRemote){
+        if(CommonUtil.FESTIVITY.isEarthDay() && worldIn.isRemote){
             int x = pos.getX();
             int y = pos.getY();
             int z = pos.getZ();

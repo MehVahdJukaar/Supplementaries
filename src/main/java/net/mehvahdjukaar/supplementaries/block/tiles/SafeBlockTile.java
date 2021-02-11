@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 import net.mehvahdjukaar.supplementaries.block.blocks.SackBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.SafeBlock;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -43,6 +44,7 @@ public class SafeBlockTile extends LockableLootTileEntity implements ISidedInven
     private NonNullList<ItemStack> items = NonNullList.withSize(27, ItemStack.EMPTY);
     private int numPlayersUsing;
 
+    public String password = null;
     public String ownerName = null;
     public UUID owner = null;
 
@@ -65,6 +67,7 @@ public class SafeBlockTile extends LockableLootTileEntity implements ISidedInven
     public void clearOwner(){
         this.ownerName=null;
         this.owner=null;
+        this.password=null;
     }
 
     public boolean isOwnedBy(PlayerEntity player){
@@ -78,9 +81,13 @@ public class SafeBlockTile extends LockableLootTileEntity implements ISidedInven
 
     @Override
     public ITextComponent getDisplayName() {
-        if(this.ownerName!=null){
-            return (new TranslationTextComponent("gui.supplementaries.safe.name",this.ownerName,super.getDisplayName()));
-
+        if(ServerConfigs.cached.SAFE_SIMPLE) {
+            if (this.ownerName != null) {
+                return (new TranslationTextComponent("gui.supplementaries.safe.name", this.ownerName, super.getDisplayName()));
+            }
+        }
+        else if(this.password != null){
+            return (new TranslationTextComponent("gui.supplementaries.safe.password", this.password, super.getDisplayName()));
         }
         return super.getDisplayName();
     }
@@ -141,7 +148,7 @@ public class SafeBlockTile extends LockableLootTileEntity implements ISidedInven
 
             boolean flag = blockstate.get(SackBlock.OPEN);
             if (flag) {
-                this.world.playSound(null, this.pos.getX()+0.5, this.pos.getY()+0.5, this.pos.getZ()+0.5,
+                this.world.playSound(null, this.pos,
                         SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.65F);
                 this.world.setBlockState(this.getPos(), blockstate.with(SackBlock.OPEN, false), 3);
             }
@@ -177,6 +184,8 @@ public class SafeBlockTile extends LockableLootTileEntity implements ISidedInven
             this.owner=compound.getUniqueId("Owner");
         if(compound.contains("OwnerName"))
             this.ownerName=compound.getString("OwnerName");
+        if(compound.contains("Password"))
+            this.password=compound.getString("Password");
     }
 
     public CompoundNBT saveToNbt(CompoundNBT compound) {
@@ -187,6 +196,8 @@ public class SafeBlockTile extends LockableLootTileEntity implements ISidedInven
             compound.putUniqueId("Owner",this.owner);
         if(this.ownerName!=null)
             compound.putString("OwnerName",this.ownerName);
+        if(this.password!=null)
+            compound.putString("Password",this.password);
         return compound;
     }
 

@@ -19,6 +19,6 @@ public class ModCommands {
 
         );
 
-        dispatcher.register(Commands.literal("splm").redirect(mymod));
+        //dispatcher.register(Commands.literal("splm").redirect(mymod));
     }
 }

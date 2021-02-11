@@ -7,39 +7,23 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.MissingTextureSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.inventory.container.ChestContainer;
-import net.minecraft.inventory.container.Container;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.LockableLootTileEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.wrapper.SidedInvWrapper;
 
 import javax.annotation.Nullable;
 import java.util.stream.IntStream;
 
 import static net.mehvahdjukaar.supplementaries.common.Textures.*;
 
-public class HourGlassBlockTile extends LockableLootTileEntity implements ISidedInventory, ITickableTileEntity {
-    private NonNullList<ItemStack> stacks = NonNullList.withSize(1, ItemStack.EMPTY);
+public class HourGlassBlockTile extends ItemDisplayTile implements ITickableTileEntity {
     public HourGlassSandType sandType = HourGlassSandType.DEFAULT;
     public float progress = 0; //0-1 percentage of progress
     public float prevProgress = 0;
@@ -55,7 +39,6 @@ public class HourGlassBlockTile extends LockableLootTileEntity implements ISided
     public void markDirty() {
         //this.updateServerAndClient();
         this.updateTile();
-        this.world.notifyBlockUpdate(this.pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
         super.markDirty();
     }
 
@@ -111,10 +94,6 @@ public class HourGlassBlockTile extends LockableLootTileEntity implements ISided
     @Override
     public void read(BlockState state, CompoundNBT compound) {
         super.read(state, compound);
-        if (!this.checkLootAndRead(compound)) {
-            this.stacks = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
-        }
-        ItemStackHelper.loadAllItems(compound, this.stacks);
         this.sandType = HourGlassSandType.values()[compound.getInt("SandType")];
         this.progress = compound.getFloat("Progress");
     }
@@ -122,41 +101,9 @@ public class HourGlassBlockTile extends LockableLootTileEntity implements ISided
     @Override
     public CompoundNBT write(CompoundNBT compound) {
         super.write(compound);
-        if (!this.checkLootAndWrite(compound)) {
-            ItemStackHelper.saveAllItems(compound, this.stacks);
-        }
         compound.putInt("SandType", this.sandType.ordinal());
         compound.putFloat("Progress", this.progress);
         return compound;
-    }
-
-    @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.pos, 0, this.getUpdateTag());
-    }
-
-    @Override
-    public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
-    }
-
-    @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.read(this.getBlockState(),pkt.getNbtCompound());
-        this.cachedTexture=null;
-    }
-
-    @Override
-    public int getSizeInventory() {
-        return stacks.size();
-    }
-
-    @Override
-    public boolean isEmpty() {
-        for (ItemStack itemstack : this.stacks)
-            if (!itemstack.isEmpty())
-                return false;
-        return true;
     }
 
     @Override
@@ -164,25 +111,6 @@ public class HourGlassBlockTile extends LockableLootTileEntity implements ISided
         return new TranslationTextComponent("block.supplementaries.hourglass");
     }
 
-    @Override
-    public int getInventoryStackLimit() {
-        return 1;
-    }
-
-    @Override
-    public Container createMenu(int id, PlayerInventory player) {
-        return ChestContainer.createGeneric9X3(id, player, this);
-    }
-
-    @Override
-    protected NonNullList<ItemStack> getItems() {
-        return this.stacks;
-    }
-
-    @Override
-    public void setItems(NonNullList<ItemStack> stacks) {
-        this.stacks = stacks;
-    }
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
@@ -207,20 +135,6 @@ public class HourGlassBlockTile extends LockableLootTileEntity implements ISided
     public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
         Direction dir = this.getBlockState().get(HourGlassBlock.FACING);
         return (dir==Direction.UP && this.progress==1)||(dir==Direction.DOWN && this.progress==0);
-    }
-    private final LazyOptional<? extends IItemHandler>[] handlers = SidedInvWrapper.create(this, Direction.values());
-    @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
-        if (!this.removed && facing != null && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-            return handlers[facing.ordinal()].cast();
-        return super.getCapability(capability, facing);
-    }
-
-    @Override
-    public void remove() {
-        super.remove();
-        for (LazyOptional<? extends IItemHandler> handler : handlers)
-            handler.invalidate();
     }
 
     public Direction getDirection(){
@@ -320,4 +234,3 @@ public class HourGlassBlockTile extends LockableLootTileEntity implements ISided
     }
 
 }
-

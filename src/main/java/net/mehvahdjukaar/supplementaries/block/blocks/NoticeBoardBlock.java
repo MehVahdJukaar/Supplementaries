@@ -70,8 +70,7 @@ public class NoticeBoardBlock extends Block {
                 if(server){
                     ItemStack it = itemstack.copy();
                     it.setCount(1);
-                    NonNullList<ItemStack> stacks = NonNullList.withSize(1, it);
-                    te.setItems(stacks);
+                    te.setItems(NonNullList.withSize(1, it));
                     te.markDirty();
                     worldIn.playSound(null, pos, SoundEvents.ENTITY_ITEM_FRAME_ADD_ITEM, SoundCategory.BLOCKS, 1.0F,
                             worldIn.rand.nextFloat() * 0.10F + 0.95F);
@@ -97,6 +96,7 @@ public class NoticeBoardBlock extends Block {
                     ItemStack it = te.removeStackFromSlot(0);
                     BlockPos newpos = pos.add(state.get(FACING).getDirectionVec());
                     ItemEntity drop = new ItemEntity(worldIn, newpos.getX() + 0.5, newpos.getY() + 0.5, newpos.getZ() + 0.5, it);
+                    drop.setDefaultPickupDelay();
                     worldIn.addEntity(drop);
                     te.markDirty();
                 }

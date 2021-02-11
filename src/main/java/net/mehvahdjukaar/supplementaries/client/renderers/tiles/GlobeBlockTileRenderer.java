@@ -20,14 +20,12 @@ import net.minecraft.util.math.vector.Vector3f;
 
 public class GlobeBlockTileRenderer extends TileEntityRenderer<GlobeBlockTile> {
 
-    public final ModelRenderer globe = new ModelRenderer(32, 16, 0, 0);
-    public final ModelRenderer flat = new ModelRenderer(32, 32, 0, 0);
-
-
-    public GlobeBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
-        super(rendererDispatcherIn);
-        this.globe.addBox(-4.0F, -28.0F, -4.0F, 8.0F, 8.0F, 8.0F, 0.0F, false);
-        this.globe.setRotationPoint(0.0F, 24.0F, 0.0F);
+    public static final ModelRenderer globe = new ModelRenderer(32, 16, 0, 0);
+    public static final ModelRenderer flat = new ModelRenderer(32, 32, 0, 0);
+    public static final ModelRenderer sheared = new ModelRenderer(32, 32, 0, 0);
+    static {
+        globe.addBox(-4.0F, -28.0F, -4.0F, 8.0F, 8.0F, 8.0F, 0.0F, false);
+        globe.setRotationPoint(0.0F, 24.0F, 0.0F);
 
         flat.setRotationPoint(0.0F, 24.0F, 0.0F);
         flat.setTextureOffset(0, 0).addBox(-4.0F, -28.0F, -4.0F, 8.0F, 4.0F, 8.0F, 0.0F, false);
@@ -35,16 +33,30 @@ public class GlobeBlockTileRenderer extends TileEntityRenderer<GlobeBlockTile> {
         flat.setTextureOffset(4, 23).addBox(-3.0F, -22.0F, -3.0F, 6.0F, 1.0F, 6.0F, 0.0F, false);
         flat.setTextureOffset(8, 24).addBox(-2.0F, -21.0F, -2.0F, 4.0F, 1.0F, 4.0F, 0.0F, false);
 
+        sheared.setRotationPoint(0.0F, 24.0F, 0.0F);
+        sheared.setTextureOffset(0, 0).addBox(-4.0F, -28.0F, -4.0F, 8.0F, 8.0F, 4.0F, 0.0F, false);
+        sheared.setTextureOffset(0, 12).addBox(0.0F, -28.0F, 0.0F, 4.0F, 8.0F, 4.0F, 0.0F, false);
+    }
+
+
+    public GlobeBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
+        super(rendererDispatcherIn);
+
     }
 
     public void renderEarth(MatrixStack matrixStack, IVertexBuilder vertexBuilder, int combinedLightIn, int combinedOverlayIn){
         matrixStack.rotate(Const.X180);
-        this.globe.render(matrixStack, vertexBuilder, combinedLightIn,combinedOverlayIn,1,1,1,1);
+        globe.render(matrixStack, vertexBuilder, combinedLightIn,combinedOverlayIn,1,1,1,1);
     }
 
     public void renderFlat(MatrixStack matrixStack, IVertexBuilder vertexBuilder, int combinedLightIn, int combinedOverlayIn){
         matrixStack.rotate(Const.X180);
-        this.flat.render(matrixStack, vertexBuilder, combinedLightIn,combinedOverlayIn,1,1,1,1);
+        flat.render(matrixStack, vertexBuilder, combinedLightIn,combinedOverlayIn,1,1,1,1);
+    }
+
+    public void renderSheared(MatrixStack matrixStack, IVertexBuilder vertexBuilder, int combinedLightIn, int combinedOverlayIn){
+        matrixStack.rotate(Const.X180);
+        sheared.render(matrixStack, vertexBuilder, combinedLightIn,combinedOverlayIn,1,1,1,1);
     }
 
     @Override
@@ -66,6 +78,7 @@ public class GlobeBlockTileRenderer extends TileEntityRenderer<GlobeBlockTile> {
             this.renderEarth(matrixStackIn,builder,combinedLightIn,combinedOverlayIn);
         }
 
+        //special cases for random generated, sheared and flat. custom ones are in earth
         switch(tile.type){
             case FLAT:
                 this.renderFlat(matrixStackIn,builder,combinedLightIn,combinedOverlayIn);
@@ -73,6 +86,9 @@ public class GlobeBlockTileRenderer extends TileEntityRenderer<GlobeBlockTile> {
             default:
             case EARTH:
                 this.renderEarth(matrixStackIn,builder,combinedLightIn,combinedOverlayIn);
+                break;
+            case SHEARED:
+                this.renderSheared(matrixStackIn,builder,combinedLightIn,combinedOverlayIn);
                 break;
             case DEFAULT:
                 matrixStackIn.translate(-0.25, 0.25, 0.25);

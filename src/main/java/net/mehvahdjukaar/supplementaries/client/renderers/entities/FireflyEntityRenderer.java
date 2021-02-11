@@ -26,8 +26,8 @@ public class FireflyEntityRenderer extends EntityRenderer<FireflyEntity> {
 
         matrixStackIn.push();
 
-        float r = CommonUtil.ishalloween?0.3f:1;
-        float g = CommonUtil.ishalloween?0:1;
+        float r = CommonUtil.FESTIVITY.isHalloween()?0.3f:1;
+        float g = CommonUtil.FESTIVITY.isHalloween()?0:1;
         float b = 1;
         float a = MathHelper.lerp(partialTicks, entityIn.prevAlpha, entityIn.alpha);
 

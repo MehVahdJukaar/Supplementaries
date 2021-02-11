@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.mehvahdjukaar.supplementaries.block.tiles.NoticeBoardBlockTile;
+import net.mehvahdjukaar.supplementaries.client.renderers.TextUtil;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.RequestMapDataFromServerPacket;
 import net.minecraft.client.Minecraft;
@@ -20,7 +21,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.ITextProperties;
 import net.minecraft.world.storage.MapData;
 
@@ -33,16 +33,7 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
         super(rendererDispatcherIn);
     }
 
-    public ITextProperties iGetPageText(String s) {
-        try {
-            ITextProperties itextproperties = ITextComponent.Serializer.getComponentFromJson(s);
-            if (itextproperties != null) {
-                return itextproperties;
-            }
-        } catch (Exception ignored) {
-        }
-        return ITextProperties.func_240652_a_(s);
-    }
+
 
     @Override
     public void render(NoticeBoardBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
@@ -50,7 +41,7 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
 
         if(tile.textVisible){
             //TODO: fix book with nothing in it
-            int newl = tile.getFrontLight();
+            int frontLight = tile.getFrontLight();
             ItemStack stack = tile.getStackInSlot(0);
 
             matrixStackIn.push();
@@ -67,7 +58,7 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
                     matrixStackIn.scale(0.0078125F, -0.0078125F, -0.0078125F);
                     matrixStackIn.translate(-64.0D, -64.0D, 0.0D);
 
-                    Minecraft.getInstance().gameRenderer.getMapItemRenderer().renderMap(matrixStackIn, bufferIn, mapdata, true, newl);
+                    Minecraft.getInstance().gameRenderer.getMapItemRenderer().renderMap(matrixStackIn, bufferIn, mapdata, true, frontLight);
                     matrixStackIn.pop();
                 }
                 else{
@@ -95,26 +86,30 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
                     d0 = 0.6f * 0.7f;
                 }
 
+
+                if(tile.getStackInSlot(0).getDisplayName().getString().toLowerCase().equals("credits")){
+                    TextUtil.renderCredits(matrixStackIn,bufferIn,frontLight,fontrenderer,d0);
+                    matrixStackIn.pop();
+                    matrixStackIn.pop();
+                    return;
+                }
+
+
                 int i = tile.getTextColor().getTextColor();
                 int r = (int) ((double) NativeImage.getRed(i) * d0);
                 int g = (int) ((double) NativeImage.getGreen(i) * d0);
                 int b = (int) ((double) NativeImage.getBlue(i) * d0);
                 int i1 = NativeImage.getCombined(0, b, g, r);
 
-                float bordery = 0.125f;
-                float borderx = 0.1875f;
                 int scalingfactor;
 
-                //List<ITextComponent> tempPageLines;
                 List<IReorderingProcessor> tempPageLines;
 
-                ITextProperties txt = iGetPageText(page);
-                //ITextComponent txt = new StringTextComponent(page);
-
-                //int width = fontrenderer.getStringWidth(txt.getFormattedText());
-                int width = fontrenderer.getStringPropertyWidth(txt);
-
                 if (tile.getFlag()) {
+                    ITextProperties txt = TextUtil.iGetPageText(page);
+                    int width = fontrenderer.getStringPropertyWidth(txt);
+                    float bordery = 0.125f;
+                    float borderx = 0.1875f;
                     float lx = 1 - (2 * borderx);
                     float ly = 1 - (2 * bordery);
                     float maxlines;
@@ -141,7 +136,6 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
                 matrixStackIn.scale(scale, -scale, scale);
                 int numberoflin = tempPageLines.size();
 
-
                 for (int lin = 0; lin < numberoflin; ++lin) {
                     //String str = tempPageLines.get(lin).getFormattedText();
                     IReorderingProcessor str = tempPageLines.get(lin);
@@ -154,8 +148,8 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
                     float dy = ((scalingfactor - (8 * numberoflin)) / 2f) + 0.5f;
 
 
-                    fontrenderer.func_238416_a_(str, dx, dy + 8 * lin, i1, false, matrixStackIn.getLast().getMatrix(), bufferIn, false, 0, newl);
-                    // fontrenderer.renderString(str, dx, dy + 8 * lin, i1, false, matrixStackIn.getLast().getMatrix(), bufferIn, false, 0, newl);
+                    fontrenderer.func_238416_a_(str, dx, dy + 8 * lin, i1, false, matrixStackIn.getLast().getMatrix(), bufferIn, false, 0, frontLight);
+                    //fontrenderer.renderString(str, dx, dy + 8 * lin, i1, false, matrixStackIn.getLast().getMatrix(), bufferIn, false, 0, newl);
                 }
                 matrixStackIn.pop();
                 matrixStackIn.pop();
@@ -171,7 +165,7 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
                 matrixStackIn.push();
                 matrixStackIn.translate(0,0,0.015625+0.00005);
                 matrixStackIn.scale(-0.5f, 0.5f, -0.5f);
-                itemRenderer.renderItem(stack, ItemCameraTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, newl,
+                itemRenderer.renderItem(stack, ItemCameraTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, frontLight,
                         combinedOverlayIn, ibakedmodel);
                 //itemRenderer.renderItem(stack, ItemCameraTransforms.TransformType.FIXED, newl, OverlayTexture.NO_OVERLAY, matrixStackIn, bufferIn);
 
@@ -183,4 +177,5 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
             matrixStackIn.pop();
         }
     }
+
 }

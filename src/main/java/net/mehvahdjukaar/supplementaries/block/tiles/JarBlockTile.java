@@ -10,39 +10,24 @@ import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.inventory.container.ChestContainer;
-import net.minecraft.inventory.container.Container;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.potion.Potions;
 import net.minecraft.stats.Stats;
 import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.LockableLootTileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.biome.BiomeColors;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.wrapper.SidedInvWrapper;
 
 import javax.annotation.Nullable;
-import java.util.stream.IntStream;
 
-public class JarBlockTile extends LockableLootTileEntity implements ISidedInventory, ITickableTileEntity, IMobHolder {
-    private NonNullList<ItemStack> stacks = NonNullList.withSize(1, ItemStack.EMPTY);
+public class JarBlockTile extends ItemDisplayTile implements  ITickableTileEntity, IMobHolder {
     public int color = 0xffffff;
     public float liquidLevel = 0;
     public JarLiquidType liquidType = JarLiquidType.EMPTY;
@@ -74,7 +59,6 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
     public void markDirty() {
         // this.updateServerAndClient();
         this.updateTile();
-        this.world.notifyBlockUpdate(this.pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
         this.world.notifyNeighborsOfStateChange(pos,this.getBlockState().getBlock());
         super.markDirty();
     }
@@ -274,13 +258,17 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
         // shrink stack and replace bottle /bucket with empty ones
         if (player != null && handIn != null) {
             if (!player.isCreative()) {
-                handstack.shrink(1);
                 ItemStack returnItem = new ItemStack(isWaterBucket? Items.BUCKET : this.liquidType.getReturnItem());
+
+                player.setHeldItem(handIn, DrinkHelper.fill(handstack.copy(), player, returnItem, false));
+
+                /*
+                handstack.shrink(1);
                 if (handstack.isEmpty()) {
                     player.setHeldItem(handIn, returnItem);
                 } else if (!player.inventory.addItemStackToInventory(returnItem)) {
                     player.dropItem(returnItem, false);
-                }
+                }*/
             }
             if (this.liquidType.makesSound())
                 this.world.playSound(player, player.getPosition(), SoundEvents.ITEM_BOTTLE_EMPTY,
@@ -356,10 +344,6 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
     @Override
     public void read(BlockState state, CompoundNBT compound) {
         super.read(state, compound);
-        if (!this.checkLootAndRead(compound)) {
-            this.stacks = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
-        }
-        ItemStackHelper.loadAllItems(compound, this.stacks);
 
         this.liquidLevel = compound.getFloat("liquid_level");
         this.color = compound.getInt("liquid_color");
@@ -385,34 +369,6 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
         return compound;
     }
 
-    @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.pos, 0, this.getUpdateTag());
-    }
-
-    @Override
-    public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
-    }
-
-    @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.read(this.getBlockState(), pkt.getNbtCompound());
-    }
-
-    @Override
-    public int getSizeInventory() {
-        return stacks.size();
-    }
-
-    @Override
-    public boolean isEmpty() {
-        for (ItemStack itemstack : this.stacks)
-            if (!itemstack.isEmpty())
-                return false;
-        return true;
-    }
-
 
     public boolean hasContent(){
         return !(this.isEmpty()&&this.mobHolder.isEmpty());
@@ -424,28 +380,8 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
     }
 
     @Override
-    public Container createMenu(int id, PlayerInventory player) {
-        return ChestContainer.createGeneric9X3(id, player, this);
-    }
-
-    @Override
     public ITextComponent getDefaultName() {
         return new TranslationTextComponent("block.supplementaries.jar");
-    }
-
-    @Override
-    protected NonNullList<ItemStack> getItems() {
-        return this.stacks;
-    }
-
-    @Override
-    protected void setItems(NonNullList<ItemStack> stacks) {
-        this.stacks = stacks;
-    }
-
-    @Override
-    public int[] getSlotsForFace(Direction side) {
-        return IntStream.range(0, this.getSizeInventory()).toArray();
     }
 
     @Override
@@ -458,21 +394,6 @@ public class JarBlockTile extends LockableLootTileEntity implements ISidedInvent
     public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
         return this.liquidType == JarLiquidType.COOKIES;
     }
-    private final LazyOptional<? extends IItemHandler>[] handlers = SidedInvWrapper.create(this, Direction.values());
-    @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
-        if (!this.removed && facing != null && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-            return handlers[facing.ordinal()].cast();
-        return super.getCapability(capability, facing);
-    }
-
-    @Override
-    public void remove() {
-        super.remove();
-        for (LazyOptional<? extends IItemHandler> handler : handlers)
-            handler.invalidate();
-    }
-
 
     public int updateClientWaterColor(){
         this.color = BiomeColors.getWaterColor(this.world, this.pos);

@@ -130,7 +130,7 @@ public class PedestalBlockTileRenderer extends TileEntityRenderer<PedestalBlockT
             //TODO: make FIXED
             ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
             ItemStack stack = tile.getStackInSlot(0);
-            if(CommonUtil.aprilfool)stack= new ItemStack(Items.DIRT);
+            if(CommonUtil.FESTIVITY.isAprilsFool())stack= new ItemStack(Items.DIRT);
             IBakedModel ibakedmodel = itemRenderer.getItemModelWithOverrides(stack, tile.getWorld(), null);
             itemRenderer.renderItem(stack, transform, true, matrixStackIn, bufferIn, combinedLightIn,
                     combinedOverlayIn, ibakedmodel);

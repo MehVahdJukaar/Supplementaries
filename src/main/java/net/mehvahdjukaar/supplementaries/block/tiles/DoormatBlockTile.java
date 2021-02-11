@@ -8,11 +8,11 @@ import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
-public class DoormatBlockTile extends TileEntity implements ITextHolder {
+public class DoormatBlockTile extends ItemDisplayTile implements ITextHolder {
     public static final int MAXLINES = 3;
 
     public TextHolder textHolder;
@@ -26,12 +26,6 @@ public class DoormatBlockTile extends TileEntity implements ITextHolder {
     public TextHolder getTextHolder(){return this.textHolder;}
 
     @Override
-    public void markDirty() {
-        this.world.notifyBlockUpdate(this.pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
-        super.markDirty();
-    }
-
-    @Override
     public void read(BlockState state, CompoundNBT compound) {
         super.read(state, compound);
         this.textHolder.read(compound);
@@ -42,6 +36,11 @@ public class DoormatBlockTile extends TileEntity implements ITextHolder {
         super.write(compound);
         this.textHolder.write(compound);
         return compound;
+    }
+
+    @Override
+    protected ITextComponent getDefaultName() {
+        return new TranslationTextComponent("block.supplementaries.doormat");
     }
 
     public Direction getDirection(){
