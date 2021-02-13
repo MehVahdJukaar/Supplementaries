@@ -48,6 +48,7 @@ public class EnhancedLanternBlockTileRenderer<T extends  EnhancedLanternBlockTil
     public void render(T tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
         BlockState state = tile.getBlockState().getBlock().getDefaultState();
+
         this.renderLantern(tile,state,partialTicks,matrixStackIn,bufferIn,combinedLightIn,combinedOverlayIn,false);
     }
 }

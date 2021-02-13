@@ -1,10 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.common.ModTags;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tags.ITag;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.tileentity.ShulkerBoxTileEntity;
 import net.minecraft.util.Direction;
 import org.spongepowered.asm.mixin.Mixin;

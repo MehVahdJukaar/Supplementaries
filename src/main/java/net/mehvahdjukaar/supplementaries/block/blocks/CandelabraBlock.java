@@ -91,7 +91,7 @@ public class CandelabraBlock extends LightUpBlock {
                 return SHAPE_CEILING;
         }
     }
-        /*
+
     @Override
     public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
         if(state.get(FACE)==AttachFace.FLOOR){
@@ -101,7 +101,7 @@ public class CandelabraBlock extends LightUpBlock {
             return hasEnoughSolidSide(worldIn, pos.up(), Direction.DOWN);
         }
         return isSideSolidForDirection(worldIn, pos, state.get(FACING).getOpposite());
-    }*/
+    }
 
     @Override
     public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
@@ -175,10 +175,6 @@ public class CandelabraBlock extends LightUpBlock {
         return getFacing(stateIn).getOpposite() == facing && !stateIn.isValidPosition(worldIn, currentPos) ? Blocks.AIR.getDefaultState() : super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
 
-    @Override
-    public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-        return isSideSolidForDirection(worldIn, pos, getFacing(state).getOpposite());
-    }
 
     protected static Direction getFacing(BlockState state) {
         switch(state.get(FACE)) {

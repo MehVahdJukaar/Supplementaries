@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.client.gui.NoticeBoardGui;
 import net.mehvahdjukaar.supplementaries.client.gui.SackGui;
 import net.mehvahdjukaar.supplementaries.client.particles.FireflyGlowParticle;
 import net.mehvahdjukaar.supplementaries.client.particles.SpeakerSoundParticle;
+import net.mehvahdjukaar.supplementaries.client.renderers.TippedSpikesColor;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.FireflyEntityRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
 import net.mehvahdjukaar.supplementaries.common.Textures;
@@ -28,6 +29,7 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -42,6 +44,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 public class ClientSetup {
 
 
+
     //TODO: figure out why this is making everything crash without ONLY in
     //TODO: remove this onlyIn
     @OnlyIn(Dist.CLIENT)
@@ -50,6 +53,8 @@ public class ClientSetup {
                 renderManager -> new SpriteRenderer(renderManager, event.getMinecraftSupplier().get().getItemRenderer()));
 
     }
+
+
 
     public static void init(final FMLClientSetupEvent event) {
 
@@ -173,6 +178,15 @@ public class ClientSetup {
         Minecraft.getInstance().particles.registerFactory(Registry.GREEN_FLAME, FlameParticle.Factory::new);
     }
 
+    @SubscribeEvent
+    public static void registerBlockColors(ColorHandlerEvent.Block event){
+        event.getBlockColors().register(new TippedSpikesColor(), Registry.BAMBOO_SPIKES.get());
+    }
+
+    @SubscribeEvent
+    public static void registerItemColors(ColorHandlerEvent.Item event){
+        event.getItemColors().register(new TippedSpikesColor(), Registry.BAMBOO_SPIKES_TIPPED_ITEM.get());
+    }
 
     //textures
     @SubscribeEvent

@@ -27,6 +27,7 @@ public class BlockProperties {
     public static final EnumProperty<Attachment> CONNECTION_EAST = EnumProperty.create("east_connection",Attachment.class);
     public static final EnumProperty<Attachment> CONNECTION_WEST = EnumProperty.create("west_connection",Attachment.class);
     public static final IntegerProperty POISON = IntegerProperty.create("poison", 0, 15);
+    public static final BooleanProperty TIPPED = BooleanProperty.create("tipped");
 
     public enum Attachment implements IStringSerializable{
         NONE("none"), //default /no attachment

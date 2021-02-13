@@ -227,6 +227,11 @@ public class SafeBlockTile extends LockableLootTileEntity implements ISidedInven
     }
 
     @Override
+    public SUpdateTileEntityPacket getUpdatePacket() {
+        return new SUpdateTileEntityPacket(this.pos, 0, this.getUpdateTag());
+    }
+
+    @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
         return CommonUtil.isAllowedInShulker(stack);
     }

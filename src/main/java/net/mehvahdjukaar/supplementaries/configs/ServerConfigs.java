@@ -95,7 +95,7 @@ public class ServerConfigs {
             WALL_LANTERN_PLACEMENT = builder.comment("allow wall lanterns placement")
                     .define("enabled",true);
 
-            List<String> modBlacklist = Arrays.asList("extlights");
+            List<String> modBlacklist = Arrays.asList("extlights","betterendforge");
             WALL_LANTERN_BLACKLIST = builder.comment("mod ids of mods that have lantern block that extend the base lantern class but don't look like one")
                     .defineList("mod_blacklist", modBlacklist,s -> true);
             builder.pop();
@@ -142,6 +142,7 @@ public class ServerConfigs {
         public static ForgeConfigSpec.ConfigValue<List<? extends String>> CAGE_ALLOWED_MOBS;
         public static ForgeConfigSpec.ConfigValue<List<? extends String>> CAGE_ALLOWED_BABY_MOBS;
         public static ForgeConfigSpec.BooleanValue CAGE_ALL_MOBS;
+        public static ForgeConfigSpec.BooleanValue CAGE_ALL_BABIES;
 
         public static ForgeConfigSpec.BooleanValue NOTICE_BOARDS_UNRESTRICTED;
 
@@ -262,6 +263,8 @@ public class ServerConfigs {
                     .defineList("cage_baby_mobs", cageBabyMobs,s -> true);
             CAGE_ALL_MOBS = builder.comment("allow all mobs to be captured by cages")
                     .define("cage_allow_all_mobs", false);
+            CAGE_ALL_BABIES = builder.comment("allow all baby mobs to be captured by cages")
+                    .define("cage_allow_all_babies", false);
             builder.pop();
 
             //notice boards
@@ -405,6 +408,7 @@ public class ServerConfigs {
         public static List<? extends String> CAGE_ALLOWED_MOBS;
         public static List<? extends String> CAGE_ALLOWED_BABY_MOBS;
         public static boolean CAGE_ALL_MOBS;
+        public static boolean CAGE_ALL_BABIES;
         public static List<? extends String> SACK_WHITELIST;
         public static int SACK_INCREMENT;
         public static boolean SACK_PENALTY;
@@ -467,6 +471,7 @@ public class ServerConfigs {
             CAGE_ALLOWED_MOBS = block.CAGE_ALLOWED_MOBS.get();
             CAGE_ALLOWED_BABY_MOBS = block.CAGE_ALLOWED_BABY_MOBS.get();
             CAGE_ALL_MOBS = block.CAGE_ALL_MOBS.get();
+            CAGE_ALL_BABIES = block.CAGE_ALL_BABIES.get();
 
             SACK_WHITELIST = block.SACK_WHITELIST.get();
             SACK_INCREMENT = block.SACK_INCREMENT.get();

@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.entities;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.block.blocks.JarBlock;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
@@ -85,7 +86,13 @@ public class ThrowableBrickEntity extends ProjectileItemEntity implements IRende
             if(entity instanceof PlayerEntity && !((PlayerEntity) entity).isAllowEdit())return;
             if (!(entity instanceof MobEntity) || this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING) || net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.world, this.getEntity())) {
 
-                breakGlass(rayTraceResult.getPos(),6);
+                BlockPos pos = rayTraceResult.getPos();
+                if(world.getBlockState(pos).getBlock() instanceof JarBlock){
+                    world.destroyBlock(pos,true);
+                }
+                else {
+                    breakGlass(pos, 6);
+                }
 
             }
 
@@ -96,8 +103,8 @@ public class ThrowableBrickEntity extends ProjectileItemEntity implements IRende
         try {
             return ((Tags.Blocks.GLASS_PANES != null && s.isIn(Tags.Blocks.GLASS_PANES))
                     || (Tags.Blocks.GLASS != null && s.isIn(Tags.Blocks.GLASS)));
-        }catch (Exception e){
-            Supplementaries.LOGGER.warn("Supplementaries: tag fix still not working. Notify mod author please");
+        }
+        catch (Exception e){
             return false;
         }
     }

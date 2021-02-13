@@ -114,5 +114,18 @@ public class TextUtil {
         return ITextProperties.func_240652_a_(s);
     }
 
+    public static String format(String name){
+        String[] words = name.split("_");
+
+        for (int i = 0; i < words.length; i++) {
+            words[i] = words[i].substring(0,1).toUpperCase() + words[i].substring(1);
+        }
+        StringBuilder ret = new StringBuilder();
+        for (String s : words){
+            ret.append(s);
+            if(!s.equals(words[words.length-1]))ret.append(" ");
+        }
+        return ret.toString();
+    }
 
 }

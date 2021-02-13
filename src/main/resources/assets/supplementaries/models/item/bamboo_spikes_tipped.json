@@ -1,6 +1,9 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "supplementaries:items/bamboo_spikes_tipped"
+		"layer0": "supplementaries:items/bamboo_spikes_tipped",
+		"layer1": "supplementaries:items/bamboo_spikes_overlay",
+		"layer2": "supplementaries:items/bamboo_spikes_overlay_2"
 	}
 }
+

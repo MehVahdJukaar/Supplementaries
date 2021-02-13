@@ -55,10 +55,11 @@ public class EmptyCageItem extends BlockItem {
         boolean isFirefly = false;
         switch (this.cageType){
             case CAGE:
-                if (!ServerConfigs.cached.CAGE_ALL_MOBS && !(ServerConfigs.cached.CAGE_ALLOWED_MOBS.contains(name)||
-                        (ServerConfigs.cached.CAGE_ALLOWED_BABY_MOBS.contains(name)&&entity.isChild()))) {
-                    return ActionResultType.PASS;
-                }
+                boolean canBeCaught = (ServerConfigs.cached.CAGE_ALL_MOBS ||
+                        (ServerConfigs.cached.CAGE_ALL_BABIES && entity.isChild()) ||
+                        ServerConfigs.cached.CAGE_ALLOWED_MOBS.contains(name) ||
+                        ServerConfigs.cached.CAGE_ALLOWED_BABY_MOBS.contains(name)&&entity.isChild());
+                if(!canBeCaught){ return ActionResultType.PASS; }
                 break;
             case JAR:
                 isFirefly = entity.getType().getRegistryName().getPath().toLowerCase().contains("firefl");
@@ -72,6 +73,7 @@ public class EmptyCageItem extends BlockItem {
                 }
                 break;
         }
+        if((entity instanceof LivingEntity && !entity.isAlive()) || entity.getShouldBeDead())return ActionResultType.PASS;
         if(entity instanceof SlimeEntity && ((SlimeEntity)entity).getSlimeSize()>1) return ActionResultType.PASS;
 
         if(player.world.isRemote)return ActionResultType.SUCCESS;

@@ -8,6 +8,8 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.HorizontalBlock;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemStack;
@@ -155,6 +157,17 @@ public class DoormatBlock extends Block {
     @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
         return state.rotate(mirrorIn.toRotation(state.get(FACING)));
+    }
+
+    @Override
+    public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (state.getBlock() != newState.getBlock()) {
+            TileEntity tileentity = world.getTileEntity(pos);
+            if (tileentity instanceof IInventory) {
+                InventoryHelper.dropInventoryItems(world, pos, (IInventory) tileentity);
+            }
+            super.onReplaced(state, world, pos, newState, isMoving);
+        }
     }
 
 }

@@ -12,8 +12,6 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.ShapelessRecipe;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.NonNullList;
@@ -43,17 +41,19 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         String group = "supplementaries.jei.tipped_spikes";
 
         for (Potion potionType : ForgeRegistries.POTION_TYPES.getValues()) {
-            if (potionType.getEffects().stream().map(EffectInstance::getPotion).anyMatch(effect -> effect.equals(Effects.POISON))) {
-                ItemStack spikes = new ItemStack(Registry.BAMBOO_SPIKES_ITEM.get());
-                ItemStack lingeringPotion = PotionUtils.addPotionToItemStack(new ItemStack(Items.LINGERING_POTION), potionType);
-                Ingredient spikeIngredient = Ingredient.fromStacks(spikes);
-                Ingredient potionIngredient = Ingredient.fromStacks(lingeringPotion);
-                NonNullList<Ingredient> inputs = NonNullList.from(Ingredient.EMPTY, spikeIngredient, potionIngredient);
-                ItemStack output = new ItemStack(Registry.BAMBOO_SPIKES_TIPPED_ITEM.get(), 1);
-                ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "jei_tipped_spikes");
-                ShapelessRecipe recipe = new ShapelessRecipe(id, group, output, inputs);
-                recipes.add(recipe);
-            }
+            ItemStack spikes = new ItemStack(Registry.BAMBOO_SPIKES_ITEM.get());
+            ItemStack lingeringPotion = PotionUtils.addPotionToItemStack(new ItemStack(Items.LINGERING_POTION), potionType);
+            Ingredient spikeIngredient = Ingredient.fromStacks(spikes);
+            Ingredient potionIngredient = Ingredient.fromStacks(lingeringPotion);
+            NonNullList<Ingredient> inputs = NonNullList.from(Ingredient.EMPTY, spikeIngredient, potionIngredient);
+            ItemStack output = new ItemStack(Registry.BAMBOO_SPIKES_TIPPED_ITEM.get(), 1);
+            CompoundNBT com = new CompoundNBT();
+            ResourceLocation resourcelocation = net.minecraft.util.registry.Registry.POTION.getKey(potionType);
+            com.putString("Potion", resourcelocation.toString());
+            output.setTagInfo("BlockEntityTag",com);
+            ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "jei_tipped_spikes");
+            ShapelessRecipe recipe = new ShapelessRecipe(id, group, output, inputs);
+            recipes.add(recipe);
         }
         return recipes;
     }

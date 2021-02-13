@@ -30,7 +30,7 @@ public class PlanterBlock extends Block implements IWaterLoggable{
 
         this.setDefaultState(this.stateContainer.getBaseState().with(WATERLOGGED, false).with(EXTENDED, false));
     }
-    //TODO: this seem sto fix pathfinding
+
     @Override
     public boolean allowsMovement(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
         return false;

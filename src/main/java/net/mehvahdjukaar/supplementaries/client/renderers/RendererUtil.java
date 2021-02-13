@@ -23,11 +23,13 @@ public class RendererUtil {
     //stuff that falling sand uses. for some reason renderBlock doesn't use correct light level
     public static void renderBlockPlus(BlockState state, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn,
                                        BlockRendererDispatcher blockRenderer, World world, BlockPos pos){
-        for (RenderType type : RenderType.getBlockRenderTypes()) {
-            if (RenderTypeLookup.canRenderInLayer(state, type)) {
-                renderBlockPlus(state,matrixStackIn,bufferIn,blockRenderer,world,pos,type);
+        try {
+            for (RenderType type : RenderType.getBlockRenderTypes()) {
+                if (RenderTypeLookup.canRenderInLayer(state, type)) {
+                    renderBlockPlus(state, matrixStackIn, bufferIn, blockRenderer, world, pos, type);
+                }
             }
-        }
+        }catch (Exception ignored){}
 
     }
 

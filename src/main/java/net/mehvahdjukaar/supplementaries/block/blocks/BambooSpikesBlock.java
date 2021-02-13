@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -11,26 +12,22 @@ import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.LingeringPotionItem;
+import net.minecraft.item.*;
 import net.minecraft.loot.LootContext;
+import net.minecraft.loot.LootParameters;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.pathfinding.PathType;
 import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -40,6 +37,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,12 +52,13 @@ public class BambooSpikesBlock extends Block {
 
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
-    public static final IntegerProperty POISON = BlockProperties.POISON;
+    public static final BooleanProperty TIPPED = BlockProperties.TIPPED;
 
 
     public BambooSpikesBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(WATERLOGGED,false));
+        this.setDefaultState(this.stateContainer.getBaseState()
+                .with(FACING, Direction.NORTH).with(WATERLOGGED,false).with(TIPPED,false));
     }
 
     @Override
@@ -82,28 +81,39 @@ public class BambooSpikesBlock extends Block {
         return state.rotate(mirrorIn.toRotation(state.get(FACING)));
     }
 
+    //this could be improved
+    @Override
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
+        TileEntity te = worldIn.getTileEntity(pos);
+        if(te instanceof BambooSpikesBlockTile){
+            CompoundNBT com = stack.getTag();
+            if(com!=null){
+                if(com.contains("Damage"))((BambooSpikesBlockTile) te).setMissingCharges(com.getInt("Damage"));
+                if(com.contains("BlockEntityTag"))((BambooSpikesBlockTile) te).potion = PotionUtils.getPotionTypeFromNBT(com.getCompound("BlockEntityTag"));
+            }
+        }
+    }
+
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         CompoundNBT com = context.getItem().getTag();
-        int poison = com!=null?context.getItem().getMaxDamage()-com.getInt("Damage"):0;
+        int charges = com!=null?context.getItem().getMaxDamage()-com.getInt("Damage"):0;
         boolean flag = context.getWorld().getFluidState(context.getPos()).getFluid() == Fluids.WATER;;
-        return this.getDefaultState().with(FACING, context.getFace()).with(WATERLOGGED,flag).with(POISON, MathHelper.clamp(poison,0,15));
+        return this.getDefaultState().with(FACING, context.getFace()).with(WATERLOGGED,flag).with(TIPPED, charges!=0);
     }
 
-    public ItemStack getSpikeItem(BlockState state){
-        int poison = state.get(POISON);
-        if(poison==0)return new ItemStack(Registry.BAMBOO_SPIKES_ITEM.get());
-        else{
-            ItemStack stack = new ItemStack(Registry.BAMBOO_SPIKES_TIPPED_ITEM.get());
-            stack.setDamage(stack.getMaxDamage()-poison);
-            return stack;
+    public ItemStack getSpikeItem(TileEntity te){
+        if(te instanceof BambooSpikesBlockTile) {
+            return ((BambooSpikesBlockTile) te).getSpikeItem();
         }
+        return new ItemStack(Registry.BAMBOO_SPIKES_ITEM.get());
     }
 
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         List<ItemStack> list = new ArrayList<>();
-        list.add(this.getSpikeItem(state));
+        list.add(this.getSpikeItem(builder.get(LootParameters.BLOCK_ENTITY)));
         return list;
     }
 
@@ -150,12 +160,28 @@ public class BambooSpikesBlock extends Block {
                 if(up && entityIn instanceof PlayerEntity && entityIn.isSneaking())return;
                 float damage = entityIn.getPosY() > (pos.getY() + 0.0625) ? 2 : 1;
                 entityIn.attackEntityFrom(DamageSource.GENERIC, damage);
-                int poison = state.get(POISON);
-                if (poison > 0) {
-                    if (entityIn instanceof LivingEntity) {
-                        if (!((LivingEntity) entityIn).isPotionActive(Effects.POISON)) {
-                            ((LivingEntity) entityIn).addPotionEffect(new EffectInstance(Effects.POISON, 120));
-                            worldIn.setBlockState(pos, state.with(POISON, Math.max(poison - 1, 0)), poison==1?2:2|16);
+                if(state.get(TIPPED)) {
+                    TileEntity te = worldIn.getTileEntity(pos);
+                    if (te instanceof BambooSpikesBlockTile) {
+                        BambooSpikesBlockTile tile = ((BambooSpikesBlockTile)te);
+                        if(tile.hasPotion() && !tile.isOnCooldown()) {
+                            boolean used = false;
+                            LivingEntity le = ((LivingEntity) entityIn);
+                            for(EffectInstance effect : tile.potion.getEffects()){
+                                if(!le.isPotionApplicable(effect))continue;
+                                if(le.isPotionActive(effect.getPotion()))continue;
+
+                                if (effect.getPotion().isInstant()) {
+                                    float health = 0.5f;//no idea of what this does. it's either 0.5 or 1
+                                    effect.getPotion().affectEntity(null, null, le, effect.getAmplifier(), health);
+                                } else {
+                                    le.addPotionEffect( new EffectInstance(effect.getPotion(),
+                                            (int)(effect.getDuration()*BambooSpikesBlockTile.POTION_MULTIPLIER),
+                                            effect.getAmplifier()));
+                                }
+                                used=true;
+                            }
+                            if(used)tile.consumeCharge();
                         }
                     }
                 }
@@ -168,42 +194,58 @@ public class BambooSpikesBlock extends Block {
         return PathNodeType.DANGER_OTHER;
     }
 
-    public static boolean isLingeringPoison(ItemStack stack){
-        return stack.getItem() == Items.LINGERING_POTION && PotionUtils.getEffectsFromStack(stack).stream()
-                .map(EffectInstance::getPotion).anyMatch(effect -> effect.equals(Effects.POISON));
+    public static boolean tryAddingPotion(BlockState state, IWorld world, BlockPos pos, ItemStack stack){
+        TileEntity te = world.getTileEntity(pos);
+        if (te instanceof BambooSpikesBlockTile) {
+            if (((BambooSpikesBlockTile) te).tryApplyPotion(stack)) {
+                world.playSound(null, pos, SoundEvents.BLOCK_HONEY_BLOCK_FALL, SoundCategory.BLOCKS, 0.5F, 1.5F);
+                world.setBlockState(pos,state.with(TIPPED,true),3);
+                return true;
+            }
+        }
+        return false;
+
     }
 
-    public static boolean addPoison(BlockState state, IWorld world, BlockPos pos, ItemStack stack){
-        world.playSound(null, pos, SoundEvents.BLOCK_HONEY_BLOCK_FALL, SoundCategory.BLOCKS, 0.5F, 1.5F);
-        return world.setBlockState(pos,state.with(POISON,15),3);
-    }
-
-    //TODO: separate potions and add tile and potion support
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         ItemStack stack = player.getHeldItem(handIn);
-        if(isLingeringPoison(stack)) {
 
-            //todo: sound here
-            if(!player.isCreative())
-                player.setHeldItem(handIn, DrinkHelper.fill(stack.copy(), player, new ItemStack(Items.GLASS_BOTTLE), false));
-            if(!worldIn.isRemote){
-                addPoison(state,worldIn,pos,stack);
+        if(stack.getItem() instanceof LingeringPotionItem) {
+            if(tryAddingPotion(state,worldIn,pos,stack)){
+                if (!player.isCreative())
+                    player.setHeldItem(handIn, DrinkHelper.fill(stack.copy(), player, new ItemStack(Items.GLASS_BOTTLE), false));
             }
-
-
             return ActionResultType.func_233537_a_(worldIn.isRemote);
         }
         return ActionResultType.PASS;
     }
 
+
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(FACING,WATERLOGGED,POISON);
+        builder.add(FACING,WATERLOGGED,TIPPED);
     }
 
     @Override
     public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
-        return this.getSpikeItem(state);
+        return this.getSpikeItem(world.getTileEntity(pos));
+    }
+
+    @Override
+    public boolean hasTileEntity(BlockState state) {
+        return true;
+    }
+
+    @Override
+    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+        return new BambooSpikesBlockTile();
+    }
+
+    @Override
+    public boolean eventReceived(BlockState state, World world, BlockPos pos, int eventID, int eventParam) {
+        super.eventReceived(state, world, pos, eventID, eventParam);
+        TileEntity tileentity = world.getTileEntity(pos);
+        return tileentity != null && tileentity.receiveClientEvent(eventID, eventParam);
     }
 }

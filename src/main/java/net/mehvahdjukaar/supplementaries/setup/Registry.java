@@ -18,7 +18,10 @@ import net.mehvahdjukaar.supplementaries.items.crafting.BlackboardClearRecipe;
 import net.mehvahdjukaar.supplementaries.items.crafting.BlackboardDuplicateRecipe;
 import net.mehvahdjukaar.supplementaries.items.crafting.TippedBambooSpikesRecipe;
 import net.mehvahdjukaar.supplementaries.setup.registration.Variants;
-import net.minecraft.block.*;
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.entity.EntityClassification;
@@ -78,7 +81,7 @@ public class Registry {
 
     //creative tab
     private static final boolean tab = RegistryConfigs.reg.CREATIVE_TAB.get();
-    public static final ItemGroup MYTAB = !tab?null:
+    public static final ItemGroup MOD_TAB = !tab?null:
             new ItemGroup("supplementaries") {
                 @Override
                 public ItemStack createIcon() {
@@ -91,7 +94,7 @@ public class Registry {
 
     public static ItemGroup getTab(ItemGroup g,String reg_name){
         if(RegistryConfigs.reg.isEnabled(reg_name)) {
-            return tab ? MYTAB : g;
+            return tab ? MOD_TAB : g;
         }
         return null;
     }
@@ -849,7 +852,7 @@ public class Registry {
     public static final RegistryObject<TileEntityType<?>> CRIMSON_LANTERN_TILE = TILES.register(CRIMSON_LANTERN_NAME,()-> TileEntityType.Builder.create(
             OilLanternBlockTile::new, CRIMSON_LANTERN.get()).build(null));
     public static final RegistryObject<Item> CRIMSON_LANTERN_ITEM = ITEMS.register(CRIMSON_LANTERN_NAME,()-> new BlockItem(CRIMSON_LANTERN.get(),
-            (new Item.Properties()).group(getTab(null,CRIMSON_LANTERN_NAME))
+            (new Item.Properties()).group(null)
     ));
 
     public static final RegistryObject<TileEntityType<?>> COPPER_LANTERN_TILE = TILES.register(COPPER_LANTERN_NAME,()-> TileEntityType.Builder.create(
@@ -934,7 +937,7 @@ public class Registry {
                     .speedFactor(0.8f)
                     .notSolid()));
     public static final RegistryObject<Item> ROPE_ITEM = ITEMS.register(ROPE_NAME,()-> new BlockItem(ROPE.get(),
-            (new Item.Properties()).group(getTab(null,ROPE_NAME))
+            (new Item.Properties()).group(null)
     ));
 
     //spikes
@@ -944,13 +947,16 @@ public class Registry {
                     .sound(SoundType.SCAFFOLDING)
                     .harvestTool(ToolType.AXE)
                     .setOpaque((a,b,c)->false)
-                    .hardnessAndResistance(1)
+                    .hardnessAndResistance(2)
                     .notSolid()));
+    public static final RegistryObject<TileEntityType<?>> BAMBOO_SPIKES_TILE = TILES.register(BAMBOO_SPIKES_NAME,()-> TileEntityType.Builder.create(
+            BambooSpikesBlockTile::new, BAMBOO_SPIKES.get()).build(null));
+
     public static final RegistryObject<Item> BAMBOO_SPIKES_ITEM = ITEMS.register(BAMBOO_SPIKES_NAME,()-> new BurnableBlockItem(BAMBOO_SPIKES.get(),
             (new Item.Properties()).group(null),150
     ));
     public static final RegistryObject<Item> BAMBOO_SPIKES_TIPPED_ITEM = ITEMS.register("bamboo_spikes_tipped",()-> new BambooSpikesTippedItem(BAMBOO_SPIKES.get(),
-            (new Item.Properties()).defaultMaxDamage(15).group(getTab(ItemGroup.DECORATIONS,BAMBOO_SPIKES_NAME))
+            (new Item.Properties()).defaultMaxDamage(BambooSpikesBlockTile.MAX_CHARGES).setNoRepair().group(getTab(ItemGroup.BREWING,BAMBOO_SPIKES_NAME))
     ));
 
     //key
@@ -958,7 +964,22 @@ public class Registry {
     public static final RegistryObject<Item> KEY_ITEM = ITEMS.register(KEY_NAME,()-> new KeyItem(
             (new Item.Properties()).group(getTab(ItemGroup.MISC,KEY_NAME))
     ));
+    //TODO: enable keys only when safe||doors||trapdoors
 
+    //netherite doors
+    public static final String NETHERITE_DOOR_NAME = "netherite_door";
+    public static final RegistryObject<Block> NETHERITE_DOOR = BLOCKS.register(NETHERITE_DOOR_NAME,()-> new NetheriteDoorBlock(
+            AbstractBlock.Properties.create(Material.IRON, MaterialColor.BLACK)
+                    .hardnessAndResistance(50.0F, 1200.0F)
+                    .setRequiresTool()
+                    .harvestTool(ToolType.PICKAXE)
+                    .sound(SoundType.NETHERITE)
+    ));
+    public static final RegistryObject<Item> NETHERITE_DOOR_ = ITEMS.register(NETHERITE_DOOR_NAME,()-> new BlockItem(NETHERITE_DOOR.get(),
+            (new Item.Properties()).group(null).isImmuneToFire()
+    ));
+    public static final RegistryObject<TileEntityType<?>> KEY_LOCKABLE_TILE= TILES.register("key_lockable_tile",()-> TileEntityType.Builder.create(
+            KeyLockableTile::new, NETHERITE_DOOR.get()).build(null));
 
     /*
     //statue

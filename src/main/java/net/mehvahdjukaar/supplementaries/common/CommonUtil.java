@@ -147,13 +147,13 @@ public class CommonUtil {
         return (ModTags.isTagged(ModTags.COOKIES,i));
     }
 
-
+    //TODO: move to tag
     public static boolean isLantern(Item i){
         if(i instanceof BlockItem){
             Block b =  ((BlockItem) i).getBlock();
             String namespace = b.getRegistryName().getNamespace();
-            return ((b instanceof LanternBlock || namespace.equals("skinnedlanterns"))
-                    && !ServerConfigs.cached.WALL_LANTERN_BLACKLIST.contains(namespace));
+            if(namespace.equals("skinnedlanterns")) return true;
+            return (b instanceof LanternBlock && !ServerConfigs.cached.WALL_LANTERN_BLACKLIST.contains(namespace));
         }
         return false;
     }

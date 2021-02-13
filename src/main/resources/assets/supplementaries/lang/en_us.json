@@ -88,7 +88,8 @@
   "message.supplementaries.safe.bound": "Locked",
   "message.supplementaries.safe.assigned_key": "Assigned to '%s' key",
   "item.supplementaries.key": "Key",
-
+  "supplementaries.comment8": "For translation remove the %s and translate as if it was 'tipped bamboo spikes'",
+  "item.supplementaries.bamboo_spikes_tipped_effect": "Bamboo Spikes of %s",
 
   "block.supplementaries.skull_candle": "Skull Candle",
   "block.supplementaries.goblet": "Goblet",

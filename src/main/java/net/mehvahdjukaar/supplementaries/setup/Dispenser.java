@@ -203,8 +203,8 @@ public class Dispenser {
             ServerWorld world = source.getWorld();
             BlockPos blockpos = source.getBlockPos().offset(source.getBlockState().get(DispenserBlock.FACING));
             BlockState state = world.getBlockState(blockpos);
-            if(state.getBlock() instanceof BambooSpikesBlock && BambooSpikesBlock.isLingeringPoison(stack)){
-                if(BambooSpikesBlock.addPoison(state,world,blockpos,stack)){
+            if(state.getBlock() instanceof BambooSpikesBlock){
+                if(BambooSpikesBlock.tryAddingPotion(state,world,blockpos,stack)){
                     return Dispenser.glassBottleFill(source, stack, new ItemStack(Items.GLASS_BOTTLE));
                 }
                 return stack;
