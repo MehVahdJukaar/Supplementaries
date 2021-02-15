@@ -1,0 +1,10 @@
+{
+  "parent": "supplementaries:custom/turntable",
+  "textures": {
+    "all": "supplementaries:blocks/laser_side_on",
+    "particle": "supplementaries:blocks/laser_side_on",
+    "0": "supplementaries:blocks/laser_top_on",
+    "1": "supplementaries:blocks/laser_side_on",
+    "2": "supplementaries:blocks/laser_bottom"
+  }
+}
