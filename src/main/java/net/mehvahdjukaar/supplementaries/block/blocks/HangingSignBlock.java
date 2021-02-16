@@ -90,7 +90,7 @@ public class HangingSignBlock extends SwayingBlock {
             }
             // open gui (edit sign with empty hand)
             else if (emptyhand && !server) {
-                if(!server) HangingSignGui.open(te);
+                HangingSignGui.open(te);
             }
             return ActionResultType.func_233537_a_(worldIn.isRemote);
         }

@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.network;
 
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.world.data.GlobeData;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
@@ -29,6 +30,7 @@ public class SyncGlobeDataPacket {
             if (!context.getDirection().getReceptionSide().isServer()) {
                 //assigns data to client
                 GlobeData.clientSide = message.data;
+                Supplementaries.LOGGER.info("Synced Globe data");
             }
         });
         context.setPacketHandled(true);

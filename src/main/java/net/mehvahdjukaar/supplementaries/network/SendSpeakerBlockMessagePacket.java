@@ -19,8 +19,8 @@ public class SendSpeakerBlockMessagePacket {
         this.narrator = buf.readBoolean();
     }
 
-    public SendSpeakerBlockMessagePacket(String str, boolean narrator) {
-        this.str = new StringTextComponent(str);
+    public SendSpeakerBlockMessagePacket(ITextComponent str, boolean narrator) {
+        this.str = str;
         this.narrator = narrator;
     }
 
@@ -38,7 +38,7 @@ public class SendSpeakerBlockMessagePacket {
             if (message.narrator) {
                 Narrator.getNarrator().say(message.str.getString(), true);
             } else {
-                Minecraft.getInstance().player.sendMessage(new StringTextComponent(message.str.getString()), Util.DUMMY_UUID);
+                Minecraft.getInstance().player.sendMessage(message.str, Util.DUMMY_UUID);
             }
         });
         ctx.get().setPacketHandled(true);

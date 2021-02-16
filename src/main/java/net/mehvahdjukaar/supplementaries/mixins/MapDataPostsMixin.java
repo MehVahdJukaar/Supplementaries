@@ -25,8 +25,8 @@ import java.util.Map;
 import java.util.Objects;
 
 @Mixin(MapData.class)
-public abstract class MapDataMixin extends WorldSavedData {
-    public MapDataMixin(String name) {
+public abstract class MapDataPostsMixin extends WorldSavedData {
+    public MapDataPostsMixin(String name) {
         super(name);
         mapDecorations= Maps.newLinkedHashMap();
     }

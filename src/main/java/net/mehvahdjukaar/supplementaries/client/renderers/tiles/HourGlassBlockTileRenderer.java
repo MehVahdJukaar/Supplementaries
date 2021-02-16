@@ -20,51 +20,26 @@ public class HourGlassBlockTileRenderer extends TileEntityRenderer<HourGlassBloc
         super(rendererDispatcherIn);
     }
 
-    @Override
-    public void render(HourGlassBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
-                       int combinedOverlayIn) {
-        if(tile.sandType.isEmpty())return;
-        /*
-        ResourceLocation texture = tile.sandType.texture;
-        if(tile.sandType.isSand()){
-            ItemStack stack = tile.getStackInSlot(0);
-            Item i = stack.getItem();
-            ResourceLocation reg = i.getRegistryName();
-            //BlockState state = ((BlockItem) stack.getItem()).getBlock().getDefaultState();
-            //ModelLoader.instance().getModelOrMissing(new ResourceLocation()).
-            //IBakedModel baked = Minecraft.getInstance().getBlockRendererDispatcher().getBlockModelShapes().getModel(state)
-            //ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-            //IBakedModel ibakedmodel = itemRenderer.getItemModelWithOverrides(stack, tile.getWorld(), null);
-            //IBakedModel baked2 = Minecraft.getInstance().getBlockRendererDispatcher().;
-            //IUnbakedModel unbaked = ModelLoader.instance().getModelOrMissing(new ResourceLocation(reg.getNamespace(),"block/"+reg.getPath()));
-            //unbaked.getTextures()
-            //TODO: find more general solution
-            texture = new ResourceLocation(reg.getNamespace(),"block/"+reg.getPath());
-        }
-        TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(texture);
-        if(sprite instanceof MissingTextureSprite)sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(tile.sandType.texture);
-*/
 
-        TextureAtlasSprite sprite = tile.getOrCreateSprite();
+    public static void renderSand(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
+                                   int combinedOverlayIn, TextureAtlasSprite sprite, float height, Direction dir){
 
-        int color = 0xffffff;
+
         IVertexBuilder builder = bufferIn.getBuffer(RenderType.getSolid());
-        float h = MathHelper.lerp(partialTicks, tile.prevProgress, tile.progress);
-
+        int color = 0xffffff;
         matrixStackIn.push();
-
         matrixStackIn.translate(0.5,0.5,0.5);
-        matrixStackIn.rotate(tile.getBlockState().get(HourGlassBlock.FACING).getRotation());
-        Direction dir = tile.getBlockState().get(HourGlassBlock.FACING);
         Quaternion q = dir.getRotation();
+        matrixStackIn.rotate(q);
+
         q.conjugate();
 
-        if(h!=0) {
+        if(height!=0) {
             matrixStackIn.push();
             matrixStackIn.translate(0,-0.25,0);
             matrixStackIn.rotate(q);
             matrixStackIn.translate(0,-0.125,0);
-            float h1 = h * 0.25f;
+            float h1 = height * 0.25f;
             RendererUtil.addCube(builder, matrixStackIn, 0.375f,0.3125f, 0.25f, h1, sprite, combinedLightIn, color, 1, combinedOverlayIn, true,
                     true, true, true);
             if(dir==Direction.DOWN) {
@@ -74,12 +49,12 @@ public class HourGlassBlockTileRenderer extends TileEntityRenderer<HourGlassBloc
             }
             matrixStackIn.pop();
         }
-        if(h!=1) {
+        if(height!=1) {
             matrixStackIn.push();
             matrixStackIn.translate(0,0.25,0);
             matrixStackIn.rotate(q);
             matrixStackIn.translate(0,-0.125,0);
-            float h2 = (1 - h) * 0.25f;
+            float h2 = (1 - height) * 0.25f;
             RendererUtil.addCube(builder, matrixStackIn,0.375f,0.3125f, 0.25f, h2 , sprite, combinedLightIn, color, 1, combinedOverlayIn, true,
                     true, true, true);
             if(dir==Direction.UP) {
@@ -90,5 +65,18 @@ public class HourGlassBlockTileRenderer extends TileEntityRenderer<HourGlassBloc
             matrixStackIn.pop();
         }
         matrixStackIn.pop();
+
+    }
+
+    @Override
+    public void render(HourGlassBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
+                       int combinedOverlayIn) {
+        if(tile.sandType.isEmpty())return;
+        TextureAtlasSprite sprite = tile.getOrCreateSprite();
+
+        float h = MathHelper.lerp(partialTicks, tile.prevProgress, tile.progress);
+        Direction dir = tile.getBlockState().get(HourGlassBlock.FACING);
+
+        renderSand(matrixStackIn,bufferIn,combinedLightIn,combinedOverlayIn,sprite,h,dir);
     }
 }

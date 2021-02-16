@@ -11,7 +11,7 @@ issueTrackerURL="https://www.curseforge.com/minecraft/mc-mods/supplementaries/is
 
 modId="supplementaries" #mandatory
 
-version="1.16.5-0.9.26" #mandatory
+version="1.16.5-0.9.27" #mandatory
 
 displayName="Supplementaries" #mandatory
 
@@ -21,7 +21,7 @@ displayURL="https://www.curseforge.com/minecraft/mc-mods/supplementaries" #optio
 
 logoFile="logo.png" #optional
 
-credits="see curse forge page" #optional
+credits="put a book named 'credits' inside a notice board" #optional
 
 authors="MehVahdJukaar" #optional
 

@@ -4,6 +4,7 @@ package net.mehvahdjukaar.supplementaries.setup;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.network.commands.ModCommands;
+import net.mehvahdjukaar.supplementaries.plugins.create.SupplementariesCreatePlugin;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.ConstantRange;
 import net.minecraft.loot.ItemLootEntry;
@@ -16,6 +17,7 @@ import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.event.village.WandererTradesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
@@ -30,10 +32,14 @@ public class ModSetup {
         //event.enqueueWork(Dispenser::registerBehaviors);
         Dispenser.registerBehaviors();
 
+        if(ModList.get().isLoaded("create")){
+            SupplementariesCreatePlugin.initialize();
+        }
+
     }
 
     @SubscribeEvent
-    public static void onServerStart(RegisterCommandsEvent event) {
+    public static void registerCommands(RegisterCommandsEvent event) {
         ModCommands.register(event.getDispatcher());
     }
 

@@ -12,14 +12,18 @@ import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.item.*;
+import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.item.LingeringPotionItem;
 import net.minecraft.loot.LootContext;
 import net.minecraft.loot.LootParameters;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.pathfinding.PathType;
-import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionUtils;
+import net.minecraft.potion.Potions;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
@@ -54,6 +58,7 @@ public class BambooSpikesBlock extends Block {
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
     public static final BooleanProperty TIPPED = BlockProperties.TIPPED;
 
+    public static DamageSource SPIKE_DAMAGE = (new DamageSource("supplementaries.bamboo_spikes"));
 
     public BambooSpikesBlock(Properties properties) {
         super(properties);
@@ -89,7 +94,10 @@ public class BambooSpikesBlock extends Block {
         if(te instanceof BambooSpikesBlockTile){
             CompoundNBT com = stack.getTag();
             if(com!=null){
+                Potion p = PotionUtils.getPotionFromItem(stack);
+                if(p != Potions.EMPTY)((BambooSpikesBlockTile) te).potion = p;
                 if(com.contains("Damage"))((BambooSpikesBlockTile) te).setMissingCharges(com.getInt("Damage"));
+                //remove in the future
                 if(com.contains("BlockEntityTag"))((BambooSpikesBlockTile) te).potion = PotionUtils.getPotionTypeFromNBT(com.getCompound("BlockEntityTag"));
             }
         }
@@ -149,39 +157,24 @@ public class BambooSpikesBlock extends Block {
         return VoxelShapes.fullCube();
     }
 
+    //TODO: fix pathfinding
+
     @Override
     public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
         if(entityIn instanceof PlayerEntity && ((PlayerEntity) entityIn).isCreative())return;
-        if(entityIn instanceof LivingEntity) {
+        if(entityIn instanceof LivingEntity && entityIn.isAlive()) {
             boolean up = state.get(FACING) == Direction.UP;
             double vy = up ? 0.45 : 0.95;
             entityIn.setMotionMultiplier(state, new Vector3d(0.95D, vy, 0.95D));
             if(!worldIn.isRemote) {
                 if(up && entityIn instanceof PlayerEntity && entityIn.isSneaking())return;
                 float damage = entityIn.getPosY() > (pos.getY() + 0.0625) ? 2 : 1;
-                entityIn.attackEntityFrom(DamageSource.GENERIC, damage);
+                entityIn.attackEntityFrom(SPIKE_DAMAGE, damage);
                 if(state.get(TIPPED)) {
                     TileEntity te = worldIn.getTileEntity(pos);
                     if (te instanceof BambooSpikesBlockTile) {
-                        BambooSpikesBlockTile tile = ((BambooSpikesBlockTile)te);
-                        if(tile.hasPotion() && !tile.isOnCooldown()) {
-                            boolean used = false;
-                            LivingEntity le = ((LivingEntity) entityIn);
-                            for(EffectInstance effect : tile.potion.getEffects()){
-                                if(!le.isPotionApplicable(effect))continue;
-                                if(le.isPotionActive(effect.getPotion()))continue;
-
-                                if (effect.getPotion().isInstant()) {
-                                    float health = 0.5f;//no idea of what this does. it's either 0.5 or 1
-                                    effect.getPotion().affectEntity(null, null, le, effect.getAmplifier(), health);
-                                } else {
-                                    le.addPotionEffect( new EffectInstance(effect.getPotion(),
-                                            (int)(effect.getDuration()*BambooSpikesBlockTile.POTION_MULTIPLIER),
-                                            effect.getAmplifier()));
-                                }
-                                used=true;
-                            }
-                            if(used)tile.consumeCharge();
+                        if(((BambooSpikesBlockTile)te).interactWithEntity(((LivingEntity) entityIn),worldIn)){
+                            worldIn.setBlockState(pos,state.with(BambooSpikesBlock.TIPPED,false),3);
                         }
                     }
                 }
@@ -191,7 +184,7 @@ public class BambooSpikesBlock extends Block {
 
     @Override
     public PathNodeType getAiPathNodeType(BlockState state, IBlockReader world, BlockPos pos, MobEntity entity) {
-        return PathNodeType.DANGER_OTHER;
+        return PathNodeType.BLOCKED;
     }
 
     public static boolean tryAddingPotion(BlockState state, IWorld world, BlockPos pos, ItemStack stack){
@@ -204,7 +197,6 @@ public class BambooSpikesBlock extends Block {
             }
         }
         return false;
-
     }
 
     @Override

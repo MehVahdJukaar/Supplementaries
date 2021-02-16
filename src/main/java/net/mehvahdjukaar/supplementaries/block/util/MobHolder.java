@@ -234,7 +234,7 @@ public class MobHolder {
 
     @Nullable
     public static Entity createEntityFromNBT(CompoundNBT com, UUID id, World world){
-        if(com.contains("id")) {
+        if(com!=null && com.contains("id")) {
             Entity entity;
             if(com.get("id").getString().equals("minecraft:bee")){
                 entity = new BeeEntity(EntityType.BEE, world);

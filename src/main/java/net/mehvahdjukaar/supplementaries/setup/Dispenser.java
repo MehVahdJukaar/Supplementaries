@@ -38,7 +38,7 @@ import java.util.Map;
 public class Dispenser {
 
 
-
+    //TODO: bricks
     static public Map<Item, IDispenseItemBehavior> DEFAULT_BEHAVIORS;
     //TODO: find a better way to do this
 

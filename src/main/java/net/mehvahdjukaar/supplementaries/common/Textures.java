@@ -56,6 +56,7 @@ public class Textures {
     public static final ResourceLocation HOURGLASS_BLAZE = new ResourceLocation(MOD_ID, "blocks/hourglass_blaze");
     public static final ResourceLocation HOURGLASS_GUNPOWDER = new ResourceLocation(MOD_ID, "blocks/hourglass_gunpowder");
 
+    //entities
     public static final ResourceLocation BLACKBOARD_TEXTURE = new ResourceLocation(MOD_ID,"textures/entity/blackboard.png");
     public static final ResourceLocation GLOBE_TEXTURE = new ResourceLocation(MOD_ID,"textures/entity/globes/globe_the_world.png");
     public static final ResourceLocation GLOBE_FLAT_TEXTURE = new ResourceLocation(MOD_ID,"textures/entity/globes/globe_flat.png");
@@ -66,6 +67,7 @@ public class Textures {
 
     public static final ResourceLocation FIREFLY_TEXTURE =  new ResourceLocation(MOD_ID,"textures/entity/firefly.png");
     public static final ResourceLocation BELL_CHAIN_TEXTURE = new ResourceLocation(MOD_ID,"textures/entity/bell_chain.png");
+    public static final ResourceLocation THICK_GOLEM = new ResourceLocation(MOD_ID,"textures/entity/misc/iron_golem.png");
 
     //gui
     public static final ResourceLocation NOTICE_BOARD_GUI_TEXTURE = new ResourceLocation(MOD_ID,"textures/gui/notice_board_gui.png");

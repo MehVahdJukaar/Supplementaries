@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.network;
 
 
 import com.electronwill.nightconfig.toml.TomlFormat;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkDirection;
@@ -35,6 +36,7 @@ public class SyncConfigsPacket {
 
             ServerConfigs.SERVER_CONFIG.setConfig(TomlFormat.instance().createParser().parse(new ByteArrayInputStream(message.configData)));
             ServerConfigs.cached.refresh();
+            Supplementaries.LOGGER.info("Synced Common configs");
         });
         context.setPacketHandled(true);
     }

@@ -17,6 +17,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
 import java.util.stream.IntStream;
@@ -61,7 +62,6 @@ public class HourGlassBlockTile extends ItemDisplayTile implements ITickableTile
         return this.cachedTexture;
     }
 
-    //TODO:!!! tick seems to be called 3 times more often on server side wtf
     @Override
     public void tick() {
 
@@ -96,6 +96,8 @@ public class HourGlassBlockTile extends ItemDisplayTile implements ITickableTile
         super.read(state, compound);
         this.sandType = HourGlassSandType.values()[compound.getInt("SandType")];
         this.progress = compound.getFloat("Progress");
+        this.prevProgress = compound.getFloat("PrevProgress");
+        this.cachedTexture=null;
     }
 
     @Override
@@ -103,6 +105,7 @@ public class HourGlassBlockTile extends ItemDisplayTile implements ITickableTile
         super.write(compound);
         compound.putInt("SandType", this.sandType.ordinal());
         compound.putFloat("Progress", this.progress);
+        compound.putFloat("PrevProgress", this.prevProgress);
         return compound;
     }
 

@@ -1,10 +1,13 @@
-package net.mehvahdjukaar.supplementaries.jei;
+package net.mehvahdjukaar.supplementaries.plugins.jei;
 
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaRecipeCategoryUid;
+import mezz.jei.api.ingredients.subtypes.ISubtypeInterpreter;
 import mezz.jei.api.registration.IRecipeRegistration;
+import mezz.jei.api.registration.ISubtypeRegistration;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.items.BambooSpikesTippedItem;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -12,6 +15,7 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.ShapelessRecipe;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.NonNullList;
@@ -30,6 +34,32 @@ public class SupplementariesJEIPlugin implements IModPlugin {
     }
 
     @Override
+    public void registerItemSubtypes(ISubtypeRegistration registration) {
+        registration.registerSubtypeInterpreter(Registry.BAMBOO_SPIKES_TIPPED_ITEM.get(), SpikesSubtypeInterpreter.INSTANCE);
+    }
+
+    public static class SpikesSubtypeInterpreter implements ISubtypeInterpreter {
+        public static final SpikesSubtypeInterpreter INSTANCE = new SpikesSubtypeInterpreter();
+
+        private SpikesSubtypeInterpreter() {
+        }
+
+        public String apply(ItemStack itemStack) {
+
+            Potion potionType = PotionUtils.getPotionFromItem(itemStack);
+            String potionTypeString = potionType.getNamePrefixed("");
+            StringBuilder stringBuilder = new StringBuilder(potionTypeString);
+            List<EffectInstance> effects = PotionUtils.getEffectsFromStack(itemStack);
+
+            for (EffectInstance effect : effects) {
+                stringBuilder.append(";").append(effect);
+            }
+
+            return stringBuilder.toString();
+        }
+    }
+
+    @Override
     public void registerRecipes(IRecipeRegistration registry) {
         registry.addRecipes(createTippedBambooSpikesRecipes(),VanillaRecipeCategoryUid.CRAFTING);
         registry.addRecipes(createBlackboardDuplicate(),VanillaRecipeCategoryUid.CRAFTING);
@@ -41,21 +71,23 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         String group = "supplementaries.jei.tipped_spikes";
 
         for (Potion potionType : ForgeRegistries.POTION_TYPES.getValues()) {
-            ItemStack spikes = new ItemStack(Registry.BAMBOO_SPIKES_ITEM.get());
-            ItemStack lingeringPotion = PotionUtils.addPotionToItemStack(new ItemStack(Items.LINGERING_POTION), potionType);
-            Ingredient spikeIngredient = Ingredient.fromStacks(spikes);
-            Ingredient potionIngredient = Ingredient.fromStacks(lingeringPotion);
-            NonNullList<Ingredient> inputs = NonNullList.from(Ingredient.EMPTY, spikeIngredient, potionIngredient);
-            ItemStack output = new ItemStack(Registry.BAMBOO_SPIKES_TIPPED_ITEM.get(), 1);
-            CompoundNBT com = new CompoundNBT();
-            ResourceLocation resourcelocation = net.minecraft.util.registry.Registry.POTION.getKey(potionType);
-            com.putString("Potion", resourcelocation.toString());
-            output.setTagInfo("BlockEntityTag",com);
-            ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "jei_tipped_spikes");
-            ShapelessRecipe recipe = new ShapelessRecipe(id, group, output, inputs);
-            recipes.add(recipe);
+           if (!potionType.getEffects().isEmpty()) {
+                recipes.add(makeSpikeRecipe(potionType,group));
+            }
         }
         return recipes;
+    }
+
+    private static ShapelessRecipe makeSpikeRecipe(Potion potionType, String group){
+        ItemStack spikes = new ItemStack(Registry.BAMBOO_SPIKES_ITEM.get());
+        ItemStack lingeringPotion = PotionUtils.addPotionToItemStack(new ItemStack(Items.LINGERING_POTION), potionType);
+        Ingredient spikeIngredient = Ingredient.fromStacks(spikes);
+        Ingredient potionIngredient = Ingredient.fromStacks(lingeringPotion);
+        NonNullList<Ingredient> inputs = NonNullList.from(Ingredient.EMPTY, spikeIngredient, potionIngredient);
+        ItemStack output = BambooSpikesTippedItem.makeSpikeItem(potionType);
+        //ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "jei.bamboo_spikes." + output.getTranslationKey());
+        ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, potionType.getNamePrefixed("jei.tipped_spikes."));
+        return new ShapelessRecipe(id, group, output, inputs);
     }
 
     public static List<IRecipe<?>> createBlackboardDuplicate() {

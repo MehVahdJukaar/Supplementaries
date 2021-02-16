@@ -647,7 +647,7 @@ public class Registry {
                     .hardnessAndResistance(4f, 5f)
                     .sound(SoundType.METAL)
                     .notSolid()
-                    .setLightLevel((state) -> 14)
+                    .setLightLevel((state) -> state.get(BlockStateProperties.LIT)? 14 : 0)
                     .setRequiresTool()
                     .harvestTool(ToolType.PICKAXE)
                     .harvestLevel(1)

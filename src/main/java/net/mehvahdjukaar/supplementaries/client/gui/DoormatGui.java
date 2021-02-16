@@ -85,6 +85,8 @@ public class DoormatGui extends Screen {
         }
     }
 
+    //TODO: make all these subclasses
+
     @Override
     public void tick() {
         ++this.updateCounter;

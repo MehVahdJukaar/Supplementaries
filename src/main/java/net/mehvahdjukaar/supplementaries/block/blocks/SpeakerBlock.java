@@ -22,6 +22,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkDirection;
@@ -88,10 +92,12 @@ public class SpeakerBlock extends Block {
                             // particle
                             world.addBlockEvent(pos, this, 0, 0);
                             PlayerList players = mcserv.getPlayerList();
+
+                            ITextComponent message = new StringTextComponent(speaker.getName().getString()+": "+speaker.message).mergeStyle(TextFormatting.ITALIC);
+
                             players.sendToAllNearExcept(null, pos.getX(), pos.getY(), pos.getZ(), ServerConfigs.cached.SPEAKER_RANGE*speaker.volume,
                                     dimension, NetworkHandler.INSTANCE.toVanillaPacket(
-                                            new SendSpeakerBlockMessagePacket(speaker.getName().getString() + ": " + speaker.message,
-                                                    speaker.narrator),
+                                            new SendSpeakerBlockMessagePacket(message, speaker.narrator),
                                             NetworkDirection.PLAY_TO_CLIENT));
                         }
                     }

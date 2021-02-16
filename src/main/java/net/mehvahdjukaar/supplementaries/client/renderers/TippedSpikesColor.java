@@ -1,23 +1,72 @@
 package net.mehvahdjukaar.supplementaries.client.renderers;
 
 import net.mehvahdjukaar.supplementaries.block.tiles.BambooSpikesBlockTile;
+import net.mehvahdjukaar.supplementaries.plugins.quark.SupplementariesQuarkPlugin;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.PotionUtils;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockDisplayReader;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.ModList;
 
 import javax.annotation.Nullable;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class TippedSpikesColor implements IBlockColor, IItemColor {
+    public static Map<Integer, Integer> cachedColors0 = new HashMap<>();
+    public static Map<Integer, Integer> cachedColors1 = new HashMap<>();
+
+    //TODO: figure out if this is actually faster. seems to me about the same, maybe slightly faster this way
+    public static int getCachedColor(int base, int tint){
+        if(tint==0) {
+            if (!cachedColors0.containsKey(base)) {
+                int c = getProcessedColor(base,tint);
+                cachedColors0.put(base, c);
+                return c;
+            }
+            else{
+                return cachedColors0.get(base);
+            }
+        }
+        else{
+            if (!cachedColors1.containsKey(base)) {
+                int c = getProcessedColor(base,tint);
+                cachedColors1.put(base, c);
+                return c;
+            }
+            else{
+                return cachedColors1.get(base);
+            }
+        }
+    }
+
 
     @Override
     public int getColor(BlockState state, @Nullable IBlockDisplayReader world, @Nullable BlockPos pos, int tint) {
         TileEntity te = world.getTileEntity(pos);
+
         if(te instanceof BambooSpikesBlockTile){
-            return getProcessedColor(((BambooSpikesBlockTile) te).getColor(), tint);
+            int color = ((BambooSpikesBlockTile) te).getColor();
+            //return getProcessedColor(color, tint);
+            return getCachedColor(color,tint);
+        }
+        //not actually sure why I need this since quark seems to handle moving tiles pretty well
+        else if(ModList.get().isLoaded("quark")){
+            if(world instanceof World) {
+                te = SupplementariesQuarkPlugin.getMovingTile(pos, (World) world);
+                if(te instanceof BambooSpikesBlockTile){
+                    int color = ((BambooSpikesBlockTile) te).getColor();
+                    //return getProcessedColor(color, tint);
+                    return getCachedColor(color,tint);
+                }
+            }
         }
         return 0xffffff;
     }
@@ -25,11 +74,11 @@ public class TippedSpikesColor implements IBlockColor, IItemColor {
     @Override
     public int getColor(ItemStack stack, int tint) {
         if(tint==0)return 0xffffff;
-
-        return getProcessedColor(PotionTooltipHelper.getColor(stack.getChildTag("BlockEntityTag")), tint-1);
+        return getCachedColor(PotionUtils.getColor(stack), tint-1);
+        //return getProcessedColor(PotionUtils.getColor(stack), tint-1);
     }
 
-    private int getProcessedColor(int rgb, int tint){
+    private static int getProcessedColor(int rgb, int tint){
         //float[] hsb = Color.RGBtoHSB(r,g,b,null);
         //int rgb2 = Color.HSBtoRGB(hsb[0],0.75f,0.85f);
         float[] hsl = HSLColor.rgbToHsl(rgb);

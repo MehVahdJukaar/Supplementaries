@@ -9,15 +9,17 @@
     "mixins": [
         "CatSitOnBlockMixin",
         "ShulkerBoxTileEntityMixin",
-        "MapDataMixin",
+        "MapDataPostsMixin",
         "ShulkerBoxSlotMixin",
         "BellBlockMixin",
-        "BellTileEntityMixin"
+        "BellTileEntityMixin",
+        "PistonTileEntityMixin"
 
     ],
     "client": [
         "ParrotPartyMixin",
-        "BellTileEntityRendererMixin"
+        "BellTileEntityRendererMixin",
+        "IronGolemRendererMixin"
     ],
     "injectors": {
         "defaultRequire": 1

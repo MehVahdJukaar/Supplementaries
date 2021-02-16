@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers;
 
 import net.minecraft.util.ColorHelper;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.common.Tags;
 
 public class HSLColor {
 
