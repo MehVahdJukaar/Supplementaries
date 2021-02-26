@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.particles.IParticleData;
+import net.minecraft.particles.BasicParticleType;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
@@ -16,10 +16,11 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import java.util.Random;
+import java.util.function.Supplier;
 
 public class SconceLeverBlock extends SconceWallBlock{
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
-    public SconceLeverBlock(Properties properties, IParticleData particleData) {
+    public SconceLeverBlock(Properties properties, Supplier<BasicParticleType> particleData) {
         super(properties, particleData);
         this.setDefaultState(this.stateContainer.getBaseState().with(POWERED,false)
                 .with(FACING, Direction.NORTH).with(WATERLOGGED, false).with(LIT, true));
@@ -108,7 +109,7 @@ public class SconceLeverBlock extends SconceWallBlock{
             double d2 = (double) pos.getZ() + 0.5D;
             Direction direction1 = direction.getOpposite();
             worldIn.addParticle(ParticleTypes.SMOKE, d0 + 0.125D * (double) direction1.getXOffset(), d1 + 0.15D, d2 + 0.125D * (double) direction1.getZOffset(), 0.0D, 0.0D, 0.0D);
-            worldIn.addParticle(this.particleData, d0 + 0.125D * (double) direction1.getXOffset(), d1 + 0.15D, d2 + 0.125D * (double) direction1.getZOffset(), 0.0D, 0.0D, 0.0D);
+            worldIn.addParticle(this.particleData.get(), d0 + 0.125D * (double) direction1.getXOffset(), d1 + 0.15D, d2 + 0.125D * (double) direction1.getZOffset(), 0.0D, 0.0D, 0.0D);
         }
     }
 }

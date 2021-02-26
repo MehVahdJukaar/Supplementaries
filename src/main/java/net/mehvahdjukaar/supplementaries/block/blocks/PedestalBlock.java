@@ -118,6 +118,7 @@ public class PedestalBlock extends Block implements IWaterLoggable {
 
     }
 
+    //TODO: rewrite
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
                                              BlockRayTraceResult hit) {

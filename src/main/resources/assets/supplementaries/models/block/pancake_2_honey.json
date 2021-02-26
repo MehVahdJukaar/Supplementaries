@@ -1,0 +1,9 @@
+{
+	"parent": "supplementaries:block/pancake_2",
+	"textures": {
+		"0": "supplementaries:blocks/pancake_side_honey",
+		"1": "supplementaries:blocks/pancake_top_honey",
+		"2": "supplementaries:blocks/pancake_bottom",
+		"particle": "supplementaries:blocks/pancake_side_honey"
+	}
+}

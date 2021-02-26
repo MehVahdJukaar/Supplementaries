@@ -1,12 +1,8 @@
 {
-  "parent": "block/cube",
+  "parent": "minecraft:block/orientable",
   "textures": {
-    "down": "supplementaries:blocks/notice_board_side",
-    "up": "supplementaries:blocks/notice_board_side",
-    "north": "supplementaries:blocks/notice_board_front",
-    "east": "supplementaries:blocks/notice_board_side",
-    "south": "supplementaries:blocks/notice_board_side",
-    "west": "supplementaries:blocks/notice_board_side",
-    "particle": "supplementaries:blocks/notice_board_side"
+    "top": "supplementaries:blocks/notice_board_top",
+    "front": "supplementaries:blocks/notice_board_front",
+    "side": "supplementaries:blocks/notice_board_side"
   }
 }

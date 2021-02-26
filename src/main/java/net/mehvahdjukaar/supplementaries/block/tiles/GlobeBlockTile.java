@@ -135,10 +135,11 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, I
         MOON(new String[]{"moon","luna","selene","cynthia"},
                 new TranslationTextComponent("globe.supplementaries.moon"),GLOBE_MOON_TEXTURE),
         EARTH(new String[]{"earth","terra","gaia","gaea","tierra","tellus","terre"},
-                new TranslationTextComponent("globe.supplementaries.earth"),GLOBE_TEXTURE), //TODO: add via translationtext
+                new TranslationTextComponent("globe.supplementaries.earth"),GLOBE_TEXTURE),
         SHEARED(null,null,GLOBE_SHEARED_TEXTURE),
         CUSTOM_1(new String[]{"plantkillable"}, null, GLOBE_CUSTOM_1),
-        CUSTOM_2(new String[]{"toffanelly"}, null, GLOBE_CUSTOM_2);
+        CUSTOM_2(new String[]{"toffanelly"}, null, GLOBE_CUSTOM_2),
+        CUSTOM_3(new String[]{"sylvetichearts"}, null, GLOBE_CUSTOM_3);
 
 
         GlobeType(String[] key, TranslationTextComponent tr, ResourceLocation res){

@@ -6,7 +6,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.Util;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -33,6 +32,7 @@ public class SendSpeakerBlockMessagePacket {
         // client world
         ctx.get().enqueueWork(() -> {
             // PlayerEntity player = ctx.get().getSender();
+
 
             //TODO: add @p command support
             if (message.narrator) {

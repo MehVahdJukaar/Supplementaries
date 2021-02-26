@@ -19,6 +19,7 @@ import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootContext;
 import net.minecraft.loot.LootParameters;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
@@ -67,20 +68,23 @@ public class JarBlock extends Block implements IWaterLoggable {
         return super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
 
+    //check if it only gets called client side
+    public int getJarLiquidColor(BlockPos pos, IWorldReader world){
+        TileEntity te = world.getTileEntity(pos);
+        if (te instanceof JarBlockTile) {
+            return ((JarBlockTile)te).fluidHolder.getParticleColor();
+        }
+        return 0xffffff;
+    }
+
     @Override
     public float[] getBeaconColorMultiplier(BlockState state, IWorldReader world, BlockPos pos, BlockPos beaconPos) {
-        TileEntity tileentity = world.getTileEntity(pos);
-        if (tileentity instanceof JarBlockTile) {
-            JarBlockTile te = (JarBlockTile) tileentity;
-            int color = te.color;
-            if (te.isEmpty() || color == 0x000000)
-                return null;
-            float r = (float) ((color >> 16 & 255)) / 255.0F;
-            float g = (float) ((color >> 8 & 255)) / 255.0F;
-            float b = (float) ((color & 255)) / 255.0F;
-            return new float[]{r, g, b};
-        }
-        return null;
+        int color = getJarLiquidColor(pos,world);
+        if(color==-1)return null;
+        float r = (float) ((color >> 16 & 255)) / 255.0F;
+        float g = (float) ((color >> 8 & 255)) / 255.0F;
+        float b = (float) ((color & 255)) / 255.0F;
+        return new float[]{r, g, b};
     }
 
     @Override
@@ -107,21 +111,27 @@ public class JarBlock extends Block implements IWaterLoggable {
                 ((LockableTileEntity) tileentity).setCustomName(stack.getDisplayName());
             }
         }
+
+        //remove in the future
+        TileEntity tileentity = worldIn.getTileEntity(pos);
+        if (tileentity instanceof JarBlockTile) {
+            ((JarBlockTile) tileentity).convertOldJars(stack.getChildTag("BlockEntityTag"));
+        }
     }
 
-    //TODO: finish this
     public ItemStack getJarItem(JarBlockTile te){
         ItemStack returnStack;
         //TODO: generalize this
         boolean flag = this.getBlock() == Registry.JAR.get();
-        if(te.isEmpty()&&te.mobHolder.isEmpty()){
+        if(!te.hasContent()){
             returnStack = new ItemStack(flag ? Registry.EMPTY_JAR_ITEM.get() : Registry.EMPTY_JAR_ITEM_TINTED.get());
         }
         else{
             returnStack = new ItemStack(flag ? Registry.JAR_ITEM.get() : Registry.JAR_ITEM_TINTED.get());
-            te.saveToNbt(returnStack);
-            //TODO: learn how to use BlockEntityTag
-            //CommonUtil.createJarMobItemNBT(returnStack, te.mob, 0.875f, 0.625f);
+            CompoundNBT compoundnbt = te.write(new CompoundNBT());
+            if (!compoundnbt.isEmpty()) {
+                returnStack.setTagInfo("BlockEntityTag", compoundnbt);
+            }
         }
         if(te.hasCustomName()){
             returnStack.setDisplayName(te.getCustomName());

@@ -2,43 +2,35 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.ClockBlock;
 import net.mehvahdjukaar.supplementaries.block.util.IMobHolder;
-import net.mehvahdjukaar.supplementaries.block.util.LiquidHolder;
 import net.mehvahdjukaar.supplementaries.block.util.MobHolder;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
-import net.mehvahdjukaar.supplementaries.common.CommonUtil.JarLiquidType;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.fluids.SoftFluidHolder;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.PotionUtils;
-import net.minecraft.potion.Potions;
 import net.minecraft.stats.Stats;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.biome.BiomeColors;
 
 import javax.annotation.Nullable;
 
-public class JarBlockTile extends ItemDisplayTile implements  ITickableTileEntity, IMobHolder {
-    public int color = 0xffffff;
-    public float liquidLevel = 0;
-    public JarLiquidType liquidType = JarLiquidType.EMPTY;
+public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity, IMobHolder {
+    private final int CAPACITY = ServerConfigs.cached.JAR_CAPACITY;
 
+    public SpecialJarContent specialType = SpecialJarContent.NONE;
     public MobHolder mobHolder;
-    public LiquidHolder liquidHolder;
+    public SoftFluidHolder fluidHolder;
 
     public JarBlockTile() {
         super(Registry.JAR_TILE.get());
         this.mobHolder = new MobHolder(this.world,this.pos);
-        this.liquidHolder = new LiquidHolder(this.world,this.pos);
+        this.fluidHolder = new SoftFluidHolder(CAPACITY);
     }
 
     public MobHolder getMobHolder(){return this.mobHolder;}
@@ -50,333 +42,180 @@ public class JarBlockTile extends ItemDisplayTile implements  ITickableTileEntit
 
     @Override
     public void onLoad() {
-        this.mobHolder.setWorldAndPos(this.world,this.pos);
-        this.liquidHolder.setWorldAndPos(this.world,this.pos);
+        this.mobHolder.setWorldAndPos(this.world, this.pos);
+        this.fluidHolder.setWorldAndPos(this.world, this.pos);
     }
 
     // hijacking this method to work with hoppers
     @Override
     public void markDirty() {
-        // this.updateServerAndClient();
-        this.updateTile();
+        //TODO: only call after you finished updating your tile so others can react properly (faucets)
         this.world.notifyNeighborsOfStateChange(pos,this.getBlockState().getBlock());
         super.markDirty();
     }
 
-    //TODO: rework this
-    //called by markdirty. server side. client will receive updated values via update packet and read()
-    public void updateTile() {
-        ItemStack stack = this.getStackInSlot(0);
-
-        this.liquidHolder.updateLiquid(stack);
-
-        this.liquidType = CommonUtil.getJarContentTypeFromItem(stack);
-        //level
-        if(this.liquidType.isFish()){
-            this.liquidLevel = 0.625f;
-        }
-        else{
-            this.liquidLevel = ((float) this.getStackInSlot(0).getCount()/ (float)ServerConfigs.cached.JAR_CAPACITY)*0.75f;
-        }
-        //color
-        if(this.liquidType.isWater()){
-            this.color=-1;//let client get biome color on next rendering. ugly i know but that class is client side
-        }
-        else if(this.liquidType == JarLiquidType.POTION){
-            this.color = PotionUtils.getColor(stack);
-        }
-        else{
-            this.color = this.liquidType.color;
-        }
-        //lava light
-        //dis
-
-    }
-
     // does all the calculation for handling player interaction.
     public boolean handleInteraction(PlayerEntity player, Hand hand) {
-        ItemStack handstack = player.getHeldItem(hand);
-        Item handitem = handstack.getItem();
-        boolean isbucket = handitem == Items.BUCKET;
-        boolean isbottle = handitem == Items.GLASS_BOTTLE;
-        boolean isbowl = handitem == Items.BOWL;
-        boolean isempty = handstack.isEmpty();
-        // eat food
-        boolean candrinkfromjar = ServerConfigs.cached.JAR_EAT;
-        if(isempty && !player.isSneaking()) {
-            ItemStack stack = this.getStackInSlot(0);
-            Item it = stack.getItem();
-            if(stack.isFood()){
-                //eat foods
-                if (player.canEat(false) && candrinkfromjar) {
-                    if(this.world.isRemote)return true;
-                    Food food = it.getFood();
-                    int div = CommonUtil.getLiquidCountFromItem(it);
-                    player.getFoodStats().addStats(food.getHealing()/div, food.getSaturation()/(float)div);
-                    //add stew effects
-                    if(it instanceof  SuspiciousStewItem){
-                        //stew code
-                        CompoundNBT compoundnbt = stack.getTag();
-                        if (compoundnbt != null && compoundnbt.contains("Effects", 9)) {
-                            ListNBT listnbt = compoundnbt.getList("Effects", 10);
-                            for(int i = 0; i < listnbt.size(); ++i) {
-                                int j = 160;
-                                CompoundNBT compoundnbt1 = listnbt.getCompound(i);
-                                if (compoundnbt1.contains("EffectDuration", 3))
-                                    j = compoundnbt1.getInt("EffectDuration")/div;
-                                Effect effect = Effect.get(compoundnbt1.getByte("EffectId"));
-                                if (effect != null) {
-                                    player.addPotionEffect(new EffectInstance(effect, j));
-                                }
-                            }
-                        }
-                    }
-                    this.extractItem(1);
-                    this.world.playSound(player,pos, SoundEvents.ENTITY_GENERIC_DRINK, SoundCategory.BLOCKS,1,1);
-                    return true;
-                }
-                //extract cookies with empty hand
-                else if(this.liquidType == JarLiquidType.COOKIES){
-                    this.handleExtractItem(1, handstack, player, hand);
-                    return true;
-                }
-            }
-            //drink potions
-            else if(it instanceof PotionItem && candrinkfromjar){
-                if(this.world.isRemote)return true;
-                //potion code
-                for(EffectInstance effectinstance : PotionUtils.getEffectsFromStack(stack)) {
-                    if (effectinstance.getPotion().isInstant()) {
-                        effectinstance.getPotion().affectEntity(player, player, player, effectinstance.getAmplifier(), 1.0D);
-                    } else {
-                        player.addPotionEffect(new EffectInstance(effectinstance));
-                    }
-                }
-                this.extractItem(1);
-                this.world.playSound(null,pos, SoundEvents.ENTITY_GENERIC_DRINK, SoundCategory.BLOCKS,1,1);
-                return true;
+        if(!this.mobHolder.isEmpty())return false;
+        ItemStack handStack = player.getHeldItem(hand);
 
-            }
-        }
-        // can I insert this item?
-        else if (this.isItemValidForSlot(0, handstack)) {
-            this.handleAddItem(handstack, player, hand);
+        ItemStack displayedStack = this.getDisplayedItem();
+        //interact with fluid holder
+        if(this.isEmpty() && this.fluidHolder.interactWithPlayer(player,hand,this.world,this.pos)){
             return true;
         }
-        // is hand item bottle?
-        else if (isbottle) {
-            // can content be extracted with bottle
-            if (this.liquidType.bottle) {
-                // if extraction successful
-                if (this.handleExtractItem(1, handstack, player, hand)) {
-                    this.world.playSound(player, player.getPosition(), SoundEvents.ITEM_BOTTLE_FILL,
-                            SoundCategory.BLOCKS, 1.0F, 1.0F);
-                    player.addStat(Stats.ITEM_USED.get(Items.GLASS_BOTTLE));
+        //empty hand: eat food
+
+        // can I insert this item? For cookies and fish buckets
+        if (this.isItemValidForSlot(0, handStack)) {
+            this.handleAddItem(handStack, player, hand);
+            return true;
+        }
+
+        if(!player.isSneaking()) {
+            boolean canDrinkFromJar = ServerConfigs.cached.JAR_EAT;
+            //from drink
+            if (canDrinkFromJar && this.fluidHolder.drinkUpFluid(player, this.world, hand)) return true;
+            //cookies
+            if (displayedStack.isFood()) {
+                //eat cookies
+                if (player.canEat(false) && canDrinkFromJar) {
+                    if (this.world.isRemote) return true;
+                    Food food = displayedStack.getItem().getFood();
+                    player.getFoodStats().addStats(food.getHealing(), food.getSaturation());
+                    this.extractItem();
+                    player.playSound(SoundEvents.ENTITY_GENERIC_EAT, SoundCategory.PLAYERS, 1, 1);
                     return true;
                 }
             }
-            return false;
         }
-        // is hand item bucket?
-        else if (isbucket) {
-            // can content be extracted with bucket
-            if (this.liquidType.bucket) {
-                // if extraction successful
-                if (this.handleExtractItem(3, handstack, player, hand)) {
-                        this.world.playSound(player, player.getPosition(), this.liquidType.getSound(),
-                            SoundCategory.BLOCKS, 1.0F, 1.0F);
-                    player.addStat(Stats.ITEM_USED.get(Items.BUCKET));
-                    return true;
-                }
-            }
-            return false;
-        }
-        else if (isbowl) {
-            // can content be extracted with bowl
-            if (this.liquidType.bowl) {
-                // if extraction successful
-                if (this.handleExtractItem(2, handstack, player, hand)) {
-                    this.world.playSound(player, player.getPosition(), SoundEvents.ITEM_BOTTLE_FILL,
-                            SoundCategory.BLOCKS, 1.0F, 1.0F);
-                    player.addStat(Stats.ITEM_USED.get(Items.BOWL));
-                    return true;
-                }
-            }
-            return false;
-        }
-        return false;
+        //extract stuff
+        return this.handleExtractItem(player, hand);
     }
 
-    // removes item from te
-    public ItemStack extractItem(int amount) {
-        amount = this.liquidType.isFish() ? 1 : amount;
-        ItemStack mystack = this.getStackInSlot(0);
-        int count = mystack.getCount();
-        // do i have enough?
-        if (count >= amount) {
-            //case for cookies
-            ItemStack extracted = mystack.copy();
-            extracted.setCount(1);
-            // special case to convert water bottles into bucket
-            if (this.liquidType == JarLiquidType.WATER && amount==3) {
-                extracted = new ItemStack(Items.WATER_BUCKET);
-            }
-            mystack.setCount(Math.max(0, count - amount));
-            return extracted;
+    // removes item from te. only 1 increment
+    public ItemStack extractItem() {
+        ItemStack myStack = this.getDisplayedItem();
+        if (myStack.getCount() > 0 ) {
+            return myStack.split(1);
         }
-        return null;
+        return ItemStack.EMPTY;
     }
 
     // removes item from te and gives it to player
-    public boolean handleExtractItem(int amount, ItemStack handstack, @Nullable PlayerEntity player, @Nullable Hand handIn){
-        ItemStack extracted = this.extractItem(amount);
-        if(extracted!=null) {
-            player.setHeldItem(handIn, DrinkHelper.fill(handstack.copy(), player, extracted, true));
+    public boolean handleExtractItem(PlayerEntity player, Hand hand){
+        if(this.getDisplayedItem().getItem()instanceof FishBucketItem){
+            if(player.getHeldItem(hand).getItem()!=Items.BUCKET)return false;
+            this.world.playSound(null, player.getPosition(), SoundEvents.ITEM_BUCKET_FILL_FISH, SoundCategory.BLOCKS, 1.0F, 1.0F);
+        }
+
+        ItemStack extracted = this.extractItem();
+        if(!extracted.isEmpty()) {
+            CommonUtil.swapItem(player,hand,extracted);
             return true;
         }
         return false;
     }
 
-
     // adds item to te, removes from player
-    public void handleAddItem(ItemStack handstack, @Nullable PlayerEntity player, @Nullable Hand handIn) {
-        ItemStack it = handstack.copy();
-        Item i = it.getItem();
+    public void handleAddItem(ItemStack stack, PlayerEntity player, Hand handIn) {
+        ItemStack handStack = stack.copy();
+        handStack.setCount(1);
+        Item item = handStack.getItem();
 
-        //add item
-        int count = CommonUtil.getLiquidCountFromItem(i);
-        //convert water bucket to bottle
-        boolean isWaterBucket = i == Items.WATER_BUCKET;
-        if(isWaterBucket)
-            it = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.WATER);
+        this.addItem(handStack);
 
-        this.addItem(it, count);
-        //update liquidType after adding item. this should' be here. too bad
-        this.updateTile();
-
-
-        // shrink stack and replace bottle /bucket with empty ones
-        if (player != null && handIn != null) {
-            if (!player.isCreative()) {
-                ItemStack returnItem = new ItemStack(isWaterBucket? Items.BUCKET : this.liquidType.getReturnItem());
-
-                player.setHeldItem(handIn, DrinkHelper.fill(handstack.copy(), player, returnItem, false));
-
-                /*
-                handstack.shrink(1);
-                if (handstack.isEmpty()) {
-                    player.setHeldItem(handIn, returnItem);
-                } else if (!player.inventory.addItemStackToInventory(returnItem)) {
-                    player.dropItem(returnItem, false);
-                }*/
-            }
-            if (this.liquidType.makesSound())
-                this.world.playSound(player, player.getPosition(), SoundEvents.ITEM_BOTTLE_EMPTY,
-                        SoundCategory.BLOCKS, 1.0F, 1.0F);
+        ItemStack returnStack = ItemStack.EMPTY;
+        //TODO: cookie sounds
+        player.addStat(Stats.ITEM_USED.get(item));
+        if(item instanceof FishBucketItem) {
+            returnStack = new ItemStack(Items.BUCKET);
+            this.world.playSound(null, this.pos, SoundEvents.ITEM_BUCKET_EMPTY_FISH, SoundCategory.BLOCKS, 1.0F, 1.0F);
         }
-
+        // shrink stack and replace bottle /bucket with empty ones
+        if (!player.isCreative()) {
+            CommonUtil.swapItem(player,handIn,returnStack);
+        }
     }
 
-    public void addItem(ItemStack itemstack, int amount) {
+    public void addItem(ItemStack itemstack) {
         if (this.isEmpty()) {
-            itemstack.setCount(amount);
             NonNullList<ItemStack> stacks = NonNullList.withSize(1, itemstack);
             this.setItems(stacks);
         } else {
-            this.getStackInSlot(0).grow(Math.min(amount, this.getInventoryStackLimit() - this.getStackInSlot(0).getCount()));
+            this.getDisplayedItem().grow(Math.min(1, this.getInventoryStackLimit() - this.getDisplayedItem().getCount()));
         }
     }
 
-    public boolean isFull() {
-        return (this.liquidType.isFish() || this.getStackInSlot(0).getCount() >= this.getInventoryStackLimit());
-    }
-
+    //can this item be added?
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        //c*m jar easter egg XD. so funi XDD
-        if(!this.mobHolder.isEmpty()){
-            if(!this.hasCustomName())return false;
-            else if(!this.getCustomName().toString().toLowerCase().contains("cum"))return false;
-        }
-        //bottom text
-
-        //TODO rewrite this to use forge fluid system
-        //convert water buckets
-        if(stack.getItem() == Items.WATER_BUCKET)
-            stack = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.WATER);
-
-        JarLiquidType lt = CommonUtil.getJarContentTypeFromItem(stack);
-        if(!lt.isEmpty() && index == 0){
-            ItemStack currentStack = this.getStackInSlot(0);
-            if (this.isEmpty()) return true;
-            else if(!this.isFull()&&this.liquidType==lt){
-                if(this.liquidType==JarLiquidType.COOKIES&&!this.canInsertItem(0,stack,null))return false;
-                return currentStack.getOrCreateTag().equals(stack.getOrCreateTag());
+        if(this.fluidHolder.isEmpty() && this.mobHolder.isEmpty()) {
+            //cookies and fish buckets
+            Item i = stack.getItem();
+            if (!this.isFull()) {
+                if (i instanceof FishBucketItem || CommonUtil.isCookie(i)) {
+                    return this.isEmpty() || i == this.getDisplayedItem().getItem();
+                }
             }
         }
         return false;
     }
 
-    //TODO: use write instead so you can pass stuff directly when usign blockEntityTag
-
-    // save to itemstack
-    public void saveToNbt(ItemStack stack) {
-        //TODO: replace with write
-        //liquid stuff
-        CompoundNBT compound = new CompoundNBT();
-        if (!this.checkLootAndWrite(compound)) {
-            ItemStackHelper.saveAllItems(compound, this.stacks, false);
-            if (this.liquidLevel != 0) {
-                compound.putFloat("liquidLevel", this.liquidLevel);
-                compound.putInt("liquidType", this.liquidType.ordinal());
-                compound.putInt("liquidColor", this.liquidType.bucket ? this.liquidType.color : this.color);
+    public boolean convertOldJars(CompoundNBT compound){
+        if(compound==null)return false;
+        NonNullList<ItemStack> oldStacks = NonNullList.withSize(1, ItemStack.EMPTY);
+        ItemStackHelper.loadAllItems(compound, oldStacks);
+        ItemStack oldStack = oldStacks.get(0);
+        if(!oldStacks.isEmpty()&&!oldStack.isEmpty()) {
+            this.fluidHolder.empty();
+            if(!this.fluidHolder.interactWithItem(oldStack).isEmpty()){
+                if(compound.contains("LiquidHolder")) {
+                    this.fluidHolder.setCount((int) (compound.getCompound("LiquidHolder").getFloat("Level") * 16));
+                }
+                else{
+                    this.fluidHolder.lossyAdd(oldStack.getCount());
+                }
+                this.stacks = NonNullList.withSize(1, ItemStack.EMPTY);
+                return true;
             }
         }
-        this.mobHolder.write(compound);
-        this.liquidHolder.write(compound);
-
-        if (!compound.isEmpty())
-            stack.setTagInfo("BlockEntityTag", compound);
-
+        return false;
     }
 
-    //TODO: convert to liquid holder
     @Override
     public void read(BlockState state, CompoundNBT compound) {
         super.read(state, compound);
-
-        this.liquidLevel = compound.getFloat("liquid_level");
-        this.color = compound.getInt("liquid_color");
-        this.liquidType = JarLiquidType.values()[compound.getInt("liquid_type")];
-
+        //todo: remove in future
+        if(!(compound.contains("LiquidHolder") && this.convertOldJars(compound))) {
+            this.fluidHolder.read(compound);
+        }
         this.mobHolder.read(compound);
-        this.liquidHolder.read(compound);
+        this.specialType = SpecialJarContent.values()[compound.getInt("SpecialType")];
+        this.onLoad();
     }
 
     @Override
     public CompoundNBT write(CompoundNBT compound) {
+        //stacks are done by itemDisplayTile
         super.write(compound);
-        if (!this.checkLootAndWrite(compound)) {
-            ItemStackHelper.saveAllItems(compound, this.stacks);
-        }
-        compound.putInt("liquid_color", this.color);
-        compound.putFloat("liquid_level", this.liquidLevel);
-        compound.putInt("liquid_type", this.liquidType.ordinal());
-
         this.mobHolder.write(compound);
-        this.liquidHolder.write(compound);
-
+        this.fluidHolder.write(compound);
+        compound.putInt("SpecialType",SpecialJarContent.get(this.getDisplayedItem().getItem()).ordinal());
         return compound;
     }
 
-
     public boolean hasContent(){
-        return !(this.isEmpty()&&this.mobHolder.isEmpty());
+        return !(this.isEmpty()&&this.mobHolder.isEmpty()&&this.fluidHolder.isEmpty());
+    }
+
+    public boolean isFull(){
+        return this.getDisplayedItem().getCount()>=this.getInventoryStackLimit();
     }
 
     @Override
     public int getInventoryStackLimit() {
-        return ServerConfigs.cached.JAR_CAPACITY;
+        return this.CAPACITY;
     }
 
     @Override
@@ -387,17 +226,12 @@ public class JarBlockTile extends ItemDisplayTile implements  ITickableTileEntit
     @Override
     public boolean canInsertItem(int index, ItemStack stack, @Nullable Direction direction) {
         //can only insert cookies
-        return CommonUtil.isCookie(stack.getItem())&&(this.isEmpty()||stack.getItem()==this.getStackInSlot(0).getItem());
+        return CommonUtil.isCookie(stack.getItem())&&(this.isEmpty()||stack.getItem()==this.getDisplayedItem().getItem());
     }
 
     @Override
     public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
-        return this.liquidType == JarLiquidType.COOKIES;
-    }
-
-    public int updateClientWaterColor(){
-        this.color = BiomeColors.getWaterColor(this.world, this.pos);
-        return this.color;
+        return CommonUtil.isCookie(stack.getItem());
     }
 
     public Direction getDirection() {
@@ -409,4 +243,34 @@ public class JarBlockTile extends ItemDisplayTile implements  ITickableTileEntit
         this.mobHolder.tick();
     }
 
+    public enum SpecialJarContent{
+        NONE,
+        COOKIE,
+        TROPICAL_FISH,
+        SALMON,
+        COD,
+        PUFFER_FISH;
+
+        public int getFishTextureOffset(){
+            return this.ordinal()-2;
+        }
+        public boolean isFish(){
+            return this!=COOKIE && this!=NONE;
+        }
+        public boolean isEmpty(){
+            return this==COOKIE;
+        }
+        public boolean isCookie(){
+            return this==COOKIE;
+        }
+
+        public static SpecialJarContent get(Item item){
+            if(item == Items.TROPICAL_FISH_BUCKET)return SpecialJarContent.TROPICAL_FISH;
+            if(item == Items.COD_BUCKET)return SpecialJarContent.COD;
+            if(item  == Items.PUFFERFISH_BUCKET)return SpecialJarContent.PUFFER_FISH;
+            if(item == Items.SALMON_BUCKET)return SpecialJarContent.SALMON;
+            if(CommonUtil.isCookie(item))return SpecialJarContent.COOKIE;
+            return SpecialJarContent.NONE;
+        }
+    }
 }

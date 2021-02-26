@@ -4,8 +4,8 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.tiles.*;
 import net.mehvahdjukaar.supplementaries.client.gui.NoticeBoardGui;
 import net.mehvahdjukaar.supplementaries.client.gui.SackGui;
-import net.mehvahdjukaar.supplementaries.client.particles.FireflyGlowParticle;
-import net.mehvahdjukaar.supplementaries.client.particles.SpeakerSoundParticle;
+import net.mehvahdjukaar.supplementaries.client.particles.*;
+import net.mehvahdjukaar.supplementaries.client.renderers.FluidColors;
 import net.mehvahdjukaar.supplementaries.client.renderers.TippedSpikesColor;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.FireflyEntityRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
@@ -30,6 +30,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
+import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -51,7 +52,6 @@ public class ClientSetup {
     public static void onlyClientPls(final FMLClientSetupEvent event) {
         RenderingRegistry.registerEntityRenderingHandler(Registry.THROWABLE_BRICK,
                 renderManager -> new SpriteRenderer(renderManager, event.getMinecraftSupplier().get().getItemRenderer()));
-
     }
 
 
@@ -166,16 +166,22 @@ public class ClientSetup {
         RenderTypeLookup.setRenderLayer(Registry.GOLD_TRAPDOOR.get(), RenderType.getCutout());
         //spikes
         RenderTypeLookup.setRenderLayer(Registry.BAMBOO_SPIKES.get(), RenderType.getCutout());
+        //netherite door & trapdoor
+        RenderTypeLookup.setRenderLayer(Registry.NETHERITE_DOOR.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(Registry.NETHERITE_TRAPDOOR.get(), RenderType.getCutout());
     }
 
     //particles
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void registerParticles(ParticleFactoryRegisterEvent event) {
-        Minecraft.getInstance().particles.registerFactory(Registry.FIREFLY_GLOW, FireflyGlowParticle.Factory::new);
-        Minecraft.getInstance().particles.registerFactory(Registry.SPEAKER_SOUND, SpeakerSoundParticle.Factory::new);
-        Minecraft.getInstance().particles.registerFactory(Registry.ENDERGETIC_FLAME, FlameParticle.Factory::new);
-        Minecraft.getInstance().particles.registerFactory(Registry.GREEN_FLAME, FlameParticle.Factory::new);
+        Minecraft.getInstance().particles.registerFactory(Registry.FIREFLY_GLOW.get(), FireflyGlowParticle.Factory::new);
+        Minecraft.getInstance().particles.registerFactory(Registry.SPEAKER_SOUND.get(), SpeakerSoundParticle.Factory::new);
+        Minecraft.getInstance().particles.registerFactory(Registry.ENDERGETIC_FLAME.get(), FlameParticle.Factory::new);
+        Minecraft.getInstance().particles.registerFactory(Registry.GREEN_FLAME.get(), FlameParticle.Factory::new);
+        Minecraft.getInstance().particles.registerFactory(Registry.DRIPPING_LIQUID.get(), DrippingLiquidParticle.Factory::new);
+        Minecraft.getInstance().particles.registerFactory(Registry.FALLING_LIQUID.get(), FallingLiquidParticle.Factory::new);
+        Minecraft.getInstance().particles.registerFactory(Registry.SPLASHING_LIQUID.get(), SplashingLiquidParticle.Factory::new);
     }
 
     @SubscribeEvent
@@ -204,5 +210,11 @@ public class ClientSetup {
             }
         }
     }
+
+    @SubscribeEvent
+    public static void onResourcePackChanged(ModelBakeEvent event) {
+        FluidColors.refresh();
+    }
+
 
 }

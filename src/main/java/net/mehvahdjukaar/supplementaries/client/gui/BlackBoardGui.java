@@ -58,6 +58,7 @@ public class BlackBoardGui extends Screen {
     }
 
     private void close() {
+
         this.tileBoard.markDirty();
         this.minecraft.displayGuiScreen(null);
     }

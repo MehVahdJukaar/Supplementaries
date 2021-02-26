@@ -77,8 +77,9 @@ public class HangingFlowerPotBlock extends Block{
                 ItemStack itemstack = player.getHeldItem(handIn);
                 Item item = itemstack.getItem();
                 //mimics flowerPorBlock behavior
-                Block newPot = item instanceof BlockItem ? FlowerPotHelper.fullPots.get(((FlowerPotBlock) pot).getEmptyPot())
-                        .getOrDefault(((BlockItem)item).getBlock().getRegistryName(), Blocks.AIR.delegate).get() : Blocks.AIR;
+                Block newPot = item instanceof BlockItem ? FlowerPotHelper.getFullPot((FlowerPotBlock) pot,((BlockItem)item).getBlock()): Blocks.AIR;
+                /*Block newPot = item instanceof BlockItem ? FlowerPotHelper.FULL_POTS.get(((FlowerPotBlock) pot).getEmptyPot())
+                        .getOrDefault(((BlockItem)item).getBlock().getRegistryName(), Blocks.AIR.delegate).get() : Blocks.AIR;*/
 
                 boolean isEmptyFlower = newPot == Blocks.AIR;
                 boolean isPotEmpty = FlowerPotHelper.isEmptyPot(pot);

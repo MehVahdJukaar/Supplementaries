@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
 public class BambooSpikesBlockTile extends TileEntity {
     //private List<EffectInstance> effects = new ArrayList<>();
     public Potion potion = Potions.EMPTY;
-    public int charges = MAX_CHARGES;
+    public int charges = 0;
     public long lastTicked = 0;
     //put these two in config
     public static final float POTION_MULTIPLIER = 0.1f;
@@ -38,6 +38,8 @@ public class BambooSpikesBlockTile extends TileEntity {
             return PotionUtils.getPotionColor(potion);
         return 0xffffff;
     }
+
+
 
     public boolean hasPotion(){
         return this.potion!=Potions.EMPTY && this.charges!=0;
@@ -65,7 +67,7 @@ public class BambooSpikesBlockTile extends TileEntity {
 
     public boolean tryApplyPotion(ItemStack stack){
         Potion p = PotionUtils.getPotionFromItem(stack);
-        if(this.charges==0||(this.potion.equals(p)&&this.charges!=MAX_CHARGES)) {
+        if(this.charges==0||this.potion==Potions.EMPTY||(this.potion.equals(p)&&this.charges!=MAX_CHARGES)) {
             this.potion = p;
             this.charges = MAX_CHARGES;
             this.markDirty();

@@ -46,16 +46,19 @@ public class RendererUtil {
 
     public static void addCube(IVertexBuilder builder, MatrixStack matrixStackIn, float w, float h, TextureAtlasSprite sprite, int combinedLightIn,
                                int color, float a, int combinedOverlayIn, boolean up, boolean down, boolean fakeshading, boolean flippedY) {
-        addCube(builder,matrixStackIn,0,0,w,h,sprite,combinedLightIn,color,a,combinedOverlayIn,up,down,fakeshading,flippedY);
+        addCube(builder,matrixStackIn,0,0,w,h,sprite,combinedLightIn,color,a,combinedOverlayIn,up,down,fakeshading,flippedY,false);
+    }
+    public static void addCube(IVertexBuilder builder, MatrixStack matrixStackIn,float uOff, float vOff, float w, float h, TextureAtlasSprite sprite, int combinedLightIn,
+                               int color, float a, int combinedOverlayIn, boolean up, boolean down, boolean fakeshading, boolean flippedY) {
+        addCube(builder,matrixStackIn,uOff,vOff,w,h,sprite,combinedLightIn,color,a,combinedOverlayIn,up,down,fakeshading,flippedY,false);
     }
 
 
 
-
     //TODO: cache sprite coordinates?
-
+    //TODO: wrap around faucet water texture
     public static void addCube(IVertexBuilder builder, MatrixStack matrixStackIn,float uOff, float vOff, float w, float h, TextureAtlasSprite sprite, int combinedLightIn,
-                               int color, float a, int combinedOverlayIn, boolean up, boolean down, boolean fakeshading, boolean flippedY) {
+                               int color, float a, int combinedOverlayIn, boolean up, boolean down, boolean fakeshading, boolean flippedY, boolean wrap) {
         int lu = combinedLightIn & '\uffff';
         int lv = combinedLightIn >> 16 & '\uffff'; // ok
         float atlasscaleU = sprite.getMaxU() - sprite.getMinU();
@@ -114,15 +117,20 @@ public class RendererUtil {
             minv = maxv;
             maxv = temp;
         }
-        // south z+
+        float inc = 0;
+        if (wrap){
+            inc = atlasscaleU * w;
+        }
+
+        // north z-
         // x y z u v r g b a lu lv
         addQuadSide(builder, matrixStackIn, hw, 0, -hw, -hw, h, -hw, minu, minv, maxu, maxv, r8, g8, b8, a, lu, lv, 0, 0, 1);
         // west
-        addQuadSide(builder, matrixStackIn, -hw, 0, -hw, -hw, h, hw, minu, minv, maxu, maxv, r6, g6, b6, a, lu, lv, -1, 0, 0);
-        // north
-        addQuadSide(builder, matrixStackIn, -hw, 0, hw, hw, h, hw, minu, minv, maxu, maxv, r8, g8, b8, a, lu, lv, 0, 0, -1);
+        addQuadSide(builder, matrixStackIn, -hw, 0, -hw, -hw, h, hw, minu+inc, minv, maxu+inc, maxv, r6, g6, b6, a, lu, lv, -1, 0, 0);
+        // south
+        addQuadSide(builder, matrixStackIn, -hw, 0, hw, hw, h, hw, minu+2*inc, minv, maxu+2*inc, maxv, r8, g8, b8, a, lu, lv, 0, 0, -1);
         // east
-        addQuadSide(builder, matrixStackIn, hw, 0, hw, hw, h, -hw, minu, minv, maxu, maxv, r6, g6, b6, a, lu, lv, 1, 0, 0);
+        addQuadSide(builder, matrixStackIn, hw, 0, hw, hw, h, -hw, minu+3*inc, minv, maxu+3*inc, maxv, r6, g6, b6, a, lu, lv, 1, 0, 0);
     }
 
     /*

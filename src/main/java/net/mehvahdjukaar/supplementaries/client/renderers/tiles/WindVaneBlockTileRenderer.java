@@ -34,5 +34,6 @@ public class WindVaneBlockTileRenderer extends TileEntityRenderer<WindVaneBlockT
         //blockRenderer.renderBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
         RendererUtil.renderBlockPlus(state, matrixStackIn, bufferIn, blockRenderer, tile.getWorld(), tile.getPos(), RenderType.getCutout());
         matrixStackIn.pop();
+
     }
 }

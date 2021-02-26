@@ -47,7 +47,7 @@ public class ServerConfigs {
             FLUTE_DISTANCE = builder.comment("max distance at which a bound flute will allow a pet to teleport")
                     .defineInRange("bound_distance",64, 0, 500);
             FLUTE_EXTRA_MOBS = builder.comment("additional non tameable entities that you can bind to flutes")
-                    .defineList("flute_extra_mobs", Arrays.asList("minecraft:horse","minecraft:llama","minecraft:donkey","minecraft:fox"),s->true);
+                    .defineList("flute_extra_mobs", Arrays.asList("minecraft:horse","minecraft:llama","minecraft:mule","minecraft:donkey","minecraft:fox"),s->true);
             builder.pop();
 
 
@@ -277,7 +277,7 @@ public class ServerConfigs {
             List<String> sackSupport = Arrays.asList("farmersdelight:rope");
             SACK_WHITELIST = builder.comment("additional blocks that can support a sack")
                     .defineList("whitelist", sackSupport,s -> true);
-            SACK_PENALTY = builder.comment("penalize the player with slowness effecn when carring too many sacks")
+            SACK_PENALTY = builder.comment("penalize the player with slowness effect when carrying too many sacks")
                     .define("sack_penality", true);
             SACK_INCREMENT = builder.comment("maximum number of sacks after which the slowness effect will be applied. each multiple of this number will further slow the player down")
                     .defineInRange("sack_increment",2,0,50);

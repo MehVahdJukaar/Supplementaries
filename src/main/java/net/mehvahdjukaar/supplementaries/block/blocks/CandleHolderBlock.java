@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.particles.IParticleData;
+import net.minecraft.particles.BasicParticleType;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -15,6 +15,7 @@ import net.minecraft.world.World;
 
 import java.util.Map;
 import java.util.Random;
+import java.util.function.Supplier;
 
 public class CandleHolderBlock extends SconceWallBlock {
 
@@ -24,7 +25,7 @@ public class CandleHolderBlock extends SconceWallBlock {
             Direction.WEST, Block.makeCuboidShape(11D, 2.0D, 6D, 16.0D, 13.0D, 10D),
             Direction.EAST, Block.makeCuboidShape(0.0D, 2.0D, 6D, 5D, 13.0D, 10D)));
 
-    public CandleHolderBlock(Properties properties, IParticleData particleData) {
+    public CandleHolderBlock(Properties properties, Supplier<BasicParticleType> particleData) {
         super(properties, particleData);
         this.setDefaultState(this.stateContainer.getBaseState()
                 .with(FACING, Direction.NORTH).with(LIT, true));
@@ -45,7 +46,7 @@ public class CandleHolderBlock extends SconceWallBlock {
             double d2 = (double) pos.getZ() + 0.5D;
             Direction direction1 = direction.getOpposite();
             worldIn.addParticle(ParticleTypes.SMOKE, d0 + 0.3125 * (double) direction1.getXOffset(), d1, d2 + 0.3125 * (double) direction1.getZOffset(), 0.0D, 0.0D, 0.0D);
-            worldIn.addParticle(this.particleData, d0 + 0.3125 * (double) direction1.getXOffset(), d1, d2 + 0.3125 * (double) direction1.getZOffset(), 0.0D, 0.0D, 0.0D);
+            worldIn.addParticle(this.particleData.get(), d0 + 0.3125 * (double) direction1.getXOffset(), d1, d2 + 0.3125 * (double) direction1.getZOffset(), 0.0D, 0.0D, 0.0D);
         }
     }
 

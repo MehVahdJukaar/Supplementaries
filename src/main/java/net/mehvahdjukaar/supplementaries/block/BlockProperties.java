@@ -28,6 +28,9 @@ public class BlockProperties {
     public static final EnumProperty<Attachment> CONNECTION_WEST = EnumProperty.create("west_connection",Attachment.class);
     public static final IntegerProperty POISON = IntegerProperty.create("poison", 0, 15);
     public static final BooleanProperty TIPPED = BooleanProperty.create("tipped");
+    public static final IntegerProperty PANCAKES_1_8 = IntegerProperty.create("pancakes", 1, 8);
+    public static final BooleanProperty HAS_HONEY = BooleanProperty.create("has_honey");
+    public static final EnumProperty<Topping> TOPPING = EnumProperty.create("topping",Topping.class);
 
     public enum Attachment implements IStringSerializable{
         NONE("none"), //default /no attachment
@@ -54,6 +57,24 @@ public class BlockProperties {
 
         public boolean isNone(){
             return this==NONE;
+        }
+    }
+
+    public enum Topping implements IStringSerializable{
+        NONE("none"),
+        HONEY("honey"),
+        SYRUP("syrup"),
+        CHOCOLATE("chocolate");
+
+        private final String name;
+        Topping(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String getString() {
+            return this.name;
+
         }
     }
 

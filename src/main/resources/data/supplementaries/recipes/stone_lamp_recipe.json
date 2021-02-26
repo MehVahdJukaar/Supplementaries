@@ -20,7 +20,7 @@
   "conditions": [
     {
       "type": "supplementaries:flag",
-      "flag": "stone_lantern"
+      "flag": "stone_lamp"
     }
   ]
 }

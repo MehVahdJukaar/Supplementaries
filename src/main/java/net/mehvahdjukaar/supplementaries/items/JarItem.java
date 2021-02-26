@@ -1,5 +1,8 @@
 package net.mehvahdjukaar.supplementaries.items;
 
+import net.mehvahdjukaar.supplementaries.client.renderers.PotionTooltipHelper;
+import net.mehvahdjukaar.supplementaries.fluids.SoftFluid;
+import net.mehvahdjukaar.supplementaries.fluids.SoftFluidList;
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.inventory.ItemStackHelper;
@@ -25,6 +28,21 @@ public class JarItem extends CageItem {
         if (compoundnbt != null) {
             if (compoundnbt.contains("LootTable", 8)) {
                 tooltip.add(new StringTextComponent("???????").mergeStyle(TextFormatting.GRAY));
+            }
+
+            if(compoundnbt.contains("FluidHolder")){
+                CompoundNBT com = compoundnbt.getCompound("FluidHolder");
+                SoftFluid s = SoftFluidList.fromID(com.getString("Fluid"));
+                int count = com.getInt("Count");
+                if(!s.isEmpty()){
+                    tooltip.add(new TranslationTextComponent("message.supplementaries.fluid_tooltip",
+                            s.getTranslatedName(),count).mergeStyle(TextFormatting.GRAY));
+                }
+
+                if(com.contains("NBT") && com.getCompound("NBT").contains("Potion")){
+                    PotionTooltipHelper.addPotionTooltip(com.getCompound("NBT"),tooltip,1);
+                    return;
+                }
             }
 
             if (compoundnbt.contains("Items", 9)) {

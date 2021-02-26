@@ -95,8 +95,10 @@ public class BambooSpikesBlock extends Block {
             CompoundNBT com = stack.getTag();
             if(com!=null){
                 Potion p = PotionUtils.getPotionFromItem(stack);
-                if(p != Potions.EMPTY)((BambooSpikesBlockTile) te).potion = p;
-                if(com.contains("Damage"))((BambooSpikesBlockTile) te).setMissingCharges(com.getInt("Damage"));
+                if(p != Potions.EMPTY && com.contains("Damage")){
+                    ((BambooSpikesBlockTile) te).potion = p;
+                    ((BambooSpikesBlockTile) te).setMissingCharges(com.getInt("Damage"));
+                }
                 //remove in the future
                 if(com.contains("BlockEntityTag"))((BambooSpikesBlockTile) te).potion = PotionUtils.getPotionTypeFromNBT(com.getCompound("BlockEntityTag"));
             }
@@ -108,7 +110,8 @@ public class BambooSpikesBlock extends Block {
         CompoundNBT com = context.getItem().getTag();
         int charges = com!=null?context.getItem().getMaxDamage()-com.getInt("Damage"):0;
         boolean flag = context.getWorld().getFluidState(context.getPos()).getFluid() == Fluids.WATER;;
-        return this.getDefaultState().with(FACING, context.getFace()).with(WATERLOGGED,flag).with(TIPPED, charges!=0);
+        return this.getDefaultState().with(FACING, context.getFace()).with(WATERLOGGED,flag)
+                .with(TIPPED, charges!=0 && PotionUtils.getPotionTypeFromNBT(com)!=Potions.EMPTY);
     }
 
     public ItemStack getSpikeItem(TileEntity te){

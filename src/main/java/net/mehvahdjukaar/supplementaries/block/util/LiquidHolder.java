@@ -68,7 +68,7 @@ public class LiquidHolder {
         }
         //color
         if(this.liquidType.isWater()){
-            this.color=-1;//let client get biome color on next rendering. ugly i know but that class is client side
+            this.color=-420;//let client get biome color on next rendering. ugly i know but that class is client side
         }
         else if(this.liquidType == CommonUtil.JarLiquidType.POTION){
             this.color = PotionUtils.getColor(stack);

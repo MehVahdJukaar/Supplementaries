@@ -6,26 +6,27 @@ import net.mehvahdjukaar.supplementaries.block.blocks.FireflyJarBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.LightUpBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.items.EmptyJarItem;
 import net.mehvahdjukaar.supplementaries.items.JarItem;
 import net.mehvahdjukaar.supplementaries.items.SackItem;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DispenserBlock;
-import net.minecraft.dispenser.DefaultDispenseItemBehavior;
-import net.minecraft.dispenser.IBlockSource;
-import net.minecraft.dispenser.IDispenseItemBehavior;
-import net.minecraft.dispenser.OptionalDispenseBehavior;
+import net.minecraft.dispenser.*;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.*;
+import net.minecraft.tags.ITag;
 import net.minecraft.tileentity.DispenserTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -37,8 +38,7 @@ import java.util.Map;
 
 public class Dispenser {
 
-
-    //TODO: bricks
+    //this is a copy of vanilla dispenser behaviors
     static public Map<Item, IDispenseItemBehavior> DEFAULT_BEHAVIORS;
     //TODO: find a better way to do this
 
@@ -48,7 +48,7 @@ public class Dispenser {
 
         DEFAULT_BEHAVIORS = Dispenser.getVanillaDispenserBehaviors();
         if(DEFAULT_BEHAVIORS==null){
-            Supplementaries.LOGGER.info("failed to register dispenser behaviors");
+            Supplementaries.LOGGER.info("Failed to register dispenser behaviors");
             return;
         }
         //jar
@@ -65,9 +65,16 @@ public class Dispenser {
             DispenserBlock.registerDispenseBehavior(Items.BUCKET, new BucketJarDispenserBehavior());
             DispenserBlock.registerDispenseBehavior(Items.BOWL, new BowlJarDispenserBehavior());
             DispenserBlock.registerDispenseBehavior(Items.GLASS_BOTTLE, new BottleJarDispenserBehavior());
-            DispenserBlock.registerDispenseBehavior(Items.FLINT_AND_STEEL, new FlintAndSteelDispenserBehavior());
-            DispenserBlock.registerDispenseBehavior(Items.LINGERING_POTION, new BambooSpikesDispenserBehavior());
         }
+
+        DispenserBlock.registerDispenseBehavior(Items.FLINT_AND_STEEL, new FlintAndSteelDispenserBehavior());
+        DispenserBlock.registerDispenseBehavior(Items.LINGERING_POTION, new BambooSpikesDispenserBehavior());
+
+        if(ServerConfigs.cached.THROWABLE_BRICKS_ENABLED){
+            DispenserBlock.registerDispenseBehavior(Items.NETHER_BRICK, new ThrowableBricksDispenserBehavior(ModTags.BRICKS));
+            DispenserBlock.registerDispenseBehavior(Items.BRICK, new ThrowableBricksDispenserBehavior(ModTags.BRICKS));
+        }
+
         //firefly
         if(RegistryConfigs.reg.FIREFLY_ENABLED.get()) {
             DispenserBlock.registerDispenseBehavior(Registry.FIREFLY_SPAWN_EGG_ITEM.get(), spawneggBehavior);
@@ -84,7 +91,7 @@ public class Dispenser {
             return stack;
         }
     };
-    private static final DefaultDispenseItemBehavior defaultBehaviour = new DefaultDispenseItemBehavior();
+    private static final DefaultDispenseItemBehavior shootBehavior = new DefaultDispenseItemBehavior();
 
     private static Map<Item, IDispenseItemBehavior> getVanillaDispenserBehaviors(){
         try {
@@ -130,23 +137,44 @@ public class Dispenser {
             return filled.copy();
         } else {
             if (!Dispenser.MergeDispenserItem(source.getBlockTileEntity(), filled)) {
-                Dispenser.defaultBehaviour.dispense(source, filled.copy());
+                Dispenser.shootBehavior.dispense(source, filled.copy());
             }
             return empty;
         }
     }
 
+    public static abstract class TaggedAdditionalDispenserBehavior extends AdditionalDispenserBehavior {
+        private final ITag<Item> tag;
+        TaggedAdditionalDispenserBehavior(ITag<Item> tag){
+            this.tag = tag;
+        }
+        @Override
+        public ItemStack dispenseStack(IBlockSource source, ItemStack stack) {
+            if(ModTags.isTagged(tag,stack.getItem())){
+                return super.dispenseStack(source,stack);
+            }
+            //vanilla behavior
+            return super.customBehavior(source,stack);
+        }
+
+        @Override
+        protected abstract ItemStack customBehavior(IBlockSource source, ItemStack stack);
+    }
+
     //TODO: there must be an easier and cleaner way
     public static abstract class AdditionalDispenserBehavior extends DefaultDispenseItemBehavior {
+        @Override
         public ItemStack dispenseStack(IBlockSource source, ItemStack stack) {
             //this.setSuccessful(false);
             try{
                 return this.customBehavior(source,stack);
             }
             catch (Exception e) {
-                return defaultBehaviour.dispense(source, stack);
+                //failsafe shoot behavior (hopefully)
+                return shootBehavior.dispense(source, stack);
             }
         }
+        //default vanilla behavior
         protected ItemStack customBehavior(IBlockSource source, ItemStack stack){
             return Dispenser.DEFAULT_BEHAVIORS.get(stack.getItem()).dispense(source,stack);
         }
@@ -161,6 +189,7 @@ public class Dispenser {
             BlockPos blockpos = source.getBlockPos().offset(source.getBlockState().get(DispenserBlock.FACING));
             TileEntity te = world.getTileEntity(blockpos);
             if(te instanceof JarBlockTile){
+                /*
                 JarBlockTile tile = ((JarBlockTile)te);
                 if(tile.isItemValidForSlot(0, stack)){
                     tile.handleAddItem(stack, null, null);
@@ -168,7 +197,7 @@ public class Dispenser {
                     //this.setSuccessful(true);
                     return Dispenser.glassBottleFill(source, stack, new ItemStack(
                             stack.getItem() == Items.WATER_BUCKET? Items.BUCKET : tile.liquidType.getReturnItem()));
-                }
+                }*/
             }
             return super.customBehavior(source,stack);
         }
@@ -195,6 +224,45 @@ public class Dispenser {
         }
     }
 
+
+    public static class ThrowableBricksDispenserBehavior extends TaggedAdditionalDispenserBehavior{
+
+        ThrowableBricksDispenserBehavior(ITag<Item> tag) {
+            super(tag);
+        }
+
+        @Override
+        protected ItemStack customBehavior(IBlockSource source, ItemStack stack) {
+            World world = source.getWorld();
+            IPosition iposition = DispenserBlock.getDispensePosition(source);
+            Direction direction = source.getBlockState().get(DispenserBlock.FACING);
+            ProjectileEntity projectileentity = this.getProjectileEntity(world, iposition, stack);
+            projectileentity.shoot(direction.getXOffset(), (float)direction.getYOffset() + 0.1F, direction.getZOffset(), this.getProjectileVelocity(), this.getProjectileInaccuracy());
+            world.addEntity(projectileentity);
+            stack.shrink(1);
+            return stack;
+        }
+
+        @Override
+        protected void playDispenseSound(IBlockSource source) {
+            source.getWorld().playSound(null, source.getX()+0.5, source.getY()+0.5, source.getZ()+0.5, SoundEvents.ENTITY_SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (source.getWorld().getRandom().nextFloat() * 0.4F + 0.8F ));
+        }
+
+        protected ProjectileEntity getProjectileEntity(World worldIn, IPosition position, ItemStack stackIn){
+            ThrowableBrickEntity brickEntity = new ThrowableBrickEntity(worldIn, position.getX(), position.getY(), position.getZ());
+            return brickEntity;
+        }
+
+        protected float getProjectileInaccuracy() {
+            return 7.0F;
+        }
+        //TODO: fix throwable bricks rendering glitchyness
+        protected float getProjectileVelocity() {
+            return 0.9F;
+        }
+
+    }
+
     public static class BambooSpikesDispenserBehavior extends AdditionalDispenserBehavior{
 
         @Override
@@ -214,6 +282,7 @@ public class Dispenser {
         }
     }
 
+
     public static class BucketJarDispenserBehavior extends  AdditionalDispenserBehavior{
 
         @Override
@@ -224,6 +293,7 @@ public class Dispenser {
             TileEntity te = world.getTileEntity(blockpos);
             if(te instanceof JarBlockTile){
                 JarBlockTile tile = ((JarBlockTile)te);
+                /*
                 if (tile.liquidType.bucket) {
                     // if extraction successful
                     ItemStack returnitem  = tile.extractItem(3);
@@ -232,7 +302,7 @@ public class Dispenser {
                         //this.setSuccessful(true);
                         return Dispenser.glassBottleFill(source,stack,returnitem);
                     }
-                }
+                }*/
             }
 
             return super.customBehavior(source,stack);
@@ -247,6 +317,7 @@ public class Dispenser {
             ServerWorld world = source.getWorld();
             BlockPos blockpos = source.getBlockPos().offset(source.getBlockState().get(DispenserBlock.FACING));
             TileEntity te = world.getTileEntity(blockpos);
+            /*
             if(te instanceof JarBlockTile){
                 JarBlockTile tile = ((JarBlockTile)te);
                 if (tile.liquidType.bottle) {
@@ -259,7 +330,7 @@ public class Dispenser {
                     }
 
                 }
-            }
+            }*/
             return super.customBehavior(source,stack);
         }
 
@@ -272,6 +343,7 @@ public class Dispenser {
             ServerWorld world = source.getWorld();
             BlockPos blockpos = source.getBlockPos().offset(source.getBlockState().get(DispenserBlock.FACING));
             TileEntity te = world.getTileEntity(blockpos);
+            /*
             if(te instanceof JarBlockTile){
                 JarBlockTile tile = ((JarBlockTile)te);
                 if (tile.liquidType.bowl) {
@@ -284,7 +356,7 @@ public class Dispenser {
                     }
 
                 }
-            }
+            }*/
             return super.customBehavior(source, stack);
         }
 

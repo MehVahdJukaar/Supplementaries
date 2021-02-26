@@ -1,12 +1,15 @@
 package net.mehvahdjukaar.supplementaries.common;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.passive.PigEntity;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -17,6 +20,7 @@ public class CagedMobHelper {
 
     //we may have a memory leak here... too bad
     public static boolean addMob(Entity e){
+        if(e==null) e=defaultPig;
         if(!cachedMobs.containsKey(e.getUniqueID())) {
             cachedMobs.put(e.getUniqueID(), e);
             return true;
@@ -24,11 +28,10 @@ public class CagedMobHelper {
         return false;
     }
 
+    private static Entity defaultPig;
+    @Nullable
     public static Entity getCachedMob(UUID id){
-        if(cachedMobs.containsKey(id)){
-            return cachedMobs.get(id);
-        }
-        return null;
+        return cachedMobs.getOrDefault(id, null);
     }
 
     //TODO: do some memory cleanups here
@@ -40,6 +43,7 @@ public class CagedMobHelper {
         //TODO: might remove this on final release
         if(world instanceof World && ((World) world).getDimensionKey()==World.OVERWORLD){
             cachedMobs = new HashMap<>();
+            defaultPig = new PigEntity(EntityType.PIG, (World) world);
         }
     }
 

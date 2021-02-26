@@ -1,11 +1,8 @@
 package net.mehvahdjukaar.supplementaries.plugins.create.behaviors;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.content.contraptions.components.actors.PloughMovementBehaviour;
-import com.simibubi.create.content.contraptions.components.structureMovement.ControlledContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
-import net.mehvahdjukaar.supplementaries.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.HourGlassBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.HourGlassBlockTile;
 import net.minecraft.block.BlockState;
@@ -14,16 +11,12 @@ import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3i;
-import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.Map;
 import java.util.function.UnaryOperator;

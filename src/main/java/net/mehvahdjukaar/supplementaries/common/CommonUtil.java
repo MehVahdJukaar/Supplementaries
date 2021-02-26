@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.VanillaWoodTypes;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.*;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.potion.Potions;
@@ -25,6 +26,13 @@ import java.util.Calendar;
 import static net.mehvahdjukaar.supplementaries.common.Textures.*;
 
 public class CommonUtil {
+
+    public static void swapItem(PlayerEntity player, Hand hand, ItemStack oldItem, ItemStack newItem){
+        player.setHeldItem(hand, DrinkHelper.fill(oldItem.copy(), player, newItem, false));
+    }
+    public static void swapItem(PlayerEntity player, Hand hand, ItemStack newItem){
+        player.setHeldItem(hand, DrinkHelper.fill(player.getHeldItem(hand).copy(), player, newItem, player.isCreative()));
+    }
 
     public enum Festivity{
         NONE,
@@ -64,7 +72,7 @@ public class CommonUtil {
         WATER(WATER_TEXTURE, 0x3F76E4, true, 1f, true, true, false, -1),
         LAVA(LAVA_TEXTURE, 0xfd6d15, false, 1f, false, true, false, -1),
         MILK(MILK_TEXTURE, 0xFFFFFF, false, 1f, false, true, false, -1),
-        POTION(POTION_TEXTURE, 0x3F76E4, true, 0.88f, true, false, false, -1),
+        POTION(POTION_TEXTURE_FLOW, 0x3F76E4, true, 0.88f, true, false, false, -1),
         HONEY(HONEY_TEXTURE, 0xffa710, false, 0.85f, true, false, false, -1),
         DRAGON_BREATH(DRAGON_BREATH_TEXTURE, 0xFF33FF, true, 0.8f, true, false, false, -1),
         XP(XP_TEXTURE, 0x8eff11, false, 0.95f, true, false, false, -1),
@@ -139,6 +147,10 @@ public class CommonUtil {
             if (this.isLava()) return SoundEvents.ITEM_BUCKET_FILL_LAVA;
             else if (this.isFish()) return SoundEvents.ITEM_BUCKET_FILL_FISH;
             else return SoundEvents.ITEM_BUCKET_FILL;
+        }
+
+        public SoundEvent getEatSound() {
+            return this==COOKIES?SoundEvents.ENTITY_GENERIC_EAT:SoundEvents.ENTITY_GENERIC_DRINK;
         }
 
     }
@@ -216,10 +228,10 @@ public class CommonUtil {
             return JarLiquidType.BEETROOT_SOUP;
         } else if (i instanceof SuspiciousStewItem) {
             return JarLiquidType.SUSPICIOUS_STEW;
+        } else if (i == Items.WATER_BUCKET){
+            return JarLiquidType.WATER;
         } else if (isCookie(i)) {
             return JarLiquidType.COOKIES;
-        }else if (i == Items.WATER_BUCKET){
-            return JarLiquidType.WATER;
         }
         return JarLiquidType.EMPTY;
     }

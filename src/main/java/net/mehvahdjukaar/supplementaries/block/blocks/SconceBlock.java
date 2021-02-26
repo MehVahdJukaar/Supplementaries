@@ -4,7 +4,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.particles.IParticleData;
+import net.minecraft.particles.BasicParticleType;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.util.Direction;
@@ -17,12 +17,13 @@ import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
 import java.util.Random;
+import java.util.function.Supplier;
 
 public class SconceBlock extends LightUpBlock{
     protected static final VoxelShape SHAPE = makeCuboidShape(6.0D, 0.0D, 6.0D, 10.0D, 11.0D, 10.0D);
-    protected final IParticleData particleData;
+    protected final Supplier<BasicParticleType> particleData;
 
-    public SconceBlock(Properties properties, IParticleData particleData) {
+    public SconceBlock(Properties properties, Supplier<BasicParticleType> particleData) {
         super(properties);
         this.particleData = particleData;
         this.setDefaultState(this.stateContainer.getBaseState().with(WATERLOGGED,false).with(LIT,true));
@@ -52,7 +53,7 @@ public class SconceBlock extends LightUpBlock{
             double d1 = (double) pos.getY() + 0.75D;
             double d2 = (double) pos.getZ() + 0.5D;
             worldIn.addParticle(ParticleTypes.SMOKE, d0, d1, d2, 0.0D, 0.0D, 0.0D);
-            worldIn.addParticle(this.particleData, d0, d1, d2, 0.0D, 0.0D, 0.0D);
+            worldIn.addParticle(this.particleData.get(), d0, d1, d2, 0.0D, 0.0D, 0.0D);
         }
     }
 

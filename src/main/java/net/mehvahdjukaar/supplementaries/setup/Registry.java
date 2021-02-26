@@ -28,6 +28,7 @@ import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.*;
 import net.minecraft.item.crafting.IRecipeSerializer;
@@ -65,7 +66,7 @@ public class Registry {
     public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, Supplementaries.MOD_ID);
     public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, Supplementaries.MOD_ID);
     public static final DeferredRegister<IRecipeSerializer<?>> RECIPES = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, Supplementaries.MOD_ID);
-
+    public static final DeferredRegister<Fluid> FLUIDS = DeferredRegister.create(ForgeRegistries.FLUIDS, Supplementaries.MOD_ID);
 
     public static void init(IEventBus bus) {
         BLOCKS.register(bus);
@@ -73,7 +74,7 @@ public class Registry {
         TILES.register(bus);
         CONTAINERS.register(bus);
         ENTITIES.register(bus);
-        //PARTICLES.register(bus);
+        PARTICLES.register(bus);
         SOUNDS.register(bus);
         RECIPES.register(bus);
     }
@@ -124,13 +125,6 @@ public class Registry {
         event.getRegistry().register(FIREFLY_TYPE);
         GlobalEntityTypeAttributes.put((EntityType<? extends LivingEntity>) FIREFLY_TYPE, FireflyEntity.setCustomAttributes().create());
     }
-    @SubscribeEvent
-    public static void registerParticles(final RegistryEvent.Register<ParticleType<?>> event){
-        event.getRegistry().register(ENDERGETIC_FLAME);
-        event.getRegistry().register(FIREFLY_GLOW);
-        event.getRegistry().register(SPEAKER_SOUND);
-        event.getRegistry().register(GREEN_FLAME);
-    }
 
     //entities
 
@@ -141,7 +135,7 @@ public class Registry {
             .size(0.3125f, 1f))
             .build(FIREFLY_NAME)
             .setRegistryName(FIREFLY_NAME);
-    public static final RegistryObject<Item> FIREFLY_SPAWN_EGG_ITEM = ITEMS.register(FIREFLY_NAME,()-> new SpawnEggItem(FIREFLY_TYPE,  -5048018, -14409439, //-4784384, -16777216,
+    public static final RegistryObject<Item> FIREFLY_SPAWN_EGG_ITEM = ITEMS.register(FIREFLY_NAME+"_spawn_egg",()-> new SpawnEggItem(FIREFLY_TYPE,  -5048018, -14409439, //-4784384, -16777216,
             new Item.Properties().group(getTab(ItemGroup.MISC,FIREFLY_NAME))));
 
 
@@ -154,16 +148,13 @@ public class Registry {
 
 
     //particles
-    //public static final RegistryObject<BasicParticleType> ENDERGETIC_FLAME = PARTICLES.register("endergetic_flame", ()-> new BasicParticleType(true));
-    //public static final RegistryObject<BasicParticleType> FIREFLY_GLOW = PARTICLES.register("firefly_glow", ()-> new BasicParticleType(true));
-    //public static final RegistryObject<BasicParticleType> SPEAKER_SOUND = PARTICLES.register("speaker_sound", ()-> new BasicParticleType(true));
-    //public static final RegistryObject<BasicParticleType> GREEN_FLAME = PARTICLES.register("green_flame", ()-> new BasicParticleType(true));
-
-
-    public static final BasicParticleType ENDERGETIC_FLAME = (BasicParticleType) new BasicParticleType(true).setRegistryName("endergetic_flame");
-    public static final BasicParticleType FIREFLY_GLOW = (BasicParticleType) new BasicParticleType(true).setRegistryName("firefly_glow");
-    public static final BasicParticleType SPEAKER_SOUND = (BasicParticleType) new BasicParticleType(true).setRegistryName("speaker_sound");
-    public static final BasicParticleType GREEN_FLAME = (BasicParticleType) new BasicParticleType(true).setRegistryName("green_flame");
+    public static final RegistryObject<BasicParticleType> ENDERGETIC_FLAME = PARTICLES.register("endergetic_flame", ()-> new BasicParticleType(true));
+    public static final RegistryObject<BasicParticleType> FIREFLY_GLOW = PARTICLES.register("firefly_glow", ()-> new BasicParticleType(true));
+    public static final RegistryObject<BasicParticleType> SPEAKER_SOUND = PARTICLES.register("speaker_sound", ()-> new BasicParticleType(true));
+    public static final RegistryObject<BasicParticleType> GREEN_FLAME = PARTICLES.register("green_flame", ()-> new BasicParticleType(true));
+    public static final RegistryObject<BasicParticleType> DRIPPING_LIQUID = PARTICLES.register("dripping_liquid", ()-> new BasicParticleType(true));
+    public static final RegistryObject<BasicParticleType> FALLING_LIQUID = PARTICLES.register("falling_liquid", ()-> new BasicParticleType(true));
+    public static final RegistryObject<BasicParticleType> SPLASHING_LIQUID = PARTICLES.register("splashing_liquid", ()-> new BasicParticleType(true));
 
 
 
@@ -174,7 +165,6 @@ public class Registry {
             new SpecialRecipeSerializer<>(BlackboardClearRecipe::new));
     public static final RegistryObject<IRecipeSerializer<?>> BAMBOO_SPIKES_TIPPED_RECIPE = RECIPES.register("bamboo_spikes_tipped_recipe", ()->
             new SpecialRecipeSerializer<>(TippedBambooSpikesRecipe::new));
-
 
 
     //blocks
@@ -387,7 +377,6 @@ public class Registry {
             AbstractBlock.Properties.create(Material.IRON, MaterialColor.IRON)
                     .hardnessAndResistance(3f, 4.8f)
                     .harvestLevel(1)
-                    .setRequiresTool()
                     .sound(SoundType.METAL)
                     .harvestTool(ToolType.PICKAXE)
                     .notSolid()
@@ -558,14 +547,14 @@ public class Registry {
                     .doesNotBlockMovement()
                     .zeroHardnessAndResistance()
                     .setLightLevel((state) -> state.get(BlockStateProperties.LIT)? 14 : 0)
-                    .sound(SoundType.LANTERN), ParticleTypes.FLAME));
+                    .sound(SoundType.LANTERN), ()->ParticleTypes.FLAME));
     public static final RegistryObject<Block> SCONCE_WALL = BLOCKS.register("sconce_wall",()-> new SconceWallBlock(
             AbstractBlock.Properties.create(Material.MISCELLANEOUS)
                     .doesNotBlockMovement()
                     .zeroHardnessAndResistance()
                     .setLightLevel((state) -> state.get(BlockStateProperties.LIT)? 14 : 0)
                     .lootFrom(SCONCE.get())
-                    .sound(SoundType.LANTERN), ParticleTypes.FLAME));
+                    .sound(SoundType.LANTERN), ()->ParticleTypes.FLAME));
     public static final RegistryObject<Item> SCONCE_ITEM = ITEMS.register(SCONCE_NAME, ()-> new WallOrFloorItem(SCONCE.get(), SCONCE_WALL.get(),
             (new Item.Properties()).group(getTab(ItemGroup.DECORATIONS,SCONCE_NAME))));
 
@@ -576,14 +565,14 @@ public class Registry {
                     .doesNotBlockMovement()
                     .zeroHardnessAndResistance()
                     .setLightLevel((state) -> state.get(BlockStateProperties.LIT)? 10 : 0)
-                    .sound(SoundType.LANTERN), ParticleTypes.SOUL_FIRE_FLAME));
+                    .sound(SoundType.LANTERN), ()->ParticleTypes.SOUL_FIRE_FLAME));
     public static final RegistryObject<Block> SCONCE_WALL_SOUL = BLOCKS.register("sconce_wall_soul",()-> new SconceWallBlock(
             AbstractBlock.Properties.create(Material.MISCELLANEOUS)
                     .zeroHardnessAndResistance()
                     .doesNotBlockMovement()
                     .setLightLevel((state) -> state.get(BlockStateProperties.LIT)? 10 : 0)
                     .lootFrom(SCONCE_SOUL.get())
-                    .sound(SoundType.LANTERN), ParticleTypes.SOUL_FIRE_FLAME));
+                    .sound(SoundType.LANTERN), ()->ParticleTypes.SOUL_FIRE_FLAME));
     public static final RegistryObject<Item> SCONCE_ITEM_SOUL = ITEMS.register(SCONCE_NAME_SOUL,()-> new WallOrFloorItem(SCONCE_SOUL.get(), SCONCE_WALL_SOUL.get(),
             (new Item.Properties()).group(getTab(ItemGroup.DECORATIONS,SCONCE_NAME_SOUL))
     ));
@@ -722,7 +711,7 @@ public class Registry {
                     .zeroHardnessAndResistance()
                     .doesNotBlockMovement()
                     .setLightLevel((state) -> state.get(BlockStateProperties.LIT)? 14 : 0)
-                    .sound(SoundType.LANTERN), ParticleTypes.FLAME));
+                    .sound(SoundType.LANTERN), ()->ParticleTypes.FLAME));
     public static final RegistryObject<Item> SCONCE_LEVER_ITEM = ITEMS.register(SCONCE_LEVER_NAME,()-> new BlockItem(SCONCE_LEVER.get(),
             (new Item.Properties()).group(getTab(ItemGroup.REDSTONE,SCONCE_LEVER_NAME))
     ));
@@ -784,7 +773,7 @@ public class Registry {
                     .zeroHardnessAndResistance()
                     .doesNotBlockMovement()
                     .setLightLevel((state) -> state.get(BlockStateProperties.LIT)? 14 : 0)
-                    .sound(SoundType.LANTERN), ParticleTypes.FLAME));
+                    .sound(SoundType.LANTERN), ()->ParticleTypes.FLAME));
     public static final RegistryObject<Item> CANDLE_HOLDER_ITEM = ITEMS.register(CANDLE_HOLDER_NAME,()-> new BlockItem(CANDLE_HOLDER.get(),
             (new Item.Properties()).group(getTab(ItemGroup.DECORATIONS,CANDLE_HOLDER_NAME))
     ));
@@ -807,11 +796,8 @@ public class Registry {
     //safe
     public static final String SAFE_NAME = "safe";
     public static final RegistryObject<Block> SAFE = BLOCKS.register(SAFE_NAME,()-> new SafeBlock(
-            AbstractBlock.Properties.create(Material.IRON, MaterialColor.BLACK)
-                    .hardnessAndResistance(50.0F, 1200.0F)
-                    .setRequiresTool()
-                    .harvestTool(ToolType.PICKAXE)
-                    .sound(SoundType.NETHERITE)
+            AbstractBlock.Properties.from(Blocks.NETHERITE_BLOCK)
+                    .harvestLevel(3)
     ));
     public static final RegistryObject<TileEntityType<?>> SAFE_TILE = TILES.register(SAFE_NAME,()-> TileEntityType.Builder.create(
             SafeBlockTile::new, SAFE.get()).build(null));
@@ -875,8 +861,7 @@ public class Registry {
     //hanging flower pot
     public static final String HANGING_FLOWER_POT_NAME = "hanging_flower_pot";
     public static final RegistryObject<Block> HANGING_FLOWER_POT = BLOCKS.register(HANGING_FLOWER_POT_NAME,()-> new HangingFlowerPotBlock(
-            AbstractBlock.Properties.create(Material.MISCELLANEOUS)
-                    .zeroHardnessAndResistance().notSolid()
+            AbstractBlock.Properties.from(Blocks.FLOWER_POT)
     ));
     public static final RegistryObject<TileEntityType<?>> HANGING_FLOWER_POT_TILE = TILES.register(HANGING_FLOWER_POT_NAME,()-> TileEntityType.Builder.create(
             HangingFlowerPotBlockTile::new, HANGING_FLOWER_POT.get()).build(null));
@@ -887,16 +872,12 @@ public class Registry {
     //double cake
     public static final String DOUBLE_CAKE_NAME = "double_cake";
     public static final RegistryObject<Block> DOUBLE_CAKE = BLOCKS.register(DOUBLE_CAKE_NAME,()-> new DoubleCakeBlock(
-            AbstractBlock.Properties.create(Material.CAKE).
-            hardnessAndResistance(0.5F)
-            .sound(SoundType.CLOTH)
+            AbstractBlock.Properties.from(Blocks.CAKE)
     ));
     //directional cake
     public static final String DIRECTIONAL_CAKE_NAME = "directional_cake";
     public static final RegistryObject<Block> DIRECTIONAL_CAKE = BLOCKS.register(DIRECTIONAL_CAKE_NAME,()-> new DirectionalCakeBlock(
-            AbstractBlock.Properties.create(Material.CAKE).
-            hardnessAndResistance(0.5F)
-            .sound(SoundType.CLOTH)
+            AbstractBlock.Properties.from(Blocks.CAKE)
             .lootFrom(Blocks.CAKE)
     ));
     public static final RegistryObject<Item> DIRECTIONAL_CAKE_ITEM = ITEMS.register(DIRECTIONAL_CAKE_NAME,()-> new BlockItem(DIRECTIONAL_CAKE.get(),
@@ -906,10 +887,8 @@ public class Registry {
     //gold door
     public static final String GOLD_DOOR_NAME = "gold_door";
     public static final RegistryObject<Block> GOLD_DOOR = BLOCKS.register(GOLD_DOOR_NAME, ()-> new GoldDoorBlock(
-            AbstractBlock.Properties.create(Material.IRON, MaterialColor.GOLD)
-            .setRequiresTool()
-            .hardnessAndResistance(5.0F)
-            .sound(SoundType.METAL)
+            AbstractBlock.Properties.from(Blocks.GOLD_BLOCK)
+            .harvestLevel(2)
             .notSolid()));
     public static final RegistryObject<Item> GOLD_DOOR_ITEM = ITEMS.register(GOLD_DOOR_NAME,()-> new BlockItem(GOLD_DOOR.get(),
             (new Item.Properties()).group(getTab(ItemGroup.REDSTONE,GOLD_DOOR_NAME))
@@ -917,11 +896,9 @@ public class Registry {
     //gold trapdoor
     public static final String GOLD_TRAPDOOR_NAME = "gold_trapdoor";
     public static final RegistryObject<Block> GOLD_TRAPDOOR = BLOCKS.register(GOLD_TRAPDOOR_NAME,()-> new GoldTrapdoorBlock(
-            AbstractBlock.Properties.create(Material.IRON, MaterialColor.GOLD)
-            .setRequiresTool()
-            .hardnessAndResistance(5.0F)
-            .sound(SoundType.METAL)
+            AbstractBlock.Properties.from(Blocks.GOLD_BLOCK)
             .notSolid()
+            .harvestLevel(2)
             .setAllowsSpawn((a,b,c,d)->false)));
     public static final RegistryObject<Item> GOLD_TRAPDOOR_ITEM = ITEMS.register(GOLD_TRAPDOOR_NAME,()-> new BlockItem(GOLD_TRAPDOOR.get(),
             (new Item.Properties()).group(getTab(ItemGroup.REDSTONE,GOLD_TRAPDOOR_NAME))
@@ -962,24 +939,66 @@ public class Registry {
     //key
     public static final String KEY_NAME = "key";
     public static final RegistryObject<Item> KEY_ITEM = ITEMS.register(KEY_NAME,()-> new KeyItem(
-            (new Item.Properties()).group(getTab(ItemGroup.MISC,KEY_NAME))
+            (new Item.Properties()).group(getTab(ItemGroup.TOOLS,KEY_NAME))
     ));
-    //TODO: enable keys only when safe||doors||trapdoors
 
     //netherite doors
     public static final String NETHERITE_DOOR_NAME = "netherite_door";
     public static final RegistryObject<Block> NETHERITE_DOOR = BLOCKS.register(NETHERITE_DOOR_NAME,()-> new NetheriteDoorBlock(
-            AbstractBlock.Properties.create(Material.IRON, MaterialColor.BLACK)
-                    .hardnessAndResistance(50.0F, 1200.0F)
+            AbstractBlock.Properties.from(Blocks.NETHERITE_BLOCK)
+                    .harvestLevel(3)
+    ));
+    public static final RegistryObject<Item> NETHERITE_DOOR_ITEM = ITEMS.register(NETHERITE_DOOR_NAME,()-> new BlockItem(NETHERITE_DOOR.get(),
+            (new Item.Properties()).group(getTab(ItemGroup.DECORATIONS,NETHERITE_DOOR_NAME)).isImmuneToFire()
+    ));
+    public static final String NETHERITE_TRAPDOOR_NAME = "netherite_trapdoor";
+    public static final RegistryObject<Block> NETHERITE_TRAPDOOR = BLOCKS.register(NETHERITE_TRAPDOOR_NAME,()-> new NetheriteTrapdoorBlock(
+            AbstractBlock.Properties.from(Blocks.NETHERITE_BLOCK)
+                    .notSolid()
+                    .setAllowsSpawn((a,b,c,d)->false)
+                    .harvestLevel(3)
+    ));
+    public static final RegistryObject<Item> NETHERITE_TRAPDOOR_ITEM = ITEMS.register(NETHERITE_TRAPDOOR_NAME,()-> new BlockItem(NETHERITE_TRAPDOOR.get(),
+            (new Item.Properties()).group(getTab(ItemGroup.DECORATIONS,NETHERITE_TRAPDOOR_NAME)).isImmuneToFire()
+    ));
+
+    //lock block
+    public static final String LOCK_BLOCK_NAME = "lock_block";
+    public static final RegistryObject<Block> LOCK_BLOCK = BLOCKS.register(LOCK_BLOCK_NAME,()-> new LockBlock(
+            AbstractBlock.Properties.create(Material.IRON,MaterialColor.IRON)
                     .setRequiresTool()
-                    .harvestTool(ToolType.PICKAXE)
-                    .sound(SoundType.NETHERITE)
+                    .hardnessAndResistance(5.0F)
+                    .sound(SoundType.METAL))
+    );
+    public static final RegistryObject<Item> LOCK_BLOCK_ITEM = ITEMS.register(LOCK_BLOCK_NAME,()-> new BlockItem(LOCK_BLOCK.get(),
+            (new Item.Properties()).group(getTab(ItemGroup.REDSTONE,LOCK_BLOCK_NAME))
     ));
-    public static final RegistryObject<Item> NETHERITE_DOOR_ = ITEMS.register(NETHERITE_DOOR_NAME,()-> new BlockItem(NETHERITE_DOOR.get(),
-            (new Item.Properties()).group(null).isImmuneToFire()
+    public static final RegistryObject<TileEntityType<?>> KEY_LOCKABLE_TILE = TILES.register("key_lockable_tile",()-> TileEntityType.Builder.create(
+            KeyLockableTile::new, NETHERITE_DOOR.get(), NETHERITE_TRAPDOOR.get(), LOCK_BLOCK.get()).build(null));
+
+    //checker block
+    public static final String CHECKER_BLOCK_NAME = "checker_block";
+    public static final RegistryObject<Block> CHECKER_BLOCK = BLOCKS.register(CHECKER_BLOCK_NAME,()-> new Block(
+            AbstractBlock.Properties.create(Material.ROCK)
+                    .setRequiresTool()
+                    .hardnessAndResistance(1.5F, 6.0F))
+    );
+    public static final RegistryObject<Item> CHECKER_ITEM = ITEMS.register(CHECKER_BLOCK_NAME,()-> new BlockItem(CHECKER_BLOCK.get(),
+            (new Item.Properties()).group(getTab(ItemGroup.DECORATIONS, CHECKER_BLOCK_NAME))
     ));
-    public static final RegistryObject<TileEntityType<?>> KEY_LOCKABLE_TILE= TILES.register("key_lockable_tile",()-> TileEntityType.Builder.create(
-            KeyLockableTile::new, NETHERITE_DOOR.get()).build(null));
+
+    //pancakes
+    public static final String PANCAKE_NAME = "pancake";
+    public static final RegistryObject<Block> PANCAKE = BLOCKS.register(PANCAKE_NAME,()-> new PancakeBlock(
+            AbstractBlock.Properties.create(Material.CAKE,MaterialColor.ORANGE_TERRACOTTA)
+                    .hardnessAndResistance(0.5F)
+                    .sound(SoundType.CLOTH))
+    );
+    public static final RegistryObject<Item> PANCAKE_ITEM = ITEMS.register(PANCAKE_NAME,()-> new BlockItem(PANCAKE.get(),
+            (new Item.Properties()).group(getTab(ItemGroup.FOOD,PANCAKE_NAME))
+    ));
+
+
 
     /*
     //statue

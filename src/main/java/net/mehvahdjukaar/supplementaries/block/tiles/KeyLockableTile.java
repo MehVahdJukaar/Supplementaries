@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.items.KeyItem;
+import net.mehvahdjukaar.supplementaries.plugins.curios.SupplementariesCuriosPlugin;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -10,11 +11,11 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
@@ -32,21 +33,35 @@ public class KeyLockableTile extends TileEntity {
         this.password = password;
     }
 
+    public void setPassword(ItemStack stack){
+        this.setPassword(stack.getDisplayName().getString());
+    }
+
     public void clearOwner(){
         this.password=null;
     }
 
-    public static boolean isKeyInInventory(PlayerEntity player, String key){
-        AtomicReference<IItemHandler> _iitemhandlerref = new AtomicReference<>();
-        player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent(_iitemhandlerref::set);
-        if (_iitemhandlerref.get() != null) {
+    public static boolean isCorrectKey(ItemStack key, String password){
+        return key.getDisplayName().getString().equals(password);
+    }
+    public boolean isCorrectKey(ItemStack key){
+        return isCorrectKey(key,this.password);
+    }
+
+    public static boolean isKeyInInventory(PlayerEntity player, String key, String translName){
+
+        if(ModList.get().isLoaded("curios") &&
+                SupplementariesCuriosPlugin.isKeyInCurio(player, key, translName))return true;
+
+        AtomicReference<IItemHandler> itemHandler = new AtomicReference<>();
+        player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent(itemHandler::set);
+        if (itemHandler.get() != null) {
             boolean hasKey = false;
-            for (int _idx = 0; _idx < _iitemhandlerref.get().getSlots(); _idx++) {
-                ItemStack stack = _iitemhandlerref.get().getStackInSlot(_idx);
+            for (int _idx = 0; _idx < itemHandler.get().getSlots(); _idx++) {
+                ItemStack stack = itemHandler.get().getStackInSlot(_idx);
                 if(stack.getItem() instanceof KeyItem){
                     hasKey = true;
-                    String s = stack.getDisplayName().getString();
-                    if(s.equals(key))return true;
+                    if(isCorrectKey(stack,key))return true;
                 }
             }
             if(hasKey){
@@ -54,24 +69,39 @@ public class KeyLockableTile extends TileEntity {
                 return false;
             }
         }
-        player.sendStatusMessage(new TranslationTextComponent("message.supplementaries.safe.locked"), true);
+        player.sendStatusMessage(new TranslationTextComponent("message.supplementaries."+translName+".locked"), true);
         return false;
     }
 
+    //returns true if door has to open
+    public boolean handleAction(PlayerEntity player, Hand handIn, String translName) {
+        if (player.isSpectator()) return false;
 
-
-    public ActionResultType handleAction(PlayerEntity player, Hand hand){
-        ItemStack stack = player.getHeldItem(hand);
+        ItemStack stack = player.getHeldItem(handIn);
         Item item = stack.getItem();
-        if(player.isSneaking() && item instanceof KeyItem && (player.isCreative() ||
-                stack.getDisplayName().getString().equals(this.password))) {
+
+        boolean isKey = item instanceof KeyItem;
+        //clear ownership with tripwire
+        if(player.isSneaking() && isKey && (player.isCreative() || this.isCorrectKey(stack))){
             this.clearOwner();
-            player.sendStatusMessage(new TranslationTextComponent("message.supplementaries.safe.cleared"), true);
-            this.world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
+            player.sendStatusMessage(new TranslationTextComponent("message.supplementaries.safe.cleared"),true);
+            this.world.playSound(null, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5,
                     SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN, SoundCategory.BLOCKS, 0.5F, 1.5F);
-            return ActionResultType.CONSUME;
+            return false;
         }
-        return ActionResultType.PASS;
+        //set key
+        else if(this.password==null){
+            if(isKey) {
+                this.setPassword(stack);
+                player.sendStatusMessage(new TranslationTextComponent("message.supplementaries.safe.assigned_key", this.password), true);
+                this.world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
+                        SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN, SoundCategory.BLOCKS, 0.5F, 1.5F);
+                return false;
+            }
+            return true;
+        }
+        //open
+        else return isKeyInInventory(player, this.password,translName) || player.isCreative();
     }
 
     @Override

@@ -8,7 +8,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.HorizontalBlock;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.particles.IParticleData;
+import net.minecraft.particles.BasicParticleType;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
@@ -26,6 +26,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Random;
+import java.util.function.Supplier;
 
 public class SconceWallBlock extends SconceBlock {
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
@@ -36,7 +37,7 @@ public class SconceWallBlock extends SconceBlock {
             Direction.WEST, makeCuboidShape(10D, 2.0D, 6D, 16.0D, 13.0D, 10D),
             Direction.EAST, makeCuboidShape(0.0D, 2.0D, 6D, 6D, 13.0D, 10D)));
 
-    public SconceWallBlock(Properties properties, IParticleData particleData) {
+    public SconceWallBlock(Properties properties, Supplier<BasicParticleType> particleData) {
         super(properties, particleData);
         this.setDefaultState(this.stateContainer.getBaseState()
                 .with(FACING, Direction.NORTH).with(WATERLOGGED, false).with(LIT, true));
@@ -59,7 +60,7 @@ public class SconceWallBlock extends SconceBlock {
             double d2 = (double) pos.getZ() + 0.5D;
             Direction direction1 = direction.getOpposite();
             worldIn.addParticle(ParticleTypes.SMOKE, d0 + 0.25D * (double) direction1.getXOffset(), d1 + 0.15D, d2 + 0.25D * (double) direction1.getZOffset(), 0.0D, 0.0D, 0.0D);
-            worldIn.addParticle(this.particleData, d0 + 0.25D * (double) direction1.getXOffset(), d1 + 0.15D, d2 + 0.25D * (double) direction1.getZOffset(), 0.0D, 0.0D, 0.0D);
+            worldIn.addParticle(this.particleData.get(), d0 + 0.25D * (double) direction1.getXOffset(), d1 + 0.15D, d2 + 0.25D * (double) direction1.getZOffset(), 0.0D, 0.0D, 0.0D);
         }
     }
 

@@ -4,6 +4,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.Tags;
@@ -32,7 +33,7 @@ public class ModTags {
         return BlockTags.createOptional(new ResourceLocation(Supplementaries.MOD_ID, name));
     }
 
-    public static boolean isTagged(Tags.IOptionalNamedTag<Item> tag, Item i){
+    public static boolean isTagged(ITag<Item> tag, Item i){
         try {
             return tag != null && i.isIn(tag);
         }
@@ -41,7 +42,7 @@ public class ModTags {
         }
     }
 
-    public static boolean isTagged(Tags.IOptionalNamedTag<Block> tag, Block b){
+    public static boolean isTagged(ITag<Block> tag, Block b){
         try {
             return tag != null && b.isIn(tag);
         }

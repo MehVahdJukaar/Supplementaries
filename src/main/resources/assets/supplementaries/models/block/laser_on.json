@@ -1,10 +1,9 @@
+
 {
-  "parent": "supplementaries:custom/turntable",
+  "parent": "minecraft:block/template_piston",
   "textures": {
-    "all": "supplementaries:blocks/laser_side_off",
-    "particle": "supplementaries:blocks/laser_side_off",
-    "0": "supplementaries:blocks/laser_top_on",
-    "1": "supplementaries:blocks/laser_side_off",
-    "2": "supplementaries:blocks/laser_bottom"
+    "platform": "supplementaries:blocks/laser_top_on",
+    "bottom": "supplementaries:blocks/laser_bottom",
+    "side": "supplementaries:blocks/laser_side_off"
   }
 }

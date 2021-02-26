@@ -5,7 +5,6 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.mehvahdjukaar.supplementaries.block.tiles.FaucetBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
-import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
@@ -13,6 +12,7 @@ import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.util.ResourceLocation;
 
 
 public class FaucetBlockTileRenderer extends TileEntityRenderer<FaucetBlockTile> {
@@ -21,21 +21,25 @@ public class FaucetBlockTileRenderer extends TileEntityRenderer<FaucetBlockTile>
     }
 
     @Override
-    public void render(FaucetBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
-                       int combinedOverlayIn) {
-        if (tile.hasWater() && tile.isOpen() && !tile.hasJar() && !CommonUtil.FESTIVITY.isEarthDay()) {
-            TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(Textures.FAUCET_TEXTURE);
-            // TODO:remove breaking animation
+    public void render(FaucetBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int light,
+                       int ov) {
+        if (tile.hasWater() && tile.isOpen() && !tile.hasFluidTankBelow() && !CommonUtil.FESTIVITY.isEarthDay()) {
+            ResourceLocation texture = tile.fluidHolder.getFluid().getFlowingTexture();
+            TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(texture);
             IVertexBuilder builder = bufferIn.getBuffer(RenderType.getTranslucentMovingBlock());
-            int color = tile.watercolor;
-            if(color==-1)color = tile.updateClientWaterColor();
-            float opacity = 0.75f;
+            int color = tile.fluidHolder.getTintColor();
+            int luminosity = tile.fluidHolder.getFluid().getLuminosity();
+            if(luminosity!=0) light = light & 15728640 | luminosity << 4;
+            float opacity = 1.3f;
             matrixStackIn.push();
-            matrixStackIn.translate(0.5, -0.5 - 0.1875, 0.5);
-
-            RendererUtil.addCube(builder, matrixStackIn, 0.25f, 1, sprite, combinedLightIn, color, opacity, combinedOverlayIn, false,
-                    false, true, false);
-
+            matrixStackIn.translate(0.5, 0.25, 0.5);
+            matrixStackIn.scale(2f,2f,2f);
+            float h = 0.5f/16f;
+            for(int i = 0; i<16; i++) {
+                opacity = Math.min(1,opacity-0.0082f*i);
+                RendererUtil.addCube(builder, matrixStackIn,0,i*h, 0.125f, h, sprite, light, color, opacity, ov, false, false, true, false,true);
+                matrixStackIn.translate(0,-h,0);
+            }
             matrixStackIn.pop();
         }
     }

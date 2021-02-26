@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
+import net.mehvahdjukaar.supplementaries.block.tiles.KeyLockableTile;
 import net.mehvahdjukaar.supplementaries.block.tiles.SafeBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.items.KeyItem;
@@ -44,15 +45,12 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class SafeBlock extends Block implements IWaterLoggable{
     public static final VoxelShape SHAPE = Block.makeCuboidShape(1,0,1,15,16,15);
@@ -189,7 +187,7 @@ public class SafeBlock extends Block implements IWaterLoggable{
                                 return ActionResultType.CONSUME;
                             }
                         }
-                        else if(!isKeyInInventory(player, safe.password)&&!player.isCreative()){
+                        else if(!KeyLockableTile.isKeyInInventory(player, safe.password,"safe")&&!player.isCreative()){
                             return ActionResultType.CONSUME;
                         }
                     }
@@ -205,27 +203,6 @@ public class SafeBlock extends Block implements IWaterLoggable{
     }
 
 
-    public static boolean isKeyInInventory(PlayerEntity player, String key){
-        AtomicReference<IItemHandler> _iitemhandlerref = new AtomicReference<>();
-        player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent(_iitemhandlerref::set);
-        if (_iitemhandlerref.get() != null) {
-            boolean hasKey = false;
-            for (int _idx = 0; _idx < _iitemhandlerref.get().getSlots(); _idx++) {
-                ItemStack stack = _iitemhandlerref.get().getStackInSlot(_idx);
-                if(stack.getItem() instanceof KeyItem){
-                    hasKey = true;
-                    String s = stack.getDisplayName().getString();
-                    if(s.equals(key))return true;
-                }
-            }
-            if(hasKey){
-                player.sendStatusMessage(new TranslationTextComponent("message.supplementaries.safe.incorrect_key"), true);
-                return false;
-            }
-        }
-        player.sendStatusMessage(new TranslationTextComponent("message.supplementaries.safe.locked"), true);
-        return false;
-    }
 
     public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
@@ -307,7 +284,7 @@ public class SafeBlock extends Block implements IWaterLoggable{
                     }
                 }
                 else{
-                    if (!player.isCreative() && !isKeyInInventory(player,te.password)) {
+                    if (!player.isCreative() && !KeyLockableTile.isKeyInInventory(player,te.password,"safe")) {
                         player.sendStatusMessage(new TranslationTextComponent("message.supplementaries.safe.locked", te.ownerName), true);
                         return false;
                     }

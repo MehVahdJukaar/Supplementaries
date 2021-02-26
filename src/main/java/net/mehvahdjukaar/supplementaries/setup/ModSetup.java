@@ -2,7 +2,9 @@ package net.mehvahdjukaar.supplementaries.setup;
 
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.FlowerPotHelper;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.fluids.SoftFluidList;
 import net.mehvahdjukaar.supplementaries.network.commands.ModCommands;
 import net.mehvahdjukaar.supplementaries.plugins.create.SupplementariesCreatePlugin;
 import net.minecraft.item.ItemStack;
@@ -35,6 +37,9 @@ public class ModSetup {
         if(ModList.get().isLoaded("create")){
             SupplementariesCreatePlugin.initialize();
         }
+
+        SoftFluidList.init();
+        FlowerPotHelper.init();
 
     }
 

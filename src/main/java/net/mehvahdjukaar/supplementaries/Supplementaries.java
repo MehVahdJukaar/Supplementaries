@@ -37,10 +37,10 @@ public class Supplementaries{
 
         ConfigHandler.init();
 
-
         CraftingHelper.register(new RecipeCondition.Serializer(RecipeCondition.MY_FLAG));
 
         NetworkHandler.registerMessages();
+
 
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 

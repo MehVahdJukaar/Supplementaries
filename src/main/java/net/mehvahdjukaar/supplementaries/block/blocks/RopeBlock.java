@@ -41,6 +41,7 @@ public class RopeBlock extends Block implements IWaterLoggable{
     public static final BooleanProperty DOWN = BlockStateProperties.DOWN;
     public static final IntegerProperty DISTANCE = BlockStateProperties.DISTANCE_0_7;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+
     public static final Map<Direction, EnumProperty<Attachment>> FACING_TO_PROPERTY_MAP = Util.make(Maps.newEnumMap(Direction.class), (directions) -> {
         directions.put(Direction.NORTH, NORTH);
         directions.put(Direction.EAST, EAST);

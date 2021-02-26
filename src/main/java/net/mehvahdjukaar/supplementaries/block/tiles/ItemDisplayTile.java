@@ -39,6 +39,11 @@ public abstract class ItemDisplayTile extends LockableLootTileEntity implements 
         super.markDirty();
     }
 
+    //TODO: use this
+    public ItemStack getDisplayedItem(){
+        return this.getStackInSlot(0);
+    }
+
     @Override
     public void read(BlockState state, CompoundNBT compound) {
         super.read(state, compound);
@@ -141,5 +146,6 @@ public abstract class ItemDisplayTile extends LockableLootTileEntity implements 
         for (LazyOptional<? extends IItemHandler> handler : handlers)
             handler.invalidate();
     }
+
 }
 

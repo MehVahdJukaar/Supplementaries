@@ -47,6 +47,7 @@ public class UpdateServerSpeakerBlockPacket{
 
         ctx.get().enqueueWork(() -> {
             if (world != null) {
+
                 TileEntity tileentity = world.getTileEntity(message.pos);
                 if (tileentity instanceof SpeakerBlockTile) {
                     SpeakerBlockTile speaker = (SpeakerBlockTile) tileentity;
@@ -55,6 +56,10 @@ public class UpdateServerSpeakerBlockPacket{
                     speaker.volume = message.volume;
                     tileentity.markDirty();
                 }
+                /*
+                if(world instanceof ServerWorld)
+                    StructureDebug.doStuff((ServerWorld) world,message.pos,message.str.getString());*/
+
             }
         });
         ctx.get().setPacketHandled(true);

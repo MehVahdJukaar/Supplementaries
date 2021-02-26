@@ -2,22 +2,23 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.FaucetBlockTile;
-import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
-import net.mehvahdjukaar.supplementaries.common.CommonUtil;
-import net.minecraft.block.*;
+import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.ConcretePowderBlock;
+import net.minecraft.block.IWaterLoggable;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.particles.ParticleTypes;
 import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
+import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -28,13 +29,13 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import java.lang.reflect.Field;
 import java.util.Random;
 
-public class FaucetBlock extends Block implements  IWaterLoggable{
+public class FaucetBlock extends Block implements IWaterLoggable{
     protected static final VoxelShape SHAPE_NORTH = VoxelShapes.create(0.6875D, 0.3125D, 1D, 0.3125D, 0.9375D, 0.3125D);
     protected static final VoxelShape SHAPE_SOUTH = VoxelShapes.create(0.3125D, 0.3125D, 0D, 0.6875D, 0.9375D, 0.6875D);
     protected static final VoxelShape SHAPE_WEST = VoxelShapes.create(1D, 0.3125D, 0.3125D, 0.3125D, 0.9375D, 0.6875D);
@@ -48,13 +49,15 @@ public class FaucetBlock extends Block implements  IWaterLoggable{
     public static final BooleanProperty ENABLED = BlockStateProperties.ENABLED;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     public static final BooleanProperty HAS_WATER = BlockProperties.HAS_WATER;
+    public static final IntegerProperty LIGHT_LEVEL = BlockProperties.LIGHT_LEVEL_0_15;
     public static final BooleanProperty HAS_JAR = BlockProperties.HAS_JAR;
     public static final BooleanProperty EXTENDED = BlockStateProperties.ATTACHED; //glass extension
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public FaucetBlock(Properties properties) {
         super(properties);
         this.setDefaultState(this.stateContainer.getBaseState().with(HAS_JAR, false).with(FACING, Direction.NORTH)
-                .with(ENABLED, false).with(EXTENDED, false).with(POWERED, false).with(HAS_WATER, false).with(WATERLOGGED,false));
+                .with(ENABLED, false).with(EXTENDED, false).with(POWERED, false)
+                .with(HAS_WATER, false).with(WATERLOGGED,false).with(LIGHT_LEVEL,0));
     }
 
     @Override
@@ -111,7 +114,8 @@ public class FaucetBlock extends Block implements  IWaterLoggable{
 
     @Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        this.updateBlock(state, worldIn, pos, false);
+        boolean hasWater = updateTileFluid(state,pos,worldIn);
+        if(hasWater != state.get(HAS_WATER)) worldIn.setBlockState(pos,state.with(HAS_WATER,hasWater));
     }
 
     @Override
@@ -119,11 +123,29 @@ public class FaucetBlock extends Block implements  IWaterLoggable{
         if (stateIn.get(WATERLOGGED)) {
             worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
         }
-        return super.updatePostPlacement(stateIn,facing,facingState,worldIn,currentPos,facingPos);
+        if(facing==Direction.DOWN)return stateIn.with(HAS_JAR,canConnect(facingState,worldIn,facingPos,facing.getOpposite()));
+        if(facing==stateIn.get(FACING).getOpposite()){
+            boolean hasWater = updateTileFluid(stateIn,currentPos,worldIn);
+            return stateIn.with(EXTENDED,canConnect(facingState,worldIn,facingPos,facing.getOpposite())).with(HAS_WATER,hasWater);
+        }
+        return stateIn;
     }
 
-    //TODO: replace this with updatePostPlacement. this will make faucets rotate correctly with turn table
-    //TODO!!! also fix faucet glass connection shading
+    //returns false if no color
+    public boolean updateTileFluid(BlockState state, BlockPos pos, IWorld world){
+        TileEntity te = world.getTileEntity(pos);
+        if(te instanceof FaucetBlockTile){
+            return ((FaucetBlockTile) te).updateDisplayedFluid(state);
+        }
+        return false;
+    }
+
+    private boolean canConnect(BlockState downState, IWorld world, BlockPos pos, Direction dir){
+        if(downState.getBlock() instanceof JarBlock)return true;
+        return world instanceof World && FluidUtil.getFluidHandler((World) world, pos, dir).isPresent();
+    }
+
+    //TODO also fix faucet glass connection shading
     @Override
     public void neighborChanged(BlockState state, World world, BlockPos pos, Block neighborBlock, BlockPos fromPos, boolean moving) {
         super.neighborChanged(state, world, pos, neighborBlock, fromPos, moving);
@@ -131,64 +153,32 @@ public class FaucetBlock extends Block implements  IWaterLoggable{
     }
 
     public void updateBlock(BlockState state, World world, BlockPos pos, boolean toggle) {
-        BlockPos backpos = pos.offset(state.get(FACING), -1);
-        BlockState backblock = world.getBlockState(backpos);
-        TileEntity backtile = world.getTileEntity(pos.offset(state.get(FACING), -1));
-        // checks backblock
-        boolean ispowered = world.getRedstonePowerFromNeighbors(pos) > 0;
-        boolean ishoney = backblock.getBlock() instanceof BeehiveBlock && backblock.get(BlockStateProperties.HONEY_LEVEL) > 0;
-        boolean backjar = backblock.getBlock() instanceof JarBlock;
-        boolean isjarliquid = backjar && backblock.getBlock().getBeaconColorMultiplier(backblock, world, backpos, backpos) != null;
-        boolean iswater = (world.getFluidState(backpos).isTagged(FluidTags.WATER)
-                || ((backblock.getBlock() instanceof CauldronBlock) && backblock.getComparatorInputOverride(world, backpos) > 0));
-        BlockState downstate = world.getBlockState(pos.down());
-        boolean hasjar = downstate.getBlock() instanceof JarBlock;
-        boolean isTank = false;//backtile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)!=null && !backtile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).map(iFluidHandler -> iFluidHandler.getFluidInTank(0).isEmpty()).orElse(true);
-        boolean haswater = ishoney || iswater || isjarliquid || isTank;
+        boolean isPowered = world.isBlockPowered(pos);
+        if (isPowered != state.get(POWERED) || toggle) {
+            world.setBlockState(pos, state.with(POWERED, isPowered).with(ENABLED, toggle ^ state.get(ENABLED)), 2);
+        }
 
+        boolean hasWater = updateTileFluid(state,pos,world);
+        if(hasWater != state.get(HAS_WATER)) world.setBlockState(pos,state.with(HAS_WATER,hasWater));
 
-        if (ispowered != state.get(POWERED) || haswater != state.get(HAS_WATER) || hasjar != state.get(HAS_JAR) || toggle||backjar != state.get(EXTENDED)) {
-            world.setBlockState(pos,
-                    state.with(POWERED, ispowered).with(HAS_WATER, haswater).with(HAS_JAR, hasjar).with(EXTENDED, backjar)
-                            .with(ENABLED, toggle ^ state.get(ENABLED)), 2);
-        }
-        int newcolor = -2;
-        //TODO:rewrite this
-        if (ishoney)
-            newcolor = CommonUtil.JarLiquidType.HONEY.color;
-        else if (isjarliquid) {
-            TileEntity tileentity = world.getTileEntity(backpos);
-            if (tileentity instanceof JarBlockTile) {
-                newcolor = ((JarBlockTile) tileentity).color;
-            }
-        }
-        else if (iswater)
-            newcolor = -1;
-        else if (isTank){
-            newcolor = getFluidTankColor(backtile);
-        }
-        if (newcolor != -2) {
-            TileEntity tileentity = world.getTileEntity(pos);
-            if (tileentity instanceof FaucetBlockTile) {
-                ((FaucetBlockTile) tileentity).watercolor = newcolor;
-            }
-        }
 
         //handles concrete
-        if(!hasjar && haswater && (state.get(ENABLED)^toggle^ispowered) && downstate.getBlock() instanceof  ConcretePowderBlock){
-            try {
-                //field_200294_a ->solidifiedState
-                Field f = ObfuscationReflectionHelper.findField(ConcretePowderBlock.class,"field_200294_a");
-                f.setAccessible(true);
-                world.setBlockState(pos.down(), (BlockState) f.get(downstate.getBlock()), 2|16);
-            } catch (Exception ignored) {}
+        if (state.get(ENABLED) ^ toggle ^ isPowered && state.get(HAS_WATER)) {
+            BlockPos downPos = pos.down();
+            BlockState downState = world.getBlockState(downPos);
+            if (downState.getBlock() instanceof ConcretePowderBlock) {
+                solidifyConcrete(downPos, state, world);
+            }
         }
-
-
     }
 
-    public static int getFluidTankColor(TileEntity te){
-        return te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).map(iFluidHandler -> iFluidHandler.getFluidInTank(0).getFluid().getAttributes().getColor()).orElse(0xffffff);
+    public static void solidifyConcrete(BlockPos pos, BlockState state, World world){
+        try {
+            //field_200294_a ->solidifiedState
+            Field f = ObfuscationReflectionHelper.findField(ConcretePowderBlock.class,"field_200294_a");
+            f.setAccessible(true);
+            world.setBlockState(pos.down(), (BlockState) f.get(state.getBlock()), 2|16);
+        } catch (Exception ignored) {}
     }
 
 
@@ -197,13 +187,8 @@ public class FaucetBlock extends Block implements  IWaterLoggable{
     }
 
     @Override
-    public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
-        return true;
-    }
-
-    @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(EXTENDED,FACING, ENABLED, POWERED, HAS_WATER, HAS_JAR, WATERLOGGED);
+        builder.add(EXTENDED,FACING, ENABLED, POWERED, HAS_WATER, HAS_JAR, WATERLOGGED, LIGHT_LEVEL);
     }
 
     @Override
@@ -220,33 +205,46 @@ public class FaucetBlock extends Block implements  IWaterLoggable{
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         World world = context.getWorld();
         BlockPos pos = context.getPos();
-        boolean flag = world.getFluidState(pos).getFluid() == Fluids.WATER;
-        boolean hasjar = world.getBlockState(pos.down()).getBlock() instanceof JarBlock;
-        Direction dir = context.getFace();
-        if (context.getFace() == Direction.UP || context.getFace() == Direction.DOWN) {
-            dir = Direction.NORTH;
-        }
-        boolean jarbehind = world.getBlockState(pos.offset(dir.getOpposite())).getBlock() instanceof JarBlock;
-        return this.getDefaultState().with(FACING, dir).with(EXTENDED, jarbehind).with(HAS_JAR,hasjar).with(WATERLOGGED,flag);
+        Direction dir = context.getFace().getAxis() == Direction.Axis.Y ? Direction.NORTH : context.getFace();
+
+        boolean water = world.getFluidState(pos).getFluid() == Fluids.WATER;
+        boolean hasJar = canConnect(world.getBlockState(pos.down()),world,pos.down(),Direction.UP);
+        BlockPos backPos = pos.offset(dir.getOpposite());
+        boolean jarBehind = canConnect(world.getBlockState(backPos),world,backPos,dir.getOpposite());
+        boolean powered = world.isBlockPowered(pos);
+
+        return this.getDefaultState().with(FACING, dir).with(EXTENDED, jarBehind)
+                .with(HAS_JAR,hasJar).with(WATERLOGGED,water).with(POWERED,powered);
     }
 
-
+    //TODO: maybe remove haswater state
+    //TODO: add luminance
     @Override
     public void animateTick(BlockState state, World world, BlockPos pos, Random random) {
-        super.animateTick(state, world, pos, random);
-        if (this.isOpen(state) && state.get(HAS_WATER) && !state.get(HAS_JAR)) {
-            int x = pos.getX();
-            int y = pos.getY();
-            int z = pos.getZ();
-            for (int l = 0; l < 4; ++l) {
-                //double d0 = (x + 0.375 + 0.25 * random.nextFloat());
-                //double d1 = (y + 0.25 + 0 * random.nextFloat());
-                // 0.3125
-                //double d2 = (z + 0.375 + 0.25 * random.nextFloat());
-               // world.addParticle(ParticleTypes.FALLING_WATER, d0, d1, d2, 0, 0, 0);
-                world.addParticle(ParticleTypes.DRIPPING_WATER, x + 0.5, y + 0.25, z + 0.5, 0, 0, 0);
-            }
+        boolean flag = this.isOpen(state);
+        if (state.get(HAS_WATER) && !state.get(HAS_JAR)) {
+            if(random.nextFloat()>(flag?0:0.06))return;
+            float d = 0.125f;
+            double x = (pos.getX() + 0.5 + d * (random.nextFloat()-0.5));
+            double y = (pos.getY() + 0.25);
+            double z = (pos.getZ() + 0.5 + d * (random.nextFloat()-0.5));
+            int color = getTileParticleColor(pos,world);
+            //get texture color if color is white
+            float r = ColorHelper.PackedColor.getRed(color)/255f;
+            float g = ColorHelper.PackedColor.getGreen(color)/255f;
+            float b = ColorHelper.PackedColor.getBlue(color)/255f;
+            world.addParticle(Registry.DRIPPING_LIQUID.get(), x, y, z, r, g, b);
+
+            //world.addParticle(flag?Registry.FALLING_LIQUID.get():Registry.DRIPPING_LIQUID.get(), x, y, z, 0, 1, 0);
         }
+    }
+
+    //only client
+    public int getTileParticleColor(BlockPos pos, World world){
+        TileEntity te = world.getTileEntity(pos);
+        if(te instanceof FaucetBlockTile)
+            return ((FaucetBlockTile) te).fluidHolder.getParticleColor();
+        return 0x423cf7;
     }
 
     @Override

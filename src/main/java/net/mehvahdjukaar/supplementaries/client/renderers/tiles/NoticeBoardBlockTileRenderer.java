@@ -86,8 +86,8 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
                     d0 = 0.6f * 0.7f;
                 }
 
-
-                if(tile.getStackInSlot(0).getDisplayName().getString().toLowerCase().equals("credits")){
+                String bookName = tile.getStackInSlot(0).getDisplayName().getString().toLowerCase();
+                if(bookName.equals("credits")){
                     TextUtil.renderCredits(matrixStackIn,bufferIn,frontLight,fontrenderer,d0);
                     matrixStackIn.pop();
                     matrixStackIn.pop();
@@ -147,9 +147,11 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
                     // float dy = (float) scalingfactor * bordery;
                     float dy = ((scalingfactor - (8 * numberoflin)) / 2f) + 0.5f;
 
-
-                    fontrenderer.func_238416_a_(str, dx, dy + 8 * lin, i1, false, matrixStackIn.getLast().getMatrix(), bufferIn, false, 0, frontLight);
-                    //fontrenderer.renderString(str, dx, dy + 8 * lin, i1, false, matrixStackIn.getLast().getMatrix(), bufferIn, false, 0, newl);
+                    if(!bookName.equals("missingno")) {
+                        fontrenderer.func_238416_a_(str, dx, dy + 8 * lin, i1, false, matrixStackIn.getLast().getMatrix(), bufferIn, false, 0, frontLight);
+                    }else {
+                        fontrenderer.renderString("\u00A7ka", dx, dy + 8 * lin, i1, false, matrixStackIn.getLast().getMatrix(), bufferIn, false, 0, frontLight);
+                    }
                 }
                 matrixStackIn.pop();
                 matrixStackIn.pop();

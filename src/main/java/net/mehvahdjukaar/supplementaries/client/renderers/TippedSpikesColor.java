@@ -5,7 +5,6 @@ import net.mehvahdjukaar.supplementaries.plugins.quark.SupplementariesQuarkPlugi
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
-import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.tileentity.TileEntity;
@@ -17,7 +16,6 @@ import net.minecraftforge.fml.ModList;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 public class TippedSpikesColor implements IBlockColor, IItemColor {
     public static Map<Integer, Integer> cachedColors0 = new HashMap<>();

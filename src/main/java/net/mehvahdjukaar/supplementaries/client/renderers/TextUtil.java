@@ -31,6 +31,7 @@ public class TextUtil {
                 "MehVahdJukaar"+
                 "\n\n\n\u00A74Donators:\u00A7r\n\n\u00A70"+
                 "Toffanelly"+
+                "\nSylveticHearts"+
                 "\n\n\n\u00A74Credits:"+
                 "\n\n\u00A75Textures:\u00A7r\n\n\u00A70"+
                 "Plantkillable"+
@@ -56,8 +57,10 @@ public class TextUtil {
                 "\nUmaroth"+
                 "\nHowester84"+
                 "\nspiritwolf_twitch"+
-                "\nMcreator" +
+                "\nax3el"+
+                "\nMcreator"+
                 "\nYoutube tutorials"+
+                "\nmy grades. rip"+
                 "\nJoe Mama"+
                 "\nand You <3"+
                 "\n\n\n\n\n\n\n\n\n\n\n\n";

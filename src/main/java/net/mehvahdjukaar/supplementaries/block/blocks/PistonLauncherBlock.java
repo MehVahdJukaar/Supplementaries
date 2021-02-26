@@ -57,10 +57,12 @@ public class PistonLauncherBlock extends Block {
         builder.add(FACING, EXTENDED);
     }
 
+    @Override
     public BlockState rotate(BlockState state, Rotation rot) {
         return state.with(FACING, rot.rotate(state.get(FACING)));
     }
 
+    @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
         return state.rotate(mirrorIn.toRotation(state.get(FACING)));
     }

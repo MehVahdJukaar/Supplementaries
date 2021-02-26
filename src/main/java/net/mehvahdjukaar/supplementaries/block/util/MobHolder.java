@@ -7,6 +7,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.entity.monster.EndermanEntity;
 import net.minecraft.entity.monster.SlimeEntity;
 import net.minecraft.entity.passive.*;
 import net.minecraft.item.ItemStack;
@@ -236,15 +237,26 @@ public class MobHolder {
     public static Entity createEntityFromNBT(CompoundNBT com, UUID id, World world){
         if(com!=null && com.contains("id")) {
             Entity entity;
-            if(com.get("id").getString().equals("minecraft:bee")){
-                entity = new BeeEntity(EntityType.BEE, world);
-            }
-            else{
-                entity  = EntityType.loadEntityAndExecute(com, world, o -> o);
-            }
-            //if (!(entity instanceof LivingEntity))return;
 
-            if(id!=null) {
+            String name = com.get("id").getString();
+            switch (name) {
+                case "minecraft:bee":
+                    entity = new BeeEntity(EntityType.BEE, world);
+                    break;
+                case "minecraft:iron_golem":
+                    entity = new IronGolemEntity(EntityType.IRON_GOLEM, world);
+                    break;
+                case "minecraft:enderman":
+                    entity = new EndermanEntity(EntityType.ENDERMAN, world);
+                    break;
+                case "minecraft:wolf":
+                    entity = new WolfEntity(EntityType.WOLF, world);
+                    break;
+                default:
+                    entity = EntityType.loadEntityAndExecute(com, world, o -> o);
+                    break;
+            }
+            if(id!=null && entity!=null){
                 entity.setUniqueId(id);
             }
 

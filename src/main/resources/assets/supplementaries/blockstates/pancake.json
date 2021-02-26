@@ -1,0 +1,100 @@
+{
+  "variants": {
+    "pancakes=1,topping=none": {
+      "model": "supplementaries:block/pancake_1"
+    },
+    "pancakes=2,topping=none": {
+      "model": "supplementaries:block/pancake_2"
+    },
+    "pancakes=3,topping=none": {
+      "model": "supplementaries:block/pancake_3"
+    },
+    "pancakes=4,topping=none": {
+      "model": "supplementaries:block/pancake_4"
+    },
+    "pancakes=5,topping=none": {
+      "model": "supplementaries:block/pancake_5"
+    },
+    "pancakes=6,topping=none": {
+      "model": "supplementaries:block/pancake_6"
+    },
+    "pancakes=7,topping=none": {
+      "model": "supplementaries:block/pancake_7"
+    },
+    "pancakes=8,topping=none": {
+      "model": "supplementaries:block/pancake_8"
+    },
+    "pancakes=1,topping=honey": {
+      "model": "supplementaries:block/pancake_1_honey"
+    },
+    "pancakes=2,topping=honey": {
+      "model": "supplementaries:block/pancake_2_honey"
+    },
+    "pancakes=3,topping=honey": {
+      "model": "supplementaries:block/pancake_3_honey"
+    },
+    "pancakes=4,topping=honey": {
+      "model": "supplementaries:block/pancake_4_honey"
+    },
+    "pancakes=5,topping=honey": {
+      "model": "supplementaries:block/pancake_5_honey"
+    },
+    "pancakes=6,topping=honey": {
+      "model": "supplementaries:block/pancake_6_honey"
+    },
+    "pancakes=7,topping=honey": {
+      "model": "supplementaries:block/pancake_7_honey"
+    },
+    "pancakes=8,topping=honey": {
+      "model": "supplementaries:block/pancake_8_honey"
+    },
+    "pancakes=1,topping=syrup": {
+      "model": "supplementaries:block/pancake_1_syrup"
+    },
+    "pancakes=2,topping=syrup": {
+      "model": "supplementaries:block/pancake_2_syrup"
+    },
+    "pancakes=3,topping=syrup": {
+      "model": "supplementaries:block/pancake_3_syrup"
+    },
+    "pancakes=4,topping=syrup": {
+      "model": "supplementaries:block/pancake_4_syrup"
+    },
+    "pancakes=5,topping=syrup": {
+      "model": "supplementaries:block/pancake_5_syrup"
+    },
+    "pancakes=6,topping=syrup": {
+      "model": "supplementaries:block/pancake_6_syrup"
+    },
+    "pancakes=7,topping=syrup": {
+      "model": "supplementaries:block/pancake_7_syrup"
+    },
+    "pancakes=8,topping=syrup": {
+      "model": "supplementaries:block/pancake_8_syrup"
+    },
+    "pancakes=1,topping=chocolate": {
+      "model": "supplementaries:block/pancake_1_chocolate"
+    },
+    "pancakes=2,topping=chocolate": {
+      "model": "supplementaries:block/pancake_2_chocolate"
+    },
+    "pancakes=3,topping=chocolate": {
+      "model": "supplementaries:block/pancake_3_chocolate"
+    },
+    "pancakes=4,topping=chocolate": {
+      "model": "supplementaries:block/pancake_4_chocolate"
+    },
+    "pancakes=5,topping=chocolate": {
+      "model": "supplementaries:block/pancake_5_chocolate"
+    },
+    "pancakes=6,topping=chocolate": {
+      "model": "supplementaries:block/pancake_6_chocolate"
+    },
+    "pancakes=7,topping=chocolate": {
+      "model": "supplementaries:block/pancake_7_chocolate"
+    },
+    "pancakes=8,topping=chocolate": {
+      "model": "supplementaries:block/pancake_8_chocolate"
+    }
+  }
+}

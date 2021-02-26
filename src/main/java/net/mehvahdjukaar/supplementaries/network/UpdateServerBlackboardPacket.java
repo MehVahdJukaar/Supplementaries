@@ -3,6 +3,8 @@ package net.mehvahdjukaar.supplementaries.network;
 import net.mehvahdjukaar.supplementaries.block.tiles.BlackboardBlockTile;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -43,7 +45,8 @@ public class UpdateServerBlackboardPacket {
                 TileEntity tileentity = world.getTileEntity(message.pos);
                 if (tileentity instanceof BlackboardBlockTile) {
                     BlackboardBlockTile board = (BlackboardBlockTile) tileentity;
-                    board.pixels= message.pixels;
+                    world.playSound(null,message.pos, SoundEvents.ENTITY_VILLAGER_WORK_CARTOGRAPHER, SoundCategory.BLOCKS,1,0.8f);
+                    board.pixels = message.pixels;
                     tileentity.markDirty();
                 }
             }

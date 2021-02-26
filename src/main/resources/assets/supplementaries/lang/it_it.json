@@ -104,6 +104,11 @@
   "message.supplementaries.safe.assigned_key": "Assegnata alla chiave '%s'",
   "item.supplementaries.key": "Chiave",
   "item.supplementaries.bamboo_spikes_tipped_effect": "Punte di bambù avvelenate",
+  "death.attack.supplementaries.bamboo_spikes": "%1$s è morto impalato",
+  "death.attack.supplementaries.bamboo_spikes.player": "%1$s è morto impalato mentre combatteva contro %2$s",
+  "block.supplementaries.checkerboard_block": "Blocco a scacchiera",
+  "block.supplementaries.netherite_door": "Porta di netherite",
+  "block.supplementaries.netherite_trapdoor": "Botola di netherite",
 
   "block.supplementaries.skull_candle": "Teschio con candela",
   "block.supplementaries.goblet": "Calice",

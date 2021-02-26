@@ -17,6 +17,7 @@ public class DoormatBlockTile extends ItemDisplayTile implements ITextHolder {
 
     public TextHolder textHolder;
 
+
     public DoormatBlockTile() {
         super(Registry.DOORMAT_TILE.get());
         this.textHolder = new TextHolder(MAXLINES);

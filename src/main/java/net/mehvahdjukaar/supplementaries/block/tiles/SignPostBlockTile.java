@@ -24,7 +24,7 @@ public class SignPostBlockTile extends TileEntity implements ITextHolder, IBlock
 
     public TextHolder textHolder;
 
-    public BlockState fenceBlock = Blocks.OAK_FENCE.getDefaultState();
+    public BlockState fenceBlock = Blocks.AIR.getDefaultState();
     public float yawUp = 0;
     public float yawDown = 0;
     public boolean leftUp = true;

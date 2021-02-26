@@ -34,13 +34,16 @@ public class Textures {
     public static final ResourceLocation WATER_TEXTURE = new ResourceLocation("minecraft:block/water_still");
     public static final ResourceLocation LAVA_TEXTURE = new ResourceLocation("minecraft:block/lava_still");
     public static final ResourceLocation CHAIN_TEXTURE = new ResourceLocation("minecraft:block/chain");
+    public static final ResourceLocation FLOWING_WATER_TEXTURE = new ResourceLocation("minecraft:block/water_flow");
 
     //blocks (to stitch)
     public static final ResourceLocation MILK_TEXTURE = new ResourceLocation(MOD_ID, "blocks/milk_liquid");
-    public static final ResourceLocation POTION_TEXTURE = new ResourceLocation(MOD_ID, "blocks/potion_liquid");
+    public static final ResourceLocation POTION_TEXTURE = new ResourceLocation(MOD_ID, "blocks/potion_still");
+    public static final ResourceLocation POTION_TEXTURE_FLOW = new ResourceLocation(MOD_ID, "blocks/potion_flow");
     public static final ResourceLocation HONEY_TEXTURE = new ResourceLocation(MOD_ID, "blocks/honey_liquid");
     public static final ResourceLocation DRAGON_BREATH_TEXTURE = new ResourceLocation(MOD_ID, "blocks/dragon_breath_liquid");
-    public static final ResourceLocation XP_TEXTURE = new ResourceLocation(MOD_ID, "blocks/xp_liquid");
+    public static final ResourceLocation XP_TEXTURE = new ResourceLocation(MOD_ID, "blocks/xp_still");
+    public static final ResourceLocation XP_TEXTURE_FLOW = new ResourceLocation(MOD_ID, "blocks/xp_flow");
     public static final ResourceLocation FAUCET_TEXTURE = new ResourceLocation(MOD_ID, "blocks/faucet_water");
     public static final ResourceLocation FISHIES_TEXTURE = new ResourceLocation(MOD_ID, "blocks/fishies");
     public static final ResourceLocation BELLOWS_TEXTURE = new ResourceLocation(MOD_ID, "entity/bellows");
@@ -64,6 +67,8 @@ public class Textures {
     public static final ResourceLocation GLOBE_SHEARED_TEXTURE = new ResourceLocation(MOD_ID,"textures/entity/globes/globe_sheared.png");
     public static final ResourceLocation GLOBE_CUSTOM_1 = new ResourceLocation(MOD_ID,"textures/entity/globes/globe_plantkillable.png");
     public static final ResourceLocation GLOBE_CUSTOM_2 = new ResourceLocation(MOD_ID,"textures/entity/globes/globe_toffanelly.png");
+    public static final ResourceLocation GLOBE_CUSTOM_3 = new ResourceLocation(MOD_ID,"textures/entity/globes/globe_sylvetichearts.png");
+
 
     public static final ResourceLocation FIREFLY_TEXTURE =  new ResourceLocation(MOD_ID,"textures/entity/firefly.png");
     public static final ResourceLocation BELL_CHAIN_TEXTURE = new ResourceLocation(MOD_ID,"textures/entity/bell_chain.png");
@@ -87,8 +92,8 @@ public class Textures {
     //TODO: rethink this
     public static List<ResourceLocation> getBlockTextures() {
         return new ArrayList<>(Arrays.asList(
-                MILK_TEXTURE, POTION_TEXTURE, HONEY_TEXTURE, DRAGON_BREATH_TEXTURE, SOUP_TEXTURE,
-                XP_TEXTURE, FAUCET_TEXTURE, FISHIES_TEXTURE, BELLOWS_TEXTURE, LASER_BEAM_TEXTURE, LASER_BEAM_END_TEXTURE,LASER_OVERLAY_TEXTURE,
+                MILK_TEXTURE, POTION_TEXTURE, POTION_TEXTURE_FLOW, HONEY_TEXTURE, DRAGON_BREATH_TEXTURE, SOUP_TEXTURE,
+                XP_TEXTURE, XP_TEXTURE_FLOW, FISHIES_TEXTURE, BELLOWS_TEXTURE, LASER_BEAM_TEXTURE, LASER_BEAM_END_TEXTURE,LASER_OVERLAY_TEXTURE,
                 CLOCK_HAND_TEXTURE, HOURGLASS_REDSTONE, HOURGLASS_GLOWSTONE, HOURGLASS_SUGAR, HOURGLASS_BLAZE, HOURGLASS_GUNPOWDER));
     }
 

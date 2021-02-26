@@ -33,6 +33,7 @@ public class RegistryConfigs {
 
             reg.FIREFLY_JAR = reg.FIREFLY_ENABLED.get() && reg.JAR_ENABLED.get();
             reg.SILVER_CANDELABRA = reg.CANDELABRA_ENABLED.get() && reg.HAS_SILVER;
+            reg.HAS_KEY = reg.NETHERITE_DOOR_ENABLED.get() || reg.NETHERITE_TRAPDOOR_ENABLED.get() || reg.SAFE_ENABLED.get();
         }
         catch(Exception ignored){};
 
@@ -90,6 +91,11 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue GOLD_TRAPDOOR_ENABLED;
         public static ForgeConfigSpec.BooleanValue GOLD_DOOR_ENABLED;
         public static ForgeConfigSpec.BooleanValue BAMBOO_SPIKES_ENABLED;
+        public static ForgeConfigSpec.BooleanValue CHECKERBOARD_ENABLED;
+        public static ForgeConfigSpec.BooleanValue NETHERITE_TRAPDOOR_ENABLED;
+        public static ForgeConfigSpec.BooleanValue NETHERITE_DOOR_ENABLED;
+        public static ForgeConfigSpec.BooleanValue PANCAKES_ENABLED;
+        public static ForgeConfigSpec.BooleanValue LOCK_BLOCK_ENABLED;
 
         public static ForgeConfigSpec.BooleanValue CREATIVE_TAB;
         public static ForgeConfigSpec.BooleanValue DISPENSERS;
@@ -98,7 +104,7 @@ public class RegistryConfigs {
         public static boolean SILVER_CANDELABRA = false;
         public static boolean HAS_COPPER = false;
         public static boolean HAS_SILVER = false;
-
+        public static boolean HAS_KEY = true;
 
         //oh god what have I done
         public static boolean isEnabled(String path){
@@ -111,6 +117,9 @@ public class RegistryConfigs {
             }
             if(path.equals(Registry.SOUL_JAR_NAME)){
                 return reg.JAR_ENABLED.get();
+            }
+            if(path.equals(Registry.KEY_NAME)){
+                return reg.HAS_KEY;
             }
             for (Field f : reg.class.getDeclaredFields()) {
                 try{
@@ -176,6 +185,11 @@ public class RegistryConfigs {
             GOLD_DOOR_ENABLED = builder.define(Registry.GOLD_DOOR_NAME,true);
             BAMBOO_SPIKES_ENABLED = builder.define(Registry.BAMBOO_SPIKES_NAME,true);
             STONE_LAMP_ENABLED = builder.define(Registry.STONE_LAMP_NAME, true);
+            CHECKERBOARD_ENABLED = builder.define(Registry.CHECKER_BLOCK_NAME, true);
+            NETHERITE_DOOR_ENABLED = builder.define(Registry.NETHERITE_DOOR_NAME, true);
+            NETHERITE_TRAPDOOR_ENABLED = builder.define(Registry.NETHERITE_TRAPDOOR_NAME, true);
+            PANCAKES_ENABLED = builder.define(Registry.PANCAKE_NAME,true);
+            LOCK_BLOCK_ENABLED = builder.define(Registry.LOCK_BLOCK_NAME,true);
 
             LASER_ENABLED = builder.comment("WIP")
                     .define(Registry.LASER_NAME, false);
