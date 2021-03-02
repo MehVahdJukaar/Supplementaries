@@ -2,8 +2,8 @@
   "replace": false,
   "values": [
     "supplementaries:rope",
-    "supplementaries:sack",
-    "supplementaries:hanging_flower_pot",
+    "minecraft:bell",
+    "minecraft:grindstone",
     {
       "id" :"farmersdelight:rope",
       "required": false

@@ -75,6 +75,7 @@ public class JarItemRenderer extends CageItemRenderer {
                 int color = com.getInt("CachedColor");
                 int height = com.getInt("Count");
                 SoftFluid fluid = SoftFluidList.fromID(com.getString("Fluid"));
+                if(!fluid.isEmpty()&&height>0)
                 renderFluid(height/16f, color, 0, fluid.getStillTexture(),
                         matrixStackIn,bufferIn,combinedLightIn,combinedOverlayIn,false);
             }

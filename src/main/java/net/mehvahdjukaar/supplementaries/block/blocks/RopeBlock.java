@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.block.BlockProperties.RopeAttachment;
 import net.mehvahdjukaar.supplementaries.block.util.PlayerlessContext;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.plugins.quark.QuarkPistonPlugin;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.*;
@@ -28,6 +29,7 @@ import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.AttachFace;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.stats.Stats;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -348,6 +350,23 @@ public class RopeBlock extends Block implements IWaterLoggable{
         return 60;
     }
 
+    private static boolean findConnectedBell(World world, BlockPos pos, PlayerEntity player, int it){
+        if(it>ServerConfigs.cached.BELL_CHAIN_LENGTH)return false;
+        BlockState state = world.getBlockState(pos);
+        Block b = state.getBlock();
+        if(b instanceof RopeBlock){
+            return findConnectedBell(world,pos.up(),player,it+1);
+        }
+        else if(b instanceof BellBlock && it !=0){
+            boolean success = ((BellBlock) b).ring(world, pos, state.get(BellBlock.HORIZONTAL_FACING).rotateY());
+            if (success && player != null) {
+                player.addStat(Stats.BELL_RING);
+            }
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         ItemStack stack = player.getHeldItem(handIn);
@@ -362,8 +381,13 @@ public class RopeBlock extends Block implements IWaterLoggable{
                     return ActionResultType.func_233537_a_(world.isRemote);
                 }
             }
+            return ActionResultType.PASS;
         }
-        else if(stack.isEmpty() && !player.isSneaking() && handIn==Hand.MAIN_HAND){
+        if(stack.isEmpty() && state.get(UP) && ServerConfigs.cached.BELL_CHAIN){
+            if (findConnectedBell(world, pos, player, 0))
+                return ActionResultType.func_233537_a_(world.isRemote);
+        }
+        if(stack.isEmpty() && !player.isSneaking() && handIn==Hand.MAIN_HAND){
             if(this.removeRope(pos.down(),world,0)){
                 world.playSound(player, pos, SoundEvents.ENTITY_LEASH_KNOT_PLACE, SoundCategory.BLOCKS, 1, 0.6f);
                 if (player == null || !player.abilities.isCreativeMode) {
@@ -461,12 +485,17 @@ public class RopeBlock extends Block implements IWaterLoggable{
             //gets update state for new position
 
             boolean toFluid = world.getFluidState(toPos).getFluid()==Fluids.WATER;
-            if(state.hasProperty(WATERLOGGED))state = state.with(WATERLOGGED,toFluid);
-            if(state.getBlock() instanceof CauldronBlock && !state.hasTileEntity() && toFluid)state = state.with(CauldronBlock.LEVEL,3);
+            boolean canHoldWater = false;
+            if(state.hasProperty(WATERLOGGED)){
+                canHoldWater = ModTags.isTagged(ModTags.WATER_HOLDER, state.getBlock());
+                if(!canHoldWater) state = state.with(WATERLOGGED,toFluid);
+            }
+            if(state.getBlock() instanceof CauldronBlock && toFluid)state = state.with(CauldronBlock.LEVEL,3);
+
 
             FluidState fromFluid = world.getFluidState(fromPos);
             boolean water = (fromFluid.getFluid()==Fluids.WATER && fromFluid.isSource());
-            world.setBlockState(fromPos, water?Blocks.WATER.getDefaultState():Blocks.AIR.getDefaultState());
+            if(!canHoldWater) world.setBlockState(fromPos, water?Blocks.WATER.getDefaultState():Blocks.AIR.getDefaultState());
             //update existing block block to new position
             BlockState newState = Block.getValidBlockForPosition(state, world, toPos);
             world.setBlockState(toPos, newState);

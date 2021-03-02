@@ -148,7 +148,9 @@ public class RopeArrowEntity extends AbstractArrowEntity {
             this.prevPlacedPos = hitPos.down();
             this.removeCharge();
         }
-
+        else {
+            this.prevPlacedPos = null;
+        }
     }
 
     @Override

@@ -19,9 +19,9 @@ public class SoftFluidList {
     // id -> SoftFluid
     public static final HashMap<String,SoftFluid> ID_MAP = new HashMap<>();
     // filled item -> SoftFluid. need to handle potions separately since they map to same item id
-    private static final HashMap<Item,SoftFluid> ITEM_MAP = new HashMap<>();
+    public static final HashMap<Item,SoftFluid> ITEM_MAP = new HashMap<>();
     // fluid item -> SoftFluid
-    private static final HashMap<Fluid,SoftFluid> FLUID_MAP = new HashMap<>();
+    public static final HashMap<Fluid,SoftFluid> FLUID_MAP = new HashMap<>();
 
     public static SoftFluid fromID(String id){
         return ID_MAP.getOrDefault(id, EMPTY);

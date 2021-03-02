@@ -1,9 +1,9 @@
 {
   "replace": false,
   "values": [
-    "supplementaries:rope",
+    "minecraft:composter",
     {
-      "id" :"farmersdelight:rope",
+      "id" :"farmersdelight:basket",
       "required": false
     }
   ]

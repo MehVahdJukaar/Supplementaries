@@ -13,6 +13,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeColors;
 import net.minecraftforge.fluids.FluidStack;
@@ -334,10 +335,13 @@ public class SoftFluidHolder {
         this.count = Math.min(this.capacity,this.count+inc);
     }
 
+    public int getCount() {
+        return count;
+    }
     public void setCount(int inc){
         this.count = inc;
     }
-    public void maxCount(){this.count = capacity;}
+    public void fillCount(){this.count = capacity;}
     public void grow(int inc) {
         this.setCount(this.count + inc);
     }
@@ -348,6 +352,10 @@ public class SoftFluidHolder {
 
     public float getHeight(){
         return 0.75f*(float)this.count/(float)this.capacity;
+    }
+    public int getComparator(){
+        float f = this.count / (float)this.capacity;
+        return MathHelper.floor(f * 14.0F)+1;
     }
 
     @Nonnull
@@ -372,9 +380,7 @@ public class SoftFluidHolder {
         this.specialColor = 0;
     }
 
-    public int getCount() {
-        return count;
-    }
+
 
     public void copy(SoftFluidHolder other){
         this.setFluid(other.getFluid(), other.getNbt());
@@ -438,6 +444,7 @@ public class SoftFluidHolder {
     }
     //only client
     public int getParticleColor(){
+        if(this.isEmpty())return -1;
         int tintColor = this.getTintColor();
         if(tintColor==-1)return FluidColors.get(this.fluid.getID());
         return tintColor;

@@ -32,10 +32,8 @@ import java.lang.reflect.Field;
 public class ModSetup {
 
     public static void init(final FMLCommonSetupEvent event) {
-
+        //order matters here
         Spawns.registerSpawningStuff();
-        //event.enqueueWork(Dispenser::registerBehaviors);
-        Dispenser.registerBehaviors();
 
         if(ModList.get().isLoaded("create")){
             SupplementariesCreatePlugin.initialize();
@@ -43,8 +41,12 @@ public class ModSetup {
 
         ((FlowerPotBlock)Blocks.FLOWER_POT).addPlant(Registry.FLAX_ITEM.get().getRegistryName(), Registry.FLAX_POT);
 
-        SoftFluidList.init();
         FlowerPotHelper.init();
+
+        SoftFluidList.init();
+
+        Dispenser.registerBehaviors();
+        //event.enqueueWork(Dispenser::registerBehaviors);
 
     }
 

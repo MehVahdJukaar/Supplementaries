@@ -1014,7 +1014,14 @@ public class Registry {
                     .setRequiresTool()
                     .hardnessAndResistance(1.5F, 6.0F))
     );
-    public static final RegistryObject<Item> CHECKER_ITEM = ITEMS.register(CHECKER_BLOCK_NAME,()-> new BlockItem(CHECKER_BLOCK.get(),
+    public static final RegistryObject<Item> CHECKER_BLOCK_ITEM = ITEMS.register(CHECKER_BLOCK_NAME,()-> new BlockItem(CHECKER_BLOCK.get(),
+            (new Item.Properties()).group(getTab(ItemGroup.DECORATIONS, CHECKER_BLOCK_NAME))
+    ));
+    public static final String CHECKER_SLAB_NAME = "checker_slab";
+    public static final RegistryObject<Block> CHECKER_SLAB = BLOCKS.register(CHECKER_SLAB_NAME,()-> new SlabBlock(
+            AbstractBlock.Properties.from(CHECKER_BLOCK.get()))
+    );
+    public static final RegistryObject<Item> CHECKER_SLAB_ITEM = ITEMS.register(CHECKER_SLAB_NAME,()-> new BlockItem(CHECKER_SLAB.get(),
             (new Item.Properties()).group(getTab(ItemGroup.DECORATIONS, CHECKER_BLOCK_NAME))
     ));
 

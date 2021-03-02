@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.CageBlockTile;
+import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -12,6 +13,7 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
@@ -65,6 +67,20 @@ public class CageBlock extends Block implements IWaterLoggable {
     }
 
     @Override
+    public boolean hasComparatorInputOverride(BlockState state) {
+        return true;
+    }
+
+    @Override
+    public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
+        TileEntity tileentity = worldIn.getTileEntity(pos);
+        if (tileentity instanceof CageBlockTile) {
+            return ((CageBlockTile) tileentity).mobHolder.isEmpty()?0:15;
+        }
+        return 0;
+    }
+
+    @Override
     public boolean allowsMovement(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
         return false;
     }
@@ -90,6 +106,7 @@ public class CageBlock extends Block implements IWaterLoggable {
 
 
     //only for creative
+    /*
     @Override
     public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
         TileEntity tileentity = worldIn.getTileEntity(pos);
@@ -105,7 +122,7 @@ public class CageBlock extends Block implements IWaterLoggable {
             }
         }
         super.onBlockHarvested(worldIn, pos, state, player);
-    }
+    }*/
 
 
     //loot table does the same. frick the loot table

@@ -14,7 +14,7 @@
         "BellBlockMixin",
         "BellTileEntityMixin",
         "PistonMixin",
-        "LivingEntityMixin"
+        "RopeLivingEntityMixin"
 
     ],
     "client": [

@@ -9,7 +9,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.IWaterLoggable;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -142,6 +141,7 @@ public class JarBlock extends Block implements IWaterLoggable {
     // shulker box code
 
     //forces creative drop. might remove this since pick block does work
+    /*
     @Override
     public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
         TileEntity tileentity = worldIn.getTileEntity(pos);
@@ -159,7 +159,7 @@ public class JarBlock extends Block implements IWaterLoggable {
             }
         }
         super.onBlockHarvested(worldIn, pos, state, player);
-    }
+    }*/
 
     @Override
     public boolean allowsMovement(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
@@ -248,10 +248,16 @@ public class JarBlock extends Block implements IWaterLoggable {
     @Override
     public int getComparatorInputOverride(BlockState blockState, World world, BlockPos pos) {
         TileEntity tileentity = world.getTileEntity(pos);
-        if (tileentity instanceof JarBlockTile)
-            return Container.calcRedstoneFromInventory((JarBlockTile) tileentity);
-        else
-            return 0;
+        if (tileentity instanceof JarBlockTile) {
+            JarBlockTile te = ((JarBlockTile) tileentity);
+            if (!te.isEmpty())
+                return Container.calcRedstoneFromInventory(te);
+            else if (!te.fluidHolder.isEmpty()) {
+                return ((JarBlockTile) tileentity).fluidHolder.getComparator();
+            }
+            else if(!te.mobHolder.isEmpty())return 15;
+        }
+        return 0;
     }
 
     public BlockState rotate(BlockState state, Rotation rot) {

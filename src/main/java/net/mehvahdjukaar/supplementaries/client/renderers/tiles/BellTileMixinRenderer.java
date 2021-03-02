@@ -18,8 +18,11 @@ public class BellTileMixinRenderer {
 
     public static final ModelRenderer chain = new ModelRenderer(16, 16, 0, 0);
     public static final ModelRenderer link = new ModelRenderer(16, 16, 0, 0);
+    public static final ModelRenderer rope = new ModelRenderer(16, 16, 0, 0);
 
         static {
+            rope.setTextureOffset(0, 0).addBox(-1.0F, -6.0F, -1.0F, 2.0F, 6.0F, 2.0F, 0.0F, false);
+            rope.setRotationPoint(0, 6, 0);
             chain.setRotationPoint(0.0F, 0F, 0.0F);
             chain.setTextureOffset(0, 10).addBox(-1.5F, -6.0F, 0.0F, 3.0F, 6.0F, 0.0F, 0.0F, false);
             link.setRotationPoint(0.0F, 0.0F, 0.0F);
@@ -32,51 +35,56 @@ public class BellTileMixinRenderer {
 
     public static void render(BellTileEntity tile, float partialTicks, MatrixStack matrixStackIn,
                               IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
-        if(tile instanceof IBellConnection && ((IBellConnection) tile).getConnected()){
+        if(tile instanceof IBellConnection ){
+
+            IBellConnection.BellConnection connection = ((IBellConnection) tile).getConnected();
+            if(connection==null)return;
 
             matrixStackIn.push();
-            //combinedLightIn = WorldRenderer.getCombinedLight(tile.getWorld(), tile.getPos().down());
-            int lu = combinedLightIn & '\uffff';
-            int lv = combinedLightIn >> 16 & '\uffff'; // ok
-
             matrixStackIn.translate(0.5, 0, 0.5);
-            matrixStackIn.rotate(Const.Y45);
 
+            if(connection.isRope()) {
+                //TODO: fix lighting since none of these methods are shaded properly
+                IVertexBuilder builder2 = bufferIn.getBuffer(RenderType.getEntityCutout(Textures.BELL_ROPE_TEXTURE));
 
-            TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(Textures.CHAIN_TEXTURE);
-            IVertexBuilder builder = bufferIn.getBuffer(RenderType.getCutout());
+                rope.render(matrixStackIn, builder2, combinedLightIn, combinedOverlayIn, 1, 1, 1, 1);
+            }
+            else if(connection.isChain()){
 
-            float sMinU = sprite.getMinU();
-            float sMinV = sprite.getMinV();
-            float sMaxU = sprite.getMaxU();
-            float sMaxV = sprite.getMaxV();
+                //combinedLightIn = WorldRenderer.getCombinedLight(tile.getWorld(), tile.getPos().down());
+                int lu = combinedLightIn & '\uffff';
+                int lv = combinedLightIn >> 16 & '\uffff'; // ok
 
-            float atlasscaleU = sMaxU - sMinU;
-            float atlasscaleV = sMaxV - sMinV;
-            float minu1 = sMinU;
-            float minu2 = sMinU + (3f/16f)*atlasscaleU;
-            float minv = sMinV + (11f/16f)*atlasscaleV;
-            float maxu1 = minu2;
-            float maxu2 = minu2 +(3f/16f)*atlasscaleU;
-            float maxv = sMaxV;
+                TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(Textures.CHAIN_TEXTURE);
+                IVertexBuilder builder = bufferIn.getBuffer(RenderType.getCutout());
 
-            float w = 1.5f/16f;
-            float h = 5f/16f;
-            //Minecraft.getInstance().gameSettings.ambientOcclusionStatus.
-            float col =1f;
-            //TODO: fix lighting since none of these methods are shaded properly
-            //IVertexBuilder builder2 = bufferIn.getBuffer(RenderType.getEntityCutout(Resources.BELL_CHAIN_TEXTURE));
-            chain.setRotationPoint(0,0,0);
-            //chain.render(matrixStackIn,builder2,combinedLightIn,combinedOverlayIn,1,1,1,1);
+                float sMinU = sprite.getMinU();
+                float sMinV = sprite.getMinV();
+                float sMaxU = sprite.getMaxU();
+                float sMaxV = sprite.getMaxV();
 
+                float atlasscaleU = sMaxU - sMinU;
+                float atlasscaleV = sMaxV - sMinV;
+                float minu1 = sMinU;
+                float minu2 = sMinU + (3f / 16f) * atlasscaleU;
+                float minv = sMinV + (11f / 16f) * atlasscaleV;
+                float maxu1 = minu2;
+                float maxu2 = minu2 + (3f / 16f) * atlasscaleU;
+                float maxv = sMaxV;
 
-            RendererUtil.addQuadSide(builder, matrixStackIn, -w, -0, 0, w, h, 0, minu1, minv, maxu1, maxv,  col,  col, col, 1, lu, lv, 0, 0, 1);
-            RendererUtil.addQuadSide(builder, matrixStackIn, w, -0, 0, -w, h, 0, minu1, minv, maxu1, maxv,  col,  col, col, 1, lu, lv, 0, 0, 1);
-            matrixStackIn.rotate(Const.YN90);
-            RendererUtil.addQuadSide(builder, matrixStackIn, -w, -0, 0, w, h, 0, minu2, minv, maxu2, maxv,  col,  col, col, 1, lu, lv, 0, 0, 1);
-            RendererUtil.addQuadSide(builder, matrixStackIn, w, -0, 0, -w, h, 0, minu2, minv, maxu2, maxv,  col,  col, col, 1, lu, lv, 0, 0, 1);
+                float w = 1.5f / 16f;
+                float h = 5f / 16f;
+                //Minecraft.getInstance().gameSettings.ambientOcclusionStatus.
+                float col = 1f;
 
+                matrixStackIn.rotate(Const.Y45);
 
+                RendererUtil.addQuadSide(builder, matrixStackIn, -w, -0, 0, w, h, 0, minu1, minv, maxu1, maxv, col, col, col, 1, lu, lv, 0, 0, 1);
+                RendererUtil.addQuadSide(builder, matrixStackIn, w, -0, 0, -w, h, 0, minu1, minv, maxu1, maxv, col, col, col, 1, lu, lv, 0, 0, 1);
+                matrixStackIn.rotate(Const.YN90);
+                RendererUtil.addQuadSide(builder, matrixStackIn, -w, -0, 0, w, h, 0, minu2, minv, maxu2, maxv, col, col, col, 1, lu, lv, 0, 0, 1);
+                RendererUtil.addQuadSide(builder, matrixStackIn, w, -0, 0, -w, h, 0, minu2, minv, maxu2, maxv, col, col, col, 1, lu, lv, 0, 0, 1);
+            }
             matrixStackIn.pop();
         }
     }

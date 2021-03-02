@@ -193,7 +193,7 @@ public class SoftFluid {
         private ResourceLocation stillTexture;
         private ResourceLocation flowingTexture;
         private String translationKey = "fluid.supplementaries.jar_fluid";
-        private int tintColor = 0xFFFFFFFF;
+        private int tintColor = -1;
         private int luminosity = 0;
         private final List<Item> filledBottles = new ArrayList<>();
         private final List<Item> filledBuckets = new ArrayList<>();
@@ -287,7 +287,8 @@ public class SoftFluid {
         }
         public final Builder condition(String modId){
             this.isDisabled = !ModList.get().isLoaded(modId);
-            this.id = this.id.replace(Supplementaries.MOD_ID,modId);
+            if(this.id==null)this.id = modId;
+            else if(this.id.contains(Supplementaries.MOD_ID)) this.id = this.id.replace(Supplementaries.MOD_ID,modId);
             return this;
         }
         public final Builder textureOverride(String fluidRes, int newColor){

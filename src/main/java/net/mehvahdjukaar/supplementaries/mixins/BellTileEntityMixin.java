@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(BellTileEntity.class)
 public abstract class BellTileEntityMixin extends TileEntity  implements IBellConnection {
-    public boolean hasChain;
+    public BellConnection connection = BellConnection.NONE;
 
 
     public BellTileEntityMixin(TileEntityType<?> tileEntityTypeIn) {
@@ -22,27 +22,27 @@ public abstract class BellTileEntityMixin extends TileEntity  implements IBellCo
 
 
     @Override
-    public boolean getConnected() {
-        return hasChain;
+    public BellConnection getConnected() {
+        return connection;
     }
 
     @Override
-    public void setConnected(boolean hasChain) {
-        this.hasChain=hasChain;
+    public void setConnected(BellConnection con) {
+        this.connection=con;
     }
 
     @Override
     public CompoundNBT write(CompoundNBT compound) {
         super.write(compound);
-        compound.putBoolean("Chain",this.hasChain);
+        compound.putInt("Connection",this.connection.ordinal());
         return compound;
     }
 
     @Override
     public void read(BlockState state, CompoundNBT compound) {
         super.read(state, compound);
-        if(compound.contains("Chain"))
-            this.hasChain=compound.getBoolean("Chain");
+        if(compound.contains("Connection"))
+            this.connection = BellConnection.values()[compound.getInt("Connection")];
     }
 
     @Override

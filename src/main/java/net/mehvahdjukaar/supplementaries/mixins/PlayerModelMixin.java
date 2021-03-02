@@ -5,7 +5,6 @@ import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.LivingEntity;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -19,11 +18,9 @@ public abstract class PlayerModelMixin<T extends LivingEntity> extends BipedMode
     }
 
     @Shadow
-    @Final
     public ModelRenderer bipedLeftArmwear;
 
     @Shadow
-    @Final
     public ModelRenderer bipedRightArmwear;
 
     @Inject(at = @At("TAIL"), method = "setRotationAngles(Lnet/minecraft/entity/LivingEntity;FFFFF)V")

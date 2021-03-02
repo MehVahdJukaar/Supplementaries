@@ -5,11 +5,11 @@ import net.mehvahdjukaar.supplementaries.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.FireflyJarBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.LightUpBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
-import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.entities.ThrowableBrickEntity;
+import net.mehvahdjukaar.supplementaries.fluids.SoftFluidList;
 import net.mehvahdjukaar.supplementaries.items.EmptyJarItem;
 import net.mehvahdjukaar.supplementaries.items.JarItem;
 import net.mehvahdjukaar.supplementaries.items.SackItem;
@@ -58,9 +58,10 @@ public class Dispenser {
                         (item instanceof BlockItem && ((BlockItem) item).getBlock() instanceof FireflyJarBlock)) {
                     DispenserBlock.registerDispenseBehavior(item, new PlaceBlockDispenseBehavior());
                 }
-                else if (!CommonUtil.getJarContentTypeFromItem(new ItemStack(item)).isEmpty()) {
+                else if(item instanceof FishBucketItem || item==Items.COOKIE || item==Items.WATER_BUCKET
+                        || SoftFluidList.ITEM_MAP.containsKey(item))
                     DispenserBlock.registerDispenseBehavior(item, new FillJarDispenserBehavior());
-                }
+
             }
             DispenserBlock.registerDispenseBehavior(Items.BUCKET, new BucketJarDispenserBehavior());
             DispenserBlock.registerDispenseBehavior(Items.BOWL, new BucketJarDispenserBehavior());
@@ -191,17 +192,20 @@ public class Dispenser {
             if(te instanceof JarBlockTile){
                 JarBlockTile tile = ((JarBlockTile)te);
                 if(tile.mobHolder.isEmpty()) {
-                    ItemStack returnStack = ItemStack.EMPTY;
+                    ItemStack returnStack;
                     if (tile.isItemValidForSlot(0, stack)) {
                         tile.handleAddItem(stack, null, null);
                         tile.markDirty();
                         //this.setSuccessful(true);
                         returnStack = new ItemStack(stack.getItem() instanceof FishBucketItem ? Items.BUCKET : Items.AIR);
-                    } else if (tile.isEmpty()) {
+                        return Dispenser.glassBottleFill(source, stack, returnStack);
+                    }
+                    else if (tile.isEmpty() && !tile.fluidHolder.isFull()) {
                         returnStack = tile.fluidHolder.interactWithItem(stack);
                         if(!returnStack.isEmpty())tile.markDirty();
+                        return Dispenser.glassBottleFill(source, stack, returnStack);
                     }
-                    return Dispenser.glassBottleFill(source, stack, returnStack);
+
                 }
                 return stack;
             }

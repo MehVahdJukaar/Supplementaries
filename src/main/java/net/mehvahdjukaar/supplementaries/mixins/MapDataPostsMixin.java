@@ -28,31 +28,26 @@ import java.util.Objects;
 public abstract class MapDataPostsMixin extends WorldSavedData {
     public MapDataPostsMixin(String name) {
         super(name);
-        mapDecorations= Maps.newLinkedHashMap();
+        //mapDecorations= Maps.newLinkedHashMap();
     }
 
     @Shadow
-    @Final
-    private void updateDecorations(MapDecoration.Type type, @Nullable IWorld worldIn, String decorationName, double worldX, double worldZ, double rotationIn, @Nullable ITextComponent name){};
+    public abstract void updateDecorations(MapDecoration.Type type, @Nullable IWorld worldIn, String decorationName, double worldX, double worldZ, double rotationIn, @Nullable ITextComponent name);
 
     @Final
     private final Map<String, MapPost> posts = Maps.newHashMap();
 
     @Shadow
-    @Final
     public int xCenter;
 
     @Shadow
-    @Final
     public int zCenter;
 
     @Shadow
-    @Final
     public byte scale;
 
     @Shadow
-    @Final
-    public final Map<String, MapDecoration> mapDecorations;
+    public Map<String, MapDecoration> mapDecorations;
     //TODO: it says this should fe final but as you can see it clearly is. if you know a solution tell me
 
 

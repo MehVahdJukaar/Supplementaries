@@ -10,7 +10,6 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.shapes.VoxelShapes;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -28,15 +27,12 @@ public abstract class PistonMixin extends TileEntity implements IBlockHolder {
         return true;
     }
 
-    @Final
     @Shadow
     private BlockState pistonState;
 
-    @Final
     @Shadow
     private boolean extending;
 
-    @Final
     @Shadow
     private float lastProgress;
 
@@ -54,12 +50,8 @@ public abstract class PistonMixin extends TileEntity implements IBlockHolder {
     }
 
     @Shadow
-    private AxisAlignedBB moveByPositionAndProgress(AxisAlignedBB bb) {
-        return bb;
-    }
+    public abstract AxisAlignedBB moveByPositionAndProgress(AxisAlignedBB bb);
 
     @Shadow
-    public Direction getMotionDirection() {
-        return Direction.UP;
-    }
+    public abstract Direction getMotionDirection();
 }
