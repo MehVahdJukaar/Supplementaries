@@ -19,6 +19,7 @@ import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
@@ -74,13 +75,18 @@ public abstract class SwayingBlock extends Block implements IWaterLoggable {
         if (tileentity instanceof SwayingBlockTile) {
             SwayingBlockTile te = ((SwayingBlockTile) tileentity);
             Vector3d mot = entity.getMotion();
-            double v = mot.dotProduct(Vector3d.copyCentered(te.getDirection().rotateY().getDirectionVec()));
-            if(v!=0){
-                te.inv=v<0;
-            }
             if(mot.length()>0.05){
-                te.counter = 0;
+                Vector3d norm = new Vector3d(mot.x,0,mot.z).normalize();
+                Vector3i dv = te.getDirection().rotateY().getDirectionVec();
+                Vector3d vec = new Vector3d(dv.getX(),0,dv.getZ()).normalize();
+                double dot = norm.dotProduct(vec);
+                if(dot!=0){
+                    te.inv=dot<0;
+                }
+                if(Math.abs(dot)>0.4) te.counter = 0;
             }
+
+
         }
     }
 

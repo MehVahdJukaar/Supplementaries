@@ -28,7 +28,7 @@ public class BambooSpikesPistonMovement {
                     //apply potions using quark moving tiles
                     if (ModList.get().isLoaded("quark") && world!=null) {
                         //get tile
-                        TileEntity tile = SupplementariesQuarkPlugin.getMovingTile(pos, world);
+                        TileEntity tile = QuarkPistonPlugin.getMovingTile(pos, world);
                         if (tile instanceof BambooSpikesBlockTile) {
                             //apply effects
                             if(((BambooSpikesBlockTile) tile).interactWithEntity(((LivingEntity) entity),world)){
@@ -42,7 +42,7 @@ public class BambooSpikesPistonMovement {
                                 }
                             }
                             //update tile entity in its list
-                            SupplementariesQuarkPlugin.updateMovingTIle(pos,world,tile);
+                            QuarkPistonPlugin.updateMovingTIle(pos,world,tile);
                         }
                     }
 

@@ -59,7 +59,7 @@ public class PlanterBlock extends Block implements IWaterLoggable{
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         boolean flag = context.getWorld().getFluidState(context.getPos()).getFluid() == Fluids.WATER;
-        return this.updatedState(this.getDefaultState(), context.getWorld(), context.getPos()).with(WATERLOGGED, flag);
+        return this.getDefaultState().with(WATERLOGGED, flag).with(EXTENDED, this.canConnect(context.getWorld(),context.getPos()));
     }
 
     //called when a neighbor is placed
@@ -69,17 +69,18 @@ public class PlanterBlock extends Block implements IWaterLoggable{
             worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
         }
         if(facing==Direction.UP){
-            return this.updatedState(stateIn, worldIn, currentPos);
+            return stateIn.with(EXTENDED, this.canConnect(worldIn, currentPos));
         }
         return stateIn;
     }
 
-    public BlockState updatedState(BlockState state, IWorld world, BlockPos pos){
-        return state.with(EXTENDED, this.canConnect(world.getBlockState(pos.up()).getBlock()));
-    }
-
-    public boolean canConnect(Block block){
-        return !((block instanceof AirBlock) || (block instanceof StemBlock) || (block instanceof CropsBlock));
+    public boolean canConnect(IWorld world, BlockPos pos){
+        BlockPos up = pos.up();
+        BlockState state = world.getBlockState(up);
+        Block b = state.getBlock();
+        VoxelShape shape = state.getShape(world, up);
+        boolean connect = (!shape.isEmpty() && shape.getBoundingBox().minY<0.06);
+        return (connect && !(b instanceof StemBlock) && !(b instanceof CropsBlock));
     }
 
     @Override
@@ -91,8 +92,4 @@ public class PlanterBlock extends Block implements IWaterLoggable{
     public boolean canSustainPlant(BlockState state, IBlockReader world, BlockPos pos, Direction direction, IPlantable plantable) {
         return true;
     }
-
-
-
-
 }

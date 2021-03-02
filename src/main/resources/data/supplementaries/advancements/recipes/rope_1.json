@@ -3,7 +3,7 @@
     {
       "conditions": [
         {
-          "flag": "checkerboard_block",
+          "flag": "rope",
           "type": "supplementaries:flag"
         }
       ],
@@ -11,7 +11,7 @@
         "parent": "minecraft:recipes/root",
         "rewards": {
           "recipes": [
-            "supplementaries:checkerboard_block_recipe"
+            "supplementaries:rope_recipe"
           ]
         },
         "criteria": {
@@ -20,7 +20,7 @@
             "conditions": {
               "items": [
                 {
-                  "item": "minecraft:blackstone"
+                  "item": "supplementaries:flax"
                 }
               ]
             }
@@ -28,7 +28,7 @@
           "has_the_recipe": {
             "trigger": "minecraft:recipe_unlocked",
             "conditions": {
-              "recipe": "supplementaries:checkerboard_block_recipe"
+              "recipe": "supplementaries:flax_recipe"
             }
           }
         },

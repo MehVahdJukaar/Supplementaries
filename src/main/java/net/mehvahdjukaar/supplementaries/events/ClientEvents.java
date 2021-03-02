@@ -21,16 +21,16 @@ public class ClientEvents {
         if((event.getPlayer()==null) || (event.getPlayer().world==null) || !ClientConfigs.cached.TOOLTIP_HINTS)return;
         Item i = event.getItemStack().getItem();
         if(ServerConfigs.cached.WALL_LANTERN_PLACEMENT && CommonUtil.isLantern(i)){
-            event.getToolTip().add(new TranslationTextComponent("message.supplementaries.wall_lantern").mergeStyle(TextFormatting.GRAY));
+            event.getToolTip().add(new TranslationTextComponent("message.supplementaries.wall_lantern").mergeStyle(TextFormatting.GRAY).mergeStyle(TextFormatting.ITALIC));
         }
         else if(ServerConfigs.cached.THROWABLE_BRICKS_ENABLED && CommonUtil.isBrick(i)){
-            event.getToolTip().add(new TranslationTextComponent("message.supplementaries.throwable_brick").mergeStyle(TextFormatting.GRAY));
+            event.getToolTip().add(new TranslationTextComponent("message.supplementaries.throwable_brick").mergeStyle(TextFormatting.GRAY).mergeStyle(TextFormatting.ITALIC));
         }
         else if(ServerConfigs.cached.HANGING_POT_PLACEMENT && CommonUtil.isPot(i)){
-            event.getToolTip().add(new TranslationTextComponent("message.supplementaries.hanging_pot").mergeStyle(TextFormatting.GRAY));
+            event.getToolTip().add(new TranslationTextComponent("message.supplementaries.hanging_pot").mergeStyle(TextFormatting.GRAY).mergeStyle(TextFormatting.ITALIC));
         }
         else if(ServerConfigs.cached.DOUBLE_CAKE_PLACEMENT && CommonUtil.isCake(i)){
-            event.getToolTip().add(new TranslationTextComponent("message.supplementaries.double_cake").mergeStyle(TextFormatting.GRAY));
+            event.getToolTip().add(new TranslationTextComponent("message.supplementaries.double_cake").mergeStyle(TextFormatting.GRAY).mergeStyle(TextFormatting.ITALIC));
         }
     }
 

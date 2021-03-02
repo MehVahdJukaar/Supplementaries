@@ -89,7 +89,7 @@ public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
         if(handler!=null){
             FluidStack fluid = handler.getFluidInTank(0);
             if(!fluid.isEmpty()){
-                this.fluidHolder.fill(SoftFluidList.fromFluid(fluid.getFluid()));
+                this.fluidHolder.fill(fluid);
                 return true;
             }
         }

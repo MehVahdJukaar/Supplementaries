@@ -29,6 +29,7 @@ public class SoftFluid {
     private final List<Item> filledBottles;
     private final List<Item> filledBuckets;
     private final List<Item> filledBowls;
+    private final Item bottleReturnItem;
     private final Item foodItem;
     private final int foodDivider;
     private final SoundEvent fillSound;
@@ -51,6 +52,7 @@ public class SoftFluid {
         this.emptySound = builder.emptySound;
         this.id = builder.id;
         this.translationKey = builder.translationKey;
+        this.bottleReturnItem = builder.bottleReturnItem;
     }
 
     public int getFoodDivider() {
@@ -130,14 +132,9 @@ public class SoftFluid {
         return this.tintColor;
     }
 
-    @Nullable
-    public Item getBottle() {
-        for(Item item : this.filledBottles){
-            return item;
-        }
-        return null;
+    public Item getEmptyBottle(){
+        return this.bottleReturnItem;
     }
-
 
     public Collection<Item> getBowls(){
         return this.filledBowls;
@@ -147,6 +144,14 @@ public class SoftFluid {
     }
     public Collection<Item> getBottles(){
         return this.filledBottles;
+    }
+
+    @Nullable
+    public Item getBottle() {
+        for(Item item : this.filledBottles){
+            return item;
+        }
+        return null;
     }
 
     @Nullable
@@ -193,6 +198,7 @@ public class SoftFluid {
         private final List<Item> filledBottles = new ArrayList<>();
         private final List<Item> filledBuckets = new ArrayList<>();
         private final List<Item> filledBowls = new ArrayList<>();
+        private Item bottleReturnItem = Items.GLASS_BOTTLE;
         private Item foodItem = Items.AIR;
         private int foodDivider = 1;
         //only used for buckets. rest only depends on return item
@@ -231,7 +237,7 @@ public class SoftFluid {
                 this.luminosity = att.getLuminosity();
                 this.translationKey = att.getTranslationKey();
                 this.addEqFluid(fluid);
-                this.id = fluid.getRegistryName().toString();;
+                this.id = fluid.getRegistryName().toString();
             }
             else{
                 this.isDisabled=true;
@@ -281,6 +287,16 @@ public class SoftFluid {
         }
         public final Builder condition(String modId){
             this.isDisabled = !ModList.get().isLoaded(modId);
+            this.id = this.id.replace(Supplementaries.MOD_ID,modId);
+            return this;
+        }
+        public final Builder textureOverride(String fluidRes, int newColor){
+            Fluid f = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(fluidRes));
+            if(f!=null && f!=Fluids.EMPTY) {
+                this.flowingTexture = f.getAttributes().getFlowingTexture();
+                this.stillTexture = f.getAttributes().getStillTexture();
+                this.color(newColor);
+            }
             return this;
         }
         public final Builder textureOverride(String fluidRes){
@@ -344,6 +360,10 @@ public class SoftFluid {
         public final Builder sound(SoundEvent fill, SoundEvent empty) {
             this.emptySound = empty;
             this.fillSound = fill;
+            return this;
+        }
+        public final Builder specialEmptyBottle(Item item){
+            this.bottleReturnItem = item;
             return this;
         }
         //food

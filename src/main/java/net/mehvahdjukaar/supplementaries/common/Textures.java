@@ -35,6 +35,8 @@ public class Textures {
     public static final ResourceLocation LAVA_TEXTURE = new ResourceLocation("minecraft:block/lava_still");
     public static final ResourceLocation CHAIN_TEXTURE = new ResourceLocation("minecraft:block/chain");
     public static final ResourceLocation FLOWING_WATER_TEXTURE = new ResourceLocation("minecraft:block/water_flow");
+    public static final ResourceLocation SLIME_TEXTURE = new ResourceLocation("minecraft:block/slime_block");
+
 
     //blocks (to stitch)
     public static final ResourceLocation MILK_TEXTURE = new ResourceLocation(MOD_ID, "blocks/milk_liquid");
@@ -64,11 +66,12 @@ public class Textures {
     public static final ResourceLocation GLOBE_TEXTURE = new ResourceLocation(MOD_ID,"textures/entity/globes/globe_the_world.png");
     public static final ResourceLocation GLOBE_FLAT_TEXTURE = new ResourceLocation(MOD_ID,"textures/entity/globes/globe_flat.png");
     public static final ResourceLocation GLOBE_MOON_TEXTURE = new ResourceLocation(MOD_ID,"textures/entity/globes/globe_moon.png");
+    public static final ResourceLocation GLOBE_SUN_TEXTURE = new ResourceLocation(MOD_ID,"textures/entity/globes/globe_sun.png");
     public static final ResourceLocation GLOBE_SHEARED_TEXTURE = new ResourceLocation(MOD_ID,"textures/entity/globes/globe_sheared.png");
     public static final ResourceLocation GLOBE_CUSTOM_1 = new ResourceLocation(MOD_ID,"textures/entity/globes/globe_plantkillable.png");
     public static final ResourceLocation GLOBE_CUSTOM_2 = new ResourceLocation(MOD_ID,"textures/entity/globes/globe_toffanelly.png");
     public static final ResourceLocation GLOBE_CUSTOM_3 = new ResourceLocation(MOD_ID,"textures/entity/globes/globe_sylvetichearts.png");
-
+    public static final ResourceLocation ROPE_ARROW = new ResourceLocation(MOD_ID,"textures/entity/rope_arrow.png");
 
     public static final ResourceLocation FIREFLY_TEXTURE =  new ResourceLocation(MOD_ID,"textures/entity/firefly.png");
     public static final ResourceLocation BELL_CHAIN_TEXTURE = new ResourceLocation(MOD_ID,"textures/entity/bell_chain.png");

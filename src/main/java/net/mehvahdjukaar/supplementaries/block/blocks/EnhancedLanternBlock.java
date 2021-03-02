@@ -41,7 +41,7 @@ public class EnhancedLanternBlock extends SwayingBlock {
     public void addInformation(ItemStack stack, IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
         if(!ClientConfigs.cached.TOOLTIP_HINTS)return;
-        tooltip.add(new TranslationTextComponent("message.supplementaries.wall_lantern").mergeStyle(TextFormatting.GRAY));
+        tooltip.add(new TranslationTextComponent("message.supplementaries.wall_lantern").mergeStyle(TextFormatting.GRAY).mergeStyle(TextFormatting.ITALIC));
 
     }
 

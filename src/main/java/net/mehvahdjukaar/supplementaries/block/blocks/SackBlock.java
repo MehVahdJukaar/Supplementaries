@@ -2,8 +2,6 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import com.google.common.collect.Lists;
 import net.mehvahdjukaar.supplementaries.block.tiles.SackBlockTile;
-import net.mehvahdjukaar.supplementaries.common.ModTags;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -93,18 +91,12 @@ public class SackBlock extends FallingBlock {
 
     public static boolean canFall(BlockPos pos, IWorld world){
         return (world.isAirBlock(pos.down()) || canFallThrough(world.getBlockState(pos.down()))) &&
-                 pos.getY() >= 0 && !isSupportingCeiling(pos.up(),world);
+                 pos.getY() >= 0 && !RopeBlock.isSupportingCeiling(pos.up(),world);
     }
 
     //TODO: maybe put in rope
     //TODO: merge rope tag and sack supporting whitelist
     //check is block can support a rope or sack under it
-    public static boolean isSupportingCeiling(BlockPos pos, IWorld world){
-        Block b = world.getBlockState(pos).getBlock();
-        return hasEnoughSolidSide(world, pos, Direction.DOWN)||
-                ModTags.isTagged(ModTags.ROPE_TAG,b)||
-                ServerConfigs.cached.SACK_WHITELIST.contains(b.getRegistryName().toString());
-    }
 
     //schedule block tick
     @Override

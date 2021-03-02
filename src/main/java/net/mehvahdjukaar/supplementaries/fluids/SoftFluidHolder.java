@@ -100,7 +100,7 @@ public class SoftFluidHolder {
             fluidStack.setTag(this.nbt.copy());
     }
 
-    public boolean interactWithPlayer(PlayerEntity player, Hand hand, World world, BlockPos pos){
+    public boolean interactWithPlayer(PlayerEntity player, Hand hand){
         ItemStack handStack = player.getHeldItem(hand);
         ItemStack returnStack = this.interactWithItem(handStack);
         if(!returnStack.isEmpty()){
@@ -125,7 +125,7 @@ public class SoftFluidHolder {
         Item i = stack.getItem();
         ItemStack returnStack;
         SoundEvent sound;
-        if(i == Items.GLASS_BOTTLE){
+        if(i == fluid.getEmptyBottle()){
             returnStack = this.fillBottle();
             sound = SoundEvents.ITEM_BOTTLE_FILL;
         }
@@ -193,7 +193,7 @@ public class SoftFluidHolder {
         }
         if(this.fluid.hasBottle(i) && this.canAdd(BOTTLE_COUNT)){
             this.grow(BOTTLE_COUNT);
-            return new ItemStack(Items.GLASS_BOTTLE);
+            return new ItemStack(this.fluid.getEmptyBottle());
         }
         else if(this.fluid.hasBowl(i) && this.canAdd(BOWL_COUNT)){
             this.grow(BOWL_COUNT);
@@ -337,6 +337,7 @@ public class SoftFluidHolder {
     public void setCount(int inc){
         this.count = inc;
     }
+    public void maxCount(){this.count = capacity;}
     public void grow(int inc) {
         this.setCount(this.count + inc);
     }
@@ -359,9 +360,14 @@ public class SoftFluidHolder {
         return nbt;
     }
 
+    public void setNbt(CompoundNBT nbt) {
+        this.nbt = nbt;
+    }
+
     //clears the tank
     public void empty(){
         this.fluid = SoftFluidList.EMPTY;
+        this.setCount(0);
         this.nbt = new CompoundNBT();
         this.specialColor = 0;
     }
@@ -374,6 +380,12 @@ public class SoftFluidHolder {
         this.setFluid(other.getFluid(), other.getNbt());
         this.setCount(Math.min(this.capacity,other.getCount()));
     }
+
+    public void fill(FluidStack fluidStack){
+        this.setFluid(fluidStack);
+        this.setCount(capacity);
+    }
+
     //fills to max capacity with said fluid
     public void fill(SoftFluid fluid){
         this.fill(fluid, new CompoundNBT());
@@ -382,6 +394,11 @@ public class SoftFluidHolder {
     public void fill(SoftFluid fluid, CompoundNBT nbt){
         this.setFluid(fluid,nbt);
         this.setCount(capacity);
+    }
+
+    public void setFluid(FluidStack fluidStack){
+        SoftFluid s = SoftFluidList.fromFluid(fluidStack.getFluid());
+        this.setFluid(s, fluidStack.getOrCreateTag());
     }
 
     public void setFluid(SoftFluid fluid){
@@ -462,6 +479,9 @@ public class SoftFluidHolder {
                 if (item instanceof SuspiciousStewItem) {
                     susStewBehavior(player, stack, div);
                 }
+                else if(item instanceof HoneyBottleItem){
+                    honeyBehavior(player);
+                }
                 success = true;
             }
         } else if (item instanceof PotionItem) {
@@ -515,6 +535,10 @@ public class SoftFluidHolder {
             }
         }
         return false;
+    }
+
+    public static void honeyBehavior(PlayerEntity player){
+        player.removePotionEffect(Effects.POISON);
     }
 
     //util functions

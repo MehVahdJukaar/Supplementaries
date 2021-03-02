@@ -36,15 +36,15 @@ public class ThrowableBrickEntity extends ProjectileItemEntity implements IRende
     }
 
     public ThrowableBrickEntity(World worldIn, LivingEntity throwerIn) {
-        super((EntityType<? extends ProjectileItemEntity>) Registry.THROWABLE_BRICK, throwerIn, worldIn);
+        super(Registry.THROWABLE_BRICK.get(), throwerIn, worldIn);
     }
 
     public ThrowableBrickEntity(World worldIn, double x, double y, double z) {
-        super((EntityType<? extends ProjectileItemEntity>) Registry.THROWABLE_BRICK, x, y, z, worldIn);
+        super(Registry.THROWABLE_BRICK.get(), x, y, z, worldIn);
     }
 
     public ThrowableBrickEntity(FMLPlayMessages.SpawnEntity packet, World world) {
-        super((EntityType<? extends ProjectileItemEntity>) Registry.THROWABLE_BRICK, world);
+        super(Registry.THROWABLE_BRICK.get(), world);
     }
 
     @Override

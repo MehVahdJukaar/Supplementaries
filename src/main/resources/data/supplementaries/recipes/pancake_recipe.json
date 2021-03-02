@@ -5,13 +5,13 @@
       "item": "minecraft:sugar"
     },
     {
-      "item": "minecraft:milk_bucket"
+      "tag": "forge:milk"
     },
     {
-      "item": "minecraft:wheat"
+      "tag": "forge:grain"
     },
     {
-      "item": "minecraft:egg"
+      "tag": "forge:eggs"
     }
   ],
   "result": {

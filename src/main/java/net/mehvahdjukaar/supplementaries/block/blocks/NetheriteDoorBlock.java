@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.tiles.KeyLockableTile;
+import net.mehvahdjukaar.supplementaries.plugins.quark.QuarkDoubleDoorPlugin;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DoorBlock;
@@ -14,6 +15,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.ModList;
 
 public class NetheriteDoorBlock extends DoorBlock {
 
@@ -28,9 +30,11 @@ public class NetheriteDoorBlock extends DoorBlock {
         TileEntity te = worldIn.getTileEntity(p);
         if (te instanceof KeyLockableTile) {
             if (((KeyLockableTile) te).handleAction(player, handIn, "door")) {
+
+                if(ModList.get().isLoaded("quark")) QuarkDoubleDoorPlugin.openDoorKey(worldIn,state,pos,player,handIn);
+
                 state = state.func_235896_a_(OPEN);
                 worldIn.setBlockState(pos, state, 10);
-
                 //TODO: replace with proper sound event
                 worldIn.playEvent(player, state.get(OPEN) ? this.getOpenSound() : this.getCloseSound(), pos, 0);
             }

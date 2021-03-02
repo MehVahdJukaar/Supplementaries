@@ -5,11 +5,13 @@ import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.datagen.RecipeCondition;
+import net.mehvahdjukaar.supplementaries.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.setup.ClientSetup;
 import net.mehvahdjukaar.supplementaries.setup.ModSetup;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
@@ -30,8 +32,14 @@ public class Supplementaries{
 
     public Supplementaries() {
 
+        MinecraftForge.EVENT_BUS.register(ServerEvents.class);
 
-        RegistryConfigs.load();
+        try {
+            RegistryConfigs.load();
+        }catch (Exception exception){
+            throw new RuntimeException("Failed to load config supplementaries-registry.toml. Try deleting it");
+        }
+
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ServerConfigs.SERVER_CONFIG);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfigs.CLIENT_CONFIG);
 

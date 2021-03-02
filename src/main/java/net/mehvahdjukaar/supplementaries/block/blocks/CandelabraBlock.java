@@ -38,6 +38,8 @@ public class CandelabraBlock extends LightUpBlock {
     public static final EnumProperty<AttachFace> FACE = BlockStateProperties.FACE;
     public CandelabraBlock(Properties properties) {
         super(properties);
+        this.setDefaultState(this.stateContainer.getBaseState().with(WATERLOGGED,false).with(LIT,true)
+            .with(FACE,AttachFace.FLOOR).with(FACING,Direction.NORTH));
     }
 
     @Override
@@ -98,7 +100,7 @@ public class CandelabraBlock extends LightUpBlock {
             return hasEnoughSolidSide(worldIn, pos.down(), Direction.UP);
         }
         else if(state.get(FACE)==AttachFace.CEILING){
-            return hasEnoughSolidSide(worldIn, pos.up(), Direction.DOWN);
+            return RopeBlock.isSupportingCeiling(pos.up(), worldIn);
         }
         return isSideSolidForDirection(worldIn, pos, state.get(FACING).getOpposite());
     }

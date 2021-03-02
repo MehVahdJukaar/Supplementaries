@@ -20,6 +20,7 @@ public class ModTags {
     //block tags
     public static final Tags.IOptionalNamedTag<Block> POSTS = blockTag("posts");
     public static final Tags.IOptionalNamedTag<Block> ROPE_TAG = blockTag("ropes");
+    public static final Tags.IOptionalNamedTag<Block> ROPE_HANG_TAG = blockTag("hang_from_ropes");
     public static final Tags.IOptionalNamedTag<Block> BELLOWS_TICKABLE_TAG = blockTag("bellows_tickable");
     //item tags
     public static final Tags.IOptionalNamedTag<Item> SHULKER_BLACKLIST_TAG = itemTag("shulker_blacklist");

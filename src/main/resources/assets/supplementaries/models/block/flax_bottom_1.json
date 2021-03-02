@@ -1,0 +1,6 @@
+{
+  "parent": "supplementaries:block/crop_cross",
+  "textures": {
+    "cross": "supplementaries:blocks/flax_bottom_1"
+  }
+}

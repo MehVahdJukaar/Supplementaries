@@ -44,9 +44,9 @@ public class OilLanternBlock extends EnhancedLanternBlock {
         switch (state.get(FACE)) {
             default:
             case FLOOR:
-                return Block.hasEnoughSolidSide(worldIn, pos.offset(Direction.DOWN), Direction.UP);
+                return Block.hasEnoughSolidSide(worldIn, pos.down(), Direction.UP);
             case CEILING:
-                return Block.hasEnoughSolidSide(worldIn, pos.offset(Direction.UP), Direction.DOWN);
+                return RopeBlock.isSupportingCeiling(pos.up(),worldIn);
             case WALL:
                 return super.isValidPosition(state,worldIn,pos);
         }

@@ -40,6 +40,8 @@ public class ServerConfigs {
         private static void init(ForgeConfigSpec.Builder builder){
             builder.push("items");
 
+
+
             //flute
             builder.push("flute");
             FLUTE_RADIUS = builder.comment("radius in which an unbound flute will search pets")
@@ -48,6 +50,7 @@ public class ServerConfigs {
                     .defineInRange("bound_distance",64, 0, 500);
             FLUTE_EXTRA_MOBS = builder.comment("additional non tameable entities that you can bind to flutes")
                     .defineList("flute_extra_mobs", Arrays.asList("minecraft:horse","minecraft:llama","minecraft:mule","minecraft:donkey","minecraft:fox"),s->true);
+
             builder.pop();
 
 
@@ -146,7 +149,6 @@ public class ServerConfigs {
 
         public static ForgeConfigSpec.BooleanValue NOTICE_BOARDS_UNRESTRICTED;
 
-        public static ForgeConfigSpec.ConfigValue<List<? extends String>> SACK_WHITELIST;
         public static ForgeConfigSpec.BooleanValue SACK_PENALTY;
         public static ForgeConfigSpec.IntValue SACK_INCREMENT;
         public static ForgeConfigSpec.IntValue SACK_SLOTS;
@@ -221,7 +223,8 @@ public class ServerConfigs {
             List<String> jarMobs = Arrays.asList("minecraft:slime",
                     "minecraft:bee","minecraft:magma_cube","iceandfire:pixie","alexsmobs:fly", "alexsmobs:hummingbird","alexsmobs:cockroach",
                     "buzzierbees:honey_slime", "mysticalworld:frog","mysticalworld:beetle","mysticalworld:silkworm",
-                    "druidcraft:lunar_moth", "druidcraft:dreadfish","swampexpansion:slabfish",
+                    "druidcraft:lunar_moth", "druidcraft:dreadfish","swampexpansion:slabfish","betteranimalsplus:goose",
+                    "endergetic:puff_bug", "betterendforge:end_slime", "betterendforge:dragonfly", "betterendforge:silk_moth",
                     "savageandravage:creepie","betteranimalsplus:butterfly","whisperwoods:moth","fins:river_pebble_snail");
             MOB_JAR_ALLOWED_MOBS = builder.comment("catchable mobs \n"+
                     "due to a vanilla bug some mobs might not render correctly or at all")
@@ -254,6 +257,9 @@ public class ServerConfigs {
                     "exoticbirds:gouldianfinch", "exoticbirds:gull", "exoticbirds:pigeon", "exoticbirds:penguin", "exoticbirds:duck",
                     "exoticbirds:booby", "exoticbirds:cardinal", "exoticbirds:bluejay", "exoticbirds:robin", "exoticbirds:kookaburra",
                     "exoticbirds:budgerigar", "exoticbirds:cockatoo","swampexpansion:slabfish",
+                    "betteranimalsplus:horseshoecrab", "betteranimalsplus:crab", "whisperwoods:wisp",
+                    "undergarden:muncher", "undergarden:scintling", "undergarden:rotling",  "undergarden:sploogie",
+                    "dungeonsmod:crow", "dungeonsmod:anthermite", "pandoras_creatures:crab",
                     "fins:flatback_leaf_snail","fins:penglil", "fins:river_pebble_snail", "fins:siderol_whiskered_snail", "fins:red_bull_crab", "fins:white_bull_crab");
             cageMobs.addAll(additionalCageMobs);
             CAGE_ALLOWED_MOBS = builder.comment("catchable mobs")
@@ -274,9 +280,6 @@ public class ServerConfigs {
             builder.pop();
 
             builder.push("sack");
-            List<String> sackSupport = Arrays.asList("farmersdelight:rope");
-            SACK_WHITELIST = builder.comment("additional blocks that can support a sack")
-                    .defineList("whitelist", sackSupport,s -> true);
             SACK_PENALTY = builder.comment("penalize the player with slowness effect when carrying too many sacks")
                     .define("sack_penality", true);
             SACK_INCREMENT = builder.comment("maximum number of sacks after which the slowness effect will be applied. each multiple of this number will further slow the player down")
@@ -409,7 +412,6 @@ public class ServerConfigs {
         public static List<? extends String> CAGE_ALLOWED_BABY_MOBS;
         public static boolean CAGE_ALL_MOBS;
         public static boolean CAGE_ALL_BABIES;
-        public static List<? extends String> SACK_WHITELIST;
         public static int SACK_INCREMENT;
         public static boolean SACK_PENALTY;
         public static int SACK_SLOTS;
@@ -473,7 +475,6 @@ public class ServerConfigs {
             CAGE_ALL_MOBS = block.CAGE_ALL_MOBS.get();
             CAGE_ALL_BABIES = block.CAGE_ALL_BABIES.get();
 
-            SACK_WHITELIST = block.SACK_WHITELIST.get();
             SACK_INCREMENT = block.SACK_INCREMENT.get();
             SACK_PENALTY = block.SACK_PENALTY.get();
             SACK_SLOTS = block.SACK_SLOTS.get();

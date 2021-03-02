@@ -15,6 +15,7 @@ import net.minecraft.tileentity.ShulkerBoxTileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.math.vector.Vector3d;
@@ -369,6 +370,14 @@ public class CommonUtil {
         double dz = vector.getZ() - ((double)pos.getZ() + 0.5);
         double mydistW = (dx*dx + dz*dz);
         return (mydistW<(distW*distW) && (dy<distW && dy>-distDown));
+    }
+
+
+    //BlockItem method
+    public static boolean canPlace(BlockItemUseContext context, BlockState state){
+        PlayerEntity playerentity = context.getPlayer();
+        ISelectionContext iselectioncontext = playerentity == null ? ISelectionContext.dummy() : ISelectionContext.forEntity(playerentity);
+        return state.isValidPosition(context.getWorld(), context.getPos()) && context.getWorld().placedBlockCollides(state, context.getPos(), iselectioncontext);
     }
 
 }

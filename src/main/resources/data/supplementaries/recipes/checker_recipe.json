@@ -14,14 +14,14 @@
     }
   },
   "result": {
-    "item": "supplementaries:checkerboard_block",
+    "item": "supplementaries:checker_block",
     "count": 4
   },
 
   "conditions": [
     {
       "type": "supplementaries:flag",
-      "flag": "checkerboard_block"
+      "flag": "checker_block"
     }
   ]
 }

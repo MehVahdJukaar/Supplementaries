@@ -1,12 +1,16 @@
 package net.mehvahdjukaar.supplementaries.items;
 
 import net.mehvahdjukaar.supplementaries.client.renderers.PotionTooltipHelper;
+import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.fluids.SoftFluid;
 import net.mehvahdjukaar.supplementaries.fluids.SoftFluidList;
+import net.mehvahdjukaar.supplementaries.items.tabs.JarTab;
+import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
@@ -76,5 +80,10 @@ public class JarItem extends CageItem {
         }
     }
 
-
+    @Override
+    public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
+        if (this.isInGroup(group) && RegistryConfigs.reg.JAR_TAB.get() && group == Registry.JAR_TAB) {
+            JarTab.populateTab(items);
+        }
+    }
 }

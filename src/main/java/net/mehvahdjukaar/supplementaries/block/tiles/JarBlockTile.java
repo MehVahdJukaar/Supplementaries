@@ -61,7 +61,7 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
 
         ItemStack displayedStack = this.getDisplayedItem();
         //interact with fluid holder
-        if(this.isEmpty() && this.fluidHolder.interactWithPlayer(player,hand,this.world,this.pos)){
+        if(this.isEmpty() && this.fluidHolder.interactWithPlayer(player,hand)){
             return true;
         }
         //empty hand: eat food
@@ -118,23 +118,25 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
     }
 
     // adds item to te, removes from player
-    public void handleAddItem(ItemStack stack, PlayerEntity player, Hand handIn) {
+    public void handleAddItem(ItemStack stack, @Nullable PlayerEntity player, Hand handIn) {
         ItemStack handStack = stack.copy();
         handStack.setCount(1);
         Item item = handStack.getItem();
 
         this.addItem(handStack);
 
-        ItemStack returnStack = ItemStack.EMPTY;
-        //TODO: cookie sounds
-        player.addStat(Stats.ITEM_USED.get(item));
-        if(item instanceof FishBucketItem) {
-            returnStack = new ItemStack(Items.BUCKET);
-            this.world.playSound(null, this.pos, SoundEvents.ITEM_BUCKET_EMPTY_FISH, SoundCategory.BLOCKS, 1.0F, 1.0F);
-        }
-        // shrink stack and replace bottle /bucket with empty ones
-        if (!player.isCreative()) {
-            CommonUtil.swapItem(player,handIn,returnStack);
+        if(player!=null) {
+            ItemStack returnStack = ItemStack.EMPTY;
+            //TODO: cookie sounds
+            player.addStat(Stats.ITEM_USED.get(item));
+            if (item instanceof FishBucketItem) {
+                returnStack = new ItemStack(Items.BUCKET);
+                this.world.playSound(null, this.pos, SoundEvents.ITEM_BUCKET_EMPTY_FISH, SoundCategory.BLOCKS, 1.0F, 1.0F);
+            }
+            // shrink stack and replace bottle /bucket with empty ones
+            if (!player.isCreative()) {
+                CommonUtil.swapItem(player, handIn, returnStack);
+            }
         }
     }
 
@@ -145,6 +147,12 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
         } else {
             this.getDisplayedItem().grow(Math.min(1, this.getInventoryStackLimit() - this.getDisplayedItem().getCount()));
         }
+    }
+
+    public void resetHolders(){
+        this.fluidHolder.empty();
+        //this.mobholder.empty();
+        NonNullList<ItemStack> stacks = NonNullList.withSize(1, ItemStack.EMPTY);
     }
 
     //can this item be added?

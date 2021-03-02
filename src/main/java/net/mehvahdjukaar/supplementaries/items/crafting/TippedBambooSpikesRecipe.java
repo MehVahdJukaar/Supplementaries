@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.items.crafting;
 
+import net.mehvahdjukaar.supplementaries.items.BambooSpikesTippedItem;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
@@ -7,9 +8,9 @@ import net.minecraft.item.Items;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.SpecialRecipe;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
+import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionUtils;
+import net.minecraft.potion.Potions;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -41,8 +42,7 @@ public class TippedBambooSpikesRecipe extends SpecialRecipe {
                 }
                 itemstack = stack;
             }
-            if(stack.getItem() == Items.LINGERING_POTION && PotionUtils.getEffectsFromStack(stack).stream()
-                    .map(EffectInstance::getPotion).anyMatch(effect -> effect.equals(Effects.POISON))) {
+            if(stack.getItem() == Items.LINGERING_POTION) {
 
                 if (itemstack1 != null) {
                     return false;
@@ -58,7 +58,16 @@ public class TippedBambooSpikesRecipe extends SpecialRecipe {
 
     @Override
     public ItemStack getCraftingResult(CraftingInventory inv) {
-        return new ItemStack(Registry.BAMBOO_SPIKES_TIPPED_ITEM.get());
+        Potion potion = Potions.EMPTY;
+        for(int i = 0; i < inv.getSizeInventory(); ++i) {
+            Potion p = PotionUtils.getPotionFromItem(inv.getStackInSlot(i));
+            if(p!=Potions.EMPTY){
+                potion=p;
+                break;
+            }
+        }
+        return BambooSpikesTippedItem.makeSpikeItem(potion);
+
     }
 
     @Override

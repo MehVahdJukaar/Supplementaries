@@ -2,25 +2,44 @@
 
 {
     "multipart": [
-        {   "when":  {"OR": [
-            {"north_connection": "block"},
-            {"east_connection": "block"},
-            {"south_connection": "block"},
-            {"west_connection": "block"}
-        ]},
+        {   "when":  { "knot": true},
             "apply": { "model": "supplementaries:block/rope_knot" }
         },
         {   "when": { "north_connection": "block" },
-            "apply": { "model": "supplementaries:block/rope_connection_0", "uvlock": true}
+            "apply": { "model": "supplementaries:block/rope_connection_block", "uvlock": true}
         },
         {   "when": { "east_connection": "block" },
-            "apply": { "model": "supplementaries:block/rope_connection_0", "y": 90, "uvlock": true}
+            "apply": { "model": "supplementaries:block/rope_connection_block", "y": 90, "uvlock": true}
         },
         {   "when": { "south_connection": "block" },
-            "apply": { "model": "supplementaries:block/rope_connection_0", "y": 180, "uvlock": true}
+            "apply": { "model": "supplementaries:block/rope_connection_block", "y": 180, "uvlock": true}
         },
         {   "when": { "west_connection": "block" },
-            "apply": { "model": "supplementaries:block/rope_connection_0", "y": 270, "uvlock": true}
+            "apply": { "model": "supplementaries:block/rope_connection_block", "y": 270, "uvlock": true}
+        },
+        {   "when": { "north_connection": "knot" },
+            "apply": { "model": "supplementaries:block/rope_connection_fence_knot", "uvlock": true}
+        },
+        {   "when": { "east_connection": "knot" },
+            "apply": { "model": "supplementaries:block/rope_connection_fence_knot", "y": 90, "uvlock": true}
+        },
+        {   "when": { "south_connection": "knot" },
+            "apply": { "model": "supplementaries:block/rope_connection_fence_knot", "y": 180, "uvlock": true}
+        },
+        {   "when": { "west_connection": "knot" },
+            "apply": {"model": "supplementaries:block/rope_connection_fence_knot", "y": 270, "uvlock": true}
+        },
+        {   "when": { "north_connection": "fence" },
+            "apply": { "model": "supplementaries:block/rope_connection_fence", "uvlock": true}
+        },
+        {   "when": { "east_connection": "fence" },
+            "apply": { "model": "supplementaries:block/rope_connection_fence", "y": 90, "uvlock": true}
+        },
+        {   "when": { "south_connection": "fence" },
+            "apply": { "model": "supplementaries:block/rope_connection_fence", "y": 180, "uvlock": true}
+        },
+        {   "when": { "west_connection": "fence" },
+            "apply": {"model": "supplementaries:block/rope_connection_fence", "y": 270, "uvlock": true}
         },
         {   "when": { "up": "true" },
             "apply": { "model": "supplementaries:block/rope_up"}

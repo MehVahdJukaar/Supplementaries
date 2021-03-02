@@ -13,7 +13,8 @@
         "ShulkerBoxSlotMixin",
         "BellBlockMixin",
         "BellTileEntityMixin",
-        "PistonMixin"
+        "PistonMixin",
+        "LivingEntityMixin"
 
     ],
     "client": [

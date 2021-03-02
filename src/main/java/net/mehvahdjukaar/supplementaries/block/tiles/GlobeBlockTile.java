@@ -30,7 +30,7 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, I
 
     public void setCustomName(ITextComponent name) {
         this.customName = name;
-        this.type = GlobeType.getGlobeType(name.toString());
+        this.type = GlobeType.getGlobeType(name.getString());
     }
 
     @Override
@@ -131,7 +131,7 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, I
 
     public enum GlobeType {
         DEFAULT(null, null, GLOBE_TEXTURE),
-        FLAT(new String[]{"flat"}, new TranslationTextComponent("globe.supplementaries.flat"), GLOBE_FLAT_TEXTURE),
+        FLAT(new String[]{"flat","flat earth"}, new TranslationTextComponent("globe.supplementaries.flat"), GLOBE_FLAT_TEXTURE),
         MOON(new String[]{"moon","luna","selene","cynthia"},
                 new TranslationTextComponent("globe.supplementaries.moon"),GLOBE_MOON_TEXTURE),
         EARTH(new String[]{"earth","terra","gaia","gaea","tierra","tellus","terre"},
@@ -139,7 +139,9 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, I
         SHEARED(null,null,GLOBE_SHEARED_TEXTURE),
         CUSTOM_1(new String[]{"plantkillable"}, null, GLOBE_CUSTOM_1),
         CUSTOM_2(new String[]{"toffanelly"}, null, GLOBE_CUSTOM_2),
-        CUSTOM_3(new String[]{"sylvetichearts"}, null, GLOBE_CUSTOM_3);
+        CUSTOM_3(new String[]{"sylvetichearts"}, null, GLOBE_CUSTOM_3),
+        SUN(new String[]{"sun","sol","helios"},
+                new TranslationTextComponent("globe.supplementaries.sun"),GLOBE_SUN_TEXTURE);
 
 
         GlobeType(String[] key, TranslationTextComponent tr, ResourceLocation res){
@@ -156,9 +158,9 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, I
             String name = text.toLowerCase();
             for (GlobeType n : GlobeType.values()) {
                 if(n.keyWords==null)continue;
-                if(n.transKeyWord!=null && !n.transKeyWord.getString().equals("") && name.contains(n.transKeyWord.getString().toLowerCase()))return n;
+                if(n.transKeyWord!=null && !n.transKeyWord.getString().equals("") && name.equals(n.transKeyWord.getString().toLowerCase()))return n;
                 for (String s : n.keyWords) {
-                    if (!s.equals("") && name.contains(s)) {
+                    if (!s.equals("") && name.equals(s)) {
                         return n;
                     }
                 }
@@ -168,7 +170,7 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, I
 
         public static GlobeType getGlobeType(TileEntity t){
             if(t instanceof INameable && ((INameable) t).hasCustomName()) {
-                return getGlobeType(((INameable) t).getCustomName().toString());
+                return getGlobeType(((INameable) t).getCustomName().getString());
             }
             return GlobeType.DEFAULT;
         }

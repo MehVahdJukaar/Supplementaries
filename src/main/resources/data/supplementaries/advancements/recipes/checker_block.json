@@ -1,0 +1,44 @@
+{
+  "advancements": [
+    {
+      "conditions": [
+        {
+          "flag": "checker_block",
+          "type": "supplementaries:flag"
+        }
+      ],
+      "advancement": {
+        "parent": "minecraft:recipes/root",
+        "rewards": {
+          "recipes": [
+            "supplementaries:checker_block_recipe"
+          ]
+        },
+        "criteria": {
+          "has_plank": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+              "items": [
+                {
+                  "item": "minecraft:blackstone"
+                }
+              ]
+            }
+          },
+          "has_the_recipe": {
+            "trigger": "minecraft:recipe_unlocked",
+            "conditions": {
+              "recipe": "supplementaries:checker_block_recipe"
+            }
+          }
+        },
+        "requirements": [
+          [
+            "has_plank",
+            "has_the_recipe"
+          ]
+        ]
+      }
+    }
+  ]
+}

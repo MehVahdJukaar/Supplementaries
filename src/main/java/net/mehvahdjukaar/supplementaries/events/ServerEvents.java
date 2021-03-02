@@ -20,10 +20,11 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.ModList;
 
-@Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.FORGE)
+//@Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.FORGE)
 public class ServerEvents {
 
     //TODO: split into different classes
@@ -42,8 +43,9 @@ public class ServerEvents {
                 }
 
                 //place block
-                BlockItemUseContext ctx = new BlockItemUseContext(
-                        new ItemUseContext(player, hand, raytrace));
+
+
+                BlockItemUseContext ctx = new BlockItemUseContext(new ItemUseContext(player, hand, raytrace));
                 if(itemOverride instanceof BlockHolderItem) {
                     return ((BlockHolderItem) itemOverride).tryPlace(ctx, heldItem.getBlock());
                 }
@@ -97,7 +99,7 @@ public class ServerEvents {
         return false;
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGH)
     public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
         PlayerEntity player = event.getPlayer();
         if(player.isSpectator())return;
@@ -107,6 +109,7 @@ public class ServerEvents {
         Direction dir = event.getFace();
         World world = event.getWorld();
         BlockPos pos = event.getPos();
+
 
         //order matters here
         if (!player.isSneaking()) {
@@ -139,6 +142,10 @@ public class ServerEvents {
             BlockItem bi = (BlockItem) i;
             ActionResultType result = ActionResultType.PASS;
             if (ServerConfigs.cached.WALL_LANTERN_PLACEMENT && CommonUtil.isLantern(bi)) {
+                if(ModList.get().isLoaded("torchslabmod")){
+                    double y = event.getHitVec().getHitVec().getY()%1;
+                    if(y<0.5)return;
+                }
                 result = paceBlockOverride(Registry.WALL_LANTERN_ITEM.get(), player, hand, bi, pos, dir, world);
             }
             else if (ServerConfigs.cached.HANGING_POT_PLACEMENT && CommonUtil.isPot(bi)) {
@@ -191,4 +198,7 @@ public class ServerEvents {
         }
 
     }
+
+
+
 }

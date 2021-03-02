@@ -63,8 +63,8 @@ public class Dispenser {
                 }
             }
             DispenserBlock.registerDispenseBehavior(Items.BUCKET, new BucketJarDispenserBehavior());
-            DispenserBlock.registerDispenseBehavior(Items.BOWL, new BowlJarDispenserBehavior());
-            DispenserBlock.registerDispenseBehavior(Items.GLASS_BOTTLE, new BottleJarDispenserBehavior());
+            DispenserBlock.registerDispenseBehavior(Items.BOWL, new BucketJarDispenserBehavior());
+            DispenserBlock.registerDispenseBehavior(Items.GLASS_BOTTLE, new BucketJarDispenserBehavior());
         }
 
         DispenserBlock.registerDispenseBehavior(Items.FLINT_AND_STEEL, new FlintAndSteelDispenserBehavior());
@@ -189,15 +189,21 @@ public class Dispenser {
             BlockPos blockpos = source.getBlockPos().offset(source.getBlockState().get(DispenserBlock.FACING));
             TileEntity te = world.getTileEntity(blockpos);
             if(te instanceof JarBlockTile){
-                /*
                 JarBlockTile tile = ((JarBlockTile)te);
-                if(tile.isItemValidForSlot(0, stack)){
-                    tile.handleAddItem(stack, null, null);
-                    tile.markDirty();
-                    //this.setSuccessful(true);
-                    return Dispenser.glassBottleFill(source, stack, new ItemStack(
-                            stack.getItem() == Items.WATER_BUCKET? Items.BUCKET : tile.liquidType.getReturnItem()));
-                }*/
+                if(tile.mobHolder.isEmpty()) {
+                    ItemStack returnStack = ItemStack.EMPTY;
+                    if (tile.isItemValidForSlot(0, stack)) {
+                        tile.handleAddItem(stack, null, null);
+                        tile.markDirty();
+                        //this.setSuccessful(true);
+                        returnStack = new ItemStack(stack.getItem() instanceof FishBucketItem ? Items.BUCKET : Items.AIR);
+                    } else if (tile.isEmpty()) {
+                        returnStack = tile.fluidHolder.interactWithItem(stack);
+                        if(!returnStack.isEmpty())tile.markDirty();
+                    }
+                    return Dispenser.glassBottleFill(source, stack, returnStack);
+                }
+                return stack;
             }
             return super.customBehavior(source,stack);
         }
@@ -292,72 +298,19 @@ public class Dispenser {
             BlockPos blockpos = source.getBlockPos().offset(source.getBlockState().get(DispenserBlock.FACING));
             TileEntity te = world.getTileEntity(blockpos);
             if(te instanceof JarBlockTile){
+                //TODO: add fish buckets
                 JarBlockTile tile = ((JarBlockTile)te);
-                /*
-                if (tile.liquidType.bucket) {
-                    // if extraction successful
-                    ItemStack returnitem  = tile.extractItem(3);
-                    if(returnitem!=null){
+                if(tile.mobHolder.isEmpty() && tile.isEmpty()) {
+                    ItemStack returnStack = tile.fluidHolder.interactWithItem(stack);
+                    if(!returnStack.isEmpty()){
                         tile.markDirty();
-                        //this.setSuccessful(true);
-                        return Dispenser.glassBottleFill(source,stack,returnitem);
+                        return Dispenser.glassBottleFill(source, stack,returnStack);
                     }
-                }*/
+                }
+                return stack;
             }
 
             return super.customBehavior(source,stack);
-        }
-
-    }
-
-    public static class BottleJarDispenserBehavior extends  AdditionalDispenserBehavior{
-
-        protected ItemStack customBehavior(IBlockSource source, ItemStack stack) {
-            //this.setSuccessful(false);
-            ServerWorld world = source.getWorld();
-            BlockPos blockpos = source.getBlockPos().offset(source.getBlockState().get(DispenserBlock.FACING));
-            TileEntity te = world.getTileEntity(blockpos);
-            /*
-            if(te instanceof JarBlockTile){
-                JarBlockTile tile = ((JarBlockTile)te);
-                if (tile.liquidType.bottle) {
-                    // if extraction successful
-                    ItemStack returnitem  = tile.extractItem(1);
-                    if(returnitem!=null){
-                        tile.markDirty();
-                        //this.setSuccessful(true);
-                        return Dispenser.glassBottleFill(source,stack,returnitem);
-                    }
-
-                }
-            }*/
-            return super.customBehavior(source,stack);
-        }
-
-    }
-
-    public static class BowlJarDispenserBehavior extends  AdditionalDispenserBehavior{
-
-        protected ItemStack customBehavior(IBlockSource source, ItemStack stack) {
-            //this.setSuccessful(false);
-            ServerWorld world = source.getWorld();
-            BlockPos blockpos = source.getBlockPos().offset(source.getBlockState().get(DispenserBlock.FACING));
-            TileEntity te = world.getTileEntity(blockpos);
-            /*
-            if(te instanceof JarBlockTile){
-                JarBlockTile tile = ((JarBlockTile)te);
-                if (tile.liquidType.bowl) {
-                    // if extraction successful
-                    ItemStack returnitem  = tile.extractItem(2);
-                    if(returnitem!=null){
-                        tile.markDirty();
-                        //this.setSuccessful(true);
-                        return Dispenser.glassBottleFill(source,stack,returnitem);
-                    }
-
-                }
-            }*/
-            return super.customBehavior(source, stack);
         }
 
     }

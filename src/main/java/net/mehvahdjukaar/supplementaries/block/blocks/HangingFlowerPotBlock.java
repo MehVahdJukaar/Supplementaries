@@ -174,6 +174,6 @@ public class HangingFlowerPotBlock extends Block{
     }
 
     public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-        return hasEnoughSolidSide(worldIn, pos.up(), Direction.DOWN);
+        return RopeBlock.isSupportingCeiling(pos.offset(Direction.UP),worldIn);
     }
 }

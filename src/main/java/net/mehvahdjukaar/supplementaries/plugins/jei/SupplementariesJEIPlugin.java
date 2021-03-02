@@ -64,6 +64,42 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         registry.addRecipes(createTippedBambooSpikesRecipes(),VanillaRecipeCategoryUid.CRAFTING);
         registry.addRecipes(createBlackboardDuplicate(),VanillaRecipeCategoryUid.CRAFTING);
         registry.addRecipes(createBlackboardClear(),VanillaRecipeCategoryUid.CRAFTING);
+        registry.addRecipes(createRopeArrowCreateRecipe(),VanillaRecipeCategoryUid.CRAFTING);
+        registry.addRecipes(createRopeArrowAddRecipe(),VanillaRecipeCategoryUid.CRAFTING);
+    }
+
+    public static List<IRecipe<?>> createRopeArrowCreateRecipe() {
+        List<IRecipe<?>> recipes = new ArrayList<>();
+        String group = "supplementaries.jei.rope_arrow";
+
+        ItemStack ropeArrow = new ItemStack(Registry.ROPE_ARROW_ITEM.get());
+        ropeArrow.setDamage(ropeArrow.getMaxDamage()-4);
+
+        Ingredient arrow = Ingredient.fromStacks(new ItemStack(Items.ARROW));
+        Ingredient rope = Ingredient.fromStacks(new ItemStack(Registry.ROPE_ITEM.get()));
+        NonNullList<Ingredient> inputs = NonNullList.from(Ingredient.EMPTY, arrow, rope,rope,rope,rope);
+        ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "jei_rope_arrow_create");
+        ShapelessRecipe recipe = new ShapelessRecipe(id, group, ropeArrow, inputs);
+        recipes.add(recipe);
+
+        return recipes;
+    }
+    public static List<IRecipe<?>> createRopeArrowAddRecipe() {
+        List<IRecipe<?>> recipes = new ArrayList<>();
+        String group = "supplementaries.jei.rope_arrow";
+
+        ItemStack ropeArrow = new ItemStack(Registry.ROPE_ARROW_ITEM.get());
+        ItemStack ropeArrow2 = ropeArrow.copy();
+        ropeArrow2.setDamage(8);
+
+        Ingredient arrow = Ingredient.fromStacks(ropeArrow2);
+        Ingredient rope = Ingredient.fromStacks(new ItemStack(Registry.ROPE_ITEM.get()));
+        NonNullList<Ingredient> inputs = NonNullList.from(Ingredient.EMPTY, rope,rope,rope,rope,arrow,rope,rope,rope,rope);
+        ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "jei_rope_arrow_add");
+        ShapelessRecipe recipe = new ShapelessRecipe(id, group, ropeArrow, inputs);
+        recipes.add(recipe);
+
+        return recipes;
     }
 
     public static List<IRecipe<?>> createTippedBambooSpikesRecipes() {

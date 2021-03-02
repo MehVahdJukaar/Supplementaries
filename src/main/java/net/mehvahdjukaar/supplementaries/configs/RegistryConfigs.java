@@ -97,6 +97,8 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue PANCAKES_ENABLED;
         public static ForgeConfigSpec.BooleanValue LOCK_BLOCK_ENABLED;
 
+
+        public static ForgeConfigSpec.BooleanValue JAR_TAB;
         public static ForgeConfigSpec.BooleanValue CREATIVE_TAB;
         public static ForgeConfigSpec.BooleanValue DISPENSERS;
 
@@ -141,6 +143,8 @@ public class RegistryConfigs {
 
             DISPENSERS = builder.comment("set to false to disable custom dispenser behaviors (filling jars) if for some reason they are causing trouble").define("dispensers",true);
 
+            JAR_TAB = builder.comment("creates a creative tab full of filled jars")
+                    .define("jar_tab",false);
             builder.pop();
 
             builder.comment("Enable and disable blocks / entities");

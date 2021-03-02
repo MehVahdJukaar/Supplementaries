@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.plugins.quark;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -13,7 +14,7 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-public class SupplementariesQuarkPlugin {
+public class QuarkPistonPlugin {
     //not really a plugin
     @Nullable
     public static TileEntity getMovingTile1(BlockPos pos, World world){
@@ -56,9 +57,9 @@ public class SupplementariesQuarkPlugin {
         catch (Exception ignored) {}
         return false;
     }
-    /*
-    public static TileEntity getMovingTile(BlockPos pos, World world){
-        return PistonsMoveTileEntitiesModule.getMovement(world,pos);
-    }*/
+
+    public static boolean canMoveTile(BlockState state){
+        return PistonsMoveTileEntitiesModule.shouldMoveTE(true, state);
+    }
 
 }
