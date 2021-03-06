@@ -24,7 +24,6 @@ import java.util.List;
 
 
 public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, IMapDisplay {
-    private NonNullList<ItemStack> stacks = NonNullList.withSize(1, ItemStack.EMPTY);
     private String txt = null;
     private int fontScale = 1;
     private DyeColor textColor = DyeColor.BLACK;

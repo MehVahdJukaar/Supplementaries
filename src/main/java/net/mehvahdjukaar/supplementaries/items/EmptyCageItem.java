@@ -39,15 +39,13 @@ public class EmptyCageItem extends BlockItem {
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, PlayerEntity player, Entity entity) {
-        if(!(entity instanceof LivingEntity)||player.getActiveHand()==null)return false;
+        if(player.getActiveHand()==null)return false;
 
-        return this.itemInteractionForEntity(stack,player, ((LivingEntity) entity),player.getActiveHand()).isSuccessOrConsume();
+        return this.doInteract(stack,player, entity,player.getActiveHand()).isSuccessOrConsume();
 
     }
 
-
-    @Override
-    public ActionResultType itemInteractionForEntity(ItemStack stack, PlayerEntity player, LivingEntity entity, Hand hand) {
+    public ActionResultType doInteract(ItemStack stack, PlayerEntity player, Entity entity, Hand hand) {
         ResourceLocation n = entity.getType().getRegistryName();
         if(n==null)return ActionResultType.PASS;
         String name = n.toString();
@@ -56,9 +54,9 @@ public class EmptyCageItem extends BlockItem {
         switch (this.cageType){
             case CAGE:
                 boolean canBeCaught = (ServerConfigs.cached.CAGE_ALL_MOBS ||
-                        (ServerConfigs.cached.CAGE_ALL_BABIES && entity.isChild()) ||
+                        (entity instanceof LivingEntity && ServerConfigs.cached.CAGE_ALL_BABIES && ((LivingEntity) entity).isChild()) ||
                         ServerConfigs.cached.CAGE_ALLOWED_MOBS.contains(name) ||
-                        ServerConfigs.cached.CAGE_ALLOWED_BABY_MOBS.contains(name)&&entity.isChild());
+                        (entity instanceof LivingEntity && ServerConfigs.cached.CAGE_ALLOWED_BABY_MOBS.contains(name)&&((LivingEntity) entity).isChild()));
                 if(!canBeCaught){ return ActionResultType.PASS; }
                 break;
             case JAR:
@@ -73,7 +71,7 @@ public class EmptyCageItem extends BlockItem {
                 }
                 break;
         }
-        if((entity instanceof LivingEntity && !entity.isAlive()) || entity.getShouldBeDead())return ActionResultType.PASS;
+        if(!entity.isAlive() || (entity instanceof LivingEntity && ((LivingEntity) entity).getShouldBeDead()))return ActionResultType.PASS;
         if(entity instanceof SlimeEntity && ((SlimeEntity)entity).getSlimeSize()>1) return ActionResultType.PASS;
 
         if(player.world.isRemote)return ActionResultType.SUCCESS;
@@ -110,6 +108,11 @@ public class EmptyCageItem extends BlockItem {
 
         entity.remove();
         return ActionResultType.CONSUME;
+    }
+
+    @Override
+    public ActionResultType itemInteractionForEntity(ItemStack stack, PlayerEntity player, LivingEntity entity, Hand hand) {
+        return this.doInteract(stack, player, entity, hand);
     }
 
     //TODO: add whitelist reference in here or in item constructor. maybe ad return item here too

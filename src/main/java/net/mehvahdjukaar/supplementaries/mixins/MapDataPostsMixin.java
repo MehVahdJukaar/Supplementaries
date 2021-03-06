@@ -48,7 +48,6 @@ public abstract class MapDataPostsMixin extends WorldSavedData {
 
     @Shadow
     public Map<String, MapDecoration> mapDecorations;
-    //TODO: it says this should fe final but as you can see it clearly is. if you know a solution tell me
 
 
 

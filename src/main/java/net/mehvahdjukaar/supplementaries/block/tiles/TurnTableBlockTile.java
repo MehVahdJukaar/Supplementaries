@@ -1,11 +1,13 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
 
+import net.mehvahdjukaar.supplementaries.block.blocks.PulleyBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.SignPostBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.TurnTableBlock;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BedBlock;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
@@ -75,37 +77,13 @@ public class TurnTableBlockTile extends TileEntity implements ITickableTileEntit
     }
 
 
-    private boolean doRotateBlocks(BlockState oldstate, BlockState newState, BlockPos pos) {
+    private boolean doRotateBlocks(BlockState oldstate, BlockState newState, BlockPos pos, Direction mydir) {
         if(newState!=oldstate){
             //always returns true because block could be able to rotate in the future even if it can't now
             if(newState.isValidPosition(world,pos)) {
-                world.setBlockState(pos, newState, 3);
-                //self update post placement to connect to others
-                for(int i = 0; i<6; i++){
-                    Direction d = Direction.byIndex(i);
-                    BlockPos otherPos = pos.offset(d);
-                    BlockState neighbour = world.getBlockState(otherPos);
-                    BlockState updatedNewState = newState.updatePostPlacement(d, neighbour, this.world, pos, otherPos);
-
-                    if(!updatedNewState.isAir()) {
-                        world.setBlockState(pos, updatedNewState,3);
-                        newState = updatedNewState;
-                    }
-                    else {
-                        //turns into air == rotation failed
-                        world.setBlockState(pos, oldstate,3);
-                        return false;
-                    }
-                }
-                //update others so they connect to this block
-                for(int i = 0; i<6; i++){
-                    Direction d = Direction.byIndex(i);
-                    BlockPos otherPos = pos.offset(d);
-                    BlockState neighbour = world.getBlockState(otherPos);
-                    BlockState updatedNeighbour = neighbour.updatePostPlacement(d.getOpposite(), newState, this.world, otherPos, pos);
-                    if(updatedNeighbour!=neighbour)
-                        world.setBlockState(otherPos, updatedNeighbour,3);
-                }
+                BlockState updatedState = Block.getValidBlockForPosition(newState, world, pos);
+                world.setBlockState(pos, updatedState, 3);
+                world.notifyNeighborsOfStateExcept(pos,newState.getBlock(),mydir.getOpposite());
             }
             return true;
             //TODO: this makes block instantly rotate when condition becomes true
@@ -126,9 +104,9 @@ public class TurnTableBlockTile extends TileEntity implements ITickableTileEntit
         BlockPos mypos = this.pos;
         Direction mydir = state.get(BlockStateProperties.FACING);
         BlockPos targetpos = mypos.offset(mydir);
-        BlockState _bs = world.getBlockState(targetpos);
+        BlockState targetState = world.getBlockState(targetpos);
         // is block blacklisted?
-        if (this.isInBlacklist(_bs)) return false;
+        if (this.isInBlacklist(targetState)) return false;
         boolean ccw = (state.get(BlockStateProperties.INVERTED) ^ (state.get(BlockStateProperties.FACING) == Direction.DOWN));
         Rotation rot = ccw ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90;
 
@@ -136,16 +114,16 @@ public class TurnTableBlockTile extends TileEntity implements ITickableTileEntit
             //horizontal facing blocks -easy
             if (mydir.getAxis() == Direction.Axis.Y) {
                 //sign posts
-                if (_bs.getBlock() instanceof SignPostBlock) {
-                    _bs.rotate(world,targetpos,rot);
+                if (targetState.getBlock() instanceof SignPostBlock) {
+                    targetState.rotate(world,targetpos,rot);
                     return true;
                 }
-                BlockState rotatedstate = _bs.rotate(world,targetpos,rot);
-                return doRotateBlocks(_bs, rotatedstate, targetpos);
+                BlockState rotatedstate = targetState.rotate(world,targetpos,rot);
+                return doRotateBlocks(targetState, rotatedstate, targetpos,mydir);
             }
             // 6 dir blocks blocks
-            else if (_bs.hasProperty(BlockStateProperties.FACING)) {
-                Vector3d targetvec = toVector3d(_bs.get(BlockStateProperties.FACING));
+            else if (targetState.hasProperty(BlockStateProperties.FACING)) {
+                Vector3d targetvec = toVector3d(targetState.get(BlockStateProperties.FACING));
                 Vector3d myvec = toVector3d(mydir);
                 if (!ccw)
                     targetvec.mul(-1,-1,-1);
@@ -156,19 +134,22 @@ public class TurnTableBlockTile extends TileEntity implements ITickableTileEntit
                     return false;
                 }
                 Direction newdir = Direction.getFacingFromVector(myvec.getX(), myvec.getY(), myvec.getZ());
-                return this.doRotateBlocks(_bs, _bs.with(BlockStateProperties.FACING, newdir), targetpos);
+                return this.doRotateBlocks(targetState, targetState.with(BlockStateProperties.FACING, newdir), targetpos,mydir);
             }
             // axis blocks
-            else if (_bs.hasProperty(BlockStateProperties.AXIS)) {
-                Axis targetaxis = _bs.get(BlockStateProperties.AXIS);
+            else if (targetState.hasProperty(BlockStateProperties.AXIS)) {
+                Axis targetaxis = targetState.get(BlockStateProperties.AXIS);
                 Axis myaxis = mydir.getAxis();
                 if (myaxis == targetaxis) {
+                    if(myaxis != Axis.Y && targetState.getBlock() instanceof PulleyBlock) {
+                        return ((PulleyBlock) targetState.getBlock()).axisRotate(targetState,targetpos,world,rot);
+                    }
                     // same axis, can't rotate
                     return false;
                 } else if (myaxis == Axis.X) {
-                    return this.doRotateBlocks(_bs, _bs.with(BlockStateProperties.AXIS, targetaxis == Axis.Y ? Axis.Z : Axis.Y), targetpos);
+                    return this.doRotateBlocks(targetState, targetState.with(BlockStateProperties.AXIS, targetaxis == Axis.Y ? Axis.Z : Axis.Y), targetpos,mydir);
                 } else if (myaxis == Axis.Z) {
-                    return this.doRotateBlocks(_bs, _bs.with(BlockStateProperties.AXIS, targetaxis == Axis.Y ? Axis.X : Axis.Y), targetpos);
+                    return this.doRotateBlocks(targetState, targetState.with(BlockStateProperties.AXIS, targetaxis == Axis.Y ? Axis.X : Axis.Y), targetpos,mydir);
                 }
             }
 

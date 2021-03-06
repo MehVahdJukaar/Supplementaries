@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.gui.NoticeBoardGui;
+import net.mehvahdjukaar.supplementaries.client.gui.PulleyBlockGui;
 import net.mehvahdjukaar.supplementaries.client.gui.SackGui;
 import net.mehvahdjukaar.supplementaries.client.particles.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.FluidColors;
@@ -170,7 +171,8 @@ public class ClientSetup {
         //flax
         RenderTypeLookup.setRenderLayer(Registry.FLAX.get(), RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(Registry.FLAX_POT.get(), RenderType.getCutout());
-
+        //pulley
+        ScreenManager.registerFactory(Registry.PULLEY_BLOCK_CONTAINER.get(), PulleyBlockGui::new);
     }
 
     //particles

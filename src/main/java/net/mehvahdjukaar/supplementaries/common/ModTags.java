@@ -19,7 +19,7 @@ public class ModTags {
 
     //block tags
     public static final Tags.IOptionalNamedTag<Block> POSTS = blockTag("posts");
-    public static final Tags.IOptionalNamedTag<Block> ROPE_TAG = blockTag("rope_support");
+    public static final Tags.IOptionalNamedTag<Block> ROPE_SUPPORT_TAG = blockTag("rope_support");
     public static final Tags.IOptionalNamedTag<Block> ROPE_HANG_TAG = blockTag("hang_from_ropes");
     public static final Tags.IOptionalNamedTag<Block> BELLOWS_TICKABLE_TAG = blockTag("bellows_tickable");
     public static final Tags.IOptionalNamedTag<Block> WATER_HOLDER = blockTag("water_holder");
@@ -27,6 +27,7 @@ public class ModTags {
     public static final Tags.IOptionalNamedTag<Item> SHULKER_BLACKLIST_TAG = itemTag("shulker_blacklist");
     public static final Tags.IOptionalNamedTag<Item> COOKIES = itemTag("cookies");
     public static final Tags.IOptionalNamedTag<Item> BRICKS = itemTag("throwable_bricks");
+    public static final Tags.IOptionalNamedTag<Item> ROPES = itemTag("ropes");
 
     private static Tags.IOptionalNamedTag<Item> itemTag(String name) {
         return ItemTags.createOptional(new ResourceLocation(Supplementaries.MOD_ID, name));

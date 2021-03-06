@@ -108,7 +108,7 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
             if(player.getHeldItem(hand).getItem()!=Items.BUCKET)return false;
             this.world.playSound(null, player.getPosition(), SoundEvents.ITEM_BUCKET_FILL_FISH, SoundCategory.BLOCKS, 1.0F, 1.0F);
         }
-
+        else if(!player.getHeldItem(hand).isEmpty())return false;
         ItemStack extracted = this.extractItem();
         if(!extracted.isEmpty()) {
             CommonUtil.swapItem(player,hand,extracted);
@@ -257,7 +257,8 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
         TROPICAL_FISH,
         SALMON,
         COD,
-        PUFFER_FISH;
+        PUFFER_FISH,
+        FISH;
 
         public int getFishTextureOffset(){
             return this.ordinal()-2;
@@ -277,6 +278,7 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
             if(item == Items.COD_BUCKET)return SpecialJarContent.COD;
             if(item  == Items.PUFFERFISH_BUCKET)return SpecialJarContent.PUFFER_FISH;
             if(item == Items.SALMON_BUCKET)return SpecialJarContent.SALMON;
+            if(item instanceof FishBucketItem)return SpecialJarContent.FISH;
             if(CommonUtil.isCookie(item))return SpecialJarContent.COOKIE;
             return SpecialJarContent.NONE;
         }

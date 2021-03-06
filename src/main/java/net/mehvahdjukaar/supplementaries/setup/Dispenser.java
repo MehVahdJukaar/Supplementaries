@@ -202,8 +202,10 @@ public class Dispenser {
                     }
                     else if (tile.isEmpty() && !tile.fluidHolder.isFull()) {
                         returnStack = tile.fluidHolder.interactWithItem(stack);
-                        if(!returnStack.isEmpty())tile.markDirty();
-                        return Dispenser.glassBottleFill(source, stack, returnStack);
+                        if(!returnStack.isEmpty()) {
+                            tile.markDirty();
+                            return Dispenser.glassBottleFill(source, stack, returnStack);
+                        }
                     }
 
                 }

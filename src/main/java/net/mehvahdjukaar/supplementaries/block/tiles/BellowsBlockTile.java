@@ -221,7 +221,7 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
                 BlockPos frontPos = this.pos.offset(facing);
 
                 //speeds up furnaces
-                if(time % 9 - (power/2) == 0) {
+                if(time % (10 - (power/2)) == 0) {
                     this.tickFurnaces(frontPos);
                 }
 

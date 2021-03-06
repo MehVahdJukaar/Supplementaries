@@ -19,8 +19,17 @@
   },
   "conditions": [
     {
-      "type": "supplementaries:flag",
-      "flag": "sack"
+      "type": "forge:and",
+      "values": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "sack"
+        },
+        {
+          "type": "supplementaries:flag",
+          "flag": "flax"
+        }
+      ]
     }
   ]
 }

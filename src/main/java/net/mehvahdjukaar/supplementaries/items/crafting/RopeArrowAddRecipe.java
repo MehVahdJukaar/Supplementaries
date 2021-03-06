@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.items.crafting;
 
+import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
@@ -35,7 +36,7 @@ public class RopeArrowAddRecipe extends SpecialRecipe {
         }
         for(int i = 0; i < inv.getSizeInventory(); ++i) {
             ItemStack stack = inv.getStackInSlot(i);
-            if(stack.getItem() == Registry.ROPE_ITEM.get()) {
+            if(ModTags.isTagged(ModTags.ROPES,stack.getItem())) {
                 if (missingRopes <= 0) return false;
                 rope = stack;
                 missingRopes--;
@@ -52,7 +53,7 @@ public class RopeArrowAddRecipe extends SpecialRecipe {
         ItemStack arrow = null;
         for(int i = 0; i < inv.getSizeInventory(); ++i) {
             ItemStack stack = inv.getStackInSlot(i);
-            if(stack.getItem() == Registry.ROPE_ITEM.get()){
+            if(ModTags.isTagged(ModTags.ROPES,stack.getItem())){
                 ropes++;
             }
             if(stack.getItem() == Registry.ROPE_ARROW_ITEM.get()) {

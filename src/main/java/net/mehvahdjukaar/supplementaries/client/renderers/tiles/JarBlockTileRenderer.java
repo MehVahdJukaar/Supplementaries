@@ -45,6 +45,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
         matrixStackIn.pop();
     }
 
+
     @Override
     public void render(JarBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
 
@@ -89,8 +90,8 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
             matrixStackIn.rotate(rotation);
             matrixStackIn.scale(0.6f, 0.6f, 0.6f);
             matrixStackIn.translate(0, -0.2, -0.35);
-            int textureOffset = tile.specialType.getFishTextureOffset();
-            RendererUtil.renderFish(builder1, matrixStackIn, wo, ho, textureOffset, combinedLightIn, combinedOverlayIn);
+            int fishType = tile.specialType.getFishTextureOffset();
+            RendererUtil.renderFish(builder1, matrixStackIn, wo, ho, fishType, combinedLightIn, combinedOverlayIn);
             matrixStackIn.pop();
             SoftFluid s = SoftFluidList.WATER;
             renderFluid(0.5625f, s.getTintColor(), 0, s.getStillTexture(),

@@ -3,11 +3,13 @@ package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.FlowerPotHelper;
+import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.fluids.SoftFluidList;
 import net.mehvahdjukaar.supplementaries.network.commands.ModCommands;
 import net.mehvahdjukaar.supplementaries.plugins.create.SupplementariesCreatePlugin;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.ComposterBlock;
 import net.minecraft.block.FlowerPotBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.ConstantRange;
@@ -31,15 +33,26 @@ import java.lang.reflect.Field;
 @Mod.EventBusSubscriber(modid = Supplementaries.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ModSetup {
 
+
     public static void init(final FMLCommonSetupEvent event) {
         //order matters here
         Spawns.registerSpawningStuff();
 
-        if(ModList.get().isLoaded("create")){
+        ComposterBlock.CHANCES.put(Registry.FLAX_SEEDS_ITEM.get().asItem(),0.3F);
+        ComposterBlock.CHANCES.put(Registry.FLAX_ITEM.get().asItem(),0.65F);
+
+        /*
+        List<ItemStack> newStacks = new ArrayList<>();
+        Collections.addAll(newStacks, ChickenMixin.getTemptationItems().getMatchingStacks());
+        newStacks.add(new ItemStack(Registry.FLAX_SEEDS_ITEM.get()));
+        ChickenMixin.setTemptationItems(Ingredient.fromStacks(newStacks.stream()));
+        */
+
+        if (ModList.get().isLoaded("create")) {
             SupplementariesCreatePlugin.initialize();
         }
 
-        ((FlowerPotBlock)Blocks.FLOWER_POT).addPlant(Registry.FLAX_ITEM.get().getRegistryName(), Registry.FLAX_POT);
+        ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(Registry.FLAX_ITEM.get().getRegistryName(), Registry.FLAX_POT);
 
         FlowerPotHelper.init();
 
@@ -47,7 +60,6 @@ public class ModSetup {
 
         Dispenser.registerBehaviors();
         //event.enqueueWork(Dispenser::registerBehaviors);
-
     }
 
     @SubscribeEvent
@@ -56,7 +68,7 @@ public class ModSetup {
     }
 
     @SubscribeEvent
-    public static void registerWanderingTraderTrades(VillagerTradesEvent event) {
+    public static void registerVillagersTrades(VillagerTradesEvent event) {
         event.getType();
         //TODO: add villager trades
     }
@@ -64,13 +76,17 @@ public class ModSetup {
     @SubscribeEvent
     public static void registerWanderingTraderTrades(WandererTradesEvent event) {
         //adding twice cause it's showing up too rarely
-        for(int i = 0; i<ServerConfigs.cached.GLOBE_TRADES; i++) {
-            event.getRareTrades()
-                    .add(new BasicTrade(10, new ItemStack(Registry.GLOBE_ITEM.get(), 1), 2, 20));
+        if(RegistryConfigs.reg.GLOBE_ENABLED.get()) {
+            for(int i = 0; i<ServerConfigs.cached.GLOBE_TRADES; i++) {
+                event.getRareTrades()
+                        .add(new BasicTrade(10, new ItemStack(Registry.GLOBE_ITEM.get(), 1), 2, 20));
+            }
         }
-        for(int i = 0; i<2; i++) {
-            event.getGenericTrades()
-                    .add(new BasicTrade(6, new ItemStack(Registry.FLAX_SEEDS_ITEM.get(), 1), 5, 10));
+        if(RegistryConfigs.reg.FLAX_ENABLED.get()) {
+            for (int i = 0; i < 2; i++) {
+                event.getGenericTrades()
+                        .add(new BasicTrade(6, new ItemStack(Registry.FLAX_SEEDS_ITEM.get(), 1), 5, 10));
+            }
         }
     }
 
@@ -81,6 +97,7 @@ public class ModSetup {
     @SubscribeEvent
     public static void onLootLoad(LootTableLoadEvent e) {
         if (e.getName().toString().equals("minecraft:chests/shipwreck_treasure")) {
+            if(!RegistryConfigs.reg.GLOBE_ENABLED.get())return;
             float chance = (float) ServerConfigs.cached.GLOBE_TREASURE_CHANCE;
             LootPool pool = LootPool.builder()
                     .name("supplementaries_injected_globe")
@@ -91,6 +108,7 @@ public class ModSetup {
             e.getTable().addPool(pool);
         }
         else if (e.getName().toString().equals("minecraft:chests/abandoned_mineshaft")) {
+            if(!RegistryConfigs.reg.ROPE_ENABLED.get())return;
             float chance = 0.4f;
             LootPool pool = LootPool.builder()
                     .name("supplementaries_injected_rope")
@@ -101,6 +119,7 @@ public class ModSetup {
             e.getTable().addPool(pool);
         }
         else if (e.getName().toString().equals("minecraft:blocks/tall_grass")) {
+            if(!RegistryConfigs.reg.FLAX_ENABLED.get())return;
             float chance = 0.02f;
             LootPool pool = LootPool.builder()
                     .name("supplementaries_injected_flax")
@@ -111,6 +130,7 @@ public class ModSetup {
             e.getTable().addPool(pool);
         }
         else if (e.getName().toString().equals("minecraft:chests/pillager_outpost")) {
+            if(!RegistryConfigs.reg.FLAX_ENABLED.get())return;
             float chance = 0.5f;
             LootPool pool = LootPool.builder()
                     .name("supplementaries_injected_flax")

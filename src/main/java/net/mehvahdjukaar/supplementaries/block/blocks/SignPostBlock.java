@@ -58,11 +58,13 @@ public class SignPostBlock extends Block implements IWaterLoggable, IForgeBlock{
         return true;
     }
 
+    //THIS IS DANGEROUS
     @Override
     public float getPlayerRelativeBlockHardness(BlockState state, PlayerEntity player, IBlockReader worldIn, BlockPos pos) {
         TileEntity te = worldIn.getTileEntity(pos);
         if(te instanceof SignPostBlockTile){
-            return ((SignPostBlockTile)te).fenceBlock.getPlayerRelativeBlockHardness(player,worldIn,pos);
+            if(((SignPostBlockTile)te).fenceBlock.getBlock() != this)
+                return ((SignPostBlockTile)te).fenceBlock.getPlayerRelativeBlockHardness(player,worldIn,pos);
         }
         return super.getPlayerRelativeBlockHardness(state, player, worldIn, pos);
     }

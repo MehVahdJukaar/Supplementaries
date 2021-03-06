@@ -39,7 +39,7 @@ public class MobHolder {
     public float scale = 1;
     public String name;
     //client only
-    public LivingEntity mob = null;
+    public Entity mob = null;
     public float jumpY = 0;
     public float prevJumpY = 0;
     public float yVel = 0;
@@ -55,8 +55,8 @@ public class MobHolder {
     }
 
     public void setPartying(BlockPos pos, boolean isPartying){
-        if(this.mob!=null){
-            this.mob.setPartying(pos, isPartying);
+        if(this.mob!=null && this.mob instanceof LivingEntity){
+            ((LivingEntity)this.mob).setPartying(pos, isPartying);
         }
     }
 
@@ -163,13 +163,13 @@ public class MobHolder {
                     }
                     break;
                 case PARROT:
-                    this.mob.livingTick();
+                    ((LivingEntity)this.mob).livingTick();
                     boolean p = ((ParrotEntity)this.mob).isPartying();
                         this.mob.setOnGround(p);
                         this.jumpY=p?0:0.0625f;
                     break;
                 case PIXIE:
-                    mob.livingTick();
+                    ((LivingEntity)this.mob).livingTick();
                     this.mob.lastTickPosY=this.pos.getY();
                     this.mob.setPosition(this.mob.getPosX(),this.pos.getY(),this.mob.getPosZ());
                     break;
@@ -211,7 +211,7 @@ public class MobHolder {
                     if (rand.nextFloat() > (ch.isOnGround() ? 0.99 : 0.88)) ch.setOnGround(!ch.isOnGround());
                     break;
                 case MOTH:
-                    mob.livingTick();
+                    ((LivingEntity)this.mob).livingTick();
                     this.mob.lastTickPosY=this.pos.getY();
                     this.mob.setPosition(this.mob.getPosX(),this.pos.getY(),this.mob.getPosZ());
                     this.jumpY = 0.04f * MathHelper.sin(this.mob.ticksExisted / 10f) - 0.03f;
@@ -289,7 +289,7 @@ public class MobHolder {
         entity.prevPosZ = pz;
         entity.ticksExisted+=this.rand.nextInt(40);
 
-        this.mob = (LivingEntity) entity;
+        this.mob = entity;
         this.animationType = MobHolderType.getType(entity);
         if(!this.world.isRemote){
             int light = this.animationType.getLightLevel();

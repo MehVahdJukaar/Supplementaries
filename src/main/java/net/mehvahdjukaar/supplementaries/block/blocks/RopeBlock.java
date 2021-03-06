@@ -89,7 +89,7 @@ public class RopeBlock extends Block implements IWaterLoggable{
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return SHAPES_MAP.getOrDefault(state.with(DISTANCE,0).with(WATERLOGGED,false), VoxelShapes.fullCube());
+        return SHAPES_MAP.getOrDefault(state.with(DISTANCE,0).with(KNOT,true).with(WATERLOGGED,false), VoxelShapes.fullCube());
     }
 
     //oh boy 32k shapes. 2k by removing water and distance lol
@@ -107,7 +107,7 @@ public class RopeBlock extends Block implements IWaterLoggable{
         VoxelShape eastEx = Block.makeCuboidShape(6, 9, 6, 22, 13, 10);
 
         for(BlockState state : this.stateContainer.getValidStates()){
-            if(state.get(WATERLOGGED)||state.get(DISTANCE)!=0)continue;
+            if(state.get(WATERLOGGED)||state.get(DISTANCE)!=0||!state.get(KNOT))continue;
             VoxelShape v = VoxelShapes.or(knot);
             if(state.get(DOWN))v = VoxelShapes.or(v,down);
             if(state.get(UP))v = VoxelShapes.or(v,up);
@@ -196,6 +196,7 @@ public class RopeBlock extends Block implements IWaterLoggable{
         return RopeAttachment.NONE;
     }
 
+    //TODO: move to tags
     private static boolean isFence(Block block){
         return block instanceof FenceBlock|| block.isIn(Tags.Blocks.FENCES);
     }
@@ -287,7 +288,7 @@ public class RopeBlock extends Block implements IWaterLoggable{
     public static boolean isSupportingCeiling(BlockPos pos, IWorldReader world){
         Block b = world.getBlockState(pos).getBlock();
         return hasEnoughSolidSide(world, pos, Direction.DOWN)||
-                ModTags.isTagged(ModTags.ROPE_TAG,b);
+                ModTags.isTagged(ModTags.ROPE_SUPPORT_TAG,b);
     }
 
     public static boolean canConnectDown(BlockPos currentPos, IWorldReader world){
@@ -372,7 +373,7 @@ public class RopeBlock extends Block implements IWaterLoggable{
         ItemStack stack = player.getHeldItem(handIn);
         if(stack.getItem() == this.asItem()){
             if(hit.getFace().getAxis()==Direction.Axis.Y||state.get(DOWN)) {
-                if (this.addRope(pos.down(), world, player, handIn)) {
+                if (addRope(pos.down(), world, player, handIn, this)) {
                     SoundType soundtype = state.getSoundType(world, pos, player);
                     world.playSound(player, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
                     if (player == null || !player.abilities.isCreativeMode) {
@@ -388,50 +389,53 @@ public class RopeBlock extends Block implements IWaterLoggable{
                 return ActionResultType.func_233537_a_(world.isRemote);
         }
         if(stack.isEmpty() && !player.isSneaking() && handIn==Hand.MAIN_HAND){
-            if(this.removeRope(pos.down(),world,0)){
-                world.playSound(player, pos, SoundEvents.ENTITY_LEASH_KNOT_PLACE, SoundCategory.BLOCKS, 1, 0.6f);
-                if (player == null || !player.abilities.isCreativeMode) {
-                    CommonUtil.swapItem(player,handIn,stack,new ItemStack(this.asItem()));
+            if(world.getBlockState(pos.down()).getBlock()==this) {
+                if (removeRope(pos.down(), world, this)) {
+                    world.playSound(player, pos, SoundEvents.ENTITY_LEASH_KNOT_PLACE, SoundCategory.BLOCKS, 1, 0.6f);
+                    if (player == null || !player.abilities.isCreativeMode) {
+                        CommonUtil.swapItem(player, handIn, stack, new ItemStack(this.asItem()));
+                    }
+                    return ActionResultType.func_233537_a_(world.isRemote);
                 }
-                return ActionResultType.func_233537_a_(world.isRemote);
             }
         }
         return ActionResultType.PASS;
     }
 
 
-    private boolean removeRope(BlockPos pos, World world, int dist){
+
+    public static boolean removeRope(BlockPos pos, World world, Block ropeBlock){
         BlockState state = world.getBlockState(pos);
-        if(this == state.getBlock()){
-            return this.removeRope(pos.down(),world, dist+1);
+        if(ropeBlock == state.getBlock()){
+            return removeRope(pos.down(), world, ropeBlock);
         }
         else {
-            if (dist == 0) return false;
+            //if (dist == 0) return false;
             BlockPos up = pos.up();
+            if(!(world.getBlockState(up).getBlock()==ropeBlock))return false;
             FluidState fromFluid = world.getFluidState(up);
             boolean water = (fromFluid.getFluid()==Fluids.WATER && fromFluid.isSource());
             world.setBlockState(up, water?Blocks.WATER.getDefaultState():Blocks.AIR.getDefaultState());
-            this.tryMove(pos, up, world);
+            tryMove(pos, up, world);
             return true;
         }
     }
 
 
 
-    public boolean addRope(BlockPos pos, World world, @Nullable PlayerEntity player, Hand hand){
+    public static boolean addRope(BlockPos pos, World world, @Nullable PlayerEntity player, Hand hand, Block ropeBlock){
         BlockState state = world.getBlockState(pos);
-        if(this == state.getBlock()){
-            return this.addRope(pos.down(),world,player,hand);
+        if(ropeBlock == state.getBlock()){
+            return addRope(pos.down(),world,player,hand,ropeBlock);
         }
         else{
-
-            return this.tryPlaceAndMove(player,hand,world,pos);
+            return tryPlaceAndMove(player,hand, (World) world,pos,ropeBlock);
         }
     }
 
 
-    public boolean tryPlaceAndMove(@Nullable PlayerEntity player, Hand hand, World world, BlockPos pos) {
-        ItemStack stack = new ItemStack(this);
+    public static boolean tryPlaceAndMove(@Nullable PlayerEntity player, Hand hand, World world, BlockPos pos, Block ropeBlock) {
+        ItemStack stack = new ItemStack(ropeBlock);
 
         BlockItemUseContext context = new PlayerlessContext(world, player , hand, stack, new BlockRayTraceResult(Vector3d.copyCentered(pos), Direction.UP, pos, false));
         if (!context.canPlace()) {
@@ -439,21 +443,21 @@ public class RopeBlock extends Block implements IWaterLoggable{
             BlockPos downPos = pos.down();
             //try move block down
             if (!(world.getBlockState(downPos).getMaterial().isReplaceable()
-                    && this.tryMove(pos, downPos, world))) return false;
-            context = new BlockItemUseContext(player, hand, stack, new BlockRayTraceResult(Vector3d.copyCentered(pos), Direction.UP, pos, false));
+                    && tryMove(pos, downPos, world))) return false;
+            context = new PlayerlessContext(world, player, hand, stack, new BlockRayTraceResult(Vector3d.copyCentered(pos), Direction.UP, pos, false));
         }
 
-        BlockState state = this.getStateForPlacement(context);
+        BlockState state = ropeBlock.getStateForPlacement(context);
         if (state == null || !CommonUtil.canPlace(context, state)) return false;
-
-        if (state != null && world.setBlockState(pos, state, 11)) {
+        if (state == world.getBlockState(context.getPos()))return false;
+        if (world.setBlockState(context.getPos(), state, 11)) {
             if(player!=null) {
-                BlockState placedState = world.getBlockState(pos);
+                BlockState placedState = world.getBlockState(context.getPos());
                 Block block = placedState.getBlock();
                 if (block == state.getBlock()) {
-                    block.onBlockPlacedBy(world, pos, placedState, player, stack);
+                    block.onBlockPlacedBy(world, context.getPos(), placedState, player, stack);
                     if (player instanceof ServerPlayerEntity) {
-                        CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayerEntity) player, pos, stack);
+                        CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayerEntity) player, context.getPos(), stack);
                     }
                 }
             }
@@ -466,10 +470,13 @@ public class RopeBlock extends Block implements IWaterLoggable{
         return (state.isIn(Blocks.OBSIDIAN) || state.isIn(Blocks.CRYING_OBSIDIAN) || state.isIn(Blocks.RESPAWN_ANCHOR));
     }
 
-    private boolean tryMove(BlockPos fromPos, BlockPos toPos, World world) {
+    //TODO: fix order of operations to allow for pulling down lanterns
+    private static boolean tryMove(BlockPos fromPos, BlockPos toPos, World world) {
         BlockState state = world.getBlockState(fromPos);
         Block block = state.getBlock();
-        if (state.getPushReaction()==PushReaction.NORMAL && state.getBlockHardness(world, fromPos) != -1
+        PushReaction push = state.getPushReaction();
+        //TODO: add case for glazed terracotta
+        if ((push==PushReaction.NORMAL||ModTags.isTagged(ModTags.ROPE_HANG_TAG,block)) && state.getBlockHardness(world, fromPos) != -1
                 && state.isValidPosition(world, toPos) && !block.isAir(state, world, fromPos) && !isObsidian(state)){
 
             TileEntity tile = world.getTileEntity(fromPos);

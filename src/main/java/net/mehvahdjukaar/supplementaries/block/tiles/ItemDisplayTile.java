@@ -35,8 +35,12 @@ public abstract class ItemDisplayTile extends LockableLootTileEntity implements 
     //for server
     @Override
     public void markDirty() {
-        this.world.notifyBlockUpdate(this.pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
+        this.updateVisuals();
         super.markDirty();
+    }
+
+    public void updateVisuals(){
+        this.world.notifyBlockUpdate(this.pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
     }
 
     //TODO: use this

@@ -96,7 +96,10 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue NETHERITE_DOOR_ENABLED;
         public static ForgeConfigSpec.BooleanValue PANCAKES_ENABLED;
         public static ForgeConfigSpec.BooleanValue LOCK_BLOCK_ENABLED;
-
+        public static ForgeConfigSpec.BooleanValue FLAX_ENABLED;
+        public static ForgeConfigSpec.BooleanValue ROPE_ENABLED;
+        public static ForgeConfigSpec.BooleanValue ROPE_ARROW_ENABLED;
+        public static ForgeConfigSpec.BooleanValue PULLEY_ENABLED;
 
         public static ForgeConfigSpec.BooleanValue JAR_TAB;
         public static ForgeConfigSpec.BooleanValue CREATIVE_TAB;
@@ -111,6 +114,18 @@ public class RegistryConfigs {
         //oh god what have I done
         public static boolean isEnabled(String path){
             //special double condition cases
+            if(path.equals(Registry.GOLD_DOOR_NAME)){
+                return true;
+            }
+            if(path.equals(Registry.STONE_LAMP_NAME)){
+                return true;
+            }
+            if(path.equals(Registry.GOLD_TRAPDOOR_NAME)){
+                return true;
+            }
+            if(path.equals(Registry.CRIMSON_LANTERN_NAME)){
+                return false;
+            }
             if(path.equals(Registry.FIREFLY_JAR_NAME)){
                 return reg.FIREFLY_JAR;
             }
@@ -194,6 +209,11 @@ public class RegistryConfigs {
             NETHERITE_TRAPDOOR_ENABLED = builder.define(Registry.NETHERITE_TRAPDOOR_NAME, true);
             PANCAKES_ENABLED = builder.define(Registry.PANCAKE_NAME,true);
             LOCK_BLOCK_ENABLED = builder.define(Registry.LOCK_BLOCK_NAME,true);
+            FLAX_ENABLED = builder.define(Registry.FLAX_NAME,true);
+            ROPE_ENABLED = builder.define(Registry.ROPE_NAME,true);
+            ROPE_ARROW_ENABLED = builder.define(Registry.ROPE_ARROW_NAME,true);
+            FLAX_ENABLED = builder.define(Registry.FLAX_NAME,true);
+
 
             LASER_ENABLED = builder.comment("WIP")
                     .define(Registry.LASER_NAME, false);

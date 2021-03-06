@@ -7,6 +7,7 @@ import mezz.jei.api.ingredients.subtypes.ISubtypeInterpreter;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.items.BambooSpikesTippedItem;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.item.ItemStack;
@@ -66,8 +67,10 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         registry.addRecipes(createBlackboardClear(),VanillaRecipeCategoryUid.CRAFTING);
         registry.addRecipes(createRopeArrowCreateRecipe(),VanillaRecipeCategoryUid.CRAFTING);
         registry.addRecipes(createRopeArrowAddRecipe(),VanillaRecipeCategoryUid.CRAFTING);
+
     }
 
+    //TODO: fix ropes
     public static List<IRecipe<?>> createRopeArrowCreateRecipe() {
         List<IRecipe<?>> recipes = new ArrayList<>();
         String group = "supplementaries.jei.rope_arrow";
@@ -76,7 +79,7 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         ropeArrow.setDamage(ropeArrow.getMaxDamage()-4);
 
         Ingredient arrow = Ingredient.fromStacks(new ItemStack(Items.ARROW));
-        Ingredient rope = Ingredient.fromStacks(new ItemStack(Registry.ROPE_ITEM.get()));
+        Ingredient rope = Ingredient.fromTag(ModTags.ROPES);//fromStacks(new ItemStack(Registry.ROPE_ITEM.get()));
         NonNullList<Ingredient> inputs = NonNullList.from(Ingredient.EMPTY, arrow, rope,rope,rope,rope);
         ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "jei_rope_arrow_create");
         ShapelessRecipe recipe = new ShapelessRecipe(id, group, ropeArrow, inputs);
@@ -93,7 +96,7 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         ropeArrow2.setDamage(8);
 
         Ingredient arrow = Ingredient.fromStacks(ropeArrow2);
-        Ingredient rope = Ingredient.fromStacks(new ItemStack(Registry.ROPE_ITEM.get()));
+        Ingredient rope = Ingredient.fromTag(ModTags.ROPES);//.fromStacks(new ItemStack(Registry.ROPE_ITEM.get()));
         NonNullList<Ingredient> inputs = NonNullList.from(Ingredient.EMPTY, rope,rope,rope,rope,arrow,rope,rope,rope,rope);
         ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "jei_rope_arrow_add");
         ShapelessRecipe recipe = new ShapelessRecipe(id, group, ropeArrow, inputs);

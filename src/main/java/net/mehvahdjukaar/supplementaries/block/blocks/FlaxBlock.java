@@ -79,7 +79,8 @@ public class FlaxBlock extends CropsBlock {
     @Override
     public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
         DoubleBlockHalf half = stateIn.get(HALF);
-        if (facing.getAxis() != Direction.Axis.Y || half == DoubleBlockHalf.LOWER != (facing == Direction.UP) || (facingState.isIn(this) && facingState.get(HALF) != half )) {
+
+        if (facing.getAxis() != Direction.Axis.Y || (half == DoubleBlockHalf.LOWER != (facing == Direction.UP) || !this.isDouble(stateIn)) || (facingState.isIn(this) && facingState.get(HALF) != half )) {
             return half == DoubleBlockHalf.LOWER && facing == Direction.DOWN && !stateIn.isValidPosition(worldIn, currentPos)
                     ? Blocks.AIR.getDefaultState() : super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
         } else {
@@ -172,7 +173,7 @@ public class FlaxBlock extends CropsBlock {
     //for bonemeal
     @Override
     public boolean canGrow(IBlockReader worldIn, BlockPos pos, BlockState state, boolean isClient) {
-        return !this.isMaxAge(state) && (this.canGrowUp(worldIn,pos)||this.getAge(state)<DOUBLE_AGE);
+        return !this.isMaxAge(state) && (this.canGrowUp(worldIn,pos)||this.getAge(state)<DOUBLE_AGE-1);
     }
 
     //here I'm assuming canGrow has already been called
@@ -180,7 +181,8 @@ public class FlaxBlock extends CropsBlock {
     public void grow(World worldIn, BlockPos pos, BlockState state) {
         int newAge = this.getAge(state) + this.getBonemealAgeIncrease(worldIn);
         newAge = Math.min(newAge, this.getMaxAge());
-        if (newAge >= DOUBLE_AGE ) {
+        if (newAge >= DOUBLE_AGE) {
+            if(!this.canGrowUp(worldIn,pos))return;
             worldIn.setBlockState(pos.up(), withAge(newAge).with(HALF, DoubleBlockHalf.UPPER), 3);
         }
         worldIn.setBlockState(pos, withAge(newAge), 2);

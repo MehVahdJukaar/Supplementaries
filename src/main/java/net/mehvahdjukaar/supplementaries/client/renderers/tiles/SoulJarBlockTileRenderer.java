@@ -131,6 +131,10 @@ public class SoulJarBlockTileRenderer extends TileEntityRenderer<FireflyJarBlock
         Quaternion rotation = Minecraft.getInstance().getRenderManager().getCameraOrientation();
         matrixStackIn.rotate(rotation);
 
+
+        //matrixStackIn.scale(20f, 20f, 20f);
+        //RendererUtil.addQuadSide(builder, matrixStackIn, 5f, -5f, 0, -5f, 0.5f, 0, 0, 0, 1, 1,  1,  1, 1, 1, lu, lv, 0, 1, 0);
+
         RendererUtil.addQuadSide(builder, matrixStackIn, 0.5f, -0.5f, 0, -0.5f, 0.5f, 0, sprite.getMinU(), sprite.getMinV(), sprite.getMaxU(), sprite.getMaxV(),  1,  1, 1, 1, lu, lv, 0, 1, 0);
 
         matrixStackIn.pop();

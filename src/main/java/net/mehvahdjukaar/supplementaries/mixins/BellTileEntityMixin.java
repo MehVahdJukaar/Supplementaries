@@ -34,15 +34,23 @@ public abstract class BellTileEntityMixin extends TileEntity  implements IBellCo
     @Override
     public CompoundNBT write(CompoundNBT compound) {
         super.write(compound);
-        compound.putInt("Connection",this.connection.ordinal());
+        //not needed but since I keep getting reports lets do this
+        try {
+            if (this.connection != null)
+                compound.putInt("Connection", this.connection.ordinal());
+        }catch (Exception ignored){}
         return compound;
     }
 
     @Override
     public void read(BlockState state, CompoundNBT compound) {
         super.read(state, compound);
-        if(compound.contains("Connection"))
-            this.connection = BellConnection.values()[compound.getInt("Connection")];
+        try {
+            if(compound.contains("Connection"))
+                this.connection = BellConnection.values()[compound.getInt("Connection")];
+        }catch (Exception ignored){
+            this.connection = BellConnection.NONE;
+        }
     }
 
     @Override

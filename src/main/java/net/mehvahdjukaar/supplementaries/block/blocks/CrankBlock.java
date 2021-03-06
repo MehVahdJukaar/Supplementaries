@@ -193,10 +193,12 @@ public class CrankBlock extends Block implements IWaterLoggable{
         builder.add(FACING, POWER, WATERLOGGED);
     }
 
+    @Override
     public BlockState rotate(BlockState state, Rotation rot) {
         return state.with(FACING, rot.rotate(state.get(FACING)));
     }
 
+    @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
         return state.rotate(mirrorIn.toRotation(state.get(FACING)));
     }

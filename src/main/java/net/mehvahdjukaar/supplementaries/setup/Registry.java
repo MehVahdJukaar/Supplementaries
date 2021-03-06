@@ -13,6 +13,7 @@ import net.mehvahdjukaar.supplementaries.entities.FireflyEntity;
 import net.mehvahdjukaar.supplementaries.entities.RopeArrowEntity;
 import net.mehvahdjukaar.supplementaries.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.inventories.NoticeBoardContainer;
+import net.mehvahdjukaar.supplementaries.inventories.PulleyBlockContainer;
 import net.mehvahdjukaar.supplementaries.inventories.SackContainer;
 import net.mehvahdjukaar.supplementaries.items.*;
 import net.mehvahdjukaar.supplementaries.items.crafting.*;
@@ -132,6 +133,16 @@ public class Registry {
     }
 
     //entities
+    /*
+    public static final String ORANGE_TRADER_NAME = "orange_trader";
+    public static final EntityType<?> ORANGE_TRADER = (EntityType.Builder.create(FireflyEntity::new, EntityClassification.AMBIENT)
+            .setShouldReceiveVelocityUpdates(true).setTrackingRange(128).setUpdateInterval(3)
+            .size(0.3125f, 1f))
+            .build(FIREFLY_NAME)
+            .setRegistryName(FIREFLY_NAME);
+    public static final RegistryObject<Item> FIREFLY_SPAWN_EGG_ITEM = ITEMS.register(FIREFLY_NAME+"_spawn_egg",()-> new SpawnEggItem(FIREFLY_TYPE,  -5048018, -14409439, //-4784384, -16777216,
+            new Item.Properties().group(getTab(ItemGroup.MISC,FI
+    */
 
     //firefly
     public static final String FIREFLY_NAME = "firefly";
@@ -161,8 +172,7 @@ public class Registry {
             .setTrackingRange(64).setUpdateInterval(1).size(0.5f, 0.5f))//.size(0.25F, 0.25F).trackingRange(4).func_233608_b_(10))
             .build(ROPE_ARROW_NAME));
     public static final RegistryObject<Item> ROPE_ARROW_ITEM = ITEMS.register(ROPE_ARROW_NAME,()-> new RopeArrowItem(
-            new Item.Properties().group(getTab(ItemGroup.MISC,ROPE_ARROW_NAME))
-                    .defaultMaxDamage(16).setNoRepair()));
+            new Item.Properties().group(getTab(ItemGroup.MISC,ROPE_ARROW_NAME)).defaultMaxDamage(16).setNoRepair()));
 
 
     //particles
@@ -1015,14 +1025,14 @@ public class Registry {
                     .hardnessAndResistance(1.5F, 6.0F))
     );
     public static final RegistryObject<Item> CHECKER_BLOCK_ITEM = ITEMS.register(CHECKER_BLOCK_NAME,()-> new BlockItem(CHECKER_BLOCK.get(),
-            (new Item.Properties()).group(getTab(ItemGroup.DECORATIONS, CHECKER_BLOCK_NAME))
+            (new Item.Properties()).group(getTab(ItemGroup.BUILDING_BLOCKS, CHECKER_BLOCK_NAME))
     ));
     public static final String CHECKER_SLAB_NAME = "checker_slab";
     public static final RegistryObject<Block> CHECKER_SLAB = BLOCKS.register(CHECKER_SLAB_NAME,()-> new SlabBlock(
             AbstractBlock.Properties.from(CHECKER_BLOCK.get()))
     );
     public static final RegistryObject<Item> CHECKER_SLAB_ITEM = ITEMS.register(CHECKER_SLAB_NAME,()-> new BlockItem(CHECKER_SLAB.get(),
-            (new Item.Properties()).group(getTab(ItemGroup.DECORATIONS, CHECKER_BLOCK_NAME))
+            (new Item.Properties()).group(getTab(ItemGroup.BUILDING_BLOCKS, CHECKER_BLOCK_NAME))
     ));
 
     //pancakes
@@ -1051,6 +1061,25 @@ public class Registry {
     //pot
     public static final RegistryObject<Block> FLAX_POT = BLOCKS.register("potted_flax",()-> new FlowerPotBlock(
             () -> (FlowerPotBlock)Blocks.FLOWER_POT, FLAX, AbstractBlock.Properties.from(Blocks.FLOWER_POT)));
+
+    //fodder
+    public static final String FODDER_NAME = "fodder";
+    public static final RegistryObject<Block> FODDER = BLOCKS.register(FODDER_NAME,()-> new FodderBlock(
+            AbstractBlock.Properties.from(Blocks.PODZOL)));
+    public static final RegistryObject<Item> FODDER_ITEM = ITEMS.register(FODDER_NAME,()-> new BlockItem(FODDER.get(),
+            (new Item.Properties()).group(getTab(ItemGroup.BUILDING_BLOCKS,FODDER_NAME))));
+
+    //pulley
+    public static final String PULLEY_BLOCK_NAME = "pulley_block";
+    public static final RegistryObject<Block> PULLEY_BLOCK = BLOCKS.register(PULLEY_BLOCK_NAME,()-> new PulleyBlock(
+            AbstractBlock.Properties.from(Blocks.BARREL)));
+    public static final RegistryObject<Item> PULLEY_BLOCK_ITEM = ITEMS.register(PULLEY_BLOCK_NAME,()-> new BlockItem(PULLEY_BLOCK.get(),
+            (new Item.Properties()).group(getTab(ItemGroup.REDSTONE,PULLEY_BLOCK_NAME))
+    ));
+    public static final RegistryObject<ContainerType<PulleyBlockContainer>> PULLEY_BLOCK_CONTAINER = CONTAINERS
+            .register(PULLEY_BLOCK_NAME,()-> IForgeContainerType.create(PulleyBlockContainer::new));
+    public static final RegistryObject<TileEntityType<PulleyBlockTile>> PULLEY_BLOCK_TILE = TILES.register(PULLEY_BLOCK_NAME,()-> TileEntityType.Builder.create(
+            PulleyBlockTile::new, PULLEY_BLOCK.get()).build(null));
 
     /*
     //statue

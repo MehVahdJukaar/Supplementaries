@@ -307,6 +307,30 @@
     {
       "id":"quark:stripped_crimson_post",
       "required":false
+    },
+    {
+      "id":"environmental:stripped_willow_post",
+      "required":false
+    },
+    {
+      "id":"environmental:willow_post",
+      "required":false
+    },
+    {
+      "id":"environmental:stripped_cherry_post",
+      "required":false
+    },
+    {
+      "id":"environmental:cherry_post",
+      "required":false
+    },
+    {
+      "id":"environmental:stripped_wisteria_post",
+      "required":false
+    },
+    {
+      "id":"environmental:wisteria_post",
+      "required":false
     }
   ]
 }

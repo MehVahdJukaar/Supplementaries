@@ -1,6 +1,11 @@
 package net.mehvahdjukaar.supplementaries.configs;
 
+import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,6 +37,7 @@ public class ServerConfigs {
 
 
     public static class item {
+        public static ForgeConfigSpec.ConfigValue<String> ROPE_ARROW_ROPE;
         public static ForgeConfigSpec.IntValue FLUTE_RADIUS;
         public static ForgeConfigSpec.IntValue FLUTE_DISTANCE;
         public static ForgeConfigSpec.ConfigValue<List<? extends String>> FLUTE_EXTRA_MOBS;
@@ -40,8 +46,12 @@ public class ServerConfigs {
         private static void init(ForgeConfigSpec.Builder builder){
             builder.push("items");
 
-
-
+            //rope arrow
+            builder.push("rope_arrow");
+            ROPE_ARROW_ROPE = builder.comment("If you really don't like my ropes you can specify here the block id of"+
+                    "a rope from another mod which will get deployed by rope arrows instead of mine")
+                    .define("rope_arrow_override","supplementaries:rope");
+            builder.pop();
             //flute
             builder.push("flute");
             FLUTE_RADIUS = builder.comment("radius in which an unbound flute will search pets")
@@ -371,6 +381,8 @@ public class ServerConfigs {
     //maybe not need but hey
     public static class cached{
         //items
+        public static String ROPE_ARROW_ROPE;
+        public static Block ROPE_ARROW_BLOCK;
         public static int FLUTE_RADIUS;
         public static int FLUTE_DISTANCE;
         public static List<? extends String> FLUTE_EXTRA_MOBS;
@@ -424,6 +436,9 @@ public class ServerConfigs {
         public static double FIREFLY_SPEED;
 
         public static void refresh(){
+            ROPE_ARROW_ROPE = item.ROPE_ARROW_ROPE.get();
+            ROPE_ARROW_BLOCK = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ROPE_ARROW_ROPE));
+            if(ROPE_ARROW_BLOCK == Blocks.AIR)ROPE_ARROW_BLOCK = Registry.ROPE.get();
             FLUTE_DISTANCE = item.FLUTE_DISTANCE.get();
             FLUTE_RADIUS = item.FLUTE_RADIUS.get();
             FLUTE_EXTRA_MOBS = item.FLUTE_EXTRA_MOBS.get();

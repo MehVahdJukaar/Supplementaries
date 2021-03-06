@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "111",
+    "000",
+    "000"
+  ],
+  "key": {
+    "1": {
+      "item": "supplementaries:flax"
+    },
+    "0": {
+      "item": "minecraft:dirt"
+    }
+  },
+  "result": {
+    "item": "supplementaries:fodder",
+    "count": 1
+  },
+  "conditions": [
+    {
+      "type": "forge:and",
+      "values": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "fodder"
+        },
+        {
+          "type": "supplementaries:flag",
+          "flag": "flax"
+        }
+      ]
+    }
+  ]
+}

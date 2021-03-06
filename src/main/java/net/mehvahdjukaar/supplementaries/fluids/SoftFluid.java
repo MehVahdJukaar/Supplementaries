@@ -36,6 +36,7 @@ public class SoftFluid {
     private final SoundEvent emptySound;
     private final String id;
     private final String translationKey;
+    private final boolean isEmptyHand;
 
     public SoftFluid(Builder builder){
         this.stillTexture = builder.stillTexture;
@@ -53,6 +54,8 @@ public class SoftFluid {
         this.id = builder.id;
         this.translationKey = builder.translationKey;
         this.bottleReturnItem = builder.bottleReturnItem;
+        //empty bottles = empty hand
+        this.isEmptyHand = (this.bottleReturnItem == Items.AIR);
     }
 
     public int getFoodDivider() {
@@ -249,7 +252,8 @@ public class SoftFluid {
             return this;
         }
         public final Builder translationKey(String translationKey) {
-            this.translationKey = translationKey;
+            if(translationKey == null) this.translationKey = "fluid.supplementaries.jar_fluid";
+            else{this.translationKey = translationKey;}
             return this;
         }
         public final Builder color(int tintColor) {
@@ -310,8 +314,9 @@ public class SoftFluid {
         }
         //bottle
         public final Builder bottle(Item item) {
-            if(item!=null&&item!=Items.AIR)
+            if(item!=null&&item!=Items.AIR) {
                 this.filledBottles.add(item);
+            }
             return this;
         }
         public final Builder bottle(ResourceLocation itemRes) {
@@ -338,8 +343,11 @@ public class SoftFluid {
         }
         //bowl
         public final Builder bowl(Item item) {
-            if(item!=null&&item!=Items.AIR)
+            if(item!=null&&item!=Items.AIR) {
                 this.filledBowls.add(item);
+                //only works with bowls
+                this.translationKey(item.getTranslationKey());
+            }
             return this;
         }
         public final Builder bowl(ResourceLocation itemRes) {

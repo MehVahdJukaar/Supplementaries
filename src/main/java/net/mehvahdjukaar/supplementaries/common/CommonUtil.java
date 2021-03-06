@@ -1,15 +1,18 @@
 package net.mehvahdjukaar.supplementaries.common;
 
+import net.mehvahdjukaar.supplementaries.block.blocks.FodderBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.SignPostBlock;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.VanillaWoodTypes;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.*;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.potion.Potions;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tileentity.ShulkerBoxTileEntity;
 import net.minecraft.util.*;
@@ -356,6 +359,17 @@ public class CommonUtil {
         return 0;
     }
 
+    public static boolean isVertical(BlockState state){
+        if(state.hasProperty(BlockStateProperties.AXIS)){
+            return state.get(BlockStateProperties.AXIS)== Direction.Axis.Y;
+        }
+        return true;
+    }
+
+    public static boolean isPost(BlockState state){
+        return isVertical(state) && ModTags.isTagged(ModTags.POSTS,state.getBlock());
+    }
+
     //this is how you do it :D
     private static final ShulkerBoxTileEntity SHULKER_TILE = new ShulkerBoxTileEntity();
     public static boolean isAllowedInShulker(ItemStack stack){
@@ -380,4 +394,28 @@ public class CommonUtil {
         return state.isValidPosition(context.getWorld(), context.getPos()) && context.getWorld().placedBlockCollides(state, context.getPos(), iselectioncontext);
     }
 
+
+    public static void mm(BlockPos pos, Entity entity){
+        Block b = entity.world.getBlockState(pos).getBlock();
+        int a = 2;
+    }
+    public static void m2m(BlockPos pos, Entity entity){
+        Block b = entity.world.getBlockState(pos).getBlock();
+        int a = 2;
+    }
+    public static void m3m(int i){
+        int a = 2;
+    }
+    public static void m4m(int i){
+        int a = 2;
+    }
+    public static void m5m(BlockPos pos, Entity entity){
+        Block b = entity.world.getBlockState(pos).getBlock();
+        boolean flag = entity.world.getBlockState(pos).getBlock() instanceof FodderBlock;
+        int a = 2;
+    }
+    public static void m6m(boolean nn){
+
+        int a = 2;
+    }
 }

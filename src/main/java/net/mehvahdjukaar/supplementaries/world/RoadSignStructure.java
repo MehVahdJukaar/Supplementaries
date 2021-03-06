@@ -14,10 +14,8 @@ public class RoadSignStructure {
             @Override
             public boolean generate(ISeedReader world, ChunkGenerator generator, Random random, BlockPos pos, NoFeatureConfig config) {
 
-                StructureSeparationSettings structureseparationsettings = generator.func_235957_b_().func_236197_a_(Structure.VILLAGE);
+                //StructureSeparationSettings structureseparationsettings = generator.func_235957_b_().func_236197_a_(Structure.VILLAGE);
                 //ChunkPos chunkpos = Structure.VILLAGE.getChunkPosForStructure(structureseparationsettings, p_242782_2_, p_242782_4_, i, j);
-
-
 
                 //chunk 0,0 coordinates
                 int ci = (pos.getX() >> 4) << 4;

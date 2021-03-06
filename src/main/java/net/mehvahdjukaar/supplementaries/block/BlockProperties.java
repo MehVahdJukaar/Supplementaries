@@ -32,6 +32,8 @@ public class BlockProperties {
     public static final IntegerProperty PANCAKES_1_8 = IntegerProperty.create("pancakes", 1, 8);
     public static final BooleanProperty HAS_HONEY = BooleanProperty.create("has_honey");
     public static final EnumProperty<Topping> TOPPING = EnumProperty.create("topping",Topping.class);
+    public static final EnumProperty<Winding> WINDING = EnumProperty.create("winding",Winding.class);
+    public static final BooleanProperty FLIPPED = BooleanProperty.create("flipped");
 
     public enum RopeAttachment implements IStringSerializable{
         NONE("none"), //default /no attachment
@@ -73,8 +75,25 @@ public class BlockProperties {
         SYRUP("syrup"),
         CHOCOLATE("chocolate");
 
+
         private final String name;
         Topping(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String getString() {
+            return this.name;
+
+        }
+    }
+    public enum Winding implements IStringSerializable{
+        NONE("none"),
+        CHAIN("chain"),
+        ROPE("rope");
+
+        private final String name;
+        Winding(String name) {
             this.name = name;
         }
 

@@ -117,12 +117,15 @@
   "entity.supplementaries.brick_projectile": "Brick Projectile",
   "entity.supplementaries.rope_arrow": "Rope Arrow",
   "block.supplementaries.checker_slab": "Checker Slab",
+  "message.supplementaries.rope_arrow": "Rope override: %s",
+  "block.supplementaries.pulley_block": "Pulley Block",
+  "block.supplementaries.fodder": "Fodder",
 
   "item.supplementaries.key_chain": "Key Chain",
   "block.supplementaries.skull_candle": "Skull Candle",
   "block.supplementaries.goblet": "Goblet",
   "block.supplementaries.flag": "Flag",
-  "block.supplementaries.laser_block": "Laser Block",
+  "block.supplementaries.laser_block": "Ender Beamer",
 
   "supplementaries.comment": "enhanced mushroom: red mushroom, brown mushroom, glowshroom",
   "supplementaries.comment2": "outer end: azure",

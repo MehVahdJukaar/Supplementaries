@@ -4,6 +4,7 @@
 		"1": "supplementaries:blocks/sack_front",
 		"2": "supplementaries:blocks/sack_top",
 		"3": "supplementaries:blocks/sack_bottom",
+		"4": "supplementaries:blocks/sack_closed",
 		"particle": "supplementaries:blocks/sack_front"
 	},
 	"elements": [
@@ -29,8 +30,8 @@
 				"east": {"uv": [5, 0, 11, 3], "texture": "#1"},
 				"south": {"uv": [5, 0, 11, 3], "texture": "#1"},
 				"west": {"uv": [5, 0, 11, 3], "texture": "#1"},
-				"up": {"uv": [5, 5, 11, 11], "texture": "#2"},
-				"down": {"uv": [5, 5, 11, 11], "texture": "#2"}
+				"up": {"uv": [0, 0, 6, 6], "texture": "#4"},
+				"down": {"uv": [6, 0, 12, 6], "texture": "#4"}
 			}
 		},
 		{
