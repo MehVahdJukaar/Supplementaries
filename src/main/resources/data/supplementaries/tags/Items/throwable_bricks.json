@@ -38,6 +38,10 @@
     {
       "id":"environmental:mud_brick",
       "required":false
+    },
+    {
+      "id":"extcaves:brick_half",
+      "required":false
     }
   ]
 }

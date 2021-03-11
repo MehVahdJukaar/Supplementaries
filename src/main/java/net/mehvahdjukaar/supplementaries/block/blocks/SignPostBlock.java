@@ -154,20 +154,15 @@ public class SignPostBlock extends Block implements IWaterLoggable, IForgeBlock{
                         this.getLodestonePos(worldIn, itemstack.getOrCreateTag()) : this.getWorldSpawnPos(worldIn);
 
                 if(pointingPos!=null) {
-                    double yaw = Math.atan2(pointingPos.getX() - pos.getX(), pointingPos.getZ() - pos.getZ()) * 180d / Math.PI;
-                    //int r = MathHelper.floor((double) ((180.0F + yaw) * 16.0F / 360.0F) + 0.5D) & 15;
                     double y = hit.getHitVec().y;
                     boolean up = y % ((int) y) > 0.5d;
                     if (up && te.up) {
-                        int d = te.leftUp ? 180 : 0;
-                        te.yawUp = (float) yaw - d;// r*-22.5f;
-                        if(server)te.markDirty();
-                        return ActionResultType.func_233537_a_(worldIn.isRemote);
+                        te.pointToward(pointingPos,true);
                     } else if (!up && te.down) {
-                        int d = te.leftDown ? 180 : 0;
-                        te.yawDown = (float) yaw - d;// r*-22.5f;
-                        if(server)te.markDirty();
+                        te.pointToward(pointingPos,false);
                     }
+                    if(server)te.markDirty();
+                    return ActionResultType.func_233537_a_(worldIn.isRemote);
                 }
             }
             else if (isSignPost){
@@ -182,6 +177,7 @@ public class SignPostBlock extends Block implements IWaterLoggable, IForgeBlock{
         }
         return ActionResultType.PASS;
     }
+
 
     @Nullable
     private BlockPos getLodestonePos(World world, CompoundNBT cmp) {

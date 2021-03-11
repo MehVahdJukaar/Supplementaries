@@ -176,34 +176,49 @@ public class RendererUtil {
                 .normal(matrixStackIn.getLast().getNormal(), nx, ny, nz).endVertex();
     }
 
+                //RendererUtil.renderFish(builder, matrixStackIn, wo, ho, fishType,240 , combinedOverlayIn);
 
     public static void renderFish(IVertexBuilder builder, MatrixStack matrixStackIn, float wo, float ho, int fishType, int combinedLightIn,
                                   int combinedOverlayIn) {
-        int fishv = fishType%4;
-        int fishu = fishType/4;
+        int textW = 64;
+        int textH = 32;
+        int fishW = 5;
+        int fishH = 4;
+
+        int fishv = fishType % (textH/fishH);
+        int fishu = fishType / (textH/fishH);
 
         TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(Textures.FISHIES_TEXTURE);
-        float w = 5 / 16f;
-        float h = 4 / 16f;
-        float hw = w / 2f;
-        float hh = h / 2f;
+        float w = fishW / (float)textW;
+        float h = fishH / (float)textH;
+        float hw = 4*w / 2f;
+        float hh = 2*h / 2f;
         int lu = combinedLightIn & '\uffff';
         int lv = combinedLightIn >> 16 & '\uffff';
         float atlasscaleU = sprite.getMaxU() - sprite.getMinU();
         float atlasscaleV = sprite.getMaxV() - sprite.getMinV();
-        float minu = sprite.getMinU() + atlasscaleU * fishu * h;
+        float minu = sprite.getMinU() + atlasscaleU * fishu * w;
         float minv = sprite.getMinV() + atlasscaleV * fishv * h;
         float maxu = atlasscaleU * w + minu;
         float maxv = atlasscaleV * h + minv;
-        for (int j = 0; j < 2; j++) {
-            addVert(builder, matrixStackIn, hw - Math.abs(wo / 2), -hh + ho, +wo, minu, maxv, 1, 1, 1, 1, lu, lv, 0, 1, 0);
-            addVert(builder, matrixStackIn, -hw + Math.abs(wo / 2), -hh + ho, -wo, maxu, maxv, 1, 1, 1, 1, lu, lv, 0, 1, 0);
-            addVert(builder, matrixStackIn, -hw + Math.abs(wo / 2), hh + ho, -wo, maxu, minv, 1, 1, 1, 1, lu, lv, 0, 1, 0);
-            addVert(builder, matrixStackIn, hw - Math.abs(wo / 2), hh + ho, +wo, minu, minv, 1, 1, 1, 1, lu, lv, 0, 1, 0);
-            matrixStackIn.rotate(Const.Y180);
-            float temp = minu;
-            minu = maxu;
-            maxu = temp;
+
+
+
+        for (int k = 0; k < 2; k++) {
+            for (int j = 0; j < 2; j++) {
+                addVert(builder, matrixStackIn, hw - Math.abs(wo / 2), -hh + ho, +wo, minu, maxv, 1, 1, 1, 1, lu, lv, 0, 1, 0);
+                addVert(builder, matrixStackIn, -hw + Math.abs(wo / 2), -hh + ho, -wo, maxu, maxv, 1, 1, 1, 1, lu, lv, 0, 1, 0);
+                addVert(builder, matrixStackIn, -hw + Math.abs(wo / 2), hh + ho, -wo, maxu, minv, 1, 1, 1, 1, lu, lv, 0, 1, 0);
+                addVert(builder, matrixStackIn, hw - Math.abs(wo / 2), hh + ho, +wo, minu, minv, 1, 1, 1, 1, lu, lv, 0, 1, 0);
+                matrixStackIn.rotate(Const.Y180);
+                float temp = minu;
+                minu = maxu;
+                maxu = temp;
+            }
+            lu = 240;
+            minu += (atlasscaleU/2);
+            maxu += (atlasscaleU/2);
+
         }
     }
 }

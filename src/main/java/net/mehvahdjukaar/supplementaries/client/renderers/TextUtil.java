@@ -49,9 +49,12 @@ public class TextUtil {
                 "\nBaliocraft"+
                 "\nAnton Bidenko"+
                 "\nsarlix"+
+                "\nNick Defrunct"+
                 "\n\n\u00A75Mod Compat.:\u00A7r\n\n\u00A70"+
                 "WenXin2"+
                 "\nFrogbirdd"+
+                "\nMightyGoat"+
+                "\nAgrona"+
                 "\n\n\u00A75Others:\u00A7r\n\n\u00A70"+
                  "Guys on Discord"+
                 "\nUmaroth"+

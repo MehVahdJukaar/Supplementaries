@@ -48,6 +48,11 @@ public abstract class ItemDisplayTile extends LockableLootTileEntity implements 
         return this.getStackInSlot(0);
     }
 
+    public void setDisplayedItem(ItemStack stack){
+        this.setItems(NonNullList.withSize(1, stack));
+    }
+
+
     @Override
     public void read(BlockState state, CompoundNBT compound) {
         super.read(state, compound);

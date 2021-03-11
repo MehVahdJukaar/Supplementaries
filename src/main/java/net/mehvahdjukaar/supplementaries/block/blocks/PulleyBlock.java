@@ -49,9 +49,8 @@ public class PulleyBlock extends RotatedPillarBlock {
     //rotates itself and pull up/down. unchecked
     public boolean axisRotate(BlockState state, BlockPos pos, World world, Rotation rot){
         world.setBlockState(pos,state.func_235896_a_(FLIPPED));
-        if(rot==Rotation.CLOCKWISE_90)this.pullUp(pos, world,1);
-        else this.pullDown(pos, world,1);
-        return true;
+        if(rot==Rotation.CLOCKWISE_90) return this.pullUp(pos, world,1);
+        else return this.pullDown(pos, world,1);
     }
 
     public boolean pullUp(BlockPos pos, IWorld world, int rot){
@@ -101,7 +100,8 @@ public class PulleyBlock extends RotatedPillarBlock {
         TileEntity tileentity = worldIn.getTileEntity(pos);
         if (tileentity instanceof PulleyBlockTile) {
             if (player instanceof ServerPlayerEntity) {
-                player.openContainer((INamedContainerProvider)tileentity);
+                if(!(player.isSneaking()&&this.axisRotate(state,pos,worldIn,Rotation.COUNTERCLOCKWISE_90)))
+                    player.openContainer((INamedContainerProvider)tileentity);
             }
             return ActionResultType.func_233537_a_(worldIn.isRemote());
         }

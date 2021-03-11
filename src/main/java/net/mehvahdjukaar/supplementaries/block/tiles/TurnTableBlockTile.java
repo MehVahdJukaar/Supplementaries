@@ -142,7 +142,8 @@ public class TurnTableBlockTile extends TileEntity implements ITickableTileEntit
                 Axis myaxis = mydir.getAxis();
                 if (myaxis == targetaxis) {
                     if(myaxis != Axis.Y && targetState.getBlock() instanceof PulleyBlock) {
-                        return ((PulleyBlock) targetState.getBlock()).axisRotate(targetState,targetpos,world,rot);
+                        ((PulleyBlock) targetState.getBlock()).axisRotate(targetState,targetpos,world,rot);
+                        return true;
                     }
                     // same axis, can't rotate
                     return false;

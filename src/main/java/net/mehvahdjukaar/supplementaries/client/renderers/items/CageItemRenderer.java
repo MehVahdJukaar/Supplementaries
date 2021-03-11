@@ -39,7 +39,7 @@ public class CageItemRenderer extends ItemStackTileEntityRenderer {
             CompoundNBT cmp = compound.getCompound("BlockEntityTag");
             if (cmp.contains("MobHolder")) {
                 CompoundNBT cmp2 = cmp.getCompound("MobHolder");
-
+                if(cmp2.contains("FishTexture"))return;
                 if (cmp2.contains("UUID")) {
                     UUID id = cmp2.getUniqueId("UUID");
                     Entity e = CagedMobHelper.getCachedMob(id);

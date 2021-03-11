@@ -14,7 +14,7 @@
 			"faces": {
 				"north": {"uv": [2, 0, 14, 12], "texture": "#0"},
 				"east": {"uv": [2, 0, 14, 12], "texture": "#0"},
-				"south": {"uv": [2, 0, 14, 10], "texture": "#0"},
+				"south": {"uv": [2, 0, 14, 12], "texture": "#0"},
 				"west": {"uv": [2, 0, 14, 12], "texture": "#0"},
 				"up": {"uv": [2, 2, 14, 14], "texture": "#1"},
 				"down": {"uv": [2, 2, 14, 14], "texture": "#2", "cullface": "down"}

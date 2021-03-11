@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.items;
 
 
 import net.mehvahdjukaar.supplementaries.block.util.MobHolder;
+import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
@@ -10,12 +11,16 @@ import net.minecraft.entity.IAngerable;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.item.ItemFrameEntity;
 import net.minecraft.entity.monster.SlimeEntity;
 import net.minecraft.entity.monster.piglin.PiglinEntity;
+import net.minecraft.entity.passive.fish.AbstractFishEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemFrameItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 
@@ -51,26 +56,24 @@ public class EmptyCageItem extends BlockItem {
         String name = n.toString();
 
         boolean isFirefly = false;
+        boolean canBeCaught = false;
         switch (this.cageType){
             case CAGE:
-                boolean canBeCaught = (ServerConfigs.cached.CAGE_ALL_MOBS ||
+                canBeCaught = (ServerConfigs.cached.CAGE_ALL_MOBS ||
                         (entity instanceof LivingEntity && ServerConfigs.cached.CAGE_ALL_BABIES && ((LivingEntity) entity).isChild()) ||
                         ServerConfigs.cached.CAGE_ALLOWED_MOBS.contains(name) ||
                         (entity instanceof LivingEntity && ServerConfigs.cached.CAGE_ALLOWED_BABY_MOBS.contains(name)&&((LivingEntity) entity).isChild()));
-                if(!canBeCaught){ return ActionResultType.PASS; }
                 break;
             case JAR:
                 isFirefly = entity.getType().getRegistryName().getPath().toLowerCase().contains("firefl");
-                if (!ServerConfigs.cached.MOB_JAR_ALLOWED_MOBS.contains(name) && !isFirefly) {
-                    return ActionResultType.PASS;
-                }
+                canBeCaught = ServerConfigs.cached.CAGE_ALL_MOBS || isFirefly || ServerConfigs.cached.MOB_JAR_ALLOWED_MOBS.contains(name);
                 break;
             case TINTED_JAR:
-                if (!ServerConfigs.cached.MOB_JAR_TINTED_ALLOWED_MOBS.contains(name)) {
-                    return ActionResultType.PASS;
-                }
+                canBeCaught = ServerConfigs.cached.CAGE_ALL_MOBS || ServerConfigs.cached.MOB_JAR_TINTED_ALLOWED_MOBS.contains(name);
                 break;
         }
+        if(!canBeCaught)return ActionResultType.PASS;
+
         if(!entity.isAlive() || (entity instanceof LivingEntity && ((LivingEntity) entity).getShouldBeDead()))return ActionResultType.PASS;
         if(entity instanceof SlimeEntity && ((SlimeEntity)entity).getSlimeSize()>1) return ActionResultType.PASS;
 
@@ -82,13 +85,13 @@ public class EmptyCageItem extends BlockItem {
 
             if (stack.hasDisplayName()) returnStack.setDisplayName(stack.getDisplayName());
 
-            MobHolder.createMobHolderItemNBT(returnStack, entity, this.cageType.height, this.cageType.width);
+            CompoundNBT cmp = MobHolder.createMobHolderItemNBT(entity, this.cageType.height, this.cageType.width);
+            if(cmp!=null) returnStack.setTagInfo("BlockEntityTag", cmp);
         }
 
-        player.setHeldItem(hand, DrinkHelper.fill(stack.copy(),player,returnStack,false));
+        CommonUtil.swapItem(player,hand,stack,returnStack);
         //TODO: cage sound here
-        player.world.playSound(null, player.getPosition(),  SoundEvents.ITEM_BOTTLE_FILL_DRAGONBREATH, SoundCategory.BLOCKS,1,1);
-
+        player.world.playSound(null, player.getPosition(),  SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.BLOCKS,1,1);
 
         //anger entities
         if(entity instanceof IAngerable && entity instanceof MobEntity){
@@ -104,7 +107,6 @@ public class EmptyCageItem extends BlockItem {
         if(entity instanceof PiglinEntity){
             entity.attackEntityFrom(DamageSource.causePlayerDamage(player), 0);
         }
-
 
         entity.remove();
         return ActionResultType.CONSUME;

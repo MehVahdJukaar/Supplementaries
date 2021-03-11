@@ -4,6 +4,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -18,7 +19,8 @@ public class ClientEvents {
 
     @SubscribeEvent
     public static void onItemTooltip(ItemTooltipEvent event) {
-        if((event.getPlayer()==null) || (event.getPlayer().world==null) || !ClientConfigs.cached.TOOLTIP_HINTS)return;
+        if((event.getPlayer()==null) || (event.getPlayer().world==null) ||
+                !ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().gameSettings.advancedItemTooltips)return;
         Item i = event.getItemStack().getItem();
         if(ServerConfigs.cached.WALL_LANTERN_PLACEMENT && CommonUtil.isLantern(i)){
             event.getToolTip().add(new TranslationTextComponent("message.supplementaries.wall_lantern").mergeStyle(TextFormatting.GRAY).mergeStyle(TextFormatting.ITALIC));

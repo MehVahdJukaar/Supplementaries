@@ -48,6 +48,11 @@ public class ThrowableBrickEntity extends ProjectileItemEntity implements IRende
     }
 
     @Override
+    protected float getGravityVelocity() {
+        return 0.035F;
+    }
+
+    @Override
     public IPacket<?> createSpawnPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }

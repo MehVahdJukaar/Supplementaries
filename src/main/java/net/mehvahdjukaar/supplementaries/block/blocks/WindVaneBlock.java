@@ -8,6 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IWaterLoggable;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.fluid.FluidState;
@@ -49,7 +50,7 @@ public class WindVaneBlock extends Block implements IWaterLoggable {
     @Override
     public void addInformation(ItemStack stack, IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
-        if(!ClientConfigs.cached.TOOLTIP_HINTS)return;
+        if(!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().gameSettings.advancedItemTooltips)return;
         tooltip.add(new TranslationTextComponent("message.supplementaries.wind_vane").mergeStyle(TextFormatting.ITALIC).mergeStyle(TextFormatting.GRAY));
 
     }

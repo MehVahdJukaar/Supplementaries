@@ -43,7 +43,7 @@ public class SoftFluidList {
     public static SoftFluid DRAGON_BREATH;
     public static SoftFluid XP;
     public static SoftFluid SLIME;
-
+    public static SoftFluid DIRT;
 
     public static SoftFluid makeSF(SoftFluid.Builder builder){
         if(builder.isDisabled)return null;
@@ -121,11 +121,16 @@ public class SoftFluidList {
                 .bottle(Items.EXPERIENCE_BOTTLE));
         SLIME = makeSF(new SoftFluid.Builder(Textures.SLIME_TEXTURE,Textures.SLIME_TEXTURE,"slime")
                 .bottle(Items.SLIME_BALL)
-                //TODO: fix to accoumt for left hand
-                .specialEmptyBottle(Items.WHEAT_SEEDS)
+                .specialEmptyBottle(Items.AIR)
+                .emptySound(SoundEvents.BLOCK_SLIME_BLOCK_PLACE)
                 .translationKey("fluid.supplementaries.slime"));
+        DIRT = makeSF(new SoftFluid.Builder(Textures.DIRT_TEXTURE,Textures.DIRT_TEXTURE,"dirt")
+                .bottle(Items.DIRT)
+                .specialEmptyBottle(Items.AIR)
+                .emptySound(SoundEvents.BLOCK_GRAVEL_PLACE)
+                .translationKey("block.minecraft.dirt"));
         List<SoftFluid> custom = new ArrayList<>(Arrays.asList(WATER,LAVA,HONEY,MILK,MUSHROOM_STEW,
-                SUS_STEW,BEETROOT_SOUP,RABBIT_STEW,POTION,DRAGON_BREATH,XP,SLIME));
+                SUS_STEW,BEETROOT_SOUP,RABBIT_STEW,POTION,DRAGON_BREATH,XP,SLIME,DIRT));
 
 
         addOpt(custom,makeSF(new SoftFluid.Builder(Textures.POTION_TEXTURE,Textures.POTION_TEXTURE_FLOW,"komodo_spit")
@@ -221,7 +226,7 @@ public class SoftFluidList {
                 .bowl("iceandfire:lightning_stew")));
         addOpt(custom,makeSF(new SoftFluid.Builder(Textures.POTION_TEXTURE,Textures.POTION_TEXTURE_FLOW,"fire_dragon_blood")
                 .condition("iceandfire")
-                .color(0x1BCFFC)
+                .color(0xEB5D10)
                 .food("iceandfire:fire_dragon_blood")
                 .translationKey("item.iceandfire.fire_dragon_blood")
                 .bottle("iceandfire:fire_dragon_blood")));
@@ -233,7 +238,7 @@ public class SoftFluidList {
                 .bottle("iceandfire:lightning_dragon_blood")));
         addOpt(custom,makeSF(new SoftFluid.Builder(Textures.POTION_TEXTURE,Textures.POTION_TEXTURE_FLOW,"ice_dragon_blood")
                 .condition("iceandfire")
-                .color(0xEB5D10)
+                .color(0x1BCFFC)
                 .food("iceandfire:ice_dragon_blood")
                 .translationKey("item.iceandfire.ice_dragon_blood")
                 .bottle("iceandfire:ice_dragon_blood")));

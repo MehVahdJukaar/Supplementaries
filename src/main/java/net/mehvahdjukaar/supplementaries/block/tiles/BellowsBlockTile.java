@@ -40,6 +40,11 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
     }
 
     @Override
+    public AxisAlignedBB getRenderBoundingBox() {
+        return new AxisAlignedBB(this.pos);
+    }
+
+    @Override
     public double getMaxRenderDistanceSquared() {
         return 128;
     }

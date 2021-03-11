@@ -2,16 +2,19 @@ package net.mehvahdjukaar.supplementaries.setup;
 
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.block.util.CapturedMobs;
 import net.mehvahdjukaar.supplementaries.common.FlowerPotHelper;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.fluids.SoftFluidList;
+import net.mehvahdjukaar.supplementaries.mixins.ChickenMixin;
 import net.mehvahdjukaar.supplementaries.network.commands.ModCommands;
 import net.mehvahdjukaar.supplementaries.plugins.create.SupplementariesCreatePlugin;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ComposterBlock;
 import net.minecraft.block.FlowerPotBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.loot.ConstantRange;
 import net.minecraft.loot.ItemLootEntry;
 import net.minecraft.loot.LootPool;
@@ -29,6 +32,9 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Mod.EventBusSubscriber(modid = Supplementaries.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ModSetup {
@@ -41,12 +47,12 @@ public class ModSetup {
         ComposterBlock.CHANCES.put(Registry.FLAX_SEEDS_ITEM.get().asItem(),0.3F);
         ComposterBlock.CHANCES.put(Registry.FLAX_ITEM.get().asItem(),0.65F);
 
-        /*
+
         List<ItemStack> newStacks = new ArrayList<>();
         Collections.addAll(newStacks, ChickenMixin.getTemptationItems().getMatchingStacks());
         newStacks.add(new ItemStack(Registry.FLAX_SEEDS_ITEM.get()));
         ChickenMixin.setTemptationItems(Ingredient.fromStacks(newStacks.stream()));
-        */
+
 
         if (ModList.get().isLoaded("create")) {
             SupplementariesCreatePlugin.initialize();
@@ -57,6 +63,8 @@ public class ModSetup {
         FlowerPotHelper.init();
 
         SoftFluidList.init();
+
+        CapturedMobs.refresh();
 
         Dispenser.registerBehaviors();
         //event.enqueueWork(Dispenser::registerBehaviors);

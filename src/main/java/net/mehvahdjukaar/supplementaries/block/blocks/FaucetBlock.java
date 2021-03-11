@@ -26,6 +26,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
@@ -106,7 +107,22 @@ public class FaucetBlock extends Block implements IWaterLoggable{
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
                                              BlockRayTraceResult hit) {
-        float f = state.get(ENABLED) ? 0.6F : 0.5F;
+        boolean enabled = state.get(ENABLED);
+        if(hit.getHitVec().y%1<=0.4375) {
+            if (enabled && state.get(HAS_WATER) && !state.get(HAS_JAR)) {
+                Direction dir = state.get(FACING);
+                BlockPos backPos = pos.offset(dir.getOpposite());
+                BlockState backState = worldIn.getBlockState(backPos);
+                return backState.onBlockActivated(worldIn, player, handIn, new BlockRayTraceResult(
+                        new Vector3d(backPos.getX() + 0.5, backPos.getY() + 0.5, backPos.getZ() + 0.5),
+                        dir, backPos, false));
+
+            }
+            return ActionResultType.func_233537_a_(worldIn.isRemote);
+        }
+
+
+        float f = enabled ? 0.6F : 0.5F;
         worldIn.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 0.3F, f);
         this.updateBlock(state, worldIn, pos, true);
         return ActionResultType.SUCCESS;

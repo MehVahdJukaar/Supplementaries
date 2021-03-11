@@ -1,14 +1,24 @@
 package net.mehvahdjukaar.supplementaries.items;
 
 
+import its_meow.betteranimalsplus.common.entity.EntityLamprey;
+import net.mehvahdjukaar.supplementaries.block.util.CapturedMobs;
+import net.mehvahdjukaar.supplementaries.block.util.MobHolder;
+import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.passive.WaterMobEntity;
+import net.minecraft.entity.passive.fish.SalmonEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -28,6 +38,42 @@ public class EmptyJarItem extends EmptyCageItem {
             return (BlockTags.SOUL_SPEED_BLOCKS != null && s.isIn(BlockTags.SOUL_SPEED_BLOCKS));
         }catch (Exception ignored){ }
         return false;
+    }
+
+    @Override
+    public ActionResultType doInteract(ItemStack stack, PlayerEntity player, Entity entity, Hand hand) {
+        //bucket stuff
+        if(entity instanceof WaterMobEntity){
+            ItemStack heldItem = player.getHeldItem(hand).copy();
+
+            player.setHeldItem(hand, new ItemStack(Items.WATER_BUCKET));
+            ActionResultType result = entity.processInitialInteract(player,hand);
+            if(!result.isSuccessOrConsume()){
+                player.setHeldItem(hand, new ItemStack(Items.BUCKET));
+                result = entity.processInitialInteract(player,hand);
+            }
+
+            if(result.isSuccessOrConsume()){
+                ItemStack filledBucket = player.getHeldItem(hand);
+                if(filledBucket!=heldItem) {
+                    ItemStack returnItem = new ItemStack(this.full.get());
+
+                    CompoundNBT com = new CompoundNBT();
+                    MobHolder.saveBucketToNBT(com, filledBucket, entity.getName().getString(), CapturedMobs.getType(entity).getFishTexture());
+                    returnItem.setTagInfo("BlockEntityTag", com);
+
+                    player.setActiveHand(hand);
+
+                    CommonUtil.swapItem(player,hand,stack,returnItem);
+                    return ActionResultType.func_233537_a_(player.world.isRemote);
+                }
+            }
+            player.setHeldItem(hand,heldItem);
+            player.setActiveHand(hand);
+        }
+
+        //capture mob
+        return super.doInteract(stack, player, entity, hand);
     }
 
     //soul jar

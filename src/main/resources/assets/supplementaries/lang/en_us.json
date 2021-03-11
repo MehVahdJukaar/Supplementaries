@@ -120,6 +120,8 @@
   "message.supplementaries.rope_arrow": "Rope override: %s",
   "block.supplementaries.pulley_block": "Pulley Block",
   "block.supplementaries.fodder": "Fodder",
+  "item.supplementaries.bomb": "Bomb",
+  "item.supplementaries.bomb_projectile": "Bomb",
 
   "item.supplementaries.key_chain": "Key Chain",
   "block.supplementaries.skull_candle": "Skull Candle",

@@ -13,6 +13,7 @@ public class Textures {
     private static final String MOD_ID = Supplementaries.MOD_ID;
 
     //minecraft
+    public static final ResourceLocation DIRT_TEXTURE = new ResourceLocation("minecraft:block/dirt");
     public static final ResourceLocation WHITE_CONCRETE_TEXTURE = new ResourceLocation("minecraft:block/white_concrete_powder");
     public static final ResourceLocation ORANGE_CONCRETE_TEXTURE = new ResourceLocation("minecraft:block/orange_concrete_powder");
     public static final ResourceLocation LIGHT_BLUE_CONCRETE_TEXTURE = new ResourceLocation("minecraft:block/light_blue_concrete_powder");

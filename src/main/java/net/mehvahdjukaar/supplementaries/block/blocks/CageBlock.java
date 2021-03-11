@@ -2,12 +2,14 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.CageBlockTile;
+import net.mehvahdjukaar.supplementaries.block.util.IMobHolder;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IWaterLoggable;
 import net.minecraft.block.material.PushReaction;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.container.INamedContainerProvider;
@@ -33,6 +35,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -87,7 +90,6 @@ public class CageBlock extends Block implements IWaterLoggable {
     }
 
     // shulker box code
-
     public ItemStack getCageItem(CageBlockTile te){
         ItemStack returnStack;
         if(te.mobHolder.isEmpty()){
@@ -100,29 +102,7 @@ public class CageBlock extends Block implements IWaterLoggable {
         return returnStack;
     }
 
-
-    //only for creative
-    /*
-    @Override
-    public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
-        TileEntity tileentity = worldIn.getTileEntity(pos);
-        if (tileentity instanceof CageBlockTile) {
-            CageBlockTile tile = (CageBlockTile) tileentity;
-            if (!worldIn.isRemote && player.isCreative() && tile.hasContent()) {
-
-                ItemStack itemstack = this.getCageItem(tile);
-
-                ItemEntity itementity = new ItemEntity(worldIn, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5, itemstack);
-                itementity.setDefaultPickupDelay();
-                worldIn.addEntity(itementity);
-            }
-        }
-        super.onBlockHarvested(worldIn, pos, state, player);
-    }*/
-
-
     //loot table does the same. frick the loot table
-
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         TileEntity tileentity = builder.get(LootParameters.BLOCK_ENTITY);
@@ -149,7 +129,7 @@ public class CageBlock extends Block implements IWaterLoggable {
         return super.getItem(worldIn, pos, state);
     }
 
-    // end shoulker box code
+    // end shulker box code
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(LIGHT_LEVEL,FACING,WATERLOGGED);

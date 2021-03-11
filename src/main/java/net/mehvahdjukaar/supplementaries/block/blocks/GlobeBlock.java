@@ -58,7 +58,7 @@ public class GlobeBlock extends Block implements IWaterLoggable {
     @Override
     public void addInformation(ItemStack stack, IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
-        if(!ClientConfigs.cached.TOOLTIP_HINTS)return;
+        if(!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().gameSettings.advancedItemTooltips)return;
         tooltip.add(new TranslationTextComponent("message.supplementaries.globe").mergeStyle(TextFormatting.ITALIC).mergeStyle(TextFormatting.GRAY));
 
     }

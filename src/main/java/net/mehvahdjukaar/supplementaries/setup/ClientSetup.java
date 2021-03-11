@@ -47,6 +47,8 @@ public class ClientSetup {
     //TODO: remove this onlyIn
     @OnlyIn(Dist.CLIENT)
     public static void onlyClientPls(final FMLClientSetupEvent event) {
+        RenderingRegistry.registerEntityRenderingHandler(Registry.BOMB.get(),
+                renderManager -> new SpriteRenderer<>(renderManager, event.getMinecraftSupplier().get().getItemRenderer()));
         RenderingRegistry.registerEntityRenderingHandler(Registry.THROWABLE_BRICK.get(),
                 renderManager -> new SpriteRenderer<>(renderManager, event.getMinecraftSupplier().get().getItemRenderer()));
     }
@@ -186,6 +188,9 @@ public class ClientSetup {
         Minecraft.getInstance().particles.registerFactory(Registry.DRIPPING_LIQUID.get(), DrippingLiquidParticle.Factory::new);
         Minecraft.getInstance().particles.registerFactory(Registry.FALLING_LIQUID.get(), FallingLiquidParticle.Factory::new);
         Minecraft.getInstance().particles.registerFactory(Registry.SPLASHING_LIQUID.get(), SplashingLiquidParticle.Factory::new);
+        Minecraft.getInstance().particles.registerFactory(Registry.BOMB_EXPLOSION_PARTICLE.get(), BombExplosionParticle.Factory::new);
+        Minecraft.getInstance().particles.registerFactory(Registry.BOMB_EXPLOSION_PARTICLE_EMITTER.get(), new BombExplosionEmitterParticle.Factory());
+        Minecraft.getInstance().particles.registerFactory(Registry.BOMB_SMOKE_PARTICLE.get(), BombSmokeParticle.Factory::new);
     }
 
     @SubscribeEvent

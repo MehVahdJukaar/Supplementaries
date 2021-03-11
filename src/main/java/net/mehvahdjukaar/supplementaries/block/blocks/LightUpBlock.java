@@ -4,10 +4,11 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IWaterLoggable;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.IRendersAsItem;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PotionEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
+import net.minecraft.entity.projectile.ProjectileItemEntity;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
@@ -23,6 +24,7 @@ import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
@@ -49,6 +51,11 @@ public abstract class LightUpBlock extends Block implements IWaterLoggable {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public boolean isReplaceable(BlockState state, Fluid fluid) {
+        return this.material.isReplaceable();
     }
 
     public enum FireSound{
@@ -120,8 +127,7 @@ public abstract class LightUpBlock extends Block implements IWaterLoggable {
     }
 
 
-
-
+    @SuppressWarnings({"StrongCast", "OverlyStrongTypeCast"})
     @Override
     public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
         if(entityIn instanceof ProjectileEntity) {
@@ -132,7 +138,7 @@ public abstract class LightUpBlock extends Block implements IWaterLoggable {
                     if(lightUp(state, pos, worldIn,FireSound.FLAMING_ARROW))this.onChange(state,worldIn,pos);
                 }
             }
-            else if (projectile instanceof PotionEntity && PotionUtils.getPotionFromItem(((IRendersAsItem) projectile).getItem()).equals(Potions.WATER)) {
+            else if (projectile instanceof PotionEntity && PotionUtils.getPotionFromItem(((ProjectileItemEntity) projectile).getItem())==Potions.WATER) {
                 Entity entity = projectile.func_234616_v_();
                 boolean flag = entity == null || entity instanceof PlayerEntity || net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(worldIn, entity);
                 if (flag && state.get(LIT)) {

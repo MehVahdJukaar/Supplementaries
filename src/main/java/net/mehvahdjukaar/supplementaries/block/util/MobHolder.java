@@ -1,19 +1,27 @@
 package net.mehvahdjukaar.supplementaries.block.util;
 
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.block.util.CapturedMobs.CapturedMobProperties;
+import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.AgeableEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.monster.EndermanEntity;
+import net.minecraft.entity.monster.EndermiteEntity;
 import net.minecraft.entity.monster.SlimeEntity;
+import net.minecraft.entity.monster.VexEntity;
 import net.minecraft.entity.passive.*;
+import net.minecraft.entity.passive.fish.AbstractFishEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.stats.Stats;
+import net.minecraft.util.Hand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -21,6 +29,7 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Random;
 import java.util.UUID;
 
@@ -30,10 +39,13 @@ public class MobHolder {
     private World world;
     private BlockPos pos;
 
-    public boolean entityChanged = true;
+    private ItemStack bucketHolder = ItemStack.EMPTY;
+    public SpecialBehaviorType specialBehaviorType = SpecialBehaviorType.NONE;
+    public CapturedMobProperties capturedMobProperties = CapturedMobs.DEFAULT;
+
+    private boolean firstTick = true;
 
     public CompoundNBT entityData = null;
-    public MobHolderType animationType = MobHolderType.DEFAULT;
     public UUID uuid = null;
     public float yOffset = 1;
     public float scale = 1;
@@ -64,13 +76,12 @@ public class MobHolder {
         //remove in the future
         if(compound.contains("jar_mob")){
             this.entityData = compound.getCompound("jar_mob");
-            this.entityChanged = true;
             this.scale=0.15f;
             this.yOffset=0;
-            this.animationType=MobHolderType.DEFAULT;
+            this.specialBehaviorType = SpecialBehaviorType.NONE;
             this.name="reload needed";
         }
-        if(compound.contains("animation_type")) this.animationType=MobHolderType.values()[compound.getInt("animation_type")];
+        if(compound.contains("animation_type")) this.specialBehaviorType = SpecialBehaviorType.values()[compound.getInt("animation_type")];
         if(compound.contains("scale"))this.scale=compound.getFloat("scale");
 
 
@@ -80,54 +91,148 @@ public class MobHolder {
             this.entityData = cmp.getCompound("EntityData");
             this.scale = cmp.getFloat("Scale");
             this.yOffset = cmp.getFloat("YOffset");
-            this.animationType = MobHolderType.values()[cmp.getInt("AnimationType")];
-            if(cmp.contains("UUID"))
-                this.uuid = cmp.getUniqueId("UUID");
+            this.specialBehaviorType = SpecialBehaviorType.values()[cmp.getInt("AnimationType")];
+            if(cmp.contains("UUID")) this.uuid = cmp.getUniqueId("UUID");
             this.name = cmp.getString("Name");
-
-            this.entityChanged = true;
         }
-
-
-
+        if(compound.contains("BucketHolder")){
+            this.bucketHolder = ItemStack.read(compound.getCompound("BucketHolder"));
+        }
     }
 
     public CompoundNBT write(CompoundNBT compound) {
         if(this.entityData!=null) {
-            saveMobToNBT(compound, this.entityData,this.scale,this.yOffset,this.animationType.ordinal(),this.name,this.uuid);
+            int fishTexture = mob instanceof WaterMobEntity? -69:this.capturedMobProperties.getFishTexture();
+            saveMobToNBT(compound, this.entityData, this.scale, this.yOffset, this.name, this.uuid, fishTexture);
+        }
+        if(!this.bucketHolder.isEmpty()){
+            int fishTexture = mob instanceof WaterMobEntity? -69:this.capturedMobProperties.getFishTexture();
+            saveBucketToNBT(compound, this.bucketHolder, this.name, fishTexture);
         }
         return compound;
     }
 
+    public static void saveBucketToNBT(CompoundNBT compound, ItemStack bucket, String name, int fishTexture){
+        CompoundNBT cmp = new CompoundNBT();
+        bucket.write(cmp);
+        if(fishTexture>=0||fishTexture==-69)
+            cmp.putInt("FishTexture",fishTexture);
+        if(name!=null) cmp.putString("Name",name);
+        compound.put("BucketHolder", cmp);
+    }
+
+    public static void saveMobToNBT(CompoundNBT compound, CompoundNBT entityData, float scale,
+                                    float yOffset, String name, UUID id, int fishTexture){
+        CompoundNBT cmp = new CompoundNBT();
+        cmp.put("EntityData", entityData);
+        cmp.putFloat("Scale", scale);
+        cmp.putFloat("YOffset", yOffset);
+        if(id!=null) cmp.putUniqueId("UUID", id);
+        cmp.putString("Name", name);
+        if(fishTexture>=0||fishTexture==-69)
+            cmp.putInt("FishTexture",fishTexture);
+        compound.put("MobHolder", cmp);
+    }
+
+    public boolean acceptFishBucket(ItemStack stack){
+        Item item = stack.getItem();
+        /*
+        if(CapturedMobs.VALID_BUCKETS.contains(item)) {
+            this.bucketHolder = stack.copy();
+            if (world instanceof ServerWorld) {
+                EntityType<?> entityType = null;
+                try {
+                    Field f = ObfuscationReflectionHelper.findField(FishBucketItem.class, "field_203794_a");
+                    f.setAccessible(true);
+                    entityType = (EntityType<?>) f.get(item);
+                } catch (Exception exception) {
+                    try {
+                        Field f = ObfuscationReflectionHelper.findField(FishBucketItem.class, "getFishType");
+                        f.setAccessible(true);
+                        entityType = (EntityType<?>) f.get(item);
+                    } catch (Exception ignored) {}
+                }
+                if (entityType != null) {
+                    Entity entity = entityType.create((ServerWorld) world, stack.getTag(), stack.hasDisplayName() ? stack.getDisplayName() : null, null, pos, SpawnReason.BUCKET, false, false);
+                    if (entity instanceof AbstractFishEntity) ((AbstractFishEntity) entity).setFromBucket(true);
+                    this.read(createMobHolderItemNBT(entity, EmptyCageItem.CageWhitelist.JAR.height, EmptyCageItem.CageWhitelist.JAR.width));
+                    this.init();
+                }
+            }
+            return true;
+        }
+        */
+
+        return false;
+    }
+
+    //only called from jar
+    public boolean interactWithBucketItem(ItemStack stack, @Nullable PlayerEntity player, Hand hand){
+        Item item = stack.getItem();
+
+        ItemStack returnStack = ItemStack.EMPTY;
+        //fill
+        if(CapturedMobs.isFishBucket(item) && this.isEmpty()) {
+            this.bucketHolder = stack.copy();
+            this.world.playSound(null, this.pos, SoundEvents.ITEM_BUCKET_EMPTY_FISH, SoundCategory.BLOCKS, 1.0F, 1.0F);
+            returnStack = new ItemStack(Items.BUCKET);
+        }
+        //empty
+        else if(!this.bucketHolder.isEmpty() && item == Items.BUCKET ){
+            this.world.playSound(null, this.pos, SoundEvents.ITEM_BUCKET_FILL_FISH, SoundCategory.BLOCKS, 1.0F, 1.0F);
+            returnStack = this.bucketHolder.copy();
+            this.clear();
+        }
+        if(!returnStack.isEmpty()) {
+            if (player != null) {
+                player.addStat(Stats.ITEM_USED.get(item));
+                if (!player.isCreative()) {
+                    CommonUtil.swapItem(player, hand, returnStack);
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+
+    public void clear(){
+        this.bucketHolder = ItemStack.EMPTY;
+        this.firstTick = true;
+        this.mob = null;
+        this.entityData = null;
+    }
+
+
 
     public void tick() {
 
+        if(this.firstTick && !this.isEmpty()){
+            this.init();
+            this.firstTick = false;
+        }
 
-        if(this.entityChanged && this.entityData!=null && this.world!=null)this.updateMob();
+        if (this.mob == null)return;
 
-        if (this.mob != null) {
-            //needed for eggs
-            if (!this.world.isRemote) {
-                if (this.animationType == MobHolderType.CHICKEN) {
-                    ChickenEntity ch = (ChickenEntity) this.mob;
-                    if (--ch.timeUntilNextEgg <= 0) {
-                        ch.entityDropItem(Items.EGG);
-                        ch.timeUntilNextEgg = this.rand.nextInt(6000) + 6000;
-                    }
+        //needed for eggs
+        this.mob.ticksExisted++;
+        if (!this.world.isRemote) {
+            if (this.specialBehaviorType == SpecialBehaviorType.CHICKEN) {
+                ChickenEntity ch = (ChickenEntity) this.mob;
+                if (--ch.timeUntilNextEgg <= 0) {
+                    ch.entityDropItem(Items.EGG);
+                    ch.timeUntilNextEgg = this.rand.nextInt(6000) + 6000;
                 }
-                return;
             }
-
+        }
+        else {
             //client side animation
-
-            this.mob.ticksExisted++;
             this.prevJumpY = this.jumpY;
-            switch (this.animationType) {
+            switch (this.specialBehaviorType) {
                 default:
-                case DEFAULT:
+                case NONE:
                     break;
                 case SLIME:
-                case MAGMA_CUBE:
                     SlimeEntity slime = (SlimeEntity) this.mob;
                     slime.squishFactor += (slime.squishAmount - slime.squishFactor) * 0.5F;
                     slime.prevSquishFactor = slime.squishFactor;
@@ -153,9 +258,6 @@ public class MobHolder {
                     }
                     slime.squishAmount *= 0.6F;
                     break;
-                case VEX:
-                    this.jumpY = 0.04f * MathHelper.sin(this.mob.ticksExisted / 10f) - 0.03f;
-                    break;
                 case ENDERMITE:
                     if (this.rand.nextFloat() > 0.7f) {
                         this.world.addParticle(ParticleTypes.PORTAL, this.pos.getX() + 0.5f, this.pos.getY() + 0.2f,
@@ -163,15 +265,13 @@ public class MobHolder {
                     }
                     break;
                 case PARROT:
-                    ((LivingEntity)this.mob).livingTick();
-                    boolean p = ((ParrotEntity)this.mob).isPartying();
-                        this.mob.setOnGround(p);
-                        this.jumpY=p?0:0.0625f;
+                    ((LivingEntity) this.mob).livingTick();
+                    boolean p = ((ParrotEntity) this.mob).isPartying();
+                    this.mob.setOnGround(p);
+                    this.jumpY = p ? 0 : 0.0625f;
                     break;
-                case PIXIE:
-                    ((LivingEntity)this.mob).livingTick();
-                    this.mob.lastTickPosY=this.pos.getY();
-                    this.mob.setPosition(this.mob.getPosX(),this.pos.getY(),this.mob.getPosZ());
+                case TICKABLE:
+                    ((LivingEntity) this.mob).livingTick();
                     break;
                 case RABBIT:
                     RabbitEntity rabbit = (RabbitEntity) this.mob;
@@ -204,18 +304,14 @@ public class MobHolder {
                     cat.setSleeping(true);
                     //this.jumpY=0.0325f;
                     break;
-                //TODO: move jump position & stuff inside entity. merge with jar one
                 case CHICKEN:
                     ChickenEntity ch = (ChickenEntity) this.mob;
                     ch.livingTick();
                     if (rand.nextFloat() > (ch.isOnGround() ? 0.99 : 0.88)) ch.setOnGround(!ch.isOnGround());
                     break;
-                case MOTH:
-                    ((LivingEntity)this.mob).livingTick();
-                    this.mob.lastTickPosY=this.pos.getY();
-                    this.mob.setPosition(this.mob.getPosX(),this.pos.getY(),this.mob.getPosZ());
-                    this.jumpY = 0.04f * MathHelper.sin(this.mob.ticksExisted / 10f) - 0.03f;
-                    break;
+            }
+            if (this.capturedMobProperties.isFloating()) {
+                this.jumpY = 0.04f * MathHelper.sin(this.mob.ticksExisted / 10f) - 0.03f;
             }
         }
     }
@@ -232,12 +328,11 @@ public class MobHolder {
         }
     }
 
-
     @Nullable
     public static Entity createEntityFromNBT(CompoundNBT com, UUID id, World world){
         if(com!=null && com.contains("id")) {
             Entity entity;
-
+            //TODO: remove in 1.17
             String name = com.get("id").getString();
             switch (name) {
                 case "minecraft:bee":
@@ -259,69 +354,103 @@ public class MobHolder {
             if(id!=null && entity!=null){
                 entity.setUniqueId(id);
             }
-
             return entity;
         }
         return null;
     }
 
-    //todo: replace with markdirty like liquid holder and rewrite
+    //called on the first tick after the tile received the nbt data from the item
+    //can't be client only because It needs to generate a mob
     //client and server. cached mob from entitydata
-    public void updateMob(){
-        this.entityChanged = false;
+    //sets the entity parameters to with with current position
+    public void init(){
+        //this has two mode: normal and bucket mode
+        if(!this.bucketHolder.isEmpty()){
+            this.capturedMobProperties = CapturedMobs.getTypeFromBucket(this.bucketHolder.getItem());
+            if(this.name==null||this.name.isEmpty()) this.name = CapturedMobs.getDefaultNameFromBucket(this.bucketHolder.getItem());
+        }
+        else if(this.world!=null && this.entityData!=null) {
 
-        Entity entity = createEntityFromNBT(this.entityData,this.uuid,this.world);
+            Entity entity = createEntityFromNBT(this.entityData, this.uuid, this.world);
+            if (entity == null) return;
 
-        if(entity==null)return;
+            //don't even need to sync these
+            this.specialBehaviorType = SpecialBehaviorType.getType(entity);
+            this.capturedMobProperties = CapturedMobs.getType(entity);
+            this.setBucketHolder(entity);
 
+            //client side stuff
+            if (this.world.isRemote) {
+                //TODO: add shadows
+                double px = this.pos.getX() + 0.5;
+                double py = this.pos.getY() + (0.5 + 0.0625) + 0.5;
+                double pz = this.pos.getZ() + 0.5;
+                entity.setPosition(px, py, pz);
+                //entity.setMotion(0,0,0);
+                entity.lastTickPosX = px;
+                entity.lastTickPosY = py;
+                entity.lastTickPosZ = pz;
+                entity.prevPosX = px;
+                entity.prevPosY = py;
+                entity.prevPosZ = pz;
+                entity.ticksExisted += this.rand.nextInt(40);
 
-        //TODO: add shadows
-        double px = this.pos.getX() + 0.5;
-        double py = this.pos.getY() + 0.5 + 0.0625;
-        double pz = this.pos.getZ() + 0.5;
-        entity.setPosition(px, py, pz);
-        //entity.setMotion(0,0,0);
-        entity.lastTickPosX = px;
-        entity.lastTickPosY = py;
-        entity.lastTickPosZ = pz;
-        entity.prevPosX = px;
-        entity.prevPosY = py;
-        entity.prevPosZ = pz;
-        entity.ticksExisted+=this.rand.nextInt(40);
-
-        this.mob = entity;
-        this.animationType = MobHolderType.getType(entity);
-        if(!this.world.isRemote){
-            int light = this.animationType.getLightLevel();
-            BlockState state = this.world.getBlockState(this.pos);
-            if(state.get(BlockProperties.LIGHT_LEVEL_0_15)!=light){
-                this.world.setBlockState(this.pos, state.with(BlockProperties.LIGHT_LEVEL_0_15,light),2|4|16);
+                //server doesn't need this
+                this.mob = entity;
+                //TODO: make properly react to water
+                this.setWaterMobInWater(true); //!this.world.getFluidState(pos).isEmpty()
+            } else {
+                int light = this.capturedMobProperties.getLightLevel();
+                BlockState state = this.world.getBlockState(this.pos);
+                if (state.get(BlockProperties.LIGHT_LEVEL_0_15) != light) {
+                    this.world.setBlockState(this.pos, state.with(BlockProperties.LIGHT_LEVEL_0_15, light), 2 | 4 | 16);
+                }
             }
         }
+    }
 
-        this.setWaterMobInWater(!this.world.getFluidState(pos).isEmpty());
+    //this is horrible
+    private void setBucketHolder(Entity entity){
+        if(entity instanceof AbstractFishEntity){
+            try {
+                Method m = ObfuscationReflectionHelper.findMethod(AbstractFishEntity.class, "func_203707_dx");
+                m.setAccessible(true);
+                this.bucketHolder = (ItemStack) m.invoke(entity);
+            } catch (Exception exception) {
+                try {
+                    Method m = ObfuscationReflectionHelper.findMethod(AbstractFishEntity.class, "getFishBucket");
+                    m.setAccessible(true);
+                    this.bucketHolder = (ItemStack) m.invoke(entity);
+                } catch (Exception ignored) {}
+            }
+            try{
+                Method m2 = ObfuscationReflectionHelper.findMethod(AbstractFishEntity.class, "func_204211_f", ItemStack.class);
+                m2.setAccessible(true);
+                m2.invoke(entity,this.bucketHolder);
+            } catch (Exception exception) {
+                try{
+                    Method m2 = ObfuscationReflectionHelper.findMethod(AbstractFishEntity.class, "setBucketData", ItemStack.class);
+                    m2.setAccessible(true);
+                    m2.invoke(entity,this.bucketHolder);
+                } catch (Exception ignored) {}
+            }
+        }
     }
 
     public boolean isEmpty(){
-        return this.entityData==null;
+        return this.entityData==null && this.bucketHolder.isEmpty();
+
     }
 
-    public static void saveMobToNBT(CompoundNBT compound, CompoundNBT entityData, float scale, float yOffset, int type, String name, UUID id){
-        CompoundNBT cmp = new CompoundNBT();
-        cmp.put("EntityData", entityData);
-        cmp.putFloat("Scale", scale);
-        cmp.putFloat("YOffset", yOffset);
-        cmp.putInt("AnimationType", type);
-        if(id!=null)
-            cmp.putUniqueId("UUID", id);
-        cmp.putString("Name", name);
-
-        compound.put("MobHolder", cmp);
+    private static boolean isInAir(Entity mob, CapturedMobProperties type){
+        return (mob.hasNoGravity() || mob instanceof IFlyingAnimal || mob.doesEntityNotTriggerPressurePlate() || mob instanceof WaterMobEntity
+                ||type.isFlying()) && !type.isLand();
     }
 
-    //called by the item
-    public static void createMobHolderItemNBT(ItemStack stack, Entity mob, float blockh, float blockw){
-        if(mob==null)return;
+    //called by the item. turns a mob into what's store inside item and tile
+    @Nullable
+    public static CompoundNBT createMobHolderItemNBT(Entity mob, float blockh, float blockw){
+        if(mob==null)return null;
         if(mob instanceof LivingEntity){
             LivingEntity le = (LivingEntity) mob;
             le.prevRotationYawHead = 0;
@@ -351,23 +480,24 @@ public class MobHolder {
             mobCompound.remove("UUID");
 
             //TODO: improve for acquatic entities to react and not fly when not in water
-            boolean flag = mob.hasNoGravity() || mob instanceof IFlyingAnimal || mob.doesEntityNotTriggerPressurePlate() || mob instanceof WaterMobEntity;
+            CapturedMobProperties type = CapturedMobs.getType(mob);
+            boolean isAir = isInAir(mob,type);
 
-            MobHolderType type = MobHolderType.getType(mob);
-            float babyscale = 1;
+            //MobHolderType type = MobHolderType.getType(mob);
+
+            float babyScale = 1;
             //non ageable
-
-            if(mob instanceof AgeableEntity && ((LivingEntity) mob).isChild()) babyscale = 2f;
+            if(mob instanceof AgeableEntity && ((LivingEntity) mob).isChild()) babyScale = 2f;
             if(mobCompound.contains("IsBaby")&&mobCompound.getBoolean("IsBaby")||
-                    (mob instanceof VillagerEntity && ((LivingEntity) mob).isChild())) babyscale = 1.125f;
+                    (mob instanceof VillagerEntity && ((LivingEntity) mob).isChild())) babyScale = 1.125f;
 
             float s = 1;
-            float w = mob.getWidth() *babyscale;
-            float h = mob.getHeight() *babyscale;
-            //float maxh = flag ? 0.5f : 0.75f;
+            float w = mob.getWidth() *babyScale;
+            float h = mob.getHeight() *babyScale;
+            //float maxh = isAir ? 0.5f : 0.75f;
             //1 px border
-            float maxh = blockh - (flag ? 0.25f : 0.125f) - type.adjHeight;
-            float maxw = blockw - 0.25f - type.adjWidth;
+            float maxh = blockh - (isAir ? 0.25f : 0.125f) - type.getHeight();
+            float maxw = blockw - 0.25f - type.getWidth();
             if (w > maxw || h > maxh) {
                 if (w - maxw > h - maxh)
                     s = maxw / w;
@@ -375,7 +505,7 @@ public class MobHolder {
                     s = maxh / h;
             }
             //TODO: rewrite this to account for adjValues
-            float y = flag ? (blockh/2f) - h * s / 2f : 0.0626f;
+            float y = isAir ? (blockh/2f) - h * s / 2f : 0.0626f;
 
             //ice&fire dragons
             String name = mob.getType().getRegistryName().toString();
@@ -383,58 +513,44 @@ public class MobHolder {
                 s*=0.45;
             }
             CompoundNBT cmp = new CompoundNBT();
-            saveMobToNBT(cmp, mobCompound, s, y, 0, mob.getName().getString(), id);
-            stack.setTagInfo("BlockEntityTag", cmp);
-
+            //TODO: stop coding like this omg
+            int fishTexture = mob instanceof WaterMobEntity? -69:CapturedMobs.getType(name).getFishTexture();
+            saveMobToNBT(cmp, mobCompound, s, y, mob.getName().getString(), id, fishTexture);
+            return cmp;
         }
+        return null;
     }
 
-    //used for animation only (maybe caching item renderer later)
-    public enum MobHolderType {
-        DEFAULT(null,0,0),
-        SLIME("minecraft:slime",0,0),
-        MAGMA_CUBE("minecraft:magma_cube",0,0),
-        BEE("minecraft:bee",0.3125f,0),
-        BAT("minecraft:bat",0,0),
-        VEX("minecraft:vex",0,0.125f),
-        ENDERMITE("minecraft:endermite",0,0),
-        SILVERFISH("minecraft:silverfish",0,0.25f),
-        PARROT("minecraft:parrot",0,0),
-        CAT("minecraft:cat",0,0.1875f),
-        RABBIT("minecraft:rabbit",0,0),
-        CHICKEN("minecraft:chicken",0.25f,0.3125f),
-        PIXIE("iceandfire:pixie",0,0),
-        MOTH("druidcraft:lunar_moth",0.375f,0.1375f),
-        WATER_MOB("minecraft:tropical_fish",0,0.125f);
+    public boolean shouldHaveWater(){
+        return this.specialBehaviorType==SpecialBehaviorType.WATER_MOB||this.capturedMobProperties.isFish();
+    }
+
+    //for hardcoded special behaviors
+    public enum SpecialBehaviorType {
+        NONE,
+        SLIME,
+        VEX,
+        ENDERMITE,
+        PARROT,
+        CAT,
+        RABBIT,
+        CHICKEN,
+        TICKABLE,
+        WATER_MOB;
 
 
-        public final String type;
-        public final float adjHeight;
-        public final float adjWidth;
-
-        MobHolderType(String type, float h, float w){
-            this.type = type;
-            this.adjHeight =h;
-            this.adjWidth = w;
-        }
-
-        //maybe move into enum
-        public int getLightLevel(){
-            if(this==PIXIE)return 10;
-            if(this==ENDERMITE)return 5;
-            if(this==MOTH)return 10;
-            return 0;
-        }
-
-        public static MobHolderType getType(Entity e){
+        public static SpecialBehaviorType getType(Entity e){
             if(e instanceof WaterMobEntity)return WATER_MOB;
-            String name = e.getType().getRegistryName().toString();
-            for (MobHolderType n : MobHolderType.values()){
-                if(name.equals(n.type)){
-                    return n;
-                }
-            }
-            return MobHolderType.DEFAULT;
+            else if(e instanceof SlimeEntity)return SLIME;
+            else if(e instanceof VexEntity)return VEX;
+            else if(e instanceof EndermiteEntity)return ENDERMITE;
+            else if(e instanceof ParrotEntity)return PARROT;
+            else if(e instanceof CatEntity)return CAT;
+            else if(e instanceof RabbitEntity)return RABBIT;
+            else if(e instanceof ChickenEntity)return CHICKEN;
+            else if(e.getType().getRegistryName().toString().equals("iceandfire:pixe")||
+                    e.getType().getRegistryName().toString().equals("druidcraft:moth"))return TICKABLE;
+            return SpecialBehaviorType.NONE;
         }
     }
 

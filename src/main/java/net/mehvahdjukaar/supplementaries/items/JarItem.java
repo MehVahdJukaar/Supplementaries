@@ -12,6 +12,7 @@ import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Rarity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.*;
@@ -85,5 +86,18 @@ public class JarItem extends CageItem {
         if (this.isInGroup(group) && RegistryConfigs.reg.JAR_TAB.get() && group == Registry.JAR_TAB) {
             JarTab.populateTab(items);
         }
+    }
+
+    @Override
+    public Rarity getRarity(ItemStack stack) {
+        CompoundNBT compoundnbt = stack.getChildTag("BlockEntityTag");
+        if (compoundnbt != null) {
+            if (compoundnbt.contains("FluidHolder")) {
+                CompoundNBT com = compoundnbt.getCompound("FluidHolder");
+                SoftFluid s = SoftFluidList.fromID(com.getString("Fluid"));
+                if(s==SoftFluidList.DIRT)return Rarity.RARE;
+            }
+        }
+        return super.getRarity(stack);
     }
 }

@@ -3,11 +3,13 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 import com.google.common.collect.Maps;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties.RopeAttachment;
+import net.mehvahdjukaar.supplementaries.block.tiles.PulleyBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.PlayerlessContext;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.plugins.quark.QuarkPistonPlugin;
+import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.*;
 import net.minecraft.block.material.PushReaction;
@@ -367,6 +369,30 @@ public class RopeBlock extends Block implements IWaterLoggable{
         }
         return false;
     }
+    private static boolean findConnectedPulley(World world, BlockPos pos, PlayerEntity player, int it, Rotation rot){
+        if(it>64)return false;
+        BlockState state = world.getBlockState(pos);
+        Block b = state.getBlock();
+        if(b instanceof RopeBlock){
+            return findConnectedPulley(world,pos.up(),player,it+1,rot);
+        }
+        else if(b instanceof PulleyBlock && it !=0){
+            TileEntity te = world.getTileEntity(pos);
+            if(te instanceof PulleyBlockTile){
+                PulleyBlockTile tile = ((PulleyBlockTile) te);
+                if(tile.isEmpty() && !player.isSneaking()){
+                    tile.setDisplayedItem(new ItemStack(Registry.ROPE_ITEM.get()));
+                    boolean ret = ((PulleyBlock) b).axisRotate(state, pos, world, rot);
+                    tile.getDisplayedItem().shrink(1);
+                    return ret;
+                }
+                else {
+                    return ((PulleyBlock) b).axisRotate(state, pos, world, rot);
+                }
+            }
+        }
+        return false;
+    }
 
     @Override
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
@@ -384,9 +410,13 @@ public class RopeBlock extends Block implements IWaterLoggable{
             }
             return ActionResultType.PASS;
         }
-        if(stack.isEmpty() && state.get(UP) && ServerConfigs.cached.BELL_CHAIN){
-            if (findConnectedBell(world, pos, player, 0))
+        if(stack.isEmpty() && state.get(UP)){
+
+            if (ServerConfigs.cached.BELL_CHAIN && findConnectedBell(world, pos, player, 0))
                 return ActionResultType.func_233537_a_(world.isRemote);
+            else if(findConnectedPulley(world, pos, player, 0, player.isSneaking()?Rotation.COUNTERCLOCKWISE_90:Rotation.CLOCKWISE_90)){
+                return ActionResultType.func_233537_a_(world.isRemote);
+            }
         }
         if(stack.isEmpty() && !player.isSneaking() && handIn==Hand.MAIN_HAND){
             if(world.getBlockState(pos.down()).getBlock()==this) {

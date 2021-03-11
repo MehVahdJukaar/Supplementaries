@@ -52,7 +52,6 @@ public class BellowsBlock extends Block {
         return te instanceof BellowsBlockTile ? ((BellowsBlockTile)te).getVoxelShape(state.get(FACING)) : VoxelShapes.create(VoxelShapes.fullCube().getBoundingBox().grow(0.1f));
 
         //return te instanceof BellowsBlockTile ? VoxelShapes.create(((BellowsBlockTile)te).getBoundingBox(state.get(FACING))) : VoxelShapes.create(VoxelShapes.fullCube().getBoundingBox().grow(0.1f));
-
     }
 
     @Override

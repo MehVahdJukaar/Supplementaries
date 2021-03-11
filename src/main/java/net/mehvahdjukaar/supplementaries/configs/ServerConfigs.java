@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.configs;
 
+import net.mehvahdjukaar.supplementaries.block.util.CapturedMobs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -236,14 +237,17 @@ public class ServerConfigs {
                     "druidcraft:lunar_moth", "druidcraft:dreadfish","swampexpansion:slabfish","betteranimalsplus:goose",
                     "endergetic:puff_bug", "betterendforge:end_slime", "betterendforge:dragonfly", "betterendforge:silk_moth",
                     "savageandravage:creepie","betteranimalsplus:butterfly","whisperwoods:moth","fins:river_pebble_snail");
+            List<String> jarMobsAndFishes = new ArrayList<>(jarMobs);
+            jarMobsAndFishes.addAll(CapturedMobs.getFishes());
             MOB_JAR_ALLOWED_MOBS = builder.comment("catchable mobs \n"+
                     "due to a vanilla bug some mobs might not render correctly or at all")
-                    .defineList("mobs", jarMobs,s -> true);
+                    .defineList("mobs", jarMobsAndFishes,s -> true);
             List<String> tintedMobs = new ArrayList<>(jarMobs);
-            List<String> additionalTinted = Arrays.asList("minecraft:endermite","minecraft:vex","alexsmobs:mimicube");
-            tintedMobs.addAll(additionalTinted);
+            tintedMobs.addAll(Arrays.asList("minecraft:endermite","minecraft:vex","alexsmobs:mimicube"));
+            List<String> tintedMobsAndFishes = new ArrayList<>(tintedMobs);
+            tintedMobsAndFishes.addAll(CapturedMobs.getFishes());
             MOB_JAR_TINTED_ALLOWED_MOBS = builder.comment("tinted jar catchable mobs")
-                    .defineList("tinted_jar_mobs", tintedMobs,s -> true);
+                    .defineList("tinted_jar_mobs", tintedMobsAndFishes,s -> true);
             builder.pop();
 
             //cage
@@ -277,7 +281,7 @@ public class ServerConfigs {
             List<String> cageBabyMobs = Arrays.asList("minecraft:cow","minecraft:sheep","minecraft:pig","alexsmobs:crocodile", "alexsmobs:endergrade", "alexsmobs:gazelle", "alexsmobs:gorilla", "alexsmobs:komodo_dragon", "alexsmobs:raccoon", "alexsmobs:seal", "alexsmobs:warped_toad");
             CAGE_ALLOWED_BABY_MOBS = builder.comment("additional mobs that you'll be able to catch with the added condition that it has to be a baby variant. No need to include the ones already in cage_mobs")
                     .defineList("cage_baby_mobs", cageBabyMobs,s -> true);
-            CAGE_ALL_MOBS = builder.comment("allow all mobs to be captured by cages")
+            CAGE_ALL_MOBS = builder.comment("allow all entities to be captured by cages and jars. Not meant for survival")
                     .define("cage_allow_all_mobs", false);
             CAGE_ALL_BABIES = builder.comment("allow all baby mobs to be captured by cages")
                     .define("cage_allow_all_babies", false);
@@ -295,7 +299,7 @@ public class ServerConfigs {
             SACK_INCREMENT = builder.comment("maximum number of sacks after which the slowness effect will be applied. each multiple of this number will further slow the player down")
                     .defineInRange("sack_increment",2,0,50);
             SACK_SLOTS = builder.comment("additional sack slots divided by 2. Number of slots will be 5 + additional_slots*2")
-                    .defineInRange("additional_slots",0,0,2);
+                    .defineInRange("additional_slots",1,0,2);
             builder.pop();
 
             builder.push("safe");

@@ -52,7 +52,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
         long r = tile.getPos().toLong();
         Random rand = new Random(r);
         //render cookies
-        if(tile.specialType.isCookie()){
+        if(!tile.isEmpty()){
             ItemStack stack = tile.getDisplayedItem();
             int height = tile.getDisplayedItem().getCount();
             matrixStackIn.push();
@@ -73,38 +73,50 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
             matrixStackIn.pop();
         }
         //render fish
-        else if(tile.specialType.isFish()){
-            matrixStackIn.push();
-            IVertexBuilder builder1 = bufferIn.getBuffer(RenderType.getCutout());
-            long time = System.currentTimeMillis() + r;
-            float angle =(time%(360*80))/80f;
-            float angle2 = (time%(360*3))/3f;
-            float angle3 = (time%(360*350))/350f;
-            float wo = 0.015f * MathHelper.sin((float)(2 * Math.PI * angle2 / 360));
-            float ho = 0.1f * MathHelper.sin((float)(2 * Math.PI * angle3 / 360));
-            matrixStackIn.translate(0.5, 0.0635, 0.5);
-            TextureAtlasSprite sprite_s = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(Textures.SAND_TEXTURE);
-            RendererUtil.addCube(builder1, matrixStackIn, 0.499f, 0.0625f, sprite_s, combinedLightIn, 16777215, 1f, combinedOverlayIn, true, true,true, true);
-            matrixStackIn.translate(0, 0.5-0.0635, 0);
-            Quaternion rotation = Vector3f.YP.rotationDegrees(-angle);
-            matrixStackIn.rotate(rotation);
-            matrixStackIn.scale(0.6f, 0.6f, 0.6f);
-            matrixStackIn.translate(0, -0.2, -0.35);
-            int fishType = tile.specialType.getFishTextureOffset();
-            RendererUtil.renderFish(builder1, matrixStackIn, wo, ho, fishType, combinedLightIn, combinedOverlayIn);
-            matrixStackIn.pop();
-            SoftFluid s = SoftFluidList.WATER;
-            renderFluid(0.5625f, s.getTintColor(), 0, s.getStillTexture(),
-                    matrixStackIn,bufferIn,combinedLightIn,combinedOverlayIn,true);
+        if(!tile.mobHolder.isEmpty()) {
+            if (tile.mobHolder.capturedMobProperties.isFish()) {
+                matrixStackIn.push();
+
+                long time = System.currentTimeMillis() + r;
+                float angle = (time % (360 * 80)) / 80f;
+                float angle2 = (time % (360 * 3)) / 3f;
+                float angle3 = (time % (360 * 350)) / 350f;
+                float wo = 0.015f * MathHelper.sin((float) (2 * Math.PI * angle2 / 360));
+                float ho = 0.1f * MathHelper.sin((float) (2 * Math.PI * angle3 / 360));
+                IVertexBuilder builder = bufferIn.getBuffer(RenderType.getCutout());
+                matrixStackIn.translate(0.5, 0.5, 0.5);
+                Quaternion rotation = Vector3f.YP.rotationDegrees(-angle);
+                matrixStackIn.rotate(rotation);
+                matrixStackIn.scale(0.625f, 0.625f, 0.625f);
+                matrixStackIn.translate(0, -0.2, -0.35);
+                int fishType = tile.mobHolder.capturedMobProperties.getFishTexture();
+
+                //overlay
+                RendererUtil.renderFish(builder, matrixStackIn, wo, ho, fishType, combinedLightIn, combinedOverlayIn);
+                matrixStackIn.pop();
+
+            }
+            else {
+                super.render(tile, partialTicks, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
+            }
+            if (tile.mobHolder.shouldHaveWater()) {
+                matrixStackIn.push();
+                matrixStackIn.translate(0.5, 0.0635, 0.5);
+                IVertexBuilder builder = bufferIn.getBuffer(RenderType.getCutout());
+                TextureAtlasSprite sprite_s = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(Textures.SAND_TEXTURE);
+                RendererUtil.addCube(builder, matrixStackIn, 0.499f, 0.0625f, sprite_s, combinedLightIn, 16777215, 1f, combinedOverlayIn, true, true, true, true);
+                matrixStackIn.pop();
+                matrixStackIn.push();
+                SoftFluid s = SoftFluidList.WATER;
+                renderFluid(0.5625f, s.getTintColor(), 0, s.getStillTexture(),
+                        matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, true);
+                matrixStackIn.pop();
+            }
         }
         //render fluid
         else if(!tile.fluidHolder.isEmpty()){
             renderFluid(tile.fluidHolder.getHeight(), tile.fluidHolder.getTintColor(), tile.fluidHolder.getFluid().getLuminosity(),
                     tile.fluidHolder.getFluid().getStillTexture(), matrixStackIn,bufferIn,combinedLightIn,combinedOverlayIn,true);
-        }
-        else {
-            //render mob. done by cage renderer
-            super.render(tile, partialTicks, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
         }
     }
 }

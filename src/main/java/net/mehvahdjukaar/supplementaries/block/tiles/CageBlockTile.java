@@ -25,6 +25,7 @@ public class CageBlockTile extends TileEntity implements ITickableTileEntity, IM
     @Override
     public MobHolder getMobHolder(){return this.mobHolder;}
 
+
     @Override
     public double getMaxRenderDistanceSquared() {
         return 80;
@@ -35,7 +36,6 @@ public class CageBlockTile extends TileEntity implements ITickableTileEntity, IM
         this.mobHolder.setWorldAndPos(this.world,this.pos);
     }
 
-
     public void saveToNbt(ItemStack stack){
         CompoundNBT compound = new CompoundNBT();
         stack.setTagInfo("BlockEntityTag",write(compound));
@@ -45,10 +45,7 @@ public class CageBlockTile extends TileEntity implements ITickableTileEntity, IM
     @Override
     public void read(BlockState state, CompoundNBT compound) {
         super.read(state, compound);
-
         this.mobHolder.read(compound);
-
-
     }
 
     @Override

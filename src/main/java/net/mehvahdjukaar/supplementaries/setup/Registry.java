@@ -9,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.items.FireflyJarItemRe
 import net.mehvahdjukaar.supplementaries.client.renderers.items.JarItemRenderer;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
+import net.mehvahdjukaar.supplementaries.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.entities.FireflyEntity;
 import net.mehvahdjukaar.supplementaries.entities.RopeArrowEntity;
 import net.mehvahdjukaar.supplementaries.entities.ThrowableBrickEntity;
@@ -19,6 +20,7 @@ import net.mehvahdjukaar.supplementaries.items.*;
 import net.mehvahdjukaar.supplementaries.items.crafting.*;
 import net.mehvahdjukaar.supplementaries.items.tabs.JarTab;
 import net.mehvahdjukaar.supplementaries.setup.registration.Variants;
+import net.mehvahdjukaar.supplementaries.world.structures.RoadSignStructure;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
@@ -74,6 +76,7 @@ public class Registry {
         PARTICLES.register(bus);
         SOUNDS.register(bus);
         RECIPES.register(bus);
+        RoadSignStructure.FEATURES.register(bus);
     }
 
     //creative tab
@@ -159,18 +162,34 @@ public class Registry {
     public static final String THROWABLE_BRICK_NAME = "brick_projectile";
     public static final RegistryObject<EntityType<ThrowableBrickEntity>> THROWABLE_BRICK = ENTITIES.register(THROWABLE_BRICK_NAME,()->(
             EntityType.Builder.<ThrowableBrickEntity>create(ThrowableBrickEntity::new, EntityClassification.MISC)
-            .setShouldReceiveVelocityUpdates(true).setCustomClientFactory(ThrowableBrickEntity::new)
-            .setTrackingRange(64).setUpdateInterval(1).size(0.5f, 0.5f))//.size(0.25F, 0.25F).trackingRange(4).func_233608_b_(10))
+                    .setCustomClientFactory(ThrowableBrickEntity::new)
+                    .size(0.25F, 0.25F).trackingRange(4).func_233608_b_(10))//.size(0.25F, 0.25F).trackingRange(4).func_233608_b_(10))
+                    .build(THROWABLE_BRICK_NAME));
+
+
+    //bomb
+    public static final String BOMB_NAME = "bomb";
+    public static final RegistryObject<EntityType<BombEntity>> BOMB = ENTITIES.register(BOMB_NAME,()->(
+            EntityType.Builder.<BombEntity>create(BombEntity::new, EntityClassification.MISC)
+                    .setCustomClientFactory(BombEntity::new)
+                    .size(0.5F, 0.5F).trackingRange(4).func_233608_b_(10))
+                    //.setTrackingRange(64).setUpdateInterval(1)) //.size(0.25F, 0.25F).trackingRange(4).func_233608_b_(10))
             .build(THROWABLE_BRICK_NAME));
+    /*
+    public static final RegistryObject<Item> BOMB_ITEM = ITEMS.register(BOMB_NAME,()-> new BombItem(new Item.Properties()
+            .group(getTab(ItemGroup.COMBAT,BOMB_NAME))));
+    public static final RegistryObject<Item> BOMB_ITEM_ON = ITEMS.register("bomb_projectile",()-> new BombItem(new Item.Properties()
+            .group(null)));
+    */
 
     //TODO: add enable config
     //rope arrow
     public static final String ROPE_ARROW_NAME = "rope_arrow";
     public static final RegistryObject<EntityType<RopeArrowEntity>> ROPE_ARROW = ENTITIES.register(ROPE_ARROW_NAME,()->(
             EntityType.Builder.<RopeArrowEntity>create(RopeArrowEntity::new, EntityClassification.MISC)
-            .setShouldReceiveVelocityUpdates(true).setCustomClientFactory(RopeArrowEntity::new)
-            .setTrackingRange(64).setUpdateInterval(1).size(0.5f, 0.5f))//.size(0.25F, 0.25F).trackingRange(4).func_233608_b_(10))
-            .build(ROPE_ARROW_NAME));
+                    .setCustomClientFactory(RopeArrowEntity::new)
+                    .size(0.5F, 0.5F).trackingRange(4).func_233608_b_(20))//.size(0.25F, 0.25F).trackingRange(4).func_233608_b_(10))
+                    .build(ROPE_ARROW_NAME));
     public static final RegistryObject<Item> ROPE_ARROW_ITEM = ITEMS.register(ROPE_ARROW_NAME,()-> new RopeArrowItem(
             new Item.Properties().group(getTab(ItemGroup.MISC,ROPE_ARROW_NAME)).defaultMaxDamage(16).setNoRepair()));
 
@@ -190,6 +209,12 @@ public class Registry {
             .register("falling_liquid", ()-> new BasicParticleType(true));
     public static final RegistryObject<BasicParticleType> SPLASHING_LIQUID = PARTICLES
             .register("splashing_liquid", ()-> new BasicParticleType(true));
+    public static final RegistryObject<BasicParticleType> BOMB_EXPLOSION_PARTICLE = PARTICLES
+            .register("bomb_explosion", ()-> new BasicParticleType(true));
+    public static final RegistryObject<BasicParticleType> BOMB_EXPLOSION_PARTICLE_EMITTER = PARTICLES
+            .register("bomb_explosion_emitter", ()-> new BasicParticleType(true));
+    public static final RegistryObject<BasicParticleType> BOMB_SMOKE_PARTICLE = PARTICLES
+            .register("bomb_smoke", ()-> new BasicParticleType(true));
 
 
 
@@ -240,7 +265,6 @@ public class Registry {
     public static final RegistryObject<Block> PLANTER = BLOCKS.register(PLANTER_NAME, ()-> new PlanterBlock(
             AbstractBlock.Properties.create(Material.ROCK, MaterialColor.RED_TERRACOTTA)
                     .hardnessAndResistance(2f, 6f)
-                    .harvestLevel(1)
                     .setRequiresTool()
                     .harvestTool(ToolType.PICKAXE)
                     .notSolid()
@@ -505,14 +529,8 @@ public class Registry {
     //wall lantern
     public static final String WALL_LANTERN_NAME = "wall_lantern";
     public static final RegistryObject<Block> WALL_LANTERN = BLOCKS.register(WALL_LANTERN_NAME,()-> new WallLanternBlock(
-            AbstractBlock.Properties.create(Material.IRON, MaterialColor.IRON)
-                    .hardnessAndResistance(3.5f, 3.5f)
-                    .sound(SoundType.LANTERN)
-                    .harvestTool(ToolType.PICKAXE)
-                    .setRequiresTool()
-                    .harvestLevel(1)
+            AbstractBlock.Properties.from(Blocks.LANTERN)
                     .setLightLevel((state) -> 15)
-                    .notSolid()
                     .noDrops()
     ));
     public static final RegistryObject<TileEntityType<WallLanternBlockTile>> WALL_LANTERN_TILE = TILES.register(WALL_LANTERN_NAME,()->  TileEntityType.Builder.create(
@@ -1065,7 +1083,7 @@ public class Registry {
     //fodder
     public static final String FODDER_NAME = "fodder";
     public static final RegistryObject<Block> FODDER = BLOCKS.register(FODDER_NAME,()-> new FodderBlock(
-            AbstractBlock.Properties.from(Blocks.PODZOL)));
+            AbstractBlock.Properties.from(Blocks.GRASS_BLOCK)));
     public static final RegistryObject<Item> FODDER_ITEM = ITEMS.register(FODDER_NAME,()-> new BlockItem(FODDER.get(),
             (new Item.Properties()).group(getTab(ItemGroup.BUILDING_BLOCKS,FODDER_NAME))));
 

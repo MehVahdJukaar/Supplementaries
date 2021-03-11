@@ -5,9 +5,11 @@ import net.mehvahdjukaar.supplementaries.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.FireflyJarBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.LightUpBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
+import net.mehvahdjukaar.supplementaries.block.util.CapturedMobs;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.fluids.SoftFluidList;
 import net.mehvahdjukaar.supplementaries.items.EmptyJarItem;
@@ -19,7 +21,10 @@ import net.minecraft.dispenser.*;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.entity.projectile.AbstractArrowEntity;
+import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
+import net.minecraft.entity.projectile.SnowballEntity;
 import net.minecraft.item.*;
 import net.minecraft.tags.ITag;
 import net.minecraft.tileentity.DispenserTileEntity;
@@ -66,6 +71,10 @@ public class Dispenser {
             DispenserBlock.registerDispenseBehavior(Items.BUCKET, new BucketJarDispenserBehavior());
             DispenserBlock.registerDispenseBehavior(Items.BOWL, new BucketJarDispenserBehavior());
             DispenserBlock.registerDispenseBehavior(Items.GLASS_BOTTLE, new BucketJarDispenserBehavior());
+
+            for(Item i : CapturedMobs.VALID_BUCKETS.keySet()){
+                DispenserBlock.registerDispenseBehavior(i, new FishBucketJarDispenserBehavior());
+            }
         }
 
         DispenserBlock.registerDispenseBehavior(Items.FLINT_AND_STEEL, new FlintAndSteelDispenserBehavior());
@@ -79,6 +88,9 @@ public class Dispenser {
         //firefly
         if(RegistryConfigs.reg.FIREFLY_ENABLED.get()) {
             DispenserBlock.registerDispenseBehavior(Registry.FIREFLY_SPAWN_EGG_ITEM.get(), spawneggBehavior);
+        }
+        if(RegistryConfigs.reg.BOMB_ENABLED.get()){
+            //DispenserBlock.registerDispenseBehavior(Registry.BOMB_ITEM.get(), new BombsDispenserBehavior());
         }
 
     }
@@ -111,7 +123,7 @@ public class Dispenser {
     }
 
     //add item to dispenser and merges it if there's one already
-    public static boolean MergeDispenserItem(DispenserTileEntity te, ItemStack filled) {
+    private static boolean MergeDispenserItem(DispenserTileEntity te, ItemStack filled) {
         try {
             //field_174913_f, field_146022_i
             Field f = ObfuscationReflectionHelper.findField(DispenserTileEntity.class,"field_146022_i");
@@ -132,7 +144,7 @@ public class Dispenser {
     }
 
     //returns full bottle to dispenser. same function that's in IDispenseritemBehavior
-    public static ItemStack glassBottleFill(IBlockSource source, ItemStack empty, ItemStack filled) {
+    private static ItemStack glassBottleFill(IBlockSource source, ItemStack empty, ItemStack filled) {
         empty.shrink(1);
         if (empty.isEmpty()) {
             return filled.copy();
@@ -144,7 +156,7 @@ public class Dispenser {
         }
     }
 
-    public static abstract class TaggedAdditionalDispenserBehavior extends AdditionalDispenserBehavior {
+    private static abstract class TaggedAdditionalDispenserBehavior extends AdditionalDispenserBehavior {
         private final ITag<Item> tag;
         TaggedAdditionalDispenserBehavior(ITag<Item> tag){
             this.tag = tag;
@@ -163,7 +175,7 @@ public class Dispenser {
     }
 
     //TODO: there must be an easier and cleaner way
-    public static abstract class AdditionalDispenserBehavior extends DefaultDispenseItemBehavior {
+    private static abstract class AdditionalDispenserBehavior extends DefaultDispenseItemBehavior {
         @Override
         public ItemStack dispenseStack(IBlockSource source, ItemStack stack) {
             //this.setSuccessful(false);
@@ -181,7 +193,7 @@ public class Dispenser {
         }
     }
 
-    public static class FillJarDispenserBehavior extends AdditionalDispenserBehavior {
+    private static class FillJarDispenserBehavior extends AdditionalDispenserBehavior {
 
         @Override
         protected ItemStack customBehavior(IBlockSource source, ItemStack stack) {
@@ -197,17 +209,15 @@ public class Dispenser {
                         tile.handleAddItem(stack, null, null);
                         tile.markDirty();
                         //this.setSuccessful(true);
-                        returnStack = new ItemStack(stack.getItem() instanceof FishBucketItem ? Items.BUCKET : Items.AIR);
-                        return Dispenser.glassBottleFill(source, stack, returnStack);
+                        return Dispenser.glassBottleFill(source, stack, ItemStack.EMPTY);
                     }
                     else if (tile.isEmpty() && !tile.fluidHolder.isFull()) {
                         returnStack = tile.fluidHolder.interactWithItem(stack);
-                        if(!returnStack.isEmpty()) {
+                        if(returnStack !=null && !returnStack.isEmpty()) {
                             tile.markDirty();
                             return Dispenser.glassBottleFill(source, stack, returnStack);
                         }
                     }
-
                 }
                 return stack;
             }
@@ -216,7 +226,7 @@ public class Dispenser {
     }
 
 
-    public static class FlintAndSteelDispenserBehavior extends AdditionalDispenserBehavior{
+    private static class FlintAndSteelDispenserBehavior extends AdditionalDispenserBehavior{
 
         @Override
         protected ItemStack customBehavior(IBlockSource source, ItemStack stack) {
@@ -237,7 +247,7 @@ public class Dispenser {
     }
 
 
-    public static class ThrowableBricksDispenserBehavior extends TaggedAdditionalDispenserBehavior{
+    private static class ThrowableBricksDispenserBehavior extends TaggedAdditionalDispenserBehavior{
 
         ThrowableBricksDispenserBehavior(ITag<Item> tag) {
             super(tag);
@@ -261,8 +271,7 @@ public class Dispenser {
         }
 
         protected ProjectileEntity getProjectileEntity(World worldIn, IPosition position, ItemStack stackIn){
-            ThrowableBrickEntity brickEntity = new ThrowableBrickEntity(worldIn, position.getX(), position.getY(), position.getZ());
-            return brickEntity;
+            return new ThrowableBrickEntity(worldIn, position.getX(), position.getY(), position.getZ());
         }
 
         protected float getProjectileInaccuracy() {
@@ -275,7 +284,23 @@ public class Dispenser {
 
     }
 
-    public static class BambooSpikesDispenserBehavior extends AdditionalDispenserBehavior{
+    private static class BombsDispenserBehavior extends ProjectileDispenseBehavior{
+
+        @Override
+        protected ProjectileEntity getProjectileEntity(World worldIn, IPosition position, ItemStack stackIn) {
+            return new BombEntity(worldIn, position.getX(), position.getY(), position.getZ());
+        }
+        protected float getProjectileInaccuracy() {
+            return 11.0F;
+        }
+
+        protected float getProjectileVelocity() {
+            return 1.3F;
+        }
+    }
+
+
+    private static class BambooSpikesDispenserBehavior extends AdditionalDispenserBehavior{
 
         @Override
         protected ItemStack customBehavior(IBlockSource source, ItemStack stack) {
@@ -294,8 +319,7 @@ public class Dispenser {
         }
     }
 
-
-    public static class BucketJarDispenserBehavior extends  AdditionalDispenserBehavior{
+    private static class FishBucketJarDispenserBehavior extends  AdditionalDispenserBehavior{
 
         @Override
         protected ItemStack customBehavior(IBlockSource source, ItemStack stack) {
@@ -306,9 +330,36 @@ public class Dispenser {
             if(te instanceof JarBlockTile){
                 //TODO: add fish buckets
                 JarBlockTile tile = ((JarBlockTile)te);
+                if(tile.fluidHolder.isEmpty() && tile.isEmpty()) {
+                    if(tile.mobHolder.interactWithBucketItem(stack,null,null)){
+                        tile.markDirty();
+                        return Dispenser.glassBottleFill(source, stack,new ItemStack(Items.BUCKET));
+                    }
+                }
+                return stack;
+            }
+
+            return super.customBehavior(source,stack);
+        }
+
+    }
+
+
+    private static class BucketJarDispenserBehavior extends  AdditionalDispenserBehavior{
+
+        @Override
+        protected ItemStack customBehavior(IBlockSource source, ItemStack stack) {
+            //this.setSuccessful(false);
+            ServerWorld world = source.getWorld();
+            BlockPos blockpos = source.getBlockPos().offset(source.getBlockState().get(DispenserBlock.FACING));
+            TileEntity te = world.getTileEntity(blockpos);
+            if(te instanceof JarBlockTile){
+                //TODO: add fish buckets!!
+                JarBlockTile tile = ((JarBlockTile)te);
+                if(tile.isEmpty())
                 if(tile.mobHolder.isEmpty() && tile.isEmpty()) {
                     ItemStack returnStack = tile.fluidHolder.interactWithItem(stack);
-                    if(!returnStack.isEmpty()){
+                    if(returnStack !=null && !returnStack.isEmpty()){
                         tile.markDirty();
                         return Dispenser.glassBottleFill(source, stack,returnStack);
                     }
@@ -321,7 +372,7 @@ public class Dispenser {
 
     }
 
-    public static class PlaceBlockDispenseBehavior extends OptionalDispenseBehavior {
+    private static class PlaceBlockDispenseBehavior extends OptionalDispenseBehavior {
 
         protected ItemStack dispenseStack(IBlockSource source, ItemStack stack) {
             this.setSuccessful(false);

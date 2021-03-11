@@ -2,10 +2,7 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import com.google.common.collect.Lists;
 import net.mehvahdjukaar.supplementaries.block.tiles.SackBlockTile;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.FallingBlock;
+import net.minecraft.block.*;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -28,7 +25,6 @@ import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.LockableTileEntity;
-import net.minecraft.tileentity.ShulkerBoxTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -47,8 +43,12 @@ import java.util.List;
 import java.util.Random;
 
 public class SackBlock extends FallingBlock {
-    public static final VoxelShape SHAPE = VoxelShapes.or(Block.makeCuboidShape(2,0,2,14,12,14),
+    public static final VoxelShape SHAPE_CLOSED = VoxelShapes.or(Block.makeCuboidShape(2,0,2,14,12,14),
             Block.makeCuboidShape(6,12,6,10,13,10),Block.makeCuboidShape(5,13,5,11,16,11));
+    public static final VoxelShape SHAPE_OPEN = VoxelShapes.or(Block.makeCuboidShape(2,0,2,14,12,14),
+            Block.makeCuboidShape(6,12,6,10,13,10),Block.makeCuboidShape(3,13,3,13,14,13));
+
+
     public static final ResourceLocation CONTENTS = new ResourceLocation("contents");
     public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
@@ -58,8 +58,16 @@ public class SackBlock extends FallingBlock {
         this.setDefaultState(this.stateContainer.getBaseState().with(OPEN, false).with(WATERLOGGED,false));
     }
 
+    @Override
     public int getDustColor(BlockState state, IBlockReader reader, BlockPos pos) {
-        return -5671355;
+        return 0xba8f6a;
+    }
+
+    //falling block
+    @Override
+    public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+        if(state.getBlock()!=oldState.getBlock())
+            worldIn.getPendingBlockTicks().scheduleTick(pos, this, this.getFallDelay());
     }
 
     @Override
@@ -101,6 +109,7 @@ public class SackBlock extends FallingBlock {
     //schedule block tick
     @Override
     public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
+
         TileEntity tileentity = worldIn.getTileEntity(pos);
         if (tileentity instanceof SackBlockTile) {
             SackBlockTile te = ((SackBlockTile)tileentity);
@@ -248,14 +257,16 @@ public class SackBlock extends FallingBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return SHAPE;
+        if(state.get(OPEN))
+            return SHAPE_OPEN;
+        return SHAPE_CLOSED;
     }
 
     @Override
     public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!state.isIn(newState.getBlock())) {
             TileEntity tileentity = worldIn.getTileEntity(pos);
-            if (tileentity instanceof ShulkerBoxTileEntity) {
+            if (tileentity instanceof SackBlockTile) {
                 worldIn.updateComparatorOutputLevel(pos, state.getBlock());
             }
 

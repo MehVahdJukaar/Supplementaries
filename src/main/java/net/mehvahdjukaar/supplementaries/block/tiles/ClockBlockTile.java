@@ -88,7 +88,7 @@ public class ClockBlockTile extends TileEntity implements ITickableTileEntity {
             BlockState state = this.getBlockState();
             if(hour!=state.get(ClockBlock.HOUR)){
                 //if they are sent to the client the animation gets broken. Side effect is that you can't see hour with f3
-                world.setBlockState(this.pos, state.with(ClockBlock.HOUR, hour),4);
+                world.setBlockState(this.pos, state.with(ClockBlock.HOUR, hour),3);
             }
             int p = MathHelper.clamp(time / 1500, 0, 15);
             if (p!=this.power){

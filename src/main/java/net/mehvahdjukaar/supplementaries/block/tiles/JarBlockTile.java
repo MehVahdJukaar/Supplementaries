@@ -23,7 +23,6 @@ import javax.annotation.Nullable;
 public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity, IMobHolder {
     private final int CAPACITY = ServerConfigs.cached.JAR_CAPACITY;
 
-    public SpecialJarContent specialType = SpecialJarContent.NONE;
     public MobHolder mobHolder;
     public SoftFluidHolder fluidHolder;
 
@@ -56,19 +55,23 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
 
     // does all the calculation for handling player interaction.
     public boolean handleInteraction(PlayerEntity player, Hand hand) {
-        if(!this.mobHolder.isEmpty())return false;
-        ItemStack handStack = player.getHeldItem(hand);
 
+        ItemStack handStack = player.getHeldItem(hand);
         ItemStack displayedStack = this.getDisplayedItem();
+
         //interact with fluid holder
-        if(this.isEmpty() && this.fluidHolder.interactWithPlayer(player,hand)){
+        if (this.isEmpty() && this.mobHolder.isEmpty() &&this.fluidHolder.interactWithPlayer(player, hand)) {
             return true;
         }
         //empty hand: eat food
 
         // can I insert this item? For cookies and fish buckets
-        if (this.isItemValidForSlot(0, handStack)) {
+        else if (this.mobHolder.isEmpty() && this.isItemValidForSlot(0, handStack)) {
             this.handleAddItem(handStack, player, hand);
+            return true;
+        }
+        //fish buckets
+        else if(this.isEmpty()&&this.fluidHolder.isEmpty()&&this.mobHolder.interactWithBucketItem(handStack, player, hand)){
             return true;
         }
 
@@ -129,10 +132,6 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
             ItemStack returnStack = ItemStack.EMPTY;
             //TODO: cookie sounds
             player.addStat(Stats.ITEM_USED.get(item));
-            if (item instanceof FishBucketItem) {
-                returnStack = new ItemStack(Items.BUCKET);
-                this.world.playSound(null, this.pos, SoundEvents.ITEM_BUCKET_EMPTY_FISH, SoundCategory.BLOCKS, 1.0F, 1.0F);
-            }
             // shrink stack and replace bottle /bucket with empty ones
             if (!player.isCreative()) {
                 CommonUtil.swapItem(player, handIn, returnStack);
@@ -150,19 +149,19 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
     }
 
     public void resetHolders(){
-        this.fluidHolder.empty();
-        //this.mobholder.empty();
-        NonNullList<ItemStack> stacks = NonNullList.withSize(1, ItemStack.EMPTY);
+        this.fluidHolder.clear();
+        this.mobHolder.clear();
+        this.setDisplayedItem(ItemStack.EMPTY);
     }
 
     //can this item be added?
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
         if(this.fluidHolder.isEmpty() && this.mobHolder.isEmpty()) {
-            //cookies and fish buckets
             Item i = stack.getItem();
             if (!this.isFull()) {
-                if (i instanceof FishBucketItem || CommonUtil.isCookie(i)) {
+                //might add other accepted items here
+                if (CommonUtil.isCookie(i)) {
                     return this.isEmpty() || i == this.getDisplayedItem().getItem();
                 }
             }
@@ -176,7 +175,7 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
         ItemStackHelper.loadAllItems(compound, oldStacks);
         ItemStack oldStack = oldStacks.get(0);
         if(!oldStacks.isEmpty()&&!oldStack.isEmpty()) {
-            this.fluidHolder.empty();
+            this.fluidHolder.clear();
             if(!this.fluidHolder.interactWithItem(oldStack).isEmpty()){
                 if(compound.contains("LiquidHolder")) {
                     this.fluidHolder.setCount((int) (compound.getCompound("LiquidHolder").getFloat("Level") * 16));
@@ -199,7 +198,7 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
             this.fluidHolder.read(compound);
         }
         this.mobHolder.read(compound);
-        this.specialType = SpecialJarContent.values()[compound.getInt("SpecialType")];
+
         this.onLoad();
     }
 
@@ -209,7 +208,6 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
         super.write(compound);
         this.mobHolder.write(compound);
         this.fluidHolder.write(compound);
-        compound.putInt("SpecialType",SpecialJarContent.get(this.getDisplayedItem().getItem()).ordinal());
         return compound;
     }
 
@@ -249,38 +247,5 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
     @Override
     public void tick() {
         this.mobHolder.tick();
-    }
-
-    public enum SpecialJarContent{
-        NONE,
-        COOKIE,
-        TROPICAL_FISH,
-        SALMON,
-        COD,
-        PUFFER_FISH,
-        FISH;
-
-        public int getFishTextureOffset(){
-            return this.ordinal()-2;
-        }
-        public boolean isFish(){
-            return this!=COOKIE && this!=NONE;
-        }
-        public boolean isEmpty(){
-            return this==COOKIE;
-        }
-        public boolean isCookie(){
-            return this==COOKIE;
-        }
-
-        public static SpecialJarContent get(Item item){
-            if(item == Items.TROPICAL_FISH_BUCKET)return SpecialJarContent.TROPICAL_FISH;
-            if(item == Items.COD_BUCKET)return SpecialJarContent.COD;
-            if(item  == Items.PUFFERFISH_BUCKET)return SpecialJarContent.PUFFER_FISH;
-            if(item == Items.SALMON_BUCKET)return SpecialJarContent.SALMON;
-            if(item instanceof FishBucketItem)return SpecialJarContent.FISH;
-            if(CommonUtil.isCookie(item))return SpecialJarContent.COOKIE;
-            return SpecialJarContent.NONE;
-        }
     }
 }

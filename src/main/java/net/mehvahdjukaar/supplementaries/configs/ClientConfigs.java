@@ -1,6 +1,9 @@
 package net.mehvahdjukaar.supplementaries.configs;
 
+import net.mehvahdjukaar.supplementaries.block.util.CapturedMobs;
 import net.minecraftforge.common.ForgeConfigSpec;
+
+import java.util.List;
 
 public class ClientConfigs {
     public static ForgeConfigSpec CLIENT_CONFIG;
@@ -49,11 +52,13 @@ public class ClientConfigs {
         public static ForgeConfigSpec.DoubleValue FLAG_WAVELENGTH;
         public static ForgeConfigSpec.DoubleValue FLAG_AMPLITUDE;
         public static ForgeConfigSpec.DoubleValue FLAG_AMPLITUDE_INCREMENT;
+        public static ForgeConfigSpec.ConfigValue<List<? extends List<String>>> CAPTURED_MOBS;
 
 
-
+        //is there a way to store more complicated data structures inside Forge configs. For example I would like to store a list containing many lists made up of lets say a string and an int value
 
         private static void init(ForgeConfigSpec.Builder builder) {
+
 
 
             builder.comment("Tweak and change the various block animations +\n" +
@@ -118,6 +123,22 @@ public class ClientConfigs {
             builder.pop();
             //TODO: add more
 
+
+            builder.push("captured_mobs");
+
+            CAPTURED_MOBS = builder.comment("following here is a list of mob ids and 4 parameters that determine how they are displayed in jars and cages:\n"
+                    +"1&2: these are the added height and width that will be added to the mob actual hitbox to determine its scale inside a cage or jar \n"+
+                    "you can increase them so this 'adjusted hitbox' will match the actual mob shape, in other words increase the to make the mob smaller\n"+
+                    "3: this one determines if the mob should emit light\n"+
+                    "4: the last parameter determines the animation type. It can be set to the following values:\n" +
+                    "-'air' to make it stand in mid air like a flying animal (note that such mobs are set to this value by default)\n" +
+                    "-'land' to force it to stand on the ground even if it is a flying animal\n" +
+                    "-'floating' to to make it stand in mid air and wobble up and down\n" +
+                    "-any number >0 to make it render as a 2d fish. The ordinal of the texture that will be shown will be the number\n" +
+                    "-0 or any other values will be ignored and treated as default")
+                    .defineList("rendering_parameters", CapturedMobs.DEFAULT_CONFIG, s->true);
+
+            builder.pop();
 
             builder.pop();
         }
@@ -213,6 +234,7 @@ public class ClientConfigs {
             CLOCK_24H = block.CLOCK_24H.get();
             GLOBE_RANDOM = block.GLOBE_RANDOM.get();
 
+            CapturedMobs.refresh();
 
         }
     }

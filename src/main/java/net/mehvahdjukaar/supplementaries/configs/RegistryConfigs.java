@@ -100,6 +100,8 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue ROPE_ENABLED;
         public static ForgeConfigSpec.BooleanValue ROPE_ARROW_ENABLED;
         public static ForgeConfigSpec.BooleanValue PULLEY_ENABLED;
+        public static ForgeConfigSpec.BooleanValue FODDER_ENABLED;
+        public static ForgeConfigSpec.BooleanValue BOMB_ENABLED;
 
         public static ForgeConfigSpec.BooleanValue JAR_TAB;
         public static ForgeConfigSpec.BooleanValue CREATIVE_TAB;
@@ -212,8 +214,9 @@ public class RegistryConfigs {
             FLAX_ENABLED = builder.define(Registry.FLAX_NAME,true);
             ROPE_ENABLED = builder.define(Registry.ROPE_NAME,true);
             ROPE_ARROW_ENABLED = builder.define(Registry.ROPE_ARROW_NAME,true);
-            FLAX_ENABLED = builder.define(Registry.FLAX_NAME,true);
-
+            PULLEY_ENABLED = builder.define(Registry.PULLEY_BLOCK_NAME,true);
+            FODDER_ENABLED = builder.define(Registry.FODDER_NAME,true);
+            BOMB_ENABLED = builder.define(Registry.BOMB_NAME,true);
 
             LASER_ENABLED = builder.comment("WIP")
                     .define(Registry.LASER_NAME, false);

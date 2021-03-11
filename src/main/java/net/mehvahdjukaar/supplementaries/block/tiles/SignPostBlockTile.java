@@ -17,6 +17,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.Constants;
 
 
@@ -68,6 +69,19 @@ public class SignPostBlockTile extends TileEntity implements ITextHolder, IBlock
     @Override
     public AxisAlignedBB getRenderBoundingBox(){
         return new AxisAlignedBB(this.getPos().add(-0.25,0,-0.25), this.getPos().add(1.25,1,1.25));
+    }
+
+    //TODO: maybe add constraints to this so it snaps to 22.5deg
+    public void pointToward(BlockPos targetPos, boolean up){
+        //int r = MathHelper.floor((double) ((180.0F + yaw) * 16.0F / 360.0F) + 0.5D) & 15;
+        // r*-22.5f;
+        float yaw = (float)(Math.atan2(targetPos.getX() - pos.getX(), targetPos.getZ() - pos.getZ()) * 180d / Math.PI);
+        if(up){
+            this.yawUp = yaw - (this.leftUp ? 180 : 0);
+        }
+        else {
+            this.yawDown = yaw - (this.leftDown ? 180 : 0);
+        }
     }
 
     @Override

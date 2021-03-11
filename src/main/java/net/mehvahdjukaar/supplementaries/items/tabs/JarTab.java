@@ -1,6 +1,9 @@
 package net.mehvahdjukaar.supplementaries.items.tabs;
 
 import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
+import net.mehvahdjukaar.supplementaries.block.util.CapturedMobs;
+import net.mehvahdjukaar.supplementaries.block.util.MobHolder;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.fluids.SoftFluid;
 import net.mehvahdjukaar.supplementaries.fluids.SoftFluidHolder;
 import net.mehvahdjukaar.supplementaries.fluids.SoftFluidList;
@@ -30,14 +33,23 @@ public class JarTab {
     public static void populateTab(NonNullList<ItemStack> items){
         JarBlockTile tempTile = new JarBlockTile();
         SoftFluidHolder fluidHolder = new SoftFluidHolder(tempTile.getInventoryStackLimit());
+
+
+
+        for (Item i : CapturedMobs.VALID_BUCKETS.keySet()){
+            CompoundNBT com = new CompoundNBT();
+            MobHolder.saveBucketToNBT(com, new ItemStack(i), CapturedMobs.getDefaultNameFromBucket(i),
+                    CapturedMobs.getTypeFromBucket(i).getFishTexture());
+            tryAdd(items, com);
+        }
+
+
         for (Item i : ForgeRegistries.ITEMS) {
             ItemStack regItem = new ItemStack(i);
             CompoundNBT com = new CompoundNBT();
             if (tempTile.isItemValidForSlot(0, regItem)) {
-                JarBlockTile.SpecialJarContent special = JarBlockTile.SpecialJarContent.get(i);
-                regItem.setCount(special.isCookie()?tempTile.getInventoryStackLimit():1);
+                regItem.setCount(tempTile.getInventoryStackLimit());
                 ItemStackHelper.saveAllItems(com, NonNullList.withSize(1, regItem));
-                com.putInt("SpecialType", special.ordinal());
                 tryAdd(items, com);
             }
         }
@@ -45,7 +57,7 @@ public class JarTab {
             SoftFluid s = SoftFluidList.ID_MAP.get(id);
             if(s==SoftFluidList.POTION||s.isEmpty())continue;
             CompoundNBT com = new CompoundNBT();
-            fluidHolder.empty();
+            fluidHolder.clear();
             fluidHolder.fill(s);
             fluidHolder.write(com);
             tryAdd(items,com);
