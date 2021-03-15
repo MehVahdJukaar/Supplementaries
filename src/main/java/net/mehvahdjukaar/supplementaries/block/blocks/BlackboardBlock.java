@@ -144,12 +144,6 @@ public class BlackboardBlock extends Block implements IWaterLoggable {
     }
 
     @Override
-    public boolean eventReceived(BlockState state, World world, BlockPos pos, int eventID, int eventParam) {
-        super.eventReceived(state, world, pos, eventID, eventParam);
-        TileEntity tileentity = world.getTileEntity(pos);
-        return tileentity != null && tileentity.receiveClientEvent(eventID, eventParam);
-    }
-
     public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
         CompoundNBT compoundnbt = stack.getChildTag("BlockEntityTag");

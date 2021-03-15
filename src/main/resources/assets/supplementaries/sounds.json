@@ -26,5 +26,27 @@
         "stream": true
       }
     ]
+  },
+  "item.bomb": {
+    "category": "item",
+    "subtitle": "subtitle.supplementaries.bomb",
+    "sounds": [
+      {
+        "name": "supplementaries:item/bomb_explosion_0",
+        "stream": true
+      },
+      {
+        "name": "supplementaries:item/bomb_explosion_1",
+        "stream": true
+      },
+      {
+        "name": "supplementaries:item/bomb_explosion_2",
+        "stream": true
+      },
+      {
+        "name": "supplementaries:item/bomb_explosion_3",
+        "stream": true
+      }
+    ]
   }
 }

@@ -13,7 +13,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvents;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.registries.ForgeRegistries;
-import vectorwing.farmersdelight.FarmersDelight;
 
 import java.util.*;
 
@@ -44,6 +43,8 @@ public class SoftFluidList {
     public static SoftFluid XP;
     public static SoftFluid SLIME;
     public static SoftFluid DIRT;
+    public static SoftFluid GHAST_TEAR;
+    public static SoftFluid MAGMA_CREAM;
 
     public static SoftFluid makeSF(SoftFluid.Builder builder){
         if(builder.isDisabled)return null;
@@ -129,8 +130,17 @@ public class SoftFluidList {
                 .specialEmptyBottle(Items.AIR)
                 .emptySound(SoundEvents.BLOCK_GRAVEL_PLACE)
                 .translationKey("block.minecraft.dirt"));
+        GHAST_TEAR = makeSF(new SoftFluid.Builder(Textures.MILK_TEXTURE,Textures.POTION_TEXTURE_FLOW,"ghast_tear")
+                .bottle(Items.GHAST_TEAR)
+                .color(0xbff0f0)
+                .specialEmptyBottle(Items.AIR)
+                .translationKey("item.minecraft.ghast_tear"));
+        GHAST_TEAR = makeSF(new SoftFluid.Builder(Textures.MAGMA_TEXTURE,Textures.MAGMA_TEXTURE_FLOW,"magma_cream")
+                .bottle(Items.MAGMA_CREAM)
+                .specialEmptyBottle(Items.AIR)
+                .translationKey("item.minecraft.magma_cream"));
         List<SoftFluid> custom = new ArrayList<>(Arrays.asList(WATER,LAVA,HONEY,MILK,MUSHROOM_STEW,
-                SUS_STEW,BEETROOT_SOUP,RABBIT_STEW,POTION,DRAGON_BREATH,XP,SLIME,DIRT));
+                SUS_STEW,BEETROOT_SOUP,RABBIT_STEW,POTION,DRAGON_BREATH,XP,SLIME,DIRT,GHAST_TEAR));
 
 
         addOpt(custom,makeSF(new SoftFluid.Builder(Textures.POTION_TEXTURE,Textures.POTION_TEXTURE_FLOW,"komodo_spit")

@@ -17,8 +17,17 @@
 
   "conditions": [
     {
-      "type": "supplementaries:flag",
-      "flag": "rope"
+      "type": "forge:and",
+      "values": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "rope"
+        },
+        {
+          "type": "supplementaries:flag",
+          "flag": "flax"
+        }
+      ]
     }
   ]
 }

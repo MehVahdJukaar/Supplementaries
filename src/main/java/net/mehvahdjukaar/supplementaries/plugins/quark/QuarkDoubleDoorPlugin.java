@@ -16,6 +16,7 @@ import vazkii.quark.content.tweaks.module.DoubleDoorOpeningModule;
 
 public class QuarkDoubleDoorPlugin {
     public static void openDoor(World world,BlockState state, BlockPos pos) {
+
         if (ModuleLoader.INSTANCE.isModuleEnabled(DoubleDoorOpeningModule.class)) {
             Direction direction = state.get(DoorBlock.FACING);
             boolean isOpen = state.get(DoorBlock.OPEN);
@@ -30,6 +31,7 @@ public class QuarkDoubleDoorPlugin {
         }
     }
     public static void openDoorKey(World world, BlockState state, BlockPos pos, PlayerEntity player, Hand hand) {
+
         if (ModuleLoader.INSTANCE.isModuleEnabled(DoubleDoorOpeningModule.class)) {
             Direction direction = state.get(DoorBlock.FACING);
             boolean isOpen = state.get(DoorBlock.OPEN);

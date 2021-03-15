@@ -1,6 +1,8 @@
 package net.mehvahdjukaar.supplementaries.configs;
 
 import net.mehvahdjukaar.supplementaries.block.util.CapturedMobs;
+import net.mehvahdjukaar.supplementaries.world.data.GlobeData;
+import net.mehvahdjukaar.supplementaries.world.data.GlobeDataGenerator;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.List;
@@ -21,12 +23,15 @@ public class ClientConfigs {
 
     public static class general {
         public static ForgeConfigSpec.BooleanValue TOOLTIP_HINTS;
+        public static ForgeConfigSpec.BooleanValue ANTI_REPOST_WARNING;
         private static void init(ForgeConfigSpec.Builder builder) {
             builder.comment("general settings")
                     .push("general");
-            TOOLTIP_HINTS = builder.comment("show some tooltip hints to guide player through the mod")
+            TOOLTIP_HINTS = builder.comment("show some tooltip hints to guide players through the mod")
                     .define("tooltip_hints",true);
-
+            ANTI_REPOST_WARNING = builder.comment("tries to detect when the mod hasn't been downloaded from curseforge. " +
+                    "set to false if you have manually changed the mod jar name")
+                    .define("anti_reposting_warning", true);
             builder.pop();
         }
     }
@@ -46,13 +51,14 @@ public class ClientConfigs {
         public static ForgeConfigSpec.DoubleValue WIND_VANE_PERIOD_2;
         public static ForgeConfigSpec.BooleanValue CLOCK_24H;
         public static ForgeConfigSpec.BooleanValue GLOBE_RANDOM;
+        public static ForgeConfigSpec.ConfigValue<List<? extends List<String>>> GLOBE_COLORS;
 
         public static ForgeConfigSpec.DoubleValue FLAG_SEGMENT_LENGTH;
         public static ForgeConfigSpec.DoubleValue FLAG_SPEED;
         public static ForgeConfigSpec.DoubleValue FLAG_WAVELENGTH;
         public static ForgeConfigSpec.DoubleValue FLAG_AMPLITUDE;
         public static ForgeConfigSpec.DoubleValue FLAG_AMPLITUDE_INCREMENT;
-        public static ForgeConfigSpec.ConfigValue<List<? extends List<String>>> CAPTURED_MOBS;
+        public static ForgeConfigSpec.ConfigValue<List<? extends List<String>>> CAPTURED_MOBS_PROPERTIES;
 
 
         //is there a way to store more complicated data structures inside Forge configs. For example I would like to store a list containing many lists made up of lets say a string and an int value
@@ -69,6 +75,19 @@ public class ClientConfigs {
 
             builder.push("globe");
             GLOBE_RANDOM = builder.comment("enable a random globe texture for each world").define("random_world", true);
+
+            GLOBE_COLORS = builder.comment("here you can put custom colors that will be assigned to each globe depending on its dimension:\n" +
+                    "to do so you'll have to make a list of lists in the format [[id,colors...],[id,colors...],...]\n"+
+                    "1: dimension id\n" +
+                    "now follows 12 numbers that will be used to color all of the 17 possible 'biomes'. omitting even one will make the config invalid\n"+
+                    "2: water, 3: water shaded, 4: water dark, 5: coast/taiga \n"+
+                    "6: forest, 7: plains\n"+
+                    "8: savanna, 9: desert\n"+
+                    "10: snow, 11: ice, 12: iceberg/island\n"+
+                    "13: mushroom island")
+                    .defineList("globe_colors", GlobeDataGenerator.getDefaultConfig(),s->true);
+
+
             builder.pop();
 
             builder.push("clock_block");
@@ -126,7 +145,7 @@ public class ClientConfigs {
 
             builder.push("captured_mobs");
 
-            CAPTURED_MOBS = builder.comment("following here is a list of mob ids and 4 parameters that determine how they are displayed in jars and cages:\n"
+            CAPTURED_MOBS_PROPERTIES = builder.comment("following here is a list of mob ids and 4 parameters that determine how they are displayed in jars and cages:\n"
                     +"1&2: these are the added height and width that will be added to the mob actual hitbox to determine its scale inside a cage or jar \n"+
                     "you can increase them so this 'adjusted hitbox' will match the actual mob shape, in other words increase the to make the mob smaller\n"+
                     "3: this one determines if the mob should emit light\n"+
@@ -235,6 +254,7 @@ public class ClientConfigs {
             GLOBE_RANDOM = block.GLOBE_RANDOM.get();
 
             CapturedMobs.refresh();
+            GlobeDataGenerator.refreshColorsFromConfig();
 
         }
     }

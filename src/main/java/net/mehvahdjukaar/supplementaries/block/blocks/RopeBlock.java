@@ -140,13 +140,16 @@ public class RopeBlock extends Block implements IWaterLoggable{
     }
 
     @Override
-    public boolean isLadder(BlockState state, IWorldReader world, BlockPos pos, net.minecraft.entity.LivingEntity entity) { return true; }
+    public boolean isLadder(BlockState state, IWorldReader world, BlockPos pos, LivingEntity entity) {
+        return state.get(DOWN)&&entity.getPositionVec().getY()-pos.getY()<(13/16f);
+    }
 
     //TODO: make solid when player is not colliding
     private static final VoxelShape COLLISION_SHAPE = Block.makeCuboidShape(0, 0, 0, 16, 13, 16);
     @Override
     public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return ((!state.get(UP) && context.func_216378_a(COLLISION_SHAPE, pos, true)) || !(context.getEntity() instanceof LivingEntity)) ?
+        return ((!state.get(UP) && (context.func_216378_a(COLLISION_SHAPE, pos, true)||!state.get(DOWN)))
+                || !(context.getEntity() instanceof LivingEntity)) ?
                 getShape(state,worldIn,pos,context) : VoxelShapes.empty();
 
     }
@@ -171,7 +174,7 @@ public class RopeBlock extends Block implements IWaterLoggable{
     public void updateFenceNeighbours(BlockPos myPos, Direction facingDir, World world){
         BlockPos fencePos = myPos.offset(facingDir);
         BlockState fence = world.getBlockState(fencePos);
-        if(isFence(fence.getBlock())) {
+        if(CommonUtil.isPost(fence)) {
             for (Direction d : FACING_TO_PROPERTY_MAP.keySet()) {
                 if (d == facingDir.getOpposite()) continue;
                 BlockPos ropePos = fencePos.offset(d);
@@ -188,19 +191,15 @@ public class RopeBlock extends Block implements IWaterLoggable{
     //TODO: fix this
     public RopeAttachment getAttachment(BlockPos currentPos, IWorld world, Direction dir){
         BlockPos facingPos = currentPos.offset(dir);
-        Block b = world.getBlockState(facingPos).getBlock();
+        BlockState facingState = world.getBlockState(facingPos);
+        Block b = facingState.getBlock();
         if(b == this)return RopeAttachment.BLOCK;
-        else if(isFence(b)){
+        else if(CommonUtil.isPost(facingState)){
             if(checkForKnot(facingPos,world,dir))return RopeAttachment.KNOT;
             return RopeAttachment.FENCE;
         }
         //else if(b instanceof WallBlock)return Attachment.WALL;
         return RopeAttachment.NONE;
-    }
-
-    //TODO: move to tags
-    private static boolean isFence(Block block){
-        return block instanceof FenceBlock|| block.isIn(Tags.Blocks.FENCES);
     }
 
     //should I become a knot
@@ -321,7 +320,7 @@ public class RopeBlock extends Block implements IWaterLoggable{
                     break;
                 }
             }
-            else if(isFence(b)) i = 0;
+            else if(CommonUtil.isPost(side)) i = 0;
         }
 
         return i;

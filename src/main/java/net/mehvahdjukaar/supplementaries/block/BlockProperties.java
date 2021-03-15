@@ -36,6 +36,7 @@ public class BlockProperties {
     public static final BooleanProperty FLIPPED = BooleanProperty.create("flipped");
 
     public enum RopeAttachment implements IStringSerializable{
+
         NONE("none"), //default /no attachment
         BLOCK("block"), //block attachment / pillar attachment
         //WALL("wall"), //wall attachment
@@ -84,7 +85,6 @@ public class BlockProperties {
         @Override
         public String getString() {
             return this.name;
-
         }
     }
     public enum Winding implements IStringSerializable{

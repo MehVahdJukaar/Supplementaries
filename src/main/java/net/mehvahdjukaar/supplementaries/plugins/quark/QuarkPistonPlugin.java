@@ -1,7 +1,10 @@
 package net.mehvahdjukaar.supplementaries.plugins.quark;
 
+
+import net.mehvahdjukaar.supplementaries.block.tiles.SignPostBlockTile;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.SignTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -18,9 +21,12 @@ public class QuarkPistonPlugin {
     //not really a plugin
     @Nullable
     public static TileEntity getMovingTile1(BlockPos pos, World world){
+
+
         //I could also reference these directly but I'm not sure if it would lead to some possible crashes
         try {
-            Class c = Class.forName("vazkii.quark.content.automation.module.PistonsMoveTileEntitiesModule");
+            //Class c = Class.forName("vazkii.quark.content.automation.module.PistonsMoveTileEntitiesModule");
+            Class c = PistonsMoveTileEntitiesModule.class;
             Method m = ObfuscationReflectionHelper.findMethod(c,"getMovement",World.class, BlockPos.class);
             Object o = m.invoke(null,world,pos);
             if(o instanceof TileEntity){
@@ -37,6 +43,7 @@ public class QuarkPistonPlugin {
     }
 
     public static boolean updateMovingTIle(BlockPos pos, World world, TileEntity tile) {
+
         try {
             //Class c = Class.forName("vazkii.quark.content.automation.module.PistonsMoveTileEntitiesModule");
             Class c = PistonsMoveTileEntitiesModule.class;

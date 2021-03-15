@@ -7,7 +7,7 @@
           "type": "supplementaries:flag"
         },
         {
-          "modid": "autumnity",
+          "modid": "byg",
           "type": "forge:mod_loaded"
         }
       ],
@@ -24,7 +24,7 @@
             "conditions": {
               "items": [
                 {
-                  "item": "autumnity:maple_planks"
+                  "item": "byg:maple_planks"
                 }
               ]
             }

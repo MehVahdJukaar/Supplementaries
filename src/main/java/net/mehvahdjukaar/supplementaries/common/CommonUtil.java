@@ -395,27 +395,4 @@ public class CommonUtil {
     }
 
 
-    public static void mm(BlockPos pos, Entity entity){
-        Block b = entity.world.getBlockState(pos).getBlock();
-        int a = 2;
-    }
-    public static void m2m(BlockPos pos, Entity entity){
-        Block b = entity.world.getBlockState(pos).getBlock();
-        int a = 2;
-    }
-    public static void m3m(int i){
-        int a = 2;
-    }
-    public static void m4m(int i){
-        int a = 2;
-    }
-    public static void m5m(BlockPos pos, Entity entity){
-        Block b = entity.world.getBlockState(pos).getBlock();
-        boolean flag = entity.world.getBlockState(pos).getBlock() instanceof FodderBlock;
-        int a = 2;
-    }
-    public static void m6m(boolean nn){
-
-        int a = 2;
-    }
 }

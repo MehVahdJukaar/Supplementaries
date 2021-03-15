@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.fluids.SoftFluidHolder;
 import net.mehvahdjukaar.supplementaries.fluids.SoftFluidList;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.*;
+import net.minecraft.entity.item.ExperienceOrbEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.inventory.IInventory;
@@ -150,7 +151,7 @@ public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
         BlockPos behind = this.pos.offset(dir.getOpposite());
         BlockState backState = this.world.getBlockState(behind);
         Block backBlock = backState.getBlock();
-
+        //TODO: optimize thiis
         if (this.hasFluidTankBelow()){
             if (backBlock instanceof BeehiveBlock && backState.get(BlockStateProperties.HONEY_LEVEL) > 0) {
                 if(tryFillingBlockBelow(SoftFluidList.HONEY)) {
@@ -182,7 +183,7 @@ public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
                         }
                     }
                     TileEntity tileDown = world.getTileEntity(pos.down());
-                    if (tileDown instanceof JarBlockTile) {
+                    if (tileDown instanceof JarBlockTile && ((IInventory) tileBack).isEmpty()) {
                         if(((JarBlockTile) tileBack).fluidHolder.tryTransferFluid(((JarBlockTile) tileDown).fluidHolder)){
                             tileBack.markDirty();
                             tileDown.markDirty();
@@ -209,8 +210,42 @@ public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
 
         }
 
+        else if(backBlock instanceof JarBlock){
+            TileEntity te = this.world.getTileEntity(behind);
+            if(te instanceof JarBlockTile){
+                if(((IInventory) te).isEmpty()) {
+                    SoftFluidHolder holder = ((JarBlockTile) te).fluidHolder;
+                    if (holder.canRemove(1)) {
+                        if (holder.getFluid() == SoftFluidList.XP) {
+                            ((JarBlockTile) te).fluidHolder.shrink(1);
+                            this.dropXP();
+                            te.markDirty();
+                            return true;
+                        }
+                        return false;
+                    }
+                }
+            }
+        }
         //pull other items
         return this.pullItems();
+    }
+
+    private void dropXP(){
+        int i = 3 + this.world.rand.nextInt(5) + this.world.rand.nextInt(5);
+
+        while(i > 0) {
+            int xp = ExperienceOrbEntity.getXPSplit(i);
+            i -= xp;
+            ExperienceOrbEntity orb = new ExperienceOrbEntity(this.world,this.pos.getX() + 0.5, this.pos.getY()-0.125f, this.pos.getZ() + 0.5, xp);
+            orb.setMotion(new Vector3d(0, 0, 0));
+            this.world.addEntity(orb);
+        }
+        //average xp bottle xp
+        //int xp = 7;
+        //this.world.addEntity(new ExperienceOrbEntity(this.world,this.pos.getX() + 0.5, this.pos.getY(), this.pos.getZ() + 0.5, xp));
+        float f = (this.rand.nextFloat() - 0.5f) / 4f;
+        this.world.playSound(null, this.pos, SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.BLOCKS, 0.3F, 0.5f + f);
     }
 
     public boolean isOpen() {
@@ -230,37 +265,14 @@ public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
         return !(inventoryIn instanceof ISidedInventory) || ((ISidedInventory) inventoryIn).canExtractItem(index, stack, side);
     }
 
-    private boolean addItemToJar(ItemStack itemstack) {
-        TileEntity tileentity = world.getTileEntity(this.pos.down());
-        if (tileentity instanceof JarBlockTile) {
-            JarBlockTile jartileentity = (JarBlockTile) tileentity;
-            if (jartileentity.isItemValidForSlot(0, itemstack)) {
-                ItemStack it = itemstack.copy();
-                itemstack.shrink(1);
-                //jartileentity.addItem(it, 1);
-                jartileentity.markDirty();
-                return true;
-            }
-        }
-        return false;
-    }
-
     private boolean pullItemFromSlot(IInventory inventoryIn, int index, Direction direction) {
         ItemStack itemstack = inventoryIn.getStackInSlot(index);
-        BlockPos backpos = this.pos.offset(this.getBlockState().get(HorizontalBlock.HORIZONTAL_FACING), -1);
         // special case for jars. has to be done to prevent other hoppers
         // frominteracting with them cause canextractitems is always false
         if (this.hasFluidTankBelow()) {
-            // can only transfer from jar to jar
-            if (world.getBlockState(backpos).getBlock() instanceof JarBlock && !itemstack.isEmpty()) {
-                if (this.addItemToJar(itemstack)) {
-                    inventoryIn.markDirty();
-                    return true;
-                }
-            }
-            //TODO: add xp, pancakes & others
             return false;
-        } else if (!itemstack.isEmpty() && canExtractItemFromSlot(inventoryIn, itemstack, index, direction)) {
+        }
+        else if (!itemstack.isEmpty() && canExtractItemFromSlot(inventoryIn, itemstack, index, direction)) {
             ItemStack it = itemstack.copy();
             itemstack.shrink(1);
             inventoryIn.markDirty();

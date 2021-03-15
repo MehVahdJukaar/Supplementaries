@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
-import net.mehvahdjukaar.supplementaries.block.tiles.SackBlockTile;
 import net.mehvahdjukaar.supplementaries.block.tiles.StatuetteBlockTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

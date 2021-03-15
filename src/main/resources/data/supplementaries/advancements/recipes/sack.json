@@ -11,7 +11,7 @@
       "conditions": {
         "items": [
           {
-            "item": "minecraft:wheat"
+            "item": "supplementaries:flax"
           }
         ]
       }

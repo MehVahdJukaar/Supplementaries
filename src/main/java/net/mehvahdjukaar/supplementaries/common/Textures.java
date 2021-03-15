@@ -61,6 +61,8 @@ public class Textures {
     public static final ResourceLocation HOURGLASS_SUGAR = new ResourceLocation(MOD_ID, "blocks/hourglass_sugar");
     public static final ResourceLocation HOURGLASS_BLAZE = new ResourceLocation(MOD_ID, "blocks/hourglass_blaze");
     public static final ResourceLocation HOURGLASS_GUNPOWDER = new ResourceLocation(MOD_ID, "blocks/hourglass_gunpowder");
+    public static final ResourceLocation MAGMA_TEXTURE = new ResourceLocation(MOD_ID, "blocks/magma_still");
+    public static final ResourceLocation MAGMA_TEXTURE_FLOW = new ResourceLocation(MOD_ID, "blocks/magma_flow");
 
     //entities
     public static final ResourceLocation BLACKBOARD_TEXTURE = new ResourceLocation(MOD_ID,"textures/entity/blackboard.png");
@@ -99,7 +101,7 @@ public class Textures {
     //TODO: rethink this
     public static List<ResourceLocation> getBlockTextures() {
         return new ArrayList<>(Arrays.asList(
-                MILK_TEXTURE, POTION_TEXTURE, POTION_TEXTURE_FLOW, HONEY_TEXTURE, DRAGON_BREATH_TEXTURE, SOUP_TEXTURE,
+                MILK_TEXTURE, POTION_TEXTURE, POTION_TEXTURE_FLOW, HONEY_TEXTURE, DRAGON_BREATH_TEXTURE, SOUP_TEXTURE,MAGMA_TEXTURE,MAGMA_TEXTURE_FLOW,
                 XP_TEXTURE, XP_TEXTURE_FLOW, FISHIES_TEXTURE, BELLOWS_TEXTURE, LASER_BEAM_TEXTURE, LASER_BEAM_END_TEXTURE,LASER_OVERLAY_TEXTURE,
                 CLOCK_HAND_TEXTURE, HOURGLASS_REDSTONE, HOURGLASS_GLOWSTONE, HOURGLASS_SUGAR, HOURGLASS_BLAZE, HOURGLASS_GUNPOWDER));
     }

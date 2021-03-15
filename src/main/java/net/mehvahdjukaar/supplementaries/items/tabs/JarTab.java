@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.items.tabs;
 import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.CapturedMobs;
 import net.mehvahdjukaar.supplementaries.block.util.MobHolder;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.fluids.SoftFluid;
 import net.mehvahdjukaar.supplementaries.fluids.SoftFluidHolder;
 import net.mehvahdjukaar.supplementaries.fluids.SoftFluidList;

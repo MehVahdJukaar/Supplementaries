@@ -389,13 +389,6 @@ public class SafeBlock extends Block implements IWaterLoggable{
     }
 
     @Override
-    public boolean eventReceived(BlockState state, World worldIn, BlockPos pos, int id, int param) {
-        super.eventReceived(state, worldIn, pos, id, param);
-        TileEntity tileentity = worldIn.getTileEntity(pos);
-        return tileentity != null && tileentity.receiveClientEvent(id, param);
-    }
-
-    @Override
     public INamedContainerProvider getContainer(BlockState state, World worldIn, BlockPos pos) {
         TileEntity tileentity = worldIn.getTileEntity(pos);
         return tileentity instanceof INamedContainerProvider ? (INamedContainerProvider)tileentity : null;

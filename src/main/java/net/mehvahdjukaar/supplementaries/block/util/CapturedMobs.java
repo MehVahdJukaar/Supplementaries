@@ -7,7 +7,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.*;
@@ -157,7 +156,7 @@ public class CapturedMobs {
 
     public static void refresh(){
         TYPES.clear();
-        List<? extends List<String>> config = ClientConfigs.block.CAPTURED_MOBS.get();
+        List<? extends List<String>> config = ClientConfigs.block.CAPTURED_MOBS_PROPERTIES.get();
         for (List<String> l : config){
             int size = l.size();
             if(size<2)continue;

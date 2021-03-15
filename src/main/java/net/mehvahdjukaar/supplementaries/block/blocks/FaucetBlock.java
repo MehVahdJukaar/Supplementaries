@@ -3,16 +3,15 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.FaucetBlockTile;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ConcretePowderBlock;
-import net.minecraft.block.IWaterLoggable;
+import net.minecraft.block.*;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.GlassBottleItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUseContext;
 import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
@@ -107,16 +106,19 @@ public class FaucetBlock extends Block implements IWaterLoggable{
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
                                              BlockRayTraceResult hit) {
+        //TODO: add item activated method for bottles
         boolean enabled = state.get(ENABLED);
-        if(hit.getHitVec().y%1<=0.4375) {
-            if (enabled && state.get(HAS_WATER) && !state.get(HAS_JAR)) {
+        if(!state.get(HAS_JAR)&&hit.getHitVec().y%1<=0.4375) {
+            if (enabled && state.get(HAS_WATER)) {
                 Direction dir = state.get(FACING);
                 BlockPos backPos = pos.offset(dir.getOpposite());
                 BlockState backState = worldIn.getBlockState(backPos);
-                return backState.onBlockActivated(worldIn, player, handIn, new BlockRayTraceResult(
-                        new Vector3d(backPos.getX() + 0.5, backPos.getY() + 0.5, backPos.getZ() + 0.5),
-                        dir, backPos, false));
-
+                BlockRayTraceResult rayTraceResult = new BlockRayTraceResult(new Vector3d(backPos.getX() + 0.5,
+                        backPos.getY() + 0.5, backPos.getZ() + 0.5), dir, backPos, false);
+                ActionResultType blockResult = backState.onBlockActivated(worldIn, player, handIn, rayTraceResult);
+                if(blockResult.isSuccessOrConsume())return blockResult;
+                ActionResultType itemResult = player.getHeldItem(handIn).getItem().onItemUse(new ItemUseContext(player, handIn, rayTraceResult));
+                if(itemResult.isSuccessOrConsume())return itemResult;
             }
             return ActionResultType.func_233537_a_(worldIn.isRemote);
         }
@@ -273,11 +275,5 @@ public class FaucetBlock extends Block implements IWaterLoggable{
         return new FaucetBlockTile();
     }
 
-    @Override
-    public boolean eventReceived(BlockState state, World world, BlockPos pos, int eventID, int eventParam) {
-        super.eventReceived(state, world, pos, eventID, eventParam);
-        TileEntity tileentity = world.getTileEntity(pos);
-        return tileentity != null && tileentity.receiveClientEvent(eventID, eventParam);
-    }
 }
 

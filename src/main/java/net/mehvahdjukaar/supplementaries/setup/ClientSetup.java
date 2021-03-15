@@ -8,22 +8,32 @@ import net.mehvahdjukaar.supplementaries.client.particles.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.FluidColors;
 import net.mehvahdjukaar.supplementaries.client.renderers.TippedSpikesColor;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.FireflyEntityRenderer;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.MashlingEntityRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.RopeArrowRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.entities.FireflyEntity;
+import net.mehvahdjukaar.supplementaries.entities.MashlingEntity;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.particle.FlameParticle;
 import net.minecraft.client.renderer.Atlases;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.client.renderer.color.IBlockColor;
+import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.entity.SpriteRenderer;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.entity.EntityType;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockDisplayReader;
+import net.minecraft.world.biome.BiomeColors;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
@@ -56,6 +66,8 @@ public class ClientSetup {
 
 
     public static void init(final FMLClientSetupEvent event) {
+
+        RenderingRegistry.registerEntityRenderingHandler((EntityType<MashlingEntity>) Registry.POTAT_TYPE, MashlingEntityRenderer::new);
 
         //falling block tile entity
         //RenderingRegistry.registerEntityRenderingHandler( (EntityType<FallingBlockTileEntity>) Registry.FALLING_BLOCK_TILE_ENTITY.get(),
@@ -175,6 +187,8 @@ public class ClientSetup {
         RenderTypeLookup.setRenderLayer(Registry.FLAX_POT.get(), RenderType.getCutout());
         //pulley
         ScreenManager.registerFactory(Registry.PULLEY_BLOCK_CONTAINER.get(), PulleyBlockGui::new);
+        //boat
+        RenderTypeLookup.setRenderLayer(Registry.JAR_BOAT.get(), RenderType.getTranslucent());
     }
 
     //particles
@@ -196,11 +210,27 @@ public class ClientSetup {
     @SubscribeEvent
     public static void registerBlockColors(ColorHandlerEvent.Block event){
         event.getBlockColors().register(new TippedSpikesColor(), Registry.BAMBOO_SPIKES.get());
+        event.getBlockColors().register(new defWater(), Registry.JAR_BOAT.get());
+
     }
 
     @SubscribeEvent
     public static void registerItemColors(ColorHandlerEvent.Item event){
         event.getItemColors().register(new TippedSpikesColor(), Registry.BAMBOO_SPIKES_TIPPED_ITEM.get());
+        event.getItemColors().register(new defWater(), Registry.JAR_BOAT_ITEM.get());
+    }
+
+    private static class defWater implements IItemColor, IBlockColor {
+
+        @Override
+        public int getColor(ItemStack stack, int color) {
+            return 0x3F76E4;
+        }
+
+        @Override
+        public int getColor(BlockState state, IBlockDisplayReader reader, BlockPos pos, int color) {
+            return reader != null && pos != null ? BiomeColors.getWaterColor(reader, pos) : -1;
+        }
     }
 
     //textures

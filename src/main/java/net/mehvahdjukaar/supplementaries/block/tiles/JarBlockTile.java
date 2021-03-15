@@ -237,7 +237,7 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
 
     @Override
     public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
-        return CommonUtil.isCookie(stack.getItem());
+        return true;
     }
 
     public Direction getDirection() {

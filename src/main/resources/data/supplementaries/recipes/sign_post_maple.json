@@ -8,21 +8,29 @@
           "type": "supplementaries:flag"
         },
         {
-          "modid": "autumnity",
+          "modid": "byg",
           "type": "forge:mod_loaded"
         }
       ],
       "recipe": {
-        "type": "minecraft:crafting_shapeless",
+        "type": "minecraft:crafting_shaped",
         "group": "sign_post",
-        "ingredients": [
-          {
-            "item": "autumnity:maple_sign"
-          }
+        "pattern": [
+          "   ",
+          "222",
+          " 1 "
         ],
+        "key": {
+          "1": {
+            "item": "minecraft:stick"
+          },
+          "2": {
+            "item": "byg:maple_planks"
+          }
+        },
         "result": {
           "item": "supplementaries:sign_post_maple",
-          "count": 2
+          "count": 3
         }
       }
     }

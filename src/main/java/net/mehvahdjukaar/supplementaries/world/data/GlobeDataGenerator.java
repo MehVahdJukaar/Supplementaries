@@ -1,11 +1,13 @@
 package net.mehvahdjukaar.supplementaries.world.data;
 
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.util.math.MathHelper;
 
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Random;
+import java.awt.*;
+import java.util.*;
+import java.util.List;
 
 public class GlobeDataGenerator {
     //object instance
@@ -15,10 +17,12 @@ public class GlobeDataGenerator {
     public static final int HEIGHT = SIDE*2;
     public static final int SCALE = 20;
 
+    //might make this an array
+    public static final HashMap<String,HashMap<Byte,Integer>> dimensionColorMap = new HashMap<>();
     public static final HashMap<Byte,Integer> colorMap = new HashMap<>();
 
-    public Random rand = new Random(1);
-    public Pixel[][] pixels = new Pixel[WIDTH][HEIGHT];
+    public static Random RAND = new Random(1);
+    public static Pixel[][] pixels = new Pixel[WIDTH][HEIGHT];
 
     public enum Biome{
         TEMPERATE,HOT,COLD,MUSHROOM,MOUNTAIN,MESA
@@ -36,25 +40,82 @@ public class GlobeDataGenerator {
         F1,F2,F3,F4,TOP,BOT,NA
     }
 
-    public GlobeDataGenerator(){
+    //TODO: merge these two
+    static{
         colorMap.put(Col.BLACK,0); //black
         colorMap.put(Col.WATER,0x23658d);
+
         colorMap.put(Col.WATER_S,0x25527d);
+
         colorMap.put(Col.WATER_D,0x1d396d);
+
         colorMap.put(Col.SUNKEN,0x2d8a5c);
+
         colorMap.put(Col.GREEN,0x34a03a);
+
         colorMap.put(Col.GREEN_S,0x6ea14b);
+
         colorMap.put(Col.HOT_S,0x89a83d);
+
         colorMap.put(Col.HOT,0xb5ba65);
+
         colorMap.put(Col.COLD,0xccd7d5);
+
         colorMap.put(Col.COLD_S,0x83b4c6);
+
         colorMap.put(Col.ICEBERG,0x2f83a2);
+
         colorMap.put(Col.MUSHROOM,0x826e71);
+
         colorMap.put(Col.MUSHROOM_S,0x8e8675);
+
+        //TODO: finish this
+        colorMap.put(Col.TAIGA,0x2d8a5c);
+
+
         colorMap.put(Col.MESA,0xc28947);
+
         colorMap.put(Col.MESA_S,0xba9f65);
+
         colorMap.put(Col.MOUNTAIN,0xba9f65);
+
         colorMap.put(Col.MOUNTAIN_S,0x769169);
+
+
+    }
+
+    public static List<List<String>> getDefaultConfig(){
+        List<List<String>> l = new ArrayList<>();
+        List<String> col = new ArrayList<>();
+        col.add("minecraft:overworld");
+        for(int i = 1; i<13; i++) {
+            col.add(Integer.toHexString(colorMap.get((byte)i)));
+        }
+        l.add(col);
+        return l;
+    }
+
+
+    public static void refreshColorsFromConfig(){
+        dimensionColorMap.clear();
+        List<? extends List<String>> customColors = ClientConfigs.block.GLOBE_COLORS.get();
+        for(List<String> l: customColors){
+            if(l.size()>=13){
+                String id = l.get(0);
+                HashMap<Byte, Integer> col = new HashMap<>();
+                for(int i = 1; i<13; i++) {
+                    int hex;
+                    try{
+                        hex = Integer.parseInt(l.get(i), 16);
+                    }catch(Exception e){
+                        Supplementaries.LOGGER.warn("failed to parse config 'globe_colors' (at dimension"+id+")");
+                        continue;
+                    }
+                    col.put((byte)i, hex);
+                }
+                dimensionColorMap.put(id,col);
+            }
+        }
     }
 
     public static class Col{
@@ -72,15 +133,18 @@ public class GlobeDataGenerator {
         public static final byte ICEBERG = 11;
         public static final byte MUSHROOM = 12;
         public static final byte MUSHROOM_S = 13;
-        public static final byte MESA = 14;
-        public static final byte MESA_S = 15;
-        public static final byte MOUNTAIN = 16;
-        public static final byte MOUNTAIN_S = 17;
+        public static final byte TAIGA = 14;
+
+
+        public static final byte MESA = 15;
+        public static final byte MESA_S = 16;
+        public static final byte MOUNTAIN = 17;
+        public static final byte MOUNTAIN_S = 18;
 
     }
 
-    public static int getRGB(byte b){
-        return colorMap.get(b);
+    public static int getRGB(byte b, String dimension){
+        return dimensionColorMap.getOrDefault(dimension,colorMap).getOrDefault(b,0);
     }
 
     public static class Pos{
@@ -183,7 +247,7 @@ public class GlobeDataGenerator {
         }
     }
 
-    public Pixel pfp(Pos p){
+    public static Pixel pfp(Pos p){
         return pixels[p.x][p.y];
     }
 
@@ -191,8 +255,8 @@ public class GlobeDataGenerator {
         return  MathHelper.sqrt(Math.pow((x-x1),2)+Math.pow((y-y1),2));
     }
 
-    public byte[][] generate(long seed){
-        this.rand = new Random(seed);
+    public static byte[][] generate(long seed){
+        RAND = new Random(seed);
         pixels = new Pixel[WIDTH][HEIGHT];
         for (int x=0; x< pixels.length; x++){
             for (int y=0; y< pixels[x].length; y++){
@@ -204,7 +268,7 @@ public class GlobeDataGenerator {
         return getByteMatrix();
     }
 
-    public byte[][] getByteMatrix(){
+    public static byte[][] getByteMatrix(){
         byte[][] matrix = {{0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 3, 2, 2, 2, 3, 3},
                 {0, 0, 0, 0, 0, 0, 0, 0, 3, 2, 2, 1, 1, 1, 2, 3},
                 {0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 1, 1, 1, 1, 1, 2},
@@ -366,7 +430,7 @@ public class GlobeDataGenerator {
 
 
 
-    public void applyEffects(){
+    public static void applyEffects(){
         shadeWater();
         generateIce();
         //if(genHot)generateHot();
@@ -380,7 +444,6 @@ public class GlobeDataGenerator {
         generateMushrooms();
         generateIcebergs2();
 
-        Calendar calendar = Calendar.getInstance();
         if(CommonUtil.FESTIVITY.isChristmas()){
            christmas();
         }
@@ -389,7 +452,7 @@ public class GlobeDataGenerator {
         }
     }
 
-    public void meltice(){
+    public static void meltice(){
         for (Pixel[] pixel : pixels) {
             for (Pixel value : pixel) {
                 if(value.biome==Biome.COLD){
@@ -411,7 +474,7 @@ public class GlobeDataGenerator {
         }
     }
 
-    public void christmas(){
+    public static void christmas(){
         for (Pixel[] pixel : pixels) {
             for (Pixel value : pixel) {
                 value.biome = Biome.COLD;
@@ -422,20 +485,20 @@ public class GlobeDataGenerator {
         }
     }
 
-    public void generateMushrooms(){
+    public static void generateMushrooms(){
         //sides
         int min = 0;
         int additional = 3;
 
-        int count = min + rand.nextInt(additional);
+        int count = min + RAND.nextInt(additional);
         int c=0;
         while (c < count) {
-            int x = rand.nextInt(WIDTH);
-            int y = SIDE + rand.nextInt(SIDE);
+            int x = RAND.nextInt(WIDTH);
+            int y = SIDE + RAND.nextInt(SIDE);
 
 
             float p = pixels[x][y].isWater()? 0.9f:0.1f;
-            if (rand.nextFloat()<p){
+            if (RAND.nextFloat()<p){
                 c++;
                 pixels[x][y].specialFeature =Feature.MUSHROOM;
             }
@@ -449,24 +512,24 @@ public class GlobeDataGenerator {
                 Pos pos = new Pos(x, y);
                 Pixel pixel = pfp(pos);
 
-                if (pixel.isWater() && rand.nextFloat()<0.005) {
+                if (pixel.isWater() && RAND.nextFloat()<0.005) {
                     pixels[x][y].specialFeature = Feature.ICEBERG;
                 }
             }
         }
 
     }
-    public void generateIcebergs2(){
+    public static void generateIcebergs2(){
         //sides
         int min = 1;
         int additional = 3;
 
-        int count = min + rand.nextInt(additional);
+        int count = min + RAND.nextInt(additional);
         int c=0;
         int tries=0;
         while (c < count && tries<1000) {
-            int x = rand.nextInt(WIDTH);
-            int y = SIDE + rand.nextInt(SIDE);
+            int x = RAND.nextInt(WIDTH);
+            int y = SIDE + RAND.nextInt(SIDE);
             Pos p = new Pos(x,y);
             if (pixels[x][y].isWater()&&pfp(p.up()).isWater()&&pfp(p.down()).isWater()
                     &&pfp(p.left()).isWater()&&pfp(p.right()).isWater()){
@@ -480,20 +543,20 @@ public class GlobeDataGenerator {
 
 
 
-    public void generateHotBiomes(){
+    public static void generateHotBiomes(){
         //sides
         int min = 6;
         int additional = 4;
 
-        int count = min + rand.nextInt(additional);
+        int count = min + RAND.nextInt(additional);
         int c=0;
         try {
             while (c < count) {
-                int x = rand.nextInt(WIDTH);
-                int y = SIDE + rand.nextInt(SIDE);
-                double k = rand.nextFloat();
+                int x = RAND.nextInt(WIDTH);
+                int y = SIDE + RAND.nextInt(SIDE);
+                double k = RAND.nextFloat();
                 double p = 0.5 * Math.sin((y - k) * 2 * Math.PI / 4d) + 0.3;
-                if (rand.nextFloat() < p && pixels[x][y].isLand()) {
+                if (RAND.nextFloat() < p && pixels[x][y].isLand()) {
                     c++;
                     setHotBiome(new Pos(x, y), 8);
                 }
@@ -505,11 +568,11 @@ public class GlobeDataGenerator {
         }
     }
 
-    public void setHotBiome(Pos p, int dist){
+    public static void setHotBiome(Pos p, int dist){
         int x = p.x;
         int y = p.y;
         if(dist<0||pixels[x][y].isHot())return;
-        int d = dist - this.rand.nextInt(10);
+        int d = dist - RAND.nextInt(10);
         pixels[x][y].biome=Biome.HOT;
         setHotBiome(p.up(),d-2);
         setHotBiome(p.down(),d-2);
@@ -521,9 +584,9 @@ public class GlobeDataGenerator {
         int min = 6;
         int additional = 4;
         int c = 0;
-        int count = min + rand.nextInt(additional);
+        int count = min + RAND.nextInt(additional);
         while(c<0){
-            float chance = rand.nextFloat();
+            float chance = RAND.nextFloat();
             if(chance <0.5){
                 if(this.doGenHot())c++;
             }
@@ -540,11 +603,11 @@ public class GlobeDataGenerator {
     }
 
     public boolean doGenHot(){
-        int x = rand.nextInt(WIDTH);
-        int y = SIDE + rand.nextInt(SIDE);
-        double k = rand.nextFloat();
+        int x = RAND.nextInt(WIDTH);
+        int y = SIDE + RAND.nextInt(SIDE);
+        double k = RAND.nextFloat();
         double p = 0.5 * Math.sin((y - k) * 2 * Math.PI / 4d) + 0.3;
-        if (rand.nextFloat() < p && pixels[x][y].isLand()) {
+        if (RAND.nextFloat() < p && pixels[x][y].isLand()) {
             setHotBiome(new Pos(x, y), 8);
             return true;
         }
@@ -555,11 +618,11 @@ public class GlobeDataGenerator {
 
 
     public void generateHot() {
-        int j = 4 +rand.nextInt(2);
+        int j = 4 + RAND.nextInt(2);
         Pos[] list = new Pos[j];
 
         for(int i = 0; i<j; i++){
-            list[i]=new Pos(rand.nextInt(WIDTH),SIDE+rand.nextInt(SIDE));
+            list[i]=new Pos(RAND.nextInt(WIDTH),SIDE+ RAND.nextInt(SIDE));
         }
 
         for (int x=0; x< pixels.length; x++) {
@@ -570,13 +633,13 @@ public class GlobeDataGenerator {
                     boolean flag= false;
                     for(int m = 0; m<j; m++) {
                         Pos k = list[m];
-                        if (dist(k.x, k.y, x, y) < (2+rand.nextInt(2))) flag = true;
+                        if (dist(k.x, k.y, x, y) < (2+ RAND.nextInt(2))) flag = true;
                     }
 
                     if(flag)continue;
-                    double k = rand.nextFloat();
+                    double k = RAND.nextFloat();
                     double p = 0.5*Math.sin((y -k) * 2 * Math.PI / 4d) + 0.3;
-                    if (rand.nextFloat() < p) {
+                    if (RAND.nextFloat() < p) {
                         pixels[x][y].biome = Biome.HOT;
                     }
                 }
@@ -584,7 +647,7 @@ public class GlobeDataGenerator {
         }
     }
 
-    public void shadeCold(){
+    public static void shadeCold(){
         for (int x=0; x< pixels.length; x++) {
             for (int y = 0; y < pixels[x].length; y++) {
                 Pos pos = new Pos(x, y);
@@ -603,13 +666,13 @@ public class GlobeDataGenerator {
                     if(pfp(pos.right()).isTemperate()){
                         p+=0.15;
                     }
-                    if(rand.nextFloat()<p)pixels[x][y].shaded=true;
+                    if(RAND.nextFloat()<p)pixels[x][y].shaded=true;
                 }
             }
         }
     }
 
-    public void shadeHot(){
+    public static void shadeHot(){
         for (int x=0; x< pixels.length; x++) {
             for (int y = 0; y < pixels[x].length; y++) {
                 Pos pos = new Pos(x, y);
@@ -629,13 +692,13 @@ public class GlobeDataGenerator {
                     if(pfp(pos.left()).isTemperate()){
                         p+= pfp(pos.left()).isShaded()?0.19 : 0.35;
                     }
-                    if(rand.nextFloat()<p)pixels[x][y].shaded=true;
+                    if(RAND.nextFloat()<p)pixels[x][y].shaded=true;
                 }
             }
         }
     }
 
-    public void shadeTemperateHot(){
+    public static void shadeTemperateHot(){
         for (int x=0; x< pixels.length; x++) {
             for (int y = 0; y < pixels[x].length; y++) {
                 Pos pos = new Pos(x, y);
@@ -654,13 +717,13 @@ public class GlobeDataGenerator {
                     if(pfp(pos.right()).isHot()){
                         p+=0.25;
                     }
-                    if(rand.nextFloat()<p)pixels[x][y].shaded=true;
+                    if(RAND.nextFloat()<p)pixels[x][y].shaded=true;
                 }
             }
         }
     }
 
-    public void shadeTemperateCold(){
+    public static void shadeTemperateCold(){
         for (int x=0; x< pixels.length; x++) {
             for (int y = 0; y < pixels[x].length; y++) {
                 Pos pos = new Pos(x, y);
@@ -679,14 +742,14 @@ public class GlobeDataGenerator {
                     if(pfp(pos.right()).isCold()){
                         p+=0.25;
                     }
-                    if(rand.nextFloat()<p)pixels[x][y].specialFeature =Feature.SUNKEN;
+                    if(RAND.nextFloat()<p)pixels[x][y].specialFeature =Feature.SUNKEN;
                 }
             }
         }
     }
 
 
-    public void generateIce(){
+    public static void generateIce(){
         for (int x=0; x< pixels.length; x++) {
             for (int y = 0; y < pixels[x].length; y++) {
                 Pos pos = new Pos(x,y);
@@ -694,10 +757,10 @@ public class GlobeDataGenerator {
 
                 boolean flag = false;
                 double d = dist(x+0.5,y+0.5,12, 4);
-                if(rand.nextFloat()>((d-0.8)/2))flag=true;
+                if(RAND.nextFloat()>((d-0.8)/2))flag=true;
 
                 double d2 = dist(x+0.5,y+0.5,20, 4);
-                if(rand.nextFloat()>((d2-0.8)/2))flag=true;
+                if(RAND.nextFloat()>((d2-0.8)/2))flag=true;
 
                 if(flag){
                     pixels[x][y].biome=Biome.COLD;
@@ -709,12 +772,12 @@ public class GlobeDataGenerator {
         }
     }
 
-    public void averageOut(){
+    public static void averageOut(){
         for (int x=0; x< pixels.length; x++) {
             for (int y = 0; y < pixels[x].length; y++) {
                 Pos pos = new Pos(x, y);
                 Pixel pixel = pfp(pos);
-                if (y >= SIDE && pixel.isLand() && rand.nextFloat()>0.8) {
+                if (y >= SIDE && pixel.isLand() && RAND.nextFloat()>0.8) {
                     int t = 0;
                     t+=pfp(pos.up()).getTemp();
                     t+=pfp(pos.down()).getTemp();
@@ -732,7 +795,7 @@ public class GlobeDataGenerator {
         }
     }
 
-    public void setTemperature(int x, int y, int t){
+    public static void setTemperature(int x, int y, int t){
         if(t<2) {
             pixels[x][y].biome=Biome.TEMPERATE;
             pixels[x][y].shaded = (t%2) !=0;
@@ -745,7 +808,7 @@ public class GlobeDataGenerator {
     }
 
 
-    public void shadeWater(){
+    public static void shadeWater(){
         for (int x=0; x< pixels.length; x++) {
             for (int y = 0; y < pixels[x].length; y++) {
                 Pos pos = new Pos(x,y);
@@ -758,7 +821,7 @@ public class GlobeDataGenerator {
         }
     }
 
-    public void coastEffects(){
+    public static void coastEffects(){
         for (int x=0; x< pixels.length; x++) {
             for (int y = 0; y < pixels[x].length; y++) {
                 Pos pos = new Pos(x,y);
@@ -766,36 +829,36 @@ public class GlobeDataGenerator {
                 if(pixel.isLand() && (pfp(pos.right()).isWater() ||
                         pfp(pos.up()).isWater() ||
                         pfp(pos.down()).isWater() ||
-                        pfp(pos.left()).isWater()) && rand.nextFloat()>0.7){
+                        pfp(pos.left()).isWater()) && RAND.nextFloat()>0.7){
                     pixels[x][y].specialFeature = pixel.biome!=Biome.COLD ? Feature.SUNKEN : Feature.ICEBERG;
                 }
             }
         }
     }
 
-    public void generateLand(){
+    public static void generateLand(){
         //sides
         int min = 10;
         int additional = 18;
 
-        int count = min + this.rand.nextInt(additional);
+        int count = min + RAND.nextInt(additional);
         for (int i = 0; i<count; i++){
-            int x = this.rand.nextInt(WIDTH);
-            int y = this.rand.nextInt(HEIGHT);
+            int x = RAND.nextInt(WIDTH);
+            int y = RAND.nextInt(HEIGHT);
             setLand(new Pos(x,y),10);
         }
     }
 
-    public void setLand(Pos p, int dist){
+    public static void setLand(Pos p, int dist){
         int x = p.x;
         int y = p.y;
         if(dist<0||pixels[x][y].isLand())return;
         //int d = dist - this.rand.nextInt(10);
         pixels[x][y].setLand();
-        setLand(p.up(),dist - rand.nextInt(10));
-        setLand(p.down(),dist - rand.nextInt(10));
-        setLand(p.left(),dist - rand.nextInt(10));
-        setLand(p.right(),dist - rand.nextInt(10));
+        setLand(p.up(),dist - RAND.nextInt(10));
+        setLand(p.down(),dist - RAND.nextInt(10));
+        setLand(p.left(),dist - RAND.nextInt(10));
+        setLand(p.right(),dist - RAND.nextInt(10));
         //TODO: apply this fix to other gens
     }
 

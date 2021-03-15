@@ -1,0 +1,7 @@
+{
+  "parent": "supplementaries:item/hanging_sign_template",
+  "textures": {
+    "0": "supplementaries:blocks/hanging_signs/premium_wood/hanging_sign_front_silverbell_pw",
+    "2": "supplementaries:blocks/hanging_signs/premium_wood/hanging_sign_details_silverbell_pw"
+  }
+}

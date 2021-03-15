@@ -16,7 +16,8 @@
         "PistonMixin",
         "RopeLivingEntityMixin",
         "EatGrassGoalMixin",
-        "ChickenMixin"
+        "ChickenEntityAccessor"
+
 
     ],
     "client": [

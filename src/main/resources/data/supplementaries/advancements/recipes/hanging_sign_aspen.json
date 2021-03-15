@@ -7,7 +7,7 @@
           "type": "supplementaries:flag"
         },
         {
-          "modid": "atmospheric",
+          "modid": "byg",
           "type": "forge:mod_loaded"
         }
       ],
@@ -24,7 +24,7 @@
             "conditions": {
               "items": [
                 {
-                  "item": "atmospheric:aspen_planks"
+                  "item": "byg:aspen_planks"
                 }
               ]
             }

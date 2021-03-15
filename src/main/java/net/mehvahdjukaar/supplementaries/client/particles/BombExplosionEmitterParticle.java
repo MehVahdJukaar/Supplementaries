@@ -1,7 +1,9 @@
 package net.mehvahdjukaar.supplementaries.client.particles;
 
 import net.mehvahdjukaar.supplementaries.setup.Registry;
-import net.minecraft.client.particle.*;
+import net.minecraft.client.particle.IParticleFactory;
+import net.minecraft.client.particle.MetaParticle;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particles.BasicParticleType;
 import net.minecraftforge.api.distmarker.Dist;

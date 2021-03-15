@@ -42,7 +42,7 @@ public class BellowsBlock extends Block {
 
     @Override
     public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.INVISIBLE;
+        return BlockRenderType.ENTITYBLOCK_ANIMATED;
     }
 
     @Override
@@ -87,7 +87,6 @@ public class BellowsBlock extends Block {
     @Override
     public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         this.updatePower(state, world, pos);
-
     }
 
     public void updatePower(BlockState state, World world, BlockPos pos) {
@@ -118,19 +117,11 @@ public class BellowsBlock extends Block {
     }
 
     @Override
-    public boolean eventReceived(BlockState state, World world, BlockPos pos, int eventID, int eventParam) {
-        super.eventReceived(state, world, pos, eventID, eventParam);
-        TileEntity tileentity = world.getTileEntity(pos);
-        return tileentity != null && tileentity.receiveClientEvent(eventID, eventParam);
-    }
-
-    @Override
     public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
         super.onEntityCollision(state, worldIn, pos, entityIn);
         TileEntity te = worldIn.getTileEntity(pos);
         if(te instanceof BellowsBlockTile)((BellowsBlockTile) te).onSteppedOn(entityIn);
     }
-
 
     @Override
     public void onEntityWalk(World worldIn, BlockPos pos, Entity entityIn) {

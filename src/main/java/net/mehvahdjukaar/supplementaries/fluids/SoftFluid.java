@@ -230,21 +230,22 @@ public class SoftFluid {
             //TODO: figure out particleColor
         }
         public Builder(String fluidRes) {
-            Fluid fluid = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(fluidRes));
-            if(fluid!=null && fluid!=Fluids.EMPTY) {
-                FluidAttributes att = fluid.getAttributes();
-                this.stillTexture = att.getStillTexture();
-                this.flowingTexture = att.getFlowingTexture();
-                this.color(att.getColor());
-                this.bucket(fluid.getFilledBucket());
-                this.luminosity = att.getLuminosity();
-                this.translationKey = att.getTranslationKey();
-                this.addEqFluid(fluid);
-                this.id = fluid.getRegistryName().toString();
+            if(ForgeRegistries.FLUIDS.containsKey(new ResourceLocation(fluidRes))) {
+                Fluid fluid = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(fluidRes));
+                if (fluid != null && fluid != Fluids.EMPTY) {
+                    FluidAttributes att = fluid.getAttributes();
+                    this.stillTexture = att.getStillTexture();
+                    this.flowingTexture = att.getFlowingTexture();
+                    this.color(att.getColor());
+                    this.bucket(fluid.getFilledBucket());
+                    this.luminosity = att.getLuminosity();
+                    this.translationKey = att.getTranslationKey();
+                    this.addEqFluid(fluid);
+                    this.id = fluid.getRegistryName().toString();
+                }
+                else this.isDisabled=true;
             }
-            else{
-                this.isDisabled=true;
-            }
+            else this.isDisabled=true;
         }
         public final Builder textures(ResourceLocation still, ResourceLocation flow) {
             this.stillTexture = still;
@@ -265,11 +266,13 @@ public class SoftFluid {
             return this;
         }
         public final Builder addEqFluid(ResourceLocation fluidRes) {
-            Fluid f = ForgeRegistries.FLUIDS.getValue(fluidRes);
-            if(f!=null && f!=Fluids.EMPTY) {
-                this.equivalentFluids.add(f);
-                Item i = f.getFilledBucket();
-                if(i != null && i != Items.AIR)this.bucket(i);
+            if(ForgeRegistries.FLUIDS.containsKey(fluidRes)) {
+                Fluid f = ForgeRegistries.FLUIDS.getValue(fluidRes);
+                if (f != null && f != Fluids.EMPTY) {
+                    this.equivalentFluids.add(f);
+                    Item i = f.getFilledBucket();
+                    if (i != null && i != Items.AIR) this.bucket(i);
+                }
             }
             return this;
         }
@@ -282,10 +285,12 @@ public class SoftFluid {
             return this;
         }
         public final Builder textureOverrideF(String fluidRes){
-            Fluid f = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(fluidRes));
-            if(f!=null && f!=Fluids.EMPTY) {
-                this.flowingTexture = f.getAttributes().getFlowingTexture();
-                //this.stillTexture = f.getAttributes().getStillTexture();
+            if(ForgeRegistries.FLUIDS.containsKey(new ResourceLocation(fluidRes))) {
+                Fluid f = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(fluidRes));
+                if (f != null && f != Fluids.EMPTY) {
+                    this.flowingTexture = f.getAttributes().getFlowingTexture();
+                    //this.stillTexture = f.getAttributes().getStillTexture();
+                }
             }
             return this;
         }
@@ -296,19 +301,23 @@ public class SoftFluid {
             return this;
         }
         public final Builder textureOverride(String fluidRes, int newColor){
-            Fluid f = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(fluidRes));
-            if(f!=null && f!=Fluids.EMPTY) {
-                this.flowingTexture = f.getAttributes().getFlowingTexture();
-                this.stillTexture = f.getAttributes().getStillTexture();
-                this.color(newColor);
+            if(ForgeRegistries.FLUIDS.containsKey(new ResourceLocation(fluidRes))) {
+                Fluid f = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(fluidRes));
+                if (f != null && f != Fluids.EMPTY) {
+                    this.flowingTexture = f.getAttributes().getFlowingTexture();
+                    this.stillTexture = f.getAttributes().getStillTexture();
+                    this.color(newColor);
+                }
             }
             return this;
         }
         public final Builder textureOverride(String fluidRes){
-            Fluid f = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(fluidRes));
-            if(f!=null && f!=Fluids.EMPTY) {
-                this.flowingTexture = f.getAttributes().getFlowingTexture();
-                this.stillTexture = f.getAttributes().getStillTexture();
+            if(ForgeRegistries.FLUIDS.containsKey(new ResourceLocation(fluidRes))) {
+                Fluid f = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(fluidRes));
+                if (f != null && f != Fluids.EMPTY) {
+                    this.flowingTexture = f.getAttributes().getFlowingTexture();
+                    this.stillTexture = f.getAttributes().getStillTexture();
+                }
             }
             return this;
         }
@@ -320,8 +329,10 @@ public class SoftFluid {
             return this;
         }
         public final Builder bottle(ResourceLocation itemRes) {
-            Item i = ForgeRegistries.ITEMS.getValue(itemRes);
-            if(i!=null)this.bottle(i);
+            if(ForgeRegistries.ITEMS.containsKey(itemRes)) {
+                Item i = ForgeRegistries.ITEMS.getValue(itemRes);
+                if (i != null) this.bottle(i);
+            }
             return this;
         }
         public final Builder bottle(String res) {
@@ -334,8 +345,10 @@ public class SoftFluid {
             return this;
         }
         public final Builder bucket(ResourceLocation itemRes) {
-            Item i = ForgeRegistries.ITEMS.getValue(itemRes);
-            if(i!=null)this.bucket(i);
+            if(ForgeRegistries.ITEMS.containsKey(itemRes)) {
+                Item i = ForgeRegistries.ITEMS.getValue(itemRes);
+                if (i != null) this.bucket(i);
+            }
             return this;
         }
         public final Builder bucket(String res) {
@@ -351,8 +364,10 @@ public class SoftFluid {
             return this;
         }
         public final Builder bowl(ResourceLocation itemRes) {
-            Item i = ForgeRegistries.ITEMS.getValue(itemRes);
-            if(i!=null)this.bowl(i);
+            if(ForgeRegistries.ITEMS.containsKey(itemRes)) {
+                Item i = ForgeRegistries.ITEMS.getValue(itemRes);
+                if (i != null) this.bowl(i);
+            }
             return this;
         }
         public final Builder bowl(String res) {
@@ -382,8 +397,10 @@ public class SoftFluid {
             return this;
         }
         public final Builder food(ResourceLocation itemRes) {
-            Item i = ForgeRegistries.ITEMS.getValue(itemRes);
-            if(i!=null)this.food(i);
+            if(ForgeRegistries.ITEMS.containsKey(itemRes)){
+                Item i = ForgeRegistries.ITEMS.getValue(itemRes);
+                if (i != null) this.food(i);
+            }
             return this;
         }
         public final Builder food(String res) {

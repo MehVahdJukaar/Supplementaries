@@ -6,8 +6,9 @@ import net.minecraft.block.material.MaterialColor;
 
 
 public enum PremiumWoodWoodTypes implements IWoodType {
+    MAGIC("magic"),
     MAPLE("maple"),
-    PURPLE_HEARTH("purple_hearth"),
+    PURPLE_HEART("purple_heart"),
     SILVERBELL("silverbell"),
     TIGER("tiger"),
     WILLOW("willow");

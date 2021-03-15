@@ -3,18 +3,23 @@ package net.mehvahdjukaar.supplementaries.entities;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.TNTBlock;
-import net.minecraft.entity.*;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.IRendersAsItem;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.entity.projectile.ProjectileItemEntity;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.item.BowItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
@@ -88,7 +93,7 @@ public class BombEntity extends ProjectileItemEntity implements IRendersAsItem{
 
     @Override
     protected Item getDefaultItem() {
-        return null;
+        return Items.ACACIA_BUTTON;
         //return Registry.BOMB_ITEM_ON.get();
     }
     /*
@@ -167,7 +172,7 @@ public class BombEntity extends ProjectileItemEntity implements IRendersAsItem{
         explosion.doExplosionA();
         explosion.doExplosionB(false);
 
-        this.world.playSound(null, this.getPosX(),this.getPosY(),this.getPosZ(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.NEUTRAL, 3F, (1.2F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) );
+        this.world.playSound(null, this.getPosX(),this.getPosY(),this.getPosZ(), Registry.BOMB_SOUND.get(), SoundCategory.NEUTRAL, 3F, (1.2F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) );
     }
 
     //explode
@@ -195,6 +200,20 @@ public class BombEntity extends ProjectileItemEntity implements IRendersAsItem{
             }
         }
         this.active = false;
+    }
+
+    public void onCollideWithPlayer(PlayerEntity entityIn) {
+        if (!this.world.isRemote) {
+            if (!this.active && entityIn.inventory.addItemStackToInventory(this.getItemStack())) {
+                entityIn.onItemPickup(this, 1);
+                this.remove();
+            }
+        }
+    }
+
+    private ItemStack getItemStack(){
+        return ItemStack.EMPTY;
+        //return new ItemStack(Registry.BOMB_ITEM.get());
     }
 
     //onBlockHit

@@ -9,10 +9,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.items.FireflyJarItemRe
 import net.mehvahdjukaar.supplementaries.client.renderers.items.JarItemRenderer;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
-import net.mehvahdjukaar.supplementaries.entities.BombEntity;
-import net.mehvahdjukaar.supplementaries.entities.FireflyEntity;
-import net.mehvahdjukaar.supplementaries.entities.RopeArrowEntity;
-import net.mehvahdjukaar.supplementaries.entities.ThrowableBrickEntity;
+import net.mehvahdjukaar.supplementaries.entities.*;
 import net.mehvahdjukaar.supplementaries.inventories.NoticeBoardContainer;
 import net.mehvahdjukaar.supplementaries.inventories.PulleyBlockContainer;
 import net.mehvahdjukaar.supplementaries.inventories.SackContainer;
@@ -40,6 +37,7 @@ import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
@@ -76,7 +74,7 @@ public class Registry {
         PARTICLES.register(bus);
         SOUNDS.register(bus);
         RECIPES.register(bus);
-        RoadSignStructure.FEATURES.register(bus);
+        //RoadSignStructure.FEATURES.register(bus);
     }
 
     //creative tab
@@ -110,30 +108,34 @@ public class Registry {
         return null;
     }
 
-    @SubscribeEvent
-    public static void registerSounds(RegistryEvent.Register<SoundEvent> event) {
-        event.getRegistry().register(TOM_SOUND_EVENT);
-        event.getRegistry().register(TICK_SOUND_EVENT);
-        event.getRegistry().register(TICK_2_SOUND_EVENT);
-
+    public static RegistryObject<SoundEvent> makeSoundEvent(String name){
+        return SOUNDS.register(name, ()-> new SoundEvent(new ResourceLocation(Supplementaries.MOD_ID, name)));
     }
-    //TODO: figure out sounds, use deferred registries
-    //these are the names in sound.json. not actual location
-    public static final SoundEvent TICK_SOUND_EVENT = makeSoundEvent("block.tick_1");
-    public static final SoundEvent TICK_2_SOUND_EVENT = makeSoundEvent("block.tick_2");
-    public static final SoundEvent TOM_SOUND_EVENT = makeSoundEvent("block.tom");
+    //these are the names in sound.json. not actual location. this is so a sound event can play multiple sounds
+    public static final RegistryObject<SoundEvent> TOM_SOUND = makeSoundEvent("block.tom");
+    public static final RegistryObject<SoundEvent> TICK_SOUND = makeSoundEvent("block.tick_1");
+    public static final RegistryObject<SoundEvent> TICK_2_SOUND = makeSoundEvent("block.tick_2");
+    public static final RegistryObject<SoundEvent> BOMB_SOUND = makeSoundEvent("item.bomb");
 
-    public static SoundEvent makeSoundEvent(String name){
-        ResourceLocation loc = new ResourceLocation(Supplementaries.MOD_ID,name);
-        return new SoundEvent(loc).setRegistryName(name);
-    }
 
     //TODO: use deferred reg
     @SubscribeEvent
     public static void registerEntities(final RegistryEvent.Register<EntityType<?>> event){
+        event.getRegistry().register(POTAT_TYPE);
+        GlobalEntityTypeAttributes.put((EntityType<? extends LivingEntity>) POTAT_TYPE, FireflyEntity.setCustomAttributes().create());
+
         event.getRegistry().register(FIREFLY_TYPE);
         GlobalEntityTypeAttributes.put((EntityType<? extends LivingEntity>) FIREFLY_TYPE, FireflyEntity.setCustomAttributes().create());
     }
+
+    public static final String POTAT_NAME = "potat";
+    public static final EntityType<?> POTAT_TYPE = (EntityType.Builder.create(MashlingEntity::new, EntityClassification.AMBIENT)
+            .setShouldReceiveVelocityUpdates(true).setTrackingRange(128).setUpdateInterval(3)
+            .size(0.3125f, 1f))
+            .build(POTAT_NAME)
+            .setRegistryName(POTAT_NAME);
+    //public static final RegistryObject<Item> POTAT_SPAWN_EGG = ITEMS.register(POTAT_NAME+"_spawn_egg",()-> new SpawnEggItem(POTAT_TYPE,  -5048018, -14409439, //-4784384, -16777216,
+     //       new Item.Properties().group(getTab(ItemGroup.MISC,POTAT_NAME))));
 
     //entities
     /*
@@ -969,7 +971,7 @@ public class Registry {
             AbstractBlock.Properties.create(Material.WOOL)
                     .sound(SoundType.CLOTH)
                     .zeroHardnessAndResistance()
-                    //.speedFactor(0.8f)
+                    .speedFactor(0.7f)
                     .notSolid()));
     public static final RegistryObject<Item> ROPE_ITEM = ITEMS.register(ROPE_NAME,()-> new BlockItem(ROPE.get(),
             (new Item.Properties()).group(getTab(ItemGroup.DECORATIONS,ROPE_NAME))
@@ -1099,6 +1101,21 @@ public class Registry {
     public static final RegistryObject<TileEntityType<PulleyBlockTile>> PULLEY_BLOCK_TILE = TILES.register(PULLEY_BLOCK_NAME,()-> TileEntityType.Builder.create(
             PulleyBlockTile::new, PULLEY_BLOCK.get()).build(null));
 
+    //flax block
+    public static final String FLAX_BLOCK_NAME = "flax_block";
+    public static final RegistryObject<Block> FLAX_BLOCK = BLOCKS.register(FLAX_BLOCK_NAME,()-> new HayBlock(
+            AbstractBlock.Properties.create(Material.ORGANIC, MaterialColor.LIME_TERRACOTTA)
+                    .hardnessAndResistance(0.5F)
+                    .sound(SoundType.PLANT)));
+    public static final RegistryObject<Item> FLAX_BLOCK_ITEM = ITEMS.register(FLAX_BLOCK_NAME,()-> new BlockItem(FLAX_BLOCK.get(),
+            (new Item.Properties()).group(getTab(ItemGroup.BUILDING_BLOCKS,FLAX_NAME))));
+
+    //boat in a jar
+    public static final String JAR_BOAT_NAME = "jar_boat";
+    public static final RegistryObject<Block> JAR_BOAT = BLOCKS.register(JAR_BOAT_NAME,()-> new JarBoatBlock(
+            AbstractBlock.Properties.from(Registry.JAR.get())));
+    public static final RegistryObject<Item> JAR_BOAT_ITEM = ITEMS.register(JAR_BOAT_NAME,()-> new BlockItem(JAR_BOAT.get(),
+            (new Item.Properties()).group(getTab(ItemGroup.DECORATIONS,JAR_NAME))));
     /*
     //statue
     public static final String STATUE_NAME = "statue";

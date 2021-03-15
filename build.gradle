@@ -21,7 +21,7 @@ mixin {
     add sourceSets.main, "supplementaries.refmap.json"
 }
 
-version = '1.16.5-0.10.3'
+version = '1.16.5-0.10.4'
 group = 'net.mehvahdjukaar.supplementaries' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'supplementaries'
 
@@ -46,7 +46,7 @@ minecraft {
         client {
             property 'mixin.env.disableRefMap', 'true'
             arg "-mixin.config=supplementaries.mixins.json".toString()
-
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
 
             workingDirectory project.file('run')
 
@@ -66,6 +66,7 @@ minecraft {
         server {
             property 'mixin.env.disableRefMap', 'true'
             arg "-mixin.config="+archivesBaseName+".mixins.json"
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
 
             workingDirectory project.file('run')
 
@@ -83,6 +84,12 @@ minecraft {
         }
 
         data {
+
+            //run data mixins?
+            property 'mixin.env.remapRefMap', 'true'
+
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+
             workingDirectory project.file('run')
 
             // Recommended logging data for a userdev environment

@@ -34,6 +34,11 @@ public enum TraverseWoodTypes implements IWoodType {
     }
 
     @Override
+    public String getRegName() {
+        return this.name+"_tr";
+    }
+
+    @Override
     public String getNamespace() {
         return "traverse";
     }

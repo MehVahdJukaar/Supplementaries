@@ -7,7 +7,7 @@ import net.mehvahdjukaar.supplementaries.common.FlowerPotHelper;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.fluids.SoftFluidList;
-import net.mehvahdjukaar.supplementaries.mixins.ChickenMixin;
+import net.mehvahdjukaar.supplementaries.mixins.ChickenEntityAccessor;
 import net.mehvahdjukaar.supplementaries.network.commands.ModCommands;
 import net.mehvahdjukaar.supplementaries.plugins.create.SupplementariesCreatePlugin;
 import net.minecraft.block.Blocks;
@@ -49,9 +49,9 @@ public class ModSetup {
 
 
         List<ItemStack> newStacks = new ArrayList<>();
-        Collections.addAll(newStacks, ChickenMixin.getTemptationItems().getMatchingStacks());
+        Collections.addAll(newStacks, ChickenEntityAccessor.getTemptationItems().getMatchingStacks());
         newStacks.add(new ItemStack(Registry.FLAX_SEEDS_ITEM.get()));
-        ChickenMixin.setTemptationItems(Ingredient.fromStacks(newStacks.stream()));
+        ChickenEntityAccessor.setTemptationItems(Ingredient.fromStacks(newStacks.stream()));
 
 
         if (ModList.get().isLoaded("create")) {
@@ -139,7 +139,7 @@ public class ModSetup {
         }
         else if (e.getName().toString().equals("minecraft:chests/pillager_outpost")) {
             if(!RegistryConfigs.reg.FLAX_ENABLED.get())return;
-            float chance = 0.5f;
+            float chance = 0.9f;
             LootPool pool = LootPool.builder()
                     .name("supplementaries_injected_flax")
                     .rolls(new RandomValueRange(1,3))

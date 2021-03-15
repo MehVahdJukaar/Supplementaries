@@ -101,7 +101,7 @@ public class ServerConfigs {
 
             //throwable bricks
             builder.push("throwable_bricks");
-            THROWABLE_BRICKS_ENABLED = builder.comment("throw bricks at your foes! Might glass blocks")
+            THROWABLE_BRICKS_ENABLED = builder.comment("throw bricks at your foes! Might break glass blocks")
                     .define("enabled",true);
             builder.pop();
             //wall lantern
@@ -274,6 +274,7 @@ public class ServerConfigs {
                     "betteranimalsplus:horseshoecrab", "betteranimalsplus:crab", "whisperwoods:wisp",
                     "undergarden:muncher", "undergarden:scintling", "undergarden:rotling",  "undergarden:sploogie",
                     "dungeonsmod:crow", "dungeonsmod:anthermite", "pandoras_creatures:crab",
+                    "environmental:duck", "environmental:cardinal", "environmental:fennec_fox", "environmental:slabfish", "environmental:penguin",
                     "fins:flatback_leaf_snail","fins:penglil", "fins:river_pebble_snail", "fins:siderol_whiskered_snail", "fins:red_bull_crab", "fins:white_bull_crab");
             cageMobs.addAll(additionalCageMobs);
             CAGE_ALLOWED_MOBS = builder.comment("catchable mobs")

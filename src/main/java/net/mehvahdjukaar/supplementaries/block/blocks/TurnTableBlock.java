@@ -10,6 +10,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.passive.CatEntity;
+import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
@@ -170,13 +171,13 @@ public class TurnTableBlock extends Block {
                 ((LivingEntity) e).setIdleTime(20);
                 //e.velocityChanged = true;
 
-                if(e instanceof CatEntity &&((CatEntity) e).isSitting()&&!world.isRemote){
+                if(e instanceof CatEntity &&((TameableEntity) e).isSitting()&&!world.isRemote){
                     TileEntity te = world.getTileEntity(pos);
                     if(te instanceof TurnTableBlockTile) {
                         TurnTableBlockTile table = ((TurnTableBlockTile) te);
                         if(table.cat==0) {
                             ((TurnTableBlockTile) te).cat = 20*20;
-                            world.playSound(null, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, Registry.TOM_SOUND_EVENT, SoundCategory.BLOCKS, 0.85f, 1);
+                            world.playSound(null, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, Registry.TOM_SOUND.get(), SoundCategory.BLOCKS, 0.85f, 1);
                         }
                     }
                 }
@@ -207,10 +208,4 @@ public class TurnTableBlock extends Block {
         return new TurnTableBlockTile();
     }
 
-    @Override
-    public boolean eventReceived(BlockState state, World world, BlockPos pos, int eventID, int eventParam) {
-        super.eventReceived(state, world, pos, eventID, eventParam);
-        TileEntity tileentity = world.getTileEntity(pos);
-        return tileentity != null && tileentity.receiveClientEvent(eventID, eventParam);
-    }
 }

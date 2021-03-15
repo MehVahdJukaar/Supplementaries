@@ -108,6 +108,8 @@ public class PistonLauncherArmBlockTile extends TileEntity implements ITickableT
                     double d5 = (random.nextFloat() - 0.5D) * 0.05D;
                     // world.addParticle(ParticleTypes.POOF, d0, d1, d2, d3, d4, d5);
                     this.world.addParticle(ParticleTypes.CLOUD, d0, d1, d2, d3, d4, d5);
+                    //TODO:add swirl particle
+                    //this.world.addParticle(ParticleTypes.ENTITY_EFFECT, d0, d1, d2, d3, d4, d5);
                 }
             }
         }

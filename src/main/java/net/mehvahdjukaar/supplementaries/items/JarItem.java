@@ -35,18 +35,19 @@ public class JarItem extends CageItem {
                 tooltip.add(new StringTextComponent("???????").mergeStyle(TextFormatting.GRAY));
             }
 
-            if(compoundnbt.contains("FluidHolder")){
+            if(compoundnbt.contains("FluidHolder")) {
                 CompoundNBT com = compoundnbt.getCompound("FluidHolder");
                 SoftFluid s = SoftFluidList.fromID(com.getString("Fluid"));
                 int count = com.getInt("Count");
-                if(!s.isEmpty()){
+                if (!s.isEmpty() && count > 0) {
                     tooltip.add(new TranslationTextComponent("message.supplementaries.fluid_tooltip",
-                            s.getTranslatedName(),count).mergeStyle(TextFormatting.GRAY));
-                }
+                            s.getTranslatedName(), count).mergeStyle(TextFormatting.GRAY));
 
-                if(com.contains("NBT") && com.getCompound("NBT").contains("Potion")){
-                    PotionTooltipHelper.addPotionTooltip(com.getCompound("NBT"),tooltip,1);
-                    return;
+
+                    if (com.contains("NBT") && com.getCompound("NBT").contains("Potion")) {
+                        PotionTooltipHelper.addPotionTooltip(com.getCompound("NBT"), tooltip, 1);
+                        return;
+                    }
                 }
             }
 

@@ -8,7 +8,7 @@
           "type": "supplementaries:flag"
         },
         {
-          "modid": "atmospheric",
+          "modid": "byg",
           "type": "forge:mod_loaded"
         }
       ],
@@ -28,7 +28,7 @@
             "item": "minecraft:stick"
           },
           "2": {
-            "item": "atmospheric:aspen_planks"
+            "item": "byg:aspen_planks"
           }
         },
         "result": {

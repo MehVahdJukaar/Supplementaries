@@ -10,6 +10,8 @@ import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.setup.ClientSetup;
 import net.mehvahdjukaar.supplementaries.setup.ModSetup;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.minecraft.block.CampfireBlock;
+import net.minecraft.item.HoeItem;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
@@ -22,6 +24,12 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.File;
+import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.security.CodeSource;
+
 @Mod(Supplementaries.MOD_ID)
 public class Supplementaries{
 
@@ -29,8 +37,8 @@ public class Supplementaries{
 
     public static final Logger LOGGER = LogManager.getLogger();
 
-
     public Supplementaries() {
+
 
         MinecraftForge.EVENT_BUS.register(ServerEvents.class);
 
@@ -49,6 +57,7 @@ public class Supplementaries{
 
         NetworkHandler.registerMessages();
 
+        //TODO: make flax like hay
 
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
@@ -57,6 +66,8 @@ public class Supplementaries{
         bus.addListener(ModSetup::init);
 
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> bus.addListener(ClientSetup::init));
+
+
 
 
     }

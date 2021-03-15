@@ -18,7 +18,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeColors;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import vectorwing.farmersdelight.items.HotCocoaItem;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -344,7 +343,8 @@ public class SoftFluidHolder {
     }
 
     public boolean isEmpty() {
-        return this.fluid.isEmpty() || this.count <= 0;
+        //count 0 should always = to fluid.empty
+        return this.fluid.isEmpty()||this.count<=0;
     }
 
     public void lossyAdd(int inc) {
@@ -369,6 +369,7 @@ public class SoftFluidHolder {
 
     public void shrink(int inc) {
         this.grow(-inc);
+        if(this.count==0)this.fluid = SoftFluidList.EMPTY;
     }
 
     public float getHeight() {
@@ -480,15 +481,15 @@ public class SoftFluidHolder {
     }
 
     public CompoundNBT write(CompoundNBT compound) {
-        if(!this.isEmpty()) {
-            CompoundNBT cmp = new CompoundNBT();
-            cmp.putInt("Count", this.count);
-            cmp.putString("Fluid", this.fluid.getID());
-            //for item render. needed for potion colors
-            cmp.putInt("CachedColor", this.getTintColor());
-            if (!this.nbt.isEmpty()) cmp.put("NBT", this.nbt);
-            compound.put("FluidHolder", cmp);
-        }
+
+        CompoundNBT cmp = new CompoundNBT();
+        cmp.putInt("Count", this.count);
+        cmp.putString("Fluid", this.fluid.getID());
+        //for item render. needed for potion colors
+        cmp.putInt("CachedColor", this.getTintColor());
+        if (!this.nbt.isEmpty()) cmp.put("NBT", this.nbt);
+        compound.put("FluidHolder", cmp);
+
         return compound;
     }
 

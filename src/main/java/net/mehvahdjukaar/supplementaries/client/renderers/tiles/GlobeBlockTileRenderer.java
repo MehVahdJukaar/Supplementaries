@@ -62,7 +62,8 @@ public class GlobeBlockTileRenderer extends TileEntityRenderer<GlobeBlockTile> {
     @Override
     public void render(GlobeBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
-
+        //TODO: maybe convert into an int(might be faster for map access idk)
+        String dimension = tile.getWorld().getDimensionKey().getLocation().toString();
 
         matrixStackIn.push();
         matrixStackIn.translate(0.5,0.5,0.5);
@@ -95,7 +96,7 @@ public class GlobeBlockTileRenderer extends TileEntityRenderer<GlobeBlockTile> {
 
                 //TODO: use less transforms
 
-                byte[][] colors = GlobeData.get(tile.getWorld()).colors;
+                byte[][] colors = GlobeData.get(tile.getWorld()).globePixels;
 
                 if (colors[0].length != 16) {
                     matrixStackIn.pop();
@@ -108,7 +109,7 @@ public class GlobeBlockTileRenderer extends TileEntityRenderer<GlobeBlockTile> {
                 matrixStackIn.scale(0.0625f, 0.0625f, 0.0625f);
 
 
-                renderFace(matrixStackIn, builder, colors, 0, 8, lu, lv);
+                renderFace(matrixStackIn, builder, colors, 0, 8, lu, lv, dimension);
 
                 matrixStackIn.rotate(Const.Y90);
 
@@ -116,21 +117,21 @@ public class GlobeBlockTileRenderer extends TileEntityRenderer<GlobeBlockTile> {
                 matrixStackIn.push();
                 matrixStackIn.rotate(Const.XN90);
                 matrixStackIn.translate(0, 8, 0);
-                renderFaceUp(matrixStackIn, builder, colors, 8, 0, lu, lv);
+                renderFaceUp(matrixStackIn, builder, colors, 8, 0, lu, lv, dimension);
                 matrixStackIn.pop();
 
                 //down
                 matrixStackIn.push();
                 matrixStackIn.translate(0, -8, 0);
                 matrixStackIn.rotate(Const.X90);
-                renderFace(matrixStackIn, builder, colors, 16, 0, lu, lv);
+                renderFace(matrixStackIn, builder, colors, 16, 0, lu, lv, dimension);
                 matrixStackIn.pop();
 
-                renderFace(matrixStackIn, builder, colors, 8, 8, lu, lv);
+                renderFace(matrixStackIn, builder, colors, 8, 8, lu, lv, dimension);
                 matrixStackIn.rotate(Const.Y90);
-                renderFace(matrixStackIn, builder, colors, 16, 8, lu, lv);
+                renderFace(matrixStackIn, builder, colors, 16, 8, lu, lv, dimension);
                 matrixStackIn.rotate(Const.Y90);
-                renderFace(matrixStackIn, builder, colors, 24, 8, lu, lv);
+                renderFace(matrixStackIn, builder, colors, 24, 8, lu, lv, dimension);
                 break;
 
             }
@@ -138,12 +139,12 @@ public class GlobeBlockTileRenderer extends TileEntityRenderer<GlobeBlockTile> {
     }
 
 
-    public static void renderFace(MatrixStack matrixStackIn, IVertexBuilder builder, byte[][] colors, int ux, int uv, int lu, int lv){
+    public static void renderFace(MatrixStack matrixStackIn, IVertexBuilder builder, byte[][] colors, int ux, int uv, int lu, int lv, String dimension){
         for(int x=0; x<8; x++) {
             matrixStackIn.push();
             for (int y = 0; y < 8; y++) {
                 matrixStackIn.translate(0, -1, 0);
-                int color = GlobeDataGenerator.getRGB(colors[ux + x][uv + y]);
+                int color = GlobeDataGenerator.getRGB(colors[ux + x][uv + y], dimension);
 
                 float r = (float) ((color >> 16 & 255)) / 255.0F;
                 float g = (float) ((color >> 8 & 255)) / 255.0F;
@@ -159,12 +160,12 @@ public class GlobeBlockTileRenderer extends TileEntityRenderer<GlobeBlockTile> {
 
     }
 
-    public static void renderFaceUp(MatrixStack matrixStackIn, IVertexBuilder builder, byte[][] colors, int ux, int uv, int lu, int lv){
+    public static void renderFaceUp(MatrixStack matrixStackIn, IVertexBuilder builder, byte[][] colors, int ux, int uv, int lu, int lv, String dimension){
         for(int x=0; x<8; x++) {
             matrixStackIn.push();
             for (int y = 0; y < 8; y++) {
                 matrixStackIn.translate(0, -1, 0);
-                int color = GlobeDataGenerator.getRGB(colors[ux + x][uv + y]);
+                int color = GlobeDataGenerator.getRGB(colors[ux + x][uv + y],dimension);
 
                 float r = ((float) ((color >> 16 & 255)) / 255.0F)*0.775f;
                 float g = ((float) ((color >> 8 & 255)) / 255.0F)*0.775f;

@@ -1,0 +1,7 @@
+{
+  "parent": "supplementaries:item/hanging_sign_template",
+  "textures": {
+    "0": "supplementaries:blocks/hanging_signs/traverse/hanging_sign_front_fir_tr",
+    "2": "supplementaries:blocks/hanging_signs/traverse/hanging_sign_details_fir_tr"
+  }
+}

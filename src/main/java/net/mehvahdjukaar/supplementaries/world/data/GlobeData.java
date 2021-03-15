@@ -18,12 +18,11 @@ import net.minecraftforge.fml.network.PacketDistributor;
 @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.FORGE)
 public class GlobeData extends WorldSavedData {
     public static final String DATA_NAME = "supplementariesGlobeData";
-    public static final GlobeDataGenerator gen = new GlobeDataGenerator();
-    public byte[][] colors;
+    public byte[][] globePixels;
     public long seed;
     public GlobeData() {
         super(DATA_NAME);
-        this.colors= new byte[32][16];
+        this.globePixels = new byte[32][16];
     }
 
     public GlobeData(long seed){
@@ -34,23 +33,23 @@ public class GlobeData extends WorldSavedData {
 
     public void updateData(){
         //even when data is recovered from disk this is called anyways
-        this.colors = gen.generate(this.seed);
+        this.globePixels = GlobeDataGenerator.generate(this.seed);
         //set and save data
         this.markDirty();
     }
 
     @Override
     public void read(CompoundNBT nbt) {
-        for(int i = 0; i<colors.length; i++) {
-            this.colors[i] = nbt.getByteArray("colors_"+i);
+        for(int i = 0; i< globePixels.length; i++) {
+            this.globePixels[i] = nbt.getByteArray("colors_"+i);
         }
         this.seed = nbt.getLong("seed");
     }
 
     @Override
     public CompoundNBT write(CompoundNBT nbt) {
-        for(int i = 0; i<colors.length; i++) {
-            nbt.putByteArray("colors_"+i, this.colors[i]);
+        for(int i = 0; i< globePixels.length; i++) {
+            nbt.putByteArray("colors_"+i, this.globePixels[i]);
         }
         nbt.putLong("seed",this.seed);
         return nbt;

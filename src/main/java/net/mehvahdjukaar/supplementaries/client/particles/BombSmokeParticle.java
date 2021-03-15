@@ -3,9 +3,6 @@ package net.mehvahdjukaar.supplementaries.client.particles;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particles.BasicParticleType;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 
 public class BombSmokeParticle extends SpriteTexturedParticle {

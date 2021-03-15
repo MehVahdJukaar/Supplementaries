@@ -28,7 +28,6 @@ public class TextHolder {
         }
     }
 
-
     //removing command source crap
     public void read(CompoundNBT compound) {
         if(compound.contains("TextHolder")) {
@@ -79,7 +78,6 @@ public class TextHolder {
     }
 
     @Nullable
-
     public IReorderingProcessor getRenderText(int line, Function<ITextComponent, IReorderingProcessor> f) {
         if (this.renderText[line] == null && this.signText[line] != null) {
             this.renderText[line] = f.apply(this.signText[line]);

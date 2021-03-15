@@ -88,7 +88,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
                 Quaternion rotation = Vector3f.YP.rotationDegrees(-angle);
                 matrixStackIn.rotate(rotation);
                 matrixStackIn.scale(0.625f, 0.625f, 0.625f);
-                matrixStackIn.translate(0, -0.2, -0.35);
+                matrixStackIn.translate(0, -0.2, -0.335);
                 int fishType = tile.mobHolder.capturedMobProperties.getFishTexture();
 
                 //overlay

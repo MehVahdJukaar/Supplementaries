@@ -4,7 +4,10 @@ import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.util.CapturedMobs.CapturedMobProperties;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.*;
+import net.minecraft.entity.AgeableEntity;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.monster.EndermanEntity;
 import net.minecraft.entity.monster.EndermiteEntity;
@@ -224,6 +227,9 @@ public class MobHolder {
                     ch.timeUntilNextEgg = this.rand.nextInt(6000) + 6000;
                 }
             }
+            else if(this.specialBehaviorType==SpecialBehaviorType.SQUID){
+                ((LivingEntity) this.mob).livingTick();
+            }
         }
         else {
             //client side animation
@@ -304,6 +310,10 @@ public class MobHolder {
                     cat.setSleeping(true);
                     //this.jumpY=0.0325f;
                     break;
+                case SQUID:
+                    SquidEntity squid = (SquidEntity) this.mob;
+                    squid.livingTick();
+                    break;
                 case CHICKEN:
                     ChickenEntity ch = (ChickenEntity) this.mob;
                     ch.livingTick();
@@ -380,26 +390,26 @@ public class MobHolder {
             this.setBucketHolder(entity);
 
             //client side stuff
-            if (this.world.isRemote) {
-                //TODO: add shadows
-                double px = this.pos.getX() + 0.5;
-                double py = this.pos.getY() + (0.5 + 0.0625) + 0.5;
-                double pz = this.pos.getZ() + 0.5;
-                entity.setPosition(px, py, pz);
-                //entity.setMotion(0,0,0);
-                entity.lastTickPosX = px;
-                entity.lastTickPosY = py;
-                entity.lastTickPosZ = pz;
-                entity.prevPosX = px;
-                entity.prevPosY = py;
-                entity.prevPosZ = pz;
-                entity.ticksExisted += this.rand.nextInt(40);
 
-                //server doesn't need this
-                this.mob = entity;
-                //TODO: make properly react to water
-                this.setWaterMobInWater(true); //!this.world.getFluidState(pos).isEmpty()
-            } else {
+            //TODO: add shadows
+            double px = this.pos.getX() + 0.5;
+            double py = this.pos.getY() + (0.5 + 0.0625) + 0.5;
+            double pz = this.pos.getZ() + 0.5;
+            entity.setPosition(px, py, pz);
+            //entity.setMotion(0,0,0);
+            entity.lastTickPosX = px;
+            entity.lastTickPosY = py;
+            entity.lastTickPosZ = pz;
+            entity.prevPosX = px;
+            entity.prevPosY = py;
+            entity.prevPosZ = pz;
+            entity.ticksExisted += this.rand.nextInt(40);
+
+            //server doesn't need this
+            this.mob = entity;
+            //TODO: make properly react to water
+            this.setWaterMobInWater(true); //!this.world.getFluidState(pos).isEmpty()
+            if (!this.world.isRemote) {
                 int light = this.capturedMobProperties.getLightLevel();
                 BlockState state = this.world.getBlockState(this.pos);
                 if (state.get(BlockProperties.LIGHT_LEVEL_0_15) != light) {
@@ -522,7 +532,7 @@ public class MobHolder {
     }
 
     public boolean shouldHaveWater(){
-        return this.specialBehaviorType==SpecialBehaviorType.WATER_MOB||this.capturedMobProperties.isFish();
+        return this.specialBehaviorType.hasWater()||this.capturedMobProperties.isFish();
     }
 
     //for hardcoded special behaviors
@@ -536,11 +546,16 @@ public class MobHolder {
         RABBIT,
         CHICKEN,
         TICKABLE,
-        WATER_MOB;
+        WATER_MOB,
+        SQUID;
 
+        public boolean hasWater(){
+            return this==WATER_MOB||this==SQUID;
+        }
 
         public static SpecialBehaviorType getType(Entity e){
-            if(e instanceof WaterMobEntity)return WATER_MOB;
+            if(e instanceof SquidEntity)return SQUID;
+            else if(e instanceof WaterMobEntity)return WATER_MOB;
             else if(e instanceof SlimeEntity)return SLIME;
             else if(e instanceof VexEntity)return VEX;
             else if(e instanceof EndermiteEntity)return ENDERMITE;
