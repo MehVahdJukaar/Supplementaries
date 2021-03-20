@@ -13,12 +13,13 @@
         "ShulkerBoxSlotMixin",
         "BellBlockMixin",
         "BellTileEntityMixin",
-        "PistonMixin",
-        "RopeLivingEntityMixin",
+        "PistonTileEntityMixin",
+        "LivingEntityMixin",
         "EatGrassGoalMixin",
-        "ChickenEntityAccessor"
-
-
+        "LanternBlockMixin",
+        "ChickenEntityAccessor",
+        "HorseEntityAccessor",
+        "CampfireMixin"
     ],
     "client": [
         "ParrotPartyMixin",

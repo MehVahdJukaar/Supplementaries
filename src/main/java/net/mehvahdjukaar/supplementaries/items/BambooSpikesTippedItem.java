@@ -69,17 +69,13 @@ public class BambooSpikesTippedItem extends BlockItem implements IWaterLoggable 
 
     @Override
     public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
-        if((group==ItemGroup.DECORATIONS&&Registry.MOD_TAB==null)||group==ItemGroup.SEARCH||group==Registry.MOD_TAB){
-            items.add(new ItemStack(Registry.BAMBOO_SPIKES_ITEM.get()));
-        }
-
-        if (this.isInGroup(group)||group==ItemGroup.SEARCH) {
+        if (this.isInGroup(group)) {
             items.add(makeSpikeItem(Potions.POISON));
             items.add(makeSpikeItem(Potions.LONG_POISON));
             items.add(makeSpikeItem(Potions.STRONG_POISON));
             for(Potion potion : net.minecraft.util.registry.Registry.POTION) {
                 if(potion==Potions.POISON || potion==Potions.LONG_POISON || potion==Potions.STRONG_POISON)continue;
-                if (!potion.getEffects().isEmpty()) {
+                if (!potion.getEffects().isEmpty()&&potion!=Potions.EMPTY) {
                     items.add(makeSpikeItem(potion));
                 }
             }

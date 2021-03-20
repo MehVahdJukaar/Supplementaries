@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.datagen.types;
+package net.mehvahdjukaar.supplementaries.datagen;
 
 
 import net.minecraft.data.loot.BlockLootTables;

@@ -205,7 +205,6 @@ public class GlobeBlock extends Block implements IWaterLoggable {
     @Override
     public int getComparatorInputOverride(BlockState blockState, World world, BlockPos pos) {
         TileEntity te = world.getTileEntity(pos);
-        //TODO: improve this
             if(te instanceof GlobeBlockTile){
                 if(((GlobeBlockTile)te).yaw!=0) return 15;
                 else return ((GlobeBlockTile)te).face/-90 +1;

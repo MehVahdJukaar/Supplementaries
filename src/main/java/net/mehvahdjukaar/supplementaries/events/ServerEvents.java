@@ -1,18 +1,16 @@
 package net.mehvahdjukaar.supplementaries.events;
 
-import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.blocks.DirectionalCakeBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.DoubleCakeBlock;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
-import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.items.BlockHolderItem;
+import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.network.SendLoginMessagePacket;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.*;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.Fluids;
@@ -22,28 +20,13 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.NBTTextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.CrashReportExtender;
-import net.minecraftforge.fml.ForgeI18n;
 import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.client.gui.screen.ModListScreen;
-
-import java.net.URI;
-import java.net.URL;
-import java.security.CodeSource;
-import java.security.ProtectionDomain;
-import java.util.List;
+import net.minecraftforge.fml.network.PacketDistributor;
 
 //@Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.FORGE)
 public class ServerEvents {
@@ -222,23 +205,12 @@ public class ServerEvents {
 
 
 
-
+    //TODO: maybe use player logged in and send packet
     @SubscribeEvent
-    public static void onPlayerLoggedIn(EntityJoinWorldEvent event) {
-        if (event.getEntity() instanceof ClientPlayerEntity) {
-            if(ClientConfigs.general.ANTI_REPOST_WARNING.get()) {
-                try {
+    public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+        NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) event.getPlayer()),
+                new SendLoginMessagePacket());
 
-                    String fileName = ModList.get().getModFileById(Supplementaries.MOD_ID).getFile().getFileName();
-
-                    if (!fileName.matches("^supplementaries-1")) {
-                        ClientPlayerEntity player = (ClientPlayerEntity) event.getEntity();
-                        player.sendMessage(new TranslationTextComponent("message.supplementaries.anti_repost"), Util.DUMMY_UUID);
-                        player.sendMessage(ForgeHooks.newChatWithLinks("http://www.curseforge.com/minecraft/mc-mods/supplementaries", false), Util.DUMMY_UUID);
-                    }
-                } catch (Exception ignored) { }
-            }
-        }
     }
 
 }

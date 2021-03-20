@@ -8,16 +8,13 @@ import net.mehvahdjukaar.supplementaries.client.particles.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.FluidColors;
 import net.mehvahdjukaar.supplementaries.client.renderers.TippedSpikesColor;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.FireflyEntityRenderer;
-import net.mehvahdjukaar.supplementaries.client.renderers.entities.MashlingEntityRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.RopeArrowRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.entities.FireflyEntity;
-import net.mehvahdjukaar.supplementaries.entities.MashlingEntity;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.particle.FlameParticle;
@@ -67,7 +64,7 @@ public class ClientSetup {
 
     public static void init(final FMLClientSetupEvent event) {
 
-        RenderingRegistry.registerEntityRenderingHandler((EntityType<MashlingEntity>) Registry.POTAT_TYPE, MashlingEntityRenderer::new);
+        //RenderingRegistry.registerEntityRenderingHandler((EntityType<MashlingEntity>) Registry.POTAT_TYPE, MashlingEntityRenderer::new);
 
         //falling block tile entity
         //RenderingRegistry.registerEntityRenderingHandler( (EntityType<FallingBlockTileEntity>) Registry.FALLING_BLOCK_TILE_ENTITY.get(),
@@ -80,13 +77,9 @@ public class ClientSetup {
 
         //throwable brick
         onlyClientPls(event);
-        //planter
-        //RenderTypeLookup.setRenderLayer(Registry.PLANTER.get(), RenderType.getCutout());
         //clock
-        //RenderTypeLookup.setRenderLayer(Registry.CLOCK_BLOCK.get(), RenderType.getCutout());
         ClientRegistry.bindTileEntityRenderer(Registry.CLOCK_BLOCK_TILE.get(), ClockBlockTileRenderer::new);
         //pedestal
-        //RenderTypeLookup.setRenderLayer(Registry.PEDESTAL.get(), RenderType.getCutout());
         ClientRegistry.bindTileEntityRenderer(Registry.PEDESTAL_TILE.get(), PedestalBlockTileRenderer::new);
         //wind vane
         RenderTypeLookup.setRenderLayer(Registry.WIND_VANE.get(), RenderType.getCutout());
@@ -104,8 +97,6 @@ public class ClientSetup {
         RenderTypeLookup.setRenderLayer(Registry.FAUCET.get(), RenderType.getCutout());
         ClientRegistry.bindTileEntityRenderer(Registry.FAUCET_TILE.get(), FaucetBlockTileRenderer::new);
         //piston launcher
-        //RenderTypeLookup.setRenderLayer(Registry.PISTON_LAUNCHER.get(), RenderType.getCutout());
-        //RenderTypeLookup.setRenderLayer(Registry.PISTON_LAUNCHER_HEAD.get(), RenderType.getCutout());
         ClientRegistry.bindTileEntityRenderer(Registry.PISTON_LAUNCHER_ARM_TILE.get(), PistonLauncherArmBlockTileRenderer::new);
         //sign post
         RenderTypeLookup.setRenderLayer(Registry.SIGN_POST.get(), RenderType.getCutout());
@@ -153,7 +144,6 @@ public class ClientSetup {
         RenderTypeLookup.setRenderLayer(Registry.HOURGLASS.get(), RenderType.getCutout());
         ClientRegistry.bindTileEntityRenderer(Registry.HOURGLASS_TILE.get(), HourGlassBlockTileRenderer::new);
         //sack
-        //RenderTypeLookup.setRenderLayer(Registry.SACK.get(), RenderType.getCutout());
         ScreenManager.registerFactory(Registry.SACK_CONTAINER.get(), SackGui::new);
         //blackboard
         RenderTypeLookup.setRenderLayer(Registry.BLACKBOARD.get(), RenderType.getCutout());
@@ -189,6 +179,8 @@ public class ClientSetup {
         ScreenManager.registerFactory(Registry.PULLEY_BLOCK_CONTAINER.get(), PulleyBlockGui::new);
         //boat
         RenderTypeLookup.setRenderLayer(Registry.JAR_BOAT.get(), RenderType.getTranslucent());
+        //magma cream block
+        RenderTypeLookup.setRenderLayer(Registry.MAGMA_CREAM_BLOCK.get(), RenderType.getTranslucent());
     }
 
     //particles
@@ -211,7 +203,6 @@ public class ClientSetup {
     public static void registerBlockColors(ColorHandlerEvent.Block event){
         event.getBlockColors().register(new TippedSpikesColor(), Registry.BAMBOO_SPIKES.get());
         event.getBlockColors().register(new defWater(), Registry.JAR_BOAT.get());
-
     }
 
     @SubscribeEvent

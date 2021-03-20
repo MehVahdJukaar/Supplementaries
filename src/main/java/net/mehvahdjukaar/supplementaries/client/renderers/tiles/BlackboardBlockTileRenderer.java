@@ -26,7 +26,7 @@ public class BlackboardBlockTileRenderer extends TileEntityRenderer<BlackboardBl
         IVertexBuilder builder = bufferIn.getBuffer(RenderType.getEntitySolid(Textures.BLACKBOARD_TEXTURE));
 
         int lu = combinedLightIn & '\uffff';
-        int lv = combinedLightIn >> 16 & '\uffff'; // ok
+        int lv = combinedLightIn >> 16 & '\uffff';
 
         matrixStackIn.push();
         matrixStackIn.translate(0.5,0.5,0.5);

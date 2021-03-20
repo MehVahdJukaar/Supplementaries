@@ -24,7 +24,6 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
 
 public class PistonLauncherArmBlock  extends Block {
     protected static final VoxelShape SHAPE = VoxelShapes.empty();

@@ -18,7 +18,6 @@ public class RegistryConfigs {
 
     static {
         ForgeConfigSpec.Builder REGISTRY_BUILDER = new ForgeConfigSpec.Builder();
-        //TODO: see how block carpentry mod extrapolates textures from items to use on hourglass
         reg.init(REGISTRY_BUILDER);
 
         REGISTRY_CONFIG = REGISTRY_BUILDER.build();
@@ -31,9 +30,6 @@ public class RegistryConfigs {
                 reg.HAS_SILVER=true;
             }
 
-            reg.FIREFLY_JAR = reg.FIREFLY_ENABLED.get() && reg.JAR_ENABLED.get();
-            reg.SILVER_CANDELABRA = reg.CANDELABRA_ENABLED.get() && reg.HAS_SILVER;
-            reg.HAS_KEY = reg.NETHERITE_DOOR_ENABLED.get() || reg.NETHERITE_TRAPDOOR_ENABLED.get() || reg.SAFE_ENABLED.get();
         }
         catch(Exception ignored){};
 
@@ -102,12 +98,12 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue PULLEY_ENABLED;
         public static ForgeConfigSpec.BooleanValue FODDER_ENABLED;
         public static ForgeConfigSpec.BooleanValue BOMB_ENABLED;
+        public static ForgeConfigSpec.BooleanValue MAGMA_CREAM_BLOCK_ENABLED;
 
         public static ForgeConfigSpec.BooleanValue JAR_TAB;
         public static ForgeConfigSpec.BooleanValue CREATIVE_TAB;
         public static ForgeConfigSpec.BooleanValue DISPENSERS;
 
-        public static boolean FIREFLY_JAR = true;
         public static boolean SILVER_CANDELABRA = false;
         public static boolean HAS_COPPER = false;
         public static boolean HAS_SILVER = false;
@@ -115,30 +111,28 @@ public class RegistryConfigs {
 
         //oh god what have I done
         public static boolean isEnabled(String path){
+            if(path.equals(Registry.MAGMA_CREAM_BLOCK_NAME)){
+                return false;
+            }
+            if(path.equals(Registry.BOMB_NAME)){
+                return false;
+            }
             //special double condition cases
-            if(path.equals(Registry.GOLD_DOOR_NAME)){
-                return true;
-            }
-            if(path.equals(Registry.STONE_LAMP_NAME)){
-                return true;
-            }
-            if(path.equals(Registry.GOLD_TRAPDOOR_NAME)){
-                return true;
-            }
             if(path.equals(Registry.CRIMSON_LANTERN_NAME)){
                 return false;
             }
+
             if(path.equals(Registry.FIREFLY_JAR_NAME)){
-                return reg.FIREFLY_JAR;
+                return reg.FIREFLY_ENABLED.get() && reg.JAR_ENABLED.get();
             }
             if(path.equals(Registry.CANDELABRA_NAME_SILVER)){
-                return reg.SILVER_CANDELABRA;
+                return reg.CANDELABRA_ENABLED.get() && reg.HAS_SILVER;
             }
             if(path.equals(Registry.SOUL_JAR_NAME)){
                 return reg.JAR_ENABLED.get();
             }
             if(path.equals(Registry.KEY_NAME)){
-                return reg.HAS_KEY;
+                return reg.NETHERITE_DOOR_ENABLED.get() || reg.NETHERITE_TRAPDOOR_ENABLED.get() || reg.SAFE_ENABLED.get();
             }
             for (Field f : reg.class.getDeclaredFields()) {
                 try{
@@ -217,6 +211,7 @@ public class RegistryConfigs {
             PULLEY_ENABLED = builder.define(Registry.PULLEY_BLOCK_NAME,true);
             FODDER_ENABLED = builder.define(Registry.FODDER_NAME,true);
             BOMB_ENABLED = builder.define(Registry.BOMB_NAME,true);
+            MAGMA_CREAM_BLOCK_ENABLED = builder.define(Registry.MAGMA_CREAM_BLOCK_NAME,true);
 
             LASER_ENABLED = builder.comment("WIP")
                     .define(Registry.LASER_NAME, false);

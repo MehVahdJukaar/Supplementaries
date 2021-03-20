@@ -1,18 +1,18 @@
 package net.mehvahdjukaar.supplementaries.entities;
 
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.goal.TemptGoal;
+import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
-import net.minecraft.entity.passive.CowEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.network.IPacket;
 import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
-import net.minecraftforge.common.Tags;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 public class MashlingEntity extends CreatureEntity {
@@ -25,6 +25,15 @@ public class MashlingEntity extends CreatureEntity {
     public MashlingEntity(EntityType<? extends MashlingEntity> type, World worldIn) {
         super(type, worldIn);
         this.setPathPriority(PathNodeType.DAMAGE_CACTUS, 1.0F);
+    }
+
+    public static AttributeModifierMap.MutableAttribute setCustomAttributes() {
+        return MobEntity.func_233666_p_()
+                .createMutableAttribute(Attributes.FOLLOW_RANGE, 48.0D)
+                .createMutableAttribute(Attributes.MOVEMENT_SPEED, ServerConfigs.entity.FIREFLY_SPEED.get())
+                .createMutableAttribute(Attributes.MAX_HEALTH, 1)
+                .createMutableAttribute(Attributes.ARMOR, 0)
+                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 0D);
     }
 
     @Override

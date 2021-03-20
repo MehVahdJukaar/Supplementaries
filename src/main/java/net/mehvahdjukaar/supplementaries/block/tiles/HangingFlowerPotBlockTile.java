@@ -48,7 +48,6 @@ public class HangingFlowerPotBlockTile extends SwayingBlockTile implements IBloc
         //if(pot != Blocks.AIR.getDefaultState())
         compound.put("Pot", NBTUtil.writeBlockState(pot));
         return compound;
-        //TODO: maybe write resource location instead
     }
 
     @Override

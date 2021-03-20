@@ -1,13 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common;
 
-import net.mehvahdjukaar.supplementaries.block.blocks.FodderBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.SignPostBlock;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.VanillaWoodTypes;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.*;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.potion.PotionUtils;
@@ -32,7 +30,7 @@ import static net.mehvahdjukaar.supplementaries.common.Textures.*;
 public class CommonUtil {
 
     public static void swapItem(PlayerEntity player, Hand hand, ItemStack oldItem, ItemStack newItem){
-        player.setHeldItem(hand, DrinkHelper.fill(oldItem.copy(), player, newItem, false));
+        player.setHeldItem(hand, DrinkHelper.fill(oldItem.copy(), player, newItem, player.isCreative()));
     }
     public static void swapItem(PlayerEntity player, Hand hand, ItemStack newItem){
         player.setHeldItem(hand, DrinkHelper.fill(player.getHeldItem(hand).copy(), player, newItem, player.isCreative()));
@@ -366,8 +364,16 @@ public class CommonUtil {
         return true;
     }
 
+    //for quarks hedges
+    public static boolean isNotExtended(BlockState state){
+        if(state.hasProperty(BlockStateProperties.EXTENDED)){
+            return !state.get(BlockStateProperties.EXTENDED);
+        }
+        return true;
+    }
+
     public static boolean isPost(BlockState state){
-        return isVertical(state) && ModTags.isTagged(ModTags.POSTS,state.getBlock());
+        return isVertical(state) && isNotExtended(state) && ModTags.isTagged(ModTags.POSTS,state.getBlock());
     }
 
     //this is how you do it :D

@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.block.util;
 
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.entity.Entity;
@@ -158,42 +159,47 @@ public class CapturedMobs {
         TYPES.clear();
         List<? extends List<String>> config = ClientConfigs.block.CAPTURED_MOBS_PROPERTIES.get();
         for (List<String> l : config){
-            int size = l.size();
-            if(size<2)continue;
-            String id = l.get(0);
-            float h = strToFloat(l.get(1));
-            float w = 0;
-            int light = 0;
-            int fish = 0;
-            Category cat = Category.DEFAULT;
-            if(size>2) w = strToFloat(l.get(2));
-            if(size>3) light = strToInt(l.get(3));
-            if(size>4){
-                String type = l.get(4).toLowerCase();
-                switch (type) {
-                    case "air":
-                        cat = Category.AIR;
-                        break;
-                    case "land":
-                        cat = Category.LAND;
-                        break;
-                    case "floating":
-                        cat = Category.FLOATING;
-                        break;
-                    default:
-                        fish = strToInt(type);
-                        if (fish > 0) cat = Category.FISH;
-                        break;
+            try {
+                int size = l.size();
+                if (size < 2) continue;
+                String id = l.get(0);
+                float h = strToFloat(l.get(1));
+                float w = 0;
+                int light = 0;
+                int fish = 0;
+                Category cat = Category.DEFAULT;
+                if (size > 2) w = strToFloat(l.get(2));
+                if (size > 3) light = strToInt(l.get(3));
+                if (size > 4) {
+                    String type = l.get(4).toLowerCase();
+                    switch (type) {
+                        case "air":
+                            cat = Category.AIR;
+                            break;
+                        case "land":
+                            cat = Category.LAND;
+                            break;
+                        case "floating":
+                            cat = Category.FLOATING;
+                            break;
+                        default:
+                            fish = strToInt(type);
+                            if (fish > 0) cat = Category.FISH;
+                            break;
+                    }
                 }
-            }
             /*
             if(size>5) {
                 addValidBucket(l.get(5));
             }else{
                 tryAddingValidBucket(id);
             }*/
-            CapturedMobProperties type = new CapturedMobProperties(id,h,w,light,fish,cat);
-            TYPES.put(id,type);
+                CapturedMobProperties type = new CapturedMobProperties(id, h, w, light, fish, cat);
+                TYPES.put(id, type);
+            }
+            catch (Exception e){
+                Supplementaries.LOGGER.warn("failed to load captured mob configs");
+            }
         }
 
         List<? extends String> jarCatchable = ServerConfigs.block.MOB_JAR_ALLOWED_MOBS.get();

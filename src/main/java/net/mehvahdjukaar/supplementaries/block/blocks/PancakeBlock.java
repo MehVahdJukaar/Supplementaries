@@ -79,7 +79,8 @@ public class PancakeBlock extends Block implements IWaterLoggable{
                     worldIn.playSound(null,pos, SoundEvents.BLOCK_HONEY_BLOCK_PLACE, SoundCategory.BLOCKS,1,1.2f);
                 }
                 ItemStack returnItem = t==BlockProperties.Topping.CHOCOLATE? ItemStack.EMPTY : new ItemStack(Items.GLASS_BOTTLE);
-                CommonUtil.swapItem(player,handIn,stack,returnItem);
+                if(!player.isCreative())
+                    CommonUtil.swapItem(player,handIn,returnItem);
                 //player.setHeldItem(handIn, DrinkHelper.fill(stack.copy(), player, new ItemStack(Items.GLASS_BOTTLE), false));
                 return ActionResultType.func_233537_a_(worldIn.isRemote);
             }

@@ -26,13 +26,15 @@ public class SyncConfigsPacket {
     public static void buffer(SyncConfigsPacket message, PacketBuffer buf) {
         buf.writeByteArray(message.configData);
     }
-
+    //client
     public static void handler(SyncConfigsPacket message, Supplier<NetworkEvent.Context> contextSupplier) {
         NetworkEvent.Context context = contextSupplier.get();
         context.enqueueWork(() -> {
             if (context.getDirection() != NetworkDirection.PLAY_TO_CLIENT) {
                 return;
             }
+
+            //CONFIG.setConfig(TomlFormat.instance().createParser().parse()
 
             ServerConfigs.SERVER_CONFIG.setConfig(TomlFormat.instance().createParser().parse(new ByteArrayInputStream(message.configData)));
             ServerConfigs.cached.refresh();

@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.configs;
 
 import net.mehvahdjukaar.supplementaries.block.util.CapturedMobs;
-import net.mehvahdjukaar.supplementaries.world.data.GlobeData;
 import net.mehvahdjukaar.supplementaries.world.data.GlobeDataGenerator;
 import net.minecraftforge.common.ForgeConfigSpec;
 
@@ -11,14 +10,14 @@ public class ClientConfigs {
     public static ForgeConfigSpec CLIENT_CONFIG;
 
     static {
-        ForgeConfigSpec.Builder CLIENT_BUILDER = new ForgeConfigSpec.Builder();
+        ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
 
-        block.init(CLIENT_BUILDER);
-        particle.init(CLIENT_BUILDER);
-        entity.init(CLIENT_BUILDER);
-        general.init(CLIENT_BUILDER);
+        block.init(builder);
+        particle.init(builder);
+        entity.init(builder);
+        general.init(builder);
 
-        CLIENT_CONFIG = CLIENT_BUILDER.build();
+        CLIENT_CONFIG = builder.build();
     }
 
     public static class general {

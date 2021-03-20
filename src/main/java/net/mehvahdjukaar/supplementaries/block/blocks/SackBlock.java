@@ -105,10 +105,6 @@ public class SackBlock extends FallingBlock {
                  pos.getY() >= 0 && !RopeBlock.isSupportingCeiling(pos.up(),world);
     }
 
-    //TODO: maybe put in rope
-    //TODO: merge rope tag and sack supporting whitelist
-    //check is block can support a rope or sack under it
-
     //schedule block tick
     @Override
     public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {

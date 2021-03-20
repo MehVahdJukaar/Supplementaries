@@ -43,7 +43,7 @@ public class HourGlassBlockTile extends ItemDisplayTile implements ITickableTile
     }
 
     public void updateTile(){
-        this.sandType = HourGlassSandType.getHourGlassSandType(this.getStackInSlot(0).getItem());
+        this.sandType = HourGlassSandType.getHourGlassSandType(this.getDisplayedItem().getItem());
         int p = this.getDirection()==Direction.DOWN?1:0;
         int l = this.sandType.getLight();
         if(l!=this.getBlockState().get(HourGlassBlock.LIGHT_LEVEL)){

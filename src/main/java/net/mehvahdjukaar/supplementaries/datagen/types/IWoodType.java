@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.datagen.types;
 
+import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
-import net.minecraft.util.ResourceLocation;
 
 public interface IWoodType {
 
@@ -17,9 +17,13 @@ public interface IWoodType {
         return new ResourceLocation(this.getNamespace(),this.toString());
     }*/
 
-    Material getMaterial();
+    default Material getMaterial(){
+        return Blocks.OAK_PLANKS.getDefaultState().getMaterial();
+    }
 
-    MaterialColor getColor();
+    default MaterialColor getColor(){
+        return Blocks.OAK_PLANKS.getMaterialColor();
+    }
 
     String getNamespace();
 

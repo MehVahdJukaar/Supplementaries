@@ -38,6 +38,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.text.*;
@@ -328,9 +329,9 @@ public class SafeBlock extends Block implements IWaterLoggable{
 
     //pick block. TODO: use getsafe item here. clean up
     @Override
-    public ItemStack getItem(IBlockReader worldIn, BlockPos pos, BlockState state) {
-        ItemStack itemstack = super.getItem(worldIn, pos, state);
-        TileEntity te = worldIn.getTileEntity(pos);
+    public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
+        ItemStack itemstack = super.getItem(world, pos, state);
+        TileEntity te = world.getTileEntity(pos);
         if (te instanceof SafeBlockTile){
             CompoundNBT compoundnbt = ((SafeBlockTile)te).saveToNbt(new CompoundNBT());
             if (!compoundnbt.isEmpty()) {

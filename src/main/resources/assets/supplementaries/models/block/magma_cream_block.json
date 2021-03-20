@@ -1,0 +1,9 @@
+
+{
+  "parent": "minecraft:block/template_piston",
+  "textures": {
+    "platform": "supplementaries:blocks/magma_cream_block_top",
+    "bottom": "supplementaries:blocks/magma_cream_block_bottom",
+    "side": "supplementaries:blocks/magma_cream_block_side"
+  }
+}

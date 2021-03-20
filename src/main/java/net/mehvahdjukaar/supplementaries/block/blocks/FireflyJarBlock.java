@@ -24,7 +24,7 @@ public class FireflyJarBlock extends Block {
 
     public FireflyJarBlock(Properties properties, boolean isSoul) {
         super(properties);
-        soul=isSoul;
+        this.soul=isSoul;
     }
 
     @Override
@@ -57,5 +57,44 @@ public class FireflyJarBlock extends Block {
     public PushReaction getPushReaction(BlockState state) {
         return PushReaction.DESTROY;
     }
+
+    /*
+    @Override
+    public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+        worldIn.getPendingBlockTicks().scheduleTick(pos, this, 1);
+    }
+
+    @Override
+    public void tick(BlockState state, ServerWorld world, BlockPos pos, Random rand) {
+        world.getPendingBlockTicks().scheduleTick(pos, this, 1);
+        int p = ClientConfigs.cached.FIREFLY_SPAWN_PERIOD;
+        float c = (float) ClientConfigs.cached.FIREFLY_SPAWN_CHANCE;
+        if(world.getGameTime() % p == 0L && rand.nextFloat() > c) {
+            int x = pos.getX();
+            int y = pos.getY();
+            int z = pos.getZ();
+            double pr = 0.15;
+            if(soul){
+                pr=0.25;
+                for (int l = 0; l < 1; ++l) {
+                    double d0 = (x + 0.5 + (rand.nextFloat() - 0.5) * (0.625D - pr));
+                    double d1 = (y + 0.25);
+                    double d2 = (z + 0.5 + (rand.nextFloat() - 0.5) * (0.625D - pr));
+                    world.spawnParticle(ParticleTypes.SOUL,d0,d1,d2,0,0,0,0,0);
+                    //world.addParticle(ParticleTypes.SOUL, d0, d1, d2, 0, rand.nextFloat()*0.02, 0);
+                }
+            }
+            else {
+                for (int l = 0; l < 1; ++l) {
+                    double d0 = (x + 0.5 + (rand.nextFloat() - 0.5) * (0.625D - pr));
+                    double d1 = (y + 0.5 - 0.0625 + (rand.nextFloat() - 0.5) * (0.875D - pr));
+                    double d2 = (z + 0.5 + (rand.nextFloat() - 0.5) * (0.625D - pr));
+                    world.spawnParticle(Registry.FIREFLY_GLOW.get(), d0, d1, d2, 0, 0, 0, 0,0);
+                    //world.addParticle(Registry.FIREFLY_GLOW.get(), d0, d1, d2, 0, 0, 0);
+                }
+            }
+
+        }
+    }*/
 
 }

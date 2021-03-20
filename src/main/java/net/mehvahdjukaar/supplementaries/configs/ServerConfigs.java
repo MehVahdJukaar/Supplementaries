@@ -1,11 +1,15 @@
 package net.mehvahdjukaar.supplementaries.configs;
 
+import com.electronwill.nightconfig.core.file.CommentedFileConfig;
+import com.electronwill.nightconfig.core.io.WritingMode;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.util.CapturedMobs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
@@ -14,16 +18,18 @@ import java.util.List;
 
 
 public class ServerConfigs {
+
+
+    //overwritten by server one
     public static ForgeConfigSpec SERVER_CONFIG;
 
-    public static ForgeConfigSpec.BooleanValue comment;
-
     static {
+        createConfig();
+    }
+
+
+    public static void createConfig(){
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
-        builder.push("comment");
-        builder.comment("This config is synced server side. If you are on a server you'll get its own version");
-        comment = builder.define("comment",true);
-        builder.pop();
 
         //reg.init(SERVER_BUILDER);
 
@@ -34,6 +40,17 @@ public class ServerConfigs {
         item.init(builder);
 
         SERVER_CONFIG = builder.build();
+    }
+
+    public static void loadLocal(){
+        CommentedFileConfig replacementConfig = CommentedFileConfig
+                .builder(FMLPaths.CONFIGDIR.get().resolve(Supplementaries.MOD_ID + "-common.toml"))
+                .sync()
+                .preserveInsertionOrder()
+                .writingMode(WritingMode.REPLACE)
+                .build();
+        replacementConfig.load();
+        ServerConfigs.SERVER_CONFIG.setConfig(replacementConfig);
     }
 
 
@@ -231,8 +248,8 @@ public class ServerConfigs {
                     "Disable if you think this ability is op. Cookies are excluded")
                     .define("drink_from_jar",true);
 
-            List<String> jarMobs = Arrays.asList("minecraft:slime",
-                    "minecraft:bee","minecraft:magma_cube","iceandfire:pixie","alexsmobs:fly", "alexsmobs:hummingbird","alexsmobs:cockroach",
+            List<String> jarMobs = Arrays.asList("minecraft:slime", "minecraft:bee","minecraft:magma_cube",
+                    "iceandfire:pixie","alexsmobs:fly", "alexsmobs:hummingbird","alexsmobs:cockroach","terraincognita:butterfly",
                     "buzzierbees:honey_slime", "mysticalworld:frog","mysticalworld:beetle","mysticalworld:silkworm",
                     "druidcraft:lunar_moth", "druidcraft:dreadfish","swampexpansion:slabfish","betteranimalsplus:goose",
                     "endergetic:puff_bug", "betterendforge:end_slime", "betterendforge:dragonfly", "betterendforge:silk_moth",
@@ -338,7 +355,7 @@ public class ServerConfigs {
                     "byg:guiana_shield", "byg:guiana_clearing", "byg:meadow", "byg:orchard", "byg:seasonal_birch_forest",
                     "byg:seasonal_deciduous_forest", "byg:seasonal_forest", "biomesoplenty:flower_meadow", "biomesoplenty:fir_clearing",
                     "biomesoplenty:grove_lakes", "biomesoplenty:grove", "biomesoplenty:highland_moor", "biomesoplenty:wetland_marsh",
-                    "biomesoplenty:deep_bayou");
+                    "biomesoplenty:deep_bayou","biomesoplenty:wetland");
             List<String> fireflyModWhitelist = Arrays.asList();
             //TODO add validation for biomes
             FIREFLY_BIOMES = builder.comment("Spawnable biomes")

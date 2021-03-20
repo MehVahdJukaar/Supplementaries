@@ -36,5 +36,15 @@ public class NetworkHandler {
 
         INSTANCE.registerMessage(nextID(), SyncConfigsPacket.class,SyncConfigsPacket::buffer,
                 SyncConfigsPacket::new, SyncConfigsPacket::handler);
+
+        INSTANCE.registerMessage(nextID(), SendLoginMessagePacket.class, SendLoginMessagePacket::buffer,
+                SendLoginMessagePacket::new, SendLoginMessagePacket::handler);
+
+        INSTANCE.registerMessage(nextID(), OpenConfigsPacket.class, OpenConfigsPacket::buffer,
+                OpenConfigsPacket::new, OpenConfigsPacket::handler);
+
+        INSTANCE.registerMessage(nextID(), RequestConfigReloadPacket.class, RequestConfigReloadPacket::buffer,
+                RequestConfigReloadPacket::new, RequestConfigReloadPacket::handler);
+
     }
 }

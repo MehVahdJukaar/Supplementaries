@@ -31,8 +31,6 @@ import net.minecraft.world.World;
 
 public class TurnTableBlock extends Block {
 
-    //TODO:figure out why these two don't match up
-
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final IntegerProperty POWER = BlockStateProperties.POWER_0_15;
     public static final BooleanProperty INVERTED = BlockStateProperties.INVERTED;

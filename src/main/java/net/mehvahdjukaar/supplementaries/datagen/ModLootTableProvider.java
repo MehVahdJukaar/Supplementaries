@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.datagen;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.mehvahdjukaar.supplementaries.datagen.types.BlockLootTableAccessor;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.setup.Registry;

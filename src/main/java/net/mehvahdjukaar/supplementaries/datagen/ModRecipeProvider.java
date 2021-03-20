@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.datagen;
 
-import net.mehvahdjukaar.supplementaries.datagen.types.EnvironmentalWoodTypes;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
@@ -43,9 +42,6 @@ public class ModRecipeProvider extends RecipeProvider {
 
     private static void makeSignPostRecipe(IWoodType wood, Consumer<IFinishedRecipe> consumer) {
         try{
-            if(wood == EnvironmentalWoodTypes.WISTERIA){
-                int a = 1;
-            }
             Item plank = ForgeRegistries.ITEMS.getValue(new ResourceLocation(wood.getPlankRegName()));
             Item sign = ForgeRegistries.ITEMS.getValue(new ResourceLocation(wood.getSignRegName()));
             if (plank == null || plank == Items.AIR) return;

@@ -25,25 +25,7 @@ public enum VanillaWoodTypes implements IWoodType {
         this.name = name;
         this.color = plank.getMaterialColor();
         this.material = plank.getDefaultState().getMaterial();
-
     }
-
-    VanillaWoodTypes(String name, MaterialColor color, Material material) {
-        this.name = name;
-        this.color = color;
-        this.material = material;
-    }
-    VanillaWoodTypes(String name, MaterialColor color) {
-        this.name = name;
-        this.color = color;
-        this.material = Material.WOOD;
-    }
-    VanillaWoodTypes(String name) {
-        this.name = name;
-        this.color = MaterialColor.WOOD;
-        this.material = Material.WOOD;
-    }
-
 
     @Override
     public MaterialColor getColor() {

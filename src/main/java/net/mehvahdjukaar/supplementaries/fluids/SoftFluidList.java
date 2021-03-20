@@ -135,7 +135,7 @@ public class SoftFluidList {
                 .color(0xbff0f0)
                 .specialEmptyBottle(Items.AIR)
                 .translationKey("item.minecraft.ghast_tear"));
-        GHAST_TEAR = makeSF(new SoftFluid.Builder(Textures.MAGMA_TEXTURE,Textures.MAGMA_TEXTURE_FLOW,"magma_cream")
+        MAGMA_CREAM = makeSF(new SoftFluid.Builder(Textures.MAGMA_TEXTURE,Textures.MAGMA_TEXTURE_FLOW,"magma_cream")
                 .bottle(Items.MAGMA_CREAM)
                 .specialEmptyBottle(Items.AIR)
                 .translationKey("item.minecraft.magma_cream"));

@@ -45,7 +45,6 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.common.Tags;
 import net.minecraftforge.fml.ModList;
 
 import javax.annotation.Nullable;
@@ -141,7 +140,7 @@ public class RopeBlock extends Block implements IWaterLoggable{
 
     @Override
     public boolean isLadder(BlockState state, IWorldReader world, BlockPos pos, LivingEntity entity) {
-        return state.get(DOWN)&&entity.getPositionVec().getY()-pos.getY()<(13/16f);
+        return state.get(DOWN)&&(state.get(UP)||entity.getPositionVec().getY()-pos.getY()<(13/16f));
     }
 
     //TODO: make solid when player is not colliding
@@ -188,7 +187,6 @@ public class RopeBlock extends Block implements IWaterLoggable{
         }
     }
 
-    //TODO: fix this
     public RopeAttachment getAttachment(BlockPos currentPos, IWorld world, Direction dir){
         BlockPos facingPos = currentPos.offset(dir);
         BlockState facingState = world.getBlockState(facingPos);
@@ -198,7 +196,6 @@ public class RopeBlock extends Block implements IWaterLoggable{
             if(checkForKnot(facingPos,world,dir))return RopeAttachment.KNOT;
             return RopeAttachment.FENCE;
         }
-        //else if(b instanceof WallBlock)return Attachment.WALL;
         return RopeAttachment.NONE;
     }
 

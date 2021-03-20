@@ -9,15 +9,18 @@ import net.mehvahdjukaar.supplementaries.client.renderers.items.FireflyJarItemRe
 import net.mehvahdjukaar.supplementaries.client.renderers.items.JarItemRenderer;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
-import net.mehvahdjukaar.supplementaries.entities.*;
+import net.mehvahdjukaar.supplementaries.entities.BombEntity;
+import net.mehvahdjukaar.supplementaries.entities.FireflyEntity;
+import net.mehvahdjukaar.supplementaries.entities.RopeArrowEntity;
+import net.mehvahdjukaar.supplementaries.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.inventories.NoticeBoardContainer;
 import net.mehvahdjukaar.supplementaries.inventories.PulleyBlockContainer;
 import net.mehvahdjukaar.supplementaries.inventories.SackContainer;
 import net.mehvahdjukaar.supplementaries.items.*;
 import net.mehvahdjukaar.supplementaries.items.crafting.*;
 import net.mehvahdjukaar.supplementaries.items.tabs.JarTab;
+import net.mehvahdjukaar.supplementaries.plugins.quark.QuarkBlocks;
 import net.mehvahdjukaar.supplementaries.setup.registration.Variants;
-import net.mehvahdjukaar.supplementaries.world.structures.RoadSignStructure;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
@@ -37,7 +40,6 @@ import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
@@ -121,13 +123,14 @@ public class Registry {
     //TODO: use deferred reg
     @SubscribeEvent
     public static void registerEntities(final RegistryEvent.Register<EntityType<?>> event){
-        event.getRegistry().register(POTAT_TYPE);
-        GlobalEntityTypeAttributes.put((EntityType<? extends LivingEntity>) POTAT_TYPE, FireflyEntity.setCustomAttributes().create());
+        //event.getRegistry().register(POTAT_TYPE);
+        //GlobalEntityTypeAttributes.put((EntityType<? extends LivingEntity>) POTAT_TYPE, MashlingEntity.setCustomAttributes().create());
 
         event.getRegistry().register(FIREFLY_TYPE);
         GlobalEntityTypeAttributes.put((EntityType<? extends LivingEntity>) FIREFLY_TYPE, FireflyEntity.setCustomAttributes().create());
     }
 
+    /*
     public static final String POTAT_NAME = "potat";
     public static final EntityType<?> POTAT_TYPE = (EntityType.Builder.create(MashlingEntity::new, EntityClassification.AMBIENT)
             .setShouldReceiveVelocityUpdates(true).setTrackingRange(128).setUpdateInterval(3)
@@ -138,7 +141,7 @@ public class Registry {
      //       new Item.Properties().group(getTab(ItemGroup.MISC,POTAT_NAME))));
 
     //entities
-    /*
+
     public static final String ORANGE_TRADER_NAME = "orange_trader";
     public static final EntityType<?> ORANGE_TRADER = (EntityType.Builder.create(FireflyEntity::new, EntityClassification.AMBIENT)
             .setShouldReceiveVelocityUpdates(true).setTrackingRange(128).setUpdateInterval(3)
@@ -174,17 +177,15 @@ public class Registry {
     public static final RegistryObject<EntityType<BombEntity>> BOMB = ENTITIES.register(BOMB_NAME,()->(
             EntityType.Builder.<BombEntity>create(BombEntity::new, EntityClassification.MISC)
                     .setCustomClientFactory(BombEntity::new)
-                    .size(0.5F, 0.5F).trackingRange(4).func_233608_b_(10))
+                    .size(0.5F, 0.5F).trackingRange(8).func_233608_b_(10))
                     //.setTrackingRange(64).setUpdateInterval(1)) //.size(0.25F, 0.25F).trackingRange(4).func_233608_b_(10))
             .build(THROWABLE_BRICK_NAME));
-    /*
+
     public static final RegistryObject<Item> BOMB_ITEM = ITEMS.register(BOMB_NAME,()-> new BombItem(new Item.Properties()
             .group(getTab(ItemGroup.COMBAT,BOMB_NAME))));
     public static final RegistryObject<Item> BOMB_ITEM_ON = ITEMS.register("bomb_projectile",()-> new BombItem(new Item.Properties()
             .group(null)));
-    */
 
-    //TODO: add enable config
     //rope arrow
     public static final String ROPE_ARROW_NAME = "rope_arrow";
     public static final RegistryObject<EntityType<RopeArrowEntity>> ROPE_ARROW = ENTITIES.register(ROPE_ARROW_NAME,()->(
@@ -502,7 +503,7 @@ public class Registry {
     public static final String PISTON_LAUNCHER_ARM_NAME = "piston_launcher_arm";
     public static final RegistryObject<Block> PISTON_LAUNCHER_ARM = BLOCKS.register(PISTON_LAUNCHER_ARM_NAME,()-> new PistonLauncherArmBlock(
             AbstractBlock.Properties.create(Material.IRON, MaterialColor.IRON)
-                    .hardnessAndResistance(4f, 5f)
+                    .hardnessAndResistance(50f, 50f)
                     .harvestLevel(1)
                     .sound(SoundType.METAL)
                     .harvestTool(ToolType.PICKAXE)
@@ -989,8 +990,8 @@ public class Registry {
     public static final RegistryObject<TileEntityType<BambooSpikesBlockTile>> BAMBOO_SPIKES_TILE = TILES.register(BAMBOO_SPIKES_NAME,()-> TileEntityType.Builder.create(
             BambooSpikesBlockTile::new, BAMBOO_SPIKES.get()).build(null));
 
-    public static final RegistryObject<Item> BAMBOO_SPIKES_ITEM = ITEMS.register(BAMBOO_SPIKES_NAME,()-> new BurnableBlockItem(BAMBOO_SPIKES.get(),
-            (new Item.Properties()).group(null),150
+    public static final RegistryObject<Item> BAMBOO_SPIKES_ITEM = ITEMS.register(BAMBOO_SPIKES_NAME,()-> new BambooSpikesItem(BAMBOO_SPIKES.get(),
+            (new Item.Properties()).group(getTab(ItemGroup.DECORATIONS,BAMBOO_SPIKES_NAME))
     ));
     public static final RegistryObject<Item> BAMBOO_SPIKES_TIPPED_ITEM = ITEMS.register("bamboo_spikes_tipped",()-> new BambooSpikesTippedItem(BAMBOO_SPIKES.get(),
             (new Item.Properties()).defaultMaxDamage(BambooSpikesBlockTile.MAX_CHARGES).setNoRepair().group(getTab(ItemGroup.BREWING,BAMBOO_SPIKES_NAME))
@@ -1115,7 +1116,17 @@ public class Registry {
     public static final RegistryObject<Block> JAR_BOAT = BLOCKS.register(JAR_BOAT_NAME,()-> new JarBoatBlock(
             AbstractBlock.Properties.from(Registry.JAR.get())));
     public static final RegistryObject<Item> JAR_BOAT_ITEM = ITEMS.register(JAR_BOAT_NAME,()-> new BlockItem(JAR_BOAT.get(),
-            (new Item.Properties()).group(getTab(ItemGroup.DECORATIONS,JAR_NAME))));
+            (new Item.Properties()).group(null)));
+
+    //magma cream block
+    public static final String MAGMA_CREAM_BLOCK_NAME = "magma_cream_block";
+    public static final RegistryObject<Block> MAGMA_CREAM_BLOCK = BLOCKS.register(MAGMA_CREAM_BLOCK_NAME,()-> ModList.get().isLoaded("quark")?
+            QuarkBlocks.createMagmaCreamBlock():
+            new MagmaCreamBlock(AbstractBlock.Properties.from(Blocks.SLIME_BLOCK)));
+    public static final RegistryObject<Item> MAGMA_CREAM_BLOCK_ITEM = ITEMS.register(MAGMA_CREAM_BLOCK_NAME,()-> new BlockItem(MAGMA_CREAM_BLOCK.get(),
+            (new Item.Properties()).group(getTab(ItemGroup.REDSTONE,MAGMA_CREAM_BLOCK_NAME))));
+
+
     /*
     //statue
     public static final String STATUE_NAME = "statue";

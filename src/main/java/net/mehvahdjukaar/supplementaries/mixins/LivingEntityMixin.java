@@ -16,9 +16,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntity.class)
-public abstract class RopeLivingEntityMixin extends Entity {
+public abstract class LivingEntityMixin extends Entity {
 
-    public RopeLivingEntityMixin(EntityType<?> entityTypeIn, World worldIn) {
+    public LivingEntityMixin(EntityType<?> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
     }
 

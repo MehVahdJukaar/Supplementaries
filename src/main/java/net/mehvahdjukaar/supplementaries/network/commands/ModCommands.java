@@ -16,7 +16,7 @@ public class ModCommands {
                                 .then(ResetGlobeSeedCommand.register(dispatcher))
                         )
                         .then(ReloadConfigsCommand.register(dispatcher))
-
+                        .then(OpenConfiguredCommand.register(dispatcher))
         );
 
         //dispatcher.register(Commands.literal("splm").redirect(mymod));

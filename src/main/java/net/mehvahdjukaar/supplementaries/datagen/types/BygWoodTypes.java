@@ -1,12 +1,6 @@
 package net.mehvahdjukaar.supplementaries.datagen.types;
 
 
-
-import net.minecraft.block.Blocks;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.material.MaterialColor;
-
-
 public enum BygWoodTypes implements IWoodType {
     ASPENS("aspen"),
     BAOBABS("baobab"),
@@ -38,24 +32,10 @@ public enum BygWoodTypes implements IWoodType {
     ETHERS("ether");
 
     private final String name;
-    private final MaterialColor color;
-    private final Material material;
 
 
     BygWoodTypes(String name) {
         this.name = name;
-        this.color = MaterialColor.BROWN;
-        this.material = Blocks.OAK_PLANKS.getDefaultState().getMaterial();
-    }
-
-    @Override
-    public MaterialColor getColor() {
-        return this.color;
-    }
-
-    @Override
-    public Material getMaterial() {
-        return this.material;
     }
 
     @Override

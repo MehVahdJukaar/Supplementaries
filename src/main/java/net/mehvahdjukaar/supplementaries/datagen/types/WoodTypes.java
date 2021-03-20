@@ -1,8 +1,6 @@
 package net.mehvahdjukaar.supplementaries.datagen.types;
 
 
-import net.minecraft.util.ResourceLocation;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -109,6 +107,9 @@ public class WoodTypes {
             TYPES.put(w.toNBT(),w);
         }
         for (IWoodType w : TerraincognitaWoodType.values()){
+            TYPES.put(w.toNBT(),w);
+        }
+        for (IWoodType w : BiomesoplentyWoodTypes.values()){
             TYPES.put(w.toNBT(),w);
         }
 

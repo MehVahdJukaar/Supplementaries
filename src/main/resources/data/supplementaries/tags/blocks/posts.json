@@ -3,6 +3,10 @@
   "values": [
     "#minecraft:fences",
     {
+      "id" :"#quark:hedges",
+      "required": false
+    },
+    {
       "id" :"quark:oak_post",
       "required": false
     },

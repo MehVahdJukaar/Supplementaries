@@ -29,6 +29,7 @@ public class ConfigHandler {
 
 
     public static void reloadConfigsEvent(ModConfig.ModConfigEvent event) {
+
         if(event.getConfig().getSpec() == ServerConfigs.SERVER_CONFIG) {
             //send this configuration to connected clients
             syncServerConfigs();
@@ -41,9 +42,11 @@ public class ConfigHandler {
 
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         if (!event.getPlayer().world.isRemote) {
+            //send this configuration to connected clients
             syncServerConfigs(event.getPlayer());
         }
     }
+
 
 
 

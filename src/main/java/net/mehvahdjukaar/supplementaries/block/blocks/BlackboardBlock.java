@@ -54,15 +54,7 @@ public class BlackboardBlock extends Block implements IWaterLoggable {
         builder.add(FACING, WATERLOGGED);
     }
 /*
-    @Override
-    public boolean isTransparent(BlockState state) {
-        return true;
-    }
-    @Override
-    public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
-        return true;
-    }
-    //TODO: fix culling on all blocks
+
     @Override
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.MODEL;

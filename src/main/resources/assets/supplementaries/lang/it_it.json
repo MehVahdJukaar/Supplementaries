@@ -135,6 +135,10 @@
   "block.supplementaries.fodder": "Mangime",
   "item.supplementaries.bomb": "Bomba",
   "item.supplementaries.bomb_projectile": "Bomba",
+  "block.supplementaries.flax_block": "Balla ",
+  "subtitle.supplementaries.bomb": "Explosione",
+  "message.supplementaries.anti_repost": "Sembra che tu abbia scaricato Supplementaries da un sito pericoloso :(. Scarica la vera mod qui:",
+  "block.supplementaries.jar_boat": "Nave in bottiglia",
 
   "block.supplementaries.skull_candle": "Teschio con candela",
   "block.supplementaries.goblet": "Calice",

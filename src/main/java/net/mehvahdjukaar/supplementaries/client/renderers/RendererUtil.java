@@ -56,7 +56,6 @@ public class RendererUtil {
 
 
     //TODO: cache sprite coordinates?
-    //TODO: wrap around faucet water texture
     public static void addCube(IVertexBuilder builder, MatrixStack matrixStackIn,float uOff, float vOff, float w, float h, TextureAtlasSprite sprite, int combinedLightIn,
                                int color, float a, int combinedOverlayIn, boolean up, boolean down, boolean fakeshading, boolean flippedY, boolean wrap) {
         int lu = combinedLightIn & '\uffff';

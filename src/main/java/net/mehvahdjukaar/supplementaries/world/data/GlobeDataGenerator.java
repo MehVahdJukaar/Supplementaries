@@ -5,9 +5,10 @@ import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.util.math.MathHelper;
 
-import java.awt.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 public class GlobeDataGenerator {
     //object instance
@@ -106,7 +107,7 @@ public class GlobeDataGenerator {
                 for(int i = 1; i<13; i++) {
                     int hex;
                     try{
-                        hex = Integer.parseInt(l.get(i), 16);
+                        hex = Integer.parseInt(l.get(i).replace("0x",""), 16);
                     }catch(Exception e){
                         Supplementaries.LOGGER.warn("failed to parse config 'globe_colors' (at dimension"+id+")");
                         continue;

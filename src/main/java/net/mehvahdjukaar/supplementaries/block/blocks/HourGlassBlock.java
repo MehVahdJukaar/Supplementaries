@@ -12,6 +12,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
@@ -139,11 +140,13 @@ public class HourGlassBlock extends Block implements IWaterLoggable, IForgeBlock
                 return ActionResultType.func_233537_a_(worldIn.isRemote);
             } else if (flag2) {
                 ItemStack it = te.removeStackFromSlot(0);
+                //TODO: calling setHeld item doesn't play the item swap animatin but does play the equip sound. Do this for all other blocks
+                if(worldIn.isRemote)return ActionResultType.SUCCESS;
                 player.setHeldItem(handIn, it);
                 if (!worldIn.isRemote()) {
                     te.markDirty();
                 }
-                return ActionResultType.func_233537_a_(worldIn.isRemote);
+                return ActionResultType.CONSUME;
             }
         }
         return ActionResultType.PASS;
@@ -183,7 +186,7 @@ public class HourGlassBlock extends Block implements IWaterLoggable, IForgeBlock
         if (state.getBlock() != newState.getBlock()) {
             TileEntity tileentity = world.getTileEntity(pos);
             if (tileentity instanceof HourGlassBlockTile) {
-                InventoryHelper.dropInventoryItems(world, pos, (HourGlassBlockTile) tileentity);
+                InventoryHelper.dropInventoryItems(world, pos, (IInventory) tileentity);
                 world.updateComparatorOutputLevel(pos, this);
             }
             super.onReplaced(state, world, pos, newState, isMoving);
@@ -203,9 +206,6 @@ public class HourGlassBlock extends Block implements IWaterLoggable, IForgeBlock
         } else
             return 0;
     }
-
-
-    //TODO: camelcase all nbts 4 consistency
 
     public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);

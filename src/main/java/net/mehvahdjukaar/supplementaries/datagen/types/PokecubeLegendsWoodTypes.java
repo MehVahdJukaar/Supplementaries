@@ -1,10 +1,5 @@
 package net.mehvahdjukaar.supplementaries.datagen.types;
 
-import net.minecraft.block.Blocks;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.material.MaterialColor;
-
-
 public enum PokecubeLegendsWoodTypes implements IWoodType {
     INVERTED("inverted","ultra_plank01"),
     TEMPORAL("temporal","ultra_plank02"),
@@ -13,24 +8,10 @@ public enum PokecubeLegendsWoodTypes implements IWoodType {
 
     private final String name;
     private final String plank;
-    private final MaterialColor color;
-    private final Material material;
 
     PokecubeLegendsWoodTypes(String name, String plank) {
         this.name = name;
-        this.color = Blocks.OAK_PLANKS.getMaterialColor();
-        this.material = Blocks.OAK_PLANKS.getDefaultState().getMaterial();
         this.plank = plank;
-    }
-
-    @Override
-    public MaterialColor getColor() {
-        return this.color;
-    }
-
-    @Override
-    public Material getMaterial() {
-        return this.material;
     }
 
     @Override

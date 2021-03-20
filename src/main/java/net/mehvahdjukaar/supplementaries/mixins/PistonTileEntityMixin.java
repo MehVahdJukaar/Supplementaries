@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin({PistonTileEntity.class})
-public abstract class PistonMixin extends TileEntity implements IBlockHolder {
+public abstract class PistonTileEntityMixin extends TileEntity implements IBlockHolder {
 
     public BlockState getHeldBlock(){
         return this.pistonState;
@@ -36,7 +36,7 @@ public abstract class PistonMixin extends TileEntity implements IBlockHolder {
     @Shadow
     private float lastProgress;
 
-    public PistonMixin(TileEntityType<?> tileEntityTypeIn) {
+    public PistonTileEntityMixin(TileEntityType<?> tileEntityTypeIn) {
         super(tileEntityTypeIn);
     }
 

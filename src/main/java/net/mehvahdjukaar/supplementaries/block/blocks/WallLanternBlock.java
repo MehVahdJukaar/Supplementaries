@@ -48,16 +48,8 @@ public class WallLanternBlock extends EnhancedLanternBlock {
         tooltip.add((new StringTextComponent("You shouldn't have this")).mergeStyle(TextFormatting.GRAY));
     }
 
-    //update light level. TODO: maybe use this to update jars (onBlockAdded)
-
-
     @Override
     public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
-        /*
-        TileEntity te = world.getTileEntity(pos);
-        if (te instanceof WallLanternBlockTile) {
-            return ((WallLanternBlockTile) te).lanternBlock.getLightValue();
-        }*/
         if(state.get(LIT)) {
             return state.get(LIGHT_LEVEL);
         }
@@ -72,11 +64,6 @@ public class WallLanternBlock extends EnhancedLanternBlock {
             return new ItemStack(((WallLanternBlockTile) te).lanternBlock.getBlock());
         }
         return new ItemStack(Blocks.LANTERN, 1);
-    }
-
-    @Override
-    public ItemStack getItem(IBlockReader worldIn, BlockPos pos, BlockState state) {
-        return super.getItem(worldIn, pos, state);
     }
 
     @Override

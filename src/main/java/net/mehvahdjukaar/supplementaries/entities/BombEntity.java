@@ -7,11 +7,8 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.IRendersAsItem;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity;
-import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.entity.projectile.ProjectileItemEntity;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.item.BowItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -96,7 +93,7 @@ public class BombEntity extends ProjectileItemEntity implements IRendersAsItem{
         return Items.ACACIA_BUTTON;
         //return Registry.BOMB_ITEM_ON.get();
     }
-    /*
+
     @Override
     public ItemStack getItem() {
         return new ItemStack(this.active?Registry.BOMB_ITEM_ON.get():Registry.BOMB_ITEM.get());
@@ -112,7 +109,7 @@ public class BombEntity extends ProjectileItemEntity implements IRendersAsItem{
                 this.world.addParticle(iparticledata, this.getPosX(), this.getPosY(), this.getPosZ(), 0.0D, 0.0D, 0.0D);
             }
         }
-    }*/
+    }
 
     public double r(){
         return (rand.nextFloat()-0.5)*0.3;
@@ -212,8 +209,7 @@ public class BombEntity extends ProjectileItemEntity implements IRendersAsItem{
     }
 
     private ItemStack getItemStack(){
-        return ItemStack.EMPTY;
-        //return new ItemStack(Registry.BOMB_ITEM.get());
+        return new ItemStack(Registry.BOMB_ITEM.get());
     }
 
     //onBlockHit
