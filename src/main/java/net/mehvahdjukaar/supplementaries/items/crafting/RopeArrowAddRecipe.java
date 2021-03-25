@@ -24,18 +24,18 @@ public class RopeArrowAddRecipe extends SpecialRecipe {
         ItemStack rope = null;
         int missingRopes = 0;
 
-        for(int i = 0; i < inv.getSizeInventory(); ++i) {
-            ItemStack stack = inv.getStackInSlot(i);
-            if (stack.getItem() == Registry.ROPE_ARROW_ITEM.get() && stack.getDamage()!=0) {
+        for(int i = 0; i < inv.getContainerSize(); ++i) {
+            ItemStack stack = inv.getItem(i);
+            if (stack.getItem() == Registry.ROPE_ARROW_ITEM.get() && stack.getDamageValue()!=0) {
                 if (arrow != null) {
                     return false;
                 }
                 arrow = stack;
-                missingRopes = arrow.getDamage();
+                missingRopes = arrow.getDamageValue();
             }
         }
-        for(int i = 0; i < inv.getSizeInventory(); ++i) {
-            ItemStack stack = inv.getStackInSlot(i);
+        for(int i = 0; i < inv.getContainerSize(); ++i) {
+            ItemStack stack = inv.getItem(i);
             if(ModTags.isTagged(ModTags.ROPES,stack.getItem())) {
                 if (missingRopes <= 0) return false;
                 rope = stack;
@@ -48,11 +48,11 @@ public class RopeArrowAddRecipe extends SpecialRecipe {
 
 
     @Override
-    public ItemStack getCraftingResult(CraftingInventory inv) {
+    public ItemStack assemble(CraftingInventory inv) {
         int ropes = 0;
         ItemStack arrow = null;
-        for(int i = 0; i < inv.getSizeInventory(); ++i) {
-            ItemStack stack = inv.getStackInSlot(i);
+        for(int i = 0; i < inv.getContainerSize(); ++i) {
+            ItemStack stack = inv.getItem(i);
             if(ModTags.isTagged(ModTags.ROPES,stack.getItem())){
                 ropes++;
             }
@@ -61,18 +61,18 @@ public class RopeArrowAddRecipe extends SpecialRecipe {
             }
         }
         ItemStack returnArrow = arrow.copy();
-        returnArrow.setDamage(arrow.getDamage() - ropes);
+        returnArrow.setDamageValue(arrow.getDamageValue() - ropes);
         return returnArrow;
 
     }
 
     @Override
     public NonNullList<ItemStack> getRemainingItems(CraftingInventory inv) {
-        return NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
+        return NonNullList.withSize(inv.getContainerSize(), ItemStack.EMPTY);
     }
 
     @Override
-    public boolean canFit(int width, int height) {
+    public boolean canCraftInDimensions(int width, int height) {
         return width * height >= 2;
     }
 

@@ -16,7 +16,7 @@ public class OrangeTraderEntity extends VillagerEntity {
     }*/
 
     @Override
-    public IPacket<?> createSpawnPacket() {
+    public IPacket<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 }

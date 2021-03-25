@@ -18,7 +18,7 @@ public class ReloadConfigsCommand implements Command<CommandSource> {
 
     public static ArgumentBuilder<CommandSource, ?> register(CommandDispatcher<CommandSource> dispatcher) {
         return Commands.literal("reload")
-                .requires((p) -> p.hasPermissionLevel(0))
+                .requires((p) -> p.hasPermission(0))
                 .executes(CMD);
     }
 
@@ -28,7 +28,7 @@ public class ReloadConfigsCommand implements Command<CommandSource> {
         ClientConfigs.cached.refresh();
         ConfigHandler.syncServerConfigs();
         ServerConfigs.cached.refresh();
-        context.getSource().sendFeedback(new TranslationTextComponent("message.supplementaries.command.configs_reloaded"), false);
+        context.getSource().sendSuccess(new TranslationTextComponent("message.supplementaries.command.configs_reloaded"), false);
         return 0;
     }
 }

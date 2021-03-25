@@ -2,8 +2,7 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "supplementaries:cog_block_recipe",
-      "supplementaries:cog_block_recipe_2"
+      "supplementaries:cog_block"
     ]
   },
   "criteria": {
@@ -20,7 +19,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "supplementaries:cog_block_recipe"
+        "recipe": "supplementaries:cog_block"
       }
     }
   },

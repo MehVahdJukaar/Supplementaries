@@ -11,6 +11,8 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.AxisAlignedBB;
 import org.spongepowered.asm.mixin.Mixin;
 
+import net.mehvahdjukaar.supplementaries.block.util.IBellConnection.BellConnection;
+
 @Mixin(BellTileEntity.class)
 public abstract class BellTileEntityMixin extends TileEntity  implements IBellConnection {
     public BellConnection connection = BellConnection.NONE;
@@ -32,8 +34,8 @@ public abstract class BellTileEntityMixin extends TileEntity  implements IBellCo
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
+    public CompoundNBT save(CompoundNBT compound) {
+        super.save(compound);
         //not needed but since I keep getting reports lets do this
         try {
             if (this.connection != null)
@@ -43,8 +45,8 @@ public abstract class BellTileEntityMixin extends TileEntity  implements IBellCo
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
-        super.read(state, compound);
+    public void load(BlockState state, CompoundNBT compound) {
+        super.load(state, compound);
         try {
             if(compound.contains("Connection"))
                 this.connection = BellConnection.values()[compound.getInt("Connection")];
@@ -55,21 +57,21 @@ public abstract class BellTileEntityMixin extends TileEntity  implements IBellCo
 
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.pos, 0, this.getUpdateTag());
+        return new SUpdateTileEntityPacket(this.worldPosition, 0, this.getUpdateTag());
     }
 
     @Override
     public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundNBT());
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.read(this.getBlockState(), pkt.getNbtCompound());
+        this.load(this.getBlockState(), pkt.getTag());
     }
 
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
-        return new AxisAlignedBB(this.pos);
+        return new AxisAlignedBB(this.worldPosition);
     }
 }

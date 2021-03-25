@@ -18,6 +18,7 @@ import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.util.Constants;
 
 
@@ -25,7 +26,7 @@ public class SignPostBlockTile extends TileEntity implements ITextHolder, IBlock
 
     public TextHolder textHolder;
 
-    public BlockState fenceBlock = Blocks.AIR.getDefaultState();
+    public BlockState fenceBlock = Blocks.AIR.defaultBlockState();
     public float yawUp = 0;
     public float yawDown = 0;
     public boolean leftUp = true;
@@ -56,37 +57,46 @@ public class SignPostBlockTile extends TileEntity implements ITextHolder, IBlock
     public TextHolder getTextHolder(){ return this.textHolder; }
 
     @Override
-    public double getMaxRenderDistanceSquared() {
+    public double getViewDistance() {
         return 128;
     }
 
     @Override
-    public void markDirty() {
-        this.world.notifyBlockUpdate(this.pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
-        super.markDirty();
+    public void setChanged() {
+        this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
+        super.setChanged();
     }
 
     @Override
     public AxisAlignedBB getRenderBoundingBox(){
-        return new AxisAlignedBB(this.getPos().add(-0.25,0,-0.25), this.getPos().add(1.25,1,1.25));
+        return new AxisAlignedBB(this.getBlockPos().offset(-0.25,0,-0.25), this.getBlockPos().offset(1.25,1,1.25));
     }
 
     //TODO: maybe add constraints to this so it snaps to 22.5deg
     public void pointToward(BlockPos targetPos, boolean up){
         //int r = MathHelper.floor((double) ((180.0F + yaw) * 16.0F / 360.0F) + 0.5D) & 15;
         // r*-22.5f;
-        float yaw = (float)(Math.atan2(targetPos.getX() - pos.getX(), targetPos.getZ() - pos.getZ()) * 180d / Math.PI);
+        float yaw = (float)(Math.atan2(targetPos.getX() - worldPosition.getX(), targetPos.getZ() - worldPosition.getZ()) * 180d / Math.PI);
         if(up){
-            this.yawUp = yaw - (this.leftUp ? 180 : 0);
+            this.yawUp = MathHelper.wrapDegrees(yaw - (this.leftUp ? 180 : 0));
         }
         else {
-            this.yawDown = yaw - (this.leftDown ? 180 : 0);
+            this.yawDown = MathHelper.wrapDegrees(yaw - (this.leftDown ? 180 : 0));
+        }
+    }
+
+    public float getPointingYaw(boolean up){
+        if(up){
+            return MathHelper.wrapDegrees(-this.yawUp - (this.leftUp ? 180 : 0));
+        }
+        else {
+            return MathHelper.wrapDegrees(-this.yawDown - (this.leftDown ? 180 : 0));
         }
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
-        super.read(state, compound);
+    public void load(BlockState state, CompoundNBT compound) {
+        super.load(state, compound);
 
         this.textHolder.read(compound);
 
@@ -117,8 +127,8 @@ public class SignPostBlockTile extends TileEntity implements ITextHolder, IBlock
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
+    public CompoundNBT save(CompoundNBT compound) {
+        super.save(compound);
 
         this.textHolder.write(compound);
 
@@ -137,16 +147,16 @@ public class SignPostBlockTile extends TileEntity implements ITextHolder, IBlock
 
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.pos, 0, this.getUpdateTag());
+        return new SUpdateTileEntityPacket(this.worldPosition, 0, this.getUpdateTag());
     }
 
     @Override
     public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundNBT());
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.read(this.getBlockState(), pkt.getNbtCompound());
+        this.load(this.getBlockState(), pkt.getTag());
     }
 }

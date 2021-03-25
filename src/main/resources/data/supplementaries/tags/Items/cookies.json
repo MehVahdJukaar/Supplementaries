@@ -20,6 +20,14 @@
       "required":false
     },
     {
+      "id":"fluffy_farmer:chocolate_cookie",
+      "required":false
+    },
+    {
+      "id":"fluffy_farmer:berry_cookie",
+      "required":false
+    },
+    {
       "id":"pamhc2crops:beanitem",
       "required":false
     },

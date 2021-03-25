@@ -23,37 +23,37 @@ public class WindVaneBlockTile extends TileEntity implements ITickableTileEntity
     }
 
     @Override
-    public double getMaxRenderDistanceSquared() {
+    public double getViewDistance() {
         return 80;
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
-        super.read(state, compound);
+    public void load(BlockState state, CompoundNBT compound) {
+        super.load(state, compound);
         float tp = (float) (Math.PI*2);
-        this.offset=400*(MathHelper.sin((0.005f*this.pos.getX())%tp) + MathHelper.sin((0.005f*this.pos.getZ())%tp) + MathHelper.sin((0.005f*this.pos.getY())%tp));
+        this.offset=400*(MathHelper.sin((0.005f*this.worldPosition.getX())%tp) + MathHelper.sin((0.005f*this.worldPosition.getZ())%tp) + MathHelper.sin((0.005f*this.worldPosition.getY())%tp));
 
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
+    public CompoundNBT save(CompoundNBT compound) {
+        super.save(compound);
         return compound;
     }
 
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.pos, 0, this.getUpdateTag());
+        return new SUpdateTileEntityPacket(this.worldPosition, 0, this.getUpdateTag());
     }
 
     @Override
     public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundNBT());
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.read(this.getBlockState(), pkt.getNbtCompound());
+        this.load(this.getBlockState(), pkt.getTag());
     }
 
     @Override
@@ -61,21 +61,21 @@ public class WindVaneBlockTile extends TileEntity implements ITickableTileEntity
 
         float currentyaw = this.yaw;
         this.prevYaw = currentyaw;
-        if(this.world == null)return;
-        if (!this.world.isRemote()) {
-            if (this.world != null && this.world.getGameTime() % 20L == 0L) {
+        if(this.level == null)return;
+        if (!this.level.isClientSide()) {
+            if (this.level != null && this.level.getGameTime() % 20L == 0L) {
                 BlockState blockstate = this.getBlockState();
                 Block block = blockstate.getBlock();
                 if (block instanceof WindVaneBlock) {
-                    WindVaneBlock.updatePower(blockstate, this.world, this.pos);
+                    WindVaneBlock.updatePower(blockstate, this.level, this.worldPosition);
                 }
             }
         } else {
-            int power = this.getBlockState().get(WindVaneBlock.POWER);
+            int power = this.getBlockState().getValue(WindVaneBlock.POWER);
             // TODO:cache some of this maybe?
             float tp = (float) (2f*Math.PI);
             //float offset = 3f * (MathHelper.sin(0.1f*this.pos.getX()) + 0.1f*MathHelper.sin(this.pos.getZ()) + 0.1f*MathHelper.sin(this.pos.getY()));
-            float t = this.world.getGameTime()%24000 + this.offset;
+            float t = this.level.getGameTime()%24000 + this.offset;
             float b = (float) Math.max(1,(power * ClientConfigs.cached.WIND_VANE_POWER_SCALING));
             float max_angle_1 = (float) ClientConfigs.cached.WIND_VANE_ANGLE_1;
             float max_angle_2 = (float) ClientConfigs.cached.WIND_VANE_ANGLE_2;

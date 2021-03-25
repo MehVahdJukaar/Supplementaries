@@ -11,7 +11,7 @@
         "parent": "minecraft:recipes/root",
         "rewards": {
           "recipes": [
-            "supplementaries:fodder_recipe"
+            "supplementaries:fodder"
           ]
         },
         "criteria": {
@@ -20,7 +20,7 @@
             "conditions": {
               "items": [
                 {
-                  "item": "minecraft:flax"
+                  "tag": "forge:crops/flax"
                 }
               ]
             }
@@ -28,7 +28,7 @@
           "has_the_recipe": {
             "trigger": "minecraft:recipe_unlocked",
             "conditions": {
-              "recipe": "supplementaries:fodder_recipe"
+              "recipe": "supplementaries:fodder"
             }
           }
         },

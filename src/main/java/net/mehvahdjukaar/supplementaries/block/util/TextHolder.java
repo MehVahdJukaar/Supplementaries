@@ -32,10 +32,10 @@ public class TextHolder {
     public void read(CompoundNBT compound) {
         if(compound.contains("TextHolder")) {
             CompoundNBT com = compound.getCompound("TextHolder");
-            this.textColor = DyeColor.byTranslationKey(com.getString("Color"), DyeColor.BLACK);
+            this.textColor = DyeColor.byName(com.getString("Color"), DyeColor.BLACK);
             for (int i = 0; i < this.lines; ++i) {
                 String s = com.getString("Text" + (i + 1));
-                ITextComponent itextcomponent = ITextComponent.Serializer.getComponentFromJson(s.isEmpty() ? "\"\"" : s);
+                ITextComponent itextcomponent = ITextComponent.Serializer.fromJson(s.isEmpty() ? "\"\"" : s);
                 this.signText[i] = itextcomponent;
                 this.renderText[i] = null;
             }
@@ -44,11 +44,11 @@ public class TextHolder {
 
         //remove in the future
         if(compound.contains("Color"))
-            this.textColor = DyeColor.byTranslationKey(compound.getString("Color"), DyeColor.BLACK);
+            this.textColor = DyeColor.byName(compound.getString("Color"), DyeColor.BLACK);
         for(int i = 0; i < 2; ++i) {
             if(compound.contains("Text" + (i + 1))) {
                 String s = compound.getString("Text" + (i + 1));
-                ITextComponent itextcomponent = ITextComponent.Serializer.getComponentFromJson(s.isEmpty() ? "\"\"" : s);
+                ITextComponent itextcomponent = ITextComponent.Serializer.fromJson(s.isEmpty() ? "\"\"" : s);
                 this.signText[i] = itextcomponent;
             }
         }
@@ -57,7 +57,7 @@ public class TextHolder {
 
     public CompoundNBT write(CompoundNBT compound) {
         CompoundNBT com = new CompoundNBT();
-        com.putString("Color", this.textColor.getTranslationKey());
+        com.putString("Color", this.textColor.getName());
         for (int i = 0; i < this.lines; ++i) {
             String s = ITextComponent.Serializer.toJson(this.signText[i]);
             com.putString("Text" + (i + 1), s);

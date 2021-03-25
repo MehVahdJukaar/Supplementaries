@@ -34,7 +34,7 @@ public class KeyLockableTile extends TileEntity {
     }
 
     public void setPassword(ItemStack stack){
-        this.setPassword(stack.getDisplayName().getString());
+        this.setPassword(stack.getHoverName().getString());
     }
 
     public void clearOwner(){
@@ -42,7 +42,7 @@ public class KeyLockableTile extends TileEntity {
     }
 
     public static boolean isCorrectKey(ItemStack key, String password){
-        return key.getDisplayName().getString().equals(password);
+        return key.getHoverName().getString().equals(password);
     }
     public boolean isCorrectKey(ItemStack key){
         return isCorrectKey(key,this.password);
@@ -65,11 +65,11 @@ public class KeyLockableTile extends TileEntity {
                 }
             }
             if(hasKey){
-                player.sendStatusMessage(new TranslationTextComponent("message.supplementaries.safe.incorrect_key"), true);
+                player.displayClientMessage(new TranslationTextComponent("message.supplementaries.safe.incorrect_key"), true);
                 return false;
             }
         }
-        player.sendStatusMessage(new TranslationTextComponent("message.supplementaries."+translName+".locked"), true);
+        player.displayClientMessage(new TranslationTextComponent("message.supplementaries."+translName+".locked"), true);
         return false;
     }
 
@@ -77,25 +77,25 @@ public class KeyLockableTile extends TileEntity {
     public boolean handleAction(PlayerEntity player, Hand handIn, String translName) {
         if (player.isSpectator()) return false;
 
-        ItemStack stack = player.getHeldItem(handIn);
+        ItemStack stack = player.getItemInHand(handIn);
         Item item = stack.getItem();
 
         boolean isKey = item instanceof KeyItem;
         //clear ownership with tripwire
-        if(player.isSneaking() && isKey && (player.isCreative() || this.isCorrectKey(stack))){
+        if(player.isShiftKeyDown() && isKey && (player.isCreative() || this.isCorrectKey(stack))){
             this.clearOwner();
-            player.sendStatusMessage(new TranslationTextComponent("message.supplementaries.safe.cleared"),true);
-            this.world.playSound(null, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5,
-                    SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN, SoundCategory.BLOCKS, 0.5F, 1.5F);
+            player.displayClientMessage(new TranslationTextComponent("message.supplementaries.safe.cleared"),true);
+            this.level.playSound(null, worldPosition.getX()+0.5, worldPosition.getY()+0.5, worldPosition.getZ()+0.5,
+                    SoundEvents.IRON_TRAPDOOR_OPEN, SoundCategory.BLOCKS, 0.5F, 1.5F);
             return false;
         }
         //set key
         else if(this.password==null){
             if(isKey) {
                 this.setPassword(stack);
-                player.sendStatusMessage(new TranslationTextComponent("message.supplementaries.safe.assigned_key", this.password), true);
-                this.world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
-                        SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN, SoundCategory.BLOCKS, 0.5F, 1.5F);
+                player.displayClientMessage(new TranslationTextComponent("message.supplementaries.safe.assigned_key", this.password), true);
+                this.level.playSound(null, worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5,
+                        SoundEvents.IRON_TRAPDOOR_OPEN, SoundCategory.BLOCKS, 0.5F, 1.5F);
                 return false;
             }
             return true;
@@ -105,15 +105,15 @@ public class KeyLockableTile extends TileEntity {
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
-        super.read(state, compound);
+    public void load(BlockState state, CompoundNBT compound) {
+        super.load(state, compound);
         if(compound.contains("Password"))
             this.password=compound.getString("Password");;
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
+    public CompoundNBT save(CompoundNBT compound) {
+        super.save(compound);
         if(this.password!=null)
             compound.putString("Password",this.password);
         return compound;
@@ -121,16 +121,16 @@ public class KeyLockableTile extends TileEntity {
 
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.pos, 0, this.getUpdateTag());
+        return new SUpdateTileEntityPacket(this.worldPosition, 0, this.getUpdateTag());
     }
 
     @Override
     public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundNBT());
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.read(this.getBlockState(), pkt.getNbtCompound());
+        this.load(this.getBlockState(), pkt.getTag());
     }
 }

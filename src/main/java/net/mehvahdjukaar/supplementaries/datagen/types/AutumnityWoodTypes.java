@@ -4,7 +4,7 @@ import net.minecraft.block.material.MaterialColor;
 
 
 public enum AutumnityWoodTypes implements IWoodType {
-    MAPLE("maple", MaterialColor.ORANGE_TERRACOTTA);
+    MAPLE("maple", MaterialColor.TERRACOTTA_ORANGE);
 
     private final String name;
     private final MaterialColor color;

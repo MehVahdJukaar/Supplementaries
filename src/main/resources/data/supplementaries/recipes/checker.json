@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "10 ",
+    "01 ",
+    "   "
+  ],
+  "key": {
+    "0": {
+      "item": "minecraft:cobblestone"
+    },
+    "1": {
+      "item": "minecraft:blackstone"
+    }
+  },
+  "result": {
+    "item": "supplementaries:checker_block",
+    "count": 4
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "checker_block"
+    }
+  ]
+}

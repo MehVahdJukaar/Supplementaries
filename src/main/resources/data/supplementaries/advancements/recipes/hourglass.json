@@ -2,7 +2,7 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "supplementaries:hourglass_recipe"
+      "supplementaries:hourglass"
     ]
   },
   "criteria": {
@@ -19,7 +19,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "supplementaries:hourglass_recipe"
+        "recipe": "supplementaries:hourglass"
       }
     }
   },

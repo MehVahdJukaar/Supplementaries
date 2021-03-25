@@ -36,46 +36,48 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class WindVaneBlock extends Block implements IWaterLoggable {
-    protected static final VoxelShape SHAPE = VoxelShapes.create(0.125D, 0D, 0.125D, 0.875D, 1D, 0.875D);
+    protected static final VoxelShape SHAPE = VoxelShapes.box(0.125D, 0D, 0.125D, 0.875D, 1D, 0.875D);
 
     public static final BooleanProperty TILE = BlockProperties.TILE; // is it rooster only?
-    public static final IntegerProperty POWER = BlockStateProperties.POWER_0_15;
+    public static final IntegerProperty POWER = BlockStateProperties.POWER;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public WindVaneBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(WATERLOGGED,false).with(TILE, false).with(POWER, 0));
+        this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED,false).setValue(TILE, false).setValue(POWER, 0));
     }
 
     @Override
-    public void addInformation(ItemStack stack, IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
-        if(!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().gameSettings.advancedItemTooltips)return;
-        tooltip.add(new TranslationTextComponent("message.supplementaries.wind_vane").mergeStyle(TextFormatting.ITALIC).mergeStyle(TextFormatting.GRAY));
+    public void appendHoverText(ItemStack stack, IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+        if(!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().options.advancedItemTooltips)return;
+        tooltip.add(new TranslationTextComponent("message.supplementaries.wind_vane").withStyle(TextFormatting.ITALIC).withStyle(TextFormatting.GRAY));
 
     }
 
     @Override
-    public boolean allowsMovement(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
+    public boolean isPathfindable(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
         return false;
     }
 
 
     //model=block model+ tile. animated=tile, inv=inv
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
+    public BlockRenderType getRenderShape(BlockState state) {
         return BlockRenderType.MODEL;
     }
 
     @Override
     public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
     @Override
-    public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
-        if (stateIn.get(WATERLOGGED)) {
-            worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
+        if (stateIn.getValue(WATERLOGGED)) {
+            worldIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
         }
         return stateIn;
     }
@@ -87,39 +89,39 @@ public class WindVaneBlock extends Block implements IWaterLoggable {
         } else if (world.isRaining()) {
             weather = 1;
         }
-        if (weather != bs.get(POWER)) {
-            world.setBlockState(pos, bs.with(POWER, weather), 3);
-            world.notifyNeighborsOfStateChange(pos.down(), bs.getBlock());
+        if (weather != bs.getValue(POWER)) {
+            world.setBlock(pos, bs.setValue(POWER, weather), 3);
+            world.updateNeighborsAt(pos.below(), bs.getBlock());
         }
     }
 
     @Override
-    public boolean hasComparatorInputOverride(BlockState state) {
+    public boolean hasAnalogOutputSignal(BlockState state) {
         return true;
     }
 
     @Override
-    public int getComparatorInputOverride(BlockState blockState, World world, BlockPos pos) {
-        return blockState.get(POWER);
+    public int getAnalogOutputSignal(BlockState blockState, World world, BlockPos pos) {
+        return blockState.getValue(POWER);
     }
 
     @Override
-    public int getStrongPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
-        return side==Direction.UP ? this.getWeakPower(blockState,blockAccess,pos,side) : 0;
+    public int getDirectSignal(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+        return side==Direction.UP ? this.getSignal(blockState,blockAccess,pos,side) : 0;
     }
 
     @Override
-    public boolean canProvidePower(BlockState state) {
+    public boolean isSignalSource(BlockState state) {
         return true;
     }
 
     @Override
-    public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
-        return blockState.get(POWER);
+    public int getSignal(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+        return blockState.getValue(POWER);
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(POWER, TILE, WATERLOGGED);
     }
 
@@ -135,8 +137,8 @@ public class WindVaneBlock extends Block implements IWaterLoggable {
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        boolean flag = context.getWorld().getFluidState(context.getPos()).getFluid() == Fluids.WATER;
-        return this.getDefaultState().with(WATERLOGGED, flag);
+        boolean flag = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;
+        return this.defaultBlockState().setValue(WATERLOGGED, flag);
     }
 
     @Override

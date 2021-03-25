@@ -23,22 +23,22 @@ public abstract class LivingEntityMixin extends Entity {
     }
 
     @Shadow
-    public abstract BlockState getBlockState();
+    public abstract BlockState getFeetBlockState();
 
     @Shadow
-    public abstract boolean isOnLadder();
+    public abstract boolean onClimbable();
 
     @Shadow
-    public abstract boolean hasStoppedClimbing();
+    public abstract boolean isSuppressingSlidingDownLadder();
 
     @Inject(method = "handleOnClimbable", at = @At("HEAD"), cancellable = true)
     private void handleOnClimbable(Vector3d motion, CallbackInfoReturnable<Vector3d> info) {
-        if (this.isOnLadder() && this.getBlockState().getBlock() instanceof RopeBlock) {
+        if (this.onClimbable() && this.getFeetBlockState().getBlock() instanceof RopeBlock) {
             this.fallDistance = 0;
             double x = MathHelper.clamp(motion.x, -0.15F, 0.15F);
             double z = MathHelper.clamp(motion.z, -0.15F, 0.15F);
-            double y = motion.getY();
-            if (y < 0 && this.hasStoppedClimbing() && this.getEntity() instanceof PlayerEntity) y = 0;
+            double y = motion.y();
+            if (y < 0 && this.isSuppressingSlidingDownLadder() && this.getEntity() instanceof PlayerEntity) y = 0;
             info.setReturnValue(new Vector3d(x, y, z));
         }
     }

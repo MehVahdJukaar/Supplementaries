@@ -11,7 +11,7 @@
         "parent": "minecraft:recipes/root",
         "rewards": {
           "recipes": [
-            "supplementaries:key_recipe"
+            "supplementaries:key"
           ]
         },
         "criteria": {
@@ -28,7 +28,7 @@
           "has_the_recipe": {
             "trigger": "minecraft:recipe_unlocked",
             "conditions": {
-              "recipe": "supplementaries:key_recipe"
+              "recipe": "supplementaries:key"
             }
           }
         },

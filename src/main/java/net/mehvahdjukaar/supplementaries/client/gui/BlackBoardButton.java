@@ -50,7 +50,7 @@ public class BlackBoardButton extends AbstractGui implements IRenderable, IGuiEv
 
     public void renderButton(MatrixStack matrixStack) {
         Minecraft minecraft = Minecraft.getInstance();
-        minecraft.getTextureManager().bindTexture(Textures.BLACKBOARD_TEXTURE);
+        minecraft.getTextureManager().bind(Textures.BLACKBOARD_TEXTURE);
         RenderSystem.enableDepthTest();
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
@@ -93,7 +93,7 @@ public class BlackBoardButton extends AbstractGui implements IRenderable, IGuiEv
         if (this.isValidClickButton(button)) {
             boolean flag = this.isMouseOver(mouseX, mouseY);
             if (flag) {
-                this.playDownSound(Minecraft.getInstance().getSoundHandler());
+                this.playDownSound(Minecraft.getInstance().getSoundManager());
                 this.onClick(mouseX, mouseY);
                 return true;
             }
@@ -144,7 +144,7 @@ public class BlackBoardButton extends AbstractGui implements IRenderable, IGuiEv
 
 
     public void playDownSound(SoundHandler handler) {
-        handler.play(SimpleSound.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+        handler.play(SimpleSound.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
     }
 
 

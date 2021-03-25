@@ -25,13 +25,13 @@ public class FaucetBlockTileRenderer extends TileEntityRenderer<FaucetBlockTile>
                        int ov) {
         if (tile.hasWater() && tile.isOpen() && !tile.hasFluidTankBelow() && !CommonUtil.FESTIVITY.isEarthDay()) {
             ResourceLocation texture = tile.fluidHolder.getFluid().getFlowingTexture();
-            TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(texture);
-            IVertexBuilder builder = bufferIn.getBuffer(RenderType.getTranslucentMovingBlock());
+            TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(texture);
+            IVertexBuilder builder = bufferIn.getBuffer(RenderType.translucentMovingBlock());
             int color = tile.fluidHolder.getTintColor();
             int luminosity = tile.fluidHolder.getFluid().getLuminosity();
             if(luminosity!=0) light = light & 15728640 | luminosity << 4;
             float opacity = 1.3f;
-            matrixStackIn.push();
+            matrixStackIn.pushPose();
             matrixStackIn.translate(0.5, 0.25, 0.5);
             matrixStackIn.scale(2f,2f,2f);
             float h = 0.5f/16f;
@@ -40,7 +40,7 @@ public class FaucetBlockTileRenderer extends TileEntityRenderer<FaucetBlockTile>
                 RendererUtil.addCube(builder, matrixStackIn,0,i*h, 0.125f, h, sprite, light, color, opacity, ov, false, false, true, false,true);
                 matrixStackIn.translate(0,-h,0);
             }
-            matrixStackIn.pop();
+            matrixStackIn.popPose();
         }
     }
 }

@@ -71,7 +71,7 @@ public class MobHolder {
 
     public void setPartying(BlockPos pos, boolean isPartying){
         if(this.mob!=null && this.mob instanceof LivingEntity){
-            ((LivingEntity)this.mob).setPartying(pos, isPartying);
+            ((LivingEntity)this.mob).setRecordPlayingNearby(pos, isPartying);
         }
     }
 
@@ -95,11 +95,11 @@ public class MobHolder {
             this.scale = cmp.getFloat("Scale");
             this.yOffset = cmp.getFloat("YOffset");
             this.specialBehaviorType = SpecialBehaviorType.values()[cmp.getInt("AnimationType")];
-            if(cmp.contains("UUID")) this.uuid = cmp.getUniqueId("UUID");
+            if(cmp.contains("UUID")) this.uuid = cmp.getUUID("UUID");
             this.name = cmp.getString("Name");
         }
         if(compound.contains("BucketHolder")){
-            this.bucketHolder = ItemStack.read(compound.getCompound("BucketHolder"));
+            this.bucketHolder = ItemStack.of(compound.getCompound("BucketHolder"));
         }
     }
 
@@ -117,7 +117,7 @@ public class MobHolder {
 
     public static void saveBucketToNBT(CompoundNBT compound, ItemStack bucket, String name, int fishTexture){
         CompoundNBT cmp = new CompoundNBT();
-        bucket.write(cmp);
+        bucket.save(cmp);
         if(fishTexture>=0||fishTexture==-69)
             cmp.putInt("FishTexture",fishTexture);
         if(name!=null) cmp.putString("Name",name);
@@ -130,7 +130,7 @@ public class MobHolder {
         cmp.put("EntityData", entityData);
         cmp.putFloat("Scale", scale);
         cmp.putFloat("YOffset", yOffset);
-        if(id!=null) cmp.putUniqueId("UUID", id);
+        if(id!=null) cmp.putUUID("UUID", id);
         cmp.putString("Name", name);
         if(fishTexture>=0||fishTexture==-69)
             cmp.putInt("FishTexture",fishTexture);
@@ -145,7 +145,7 @@ public class MobHolder {
             if (world instanceof ServerWorld) {
                 EntityType<?> entityType = null;
                 try {
-                    Field f = ObfuscationReflectionHelper.findField(FishBucketItem.class, "field_203794_a");
+                    Field f = ObfuscationReflectionHelper.findField(FishBucketItem.class, "type");
                     f.setAccessible(true);
                     entityType = (EntityType<?>) f.get(item);
                 } catch (Exception exception) {
@@ -177,18 +177,18 @@ public class MobHolder {
         //fill
         if(CapturedMobs.isFishBucket(item) && this.isEmpty()) {
             this.bucketHolder = stack.copy();
-            this.world.playSound(null, this.pos, SoundEvents.ITEM_BUCKET_EMPTY_FISH, SoundCategory.BLOCKS, 1.0F, 1.0F);
+            this.world.playSound(null, this.pos, SoundEvents.BUCKET_EMPTY_FISH, SoundCategory.BLOCKS, 1.0F, 1.0F);
             returnStack = new ItemStack(Items.BUCKET);
         }
         //empty
         else if(!this.bucketHolder.isEmpty() && item == Items.BUCKET ){
-            this.world.playSound(null, this.pos, SoundEvents.ITEM_BUCKET_FILL_FISH, SoundCategory.BLOCKS, 1.0F, 1.0F);
+            this.world.playSound(null, this.pos, SoundEvents.BUCKET_FILL_FISH, SoundCategory.BLOCKS, 1.0F, 1.0F);
             returnStack = this.bucketHolder.copy();
             this.clear();
         }
         if(!returnStack.isEmpty()) {
             if (player != null) {
-                player.addStat(Stats.ITEM_USED.get(item));
+                player.awardStat(Stats.ITEM_USED.get(item));
                 if (!player.isCreative()) {
                     CommonUtil.swapItem(player, hand, returnStack);
                 }
@@ -218,17 +218,17 @@ public class MobHolder {
         if (this.mob == null)return;
 
         //needed for eggs
-        this.mob.ticksExisted++;
-        if (!this.world.isRemote) {
+        this.mob.tickCount++;
+        if (!this.world.isClientSide) {
             if (this.specialBehaviorType == SpecialBehaviorType.CHICKEN) {
                 ChickenEntity ch = (ChickenEntity) this.mob;
-                if (--ch.timeUntilNextEgg <= 0) {
-                    ch.entityDropItem(Items.EGG);
-                    ch.timeUntilNextEgg = this.rand.nextInt(6000) + 6000;
+                if (--ch.eggTime <= 0) {
+                    ch.spawnAtLocation(Items.EGG);
+                    ch.eggTime = this.rand.nextInt(6000) + 6000;
                 }
             }
             else if(this.specialBehaviorType==SpecialBehaviorType.SQUID){
-                ((LivingEntity) this.mob).livingTick();
+                ((LivingEntity) this.mob).aiStep();
             }
         }
         else {
@@ -240,8 +240,8 @@ public class MobHolder {
                     break;
                 case SLIME:
                     SlimeEntity slime = (SlimeEntity) this.mob;
-                    slime.squishFactor += (slime.squishAmount - slime.squishFactor) * 0.5F;
-                    slime.prevSquishFactor = slime.squishFactor;
+                    slime.squish += (slime.targetSquish - slime.squish) * 0.5F;
+                    slime.oSquish = slime.squish;
                     //move
                     if (this.yVel != 0)
                         this.jumpY = Math.max(0, this.jumpY + this.yVel);
@@ -254,15 +254,15 @@ public class MobHolder {
                         if (this.yVel != 0) {
                             //land
                             this.yVel = 0;
-                            slime.squishAmount = -0.5f;
+                            slime.targetSquish = -0.5f;
                         }
                         if (this.rand.nextFloat() > 0.985) {
                             //jump
                             this.yVel = 0.08f;
-                            slime.squishAmount = 1.0F;
+                            slime.targetSquish = 1.0F;
                         }
                     }
-                    slime.squishAmount *= 0.6F;
+                    slime.targetSquish *= 0.6F;
                     break;
                 case ENDERMITE:
                     if (this.rand.nextFloat() > 0.7f) {
@@ -271,13 +271,13 @@ public class MobHolder {
                     }
                     break;
                 case PARROT:
-                    ((LivingEntity) this.mob).livingTick();
-                    boolean p = ((ParrotEntity) this.mob).isPartying();
+                    ((LivingEntity) this.mob).aiStep();
+                    boolean p = ((ParrotEntity) this.mob).isPartyParrot();
                     this.mob.setOnGround(p);
                     this.jumpY = p ? 0 : 0.0625f;
                     break;
                 case TICKABLE:
-                    ((LivingEntity) this.mob).livingTick();
+                    ((LivingEntity) this.mob).aiStep();
                     break;
                 case RABBIT:
                     RabbitEntity rabbit = (RabbitEntity) this.mob;
@@ -301,27 +301,27 @@ public class MobHolder {
                         }
                     }
                     //handles actual animation without using reflections
-                    rabbit.livingTick();
+                    rabbit.aiStep();
                     //TODO: living tick causes collisions to happen
                     break;
                 case CAT:
                     CatEntity cat = (CatEntity) this.mob;
-                    //cat.func_233687_w_(true);
-                    cat.setSleeping(true);
+                    //cat.setOrderedToSit(true);
+                    cat.setInSittingPose(true);
                     //this.jumpY=0.0325f;
                     break;
                 case SQUID:
                     SquidEntity squid = (SquidEntity) this.mob;
-                    squid.livingTick();
+                    squid.aiStep();
                     break;
                 case CHICKEN:
                     ChickenEntity ch = (ChickenEntity) this.mob;
-                    ch.livingTick();
+                    ch.aiStep();
                     if (rand.nextFloat() > (ch.isOnGround() ? 0.99 : 0.88)) ch.setOnGround(!ch.isOnGround());
                     break;
             }
             if (this.capturedMobProperties.isFloating()) {
-                this.jumpY = 0.04f * MathHelper.sin(this.mob.ticksExisted / 10f) - 0.03f;
+                this.jumpY = 0.04f * MathHelper.sin(this.mob.tickCount / 10f) - 0.03f;
             }
         }
     }
@@ -330,7 +330,7 @@ public class MobHolder {
     public void setWaterMobInWater(boolean w){
         if(this.mob != null && this.mob instanceof WaterMobEntity && this.mob.isInWater()!=w){
             try {
-                Field f = ObfuscationReflectionHelper.findField(Entity.class, "field_70171_ac");
+                Field f = ObfuscationReflectionHelper.findField(Entity.class, "wasTouchingWater");
                 f.setAccessible(true);
                 f.setBoolean(this.mob,w);
             }
@@ -343,7 +343,7 @@ public class MobHolder {
         if(com!=null && com.contains("id")) {
             Entity entity;
             //TODO: remove in 1.17
-            String name = com.get("id").getString();
+            String name = com.get("id").getAsString();
             switch (name) {
                 case "minecraft:bee":
                     entity = new BeeEntity(EntityType.BEE, world);
@@ -358,11 +358,11 @@ public class MobHolder {
                     entity = new WolfEntity(EntityType.WOLF, world);
                     break;
                 default:
-                    entity = EntityType.loadEntityAndExecute(com, world, o -> o);
+                    entity = EntityType.loadEntityRecursive(com, world, o -> o);
                     break;
             }
             if(id!=null && entity!=null){
-                entity.setUniqueId(id);
+                entity.setUUID(id);
             }
             return entity;
         }
@@ -395,25 +395,25 @@ public class MobHolder {
             double px = this.pos.getX() + 0.5;
             double py = this.pos.getY() + (0.5 + 0.0625) + 0.5;
             double pz = this.pos.getZ() + 0.5;
-            entity.setPosition(px, py, pz);
+            entity.setPos(px, py, pz);
             //entity.setMotion(0,0,0);
-            entity.lastTickPosX = px;
-            entity.lastTickPosY = py;
-            entity.lastTickPosZ = pz;
-            entity.prevPosX = px;
-            entity.prevPosY = py;
-            entity.prevPosZ = pz;
-            entity.ticksExisted += this.rand.nextInt(40);
+            entity.xOld = px;
+            entity.yOld = py;
+            entity.zOld = pz;
+            entity.xo = px;
+            entity.yo = py;
+            entity.zo = pz;
+            entity.tickCount += this.rand.nextInt(40);
 
             //server doesn't need this
             this.mob = entity;
             //TODO: make properly react to water
             this.setWaterMobInWater(true); //!this.world.getFluidState(pos).isEmpty()
-            if (!this.world.isRemote) {
+            if (!this.world.isClientSide) {
                 int light = this.capturedMobProperties.getLightLevel();
                 BlockState state = this.world.getBlockState(this.pos);
-                if (state.get(BlockProperties.LIGHT_LEVEL_0_15) != light) {
-                    this.world.setBlockState(this.pos, state.with(BlockProperties.LIGHT_LEVEL_0_15, light), 2 | 4 | 16);
+                if (state.getValue(BlockProperties.LIGHT_LEVEL_0_15) != light) {
+                    this.world.setBlock(this.pos, state.setValue(BlockProperties.LIGHT_LEVEL_0_15, light), 2 | 4 | 16);
                 }
             }
         }
@@ -423,7 +423,7 @@ public class MobHolder {
     private void setBucketHolder(Entity entity){
         if(entity instanceof AbstractFishEntity){
             try {
-                Method m = ObfuscationReflectionHelper.findMethod(AbstractFishEntity.class, "func_203707_dx");
+                Method m = ObfuscationReflectionHelper.findMethod(AbstractFishEntity.class, "getBucketItemStack");
                 m.setAccessible(true);
                 this.bucketHolder = (ItemStack) m.invoke(entity);
             } catch (Exception exception) {
@@ -434,7 +434,7 @@ public class MobHolder {
                 } catch (Exception ignored) {}
             }
             try{
-                Method m2 = ObfuscationReflectionHelper.findMethod(AbstractFishEntity.class, "func_204211_f", ItemStack.class);
+                Method m2 = ObfuscationReflectionHelper.findMethod(AbstractFishEntity.class, "saveToBucketTag", ItemStack.class);
                 m2.setAccessible(true);
                 m2.invoke(entity,this.bucketHolder);
             } catch (Exception exception) {
@@ -453,7 +453,7 @@ public class MobHolder {
     }
 
     private static boolean isInAir(Entity mob, CapturedMobProperties type){
-        return (mob.hasNoGravity() || mob instanceof IFlyingAnimal || mob.doesEntityNotTriggerPressurePlate() || mob instanceof WaterMobEntity
+        return (mob.isNoGravity() || mob instanceof IFlyingAnimal || mob.isIgnoringBlockTriggers() || mob instanceof WaterMobEntity
                 ||type.isFlying()) && !type.isLand();
     }
 
@@ -463,26 +463,26 @@ public class MobHolder {
         if(mob==null)return null;
         if(mob instanceof LivingEntity){
             LivingEntity le = (LivingEntity) mob;
-            le.prevRotationYawHead = 0;
-            le.rotationYawHead = 0;
-            le.limbSwingAmount = 0;
-            le.prevLimbSwingAmount = 0;
-            le.limbSwing = 0;
+            le.yHeadRotO = 0;
+            le.yHeadRot = 0;
+            le.animationSpeed = 0;
+            le.animationSpeedOld = 0;
+            le.animationPosition = 0;
             le.hurtTime=0;
-            le.maxHurtTime=0;
+            le.hurtDuration=0;
             le.hurtTime=0;
         }
-        mob.rotationYaw = 0;
-        mob.prevRotationYaw = 0;
-        mob.prevRotationPitch = 0;
-        mob.rotationPitch = 0;
-        mob.extinguish();
-        mob.hurtResistantTime=0;
+        mob.yRot = 0;
+        mob.yRotO = 0;
+        mob.xRotO = 0;
+        mob.xRot = 0;
+        mob.clearFire();
+        mob.invulnerableTime=0;
 
-        UUID id = mob.getUniqueID();
+        UUID id = mob.getUUID();
 
         CompoundNBT mobCompound = new CompoundNBT();
-        mob.writeUnlessPassenger(mobCompound);
+        mob.save(mobCompound);
         if (!mobCompound.isEmpty()) {
 
             mobCompound.remove("Passengers");
@@ -497,13 +497,13 @@ public class MobHolder {
 
             float babyScale = 1;
             //non ageable
-            if(mob instanceof AgeableEntity && ((LivingEntity) mob).isChild()) babyScale = 2f;
+            if(mob instanceof AgeableEntity && ((LivingEntity) mob).isBaby()) babyScale = 2f;
             if(mobCompound.contains("IsBaby")&&mobCompound.getBoolean("IsBaby")||
-                    (mob instanceof VillagerEntity && ((LivingEntity) mob).isChild())) babyScale = 1.125f;
+                    (mob instanceof VillagerEntity && ((LivingEntity) mob).isBaby())) babyScale = 1.125f;
 
             float s = 1;
-            float w = mob.getWidth() *babyScale;
-            float h = mob.getHeight() *babyScale;
+            float w = mob.getBbWidth() *babyScale;
+            float h = mob.getBbHeight() *babyScale;
             //float maxh = isAir ? 0.5f : 0.75f;
             //1 px border
             float maxh = blockh - (isAir ? 0.25f : 0.125f) - type.getHeight();

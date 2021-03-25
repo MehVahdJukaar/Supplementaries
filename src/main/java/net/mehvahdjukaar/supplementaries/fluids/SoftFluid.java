@@ -205,8 +205,8 @@ public class SoftFluid {
         private Item foodItem = Items.AIR;
         private int foodDivider = 1;
         //only used for buckets. rest only depends on return item
-        private SoundEvent fillSound = SoundEvents.ITEM_BUCKET_FILL;
-        private SoundEvent emptySound = SoundEvents.ITEM_BUCKET_EMPTY;
+        private SoundEvent fillSound = SoundEvents.BUCKET_FILL;
+        private SoundEvent emptySound = SoundEvents.BUCKET_EMPTY;
         private String id;
         public boolean isDisabled = false;
 
@@ -222,7 +222,7 @@ public class SoftFluid {
             this.stillTexture = att.getStillTexture();
             this.flowingTexture = att.getFlowingTexture();
             this.color(att.getColor());
-            this.bucket(fluid.getFilledBucket());
+            this.bucket(fluid.getBucket());
             this.luminosity = att.getLuminosity();
             this.translationKey = att.getTranslationKey();
             this.addEqFluid(fluid);
@@ -237,7 +237,7 @@ public class SoftFluid {
                     this.stillTexture = att.getStillTexture();
                     this.flowingTexture = att.getFlowingTexture();
                     this.color(att.getColor());
-                    this.bucket(fluid.getFilledBucket());
+                    this.bucket(fluid.getBucket());
                     this.luminosity = att.getLuminosity();
                     this.translationKey = att.getTranslationKey();
                     this.addEqFluid(fluid);
@@ -270,7 +270,7 @@ public class SoftFluid {
                 Fluid f = ForgeRegistries.FLUIDS.getValue(fluidRes);
                 if (f != null && f != Fluids.EMPTY) {
                     this.equivalentFluids.add(f);
-                    Item i = f.getFilledBucket();
+                    Item i = f.getBucket();
                     if (i != null && i != Items.AIR) this.bucket(i);
                 }
             }
@@ -338,6 +338,9 @@ public class SoftFluid {
         public final Builder bottle(String res) {
             return this.bottle(new ResourceLocation(res));
         }
+        public final Builder drink(String res){
+            return this.bottle(res).food(res);
+        }
         //bucket
         public final Builder bucket(Item item) {
             if(item!=null&&item!=Items.AIR)
@@ -359,7 +362,7 @@ public class SoftFluid {
             if(item!=null&&item!=Items.AIR) {
                 this.filledBowls.add(item);
                 //only works with bowls
-                this.translationKey(item.getTranslationKey());
+                this.translationKey(item.getDescriptionId());
             }
             return this;
         }
@@ -417,21 +420,21 @@ public class SoftFluid {
 
         protected Item getOrCreateFood(){
             for (Item i : this.filledBuckets){
-                if(i.isFood()){
+                if(i.isEdible()){
                     this.foodItem=i;
                     this.foodDivider=SoftFluidHolder.BUCKET_COUNT;
                     break;
                 }
             }
             for (Item i : this.filledBowls){
-                if(i.isFood()){
+                if(i.isEdible()){
                     this.foodItem=i;
                     this.foodDivider=SoftFluidHolder.BOWL_COUNT;
                     break;
                 }
             }
             for (Item i : this.filledBottles){
-                if(i.isFood()){
+                if(i.isEdible()){
                     this.foodItem=i;
                     this.foodDivider=SoftFluidHolder.BOTTLE_COUNT;
                     break;

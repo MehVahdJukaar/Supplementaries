@@ -21,7 +21,7 @@ public class UpdateServerTextHolderPacket {
         this.lines = buf.readInt();
         this.signText = new ITextComponent[this.lines];
         for (int i = 0; i < this.lines; ++i) {
-            this.signText[i] = buf.readTextComponent();
+            this.signText[i] = buf.readComponent();
         }
 
     }
@@ -36,16 +36,16 @@ public class UpdateServerTextHolderPacket {
         buf.writeBlockPos(message.pos);
         buf.writeInt(message.lines);
         for (int i = 0; i < message.lines; ++i) {
-            buf.writeTextComponent(message.signText[i]);
+            buf.writeComponent(message.signText[i]);
         }
     }
 
     public static void handler(UpdateServerTextHolderPacket message, Supplier<NetworkEvent.Context> ctx) {
         // server world
-        World world = Objects.requireNonNull(ctx.get().getSender()).world;
+        World world = Objects.requireNonNull(ctx.get().getSender()).level;
         ctx.get().enqueueWork(() -> {
             if (world != null) {
-                TileEntity tileentity = world.getTileEntity(message.pos);
+                TileEntity tileentity = world.getBlockEntity(message.pos);
                 if (tileentity instanceof ITextHolder) {
                     ITextHolder te = (ITextHolder) tileentity;
                     if(te.getTextHolder().lines == message.lines){
@@ -53,7 +53,7 @@ public class UpdateServerTextHolderPacket {
                             te.getTextHolder().setText(i,message.signText[i]);
                         }
                     }
-                    tileentity.markDirty();
+                    tileentity.setChanged();
                 }
             }
         });

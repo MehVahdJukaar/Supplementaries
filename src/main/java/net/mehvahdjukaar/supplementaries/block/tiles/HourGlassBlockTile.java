@@ -36,18 +36,18 @@ public class HourGlassBlockTile extends ItemDisplayTile implements ITickableTile
 
     //hijacking this method to work with hoppers
     @Override
-    public void markDirty() {
+    public void setChanged() {
         //this.updateServerAndClient();
         this.updateTile();
-        super.markDirty();
+        super.setChanged();
     }
 
     public void updateTile(){
         this.sandType = HourGlassSandType.getHourGlassSandType(this.getDisplayedItem().getItem());
         int p = this.getDirection()==Direction.DOWN?1:0;
         int l = this.sandType.getLight();
-        if(l!=this.getBlockState().get(HourGlassBlock.LIGHT_LEVEL)){
-            world.setBlockState(this.pos, this.getBlockState().with(HourGlassBlock.LIGHT_LEVEL,l),4|16);
+        if(l!=this.getBlockState().getValue(HourGlassBlock.LIGHT_LEVEL)){
+            level.setBlock(this.worldPosition, this.getBlockState().setValue(HourGlassBlock.LIGHT_LEVEL,l),4|16);
         }
         this.prevProgress=p;
         this.progress=p;
@@ -56,7 +56,7 @@ public class HourGlassBlockTile extends ItemDisplayTile implements ITickableTile
 
     public TextureAtlasSprite getOrCreateSprite(){
         if(this.cachedTexture==null){
-            this.cachedTexture = this.sandType.getSprite(this.getStackInSlot(0).getItem());
+            this.cachedTexture = this.sandType.getSprite(this.getItem(0).getItem());
         }
         return this.cachedTexture;
     }
@@ -75,7 +75,7 @@ public class HourGlassBlockTile extends ItemDisplayTile implements ITickableTile
             }
         }
 
-        if(!this.world.isRemote){
+        if(!this.level.isClientSide){
             int p;
             if(dir==Direction.DOWN) {
                 p = (int) ((1-this.progress) * 15f);
@@ -85,14 +85,14 @@ public class HourGlassBlockTile extends ItemDisplayTile implements ITickableTile
             }
             if(p!=this.power){
                 this.power=p;
-                this.world.updateComparatorOutputLevel(this.pos,this.getBlockState().getBlock());
+                this.level.updateNeighbourForOutputSignal(this.worldPosition,this.getBlockState().getBlock());
             }
         }
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
-        super.read(state, compound);
+    public void load(BlockState state, CompoundNBT compound) {
+        super.load(state, compound);
         this.sandType = HourGlassSandType.values()[compound.getInt("SandType")];
         this.progress = compound.getFloat("Progress");
         this.prevProgress = compound.getFloat("PrevProgress");
@@ -100,8 +100,8 @@ public class HourGlassBlockTile extends ItemDisplayTile implements ITickableTile
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
+    public CompoundNBT save(CompoundNBT compound) {
+        super.save(compound);
         compound.putInt("SandType", this.sandType.ordinal());
         compound.putFloat("Progress", this.progress);
         compound.putFloat("PrevProgress", this.prevProgress);
@@ -115,32 +115,32 @@ public class HourGlassBlockTile extends ItemDisplayTile implements ITickableTile
 
 
     @Override
-    public boolean isItemValidForSlot(int index, ItemStack stack) {
+    public boolean canPlaceItem(int index, ItemStack stack) {
         return this.isEmpty() && !HourGlassSandType.getHourGlassSandType(stack.getItem()).isEmpty();
     }
 
     //TODO: FIX this so it can only put from top
     @Override
     public int[] getSlotsForFace(Direction side) {
-        return IntStream.range(0, this.getSizeInventory()).toArray();
+        return IntStream.range(0, this.getContainerSize()).toArray();
     }
 
     @Override
-    public boolean canInsertItem(int index, ItemStack stack, @Nullable Direction direction) {
+    public boolean canPlaceItemThroughFace(int index, ItemStack stack, @Nullable Direction direction) {
         if(direction==Direction.UP) {
-            return this.isItemValidForSlot(0,stack);
+            return this.canPlaceItem(0,stack);
         }
         return false;
     }
 
     @Override
-    public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
-        Direction dir = this.getBlockState().get(HourGlassBlock.FACING);
+    public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
+        Direction dir = this.getBlockState().getValue(HourGlassBlock.FACING);
         return (dir==Direction.UP && this.progress==1)||(dir==Direction.DOWN && this.progress==0);
     }
 
     public Direction getDirection(){
-        return this.getBlockState().get(HourGlassBlock.FACING);
+        return this.getBlockState().getValue(HourGlassBlock.FACING);
     }
 
 
@@ -195,26 +195,26 @@ public class HourGlassBlockTile extends ItemDisplayTile implements ITickableTile
                 TextureAtlasSprite sprite;
                 if(this==SAND) {
                     texture = new ResourceLocation(reg.getNamespace(), "block/" + reg.getPath());
-                    sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(texture);
+                    sprite = Minecraft.getInstance().getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(texture);
                 }
                 else{
                     if(reg.getNamespace().equals("thermal")){
                         texture = new ResourceLocation(reg.getNamespace(), "item/dusts/" + reg.getPath());
-                        sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(texture);
+                        sprite = Minecraft.getInstance().getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(texture);
                     }
                     else {
                         texture = new ResourceLocation(reg.getNamespace(), "item/" + reg.getPath());
-                        sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(texture);
+                        sprite = Minecraft.getInstance().getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(texture);
                         if (sprite instanceof MissingTextureSprite) {
                             texture = new ResourceLocation(reg.getNamespace(), "items/" + reg.getPath());
-                            sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(texture);
+                            sprite = Minecraft.getInstance().getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(texture);
                         }
                     }
                 }
-                if(sprite instanceof MissingTextureSprite)sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(this.texture);
+                if(sprite instanceof MissingTextureSprite)sprite = Minecraft.getInstance().getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(this.texture);
                 return sprite;
             }
-            return Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(this.texture);
+            return Minecraft.getInstance().getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(this.texture);
         }
 
         public boolean isSand(){
@@ -222,7 +222,7 @@ public class HourGlassBlockTile extends ItemDisplayTile implements ITickableTile
         }
 
         public static HourGlassSandType getHourGlassSandType(Item i){
-            if(i instanceof BlockItem && ((BlockItem) i).getBlock().isIn(Tags.Blocks.SAND))return SAND;
+            if(i instanceof BlockItem && ((BlockItem) i).getBlock().is(Tags.Blocks.SAND))return SAND;
             String name = i.getRegistryName().toString();
             for (HourGlassSandType n : HourGlassSandType.values()){
                 if(name.equals(n.name)){
@@ -230,7 +230,7 @@ public class HourGlassBlockTile extends ItemDisplayTile implements ITickableTile
                 }
             }
             if(name.equals("astralsorcery:stardust"))return FORGE_DUST;
-            if(i.isIn(Tags.Items.DUSTS))return FORGE_DUST;
+            if(i.is(Tags.Items.DUSTS))return FORGE_DUST;
             return DEFAULT;
         }
     }

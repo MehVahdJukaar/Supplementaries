@@ -41,36 +41,36 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
 
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
-        return new AxisAlignedBB(this.pos);
+        return new AxisAlignedBB(this.worldPosition);
     }
 
     @Override
-    public double getMaxRenderDistanceSquared() {
+    public double getViewDistance() {
         return 128;
     }
 
     public VoxelShape getVoxelShape(Direction direction) {
         if(direction.getAxis() == Direction.Axis.Y){
-            return VoxelShapes.create(0,0,-this.height,1,1,1+this.height);
+            return VoxelShapes.box(0,0,-this.height,1,1,1+this.height);
         }
         else{
-            return VoxelShapes.create(0,-this.height,0,1,1+this.height,1);
+            return VoxelShapes.box(0,-this.height,0,1,1+this.height,1);
         }
     }
 
     private AxisAlignedBB getHalfBoundingBox(Direction dir) {
-        return new AxisAlignedBB(this.pos)
-                .contract(-0.5*dir.getXOffset(),-0.5*dir.getYOffset(),-0.5*dir.getZOffset());
+        return new AxisAlignedBB(this.worldPosition)
+                .contract(-0.5*dir.getStepX(),-0.5*dir.getStepY(),-0.5*dir.getStepZ());
     }
 
     private void moveCollidedEntities(){
         Direction dir = this.getDirection().getAxis() == Direction.Axis.Y ? Direction.SOUTH : Direction.UP;
         for(int j=0; j<2; j++) {
             AxisAlignedBB axisalignedbb = this.getHalfBoundingBox(dir);
-            List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(null, axisalignedbb);
+            List<Entity> list = this.level.getEntities(null, axisalignedbb);
             if (!list.isEmpty()) {
                 for (Entity entity : list) {
-                    if (entity.getPushReaction() != PushReaction.IGNORE) {
+                    if (entity.getPistonPushReaction() != PushReaction.IGNORE) {
                         AxisAlignedBB entityBB = entity.getBoundingBox();
                         double dy = 0.0D;
                         double dz = 0.0D;
@@ -107,8 +107,8 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
         double velocity = ServerConfigs.cached.BELLOWS_BASE_VEL_SCALING/period; // Affects acceleration
         double maxVelocity = ServerConfigs.cached.BELLOWS_MAX_VEL; // Affects max speed
 
-        AxisAlignedBB facingBox = CommonUtil.getDirectionBB(this.pos, facing, (int)range);
-        List<Entity> list = this.world.getEntitiesWithinAABB(Entity.class, facingBox);
+        AxisAlignedBB facingBox = CommonUtil.getDirectionBB(this.worldPosition, facing, (int)range);
+        List<Entity> list = this.level.getEntitiesOfClass(Entity.class, facingBox);
 
         for (Entity entity : list) {
 
@@ -120,56 +120,56 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
             switch(facing){
                 default:
                 case SOUTH:
-                    b = pos.getZ()+1;
+                    b = worldPosition.getZ()+1;
                     if(entityBB.minZ<b)continue;
-                    dist = entity.getPosZ() - b;
+                    dist = entity.getZ() - b;
                     break;
                 case NORTH:
-                    b = pos.getZ();
+                    b = worldPosition.getZ();
                     if(entityBB.maxZ>b)continue;
-                    dist = b - entity.getPosZ();
+                    dist = b - entity.getZ();
                     break;
                 case EAST:
-                    b = pos.getX()+1;
+                    b = worldPosition.getX()+1;
                     if(entityBB.minX<b)continue;
-                    dist = entity.getPosX() - b;
+                    dist = entity.getX() - b;
                     break;
                 case WEST:
-                    b = pos.getX();
+                    b = worldPosition.getX();
                     if(entityBB.maxX>b)continue;
-                    dist = b - entity.getPosX();
+                    dist = b - entity.getX();
                     break;
                 case UP:
-                    b = pos.getY()+1;
+                    b = worldPosition.getY()+1;
                     if(entityBB.minY<b)continue;
-                    dist = entity.getPosY() - b;
+                    dist = entity.getY() - b;
                     break;
                 case DOWN:
-                    b = pos.getY();
+                    b = worldPosition.getY();
                     if(entityBB.maxY>b)continue;
-                    dist = b - entity.getPosY();
+                    dist = b - entity.getY();
                     break;
             }
             //dist, vel>0
             velocity *=(range-dist)/range;
 
-            if (Math.abs(entity.getMotion().getCoordinate(facing.getAxis())) < maxVelocity) {
-                entity.setMotion(entity.getMotion().add(facing.getXOffset() * velocity, facing.getYOffset() * velocity, facing.getZOffset() * velocity));
-                if(ServerConfigs.cached.BELLOWS_FLAG) entity.velocityChanged = true;
+            if (Math.abs(entity.getDeltaMovement().get(facing.getAxis())) < maxVelocity) {
+                entity.setDeltaMovement(entity.getDeltaMovement().add(facing.getStepX() * velocity, facing.getStepY() * velocity, facing.getStepZ() * velocity));
+                if(ServerConfigs.cached.BELLOWS_FLAG) entity.hurtMarked = true;
             }
         }
     }
 
     private void blowParticles(float air, Direction facing){
-        if (this.world.rand.nextInt(2) == 0 && this.world.rand.nextFloat() < air &&
-                !Block.hasEnoughSolidSide(this.world, this.pos.offset(facing), facing.getOpposite())) {
-            this.spawnParticle(this.world, this.pos);
+        if (this.level.random.nextInt(2) == 0 && this.level.random.nextFloat() < air &&
+                !Block.canSupportCenter(this.level, this.worldPosition.relative(facing), facing.getOpposite())) {
+            this.spawnParticle(this.level, this.worldPosition);
         }
     }
 
     private void tickFurnaces(BlockPos frontPos){
-        TileEntity te = world.getTileEntity(frontPos);
-        Block b = world.getBlockState(frontPos).getBlock();
+        TileEntity te = level.getBlockEntity(frontPos);
+        Block b = level.getBlockState(frontPos).getBlock();
         if (te instanceof ITickableTileEntity &&
                 ModTags.isTagged(ModTags.BELLOWS_TICKABLE_TAG,b)) {
             ((ITickableTileEntity) te).tick();
@@ -178,25 +178,25 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
 
     private void refreshFire(int n, Direction facing, BlockPos frontPos){
         for (int i = 0; i < n; i++) {
-            BlockState fb = this.world.getBlockState(frontPos);
+            BlockState fb = this.level.getBlockState(frontPos);
             if (fb.getBlock() instanceof FireBlock) {
-                int age = fb.get(FireBlock.AGE);
+                int age = fb.getValue(FireBlock.AGE);
                 if (age != 0) {
-                    world.setBlockState(frontPos, fb.with(FireBlock.AGE,
+                    level.setBlock(frontPos, fb.setValue(FireBlock.AGE,
                             MathHelper.clamp(age - 7, 0, 15)), 4);
                 }
             }
-            frontPos = frontPos.offset(facing);
+            frontPos = frontPos.relative(facing);
         }
     }
 
     public void tick() {
 
-        int power = this.getBlockState().get(BellowsBlock.POWER);
+        int power = this.getBlockState().getValue(BellowsBlock.POWER);
         this.prevHeight = this.height;
 
         if(power!=0 && !(this.offset==0&&this.height!=0)){
-            long time = this.world.getGameTime();
+            long time = this.level.getGameTime();
             if(this.offset==0){
                 this.offset = time;
             }
@@ -212,7 +212,7 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
             this.height = dh * cos - dh;
 
             //client. particles
-            if (this.world.isRemote) {
+            if (this.level.isClientSide) {
                 this.blowParticles(sin,facing);
             }
             //server
@@ -223,7 +223,7 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
                     this.pushEntities(facing,period,range);
                 }
 
-                BlockPos frontPos = this.pos.offset(facing);
+                BlockPos frontPos = this.worldPosition.relative(facing);
 
                 //speeds up furnaces
                 if(time % (10 - (power/2)) == 0) {
@@ -251,14 +251,14 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
 
             if(this.height>minH){
                 Direction facing = this.getDirection();
-                if (this.world.isRemote) {
+                if (this.level.isClientSide) {
                     this.blowParticles(0.8f, facing);
                 }
                 else{
                     float range = ServerConfigs.cached.BELLOWS_RANGE;
                     this.pushEntities(facing,ServerConfigs.cached.BELLOWS_PERIOD,range);
 
-                    BlockPos frontPos = this.pos.offset(facing);
+                    BlockPos frontPos = this.worldPosition.relative(facing);
 
                     if(this.height%0.04==0) {
                         this.tickFurnaces(frontPos);
@@ -283,14 +283,14 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
     }
 
     public boolean inLineOfSight(Entity entity, Direction facing) {
-        int x = facing.getXOffset() * (MathHelper.floor(entity.getPosX()) - this.pos.getX());
-        int y = facing.getYOffset() * (MathHelper.floor(entity.getPosY()) - this.pos.getY());
-        int z = facing.getZOffset() * (MathHelper.floor(entity.getPosZ()) - this.pos.getZ());
+        int x = facing.getStepX() * (MathHelper.floor(entity.getX()) - this.worldPosition.getX());
+        int y = facing.getStepY() * (MathHelper.floor(entity.getY()) - this.worldPosition.getY());
+        int z = facing.getStepZ() * (MathHelper.floor(entity.getZ()) - this.worldPosition.getZ());
         boolean flag = true;
 
         for(int i = 1; i < Math.abs(x + y + z); i++) {
 
-            if(Block.hasEnoughSolidSide(this.world, this.pos.offset(facing, i), facing.getOpposite())) {
+            if(Block.canSupportCenter(this.level, this.worldPosition.relative(facing, i), facing.getOpposite())) {
                 flag = false;
             }
         }
@@ -299,14 +299,14 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
 
     public  void spawnParticle(World world, BlockPos pos) {
         Direction dir = this.getDirection();
-        double xo = dir.getXOffset();
-        double yo = dir.getYOffset();
-        double zo = dir.getZOffset();
-        double x = xo*0.5 + pos.getX() + 0.5 + (world.rand.nextFloat() - 0.5)/3d;
-        double y = yo*0.5 + pos.getY() + 0.5 + (world.rand.nextFloat() - 0.5)/3d;
-        double z = zo*0.5 + pos.getZ() + 0.5 + (world.rand.nextFloat() - 0.5)/3d;
+        double xo = dir.getStepX();
+        double yo = dir.getStepY();
+        double zo = dir.getStepZ();
+        double x = xo*0.5 + pos.getX() + 0.5 + (world.random.nextFloat() - 0.5)/3d;
+        double y = yo*0.5 + pos.getY() + 0.5 + (world.random.nextFloat() - 0.5)/3d;
+        double z = zo*0.5 + pos.getZ() + 0.5 + (world.random.nextFloat() - 0.5)/3d;
 
-        double vel = 0.125F + world.rand.nextFloat() * 0.2F;
+        double vel = 0.125F + world.random.nextFloat() * 0.2F;
 
         double velX = xo * vel;
         double velY = yo * vel;
@@ -316,41 +316,41 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
     }
 
     public Direction getDirection() {
-        return this.getBlockState().get(BellowsBlock.FACING);
+        return this.getBlockState().getValue(BellowsBlock.FACING);
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
-        super.read(state, compound);
+    public void load(BlockState state, CompoundNBT compound) {
+        super.load(state, compound);
         this.offset = compound.getLong("Offset");
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
+    public CompoundNBT save(CompoundNBT compound) {
+        super.save(compound);
         compound.putLong("Offset", this.offset);
         return compound;
     }
 
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.pos, 0, this.getUpdateTag());
+        return new SUpdateTileEntityPacket(this.worldPosition, 0, this.getUpdateTag());
     }
 
     @Override
     public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundNBT());
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.read(this.getBlockState(), pkt.getNbtCompound());
+        this.load(this.getBlockState(), pkt.getTag());
     }
 
     public void onSteppedOn(Entity entityIn) {
         if(this.isPressed)return;
-        double b = entityIn.getBoundingBox().getAverageEdgeLength();
-        if(b>0.8 && this.getBlockState().get(BellowsBlock.FACING).getAxis()!= Direction.Axis.Y){
+        double b = entityIn.getBoundingBox().getSize();
+        if(b>0.8 && this.getBlockState().getValue(BellowsBlock.FACING).getAxis()!= Direction.Axis.Y){
             this.isPressed = true;
         }
     }

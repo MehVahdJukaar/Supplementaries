@@ -39,18 +39,18 @@ public abstract class StatuetteEntityRenderer extends EntityRenderer<AbstractCli
         this.layerRenderers.add(new HeadLayer<>(this));
     }
 
-    public PlayerModel<AbstractClientPlayerEntity> getEntityModel() {
+    public PlayerModel<AbstractClientPlayerEntity> getModel() {
         return this.entityModel;
     }
 
     public void render(AbstractClientPlayerEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
-        matrixStackIn.push();
+        matrixStackIn.pushPose();
 
-        float f = MathHelper.interpolateAngle(partialTicks, entityIn.prevRenderYawOffset, entityIn.renderYawOffset);
-        float f1 = MathHelper.interpolateAngle(partialTicks, entityIn.prevRotationYawHead, entityIn.rotationYawHead);
+        float f = MathHelper.rotLerp(partialTicks, entityIn.yBodyRotO, entityIn.yBodyRot);
+        float f1 = MathHelper.rotLerp(partialTicks, entityIn.yHeadRotO, entityIn.yHeadRot);
         float f2 = f1 - f;
 
-        float f6 = MathHelper.lerp(partialTicks, entityIn.prevRotationPitch, entityIn.rotationPitch);
+        float f6 = MathHelper.lerp(partialTicks, entityIn.xRotO, entityIn.xRot);
 
         float f7 = this.handleRotationFloat(entityIn, partialTicks);
         this.applyRotations(entityIn, matrixStackIn, f7, f, partialTicks);
@@ -61,20 +61,20 @@ public abstract class StatuetteEntityRenderer extends EntityRenderer<AbstractCli
         float f8 = 0.0F;
         float f5 = 0.0F;
         if (entityIn.isAlive()) {
-            f8 = MathHelper.lerp(partialTicks, entityIn.prevLimbSwingAmount, entityIn.limbSwingAmount);
-            f5 = entityIn.limbSwing - entityIn.limbSwingAmount * (1.0F - partialTicks);
+            f8 = MathHelper.lerp(partialTicks, entityIn.animationSpeedOld, entityIn.animationSpeed);
+            f5 = entityIn.animationPosition - entityIn.animationSpeed * (1.0F - partialTicks);
             if (f8 > 1.0F) {
                 f8 = 1.0F;
             }
         }
 
-        this.entityModel.setLivingAnimations(entityIn, f5, f8, partialTicks);
-        this.entityModel.setRotationAngles(entityIn, f5, f8, f7, f2, f6);
+        this.entityModel.prepareMobModel(entityIn, f5, f8, partialTicks);
+        this.entityModel.setupAnim(entityIn, f5, f8, f7, f2, f6);
 
-        RenderType rendertype = this.entityModel.getRenderType(this.getEntityTexture(entityIn));
+        RenderType rendertype = this.entityModel.renderType(this.getTextureLocation(entityIn));
         if (rendertype != null) {
             IVertexBuilder ivertexbuilder = bufferIn.getBuffer(rendertype);
-            this.entityModel.render(matrixStackIn, ivertexbuilder, packedLightIn, 0, 1.0F, 1.0F, 1.0F, 1.0F);
+            this.entityModel.renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, 0, 1.0F, 1.0F, 1.0F, 1.0F);
         }
 
 
@@ -83,7 +83,7 @@ public abstract class StatuetteEntityRenderer extends EntityRenderer<AbstractCli
         }
 
 
-        matrixStackIn.pop();
+        matrixStackIn.popPose();
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
     }
 
@@ -92,18 +92,18 @@ public abstract class StatuetteEntityRenderer extends EntityRenderer<AbstractCli
      * Defines what float the third param in setRotationAngles of ModelBase is
      */
     protected float handleRotationFloat(AbstractClientPlayerEntity livingBase, float partialTicks) {
-        return (float)livingBase.ticksExisted + partialTicks;
+        return (float)livingBase.tickCount + partialTicks;
     }
 
-    protected boolean canRenderName(AbstractClientPlayerEntity entity) {
-        double d0 = this.renderManager.squareDistanceTo(entity);
+    protected boolean shouldShowName(AbstractClientPlayerEntity entity) {
+        double d0 = this.entityRenderDispatcher.distanceToSqr(entity);
         float f = entity.isDiscrete() ? 32.0F : 64.0F;
         if (d0 >= (double)(f * f)) {
             return false;
         } else {
             Minecraft minecraft = Minecraft.getInstance();
             ClientPlayerEntity clientplayerentity = minecraft.player;
-            boolean flag = !entity.isInvisibleToPlayer(clientplayerentity);
+            boolean flag = !entity.isInvisibleTo(clientplayerentity);
             if (entity != clientplayerentity) {
                 Team team = entity.getTeam();
                 Team team1 = clientplayerentity.getTeam();
@@ -115,52 +115,52 @@ public abstract class StatuetteEntityRenderer extends EntityRenderer<AbstractCli
                         case NEVER:
                             return false;
                         case HIDE_FOR_OTHER_TEAMS:
-                            return team1 == null ? flag : team.isSameTeam(team1) && (team.getSeeFriendlyInvisiblesEnabled() || flag);
+                            return team1 == null ? flag : team.isAlliedTo(team1) && (team.canSeeFriendlyInvisibles() || flag);
                         case HIDE_FOR_OWN_TEAM:
-                            return team1 == null ? flag : !team.isSameTeam(team1) && flag;
+                            return team1 == null ? flag : !team.isAlliedTo(team1) && flag;
                         default:
                             return true;
                     }
                 }
             }
 
-            return Minecraft.isGuiEnabled() && entity != minecraft.getRenderViewEntity() && flag && !entity.isBeingRidden();
+            return Minecraft.renderNames() && entity != minecraft.getCameraEntity() && flag && !entity.isVehicle();
         }
     }
 
     //player code
 
 
-    public ResourceLocation getEntityTexture(AbstractClientPlayerEntity entity) {
-        return entity.getLocationSkin();
+    public ResourceLocation getTextureLocation(AbstractClientPlayerEntity entity) {
+        return entity.getSkinTextureLocation();
     }
 
 
     public void renderRightArm(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, AbstractClientPlayerEntity playerIn) {
-        this.renderItem(matrixStackIn, bufferIn, combinedLightIn, playerIn, (this.entityModel).bipedRightArm, (this.entityModel).bipedRightArmwear);
+        this.renderItem(matrixStackIn, bufferIn, combinedLightIn, playerIn, (this.entityModel).rightArm, (this.entityModel).rightSleeve);
     }
 
     public void renderLeftArm(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, AbstractClientPlayerEntity playerIn) {
-        this.renderItem(matrixStackIn, bufferIn, combinedLightIn, playerIn, (this.entityModel).bipedLeftArm, (this.entityModel).bipedLeftArmwear);
+        this.renderItem(matrixStackIn, bufferIn, combinedLightIn, playerIn, (this.entityModel).leftArm, (this.entityModel).leftSleeve);
     }
 
     private void renderItem(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, AbstractClientPlayerEntity playerIn, ModelRenderer rendererArmIn, ModelRenderer rendererArmwearIn) {
-        PlayerModel<AbstractClientPlayerEntity> playermodel = this.getEntityModel();
-        playermodel.swingProgress = 0.0F;
-        playermodel.isSneak = false;
-        playermodel.swimAnimation = 0.0F;
-        playermodel.setRotationAngles(playerIn, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
-        rendererArmIn.rotateAngleX = 0.0F;
-        rendererArmIn.render(matrixStackIn, bufferIn.getBuffer(RenderType.getEntitySolid(playerIn.getLocationSkin())), combinedLightIn, OverlayTexture.NO_OVERLAY);
-        rendererArmwearIn.rotateAngleX = 0.0F;
-        rendererArmwearIn.render(matrixStackIn, bufferIn.getBuffer(RenderType.getEntityTranslucent(playerIn.getLocationSkin())), combinedLightIn, OverlayTexture.NO_OVERLAY);
+        PlayerModel<AbstractClientPlayerEntity> playermodel = this.getModel();
+        playermodel.attackTime = 0.0F;
+        playermodel.crouching = false;
+        playermodel.swimAmount = 0.0F;
+        playermodel.setupAnim(playerIn, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
+        rendererArmIn.xRot = 0.0F;
+        rendererArmIn.render(matrixStackIn, bufferIn.getBuffer(RenderType.entitySolid(playerIn.getSkinTextureLocation())), combinedLightIn, OverlayTexture.NO_OVERLAY);
+        rendererArmwearIn.xRot = 0.0F;
+        rendererArmwearIn.render(matrixStackIn, bufferIn.getBuffer(RenderType.entityTranslucent(playerIn.getSkinTextureLocation())), combinedLightIn, OverlayTexture.NO_OVERLAY);
     }
 
     protected void applyRotations(AbstractClientPlayerEntity entityLiving, MatrixStack matrixStackIn, float ageInTicks, float rotationYaw, float partialTicks) {
-        String s = TextFormatting.getTextWithoutFormattingCodes(entityLiving.getName().getString());
-        if (("Dinnerbone".equals(s) || "Grumm".equals(s)) && (!(entityLiving instanceof PlayerEntity) || ((PlayerEntity)entityLiving).isWearing(PlayerModelPart.CAPE))) {
-            matrixStackIn.translate(0.0D, (double)(entityLiving.getHeight() + 0.1F), 0.0D);
-            matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(180.0F));
+        String s = TextFormatting.stripFormatting(entityLiving.getName().getString());
+        if (("Dinnerbone".equals(s) || "Grumm".equals(s)) && (!(entityLiving instanceof PlayerEntity) || ((PlayerEntity)entityLiving).isModelPartShown(PlayerModelPart.CAPE))) {
+            matrixStackIn.translate(0.0D, (double)(entityLiving.getBbHeight() + 0.1F), 0.0D);
+            matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(180.0F));
         }
     }
 

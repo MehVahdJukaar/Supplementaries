@@ -47,10 +47,10 @@ public class SupplementariesJEIPlugin implements IModPlugin {
 
         public String apply(ItemStack itemStack) {
 
-            Potion potionType = PotionUtils.getPotionFromItem(itemStack);
-            String potionTypeString = potionType.getNamePrefixed("");
+            Potion potionType = PotionUtils.getPotion(itemStack);
+            String potionTypeString = potionType.getName("");
             StringBuilder stringBuilder = new StringBuilder(potionTypeString);
-            List<EffectInstance> effects = PotionUtils.getEffectsFromStack(itemStack);
+            List<EffectInstance> effects = PotionUtils.getMobEffects(itemStack);
 
             for (EffectInstance effect : effects) {
                 stringBuilder.append(";").append(effect);
@@ -76,11 +76,11 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         String group = "supplementaries.jei.rope_arrow";
 
         ItemStack ropeArrow = new ItemStack(Registry.ROPE_ARROW_ITEM.get());
-        ropeArrow.setDamage(ropeArrow.getMaxDamage()-4);
+        ropeArrow.setDamageValue(ropeArrow.getMaxDamage()-4);
 
-        Ingredient arrow = Ingredient.fromStacks(new ItemStack(Items.ARROW));
-        Ingredient rope = Ingredient.fromTag(ModTags.ROPES);//fromStacks(new ItemStack(Registry.ROPE_ITEM.get()));
-        NonNullList<Ingredient> inputs = NonNullList.from(Ingredient.EMPTY, arrow, rope,rope,rope,rope);
+        Ingredient arrow = Ingredient.of(new ItemStack(Items.ARROW));
+        Ingredient rope = Ingredient.of(ModTags.ROPES);//fromStacks(new ItemStack(Registry.ROPE_ITEM.get()));
+        NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, arrow, rope,rope,rope,rope);
         ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "jei_rope_arrow_create");
         ShapelessRecipe recipe = new ShapelessRecipe(id, group, ropeArrow, inputs);
         recipes.add(recipe);
@@ -93,11 +93,11 @@ public class SupplementariesJEIPlugin implements IModPlugin {
 
         ItemStack ropeArrow = new ItemStack(Registry.ROPE_ARROW_ITEM.get());
         ItemStack ropeArrow2 = ropeArrow.copy();
-        ropeArrow2.setDamage(8);
+        ropeArrow2.setDamageValue(8);
 
-        Ingredient arrow = Ingredient.fromStacks(ropeArrow2);
-        Ingredient rope = Ingredient.fromTag(ModTags.ROPES);//.fromStacks(new ItemStack(Registry.ROPE_ITEM.get()));
-        NonNullList<Ingredient> inputs = NonNullList.from(Ingredient.EMPTY, rope,rope,rope,rope,arrow,rope,rope,rope,rope);
+        Ingredient arrow = Ingredient.of(ropeArrow2);
+        Ingredient rope = Ingredient.of(ModTags.ROPES);//.fromStacks(new ItemStack(Registry.ROPE_ITEM.get()));
+        NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, rope,rope,rope,rope,arrow,rope,rope,rope,rope);
         ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "jei_rope_arrow_add");
         ShapelessRecipe recipe = new ShapelessRecipe(id, group, ropeArrow, inputs);
         recipes.add(recipe);
@@ -119,13 +119,13 @@ public class SupplementariesJEIPlugin implements IModPlugin {
 
     private static ShapelessRecipe makeSpikeRecipe(Potion potionType, String group){
         ItemStack spikes = new ItemStack(Registry.BAMBOO_SPIKES_ITEM.get());
-        ItemStack lingeringPotion = PotionUtils.addPotionToItemStack(new ItemStack(Items.LINGERING_POTION), potionType);
-        Ingredient spikeIngredient = Ingredient.fromStacks(spikes);
-        Ingredient potionIngredient = Ingredient.fromStacks(lingeringPotion);
-        NonNullList<Ingredient> inputs = NonNullList.from(Ingredient.EMPTY, spikeIngredient, potionIngredient);
+        ItemStack lingeringPotion = PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), potionType);
+        Ingredient spikeIngredient = Ingredient.of(spikes);
+        Ingredient potionIngredient = Ingredient.of(lingeringPotion);
+        NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, spikeIngredient, potionIngredient);
         ItemStack output = BambooSpikesTippedItem.makeSpikeItem(potionType);
         //ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "jei.bamboo_spikes." + output.getTranslationKey());
-        ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, potionType.getNamePrefixed("jei.tipped_spikes."));
+        ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, potionType.getName("jei.tipped_spikes."));
         return new ShapelessRecipe(id, group, output, inputs);
     }
 
@@ -152,11 +152,11 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         com.putByteArray("pixels_"+13, new byte[]{0,0,0,1,1,0,0,1,1,0,1,0,0,0,0,0});
         com.putByteArray("pixels_"+14, new byte[]{0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0});
         com.putByteArray("pixels_"+15, new byte[]{0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0});
-        blackboard.setTagInfo("BlockEntityTag", com);
+        blackboard.addTagElement("BlockEntityTag", com);
 
-        Ingredient emptyBoard = Ingredient.fromStacks(new ItemStack(Registry.BLACKBOARD_ITEM.get()));
-        Ingredient fullBoard = Ingredient.fromStacks(blackboard);
-        NonNullList<Ingredient> inputs = NonNullList.from(Ingredient.EMPTY, emptyBoard, fullBoard);
+        Ingredient emptyBoard = Ingredient.of(new ItemStack(Registry.BLACKBOARD_ITEM.get()));
+        Ingredient fullBoard = Ingredient.of(blackboard);
+        NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, emptyBoard, fullBoard);
         ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "jei_blackboard_duplicate");
         ShapelessRecipe recipe = new ShapelessRecipe(id, group, blackboard, inputs);
         recipes.add(recipe);
@@ -187,11 +187,11 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         com.putByteArray("pixels_6", new byte[]{0,1,0,0,0,0,0,0,0,0,0,1,0,1,0,1});
         com.putByteArray("pixels_9", new byte[]{0,1,0,0,0,0,0,1,0,0,0,1,1,1,0,1});
         com.putByteArray("pixels_8", new byte[]{0,1,0,0,0,0,0,0,0,1,0,1,0,1,0,1});
-        blackboard.setTagInfo("BlockEntityTag", com);
+        blackboard.addTagElement("BlockEntityTag", com);
 
-        Ingredient emptyBoard = Ingredient.fromStacks(new ItemStack(Items.WATER_BUCKET));
-        Ingredient fullBoard = Ingredient.fromStacks(blackboard);
-        NonNullList<Ingredient> inputs = NonNullList.from(Ingredient.EMPTY, emptyBoard, fullBoard);
+        Ingredient emptyBoard = Ingredient.of(new ItemStack(Items.WATER_BUCKET));
+        Ingredient fullBoard = Ingredient.of(blackboard);
+        NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, emptyBoard, fullBoard);
         ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "jei_blackboard_clear");
         ShapelessRecipe recipe = new ShapelessRecipe(id, group, new ItemStack(Registry.BLACKBOARD_ITEM.get()), inputs);
         recipes.add(recipe);

@@ -1,7 +1,7 @@
 {
   "replace": false,
   "values": [
-    "#supplementaries:shulker_boxes",
+    "#forge:shulker_boxes",
 	"supplementaries:safe",
 	"supplementaries:sack"
   ]

@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class FenceSignBlock extends FenceMimicBlock{
 
     public FenceSignBlock(Properties properties) {
@@ -34,40 +36,40 @@ public class FenceSignBlock extends FenceMimicBlock{
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
                                              BlockRayTraceResult hit) {
-        TileEntity tileentity = worldIn.getTileEntity(pos);
+        TileEntity tileentity = worldIn.getBlockEntity(pos);
         if (tileentity instanceof FenceSignBlockTile) {
             FenceSignBlockTile te = (FenceSignBlockTile) tileentity;
-            ItemStack itemstack = player.getHeldItem(handIn);
+            ItemStack itemstack = player.getItemInHand(handIn);
             Item item = itemstack.getItem();
 
-            boolean server = !worldIn.isRemote();
-            boolean isDye = item instanceof DyeItem && player.abilities.allowEdit;
+            boolean server = !worldIn.isClientSide();
+            boolean isDye = item instanceof DyeItem && player.abilities.mayBuild;
             //color
             if (isDye){
                 if(te.textHolder.setTextColor(((DyeItem) itemstack.getItem()).getDyeColor())){
                     if (!player.isCreative()) {
                         itemstack.shrink(1);
                     }
-                    if(server)te.markDirty();
+                    if(server)te.setChanged();
                 }
             }
             // open gui (edit sign with empty hand)
             else if (!server) {
                 FenceSignGui.open(te);
             }
-            return ActionResultType.func_233537_a_(worldIn.isRemote);
+            return ActionResultType.sidedSuccess(worldIn.isClientSide);
         }
         return ActionResultType.PASS;
     }
 
     @Override
     public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
-        TileEntity te = world.getTileEntity(pos);
+        TileEntity te = world.getBlockEntity(pos);
         if(te instanceof FenceSignBlockTile){
             FenceSignBlockTile tile = ((FenceSignBlockTile)te);
-            double y = target.getHitVec().y%1;
+            double y = target.getLocation().y%1;
             if(y<0.8&&y>0.4){
                 return new ItemStack(tile.signBlock.getBlock());
             }
@@ -78,7 +80,7 @@ public class FenceSignBlock extends FenceMimicBlock{
 
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
-        TileEntity tileentity = builder.get(LootParameters.BLOCK_ENTITY);
+        TileEntity tileentity = builder.getOptionalParameter(LootParameters.BLOCK_ENTITY);
         if (tileentity instanceof FenceSignBlockTile){
             FenceSignBlockTile tile = ((FenceSignBlockTile) tileentity);
             List<ItemStack> list = new ArrayList<>();
@@ -92,12 +94,12 @@ public class FenceSignBlock extends FenceMimicBlock{
 
     @Override
     public BlockState rotate(BlockState state, IWorld world, BlockPos pos, Rotation rot) {
-        TileEntity te = world.getTileEntity(pos);
+        TileEntity te = world.getBlockEntity(pos);
         if (te instanceof FenceSignBlockTile) {
             FenceSignBlockTile tile = (FenceSignBlockTile) te;
 
             tile.signFacing = rot.rotate(tile.signFacing);
-            tile.markDirty();
+            tile.setChanged();
         }
         return state;
     }

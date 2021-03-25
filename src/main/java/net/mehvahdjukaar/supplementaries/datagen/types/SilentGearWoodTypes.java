@@ -14,8 +14,8 @@ public enum SilentGearWoodTypes implements IWoodType {
 
     SilentGearWoodTypes(String name) {
         this.name = name;
-        this.color = Blocks.CRIMSON_PLANKS.getMaterialColor();
-        this.material = Blocks.CRIMSON_PLANKS.getDefaultState().getMaterial();
+        this.color = Blocks.CRIMSON_PLANKS.defaultMaterialColor();
+        this.material = Blocks.CRIMSON_PLANKS.defaultBlockState().getMaterial();
     }
 
     @Override

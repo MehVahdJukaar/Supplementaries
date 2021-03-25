@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class ShulkerBoxTileEntityMixin {
 
 
-    @Inject(method = "canInsertItem", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "canPlaceItemThroughFace", at = @At("HEAD"), cancellable = true)
     public void canInsertItem(int index, ItemStack itemStackIn, Direction direction, CallbackInfoReturnable<Boolean> info ) {
         if(ModTags.isTagged(ModTags.SHULKER_BLACKLIST_TAG,itemStackIn.getItem()))
             info.setReturnValue(false);

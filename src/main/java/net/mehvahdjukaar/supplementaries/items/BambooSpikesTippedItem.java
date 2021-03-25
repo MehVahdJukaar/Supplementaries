@@ -20,6 +20,8 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import net.minecraft.item.Item.Properties;
+
 public class BambooSpikesTippedItem extends BlockItem implements IWaterLoggable {
 
 
@@ -31,13 +33,13 @@ public class BambooSpikesTippedItem extends BlockItem implements IWaterLoggable 
     public int getBurnTime(ItemStack itemStack) {return 150;}
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
         PotionUtils.addPotionTooltip(stack,tooltip,BambooSpikesBlockTile.POTION_MULTIPLIER);
     }
 
     @Override
-    public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
+    public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
         return false;
     }
 
@@ -53,7 +55,7 @@ public class BambooSpikesTippedItem extends BlockItem implements IWaterLoggable 
     }
 
     @Override
-    public int getItemEnchantability() {
+    public int getEnchantmentValue() {
         return 0;
     }
 
@@ -68,8 +70,8 @@ public class BambooSpikesTippedItem extends BlockItem implements IWaterLoggable 
     }
 
     @Override
-    public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
-        if (this.isInGroup(group)) {
+    public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items) {
+        if (this.allowdedIn(group)) {
             items.add(makeSpikeItem(Potions.POISON));
             items.add(makeSpikeItem(Potions.LONG_POISON));
             items.add(makeSpikeItem(Potions.STRONG_POISON));
@@ -84,26 +86,26 @@ public class BambooSpikesTippedItem extends BlockItem implements IWaterLoggable 
 
     public static ItemStack makeSpikeItem(Potion potion){
         ItemStack stack = new ItemStack(Registry.BAMBOO_SPIKES_TIPPED_ITEM.get());
-        PotionUtils.addPotionToItemStack(stack,potion);
+        PotionUtils.setPotion(stack,potion);
         return stack;
     }
 
     @Override
-    public String getTranslationKey(ItemStack stack) {
+    public String getDescriptionId(ItemStack stack) {
         return "item.supplementaries.bamboo_spikes_tipped";
         //return PotionUtils.getPotionTypeFromNBT(stack.getChildTag("BlockEntityTag")).getNamePrefixed(super.getTranslationKey() + ".effect.");
     }
 
     @Override
-    public ITextComponent getDisplayName(ItemStack stack) {
-        Potion p = PotionUtils.getPotionFromItem(stack);
-        TextComponent arrowName = new TranslationTextComponent(p.getNamePrefixed("item.minecraft.tipped_arrow.effect."));
+    public ITextComponent getName(ItemStack stack) {
+        Potion p = PotionUtils.getPotion(stack);
+        TextComponent arrowName = new TranslationTextComponent(p.getName("item.minecraft.tipped_arrow.effect."));
         String s = arrowName.getString();
         if(s.contains("Arrow of ")){
             return new TranslationTextComponent("item.supplementaries.bamboo_spikes_tipped_effect",
                     s.replace("Arrow of ",""));
         }
-        return new TranslationTextComponent(this.getTranslationKey(stack));
+        return new TranslationTextComponent(this.getDescriptionId(stack));
         //String effectName = new TranslationTextComponent(p.getNamePrefixed("effect.minecraft.")).getString();
         //return new TranslationTextComponent("item.supplementaries.bamboo_spikes_tipped_effect",effectName);
 

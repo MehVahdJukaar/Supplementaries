@@ -26,8 +26,8 @@ public class ItemShelfBlockTileRenderer extends TileEntityRenderer<ItemShelfBloc
     }
 
     protected boolean canRenderName(ItemShelfBlockTile tile) {
-        if (Minecraft.isGuiEnabled() && tile.getStackInSlot(0).hasDisplayName()) {
-            double d0 = Minecraft.getInstance().getRenderManager().getDistanceToCamera(tile.getPos().getX() + 0.5 ,tile.getPos().getY() + 0.5 ,tile.getPos().getZ() + 0.5);
+        if (Minecraft.renderNames() && tile.getItem(0).hasCustomHoverName()) {
+            double d0 = Minecraft.getInstance().getEntityRenderDispatcher().distanceToSqr(tile.getBlockPos().getX() + 0.5 ,tile.getBlockPos().getY() + 0.5 ,tile.getBlockPos().getZ() + 0.5);
             return d0 < 16;
         }
         return false;
@@ -38,22 +38,22 @@ public class ItemShelfBlockTileRenderer extends TileEntityRenderer<ItemShelfBloc
         double f = 0.625; //height
         int i = 0;
 
-        FontRenderer fontrenderer = this.renderDispatcher.getFontRenderer();
-        EntityRendererManager renderManager = Minecraft.getInstance().getRenderManager();
+        FontRenderer fontrenderer = this.renderer.getFont();
+        EntityRendererManager renderManager = Minecraft.getInstance().getEntityRenderDispatcher();
 
-        matrixStackIn.push();
+        matrixStackIn.pushPose();
 
         matrixStackIn.translate(0, f, 0);
-        matrixStackIn.rotate(renderManager.getCameraOrientation());
+        matrixStackIn.mulPose(renderManager.cameraOrientation());
         matrixStackIn.scale(-0.025F, -0.025F, 0.025F);
-        Matrix4f matrix4f = matrixStackIn.getLast().getMatrix();
-        float f1 = Minecraft.getInstance().gameSettings.getTextBackgroundOpacity(0.25F);
+        Matrix4f matrix4f = matrixStackIn.last().pose();
+        float f1 = Minecraft.getInstance().options.getBackgroundOpacity(0.25F);
         int j = (int)(f1 * 255.0F) << 24;
 
-        float f2 = (float)(-fontrenderer.getStringPropertyWidth(displayNameIn) / 2);
-        //func_243247_a == renderTextComponent
-        fontrenderer.func_243247_a(displayNameIn, f2, (float)i, -1, false, matrix4f, bufferIn, false, j, packedLightIn);
-        matrixStackIn.pop();
+        float f2 = (float)(-fontrenderer.width(displayNameIn) / 2);
+        //drawInBatch == renderTextComponent
+        fontrenderer.drawInBatch(displayNameIn, f2, (float)i, -1, false, matrix4f, bufferIn, false, j, packedLightIn);
+        matrixStackIn.popPose();
 
     }
 
@@ -64,21 +64,21 @@ public class ItemShelfBlockTileRenderer extends TileEntityRenderer<ItemShelfBloc
 
         if(!tile.isEmpty()){
 
-            matrixStackIn.push();
+            matrixStackIn.pushPose();
             matrixStackIn.translate(0.5, 0.5, 0.5);
             matrixStackIn.scale(0.5f, 0.5f, 0.5f);
             float yaw = tile.getYaw();
-            matrixStackIn.rotate(Vector3f.YP.rotationDegrees(yaw));
+            matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(yaw));
             matrixStackIn.translate(0,0,0.8125);
 
             if(this.canRenderName(tile)){
-                matrixStackIn.push();
-                matrixStackIn.rotate(Vector3f.YP.rotationDegrees(-yaw));
-                ITextComponent name = tile.getStackInSlot(0).getDisplayName();
+                matrixStackIn.pushPose();
+                matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-yaw));
+                ITextComponent name = tile.getItem(0).getHoverName();
                 int i = "Dinnerbone".equals(name.getString())? -1 : 1;
                 matrixStackIn.scale(i, i, 1);
                 this.renderName(name, matrixStackIn, bufferIn, combinedLightIn);
-                matrixStackIn.pop();
+                matrixStackIn.popPose();
             }
 
 
@@ -88,14 +88,14 @@ public class ItemShelfBlockTileRenderer extends TileEntityRenderer<ItemShelfBloc
 
 
             ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-            ItemStack stack = tile.getStackInSlot(0);
+            ItemStack stack = tile.getItem(0);
             if(CommonUtil.FESTIVITY.isAprilsFool())stack= new ItemStack(Items.DIAMOND);
-            IBakedModel ibakedmodel = itemRenderer.getItemModelWithOverrides(stack, tile.getWorld(), null);
+            IBakedModel ibakedmodel = itemRenderer.getModel(stack, tile.getLevel(), null);
             if(ibakedmodel.isGui3d()&&ClientConfigs.cached.SHELF_TRANSLATE)matrixStackIn.translate(0,-0.25,0);
-            itemRenderer.renderItem(stack, ItemCameraTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
+            itemRenderer.render(stack, ItemCameraTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
                     combinedOverlayIn, ibakedmodel);
 
-            matrixStackIn.pop();
+            matrixStackIn.popPose();
         }
     }
 }

@@ -11,7 +11,7 @@ public enum SimplyTeadWoodTypes implements IWoodType {
 
     SimplyTeadWoodTypes(String name) {
         this.name = name;
-        this.color = MaterialColor.BROWN;
+        this.color = MaterialColor.COLOR_BROWN;
     }
 
     @Override

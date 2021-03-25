@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(ShulkerBoxSlot.class)
 public abstract class ShulkerBoxSlotMixin {
 
-    @Inject(method = "isItemValid", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "mayPlace", at = @At("HEAD"), cancellable = true)
     public void isItemValid(ItemStack itemStackIn, CallbackInfoReturnable<Boolean> info ) {
         if(ModTags.isTagged(ModTags.SHULKER_BLACKLIST_TAG,itemStackIn.getItem()))
             info.setReturnValue(false);

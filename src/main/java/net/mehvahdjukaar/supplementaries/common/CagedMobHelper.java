@@ -21,8 +21,8 @@ public class CagedMobHelper {
     //we may have a memory leak here... too bad
     public static boolean addMob(Entity e){
         if(e==null) e=defaultPig;
-        if(!cachedMobs.containsKey(e.getUniqueID())) {
-            cachedMobs.put(e.getUniqueID(), e);
+        if(!cachedMobs.containsKey(e.getUUID())) {
+            cachedMobs.put(e.getUUID(), e);
             return true;
         }
         return false;
@@ -41,7 +41,7 @@ public class CagedMobHelper {
     public static void onWorldLoad(WorldEvent.Load event) {
         IWorld world = event.getWorld();
         //TODO: might remove this on final release
-        if(world instanceof World && ((World) world).getDimensionKey()==World.OVERWORLD){
+        if(world instanceof World && ((World) world).dimension()==World.OVERWORLD){
             cachedMobs = new HashMap<>();
             defaultPig = new PigEntity(EntityType.PIG, (World) world);
         }

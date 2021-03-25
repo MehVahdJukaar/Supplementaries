@@ -10,42 +10,42 @@ import net.minecraft.util.math.MathHelper;
 
 public class FlagBlockTile extends TileEntity implements ITickableTileEntity {
 
-    public final float offset = 3f * (MathHelper.sin(this.pos.getX()) + MathHelper.sin(this.pos.getZ()));
+    public final float offset = 3f * (MathHelper.sin(this.worldPosition.getX()) + MathHelper.sin(this.worldPosition.getZ()));
     public float counter = 0;
     public FlagBlockTile() {
         super(Registry.FLAG_TILE.get());
     }
 
     @Override
-    public double getMaxRenderDistanceSquared() {
+    public double getViewDistance() {
         return 96;
     }
 
     public void tick() {
 
-        if(!this.world.isRemote){
+        if(!this.level.isClientSide){
             int b = 1;
         }
         else{
             int c = 1;
         }
 
-        if(this.world.isRemote) {
+        if(this.level.isClientSide) {
             //TODO:cache?
             //TODO: make long or float. wind vane too
-            this.counter = (this.world.getGameTime()%24000)+offset;
+            this.counter = (this.level.getGameTime()%24000)+offset;
         }
     }
 
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
         Direction dir = this.getDirection();
-        return new AxisAlignedBB(0.25,0, 0.25, 0.75, 1, 0.75).expand(
-                dir.getXOffset()*1.35f,0,dir.getZOffset()*1.35f).offset(this.pos);
+        return new AxisAlignedBB(0.25,0, 0.25, 0.75, 1, 0.75).expandTowards(
+                dir.getStepX()*1.35f,0,dir.getStepZ()*1.35f).move(this.worldPosition);
     }
 
     public Direction getDirection() {
-        return this.getBlockState().get(FlagBlock.FACING);
+        return this.getBlockState().getValue(FlagBlock.FACING);
     }
 
 }

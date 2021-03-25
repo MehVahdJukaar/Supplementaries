@@ -28,36 +28,38 @@ import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
 
-public class DoormatBlock extends Block {
-    protected static final VoxelShape SHAPE_NORTH = Block.makeCuboidShape(0.0D, 0.0D, 2.0D, 16.0D, 1.0D, 14.0D);
+import net.minecraft.block.AbstractBlock.Properties;
 
-    protected static final VoxelShape SHAPE_WEST = Block.makeCuboidShape(2.0D, 0.0D, 0.0D, 14.0D, 1.0D, 16.0D);
-    public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
+public class DoormatBlock extends Block {
+    protected static final VoxelShape SHAPE_NORTH = Block.box(0.0D, 0.0D, 2.0D, 16.0D, 1.0D, 14.0D);
+
+    protected static final VoxelShape SHAPE_WEST = Block.box(2.0D, 0.0D, 0.0D, 14.0D, 1.0D, 16.0D);
+    public static final DirectionProperty FACING = HorizontalBlock.FACING;
 
     public DoormatBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH));
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
                                              BlockRayTraceResult hit) {
-        TileEntity tileentity = worldIn.getTileEntity(pos);
+        TileEntity tileentity = worldIn.getBlockEntity(pos);
         if (tileentity instanceof DoormatBlockTile) {
             DoormatBlockTile te = (DoormatBlockTile) tileentity;
-            ItemStack itemstack = player.getHeldItem(handIn);
-            boolean server = !worldIn.isRemote();
-            boolean flag = itemstack.getItem() instanceof DyeItem && player.abilities.allowEdit;
-            boolean sideHit = hit.getFace()!=Direction.UP;
-            boolean canExtract = itemstack.isEmpty() && (player.isSneaking()||sideHit);
+            ItemStack itemstack = player.getItemInHand(handIn);
+            boolean server = !worldIn.isClientSide();
+            boolean flag = itemstack.getItem() instanceof DyeItem && player.abilities.mayBuild;
+            boolean sideHit = hit.getDirection()!=Direction.UP;
+            boolean canExtract = itemstack.isEmpty() && (player.isShiftKeyDown()||sideHit);
             boolean canInsert = te.isEmpty() && sideHit;
             if(canExtract ^ canInsert){
                 if(!server)return ActionResultType.SUCCESS;
                 if(canExtract) {
-                    ItemStack dropStack = te.removeStackFromSlot(0);
+                    ItemStack dropStack = te.removeItemNoUpdate(0);
                     ItemEntity drop = new ItemEntity(worldIn, pos.getX() + 0.5, pos.getY() + 0.125, pos.getZ() + 0.5, dropStack);
-                    drop.setDefaultPickupDelay();
-                    worldIn.addEntity(drop);
+                    drop.setDefaultPickUpDelay();
+                    worldIn.addFreshEntity(drop);
                 }
                 else{
                     ItemStack newStack = itemstack.copy();
@@ -67,8 +69,8 @@ public class DoormatBlock extends Block {
                         itemstack.shrink(1);
                     }
                 }
-                te.markDirty();
-                worldIn.playSound(null, pos, SoundEvents.BLOCK_WOOL_PLACE, SoundCategory.BLOCKS, 1.0F,
+                te.setChanged();
+                worldIn.playSound(null, pos, SoundEvents.WOOL_PLACE, SoundCategory.BLOCKS, 1.0F,
                         1.2f);
                 return ActionResultType.CONSUME;
 
@@ -79,31 +81,31 @@ public class DoormatBlock extends Block {
                     if (!player.isCreative()) {
                         itemstack.shrink(1);
                     }
-                    if(server)te.markDirty();
+                    if(server)te.setChanged();
                 }
             }
             // open gui (edit sign with empty hand)
             else if (!server) {
                 DoormatGui.open(te);
             }
-            return ActionResultType.func_233537_a_(worldIn.isRemote);
+            return ActionResultType.sidedSuccess(worldIn.isClientSide);
         }
         return ActionResultType.PASS;
     }
 
     @Override
-    public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-        return !worldIn.isAirBlock(pos.down());
+    public boolean canSurvive(BlockState state, IWorldReader worldIn, BlockPos pos) {
+        return !worldIn.isEmptyBlock(pos.below());
     }
 
     @Override
-    public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
-        return !stateIn.isValidPosition(worldIn, currentPos) ? Blocks.AIR.getDefaultState() : super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
+        return !stateIn.canSurvive(worldIn, currentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
-        switch (state.get(FACING).getAxis()) {
+        switch (state.getValue(FACING).getAxis()) {
             default:
             case Z:
                 return SHAPE_NORTH;
@@ -113,18 +115,18 @@ public class DoormatBlock extends Block {
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(FACING);
     }
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.getDefaultState().with(FACING,context.getPlacementHorizontalFacing());
+        return this.defaultBlockState().setValue(FACING,context.getHorizontalDirection());
     }
 
     //for player bed spawn
     @Override
-    public boolean canSpawnInBlock() {
+    public boolean isPossibleToRespawnInThis() {
         return true;
     }
 
@@ -135,7 +137,7 @@ public class DoormatBlock extends Block {
     }*/
 
     @Override
-    public boolean allowsMovement(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
+    public boolean isPathfindable(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
         return false;
     }
 
@@ -151,22 +153,22 @@ public class DoormatBlock extends Block {
 
     @Override
     public BlockState rotate(BlockState state, Rotation rot) {
-        return state.with(FACING, rot.rotate(state.get(FACING)));
+        return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
 
     @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
-        return state.rotate(mirrorIn.toRotation(state.get(FACING)));
+        return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
 
     @Override
-    public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
-            TileEntity tileentity = world.getTileEntity(pos);
+            TileEntity tileentity = world.getBlockEntity(pos);
             if (tileentity instanceof IInventory) {
-                InventoryHelper.dropInventoryItems(world, pos, (IInventory) tileentity);
+                InventoryHelper.dropContents(world, pos, (IInventory) tileentity);
             }
-            super.onReplaced(state, world, pos, newState, isMoving);
+            super.onRemove(state, world, pos, newState, isMoving);
         }
     }
 

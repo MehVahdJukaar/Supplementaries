@@ -31,7 +31,7 @@ public class ModLootTableProvider extends LootTableProvider {
     }
 
     @Override
-    public void act(DirectoryCache cache) {
+    public void run(DirectoryCache cache) {
 
         for(IWoodType wood : WoodTypes.TYPES.values()){
             addBlockLoot(Registry.HANGING_SIGNS.get(wood).get());
@@ -45,13 +45,13 @@ public class ModLootTableProvider extends LootTableProvider {
         tables.forEach((key, lootTable) -> {
             Path path = outputFolder.resolve("data/" + key.getNamespace() + "/loot_tables/" + key.getPath() + ".json");
             try {
-                IDataProvider.save(GSON, cache, LootTableManager.toJson(lootTable), path);
+                IDataProvider.save(GSON, cache, LootTableManager.serialize(lootTable), path);
             } catch (IOException ignored) {}
         });
     }
 
 
     public void addBlockLoot(Block block) {
-        tables.put(block.getLootTable(), BlockLootTableAccessor.dropping(block).setParameterSet(LootParameterSets.BLOCK).build());
+        tables.put(block.getLootTable(), BlockLootTableAccessor.dropping(block).setParamSet(LootParameterSets.BLOCK).build());
     }
 }

@@ -29,8 +29,8 @@ public class SackContainer extends Container  {
         super(Registry.SACK_CONTAINER.get(), id);
         //tile inventory
         this.inventory = inventory;
-        assertInventorySize(inventory, 9);
-        inventory.openInventory(playerInventory.player);
+        checkContainerSize(inventory, 9);
+        inventory.startOpen(playerInventory.player);
 
         int add = ServerConfigs.cached.SACK_SLOTS;
         int xp = 44-(add*18);
@@ -49,32 +49,32 @@ public class SackContainer extends Container  {
 
 
     @Override
-    public boolean canInteractWith(PlayerEntity playerIn) {
-        return this.inventory.isUsableByPlayer(playerIn);
+    public boolean stillValid(PlayerEntity playerIn) {
+        return this.inventory.stillValid(playerIn);
     }
     /**
      * Handle when the stack in slot {@code index} is shift-clicked. Normally this moves the stack between the player
      * inventory and the other inventory(s).
      */
-    public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+    public ItemStack quickMoveStack(PlayerEntity playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
-        Slot slot = this.inventorySlots.get(index);
-        if (slot != null && slot.getHasStack()) {
-            ItemStack itemstack1 = slot.getStack();
+        Slot slot = this.slots.get(index);
+        if (slot != null && slot.hasItem()) {
+            ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
             int activeSlots = (5+(ServerConfigs.cached.SACK_SLOTS*2));
             if (index < activeSlots) {
-                if (!this.mergeItemStack(itemstack1, activeSlots, this.inventorySlots.size(), true)) {
+                if (!this.moveItemStackTo(itemstack1, activeSlots, this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.mergeItemStack(itemstack1, 0, activeSlots, false)) {
+            } else if (!this.moveItemStackTo(itemstack1, 0, activeSlots, false)) {
                 return ItemStack.EMPTY;
             }
 
             if (itemstack1.isEmpty()) {
-                slot.putStack(ItemStack.EMPTY);
+                slot.set(ItemStack.EMPTY);
             } else {
-                slot.onSlotChanged();
+                slot.setChanged();
             }
         }
 
@@ -85,9 +85,9 @@ public class SackContainer extends Container  {
     /**
      * Called when the container is closed.
      */
-    public void onContainerClosed(PlayerEntity playerIn) {
-        super.onContainerClosed(playerIn);
-        this.inventory.closeInventory(playerIn);
+    public void removed(PlayerEntity playerIn) {
+        super.removed(playerIn);
+        this.inventory.stopOpen(playerIn);
     }
 
 }

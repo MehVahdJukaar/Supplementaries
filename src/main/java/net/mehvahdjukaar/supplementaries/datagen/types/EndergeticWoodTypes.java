@@ -5,7 +5,7 @@ import net.minecraft.block.material.MaterialColor;
 
 
 public enum EndergeticWoodTypes implements IWoodType {
-    POISE("poise", MaterialColor.PURPLE_TERRACOTTA);
+    POISE("poise", MaterialColor.TERRACOTTA_PURPLE);
 
     private final String name;
     private final MaterialColor color;

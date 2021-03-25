@@ -11,7 +11,7 @@
         "parent": "minecraft:recipes/root",
         "rewards": {
           "recipes": [
-            "supplementaries:bamboo_spikes_recipe"
+            "supplementaries:bamboo_spikes"
           ]
         },
         "criteria": {
@@ -28,7 +28,7 @@
           "has_the_recipe": {
             "trigger": "minecraft:recipe_unlocked",
             "conditions": {
-              "recipe": "supplementaries:bamboo_spikes_recipe"
+              "recipe": "supplementaries:bamboo_spikes"
             }
           }
         },

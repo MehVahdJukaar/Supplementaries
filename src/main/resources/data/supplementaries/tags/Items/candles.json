@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id":"#cavesandcliffs:candles",
+      "required":false
+    },
+    {
+      "id":"#buzzier_bees:candles",
+      "required":false
+    },
+    {
+      "id":"#quark:candles",
+      "required":false
+    }
+  ]
+}

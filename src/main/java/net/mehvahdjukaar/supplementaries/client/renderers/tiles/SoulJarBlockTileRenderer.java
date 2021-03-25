@@ -117,27 +117,27 @@ public class SoulJarBlockTileRenderer extends TileEntityRenderer<FireflyJarBlock
 
 
 
-        if(!tile.soul || Minecraft.getInstance().gameSettings.graphicFanciness== GraphicsFanciness.FABULOUS)return;
-        matrixStackIn.push();
+        if(!tile.soul || Minecraft.getInstance().options.graphicsMode== GraphicsFanciness.FABULOUS)return;
+        matrixStackIn.pushPose();
         int lu = combinedLightIn & '\uffff';
         int lv = combinedLightIn >> 16 & '\uffff'; // ok
 
         matrixStackIn.translate(0.5, 0.5-0.125, 0.5);
         matrixStackIn.scale(0.5f, 0.5f, 0.5f);
 
-        TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(Textures.SOUL_TEXTURE);
-        IVertexBuilder builder = bufferIn.getBuffer(RenderType.getCutout());
+        TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(Textures.SOUL_TEXTURE);
+        IVertexBuilder builder = bufferIn.getBuffer(RenderType.cutout());
 
-        Quaternion rotation = Minecraft.getInstance().getRenderManager().getCameraOrientation();
-        matrixStackIn.rotate(rotation);
+        Quaternion rotation = Minecraft.getInstance().getEntityRenderDispatcher().cameraOrientation();
+        matrixStackIn.mulPose(rotation);
 
 
         //matrixStackIn.scale(20f, 20f, 20f);
         //RendererUtil.addQuadSide(builder, matrixStackIn, 5f, -5f, 0, -5f, 0.5f, 0, 0, 0, 1, 1,  1,  1, 1, 1, lu, lv, 0, 1, 0);
 
-        RendererUtil.addQuadSide(builder, matrixStackIn, 0.5f, -0.5f, 0, -0.5f, 0.5f, 0, sprite.getMinU(), sprite.getMinV(), sprite.getMaxU(), sprite.getMaxV(),  1,  1, 1, 1, lu, lv, 0, 1, 0);
+        RendererUtil.addQuadSide(builder, matrixStackIn, 0.5f, -0.5f, 0, -0.5f, 0.5f, 0, sprite.getU0(), sprite.getV0(), sprite.getU1(), sprite.getV1(),  1,  1, 1, 1, lu, lv, 0, 1, 0);
 
-        matrixStackIn.pop();
+        matrixStackIn.popPose();
 
 
     }

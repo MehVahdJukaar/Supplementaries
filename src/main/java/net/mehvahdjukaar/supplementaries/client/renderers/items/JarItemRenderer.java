@@ -27,9 +27,9 @@ public class JarItemRenderer extends CageItemRenderer {
     private static final Random RAND = new Random(420);
 
     @Override
-    public void func_239207_a_(ItemStack stack, ItemCameraTransforms.TransformType transformType, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
+    public void renderByItem(ItemStack stack, ItemCameraTransforms.TransformType transformType, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
 
-        CompoundNBT compound = stack.getChildTag("BlockEntityTag");
+        CompoundNBT compound = stack.getTagElement("BlockEntityTag");
         if(compound == null || compound.isEmpty())return;
 
         //JarBlockTile.SpecialJarContent specialType = JarBlockTile.SpecialJarContent.values()[compound.getInt("SpecialType")];
@@ -43,13 +43,13 @@ public class JarItemRenderer extends CageItemRenderer {
             if(com.contains("FishTexture")) {
                 int fishTexture = com.getInt("FishTexture");
                 if (fishTexture >= 0) {
-                    matrixStackIn.push();
-                    IVertexBuilder builder1 = bufferIn.getBuffer(RenderType.getCutout());
+                    matrixStackIn.pushPose();
+                    IVertexBuilder builder1 = bufferIn.getBuffer(RenderType.cutout());
                     matrixStackIn.translate(0.5, 0.3125, 0.5);
-                    matrixStackIn.rotate(Const.YN45);
+                    matrixStackIn.mulPose(Const.YN45);
                     matrixStackIn.scale(1.5f, 1.5f, 1.5f);
                     RendererUtil.renderFish(builder1, matrixStackIn, 0, 0, fishTexture, combinedLightIn, combinedOverlayIn);
-                    matrixStackIn.pop();
+                    matrixStackIn.popPose();
                 }
                 SoftFluid s = SoftFluidList.WATER;
                 renderFluid(0.5625f, s.getTintColor(), 0, s.getStillTexture(),
@@ -67,28 +67,28 @@ public class JarItemRenderer extends CageItemRenderer {
         }
         else if(compound.contains("Items")) {
             RAND.setSeed(420);
-            ItemStack cookieStack = ItemStack.read((compound.getList("Items", 10)).getCompound(0));
+            ItemStack cookieStack = ItemStack.of((compound.getList("Items", 10)).getCompound(0));
             int height = cookieStack.getCount();
             if(height==0)return;
-            matrixStackIn.push();
+            matrixStackIn.pushPose();
             matrixStackIn.translate(0.5, 0.5, 0.5);
-            matrixStackIn.rotate(Const.XN90);
+            matrixStackIn.mulPose(Const.XN90);
             matrixStackIn.translate(0, 0, -0.5);
             float scale = 8f / 14f;
             matrixStackIn.scale(scale, scale, scale);
             for (float i = 0; i < height; i ++) {
-                matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(RAND.nextInt(360)));
+                matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(RAND.nextInt(360)));
                 // matrixStackIn.translate(0, 0, 0.0625);
                 matrixStackIn.translate(0, 0, 1 / (16f * scale));
                 ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-                IBakedModel ibakedmodel = itemRenderer.getItemModelWithOverrides(cookieStack, null, null);
-                itemRenderer.renderItem(stack, ItemCameraTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
+                IBakedModel ibakedmodel = itemRenderer.getModel(cookieStack, null, null);
+                itemRenderer.render(stack, ItemCameraTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
                         combinedOverlayIn, ibakedmodel);
             }
-            matrixStackIn.pop();
+            matrixStackIn.popPose();
         }
         //render block & mob using cage renderer
-        super.func_239207_a_(stack,transformType,matrixStackIn,bufferIn,combinedLightIn,combinedOverlayIn);
+        super.renderByItem(stack,transformType,matrixStackIn,bufferIn,combinedLightIn,combinedOverlayIn);
 
     }
 }

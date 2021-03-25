@@ -25,13 +25,13 @@ public class MapPost {
 
     public static MapPost read(CompoundNBT nbt) {
         BlockPos blockpos = NBTUtil.readBlockPos(nbt.getCompound("Pos"));
-        ITextComponent itextcomponent = nbt.contains("Name") ? ITextComponent.Serializer.getComponentFromJson(nbt.getString("Name")) : null;
+        ITextComponent itextcomponent = nbt.contains("Name") ? ITextComponent.Serializer.fromJson(nbt.getString("Name")) : null;
         return new MapPost(blockpos, itextcomponent);
     }
 
     @Nullable
     public static MapPost fromWorld(IBlockReader reader, BlockPos pos) {
-        TileEntity tileentity = reader.getTileEntity(pos);
+        TileEntity tileentity = reader.getBlockEntity(pos);
         if (tileentity instanceof SignPostBlockTile) {
             SignPostBlockTile te = (SignPostBlockTile)tileentity;
 

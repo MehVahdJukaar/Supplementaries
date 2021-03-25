@@ -13,14 +13,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(WorldRenderer.class)
 public abstract class ParrotPartyMixin {
 
-    @Inject(method = "setPartying", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "notifyNearbyEntities", at = @At("HEAD"), cancellable = true)
     private void setPartying(World worldIn, BlockPos pos, boolean isPartying, CallbackInfo info) {
+
         int r = 3;
-        BlockPos.Mutable mut = pos.toMutable();
+        BlockPos.Mutable mut = pos.mutable();
         for (int x = pos.getX() - r; x < pos.getX() + r; x++) {
             for (int y = pos.getY() - r; y < pos.getY() + r; y++) {
                 for (int z = pos.getZ() - r; z < pos.getZ() + r; z++) {
-                    TileEntity te = worldIn.getTileEntity(mut.setPos(x, y, z));
+                    TileEntity te = worldIn.getBlockEntity(mut.set(x, y, z));
                     if (te instanceof IMobHolder) {
                         ((IMobHolder) te).getMobHolder().setPartying(pos, isPartying);
                     }

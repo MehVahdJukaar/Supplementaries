@@ -2,7 +2,7 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "supplementaries:flax_block_recipe"
+      "supplementaries:flax_block"
     ]
   },
   "criteria": {
@@ -11,7 +11,7 @@
       "conditions": {
         "items": [
           {
-            "item": "supplementaries:flax"
+            "tag": "forge:crops/flax"
           }
         ]
       }
@@ -19,7 +19,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "supplementaries:flax_block_recipe"
+        "recipe": "supplementaries:flax_block"
       }
     }
   },

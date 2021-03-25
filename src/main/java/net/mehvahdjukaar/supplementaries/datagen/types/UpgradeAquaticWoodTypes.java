@@ -5,7 +5,7 @@ import net.minecraft.block.material.MaterialColor;
 
 public enum UpgradeAquaticWoodTypes implements IWoodType {
     DRIFTWOOD("driftwood", MaterialColor.STONE),
-    RIVERWOOD("river", MaterialColor.BROWN);
+    RIVERWOOD("river", MaterialColor.COLOR_BROWN);
 
     private final String name;
     private final MaterialColor color;

@@ -15,32 +15,34 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class GoldTrapdoorBlock extends TrapDoorBlock {
     public GoldTrapdoorBlock(Properties properties) {
         super(properties);
     }
 
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if(state.get(POWERED))return ActionResultType.PASS;
-        state = state.func_235896_a_(OPEN);
-        worldIn.setBlockState(pos, state, 2);
-        if (state.get(WATERLOGGED)) {
-            worldIn.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if(state.getValue(POWERED))return ActionResultType.PASS;
+        state = state.cycle(OPEN);
+        worldIn.setBlock(pos, state, 2);
+        if (state.getValue(WATERLOGGED)) {
+            worldIn.getLiquidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
         }
 
-        this.playSound(player, worldIn, pos, state.get(OPEN));
-        return ActionResultType.func_233537_a_(worldIn.isRemote);
+        this.playSound(player, worldIn, pos, state.getValue(OPEN));
+        return ActionResultType.sidedSuccess(worldIn.isClientSide);
 
     }
 
     public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
-        if (!worldIn.isRemote) {
-            boolean hasPower = worldIn.isBlockPowered(pos);
-            if (hasPower != state.get(POWERED)) {
+        if (!worldIn.isClientSide) {
+            boolean hasPower = worldIn.hasNeighborSignal(pos);
+            if (hasPower != state.getValue(POWERED)) {
 
-                worldIn.setBlockState(pos, state.with(POWERED, hasPower), 2);
-                if (state.get(WATERLOGGED)) {
-                    worldIn.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
+                worldIn.setBlock(pos, state.setValue(POWERED, hasPower), 2);
+                if (state.getValue(WATERLOGGED)) {
+                    worldIn.getLiquidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
                 }
             }
 
@@ -49,19 +51,19 @@ public class GoldTrapdoorBlock extends TrapDoorBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        BlockState blockstate = this.getDefaultState();
-        FluidState fluidstate = context.getWorld().getFluidState(context.getPos());
-        Direction direction = context.getFace();
+        BlockState blockstate = this.defaultBlockState();
+        FluidState fluidstate = context.getLevel().getFluidState(context.getClickedPos());
+        Direction direction = context.getClickedFace();
         if (!context.replacingClickedOnBlock() && direction.getAxis().isHorizontal()) {
-            blockstate = blockstate.with(HORIZONTAL_FACING, direction).with(HALF, context.getHitVec().y - (double)context.getPos().getY() > 0.5D ? Half.TOP : Half.BOTTOM);
+            blockstate = blockstate.setValue(FACING, direction).setValue(HALF, context.getClickLocation().y - (double)context.getClickedPos().getY() > 0.5D ? Half.TOP : Half.BOTTOM);
         } else {
-            blockstate = blockstate.with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing().getOpposite()).with(HALF, direction == Direction.UP ? Half.BOTTOM : Half.TOP);
+            blockstate = blockstate.setValue(FACING, context.getHorizontalDirection().getOpposite()).setValue(HALF, direction == Direction.UP ? Half.BOTTOM : Half.TOP);
         }
 
-        if (context.getWorld().isBlockPowered(context.getPos())) {
-            blockstate = blockstate.with(POWERED, Boolean.TRUE);
+        if (context.getLevel().hasNeighborSignal(context.getClickedPos())) {
+            blockstate = blockstate.setValue(POWERED, Boolean.TRUE);
         }
 
-        return blockstate.with(WATERLOGGED, fluidstate.getFluid() == Fluids.WATER);
+        return blockstate.setValue(WATERLOGGED, fluidstate.getType() == Fluids.WATER);
     }
 }

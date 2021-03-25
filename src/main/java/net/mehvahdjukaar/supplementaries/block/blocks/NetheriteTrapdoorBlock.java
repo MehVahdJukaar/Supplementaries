@@ -15,6 +15,8 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class NetheriteTrapdoorBlock extends TrapDoorBlock {
 
     public NetheriteTrapdoorBlock(Properties builder) {
@@ -22,30 +24,30 @@ public class NetheriteTrapdoorBlock extends TrapDoorBlock {
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
 
-        BlockPos p = this.hasTileEntity(state)? pos : pos.down();
-        TileEntity te = worldIn.getTileEntity(p);
+        BlockPos p = this.hasTileEntity(state)? pos : pos.below();
+        TileEntity te = worldIn.getBlockEntity(p);
         if (te instanceof KeyLockableTile) {
             if (((KeyLockableTile) te).handleAction(player, handIn,"trapdoor")) {
-                state = state.func_235896_a_(OPEN);
-                worldIn.setBlockState(pos, state, 2);
-                if (state.get(WATERLOGGED)) {
-                    worldIn.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
+                state = state.cycle(OPEN);
+                worldIn.setBlock(pos, state, 2);
+                if (state.getValue(WATERLOGGED)) {
+                    worldIn.getLiquidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
                 }
 
                 //TODO: replace with proper sound event
-                this.playSound(player, worldIn, pos, state.get(OPEN));
+                this.playSound(player, worldIn, pos, state.getValue(OPEN));
             }
         }
 
-        return ActionResultType.func_233537_a_(worldIn.isRemote);
+        return ActionResultType.sidedSuccess(worldIn.isClientSide);
     }
 
     @Override
     public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
-        if (state.get(WATERLOGGED)) {
-            worldIn.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
+        if (state.getValue(WATERLOGGED)) {
+            worldIn.getLiquidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
         }
     }
 
@@ -54,7 +56,7 @@ public class NetheriteTrapdoorBlock extends TrapDoorBlock {
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         BlockState state = super.getStateForPlacement(context);
         if(state==null)return state;
-        return state.with(OPEN,false).with(POWERED,false);
+        return state.setValue(OPEN,false).setValue(POWERED,false);
     }
 
     @Override

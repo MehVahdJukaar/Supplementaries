@@ -53,15 +53,15 @@ public class SafeBlockTile extends LockableLootTileEntity implements ISidedInven
     }
 
     @Override
-    public int getSizeInventory() {
+    public int getContainerSize() {
         return this.items.size();
     }
 
     public void setOwner(UUID owner){
-        this.ownerName=world.getPlayerByUuid(owner).getName().getString();
+        this.ownerName=level.getPlayerByUUID(owner).getName().getString();
         this.owner=owner;
-        this.markDirty();
-        this.world.notifyBlockUpdate(this.pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
+        this.setChanged();
+        this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
     }
 
     public void clearOwner(){
@@ -71,11 +71,11 @@ public class SafeBlockTile extends LockableLootTileEntity implements ISidedInven
     }
 
     public boolean isOwnedBy(PlayerEntity player){
-        return (this.owner!=null && this.owner.equals(player.getUniqueID()));
+        return (this.owner!=null && this.owner.equals(player.getUUID()));
     }
     //owner==null is public
     public boolean isNotOwnedBy(PlayerEntity player){
-        return (this.owner!=null && !this.owner.equals(player.getUniqueID()));
+        return (this.owner!=null && !this.owner.equals(player.getUUID()));
     }
 
 
@@ -98,7 +98,7 @@ public class SafeBlockTile extends LockableLootTileEntity implements ISidedInven
     }
 
     @Override
-    public void openInventory(PlayerEntity player) {
+    public void startOpen(PlayerEntity player) {
         if (!player.isSpectator()) {
             if (this.numPlayersUsing < 0) {
                 this.numPlayersUsing = 0;
@@ -106,27 +106,27 @@ public class SafeBlockTile extends LockableLootTileEntity implements ISidedInven
 
             ++this.numPlayersUsing;
             BlockState blockstate = this.getBlockState();
-            boolean flag = blockstate.get(SafeBlock.OPEN);
+            boolean flag = blockstate.getValue(SafeBlock.OPEN);
             if (!flag) {
                 //this.playSound(blockstate, SoundEvents.BLOCK_BARREL_OPEN);
-                this.world.playSound(null, this.pos.getX()+0.5, this.pos.getY()+0.5, this.pos.getZ()+0.5,
-                        SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.65F);
-                this.world.setBlockState(this.getPos(), blockstate.with(SafeBlock.OPEN, true), 3);
+                this.level.playSound(null, this.worldPosition.getX()+0.5, this.worldPosition.getY()+0.5, this.worldPosition.getZ()+0.5,
+                        SoundEvents.IRON_TRAPDOOR_OPEN, SoundCategory.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.65F);
+                this.level.setBlock(this.getBlockPos(), blockstate.setValue(SafeBlock.OPEN, true), 3);
             }
-            this.world.getPendingBlockTicks().scheduleTick(this.getPos(), this.getBlockState().getBlock(), 5);
+            this.level.getBlockTicks().scheduleTick(this.getBlockPos(), this.getBlockState().getBlock(), 5);
         }
     }
 
     public static int calculatePlayersUsing(World world, LockableTileEntity tile, int x, int y, int z) {
         int i = 0;
-        for(PlayerEntity playerentity : world.getEntitiesWithinAABB(PlayerEntity.class, new AxisAlignedBB((float)x - 5.0F, (float)y - 5.0F, (float)z - 5.0F, (float)(x + 1) + 5.0F, (float)(y + 1) + 5.0F, (float)(z + 1) + 5.0F))) {
-            if (playerentity.openContainer instanceof ShulkerBoxContainer) {
+        for(PlayerEntity playerentity : world.getEntitiesOfClass(PlayerEntity.class, new AxisAlignedBB((float)x - 5.0F, (float)y - 5.0F, (float)z - 5.0F, (float)(x + 1) + 5.0F, (float)(y + 1) + 5.0F, (float)(z + 1) + 5.0F))) {
+            if (playerentity.containerMenu instanceof ShulkerBoxContainer) {
                 //TODO: maybe make my own container instead of this hacky stuff?
                 try {
                     for (Field f : ShulkerBoxContainer.class.getDeclaredFields())
                         if(IInventory.class.isAssignableFrom(f.getType())){
                             f.setAccessible(true);
-                            if(f.get(playerentity.openContainer) == tile){
+                            if(f.get(playerentity.containerMenu) == tile){
                                 ++i;
                             }
                         }
@@ -137,51 +137,51 @@ public class SafeBlockTile extends LockableLootTileEntity implements ISidedInven
     }
 
     public void barrelTick() {
-        int i = this.pos.getX();
-        int j = this.pos.getY();
-        int k = this.pos.getZ();
-        this.numPlayersUsing = calculatePlayersUsing(this.world, this, i, j, k);
+        int i = this.worldPosition.getX();
+        int j = this.worldPosition.getY();
+        int k = this.worldPosition.getZ();
+        this.numPlayersUsing = calculatePlayersUsing(this.level, this, i, j, k);
         if (this.numPlayersUsing > 0) {
-            this.world.getPendingBlockTicks().scheduleTick(this.getPos(), this.getBlockState().getBlock(), 5);
+            this.level.getBlockTicks().scheduleTick(this.getBlockPos(), this.getBlockState().getBlock(), 5);
         } else {
             BlockState blockstate = this.getBlockState();
 
-            boolean flag = blockstate.get(SackBlock.OPEN);
+            boolean flag = blockstate.getValue(SackBlock.OPEN);
             if (flag) {
-                this.world.playSound(null, this.pos,
-                        SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.65F);
-                this.world.setBlockState(this.getPos(), blockstate.with(SackBlock.OPEN, false), 3);
+                this.level.playSound(null, this.worldPosition,
+                        SoundEvents.IRON_TRAPDOOR_CLOSE, SoundCategory.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.65F);
+                this.level.setBlock(this.getBlockPos(), blockstate.setValue(SackBlock.OPEN, false), 3);
             }
         }
 
     }
     @Override
-    public void closeInventory(PlayerEntity player) {
+    public void stopOpen(PlayerEntity player) {
         if (!player.isSpectator()) {
             --this.numPlayersUsing;
         }
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT nbt) {
-        super.read(state, nbt);
+    public void load(BlockState state, CompoundNBT nbt) {
+        super.load(state, nbt);
         this.loadFromNbt(nbt);
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
+    public CompoundNBT save(CompoundNBT compound) {
+        super.save(compound);
         return this.saveToNbt(compound);
     }
 
     //TODO: make jars use blockentity tag like here. here works fine
     public void loadFromNbt(CompoundNBT compound) {
-        this.items = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
-        if (!this.checkLootAndRead(compound) && compound.contains("Items", 9)) {
+        this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
+        if (!this.tryLoadLootTable(compound) && compound.contains("Items", 9)) {
             ItemStackHelper.loadAllItems(compound, this.items);
         }
         if(compound.contains("Owner"))
-            this.owner=compound.getUniqueId("Owner");
+            this.owner=compound.getUUID("Owner");
         if(compound.contains("OwnerName"))
             this.ownerName=compound.getString("OwnerName");
         if(compound.contains("Password"))
@@ -189,11 +189,11 @@ public class SafeBlockTile extends LockableLootTileEntity implements ISidedInven
     }
 
     public CompoundNBT saveToNbt(CompoundNBT compound) {
-        if (!this.checkLootAndWrite(compound)) {
+        if (!this.trySaveLootTable(compound)) {
             ItemStackHelper.saveAllItems(compound, this.items, false);
         }
         if(this.owner!=null)
-            compound.putUniqueId("Owner",this.owner);
+            compound.putUUID("Owner",this.owner);
         if(this.ownerName!=null)
             compound.putString("OwnerName",this.ownerName);
         if(this.password!=null)
@@ -218,21 +218,21 @@ public class SafeBlockTile extends LockableLootTileEntity implements ISidedInven
 
     @Override
     public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundNBT());
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.read(this.getBlockState(), pkt.getNbtCompound());
+        this.load(this.getBlockState(), pkt.getTag());
     }
 
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.pos, 0, this.getUpdateTag());
+        return new SUpdateTileEntityPacket(this.worldPosition, 0, this.getUpdateTag());
     }
 
     @Override
-    public boolean isItemValidForSlot(int index, ItemStack stack) {
+    public boolean canPlaceItem(int index, ItemStack stack) {
         return CommonUtil.isAllowedInShulker(stack);
     }
 
@@ -240,29 +240,29 @@ public class SafeBlockTile extends LockableLootTileEntity implements ISidedInven
     //TODO: FIX this so it can only put from top
     @Override
     public int[] getSlotsForFace(Direction side) {
-        return IntStream.range(0, this.getSizeInventory()).toArray();
+        return IntStream.range(0, this.getContainerSize()).toArray();
     }
 
     @Override
-    public boolean canInsertItem(int index, ItemStack stack, @Nullable Direction direction) {
+    public boolean canPlaceItemThroughFace(int index, ItemStack stack, @Nullable Direction direction) {
         return false;
     }
 
     @Override
-    public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
+    public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
         return false;
     }
     private final LazyOptional<? extends IItemHandler>[] handlers = SidedInvWrapper.create(this, Direction.values());
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
-        if (!this.removed && facing != null && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+        if (!this.remove && facing != null && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
             return handlers[facing.ordinal()].cast();
         return super.getCapability(capability, facing);
     }
 
     @Override
-    public void remove() {
-        super.remove();
+    public void setRemoved() {
+        super.setRemoved();
         for (LazyOptional<? extends IItemHandler> handler : handlers)
             handler.invalidate();
     }

@@ -2,7 +2,7 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "supplementaries:planter_recipe"
+      "supplementaries:planter"
     ]
   },
   "criteria": {
@@ -19,7 +19,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "supplementaries:planter_recipe"
+        "recipe": "supplementaries:planter"
       }
     }
   },

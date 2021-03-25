@@ -14,10 +14,7 @@ import net.minecraft.loot.LootParameters;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.Rotation;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.MathHelper;
@@ -33,6 +30,8 @@ import java.util.List;
 import java.util.Optional;
 
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class SignPostBlock extends FenceMimicBlock{
 
     public SignPostBlock(Properties properties) {
@@ -40,28 +39,30 @@ public class SignPostBlock extends FenceMimicBlock{
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
                                              BlockRayTraceResult hit) {
-        TileEntity tileentity = worldIn.getTileEntity(pos);
+        if(hit.getDirection().getAxis()== Direction.Axis.Y)return ActionResultType.PASS;
+
+        TileEntity tileentity = worldIn.getBlockEntity(pos);
         if (tileentity instanceof SignPostBlockTile) {
             SignPostBlockTile te = (SignPostBlockTile) tileentity;
-            ItemStack itemstack = player.getHeldItem(handIn);
+            ItemStack itemstack = player.getItemInHand(handIn);
             Item item = itemstack.getItem();
 
             //put post on map
             if(item instanceof FilledMapItem){
-                MapData data = FilledMapItem.getMapData(itemstack,worldIn);
+                MapData data = FilledMapItem.getOrCreateSavedData(itemstack,worldIn);
                 if(data!=null) {
-                    data.tryAddBanner(worldIn, pos);
-                    return ActionResultType.func_233537_a_(worldIn.isRemote);
+                    data.toggleBanner(worldIn, pos);
+                    return ActionResultType.sidedSuccess(worldIn.isClientSide);
                 }
             }
 
 
-            boolean server = !worldIn.isRemote();
+            boolean server = !worldIn.isClientSide();
             boolean emptyhand = itemstack.isEmpty();
-            boolean isDye = item instanceof DyeItem && player.abilities.allowEdit;
-            boolean isSneaking = player.isSneaking() && emptyhand;
+            boolean isDye = item instanceof DyeItem && player.abilities.mayBuild;
+            boolean isSneaking = player.isShiftKeyDown() && emptyhand;
             boolean isSignPost = item instanceof SignPostItem;
             boolean isCompass = item instanceof CompassItem;
             //color
@@ -70,12 +71,12 @@ public class SignPostBlock extends FenceMimicBlock{
                     if (!player.isCreative()) {
                         itemstack.shrink(1);
                     }
-                    if(server)te.markDirty();
+                    if(server)te.setChanged();
                 }
             }
             //sneak right click rotates the sign on z axis
             else if (isSneaking){
-                double y = hit.getHitVec().y;
+                double y = hit.getLocation().y;
                 boolean up = y%((int)y) > 0.5d;
                 if(up){
                     te.leftUp = !te.leftUp;
@@ -83,24 +84,24 @@ public class SignPostBlock extends FenceMimicBlock{
                 else{
                     te.leftDown = !te.leftDown;
                 }
-                if(server)te.markDirty();
+                if(server)te.setChanged();
             }
             //change direction with compass
             else if (isCompass){
                 //itemModelProperties code
-                BlockPos pointingPos = CompassItem.func_234670_d_(itemstack) ?
+                BlockPos pointingPos = CompassItem.isLodestoneCompass(itemstack) ?
                         this.getLodestonePos(worldIn, itemstack.getOrCreateTag()) : this.getWorldSpawnPos(worldIn);
 
                 if(pointingPos!=null) {
-                    double y = hit.getHitVec().y;
+                    double y = hit.getLocation().y;
                     boolean up = y % ((int) y) > 0.5d;
                     if (up && te.up) {
                         te.pointToward(pointingPos,true);
                     } else if (!up && te.down) {
                         te.pointToward(pointingPos,false);
                     }
-                    if(server)te.markDirty();
-                    return ActionResultType.func_233537_a_(worldIn.isRemote);
+                    if(server)te.setChanged();
+                    return ActionResultType.sidedSuccess(worldIn.isClientSide);
                 }
             }
             else if (isSignPost){
@@ -111,7 +112,7 @@ public class SignPostBlock extends FenceMimicBlock{
             else if (!server) {
                 SignPostGui.open(te);
             }
-            return ActionResultType.func_233537_a_(worldIn.isRemote);
+            return ActionResultType.sidedSuccess(worldIn.isClientSide);
         }
         return ActionResultType.PASS;
     }
@@ -122,8 +123,8 @@ public class SignPostBlock extends FenceMimicBlock{
         boolean flag = cmp.contains("LodestonePos");
         boolean flag1 = cmp.contains("LodestoneDimension");
         if (flag && flag1) {
-            Optional<RegistryKey<World>> optional = CompassItem.func_234667_a_(cmp);
-            if ( optional.isPresent() && world.getDimensionKey() == optional.get() ) {
+            Optional<RegistryKey<World>> optional = CompassItem.getLodestoneDimension(cmp);
+            if ( optional.isPresent() && world.dimension() == optional.get() ) {
                 return NBTUtil.readBlockPos(cmp.getCompound("LodestonePos"));
             }
         }
@@ -132,16 +133,16 @@ public class SignPostBlock extends FenceMimicBlock{
 
     @Nullable
     private BlockPos getWorldSpawnPos(World world) {
-        return world.getDimensionType().isNatural() ? new BlockPos(world.getWorldInfo().getSpawnX(),
-                world.getWorldInfo().getSpawnY(),world.getWorldInfo().getSpawnZ()) : null;
+        return world.dimensionType().natural() ? new BlockPos(world.getLevelData().getXSpawn(),
+                world.getLevelData().getYSpawn(),world.getLevelData().getZSpawn()) : null;
     }
 
     @Override
     public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
-        TileEntity te = world.getTileEntity(pos);
+        TileEntity te = world.getBlockEntity(pos);
         if(te instanceof SignPostBlockTile){
             SignPostBlockTile tile = ((SignPostBlockTile)te);
-            double y = target.getHitVec().y;
+            double y = target.getLocation().y;
             boolean up = y%((int)y) > 0.5d;
             if(up && tile.up){
                 return new ItemStack(Registry.SIGN_POST_ITEMS.get(tile.woodTypeUp).get());
@@ -156,7 +157,7 @@ public class SignPostBlock extends FenceMimicBlock{
 
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
-        TileEntity tileentity = builder.get(LootParameters.BLOCK_ENTITY);
+        TileEntity tileentity = builder.getOptionalParameter(LootParameters.BLOCK_ENTITY);
         if (tileentity instanceof SignPostBlockTile){
             SignPostBlockTile tile = ((SignPostBlockTile) tileentity);
             List<ItemStack> list = new ArrayList<>();
@@ -178,7 +179,7 @@ public class SignPostBlock extends FenceMimicBlock{
     @Override
     public BlockState rotate(BlockState state, IWorld world, BlockPos pos, Rotation rot) {
         float angle = rot.equals(Rotation.CLOCKWISE_90)? 90 : -90;
-        TileEntity te = world.getTileEntity(pos);
+        TileEntity te = world.getBlockEntity(pos);
         if (te instanceof SignPostBlockTile) {
             SignPostBlockTile tile = (SignPostBlockTile) te;
             boolean success = false;
@@ -193,7 +194,7 @@ public class SignPostBlock extends FenceMimicBlock{
 
             if(success){
                 //world.notifyBlockUpdate(pos, tile.getBlockState(), tile.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
-                tile.markDirty();
+                tile.setChanged();
             }
         }
         return state;

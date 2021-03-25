@@ -24,7 +24,7 @@ public class FireflyEntityRenderer extends EntityRenderer<FireflyEntity> {
     public void render(FireflyEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn,
                        int packedLightIn) {
 
-        matrixStackIn.push();
+        matrixStackIn.pushPose();
 
         float r = CommonUtil.FESTIVITY.isHalloween()?0.3f:1;
         float g = CommonUtil.FESTIVITY.isHalloween()?0:1;
@@ -32,21 +32,21 @@ public class FireflyEntityRenderer extends EntityRenderer<FireflyEntity> {
         float a = MathHelper.lerp(partialTicks, entityIn.prevAlpha, entityIn.alpha);
 
         matrixStackIn.translate(0.0D, 0.5, 0.0D);
-        matrixStackIn.rotate(this.renderManager.getCameraOrientation());
-        matrixStackIn.rotate(Const.Y180);
+        matrixStackIn.mulPose(this.entityRenderDispatcher.cameraOrientation());
+        matrixStackIn.mulPose(Const.Y180);
         float scale = (float) ClientConfigs.cached.FIREFLY_SCALE;
         matrixStackIn.scale(a*scale, a*scale, a*scale);
-        IVertexBuilder builder = bufferIn.getBuffer(RenderType.getBeaconBeam(Textures.FIREFLY_TEXTURE, true));
+        IVertexBuilder builder = bufferIn.getBuffer(RenderType.beaconBeam(Textures.FIREFLY_TEXTURE, true));
 
         RendererUtil.addQuadSide(builder, matrixStackIn, -0.5f, -0.5f, 0f, 0.5f, 0.5f, 0f, 0, 0, 1, 1, r, g,b, a, 240, 0, 0, 1, 0);
 
-        matrixStackIn.pop();
+        matrixStackIn.popPose();
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
     }
 
 
     @Override
-    public ResourceLocation getEntityTexture(FireflyEntity entity) {
+    public ResourceLocation getTextureLocation(FireflyEntity entity) {
         return Textures.FIREFLY_TEXTURE;
     }
 }

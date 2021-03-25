@@ -4,7 +4,7 @@ import net.minecraft.block.material.MaterialColor;
 
 
 public enum TraverseWoodTypes implements IWoodType {
-    FIR("fir",MaterialColor.BROWN);
+    FIR("fir",MaterialColor.COLOR_BROWN);
 
     private final String name;
     private final MaterialColor color;

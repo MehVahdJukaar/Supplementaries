@@ -2,10 +2,7 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "supplementaries:candle_holder_recipe_2",
-      "supplementaries:candle_holder_recipe_3",
-      "supplementaries:candle_holder_recipe",
-      "supplementaries:candle_holder_recipe_4"
+      "supplementaries:candle_holder"
     ]
   },
   "criteria": {
@@ -22,7 +19,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "supplementaries:candle_holder_recipe_2"
+        "recipe": "supplementaries:candle_holder"
       }
     }
   },

@@ -29,6 +29,15 @@
             },
             {
               "type": "minecraft:item",
+              "conditions": [
+                {
+                  "condition": "minecraft:block_state_property",
+                  "block": "supplementaries:flax",
+                  "properties": {
+                    "half": "lower"
+                  }
+                }
+              ],
               "name": "supplementaries:flax_seeds"
             }
           ]
@@ -40,6 +49,15 @@
       "entries": [
         {
           "type": "minecraft:item",
+          "conditions": [
+            {
+              "condition": "minecraft:block_state_property",
+              "block": "supplementaries:flax",
+              "properties": {
+                "half": "lower"
+              }
+            }
+          ],
           "functions": [
             {
               "function": "minecraft:apply_bonus",

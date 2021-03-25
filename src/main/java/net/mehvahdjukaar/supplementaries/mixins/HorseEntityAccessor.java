@@ -8,12 +8,12 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(AbstractHorseEntity.class)
 public interface HorseEntityAccessor {
 
-    @Accessor("field_234235_bE_")
-    static void setfield_234235_bE_(Ingredient ingredient){
+    @Accessor("FOOD_ITEMS")
+    static void setFoodItems(Ingredient ingredient){
         throw new AssertionError();
     }
-    @Accessor("field_234235_bE_")
-    static Ingredient getfield_234235_bE_(){
+    @Accessor("FOOD_ITEMS")
+    static Ingredient getFoodItems(){
         throw new AssertionError();
     }
 }

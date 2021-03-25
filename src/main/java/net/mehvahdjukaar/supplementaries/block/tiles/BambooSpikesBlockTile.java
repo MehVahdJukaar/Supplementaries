@@ -35,7 +35,7 @@ public class BambooSpikesBlockTile extends TileEntity {
 
     public int getColor(){
         if(this.hasPotion())
-            return PotionUtils.getPotionColor(potion);
+            return PotionUtils.getColor(potion);
         return 0xffffff;
     }
 
@@ -52,7 +52,7 @@ public class BambooSpikesBlockTile extends TileEntity {
     public boolean consumeCharge(World world){
         this.lastTicked = world.getGameTime();
         this.charges-=1;
-        this.markDirty();
+        this.setChanged();
         if(this.charges<=0){
             this.charges=0;
             this.potion=Potions.EMPTY;
@@ -66,13 +66,13 @@ public class BambooSpikesBlockTile extends TileEntity {
     }
 
     public boolean tryApplyPotion(ItemStack stack){
-        Potion p = PotionUtils.getPotionFromItem(stack);
+        Potion p = PotionUtils.getPotion(stack);
         if(this.charges==0||this.potion==Potions.EMPTY||(this.potion.equals(p)&&this.charges!=MAX_CHARGES)) {
             this.potion = p;
             this.charges = MAX_CHARGES;
-            this.markDirty();
+            this.setChanged();
             //needed for buggy white tipped state. aparently not enough
-            this.world.notifyBlockUpdate(this.pos, this.getBlockState(),this.getBlockState(),3);
+            this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(),this.getBlockState(),3);
             return true;
         }
         return false;
@@ -84,14 +84,14 @@ public class BambooSpikesBlockTile extends TileEntity {
         if(this.hasPotion() && !this.isOnCooldown(world)) {
             boolean used = false;
             for(EffectInstance effect : this.potion.getEffects()){
-                if(!le.isPotionApplicable(effect))continue;
-                if(le.isPotionActive(effect.getPotion()))continue;
+                if(!le.canBeAffected(effect))continue;
+                if(le.hasEffect(effect.getEffect()))continue;
 
-                if (effect.getPotion().isInstant()) {
+                if (effect.getEffect().isInstantenous()) {
                     float health = 0.5f;//no idea of what this does. it's either 0.5 or 1
-                    effect.getPotion().affectEntity(null, null, le, effect.getAmplifier(), health);
+                    effect.getEffect().applyInstantenousEffect(null, null, le, effect.getAmplifier(), health);
                 } else {
-                    le.addPotionEffect( new EffectInstance(effect.getPotion(),
+                    le.addEffect( new EffectInstance(effect.getEffect(),
                             (int)(effect.getDuration()*BambooSpikesBlockTile.POTION_MULTIPLIER),
                             effect.getAmplifier()));
                 }
@@ -107,44 +107,44 @@ public class BambooSpikesBlockTile extends TileEntity {
     public ItemStack getSpikeItem(){
         if(this.hasPotion()) {
             ItemStack stack = BambooSpikesTippedItem.makeSpikeItem(this.potion);
-            stack.setDamage(stack.getMaxDamage() - this.charges);
+            stack.setDamageValue(stack.getMaxDamage() - this.charges);
             return stack;
         }
         return new ItemStack(Registry.BAMBOO_SPIKES_ITEM.get());
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
+    public CompoundNBT save(CompoundNBT compound) {
         compound.putInt("Charges",this.charges);
         compound.putLong("LastTicked",this.lastTicked);
 
         ResourceLocation resourcelocation = net.minecraft.util.registry.Registry.POTION.getKey(this.potion);
         compound.putString("Potion", resourcelocation.toString());
 
-        return super.write(compound);
+        return super.save(compound);
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
-        super.read(state, compound);
+    public void load(BlockState state, CompoundNBT compound) {
+        super.load(state, compound);
         this.charges = compound.getInt("Charges");
         this.lastTicked = compound.getLong("LastTicked");
-        this.potion = PotionUtils.getPotionTypeFromNBT(compound);
+        this.potion = PotionUtils.getPotion(compound);
     }
 
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.pos, 0, this.getUpdateTag());
+        return new SUpdateTileEntityPacket(this.worldPosition, 0, this.getUpdateTag());
     }
     //TODO:Make base tile
     @Override
     public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundNBT());
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.read(this.getBlockState(), pkt.getNbtCompound());
+        this.load(this.getBlockState(), pkt.getTag());
     }
 
 

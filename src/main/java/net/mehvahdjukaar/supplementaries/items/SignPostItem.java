@@ -22,6 +22,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 
+import net.minecraft.item.Item.Properties;
+
 public class SignPostItem  extends Item {
     public final IWoodType type;
     public SignPostItem(Properties properties, IWoodType wood) {
@@ -41,14 +43,14 @@ public class SignPostItem  extends Item {
     }
 
     @Override
-    public ActionResultType onItemUse(ItemUseContext context) {
+    public ActionResultType useOn(ItemUseContext context) {
         //if (!context.canPlace()) return ActionResultType.FAIL;
 
         PlayerEntity playerentity = context.getPlayer();
         if(playerentity == null)return ActionResultType.PASS;
-        BlockPos blockpos = context.getPos();
-        World world = context.getWorld();
-        ItemStack itemstack = context.getItem();
+        BlockPos blockpos = context.getClickedPos();
+        World world = context.getLevel();
+        ItemStack itemstack = context.getItemInHand();
 
         Block targetblock = world.getBlockState(blockpos).getBlock();
 
@@ -58,18 +60,18 @@ public class SignPostItem  extends Item {
 
             //if(!world.isRemote) world.setBlockState(blockpos, Registry.SIGN_POST.get().getDefaultState(), 3);
 
-            world.setBlockState(blockpos, Registry.SIGN_POST.get().getStateForPlacement(new BlockItemUseContext(context)), 3);
+            world.setBlock(blockpos, Registry.SIGN_POST.get().getStateForPlacement(new BlockItemUseContext(context)), 3);
 
             boolean flag = false;
 
-            TileEntity tileentity = world.getTileEntity(blockpos);
+            TileEntity tileentity = world.getBlockEntity(blockpos);
             if(tileentity instanceof SignPostBlockTile){
                 SignPostBlockTile signtile = ((SignPostBlockTile) tileentity);
 
 
-                int r = MathHelper.floor((double) ((180.0F + context.getPlacementYaw()) * 16.0F / 360.0F) + 0.5D) & 15;
+                int r = MathHelper.floor((double) ((180.0F + context.getRotation()) * 16.0F / 360.0F) + 0.5D) & 15;
 
-                double y = context.getHitVec().y;
+                double y = context.getClickLocation().y;
 
                 boolean up = y%((int)y) > 0.5d;
 
@@ -88,15 +90,15 @@ public class SignPostItem  extends Item {
                     flag = true;
                 }
                 if(flag) {
-                    if (isfence) signtile.fenceBlock = targetblock.getDefaultState();
-                    signtile.markDirty();
+                    if (isfence) signtile.fenceBlock = targetblock.defaultBlockState();
+                    signtile.setChanged();
                 }
 
             }
             if(flag){
-                if(world.isRemote()){
+                if(world.isClientSide()){
                     SoundType soundtype = SoundType.WOOD;
-                    world.playSound(playerentity, blockpos, SoundEvents.BLOCK_WOOD_PLACE, SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+                    world.playSound(playerentity, blockpos, SoundEvents.WOOD_PLACE, SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
                 }
                 if(!context.getPlayer().isCreative()) itemstack.shrink(1);
                 return ActionResultType.SUCCESS;

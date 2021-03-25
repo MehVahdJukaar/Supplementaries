@@ -28,8 +28,8 @@ public class PedestalBlockTileRenderer extends TileEntityRenderer<PedestalBlockT
     }
 
     protected boolean canRenderName(PedestalBlockTile tile) {
-        if (Minecraft.isGuiEnabled() && tile.getStackInSlot(0).hasDisplayName()) {
-            double d0 = Minecraft.getInstance().getRenderManager().getDistanceToCamera(tile.getPos().getX() + 0.5 ,tile.getPos().getY() + 0.5 ,tile.getPos().getZ() + 0.5);
+        if (Minecraft.renderNames() && tile.getItem(0).hasCustomHoverName()) {
+            double d0 = Minecraft.getInstance().getEntityRenderDispatcher().distanceToSqr(tile.getBlockPos().getX() + 0.5 ,tile.getBlockPos().getY() + 0.5 ,tile.getBlockPos().getZ() + 0.5);
             return d0 < 16*16;
         }
         return false;
@@ -40,22 +40,22 @@ public class PedestalBlockTileRenderer extends TileEntityRenderer<PedestalBlockT
         double f = 0.875; //height
         int i = 0;
 
-        FontRenderer fontrenderer = this.renderDispatcher.getFontRenderer();
-        EntityRendererManager renderManager = Minecraft.getInstance().getRenderManager();
+        FontRenderer fontrenderer = this.renderer.getFont();
+        EntityRendererManager renderManager = Minecraft.getInstance().getEntityRenderDispatcher();
 
-        matrixStackIn.push();
+        matrixStackIn.pushPose();
 
         matrixStackIn.translate(0, f, 0);
-        matrixStackIn.rotate(renderManager.getCameraOrientation());
+        matrixStackIn.mulPose(renderManager.cameraOrientation());
         matrixStackIn.scale(-0.025F, -0.025F, 0.025F);
-        Matrix4f matrix4f = matrixStackIn.getLast().getMatrix();
-        float f1 = Minecraft.getInstance().gameSettings.getTextBackgroundOpacity(0.25F);
+        Matrix4f matrix4f = matrixStackIn.last().pose();
+        float f1 = Minecraft.getInstance().options.getBackgroundOpacity(0.25F);
         int j = (int)(f1 * 255.0F) << 24;
 
-        float f2 = (float)(-fontrenderer.getStringPropertyWidth(displayNameIn) / 2);
-        //func_243247_a == renderTextComponent
-        fontrenderer.func_243247_a(displayNameIn, f2, (float)i, -1, false, matrix4f, bufferIn, false, j, packedLightIn);
-        matrixStackIn.pop();
+        float f2 = (float)(-fontrenderer.width(displayNameIn) / 2);
+        //drawInBatch == renderTextComponent
+        fontrenderer.drawInBatch(displayNameIn, f2, (float)i, -1, false, matrix4f, bufferIn, false, j, packedLightIn);
+        matrixStackIn.popPose();
 
     }
 
@@ -66,18 +66,18 @@ public class PedestalBlockTileRenderer extends TileEntityRenderer<PedestalBlockT
 
         if(!tile.isEmpty()){
             //TODO: optimize transforms
-            matrixStackIn.push();
+            matrixStackIn.pushPose();
             matrixStackIn.translate(0.5, 1.125, 0.5);
 
             if(this.canRenderName(tile)){
-                ITextComponent name = tile.getStackInSlot(0).getDisplayName();
+                ITextComponent name = tile.getItem(0).getHoverName();
                 int i = "Dinnerbone".equals(name.getString())? -1 : 1;
                 matrixStackIn.scale(i, i, 1);
                 this.renderName(name, matrixStackIn, bufferIn, combinedLightIn);
             }
             matrixStackIn.scale(0.5f, 0.5f, 0.5f);
             matrixStackIn.translate(0, 0.25, 0);
-            matrixStackIn.rotate(Vector3f.YP.rotationDegrees(tile.yaw));
+            matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(tile.yaw));
 
 
             ItemCameraTransforms.TransformType transform = ItemCameraTransforms.TransformType.FIXED;
@@ -88,7 +88,7 @@ public class PedestalBlockTileRenderer extends TileEntityRenderer<PedestalBlockT
                 matrixStackIn.scale(1.5f,1.5f,1.5f);
 
 
-                matrixStackIn.rotate(Const.Z135);
+                matrixStackIn.mulPose(Const.Z135);
 
             }
             else if(tile.type==4){
@@ -97,11 +97,11 @@ public class PedestalBlockTileRenderer extends TileEntityRenderer<PedestalBlockT
                 matrixStackIn.translate(0,0.03125,0);
                 matrixStackIn.scale(1.5f,1.5f,1.5f);
 
-                matrixStackIn.rotate(Const.ZN45);
+                matrixStackIn.mulPose(Const.ZN45);
 
             }
             else {
-                if (ClientConfigs.cached.PEDESTAL_SPIN && !Minecraft.getInstance().isGamePaused()) {
+                if (ClientConfigs.cached.PEDESTAL_SPIN && !Minecraft.getInstance().isPaused()) {
                     matrixStackIn.translate(0,6/16f, 0);
                     matrixStackIn.scale(1.5f,1.5f,1.5f);
 
@@ -123,19 +123,19 @@ public class PedestalBlockTileRenderer extends TileEntityRenderer<PedestalBlockT
                     //matrixStackIn.rotate(Const.Y45);
 
 
-                    matrixStackIn.rotate(rotation);
+                    matrixStackIn.mulPose(rotation);
                 }
 
             }
             //TODO: make FIXED
             ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-            ItemStack stack = tile.getStackInSlot(0);
+            ItemStack stack = tile.getItem(0);
             if(CommonUtil.FESTIVITY.isAprilsFool())stack= new ItemStack(Items.DIRT);
-            IBakedModel ibakedmodel = itemRenderer.getItemModelWithOverrides(stack, tile.getWorld(), null);
-            itemRenderer.renderItem(stack, transform, true, matrixStackIn, bufferIn, combinedLightIn,
+            IBakedModel ibakedmodel = itemRenderer.getModel(stack, tile.getLevel(), null);
+            itemRenderer.render(stack, transform, true, matrixStackIn, bufferIn, combinedLightIn,
                     combinedOverlayIn, ibakedmodel);
 
-            matrixStackIn.pop();
+            matrixStackIn.popPose();
         }
     }
 }

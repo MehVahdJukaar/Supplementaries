@@ -104,16 +104,11 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue CREATIVE_TAB;
         public static ForgeConfigSpec.BooleanValue DISPENSERS;
 
-        public static boolean SILVER_CANDELABRA = false;
-        public static boolean HAS_COPPER = false;
         public static boolean HAS_SILVER = false;
-        public static boolean HAS_KEY = true;
 
         //oh god what have I done
         public static boolean isEnabled(String path){
-            if(path.equals(Registry.MAGMA_CREAM_BLOCK_NAME)){
-                return false;
-            }
+
             if(path.equals(Registry.BOMB_NAME)){
                 return false;
             }

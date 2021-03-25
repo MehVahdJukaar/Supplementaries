@@ -2,10 +2,7 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "supplementaries:candelabra_recipe_2",
-      "supplementaries:candelabra_recipe",
-      "supplementaries:candelabra_recipe_3",
-      "supplementaries:candelabra_recipe_4"
+      "supplementaries:candelabra"
     ]
   },
   "criteria": {
@@ -22,7 +19,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "supplementaries:candelabra_recipe_2"
+        "recipe": "supplementaries:candelabra"
       }
     }
   },

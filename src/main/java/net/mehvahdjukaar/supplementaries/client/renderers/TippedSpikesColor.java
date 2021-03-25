@@ -48,7 +48,7 @@ public class TippedSpikesColor implements IBlockColor, IItemColor {
 
     @Override
     public int getColor(BlockState state, @Nullable IBlockDisplayReader world, @Nullable BlockPos pos, int tint) {
-        TileEntity te = world.getTileEntity(pos);
+        TileEntity te = world.getBlockEntity(pos);
 
         if(te instanceof BambooSpikesBlockTile){
             int color = ((BambooSpikesBlockTile) te).getColor();

@@ -34,48 +34,48 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
     }
 
     public static void renderFluid(float height, int color, int luminosity, ResourceLocation texture, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int light, int combinedOverlayIn, boolean shading){
-        matrixStackIn.push();
+        matrixStackIn.pushPose();
         float opacity = 1;//tile.liquidType.opacity;
         if(luminosity!=0) light = light & 15728640 | luminosity << 4;
-        TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(texture);
+        TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(texture);
         // TODO:remove breaking animation
-        IVertexBuilder builder = bufferIn.getBuffer(RenderType.getTranslucentMovingBlock());
+        IVertexBuilder builder = bufferIn.getBuffer(RenderType.translucentMovingBlock());
         matrixStackIn.translate(0.5, 0.0625, 0.5);
         RendererUtil.addCube(builder, matrixStackIn, 0.5f, height, sprite, light, color, opacity, combinedOverlayIn, true, true, shading, true);
-        matrixStackIn.pop();
+        matrixStackIn.popPose();
     }
 
 
     @Override
     public void render(JarBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
 
-        long r = tile.getPos().toLong();
+        long r = tile.getBlockPos().asLong();
         Random rand = new Random(r);
         //render cookies
         if(!tile.isEmpty()){
             ItemStack stack = tile.getDisplayedItem();
             int height = tile.getDisplayedItem().getCount();
-            matrixStackIn.push();
+            matrixStackIn.pushPose();
             matrixStackIn.translate(0.5, 0.5, 0.5);
-            matrixStackIn.rotate(Const.XN90);
+            matrixStackIn.mulPose(Const.XN90);
             matrixStackIn.translate(0, 0, -0.5);
             float scale = 8f / 14f;
             matrixStackIn.scale(scale, scale, scale);
             for (float i = 0; i < height; i ++) {
-                matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(rand.nextInt(360)));
+                matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(rand.nextInt(360)));
                 // matrixStackIn.translate(0, 0, 0.0625);
                 matrixStackIn.translate(0, 0, 1 / (16f * scale));
                 ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-                IBakedModel ibakedmodel = itemRenderer.getItemModelWithOverrides(stack, tile.getWorld(), null);
-                itemRenderer.renderItem(stack, ItemCameraTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
+                IBakedModel ibakedmodel = itemRenderer.getModel(stack, tile.getLevel(), null);
+                itemRenderer.render(stack, ItemCameraTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
                         combinedOverlayIn, ibakedmodel);
             }
-            matrixStackIn.pop();
+            matrixStackIn.popPose();
         }
         //render fish
         if(!tile.mobHolder.isEmpty()) {
             if (tile.mobHolder.capturedMobProperties.isFish()) {
-                matrixStackIn.push();
+                matrixStackIn.pushPose();
 
                 long time = System.currentTimeMillis() + r;
                 float angle = (time % (360 * 80)) / 80f;
@@ -83,34 +83,34 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
                 float angle3 = (time % (360 * 350)) / 350f;
                 float wo = 0.015f * MathHelper.sin((float) (2 * Math.PI * angle2 / 360));
                 float ho = 0.1f * MathHelper.sin((float) (2 * Math.PI * angle3 / 360));
-                IVertexBuilder builder = bufferIn.getBuffer(RenderType.getCutout());
+                IVertexBuilder builder = bufferIn.getBuffer(RenderType.cutout());
                 matrixStackIn.translate(0.5, 0.5, 0.5);
                 Quaternion rotation = Vector3f.YP.rotationDegrees(-angle);
-                matrixStackIn.rotate(rotation);
+                matrixStackIn.mulPose(rotation);
                 matrixStackIn.scale(0.625f, 0.625f, 0.625f);
                 matrixStackIn.translate(0, -0.2, -0.335);
                 int fishType = tile.mobHolder.capturedMobProperties.getFishTexture();
 
                 //overlay
                 RendererUtil.renderFish(builder, matrixStackIn, wo, ho, fishType, combinedLightIn, combinedOverlayIn);
-                matrixStackIn.pop();
+                matrixStackIn.popPose();
 
             }
             else {
                 super.render(tile, partialTicks, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
             }
             if (tile.mobHolder.shouldHaveWater()) {
-                matrixStackIn.push();
+                matrixStackIn.pushPose();
                 matrixStackIn.translate(0.5, 0.0635, 0.5);
-                IVertexBuilder builder = bufferIn.getBuffer(RenderType.getCutout());
-                TextureAtlasSprite sprite_s = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(Textures.SAND_TEXTURE);
+                IVertexBuilder builder = bufferIn.getBuffer(RenderType.cutout());
+                TextureAtlasSprite sprite_s = Minecraft.getInstance().getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(Textures.SAND_TEXTURE);
                 RendererUtil.addCube(builder, matrixStackIn, 0.499f, 0.0625f, sprite_s, combinedLightIn, 16777215, 1f, combinedOverlayIn, true, true, true, true);
-                matrixStackIn.pop();
-                matrixStackIn.push();
+                matrixStackIn.popPose();
+                matrixStackIn.pushPose();
                 SoftFluid s = SoftFluidList.WATER;
                 renderFluid(0.5625f, s.getTintColor(), 0, s.getStillTexture(),
                         matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, true);
-                matrixStackIn.pop();
+                matrixStackIn.popPose();
             }
         }
         //render fluid

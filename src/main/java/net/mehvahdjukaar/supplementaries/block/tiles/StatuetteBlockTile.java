@@ -23,10 +23,10 @@ public class StatuetteBlockTile extends ItemDisplayTile implements ITickableTile
 
     //hijacking this method to work with hoppers & multiplayer
     @Override
-    public void markDirty() {
+    public void setChanged() {
         //this.updateServerAndClient();
         this.updateTile();
-        super.markDirty();
+        super.setChanged();
     }
 
     @Override
@@ -45,7 +45,7 @@ public class StatuetteBlockTile extends ItemDisplayTile implements ITickableTile
 
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
-        return new AxisAlignedBB(pos);
+        return new AxisAlignedBB(worldPosition);
     }
 
     public void updateTile() {
@@ -54,13 +54,13 @@ public class StatuetteBlockTile extends ItemDisplayTile implements ITickableTile
 
     //TODO: put yaw inside blockstate so it can be rotated
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
-        super.read(state, compound);
+    public void load(BlockState state, CompoundNBT compound) {
+        super.load(state, compound);
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
+    public CompoundNBT save(CompoundNBT compound) {
+        super.save(compound);
         return compound;
     }
 

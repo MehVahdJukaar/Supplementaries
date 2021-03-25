@@ -48,15 +48,15 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, I
     }
 
     @Override
-    public double getMaxRenderDistanceSquared() {
+    public double getViewDistance() {
         return 80;
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
-        super.read(state, compound);
+    public void load(BlockState state, CompoundNBT compound) {
+        super.load(state, compound);
         if (compound.contains("CustomName", 8)) {
-            this.customName = ITextComponent.Serializer.getComponentFromJson(compound.getString("CustomName"));
+            this.customName = ITextComponent.Serializer.fromJson(compound.getString("CustomName"));
         }
         this.face = compound.getInt("Face");
         this.yaw = compound.getFloat("Yaw");
@@ -64,8 +64,8 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, I
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
+    public CompoundNBT save(CompoundNBT compound) {
+        super.save(compound);
         if (this.customName != null) {
             compound.putString("CustomName", ITextComponent.Serializer.toJson(this.customName));
         }
@@ -81,32 +81,32 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, I
         this.face=(this.face-=inc)%360;
         this.yaw=(this.yaw+spin+inc);
         this.prevYaw=(this.prevYaw+spin+inc);
-        this.markDirty();
+        this.setChanged();
     }
 
     @Override
-    public boolean receiveClientEvent(int id, int type) {
+    public boolean triggerEvent(int id, int type) {
         if (id == 1) {
             this.spin();
             return true;
         } else {
-            return super.receiveClientEvent(id, type);
+            return super.triggerEvent(id, type);
         }
     }
 
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.pos, 0, this.getUpdateTag());
+        return new SUpdateTileEntityPacket(this.worldPosition, 0, this.getUpdateTag());
     }
 
     @Override
     public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundNBT());
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.read(this.getBlockState(), pkt.getNbtCompound());
+        this.load(this.getBlockState(), pkt.getTag());
     }
 
     @Override
@@ -115,7 +115,7 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, I
         if(this.yaw!=0){
             if(this.yaw<0){
                 this.yaw=0;
-                this.world.updateComparatorOutputLevel(this.pos, this.getBlockState().getBlock());
+                this.level.updateNeighbourForOutputSignal(this.worldPosition, this.getBlockState().getBlock());
             }
             else {
                 this.yaw = (this.yaw * 0.94f) - 0.7f;
@@ -125,7 +125,7 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, I
     }
 
     public Direction getDirection(){
-        return this.getBlockState().get(GlobeBlock.FACING);
+        return this.getBlockState().getValue(GlobeBlock.FACING);
     }
 
 

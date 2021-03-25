@@ -11,7 +11,7 @@
         "parent": "minecraft:recipes/root",
         "rewards": {
           "recipes": [
-            "supplementaries:checker_slab_recipe"
+            "supplementaries:checker_slab"
           ]
         },
         "criteria": {
@@ -28,7 +28,7 @@
           "has_the_recipe": {
             "trigger": "minecraft:recipe_unlocked",
             "conditions": {
-              "recipe": "supplementaries:checker_slab_recipe"
+              "recipe": "supplementaries:checker_slab"
             }
           }
         },

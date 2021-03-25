@@ -19,17 +19,17 @@ public class ChangeGlobeSeedCommand implements Command<CommandSource> {
 
     public static ArgumentBuilder<CommandSource, ?> register(CommandDispatcher<CommandSource> dispatcher) {
         return Commands.literal("newseed")
-                .requires(cs -> cs.hasPermissionLevel(2))
+                .requires(cs -> cs.hasPermission(2))
                 .executes(CMD);
     }
 
     @Override
     public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
-        GlobeData data = GlobeData.get(context.getSource().getWorld());
+        GlobeData data = GlobeData.get(context.getSource().getLevel());
         data.seed=rand.nextLong();
         data.updateData();
-        data.syncData(context.getSource().getWorld());
-        context.getSource().sendFeedback(new TranslationTextComponent("message.supplementaries.command.globe_changed"), false);
+        data.syncData(context.getSource().getLevel());
+        context.getSource().sendSuccess(new TranslationTextComponent("message.supplementaries.command.globe_changed"), false);
         return 0;
     }
 }

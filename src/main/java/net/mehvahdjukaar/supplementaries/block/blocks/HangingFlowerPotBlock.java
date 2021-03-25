@@ -36,45 +36,47 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class HangingFlowerPotBlock extends Block{
 
-    protected static final VoxelShape SHAPE = Block.makeCuboidShape(5.0D, 0.0D, 5.0D, 11.0D, 6.0D, 11.0D);
+    protected static final VoxelShape SHAPE = Block.box(5.0D, 0.0D, 5.0D, 11.0D, 6.0D, 11.0D);
     public static final BooleanProperty TILE = BlockProperties.TILE; // is it tile only. used for rendering to store model
     public HangingFlowerPotBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(TILE, false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(TILE, false));
     }
 
     @Override
-    public void addInformation(ItemStack stack, IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
-        tooltip.add((new StringTextComponent("You shouldn't have this")).mergeStyle(TextFormatting.GRAY));
+    public void appendHoverText(ItemStack stack, IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+        tooltip.add((new StringTextComponent("You shouldn't have this")).withStyle(TextFormatting.GRAY));
     }
 
     @Override
-    public IFormattableTextComponent getTranslatedName() {
+    public IFormattableTextComponent getName() {
         return new TranslationTextComponent("minecraft:flower_pot");
     }
 
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return context.getFace() == Direction.DOWN?super.getStateForPlacement(context):null;
+        return context.getClickedFace() == Direction.DOWN?super.getStateForPlacement(context):null;
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(TILE);
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        TileEntity tileEntity = worldIn.getTileEntity(pos);
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        TileEntity tileEntity = worldIn.getBlockEntity(pos);
         if(tileEntity instanceof HangingFlowerPotBlockTile) {
             HangingFlowerPotBlockTile te = ((HangingFlowerPotBlockTile)tileEntity);
             Block pot = te.pot.getBlock();
             if(pot instanceof FlowerPotBlock && FlowerPotHelper.isEmptyPot(((FlowerPotBlock) pot).getEmptyPot())) {
-                ItemStack itemstack = player.getHeldItem(handIn);
+                ItemStack itemstack = player.getItemInHand(handIn);
                 Item item = itemstack.getItem();
                 //mimics flowerPorBlock behavior
                 Block newPot = item instanceof BlockItem ? FlowerPotHelper.getFullPot((FlowerPotBlock) pot,((BlockItem)item).getBlock()): Blocks.AIR;
@@ -86,24 +88,24 @@ public class HangingFlowerPotBlock extends Block{
 
                 if (isEmptyFlower != isPotEmpty) {
                     if (isPotEmpty) {
-                        te.setHeldBlock(newPot.getDefaultState());
-                        player.addStat(Stats.POT_FLOWER);
-                        if (!player.abilities.isCreativeMode) {
+                        te.setHeldBlock(newPot.defaultBlockState());
+                        player.awardStat(Stats.POT_FLOWER);
+                        if (!player.abilities.instabuild) {
                             itemstack.shrink(1);
                         }
                     } else {
                         //drop item
-                        ItemStack flowerItem = pot.getItem(worldIn, pos, state);
+                        ItemStack flowerItem = pot.getCloneItemStack(worldIn, pos, state);
                         if (!flowerItem.equals(new ItemStack(this))) {
                             if (itemstack.isEmpty()) {
-                                player.setHeldItem(handIn, flowerItem);
-                            } else if (!player.addItemStackToInventory(flowerItem)) {
-                                player.dropItem(flowerItem, false);
+                                player.setItemInHand(handIn, flowerItem);
+                            } else if (!player.addItem(flowerItem)) {
+                                player.drop(flowerItem, false);
                             }
                         }
-                        te.setHeldBlock(((FlowerPotBlock) pot).getEmptyPot().getDefaultState());
+                        te.setHeldBlock(((FlowerPotBlock) pot).getEmptyPot().defaultBlockState());
                     }
-                    return ActionResultType.func_233537_a_(worldIn.isRemote);
+                    return ActionResultType.sidedSuccess(worldIn.isClientSide);
                 } else {
                     return ActionResultType.CONSUME;
                 }
@@ -113,12 +115,12 @@ public class HangingFlowerPotBlock extends Block{
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return state.get(TILE)?BlockRenderType.MODEL : BlockRenderType.INVISIBLE;
+    public BlockRenderType getRenderShape(BlockState state) {
+        return state.getValue(TILE)?BlockRenderType.MODEL : BlockRenderType.INVISIBLE;
     }
 
     @Override
-    public boolean allowsMovement(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
+    public boolean isPathfindable(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
         return false;
     }
 
@@ -134,11 +136,11 @@ public class HangingFlowerPotBlock extends Block{
 
     @Override
     public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
-        TileEntity te = world.getTileEntity(pos);
+        TileEntity te = world.getBlockEntity(pos);
         if (te instanceof HangingFlowerPotBlockTile) {
             Block b = ((HangingFlowerPotBlockTile) te).pot.getBlock();
             if(b instanceof FlowerPotBlock){
-                Block flower = ((FlowerPotBlock) b).getFlower();
+                Block flower = ((FlowerPotBlock) b).getContent();
                 if(flower==Blocks.AIR)return new ItemStack(((FlowerPotBlock) b).getEmptyPot());
                 return new ItemStack(flower);
             }
@@ -148,19 +150,19 @@ public class HangingFlowerPotBlock extends Block{
 
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
-        TileEntity tileentity = builder.get(LootParameters.BLOCK_ENTITY);
+        TileEntity tileentity = builder.getOptionalParameter(LootParameters.BLOCK_ENTITY);
         if (tileentity instanceof HangingFlowerPotBlockTile){
             Block b = ((HangingFlowerPotBlockTile) tileentity).pot.getBlock();
             if(b instanceof FlowerPotBlock)
-                return Arrays.asList(new ItemStack(((FlowerPotBlock) b).getFlower()), new ItemStack(((FlowerPotBlock) b).getEmptyPot()));
+                return Arrays.asList(new ItemStack(((FlowerPotBlock) b).getContent()), new ItemStack(((FlowerPotBlock) b).getEmptyPot()));
         }
 
         return super.getDrops(state,builder);
     }
 
     @Override
-    public VoxelShape getRenderShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
-        return VoxelShapes.fullCube();
+    public VoxelShape getOcclusionShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
+        return VoxelShapes.block();
     }
 
     @Override
@@ -169,11 +171,11 @@ public class HangingFlowerPotBlock extends Block{
     }
 
     @Override
-    public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
-        return facing == Direction.UP && !this.isValidPosition(stateIn, worldIn, currentPos) ? Blocks.AIR.getDefaultState() : super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
+        return facing == Direction.UP && !this.canSurvive(stateIn, worldIn, currentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
 
-    public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-        return RopeBlock.isSupportingCeiling(pos.offset(Direction.UP),worldIn);
+    public boolean canSurvive(BlockState state, IWorldReader worldIn, BlockPos pos) {
+        return RopeBlock.isSupportingCeiling(pos.relative(Direction.UP),worldIn);
     }
 }

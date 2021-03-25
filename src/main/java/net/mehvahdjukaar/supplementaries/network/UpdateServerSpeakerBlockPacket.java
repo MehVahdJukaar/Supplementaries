@@ -21,7 +21,7 @@ public class UpdateServerSpeakerBlockPacket{
     public UpdateServerSpeakerBlockPacket(PacketBuffer buf) {
 
         this.pos = buf.readBlockPos();
-        this.str = buf.readTextComponent();
+        this.str = buf.readComponent();
         this.narrator = buf.readBoolean();
         this.volume = buf.readDouble();
     }
@@ -36,25 +36,25 @@ public class UpdateServerSpeakerBlockPacket{
     public static void buffer(UpdateServerSpeakerBlockPacket message, PacketBuffer buf) {
 
         buf.writeBlockPos(message.pos);
-        buf.writeTextComponent(message.str);
+        buf.writeComponent(message.str);
         buf.writeBoolean(message.narrator);
         buf.writeDouble(message.volume);
     }
 
     public static void handler(UpdateServerSpeakerBlockPacket message, Supplier<NetworkEvent.Context> ctx) {
         // server world
-        World world = Objects.requireNonNull(ctx.get().getSender()).world;
+        World world = Objects.requireNonNull(ctx.get().getSender()).level;
 
         ctx.get().enqueueWork(() -> {
             if (world != null) {
 
-                TileEntity tileentity = world.getTileEntity(message.pos);
+                TileEntity tileentity = world.getBlockEntity(message.pos);
                 if (tileentity instanceof SpeakerBlockTile) {
                     SpeakerBlockTile speaker = (SpeakerBlockTile) tileentity;
                     speaker.message = message.str.getString();
                     speaker.narrator = message.narrator;
                     speaker.volume = message.volume;
-                    tileentity.markDirty();
+                    tileentity.setChanged();
                 }
                 /*
                 if(world instanceof ServerWorld)

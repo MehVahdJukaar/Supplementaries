@@ -1,0 +1,72 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "type": "forge:not",
+          "value": {
+            "type": "forge:tag_empty",
+            "tag": "supplementaries:candles"
+          }
+        },
+        {
+          "flag": "candelabra",
+          "type": "supplementaries:flag"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "pattern": [
+          "111",
+          "222",
+          " 2 "
+        ],
+        "key": {
+          "1": {
+            "tag": "supplementaries:candles"
+          },
+          "2": {
+            "tag": "forge:ingots/gold"
+          }
+        },
+        "result": {
+          "item": "supplementaries:candelabra",
+          "count": 1
+        }
+      }
+    },
+    {
+      "conditions": [
+        {
+          "type": "forge:tag_empty",
+          "tag": "supplementaries:candles"
+        },
+        {
+          "flag": "candelabra",
+          "type": "supplementaries:flag"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "pattern": [
+          "111",
+          "222",
+          " 2 "
+        ],
+        "key": {
+          "1": {
+            "item": "minecraft:torch"
+          },
+          "2": {
+            "tag": "forge:ingots/gold"
+          }
+        },
+        "result": {
+          "item": "supplementaries:candelabra",
+          "count": 1
+        }
+      }
+    }
+  ]
+}

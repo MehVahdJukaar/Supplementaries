@@ -25,45 +25,45 @@ public class FireflyJarBlockTile extends TileEntity implements ITickableTileEnti
     }
 
     @Override
-    public double getMaxRenderDistanceSquared() {
+    public double getViewDistance() {
         return 64;
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
-        super.read(state, compound);
+    public void load(BlockState state, CompoundNBT compound) {
+        super.load(state, compound);
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
+    public CompoundNBT save(CompoundNBT compound) {
+        super.save(compound);
         return compound;
     }
 
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.pos, 0, this.getUpdateTag());
+        return new SUpdateTileEntityPacket(this.worldPosition, 0, this.getUpdateTag());
     }
 
     @Override
     public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundNBT());
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.read(this.getBlockState(), pkt.getNbtCompound());
+        this.load(this.getBlockState(), pkt.getTag());
     }
 
     public void tick() {
 
-        if (this.world.isRemote()){
+        if (this.level.isClientSide()){
             int p = ClientConfigs.cached.FIREFLY_SPAWN_PERIOD;
             float c = (float) ClientConfigs.cached.FIREFLY_SPAWN_CHANCE;
-            if(this.world.getGameTime() % p == 0L && this.rand.nextFloat() > c) {
-                int x = this.pos.getX();
-                int y = this.pos.getY();
-                int z = this.pos.getZ();
+            if(this.level.getGameTime() % p == 0L && this.rand.nextFloat() > c) {
+                int x = this.worldPosition.getX();
+                int y = this.worldPosition.getY();
+                int z = this.worldPosition.getZ();
                 double pr = 0.15;
                 if(soul){
                     pr=0.25;
@@ -71,7 +71,7 @@ public class FireflyJarBlockTile extends TileEntity implements ITickableTileEnti
                         double d0 = (x + 0.5 + (this.rand.nextFloat() - 0.5) * (0.625D - pr));
                         double d1 = (y + 0.25);
                         double d2 = (z + 0.5 + (this.rand.nextFloat() - 0.5) * (0.625D - pr));
-                        world.addParticle(ParticleTypes.SOUL, d0, d1, d2, 0, this.rand.nextFloat()*0.02, 0);
+                        level.addParticle(ParticleTypes.SOUL, d0, d1, d2, 0, this.rand.nextFloat()*0.02, 0);
                     }
                 }
                 else {
@@ -79,7 +79,7 @@ public class FireflyJarBlockTile extends TileEntity implements ITickableTileEnti
                         double d0 = (x + 0.5 + (this.rand.nextFloat() - 0.5) * (0.625D - pr));
                         double d1 = (y + 0.5 - 0.0625 + (this.rand.nextFloat() - 0.5) * (0.875D - pr));
                         double d2 = (z + 0.5 + (this.rand.nextFloat() - 0.5) * (0.625D - pr));
-                        world.addParticle(Registry.FIREFLY_GLOW.get(), d0, d1, d2, 0, 0, 0);
+                        level.addParticle(Registry.FIREFLY_GLOW.get(), d0, d1, d2, 0, 0, 0);
                     }
                 }
             }

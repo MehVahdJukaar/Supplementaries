@@ -40,14 +40,14 @@ public class HangingSignBlockTile extends SwayingBlockTile implements IMapDispla
     }
 
     @Override
-    public void markDirty() {
-        this.world.notifyBlockUpdate(this.pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
-        super.markDirty();
+    public void setChanged() {
+        this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
+        super.setChanged();
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
-        super.read(state, compound);
+    public void load(BlockState state, CompoundNBT compound) {
+        super.load(state, compound);
 
         this.stacks = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
         ItemStackHelper.loadAllItems(compound, this.stacks);
@@ -56,8 +56,8 @@ public class HangingSignBlockTile extends SwayingBlockTile implements IMapDispla
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
+    public CompoundNBT save(CompoundNBT compound) {
+        super.save(compound);
         ItemStackHelper.saveAllItems(compound, this.stacks);
 
         this.textHolder.write(compound);
@@ -85,7 +85,7 @@ public class HangingSignBlockTile extends SwayingBlockTile implements IMapDispla
     }
 
     public ItemStack removeStackFromSlot(int index) {
-        return ItemStackHelper.getAndRemove(this.getItems(), index);
+        return ItemStackHelper.takeItem(this.getItems(), index);
     }
 
     public ItemStack getStackInSlot(int index) {

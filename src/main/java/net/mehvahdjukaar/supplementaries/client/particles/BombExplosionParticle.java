@@ -11,29 +11,29 @@ public class BombExplosionParticle extends SpriteTexturedParticle {
 
     private BombExplosionParticle(ClientWorld world, double x, double y, double z, double scale, IAnimatedSprite spriteWithAge) {
         super(world, x, y, z, 0.0D, 0.0D, 0.0D);
-        this.maxAge = 5 + this.rand.nextInt(4);
-        float f = this.rand.nextFloat() * 0.6F + 0.4F;
-        this.particleRed = f;
-        this.particleGreen = f;
-        this.particleBlue = f;
-        this.particleScale = 0.65F * (1.0F - (float)scale * 0.5F);
+        this.lifetime = 5 + this.random.nextInt(4);
+        float f = this.random.nextFloat() * 0.6F + 0.4F;
+        this.rCol = f;
+        this.gCol = f;
+        this.bCol = f;
+        this.quadSize = 0.65F * (1.0F - (float)scale * 0.5F);
         this.spriteWithAge = spriteWithAge;
-        this.selectSpriteWithAge(spriteWithAge);
+        this.setSpriteFromAge(spriteWithAge);
 
     }
 
-    public int getBrightnessForRender(float partialTick) {
+    public int getLightColor(float partialTick) {
         return 15728880;
     }
 
     public void tick() {
-        this.prevPosX = this.posX;
-        this.prevPosY = this.posY;
-        this.prevPosZ = this.posZ;
-        if (this.age++ >= this.maxAge) {
-            this.setExpired();
+        this.xo = this.x;
+        this.yo = this.y;
+        this.zo = this.z;
+        if (this.age++ >= this.lifetime) {
+            this.remove();
         } else {
-            this.selectSpriteWithAge(this.spriteWithAge);
+            this.setSpriteFromAge(this.spriteWithAge);
         }
     }
 
@@ -50,7 +50,7 @@ public class BombExplosionParticle extends SpriteTexturedParticle {
         }
 
         @Override
-        public Particle makeParticle(BasicParticleType typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed,
+        public Particle createParticle(BasicParticleType typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed,
                                      double zSpeed) {
             return new BombExplosionParticle(worldIn, x, y, z, xSpeed, this.spriteSet);
         }

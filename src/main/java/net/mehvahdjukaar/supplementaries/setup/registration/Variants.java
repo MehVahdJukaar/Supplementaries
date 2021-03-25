@@ -44,12 +44,12 @@ public class Variants {
         for(IWoodType wood : WoodTypes.TYPES.values()){
             String name = getHangingSignName(wood);
             map.put(wood, Registry.BLOCKS.register(name, ()-> new HangingSignBlock(
-                    AbstractBlock.Properties.create(wood.getMaterial(), wood.getColor())
-                            .hardnessAndResistance(2f, 3f)
+                    AbstractBlock.Properties.of(wood.getMaterial(), wood.getColor())
+                            .strength(2f, 3f)
                             .sound(SoundType.WOOD)
                             .harvestTool(ToolType.AXE)
-                            .notSolid()
-                            .doesNotBlockMovement()
+                            .noOcclusion()
+                            .noCollission()
             )));
         }
         return map;
@@ -61,8 +61,8 @@ public class Variants {
         for(IWoodType wood : WoodTypes.TYPES.values()){
             String name = getHangingSignName(wood);
             map.put(wood, Registry.ITEMS.register(name, ()-> new BurnableBlockItem(Registry.HANGING_SIGNS.get(wood).get(),
-                    new Item.Properties().group(Registry.getTab(!hasWood(wood)?null:
-                            ItemGroup.DECORATIONS,Registry.HANGING_SIGN_NAME)),200
+                    new Item.Properties().tab(Registry.getTab(!hasWood(wood)?null:
+                            ItemGroup.TAB_DECORATIONS,Registry.HANGING_SIGN_NAME)),200
             )));
         }
         return map;
@@ -75,8 +75,8 @@ public class Variants {
         for(IWoodType wood : WoodTypes.TYPES.values()){
             String name = getSignPostName(wood);
             map.put(wood, Registry.ITEMS.register(name, ()-> new SignPostItem(
-                    new Item.Properties().group(!hasWood(wood)?null:
-                            Registry.getTab(ItemGroup.DECORATIONS,Registry.SIGN_POST_NAME)),wood
+                    new Item.Properties().tab(!hasWood(wood)?null:
+                            Registry.getTab(ItemGroup.TAB_DECORATIONS,Registry.SIGN_POST_NAME)),wood
             )));
         }
         return map;

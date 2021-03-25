@@ -16,29 +16,29 @@ public class DrippingLiquidParticle extends SpriteTexturedParticle{
     private DrippingLiquidParticle(ClientWorld world, double x, double y, double z, Fluid fluid) {
         super(world, x, y, z);
         this.setSize(0.01F, 0.01F);
-        this.particleGravity = 0.06F;
+        this.gravity = 0.06F;
         this.fluid = fluid;
-        this.particleGravity *= 0.02F;
-        this.maxAge = 40;
+        this.gravity *= 0.02F;
+        this.lifetime = 40;
     }
 
     public void tick() {
-        this.prevPosX = this.posX;
-        this.prevPosY = this.posY;
-        this.prevPosZ = this.posZ;
+        this.xo = this.x;
+        this.yo = this.y;
+        this.zo = this.z;
         this.ageParticle();
-        if (!this.isExpired) {
-            this.motionY -= (double)this.particleGravity;
-            this.move(this.motionX, this.motionY, this.motionZ);
+        if (!this.removed) {
+            this.yd -= (double)this.gravity;
+            this.move(this.xd, this.yd, this.zd);
             this.updateMotion();
-            if (!this.isExpired) {
-                this.motionX *= (double)0.98F;
-                this.motionY *= (double)0.98F;
-                this.motionZ *= (double)0.98F;
-                BlockPos blockpos = new BlockPos(this.posX, this.posY, this.posZ);
-                FluidState fluidstate = this.world.getFluidState(blockpos);
-                if (fluidstate.getFluid() == this.fluid && this.posY < (double)((float)blockpos.getY() + fluidstate.getActualHeight(this.world, blockpos))) {
-                    this.setExpired();
+            if (!this.removed) {
+                this.xd *= (double)0.98F;
+                this.yd *= (double)0.98F;
+                this.zd *= (double)0.98F;
+                BlockPos blockpos = new BlockPos(this.x, this.y, this.z);
+                FluidState fluidstate = this.level.getFluidState(blockpos);
+                if (fluidstate.getType() == this.fluid && this.y < (double)((float)blockpos.getY() + fluidstate.getHeight(this.level, blockpos))) {
+                    this.remove();
                 }
 
             }
@@ -46,9 +46,9 @@ public class DrippingLiquidParticle extends SpriteTexturedParticle{
     }
 
     protected void ageParticle() {
-        if (this.maxAge-- <= 0) {
-            this.setExpired();
-            this.world.addParticle(Registry.FALLING_LIQUID.get(), this.posX, this.posY, this.posZ, this.particleRed, this.particleGreen, this.particleBlue);
+        if (this.lifetime-- <= 0) {
+            this.remove();
+            this.level.addParticle(Registry.FALLING_LIQUID.get(), this.x, this.y, this.z, this.rCol, this.gCol, this.bCol);
         }
 
     }
@@ -57,9 +57,9 @@ public class DrippingLiquidParticle extends SpriteTexturedParticle{
     }
 
     protected void updateMotion() {
-        this.motionX *= 0.02D;
-        this.motionY *= 0.02D;
-        this.motionZ *= 0.02D;
+        this.xd *= 0.02D;
+        this.yd *= 0.02D;
+        this.zd *= 0.02D;
     }
 
 
@@ -72,10 +72,10 @@ public class DrippingLiquidParticle extends SpriteTexturedParticle{
             this.spriteSet = spriteSet;
         }
 
-        public Particle makeParticle(BasicParticleType typeIn, ClientWorld worldIn, double x, double y, double z, double r, double g, double b) {
+        public Particle createParticle(BasicParticleType typeIn, ClientWorld worldIn, double x, double y, double z, double r, double g, double b) {
             DrippingLiquidParticle dripparticle = new DrippingLiquidParticle(worldIn, x, y, z, Fluids.WATER);
             dripparticle.setColor((float)r, (float)g, (float)b);
-            dripparticle.selectSpriteRandomly(this.spriteSet);
+            dripparticle.pickSprite(this.spriteSet);
             return dripparticle;
         }
     }

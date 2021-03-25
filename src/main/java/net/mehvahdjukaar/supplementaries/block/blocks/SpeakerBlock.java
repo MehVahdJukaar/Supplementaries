@@ -30,39 +30,41 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class SpeakerBlock extends Block {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     public SpeakerBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(POWERED, false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(POWERED, false));
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(FACING, POWERED);
     }
 
     public BlockState rotate(BlockState state, Rotation rot) {
-        return state.with(FACING, rot.rotate(state.get(FACING)));
+        return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
 
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
-        return state.rotate(mirrorIn.toRotation(state.get(FACING)));
+        return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing().getOpposite());
+        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+    public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         this.updatePower(state, worldIn, pos);
-        if (stack.hasDisplayName()) {
-            TileEntity tileentity = worldIn.getTileEntity(pos);
+        if (stack.hasCustomHoverName()) {
+            TileEntity tileentity = worldIn.getBlockEntity(pos);
             if (tileentity instanceof SpeakerBlockTile) {
-                ((SpeakerBlockTile) tileentity).setCustomName(stack.getDisplayName());
+                ((SpeakerBlockTile) tileentity).setCustomName(stack.getHoverName());
             }
         }
     }
@@ -74,27 +76,27 @@ public class SpeakerBlock extends Block {
     }
 
     public void updatePower(BlockState state, World world, BlockPos pos) {
-        if (!world.isRemote()) {
-            boolean pow = world.isBlockPowered(pos);
+        if (!world.isClientSide()) {
+            boolean pow = world.hasNeighborSignal(pos);
             // state changed
-            if (pow != state.get(POWERED)) {
-                world.setBlockState(pos, state.with(POWERED, pow), 3);
+            if (pow != state.getValue(POWERED)) {
+                world.setBlock(pos, state.setValue(POWERED, pow), 3);
                 // can I emit sound?
-                Direction facing = state.get(FACING);
-                if (pow && world.isAirBlock(pos.offset(facing))) {
-                    TileEntity tileentity = world.getTileEntity(pos);
+                Direction facing = state.getValue(FACING);
+                if (pow && world.isEmptyBlock(pos.relative(facing))) {
+                    TileEntity tileentity = world.getBlockEntity(pos);
                     if (tileentity instanceof SpeakerBlockTile) {
                         SpeakerBlockTile speaker = (SpeakerBlockTile) tileentity;
                         MinecraftServer mcserv = ServerLifecycleHooks.getCurrentServer();
-                        RegistryKey<World> dimension = world.getDimensionKey();
+                        RegistryKey<World> dimension = world.dimension();
                         if (mcserv != null && !speaker.message.equals("")) {
                             // particle
-                            world.addBlockEvent(pos, this, 0, 0);
+                            world.blockEvent(pos, this, 0, 0);
                             PlayerList players = mcserv.getPlayerList();
 
-                            ITextComponent message = new StringTextComponent(speaker.getName().getString()+": "+speaker.message).mergeStyle(TextFormatting.ITALIC);
+                            ITextComponent message = new StringTextComponent(speaker.getName().getString()+": "+speaker.message).withStyle(TextFormatting.ITALIC);
 
-                            players.sendToAllNearExcept(null, pos.getX(), pos.getY(), pos.getZ(), ServerConfigs.cached.SPEAKER_RANGE*speaker.volume,
+                            players.broadcast(null, pos.getX(), pos.getY(), pos.getZ(), ServerConfigs.cached.SPEAKER_RANGE*speaker.volume,
                                     dimension, NetworkHandler.INSTANCE.toVanillaPacket(
                                             new SendSpeakerBlockMessagePacket(message, speaker.narrator),
                                             NetworkDirection.PLAY_TO_CLIENT));
@@ -106,12 +108,12 @@ public class SpeakerBlock extends Block {
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity entity, Hand hand,
+    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity entity, Hand hand,
                                              BlockRayTraceResult hit) {
-        TileEntity tileentity = world.getTileEntity(pos);
+        TileEntity tileentity = world.getBlockEntity(pos);
         if (tileentity instanceof SpeakerBlockTile) {
             // client
-            if (world.isRemote) {
+            if (world.isClientSide) {
                 SpeakerBlockGui.open((SpeakerBlockTile) tileentity);
                 return ActionResultType.SUCCESS;
             }
@@ -132,11 +134,11 @@ public class SpeakerBlock extends Block {
     }
 
     @Override
-    public boolean eventReceived(BlockState state, World world, BlockPos pos, int eventID, int eventParam) {
-        super.eventReceived(state, world, pos, eventID, eventParam);
-        Direction facing = state.get(FACING);
-        world.addParticle(Registry.SPEAKER_SOUND.get(), pos.getX() + 0.5 + facing.getXOffset() * 0.725, pos.getY() + 0.5,
-                pos.getZ() + 0.5 + facing.getZOffset() * 0.725, (double) world.rand.nextInt(24) / 24.0D, 0.0D, 0.0D);
+    public boolean triggerEvent(BlockState state, World world, BlockPos pos, int eventID, int eventParam) {
+        super.triggerEvent(state, world, pos, eventID, eventParam);
+        Direction facing = state.getValue(FACING);
+        world.addParticle(Registry.SPEAKER_SOUND.get(), pos.getX() + 0.5 + facing.getStepX() * 0.725, pos.getY() + 0.5,
+                pos.getZ() + 0.5 + facing.getStepZ() * 0.725, (double) world.random.nextInt(24) / 24.0D, 0.0D, 0.0D);
         return true;
     }
 }

@@ -21,40 +21,42 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import net.minecraft.item.Item.Properties;
+
 public class Flute extends Item {
     public Flute(Properties properties) {
         super(properties);
     }
 
     @Override
-    public boolean hasEffect(ItemStack stack) {
-        CompoundNBT compoundnbt = stack.getChildTag("Enchantments");
-        return compoundnbt != null && (compoundnbt.contains("Pet") || super.hasEffect(stack));
+    public boolean isFoil(ItemStack stack) {
+        CompoundNBT compoundnbt = stack.getTagElement("Enchantments");
+        return compoundnbt != null && (compoundnbt.contains("Pet") || super.isFoil(stack));
     }
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, PlayerEntity player, Entity entity) {
-        if(!(entity instanceof LivingEntity)||player.getActiveHand()==null)return false;
-        return this.itemInteractionForEntity(stack,player, ((LivingEntity) entity),player.getActiveHand()).isSuccessOrConsume();
+        if(!(entity instanceof LivingEntity)||player.getUsedItemHand()==null)return false;
+        return this.interactLivingEntity(stack,player, ((LivingEntity) entity),player.getUsedItemHand()).consumesAction();
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
+    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
 
-        ItemStack stack = playerIn.getHeldItem(handIn);
-        if (!worldIn.isRemote) {
-            double x = playerIn.getPosX();
-            double y = playerIn.getPosY();
-            double z = playerIn.getPosZ();
+        ItemStack stack = playerIn.getItemInHand(handIn);
+        if (!worldIn.isClientSide) {
+            double x = playerIn.getX();
+            double y = playerIn.getY();
+            double z = playerIn.getZ();
             int r=ServerConfigs.cached.FLUTE_RADIUS;
-            CompoundNBT com1 = stack.getChildTag("Enchantments");
+            CompoundNBT com1 = stack.getTagElement("Enchantments");
             if(com1!=null&&com1.contains("Pet")){
                 CompoundNBT com = com1.getCompound("Pet");
-                Entity entity = worldIn.getEntityByID(com.getInt("ID"));
+                Entity entity = worldIn.getEntity(com.getInt("ID"));
                 int maxdistsq = ServerConfigs.cached.FLUTE_DISTANCE*ServerConfigs.cached.FLUTE_DISTANCE;
                 LivingEntity pet1 = ((LivingEntity) entity);
-                if (pet1.world==playerIn.world&&pet1.getDistanceSq(playerIn)<maxdistsq) {
-                    if(pet1.attemptTeleport(x, y, z, false)){
+                if (pet1.level==playerIn.level&&pet1.distanceToSqr(playerIn)<maxdistsq) {
+                    if(pet1.randomTeleport(x, y, z, false)){
                         //pet1.setSleeping(false);
                     }
                 }
@@ -62,57 +64,57 @@ public class Flute extends Item {
             }
             else {
                 AxisAlignedBB bb = new AxisAlignedBB(x - r, y - r, z - r, x + r, y + r, z + r);
-                List<Entity> entities = worldIn.getEntitiesInAABBexcluding(playerIn, bb, (e) -> e instanceof TameableEntity);
+                List<Entity> entities = worldIn.getEntities(playerIn, bb, (e) -> e instanceof TameableEntity);
                 for (Entity e : entities) {
                     TameableEntity pet = ((TameableEntity) e);
-                    if (pet.isTamed() && !pet.isSitting() && pet.getOwnerId().equals(playerIn.getUniqueID())) {
-                        pet.attemptTeleport(x, y, z, false);
+                    if (pet.isTame() && !pet.isOrderedToSit() && pet.getOwnerUUID().equals(playerIn.getUUID())) {
+                        pet.randomTeleport(x, y, z, false);
                     }
                 }
             }
 
 
-            playerIn.getCooldownTracker().setCooldown(this, 20);
-            stack.damageItem(1, playerIn, (en) -> en.sendBreakAnimation(EquipmentSlotType.MAINHAND));
-            worldIn.playSound(null, playerIn.getPosition(), SoundEvents.BLOCK_NOTE_BLOCK_FLUTE, SoundCategory.PLAYERS, 1f, 1.45f);
+            playerIn.getCooldowns().addCooldown(this, 20);
+            stack.hurtAndBreak(1, playerIn, (en) -> en.broadcastBreakEvent(EquipmentSlotType.MAINHAND));
+            worldIn.playSound(null, playerIn.blockPosition(), SoundEvents.NOTE_BLOCK_FLUTE, SoundCategory.PLAYERS, 1f, 1.45f);
 
-            return ActionResult.resultConsume(stack);
+            return ActionResult.consume(stack);
         }
         //swings hand
-        return ActionResult.resultSuccess(stack);
+        return ActionResult.success(stack);
     }
 
     @Override
-    public ActionResultType itemInteractionForEntity(ItemStack stack, PlayerEntity playerIn, LivingEntity target, Hand hand) {
-        CompoundNBT c = stack.getChildTag("Enchantments");
+    public ActionResultType interactLivingEntity(ItemStack stack, PlayerEntity playerIn, LivingEntity target, Hand hand) {
+        CompoundNBT c = stack.getTagElement("Enchantments");
         String s  = target.getType().getRegistryName().toString();
-        if((c==null||!c.contains("Pet")) && (target instanceof TameableEntity && ((TameableEntity) target).isTamed() &&
-                ((TameableEntity) target).getOwnerId().equals(playerIn.getUniqueID())) ||
+        if((c==null||!c.contains("Pet")) && (target instanceof TameableEntity && ((TameableEntity) target).isTame() &&
+                ((TameableEntity) target).getOwnerUUID().equals(playerIn.getUUID())) ||
                 ServerConfigs.cached.FLUTE_EXTRA_MOBS.contains(target.getType().getRegistryName().toString())) {
-            if(target instanceof AbstractHorseEntity && !((AbstractHorseEntity) target).isTame())return ActionResultType.PASS;
+            if(target instanceof AbstractHorseEntity && !((AbstractHorseEntity) target).isTamed())return ActionResultType.PASS;
             //if(target instanceof FoxEntity && ! ((FoxEntity)target).isTrustedUUID(p_213497_1_.getUniqueID())return ActionResultType.PASS;
             CompoundNBT com = new CompoundNBT();
             com.putString("Name", target.getName().getString());
-            com.putUniqueId("UUID", target.getUniqueID());
-            com.putInt("ID", target.getEntityId());
+            com.putUUID("UUID", target.getUUID());
+            com.putInt("ID", target.getId());
             CompoundNBT com2 = new CompoundNBT();
             com2.put("Pet",com);
 
-            stack.setTagInfo("Enchantments",com2);
-            playerIn.setHeldItem(hand, stack);
-            playerIn.getCooldownTracker().setCooldown(this, 20);
-            return ActionResultType.func_233537_a_(playerIn.world.isRemote);
+            stack.addTagElement("Enchantments",com2);
+            playerIn.setItemInHand(hand, stack);
+            playerIn.getCooldowns().addCooldown(this, 20);
+            return ActionResultType.sidedSuccess(playerIn.level.isClientSide);
         }
-        return super.itemInteractionForEntity(stack, playerIn, target, hand);
+        return super.interactLivingEntity(stack, playerIn, target, hand);
     }
 
 
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
-        CompoundNBT compoundnbt = stack.getChildTag("Enchantments");
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+        CompoundNBT compoundnbt = stack.getTagElement("Enchantments");
             if (compoundnbt !=null && compoundnbt.contains("Pet")){
                 CompoundNBT com = compoundnbt.getCompound("Pet");
-                tooltip.add(new StringTextComponent(com.getString("Name")).mergeStyle(TextFormatting.GRAY));
+                tooltip.add(new StringTextComponent(com.getString("Name")).withStyle(TextFormatting.GRAY));
             }
 
     }

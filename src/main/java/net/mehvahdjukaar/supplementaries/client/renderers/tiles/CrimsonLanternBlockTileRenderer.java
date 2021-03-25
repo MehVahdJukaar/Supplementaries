@@ -17,13 +17,13 @@ public class CrimsonLanternBlockTileRenderer extends EnhancedLanternBlockTileRen
     @Override
     public void render(OilLanternBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
-        AttachFace face = tile.getBlockState().get(OilLanternBlock.FACE);
+        AttachFace face = tile.getBlockState().getValue(OilLanternBlock.FACE);
         if(face==AttachFace.FLOOR)return;
-        matrixStackIn.push();
+        matrixStackIn.pushPose();
         matrixStackIn.translate(0,-0.0625,0);
-        BlockState state = tile.getBlockState().getBlock().getDefaultState();
+        BlockState state = tile.getBlockState().getBlock().defaultBlockState();
         this.renderLantern(tile,state,partialTicks,matrixStackIn,bufferIn,combinedLightIn,combinedOverlayIn,face==AttachFace.CEILING);
-        matrixStackIn.pop();
+        matrixStackIn.popPose();
 
     }
 }

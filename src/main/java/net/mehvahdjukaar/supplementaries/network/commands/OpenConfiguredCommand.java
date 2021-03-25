@@ -21,7 +21,7 @@ public class OpenConfiguredCommand implements Command<CommandSource> {
 
     public static ArgumentBuilder<CommandSource, ?> register(CommandDispatcher<CommandSource> dispatcher) {
         return Commands.literal("configured")
-                .requires(cs -> cs.hasPermissionLevel(0))
+                .requires(cs -> cs.hasPermission(0))
                 .executes(CMD);
     }
 
@@ -36,7 +36,7 @@ public class OpenConfiguredCommand implements Command<CommandSource> {
             }
         }
         else {
-            context.getSource().sendFeedback(new TranslationTextComponent("message.supplementaries.command.configs"), false);
+            context.getSource().sendSuccess(new TranslationTextComponent("message.supplementaries.command.configs"), false);
         }
         return 0;
     }

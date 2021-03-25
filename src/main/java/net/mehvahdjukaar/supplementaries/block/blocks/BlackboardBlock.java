@@ -2,15 +2,15 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.client.gui.BlackBoardGui;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.IWaterLoggable;
+import net.minecraft.block.*;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.loot.LootContext;
 import net.minecraft.loot.LootParameters;
 import net.minecraft.nbt.CompoundNBT;
@@ -23,8 +23,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -36,21 +38,24 @@ import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
+import net.minecraft.block.AbstractBlock.Properties;
+import net.minecraftforge.common.Tags;
+
 public class BlackboardBlock extends Block implements IWaterLoggable {
-    public static final VoxelShape SHAPE_SOUTH = Block.makeCuboidShape(0.0D,0.0D,0.0D,16.0D,16.0D,5.0D);
-    public static final VoxelShape SHAPE_NORTH= Block.makeCuboidShape(0.0D,0.0D,11.0D,16.0D,16.0D,16.0D);
-    public static final VoxelShape SHAPE_EAST = Block.makeCuboidShape(0.0D,0.0D,0.0D,5.0D,16.0D,16.0D);
-    public static final VoxelShape SHAPE_WEST = Block.makeCuboidShape(11.0D,0.0D,0.0D,16.0D,16.0D,16.0D);
+    public static final VoxelShape SHAPE_SOUTH = Block.box(0.0D,0.0D,0.0D,16.0D,16.0D,5.0D);
+    public static final VoxelShape SHAPE_NORTH= Block.box(0.0D,0.0D,11.0D,16.0D,16.0D,16.0D);
+    public static final VoxelShape SHAPE_EAST = Block.box(0.0D,0.0D,0.0D,5.0D,16.0D,16.0D);
+    public static final VoxelShape SHAPE_WEST = Block.box(11.0D,0.0D,0.0D,16.0D,16.0D,16.0D);
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public BlackboardBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(WATERLOGGED,false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED,false));
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(FACING, WATERLOGGED);
     }
 /*
@@ -64,27 +69,27 @@ public class BlackboardBlock extends Block implements IWaterLoggable {
 
     @Override
     public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
     @Override
-    public boolean allowsMovement(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
+    public boolean isPathfindable(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
         return false;
     }
 
     @Override
     public BlockState rotate(BlockState state, Rotation rot) {
-        return state.with(FACING, rot.rotate(state.get(FACING)));
+        return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
 
     @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
-        return state.rotate(mirrorIn.toRotation(state.get(FACING)));
+        return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
-        switch (state.get(FACING)){
+        switch (state.getValue(FACING)){
             default:
             case NORTH:
                 return SHAPE_NORTH;
@@ -98,31 +103,50 @@ public class BlackboardBlock extends Block implements IWaterLoggable {
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
                                              BlockRayTraceResult hit) {
-        TileEntity tileentity = worldIn.getTileEntity(pos);
+        TileEntity tileentity = worldIn.getBlockEntity(pos);
         if (tileentity instanceof BlackboardBlockTile) {
             BlackboardBlockTile te = (BlackboardBlockTile) tileentity;
 
-            if(worldIn.isRemote()) BlackBoardGui.open(te);
-                return ActionResultType.SUCCESS;
+            if(hit.getDirection()==state.getValue(FACING)) {
+                Item item = player.getItemInHand(handIn).getItem();
+                Vector3d v2 = hit.getLocation();
+                Vector3d v = v2.yRot((float) ((hit.getDirection().toYRot()) * Math.PI / 180f));
+                double fx = ((v.x % 1) * 16);
+                if (fx < 0) fx += 16;
+                int x = MathHelper.clamp((int) fx, -15, 15);
+
+                int y = 15 - (int) MathHelper.clamp(Math.abs((v.y % 1) * 16), 0, 15);
+                if (item == Items.QUARTZ || item.is(Tags.Items.DYES_WHITE)) {
+                    te.pixels[x][y] = 1;
+                    return ActionResultType.sidedSuccess(worldIn.isClientSide);
+                } else if (item == Items.COAL || item == Items.CHARCOAL || item.is(Tags.Items.DYES_BLACK)) {
+                    te.pixels[x][y] = 0;
+                    return ActionResultType.sidedSuccess(worldIn.isClientSide);
+                }
+            }
+
+            if(worldIn.isClientSide()) BlackBoardGui.open(te);
+
+            return ActionResultType.sidedSuccess(worldIn.isClientSide);
         }
         return ActionResultType.PASS;
     }
 
 
     @Override
-    public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
-        if (stateIn.get(WATERLOGGED)) {
-            worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
+        if (stateIn.getValue(WATERLOGGED)) {
+            worldIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
         }
         return stateIn;
     }
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        boolean flag = context.getWorld().getFluidState(context.getPos()).getFluid() == Fluids.WATER;
-        return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing().getOpposite()).with(WATERLOGGED,flag);
+        boolean flag = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;
+        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite()).setValue(WATERLOGGED,flag);
     }
 
     @Override
@@ -136,11 +160,11 @@ public class BlackboardBlock extends Block implements IWaterLoggable {
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
-        CompoundNBT compoundnbt = stack.getChildTag("BlockEntityTag");
+    public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+        CompoundNBT compoundnbt = stack.getTagElement("BlockEntityTag");
         if (compoundnbt != null) {
-            tooltip.add((new TranslationTextComponent("message.supplementaries.blackboard")).mergeStyle(TextFormatting.GRAY));
+            tooltip.add((new TranslationTextComponent("message.supplementaries.blackboard")).withStyle(TextFormatting.GRAY));
         }
     }
 
@@ -149,7 +173,7 @@ public class BlackboardBlock extends Block implements IWaterLoggable {
         if(!te.isEmpty()) {
             CompoundNBT compoundnbt = te.saveItemNBT(new CompoundNBT());
             if (!compoundnbt.isEmpty()) {
-                itemstack.setTagInfo("BlockEntityTag", compoundnbt);
+                itemstack.addTagElement("BlockEntityTag", compoundnbt);
             }
         }
         return itemstack;
@@ -158,7 +182,7 @@ public class BlackboardBlock extends Block implements IWaterLoggable {
     //normal drop
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
-        TileEntity tileentity = builder.get(LootParameters.BLOCK_ENTITY);
+        TileEntity tileentity = builder.getOptionalParameter(LootParameters.BLOCK_ENTITY);
         if (tileentity instanceof BlackboardBlockTile) {
             ItemStack itemstack = this.getBlackboardItem((BlackboardBlockTile) tileentity);
 
@@ -170,12 +194,12 @@ public class BlackboardBlock extends Block implements IWaterLoggable {
 
     //pick block. TODO: maybe replace with getpickblock
     @Override
-    public ItemStack getItem(IBlockReader worldIn, BlockPos pos, BlockState state) {
-        TileEntity te = worldIn.getTileEntity(pos);
+    public ItemStack getCloneItemStack(IBlockReader worldIn, BlockPos pos, BlockState state) {
+        TileEntity te = worldIn.getBlockEntity(pos);
         if (te instanceof BlackboardBlockTile){
             return this.getBlackboardItem((BlackboardBlockTile) te);
         }
-        return super.getItem(worldIn,pos,state);
+        return super.getCloneItemStack(worldIn,pos,state);
     }
 
 

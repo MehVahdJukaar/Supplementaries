@@ -39,15 +39,15 @@ public class UpdateServerBlackboardPacket {
 
     public static void handler(UpdateServerBlackboardPacket message, Supplier<NetworkEvent.Context> ctx) {
         // server world
-        World world = Objects.requireNonNull(ctx.get().getSender()).world;
+        World world = Objects.requireNonNull(ctx.get().getSender()).level;
         ctx.get().enqueueWork(() -> {
             if (world != null) {
-                TileEntity tileentity = world.getTileEntity(message.pos);
+                TileEntity tileentity = world.getBlockEntity(message.pos);
                 if (tileentity instanceof BlackboardBlockTile) {
                     BlackboardBlockTile board = (BlackboardBlockTile) tileentity;
-                    world.playSound(null,message.pos, SoundEvents.ENTITY_VILLAGER_WORK_CARTOGRAPHER, SoundCategory.BLOCKS,1,0.8f);
+                    world.playSound(null,message.pos, SoundEvents.VILLAGER_WORK_CARTOGRAPHER, SoundCategory.BLOCKS,1,0.8f);
                     board.pixels = message.pixels;
-                    tileentity.markDirty();
+                    tileentity.setChanged();
                 }
             }
         });

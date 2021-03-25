@@ -41,9 +41,9 @@ public class ServerEvents {
                 BlockRayTraceResult raytrace = new BlockRayTraceResult(
                         new Vector3d(pos.getX(), pos.getY(), pos.getZ()), dir, pos, false);
 
-                if (!player.isSneaking()) {
-                    ActionResultType activationResult = blockstate.onBlockActivated(world, player, hand, raytrace);
-                    if(activationResult.isSuccessOrConsume())return activationResult;
+                if (!player.isShiftKeyDown()) {
+                    ActionResultType activationResult = blockstate.use(world, player, hand, raytrace);
+                    if(activationResult.consumesAction())return activationResult;
                 }
 
                 //place block
@@ -54,7 +54,7 @@ public class ServerEvents {
                     return ((BlockHolderItem) itemOverride).tryPlace(ctx, heldItem.getBlock());
                 }
                 else if(itemOverride instanceof BlockItem) {
-                    return ((BlockItem) itemOverride).tryPlace(ctx);
+                    return ((BlockItem) itemOverride).place(ctx);
                 }
 
 
@@ -65,11 +65,11 @@ public class ServerEvents {
     public static ActionResultType placeDoubleCake(PlayerEntity player, ItemStack stack, BlockPos pos, World world ){
         BlockState state1 = world.getBlockState(pos);
         boolean d = state1.getBlock()==Registry.DIRECTIONAL_CAKE.get();
-        if((d && state1.get(DirectionalCakeBlock.BITES)==0) || state1==Blocks.CAKE.getDefaultState()) {
-            BlockState state = Registry.DOUBLE_CAKE.get().getDefaultState()
-                    .with(DoubleCakeBlock.FACING,d?state1.get(DoubleCakeBlock.FACING):Direction.WEST)
-                    .with(DoubleCakeBlock.WATERLOGGED, world.getFluidState(pos).getFluid()==Fluids.WATER);
-            if (!world.setBlockState(pos, state, 3)) {
+        if((d && state1.getValue(DirectionalCakeBlock.BITES)==0) || state1==Blocks.CAKE.defaultBlockState()) {
+            BlockState state = Registry.DOUBLE_CAKE.get().defaultBlockState()
+                    .setValue(DoubleCakeBlock.FACING,d?state1.getValue(DoubleCakeBlock.FACING):Direction.WEST)
+                    .setValue(DoubleCakeBlock.WATERLOGGED, world.getFluidState(pos).getType()==Fluids.WATER);
+            if (!world.setBlock(pos, state, 3)) {
                 return ActionResultType.FAIL;
             }
             if (player instanceof ServerPlayerEntity) {
@@ -77,10 +77,10 @@ public class ServerEvents {
             }
             SoundType soundtype = state.getSoundType(world, pos, player);
             world.playSound(player, pos, state.getSoundType(world, pos, player).getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
-            if (player == null || !player.abilities.isCreativeMode) {
+            if (player == null || !player.abilities.instabuild) {
                 stack.shrink(1);
             }
-            return ActionResultType.func_233537_a_(world.isRemote);
+            return ActionResultType.sidedSuccess(world.isClientSide);
         }
         return ActionResultType.PASS;
     }
@@ -91,12 +91,12 @@ public class ServerEvents {
         BlockState state = world.getBlockState(pos);
         Block b = state.getBlock();
         if(b instanceof ChainBlock){
-            return findConnectedBell(world,pos.up(),player,it+1);
+            return findConnectedBell(world,pos.above(),player,it+1);
         }
         else if(b instanceof BellBlock && it !=0){
-            boolean success = ((BellBlock) b).ring(world, pos, state.get(BellBlock.HORIZONTAL_FACING).rotateY());
+            boolean success = ((BellBlock) b).attemptToRing(world, pos, state.getValue(BellBlock.FACING).getClockWise());
             if (success && player != null) {
-                player.addStat(Stats.BELL_RING);
+                player.awardStat(Stats.BELL_RING);
             }
             return true;
         }
@@ -116,15 +116,15 @@ public class ServerEvents {
 
 
         //order matters here
-        if (!player.isSneaking()) {
+        if (!player.isShiftKeyDown()) {
             //directional cake conversion
-            if (ServerConfigs.cached.DIRECTIONAL_CAKE && world.getBlockState(pos) == Blocks.CAKE.getDefaultState() &&
+            if (ServerConfigs.cached.DIRECTIONAL_CAKE && world.getBlockState(pos) == Blocks.CAKE.defaultBlockState() &&
                     !(ServerConfigs.cached.DOUBLE_CAKE_PLACEMENT && i == Items.CAKE)) {
-                world.setBlockState(pos, Registry.DIRECTIONAL_CAKE.get().getDefaultState(), 4);
+                world.setBlock(pos, Registry.DIRECTIONAL_CAKE.get().defaultBlockState(), 4);
                 BlockState blockstate = world.getBlockState(pos);
                 BlockRayTraceResult raytrace = new BlockRayTraceResult(
                         new Vector3d(pos.getX(), pos.getY(), pos.getZ()), dir, pos, false);
-                event.setCancellationResult(blockstate.onBlockActivated(world, player, hand, raytrace));
+                event.setCancellationResult(blockstate.use(world, player, hand, raytrace));
                 event.setCanceled(true);
                 return;
             }
@@ -134,7 +134,7 @@ public class ServerEvents {
                 if (ServerConfigs.cached.BELL_CHAIN) {
                     if (findConnectedBell(world, pos, player, 0)) {
                         event.setCanceled(true);
-                        event.setCancellationResult(ActionResultType.func_233537_a_(world.isRemote));
+                        event.setCancellationResult(ActionResultType.sidedSuccess(world.isClientSide));
                     }
                     return;
                 }
@@ -142,12 +142,12 @@ public class ServerEvents {
         }
 
         //block overrides
-        if(player.abilities.allowEdit && i instanceof BlockItem) {
+        if(player.abilities.mayBuild && i instanceof BlockItem) {
             BlockItem bi = (BlockItem) i;
             ActionResultType result = ActionResultType.PASS;
             if (ServerConfigs.cached.WALL_LANTERN_PLACEMENT && CommonUtil.isLantern(bi)) {
                 if(ModList.get().isLoaded("torchslabmod")){
-                    double y = event.getHitVec().getHitVec().getY()%1;
+                    double y = event.getHitVec().getLocation().y()%1;
                     if(y<0.5)return;
                 }
                 result = paceBlockOverride(Registry.WALL_LANTERN_ITEM.get(), player, hand, bi, pos, dir, world);
@@ -158,13 +158,13 @@ public class ServerEvents {
             else if (CommonUtil.isCake(bi)) {
                 if(ServerConfigs.cached.DOUBLE_CAKE_PLACEMENT)
                     result = placeDoubleCake(player, stack, pos, world);
-                if(!result.isSuccessOrConsume() && ServerConfigs.cached.DIRECTIONAL_CAKE)
+                if(!result.consumesAction() && ServerConfigs.cached.DIRECTIONAL_CAKE)
                     result = paceBlockOverride(Registry.DIRECTIONAL_CAKE_ITEM.get(), player, hand, bi, pos, dir, world);
             }
 
-            if (result.isSuccessOrConsume()) {
+            if (result.consumesAction()) {
                 if (player instanceof ServerPlayerEntity) {
-                    CriteriaTriggers.RIGHT_CLICK_BLOCK_WITH_ITEM.test((ServerPlayerEntity) player, pos, stack);
+                    CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayerEntity) player, pos, stack);
                 }
                 event.setCanceled(true);
                 event.setCancellationResult(result);
@@ -179,26 +179,26 @@ public class ServerEvents {
         if(!ServerConfigs.cached.THROWABLE_BRICKS_ENABLED)return;
         PlayerEntity playerIn = event.getPlayer();
         Hand handIn = event.getHand();
-        ItemStack itemstack = playerIn.getHeldItem(handIn);
+        ItemStack itemstack = playerIn.getItemInHand(handIn);
         Item i = itemstack.getItem();
         if(CommonUtil.isBrick(i)) {
             World worldIn = event.getWorld();
-            worldIn.playSound(null, playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ(), SoundEvents.ENTITY_SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (playerIn.getRNG().nextFloat() * 0.4F + 0.8F ));
-            if (!worldIn.isRemote) {
+            worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), SoundEvents.SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (playerIn.getRandom().nextFloat() * 0.4F + 0.8F ));
+            if (!worldIn.isClientSide) {
                 ThrowableBrickEntity brickEntity = new ThrowableBrickEntity(worldIn, playerIn);
                 brickEntity.setItem(itemstack);
                 float pow = 0.7f;
-                brickEntity.func_234612_a_(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F*pow, 1.0F*pow);
-                worldIn.addEntity(brickEntity);
+                brickEntity.shootFromRotation(playerIn, playerIn.xRot, playerIn.yRot, 0.0F, 1.5F*pow, 1.0F*pow);
+                worldIn.addFreshEntity(brickEntity);
             }
 
-            if (!playerIn.abilities.isCreativeMode) {
+            if (!playerIn.abilities.instabuild) {
                 itemstack.shrink(1);
             }
 
             //playerIn.swingArm(handIn);
             event.setCanceled(true);
-            event.setCancellationResult(ActionResultType.func_233537_a_(worldIn.isRemote));
+            event.setCancellationResult(ActionResultType.sidedSuccess(worldIn.isClientSide));
         }
 
     }

@@ -2,7 +2,7 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "supplementaries:jar_tinted_recipe"
+      "supplementaries:jar_tinted"
     ]
   },
   "criteria": {
@@ -19,7 +19,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "supplementaries:jar_tinted_recipe"
+        "recipe": "supplementaries:jar_tinted"
       }
     }
   },

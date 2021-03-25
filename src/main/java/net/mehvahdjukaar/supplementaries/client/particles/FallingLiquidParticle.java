@@ -16,9 +16,9 @@ public class FallingLiquidParticle extends SpriteTexturedParticle {
     private FallingLiquidParticle(ClientWorld world, double x, double y, double z, Fluid fluid) {
         super(world, x, y, z);
         this.setSize(0.01F, 0.01F);
-        this.particleGravity = 0.06F;
+        this.gravity = 0.06F;
         this.fluid = fluid;
-        this.maxAge = (int)(64.0D / (Math.random() * 0.8D + 0.2D));
+        this.lifetime = (int)(64.0D / (Math.random() * 0.8D + 0.2D));
     }
 
     public IParticleRenderType getRenderType() {
@@ -26,37 +26,37 @@ public class FallingLiquidParticle extends SpriteTexturedParticle {
     }
 
     public void tick() {
-        this.prevPosX = this.posX;
-        this.prevPosY = this.posY;
-        this.prevPosZ = this.posZ;
+        this.xo = this.x;
+        this.yo = this.y;
+        this.zo = this.z;
         this.ageParticle();
-        if (!this.isExpired) {
-            this.motionY -= (double)this.particleGravity;
-            this.move(this.motionX, this.motionY, this.motionZ);
+        if (!this.removed) {
+            this.yd -= (double)this.gravity;
+            this.move(this.xd, this.yd, this.zd);
             this.updateMotion();
-            if (!this.isExpired) {
-                this.motionX *= 0.98F;
-                this.motionY *= 0.98F;
-                this.motionZ *= 0.98F;
-                BlockPos blockpos = new BlockPos(this.posX, this.posY, this.posZ);
-                FluidState fluidstate = this.world.getFluidState(blockpos);
-                if (fluidstate.getFluid() == this.fluid && this.posY < (double)((float)blockpos.getY() + fluidstate.getActualHeight(this.world, blockpos))) {
-                    this.setExpired();
+            if (!this.removed) {
+                this.xd *= 0.98F;
+                this.yd *= 0.98F;
+                this.zd *= 0.98F;
+                BlockPos blockpos = new BlockPos(this.x, this.y, this.z);
+                FluidState fluidstate = this.level.getFluidState(blockpos);
+                if (fluidstate.getType() == this.fluid && this.y < (double)((float)blockpos.getY() + fluidstate.getHeight(this.level, blockpos))) {
+                    this.remove();
                 }
             }
         }
     }
 
     protected void ageParticle() {
-        if (this.maxAge-- <= 0) {
-            this.setExpired();
+        if (this.lifetime-- <= 0) {
+            this.remove();
         }
     }
 
     protected void updateMotion() {
         if (this.onGround) {
-            this.setExpired();
-            this.world.addParticle(Registry.SPLASHING_LIQUID.get(), this.posX, this.posY, this.posZ, this.particleRed, this.particleGreen, this.particleBlue);
+            this.remove();
+            this.level.addParticle(Registry.SPLASHING_LIQUID.get(), this.x, this.y, this.z, this.rCol, this.gCol, this.bCol);
         }
     }
 
@@ -70,10 +70,10 @@ public class FallingLiquidParticle extends SpriteTexturedParticle {
         }
 
         @Override
-        public Particle makeParticle(BasicParticleType typeIn, ClientWorld worldIn, double x, double y, double z, double r, double g, double b) {
+        public Particle createParticle(BasicParticleType typeIn, ClientWorld worldIn, double x, double y, double z, double r, double g, double b) {
             FallingLiquidParticle fallingparticle = new FallingLiquidParticle(worldIn, x, y, z, Fluids.WATER);
             fallingparticle.setColor((float)r, (float)g, (float)b);
-            fallingparticle.selectSpriteRandomly(this.spriteSet);
+            fallingparticle.pickSprite(this.spriteSet);
             return fallingparticle;
         }
     }

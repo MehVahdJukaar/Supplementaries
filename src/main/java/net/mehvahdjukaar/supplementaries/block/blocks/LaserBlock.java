@@ -22,32 +22,34 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class LaserBlock extends Block {
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     public static final IntegerProperty RECEIVING = BlockProperties.RECEIVING;
     public LaserBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(RECEIVING, 0).with(POWERED, false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(RECEIVING, 0).setValue(POWERED, false));
     }
 
     @Override
     public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
-        return state.get(POWERED) ? 12 : 0;
+        return state.getValue(POWERED) ? 12 : 0;
     }
 
     @Override
-    public boolean hasComparatorInputOverride(BlockState state) {
+    public boolean hasAnalogOutputSignal(BlockState state) {
         return true;
     }
 
     @Override
-    public int getComparatorInputOverride(BlockState blockState, World world, BlockPos pos) {
-        return blockState.get(RECEIVING);
+    public int getAnalogOutputSignal(BlockState blockState, World world, BlockPos pos) {
+        return blockState.getValue(RECEIVING);
     }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+    public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         this.updatePower(state, worldIn, pos);
     }
 
@@ -58,32 +60,32 @@ public class LaserBlock extends Block {
     }
 
     public void updatePower(BlockState state, World world, BlockPos pos) {
-        if (!world.isRemote()) {
-            boolean powered = world.getRedstonePowerFromNeighbors(pos) > 0;
-            if (powered != state.get(POWERED))
-                world.setBlockState(pos, state.with(POWERED, powered), 2);
-            TileEntity tileentity = world.getTileEntity(pos);
+        if (!world.isClientSide()) {
+            boolean powered = world.getBestNeighborSignal(pos) > 0;
+            if (powered != state.getValue(POWERED))
+                world.setBlock(pos, state.setValue(POWERED, powered), 2);
+            TileEntity tileentity = world.getBlockEntity(pos);
             if (tileentity instanceof LaserBlockTile)
                 ((LaserBlockTile) tileentity).updateReceivingLaser();
         }
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(FACING, POWERED, RECEIVING);
     }
 
     public BlockState rotate(BlockState state, Rotation rot) {
-        return state.with(FACING, rot.rotate(state.get(FACING)));
+        return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
 
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
-        return state.rotate(mirrorIn.toRotation(state.get(FACING)));
+        return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.getDefaultState().with(FACING, context.getNearestLookingDirection().getOpposite());
+        return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
     }
 
     @Override
@@ -97,12 +99,12 @@ public class LaserBlock extends Block {
     }
 
     @Override
-    public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
-        super.onBlockHarvested(worldIn, pos, state, player);
+    public void playerWillDestroy(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
+        super.playerWillDestroy(worldIn, pos, state, player);
     }
 
     @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-        super.onReplaced(state, worldIn, pos, newState, isMoving);
+    public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+        super.onRemove(state, worldIn, pos, newState, isMoving);
     }
 }

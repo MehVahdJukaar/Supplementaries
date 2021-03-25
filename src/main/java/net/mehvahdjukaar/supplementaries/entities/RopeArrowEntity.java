@@ -49,13 +49,13 @@ public class RopeArrowEntity extends AbstractArrowEntity {
     }
 
     @Override
-    public IPacket<?> createSpawnPacket() {
+    public IPacket<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @Override
-    public void writeAdditional(CompoundNBT compound) {
-        super.writeAdditional(compound);
+    public void addAdditionalSaveData(CompoundNBT compound) {
+        super.addAdditionalSaveData(compound);
         compound.putInt("Ropes",this.charges);
         if(this.prevPlacedPos!=null) {
             compound.put("PrevPlacedPos",NBTUtil.writeBlockPos(this.prevPlacedPos));
@@ -63,8 +63,8 @@ public class RopeArrowEntity extends AbstractArrowEntity {
     }
 
     @Override
-    public void readAdditional(CompoundNBT compound) {
-        super.readAdditional(compound);
+    public void readAdditionalSaveData(CompoundNBT compound) {
+        super.readAdditionalSaveData(compound);
         this.charges = compound.getInt("Ropes");
         if(compound.contains("PrevPlacedPos")) {
             this.prevPlacedPos = NBTUtil.readBlockPos(compound.getCompound("PrevPlacedPos"));
@@ -72,10 +72,10 @@ public class RopeArrowEntity extends AbstractArrowEntity {
     }
 
     @Override
-    protected ItemStack getArrowStack() {
+    protected ItemStack getPickupItem() {
         if(this.charges!=0) {
             ItemStack stack = new ItemStack(Registry.ROPE_ARROW_ITEM.get());
-            stack.setDamage(stack.getMaxDamage() - this.charges);
+            stack.setDamageValue(stack.getMaxDamage() - this.charges);
             return stack;
         }
         return new ItemStack(Items.ARROW);
@@ -84,35 +84,35 @@ public class RopeArrowEntity extends AbstractArrowEntity {
     //TODO: add sound
     //on block hit.
     @Override
-    protected void func_230299_a_(BlockRayTraceResult rayTraceResult) {
-        super.func_230299_a_(rayTraceResult);
+    protected void onHitBlock(BlockRayTraceResult rayTraceResult) {
+        super.onHitBlock(rayTraceResult);
 
         Block ropeBlock = ServerConfigs.cached.ROPE_ARROW_BLOCK;
 
         if (this.charges<=0)return;
-        if (!this.world.isRemote) {
+        if (!this.level.isClientSide) {
             this.prevPlacedPos = null;
-            Entity entity = this.func_234616_v_();
+            Entity entity = this.getOwner();
             PlayerEntity player = null;
-            if (!(entity instanceof MobEntity) || this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING) || net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.world, this.getEntity())) {
-                if(entity instanceof PlayerEntity && ((PlayerEntity) entity).isAllowEdit()){
+            if (!(entity instanceof MobEntity) || this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) || net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level, this.getEntity())) {
+                if(entity instanceof PlayerEntity && ((PlayerEntity) entity).mayBuild()){
                     //TODO: i might just give null here since player isn't actually placing these blocks
                     player = (PlayerEntity) entity;
                 }
                 //Ugly but works
                 //try finding existing ropes
-                BlockPos hitPos = rayTraceResult.getPos();
-                Block hitBlock = this.world.getBlockState(hitPos).getBlock();
+                BlockPos hitPos = rayTraceResult.getBlockPos();
+                Block hitBlock = this.level.getBlockState(hitPos).getBlock();
                 //try adding rope down
-                if(hitBlock == ropeBlock && RopeBlock.addRope(hitPos, world, player, Hand.MAIN_HAND, ropeBlock)){
+                if(hitBlock == ropeBlock && RopeBlock.addRope(hitPos, level, player, Hand.MAIN_HAND, ropeBlock)){
                     this.prevPlacedPos = hitPos;
                     this.removeCharge();
                     return;
                 }
-                hitPos = hitPos.offset(rayTraceResult.getFace());
-                hitBlock = this.world.getBlockState(hitPos).getBlock();
+                hitPos = hitPos.relative(rayTraceResult.getDirection());
+                hitBlock = this.level.getBlockState(hitPos).getBlock();
                 //rope to the side
-                if(hitBlock == ropeBlock && RopeBlock.addRope(hitPos, world, player, Hand.MAIN_HAND, ropeBlock)){
+                if(hitBlock == ropeBlock && RopeBlock.addRope(hitPos, level, player, Hand.MAIN_HAND, ropeBlock)){
                     this.prevPlacedPos = hitPos;
                     this.removeCharge();
                     return;
@@ -124,8 +124,8 @@ public class RopeArrowEntity extends AbstractArrowEntity {
                 if (context.canPlace()) {
                     BlockState state =  ropeBlock.getStateForPlacement(context);
                     if(state!=null && CommonUtil.canPlace(context, state)) {
-                        this.world.setBlockState(context.getPos(),state, 11);
-                        this.prevPlacedPos = context.getPos();
+                        this.level.setBlock(context.getClickedPos(),state, 11);
+                        this.prevPlacedPos = context.getClickedPos();
                         this.removeCharge();
                     }
                 }
@@ -135,22 +135,22 @@ public class RopeArrowEntity extends AbstractArrowEntity {
 
     private void removeCharge(){
         this.charges = Math.max(0,this.charges -1);
-        this.world.playSound(null, this.prevPlacedPos,SoundEvents.ENTITY_LEASH_KNOT_PLACE,SoundCategory.BLOCKS,0.2f,1.7f);
+        this.level.playSound(null, this.prevPlacedPos,SoundEvents.LEASH_KNOT_PLACE,SoundCategory.BLOCKS,0.2f,1.7f);
     }
 
     private void continueUnwindingRope(){
         Block ropeBlock = ServerConfigs.cached.ROPE_ARROW_BLOCK;
         //no need to do other checks since this only happens after a onBlockCollision()
         PlayerEntity player = null;
-        Entity entity = this.func_234616_v_();
-        if(entity instanceof PlayerEntity && ((PlayerEntity) entity).isAllowEdit()){
+        Entity entity = this.getOwner();
+        if(entity instanceof PlayerEntity && ((PlayerEntity) entity).mayBuild()){
             player = (PlayerEntity) entity;
         }
         BlockPos hitPos = this.prevPlacedPos;
-        Block hitBlock = this.world.getBlockState(hitPos).getBlock();
+        Block hitBlock = this.level.getBlockState(hitPos).getBlock();
         //try adding rope down
-        if(hitBlock == ropeBlock && RopeBlock.addRope(hitPos.down(), world, player, Hand.MAIN_HAND, ropeBlock)){
-            this.prevPlacedPos = hitPos.down();
+        if(hitBlock == ropeBlock && RopeBlock.addRope(hitPos.below(), level, player, Hand.MAIN_HAND, ropeBlock)){
+            this.prevPlacedPos = hitPos.below();
             this.removeCharge();
         }
         else {
@@ -161,7 +161,7 @@ public class RopeArrowEntity extends AbstractArrowEntity {
     @Override
     public void tick() {
         super.tick();
-        if (!this.world.isRemote) {
+        if (!this.level.isClientSide) {
             if (this.charges != 0 && this.prevPlacedPos != null) {
                 this.continueUnwindingRope();
             }

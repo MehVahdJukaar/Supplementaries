@@ -11,7 +11,7 @@ import net.minecraft.entity.player.PlayerEntity;
 public class CustomConfiguredScreen extends ConfigScreen {
 
     public static void openScreen(Minecraft mc){
-        mc.displayGuiScreen(new CustomConfiguredScreen(mc.currentScreen));
+        mc.setScreen(new CustomConfiguredScreen(mc.screen));
     }
 
     public CustomConfiguredScreen(Screen parent) {
@@ -24,8 +24,8 @@ public class CustomConfiguredScreen extends ConfigScreen {
     }
 
     @Override
-    public void onClose() {
-        super.onClose();
+    public void removed() {
+        super.removed();
         PlayerEntity player = Minecraft.getInstance().player;
 
 

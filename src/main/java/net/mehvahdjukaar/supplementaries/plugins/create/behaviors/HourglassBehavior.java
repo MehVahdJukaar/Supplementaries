@@ -1,8 +1,7 @@
 package net.mehvahdjukaar.supplementaries.plugins.create.behaviors;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
-import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+
+
 import net.mehvahdjukaar.supplementaries.block.blocks.HourGlassBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.HourGlassBlockTile;
 import net.minecraft.block.BlockState;
@@ -22,6 +21,11 @@ import java.util.Map;
 import java.util.function.UnaryOperator;
 
 import static net.mehvahdjukaar.supplementaries.client.renderers.tiles.HourGlassBlockTileRenderer.renderSand;
+/*
+
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
+import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 
 public class HourglassBehavior extends MovementBehaviour {
 
@@ -41,11 +45,11 @@ public class HourglassBehavior extends MovementBehaviour {
     public void tick(MovementContext context) {
         UnaryOperator<Vector3d> rot = context.rotation;
         BlockState state = context.state;
-        Direction dir = state.get(HourGlassBlock.FACING);
-        Vector3i in = dir.getDirectionVec();
+        Direction dir = state.getValue(HourGlassBlock.FACING);
+        Vector3i in = dir.getNormal();
         Vector3d v = new Vector3d(in.getX(), in.getY(), in.getZ());
         Vector3d v2 = rot.apply(v);
-        double dot = v2.dotProduct(new Vector3d(0,1,0));
+        double dot = v2.dot(new Vector3d(0,1,0));
 
         CompoundNBT com = context.tileData;
 
@@ -90,13 +94,13 @@ public class HourglassBehavior extends MovementBehaviour {
         }
         BlockPos pos = new BlockPos(v);
 
-        int light = WorldRenderer.getCombinedLight(context.world, pos);
+        int light = WorldRenderer.getLightColor(context.world, pos);
 
         TextureAtlasSprite sprite = sandType.getSprite(Items.REDSTONE);
 
         float h = MathHelper.lerp(partialTicks, prevProgress, progress);
-        Direction dir = context.state.get(HourGlassBlock.FACING);
+        Direction dir = context.state.getValue(HourGlassBlock.FACING);
         renderSand(ms,buffer,light,0,sprite,h,dir);
     }
 
-}
+}*/

@@ -46,7 +46,7 @@ public class PistonLauncherArmBlockTile extends TileEntity implements ITickableT
         this();
         this.setParameters(extending,dir);
         if(true)return;
-        Vector3i v = dir.getDirectionVec();
+        Vector3i v = dir.getNormal();
         this.dx = v.getX();
         this.dy = v.getY();
         this.dz = v.getZ();
@@ -76,28 +76,28 @@ public class PistonLauncherArmBlockTile extends TileEntity implements ITickableT
             this.offset = 0;
             this.prevOffset = 0;
         }
-        Vector3i v = dir.getDirectionVec();
+        Vector3i v = dir.getNormal();
         this.dx = v.getX();
         this.dy = v.getY();
         this.dz = v.getZ();
     }
 
     @Override
-    public double getMaxRenderDistanceSquared() {
+    public double getViewDistance() {
         return 96;
     }
 
     //TODO: rewrite some of this old code
     public AxisAlignedBB getAdjustedBoundingBox() {
-        return new AxisAlignedBB(pos).offset(this.dx * this.offset, this.dy * this.offset, this.dz * this.offset);
+        return new AxisAlignedBB(worldPosition).move(this.dx * this.offset, this.dy * this.offset, this.dz * this.offset);
     }
 
     public void tick() {
-        if (this.world.isRemote()) {
+        if (this.level.isClientSide()) {
             if (this.getExtending()) {
-                double x = this.pos.getX() + 0.5 + this.dx * this.offset;
-                double y = this.pos.getY() + this.dy * this.offset;
-                double z = this.pos.getZ() + 0.5 + this.dz * this.offset;
+                double x = this.worldPosition.getX() + 0.5 + this.dx * this.offset;
+                double y = this.worldPosition.getY() + this.dy * this.offset;
+                double z = this.worldPosition.getZ() + 0.5 + this.dz * this.offset;
                 Random random = this.rand;
                 for (int l = 0; l < 2; ++l) {
                     double d0 = (x + random.nextFloat() - 0.5D);
@@ -107,7 +107,7 @@ public class PistonLauncherArmBlockTile extends TileEntity implements ITickableT
                     double d4 = (random.nextFloat() - 0.5D) * 0.05D;
                     double d5 = (random.nextFloat() - 0.5D) * 0.05D;
                     // world.addParticle(ParticleTypes.POOF, d0, d1, d2, d3, d4, d5);
-                    this.world.addParticle(ParticleTypes.CLOUD, d0, d1, d2, d3, d4, d5);
+                    this.level.addParticle(ParticleTypes.CLOUD, d0, d1, d2, d3, d4, d5);
                     //TODO:add swirl particle
                     //this.world.addParticle(ParticleTypes.ENTITY_EFFECT, d0, d1, d2, d3, d4, d5);
                 }
@@ -115,18 +115,18 @@ public class PistonLauncherArmBlockTile extends TileEntity implements ITickableT
         }
         if (this.age > 1) {
             this.prevOffset = this.offset;
-            if (!this.world.isRemote()) {
+            if (!this.level.isClientSide()) {
                 if (this.getExtending()) {
-                    BlockState _bs = Registry.PISTON_LAUNCHER_HEAD.get().getDefaultState();
-                    world.setBlockState(pos, _bs.with(PistonLauncherHeadBlock.FACING, this.getDirection()), 3);
+                    BlockState _bs = Registry.PISTON_LAUNCHER_HEAD.get().defaultBlockState();
+                    level.setBlock(worldPosition, _bs.setValue(PistonLauncherHeadBlock.FACING, this.getDirection()), 3);
                 } else {
-                    BlockState _bs = Registry.PISTON_LAUNCHER.get().getDefaultState();
-                    BlockPos _bp = pos.offset(this.getDirection().getOpposite());
-                    BlockState oldstate = world.getBlockState(_bp);
-                    if (_bs.with(PistonLauncherBlock.FACING, this.getDirection()).with(PistonLauncherBlock.EXTENDED, true) == oldstate) {
-                        world.setBlockState(_bp, oldstate.with(PistonLauncherBlock.EXTENDED, false), 3);
+                    BlockState _bs = Registry.PISTON_LAUNCHER.get().defaultBlockState();
+                    BlockPos _bp = worldPosition.relative(this.getDirection().getOpposite());
+                    BlockState oldstate = level.getBlockState(_bp);
+                    if (_bs.setValue(PistonLauncherBlock.FACING, this.getDirection()).setValue(PistonLauncherBlock.EXTENDED, true) == oldstate) {
+                        level.setBlock(_bp, oldstate.setValue(PistonLauncherBlock.EXTENDED, false), 3);
                     }
-                    world.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+                    level.setBlock(worldPosition, Blocks.AIR.defaultBlockState(), 3);
                 }
             }
         } else {
@@ -135,11 +135,11 @@ public class PistonLauncherArmBlockTile extends TileEntity implements ITickableT
             this.offset += this.increment;
             if (this.getExtending()) {
                 AxisAlignedBB p_bb = this.getAdjustedBoundingBox();
-                List<Entity> list1 = this.world.getEntitiesWithinAABBExcludingEntity(null, p_bb);
+                List<Entity> list1 = this.level.getEntities(null, p_bb);
                 if (!list1.isEmpty()) {
                     for (Entity entity : list1) {
-                        if (entity.getPushReaction() != PushReaction.IGNORE) {
-                            Vector3d vec3d = entity.getMotion();
+                        if (entity.getPistonPushReaction() != PushReaction.IGNORE) {
+                            Vector3d vec3d = entity.getDeltaMovement();
                             double d1 = vec3d.x;
                             double d2 = vec3d.y;
                             double d3 = vec3d.z;
@@ -153,8 +153,8 @@ public class PistonLauncherArmBlockTile extends TileEntity implements ITickableT
                             if (dz != 0) {
                                 d3 = this.dz * speed;
                             }
-                            entity.setMotion(d1, d2, d3);
-                            entity.velocityChanged = true;
+                            entity.setDeltaMovement(d1, d2, d3);
+                            entity.hurtMarked = true;
                             moveCollidedEntity(entity, p_bb);
                         }
                     }
@@ -195,16 +195,16 @@ public class PistonLauncherArmBlockTile extends TileEntity implements ITickableT
     }
 
     public Direction getDirection() {
-        return this.getBlockState().get(PistonLauncherArmBlock.FACING);
+        return this.getBlockState().getValue(PistonLauncherArmBlock.FACING);
     }
 
     public boolean getExtending() {
-        return this.getBlockState().get(PistonLauncherArmBlock.EXTENDING);
+        return this.getBlockState().getValue(PistonLauncherArmBlock.EXTENDING);
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
-        super.read(state, compound);
+    public void load(BlockState state, CompoundNBT compound) {
+        super.load(state, compound);
         this.age = compound.getInt("Age");
         this.offset = compound.getDouble("Offset");
         this.prevOffset = compound.getDouble("PrevOffset");
@@ -215,8 +215,8 @@ public class PistonLauncherArmBlockTile extends TileEntity implements ITickableT
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
+    public CompoundNBT save(CompoundNBT compound) {
+        super.save(compound);
         compound.putInt("Age", this.age);
         compound.putDouble("Offset", this.offset);
         compound.putDouble("PrevOffset", this.prevOffset);
@@ -229,16 +229,16 @@ public class PistonLauncherArmBlockTile extends TileEntity implements ITickableT
 
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.pos, 0, this.getUpdateTag());
+        return new SUpdateTileEntityPacket(this.worldPosition, 0, this.getUpdateTag());
     }
 
     @Override
     public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundNBT());
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.read(this.getBlockState(), pkt.getNbtCompound());
+        this.load(this.getBlockState(), pkt.getTag());
     }
 }

@@ -22,16 +22,16 @@ public class CageBlockTileRenderer<T extends TileEntity & IMobHolder> extends Ti
     public void renderMob(MobHolder mobHolder, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, Direction dir){
         Entity mob = mobHolder.mob;
         if(mob!=null) {
-            matrixStackIn.push();
+            matrixStackIn.pushPose();
             float y = mobHolder.yOffset + MathHelper.lerp(partialTicks,mobHolder.prevJumpY,mobHolder.jumpY);
             float s = mobHolder.scale;
 
             matrixStackIn.translate(0.5, y,0.5);
-            matrixStackIn.rotate(dir.getRotation());
-            matrixStackIn.rotate(Const.XN90);
+            matrixStackIn.mulPose(dir.getRotation());
+            matrixStackIn.mulPose(Const.XN90);
             matrixStackIn.scale(s,s,s);
-            Minecraft.getInstance().getRenderManager().renderEntityStatic(mob, 0.0D, 0.0D, 0.0D, 0.0F, partialTicks, matrixStackIn, bufferIn, combinedLightIn);
-            matrixStackIn.pop();
+            Minecraft.getInstance().getEntityRenderDispatcher().render(mob, 0.0D, 0.0D, 0.0D, 0.0F, partialTicks, matrixStackIn, bufferIn, combinedLightIn);
+            matrixStackIn.popPose();
         }
     }
 

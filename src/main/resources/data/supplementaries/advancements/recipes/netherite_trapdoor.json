@@ -11,7 +11,7 @@
         "parent": "minecraft:recipes/root",
         "rewards": {
           "recipes": [
-            "supplementaries:netherite_trapdoor_recipe"
+            "supplementaries:netherite_trapdoor"
           ]
         },
         "criteria": {
@@ -28,7 +28,7 @@
           "has_the_recipe": {
             "trigger": "minecraft:recipe_unlocked",
             "conditions": {
-              "recipe": "supplementaries:netherite_trapdoor_recipe"
+              "recipe": "supplementaries:netherite_trapdoor"
             }
           }
         },

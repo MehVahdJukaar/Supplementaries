@@ -29,73 +29,75 @@ import net.minecraft.world.World;
 
 
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class TurnTableBlock extends Block {
 
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
-    public static final IntegerProperty POWER = BlockStateProperties.POWER_0_15;
+    public static final IntegerProperty POWER = BlockStateProperties.POWER;
     public static final BooleanProperty INVERTED = BlockStateProperties.INVERTED;
     public TurnTableBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.UP).with(POWER, 0).with(INVERTED, false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.UP).setValue(POWER, 0).setValue(INVERTED, false));
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(FACING, POWER, INVERTED);
     }
 
     public BlockState rotate(BlockState state, Rotation rot) {
-        return state.with(FACING, rot.rotate(state.get(FACING)));
+        return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
 
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
-        return state.rotate(mirrorIn.toRotation(state.get(FACING)));
+        return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
 
-        return this.getDefaultState().with(FACING, context.getNearestLookingDirection().getOpposite());
+        return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
     }
 
     @Override
-    public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        if(this.updatePower(state, world, pos) && world.getBlockState(pos).get(POWER)!=0){
+    public void setPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+        if(this.updatePower(state, world, pos) && world.getBlockState(pos).getValue(POWER)!=0){
             this.tryRotate(world, pos);
         }
         // if power changed and is powered or facing block changed
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
                                              BlockRayTraceResult hit) {
-        Direction face = hit.getFace();
-        Direction mydir = state.get(FACING);
+        Direction face = hit.getDirection();
+        Direction mydir = state.getValue(FACING);
         if (face != mydir && face != mydir.getOpposite()) {
-            if (!player.abilities.allowEdit) {
+            if (!player.abilities.mayBuild) {
                 return ActionResultType.PASS;
             } else {
-                state = state.func_235896_a_(INVERTED);
-                float f = state.get(INVERTED) ? 0.55F : 0.5F;
-                worldIn.playSound(player, pos, SoundEvents.BLOCK_COMPARATOR_CLICK, SoundCategory.BLOCKS, 0.3F, f);
-                worldIn.setBlockState(pos, state, 2 | 4);
-                return ActionResultType.func_233537_a_(worldIn.isRemote);
+                state = state.cycle(INVERTED);
+                float f = state.getValue(INVERTED) ? 0.55F : 0.5F;
+                worldIn.playSound(player, pos, SoundEvents.COMPARATOR_CLICK, SoundCategory.BLOCKS, 0.3F, f);
+                worldIn.setBlock(pos, state, 2 | 4);
+                return ActionResultType.sidedSuccess(worldIn.isClientSide);
             }
         }
         return ActionResultType.PASS;
     }
 
     public boolean updatePower(BlockState state, World world, BlockPos pos) {
-        int blockpower = world.getRedstonePowerFromNeighbors(pos);
-        int currentpower = state.get(POWER);
+        int blockpower = world.getBestNeighborSignal(pos);
+        int currentpower = state.getValue(POWER);
         // on-off
         if (blockpower != currentpower) {
-            TileEntity te = world.getTileEntity(pos);
+            TileEntity te = world.getBlockEntity(pos);
             if(te instanceof TurnTableBlockTile) {
                 TurnTableBlockTile table = ((TurnTableBlockTile) te);
 
             }
-            world.setBlockState(pos, state.with(POWER, blockpower), 2 | 4);
+            world.setBlock(pos, state.setValue(POWER, blockpower), 2 | 4);
             return true;
             //returns if state changed
         }
@@ -103,7 +105,7 @@ public class TurnTableBlock extends Block {
     }
 
     private void tryRotate(World world, BlockPos pos) {
-        TileEntity te = world.getTileEntity(pos);
+        TileEntity te = world.getBlockEntity(pos);
         if (te instanceof TurnTableBlockTile) {
             ((TurnTableBlockTile) te).tryRotate();
         }
@@ -114,7 +116,7 @@ public class TurnTableBlock extends Block {
         super.neighborChanged(state, world, pos, neighborBlock, fromPos, moving);
         boolean powerchanged = this.updatePower(state, world, pos);
         // if power changed and is powered or facing block changed
-        if (world.getBlockState(pos).get(POWER)!=0 && (powerchanged || fromPos.equals(pos.offset(state.get(FACING)))))
+        if (world.getBlockState(pos).getValue(POWER)!=0 && (powerchanged || fromPos.equals(pos.relative(state.getValue(FACING)))))
             this.tryRotate(world, pos);
     }
 
@@ -133,23 +135,23 @@ public class TurnTableBlock extends Block {
     }
 
     public static int getPeriod(BlockState state){
-        return (60-state.get(POWER)*4)+5;
+        return (60-state.getValue(POWER)*4)+5;
     }
 
     // rotate entities
     @Override
-    public void onEntityWalk(World world, BlockPos pos, Entity e) {
-        super.onEntityWalk(world, pos, e);
+    public void stepOn(World world, BlockPos pos, Entity e) {
+        super.stepOn(world, pos, e);
         if(!ServerConfigs.cached.TURN_TABLE_ROTATE_ENTITIES)return;
         if(!e.isOnGround())return;
         BlockState state = world.getBlockState(pos);
-        if (state.get(POWER)!=0 && state.get(FACING) == Direction.UP) {
+        if (state.getValue(POWER)!=0 && state.getValue(FACING) == Direction.UP) {
             float period = getPeriod(state)+1;
             float ANGLE_INCREMENT = 90f / period;
 
-            float increment = state.get(INVERTED) ? ANGLE_INCREMENT : -1 * ANGLE_INCREMENT;
+            float increment = state.getValue(INVERTED) ? ANGLE_INCREMENT : -1 * ANGLE_INCREMENT;
             Vector3d origin = new Vector3d(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
-            Vector3d oldpos = e.getPositionVec();
+            Vector3d oldpos = e.position();
             Vector3d oldoffset = oldpos.subtract(origin);
             Vector3d newoffset = rotateY(oldoffset, increment);
             Vector3d posdiff = origin.add(newoffset).subtract(oldpos);
@@ -162,15 +164,15 @@ public class TurnTableBlock extends Block {
             //TODO: use setMotion
             if ((e instanceof LivingEntity)) {
                 e.setOnGround(false); //remove this?
-                float diff = e.getRotationYawHead() - increment;
-                e.setRenderYawOffset(diff);
-                e.setRotationYawHead(diff);
-                ((LivingEntity) e).prevRotationYawHead=((LivingEntity) e).rotationYawHead;
-                ((LivingEntity) e).setIdleTime(20);
+                float diff = e.getYHeadRot() - increment;
+                e.setYBodyRot(diff);
+                e.setYHeadRot(diff);
+                ((LivingEntity) e).yHeadRotO=((LivingEntity) e).yHeadRot;
+                ((LivingEntity) e).setNoActionTime(20);
                 //e.velocityChanged = true;
 
-                if(e instanceof CatEntity &&((TameableEntity) e).isSitting()&&!world.isRemote){
-                    TileEntity te = world.getTileEntity(pos);
+                if(e instanceof CatEntity &&((TameableEntity) e).isOrderedToSit()&&!world.isClientSide){
+                    TileEntity te = world.getBlockEntity(pos);
                     if(te instanceof TurnTableBlockTile) {
                         TurnTableBlockTile table = ((TurnTableBlockTile) te);
                         if(table.cat==0) {
@@ -183,8 +185,8 @@ public class TurnTableBlock extends Block {
             }
             // e.prevRotationYaw = e.rotationYaw;
 
-            e.rotationYaw -= increment;
-            e.prevRotationYaw = e.rotationYaw;
+            e.yRot -= increment;
+            e.yRotO = e.yRot;
 
 
 

@@ -58,45 +58,45 @@ public class Dispenser {
             for(Item item : ForgeRegistries.ITEMS) {
                 if (item instanceof JarItem || item instanceof EmptyJarItem || item instanceof SackItem ||
                         (item instanceof BlockItem && ((BlockItem) item).getBlock() instanceof FireflyJarBlock)) {
-                    DispenserBlock.registerDispenseBehavior(item, new PlaceBlockDispenseBehavior());
+                    DispenserBlock.registerBehavior(item, new PlaceBlockDispenseBehavior());
                 }
                 else if(item instanceof FishBucketItem || item==Items.COOKIE || item==Items.WATER_BUCKET
                         || SoftFluidList.ITEM_MAP.containsKey(item))
-                    DispenserBlock.registerDispenseBehavior(item, new FillJarDispenserBehavior());
+                    DispenserBlock.registerBehavior(item, new FillJarDispenserBehavior());
 
             }
-            DispenserBlock.registerDispenseBehavior(Items.BUCKET, new BucketJarDispenserBehavior());
-            DispenserBlock.registerDispenseBehavior(Items.BOWL, new BucketJarDispenserBehavior());
-            DispenserBlock.registerDispenseBehavior(Items.GLASS_BOTTLE, new BucketJarDispenserBehavior());
+            DispenserBlock.registerBehavior(Items.BUCKET, new BucketJarDispenserBehavior());
+            DispenserBlock.registerBehavior(Items.BOWL, new BucketJarDispenserBehavior());
+            DispenserBlock.registerBehavior(Items.GLASS_BOTTLE, new BucketJarDispenserBehavior());
 
             for(Item i : CapturedMobs.VALID_BUCKETS.keySet()){
-                DispenserBlock.registerDispenseBehavior(i, new FishBucketJarDispenserBehavior());
+                DispenserBlock.registerBehavior(i, new FishBucketJarDispenserBehavior());
             }
         }
 
-        DispenserBlock.registerDispenseBehavior(Items.FLINT_AND_STEEL, new FlintAndSteelDispenserBehavior());
-        DispenserBlock.registerDispenseBehavior(Items.LINGERING_POTION, new BambooSpikesDispenserBehavior());
+        DispenserBlock.registerBehavior(Items.FLINT_AND_STEEL, new FlintAndSteelDispenserBehavior());
+        DispenserBlock.registerBehavior(Items.LINGERING_POTION, new BambooSpikesDispenserBehavior());
 
         if(ServerConfigs.cached.THROWABLE_BRICKS_ENABLED){
-            DispenserBlock.registerDispenseBehavior(Items.NETHER_BRICK, new ThrowableBricksDispenserBehavior(ModTags.BRICKS));
-            DispenserBlock.registerDispenseBehavior(Items.BRICK, new ThrowableBricksDispenserBehavior(ModTags.BRICKS));
+            DispenserBlock.registerBehavior(Items.NETHER_BRICK, new ThrowableBricksDispenserBehavior(ModTags.BRICKS));
+            DispenserBlock.registerBehavior(Items.BRICK, new ThrowableBricksDispenserBehavior(ModTags.BRICKS));
         }
 
         //firefly
         if(RegistryConfigs.reg.FIREFLY_ENABLED.get()) {
-            DispenserBlock.registerDispenseBehavior(Registry.FIREFLY_SPAWN_EGG_ITEM.get(), spawneggBehavior);
+            DispenserBlock.registerBehavior(Registry.FIREFLY_SPAWN_EGG_ITEM.get(), spawneggBehavior);
         }
         if(RegistryConfigs.reg.BOMB_ENABLED.get()){
-            //DispenserBlock.registerDispenseBehavior(Registry.BOMB_ITEM.get(), new BombsDispenserBehavior());
+            DispenserBlock.registerBehavior(Registry.BOMB_ITEM.get(), new BombsDispenserBehavior());
         }
 
     }
 
     private static final DefaultDispenseItemBehavior spawneggBehavior = new DefaultDispenseItemBehavior() {
-        public ItemStack dispenseStack(IBlockSource source, ItemStack stack) {
-            Direction direction = source.getBlockState().get(DispenserBlock.FACING);
+        public ItemStack execute(IBlockSource source, ItemStack stack) {
+            Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
             EntityType<?> entitytype = ((SpawnEggItem)stack.getItem()).getType(stack.getTag());
-            entitytype.spawn(source.getWorld(), stack, null, source.getBlockPos().offset(direction), SpawnReason.DISPENSER, direction != Direction.UP, false);
+            entitytype.spawn(source.getLevel(), stack, null, source.getPos().relative(direction), SpawnReason.DISPENSER, direction != Direction.UP, false);
             stack.shrink(1);
             return stack;
         }
@@ -105,7 +105,7 @@ public class Dispenser {
 
     private static Map<Item, IDispenseItemBehavior> getVanillaDispenserBehaviors(){
         try {
-            Field f = ObfuscationReflectionHelper.findField(DispenserBlock.class,"field_149943_a");
+            Field f = ObfuscationReflectionHelper.findField(DispenserBlock.class,"DISPENSER_REGISTRY");
             f.setAccessible(true);
             Map<Item,IDispenseItemBehavior> m = ((Map<Item, IDispenseItemBehavior>) f.get(null));
             HashMap<Item, IDispenseItemBehavior> map = new HashMap<>();
@@ -122,20 +122,20 @@ public class Dispenser {
     //add item to dispenser and merges it if there's one already
     private static boolean MergeDispenserItem(DispenserTileEntity te, ItemStack filled) {
         try {
-            //field_174913_f, field_146022_i
-            Field f = ObfuscationReflectionHelper.findField(DispenserTileEntity.class,"field_146022_i");
+            //RANDOM, items
+            Field f = ObfuscationReflectionHelper.findField(DispenserTileEntity.class,"items");
             f.setAccessible(true);
             NonNullList<ItemStack> stacks = (NonNullList<ItemStack>) f.get(te);
-            for (int i = 0; i < te.getSizeInventory(); ++i) {
+            for (int i = 0; i < te.getContainerSize(); ++i) {
                 ItemStack s = stacks.get(i);
                 if (s.isEmpty() || (s.getItem() == filled.getItem() && s.getMaxStackSize()>s.getCount())) {
                     filled.grow(s.getCount());
-                    te.setInventorySlotContents(i, filled);
+                    te.setItem(i, filled);
                     return true;
                 }
             }
         } catch (Exception ignored) {
-            return te.addItemStack(filled.copy()) < 0;
+            return te.addItem(filled.copy()) < 0;
         }
         return false;
     }
@@ -146,7 +146,7 @@ public class Dispenser {
         if (empty.isEmpty()) {
             return filled.copy();
         } else {
-            if (!Dispenser.MergeDispenserItem(source.getBlockTileEntity(), filled)) {
+            if (!Dispenser.MergeDispenserItem(source.getEntity(), filled)) {
                 Dispenser.shootBehavior.dispense(source, filled.copy());
             }
             return empty;
@@ -159,9 +159,9 @@ public class Dispenser {
             this.tag = tag;
         }
         @Override
-        public ItemStack dispenseStack(IBlockSource source, ItemStack stack) {
+        public ItemStack execute(IBlockSource source, ItemStack stack) {
             if(ModTags.isTagged(tag,stack.getItem())){
-                return super.dispenseStack(source,stack);
+                return super.execute(source,stack);
             }
             //vanilla behavior
             return super.customBehavior(source,stack);
@@ -174,7 +174,7 @@ public class Dispenser {
     //TODO: there must be an easier and cleaner way
     private static abstract class AdditionalDispenserBehavior extends DefaultDispenseItemBehavior {
         @Override
-        public ItemStack dispenseStack(IBlockSource source, ItemStack stack) {
+        public ItemStack execute(IBlockSource source, ItemStack stack) {
             //this.setSuccessful(false);
             try{
                 return this.customBehavior(source,stack);
@@ -195,23 +195,23 @@ public class Dispenser {
         @Override
         protected ItemStack customBehavior(IBlockSource source, ItemStack stack) {
             //this.setSuccessful(false);
-            ServerWorld world = source.getWorld();
-            BlockPos blockpos = source.getBlockPos().offset(source.getBlockState().get(DispenserBlock.FACING));
-            TileEntity te = world.getTileEntity(blockpos);
+            ServerWorld world = source.getLevel();
+            BlockPos blockpos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
+            TileEntity te = world.getBlockEntity(blockpos);
             if(te instanceof JarBlockTile){
                 JarBlockTile tile = ((JarBlockTile)te);
                 if(tile.mobHolder.isEmpty()) {
                     ItemStack returnStack;
-                    if (tile.isItemValidForSlot(0, stack)) {
+                    if (tile.canPlaceItem(0, stack)) {
                         tile.handleAddItem(stack, null, null);
-                        tile.markDirty();
+                        tile.setChanged();
                         //this.setSuccessful(true);
                         return Dispenser.glassBottleFill(source, stack, ItemStack.EMPTY);
                     }
                     else if (tile.isEmpty() && !tile.fluidHolder.isFull()) {
                         returnStack = tile.fluidHolder.interactWithItem(stack);
                         if(returnStack !=null && !returnStack.isEmpty()) {
-                            tile.markDirty();
+                            tile.setChanged();
                             return Dispenser.glassBottleFill(source, stack, returnStack);
                         }
                     }
@@ -228,12 +228,12 @@ public class Dispenser {
         @Override
         protected ItemStack customBehavior(IBlockSource source, ItemStack stack) {
             //this.setSuccessful(false);
-            ServerWorld world = source.getWorld();
-            BlockPos blockpos = source.getBlockPos().offset(source.getBlockState().get(DispenserBlock.FACING));
+            ServerWorld world = source.getLevel();
+            BlockPos blockpos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
             BlockState state = world.getBlockState(blockpos);
             if(state.getBlock() instanceof LightUpBlock){
                 if(LightUpBlock.lightUp(state,blockpos,world,LightUpBlock.FireSound.FLINT_AND_STEEL)){
-                    if(stack.attemptDamageItem(1, world.rand, (ServerPlayerEntity)null)){
+                    if(stack.hurt(1, world.random, (ServerPlayerEntity)null)){
                         stack.setCount(0);
                     }
                 }
@@ -252,23 +252,23 @@ public class Dispenser {
 
         @Override
         protected ItemStack customBehavior(IBlockSource source, ItemStack stack) {
-            World world = source.getWorld();
+            World world = source.getLevel();
             IPosition iposition = DispenserBlock.getDispensePosition(source);
-            Direction direction = source.getBlockState().get(DispenserBlock.FACING);
+            Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
             ProjectileEntity projectileentity = this.getProjectileEntity(world, iposition, stack);
-            projectileentity.shoot(direction.getXOffset(), (float)direction.getYOffset() + 0.1F, direction.getZOffset(), this.getProjectileVelocity(), this.getProjectileInaccuracy());
-            world.addEntity(projectileentity);
+            projectileentity.shoot(direction.getStepX(), (float)direction.getStepY() + 0.1F, direction.getStepZ(), this.getProjectileVelocity(), this.getProjectileInaccuracy());
+            world.addFreshEntity(projectileentity);
             stack.shrink(1);
             return stack;
         }
 
         @Override
-        protected void playDispenseSound(IBlockSource source) {
-            source.getWorld().playSound(null, source.getX()+0.5, source.getY()+0.5, source.getZ()+0.5, SoundEvents.ENTITY_SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (source.getWorld().getRandom().nextFloat() * 0.4F + 0.8F ));
+        protected void playSound(IBlockSource source) {
+            source.getLevel().playSound(null, source.x()+0.5, source.y()+0.5, source.z()+0.5, SoundEvents.SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (source.getLevel().getRandom().nextFloat() * 0.4F + 0.8F ));
         }
 
         protected ProjectileEntity getProjectileEntity(World worldIn, IPosition position, ItemStack stackIn){
-            return new ThrowableBrickEntity(worldIn, position.getX(), position.getY(), position.getZ());
+            return new ThrowableBrickEntity(worldIn, position.x(), position.y(), position.z());
         }
 
         protected float getProjectileInaccuracy() {
@@ -284,14 +284,14 @@ public class Dispenser {
     private static class BombsDispenserBehavior extends ProjectileDispenseBehavior{
 
         @Override
-        protected ProjectileEntity getProjectileEntity(World worldIn, IPosition position, ItemStack stackIn) {
-            return new BombEntity(worldIn, position.getX(), position.getY(), position.getZ());
+        protected ProjectileEntity getProjectile(World worldIn, IPosition position, ItemStack stackIn) {
+            return new BombEntity(worldIn, position.x(), position.y(), position.z());
         }
-        protected float getProjectileInaccuracy() {
+        protected float getUncertainty() {
             return 11.0F;
         }
 
-        protected float getProjectileVelocity() {
+        protected float getPower() {
             return 1.3F;
         }
     }
@@ -302,8 +302,8 @@ public class Dispenser {
         @Override
         protected ItemStack customBehavior(IBlockSource source, ItemStack stack) {
             //this.setSuccessful(false);
-            ServerWorld world = source.getWorld();
-            BlockPos blockpos = source.getBlockPos().offset(source.getBlockState().get(DispenserBlock.FACING));
+            ServerWorld world = source.getLevel();
+            BlockPos blockpos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
             BlockState state = world.getBlockState(blockpos);
             if(state.getBlock() instanceof BambooSpikesBlock){
                 if(BambooSpikesBlock.tryAddingPotion(state,world,blockpos,stack)){
@@ -321,15 +321,15 @@ public class Dispenser {
         @Override
         protected ItemStack customBehavior(IBlockSource source, ItemStack stack) {
             //this.setSuccessful(false);
-            ServerWorld world = source.getWorld();
-            BlockPos blockpos = source.getBlockPos().offset(source.getBlockState().get(DispenserBlock.FACING));
-            TileEntity te = world.getTileEntity(blockpos);
+            ServerWorld world = source.getLevel();
+            BlockPos blockpos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
+            TileEntity te = world.getBlockEntity(blockpos);
             if(te instanceof JarBlockTile){
                 //TODO: add fish buckets
                 JarBlockTile tile = ((JarBlockTile)te);
                 if(tile.fluidHolder.isEmpty() && tile.isEmpty()) {
                     if(tile.mobHolder.interactWithBucketItem(stack,null,null)){
-                        tile.markDirty();
+                        tile.setChanged();
                         return Dispenser.glassBottleFill(source, stack,new ItemStack(Items.BUCKET));
                     }
                 }
@@ -347,9 +347,9 @@ public class Dispenser {
         @Override
         protected ItemStack customBehavior(IBlockSource source, ItemStack stack) {
             //this.setSuccessful(false);
-            ServerWorld world = source.getWorld();
-            BlockPos blockpos = source.getBlockPos().offset(source.getBlockState().get(DispenserBlock.FACING));
-            TileEntity te = world.getTileEntity(blockpos);
+            ServerWorld world = source.getLevel();
+            BlockPos blockpos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
+            TileEntity te = world.getBlockEntity(blockpos);
             if(te instanceof JarBlockTile){
                 //TODO: add fish buckets!!
                 JarBlockTile tile = ((JarBlockTile)te);
@@ -357,7 +357,7 @@ public class Dispenser {
                 if(tile.mobHolder.isEmpty() && tile.isEmpty()) {
                     ItemStack returnStack = tile.fluidHolder.interactWithItem(stack);
                     if(returnStack !=null && !returnStack.isEmpty()){
-                        tile.markDirty();
+                        tile.setChanged();
                         return Dispenser.glassBottleFill(source, stack,returnStack);
                     }
                 }
@@ -371,15 +371,15 @@ public class Dispenser {
 
     private static class PlaceBlockDispenseBehavior extends OptionalDispenseBehavior {
 
-        protected ItemStack dispenseStack(IBlockSource source, ItemStack stack) {
-            this.setSuccessful(false);
+        protected ItemStack execute(IBlockSource source, ItemStack stack) {
+            this.setSuccess(false);
             Item item = stack.getItem();
             if (item instanceof BlockItem) {
-                Direction direction = source.getBlockState().get(DispenserBlock.FACING);
-                BlockPos blockpos = source.getBlockPos().offset(direction);
-                Direction direction1 = source.getWorld().isAirBlock(blockpos.down()) ? direction : Direction.UP;
-                ActionResultType result = ((BlockItem)item).tryPlace(new DirectionalPlaceContext(source.getWorld(), blockpos, direction, stack, direction1));
-                this.setSuccessful(result.isSuccessOrConsume());
+                Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
+                BlockPos blockpos = source.getPos().relative(direction);
+                Direction direction1 = source.getLevel().isEmptyBlock(blockpos.below()) ? direction : Direction.UP;
+                ActionResultType result = ((BlockItem)item).place(new DirectionalPlaceContext(source.getLevel(), blockpos, direction, stack, direction1));
+                this.setSuccess(result.consumesAction());
             }
             return stack;
         }

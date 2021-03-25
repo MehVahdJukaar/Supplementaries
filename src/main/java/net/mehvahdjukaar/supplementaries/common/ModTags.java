@@ -38,7 +38,7 @@ public class ModTags {
 
     public static boolean isTagged(ITag<Item> tag, Item i){
         try {
-            return tag != null && i.isIn(tag);
+            return tag != null && i.is(tag);
         }
         catch (Exception ignored){
             return false;
@@ -47,7 +47,7 @@ public class ModTags {
 
     public static boolean isTagged(ITag<Block> tag, Block b){
         try {
-            return tag != null && b.isIn(tag);
+            return tag != null && b.is(tag);
         }
         catch (Exception ignored){
             return false;

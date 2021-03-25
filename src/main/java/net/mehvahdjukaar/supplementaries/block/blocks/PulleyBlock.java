@@ -31,49 +31,50 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class PulleyBlock extends RotatedPillarBlock {
-    public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final EnumProperty<Winding> TYPE = BlockProperties.WINDING;
     public static final BooleanProperty FLIPPED = BlockProperties.FLIPPED;
 
     public PulleyBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.getDefaultState().with(AXIS, Direction.Axis.Y).with(TYPE, Winding.NONE).with(FLIPPED,false));
+        this.registerDefaultState(this.defaultBlockState().setValue(AXIS, Direction.Axis.Y).setValue(TYPE, Winding.NONE).setValue(FLIPPED,false));
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        super.fillStateContainer(builder);
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
         builder.add(TYPE,FLIPPED);
     }
 
     //rotates itself and pull up/down. unchecked
     //all methods here are called server side
     public boolean axisRotate(BlockState state, BlockPos pos, World world, Rotation rot){
-        world.setBlockState(pos,state.func_235896_a_(FLIPPED));
+        world.setBlockAndUpdate(pos,state.cycle(FLIPPED));
         if(rot==Rotation.CLOCKWISE_90) return this.pullUp(pos, world,1);
         else return this.pullDown(pos, world,1);
     }
 
     public boolean pullUp(BlockPos pos, IWorld world, int rot){
-        TileEntity tile = world.getTileEntity(pos);
+        TileEntity tile = world.getBlockEntity(pos);
         if(tile instanceof PulleyBlockTile){
             if(!(world instanceof World))return false;
             ItemStack stack = ((ItemDisplayTile) tile).getDisplayedItem();
             boolean flag = false;
             if(stack.isEmpty()){
-                stack = new ItemStack(world.getBlockState(pos.down()).getBlock().asItem());
+                stack = new ItemStack(world.getBlockState(pos.below()).getBlock().asItem());
                 flag = true;
             }
             if(stack.getCount()+rot>stack.getMaxStackSize() || !(stack.getItem() instanceof BlockItem)) return false;
             Block ropeBlock = ((BlockItem) stack.getItem()).getBlock();
-            boolean success = RopeBlock.removeRope(pos.down(), (World) world,ropeBlock);
+            boolean success = RopeBlock.removeRope(pos.below(), (World) world,ropeBlock);
             if(success){
-                SoundType soundtype = ropeBlock.getDefaultState().getSoundType(world, pos, null);
+                SoundType soundtype = ropeBlock.defaultBlockState().getSoundType(world, pos, null);
                 world.playSound(null, pos, soundtype.getBreakSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
                 if(flag)((ItemDisplayTile) tile).setDisplayedItem(stack);
                 else stack.grow(1);
-                tile.markDirty();
+                tile.setChanged();
             }
             return success;
         }
@@ -81,18 +82,18 @@ public class PulleyBlock extends RotatedPillarBlock {
     }
 
     public boolean pullDown(BlockPos pos, IWorld world, int rot){
-        TileEntity tile = world.getTileEntity(pos);
+        TileEntity tile = world.getBlockEntity(pos);
         if(tile instanceof PulleyBlockTile){
             if(!(world instanceof World))return false;
             ItemStack stack = ((ItemDisplayTile) tile).getDisplayedItem();
             if(stack.getCount()<rot || !(stack.getItem() instanceof BlockItem)) return false;
             Block ropeBlock = ((BlockItem) stack.getItem()).getBlock();
-            boolean success = RopeBlock.addRope(pos.down(), (World) world,null,Hand.MAIN_HAND,ropeBlock);
+            boolean success = RopeBlock.addRope(pos.below(), (World) world,null,Hand.MAIN_HAND,ropeBlock);
             if(success){
-                SoundType soundtype = ropeBlock.getDefaultState().getSoundType(world, pos, null);
+                SoundType soundtype = ropeBlock.defaultBlockState().getSoundType(world, pos, null);
                 world.playSound(null, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
                 stack.shrink(1);
-                tile.markDirty();
+                tile.setChanged();
             }
             return success;
         }
@@ -105,22 +106,22 @@ public class PulleyBlock extends RotatedPillarBlock {
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
                                              BlockRayTraceResult hit) {
-        TileEntity tileentity = worldIn.getTileEntity(pos);
+        TileEntity tileentity = worldIn.getBlockEntity(pos);
         if (tileentity instanceof PulleyBlockTile) {
             if (player instanceof ServerPlayerEntity) {
-                if(!(player.isSneaking()&&this.axisRotate(state,pos,worldIn,Rotation.COUNTERCLOCKWISE_90)))
-                    player.openContainer((INamedContainerProvider)tileentity);
+                if(!(player.isShiftKeyDown()&&this.axisRotate(state,pos,worldIn,Rotation.COUNTERCLOCKWISE_90)))
+                    player.openMenu((INamedContainerProvider)tileentity);
             }
-            return ActionResultType.func_233537_a_(worldIn.isRemote());
+            return ActionResultType.sidedSuccess(worldIn.isClientSide());
         }
         return ActionResultType.PASS;
     }
 
     @Override
-    public INamedContainerProvider getContainer(BlockState state, World worldIn, BlockPos pos) {
-        TileEntity tileEntity = worldIn.getTileEntity(pos);
+    public INamedContainerProvider getMenuProvider(BlockState state, World worldIn, BlockPos pos) {
+        TileEntity tileEntity = worldIn.getBlockEntity(pos);
         return tileEntity instanceof INamedContainerProvider ? (INamedContainerProvider) tileEntity : null;
     }
 
@@ -135,27 +136,27 @@ public class PulleyBlock extends RotatedPillarBlock {
     }
 
     @Override
-    public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
-            TileEntity tileentity = world.getTileEntity(pos);
+            TileEntity tileentity = world.getBlockEntity(pos);
             if (tileentity instanceof IInventory) {
-                InventoryHelper.dropInventoryItems(world, pos, (IInventory) tileentity);
-                world.updateComparatorOutputLevel(pos, this);
+                InventoryHelper.dropContents(world, pos, (IInventory) tileentity);
+                world.updateNeighbourForOutputSignal(pos, this);
             }
-            super.onReplaced(state, world, pos, newState, isMoving);
+            super.onRemove(state, world, pos, newState, isMoving);
         }
     }
 
     @Override
-    public boolean hasComparatorInputOverride(BlockState state) {
+    public boolean hasAnalogOutputSignal(BlockState state) {
         return true;
     }
 
     @Override
-    public int getComparatorInputOverride(BlockState blockState, World world, BlockPos pos) {
-        TileEntity tileentity = world.getTileEntity(pos);
+    public int getAnalogOutputSignal(BlockState blockState, World world, BlockPos pos) {
+        TileEntity tileentity = world.getBlockEntity(pos);
         if (tileentity instanceof NoticeBoardBlockTile)
-            return Container.calcRedstoneFromInventory((IInventory) tileentity);
+            return Container.getRedstoneSignalFromContainer((IInventory) tileentity);
         else
             return 0;
     }

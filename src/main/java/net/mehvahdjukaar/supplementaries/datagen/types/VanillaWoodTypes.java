@@ -23,8 +23,8 @@ public enum VanillaWoodTypes implements IWoodType {
 
     VanillaWoodTypes(String name, Block plank) {
         this.name = name;
-        this.color = plank.getMaterialColor();
-        this.material = plank.getDefaultState().getMaterial();
+        this.color = plank.defaultMaterialColor();
+        this.material = plank.defaultBlockState().getMaterial();
     }
 
     @Override

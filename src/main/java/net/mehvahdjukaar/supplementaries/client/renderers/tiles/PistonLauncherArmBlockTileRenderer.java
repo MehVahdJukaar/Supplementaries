@@ -27,17 +27,17 @@ public class PistonLauncherArmBlockTileRenderer extends TileEntityRenderer<Pisto
     @Override
     public void render(PistonLauncherArmBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
-        matrixStackIn.push();
+        matrixStackIn.pushPose();
         matrixStackIn.translate(0.5, 0.5, 0.5);
-        matrixStackIn.rotate(tile.getDirection().getOpposite().getRotation());
-        matrixStackIn.rotate(Const.X180);
+        matrixStackIn.mulPose(tile.getDirection().getOpposite().getRotation());
+        matrixStackIn.mulPose(Const.X180);
         matrixStackIn.translate(-0.5, -0.5, -0.5);
         matrixStackIn.translate(0, MathHelper.lerp(partialTicks, tile.prevOffset, tile.offset), 0);
-        BlockRendererDispatcher blockRenderer = Minecraft.getInstance().getBlockRendererDispatcher();
+        BlockRendererDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
         boolean flag1 = tile.getExtending() == tile.age < 2;
-        BlockState state = Registry.PISTON_LAUNCHER_HEAD.get().getDefaultState().with(PistonLauncherHeadBlock.FACING, Direction.UP).with(BlockStateProperties.SHORT, flag1);
+        BlockState state = Registry.PISTON_LAUNCHER_HEAD.get().defaultBlockState().setValue(PistonLauncherHeadBlock.FACING, Direction.UP).setValue(BlockStateProperties.SHORT, flag1);
         //RendererUtil.renderBlockPlus(state, matrixStackIn, bufferIn, blockRenderer, tile.getWorld(), tile.getPos());
         blockRenderer.renderBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
-        matrixStackIn.pop();
+        matrixStackIn.popPose();
     }
 }

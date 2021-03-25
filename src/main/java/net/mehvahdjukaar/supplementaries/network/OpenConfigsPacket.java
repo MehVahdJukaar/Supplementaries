@@ -36,9 +36,9 @@ public class OpenConfigsPacket {
             if(ModList.get().isLoaded("configured"))
                 CustomConfiguredScreen.openScreen(mc);
             else{
-                mc.displayGuiScreen(ModList.get().getModContainerById(Supplementaries.MOD_ID).get()
+                mc.setScreen(ModList.get().getModContainerById(Supplementaries.MOD_ID).get()
                         .getCustomExtension(ExtensionPoint.CONFIGGUIFACTORY).get()
-                        .apply(mc,mc.currentScreen));
+                        .apply(mc,mc.screen));
             }
 
         });

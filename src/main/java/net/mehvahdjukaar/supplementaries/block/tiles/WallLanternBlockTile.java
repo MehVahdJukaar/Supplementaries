@@ -13,7 +13,7 @@ import net.minecraft.tileentity.ITickableTileEntity;
 
 public class WallLanternBlockTile extends EnhancedLanternBlockTile implements ITickableTileEntity, IBlockHolder, ILightMimic {
 
-    public BlockState lanternBlock = Blocks.LANTERN.getDefaultState();//Blocks.AIR.getDefaultState();
+    public BlockState lanternBlock = Blocks.LANTERN.defaultBlockState();//Blocks.AIR.getDefaultState();
     public boolean isRedstoneLantern = false;
 
     static {
@@ -29,15 +29,15 @@ public class WallLanternBlockTile extends EnhancedLanternBlockTile implements IT
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
-        super.read(state, compound);
+    public void load(BlockState state, CompoundNBT compound) {
+        super.load(state, compound);
         this.lanternBlock = NBTUtil.readBlockState(compound.getCompound("Lantern"));
         this.isRedstoneLantern = compound.getBoolean("IsRedstone");
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
+    public CompoundNBT save(CompoundNBT compound) {
+        super.save(compound);
         compound.put("Lantern", NBTUtil.writeBlockState(lanternBlock));
         compound.putBoolean("IsRedstone",this.isRedstoneLantern);
         return compound;
@@ -62,8 +62,8 @@ public class WallLanternBlockTile extends EnhancedLanternBlockTile implements IT
             light = 15;
             lit = false;
         }
-        if(this.getBlockState().get(WallLanternBlock.LIGHT_LEVEL)!=light)
-            this.getWorld().setBlockState(this.pos, this.getBlockState().with(WallLanternBlock.LIT,lit)
-                    .with(WallLanternBlock.LIGHT_LEVEL,light),4|16);
+        if(this.getBlockState().getValue(WallLanternBlock.LIGHT_LEVEL)!=light)
+            this.getLevel().setBlock(this.worldPosition, this.getBlockState().setValue(WallLanternBlock.LIT,lit)
+                    .setValue(WallLanternBlock.LIGHT_LEVEL,light),4|16);
     }
 }

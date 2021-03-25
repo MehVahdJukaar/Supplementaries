@@ -42,14 +42,14 @@ public class TurnTableBlockTile extends TileEntity implements ITickableTileEntit
     }
     @Override
     public void tick() {
-        if (this.world != null && !this.world.isRemote) {
+        if (this.level != null && !this.level.isClientSide) {
             this.cat=Math.max(cat-1,0);
             // cd > 0
             if (this.cooldown == 0) {
                 boolean success = this.handleRotation();
                 this.cooldown = TurnTableBlock.getPeriod(this.getBlockState());//ServerConfigs.cached.TURN_TABLE_PERIOD;
                 // if it didn't rotate last block that means that block is immovable
-                this.canRotate = (success && this.getBlockState().get(TurnTableBlock.POWER)!=0);
+                this.canRotate = (success && this.getBlockState().getValue(TurnTableBlock.POWER)!=0);
             } else if (this.canRotate) {
                 this.cooldown--;
             }
@@ -61,12 +61,12 @@ public class TurnTableBlockTile extends TileEntity implements ITickableTileEntit
         if (state.getBlock() instanceof BedBlock)
             return true;
         if (state.hasProperty(BlockStateProperties.CHEST_TYPE)) {
-            if (!(state.get(BlockStateProperties.CHEST_TYPE) == ChestType.SINGLE))
+            if (!(state.getValue(BlockStateProperties.CHEST_TYPE) == ChestType.SINGLE))
                 return true;
         }
         // no piston bases
         if (state.hasProperty(BlockStateProperties.EXTENDED)) {
-            if (state.get(BlockStateProperties.EXTENDED))
+            if (state.getValue(BlockStateProperties.EXTENDED))
                 return true;
         }
         // neither piston arms
@@ -80,10 +80,10 @@ public class TurnTableBlockTile extends TileEntity implements ITickableTileEntit
     private boolean doRotateBlocks(BlockState oldstate, BlockState newState, BlockPos pos, Direction mydir) {
         if(newState!=oldstate){
             //always returns true because block could be able to rotate in the future even if it can't now
-            if(newState.isValidPosition(world,pos)) {
-                BlockState updatedState = Block.getValidBlockForPosition(newState, world, pos);
-                world.setBlockState(pos, updatedState, 3);
-                world.notifyNeighborsOfStateExcept(pos,newState.getBlock(),mydir.getOpposite());
+            if(newState.canSurvive(level,pos)) {
+                BlockState updatedState = Block.updateFromNeighbourShapes(newState, level, pos);
+                level.setBlock(pos, updatedState, 3);
+                level.updateNeighborsAtExceptFromFacing(pos,newState.getBlock(),mydir.getOpposite());
             }
             return true;
             //TODO: this makes block instantly rotate when condition becomes true
@@ -92,7 +92,7 @@ public class TurnTableBlockTile extends TileEntity implements ITickableTileEntit
     }
 
     public Vector3d toVector3d(Direction dir) {
-        return new Vector3d((float)dir.getXOffset(), (float)dir.getYOffset(), (float)dir.getZOffset());
+        return new Vector3d((float)dir.getStepX(), (float)dir.getStepY(), (float)dir.getStepZ());
     }
 
 
@@ -100,14 +100,14 @@ public class TurnTableBlockTile extends TileEntity implements ITickableTileEntit
     public boolean handleRotation() {
         BlockState state = this.getBlockState();
 
-        World world = this.world;
-        BlockPos mypos = this.pos;
-        Direction mydir = state.get(BlockStateProperties.FACING);
-        BlockPos targetpos = mypos.offset(mydir);
+        World world = this.level;
+        BlockPos mypos = this.worldPosition;
+        Direction mydir = state.getValue(BlockStateProperties.FACING);
+        BlockPos targetpos = mypos.relative(mydir);
         BlockState targetState = world.getBlockState(targetpos);
         // is block blacklisted?
         if (this.isInBlacklist(targetState)) return false;
-        boolean ccw = (state.get(BlockStateProperties.INVERTED) ^ (state.get(BlockStateProperties.FACING) == Direction.DOWN));
+        boolean ccw = (state.getValue(BlockStateProperties.INVERTED) ^ (state.getValue(BlockStateProperties.FACING) == Direction.DOWN));
         Rotation rot = ccw ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90;
 
         try {
@@ -123,22 +123,22 @@ public class TurnTableBlockTile extends TileEntity implements ITickableTileEntit
             }
             // 6 dir blocks blocks
             else if (targetState.hasProperty(BlockStateProperties.FACING)) {
-                Vector3d targetvec = toVector3d(targetState.get(BlockStateProperties.FACING));
+                Vector3d targetvec = toVector3d(targetState.getValue(BlockStateProperties.FACING));
                 Vector3d myvec = toVector3d(mydir);
                 if (!ccw)
-                    targetvec.mul(-1,-1,-1);
+                    targetvec.multiply(-1,-1,-1);
                 // hacky I know..
-                myvec = myvec.crossProduct(targetvec);
+                myvec = myvec.cross(targetvec);
                 if (myvec.equals(new Vector3d(0, 0, 0))) {
                     // same axis, can't rotate
                     return false;
                 }
-                Direction newdir = Direction.getFacingFromVector(myvec.getX(), myvec.getY(), myvec.getZ());
-                return this.doRotateBlocks(targetState, targetState.with(BlockStateProperties.FACING, newdir), targetpos,mydir);
+                Direction newdir = Direction.getNearest(myvec.x(), myvec.y(), myvec.z());
+                return this.doRotateBlocks(targetState, targetState.setValue(BlockStateProperties.FACING, newdir), targetpos,mydir);
             }
             // axis blocks
             else if (targetState.hasProperty(BlockStateProperties.AXIS)) {
-                Axis targetaxis = targetState.get(BlockStateProperties.AXIS);
+                Axis targetaxis = targetState.getValue(BlockStateProperties.AXIS);
                 Axis myaxis = mydir.getAxis();
                 if (myaxis == targetaxis) {
                     if(myaxis != Axis.Y && targetState.getBlock() instanceof PulleyBlock) {
@@ -148,9 +148,9 @@ public class TurnTableBlockTile extends TileEntity implements ITickableTileEntit
                     // same axis, can't rotate
                     return false;
                 } else if (myaxis == Axis.X) {
-                    return this.doRotateBlocks(targetState, targetState.with(BlockStateProperties.AXIS, targetaxis == Axis.Y ? Axis.Z : Axis.Y), targetpos,mydir);
+                    return this.doRotateBlocks(targetState, targetState.setValue(BlockStateProperties.AXIS, targetaxis == Axis.Y ? Axis.Z : Axis.Y), targetpos,mydir);
                 } else if (myaxis == Axis.Z) {
-                    return this.doRotateBlocks(targetState, targetState.with(BlockStateProperties.AXIS, targetaxis == Axis.Y ? Axis.X : Axis.Y), targetpos,mydir);
+                    return this.doRotateBlocks(targetState, targetState.setValue(BlockStateProperties.AXIS, targetaxis == Axis.Y ? Axis.X : Axis.Y), targetpos,mydir);
                 }
             }
 
@@ -162,15 +162,15 @@ public class TurnTableBlockTile extends TileEntity implements ITickableTileEntit
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
-        super.read(state, compound);
+    public void load(BlockState state, CompoundNBT compound) {
+        super.load(state, compound);
         this.cooldown = compound.getInt("Cooldown");
         this.canRotate = compound.getBoolean("CanRotate");
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
+    public CompoundNBT save(CompoundNBT compound) {
+        super.save(compound);
         compound.putInt("Cooldown", this.cooldown);
         compound.putBoolean("CanRotate", this.canRotate);
         return compound;
@@ -178,16 +178,16 @@ public class TurnTableBlockTile extends TileEntity implements ITickableTileEntit
 
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.pos, 0, this.getUpdateTag());
+        return new SUpdateTileEntityPacket(this.worldPosition, 0, this.getUpdateTag());
     }
 
     @Override
     public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundNBT());
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.read(this.getBlockState(), pkt.getNbtCompound());
+        this.load(this.getBlockState(), pkt.getTag());
     }
 }

@@ -32,33 +32,33 @@ public abstract class MapDataPostsMixin extends WorldSavedData {
     }
 
     @Shadow
-    public abstract void updateDecorations(MapDecoration.Type type, @Nullable IWorld worldIn, String decorationName, double worldX, double worldZ, double rotationIn, @Nullable ITextComponent name);
+    public abstract void addDecoration(MapDecoration.Type type, @Nullable IWorld worldIn, String decorationName, double worldX, double worldZ, double rotationIn, @Nullable ITextComponent name);
 
     @Final
     private final Map<String, MapPost> posts = Maps.newHashMap();
 
     @Shadow
-    public int xCenter;
+    public int x;
 
     @Shadow
-    public int zCenter;
+    public int z;
 
     @Shadow
     public byte scale;
 
     @Shadow
-    public Map<String, MapDecoration> mapDecorations;
+    public Map<String, MapDecoration> decorations;
 
 
 
     //hijacking to access it outside
-    @Inject(method = "tryAddBanner", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "toggleBanner", at = @At("HEAD"), cancellable = true)
     public void tryAddBanner(IWorld world, BlockPos pos, CallbackInfo info) {
         double d0 = (double)pos.getX() + 0.5D;
         double d1 = (double)pos.getZ() + 0.5D;
         int i = 1 << this.scale;
-        double d2 = (d0 - (double)this.xCenter) / (double)i;
-        double d3 = (d1 - (double)this.zCenter) / (double)i;
+        double d2 = (d0 - (double)this.x) / (double)i;
+        double d3 = (d1 - (double)this.z) / (double)i;
         if (d2 >= -63.0D && d3 >= -63.0D && d2 <= 63.0D && d3 <= 63.0D) {
             MapPost mappost = MapPost.fromWorld(world, pos);
             if (mappost == null) {
@@ -67,20 +67,20 @@ public abstract class MapDataPostsMixin extends WorldSavedData {
             //add or remove banner
             if (this.posts.containsKey(mappost.getId()) && this.posts.get(mappost.getId()).equals(mappost)) {
                 this.posts.remove(mappost.getId());
-                this.mapDecorations.remove(mappost.getId());
+                this.decorations.remove(mappost.getId());
             }
             else{
                 this.posts.put(mappost.getId(), mappost);
-                this.updateDecorations(MapDecoration.Type.TARGET_POINT, world, mappost.getId(), d0, d1, 180.0D, mappost.name);
+                this.addDecoration(MapDecoration.Type.TARGET_POINT, world, mappost.getId(), d0, d1, 180.0D, mappost.name);
             }
 
-            this.markDirty();
+            this.setDirty();
 
         }
     }
 
     //removes posts too
-    @Inject(method = "removeStaleBanners", at = @At("TAIL"), cancellable = true)
+    @Inject(method = "checkBanners", at = @At("TAIL"), cancellable = true)
     public void removeStaleBanners(IBlockReader reader, int x, int z, CallbackInfo info) {
         Iterator<MapPost> iterator = this.posts.values().iterator();
 
@@ -90,15 +90,15 @@ public abstract class MapDataPostsMixin extends WorldSavedData {
                 MapPost post2 = MapPost.fromWorld(reader, mampost.pos);
                 if (post2==null) {
                     iterator.remove();
-                    this.mapDecorations.remove(mampost.getId());
+                    this.decorations.remove(mampost.getId());
                 }
                 else if(!Objects.equals(post2.name,mampost.name)){
                     //update name
-                    MapDecoration p = this.mapDecorations.get(mampost.getId());
-                    p = new MapDecoration(p.getType(),p.getX(),p.getY(),p.getRotation(),post2.name);
+                    MapDecoration p = this.decorations.get(mampost.getId());
+                    p = new MapDecoration(p.getType(),p.getX(),p.getY(),p.getRot(),post2.name);
                     iterator.remove();
-                    this.mapDecorations.remove(mampost.getId());
-                    this.mapDecorations.put(mampost.getId(),p);
+                    this.decorations.remove(mampost.getId());
+                    this.decorations.put(mampost.getId(),p);
                     this.posts.remove(mampost.getId());
                     MapPost p2 = new MapPost(mampost.pos,post2.name);
                     this.posts.put(mampost.getId(),p2);
@@ -108,7 +108,7 @@ public abstract class MapDataPostsMixin extends WorldSavedData {
         }
     }
 
-    @Inject(method = "read", at = @At("TAIL"), cancellable = true)
+    @Inject(method = "load", at = @At("TAIL"), cancellable = true)
     public void read(CompoundNBT nbt, CallbackInfo info) {
         ListNBT listnbt2 = nbt.getList("posts", 10);
 
@@ -116,11 +116,11 @@ public abstract class MapDataPostsMixin extends WorldSavedData {
             MapPost mappost = MapPost.read(listnbt2.getCompound(j));
             this.posts.put(mappost.getId(), mappost);
 
-            this.updateDecorations(MapDecoration.Type.TARGET_POINT, null, mappost.getId(), mappost.pos.getX(), mappost.pos.getZ(), 180, mappost.name);
+            this.addDecoration(MapDecoration.Type.TARGET_POINT, null, mappost.getId(), mappost.pos.getX(), mappost.pos.getZ(), 180, mappost.name);
         }
     }
 
-    @Inject(method = "write", at = @At("TAIL"), cancellable = true)
+    @Inject(method = "save", at = @At("TAIL"), cancellable = true)
     public CompoundNBT write(CompoundNBT compound, CallbackInfoReturnable<CompoundNBT> info) {
 
         ListNBT listnbt2 = new ListNBT();

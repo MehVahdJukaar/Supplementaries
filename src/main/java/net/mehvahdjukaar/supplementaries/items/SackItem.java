@@ -25,6 +25,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
+import net.minecraft.item.Item.Properties;
+
 public class SackItem extends BlockItem {
     public SackItem(Block blockIn, Properties builder) {
         super(blockIn, builder);
@@ -36,9 +38,9 @@ public class SackItem extends BlockItem {
         if(!ServerConfigs.cached.SACK_PENALTY)return;
         if(entityIn instanceof ServerPlayerEntity && !((PlayerEntity) entityIn).isCreative() && !entityIn.isSpectator() && worldIn.getGameTime() % 20L == 0L){
             ServerPlayerEntity player = (ServerPlayerEntity) entityIn;
-            Collection<EffectInstance> effects = player.getActivePotionEffects();
+            Collection<EffectInstance> effects = player.getActiveEffects();
             for (EffectInstance effect : effects) {
-                if (effect.getPotion() == Effects.SLOWNESS)
+                if (effect.getEffect() == Effects.MOVEMENT_SLOWDOWN)
                     return;
             }
 
@@ -54,20 +56,20 @@ public class SackItem extends BlockItem {
             }
             int inc = ServerConfigs.cached.SACK_INCREMENT;
             if(i>inc){
-                player.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 80,  i/(inc+1)));
+                player.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 80,  i/(inc+1)));
             }
         }
     }
 
 
 
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
-        if(!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().gameSettings.advancedItemTooltips)return;
-        CompoundNBT compoundnbt = stack.getChildTag("BlockEntityTag");
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+
+        CompoundNBT compoundnbt = stack.getTagElement("BlockEntityTag");
         if (compoundnbt != null) {
             if (compoundnbt.contains("LootTable", 8)) {
-                tooltip.add(new StringTextComponent("???????").mergeStyle(TextFormatting.GRAY));
+                tooltip.add(new StringTextComponent("???????").withStyle(TextFormatting.GRAY));
             }
 
             if (compoundnbt.contains("Items", 9)) {
@@ -81,18 +83,19 @@ public class SackItem extends BlockItem {
                         ++j;
                         if (i <= 4) {
                             ++i;
-                            IFormattableTextComponent iformattabletextcomponent = itemstack.getDisplayName().deepCopy();
-                            iformattabletextcomponent.appendString(" x").appendString(String.valueOf(itemstack.getCount()));
-                            tooltip.add(iformattabletextcomponent.mergeStyle(TextFormatting.GRAY));
+                            IFormattableTextComponent iformattabletextcomponent = itemstack.getHoverName().copy();
+                            iformattabletextcomponent.append(" x").append(String.valueOf(itemstack.getCount()));
+                            tooltip.add(iformattabletextcomponent.withStyle(TextFormatting.GRAY));
                         }
                     }
                 }
                 if (j - i > 0) {
-                    tooltip.add((new TranslationTextComponent("container.shulkerBox.more", j - i)).mergeStyle(TextFormatting.ITALIC).mergeStyle(TextFormatting.GRAY));
+                    tooltip.add((new TranslationTextComponent("container.shulkerBox.more", j - i)).withStyle(TextFormatting.ITALIC).withStyle(TextFormatting.GRAY));
                 }
             }
         }
-        tooltip.add(new TranslationTextComponent("message.supplementaries.sack").mergeStyle(TextFormatting.ITALIC).mergeStyle(TextFormatting.GRAY));
+        if(!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().options.advancedItemTooltips)return;
+        tooltip.add(new TranslationTextComponent("message.supplementaries.sack").withStyle(TextFormatting.ITALIC).withStyle(TextFormatting.GRAY));
     }
 
 }

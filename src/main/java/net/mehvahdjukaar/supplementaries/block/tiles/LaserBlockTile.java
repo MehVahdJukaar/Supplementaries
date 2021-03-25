@@ -32,23 +32,23 @@ public class LaserBlockTile extends TileEntity implements ITickableTileEntity {
     // this is already server only
     public void updateBeam() {
         if (this.canEmit()) {
-            BlockPos p = this.pos;
+            BlockPos p = this.worldPosition;
             Direction dir = this.getDirection();
             int i = 0;
             boolean noblockfound = false;
             for (i = 0; i <= MAXLENGHT; i++) {
-                p = this.pos.offset(dir, i + 1);
-                BlockState state = this.world.getBlockState(p);
-                if (state.getOpacity(this.world, p) < 15)
+                p = this.worldPosition.relative(dir, i + 1);
+                BlockState state = this.level.getBlockState(p);
+                if (state.getLightBlock(this.level, p) < 15)
                     continue;
-                if (state.isSolidSide(world, p, dir.getOpposite())) {
+                if (state.isFaceSturdy(level, p, dir.getOpposite())) {
                     noblockfound = false;
                     break;
                 }
             }
             if (this.lenght != i) {
                 this.lenght = i;
-                this.world.notifyBlockUpdate(this.pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
+                this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
             }
             if (noblockfound) {
                 this.endpos = null;
@@ -62,21 +62,21 @@ public class LaserBlockTile extends TileEntity implements ITickableTileEntity {
 
     public void updateReceivingLaser() {
         if (endpos != null) {
-            BlockState state = this.world.getBlockState(this.endpos);
+            BlockState state = this.level.getBlockState(this.endpos);
             if (state.getBlock() instanceof LaserBlock
-                    && state.get(LaserBlock.RECEIVING) != MathHelper.clamp(MAXLENGHT + 1 - this.lenght, 0, 15)
-                    && state.get(LaserBlock.FACING) == this.getBlockState().get(LaserBlock.FACING).getOpposite()) {
-                this.world.setBlockState(this.endpos, state.with(LaserBlock.RECEIVING, MathHelper.clamp(MAXLENGHT + 1 - this.lenght, 0, 15)), 3);
+                    && state.getValue(LaserBlock.RECEIVING) != MathHelper.clamp(MAXLENGHT + 1 - this.lenght, 0, 15)
+                    && state.getValue(LaserBlock.FACING) == this.getBlockState().getValue(LaserBlock.FACING).getOpposite()) {
+                this.level.setBlock(this.endpos, state.setValue(LaserBlock.RECEIVING, MathHelper.clamp(MAXLENGHT + 1 - this.lenght, 0, 15)), 3);
             }
         }
     }// TODO:o check if null
 
     public void turnOffReceivingLaser() {
         if (endpos != null) {
-            BlockState state = this.world.getBlockState(this.endpos);
-            if (state.getBlock() instanceof LaserBlock && state.get(LaserBlock.RECEIVING) != 0
-                    && state.get(LaserBlock.FACING) == this.getBlockState().get(LaserBlock.FACING).getOpposite()) {
-                this.world.setBlockState(this.endpos, state.with(LaserBlock.RECEIVING, 0), 3);
+            BlockState state = this.level.getBlockState(this.endpos);
+            if (state.getBlock() instanceof LaserBlock && state.getValue(LaserBlock.RECEIVING) != 0
+                    && state.getValue(LaserBlock.FACING) == this.getBlockState().getValue(LaserBlock.FACING).getOpposite()) {
+                this.level.setBlock(this.endpos, state.setValue(LaserBlock.RECEIVING, 0), 3);
             }
         }
     }
@@ -86,11 +86,11 @@ public class LaserBlockTile extends TileEntity implements ITickableTileEntity {
     }
 
     public boolean isReceiving() {
-        return this.getBlockState().get(LaserBlock.RECEIVING) > 0;
+        return this.getBlockState().getValue(LaserBlock.RECEIVING) > 0;
     }
 
     public boolean isPowered() {
-        return this.getBlockState().get(LaserBlock.POWERED);
+        return this.getBlockState().getValue(LaserBlock.POWERED);
     }
 
     @Override
@@ -101,58 +101,58 @@ public class LaserBlockTile extends TileEntity implements ITickableTileEntity {
     }
 
     @Override
-    public double getMaxRenderDistanceSquared() {
+    public double getViewDistance() {
         return 128;
     }
 
     @Override
     public void tick() {
-        if (this.world.isRemote()) {
+        if (this.level.isClientSide()) {
             if (this.offset == -1)
-                this.offset = (new Random(this.getPos().toLong())).nextFloat() * (float) Math.PI * 2f;
+                this.offset = (new Random(this.getBlockPos().asLong())).nextFloat() * (float) Math.PI * 2f;
             this.prevWidth = this.width;
-            float angle = this.offset + (this.getWorld().getGameTime()%24000) / 50f;
+            float angle = this.offset + (this.getLevel().getGameTime()%24000) / 50f;
             this.width = MathHelper.sin(angle % (float) Math.PI * 2f);
-        } else if (this.world != null && this.world.getGameTime() % 20L == 0L) {
+        } else if (this.level != null && this.level.getGameTime() % 20L == 0L) {
             this.updateBeam();
         }
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
-        super.read(state, compound);
+    public void load(BlockState state, CompoundNBT compound) {
+        super.load(state, compound);
         this.lenght = compound.getInt("Length");
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
+    public CompoundNBT save(CompoundNBT compound) {
+        super.save(compound);
         compound.putInt("Length", this.lenght);
         return compound;
     }
 
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.pos, 0, this.getUpdateTag());
+        return new SUpdateTileEntityPacket(this.worldPosition, 0, this.getUpdateTag());
     }
 
     @Override
     public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundNBT());
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.read(this.getBlockState(), pkt.getNbtCompound());
+        this.load(this.getBlockState(), pkt.getTag());
         this.updateBeam();
     }
 
     @Override
-    public void remove() {
-        super.remove();
+    public void setRemoved() {
+        super.setRemoved();
     }
 
     public Direction getDirection() {
-        return this.getBlockState().get(LaserBlock.FACING);
+        return this.getBlockState().getValue(LaserBlock.FACING);
     }
 }

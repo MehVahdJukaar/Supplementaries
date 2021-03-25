@@ -18,11 +18,11 @@ public interface IWoodType {
     }*/
 
     default Material getMaterial(){
-        return Blocks.OAK_PLANKS.getDefaultState().getMaterial();
+        return Blocks.OAK_PLANKS.defaultBlockState().getMaterial();
     }
 
     default MaterialColor getColor(){
-        return Blocks.OAK_PLANKS.getMaterialColor();
+        return Blocks.OAK_PLANKS.defaultMaterialColor();
     }
 
     String getNamespace();

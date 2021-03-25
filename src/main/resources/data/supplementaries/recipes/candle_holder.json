@@ -1,0 +1,74 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "type": "forge:tag_empty",
+          "tag": "supplementaries:candles"
+        },
+        {
+          "flag": "candle_holder",
+          "type": "supplementaries:flag"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "pattern": [
+          " 2 ",
+          " 1 ",
+          " 3 "
+        ],
+        "key": {
+          "1": {
+            "tag": "supplementaries:candle/wick"
+          },
+          "2": {
+            "tag": "supplementaries:candle/base"
+          },
+          "3": {
+            "tag": "forge:nuggets/iron"
+          }
+        },
+        "result": {
+          "item": "supplementaries:candle_holder",
+          "count": 1
+        }
+      }
+    },
+    {
+      "conditions": [
+        {
+          "type": "forge:not",
+          "value": {
+            "type": "forge:tag_empty",
+            "tag": "supplementaries:candles"
+          }
+        },
+        {
+          "flag": "candle_holder",
+          "type": "supplementaries:flag"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "pattern": [
+          "1",
+          "2"
+        ],
+        "key": {
+          "1": {
+            "item": "supplementaries:candles"
+          },
+          "2": {
+            "tag": "forge:nuggets/iron"
+          }
+        },
+        "result": {
+          "item": "supplementaries:candle_holder",
+          "count": 1
+        }
+      }
+    }
+  ]
+}

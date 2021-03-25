@@ -17,18 +17,18 @@ public class ResetGlobeSeedCommand implements Command<CommandSource> {
 
     public static ArgumentBuilder<CommandSource, ?> register(CommandDispatcher<CommandSource> dispatcher) {
         return Commands.literal("resetseed")
-                .requires(cs -> cs.hasPermissionLevel(2))
+                .requires(cs -> cs.hasPermission(2))
                 .executes(CMD);
     }
 
     @Override
     public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
-        ServerWorld world = context.getSource().getWorld();
+        ServerWorld world = context.getSource().getLevel();
         GlobeData data = GlobeData.get(world);
         data.seed = world.getSeed();
         data.updateData();
         data.syncData(world);
-        context.getSource().sendFeedback(new TranslationTextComponent("message.supplementaries.command.globe_reset"), false);
+        context.getSource().sendSuccess(new TranslationTextComponent("message.supplementaries.command.globe_reset"), false);
         return 0;
     }
 }

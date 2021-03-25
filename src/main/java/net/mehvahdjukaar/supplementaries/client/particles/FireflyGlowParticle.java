@@ -19,24 +19,24 @@ public class FireflyGlowParticle extends SpriteTexturedParticle {
         //this.particleGreen = 1;
         // used for hitbox. not used
         // this.setSize(0.01F, 0.01F);
-        this.particleScale = (float) ClientConfigs.cached.FIREFLY_PAR_SCALE;//0.125f;
+        this.quadSize = (float) ClientConfigs.cached.FIREFLY_PAR_SCALE;//0.125f;
         // not used
         // this.motionX =0.2d;
         // this.motionY =0.2d;
         // this.motionZ =0.2d;
 
 
-        this.maxAge = new Random().nextInt(10)+ ClientConfigs.cached.FIREFLY_PAR_MAXAGE;
+        this.lifetime = new Random().nextInt(10)+ ClientConfigs.cached.FIREFLY_PAR_MAXAGE;
         //this.setColor(CommonUtil.ishalloween?0.7f:1,0,1);
     }
     @Override
-    public float getScale(float partialTicks) {
+    public float getQuadSize(float partialTicks) {
         if(CommonUtil.FESTIVITY.isHalloween()){
-            this.particleRed=0.3f;
-            this.particleGreen=0;
+            this.rCol=0.3f;
+            this.gCol=0;
         }
-        float f = ((float) this.age + partialTicks) / (float) this.maxAge;
-        return this.particleScale * (1 - f) * f * 4;// (1.0F - f * f * 0.5F);
+        float f = ((float) this.age + partialTicks) / (float) this.lifetime;
+        return this.quadSize * (1 - f) * f * 4;// (1.0F - f * f * 0.5F);
     }
 
 
@@ -52,16 +52,16 @@ public class FireflyGlowParticle extends SpriteTexturedParticle {
         // this.prevPosY =this.posY;
         // this.prevPosZ =this.posZ;
         this.age++;
-        if (this.age > this.maxAge-2) {
-            this.setExpired();
+        if (this.age > this.lifetime-2) {
+            this.remove();
         }
     }
 
-    public int getBrightnessForRender(float partialTick) {
-        float f = this.getScale(partialTick) / this.particleScale;
+    public int getLightColor(float partialTick) {
+        float f = this.getQuadSize(partialTick) / this.quadSize;
         f = MathHelper.clamp(f, 0.0F, 1.0F);
-        this.particleAlpha = f;
-        int i = super.getBrightnessForRender(partialTick);
+        this.alpha = f;
+        int i = super.getLightColor(partialTick);
         int j = (int) (f * 240);
         int k = i >> 16 & 255;
         j = Math.max(i>>0 & 255, j);
@@ -75,10 +75,10 @@ public class FireflyGlowParticle extends SpriteTexturedParticle {
         }
 
         @Override
-        public Particle makeParticle(BasicParticleType typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed,
+        public Particle createParticle(BasicParticleType typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed,
                                      double zSpeed) {
             FireflyGlowParticle op = new FireflyGlowParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed);
-            op.selectSpriteRandomly(this.spriteSet);
+            op.pickSprite(this.spriteSet);
             op.setColor(1f, 1f, 1f);
             return op;
         }

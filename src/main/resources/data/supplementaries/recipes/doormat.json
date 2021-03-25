@@ -1,0 +1,66 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "type": "forge:not",
+          "value": {
+            "type": "supplementaries:flag",
+            "flag": "flax"
+          }
+        },
+        {
+          "type": "supplementaries:flag",
+          "flag": "doormat"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "pattern": [
+          "11 ",
+          "   ",
+          "   "
+        ],
+        "key": {
+          "1": {
+            "tag": "minecraft:carpets"
+          }
+        },
+        "result": {
+          "item": "supplementaries:doormat",
+          "count": 1
+        }
+      }
+    },
+    {
+      "conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "doormat"
+        },
+        {
+          "type": "supplementaries:flag",
+          "flag": "flax"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "pattern": [
+          "11 ",
+          "   ",
+          "   "
+        ],
+        "key": {
+          "1": {
+            "tag": "forge:crops/flax"
+          }
+        },
+        "result": {
+          "item": "supplementaries:doormat",
+          "count": 1
+        }
+      }
+    }
+  ]
+}

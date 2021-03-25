@@ -2,7 +2,7 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "supplementaries:redstone_illuminator_recipe"
+      "supplementaries:redstone_illuminator"
     ]
   },
   "criteria": {
@@ -19,7 +19,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "supplementaries:redstone_illuminator_recipe"
+        "recipe": "supplementaries:redstone_illuminator"
       }
     }
   },

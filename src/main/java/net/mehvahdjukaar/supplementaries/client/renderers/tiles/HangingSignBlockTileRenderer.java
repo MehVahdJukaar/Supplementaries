@@ -41,33 +41,33 @@ public class HangingSignBlockTileRenderer extends TileEntityRenderer<HangingSign
     public void render(HangingSignBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
 
-        matrixStackIn.push();
+        matrixStackIn.pushPose();
         //rotate towards direction
-        if(tile.getBlockState().get(HangingSignBlock.HANGING))matrixStackIn.translate(0,0.125, 0);
+        if(tile.getBlockState().getValue(HangingSignBlock.HANGING))matrixStackIn.translate(0,0.125, 0);
         matrixStackIn.translate(0.5, 0.875, 0.5);
-        matrixStackIn.rotate(tile.getDirection().getOpposite().getRotation());
-        matrixStackIn.rotate(Const.XN90);
+        matrixStackIn.mulPose(tile.getDirection().getOpposite().getRotation());
+        matrixStackIn.mulPose(Const.XN90);
 
         //animation
-        matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(MathHelper.lerp(partialTicks, tile.prevAngle, tile.angle)));
+        matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(MathHelper.lerp(partialTicks, tile.prevAngle, tile.angle)));
         matrixStackIn.translate(-0.5, -0.875, -0.5);
         //render block
-        BlockRendererDispatcher blockRenderer = Minecraft.getInstance().getBlockRendererDispatcher();
-        BlockState state = tile.getBlockState().getBlock().getDefaultState().with(HangingSignBlock.TILE, true);
+        BlockRendererDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
+        BlockState state = tile.getBlockState().getBlock().defaultBlockState().setValue(HangingSignBlock.TILE, true);
         blockRenderer.renderBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
         //RendererUtil.renderBlockPlus(state, matrixStackIn, bufferIn, blockRenderer, tile.getWorld(), tile.getPos(), RenderType.getCutout());
         matrixStackIn.translate(0.5, 0.5 - 0.1875, 0.5);
-        matrixStackIn.rotate(Const.YN90);
+        matrixStackIn.mulPose(Const.YN90);
         // render item
         if (!tile.isEmpty()) {
             ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
             ItemStack stack = tile.getStackInSlot(0);
-            IBakedModel ibakedmodel = itemRenderer.getItemModelWithOverrides(stack, tile.getWorld(), null);
+            IBakedModel ibakedmodel = itemRenderer.getModel(stack, tile.getLevel(), null);
 
-            MapData mapdata = FilledMapItem.getMapData(stack, tile.getWorld());
+            MapData mapdata = FilledMapItem.getOrCreateSavedData(stack, tile.getLevel());
 
             for (int v = 0; v < 2; v++) {
-                matrixStackIn.push();
+                matrixStackIn.pushPose();
                 //render map
                 if(stack.getItem() instanceof AbstractMapItem) {
                     if (mapdata != null) {
@@ -75,59 +75,59 @@ public class HangingSignBlockTileRenderer extends TileEntityRenderer<HangingSign
                         matrixStackIn.scale(-0.0068359375F, -0.0068359375F, -0.0068359375F);
                         matrixStackIn.translate(-64.0D, -64.0D, 0.0D);
                         //matrixStackIn.translate(0.0D, 0.0D, -1.0D);
-                        Minecraft.getInstance().gameRenderer.getMapItemRenderer().renderMap(matrixStackIn, bufferIn, mapdata, true, combinedLightIn);
+                        Minecraft.getInstance().gameRenderer.getMapRenderer().render(matrixStackIn, bufferIn, mapdata, true, combinedLightIn);
                     }
                     else{
                         //request map data from server
                         PlayerEntity player = Minecraft.getInstance().player;
-                        NetworkHandler.INSTANCE.sendToServer(new RequestMapDataFromServerPacket(tile.getPos(),player.getUniqueID()));
+                        NetworkHandler.INSTANCE.sendToServer(new RequestMapDataFromServerPacket(tile.getBlockPos(),player.getUUID()));
                     }
                 }
                 //render item
                 else{
                     matrixStackIn.translate(0, 0, 0.078125);
                     matrixStackIn.scale(0.5f, 0.5f, 0.5f);
-                    matrixStackIn.rotate(Const.Y180);
-                    itemRenderer.renderItem(stack, ItemCameraTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
+                    matrixStackIn.mulPose(Const.Y180);
+                    itemRenderer.render(stack, ItemCameraTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
                             combinedOverlayIn, ibakedmodel);
                 }
-                matrixStackIn.pop();
+                matrixStackIn.popPose();
 
-                matrixStackIn.rotate(Const.Y180);
+                matrixStackIn.mulPose(Const.Y180);
 
             }
         }
         // render text
         else {
             // sign code
-            FontRenderer fontrenderer = this.renderDispatcher.getFontRenderer();
+            FontRenderer fontrenderer = this.renderer.getFont();
             int i = tile.textHolder.textColor.getTextColor();
-            int j = (int) ((double) NativeImage.getRed(i) * 0.4D);
-            int k = (int) ((double) NativeImage.getGreen(i) * 0.4D);
-            int l = (int) ((double) NativeImage.getBlue(i) * 0.4D);
-            int i1 = NativeImage.getCombined(0, l, k, j);
+            int j = (int) ((double) NativeImage.getR(i) * 0.4D);
+            int k = (int) ((double) NativeImage.getG(i) * 0.4D);
+            int l = (int) ((double) NativeImage.getB(i) * 0.4D);
+            int i1 = NativeImage.combine(0, l, k, j);
 
             for (int v = 0; v < 2; v++) {
-                matrixStackIn.push();
+                matrixStackIn.pushPose();
                 matrixStackIn.translate(0, 0, 0.0625 + 0.005);
                 matrixStackIn.scale(0.010416667F, -0.010416667F, 0.010416667F);
 
                 for(int k1 = 0; k1 < MAXLINES; ++k1) {
                     IReorderingProcessor ireorderingprocessor = tile.textHolder.getRenderText(k1, (p_243502_1_) -> {
-                        List<IReorderingProcessor> list = fontrenderer.trimStringToWidth(p_243502_1_, 75);
-                        return list.isEmpty() ? IReorderingProcessor.field_242232_a : list.get(0);
+                        List<IReorderingProcessor> list = fontrenderer.split(p_243502_1_, 75);
+                        return list.isEmpty() ? IReorderingProcessor.EMPTY : list.get(0);
                     });
                     if (ireorderingprocessor != null) {
-                        float f3 = (float)(-fontrenderer.func_243245_a(ireorderingprocessor) / 2);
-                        fontrenderer.func_238416_a_(ireorderingprocessor, f3, (float)(k1 * 10 - 20), i1, false, matrixStackIn.getLast().getMatrix(), bufferIn, false, 0, combinedLightIn);
+                        float f3 = (float)(-fontrenderer.width(ireorderingprocessor) / 2);
+                        fontrenderer.drawInBatch(ireorderingprocessor, f3, (float)(k1 * 10 - 20), i1, false, matrixStackIn.last().pose(), bufferIn, false, 0, combinedLightIn);
                     }
                 }
 
 
-                matrixStackIn.pop();
-                matrixStackIn.rotate(Const.Y180);
+                matrixStackIn.popPose();
+                matrixStackIn.mulPose(Const.Y180);
             }
         }
-        matrixStackIn.pop();
+        matrixStackIn.popPose();
     }
 }

@@ -21,15 +21,15 @@ public class BellTileMixinRenderer {
     public static final ModelRenderer rope = new ModelRenderer(16, 16, 0, 0);
 
         static {
-            rope.setTextureOffset(0, 0).addBox(-1.0F, -6.0F, -1.0F, 2.0F, 6.0F, 2.0F, 0.0F, false);
-            rope.setRotationPoint(0, 6, 0);
-            chain.setRotationPoint(0.0F, 0F, 0.0F);
-            chain.setTextureOffset(0, 10).addBox(-1.5F, -6.0F, 0.0F, 3.0F, 6.0F, 0.0F, 0.0F, false);
-            link.setRotationPoint(0.0F, 0.0F, 0.0F);
+            rope.texOffs(0, 0).addBox(-1.0F, -6.0F, -1.0F, 2.0F, 6.0F, 2.0F, 0.0F, false);
+            rope.setPos(0, 6, 0);
+            chain.setPos(0.0F, 0F, 0.0F);
+            chain.texOffs(0, 10).addBox(-1.5F, -6.0F, 0.0F, 3.0F, 6.0F, 0.0F, 0.0F, false);
+            link.setPos(0.0F, 0.0F, 0.0F);
             chain.addChild(link);
-            link.rotateAngleY=-1.5708F;
-            chain.rotateAngleX= (float) Math.PI;
-            link.setTextureOffset(6, 10).addBox(-1.5F, -6.0F, 0.0F, 3.0F, 6.0F, 0.0F, 0.0F, false);
+            link.yRot=-1.5708F;
+            chain.xRot= (float) Math.PI;
+            link.texOffs(6, 10).addBox(-1.5F, -6.0F, 0.0F, 3.0F, 6.0F, 0.0F, 0.0F, false);
         }
 
 
@@ -40,12 +40,12 @@ public class BellTileMixinRenderer {
             IBellConnection.BellConnection connection = ((IBellConnection) tile).getConnected();
             if(connection==null)return;
 
-            matrixStackIn.push();
+            matrixStackIn.pushPose();
             matrixStackIn.translate(0.5, 0, 0.5);
 
             if(connection.isRope()) {
                 //TODO: fix lighting since none of these methods are shaded properly
-                IVertexBuilder builder2 = bufferIn.getBuffer(RenderType.getEntityCutout(Textures.BELL_ROPE_TEXTURE));
+                IVertexBuilder builder2 = bufferIn.getBuffer(RenderType.entityCutout(Textures.BELL_ROPE_TEXTURE));
 
                 rope.render(matrixStackIn, builder2, combinedLightIn, combinedOverlayIn, 1, 1, 1, 1);
             }
@@ -55,13 +55,13 @@ public class BellTileMixinRenderer {
                 int lu = combinedLightIn & '\uffff';
                 int lv = combinedLightIn >> 16 & '\uffff'; // ok
 
-                TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(Textures.CHAIN_TEXTURE);
-                IVertexBuilder builder = bufferIn.getBuffer(RenderType.getCutout());
+                TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(Textures.CHAIN_TEXTURE);
+                IVertexBuilder builder = bufferIn.getBuffer(RenderType.cutout());
 
-                float sMinU = sprite.getMinU();
-                float sMinV = sprite.getMinV();
-                float sMaxU = sprite.getMaxU();
-                float sMaxV = sprite.getMaxV();
+                float sMinU = sprite.getU0();
+                float sMinV = sprite.getV0();
+                float sMaxU = sprite.getU1();
+                float sMaxV = sprite.getV1();
 
                 float atlasscaleU = sMaxU - sMinU;
                 float atlasscaleV = sMaxV - sMinV;
@@ -77,15 +77,15 @@ public class BellTileMixinRenderer {
                 //Minecraft.getInstance().gameSettings.ambientOcclusionStatus.
                 float col = 1f;
 
-                matrixStackIn.rotate(Const.Y45);
+                matrixStackIn.mulPose(Const.Y45);
 
                 RendererUtil.addQuadSide(builder, matrixStackIn, -w, -0, 0, w, h, 0, minu1, minv, maxu1, maxv, col, col, col, 1, lu, lv, 0, 0, 1);
                 RendererUtil.addQuadSide(builder, matrixStackIn, w, -0, 0, -w, h, 0, minu1, minv, maxu1, maxv, col, col, col, 1, lu, lv, 0, 0, 1);
-                matrixStackIn.rotate(Const.YN90);
+                matrixStackIn.mulPose(Const.YN90);
                 RendererUtil.addQuadSide(builder, matrixStackIn, -w, -0, 0, w, h, 0, minu2, minv, maxu2, maxv, col, col, col, 1, lu, lv, 0, 0, 1);
                 RendererUtil.addQuadSide(builder, matrixStackIn, w, -0, 0, -w, h, 0, minu2, minv, maxu2, maxv, col, col, col, 1, lu, lv, 0, 0, 1);
             }
-            matrixStackIn.pop();
+            matrixStackIn.popPose();
         }
     }
 

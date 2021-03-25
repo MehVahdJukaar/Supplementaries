@@ -23,16 +23,16 @@ public class BlackboardBlockTileRenderer extends TileEntityRenderer<BlackboardBl
                        int combinedOverlayIn) {
 
         //TODO: use render material
-        IVertexBuilder builder = bufferIn.getBuffer(RenderType.getEntitySolid(Textures.BLACKBOARD_TEXTURE));
+        IVertexBuilder builder = bufferIn.getBuffer(RenderType.entitySolid(Textures.BLACKBOARD_TEXTURE));
 
         int lu = combinedLightIn & '\uffff';
         int lv = combinedLightIn >> 16 & '\uffff';
 
-        matrixStackIn.push();
+        matrixStackIn.pushPose();
         matrixStackIn.translate(0.5,0.5,0.5);
 
-        matrixStackIn.rotate(tile.getBlockState().get(BlackboardBlock.FACING).getOpposite().getRotation());
-        matrixStackIn.rotate(Const.XN90);
+        matrixStackIn.mulPose(tile.getBlockState().getValue(BlackboardBlock.FACING).getOpposite().getRotation());
+        matrixStackIn.mulPose(Const.XN90);
         matrixStackIn.translate(0.5,0.5,0.1875);
         matrixStackIn.scale(-1,-1,1);
 
@@ -50,7 +50,7 @@ public class BlackboardBlockTileRenderer extends TileEntityRenderer<BlackboardBl
 
             }
         }
-        matrixStackIn.pop();
+        matrixStackIn.popPose();
 
     }
 }

@@ -26,44 +26,46 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class NoticeBoardBlock extends Block {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty HAS_BOOK = BlockStateProperties.HAS_BOOK;
     public NoticeBoardBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(HAS_BOOK, false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(HAS_BOOK, false));
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(FACING, HAS_BOOK);
     }
 
     public BlockState rotate(BlockState state, Rotation rot) {
-        return state.with(FACING, rot.rotate(state.get(FACING)));
+        return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
 
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
-        return state.rotate(mirrorIn.toRotation(state.get(FACING)));
+        return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing().getOpposite());
+        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
                                              BlockRayTraceResult hit) {
-        TileEntity tileentity = worldIn.getTileEntity(pos);
+        TileEntity tileentity = worldIn.getBlockEntity(pos);
 
-        boolean server = !worldIn.isRemote();
+        boolean server = !worldIn.isClientSide();
         if (tileentity instanceof NoticeBoardBlockTile) {
-            ItemStack itemstack = player.getHeldItem(handIn);
+            ItemStack itemstack = player.getItemInHand(handIn);
             NoticeBoardBlockTile te = (NoticeBoardBlockTile) tileentity;
-            boolean flag = itemstack.getItem() instanceof DyeItem && player.abilities.allowEdit;
-            boolean flag2 = (te.isEmpty() && (te.canInsertItem(0, itemstack, null))&& player.abilities.allowEdit);
-            boolean flag3 = (player.isSneaking() && !te.isEmpty());
+            boolean flag = itemstack.getItem() instanceof DyeItem && player.abilities.mayBuild;
+            boolean flag2 = (te.isEmpty() && (te.canPlaceItemThroughFace(0, itemstack, null))&& player.abilities.mayBuild);
+            boolean flag3 = (player.isShiftKeyDown() && !te.isEmpty());
 
 
             //insert Item
@@ -72,9 +74,9 @@ public class NoticeBoardBlock extends Block {
                     ItemStack it = itemstack.copy();
                     it.setCount(1);
                     te.setItems(NonNullList.withSize(1, it));
-                    te.markDirty();
-                    worldIn.playSound(null, pos, SoundEvents.ENTITY_ITEM_FRAME_ADD_ITEM, SoundCategory.BLOCKS, 1.0F,
-                            worldIn.rand.nextFloat() * 0.10F + 0.95F);
+                    te.setChanged();
+                    worldIn.playSound(null, pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundCategory.BLOCKS, 1.0F,
+                            worldIn.random.nextFloat() * 0.10F + 0.95F);
                 }
                 if (!player.isCreative()) {
                     itemstack.shrink(1);
@@ -87,33 +89,33 @@ public class NoticeBoardBlock extends Block {
                         itemstack.shrink(1);
                     }
                     if(server){
-                        te.markDirty();
+                        te.setChanged();
                     }
                 }
             }
             //pop item
             else if (flag3) {
                 if(server){
-                    ItemStack it = te.removeStackFromSlot(0);
-                    BlockPos newpos = pos.add(state.get(FACING).getDirectionVec());
+                    ItemStack it = te.removeItemNoUpdate(0);
+                    BlockPos newpos = pos.offset(state.getValue(FACING).getNormal());
                     ItemEntity drop = new ItemEntity(worldIn, newpos.getX() + 0.5, newpos.getY() + 0.5, newpos.getZ() + 0.5, it);
-                    drop.setDefaultPickupDelay();
-                    worldIn.addEntity(drop);
-                    te.markDirty();
+                    drop.setDefaultPickUpDelay();
+                    worldIn.addFreshEntity(drop);
+                    te.setChanged();
                 }
             }
             //open gui
             else if (player instanceof ServerPlayerEntity) {
-                player.openContainer((INamedContainerProvider)tileentity);
+                player.openMenu((INamedContainerProvider)tileentity);
             }
-            return ActionResultType.func_233537_a_(!server);
+            return ActionResultType.sidedSuccess(!server);
         }
         return ActionResultType.PASS;
     }
 
     @Override
-    public INamedContainerProvider getContainer(BlockState state, World worldIn, BlockPos pos) {
-        TileEntity tileEntity = worldIn.getTileEntity(pos);
+    public INamedContainerProvider getMenuProvider(BlockState state, World worldIn, BlockPos pos) {
+        TileEntity tileEntity = worldIn.getBlockEntity(pos);
         return tileEntity instanceof INamedContainerProvider ? (INamedContainerProvider) tileEntity : null;
     }
 
@@ -128,49 +130,49 @@ public class NoticeBoardBlock extends Block {
     }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+    public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         //only needed if you are not using block entity tag
-        if (stack.hasDisplayName()) {
-            TileEntity tileentity = worldIn.getTileEntity(pos);
+        if (stack.hasCustomHoverName()) {
+            TileEntity tileentity = worldIn.getBlockEntity(pos);
             if (tileentity instanceof NoticeBoardBlockTile) {
-                ((LockableTileEntity) tileentity).setCustomName(stack.getDisplayName());
+                ((LockableTileEntity) tileentity).setCustomName(stack.getHoverName());
             }
         }
     }
 
     @Override
-    public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
-        if(facing==stateIn.get(FACING)){
-            TileEntity te = worldIn.getTileEntity(currentPos);
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
+        if(facing==stateIn.getValue(FACING)){
+            TileEntity te = worldIn.getBlockEntity(currentPos);
             if(te instanceof NoticeBoardBlockTile){
-                ((NoticeBoardBlockTile)te).textVisible=!facingState.isSolidSide(worldIn,currentPos,facing.getOpposite());
+                ((NoticeBoardBlockTile)te).textVisible=!facingState.isFaceSturdy(worldIn,currentPos,facing.getOpposite());
             }
         }
         return stateIn;
     }
 
     @Override
-    public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
-            TileEntity tileentity = world.getTileEntity(pos);
+            TileEntity tileentity = world.getBlockEntity(pos);
             if (tileentity instanceof NoticeBoardBlockTile) {
-                InventoryHelper.dropInventoryItems(world, pos, (NoticeBoardBlockTile) tileentity);
-                world.updateComparatorOutputLevel(pos, this);
+                InventoryHelper.dropContents(world, pos, (NoticeBoardBlockTile) tileentity);
+                world.updateNeighbourForOutputSignal(pos, this);
             }
-            super.onReplaced(state, world, pos, newState, isMoving);
+            super.onRemove(state, world, pos, newState, isMoving);
         }
     }
 
     @Override
-    public boolean hasComparatorInputOverride(BlockState state) {
+    public boolean hasAnalogOutputSignal(BlockState state) {
         return true;
     }
 
     @Override
-    public int getComparatorInputOverride(BlockState blockState, World world, BlockPos pos) {
-        TileEntity tileentity = world.getTileEntity(pos);
+    public int getAnalogOutputSignal(BlockState blockState, World world, BlockPos pos) {
+        TileEntity tileentity = world.getBlockEntity(pos);
         if (tileentity instanceof NoticeBoardBlockTile)
-            return Container.calcRedstoneFromInventory((NoticeBoardBlockTile) tileentity);
+            return Container.getRedstoneSignalFromContainer((NoticeBoardBlockTile) tileentity);
         else
             return 0;
     }

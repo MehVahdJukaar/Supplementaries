@@ -18,33 +18,33 @@ public class QuarkDoubleDoorPlugin {
     public static void openDoor(World world,BlockState state, BlockPos pos) {
 
         if (ModuleLoader.INSTANCE.isModuleEnabled(DoubleDoorOpeningModule.class)) {
-            Direction direction = state.get(DoorBlock.FACING);
-            boolean isOpen = state.get(DoorBlock.OPEN);
-            DoorHingeSide isMirrored = state.get(DoorBlock.HINGE);
-            BlockPos mirrorPos = pos.offset(isMirrored == DoorHingeSide.RIGHT ? direction.rotateYCCW() : direction.rotateY());
-            BlockPos doorPos = state.get(DoorBlock.HALF) == DoubleBlockHalf.LOWER ? mirrorPos : mirrorPos.down();
+            Direction direction = state.getValue(DoorBlock.FACING);
+            boolean isOpen = state.getValue(DoorBlock.OPEN);
+            DoorHingeSide isMirrored = state.getValue(DoorBlock.HINGE);
+            BlockPos mirrorPos = pos.relative(isMirrored == DoorHingeSide.RIGHT ? direction.getCounterClockWise() : direction.getClockWise());
+            BlockPos doorPos = state.getValue(DoorBlock.HALF) == DoubleBlockHalf.LOWER ? mirrorPos : mirrorPos.below();
             BlockState other = world.getBlockState(doorPos);
-            if (other.getBlock() == state.getBlock() && other.get(DoorBlock.FACING) == direction && other.get(DoorBlock.OPEN) == isOpen && other.get(DoorBlock.HINGE) != isMirrored) {
-                BlockState newState = other.func_235896_a_(DoorBlock.OPEN);
-                world.setBlockState(doorPos, newState,10);
+            if (other.getBlock() == state.getBlock() && other.getValue(DoorBlock.FACING) == direction && other.getValue(DoorBlock.OPEN) == isOpen && other.getValue(DoorBlock.HINGE) != isMirrored) {
+                BlockState newState = other.cycle(DoorBlock.OPEN);
+                world.setBlock(doorPos, newState,10);
             }
         }
     }
     public static void openDoorKey(World world, BlockState state, BlockPos pos, PlayerEntity player, Hand hand) {
 
         if (ModuleLoader.INSTANCE.isModuleEnabled(DoubleDoorOpeningModule.class)) {
-            Direction direction = state.get(DoorBlock.FACING);
-            boolean isOpen = state.get(DoorBlock.OPEN);
-            DoorHingeSide isMirrored = state.get(DoorBlock.HINGE);
-            BlockPos mirrorPos = pos.offset(isMirrored == DoorHingeSide.RIGHT ? direction.rotateYCCW() : direction.rotateY());
-            BlockPos doorPos = state.get(DoorBlock.HALF) == DoubleBlockHalf.LOWER ? mirrorPos : mirrorPos.down();
+            Direction direction = state.getValue(DoorBlock.FACING);
+            boolean isOpen = state.getValue(DoorBlock.OPEN);
+            DoorHingeSide isMirrored = state.getValue(DoorBlock.HINGE);
+            BlockPos mirrorPos = pos.relative(isMirrored == DoorHingeSide.RIGHT ? direction.getCounterClockWise() : direction.getClockWise());
+            BlockPos doorPos = state.getValue(DoorBlock.HALF) == DoubleBlockHalf.LOWER ? mirrorPos : mirrorPos.below();
             BlockState other = world.getBlockState(doorPos);
-            if (other.getBlock() == state.getBlock() && other.get(DoorBlock.FACING) == direction && other.get(DoorBlock.OPEN) == isOpen && other.get(DoorBlock.HINGE) != isMirrored) {
-                TileEntity te = world.getTileEntity(doorPos);
+            if (other.getBlock() == state.getBlock() && other.getValue(DoorBlock.FACING) == direction && other.getValue(DoorBlock.OPEN) == isOpen && other.getValue(DoorBlock.HINGE) != isMirrored) {
+                TileEntity te = world.getBlockEntity(doorPos);
                 if (te instanceof KeyLockableTile &&
                         (((KeyLockableTile) te).handleAction(player, hand, "door"))) {
-                    BlockState newState = other.func_235896_a_(DoorBlock.OPEN);
-                    world.setBlockState(doorPos, newState,10);
+                    BlockState newState = other.cycle(DoorBlock.OPEN);
+                    world.setBlock(doorPos, newState,10);
                 }
             }
         }

@@ -23,6 +23,8 @@ import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public abstract class SwayingBlock extends Block implements IWaterLoggable {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final IntegerProperty EXTENSION = BlockProperties.EXTENSION;
@@ -32,54 +34,54 @@ public abstract class SwayingBlock extends Block implements IWaterLoggable {
     }
 
     @Override
-    public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos,
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos,
                                           BlockPos facingPos) {
-        if (stateIn.get(WATERLOGGED)) {
-            worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
+        if (stateIn.getValue(WATERLOGGED)) {
+            worldIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
         }
-        return facing == stateIn.get(FACING).getOpposite()?  !stateIn.isValidPosition(worldIn, currentPos)
-                ? Blocks.AIR.getDefaultState()
+        return facing == stateIn.getValue(FACING).getOpposite()?  !stateIn.canSurvive(worldIn, currentPos)
+                ? Blocks.AIR.defaultBlockState()
                 : this.getConnectedState(stateIn,facingState, worldIn,facingPos) : stateIn;
     }
 
     @Override
     public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
     @Override
-    public PushReaction getPushReaction(BlockState state) {
+    public PushReaction getPistonPushReaction(BlockState state) {
         return PushReaction.DESTROY;
     }
 
     @Override
     public BlockState rotate(BlockState state, Rotation rot) {
-        return state.with(FACING, rot.rotate(state.get(FACING)));
+        return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
 
     @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
-        return state.rotate(mirrorIn.toRotation(state.get(FACING)));
+        return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
 
     public BlockState getConnectedState(BlockState state, BlockState facingState, IWorld world, BlockPos pos){
         int ext = CommonUtil.getPostSize(facingState,pos,world);
-        return state.with(EXTENSION, ext);
+        return state.setValue(EXTENSION, ext);
     }
 
     @Override
-    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        super.onEntityCollision(state, world, pos, entity);
+    public void entityInside(BlockState state, World world, BlockPos pos, Entity entity) {
+        super.entityInside(state, world, pos, entity);
 
-        TileEntity tileentity = world.getTileEntity(pos);
+        TileEntity tileentity = world.getBlockEntity(pos);
         if (tileentity instanceof SwayingBlockTile) {
             SwayingBlockTile te = ((SwayingBlockTile) tileentity);
-            Vector3d mot = entity.getMotion();
+            Vector3d mot = entity.getDeltaMovement();
             if(mot.length()>0.05){
                 Vector3d norm = new Vector3d(mot.x,0,mot.z).normalize();
-                Vector3i dv = te.getDirection().rotateY().getDirectionVec();
+                Vector3i dv = te.getDirection().getClockWise().getNormal();
                 Vector3d vec = new Vector3d(dv.getX(),0,dv.getZ()).normalize();
-                double dot = norm.dotProduct(vec);
+                double dot = norm.dot(vec);
                 if(dot!=0){
                     te.inv=dot<0;
                 }
@@ -91,12 +93,12 @@ public abstract class SwayingBlock extends Block implements IWaterLoggable {
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
+    public BlockRenderType getRenderShape(BlockState state) {
         return BlockRenderType.MODEL;
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(FACING, EXTENSION, WATERLOGGED);
     }
 

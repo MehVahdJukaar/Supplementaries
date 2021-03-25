@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 
 
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.ItemStackHelper;
@@ -12,9 +13,12 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.LockableLootTileEntity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
+import net.minecraft.util.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.LazyOptional;
@@ -34,38 +38,68 @@ public abstract class ItemDisplayTile extends LockableLootTileEntity implements 
 
     //for server
     @Override
-    public void markDirty() {
+    public void setChanged() {
         this.updateVisuals();
-        super.markDirty();
+        super.setChanged();
     }
 
     public void updateVisuals(){
-        this.world.notifyBlockUpdate(this.pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
+        this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
     }
 
     //TODO: use this
     public ItemStack getDisplayedItem(){
-        return this.getStackInSlot(0);
+        return this.getItem(0);
     }
 
     public void setDisplayedItem(ItemStack stack){
         this.setItems(NonNullList.withSize(1, stack));
     }
 
+    public ActionResultType interact(PlayerEntity player, Hand handIn){
+        if(handIn==Hand.MAIN_HAND) {
+            ItemStack handItem = player.getItemInHand(handIn);
+            //remove
+            if (!this.isEmpty() && handItem.isEmpty()) {
+                ItemStack it = this.removeItemNoUpdate(0);
+                if (!this.level.isClientSide()) {
+                    player.setItemInHand(handIn, it);
+                    this.setChanged();
+                }
+                return ActionResultType.sidedSuccess(this.level.isClientSide);
+            }
+            //place
+            else if (!handItem.isEmpty() && this.canPlaceItem(0, handItem)) {
+                ItemStack it = handItem.copy();
+                it.setCount(1);
+                this.setDisplayedItem(it);
+
+                if (!player.isCreative()) {
+                    handItem.shrink(1);
+                }
+                if (!this.level.isClientSide()) {
+                    this.level.playSound(null, this.worldPosition, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundCategory.BLOCKS, 1.0F, this.level.random.nextFloat() * 0.10F + 0.95F);
+                    this.setChanged();
+                }
+                return ActionResultType.sidedSuccess(this.level.isClientSide);
+            }
+        }
+        return ActionResultType.PASS;
+    }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
-        super.read(state, compound);
-        if (!this.checkLootAndRead(compound)) {
-            this.stacks = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
+    public void load(BlockState state, CompoundNBT compound) {
+        super.load(state, compound);
+        if (!this.tryLoadLootTable(compound)) {
+            this.stacks = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
         }
         ItemStackHelper.loadAllItems(compound, this.stacks);
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
-        if (!this.checkLootAndWrite(compound)) {
+    public CompoundNBT save(CompoundNBT compound) {
+        super.save(compound);
+        if (!this.trySaveLootTable(compound)) {
             ItemStackHelper.saveAllItems(compound, this.stacks);
         }
         return compound;
@@ -73,21 +107,21 @@ public abstract class ItemDisplayTile extends LockableLootTileEntity implements 
 
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.pos, 0, this.getUpdateTag());
+        return new SUpdateTileEntityPacket(this.worldPosition, 0, this.getUpdateTag());
     }
 
     @Override
     public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundNBT());
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.read(this.getBlockState(),pkt.getNbtCompound());
+        this.load(this.getBlockState(),pkt.getTag());
     }
 
     @Override
-    public int getSizeInventory() {
+    public int getContainerSize() {
         return stacks.size();
     }
 
@@ -100,13 +134,13 @@ public abstract class ItemDisplayTile extends LockableLootTileEntity implements 
     }
 
     @Override
-    public int getInventoryStackLimit() {
+    public int getMaxStackSize() {
         return 1;
     }
 
     @Override
     public Container createMenu(int id, PlayerInventory player) {
-        return ChestContainer.createGeneric9X3(id, player, this);
+        return ChestContainer.threeRows(id, player, this);
     }
 
     @Override
@@ -120,23 +154,23 @@ public abstract class ItemDisplayTile extends LockableLootTileEntity implements 
     }
 
     @Override
-    public boolean isItemValidForSlot(int index, ItemStack stack) {
+    public boolean canPlaceItem(int index, ItemStack stack) {
         return this.isEmpty();
     }
 
     @Override
-    public boolean canInsertItem(int index, ItemStack stack, @Nullable Direction direction) {
+    public boolean canPlaceItemThroughFace(int index, ItemStack stack, @Nullable Direction direction) {
         return false;
     }
 
     @Override
-    public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
+    public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
         return false;
     }
 
     @Override
     public int[] getSlotsForFace(Direction side) {
-        return IntStream.range(0, this.getSizeInventory()).toArray();
+        return IntStream.range(0, this.getContainerSize()).toArray();
     }
 
 
@@ -144,14 +178,14 @@ public abstract class ItemDisplayTile extends LockableLootTileEntity implements 
     private final LazyOptional<? extends IItemHandler>[] handlers = SidedInvWrapper.create(this, Direction.values());
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
-        if (!this.removed && facing != null && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+        if (!this.remove && facing != null && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
             return handlers[facing.ordinal()].cast();
         return super.getCapability(capability, facing);
     }
 
     @Override
-    public void remove() {
-        super.remove();
+    public void setRemoved() {
+        super.setRemoved();
         for (LazyOptional<? extends IItemHandler> handler : handlers)
             handler.invalidate();
     }

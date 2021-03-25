@@ -344,6 +344,9 @@ public class ServerConfigs {
         public static ForgeConfigSpec.ConfigValue<List<? extends String>> FIREFLY_BIOMES;
         public static ForgeConfigSpec.ConfigValue<List<? extends String>> FIREFLY_MOD_WHITELIST;
 
+        public static ForgeConfigSpec.IntValue ROAD_SIGN_SPAWN_CHANCE;
+        public static ForgeConfigSpec.BooleanValue EXPERIMENTAL_ROAD_SIGN;
+
         private static void init(ForgeConfigSpec.Builder builder) {
             builder.comment("Configure spawning conditions")
                     .push("spawns");
@@ -370,6 +373,13 @@ public class ServerConfigs {
             FIREFLY_MAX = builder.comment("Maximum group size")
                     .defineInRange("max", 9, 0, 64);
 
+            builder.pop();
+
+            builder.push("structures");
+            EXPERIMENTAL_ROAD_SIGN = builder.comment("enable experimental road sign structures. This will likely change in the nar future")
+                    .define("experimental_road_signs",true);
+            ROAD_SIGN_SPAWN_CHANCE = builder.comment("the higher this number is the less sign posts you'll find")
+                    .defineInRange("rarity",80,1,2000);
             builder.pop();
             builder.pop();
         }

@@ -24,6 +24,7 @@ public class ConfigHandler {
     public static void init(){
         //need to register on 2 different busses, can't use subscribe event
         MinecraftForge.EVENT_BUS.addListener(ConfigHandler::onPlayerLoggedIn);
+        MinecraftForge.EVENT_BUS.addListener(ConfigHandler::onPlayerLoggedOut);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(ConfigHandler::reloadConfigsEvent);
     }
 
@@ -41,11 +42,20 @@ public class ConfigHandler {
 
 
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-        if (!event.getPlayer().world.isRemote) {
+        if (!event.getPlayer().level.isClientSide) {
             //send this configuration to connected clients
             syncServerConfigs(event.getPlayer());
         }
     }
+    public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
+        if (event.getPlayer().level.isClientSide) {
+            //reload local common configs
+            //maybe not needed
+            ServerConfigs.loadLocal();
+            ServerConfigs.cached.refresh();
+        }
+    }
+
 
 
 

@@ -19,7 +19,7 @@ public class BambooSpikesPistonMovement {
 
     //called by mixin code
     public static void tick(World world, BlockPos pos, AxisAlignedBB pistonBB, boolean sameDir, TileEntity movingTile){
-        List<Entity> list = world.getEntitiesWithinAABBExcludingEntity(null, pistonBB);
+        List<Entity> list = world.getEntities(null, pistonBB);
         for(Entity entity : list){
             if(entity instanceof PlayerEntity && ((PlayerEntity) entity).isCreative())return;
             if(entity instanceof LivingEntity && entity.isAlive()) {
@@ -37,7 +37,7 @@ public class BambooSpikesPistonMovement {
                                     IBlockHolder te = ((IBlockHolder) movingTile);
                                     BlockState state = te.getHeldBlock();
                                     if(state.getBlock() instanceof BambooSpikesBlock) {
-                                        te.setHeldBlock(state.with(BambooSpikesBlock.TIPPED,false));
+                                        te.setHeldBlock(state.setValue(BambooSpikesBlock.TIPPED,false));
                                     }
                                 }
                             }
@@ -46,7 +46,7 @@ public class BambooSpikesPistonMovement {
                         }
                     }
 
-                    entity.attackEntityFrom(BambooSpikesBlock.SPIKE_DAMAGE, sameDir ? 3 : 1);
+                    entity.hurt(BambooSpikesBlock.SPIKE_DAMAGE, sameDir ? 3 : 1);
 
                 }
             }

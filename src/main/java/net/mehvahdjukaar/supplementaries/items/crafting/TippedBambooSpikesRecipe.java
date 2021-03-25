@@ -34,8 +34,8 @@ public class TippedBambooSpikesRecipe extends SpecialRecipe {
         ItemStack itemstack = null;
         ItemStack itemstack1 = null;
 
-        for(int i = 0; i < inv.getSizeInventory(); ++i) {
-            ItemStack stack = inv.getStackInSlot(i);
+        for(int i = 0; i < inv.getContainerSize(); ++i) {
+            ItemStack stack = inv.getItem(i);
             if (isEmptySpike(stack)) {
                 if (itemstack != null) {
                     return false;
@@ -57,10 +57,10 @@ public class TippedBambooSpikesRecipe extends SpecialRecipe {
 
 
     @Override
-    public ItemStack getCraftingResult(CraftingInventory inv) {
+    public ItemStack assemble(CraftingInventory inv) {
         Potion potion = Potions.EMPTY;
-        for(int i = 0; i < inv.getSizeInventory(); ++i) {
-            Potion p = PotionUtils.getPotionFromItem(inv.getStackInSlot(i));
+        for(int i = 0; i < inv.getContainerSize(); ++i) {
+            Potion p = PotionUtils.getPotion(inv.getItem(i));
             if(p!=Potions.EMPTY){
                 potion=p;
                 break;
@@ -72,11 +72,11 @@ public class TippedBambooSpikesRecipe extends SpecialRecipe {
 
     @Override
     public NonNullList<ItemStack> getRemainingItems(CraftingInventory inv) {
-        return NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
+        return NonNullList.withSize(inv.getContainerSize(), ItemStack.EMPTY);
     }
 
     @Override
-    public boolean canFit(int width, int height) {
+    public boolean canCraftInDimensions(int width, int height) {
         return width * height >= 2;
     }
 

@@ -24,15 +24,17 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
+import vazkii.quark.api.ITransferManager;
 
 import javax.annotation.Nullable;
 import java.util.stream.IntStream;
 
-public class SackBlockTile extends LockableLootTileEntity implements INameable, ISidedInventory {
+public class SackBlockTile extends LockableLootTileEntity implements INameable, ISidedInventory, ICapabilityProvider, ITransferManager {
 
     private NonNullList<ItemStack> items = NonNullList.withSize(9, ItemStack.EMPTY);
     private int numPlayersUsing;
@@ -44,7 +46,7 @@ public class SackBlockTile extends LockableLootTileEntity implements INameable, 
     }
 
     @Override
-    public int getSizeInventory() {
+    public int getContainerSize() {
         return this.items.size();
     }
 
@@ -64,7 +66,7 @@ public class SackBlockTile extends LockableLootTileEntity implements INameable, 
     }
 
     @Override
-    public void openInventory(PlayerEntity player) {
+    public void startOpen(PlayerEntity player) {
         if (!player.isSpectator()) {
             if (this.numPlayersUsing < 0) {
                 this.numPlayersUsing = 0;
@@ -72,22 +74,22 @@ public class SackBlockTile extends LockableLootTileEntity implements INameable, 
 
             ++this.numPlayersUsing;
             BlockState blockstate = this.getBlockState();
-            boolean flag = blockstate.get(SackBlock.OPEN);
+            boolean flag = blockstate.getValue(SackBlock.OPEN);
             if (!flag) {
-                this.world.playSound(null, this.pos.getX()+0.5, this.pos.getY()+0.5, this.pos.getZ()+0.5,
-                        SoundEvents.BLOCK_WOOL_BREAK, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.55F);
-                this.world.playSound(null, this.pos.getX()+0.5, this.pos.getY()+0.5, this.pos.getZ()+0.5,
-                        SoundEvents.ENTITY_LEASH_KNOT_PLACE, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.7F);
-                this.world.setBlockState(this.getPos(), blockstate.with(SackBlock.OPEN, true), 3);
+                this.level.playSound(null, this.worldPosition.getX()+0.5, this.worldPosition.getY()+0.5, this.worldPosition.getZ()+0.5,
+                        SoundEvents.WOOL_BREAK, SoundCategory.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.55F);
+                this.level.playSound(null, this.worldPosition.getX()+0.5, this.worldPosition.getY()+0.5, this.worldPosition.getZ()+0.5,
+                        SoundEvents.LEASH_KNOT_PLACE, SoundCategory.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.7F);
+                this.level.setBlock(this.getBlockPos(), blockstate.setValue(SackBlock.OPEN, true), 3);
             }
-            this.world.getPendingBlockTicks().scheduleTick(this.getPos(), this.getBlockState().getBlock(), 5);
+            this.level.getBlockTicks().scheduleTick(this.getBlockPos(), this.getBlockState().getBlock(), 5);
         }
     }
     public static int calculatePlayersUsing(World world, LockableTileEntity tile, int x, int y, int z) {
         int i = 0;
-        for(PlayerEntity playerentity : world.getEntitiesWithinAABB(PlayerEntity.class, new AxisAlignedBB((float)x - 5.0F, (float)y - 5.0F, (float)z - 5.0F, (float)(x + 1) + 5.0F, (float)(y + 1) + 5.0F, (float)(z + 1) + 5.0F))) {
-            if (playerentity.openContainer instanceof SackContainer) {
-                IInventory iinventory = ((SackContainer)playerentity.openContainer).inventory;
+        for(PlayerEntity playerentity : world.getEntitiesOfClass(PlayerEntity.class, new AxisAlignedBB((float)x - 5.0F, (float)y - 5.0F, (float)z - 5.0F, (float)(x + 1) + 5.0F, (float)(y + 1) + 5.0F, (float)(z + 1) + 5.0F))) {
+            if (playerentity.containerMenu instanceof SackContainer) {
+                IInventory iinventory = ((SackContainer)playerentity.containerMenu).inventory;
                 if (iinventory == tile) {
                     ++i;
                 }
@@ -97,12 +99,12 @@ public class SackBlockTile extends LockableLootTileEntity implements INameable, 
     }
 
     public void barrelTick() {
-        int i = this.pos.getX();
-        int j = this.pos.getY();
-        int k = this.pos.getZ();
-        this.numPlayersUsing = calculatePlayersUsing(this.world, this, i, j, k);
+        int i = this.worldPosition.getX();
+        int j = this.worldPosition.getY();
+        int k = this.worldPosition.getZ();
+        this.numPlayersUsing = calculatePlayersUsing(this.level, this, i, j, k);
         if (this.numPlayersUsing > 0) {
-            this.world.getPendingBlockTicks().scheduleTick(this.getPos(), this.getBlockState().getBlock(), 5);
+            this.level.getBlockTicks().scheduleTick(this.getBlockPos(), this.getBlockState().getBlock(), 5);
         } else {
             BlockState blockstate = this.getBlockState();
             /*
@@ -111,51 +113,51 @@ public class SackBlockTile extends LockableLootTileEntity implements INameable, 
                 return;
             }*/
 
-            boolean flag = blockstate.get(SackBlock.OPEN);
+            boolean flag = blockstate.getValue(SackBlock.OPEN);
             if (flag) {
                 //this.playSound(blockstate, SoundEvents.BLOCK_BARREL_CLOSE);
-                this.world.playSound((PlayerEntity)null, this.pos.getX()+0.5, this.pos.getY()+0.5, this.pos.getZ()+0.5,
-                        SoundEvents.BLOCK_WOOL_BREAK, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.5F);
-                this.world.playSound(null, this.pos.getX()+0.5, this.pos.getY()+0.5, this.pos.getZ()+0.5,
-                        SoundEvents.ENTITY_LEASH_KNOT_PLACE, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.6F);
-                this.world.setBlockState(this.getPos(), blockstate.with(SackBlock.OPEN, false), 3);
+                this.level.playSound((PlayerEntity)null, this.worldPosition.getX()+0.5, this.worldPosition.getY()+0.5, this.worldPosition.getZ()+0.5,
+                        SoundEvents.WOOL_BREAK, SoundCategory.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.5F);
+                this.level.playSound(null, this.worldPosition.getX()+0.5, this.worldPosition.getY()+0.5, this.worldPosition.getZ()+0.5,
+                        SoundEvents.LEASH_KNOT_PLACE, SoundCategory.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.6F);
+                this.level.setBlock(this.getBlockPos(), blockstate.setValue(SackBlock.OPEN, false), 3);
             }
         }
 
     }
 
     @Override
-    public void closeInventory(PlayerEntity player) {
+    public void stopOpen(PlayerEntity player) {
         if (!player.isSpectator()) {
             --this.numPlayersUsing;
         }
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT nbt) {
-        super.read(state, nbt);
+    public void load(BlockState state, CompoundNBT nbt) {
+        super.load(state, nbt);
         this.loadFromNbt(nbt);
     }
 
     //TODO: separate save to nbt from write so you don't write data you don't need. it update packet too
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
+    public CompoundNBT save(CompoundNBT compound) {
+        super.save(compound);
         return this.saveToNbt(compound);
     }
 
     public void loadFromNbt(CompoundNBT compound) {
-        this.items = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
-        if (!this.checkLootAndRead(compound) && compound.contains("Items", 9)) {
+        this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
+        if (!this.tryLoadLootTable(compound) && compound.contains("Items", 9)) {
             ItemStackHelper.loadAllItems(compound, this.items);
         }
         if (compound.contains("CustomName", 8)) {
-            this.customName = ITextComponent.Serializer.getComponentFromJson(compound.getString("CustomName"));
+            this.customName = ITextComponent.Serializer.fromJson(compound.getString("CustomName"));
         }
     }
 
     public CompoundNBT saveToNbt(CompoundNBT compound) {
-        if (!this.checkLootAndWrite(compound)) {
+        if (!this.trySaveLootTable(compound)) {
             ItemStackHelper.saveAllItems(compound, this.items, false);
         }
         if (this.customName != null) {
@@ -181,21 +183,21 @@ public class SackBlockTile extends LockableLootTileEntity implements INameable, 
 
     @Override
     public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundNBT());
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.read(this.getBlockState(), pkt.getNbtCompound());
+        this.load(this.getBlockState(), pkt.getTag());
     }
 
     public boolean isSlotUnlocked(int ind){
         int add = ServerConfigs.cached.SACK_SLOTS;
-        return (ind<(this.getSizeInventory()-4+(2*add)));
+        return (ind<(this.getContainerSize()-4+(2*add)));
     }
 
     @Override
-    public boolean isItemValidForSlot(int index, ItemStack stack) {
+    public boolean canPlaceItem(int index, ItemStack stack) {
         return isSlotUnlocked(index) && CommonUtil.isAllowedInShulker(stack);
         //return super.isItemValidForSlot(index,stack);
     }
@@ -203,32 +205,36 @@ public class SackBlockTile extends LockableLootTileEntity implements INameable, 
     //TODO: figure out what this handlers and ISided inventory do
     @Override
     public int[] getSlotsForFace(Direction side) {
-        return IntStream.range(0, this.getSizeInventory()).toArray();
+        return IntStream.range(0, this.getContainerSize()).toArray();
     }
 
     @Override
-    public boolean canInsertItem(int index, ItemStack stack, @Nullable Direction direction) {
-        return this.isItemValidForSlot(index, stack);
+    public boolean canPlaceItemThroughFace(int index, ItemStack stack, @Nullable Direction direction) {
+        return this.canPlaceItem(index, stack);
     }
 
     @Override
-    public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
+    public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
         return isSlotUnlocked(index);
     }
 
     private final LazyOptional<? extends IItemHandler>[] handlers = SidedInvWrapper.create(this, Direction.values());
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
-        if (!this.removed && facing != null && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+        if (!this.remove && facing != null && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
             return handlers[facing.ordinal()].cast();
         return super.getCapability(capability, facing);
     }
 
     @Override
-    public void remove() {
-        super.remove();
+    public void setRemoved() {
+        super.setRemoved();
         for (LazyOptional<? extends IItemHandler> handler : handlers)
             handler.invalidate();
     }
 
+    @Override
+    public boolean acceptsTransfer(PlayerEntity player) {
+        return false;
+    }
 }

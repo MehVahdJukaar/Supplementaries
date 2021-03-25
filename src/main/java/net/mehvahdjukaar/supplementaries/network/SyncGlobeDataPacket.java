@@ -13,7 +13,7 @@ public class SyncGlobeDataPacket {
     public GlobeData data;
     public SyncGlobeDataPacket(PacketBuffer buffer) {
         this.data = new GlobeData() ;
-        this.data.read(buffer.readCompoundTag());
+        this.data.load(buffer.readNbt());
     }
 
     public SyncGlobeDataPacket(GlobeData data) {
@@ -21,7 +21,7 @@ public class SyncGlobeDataPacket {
     }
 
     public static void buffer(SyncGlobeDataPacket message, PacketBuffer buffer) {
-        buffer.writeCompoundTag(message.data.write(new CompoundNBT()));
+        buffer.writeNbt(message.data.save(new CompoundNBT()));
     }
 
     public static void handler(SyncGlobeDataPacket message, Supplier<NetworkEvent.Context> contextSupplier) {

@@ -25,19 +25,19 @@ public class HourGlassBlockTileRenderer extends TileEntityRenderer<HourGlassBloc
                                    int combinedOverlayIn, TextureAtlasSprite sprite, float height, Direction dir){
 
 
-        IVertexBuilder builder = bufferIn.getBuffer(RenderType.getSolid());
+        IVertexBuilder builder = bufferIn.getBuffer(RenderType.solid());
         int color = 0xffffff;
-        matrixStackIn.push();
+        matrixStackIn.pushPose();
         matrixStackIn.translate(0.5,0.5,0.5);
         Quaternion q = dir.getRotation();
-        matrixStackIn.rotate(q);
+        matrixStackIn.mulPose(q);
 
-        q.conjugate();
+        q.conj();
 
         if(height!=0) {
-            matrixStackIn.push();
+            matrixStackIn.pushPose();
             matrixStackIn.translate(0,-0.25,0);
-            matrixStackIn.rotate(q);
+            matrixStackIn.mulPose(q);
             matrixStackIn.translate(0,-0.125,0);
             float h1 = height * 0.25f;
             RendererUtil.addCube(builder, matrixStackIn, 0.375f,0.3125f, 0.25f, h1, sprite, combinedLightIn, color, 1, combinedOverlayIn, true,
@@ -47,12 +47,12 @@ public class HourGlassBlockTileRenderer extends TileEntityRenderer<HourGlassBloc
                 RendererUtil.addCube(builder, matrixStackIn,0.375f,0.3125f, 0.0625f, h1 + 0.25f, sprite, combinedLightIn, color, 1, combinedOverlayIn, true,
                         true, true, false);
             }
-            matrixStackIn.pop();
+            matrixStackIn.popPose();
         }
         if(height!=1) {
-            matrixStackIn.push();
+            matrixStackIn.pushPose();
             matrixStackIn.translate(0,0.25,0);
-            matrixStackIn.rotate(q);
+            matrixStackIn.mulPose(q);
             matrixStackIn.translate(0,-0.125,0);
             float h2 = (1 - height) * 0.25f;
             RendererUtil.addCube(builder, matrixStackIn,0.375f,0.3125f, 0.25f, h2 , sprite, combinedLightIn, color, 1, combinedOverlayIn, true,
@@ -62,9 +62,9 @@ public class HourGlassBlockTileRenderer extends TileEntityRenderer<HourGlassBloc
                 RendererUtil.addCube(builder, matrixStackIn,0.375f,0.3125f, 0.0625f, h2 + 0.25f, sprite, combinedLightIn, color, 1f, combinedOverlayIn, true,
                         true, true, false);
             }
-            matrixStackIn.pop();
+            matrixStackIn.popPose();
         }
-        matrixStackIn.pop();
+        matrixStackIn.popPose();
 
     }
 
@@ -75,7 +75,7 @@ public class HourGlassBlockTileRenderer extends TileEntityRenderer<HourGlassBloc
         TextureAtlasSprite sprite = tile.getOrCreateSprite();
 
         float h = MathHelper.lerp(partialTicks, tile.prevProgress, tile.progress);
-        Direction dir = tile.getBlockState().get(HourGlassBlock.FACING);
+        Direction dir = tile.getBlockState().getValue(HourGlassBlock.FACING);
 
         renderSand(matrixStackIn,bufferIn,combinedLightIn,combinedOverlayIn,sprite,h,dir);
     }

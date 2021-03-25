@@ -20,21 +20,22 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class PistonTileEntityMixin extends TileEntity implements IBlockHolder {
 
     public BlockState getHeldBlock(){
-        return this.pistonState;
+        return this.movedState;
     }
     public boolean setHeldBlock(BlockState state){
-        this.pistonState = state;
+        this.movedState = state;
         return true;
     }
 
     @Shadow
-    private BlockState pistonState;
+    private BlockState movedState;
 
     @Shadow
     private boolean extending;
 
+    //lastProgress
     @Shadow
-    private float lastProgress;
+    private float progressO;
 
     public PistonTileEntityMixin(TileEntityType<?> tileEntityTypeIn) {
         super(tileEntityTypeIn);
@@ -42,10 +43,10 @@ public abstract class PistonTileEntityMixin extends TileEntity implements IBlock
 
     @Inject(method = "tick", at = @At("TAIL"), cancellable = true)
     public void tick(CallbackInfo info) {
-        if (this.lastProgress < 1.0F && pistonState.getBlock() instanceof BambooSpikesBlock) {
-            boolean sameDir = (pistonState.get(BambooSpikesBlock.FACING).equals(this.getMotionDirection()));
-            AxisAlignedBB axisalignedbb = this.moveByPositionAndProgress(VoxelShapes.fullCube().getBoundingBox());
-            BambooSpikesPistonMovement.tick(this.world,this.pos,axisalignedbb,sameDir, this);
+        if (this.progressO < 1.0F && movedState.getBlock() instanceof BambooSpikesBlock) {
+            boolean sameDir = (movedState.getValue(BambooSpikesBlock.FACING).equals(this.getMovementDirection()));
+            AxisAlignedBB axisalignedbb = this.moveByPositionAndProgress(VoxelShapes.block().bounds());
+            BambooSpikesPistonMovement.tick(this.level,this.worldPosition,axisalignedbb,sameDir, this);
         }
     }
 
@@ -53,5 +54,5 @@ public abstract class PistonTileEntityMixin extends TileEntity implements IBlock
     public abstract AxisAlignedBB moveByPositionAndProgress(AxisAlignedBB bb);
 
     @Shadow
-    public abstract Direction getMotionDirection();
+    public abstract Direction getMovementDirection();
 }

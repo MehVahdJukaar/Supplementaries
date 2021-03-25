@@ -18,42 +18,42 @@ import net.minecraftforge.fml.network.NetworkHooks;
 public class MashlingEntity extends CreatureEntity {
 
     @Override
-    public IPacket<?> createSpawnPacket() {
+    public IPacket<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     public MashlingEntity(EntityType<? extends MashlingEntity> type, World worldIn) {
         super(type, worldIn);
-        this.setPathPriority(PathNodeType.DAMAGE_CACTUS, 1.0F);
+        this.setPathfindingMalus(PathNodeType.DAMAGE_CACTUS, 1.0F);
     }
 
     public static AttributeModifierMap.MutableAttribute setCustomAttributes() {
-        return MobEntity.func_233666_p_()
-                .createMutableAttribute(Attributes.FOLLOW_RANGE, 48.0D)
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, ServerConfigs.entity.FIREFLY_SPEED.get())
-                .createMutableAttribute(Attributes.MAX_HEALTH, 1)
-                .createMutableAttribute(Attributes.ARMOR, 0)
-                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 0D);
+        return MobEntity.createMobAttributes()
+                .add(Attributes.FOLLOW_RANGE, 48.0D)
+                .add(Attributes.MOVEMENT_SPEED, ServerConfigs.entity.FIREFLY_SPEED.get())
+                .add(Attributes.MAX_HEALTH, 1)
+                .add(Attributes.ARMOR, 0)
+                .add(Attributes.ATTACK_DAMAGE, 0D);
     }
 
     @Override
     public void tick() {
         super.tick();
 
-        if (inWater)
-            stepHeight = 1F;
+        if (wasTouchingWater)
+            maxUpStep = 1F;
         else
-            stepHeight = 0.6F;
+            maxUpStep = 0.6F;
 
-        if (!world.isRemote && world.getDifficulty() == Difficulty.PEACEFUL) {
+        if (!level.isClientSide && level.getDifficulty() == Difficulty.PEACEFUL) {
             remove();
-            for (Entity passenger : getRecursivePassengers())
+            for (Entity passenger : getIndirectPassengers())
                 if (!(passenger instanceof PlayerEntity))
                     passenger.remove();
         }
 
-        this.prevRenderYawOffset = this.prevRotationYaw;
-        this.renderYawOffset = this.rotationYaw;
+        this.yBodyRotO = this.yRotO;
+        this.yBodyRot = this.yRot;
     }
 
 
@@ -63,7 +63,7 @@ public class MashlingEntity extends CreatureEntity {
     }
     /*
     public static AttributeModifierMap.MutableAttribute prepareAttributes() {
-        return MobEntity.func_233666_p_()
+        return MobEntity.createMobAttributes()
                 .createMutableAttribute(Attributes.MAX_HEALTH, 8.0D)
                 .createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, 1D);
     }
@@ -93,13 +93,13 @@ public class MashlingEntity extends CreatureEntity {
     }
 
     @Override // processInteract
-    public ActionResultType func_230254_b_(PlayerEntity player, @Nonnull Hand hand) {
+    public ActionResultType mobInteract(PlayerEntity player, @Nonnull Hand hand) {
         ItemStack stack = player.getHeldItem(hand);
 
         if(!stack.isEmpty() && stack.getItem() == Items.NAME_TAG)
             return stack.getItem().itemInteractionForEntity(stack, player, this, hand);
         else
-            return super.func_230254_b_(player, hand);
+            return super.mobInteract(player, hand);
     }
 
 

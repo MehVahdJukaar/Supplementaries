@@ -2,8 +2,7 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "supplementaries:copper_lantern_recipe",
-      "supplementaries:copper_lantern_recipe_2"
+      "supplementaries:copper_lantern"
     ]
   },
   "criteria": {
@@ -20,7 +19,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "supplementaries:copper_lantern_recipe"
+        "recipe": "supplementaries:copper_lantern"
       }
     }
   },

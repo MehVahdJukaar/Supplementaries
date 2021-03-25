@@ -26,26 +26,26 @@ public class BlackBoardGui extends Screen {
     }
 
     public static void open(BlackboardBlockTile sign) {
-        Minecraft.getInstance().displayGuiScreen(new BlackBoardGui(sign));
+        Minecraft.getInstance().setScreen(new BlackBoardGui(sign));
     }
 
 
     @Override
     public void tick() {
-        if (!this.tileBoard.getType().isValidBlock(this.tileBoard.getBlockState().getBlock())) {
+        if (!this.tileBoard.getType().isValid(this.tileBoard.getBlockState().getBlock())) {
             this.close();
         }
     }
 
 
     @Override
-    public void closeScreen() {
+    public void onClose() {
         this.close();
     }
 
     @Override
-    public void onClose() {
-        this.minecraft.keyboardListener.enableRepeatEvents(false);
+    public void removed() {
+        this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
         // send new image to the server
         byte[][] pixels = new byte[16][16];
         for (int xx=0; xx < 16; xx++) {
@@ -53,14 +53,14 @@ public class BlackBoardGui extends Screen {
                 pixels[xx][yy]= (byte) (this.buttons[xx][yy].on?1:0);
             }
         }
-        NetworkHandler.INSTANCE.sendToServer(new UpdateServerBlackboardPacket(this.tileBoard.getPos(),pixels));
+        NetworkHandler.INSTANCE.sendToServer(new UpdateServerBlackboardPacket(this.tileBoard.getBlockPos(),pixels));
         this.tileBoard.setEditable(true);
     }
 
     private void close() {
 
-        this.tileBoard.markDirty();
-        this.minecraft.displayGuiScreen(null);
+        this.tileBoard.setChanged();
+        this.minecraft.setScreen(null);
     }
 
     //dynamic update for client
@@ -92,12 +92,12 @@ public class BlackBoardGui extends Screen {
         for (int xx=0; xx < 16; xx++) {
             for (int yy = 0; yy < 16; yy++) {
                 this.buttons[xx][yy]=new BlackBoardButton((this.width / 2), 40 + 25, xx, yy, this::setPixel, this::dragButtons);
-                this.addListener(this.buttons[xx][yy]);
+                this.addWidget(this.buttons[xx][yy]);
                 this.buttons[xx][yy].on=this.tileBoard.pixels[xx][yy]>0;
             }
         }
 
-        this.minecraft.keyboardListener.enableRepeatEvents(true);
+        this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
         this.addButton(new Button(this.width / 2 - 100, this.height / 4 + 120, 100-4, 20, new TranslationTextComponent("gui.supplementaries.blackboard.clear"), (b) -> this.clear()));
         this.addButton(new Button(this.width / 2 + 4, this.height / 4 + 120, 100-4, 20, DialogTexts.GUI_DONE, (p_238847_1_) -> this.close()));
         this.tileBoard.setEditable(false);
@@ -105,12 +105,12 @@ public class BlackBoardGui extends Screen {
 
     @Override
     public void render(MatrixStack matrixstack, int  mouseX, int mouseY, float partialTicks) {
-        RenderHelper.setupGuiFlatDiffuseLighting();
+        RenderHelper.setupForFlatItems();
         this.renderBackground(matrixstack);
         drawCenteredString(matrixstack, this.font, this.title, this.width / 2, 40, 16777215);
 
 
-        matrixstack.push();
+        matrixstack.pushPose();
         //float ff = 93.75F/16f;
         //matrixstack.scale(ff,ff,ff);
         int ut =-1;
@@ -125,10 +125,10 @@ public class BlackBoardGui extends Screen {
             }
         }
         if(ut!=-1)this.buttons[ut][vt].renderTooltip(matrixstack);
-        matrixstack.pop();
+        matrixstack.popPose();
 
         //TODO: could be optimized a lot. too bad
-        RenderHelper.setupGui3DDiffuseLighting();
+        RenderHelper.setupFor3DItems();
         super.render(matrixstack, mouseX, mouseY, partialTicks);
     }
 }

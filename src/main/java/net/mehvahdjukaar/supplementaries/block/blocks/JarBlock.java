@@ -42,34 +42,36 @@ import java.util.Collections;
 import java.util.List;
 
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class JarBlock extends Block implements IWaterLoggable {
-    protected static final VoxelShape SHAPE = VoxelShapes.or(VoxelShapes.create(0.1875D, 0D, 0.1875D, 0.8125D, 0.875D, 0.8125D),
-            VoxelShapes.create(0.3125, 0.875, 0.3125, 0.6875, 1, 0.6875));
+    protected static final VoxelShape SHAPE = VoxelShapes.or(VoxelShapes.box(0.1875D, 0D, 0.1875D, 0.8125D, 0.875D, 0.8125D),
+            VoxelShapes.box(0.3125, 0.875, 0.3125, 0.6875, 1, 0.6875));
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final IntegerProperty LIGHT_LEVEL = BlockProperties.LIGHT_LEVEL_0_15;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public JarBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(LIGHT_LEVEL, 0).with(FACING, Direction.NORTH).with(WATERLOGGED,false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(LIGHT_LEVEL, 0).setValue(FACING, Direction.NORTH).setValue(WATERLOGGED,false));
     }
 
     @Override
     public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
     @Override
-    public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
-        if (stateIn.get(WATERLOGGED)) {
-            worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
+        if (stateIn.getValue(WATERLOGGED)) {
+            worldIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
         }
-        return super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+        return super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
 
     //check if it only gets called client side
     public int getJarLiquidColor(BlockPos pos, IWorldReader world){
-        TileEntity te = world.getTileEntity(pos);
+        TileEntity te = world.getBlockEntity(pos);
         if (te instanceof JarBlockTile) {
             return ((JarBlockTile)te).fluidHolder.getParticleColor();
         }
@@ -87,34 +89,34 @@ public class JarBlock extends Block implements IWaterLoggable {
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
                                              BlockRayTraceResult hit) {
-        TileEntity tileentity = worldIn.getTileEntity(pos);
+        TileEntity tileentity = worldIn.getBlockEntity(pos);
         if (tileentity instanceof JarBlockTile) {
             // make te do the work
             JarBlockTile te = (JarBlockTile) tileentity;
             if (te.handleInteraction(player, handIn)) {
-                if (!worldIn.isRemote())
-                    te.markDirty();
-                return ActionResultType.func_233537_a_(worldIn.isRemote);
+                if (!worldIn.isClientSide())
+                    te.setChanged();
+                return ActionResultType.sidedSuccess(worldIn.isClientSide);
             }
         }
         return ActionResultType.PASS;
     }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        if (stack.hasDisplayName()) {
-            TileEntity tileentity = worldIn.getTileEntity(pos);
+    public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+        if (stack.hasCustomHoverName()) {
+            TileEntity tileentity = worldIn.getBlockEntity(pos);
             if (tileentity instanceof JarBlockTile) {
-                ((LockableTileEntity) tileentity).setCustomName(stack.getDisplayName());
+                ((LockableTileEntity) tileentity).setCustomName(stack.getHoverName());
             }
         }
 
         //remove in the future
-        TileEntity tileentity = worldIn.getTileEntity(pos);
+        TileEntity tileentity = worldIn.getBlockEntity(pos);
         if (tileentity instanceof JarBlockTile) {
-            ((JarBlockTile) tileentity).convertOldJars(stack.getChildTag("BlockEntityTag"));
+            ((JarBlockTile) tileentity).convertOldJars(stack.getTagElement("BlockEntityTag"));
         }
     }
 
@@ -127,13 +129,13 @@ public class JarBlock extends Block implements IWaterLoggable {
         }
         else{
             returnStack = new ItemStack(flag ? Registry.JAR_ITEM.get() : Registry.JAR_ITEM_TINTED.get());
-            CompoundNBT compoundnbt = te.write(new CompoundNBT());
+            CompoundNBT compoundnbt = te.save(new CompoundNBT());
             if (!compoundnbt.isEmpty()) {
-                returnStack.setTagInfo("BlockEntityTag", compoundnbt);
+                returnStack.addTagElement("BlockEntityTag", compoundnbt);
             }
         }
         if(te.hasCustomName()){
-            returnStack.setDisplayName(te.getCustomName());
+            returnStack.setHoverName(te.getCustomName());
         }
         return returnStack;
     }
@@ -162,18 +164,18 @@ public class JarBlock extends Block implements IWaterLoggable {
     }*/
 
     @Override
-    public boolean allowsMovement(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
+    public boolean isPathfindable(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
         return false;
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
+    public BlockRenderType getRenderShape(BlockState state) {
         return BlockRenderType.MODEL;
     }
 
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
-        TileEntity tileentity = builder.get(LootParameters.BLOCK_ENTITY);
+        TileEntity tileentity = builder.getOptionalParameter(LootParameters.BLOCK_ENTITY);
         if (tileentity instanceof JarBlockTile) {
             JarBlockTile tile = (JarBlockTile) tileentity;
 
@@ -186,19 +188,19 @@ public class JarBlock extends Block implements IWaterLoggable {
 
     //for pick block
     @Override
-    public ItemStack getItem(IBlockReader worldIn, BlockPos pos, BlockState state) {
+    public ItemStack getCloneItemStack(IBlockReader worldIn, BlockPos pos, BlockState state) {
 
-        TileEntity tileentity = worldIn.getTileEntity(pos);
+        TileEntity tileentity = worldIn.getBlockEntity(pos);
         if (tileentity instanceof JarBlockTile) {
             JarBlockTile tile = (JarBlockTile) tileentity;
             return this.getJarItem(tile);
         }
-        return super.getItem(worldIn, pos, state);
+        return super.getCloneItemStack(worldIn, pos, state);
     }
 
     // end shoulker box code
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(LIGHT_LEVEL,FACING,WATERLOGGED);
     }
 
@@ -208,13 +210,13 @@ public class JarBlock extends Block implements IWaterLoggable {
     }
 
     @Override
-    public PushReaction getPushReaction(BlockState state) {
+    public PushReaction getPistonPushReaction(BlockState state) {
         return PushReaction.DESTROY;
     }
 
     @Override
-    public INamedContainerProvider getContainer(BlockState state, World worldIn, BlockPos pos) {
-        TileEntity tileEntity = worldIn.getTileEntity(pos);
+    public INamedContainerProvider getMenuProvider(BlockState state, World worldIn, BlockPos pos) {
+        TileEntity tileEntity = worldIn.getBlockEntity(pos);
         return tileEntity instanceof INamedContainerProvider ? (INamedContainerProvider) tileEntity : null;
     }
 
@@ -230,21 +232,21 @@ public class JarBlock extends Block implements IWaterLoggable {
 
     @Override
     public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
-        return state.get(LIGHT_LEVEL);
+        return state.getValue(LIGHT_LEVEL);
     }
 
     @Override
-    public boolean hasComparatorInputOverride(BlockState state) {
+    public boolean hasAnalogOutputSignal(BlockState state) {
         return true;
     }
 
     @Override
-    public int getComparatorInputOverride(BlockState blockState, World world, BlockPos pos) {
-        TileEntity tileentity = world.getTileEntity(pos);
+    public int getAnalogOutputSignal(BlockState blockState, World world, BlockPos pos) {
+        TileEntity tileentity = world.getBlockEntity(pos);
         if (tileentity instanceof JarBlockTile) {
             JarBlockTile te = ((JarBlockTile) tileentity);
             if (!te.isEmpty())
-                return Container.calcRedstoneFromInventory(te);
+                return Container.getRedstoneSignalFromContainer(te);
             else if (!te.fluidHolder.isEmpty()) {
                 return ((JarBlockTile) tileentity).fluidHolder.getComparator();
             }
@@ -254,17 +256,17 @@ public class JarBlock extends Block implements IWaterLoggable {
     }
 
     public BlockState rotate(BlockState state, Rotation rot) {
-        return state.with(FACING, rot.rotate(state.get(FACING)));
+        return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
 
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
-        return state.rotate(mirrorIn.toRotation(state.get(FACING)));
+        return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing().getOpposite())
-                .with(WATERLOGGED,context.getWorld().getFluidState(context.getPos()).getFluid()==Fluids.WATER);
+        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite())
+                .setValue(WATERLOGGED,context.getLevel().getFluidState(context.getClickedPos()).getType()==Fluids.WATER);
     }
 
 

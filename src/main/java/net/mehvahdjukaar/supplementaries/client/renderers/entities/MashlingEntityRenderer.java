@@ -19,7 +19,7 @@ public class MashlingEntityRenderer extends MobRenderer<MashlingEntity, Mashling
     }
 
     @Override
-    public ResourceLocation getEntityTexture(MashlingEntity entity) {
+    public ResourceLocation getTextureLocation(MashlingEntity entity) {
         return Textures.YELLOW_CONCRETE_TEXTURE;
     }
 }

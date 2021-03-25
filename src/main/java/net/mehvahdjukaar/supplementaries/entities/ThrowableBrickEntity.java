@@ -48,12 +48,12 @@ public class ThrowableBrickEntity extends ProjectileItemEntity implements IRende
     }
 
     @Override
-    protected float getGravityVelocity() {
+    protected float getGravity() {
         return 0.035F;
     }
 
     @Override
-    public IPacket<?> createSpawnPacket() {
+    public IPacket<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
@@ -65,34 +65,34 @@ public class ThrowableBrickEntity extends ProjectileItemEntity implements IRende
 
 
     private IParticleData makeParticle() {
-        ItemStack itemstack = this.func_213882_k();
+        ItemStack itemstack = this.getItemRaw();
         return itemstack.isEmpty() ? new ItemParticleData(ParticleTypes.ITEM, new ItemStack(this.getDefaultItem())) : new ItemParticleData(ParticleTypes.ITEM, itemstack);
     }
 
 
     //
-    public void handleStatusUpdate(byte id) {
+    public void handleEntityEvent(byte id) {
         if (id == 3) {
             IParticleData iparticledata = this.makeParticle();
 
             for(int i = 0; i < 8; ++i) {
-                this.world.addParticle(iparticledata, this.getPosX(), this.getPosY(), this.getPosZ(), 0.0D, 0.0D, 0.0D);
+                this.level.addParticle(iparticledata, this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
             }
         }
 
     }
 
     @Override
-    protected void func_230299_a_(BlockRayTraceResult rayTraceResult) {
-        super.func_230299_a_(rayTraceResult);
-        if (!this.world.isRemote) {
-            Entity entity = this.func_234616_v_();
-            if(entity instanceof PlayerEntity && !((PlayerEntity) entity).isAllowEdit())return;
-            if (!(entity instanceof MobEntity) || this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING) || net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.world, this.getEntity())) {
+    protected void onHitBlock(BlockRayTraceResult rayTraceResult) {
+        super.onHitBlock(rayTraceResult);
+        if (!this.level.isClientSide) {
+            Entity entity = this.getOwner();
+            if(entity instanceof PlayerEntity && !((PlayerEntity) entity).mayBuild())return;
+            if (!(entity instanceof MobEntity) || this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) || net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level, this.getEntity())) {
 
-                BlockPos pos = rayTraceResult.getPos();
-                if(world.getBlockState(pos).getBlock() instanceof JarBlock){
-                    world.destroyBlock(pos,true);
+                BlockPos pos = rayTraceResult.getBlockPos();
+                if(level.getBlockState(pos).getBlock() instanceof JarBlock){
+                    level.destroyBlock(pos,true);
                 }
                 else {
                     breakGlass(pos, 6);
@@ -105,8 +105,8 @@ public class ThrowableBrickEntity extends ProjectileItemEntity implements IRende
 
     private static boolean isGlass(BlockState s){
         try {
-            return ((Tags.Blocks.GLASS_PANES != null && s.isIn(Tags.Blocks.GLASS_PANES))
-                    || (Tags.Blocks.GLASS != null && s.isIn(Tags.Blocks.GLASS)));
+            return ((Tags.Blocks.GLASS_PANES != null && s.is(Tags.Blocks.GLASS_PANES))
+                    || (Tags.Blocks.GLASS != null && s.is(Tags.Blocks.GLASS)));
         }
         catch (Exception e){
             return false;
@@ -114,14 +114,14 @@ public class ThrowableBrickEntity extends ProjectileItemEntity implements IRende
     }
 
     private void breakGlass(BlockPos pos, int chance){
-        int c = chance -1 -this.rand.nextInt(4);
-        BlockState state = world.getBlockState(pos);
+        int c = chance -1 -this.random.nextInt(4);
+        BlockState state = level.getBlockState(pos);
 
         if(c < 0 || !isGlass(state))return;
 
-        world.destroyBlock(pos,true);
-        breakGlass(pos.up(),c);
-        breakGlass(pos.down(),c);
+        level.destroyBlock(pos,true);
+        breakGlass(pos.above(),c);
+        breakGlass(pos.below(),c);
         breakGlass(pos.east(),c);
         breakGlass(pos.west(),c);
         breakGlass(pos.north(),c);
@@ -131,21 +131,21 @@ public class ThrowableBrickEntity extends ProjectileItemEntity implements IRende
 
 
     @Override
-    protected void onEntityHit(EntityRayTraceResult p_213868_1_) {
-        super.onEntityHit(p_213868_1_);
+    protected void onHitEntity(EntityRayTraceResult p_213868_1_) {
+        super.onHitEntity(p_213868_1_);
         Entity entity = p_213868_1_.getEntity();
         int i = 1;
-        entity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.func_234616_v_()), (float)i);
+        entity.hurt(DamageSource.thrown(this, this.getOwner()), (float)i);
     }
 
 
     @Override
-    protected void onImpact(RayTraceResult result) {
-        super.onImpact(result);
-        if (!this.world.isRemote) {
-            Vector3d v = result.getHitVec();
-            this.world.playSound(null, v.x,v.y,v.z, SoundEvents.BLOCK_NETHER_BRICKS_BREAK, SoundCategory.NEUTRAL, 0.75F, 1 );
-            this.world.setEntityState(this, (byte)3);
+    protected void onHit(RayTraceResult result) {
+        super.onHit(result);
+        if (!this.level.isClientSide) {
+            Vector3d v = result.getLocation();
+            this.level.playSound(null, v.x,v.y,v.z, SoundEvents.NETHER_BRICKS_BREAK, SoundCategory.NEUTRAL, 0.75F, 1 );
+            this.level.broadcastEntityEvent(this, (byte)3);
             this.remove();
         }
 

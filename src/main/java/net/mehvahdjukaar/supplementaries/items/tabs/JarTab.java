@@ -20,7 +20,7 @@ public class JarTab {
     public static void tryAdd(NonNullList<ItemStack> items, CompoundNBT com){
         if(!com.isEmpty()) {
             ItemStack returnStack = new ItemStack(Registry.JAR_ITEM.get());
-            returnStack.setTagInfo("BlockEntityTag", com);
+            returnStack.addTagElement("BlockEntityTag", com);
             for(ItemStack i : items){
                 if(i.equals(returnStack))return;
             }
@@ -31,7 +31,7 @@ public class JarTab {
 
     public static void populateTab(NonNullList<ItemStack> items){
         JarBlockTile tempTile = new JarBlockTile();
-        SoftFluidHolder fluidHolder = new SoftFluidHolder(tempTile.getInventoryStackLimit());
+        SoftFluidHolder fluidHolder = new SoftFluidHolder(tempTile.getMaxStackSize());
 
 
 
@@ -46,8 +46,8 @@ public class JarTab {
         for (Item i : ForgeRegistries.ITEMS) {
             ItemStack regItem = new ItemStack(i);
             CompoundNBT com = new CompoundNBT();
-            if (tempTile.isItemValidForSlot(0, regItem)) {
-                regItem.setCount(tempTile.getInventoryStackLimit());
+            if (tempTile.canPlaceItem(0, regItem)) {
+                regItem.setCount(tempTile.getMaxStackSize());
                 ItemStackHelper.saveAllItems(com, NonNullList.withSize(1, regItem));
                 tryAdd(items, com);
             }
@@ -80,7 +80,7 @@ public class JarTab {
         fluidHolder.fill(SoftFluidList.HONEY);
         CompoundNBT com = new CompoundNBT();
         fluidHolder.write(com);
-        icon.setTagInfo("BlockEntityTag", com);
+        icon.addTagElement("BlockEntityTag", com);
         return icon;
     }
 }

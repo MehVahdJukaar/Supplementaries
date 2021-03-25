@@ -11,7 +11,7 @@
         "parent": "minecraft:recipes/root",
         "rewards": {
           "recipes": [
-            "supplementaries:rope_recipe"
+            "supplementaries:rope"
           ]
         },
         "criteria": {
@@ -19,6 +19,9 @@
             "trigger": "minecraft:inventory_changed",
             "conditions": {
               "items": [
+                {
+                  "tag": "forge:crops/flax"
+                },
                 {
                   "item": "supplementaries:flax_seeds"
                 }
@@ -28,7 +31,7 @@
           "has_the_recipe": {
             "trigger": "minecraft:recipe_unlocked",
             "conditions": {
-              "recipe": "supplementaries:flax_recipe"
+              "recipe": "supplementaries:flax"
             }
           }
         },

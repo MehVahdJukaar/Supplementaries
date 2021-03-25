@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.HangingSignBlockTile;
+import net.mehvahdjukaar.supplementaries.block.tiles.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.client.gui.HangingSignGui;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -31,104 +32,110 @@ import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class HangingSignBlock extends SwayingBlock {
-    protected static final VoxelShape SHAPE_NORTH = VoxelShapes.create(0.4375D, 0D, 0D, 0.5625D, 1D, 1D);
-    protected static final VoxelShape SHAPE_WEST = VoxelShapes.create(0D, 0D, 0.5625D, 1D, 1D, 0.4375D);
+    protected static final VoxelShape SHAPE_NORTH = VoxelShapes.box(0.4375D, 0D, 0D, 0.5625D, 1D, 1D);
+    protected static final VoxelShape SHAPE_WEST = VoxelShapes.box(0D, 0D, 0.5625D, 1D, 1D, 0.4375D);
 
     public static final BooleanProperty HANGING = BlockStateProperties.HANGING;
     public static final BooleanProperty TILE = BlockProperties.TILE; // is it renderer by tile entity? animated part
 
     public HangingSignBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(WATERLOGGED, false)
-                .with(EXTENSION, 0).with(FACING, Direction.NORTH).with(TILE, false).with(HANGING,false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false)
+                .setValue(EXTENSION, 0).setValue(FACING, Direction.NORTH).setValue(TILE, false).setValue(HANGING,false));
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
                                              BlockRayTraceResult hit) {
-        TileEntity tileentity = worldIn.getTileEntity(pos);
+        TileEntity tileentity = worldIn.getBlockEntity(pos);
         if (tileentity instanceof HangingSignBlockTile) {
             HangingSignBlockTile te = (HangingSignBlockTile) tileentity;
-            ItemStack itemstack = player.getHeldItem(handIn);
-            boolean server = !worldIn.isRemote();
-            boolean emptyhand = itemstack.isEmpty();
-            boolean flag = itemstack.getItem() instanceof DyeItem && player.abilities.allowEdit;
-            boolean flag1 = te.isEmpty() && !emptyhand;
-            boolean flag2 = !te.isEmpty() && emptyhand;
+            ItemStack itemstack = player.getItemInHand(handIn);
+            boolean server = !worldIn.isClientSide();
+            boolean isDye = itemstack.getItem() instanceof DyeItem && player.abilities.mayBuild;
             //color
-            if (flag){
+            if (isDye){
                 if(te.textHolder.setTextColor(((DyeItem) itemstack.getItem()).getDyeColor())){
                     if (!player.isCreative()) {
                         itemstack.shrink(1);
                     }
-                    if(server)te.markDirty();
-                    return ActionResultType.func_233537_a_(worldIn.isRemote);
+                    if(server)te.setChanged();
+                    return ActionResultType.sidedSuccess(worldIn.isClientSide);
                 }
             }
             //not an else to allow to place dye items after coloring
             //place item
-            if (flag1) {
-                ItemStack it = itemstack.copy();
-                it.setCount(1);
-                NonNullList<ItemStack> stacks = NonNullList.withSize(1, it);
-                te.setItems(stacks);
-                if (!player.isCreative()) {
-                    itemstack.shrink(1);
+            if(handIn==Hand.MAIN_HAND) {
+                ItemStack handItem = player.getItemInHand(handIn);
+                //remove
+                if (!te.isEmpty() && handItem.isEmpty()) {
+                    ItemStack it = te.removeStackFromSlot(0);
+                    if (!worldIn.isClientSide()) {
+                        player.setItemInHand(handIn, it);
+                        te.setChanged();
+                    }
+                    return ActionResultType.sidedSuccess(worldIn.isClientSide);
                 }
-                if (!worldIn.isRemote()) {
-                    worldIn.playSound(null, pos, SoundEvents.ENTITY_ITEM_FRAME_ADD_ITEM, SoundCategory.BLOCKS, 1.0F,
-                            worldIn.rand.nextFloat() * 0.10F + 0.95F);
-                    te.markDirty();
+                //place
+                else if (!handItem.isEmpty()) {
+                    ItemStack it = handItem.copy();
+                    it.setCount(1);
+                    te.setItems(NonNullList.withSize(1, it));
+
+                    if (!player.isCreative()) {
+                        handItem.shrink(1);
+                    }
+                    if (!worldIn.isClientSide()) {
+                        worldIn.playSound(null, pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundCategory.BLOCKS, 1.0F, worldIn.random.nextFloat() * 0.10F + 0.95F);
+                        te.setChanged();
+                    }
+                    return ActionResultType.sidedSuccess(worldIn.isClientSide);
                 }
-            }
-            //remove item
-            else if (flag2) {
-                ItemStack it = te.removeStackFromSlot(0);
-                player.setHeldItem(handIn, it);
-                if(server)te.markDirty();
             }
             // open gui (edit sign with empty hand)
-            else if (emptyhand && !server) {
-                HangingSignGui.open(te);
+            else if (itemstack.isEmpty()) {
+                if(!server) HangingSignGui.open(te);
+                return ActionResultType.sidedSuccess(worldIn.isClientSide);
             }
-            return ActionResultType.func_233537_a_(worldIn.isRemote);
         }
         return ActionResultType.PASS;
     }
 
     @Override
-    public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-        if(state.get(HANGING)){
-            return worldIn.getBlockState(pos.up()).isSolidSide(worldIn, pos.up(), Direction.DOWN);
+    public boolean canSurvive(BlockState state, IWorldReader worldIn, BlockPos pos) {
+        if(state.getValue(HANGING)){
+            return worldIn.getBlockState(pos.above()).isFaceSturdy(worldIn, pos.above(), Direction.DOWN);
         }
         else {
-            return worldIn.getBlockState(pos.offset(state.get(FACING).getOpposite())).getMaterial().isSolid();
+            return worldIn.getBlockState(pos.relative(state.getValue(FACING).getOpposite())).getMaterial().isSolid();
         }
     }
 
     @Override
-    public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos,
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos,
                                           BlockPos facingPos) {
-        if (stateIn.get(WATERLOGGED)) {
-            worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
+        if (stateIn.getValue(WATERLOGGED)) {
+            worldIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
         }
 
         if(facing==Direction.UP){
-            return !stateIn.isValidPosition(worldIn, currentPos)
-                    ? Blocks.AIR.getDefaultState()
-                    : super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+            return !stateIn.canSurvive(worldIn, currentPos)
+                    ? Blocks.AIR.defaultBlockState()
+                    : super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
         }
         else {
-            return facing == stateIn.get(FACING).getOpposite()? !stateIn.isValidPosition(worldIn, currentPos)
-                    ? Blocks.AIR.getDefaultState()
+            return facing == stateIn.getValue(FACING).getOpposite()? !stateIn.canSurvive(worldIn, currentPos)
+                    ? Blocks.AIR.defaultBlockState()
                     : this.getConnectedState(stateIn,facingState, worldIn,facingPos) : stateIn;
         }
     }
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
-        switch (state.get(FACING).getAxis()) {
+        switch (state.getValue(FACING).getAxis()) {
             default:
             case Z:
                 return SHAPE_NORTH;
@@ -138,35 +145,35 @@ public class HangingSignBlock extends SwayingBlock {
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return state.get(HANGING) ? BlockRenderType.ENTITYBLOCK_ANIMATED : BlockRenderType.MODEL;
+    public BlockRenderType getRenderShape(BlockState state) {
+        return state.getValue(HANGING) ? BlockRenderType.ENTITYBLOCK_ANIMATED : BlockRenderType.MODEL;
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        super.fillStateContainer(builder);
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
         builder.add(HANGING,TILE);
     }
 
     //TODO: merge with lantern
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        boolean water = context.getWorld().getFluidState(context.getPos()).getFluid() == Fluids.WATER;
-        if (context.getFace() == Direction.DOWN||context.getFace() == Direction.UP) {
-            return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing().rotateYCCW())
-                    .with(HANGING, context.getFace()==Direction.DOWN).with(WATERLOGGED, water);
+        boolean water = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;
+        if (context.getClickedFace() == Direction.DOWN||context.getClickedFace() == Direction.UP) {
+            return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getCounterClockWise())
+                    .setValue(HANGING, context.getClickedFace()==Direction.DOWN).setValue(WATERLOGGED, water);
         }
-        BlockPos blockpos = context.getPos();
-        World world = context.getWorld();
-        BlockPos facingpos = blockpos.offset(context.getFace().getOpposite());
+        BlockPos blockpos = context.getClickedPos();
+        World world = context.getLevel();
+        BlockPos facingpos = blockpos.relative(context.getClickedFace().getOpposite());
         BlockState facingState = world.getBlockState(facingpos);
 
-        return this.getConnectedState(this.getDefaultState(),facingState, world,facingpos).with(FACING, context.getFace()).with(WATERLOGGED,water);
+        return this.getConnectedState(this.defaultBlockState(),facingState, world,facingpos).setValue(FACING, context.getClickedFace()).setValue(WATERLOGGED,water);
     }
 
     //for player bed spawn
     @Override
-    public boolean canSpawnInBlock() {
+    public boolean isPossibleToRespawnInThis() {
         return true;
     }
 
@@ -176,18 +183,18 @@ public class HangingSignBlock extends SwayingBlock {
     }
 
     @Override
-    public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
-            TileEntity tileentity = world.getTileEntity(pos);
+            TileEntity tileentity = world.getBlockEntity(pos);
             if (tileentity instanceof HangingSignBlockTile) {
                 //InventoryHelper.dropInventoryItems(world, pos, (HangingSignBlockTile) tileentity);
 
                 ItemStack itemstack =  ((HangingSignBlockTile) tileentity).getStackInSlot(0);
-                ItemEntity itementity = new ItemEntity(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, itemstack);                itementity.setDefaultPickupDelay();
-                world.addEntity(itementity);
-                world.updateComparatorOutputLevel(pos, this);
+                ItemEntity itementity = new ItemEntity(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, itemstack);                itementity.setDefaultPickUpDelay();
+                world.addFreshEntity(itementity);
+                world.updateNeighbourForOutputSignal(pos, this);
             }
-            super.onReplaced(state, world, pos, newState, isMoving);
+            super.onRemove(state, world, pos, newState, isMoving);
         }
     }
 

@@ -1,9 +1,14 @@
 package net.mehvahdjukaar.supplementaries.items;
 
 import net.mehvahdjukaar.supplementaries.entities.BombEntity;
+import net.mehvahdjukaar.supplementaries.fluids.SoftFluid;
+import net.mehvahdjukaar.supplementaries.fluids.SoftFluidList;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.EnchantedGoldenAppleItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Rarity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -13,31 +18,51 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 
 public class BombItem extends Item {
+    private final boolean blue;
     public BombItem(Item.Properties builder) {
+        this(builder, false);
+
+    }
+    public BombItem(Item.Properties builder, boolean blue) {
         super(builder);
+        this.blue = blue;
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        playerIn.sendStatusMessage(new StringTextComponent("You wished..."),true);
-        ItemStack itemstack = playerIn.getHeldItem(handIn);
-        if(true)return ActionResult.resultPass(itemstack);
-        worldIn.playSound(null, playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ(), SoundEvents.ENTITY_SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
-        playerIn.getCooldownTracker().setCooldown(this, 30);
-        if (!worldIn.isRemote) {
-            BombEntity bombEntity = new BombEntity(worldIn, playerIn);
+    public boolean isFoil(ItemStack stack) {
+        return blue;
+    }
+
+    @Override
+    public Rarity getRarity(ItemStack stack) {
+        return blue?Rarity.EPIC:Rarity.RARE;
+    }
+
+    @Override
+    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+
+        ItemStack itemstack = playerIn.getItemInHand(handIn);
+
+        if(false){
+            playerIn.displayClientMessage(new StringTextComponent("You wished..."),true);
+            return ActionResult.pass(itemstack);
+        }
+        worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), SoundEvents.SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
+        playerIn.getCooldowns().addCooldown(this, 30);
+        if (!worldIn.isClientSide) {
+            BombEntity bombEntity = new BombEntity(worldIn, playerIn, blue);
             float pitch = -10;//playerIn.isSneaking()?0:-20;
-            bombEntity.func_234612_a_(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, pitch, 1.25F, 0.9F);
-            worldIn.addEntity(bombEntity);
+            bombEntity.shootFromRotation(playerIn, playerIn.xRot, playerIn.yRot, pitch, 1.25F, 0.9F);
+            worldIn.addFreshEntity(bombEntity);
         }
 
-        playerIn.addStat(Stats.ITEM_USED.get(this));
-        if (!playerIn.abilities.isCreativeMode) {
+        playerIn.awardStat(Stats.ITEM_USED.get(this));
+        if (!playerIn.abilities.instabuild) {
             itemstack.shrink(1);
 
         }
 
-        return ActionResult.func_233538_a_(itemstack, worldIn.isRemote());
+        return ActionResult.sidedSuccess(itemstack, worldIn.isClientSide());
     }
 }
 

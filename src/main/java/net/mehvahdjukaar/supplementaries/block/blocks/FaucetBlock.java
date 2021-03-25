@@ -37,15 +37,17 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import java.lang.reflect.Field;
 import java.util.Random;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class FaucetBlock extends Block implements IWaterLoggable{
-    protected static final VoxelShape SHAPE_NORTH = VoxelShapes.create(0.6875D, 0.3125D, 1D, 0.3125D, 0.9375D, 0.3125D);
-    protected static final VoxelShape SHAPE_SOUTH = VoxelShapes.create(0.3125D, 0.3125D, 0D, 0.6875D, 0.9375D, 0.6875D);
-    protected static final VoxelShape SHAPE_WEST = VoxelShapes.create(1D, 0.3125D, 0.3125D, 0.3125D, 0.9375D, 0.6875D);
-    protected static final VoxelShape SHAPE_EAST = VoxelShapes.create(0D, 0.3125D, 0.6875D, 0.6875D, 0.9375D, 0.3125D);
-    protected static final VoxelShape SHAPE_NORTH_JAR = VoxelShapes.create(0.6875D, 0, 1D, 0.3125D, 0.625D, 0.3125D);
-    protected static final VoxelShape SHAPE_SOUTH_JAR = VoxelShapes.create(0.3125D, 0, 0D, 0.6875D, 0.625D, 0.6875D);
-    protected static final VoxelShape SHAPE_WEST_JAR = VoxelShapes.create(1D, 0, 0.3125D, 0.3125D, 0.625D, 0.6875D);
-    protected static final VoxelShape SHAPE_EAST_JAR = VoxelShapes.create(0D, 0, 0.6875D, 0.6875D, 0.625D, 0.3125D);
+    protected static final VoxelShape SHAPE_NORTH = VoxelShapes.box(0.6875D, 0.3125D, 1D, 0.3125D, 0.9375D, 0.3125D);
+    protected static final VoxelShape SHAPE_SOUTH = VoxelShapes.box(0.3125D, 0.3125D, 0D, 0.6875D, 0.9375D, 0.6875D);
+    protected static final VoxelShape SHAPE_WEST = VoxelShapes.box(1D, 0.3125D, 0.3125D, 0.3125D, 0.9375D, 0.6875D);
+    protected static final VoxelShape SHAPE_EAST = VoxelShapes.box(0D, 0.3125D, 0.6875D, 0.6875D, 0.9375D, 0.3125D);
+    protected static final VoxelShape SHAPE_NORTH_JAR = VoxelShapes.box(0.6875D, 0, 1D, 0.3125D, 0.625D, 0.3125D);
+    protected static final VoxelShape SHAPE_SOUTH_JAR = VoxelShapes.box(0.3125D, 0, 0D, 0.6875D, 0.625D, 0.6875D);
+    protected static final VoxelShape SHAPE_WEST_JAR = VoxelShapes.box(1D, 0, 0.3125D, 0.3125D, 0.625D, 0.6875D);
+    protected static final VoxelShape SHAPE_EAST_JAR = VoxelShapes.box(0D, 0, 0.6875D, 0.6875D, 0.625D, 0.3125D);
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty ENABLED = BlockStateProperties.ENABLED;
@@ -57,25 +59,25 @@ public class FaucetBlock extends Block implements IWaterLoggable{
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public FaucetBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(HAS_JAR, false).with(FACING, Direction.NORTH)
-                .with(ENABLED, false).with(EXTENDED, false).with(POWERED, false)
-                .with(HAS_WATER, false).with(WATERLOGGED,false).with(LIGHT_LEVEL,0));
+        this.registerDefaultState(this.stateDefinition.any().setValue(HAS_JAR, false).setValue(FACING, Direction.NORTH)
+                .setValue(ENABLED, false).setValue(EXTENDED, false).setValue(POWERED, false)
+                .setValue(HAS_WATER, false).setValue(WATERLOGGED,false).setValue(LIGHT_LEVEL,0));
     }
 
     @Override
-    public boolean allowsMovement(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
+    public boolean isPathfindable(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
         return false;
     }
 
     @Override
     public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
-        if (state.get(HAS_JAR)) {
-            switch (state.get(FACING)) {
+        if (state.getValue(HAS_JAR)) {
+            switch (state.getValue(FACING)) {
                 case UP :
                 case DOWN :
                 case NORTH :
@@ -89,7 +91,7 @@ public class FaucetBlock extends Block implements IWaterLoggable{
                     return SHAPE_WEST_JAR;
             }
         } else {
-            switch (state.get(FACING)) {
+            switch (state.getValue(FACING)) {
                 case UP :
                 case DOWN :
                 case NORTH :
@@ -106,54 +108,54 @@ public class FaucetBlock extends Block implements IWaterLoggable{
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
                                              BlockRayTraceResult hit) {
         //TODO: add item activated method for bottles
-        boolean enabled = state.get(ENABLED);
-        if(!state.get(HAS_JAR)&&hit.getHitVec().y%1<=0.4375) {
-            if (enabled && state.get(HAS_WATER)) {
-                Direction dir = state.get(FACING);
-                BlockPos backPos = pos.offset(dir.getOpposite());
+        boolean enabled = state.getValue(ENABLED);
+        if(!state.getValue(HAS_JAR)&&hit.getLocation().y%1<=0.4375) {
+            if (enabled && state.getValue(HAS_WATER)) {
+                Direction dir = state.getValue(FACING);
+                BlockPos backPos = pos.relative(dir.getOpposite());
                 BlockState backState = worldIn.getBlockState(backPos);
                 BlockRayTraceResult rayTraceResult = new BlockRayTraceResult(new Vector3d(backPos.getX() + 0.5,
                         backPos.getY() + 0.5, backPos.getZ() + 0.5), dir, backPos, false);
-                ActionResultType blockResult = backState.onBlockActivated(worldIn, player, handIn, rayTraceResult);
-                if(blockResult.isSuccessOrConsume())return blockResult;
-                ActionResultType itemResult = player.getHeldItem(handIn).getItem().onItemUse(new ItemUseContext(player, handIn, rayTraceResult));
-                if(itemResult.isSuccessOrConsume())return itemResult;
+                ActionResultType blockResult = backState.use(worldIn, player, handIn, rayTraceResult);
+                if(blockResult.consumesAction())return blockResult;
+                ActionResultType itemResult = player.getItemInHand(handIn).getItem().useOn(new ItemUseContext(player, handIn, rayTraceResult));
+                if(itemResult.consumesAction())return itemResult;
             }
-            return ActionResultType.func_233537_a_(worldIn.isRemote);
+            return ActionResultType.sidedSuccess(worldIn.isClientSide);
         }
 
 
         float f = enabled ? 0.6F : 0.5F;
-        worldIn.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 0.3F, f);
+        worldIn.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundCategory.BLOCKS, 0.3F, f);
         this.updateBlock(state, worldIn, pos, true);
         return ActionResultType.SUCCESS;
     }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+    public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         boolean hasWater = updateTileFluid(state,pos,worldIn);
-        if(hasWater != state.get(HAS_WATER)) worldIn.setBlockState(pos,state.with(HAS_WATER,hasWater));
+        if(hasWater != state.getValue(HAS_WATER)) worldIn.setBlockAndUpdate(pos,state.setValue(HAS_WATER,hasWater));
     }
 
     @Override
-    public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
-        if (stateIn.get(WATERLOGGED)) {
-            worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
+        if (stateIn.getValue(WATERLOGGED)) {
+            worldIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
         }
-        if(facing==Direction.DOWN)return stateIn.with(HAS_JAR,canConnect(facingState,worldIn,facingPos,facing.getOpposite()));
-        if(facing==stateIn.get(FACING).getOpposite()){
+        if(facing==Direction.DOWN)return stateIn.setValue(HAS_JAR,canConnect(facingState,worldIn,facingPos,facing.getOpposite()));
+        if(facing==stateIn.getValue(FACING).getOpposite()){
             boolean hasWater = updateTileFluid(stateIn,currentPos,worldIn);
-            return stateIn.with(EXTENDED,canConnect(facingState,worldIn,facingPos,facing.getOpposite())).with(HAS_WATER,hasWater);
+            return stateIn.setValue(EXTENDED,canConnect(facingState,worldIn,facingPos,facing.getOpposite())).setValue(HAS_WATER,hasWater);
         }
         return stateIn;
     }
 
     //returns false if no color
     public boolean updateTileFluid(BlockState state, BlockPos pos, IWorld world){
-        TileEntity te = world.getTileEntity(pos);
+        TileEntity te = world.getBlockEntity(pos);
         if(te instanceof FaucetBlockTile){
             return ((FaucetBlockTile) te).updateDisplayedFluid(state);
         }
@@ -173,18 +175,18 @@ public class FaucetBlock extends Block implements IWaterLoggable{
     }
 
     public void updateBlock(BlockState state, World world, BlockPos pos, boolean toggle) {
-        boolean isPowered = world.isBlockPowered(pos);
-        if (isPowered != state.get(POWERED) || toggle) {
-            world.setBlockState(pos, state.with(POWERED, isPowered).with(ENABLED, toggle ^ state.get(ENABLED)), 2);
+        boolean isPowered = world.hasNeighborSignal(pos);
+        if (isPowered != state.getValue(POWERED) || toggle) {
+            world.setBlock(pos, state.setValue(POWERED, isPowered).setValue(ENABLED, toggle ^ state.getValue(ENABLED)), 2);
         }
 
         boolean hasWater = updateTileFluid(state,pos,world);
-        if(hasWater != state.get(HAS_WATER)) world.setBlockState(pos,state.with(HAS_WATER,hasWater));
+        if(hasWater != state.getValue(HAS_WATER)) world.setBlockAndUpdate(pos,state.setValue(HAS_WATER,hasWater));
 
 
         //handles concrete
-        if (state.get(ENABLED) ^ toggle ^ isPowered && state.get(HAS_WATER)) {
-            BlockPos downPos = pos.down();
+        if (state.getValue(ENABLED) ^ toggle ^ isPowered && state.getValue(HAS_WATER)) {
+            BlockPos downPos = pos.below();
             BlockState downState = world.getBlockState(downPos);
             if (downState.getBlock() instanceof ConcretePowderBlock) {
                 solidifyConcrete(downPos, state, world);
@@ -194,47 +196,47 @@ public class FaucetBlock extends Block implements IWaterLoggable{
 
     public static void solidifyConcrete(BlockPos pos, BlockState state, World world){
         try {
-            //field_200294_a ->solidifiedState
-            Field f = ObfuscationReflectionHelper.findField(ConcretePowderBlock.class,"field_200294_a");
+            //concrete ->solidifiedState
+            Field f = ObfuscationReflectionHelper.findField(ConcretePowderBlock.class,"concrete");
             f.setAccessible(true);
-            world.setBlockState(pos.down(), (BlockState) f.get(state.getBlock()), 2|16);
+            world.setBlock(pos.below(), (BlockState) f.get(state.getBlock()), 2|16);
         } catch (Exception ignored) {}
     }
 
 
     public boolean isOpen(BlockState state) {
-        return (state.get(BlockStateProperties.POWERED) ^ state.get(BlockStateProperties.ENABLED));
+        return (state.getValue(BlockStateProperties.POWERED) ^ state.getValue(BlockStateProperties.ENABLED));
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(EXTENDED,FACING, ENABLED, POWERED, HAS_WATER, HAS_JAR, WATERLOGGED, LIGHT_LEVEL);
     }
 
     @Override
     public BlockState rotate(BlockState state, Rotation rot) {
-        return state.with(FACING, rot.rotate(state.get(FACING)));
+        return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
 
     @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
-        return state.rotate(mirrorIn.toRotation(state.get(FACING)));
+        return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        World world = context.getWorld();
-        BlockPos pos = context.getPos();
-        Direction dir = context.getFace().getAxis() == Direction.Axis.Y ? Direction.NORTH : context.getFace();
+        World world = context.getLevel();
+        BlockPos pos = context.getClickedPos();
+        Direction dir = context.getClickedFace().getAxis() == Direction.Axis.Y ? Direction.NORTH : context.getClickedFace();
 
-        boolean water = world.getFluidState(pos).getFluid() == Fluids.WATER;
-        boolean hasJar = canConnect(world.getBlockState(pos.down()),world,pos.down(),Direction.UP);
-        BlockPos backPos = pos.offset(dir.getOpposite());
+        boolean water = world.getFluidState(pos).getType() == Fluids.WATER;
+        boolean hasJar = canConnect(world.getBlockState(pos.below()),world,pos.below(),Direction.UP);
+        BlockPos backPos = pos.relative(dir.getOpposite());
         boolean jarBehind = canConnect(world.getBlockState(backPos),world,backPos,dir.getOpposite());
-        boolean powered = world.isBlockPowered(pos);
+        boolean powered = world.hasNeighborSignal(pos);
 
-        return this.getDefaultState().with(FACING, dir).with(EXTENDED, jarBehind)
-                .with(HAS_JAR,hasJar).with(WATERLOGGED,water).with(POWERED,powered);
+        return this.defaultBlockState().setValue(FACING, dir).setValue(EXTENDED, jarBehind)
+                .setValue(HAS_JAR,hasJar).setValue(WATERLOGGED,water).setValue(POWERED,powered);
     }
 
     //TODO: maybe remove haswater state
@@ -242,7 +244,7 @@ public class FaucetBlock extends Block implements IWaterLoggable{
     @Override
     public void animateTick(BlockState state, World world, BlockPos pos, Random random) {
         boolean flag = this.isOpen(state);
-        if (state.get(HAS_WATER) && !state.get(HAS_JAR)) {
+        if (state.getValue(HAS_WATER) && !state.getValue(HAS_JAR)) {
             if(random.nextFloat()>(flag?0:0.06))return;
             float d = 0.125f;
             double x = (pos.getX() + 0.5 + d * (random.nextFloat()-0.5));
@@ -250,9 +252,9 @@ public class FaucetBlock extends Block implements IWaterLoggable{
             double z = (pos.getZ() + 0.5 + d * (random.nextFloat()-0.5));
             int color = getTileParticleColor(pos,world);
             //get texture color if color is white
-            float r = ColorHelper.PackedColor.getRed(color)/255f;
-            float g = ColorHelper.PackedColor.getGreen(color)/255f;
-            float b = ColorHelper.PackedColor.getBlue(color)/255f;
+            float r = ColorHelper.PackedColor.red(color)/255f;
+            float g = ColorHelper.PackedColor.green(color)/255f;
+            float b = ColorHelper.PackedColor.blue(color)/255f;
             world.addParticle(Registry.DRIPPING_LIQUID.get(), x, y, z, r, g, b);
 
             //world.addParticle(flag?Registry.FALLING_LIQUID.get():Registry.DRIPPING_LIQUID.get(), x, y, z, 0, 1, 0);
@@ -261,7 +263,7 @@ public class FaucetBlock extends Block implements IWaterLoggable{
 
     //only client
     public int getTileParticleColor(BlockPos pos, World world){
-        TileEntity te = world.getTileEntity(pos);
+        TileEntity te = world.getBlockEntity(pos);
         if(te instanceof FaucetBlockTile)
             return ((FaucetBlockTile) te).fluidHolder.getParticleColor();
         return 0x423cf7;

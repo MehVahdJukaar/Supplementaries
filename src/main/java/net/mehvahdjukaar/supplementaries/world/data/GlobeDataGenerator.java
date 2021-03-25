@@ -5,10 +5,7 @@ import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.util.math.MathHelper;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class GlobeDataGenerator {
     //object instance
@@ -93,29 +90,38 @@ public class GlobeDataGenerator {
             col.add(Integer.toHexString(colorMap.get((byte)i)));
         }
         l.add(col);
+
+        l.add(Arrays.asList("minecraft:the_nether", "941818", "7b0000", "6a0400", "16615b", "941818", "ca4e06", "e66410", "f48522", "5a0000", "32333d", "118066", "100c1c"));
+        l.add(Arrays.asList("minecraft:the_end", "061914", "000000", "2a0d2a", "000000", "d5da94", "cdc68b", "061914", "2a0d2a", "cdc68b", "000000", "eef6b4", "b286b2"));
         return l;
     }
 
 
     public static void refreshColorsFromConfig(){
         dimensionColorMap.clear();
-        List<? extends List<String>> customColors = ClientConfigs.block.GLOBE_COLORS.get();
-        for(List<String> l: customColors){
-            if(l.size()>=13){
-                String id = l.get(0);
-                HashMap<Byte, Integer> col = new HashMap<>();
-                for(int i = 1; i<13; i++) {
-                    int hex;
-                    try{
-                        hex = Integer.parseInt(l.get(i).replace("0x",""), 16);
-                    }catch(Exception e){
-                        Supplementaries.LOGGER.warn("failed to parse config 'globe_colors' (at dimension"+id+")");
-                        continue;
+        try {
+            List<? extends List<String>> customColors = ClientConfigs.block.GLOBE_COLORS.get();
+            for (List<String> l : customColors) {
+                if (l.size() >= 13) {
+                    String id = l.get(0);
+                    HashMap<Byte, Integer> col = new HashMap<>();
+                    for (int i = 1; i < 13; i++) {
+                        int hex;
+                        try {
+                            hex = Integer.parseInt(l.get(i).replace("0x", ""), 16);
+                        } catch (Exception e) {
+                            Supplementaries.LOGGER.warn("failed to parse config 'globe_colors' (at dimension" + id + "). Try deleting them");
+                            continue;
+                        }
+                        col.put((byte) i, hex);
                     }
-                    col.put((byte)i, hex);
+                    dimensionColorMap.put(id, col);
                 }
-                dimensionColorMap.put(id,col);
             }
+        }
+        catch (Exception e){
+            Supplementaries.LOGGER.warn("failed to parse config globe_color configs. Try deleting them");
+            dimensionColorMap.put("minecraft:overworld",new HashMap<>(colorMap));
         }
     }
 

@@ -30,18 +30,18 @@ public class PulleyBlockTile extends ItemDisplayTile {
 
     //hijacking this method to work with hoppers
     @Override
-    public void markDirty() {
+    public void setChanged() {
         this.updateTile();
        //this.updateServerAndClient();
-        super.markDirty();
+        super.setChanged();
     }
 
     public void updateTile() {
-        if(this.world.isRemote)return;
+        if(this.level.isClientSide)return;
         Winding type = getContentType(this.getDisplayedItem().getItem());
         BlockState state = this.getBlockState();
-        if(state.get(PulleyBlock.TYPE)!=type){
-            world.setBlockState(this.pos,state.with(PulleyBlock.TYPE,type));
+        if(state.getValue(PulleyBlock.TYPE)!=type){
+            level.setBlockAndUpdate(this.worldPosition,state.setValue(PulleyBlock.TYPE,type));
         }
     }
 
@@ -64,22 +64,22 @@ public class PulleyBlockTile extends ItemDisplayTile {
     }
 
     @Override
-    public boolean isItemValidForSlot(int index, ItemStack stack) {
+    public boolean canPlaceItem(int index, ItemStack stack) {
         return (getContentType(stack.getItem())!=Winding.NONE);
     }
 
     @Override
-    public boolean canInsertItem(int index, ItemStack stack, @Nullable Direction direction) {
-        return this.isItemValidForSlot(index, stack);
+    public boolean canPlaceItemThroughFace(int index, ItemStack stack, @Nullable Direction direction) {
+        return this.canPlaceItem(index, stack);
     }
 
     @Override
-    public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
+    public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
         return true;
     }
 
     @Override
-    public int getInventoryStackLimit() {
+    public int getMaxStackSize() {
         return 64;
     }
 

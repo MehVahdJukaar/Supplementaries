@@ -24,10 +24,10 @@ import net.minecraftforge.client.model.data.EmptyModelData;
 public class FireflyJarItemRenderer extends ItemStackTileEntityRenderer {
 
     @Override
-    public void func_239207_a_(ItemStack stack, ItemCameraTransforms.TransformType transformType, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
-        matrixStackIn.push();
-        BlockRendererDispatcher blockRenderer = Minecraft.getInstance().getBlockRendererDispatcher();
-        BlockState state = Registry.FIREFLY_JAR.get().getDefaultState();
+    public void renderByItem(ItemStack stack, ItemCameraTransforms.TransformType transformType, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
+        matrixStackIn.pushPose();
+        BlockRendererDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
+        BlockState state = Registry.FIREFLY_JAR.get().defaultBlockState();
         blockRenderer.renderBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
         float r = 1;
         float g = 1;
@@ -36,26 +36,26 @@ public class FireflyJarItemRenderer extends ItemStackTileEntityRenderer {
         matrixStackIn.translate(0.5, 0.5-0.125, 0.5);
         matrixStackIn.scale(0.25f, 0.25f, 0.25f);
 
-        IVertexBuilder ivertexbuilder = bufferIn.getBuffer(RenderType.getEntityTranslucent(Textures.FIREFLY_TEXTURE));
+        IVertexBuilder ivertexbuilder = bufferIn.getBuffer(RenderType.entityTranslucent(Textures.FIREFLY_TEXTURE));
 
         if(transformType.equals(ItemCameraTransforms.TransformType.FIXED)) {
-            Quaternion rotation = Minecraft.getInstance().getRenderManager().getCameraOrientation();
-            matrixStackIn.push();
-            matrixStackIn.rotate(rotation);
+            Quaternion rotation = Minecraft.getInstance().getEntityRenderDispatcher().cameraOrientation();
+            matrixStackIn.pushPose();
+            matrixStackIn.mulPose(rotation);
             RendererUtil.addQuadSide(ivertexbuilder, matrixStackIn, -0.5f, -0.5f, 0, 0.5f, 0.5f, 0, 0, 0, 1, 1,  r,  g, b, a, 240, 0, 0, 1, 0);
-            matrixStackIn.pop();
-            matrixStackIn.rotate(Const.Y90);
-            matrixStackIn.rotate(rotation);
+            matrixStackIn.popPose();
+            matrixStackIn.mulPose(Const.Y90);
+            matrixStackIn.mulPose(rotation);
             //TODO: fix this like compass item does
 
         }
         else{
-            matrixStackIn.rotate(Const.YN45);
+            matrixStackIn.mulPose(Const.YN45);
         }
 
 
         RendererUtil.addQuadSide(ivertexbuilder, matrixStackIn, -0.5f, -0.5f, 0, 0.5f, 0.5f, 0, 0, 0, 1, 1,  r,  g, b, a, 240, 0, 0, 1, 0);
 
-        matrixStackIn.pop();
+        matrixStackIn.popPose();
     }
 }

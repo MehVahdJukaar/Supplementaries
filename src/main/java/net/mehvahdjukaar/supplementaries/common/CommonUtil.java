@@ -30,10 +30,12 @@ import static net.mehvahdjukaar.supplementaries.common.Textures.*;
 public class CommonUtil {
 
     public static void swapItem(PlayerEntity player, Hand hand, ItemStack oldItem, ItemStack newItem){
-        player.setHeldItem(hand, DrinkHelper.fill(oldItem.copy(), player, newItem, player.isCreative()));
+        if(!player.level.isClientSide)
+        player.setItemInHand(hand, DrinkHelper.createFilledResult(oldItem.copy(), player, newItem, player.isCreative()));
     }
     public static void swapItem(PlayerEntity player, Hand hand, ItemStack newItem){
-        player.setHeldItem(hand, DrinkHelper.fill(player.getHeldItem(hand).copy(), player, newItem, player.isCreative()));
+        if(!player.level.isClientSide)
+        player.setItemInHand(hand, DrinkHelper.createFilledResult(player.getItemInHand(hand).copy(), player, newItem, player.isCreative()));
     }
 
     public enum Festivity{
@@ -146,13 +148,13 @@ public class CommonUtil {
 
         //only for bucket
         public SoundEvent getSound() {
-            if (this.isLava()) return SoundEvents.ITEM_BUCKET_FILL_LAVA;
-            else if (this.isFish()) return SoundEvents.ITEM_BUCKET_FILL_FISH;
-            else return SoundEvents.ITEM_BUCKET_FILL;
+            if (this.isLava()) return SoundEvents.BUCKET_FILL_LAVA;
+            else if (this.isFish()) return SoundEvents.BUCKET_FILL_FISH;
+            else return SoundEvents.BUCKET_FILL;
         }
 
         public SoundEvent getEatSound() {
-            return this==COOKIES?SoundEvents.ENTITY_GENERIC_EAT:SoundEvents.ENTITY_GENERIC_DRINK;
+            return this==COOKIES?SoundEvents.GENERIC_EAT:SoundEvents.GENERIC_DRINK;
         }
 
     }
@@ -197,7 +199,7 @@ public class CommonUtil {
     public static JarLiquidType getJarContentTypeFromItem(ItemStack stack) {
         Item i = stack.getItem();
         if (i instanceof PotionItem) {
-            if (PotionUtils.getPotionFromItem(stack).equals(Potions.WATER)) {
+            if (PotionUtils.getPotion(stack).equals(Potions.WATER)) {
                 return JarLiquidType.WATER;
             } else {
                 return JarLiquidType.POTION;
@@ -266,7 +268,7 @@ public class CommonUtil {
             return this.name;
         }
 
-        public String getString() {
+        public String getSerializedName() {
             return this.name;
         }
 
@@ -301,29 +303,29 @@ public class CommonUtil {
 
     //bounding box
     public static AxisAlignedBB getDirectionBB(BlockPos pos, Direction facing, int offset) {
-        BlockPos endPos = pos.offset(facing, offset);
+        BlockPos endPos = pos.relative(facing, offset);
         switch (facing) {
             default:
             case NORTH:
-                endPos = endPos.add(1, 1, 0);
+                endPos = endPos.offset(1, 1, 0);
                 break;
             case SOUTH:
-                endPos = endPos.add(1, 1, 1);
-                pos = pos.add(0,0,1);
+                endPos = endPos.offset(1, 1, 1);
+                pos = pos.offset(0,0,1);
                 break;
             case UP:
-                endPos = endPos.add(1, 1, 1);
-                pos = pos.add(0,1,0);
+                endPos = endPos.offset(1, 1, 1);
+                pos = pos.offset(0,1,0);
                 break;
             case EAST:
-                endPos = endPos.add(1, 1, 1);
-                pos = pos.add(1,0,0);
+                endPos = endPos.offset(1, 1, 1);
+                pos = pos.offset(1,0,0);
                 break;
             case WEST:
-                endPos = endPos.add(0, 1, 1);
+                endPos = endPos.offset(0, 1, 1);
                 break;
             case DOWN:
-                endPos = endPos.add(1, 0, 1);
+                endPos = endPos.offset(1, 0, 1);
                 break;
         }
         return new AxisAlignedBB(pos, endPos);
@@ -336,9 +338,9 @@ public class CommonUtil {
     public static boolean isShapeEqual(AxisAlignedBB s1, AxisAlignedBB s2){
         return s1.minX==s2.minX&&s1.minY==s2.minY&&s1.minZ==s2.minZ&&s1.maxX==s2.maxX&&s1.maxY==s2.maxY&&s1.maxZ==s2.maxZ;
     }
-    public static final AxisAlignedBB FENCE_SHAPE = Block.makeCuboidShape(6,0,6,10,16,10).getBoundingBox();
-    public static final AxisAlignedBB POST_SHAPE = Block.makeCuboidShape(5,0,5,11,16,11).getBoundingBox();
-    public static final AxisAlignedBB WALL_SHAPE = Block.makeCuboidShape(7,0,7,12,16,12).getBoundingBox();
+    public static final AxisAlignedBB FENCE_SHAPE = Block.box(6,0,6,10,16,10).bounds();
+    public static final AxisAlignedBB POST_SHAPE = Block.box(5,0,5,11,16,11).bounds();
+    public static final AxisAlignedBB WALL_SHAPE = Block.box(7,0,7,12,16,12).bounds();
 
     //0 normal, 1 fence, 2 walls TODO: change 1 with 2
     public static int getPostSize(BlockState state, BlockPos pos, IWorldReader world){
@@ -346,10 +348,10 @@ public class CommonUtil {
 
         VoxelShape shape = state.getShape(world, pos);
         if(shape!= VoxelShapes.empty()) {
-            AxisAlignedBB s = shape.getBoundingBox();
-            if (block instanceof FenceBlock || block instanceof SignPostBlock || block.isIn(Tags.Blocks.FENCES) || isShapeEqual(FENCE_SHAPE, s))
+            AxisAlignedBB s = shape.bounds();
+            if (block instanceof FenceBlock || block instanceof SignPostBlock || block.is(Tags.Blocks.FENCES) || isShapeEqual(FENCE_SHAPE, s))
                 return 1;
-            if (block instanceof WallBlock || block.isIn(BlockTags.WALLS) ||
+            if (block instanceof WallBlock || block.is(BlockTags.WALLS) ||
                     (isShapeEqual(WALL_SHAPE, s))) return 2;
             if (isShapeEqual(POST_SHAPE, s)) return 1;
         }
@@ -359,7 +361,7 @@ public class CommonUtil {
 
     public static boolean isVertical(BlockState state){
         if(state.hasProperty(BlockStateProperties.AXIS)){
-            return state.get(BlockStateProperties.AXIS)== Direction.Axis.Y;
+            return state.getValue(BlockStateProperties.AXIS)== Direction.Axis.Y;
         }
         return true;
     }
@@ -367,7 +369,7 @@ public class CommonUtil {
     //for quarks hedges
     public static boolean isNotExtended(BlockState state){
         if(state.hasProperty(BlockStateProperties.EXTENDED)){
-            return !state.get(BlockStateProperties.EXTENDED);
+            return !state.getValue(BlockStateProperties.EXTENDED);
         }
         return true;
     }
@@ -379,15 +381,15 @@ public class CommonUtil {
     //this is how you do it :D
     private static final ShulkerBoxTileEntity SHULKER_TILE = new ShulkerBoxTileEntity();
     public static boolean isAllowedInShulker(ItemStack stack){
-        return SHULKER_TILE.canInsertItem(0,stack,null);
+        return SHULKER_TILE.canPlaceItemThroughFace(0,stack,null);
     }
 
 
     //cylinder distance
     public static boolean withinDistanceDown(BlockPos pos, Vector3d vector, double distW, double distDown) {
-        double dx = vector.getX() - ((double)pos.getX() + 0.5);
-        double dy = vector.getY() - ((double)pos.getY() + 0.5);
-        double dz = vector.getZ() - ((double)pos.getZ() + 0.5);
+        double dx = vector.x() - ((double)pos.getX() + 0.5);
+        double dy = vector.y() - ((double)pos.getY() + 0.5);
+        double dz = vector.z() - ((double)pos.getZ() + 0.5);
         double mydistW = (dx*dx + dz*dz);
         return (mydistW<(distW*distW) && (dy<distW && dy>-distDown));
     }
@@ -396,8 +398,8 @@ public class CommonUtil {
     //BlockItem method
     public static boolean canPlace(BlockItemUseContext context, BlockState state){
         PlayerEntity playerentity = context.getPlayer();
-        ISelectionContext iselectioncontext = playerentity == null ? ISelectionContext.dummy() : ISelectionContext.forEntity(playerentity);
-        return state.isValidPosition(context.getWorld(), context.getPos()) && context.getWorld().placedBlockCollides(state, context.getPos(), iselectioncontext);
+        ISelectionContext iselectioncontext = playerentity == null ? ISelectionContext.empty() : ISelectionContext.of(playerentity);
+        return state.canSurvive(context.getLevel(), context.getClickedPos()) && context.getLevel().isUnobstructed(state, context.getClickedPos(), iselectioncontext);
     }
 
 

@@ -13,9 +13,11 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class JarBoatBlock extends HorizontalBlock {
-    protected static final VoxelShape SHAPE_X = Block.makeCuboidShape(3,0,0,13,10,16);
-    protected static final VoxelShape SHAPE_Z = Block.makeCuboidShape(0,0,3,16,10,13);
+    protected static final VoxelShape SHAPE_X = Block.box(3,0,0,13,10,16);
+    protected static final VoxelShape SHAPE_Z = Block.box(0,0,3,16,10,13);
 
     public JarBoatBlock(Properties builder) {
         super(builder);
@@ -23,25 +25,25 @@ public class JarBoatBlock extends HorizontalBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.getDefaultState().with(HORIZONTAL_FACING,context.getPlacementHorizontalFacing());
+        return this.defaultBlockState().setValue(FACING,context.getHorizontalDirection());
     }
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
-        return state.get(HORIZONTAL_FACING).getAxis()== Direction.Axis.X?SHAPE_X:SHAPE_Z;
+        return state.getValue(FACING).getAxis()== Direction.Axis.X?SHAPE_X:SHAPE_Z;
     }
 
     @Override
-    public boolean allowsMovement(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
+    public boolean isPathfindable(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
         return false;
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(HORIZONTAL_FACING);
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+        builder.add(FACING);
     }
     @Override
-    public PushReaction getPushReaction(BlockState state) {
+    public PushReaction getPistonPushReaction(BlockState state) {
         return PushReaction.DESTROY;
     }
 

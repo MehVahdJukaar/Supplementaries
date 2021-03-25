@@ -30,19 +30,19 @@ public class NoticeBoardContainer extends Container  {
         super(Registry.NOTICE_BOARD_CONTAINER.get(), id);
         //tile inventory
         this.inventory = inventory;
-        assertInventorySize(inventory, 1);
-        inventory.openInventory(playerInventory.player);
+        checkContainerSize(inventory, 1);
+        inventory.startOpen(playerInventory.player);
 
         this.addSlot(new Slot(inventory, 0, 79, 39) {
             @Override
-            public void onSlotChanged() {
-                super.onSlotChanged();
+            public void setChanged() {
+                super.setChanged();
                 //NoticeBoardContainer.this.slotChanged(0, 0, 0);
             }
             @Override
-            public boolean isItemValid(ItemStack stack) {
+            public boolean mayPlace(ItemStack stack) {
                 if(!stack.isEmpty()&& ServerConfigs.cached.NOTICE_BOARDS_UNRESTRICTED)return true;
-                return ((ItemTags.LECTERN_BOOKS!=null&&stack.getItem().isIn(ItemTags.LECTERN_BOOKS)) || stack.getItem() instanceof FilledMapItem);
+                return ((ItemTags.LECTERN_BOOKS!=null&&stack.getItem().is(ItemTags.LECTERN_BOOKS)) || stack.getItem() instanceof FilledMapItem);
             }
         });
 
@@ -57,31 +57,31 @@ public class NoticeBoardContainer extends Container  {
 
 
     @Override
-    public boolean canInteractWith(PlayerEntity playerIn) {
-        return this.inventory.isUsableByPlayer(playerIn);
+    public boolean stillValid(PlayerEntity playerIn) {
+        return this.inventory.stillValid(playerIn);
     }
     /**
      * Handle when the stack in slot {@code index} is shift-clicked. Normally this moves the stack between the player
      * inventory and the other inventory(s).
      */
-    public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+    public ItemStack quickMoveStack(PlayerEntity playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
-        Slot slot = this.inventorySlots.get(index);
-        if (slot != null && slot.getHasStack()) {
-            ItemStack itemstack1 = slot.getStack();
+        Slot slot = this.slots.get(index);
+        if (slot != null && slot.hasItem()) {
+            ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
-            if (index < this.inventory.getSizeInventory()) {
-                if (!this.mergeItemStack(itemstack1, this.inventory.getSizeInventory(), this.inventorySlots.size(), true)) {
+            if (index < this.inventory.getContainerSize()) {
+                if (!this.moveItemStackTo(itemstack1, this.inventory.getContainerSize(), this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.mergeItemStack(itemstack1, 0, this.inventory.getSizeInventory(), false)) {
+            } else if (!this.moveItemStackTo(itemstack1, 0, this.inventory.getContainerSize(), false)) {
                 return ItemStack.EMPTY;
             }
 
             if (itemstack1.isEmpty()) {
-                slot.putStack(ItemStack.EMPTY);
+                slot.set(ItemStack.EMPTY);
             } else {
-                slot.onSlotChanged();
+                slot.setChanged();
             }
         }
 
@@ -91,9 +91,9 @@ public class NoticeBoardContainer extends Container  {
     /**
      * Called when the container is closed.
      */
-    public void onContainerClosed(PlayerEntity playerIn) {
-        super.onContainerClosed(playerIn);
-        this.inventory.closeInventory(playerIn);
+    public void removed(PlayerEntity playerIn) {
+        super.removed(playerIn);
+        this.inventory.stopOpen(playerIn);
     }
 
 }

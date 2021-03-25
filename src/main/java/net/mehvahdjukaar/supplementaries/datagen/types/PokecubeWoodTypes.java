@@ -4,12 +4,12 @@ import net.minecraft.block.material.MaterialColor;
 
 
 public enum PokecubeWoodTypes implements IWoodType {
-    ENIGMA("enigma",MaterialColor.BLACK),
-    LEPPA("leppa",MaterialColor.MAGENTA),
-    NANAB("nanab",MaterialColor.BROWN_TERRACOTTA),
-    ORAN("oran",MaterialColor.LIGHT_BLUE),
-    PECHA("pecha",MaterialColor.PINK),
-    SITRUS("sitrus",MaterialColor.YELLOW_TERRACOTTA);
+    ENIGMA("enigma",MaterialColor.COLOR_BLACK),
+    LEPPA("leppa",MaterialColor.COLOR_MAGENTA),
+    NANAB("nanab",MaterialColor.TERRACOTTA_BROWN),
+    ORAN("oran",MaterialColor.COLOR_LIGHT_BLUE),
+    PECHA("pecha",MaterialColor.COLOR_PINK),
+    SITRUS("sitrus",MaterialColor.TERRACOTTA_YELLOW);
 
 
     private final String name;

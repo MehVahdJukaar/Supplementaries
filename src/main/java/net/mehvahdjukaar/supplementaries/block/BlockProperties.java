@@ -52,7 +52,7 @@ public class BlockProperties {
             return this.name;
         }
 
-        public String getString() {
+        public String getSerializedName() {
             return this.name;
         }
 
@@ -83,7 +83,7 @@ public class BlockProperties {
         }
 
         @Override
-        public String getString() {
+        public String getSerializedName() {
             return this.name;
         }
     }
@@ -98,7 +98,7 @@ public class BlockProperties {
         }
 
         @Override
-        public String getString() {
+        public String getSerializedName() {
             return this.name;
 
         }

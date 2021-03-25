@@ -7,6 +7,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorldReader;
 
 
+import net.minecraft.item.Item.Properties;
+
 public class KeyItem extends Item {
 
     public KeyItem(Properties properties) {

@@ -31,6 +31,8 @@ import java.util.List;
 import java.util.Random;
 
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class WallLanternBlock extends EnhancedLanternBlock {
 
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
@@ -38,20 +40,20 @@ public class WallLanternBlock extends EnhancedLanternBlock {
 
     public WallLanternBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH)
-                .with(LIGHT_LEVEL, 0).with(WATERLOGGED,false).with(LIT,true));
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH)
+                .setValue(LIGHT_LEVEL, 0).setValue(WATERLOGGED,false).setValue(LIT,true));
     }
 
     @Override
-    public void addInformation(ItemStack stack,  IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
-        tooltip.add((new StringTextComponent("You shouldn't have this")).mergeStyle(TextFormatting.GRAY));
+    public void appendHoverText(ItemStack stack,  IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+        tooltip.add((new StringTextComponent("You shouldn't have this")).withStyle(TextFormatting.GRAY));
     }
 
     @Override
     public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
-        if(state.get(LIT)) {
-            return state.get(LIGHT_LEVEL);
+        if(state.getValue(LIT)) {
+            return state.getValue(LIGHT_LEVEL);
         }
         return 0;
     }
@@ -59,7 +61,7 @@ public class WallLanternBlock extends EnhancedLanternBlock {
     //TODO: replace getItem with getPickBlock
     @Override
     public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
-        TileEntity te = world.getTileEntity(pos);
+        TileEntity te = world.getBlockEntity(pos);
         if (te instanceof WallLanternBlockTile) {
             return new ItemStack(((WallLanternBlockTile) te).lanternBlock.getBlock());
         }
@@ -67,25 +69,25 @@ public class WallLanternBlock extends EnhancedLanternBlock {
     }
 
     @Override
-    public boolean allowsMovement(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
+    public boolean isPathfindable(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
         return false;
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        super.fillStateContainer(builder);
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
         builder.add(LIGHT_LEVEL,LIT);
     }
 
     @Override
     public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
         super.tick(state, worldIn, pos, rand);
-        TileEntity te = worldIn.getTileEntity(pos);
+        TileEntity te = worldIn.getBlockEntity(pos);
         if (te instanceof WallLanternBlockTile && ((WallLanternBlockTile) te).isRedstoneLantern) {
-            if (state.get(LIT) && !worldIn.isBlockPowered(pos)) {
-                worldIn.setBlockState(pos, state.func_235896_a_(LIT), 2);
+            if (state.getValue(LIT) && !worldIn.hasNeighborSignal(pos)) {
+                worldIn.setBlock(pos, state.cycle(LIT), 2);
                 if(((WallLanternBlockTile) te).lanternBlock.hasProperty(LIT))
-                    ((WallLanternBlockTile) te).lanternBlock = ((WallLanternBlockTile) te).lanternBlock.func_235896_a_(LIT);
+                    ((WallLanternBlockTile) te).lanternBlock = ((WallLanternBlockTile) te).lanternBlock.cycle(LIT);
             }
         }
     }
@@ -93,17 +95,17 @@ public class WallLanternBlock extends EnhancedLanternBlock {
     //i could reference held lantern block directly but maybe it's more efficient this way idk
     @Override
     public void neighborChanged(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
-        if (!world.isRemote) {
-            TileEntity te = world.getTileEntity(pos);
+        if (!world.isClientSide) {
+            TileEntity te = world.getBlockEntity(pos);
             if (te instanceof WallLanternBlockTile && ((WallLanternBlockTile) te).isRedstoneLantern) {
-                boolean flag = state.get(LIT);
-                if (flag != world.isBlockPowered(pos)) {
+                boolean flag = state.getValue(LIT);
+                if (flag != world.hasNeighborSignal(pos)) {
                     if (flag) {
-                        world.getPendingBlockTicks().scheduleTick(pos, this, 4);
+                        world.getBlockTicks().scheduleTick(pos, this, 4);
                     } else {
-                        world.setBlockState(pos, state.func_235896_a_(LIT), 2);
+                        world.setBlock(pos, state.cycle(LIT), 2);
                         if(((WallLanternBlockTile) te).lanternBlock.hasProperty(LIT))
-                            ((WallLanternBlockTile) te).lanternBlock=((WallLanternBlockTile) te).lanternBlock.func_235896_a_(LIT);
+                            ((WallLanternBlockTile) te).lanternBlock=((WallLanternBlockTile) te).lanternBlock.cycle(LIT);
                     }
                 }
             }
@@ -112,7 +114,7 @@ public class WallLanternBlock extends EnhancedLanternBlock {
 
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
-        TileEntity tileentity = builder.get(LootParameters.BLOCK_ENTITY);
+        TileEntity tileentity = builder.getOptionalParameter(LootParameters.BLOCK_ENTITY);
         if (tileentity instanceof WallLanternBlockTile){
             return Collections.singletonList(new ItemStack(((WallLanternBlockTile) tileentity).lanternBlock.getBlock()));
         }

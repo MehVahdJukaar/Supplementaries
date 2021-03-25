@@ -15,26 +15,28 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.extensions.IForgeBlock;
 
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class RedstoneIlluminatorBlock extends Block implements IForgeBlock {
-    public static final IntegerProperty POWER = BlockStateProperties.POWER_0_15;
+    public static final IntegerProperty POWER = BlockStateProperties.POWER;
     public RedstoneIlluminatorBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(POWER, 0));
+        this.registerDefaultState(this.stateDefinition.any().setValue(POWER, 0));
     }
 
 
     @Override
     public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
-        return 15 - state.get(POWER);
+        return 15 - state.getValue(POWER);
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(POWER);
     }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+    public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         this.updatePower(state, worldIn, pos);
     }
 
@@ -45,9 +47,9 @@ public class RedstoneIlluminatorBlock extends Block implements IForgeBlock {
     }
 
     public void updatePower(BlockState state, World world, BlockPos pos) {
-        if (!world.isRemote) {
-            int pow = world.getRedstonePowerFromNeighbors(pos);
-            world.setBlockState(pos, state.with(POWER, MathHelper.clamp(pow, 0, 15)), 2);
+        if (!world.isClientSide) {
+            int pow = world.getBestNeighborSignal(pos);
+            world.setBlock(pos, state.setValue(POWER, MathHelper.clamp(pow, 0, 15)), 2);
         }
     }
 }

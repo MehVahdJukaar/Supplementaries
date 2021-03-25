@@ -19,7 +19,7 @@ public class ModRecipeProvider extends RecipeProvider {
         super(generatorIn);
     }
     @Override
-    protected void registerRecipes(Consumer<IFinishedRecipe> consumerIn) {
+    protected void buildShapelessRecipes(Consumer<IFinishedRecipe> consumerIn) {
 
         for (IWoodType wood : WoodTypes.TYPES.values()) {
             makeSignPostRecipe(wood, consumerIn);
@@ -46,24 +46,24 @@ public class ModRecipeProvider extends RecipeProvider {
             Item sign = ForgeRegistries.ITEMS.getValue(new ResourceLocation(wood.getSignRegName()));
             if (plank == null || plank == Items.AIR) return;
             if(sign!=null && sign != Items.AIR) {
-                ShapelessRecipeBuilder.shapelessRecipe(Registry.SIGN_POST_ITEMS.get(wood).get(), 2)
-                        .addIngredient(sign)
-                        .setGroup(Registry.SIGN_POST_NAME)
-                        .addCriterion("has_plank", InventoryChangeTrigger.Instance.forItems(plank))
+                ShapelessRecipeBuilder.shapeless(Registry.SIGN_POST_ITEMS.get(wood).get(), 2)
+                        .requires(sign)
+                        .group(Registry.SIGN_POST_NAME)
+                        .unlockedBy("has_plank", InventoryChangeTrigger.Instance.hasItems(plank))
                         //.build(consumer);
-                        .build((s) -> makeConditionalRec(s, wood, consumer, Registry.SIGN_POST_NAME)); //
+                        .save((s) -> makeConditionalRec(s, wood, consumer, Registry.SIGN_POST_NAME)); //
             }
             else{
-                ShapedRecipeBuilder.shapedRecipe(Registry.SIGN_POST_ITEMS.get(wood).get(), 3)
-                        .patternLine("   ")
-                        .patternLine("222")
-                        .patternLine(" 1 ")
-                        .key('1', Items.STICK)
-                        .key('2', plank)
-                        .setGroup(Registry.SIGN_POST_NAME)
-                        .addCriterion("has_plank", InventoryChangeTrigger.Instance.forItems(plank))
+                ShapedRecipeBuilder.shaped(Registry.SIGN_POST_ITEMS.get(wood).get(), 3)
+                        .pattern("   ")
+                        .pattern("222")
+                        .pattern(" 1 ")
+                        .define('1', Items.STICK)
+                        .define('2', plank)
+                        .group(Registry.SIGN_POST_NAME)
+                        .unlockedBy("has_plank", InventoryChangeTrigger.Instance.hasItems(plank))
                         //.build(consumer);
-                        .build((s) -> makeConditionalRec(s, wood, consumer,Registry.SIGN_POST_NAME)); //
+                        .save((s) -> makeConditionalRec(s, wood, consumer,Registry.SIGN_POST_NAME)); //
             }
         }
         catch (Exception ignored){}
@@ -76,17 +76,17 @@ public class ModRecipeProvider extends RecipeProvider {
             if (plank == null || plank == Items.AIR){
                 return;
             }
-            ShapedRecipeBuilder.shapedRecipe(Registry.HANGING_SIGNS.get(wood).get(), 2)
-                    .patternLine("010")
-                    .patternLine("222")
-                    .patternLine("222")
-                    .key('0', Items.IRON_NUGGET)
-                    .key('1', Items.STICK)
-                    .key('2', plank)
-                    .setGroup(Registry.HANGING_SIGN_NAME)
-                    .addCriterion("has_plank", InventoryChangeTrigger.Instance.forItems(plank))
+            ShapedRecipeBuilder.shaped(Registry.HANGING_SIGNS.get(wood).get(), 2)
+                    .pattern("010")
+                    .pattern("222")
+                    .pattern("222")
+                    .define('0', Items.IRON_NUGGET)
+                    .define('1', Items.STICK)
+                    .define('2', plank)
+                    .group(Registry.HANGING_SIGN_NAME)
+                    .unlockedBy("has_plank", InventoryChangeTrigger.Instance.hasItems(plank))
                     //.build(consumer);
-                    .build((s) -> makeConditionalRec(s, wood, consumer,Registry.HANGING_SIGN_NAME)); //
+                    .save((s) -> makeConditionalRec(s, wood, consumer,Registry.HANGING_SIGN_NAME)); //
 
 
     }

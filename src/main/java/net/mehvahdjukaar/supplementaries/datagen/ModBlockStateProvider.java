@@ -37,11 +37,11 @@ public class ModBlockStateProvider extends BlockStateProvider {
         getVariantBuilder(Registry.HANGING_SIGNS.get(wood).get()).forAllStatesExcept(state -> {
             String baseName = Registry.HANGING_SIGN_NAME;
 
-            ModelFile model = hangingSignModel(wood,baseName,state.get(HangingSignBlock.TILE)?"tile":
-                    state.get(HangingSignBlock.EXTENSION).toString());
+            ModelFile model = hangingSignModel(wood,baseName,state.getValue(HangingSignBlock.TILE)?"tile":
+                    state.getValue(HangingSignBlock.EXTENSION).toString());
 
             return ConfiguredModel.builder().modelFile(model)
-                    .rotationY(((int) state.get(BlockStateProperties.HORIZONTAL_FACING).getHorizontalAngle() + 180) % 360)
+                    .rotationY(((int) state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + 180) % 360)
                     .build();
         }, HangingSignBlock.HANGING, HangingSignBlock.WATERLOGGED);
 

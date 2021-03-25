@@ -19,20 +19,20 @@ public class ClientEvents {
 
     @SubscribeEvent
     public static void onItemTooltip(ItemTooltipEvent event) {
-        if((event.getPlayer()==null) || (event.getPlayer().world==null) ||
-                !ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().gameSettings.advancedItemTooltips)return;
+        if((event.getPlayer()==null) || (event.getPlayer().level==null) ||
+                !ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().options.advancedItemTooltips)return;
         Item i = event.getItemStack().getItem();
         if(ServerConfigs.cached.WALL_LANTERN_PLACEMENT && CommonUtil.isLantern(i)){
-            event.getToolTip().add(new TranslationTextComponent("message.supplementaries.wall_lantern").mergeStyle(TextFormatting.GRAY).mergeStyle(TextFormatting.ITALIC));
+            event.getToolTip().add(new TranslationTextComponent("message.supplementaries.wall_lantern").withStyle(TextFormatting.GRAY).withStyle(TextFormatting.ITALIC));
         }
         else if(ServerConfigs.cached.THROWABLE_BRICKS_ENABLED && CommonUtil.isBrick(i)){
-            event.getToolTip().add(new TranslationTextComponent("message.supplementaries.throwable_brick").mergeStyle(TextFormatting.GRAY).mergeStyle(TextFormatting.ITALIC));
+            event.getToolTip().add(new TranslationTextComponent("message.supplementaries.throwable_brick").withStyle(TextFormatting.GRAY).withStyle(TextFormatting.ITALIC));
         }
         else if(ServerConfigs.cached.HANGING_POT_PLACEMENT && CommonUtil.isPot(i)){
-            event.getToolTip().add(new TranslationTextComponent("message.supplementaries.hanging_pot").mergeStyle(TextFormatting.GRAY).mergeStyle(TextFormatting.ITALIC));
+            event.getToolTip().add(new TranslationTextComponent("message.supplementaries.hanging_pot").withStyle(TextFormatting.GRAY).withStyle(TextFormatting.ITALIC));
         }
         else if(ServerConfigs.cached.DOUBLE_CAKE_PLACEMENT && CommonUtil.isCake(i)){
-            event.getToolTip().add(new TranslationTextComponent("message.supplementaries.double_cake").mergeStyle(TextFormatting.GRAY).mergeStyle(TextFormatting.ITALIC));
+            event.getToolTip().add(new TranslationTextComponent("message.supplementaries.double_cake").withStyle(TextFormatting.GRAY).withStyle(TextFormatting.ITALIC));
         }
     }
 

@@ -1,16 +1,29 @@
 {
   "variants": {
-    "axis=x": {
-      "model": "supplementaries:block/flax_block_horizontal",
+    "facing=north": {
+      "model": "supplementaries:block/flax_block",
+      "x": 90
+    },
+    "facing=east": {
+      "model": "supplementaries:block/flax_block",
+      "x": 90,
+      "y": 270
+    },
+    "facing=south": {
+      "model": "supplementaries:block/flax_block",
+      "x": 270
+    },
+    "facing=west": {
+      "model": "supplementaries:block/flax_block",
       "x": 90,
       "y": 90
     },
-    "axis=y": {
+    "facing=up": {
       "model": "supplementaries:block/flax_block"
     },
-    "axis=z": {
-      "model": "supplementaries:block/flax_block_horizontal",
-      "x": 90
+    "facing=down": {
+      "model": "supplementaries:block/flax_block",
+      "x": 180
     }
   }
 }

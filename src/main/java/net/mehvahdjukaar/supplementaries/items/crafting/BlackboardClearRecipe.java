@@ -18,7 +18,7 @@ public class BlackboardClearRecipe extends SpecialRecipe {
 
     private boolean isDrawnBlackboard(ItemStack stack){
         if (stack.getItem() == Registry.BLACKBOARD_ITEM.get()) {
-            CompoundNBT compoundnbt = stack.getChildTag("BlockEntityTag");
+            CompoundNBT compoundnbt = stack.getTagElement("BlockEntityTag");
             return compoundnbt != null && compoundnbt.contains("pixels_0");
         }
         return false;
@@ -30,8 +30,8 @@ public class BlackboardClearRecipe extends SpecialRecipe {
         ItemStack itemstack = null;
         ItemStack itemstack1 = null;
 
-        for(int i = 0; i < inv.getSizeInventory(); ++i) {
-            ItemStack stack = inv.getStackInSlot(i);
+        for(int i = 0; i < inv.getContainerSize(); ++i) {
+            ItemStack stack = inv.getItem(i);
             if (isDrawnBlackboard(stack)) {
                 if (itemstack != null) {
                     return false;
@@ -49,16 +49,16 @@ public class BlackboardClearRecipe extends SpecialRecipe {
     }
 
     @Override
-    public ItemStack getCraftingResult(CraftingInventory inv) {
+    public ItemStack assemble(CraftingInventory inv) {
         return new ItemStack(Registry.BLACKBOARD_ITEM.get());
     }
 
     @Override
     public NonNullList<ItemStack> getRemainingItems(CraftingInventory inv) {
-        NonNullList<ItemStack> nonnulllist = NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
+        NonNullList<ItemStack> nonnulllist = NonNullList.withSize(inv.getContainerSize(), ItemStack.EMPTY);
 
         for(int i = 0; i < nonnulllist.size(); ++i) {
-            ItemStack itemstack = inv.getStackInSlot(i);
+            ItemStack itemstack = inv.getItem(i);
             if (!itemstack.isEmpty()) {
                 if (!(itemstack.hasTag() && isDrawnBlackboard(itemstack))) {
                     ItemStack itemstack1 = itemstack.copy();
@@ -72,7 +72,7 @@ public class BlackboardClearRecipe extends SpecialRecipe {
     }
 
     @Override
-    public boolean canFit(int width, int height) {
+    public boolean canCraftInDimensions(int width, int height) {
         return width * height >= 2;
     }
 

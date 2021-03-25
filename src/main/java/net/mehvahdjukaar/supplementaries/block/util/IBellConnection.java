@@ -20,7 +20,7 @@ public interface IBellConnection {
         }
 
         @Override
-        public String getString() {
+        public String getSerializedName() {
             switch (this){
                 default:
                 case NONE:return "none";

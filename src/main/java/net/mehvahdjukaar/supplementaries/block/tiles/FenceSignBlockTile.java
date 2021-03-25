@@ -21,9 +21,9 @@ public class FenceSignBlockTile extends TileEntity implements ITextHolder, IBloc
 
     public TextHolder textHolder;
 
-    public BlockState fenceBlock = Blocks.AIR.getDefaultState();
+    public BlockState fenceBlock = Blocks.AIR.defaultBlockState();
     public Direction signFacing = Direction.NORTH;
-    public BlockState signBlock = Blocks.AIR.getDefaultState();
+    public BlockState signBlock = Blocks.AIR.defaultBlockState();
 
     public static final int LINES = 4;
 
@@ -47,56 +47,56 @@ public class FenceSignBlockTile extends TileEntity implements ITextHolder, IBloc
     public TextHolder getTextHolder(){ return this.textHolder; }
 
     @Override
-    public double getMaxRenderDistanceSquared() {
+    public double getViewDistance() {
         return 128;
     }
 
     @Override
-    public void markDirty() {
-        this.world.notifyBlockUpdate(this.pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
-        super.markDirty();
+    public void setChanged() {
+        this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
+        super.setChanged();
     }
 
     @Override
     public AxisAlignedBB getRenderBoundingBox(){
-        return new AxisAlignedBB(this.getPos().add(-0.25,0,-0.25), this.getPos().add(1.25,1,1.25));
+        return new AxisAlignedBB(this.getBlockPos().offset(-0.25,0,-0.25), this.getBlockPos().offset(1.25,1,1.25));
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
-        super.read(state, compound);
+    public void load(BlockState state, CompoundNBT compound) {
+        super.load(state, compound);
 
         this.textHolder.read(compound);
         this.fenceBlock = NBTUtil.readBlockState(compound.getCompound("Fence"));
         this.signBlock = NBTUtil.readBlockState(compound.getCompound("Sign"));
-        this.signFacing = Direction.byIndex(compound.getInt("Facing"));
+        this.signFacing = Direction.from3DDataValue(compound.getInt("Facing"));
 
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
+    public CompoundNBT save(CompoundNBT compound) {
+        super.save(compound);
 
         this.textHolder.write(compound);
         compound.put("Fence", NBTUtil.writeBlockState(fenceBlock));
         compound.put("Sign", NBTUtil.writeBlockState(signBlock));
-        compound.putInt("Facing", this.signFacing.getIndex());
+        compound.putInt("Facing", this.signFacing.get3DDataValue());
 
         return compound;
     }
 
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.pos, 0, this.getUpdateTag());
+        return new SUpdateTileEntityPacket(this.worldPosition, 0, this.getUpdateTag());
     }
 
     @Override
     public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundNBT());
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.read(this.getBlockState(), pkt.getNbtCompound());
+        this.load(this.getBlockState(), pkt.getTag());
     }
 }

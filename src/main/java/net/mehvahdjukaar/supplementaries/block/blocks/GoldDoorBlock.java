@@ -15,6 +15,8 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.ModList;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class GoldDoorBlock extends DoorBlock {
 
     public GoldDoorBlock(Properties builder) {
@@ -22,22 +24,22 @@ public class GoldDoorBlock extends DoorBlock {
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if(state.get(POWERED))return ActionResultType.PASS;
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if(state.getValue(POWERED))return ActionResultType.PASS;
 
         if(ModList.get().isLoaded("quark")) QuarkDoubleDoorPlugin.openDoor(worldIn,state,pos);
 
-        state = state.func_235896_a_(OPEN);
-        worldIn.setBlockState(pos, state, 10);
-        worldIn.playEvent(player, state.get(OPEN) ? this.getOpenSound() : this.getCloseSound(), pos, 0);
-        return ActionResultType.func_233537_a_(worldIn.isRemote);
+        state = state.cycle(OPEN);
+        worldIn.setBlock(pos, state, 10);
+        worldIn.levelEvent(player, state.getValue(OPEN) ? this.getOpenSound() : this.getCloseSound(), pos, 0);
+        return ActionResultType.sidedSuccess(worldIn.isClientSide);
     }
 
     @Override
     public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
-        boolean hasPower = worldIn.isBlockPowered(pos) || worldIn.isBlockPowered(pos.offset(state.get(HALF) == DoubleBlockHalf.LOWER ? Direction.UP : Direction.DOWN));
-        if (blockIn != this && hasPower != state.get(POWERED)) {
-            worldIn.setBlockState(pos, state.with(POWERED, hasPower), 2);
+        boolean hasPower = worldIn.hasNeighborSignal(pos) || worldIn.hasNeighborSignal(pos.relative(state.getValue(HALF) == DoubleBlockHalf.LOWER ? Direction.UP : Direction.DOWN));
+        if (blockIn != this && hasPower != state.getValue(POWERED)) {
+            worldIn.setBlock(pos, state.setValue(POWERED, hasPower), 2);
         }
 
     }
@@ -46,7 +48,7 @@ public class GoldDoorBlock extends DoorBlock {
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         BlockState state = super.getStateForPlacement(context);
         if(state==null)return state;
-        return state.with(OPEN,false);
+        return state.setValue(OPEN,false);
     }
 
     private int getCloseSound() {

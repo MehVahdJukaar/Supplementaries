@@ -23,17 +23,17 @@ public class BellowsBlockTileRenderer extends TileEntityRenderer<BellowsBlockTil
 
     //TODO: make other tiles this way
     static {
-        center.setRotationPoint(0.0F, 0.0F, 0.0F);
-        center.setTextureOffset(0, 0).addBox(-2.0F, -2.0F, -8.0F, 4.0F, 1.0F, 1.0F, 0.0F, false);
-        center.setTextureOffset(0, 2).addBox(-2.0F, 1.0F, -8.0F, 4.0F, 1.0F, 1.0F, 0.0F, false);
-        center.setTextureOffset(0, 19).addBox(-8.0F, -1.0F, -8.0F, 16.0F, 2.0F, 16.0F, 0.0F, false);
+        center.setPos(0.0F, 0.0F, 0.0F);
+        center.texOffs(0, 0).addBox(-2.0F, -2.0F, -8.0F, 4.0F, 1.0F, 1.0F, 0.0F, false);
+        center.texOffs(0, 2).addBox(-2.0F, 1.0F, -8.0F, 4.0F, 1.0F, 1.0F, 0.0F, false);
+        center.texOffs(0, 19).addBox(-8.0F, -1.0F, -8.0F, 16.0F, 2.0F, 16.0F, 0.0F, false);
 
-        top.setRotationPoint(0.0F, 0.0F, 0.0F);
+        top.setPos(0.0F, 0.0F, 0.0F);
         //top.setTextureOffset(0, 0).addBox(-8.0F, -8.0F, -8.0F, 16.0F, 3.0F, 16.0F, 0.0F, false);
-        top.setTextureOffset(0, 0).addBox(-8.0F, 5.0F, -8.0F, 16.0F, 3.0F, 16.0F, 0.0F, false);
+        top.texOffs(0, 0).addBox(-8.0F, 5.0F, -8.0F, 16.0F, 3.0F, 16.0F, 0.0F, false);
 
-        leather.setRotationPoint(0.0F, 0.0F, 0.0F);
-        leather.setTextureOffset(0, 37).addBox(-7.0F, -5.0F, -7.0F, 14.0F, 10.0F, 14.0F, 0.0F, false);
+        leather.setPos(0.0F, 0.0F, 0.0F);
+        leather.texOffs(0, 37).addBox(-7.0F, -5.0F, -7.0F, 14.0F, 10.0F, 14.0F, 0.0F, false);
 
     }
 
@@ -47,39 +47,39 @@ public class BellowsBlockTileRenderer extends TileEntityRenderer<BellowsBlockTil
     public void render(BellowsBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
 
-        IVertexBuilder builder = Materials.BELLOWS_MATERIAL.getBuffer(bufferIn, RenderType::getEntitySolid);
+        IVertexBuilder builder = Materials.BELLOWS_MATERIAL.buffer(bufferIn, RenderType::entitySolid);
 
 
         float dh = MathHelper.lerp(partialTicks, tile.prevHeight, tile.height);
 
-        matrixStackIn.push();
+        matrixStackIn.pushPose();
 
         matrixStackIn.translate(0.5, 0.5, 0.5);
 
         Direction dir = tile.getDirection();
-        matrixStackIn.rotate(dir.getOpposite().getRotation());
-        matrixStackIn.rotate(Const.XN90) ;
-        matrixStackIn.rotate(Const.Z180);
+        matrixStackIn.mulPose(dir.getOpposite().getRotation());
+        matrixStackIn.mulPose(Const.XN90) ;
+        matrixStackIn.mulPose(Const.Z180);
         //TODO: figure out why models are always flipped
 
         center.render(matrixStackIn, builder, combinedLightIn, combinedOverlayIn);
 
 
-        matrixStackIn.push();
+        matrixStackIn.pushPose();
         //TODO: maybe render bottom instead
         matrixStackIn.translate(0, -1+(3/16d)-dh, 0);
 
         top.render(matrixStackIn, builder, combinedLightIn, combinedOverlayIn);
 
-        matrixStackIn.pop();
+        matrixStackIn.popPose();
 
-        matrixStackIn.push();
+        matrixStackIn.pushPose();
 
         matrixStackIn.translate(0, dh,0);
 
         top.render(matrixStackIn, builder, combinedLightIn, combinedOverlayIn);
 
-        matrixStackIn.pop();
+        matrixStackIn.popPose();
 
         float j = 3.2f;
 
@@ -87,6 +87,6 @@ public class BellowsBlockTileRenderer extends TileEntityRenderer<BellowsBlockTil
 
         leather.render(matrixStackIn, builder, combinedLightIn, combinedOverlayIn);
 
-        matrixStackIn.pop();
+        matrixStackIn.popPose();
     }
 }

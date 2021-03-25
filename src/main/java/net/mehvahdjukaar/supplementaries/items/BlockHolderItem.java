@@ -9,20 +9,22 @@ import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 
+import net.minecraft.item.Item.Properties;
+
 public class BlockHolderItem extends BlockItem {
     public BlockHolderItem(Block blockIn, Properties builder) {
         super(blockIn, builder);
     }
 
     public ActionResultType tryPlace(BlockItemUseContext context, Block mimicBlock) {
-        ActionResultType result = super.tryPlace(context);
-        if(result.isSuccessOrConsume()){
-            TileEntity te = context.getWorld().getTileEntity(context.getPos());
+        ActionResultType result = super.place(context);
+        if(result.consumesAction()){
+            TileEntity te = context.getLevel().getBlockEntity(context.getClickedPos());
             if(te instanceof IBlockHolder){
-                BlockState state = mimicBlock.getDefaultState();
+                BlockState state = mimicBlock.defaultBlockState();
                 ((IBlockHolder) te).setHeldBlock(state);
                 if(te instanceof ILightMimic){
-                    ((ILightMimic) te).setLight(state.getLightValue());
+                    ((ILightMimic) te).setLight(state.getLightEmission());
                }
             }
 

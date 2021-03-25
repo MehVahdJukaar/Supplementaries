@@ -4,6 +4,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.client.gui.widget.Slider;
 
 
+import net.minecraft.client.gui.widget.button.Button.IPressable;
+
 public class SliderStep extends Slider {
     public final double step;
     public SliderStep(int xPos, int yPos, int width, int height, ITextComponent prefix, ITextComponent suf, double minVal, double maxVal, double currentVal, boolean showDec, boolean drawStr, IPressable handler, Slider.ISlider par) {

@@ -22,35 +22,35 @@ import java.util.function.Predicate;
 public abstract class EatGrassGoalMixin extends Goal {
 
     @Shadow
-    private MobEntity grassEaterEntity;
+    private MobEntity mob;
 
     @Shadow
-    private int eatingGrassTimer;
+    private int eatAnimationTick;
 
     @Shadow
-    private static Predicate<BlockState> IS_GRASS;
+    private static Predicate<BlockState> IS_TALL_GRASS;
 
     @Shadow
-    private World entityWorld;
+    private World level;
 
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
     public void tick(CallbackInfo info) {
-        if (this.eatingGrassTimer == 5) {
-            BlockPos blockpos = this.grassEaterEntity.getPosition().down();
-            if (IS_GRASS.test(this.entityWorld.getBlockState(blockpos.up())))return;
-            if (this.entityWorld.getBlockState(blockpos).getBlock() instanceof FodderBlock) {
-                this.entityWorld.playEvent(2001, blockpos, Block.getStateId(Registry.FODDER.get().getDefaultState()));
-                this.grassEaterEntity.eatGrassBonus();
-                this.eatingGrassTimer = Math.max(0, this.eatingGrassTimer - 1);
+        if (this.eatAnimationTick == 5) {
+            BlockPos blockpos = this.mob.blockPosition().below();
+            if (IS_TALL_GRASS.test(this.level.getBlockState(blockpos.above())))return;
+            if (this.level.getBlockState(blockpos).getBlock() instanceof FodderBlock) {
+                this.level.levelEvent(2001, blockpos, Block.getId(Registry.FODDER.get().defaultBlockState()));
+                this.mob.ate();
+                this.eatAnimationTick = Math.max(0, this.eatAnimationTick - 1);
                 info.cancel();
             }
         }
     }
-    @Inject(method = "shouldExecute", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "canUse", at = @At("HEAD"), cancellable = true)
     public void shouldExecute(CallbackInfoReturnable<Boolean> info) {
-        if (this.grassEaterEntity.getRNG().nextInt(this.grassEaterEntity.isChild() ? 50 : 950) == 0) {
-            BlockPos blockpos = this.grassEaterEntity.getPosition().down();
-            boolean flag = this.entityWorld.getBlockState(blockpos).getBlock() instanceof FodderBlock;
+        if (this.mob.getRandom().nextInt(this.mob.isBaby() ? 50 : 950) == 0) {
+            BlockPos blockpos = this.mob.blockPosition().below();
+            boolean flag = this.level.getBlockState(blockpos).getBlock() instanceof FodderBlock;
             if(flag)info.setReturnValue(true);
 
         }

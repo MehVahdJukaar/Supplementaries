@@ -24,6 +24,8 @@ import net.minecraft.util.math.AxisAlignedBB;
 import java.util.List;
 import java.util.function.Supplier;
 
+import net.minecraft.item.Item.Properties;
+
 public class EmptyCageItem extends BlockItem {
     public final Supplier<Item> full;
     public final CageWhitelist cageType;
@@ -35,15 +37,15 @@ public class EmptyCageItem extends BlockItem {
 
     private static List<MobEntity> getEntitiesInRange(MobEntity e) {
         double d0 = e.getAttributeValue(Attributes.FOLLOW_RANGE);
-        AxisAlignedBB axisalignedbb = AxisAlignedBB.fromVector(e.getPositionVec()).grow(d0, 10.0D, d0);
-        return e.world.getLoadedEntitiesWithinAABB(e.getClass(), axisalignedbb);
+        AxisAlignedBB axisalignedbb = AxisAlignedBB.unitCubeFromLowerCorner(e.position()).inflate(d0, 10.0D, d0);
+        return e.level.getLoadedEntitiesOfClass(e.getClass(), axisalignedbb);
     }
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, PlayerEntity player, Entity entity) {
-        if(player.getActiveHand()==null)return false;
+        if(player.getUsedItemHand()==null)return false;
 
-        return this.doInteract(stack,player, entity,player.getActiveHand()).isSuccessOrConsume();
+        return this.doInteract(stack,player, entity,player.getUsedItemHand()).consumesAction();
 
     }
 
@@ -57,9 +59,9 @@ public class EmptyCageItem extends BlockItem {
         switch (this.cageType){
             case CAGE:
                 canBeCaught = (ServerConfigs.cached.CAGE_ALL_MOBS ||
-                        (entity instanceof LivingEntity && ServerConfigs.cached.CAGE_ALL_BABIES && ((LivingEntity) entity).isChild()) ||
+                        (entity instanceof LivingEntity && ServerConfigs.cached.CAGE_ALL_BABIES && ((LivingEntity) entity).isBaby()) ||
                         ServerConfigs.cached.CAGE_ALLOWED_MOBS.contains(name) ||
-                        (entity instanceof LivingEntity && ServerConfigs.cached.CAGE_ALLOWED_BABY_MOBS.contains(name)&&((LivingEntity) entity).isChild()));
+                        (entity instanceof LivingEntity && ServerConfigs.cached.CAGE_ALLOWED_BABY_MOBS.contains(name)&&((LivingEntity) entity).isBaby()));
                 break;
             case JAR:
                 isFirefly = entity.getType().getRegistryName().getPath().toLowerCase().contains("firefl");
@@ -71,38 +73,38 @@ public class EmptyCageItem extends BlockItem {
         }
         if(!canBeCaught)return ActionResultType.PASS;
 
-        if(!entity.isAlive() || (entity instanceof LivingEntity && ((LivingEntity) entity).getShouldBeDead()))return ActionResultType.PASS;
-        if(entity instanceof SlimeEntity && ((SlimeEntity)entity).getSlimeSize()>1) return ActionResultType.PASS;
+        if(!entity.isAlive() || (entity instanceof LivingEntity && ((LivingEntity) entity).isDeadOrDying()))return ActionResultType.PASS;
+        if(entity instanceof SlimeEntity && ((SlimeEntity)entity).getSize()>1) return ActionResultType.PASS;
 
-        if(player.world.isRemote)return ActionResultType.SUCCESS;
+        if(player.level.isClientSide)return ActionResultType.SUCCESS;
 
         ItemStack returnStack = new ItemStack(isFirefly?  Registry.FIREFLY_JAR_ITEM.get() : this.full.get());
 
         if(!isFirefly) {
 
-            if (stack.hasDisplayName()) returnStack.setDisplayName(stack.getDisplayName());
+            if (stack.hasCustomHoverName()) returnStack.setHoverName(stack.getHoverName());
 
             CompoundNBT cmp = MobHolder.createMobHolderItemNBT(entity, this.cageType.height, this.cageType.width);
-            if(cmp!=null) returnStack.setTagInfo("BlockEntityTag", cmp);
+            if(cmp!=null) returnStack.addTagElement("BlockEntityTag", cmp);
         }
 
         CommonUtil.swapItem(player,hand,stack,returnStack);
         //TODO: cage sound here
-        player.world.playSound(null, player.getPosition(),  SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.BLOCKS,1,1);
+        player.level.playSound(null, player.blockPosition(),  SoundEvents.ARMOR_EQUIP_GENERIC, SoundCategory.BLOCKS,1,1);
 
         //anger entities
         if(entity instanceof IAngerable && entity instanceof MobEntity){
             getEntitiesInRange((MobEntity) entity).stream()
                     .filter((mob) -> mob != entity).map(
                     (mob) -> (IAngerable)mob).forEach((mob)->{
-                mob.func_241355_J__();
-                mob.setAngerTarget(player.getUniqueID());
-                mob.setRevengeTarget(player);
+                mob.forgetCurrentTargetAndRefreshUniversalAnger();
+                mob.setPersistentAngerTarget(player.getUUID());
+                mob.setLastHurtByMob(player);
             });
         }
         //piglin workaround. don't know why they are IAngerable
         if(entity instanceof PiglinEntity){
-            entity.attackEntityFrom(DamageSource.causePlayerDamage(player), 0);
+            entity.hurt(DamageSource.playerAttack(player), 0);
         }
 
         entity.remove();
@@ -110,7 +112,7 @@ public class EmptyCageItem extends BlockItem {
     }
 
     @Override
-    public ActionResultType itemInteractionForEntity(ItemStack stack, PlayerEntity player, LivingEntity entity, Hand hand) {
+    public ActionResultType interactLivingEntity(ItemStack stack, PlayerEntity player, LivingEntity entity, Hand hand) {
         return this.doInteract(stack, player, entity, hand);
     }
 

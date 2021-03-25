@@ -22,17 +22,19 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Supplier;
 
+import net.minecraft.item.Item.Properties;
+
 public class JarItem extends CageItem {
     public JarItem(Block blockIn, Properties properties, Supplier<Item> empty) {
         super(blockIn, properties,empty);
     }
 
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
-        CompoundNBT compoundnbt = stack.getChildTag("BlockEntityTag");
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+        CompoundNBT compoundnbt = stack.getTagElement("BlockEntityTag");
         if (compoundnbt != null) {
             if (compoundnbt.contains("LootTable", 8)) {
-                tooltip.add(new StringTextComponent("???????").mergeStyle(TextFormatting.GRAY));
+                tooltip.add(new StringTextComponent("???????").withStyle(TextFormatting.GRAY));
             }
 
             if(compoundnbt.contains("FluidHolder")) {
@@ -41,7 +43,7 @@ public class JarItem extends CageItem {
                 int count = com.getInt("Count");
                 if (!s.isEmpty() && count > 0) {
                     tooltip.add(new TranslationTextComponent("message.supplementaries.fluid_tooltip",
-                            s.getTranslatedName(), count).mergeStyle(TextFormatting.GRAY));
+                            s.getTranslatedName(), count).withStyle(TextFormatting.GRAY));
 
 
                     if (com.contains("NBT") && com.getCompound("NBT").contains("Potion")) {
@@ -62,7 +64,7 @@ public class JarItem extends CageItem {
                         ++j;
                         if (i <= 4) {
                             ++i;
-                            IFormattableTextComponent iformattabletextcomponent = itemstack.getDisplayName().deepCopy();
+                            IFormattableTextComponent iformattabletextcomponent = itemstack.getHoverName().copy();
 
                             String s = iformattabletextcomponent.getString();
                             s = s.replace(" Bucket", "");
@@ -70,28 +72,28 @@ public class JarItem extends CageItem {
                             s = s.replace("Bucket of ", "");
                             IFormattableTextComponent str = new StringTextComponent(s);
 
-                            str.appendString(" x").appendString(String.valueOf(itemstack.getCount()));
-                            tooltip.add(str.mergeStyle(TextFormatting.GRAY));
+                            str.append(" x").append(String.valueOf(itemstack.getCount()));
+                            tooltip.add(str.withStyle(TextFormatting.GRAY));
                         }
                     }
                 }
                 if (j - i > 0) {
-                    tooltip.add((new TranslationTextComponent("container.shulkerBox.more", j - i)).mergeStyle(TextFormatting.ITALIC).mergeStyle(TextFormatting.GRAY));
+                    tooltip.add((new TranslationTextComponent("container.shulkerBox.more", j - i)).withStyle(TextFormatting.ITALIC).withStyle(TextFormatting.GRAY));
                 }
             }
         }
     }
 
     @Override
-    public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
-        if (this.isInGroup(group) && RegistryConfigs.reg.JAR_TAB.get() && group == Registry.JAR_TAB) {
+    public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items) {
+        if (this.allowdedIn(group) && RegistryConfigs.reg.JAR_TAB.get() && group == Registry.JAR_TAB) {
             JarTab.populateTab(items);
         }
     }
 
     @Override
     public Rarity getRarity(ItemStack stack) {
-        CompoundNBT compoundnbt = stack.getChildTag("BlockEntityTag");
+        CompoundNBT compoundnbt = stack.getTagElement("BlockEntityTag");
         if (compoundnbt != null) {
             if (compoundnbt.contains("FluidHolder")) {
                 CompoundNBT com = compoundnbt.getCompound("FluidHolder");

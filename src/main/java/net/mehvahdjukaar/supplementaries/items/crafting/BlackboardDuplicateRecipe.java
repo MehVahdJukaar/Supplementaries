@@ -17,7 +17,7 @@ public class BlackboardDuplicateRecipe extends SpecialRecipe {
     }
 
     private boolean isDrawnBlackboard(ItemStack stack){
-        CompoundNBT compoundnbt = stack.getChildTag("BlockEntityTag");
+        CompoundNBT compoundnbt = stack.getTagElement("BlockEntityTag");
         return compoundnbt != null && compoundnbt.contains("pixels_0");
 
     }
@@ -28,8 +28,8 @@ public class BlackboardDuplicateRecipe extends SpecialRecipe {
         ItemStack itemstack = null;
         ItemStack itemstack1 = null;
 
-        for(int i = 0; i < inv.getSizeInventory(); ++i) {
-            ItemStack stack = inv.getStackInSlot(i);
+        for(int i = 0; i < inv.getContainerSize(); ++i) {
+            ItemStack stack = inv.getItem(i);
             Item item = stack.getItem();
             if (item == Registry.BLACKBOARD_ITEM.get()) {
 
@@ -53,9 +53,9 @@ public class BlackboardDuplicateRecipe extends SpecialRecipe {
     }
 
     @Override
-    public ItemStack getCraftingResult(CraftingInventory inv) {
-        for(int i = 0; i < inv.getSizeInventory(); ++i) {
-            ItemStack stack = inv.getStackInSlot(i);
+    public ItemStack assemble(CraftingInventory inv) {
+        for(int i = 0; i < inv.getContainerSize(); ++i) {
+            ItemStack stack = inv.getItem(i);
             if(isDrawnBlackboard(stack)){
                 ItemStack s = stack.copy();
                 s.setCount(1);
@@ -67,10 +67,10 @@ public class BlackboardDuplicateRecipe extends SpecialRecipe {
 
     @Override
     public NonNullList<ItemStack> getRemainingItems(CraftingInventory inv) {
-        NonNullList<ItemStack> nonnulllist = NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
+        NonNullList<ItemStack> nonnulllist = NonNullList.withSize(inv.getContainerSize(), ItemStack.EMPTY);
 
         for(int i = 0; i < nonnulllist.size(); ++i) {
-            ItemStack itemstack = inv.getStackInSlot(i);
+            ItemStack itemstack = inv.getItem(i);
             if (!itemstack.isEmpty()) {
                 if (itemstack.hasContainerItem()) {
                     nonnulllist.set(i, itemstack.getContainerItem());
@@ -86,7 +86,7 @@ public class BlackboardDuplicateRecipe extends SpecialRecipe {
     }
 
     @Override
-    public boolean canFit(int width, int height) {
+    public boolean canCraftInDimensions(int width, int height) {
         return width * height >= 2;
     }
 

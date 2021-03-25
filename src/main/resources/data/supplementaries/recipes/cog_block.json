@@ -1,0 +1,72 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "type": "forge:not",
+          "value": {
+            "type": "forge:tag_empty",
+            "tag": "forge:ingots/copper"
+          }
+        },
+        {
+          "type": "supplementaries:flag",
+          "flag": "cog_block"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "pattern": [
+          "111",
+          "121",
+          "111"
+        ],
+        "key": {
+          "1": {
+            "tag": "forge:ingots/copper"
+          },
+          "2": {
+            "item": "minecraft:redstone_block"
+          }
+        },
+        "result": {
+          "item": "supplementaries:cog_block",
+          "count": 4
+        }
+      }
+    },
+    {
+      "conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "cog_block"
+        },
+        {
+          "type": "forge:tag_empty",
+          "tag": "forge:ingots/copper"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "pattern": [
+          "111",
+          "121",
+          "111"
+        ],
+        "key": {
+          "1": {
+            "tag": "forge:ingots/iron"
+          },
+          "2": {
+            "item": "minecraft:redstone_block"
+          }
+        },
+        "result": {
+          "item": "supplementaries:cog_block",
+          "count": 4
+        }
+      }
+    }
+  ]
+}

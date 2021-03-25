@@ -73,7 +73,7 @@ public class SoftFluidHolder {
         CompoundNBT com = stack.getTag();
         if (com != null) {
             if (item instanceof PotionItem) {
-                Potion potion = PotionUtils.getPotionFromItem(stack);
+                Potion potion = PotionUtils.getPotion(stack);
                 if(potion == Potions.WATER){
                     if (addSpecial(SoftFluidList.WATER, BOTTLE_COUNT, new CompoundNBT())) {
                         return new ItemStack(Items.GLASS_BOTTLE);
@@ -108,7 +108,7 @@ public class SoftFluidHolder {
     }
 
     public boolean interactWithPlayer(PlayerEntity player, Hand hand) {
-        ItemStack handStack = player.getHeldItem(hand);
+        ItemStack handStack = player.getItemInHand(hand);
         ItemStack returnStack = this.interactWithItem(handStack);
         //for items that have no bottle
         if(returnStack==null){
@@ -119,7 +119,7 @@ public class SoftFluidHolder {
             CommonUtil.swapItem(player, hand, returnStack);
             //TODO: replace all those with these
             //player.setHeldItem(hand, DrinkHelper.fill(handStack.copy(), player, returnStack, false));
-            player.addStat(Stats.ITEM_USED.get(handStack.getItem()));
+            player.awardStat(Stats.ITEM_USED.get(handStack.getItem()));
             return true;
         }
         return false;
@@ -130,8 +130,8 @@ public class SoftFluidHolder {
         //special nbt items like potions and stews
         ItemStack specialCase = this.handleNBTItems(stack);
         if (specialCase != null) {
-            if (this.world != null && !this.world.isRemote && this.pos != null && !specialCase.isEmpty())
-                this.world.playSound(null, this.pos, SoundEvents.ITEM_BOTTLE_EMPTY, SoundCategory.BLOCKS, 1, 1);
+            if (this.world != null && !this.world.isClientSide && this.pos != null && !specialCase.isEmpty())
+                this.world.playSound(null, this.pos, SoundEvents.BOTTLE_EMPTY, SoundCategory.BLOCKS, 1, 1);
             return specialCase;
         }
         //used for items that don't have a bottle like slimeballs
@@ -140,20 +140,20 @@ public class SoftFluidHolder {
         ItemStack returnStack;
         SoundEvent sound;
         if (i == fluid.getEmptyBottle()) {
+            sound = SoundEvents.BOTTLE_FILL;
             returnStack = this.fillBottle();
-            sound = SoundEvents.ITEM_BOTTLE_FILL;
         } else if (i == Items.BOWL) {
+            sound = SoundEvents.BOTTLE_FILL;
             returnStack = this.fillBowl();
-            sound = SoundEvents.ITEM_BOTTLE_FILL;
         } else if (i == Items.BUCKET) {
-            returnStack = this.fillBucket();
             sound = this.fluid.getFillSound();
+            returnStack = this.fillBucket();
         } else {
             returnStack = this.drainItem(stack);
             //eh. might return null here for success on empty hand
-            sound = (returnStack==null||returnStack.getItem() == Items.BUCKET) ? this.fluid.getEmptySound() : SoundEvents.ITEM_BOTTLE_EMPTY;
+            sound = (returnStack==null||returnStack.getItem() == Items.BUCKET) ? this.fluid.getEmptySound() : SoundEvents.BOTTLE_EMPTY;
         }
-        if (this.world != null && !this.world.isRemote && (returnStack==null||!returnStack.isEmpty()) && i!=Items.AIR) {
+        if (this.world != null && !this.world.isClientSide && (returnStack==null||!returnStack.isEmpty()) && i!=Items.AIR) {
             this.world.playSound(null, this.pos, sound, SoundCategory.BLOCKS, 1, 1);
         }
         return returnStack;
@@ -163,11 +163,11 @@ public class SoftFluidHolder {
     //fills a bottle and removes equivalent liquid
     public ItemStack fillBottle() {
         if (this.canRemove(BOTTLE_COUNT) && (fluid.hasBottle() || fluid == SoftFluidList.WATER)) {
-            this.shrink(BOTTLE_COUNT);
             ItemStack stack = new ItemStack(fluid.getBottle());
             if (fluid == SoftFluidList.WATER)
-                stack = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.WATER);
+                stack = PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER);
             this.applyNBT(stack);
+            this.shrink(BOTTLE_COUNT);
             return stack;
         }
         return ItemStack.EMPTY;
@@ -175,9 +175,9 @@ public class SoftFluidHolder {
 
     public ItemStack fillBucket() {
         if (this.canRemove(BUCKET_COUNT) && fluid.hasBucket()) {
-            this.shrink(BUCKET_COUNT);
             ItemStack stack = new ItemStack(fluid.getBucket());
             this.applyNBT(stack);
+            this.shrink(BUCKET_COUNT);
             return stack;
         }
         return ItemStack.EMPTY;
@@ -185,9 +185,9 @@ public class SoftFluidHolder {
 
     public ItemStack fillBowl() {
         if (this.canRemove(BOWL_COUNT) && fluid.hasBowl()) {
-            this.shrink(BOWL_COUNT);
             ItemStack stack = new ItemStack(fluid.getBowl());
             this.applyNBT(stack);
+            this.shrink(BOWL_COUNT);
             return stack;
         }
         return ItemStack.EMPTY;
@@ -200,7 +200,7 @@ public class SoftFluidHolder {
         //set new fluid
         if (this.isEmpty()) {
             SoftFluid s = SoftFluidList.fromItem(i);
-            if (PotionUtils.getPotionFromItem(stack) == Potions.WATER) s = SoftFluidList.WATER;
+            if (PotionUtils.getPotion(stack) == Potions.WATER) s = SoftFluidList.WATER;
             if (s.isEmpty()) return ItemStack.EMPTY;
             this.setFluid(s);
         }
@@ -216,7 +216,7 @@ public class SoftFluidHolder {
         } else if (this.fluid.hasBucket(i) && this.canAdd(BUCKET_COUNT)) {
             this.grow(BUCKET_COUNT);
             return new ItemStack(Items.BUCKET);
-        } else if (this.canAdd(BOTTLE_COUNT) && PotionUtils.getPotionFromItem(stack) == Potions.WATER) {
+        } else if (this.canAdd(BOTTLE_COUNT) && PotionUtils.getPotion(stack) == Potions.WATER) {
             this.grow(BOTTLE_COUNT);
             return new ItemStack(Items.GLASS_BOTTLE);
         }
@@ -439,12 +439,12 @@ public class SoftFluidHolder {
         this.specialColor = 0;
         //only possible and needed client side
         if (fluid == SoftFluidList.WATER) {
-            if (this.world != null && this.world.isRemote && this.pos != null) {
-                this.specialColor = BiomeColors.getWaterColor(this.world, this.pos);
+            if (this.world != null && this.world.isClientSide && this.pos != null) {
+                this.specialColor = BiomeColors.getAverageWaterColor(this.world, this.pos);
             }
         } else if (fluid == SoftFluidList.POTION) {
-            Potion potion = PotionUtils.getPotionTypeFromNBT(this.nbt);
-            this.specialColor = PotionUtils.getPotionColor(potion);
+            Potion potion = PotionUtils.getPotion(this.nbt);
+            this.specialColor = PotionUtils.getColor(potion);
         }
     }
 
@@ -500,39 +500,51 @@ public class SoftFluidHolder {
         Item item = stack.getItem();
 
         boolean success = false;
-        Food food = item.getFood();
-        if (food!=null) {
-            if (player.canEat(false)) {
-                if (world.isRemote) return true;
-                int div = this.fluid.getFoodDivider();
-                player.getFoodStats().addStats(food.getHealing() / div, food.getSaturation() / (float) div);
-                //add stew effects
-                if (item instanceof SuspiciousStewItem) {
-                    susStewBehavior(player, stack, div);
-                } else if (item instanceof HoneyBottleItem) {
-                    honeyBehavior(player);
-                }
-                success = true;
+        Food food = item.getFoodProperties();
+
+
+        int div = this.fluid.getFoodDivider();
+        if(div == 1){
+            stack.getItem().finishUsingItem(stack.copy(),world,player);
+            if (world.isClientSide) return true;
+            this.shrink(1);
+            if(food==null||stack.getItem().isEdible()){
+                player.playNotifySound(item.getDrinkingSound(), SoundCategory.PLAYERS, 1, 1);
             }
-        } else if (item instanceof PotionItem) {
-            if (world.isRemote) return true;
+            //player already plays sound
+            return true;
+        }
+
+        if (food!=null && player.canEat(false)) {
+
+            if (item instanceof SuspiciousStewItem) susStewBehavior(player, stack, div);
+
+            if (world.isClientSide) return true;
+            player.getFoodData().eat(food.getNutrition() / div, food.getSaturationModifier() / (float) div);
+
+            success = true;
+        }
+        //unused
+        else if (item instanceof PotionItem) {
+            if (world.isClientSide) return true;
             //potion code
-            for (EffectInstance effectinstance : PotionUtils.getEffectsFromStack(stack)) {
-                if (effectinstance.getPotion().isInstant()) {
-                    effectinstance.getPotion().affectEntity(player, player, player, effectinstance.getAmplifier(), 1.0D);
+            for (EffectInstance effectinstance : PotionUtils.getMobEffects(stack)) {
+                if (effectinstance.getEffect().isInstantenous()) {
+                    effectinstance.getEffect().applyInstantenousEffect(player, player, player, effectinstance.getAmplifier(), 1.0D);
                 } else {
-                    player.addPotionEffect(new EffectInstance(effectinstance));
+                    player.addEffect(new EffectInstance(effectinstance));
                 }
             }
             success = true;
-        } else if (item instanceof MilkBucketItem || item.getRegistryName().toString().equals("farmersdelight:hot_cocoa")) {
-            if (world.isRemote) return true;
+        }
+        else if (item instanceof MilkBucketItem || item.getRegistryName().toString().equals("farmersdelight:hot_cocoa")) {
+            if (world.isClientSide) return true;
             milkBottleBehavior(player, stack);
             success = true;
         }
         if (success) {
             this.shrink(1);
-            player.playSound(item.getDrinkSound(), SoundCategory.PLAYERS, 1, 1);
+            player.playNotifySound(item.getDrinkingSound(), SoundCategory.PLAYERS, 1, 1);
             return true;
         }
         return false;
@@ -548,9 +560,9 @@ public class SoftFluidHolder {
                 CompoundNBT compoundnbt1 = listnbt.getCompound(i);
                 if (compoundnbt1.contains("EffectDuration", 3))
                     j = compoundnbt1.getInt("EffectDuration") / div;
-                Effect effect = Effect.get(compoundnbt1.getByte("EffectId"));
+                Effect effect = Effect.byId(compoundnbt1.getByte("EffectId"));
                 if (effect != null) {
-                    player.addPotionEffect(new EffectInstance(effect, j));
+                    player.addEffect(new EffectInstance(effect, j));
                 }
             }
         }
@@ -558,9 +570,9 @@ public class SoftFluidHolder {
 
     //removes just 1 effect
     public static boolean milkBottleBehavior(PlayerEntity player, ItemStack stack) {
-        for (EffectInstance effect : player.getActivePotionMap().values()) {
+        for (EffectInstance effect : player.getActiveEffectsMap().values()) {
             if (effect.isCurativeItem(stack)) {
-                player.removePotionEffect(effect.getPotion());
+                player.removeEffect(effect.getEffect());
                 return true;
             }
         }
@@ -568,7 +580,7 @@ public class SoftFluidHolder {
     }
 
     public static void honeyBehavior(PlayerEntity player) {
-        player.removePotionEffect(Effects.POISON);
+        player.removeEffect(Effects.POISON);
     }
 
     //util functions

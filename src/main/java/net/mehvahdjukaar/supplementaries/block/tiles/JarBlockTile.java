@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
+import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.blocks.ClockBlock;
 import net.mehvahdjukaar.supplementaries.block.util.IMobHolder;
 import net.mehvahdjukaar.supplementaries.block.util.MobHolder;
@@ -28,35 +29,39 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
 
     public JarBlockTile() {
         super(Registry.JAR_TILE.get());
-        this.mobHolder = new MobHolder(this.world,this.pos);
+        this.mobHolder = new MobHolder(this.level,this.worldPosition);
         this.fluidHolder = new SoftFluidHolder(CAPACITY);
     }
 
     public MobHolder getMobHolder(){return this.mobHolder;}
 
     @Override
-    public double getMaxRenderDistanceSquared() {
+    public double getViewDistance() {
         return 80;
     }
 
     @Override
     public void onLoad() {
-        this.mobHolder.setWorldAndPos(this.world, this.pos);
-        this.fluidHolder.setWorldAndPos(this.world, this.pos);
+        this.mobHolder.setWorldAndPos(this.level, this.worldPosition);
+        this.fluidHolder.setWorldAndPos(this.level, this.worldPosition);
     }
 
     // hijacking this method to work with hoppers
     @Override
-    public void markDirty() {
+    public void setChanged() {
         //TODO: only call after you finished updating your tile so others can react properly (faucets)
-        this.world.notifyNeighborsOfStateChange(pos,this.getBlockState().getBlock());
-        super.markDirty();
+        this.level.updateNeighborsAt(worldPosition,this.getBlockState().getBlock());
+        int light = this.fluidHolder.getFluid().getLuminosity();
+        if(light!=this.getBlockState().getValue(BlockProperties.LIGHT_LEVEL_0_15)){
+            this.level.setBlock(this.worldPosition,this.getBlockState().setValue(BlockProperties.LIGHT_LEVEL_0_15,light),2);
+        }
+        super.setChanged();
     }
 
     // does all the calculation for handling player interaction.
     public boolean handleInteraction(PlayerEntity player, Hand hand) {
 
-        ItemStack handStack = player.getHeldItem(hand);
+        ItemStack handStack = player.getItemInHand(hand);
         ItemStack displayedStack = this.getDisplayedItem();
 
         //interact with fluid holder
@@ -66,7 +71,7 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
         //empty hand: eat food
 
         // can I insert this item? For cookies and fish buckets
-        else if (this.mobHolder.isEmpty() && this.isItemValidForSlot(0, handStack)) {
+        else if (this.mobHolder.isEmpty() && this.canPlaceItem(0, handStack)) {
             this.handleAddItem(handStack, player, hand);
             return true;
         }
@@ -75,20 +80,23 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
             return true;
         }
 
-        if(!player.isSneaking()) {
-            boolean canDrinkFromJar = ServerConfigs.cached.JAR_EAT;
+        if(!player.isShiftKeyDown()) {
             //from drink
-            if (canDrinkFromJar && this.fluidHolder.drinkUpFluid(player, this.world, hand)) return true;
-            //cookies
-            if (displayedStack.isFood()) {
-                //eat cookies
-                if (player.canEat(false) && canDrinkFromJar) {
-                    if (this.world.isRemote) return true;
-                    Food food = displayedStack.getItem().getFood();
-                    player.getFoodStats().addStats(food.getHealing(), food.getSaturation());
+            if(ServerConfigs.cached.JAR_EAT) {
+                if (this.fluidHolder.isFood()&&this.fluidHolder.drinkUpFluid(player, this.level, hand)) return true;
+                //cookies
+                if (displayedStack.isEdible() && player.canEat(false)) {
+                    //eat cookies
+                    /*
+                    if (this.level.isClientSide) return true;
+                    Food food = displayedStack.getItem().getFoodProperties();
+                    player.getFoodData().eat(food.getNutrition(), food.getSaturationModifier());
                     this.extractItem();
-                    player.playSound(SoundEvents.ENTITY_GENERIC_EAT, SoundCategory.PLAYERS, 1, 1);
+                    player.playNotifySound(SoundEvents.GENERIC_EAT, SoundCategory.PLAYERS, 1, 1);
+                    return true;*/
+                    player.eat(level, displayedStack);
                     return true;
+
                 }
             }
         }
@@ -108,10 +116,10 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
     // removes item from te and gives it to player
     public boolean handleExtractItem(PlayerEntity player, Hand hand){
         if(this.getDisplayedItem().getItem()instanceof FishBucketItem){
-            if(player.getHeldItem(hand).getItem()!=Items.BUCKET)return false;
-            this.world.playSound(null, player.getPosition(), SoundEvents.ITEM_BUCKET_FILL_FISH, SoundCategory.BLOCKS, 1.0F, 1.0F);
+            if(player.getItemInHand(hand).getItem()!=Items.BUCKET)return false;
+            this.level.playSound(null, player.blockPosition(), SoundEvents.BUCKET_FILL_FISH, SoundCategory.BLOCKS, 1.0F, 1.0F);
         }
-        else if(!player.getHeldItem(hand).isEmpty())return false;
+        else if(!player.getItemInHand(hand).isEmpty())return false;
         ItemStack extracted = this.extractItem();
         if(!extracted.isEmpty()) {
             CommonUtil.swapItem(player,hand,extracted);
@@ -131,7 +139,7 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
         if(player!=null) {
             ItemStack returnStack = ItemStack.EMPTY;
             //TODO: cookie sounds
-            player.addStat(Stats.ITEM_USED.get(item));
+            player.awardStat(Stats.ITEM_USED.get(item));
             // shrink stack and replace bottle /bucket with empty ones
             if (!player.isCreative()) {
                 CommonUtil.swapItem(player, handIn, returnStack);
@@ -144,7 +152,7 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
             NonNullList<ItemStack> stacks = NonNullList.withSize(1, itemstack);
             this.setItems(stacks);
         } else {
-            this.getDisplayedItem().grow(Math.min(1, this.getInventoryStackLimit() - this.getDisplayedItem().getCount()));
+            this.getDisplayedItem().grow(Math.min(1, this.getMaxStackSize() - this.getDisplayedItem().getCount()));
         }
     }
 
@@ -156,7 +164,7 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
 
     //can this item be added?
     @Override
-    public boolean isItemValidForSlot(int index, ItemStack stack) {
+    public boolean canPlaceItem(int index, ItemStack stack) {
         if(this.fluidHolder.isEmpty() && this.mobHolder.isEmpty()) {
             Item i = stack.getItem();
             if (!this.isFull()) {
@@ -191,8 +199,8 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
-        super.read(state, compound);
+    public void load(BlockState state, CompoundNBT compound) {
+        super.load(state, compound);
         //todo: remove in future
         if(!(compound.contains("LiquidHolder") && this.convertOldJars(compound))) {
             this.fluidHolder.read(compound);
@@ -203,9 +211,9 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
+    public CompoundNBT save(CompoundNBT compound) {
         //stacks are done by itemDisplayTile
-        super.write(compound);
+        super.save(compound);
         this.mobHolder.write(compound);
         this.fluidHolder.write(compound);
         return compound;
@@ -216,11 +224,11 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
     }
 
     public boolean isFull(){
-        return this.getDisplayedItem().getCount()>=this.getInventoryStackLimit();
+        return this.getDisplayedItem().getCount()>=this.getMaxStackSize();
     }
 
     @Override
-    public int getInventoryStackLimit() {
+    public int getMaxStackSize() {
         return this.CAPACITY;
     }
 
@@ -230,18 +238,18 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
     }
 
     @Override
-    public boolean canInsertItem(int index, ItemStack stack, @Nullable Direction direction) {
+    public boolean canPlaceItemThroughFace(int index, ItemStack stack, @Nullable Direction direction) {
         //can only insert cookies
         return CommonUtil.isCookie(stack.getItem())&&(this.isEmpty()||stack.getItem()==this.getDisplayedItem().getItem());
     }
 
     @Override
-    public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
+    public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
         return true;
     }
 
     public Direction getDirection() {
-        return this.getBlockState().get(ClockBlock.FACING);
+        return this.getBlockState().getValue(ClockBlock.FACING);
     }
 
     @Override

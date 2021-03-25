@@ -58,7 +58,7 @@ public class HSLColor {
             g = hueToRgb(p, q, h);
             b = hueToRgb(p, q, h - 1f/3f);
         }
-        return ColorHelper.PackedColor.packColor(
+        return ColorHelper.PackedColor.color(
                 MathHelper.floor(255),MathHelper.floor(r*255),MathHelper.floor(g*255),MathHelper.floor(b*255));
     }
     public static int to255(float v) { return (int)Math.min(255,256*v); }
@@ -79,9 +79,9 @@ public class HSLColor {
     }
 
     public static float[] rgbToHsl(int rgb) {
-        int r = ColorHelper.PackedColor.getRed(rgb);
-        int g = ColorHelper.PackedColor.getGreen(rgb);
-        int b = ColorHelper.PackedColor.getBlue(rgb);
+        int r = ColorHelper.PackedColor.red(rgb);
+        int g = ColorHelper.PackedColor.green(rgb);
+        int b = ColorHelper.PackedColor.blue(rgb);
         return rgbToHsl(r,g,b);
     }
     /**
@@ -136,9 +136,9 @@ public class HSLColor {
      *  @return an array containing the 3 HSL values.
      */
     public static float[] fromRGB(int rgb) {
-        float r = ColorHelper.PackedColor.getRed(rgb)/255f;
-        float g = ColorHelper.PackedColor.getGreen(rgb)/255f;
-        float b = ColorHelper.PackedColor.getBlue(rgb)/255f;
+        float r = ColorHelper.PackedColor.red(rgb)/255f;
+        float g = ColorHelper.PackedColor.green(rgb)/255f;
+        float b = ColorHelper.PackedColor.blue(rgb)/255f;
         return fromRGB(r,g,b);
     }
 
@@ -211,7 +211,7 @@ public class HSLColor {
         g = Math.min(g, 1.0f);
         b = Math.min(b, 1.0f);
 
-        return ColorHelper.PackedColor.packColor(
+        return ColorHelper.PackedColor.color(
                 MathHelper.floor(alpha*255),MathHelper.floor(r*255),MathHelper.floor(g*255),MathHelper.floor(b*255));
     }
 

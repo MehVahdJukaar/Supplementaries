@@ -22,7 +22,7 @@ public class FluidColors {
             if(!particleColor.containsKey(key)){
                 ResourceLocation location = f.getAttributes().getStillTexture();
                 if(location==null)continue;
-                AtlasTexture textureMap = Minecraft.getInstance().getModelManager().getAtlasTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+                AtlasTexture textureMap = Minecraft.getInstance().getModelManager().getAtlas(AtlasTexture.LOCATION_BLOCKS);
                 TextureAtlasSprite sprite = textureMap.getSprite(location);
                 if(sprite==null)continue;
                 int fluidTint = f.getAttributes().getColor();
@@ -35,7 +35,7 @@ public class FluidColors {
             if(!particleColor.containsKey(s.getID()) && !s.isColored()){
                 ResourceLocation location = s.getStillTexture();
                 if(location==null)continue;
-                AtlasTexture textureMap = Minecraft.getInstance().getModelManager().getAtlasTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+                AtlasTexture textureMap = Minecraft.getInstance().getModelManager().getAtlas(AtlasTexture.LOCATION_BLOCKS);
                 TextureAtlasSprite sprite = textureMap.getSprite(location);
                 if(sprite==null)continue;
 
@@ -74,7 +74,7 @@ public class FluidColors {
             }
         }
         if (total <= 0) return -1;
-        return ColorHelper.PackedColor.packColor(255,
+        return ColorHelper.PackedColor.color(255,
                 totalR / total * tintR / 255,
                 totalG / total * tintG / 255,
                 totalB / total * tintB / 255);

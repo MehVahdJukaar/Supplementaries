@@ -39,7 +39,7 @@ public class SpeakerBlockGui extends Screen {
     }
 
     public static void open(SpeakerBlockTile te) {
-        Minecraft.getInstance().displayGuiScreen(new SpeakerBlockGui(te));
+        Minecraft.getInstance().setScreen(new SpeakerBlockGui(te));
     }
 
     public void tick() {
@@ -61,14 +61,14 @@ public class SpeakerBlockGui extends Screen {
     @Override
     public void init() {
         assert this.minecraft != null;
-        this.minecraft.keyboardListener.enableRepeatEvents(true);
+        this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
 
         int range = ServerConfigs.cached.SPEAKER_RANGE;
 
         double v = this.tileSpeaker.volume*range;
         this.volume = new Slider(this.width / 2 - 75 , this.height / 4 + 80, 150, 20, VOLUME_TEXT,DISTANCE_BLOCKS, 1,range,v,false,true,null ,null);
 
-        this.addListener(this.volume);
+        this.addWidget(this.volume);
 
         this.addButton(new Button(this.width / 2 - 100, this.height / 4 + 120, 200, 20, DialogTexts.GUI_DONE, (p_214266_1_) -> this.close()));
         this.modeBtn = this.addButton(new Button(this.width / 2 - 75, this.height / 4 + 50, 150, 20, CHAT_TEXT, (p_214186_1_) -> {
@@ -77,35 +77,35 @@ public class SpeakerBlockGui extends Screen {
         }));
         this.updateMode();
         this.commandTextField = new TextFieldWidget(this.font, this.width / 2 - 100, this.height / 4 + 10, 200, 20, this.title) {
-            protected IFormattableTextComponent getNarrationMessage() {
-                return super.getNarrationMessage();
+            protected IFormattableTextComponent createNarrationMessage() {
+                return super.createNarrationMessage();
             }
         };
-        this.commandTextField.setText(message);
-        this.commandTextField.setMaxStringLength(32);
+        this.commandTextField.setValue(message);
+        this.commandTextField.setMaxLength(32);
         this.children.add(this.commandTextField);
-        this.setFocusedDefault(this.commandTextField);
-        this.commandTextField.setFocused2(true);
+        this.setInitialFocus(this.commandTextField);
+        this.commandTextField.setFocus(true);
     }
 
     @Override
-    public void onClose() {
-        this.minecraft.keyboardListener.enableRepeatEvents(false);
+    public void removed() {
+        this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
         //update client tile
-        this.tileSpeaker.message = this.commandTextField.getText();
+        this.tileSpeaker.message = this.commandTextField.getValue();
         this.tileSpeaker.narrator = this.narrator;
         this.tileSpeaker.volume = this.volume.getValue()/this.volume.maxValue;
         //update server tile
-        NetworkHandler.INSTANCE.sendToServer(new UpdateServerSpeakerBlockPacket(this.tileSpeaker.getPos(), this.tileSpeaker.message, this.tileSpeaker.narrator, this.tileSpeaker.volume));
+        NetworkHandler.INSTANCE.sendToServer(new UpdateServerSpeakerBlockPacket(this.tileSpeaker.getBlockPos(), this.tileSpeaker.message, this.tileSpeaker.narrator, this.tileSpeaker.volume));
 
     }
 
     private void close() {
-        this.tileSpeaker.markDirty();
-        this.minecraft.displayGuiScreen(null);
+        this.tileSpeaker.setChanged();
+        this.minecraft.setScreen(null);
     }
     @Override
-    public void closeScreen() {
+    public void onClose() {
         this.close();
     }
 

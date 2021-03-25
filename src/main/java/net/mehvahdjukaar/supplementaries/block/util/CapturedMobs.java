@@ -109,7 +109,7 @@ public class CapturedMobs {
         if(mobId.equals(def))return def;
         EntityType<?> en = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(mobId));
         if(en==null)return def;
-        return en.getName().getString();
+        return en.getDescription().getString();
     }
 
     public static CapturedMobProperties getTypeFromBucket(Item bucket){

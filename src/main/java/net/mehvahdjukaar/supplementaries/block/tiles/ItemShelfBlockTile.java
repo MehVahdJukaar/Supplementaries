@@ -18,11 +18,11 @@ public class ItemShelfBlockTile extends ItemDisplayTile {
     }
 
     public float getYaw() {
-        return -this.getDirection().getOpposite().getHorizontalAngle();
+        return -this.getDirection().getOpposite().toYRot();
     }
 
     public Direction getDirection() {
-        return this.getBlockState().get(ItemShelfBlock.FACING);
+        return this.getBlockState().getValue(ItemShelfBlock.FACING);
     }
 }
 

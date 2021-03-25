@@ -20,6 +20,8 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import net.minecraft.item.Item.Properties;
+
 public class RopeArrowItem extends ArrowItem {
     public RopeArrowItem(Properties builder) {
         super(builder);
@@ -44,7 +46,7 @@ public class RopeArrowItem extends ArrowItem {
 
 
     @Override
-    public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
+    public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
         return false;
     }
 
@@ -59,7 +61,7 @@ public class RopeArrowItem extends ArrowItem {
     }
 
     @Override
-    public int getItemEnchantability() {
+    public int getEnchantmentValue() {
         return 0;
     }
 
@@ -74,13 +76,13 @@ public class RopeArrowItem extends ArrowItem {
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
-        if(!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().gameSettings.advancedItemTooltips)return;
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+        if(!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().options.advancedItemTooltips)return;
         if(worldIn==null)return;
         String override = ServerConfigs.cached.ROPE_ARROW_BLOCK.getRegistryName().getNamespace();
         if(!override.equals(Supplementaries.MOD_ID)) {
-            tooltip.add(new TranslationTextComponent("message.supplementaries.rope_arrow",override).mergeStyle(TextFormatting.ITALIC).mergeStyle(TextFormatting.GRAY));
+            tooltip.add(new TranslationTextComponent("message.supplementaries.rope_arrow",override).withStyle(TextFormatting.ITALIC).withStyle(TextFormatting.GRAY));
         }
     }
 }

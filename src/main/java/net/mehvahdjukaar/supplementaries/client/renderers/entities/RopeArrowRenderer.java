@@ -12,7 +12,7 @@ public class RopeArrowRenderer extends ArrowRenderer<RopeArrowEntity> {
     }
 
     @Override
-    public ResourceLocation getEntityTexture(RopeArrowEntity entity) {
+    public ResourceLocation getTextureLocation(RopeArrowEntity entity) {
         return Textures.ROPE_ARROW;
     }
 

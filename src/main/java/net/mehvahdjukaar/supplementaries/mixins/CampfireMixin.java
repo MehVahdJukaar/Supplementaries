@@ -11,8 +11,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(CampfireBlock.class)
 public abstract class CampfireMixin {
 
-    @Inject(method = "isHayBlock", at = @At("HEAD"), cancellable = true)
-    public void isHayBlock(BlockState state, CallbackInfoReturnable<Boolean> info ) {
+    @Inject(method = "isSmokeSource", at = @At("HEAD"), cancellable = true)
+    public void isSmokeSource(BlockState state, CallbackInfoReturnable<Boolean> info ) {
         if(state.getBlock() == Registry.FLAX_BLOCK.get())
             info.setReturnValue(true);
     }

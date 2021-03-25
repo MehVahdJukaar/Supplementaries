@@ -24,16 +24,16 @@ public class StructureDebug {
             String name = f.getName();
             name = name.replace(base.toString()+"/","");
             name = name.replace(".nbt","");
-            world.setBlockState(pos, Blocks.STRUCTURE_BLOCK.getDefaultState());
-            TileEntity tile = world.getTileEntity(pos);
+            world.setBlockAndUpdate(pos, Blocks.STRUCTURE_BLOCK.defaultBlockState());
+            TileEntity tile = world.getBlockEntity(pos);
             if(tile instanceof StructureBlockTileEntity){
                 StructureBlockTileEntity te = (StructureBlockTileEntity) tile;
                 te.setMode(StructureMode.LOAD);
-                te.setName("minecraft:"+folder+"/"+name);
-                te.func_242688_a(world,true);
+                te.setStructureName("minecraft:"+folder+"/"+name);
+                te.loadStructure(world,true);
                 BlockPos p2 = te.getStructureSize();
                 pos = new BlockPos(pos.getX()+p2.getX()+1,pos.getY(),pos.getZ());
-                te.func_242688_a(world,true);
+                te.loadStructure(world,true);
             }
         }
 

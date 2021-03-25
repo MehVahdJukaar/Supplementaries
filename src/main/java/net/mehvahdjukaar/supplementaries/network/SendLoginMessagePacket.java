@@ -32,15 +32,15 @@ public class SendLoginMessagePacket {
                 try {
                     String fileName = ModList.get().getModFileById(Supplementaries.MOD_ID).getFile().getFileName();
 
-                    if (!fileName.contains("supplementaries-1")||fileName.toLowerCase().contains("supplementaries-mod")) {
+                    if (!fileName.toLowerCase().contains("supplementaries-1")||fileName.toLowerCase().contains("supplementaries-mod")) {
                         ClientPlayerEntity player = Minecraft.getInstance().player;
                         IFormattableTextComponent link = new TranslationTextComponent("message.supplementaries.anti_repost_link");
                         String url = "http://www.curseforge.com/minecraft/mc-mods/supplementaries";
                         ClickEvent click = new ClickEvent(ClickEvent.Action.OPEN_URL, url);
-                        link.setStyle(link.getStyle().setClickEvent(click).setUnderlined(true).setColor(Color.fromTextFormatting(TextFormatting.BLUE)));
+                        link.setStyle(link.getStyle().withClickEvent(click).setUnderlined(true).withColor(Color.fromLegacyFormat(TextFormatting.BLUE)));
 
-                        player.sendMessage(new TranslationTextComponent("message.supplementaries.anti_repost",link), Util.DUMMY_UUID);
-                        player.sendMessage(new TranslationTextComponent("message.supplementaries.anti_repost_2"), Util.DUMMY_UUID);
+                        player.sendMessage(new TranslationTextComponent("message.supplementaries.anti_repost",link), Util.NIL_UUID);
+                        player.sendMessage(new TranslationTextComponent("message.supplementaries.anti_repost_2"), Util.NIL_UUID);
                         //player.sendMessage(ForgeHooks.newChatWithLinks(, false), Util.DUMMY_UUID);
                     }
                 } catch (Exception ignored) { }

@@ -31,11 +31,13 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class ClockBlock extends Block implements IWaterLoggable {
-    protected static final VoxelShape SHAPE_NORTH = VoxelShapes.create(1D, 0D, 1D, 0D, 1D, 0.0625D);
-    protected static final VoxelShape SHAPE_SOUTH = VoxelShapes.create(0D, 0D, 0D, 1D, 1D, 0.9375D);
-    protected static final VoxelShape SHAPE_EAST = VoxelShapes.create(0D, 0D, 1D, 0.9375D, 1D, 0D);
-    protected static final VoxelShape SHAPE_WEST = VoxelShapes.create(1D, 0D, 0D, 0.0625D, 1D, 1D);
+    protected static final VoxelShape SHAPE_NORTH = VoxelShapes.box(1D, 0D, 1D, 0D, 1D, 0.0625D);
+    protected static final VoxelShape SHAPE_SOUTH = VoxelShapes.box(0D, 0D, 0D, 1D, 1D, 0.9375D);
+    protected static final VoxelShape SHAPE_EAST = VoxelShapes.box(0D, 0D, 1D, 0.9375D, 1D, 0D);
+    protected static final VoxelShape SHAPE_WEST = VoxelShapes.box(1D, 0D, 0D, 0.0625D, 1D, 1D);
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final IntegerProperty HOUR = BlockProperties.HOUR;
@@ -43,29 +45,29 @@ public class ClockBlock extends Block implements IWaterLoggable {
 
     public ClockBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(WATERLOGGED,false).with(FACING, Direction.NORTH));
+        this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED,false).setValue(FACING, Direction.NORTH));
     }
 
     @Override
-    public boolean allowsMovement(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
+    public boolean isPathfindable(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
         return false;
     }
 
     @Override
     public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return super.getRenderType(state);
+    public BlockRenderType getRenderShape(BlockState state) {
+        return super.getRenderShape(state);
         //return BlockRenderType.MODEL;
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
                                              BlockRayTraceResult hit) {
-        if (!worldIn.isRemote()) {
+        if (!worldIn.isClientSide()) {
             int time = ((int) (worldIn.getDayTime()+6000) % 24000);
             int m = (int) (((time % 1000f) / 1000f) * 60);
             int h = time / 1000;
@@ -74,30 +76,30 @@ public class ClockBlock extends Block implements IWaterLoggable {
                 a = time < 12000 ? " AM" : " PM";
                 h=h%12;
             }
-            player.sendStatusMessage(new StringTextComponent(h + ":" + ((m<10)?"0":"") + m + a), true);
+            player.displayClientMessage(new StringTextComponent(h + ":" + ((m<10)?"0":"") + m + a), true);
 
         }
         //TODO: do this fo all ActionResultType
-        return ActionResultType.func_233537_a_(worldIn.isRemote);
+        return ActionResultType.sidedSuccess(worldIn.isClientSide);
     }
 
     public BlockState rotate(BlockState state, Rotation rot) {
-        return state.with(FACING, rot.rotate(state.get(FACING)));
+        return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
 
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
-        return state.rotate(mirrorIn.toRotation(state.get(FACING)));
+        return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        boolean flag = context.getWorld().getFluidState(context.getPos()).getFluid() == Fluids.WATER;
-        return this.getDefaultState().with(WATERLOGGED, flag).with(FACING, context.getPlacementHorizontalFacing().getOpposite());
+        boolean flag = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;
+        return this.defaultBlockState().setValue(WATERLOGGED, flag).setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
-        switch (state.get(FACING)) {
+        switch (state.getValue(FACING)) {
             case NORTH :
             default :
                 return SHAPE_NORTH;
@@ -121,29 +123,29 @@ public class ClockBlock extends Block implements IWaterLoggable {
     }
 
     @Override
-    public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
-            TileEntity tileentity = world.getTileEntity(pos);
+            TileEntity tileentity = world.getBlockEntity(pos);
             if (tileentity instanceof ClockBlockTile) {
-                world.updateComparatorOutputLevel(pos, this);
+                world.updateNeighbourForOutputSignal(pos, this);
             }
-            super.onReplaced(state, world, pos, newState, isMoving);
+            super.onRemove(state, world, pos, newState, isMoving);
         }
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(HOUR,FACING,WATERLOGGED);
     }
 
     @Override
-    public boolean hasComparatorInputOverride(@Nonnull BlockState state) {
+    public boolean hasAnalogOutputSignal(@Nonnull BlockState state) {
         return true;
     }
 
     @Override
-    public int getComparatorInputOverride(BlockState blockState, World world, BlockPos pos) {
-        TileEntity te = world.getTileEntity(pos);
+    public int getAnalogOutputSignal(BlockState blockState, World world, BlockPos pos) {
+        TileEntity te = world.getBlockEntity(pos);
         if(te instanceof ClockBlockTile){
             return ((ClockBlockTile) te).power;
         }
@@ -151,17 +153,17 @@ public class ClockBlock extends Block implements IWaterLoggable {
     }
 
     @Override
-    public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
-        if (stateIn.get(WATERLOGGED)) {
-            worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
+        if (stateIn.getValue(WATERLOGGED)) {
+            worldIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
         }
-        return super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+        return super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
 
     @Override
-    public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
-        super.onBlockAdded(state, worldIn, pos, oldState, isMoving);
-        TileEntity te = worldIn.getTileEntity(pos);
+    public void onPlace(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+        super.onPlace(state, worldIn, pos, oldState, isMoving);
+        TileEntity te = worldIn.getBlockEntity(pos);
         if(te instanceof ClockBlockTile){
             ((ClockBlockTile) te).updateInitialTime();
 

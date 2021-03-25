@@ -33,8 +33,8 @@ public class ClockBlockTile extends TileEntity implements ITickableTileEntity {
     }
 
     @Override
-    public void read(@Nonnull BlockState state,@Nonnull CompoundNBT compound) {
-        super.read(state, compound);
+    public void load(@Nonnull BlockState state,@Nonnull CompoundNBT compound) {
+        super.load(state, compound);
         this.roll = compound.getFloat("MinRoll");
         this.prevRoll = this.roll;
         this.targetRoll = this.roll;
@@ -46,8 +46,8 @@ public class ClockBlockTile extends TileEntity implements ITickableTileEntity {
     }
 
     @Override
-    public CompoundNBT write(@Nonnull CompoundNBT compound) {
-        super.write(compound);
+    public CompoundNBT save(@Nonnull CompoundNBT compound) {
+        super.save(compound);
         compound.putFloat("MinRoll", this.targetRoll);
         compound.putFloat("SecRoll", this.sTargetRoll);
         compound.putInt("Power",this.power);
@@ -56,21 +56,21 @@ public class ClockBlockTile extends TileEntity implements ITickableTileEntity {
 
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.pos, 0, this.getUpdateTag());
+        return new SUpdateTileEntityPacket(this.worldPosition, 0, this.getUpdateTag());
     }
 
     @Override
     public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundNBT());
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.read(this.getBlockState(), pkt.getNbtCompound());
+        this.load(this.getBlockState(), pkt.getTag());
     }
 
     public void updateInitialTime(){
-        int time = (int) (world.getDayTime() % 24000);
+        int time = (int) (level.getDayTime() % 24000);
         this.updateTime(time);
         this.roll = this.targetRoll;
         this.prevRoll = this.targetRoll;
@@ -84,16 +84,16 @@ public class ClockBlockTile extends TileEntity implements ITickableTileEntity {
         int hour = MathHelper.clamp(time / 1000, 0, 24);
 
         //server
-        if(!this.world.isRemote){
+        if(!this.level.isClientSide){
             BlockState state = this.getBlockState();
-            if(hour!=state.get(ClockBlock.HOUR)){
+            if(hour!=state.getValue(ClockBlock.HOUR)){
                 //if they are sent to the client the animation gets broken. Side effect is that you can't see hour with f3
-                world.setBlockState(this.pos, state.with(ClockBlock.HOUR, hour),3);
+                level.setBlock(this.worldPosition, state.setValue(ClockBlock.HOUR, hour),3);
             }
             int p = MathHelper.clamp(time / 1500, 0, 15);
             if (p!=this.power){
                 this.power=p;
-                this.world.updateComparatorOutputLevel(this.pos, this.getBlockState().getBlock());
+                this.level.updateNeighbourForOutputSignal(this.worldPosition, this.getBlockState().getBlock());
             }
             //TODO: add proper sounds
             //this.world.playSound(null, this.pos, SoundEvents.BLOCK_NOTE_BLOCK_SNARE, SoundCategory.BLOCKS,0.03f,time%40==0?2:1.92f);
@@ -113,18 +113,18 @@ public class ClockBlockTile extends TileEntity implements ITickableTileEntity {
     }
     //makes clock sync with daytime
     private void calculateOffset(){
-        long dayTime = (this.world.getDayTime()%24000)%20;
-        long gameTime = (this.world.getGameTime()%24000)%20;
+        long dayTime = (this.level.getDayTime()%24000)%20;
+        long gameTime = (this.level.getGameTime()%24000)%20;
         this.offset = (int) (dayTime - gameTime);
     }
 
     @Override
     public void tick() {
 
-        int time = this.world.getGameRules().getBoolean(GameRules.DO_DAYLIGHT_CYCLE)?
-                (int) (world.getDayTime() % 24000) : (int) (world.getGameTime() % 24000);
-        if (this.world != null && (time) % 20 == 0) {
-            this.updateTime((int) (this.world.getDayTime()%24000));
+        int time = this.level.getGameRules().getBoolean(GameRules.RULE_DAYLIGHT)?
+                (int) (level.getDayTime() % 24000) : (int) (level.getGameTime() % 24000);
+        if (this.level != null && (time) % 20 == 0) {
+            this.updateTime((int) (this.level.getDayTime()%24000));
 
         }
         //hours
@@ -148,7 +148,7 @@ public class ClockBlockTile extends TileEntity implements ITickableTileEntity {
     }
 
     public Direction getDirection() {
-        return this.getBlockState().get(ClockBlock.FACING);
+        return this.getBlockState().getValue(ClockBlock.FACING);
     }
 }
 

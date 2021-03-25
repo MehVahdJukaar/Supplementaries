@@ -1,7 +1,12 @@
 {
-	"parent": "minecraft:block/cube_column",
-	"textures": {
-		"end": "supplementaries:blocks/flax_block_top",
-		"side": "supplementaries:blocks/flax_block"
-	}
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "supplementaries:blocks/flax_block",
+    "north": "supplementaries:blocks/flax_block",
+    "south": "supplementaries:blocks/flax_block",
+    "east": "supplementaries:blocks/flax_block",
+    "west": "supplementaries:blocks/flax_block",
+    "up": "supplementaries:blocks/flax_block_top",
+    "down": "supplementaries:blocks/flax_block_bottom"
+  }
 }

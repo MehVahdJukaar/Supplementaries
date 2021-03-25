@@ -22,46 +22,48 @@ import net.minecraft.world.server.ServerWorld;
 import javax.annotation.Nullable;
 import java.util.Random;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class LockBlock extends Block {
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
     public LockBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(POWERED, false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(POWERED, false));
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(POWERED);
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if(state.get(POWERED))return ActionResultType.PASS;
-        BlockPos p = this.hasTileEntity(state)? pos : pos.down();
-        TileEntity te = worldIn.getTileEntity(p);
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if(state.getValue(POWERED))return ActionResultType.PASS;
+        BlockPos p = this.hasTileEntity(state)? pos : pos.below();
+        TileEntity te = worldIn.getBlockEntity(p);
         if (te instanceof KeyLockableTile) {
             if (((KeyLockableTile) te).handleAction(player, handIn,"lock_block")) {
-                if(!worldIn.isRemote) {
-                    worldIn.setBlockState(pos, state.with(POWERED, true), 2|4|3);
-                    worldIn.getPendingBlockTicks().scheduleTick(pos, this, 20);
+                if(!worldIn.isClientSide) {
+                    worldIn.setBlock(pos, state.setValue(POWERED, true), 2|4|3);
+                    worldIn.getBlockTicks().scheduleTick(pos, this, 20);
                 }
 
-                worldIn.playEvent(player, 1037, pos, 0);
+                worldIn.levelEvent(player, 1037, pos, 0);
                 //this.playSound(player, worldIn, pos, true);
             }
         }
 
-        return ActionResultType.func_233537_a_(worldIn.isRemote);
+        return ActionResultType.sidedSuccess(worldIn.isClientSide);
     }
 
     protected void playSound(@Nullable PlayerEntity player, World worldIn, BlockPos pos, boolean isOpened) {
         if (isOpened) {
-            int i = this.material == Material.IRON ? 1037 : 1007;
-            worldIn.playEvent(player, i, pos, 0);
+            int i = this.material == Material.METAL ? 1037 : 1007;
+            worldIn.levelEvent(player, i, pos, 0);
         } else {
-            int j = this.material == Material.IRON ? 1036 : 1013;
-            worldIn.playEvent(player, j, pos, 0);
+            int j = this.material == Material.METAL ? 1036 : 1013;
+            worldIn.levelEvent(player, j, pos, 0);
         }
 
     }
@@ -69,20 +71,20 @@ public class LockBlock extends Block {
     @Override
     public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
         super.tick(state, worldIn, pos, rand);
-        if(!worldIn.isRemote && state.get(POWERED)){
-            worldIn.setBlockState(pos, state.with(POWERED,false),2|4|3);
+        if(!worldIn.isClientSide && state.getValue(POWERED)){
+            worldIn.setBlock(pos, state.setValue(POWERED,false),2|4|3);
         }
 
     }
 
     @Override
-    public boolean canProvidePower(BlockState state) {
+    public boolean isSignalSource(BlockState state) {
         return true;
     }
 
     @Override
-    public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
-        return blockState.get(POWERED)?15:0;
+    public int getSignal(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+        return blockState.getValue(POWERED)?15:0;
     }
 
     @Override

@@ -23,7 +23,7 @@ public class RequestMapDataFromServerPacket {
     private final UUID id;
     public RequestMapDataFromServerPacket(PacketBuffer buf) {
         this.pos = buf.readBlockPos();
-        this.id = buf.readUniqueId();
+        this.id = buf.readUUID();
     }
 
     public RequestMapDataFromServerPacket(BlockPos pos, UUID id) {
@@ -33,27 +33,27 @@ public class RequestMapDataFromServerPacket {
 
     public static void buffer(RequestMapDataFromServerPacket message, PacketBuffer buf) {
         buf.writeBlockPos(message.pos);
-        buf.writeUniqueId(message.id);
+        buf.writeUUID(message.id);
     }
 
     public static void handler(RequestMapDataFromServerPacket message, Supplier<NetworkEvent.Context> ctx) {
         // server world
-        World world = Objects.requireNonNull(ctx.get().getSender()).world;
+        World world = Objects.requireNonNull(ctx.get().getSender()).level;
 
         ctx.get().enqueueWork(() -> {
             if (world instanceof ServerWorld) {
-                TileEntity tileentity = world.getTileEntity(message.pos);
+                TileEntity tileentity = world.getBlockEntity(message.pos);
                 if (tileentity instanceof IMapDisplay) {
                     ItemStack stack = ((IMapDisplay)tileentity).getMapStack();
-                    PlayerEntity player = world.getPlayerByUuid(message.id);
+                    PlayerEntity player = world.getPlayerByUUID(message.id);
                     if(stack.getItem() instanceof FilledMapItem){
-                        MapData data =  FilledMapItem.getData(stack, world);
+                        MapData data =  FilledMapItem.getSavedData(stack, world);
                         FilledMapItem map = (FilledMapItem)stack.getItem();
-                        data.updateVisiblePlayers(player, stack);
-                        map.updateMapData(world, player, data);
+                        data.tickCarriedBy(player, stack);
+                        map.update(world, player, data);
                         IPacket<?> ipacket = map.getUpdatePacket(stack, world, player);
                         if (ipacket != null && player instanceof ServerPlayerEntity) {
-                            ((ServerPlayerEntity)player).connection.sendPacket(ipacket);
+                            ((ServerPlayerEntity)player).connection.send(ipacket);
                         }
                     }
                 }

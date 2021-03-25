@@ -24,32 +24,34 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class BellowsBlock extends Block {
 
 
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
-    public static final IntegerProperty POWER = BlockStateProperties.POWER_0_15;
+    public static final IntegerProperty POWER = BlockStateProperties.POWER;
 
     public BellowsBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(POWER, 0));
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(POWER, 0));
     }
 
     @Override
-    public boolean allowsMovement(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
+    public boolean isPathfindable(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
         return false;
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
+    public BlockRenderType getRenderShape(BlockState state) {
         return BlockRenderType.ENTITYBLOCK_ANIMATED;
     }
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 
-        TileEntity te = worldIn.getTileEntity(pos);
-        return te instanceof BellowsBlockTile ? ((BellowsBlockTile)te).getVoxelShape(state.get(FACING)) : VoxelShapes.create(VoxelShapes.fullCube().getBoundingBox().grow(0.1f));
+        TileEntity te = worldIn.getBlockEntity(pos);
+        return te instanceof BellowsBlockTile ? ((BellowsBlockTile)te).getVoxelShape(state.getValue(FACING)) : VoxelShapes.create(VoxelShapes.block().bounds().inflate(0.1f));
 
         //return te instanceof BellowsBlockTile ? VoxelShapes.create(((BellowsBlockTile)te).getBoundingBox(state.get(FACING))) : VoxelShapes.create(VoxelShapes.fullCube().getBoundingBox().grow(0.1f));
     }
@@ -60,41 +62,41 @@ public class BellowsBlock extends Block {
     }
 
     @Override
-    public VoxelShape getRenderShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
-        return VoxelShapes.fullCube();
+    public VoxelShape getOcclusionShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
+        return VoxelShapes.block();
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(FACING, POWER);
     }
 
     @Override
     public BlockState rotate(BlockState state, Rotation rot) {
-        return state.with(FACING, rot.rotate(state.get(FACING)));
+        return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
 
     @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
-        return state.rotate(mirrorIn.toRotation(state.get(FACING)));
+        return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.getDefaultState().with(FACING, context.getNearestLookingDirection().getOpposite());
+        return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
     }
 
     @Override
-    public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+    public void setPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         this.updatePower(state, world, pos);
     }
 
     public void updatePower(BlockState state, World world, BlockPos pos) {
-        int newpower = world.getRedstonePowerFromNeighbors(pos);
-        int currentpower = state.get(POWER);
+        int newpower = world.getBestNeighborSignal(pos);
+        int currentpower = state.getValue(POWER);
         // on-off
         if (newpower != currentpower) {
-            world.setBlockState(pos, state.with(POWER, newpower), 2 | 4);
+            world.setBlock(pos, state.setValue(POWER, newpower), 2 | 4);
             //returns if state changed
         }
     }
@@ -117,15 +119,15 @@ public class BellowsBlock extends Block {
     }
 
     @Override
-    public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
-        super.onEntityCollision(state, worldIn, pos, entityIn);
-        TileEntity te = worldIn.getTileEntity(pos);
+    public void entityInside(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
+        super.entityInside(state, worldIn, pos, entityIn);
+        TileEntity te = worldIn.getBlockEntity(pos);
         if(te instanceof BellowsBlockTile)((BellowsBlockTile) te).onSteppedOn(entityIn);
     }
 
     @Override
-    public void onEntityWalk(World worldIn, BlockPos pos, Entity entityIn) {
-        TileEntity te = worldIn.getTileEntity(pos);
+    public void stepOn(World worldIn, BlockPos pos, Entity entityIn) {
+        TileEntity te = worldIn.getBlockEntity(pos);
         if(te instanceof BellowsBlockTile)((BellowsBlockTile) te).onSteppedOn(entityIn);
     }
 }

@@ -27,14 +27,14 @@ public class DoormatBlockTile extends ItemDisplayTile implements ITextHolder {
     public TextHolder getTextHolder(){return this.textHolder;}
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
-        super.read(state, compound);
+    public void load(BlockState state, CompoundNBT compound) {
+        super.load(state, compound);
         this.textHolder.read(compound);
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
+    public CompoundNBT save(CompoundNBT compound) {
+        super.save(compound);
         this.textHolder.write(compound);
         return compound;
     }
@@ -45,23 +45,23 @@ public class DoormatBlockTile extends ItemDisplayTile implements ITextHolder {
     }
 
     public Direction getDirection(){
-        return this.getBlockState().get(DoormatBlock.FACING);
+        return this.getBlockState().getValue(DoormatBlock.FACING);
     }
 
     //TODO: optimize this two methods to send only what's needed
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.pos, 0, this.getUpdateTag());
+        return new SUpdateTileEntityPacket(this.worldPosition, 0, this.getUpdateTag());
     }
 
     @Override
     public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundNBT());
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.read(this.getBlockState(), pkt.getNbtCompound());
+        this.load(this.getBlockState(), pkt.getTag());
     }
 
 }

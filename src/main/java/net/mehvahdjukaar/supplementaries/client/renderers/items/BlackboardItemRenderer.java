@@ -21,18 +21,18 @@ import net.minecraftforge.client.model.data.EmptyModelData;
 public class BlackboardItemRenderer extends ItemStackTileEntityRenderer {
 
     @Override
-    public void func_239207_a_(ItemStack stack, ItemCameraTransforms.TransformType transformType, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
+    public void renderByItem(ItemStack stack, ItemCameraTransforms.TransformType transformType, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
 
-        matrixStackIn.push();
+        matrixStackIn.pushPose();
         matrixStackIn.translate(0,0,-0.34375);
-        BlockRendererDispatcher blockRenderer = Minecraft.getInstance().getBlockRendererDispatcher();
-        BlockState state = Registry.BLACKBOARD.get().getDefaultState();
+        BlockRendererDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
+        BlockState state = Registry.BLACKBOARD.get().defaultBlockState();
         blockRenderer.renderBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
 
-        CompoundNBT com = stack.getChildTag("BlockEntityTag");
+        CompoundNBT com = stack.getTagElement("BlockEntityTag");
         if(com != null && com.contains("pixels_0")) {
 
-            IVertexBuilder builder = bufferIn.getBuffer(RenderType.getEntitySolid(Textures.BLACKBOARD_TEXTURE));
+            IVertexBuilder builder = bufferIn.getBuffer(RenderType.entitySolid(Textures.BLACKBOARD_TEXTURE));
 
             int lu = combinedLightIn & '\uffff';
             int lv = combinedLightIn >> 16 & '\uffff'; // ok
@@ -56,7 +56,7 @@ public class BlackboardItemRenderer extends ItemStackTileEntityRenderer {
                 }
             }
         }
-        matrixStackIn.pop();
+        matrixStackIn.popPose();
 
     }
 }

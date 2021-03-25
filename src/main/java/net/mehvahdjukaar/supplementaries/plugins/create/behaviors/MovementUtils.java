@@ -1,11 +1,14 @@
 package net.mehvahdjukaar.supplementaries.plugins.create.behaviors;
 
-import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.gen.feature.template.Template;
 
 import java.util.Map;
+
+/*
+import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 
 public class MovementUtils {
 
@@ -19,4 +22,4 @@ public class MovementUtils {
         }
     }
 
-}
+}*/

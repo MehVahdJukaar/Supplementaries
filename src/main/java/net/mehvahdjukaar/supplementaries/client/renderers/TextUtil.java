@@ -38,6 +38,12 @@ public class TextUtil {
                 "\nYaBoiCinn"+
                 "\nNary"+
                 "\nVladimirLemon"+
+                "\n\n\u00A75Mod Compat.:\u00A7r\n\n\u00A70"+
+                "WenXin2"+
+                "\nFrogbirdd"+
+                "\nMightyGoat"+
+                "\nAgrona"+
+                "\nAlleCraft"+
                 "\n\n\u00A75Translations:\u00A7r\n\n\u00A70"+
                 "Bart_Riot23"+
                 "\nMikeliro"+
@@ -50,17 +56,13 @@ public class TextUtil {
                 "\nAnton Bidenko"+
                 "\nsarlix"+
                 "\nNick Defrunct"+
-                "\n\n\u00A75Mod Compat.:\u00A7r\n\n\u00A70"+
-                "WenXin2"+
-                "\nFrogbirdd"+
-                "\nMightyGoat"+
-                "\nAgrona"+
                 "\n\n\u00A75Others:\u00A7r\n\n\u00A70"+
                  "Guys on Discord"+
                 "\nUmaroth"+
                 "\nHowester84"+
                 "\nspiritwolf_twitch"+
                 "\nax3el"+
+                "\nGermanCheeseMan"+
                 "\nMcreator"+
                 "\nYoutube tutorials"+
                 "\nmy grades. rip"+
@@ -69,7 +71,7 @@ public class TextUtil {
                 "\n\n\n\n\n\n\n\n\n\n\n\n";
 
         float lx = 1 - (2 * 0.125f);
-        CREDITS.addAll(fontrenderer.trimStringToWidth(iGetPageText(c), MathHelper.floor(lx * SCALINGFACTOR)));
+        CREDITS.addAll(fontrenderer.split(iGetPageText(c), MathHelper.floor(lx * SCALINGFACTOR)));
     }
 
 
@@ -95,29 +97,29 @@ public class TextUtil {
 
         float bordery = 0.125f;
 
-        matrixStack.push();
+        matrixStack.pushPose();
         for (int n = 0; n < 13; ++n) {
             if(startLin+n>=numberOfLines)break;
             IReorderingProcessor str = CREDITS.get(startLin+n);
-            float dx = (float) (-fontRenderer.func_243245_a(str) / 2) + 0.5f;
+            float dx = (float) (-fontRenderer.width(str) / 2) + 0.5f;
             int a = (int) (255*(-Math.pow(((-o+n-6f)/7.2f),2)+1));
             int col = (int)(255*side);
-            int rgba = NativeImage.getCombined(a, col, col, col);
+            int rgba = NativeImage.combine(a, col, col, col);
 
-            fontRenderer.func_238416_a_(str, dx, bordery*SCALINGFACTOR-(offset) + 8 * n, rgba, false, matrixStack.getLast().getMatrix(), bufferIn, false, 0, light);
+            fontRenderer.drawInBatch(str, dx, bordery*SCALINGFACTOR-(offset) + 8 * n, rgba, false, matrixStack.last().pose(), bufferIn, false, 0, light);
         }
-        matrixStack.pop();
+        matrixStack.popPose();
     }
 
     public static ITextProperties iGetPageText(String s) {
         try {
-            ITextProperties itextproperties = ITextComponent.Serializer.getComponentFromJson(s);
+            ITextProperties itextproperties = ITextComponent.Serializer.fromJson(s);
             if (itextproperties != null) {
                 return itextproperties;
             }
         } catch (Exception ignored) {
         }
-        return ITextProperties.func_240652_a_(s);
+        return ITextProperties.of(s);
     }
 
     public static String format(String name){

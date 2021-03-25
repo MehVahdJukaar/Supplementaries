@@ -19,7 +19,7 @@ public class CageBlockTile extends TileEntity implements ITickableTileEntity, IM
 
     public CageBlockTile() {
         super(Registry.CAGE_TILE.get());
-        this.mobHolder = new MobHolder(this.world,this.pos);
+        this.mobHolder = new MobHolder(this.level,this.worldPosition);
     }
 
     @Override
@@ -27,51 +27,51 @@ public class CageBlockTile extends TileEntity implements ITickableTileEntity, IM
 
 
     @Override
-    public double getMaxRenderDistanceSquared() {
+    public double getViewDistance() {
         return 80;
     }
 
     @Override
     public void onLoad() {
-        this.mobHolder.setWorldAndPos(this.world,this.pos);
+        this.mobHolder.setWorldAndPos(this.level,this.worldPosition);
     }
 
     public void saveToNbt(ItemStack stack){
         CompoundNBT compound = new CompoundNBT();
-        stack.setTagInfo("BlockEntityTag",write(compound));
+        stack.addTagElement("BlockEntityTag",save(compound));
     }
 
     //read==loadfromnbt, write=savetonbt.
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
-        super.read(state, compound);
+    public void load(BlockState state, CompoundNBT compound) {
+        super.load(state, compound);
         this.mobHolder.read(compound);
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
+    public CompoundNBT save(CompoundNBT compound) {
+        super.save(compound);
         this.mobHolder.write(compound);
         return compound;
     }
 
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.pos, 0, this.getUpdateTag());
+        return new SUpdateTileEntityPacket(this.worldPosition, 0, this.getUpdateTag());
     }
 
     @Override
     public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundNBT());
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.read(this.getBlockState(), pkt.getNbtCompound());
+        this.load(this.getBlockState(), pkt.getTag());
     }
 
     public Direction getDirection() {
-        return this.getBlockState().get(ClockBlock.FACING);
+        return this.getBlockState().getValue(ClockBlock.FACING);
     }
 
     @Override

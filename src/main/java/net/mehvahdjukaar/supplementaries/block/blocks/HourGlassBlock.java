@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.HourGlassBlockTile;
+import net.mehvahdjukaar.supplementaries.block.tiles.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -41,120 +42,96 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class HourGlassBlock extends Block implements IWaterLoggable, IForgeBlock {
-    protected static final VoxelShape SHAPE_Y = Block.makeCuboidShape(4D, 0D, 4.0D, 12.0D, 16D, 12.0D);
-    protected static final VoxelShape SHAPE_Z = Block.makeCuboidShape(4D, 4D, 0.0D, 12.0D, 12D, 16.0D);
-    protected static final VoxelShape SHAPE_X = Block.makeCuboidShape(0D, 4D, 4D, 16D, 12D, 12.0D);
+    protected static final VoxelShape SHAPE_Y = Block.box(4D, 0D, 4.0D, 12.0D, 16D, 12.0D);
+    protected static final VoxelShape SHAPE_Z = Block.box(4D, 4D, 0.0D, 12.0D, 12D, 16.0D);
+    protected static final VoxelShape SHAPE_X = Block.box(0D, 4D, 4D, 16D, 12D, 12.0D);
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final IntegerProperty LIGHT_LEVEL = BlockProperties.LIGHT_LEVEL_0_15;
 
     public HourGlassBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.UP).with(LIGHT_LEVEL, 0)
-                .with(WATERLOGGED, false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.UP).setValue(LIGHT_LEVEL, 0)
+                .setValue(WATERLOGGED, false));
     }
 
     @Override
-    public boolean allowsMovement(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
+    public boolean isPathfindable(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
         return false;
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
+    public BlockRenderType getRenderShape(BlockState state) {
         return BlockRenderType.MODEL;
     }
 
     @Override
     public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
-        return state.get(LIGHT_LEVEL);
+        return state.getValue(LIGHT_LEVEL);
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(FACING, WATERLOGGED, LIGHT_LEVEL);
     }
 
     @Override
     public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
     @Override
     public BlockState rotate(BlockState state, Rotation rot) {
-        return state.with(FACING, rot.rotate(state.get(FACING)));
+        return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
 
     @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
-        return state.rotate(mirrorIn.toRotation(state.get(FACING)));
+        return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        World world = context.getWorld();
-        BlockPos pos = context.getPos();
-        boolean flag = world.getFluidState(pos).getFluid() == Fluids.WATER;
-        return this.getDefaultState().with(WATERLOGGED, flag).with(FACING, context.getFace());
+        World world = context.getLevel();
+        BlockPos pos = context.getClickedPos();
+        boolean flag = world.getFluidState(pos).getType() == Fluids.WATER;
+        return this.defaultBlockState().setValue(WATERLOGGED, flag).setValue(FACING, context.getClickedFace());
     }
 
     //called when a neighbor is placed
     @Override
-    public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
-        if (stateIn.get(WATERLOGGED)) {
-            worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
+        if (stateIn.getValue(WATERLOGGED)) {
+            worldIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
         }
         return stateIn;
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
                                              BlockRayTraceResult hit) {
-        if(player.isSneaking()&&player.getHeldItem(handIn).isEmpty()&&state.get(FACING).getAxis() == Direction.Axis.Y){
-            if(!worldIn.isRemote) {
-                worldIn.setBlockState(pos, state.with(FACING, state.get(FACING).getOpposite()), 3);
-                worldIn.playSound(null,pos, SoundEvents.ENTITY_ITEM_FRAME_ROTATE_ITEM, SoundCategory.BLOCKS,1,1);
+        if(player.isShiftKeyDown()&&player.getItemInHand(handIn).isEmpty()&&state.getValue(FACING).getAxis() == Direction.Axis.Y){
+            if(!worldIn.isClientSide) {
+                worldIn.setBlock(pos, state.setValue(FACING, state.getValue(FACING).getOpposite()), 3);
+                worldIn.playSound(null,pos, SoundEvents.ITEM_FRAME_ROTATE_ITEM, SoundCategory.BLOCKS,1,1);
                 return ActionResultType.CONSUME;
             }
             return ActionResultType.SUCCESS;
         }
 
-        TileEntity tileentity = worldIn.getTileEntity(pos);
-        if (tileentity instanceof HourGlassBlockTile) {
-            HourGlassBlockTile te = (HourGlassBlockTile) tileentity;
-            ItemStack itemstack = player.getHeldItem(handIn);
-            boolean flag1 = (te.isEmpty() && !itemstack.isEmpty() && (te.isItemValidForSlot(0, itemstack)));
-            boolean flag2 = (itemstack.isEmpty() && !te.isEmpty());
-            if (flag1) {
-                ItemStack it = itemstack.copy();
-                it.setCount(1);
-                NonNullList<ItemStack> stacks = NonNullList.withSize(1, it);
-                te.setItems(stacks);
-                if (!player.isCreative()) {
-                    itemstack.shrink(1);
-                }
-                if (!worldIn.isRemote()) {
-                    worldIn.playSound(null, pos, SoundEvents.ENTITY_ITEM_FRAME_ADD_ITEM, SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.10F + 0.95F);
-                    te.markDirty();
-                }
-                return ActionResultType.func_233537_a_(worldIn.isRemote);
-            } else if (flag2) {
-                ItemStack it = te.removeStackFromSlot(0);
-                //TODO: calling setHeld item doesn't play the item swap animatin but does play the equip sound. Do this for all other blocks
-                if(worldIn.isRemote)return ActionResultType.SUCCESS;
-                player.setHeldItem(handIn, it);
-                if (!worldIn.isRemote()) {
-                    te.markDirty();
-                }
-                return ActionResultType.CONSUME;
-            }
+        TileEntity tileentity = worldIn.getBlockEntity(pos);
+        if (tileentity instanceof ItemDisplayTile) {
+            return ((ItemDisplayTile) tileentity).interact(player,handIn);
         }
         return ActionResultType.PASS;
     }
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
-        switch (state.get(FACING).getAxis()) {
+        switch (state.getValue(FACING).getAxis()) {
             case Z:
                 return SHAPE_Z;
             default:
@@ -166,8 +143,8 @@ public class HourGlassBlock extends Block implements IWaterLoggable, IForgeBlock
     }
 
     @Override
-    public INamedContainerProvider getContainer(BlockState state, World worldIn, BlockPos pos) {
-        TileEntity tileEntity = worldIn.getTileEntity(pos);
+    public INamedContainerProvider getMenuProvider(BlockState state, World worldIn, BlockPos pos) {
+        TileEntity tileEntity = worldIn.getBlockEntity(pos);
         return tileEntity instanceof INamedContainerProvider ? (INamedContainerProvider) tileEntity : null;
     }
 
@@ -182,35 +159,35 @@ public class HourGlassBlock extends Block implements IWaterLoggable, IForgeBlock
     }
 
     @Override
-    public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
-            TileEntity tileentity = world.getTileEntity(pos);
+            TileEntity tileentity = world.getBlockEntity(pos);
             if (tileentity instanceof HourGlassBlockTile) {
-                InventoryHelper.dropInventoryItems(world, pos, (IInventory) tileentity);
-                world.updateComparatorOutputLevel(pos, this);
+                InventoryHelper.dropContents(world, pos, (IInventory) tileentity);
+                world.updateNeighbourForOutputSignal(pos, this);
             }
-            super.onReplaced(state, world, pos, newState, isMoving);
+            super.onRemove(state, world, pos, newState, isMoving);
         }
     }
 
     @Override
-    public boolean hasComparatorInputOverride(BlockState state) {
+    public boolean hasAnalogOutputSignal(BlockState state) {
         return true;
     }
 
     @Override
-    public int getComparatorInputOverride(BlockState blockState, World world, BlockPos pos) {
-        TileEntity tileentity = world.getTileEntity(pos);
+    public int getAnalogOutputSignal(BlockState blockState, World world, BlockPos pos) {
+        TileEntity tileentity = world.getBlockEntity(pos);
         if (tileentity instanceof HourGlassBlockTile) {
             return ((HourGlassBlockTile) tileentity).power;
         } else
             return 0;
     }
 
-    public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
-        if(!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().gameSettings.advancedItemTooltips)return;
-        tooltip.add((new TranslationTextComponent(  "message.supplementaries.hourglass")).mergeStyle(TextFormatting.GRAY).mergeStyle(TextFormatting.ITALIC));
+    public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+        if(!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().options.advancedItemTooltips)return;
+        tooltip.add((new TranslationTextComponent(  "message.supplementaries.hourglass")).withStyle(TextFormatting.GRAY).withStyle(TextFormatting.ITALIC));
     }
 
 }

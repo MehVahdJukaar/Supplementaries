@@ -26,7 +26,7 @@ public class FenceSignBlockTileRenderer extends TileEntityRenderer<FenceSignBloc
     public static final ModelRenderer signBoard = new ModelRenderer(64, 32, 0, 0);
    //TODO: make other tiles this way
     static {
-       signBoard.setRotationPoint(0.0F, -4.0F, 0.0F);
+       signBoard.setPos(0.0F, -4.0F, 0.0F);
        signBoard.addBox(-12.0F, -14.0F, -1.0F, 24.0F, 12.0F, 2.0F, 0.0F);
     }
 
@@ -40,8 +40,8 @@ public class FenceSignBlockTileRenderer extends TileEntityRenderer<FenceSignBloc
 
         BlockState fence = tile.fenceBlock;
         if(fence !=null){
-            BlockRendererDispatcher blockRenderer = Minecraft.getInstance().getBlockRendererDispatcher();
-            RendererUtil.renderBlockPlus(fence, matrixStackIn, bufferIn, blockRenderer, tile.getWorld(), tile.getPos());
+            BlockRendererDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
+            RendererUtil.renderBlockPlus(fence, matrixStackIn, bufferIn, blockRenderer, tile.getLevel(), tile.getBlockPos());
             //blockRenderer.renderBlock(fence, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
         }
 
@@ -51,16 +51,16 @@ public class FenceSignBlockTileRenderer extends TileEntityRenderer<FenceSignBloc
 
 
             // sign code
-            FontRenderer fontrenderer = this.renderDispatcher.getFontRenderer();
+            FontRenderer fontrenderer = this.renderer.getFont();
             int i = tile.textHolder.textColor.getTextColor();
-            int j = (int) ((double) NativeImage.getRed(i) * 0.4D);
-            int k = (int) ((double) NativeImage.getGreen(i) * 0.4D);
-            int l = (int) ((double) NativeImage.getBlue(i) * 0.4D);
-            int i1 = NativeImage.getCombined(0, l, k, j);
+            int j = (int) ((double) NativeImage.getR(i) * 0.4D);
+            int k = (int) ((double) NativeImage.getG(i) * 0.4D);
+            int l = (int) ((double) NativeImage.getB(i) * 0.4D);
+            int i1 = NativeImage.combine(0, l, k, j);
 
 
 
-            matrixStackIn.push();
+            matrixStackIn.pushPose();
             matrixStackIn.translate(0.5, 0.5, 0.5);
 
 
@@ -68,19 +68,19 @@ public class FenceSignBlockTileRenderer extends TileEntityRenderer<FenceSignBloc
 
 
 
-            matrixStackIn.rotate(Vector3f.YP.rotationDegrees(tile.signFacing.getHorizontalAngle()));
+            matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(tile.signFacing.toYRot()));
             //matrixStackIn.rotate(Const.YN90);
 
             //sign block
-            matrixStackIn.push();
+            matrixStackIn.pushPose();
 
 
             matrixStackIn.scale(1,-1,-1);
             RenderMaterial material = Materials.BELLOWS_MATERIAL;
-            IVertexBuilder builder =  material.getBuffer(bufferIn, RenderType::getEntitySolid);
+            IVertexBuilder builder =  material.buffer(bufferIn, RenderType::entitySolid);
             signBoard.render(matrixStackIn, builder, combinedLightIn, combinedOverlayIn);
 
-            matrixStackIn.pop();
+            matrixStackIn.popPose();
 
             //text up
             matrixStackIn.translate(-0.03125, 0.28125, 0.1875 + 0.005);
@@ -89,18 +89,18 @@ public class FenceSignBlockTileRenderer extends TileEntityRenderer<FenceSignBloc
 
 
                 IReorderingProcessor ireorderingprocessor = tile.textHolder.getRenderText(0, (p_243502_1_) -> {
-                    List<IReorderingProcessor> list = fontrenderer.trimStringToWidth(p_243502_1_, 90);
-                    return list.isEmpty() ? IReorderingProcessor.field_242232_a : list.get(0);
+                    List<IReorderingProcessor> list = fontrenderer.split(p_243502_1_, 90);
+                    return list.isEmpty() ? IReorderingProcessor.EMPTY : list.get(0);
                 });
                 if (ireorderingprocessor != null) {
-                    float f3 = (float)(-fontrenderer.func_243245_a(ireorderingprocessor) / 2);
-                    fontrenderer.func_238416_a_(ireorderingprocessor, f3, (float)(-5), i1, false, matrixStackIn.getLast().getMatrix(), bufferIn, false, 0, combinedLightIn);
+                    float f3 = (float)(-fontrenderer.width(ireorderingprocessor) / 2);
+                    fontrenderer.drawInBatch(ireorderingprocessor, f3, (float)(-5), i1, false, matrixStackIn.last().pose(), bufferIn, false, 0, combinedLightIn);
                 }
 
 
 
 
-            matrixStackIn.pop();
+            matrixStackIn.popPose();
         }
 
     }

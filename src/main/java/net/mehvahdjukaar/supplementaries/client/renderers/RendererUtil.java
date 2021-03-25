@@ -24,7 +24,7 @@ public class RendererUtil {
     public static void renderBlockPlus(BlockState state, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn,
                                        BlockRendererDispatcher blockRenderer, World world, BlockPos pos){
         try {
-            for (RenderType type : RenderType.getBlockRenderTypes()) {
+            for (RenderType type : RenderType.chunkBufferLayers()) {
                 if (RenderTypeLookup.canRenderInLayer(state, type)) {
                     renderBlockPlus(state, matrixStackIn, bufferIn, blockRenderer, world, pos, type);
                 }
@@ -36,8 +36,8 @@ public class RendererUtil {
     public static void renderBlockPlus(BlockState state, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn,
                                        BlockRendererDispatcher blockRenderer, World world, BlockPos pos, RenderType type){
         net.minecraftforge.client.ForgeHooksClient.setRenderLayer(type);
-        blockRenderer.getBlockModelRenderer().renderModel(world,
-                blockRenderer.getModelForState(state), state, pos, matrixStackIn,
+        blockRenderer.getModelRenderer().tesselateBlock(world,
+                blockRenderer.getBlockModel(state), state, pos, matrixStackIn,
                 bufferIn.getBuffer(type), false, new Random(),0,
                 OverlayTexture.NO_OVERLAY);
         net.minecraftforge.client.ForgeHooksClient.setRenderLayer(null);
@@ -60,10 +60,10 @@ public class RendererUtil {
                                int color, float a, int combinedOverlayIn, boolean up, boolean down, boolean fakeshading, boolean flippedY, boolean wrap) {
         int lu = combinedLightIn & '\uffff';
         int lv = combinedLightIn >> 16 & '\uffff'; // ok
-        float atlasscaleU = sprite.getMaxU() - sprite.getMinU();
-        float atlasscaleV = sprite.getMaxV() - sprite.getMinV();
-        float minu = sprite.getMinU() + atlasscaleU * uOff;
-        float minv = sprite.getMinV() + atlasscaleV * vOff;
+        float atlasscaleU = sprite.getU1() - sprite.getU0();
+        float atlasscaleV = sprite.getV1() - sprite.getV0();
+        float minu = sprite.getU0() + atlasscaleU * uOff;
+        float minv = sprite.getV0() + atlasscaleV * vOff;
         float maxu = minu + atlasscaleU * w;
         float maxv = minv + atlasscaleV * h;
         float maxv2 = minv + atlasscaleV * w;
@@ -171,8 +171,8 @@ public class RendererUtil {
 
     public static void addVert(IVertexBuilder builder, MatrixStack matrixStackIn, float x, float y, float z, float u, float v, float r, float g,
                                float b, float a, int lu, int lv, float nx, float ny, float nz) {
-        builder.pos(matrixStackIn.getLast().getMatrix(), x, y, z).color(r, g, b, a).tex(u, v).overlay(OverlayTexture.NO_OVERLAY).lightmap(lu, lv)
-                .normal(matrixStackIn.getLast().getNormal(), nx, ny, nz).endVertex();
+        builder.vertex(matrixStackIn.last().pose(), x, y, z).color(r, g, b, a).uv(u, v).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lu, lv)
+                .normal(matrixStackIn.last().normal(), nx, ny, nz).endVertex();
     }
 
                 //RendererUtil.renderFish(builder, matrixStackIn, wo, ho, fishType,240 , combinedOverlayIn);
@@ -187,17 +187,17 @@ public class RendererUtil {
         int fishv = fishType % (textH/fishH);
         int fishu = fishType / (textH/fishH);
 
-        TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(Textures.FISHIES_TEXTURE);
+        TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(Textures.FISHIES_TEXTURE);
         float w = fishW / (float)textW;
         float h = fishH / (float)textH;
         float hw = 4*w / 2f;
         float hh = 2*h / 2f;
         int lu = combinedLightIn & '\uffff';
         int lv = combinedLightIn >> 16 & '\uffff';
-        float atlasscaleU = sprite.getMaxU() - sprite.getMinU();
-        float atlasscaleV = sprite.getMaxV() - sprite.getMinV();
-        float minu = sprite.getMinU() + atlasscaleU * fishu * w;
-        float minv = sprite.getMinV() + atlasscaleV * fishv * h;
+        float atlasscaleU = sprite.getU1() - sprite.getU0();
+        float atlasscaleV = sprite.getV1() - sprite.getV0();
+        float minu = sprite.getU0() + atlasscaleU * fishu * w;
+        float minv = sprite.getV0() + atlasscaleV * fishv * h;
         float maxu = atlasscaleU * w + minu;
         float maxv = atlasscaleV * h + minv;
 
@@ -209,7 +209,7 @@ public class RendererUtil {
                 addVert(builder, matrixStackIn, -hw + Math.abs(wo / 2), -hh + ho, -wo, maxu, maxv, 1, 1, 1, 1, lu, lv, 0, 1, 0);
                 addVert(builder, matrixStackIn, -hw + Math.abs(wo / 2), hh + ho, -wo, maxu, minv, 1, 1, 1, 1, lu, lv, 0, 1, 0);
                 addVert(builder, matrixStackIn, hw - Math.abs(wo / 2), hh + ho, +wo, minu, minv, 1, 1, 1, 1, lu, lv, 0, 1, 0);
-                matrixStackIn.rotate(Const.Y180);
+                matrixStackIn.mulPose(Const.Y180);
                 float temp = minu;
                 minu = maxu;
                 maxu = temp;

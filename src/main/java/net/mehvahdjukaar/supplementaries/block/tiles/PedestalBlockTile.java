@@ -23,36 +23,36 @@ public class PedestalBlockTile extends ItemDisplayTile implements ITickableTileE
 
     //hijacking this method to work with hoppers & multiplayer
     @Override
-    public void markDirty() {
+    public void setChanged() {
         //this.updateServerAndClient();
         this.updateTile();
-        super.markDirty();
+        super.setChanged();
     }
 
 
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
-        return new AxisAlignedBB(pos, pos.add(1, 2, 1));
+        return new AxisAlignedBB(worldPosition, worldPosition.offset(1, 2, 1));
     }
 
     @Override
     public void tick() {
-        if(this.world.isRemote)this.counter++;
+        if(this.level.isClientSide)this.counter++;
     }
 
     public void updateTile() {
         //TODO: rewrite this
-        if(!this.world.isRemote()) {
+        if(!this.level.isClientSide()) {
             BlockState state = this.getBlockState();
             boolean hasItem = !this.isEmpty();
-            BlockState newstate = state.with(PedestalBlock.HAS_ITEM, hasItem)
-                    .with(PedestalBlock.UP, PedestalBlock.canConnect(world.getBlockState(pos.up()), pos, world, Direction.UP, hasItem));
+            BlockState newstate = state.setValue(PedestalBlock.HAS_ITEM, hasItem)
+                    .setValue(PedestalBlock.UP, PedestalBlock.canConnect(level.getBlockState(worldPosition.above()), worldPosition, level, Direction.UP, hasItem));
             if (state != newstate) {
-                this.world.setBlockState(this.pos, newstate, 3);
+                this.level.setBlock(this.worldPosition, newstate, 3);
             }
         }
 
-        Item it = getStackInSlot(0).getItem();
+        Item it = getItem(0).getItem();
         if (it instanceof BlockItem){
             this.type=1;
         }
@@ -72,15 +72,15 @@ public class PedestalBlockTile extends ItemDisplayTile implements ITickableTileE
 
     //TODO: put yaw inside blockstate so it can be rotated
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
-        super.read(state, compound);
+    public void load(BlockState state, CompoundNBT compound) {
+        super.load(state, compound);
         this.type=compound.getInt("Type");
         this.yaw=compound.getFloat("Yaw");
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
+    public CompoundNBT save(CompoundNBT compound) {
+        super.save(compound);
         compound.putInt("Type",this.type);
         compound.putFloat("Yaw",this.yaw);
         return compound;
@@ -92,12 +92,12 @@ public class PedestalBlockTile extends ItemDisplayTile implements ITickableTileE
     }
 
     @Override
-    public boolean canInsertItem(int index, ItemStack stack, @Nullable Direction direction) {
-        return this.isItemValidForSlot(index, stack);
+    public boolean canPlaceItemThroughFace(int index, ItemStack stack, @Nullable Direction direction) {
+        return this.canPlaceItem(index, stack);
     }
 
     @Override
-    public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
+    public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
         return true;
     }
 

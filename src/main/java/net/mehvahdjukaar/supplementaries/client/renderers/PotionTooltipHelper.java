@@ -19,23 +19,23 @@ import java.util.Map;
 import static net.minecraft.potion.PotionUtils.*;
 
 public class PotionTooltipHelper {
-    private static final IFormattableTextComponent EMPTY = (new TranslationTextComponent("effect.none")).mergeStyle(TextFormatting.GRAY);
+    private static final IFormattableTextComponent EMPTY = (new TranslationTextComponent("effect.none")).withStyle(TextFormatting.GRAY);
 
     //I need this cause I'm using block entity tag so I can't give PotionUtil methods an itemStack directly
     public static void addPotionTooltip(@Nullable CompoundNBT com, List<ITextComponent> tooltip, float durationFactor) {
-        List<EffectInstance> list = getEffectsFromTag(com);
+        List<EffectInstance> list = getAllEffects(com);
         List<Pair<Attribute, AttributeModifier>> list1 = Lists.newArrayList();
         if (list.isEmpty()) {
             tooltip.add(EMPTY);
         } else {
             for(EffectInstance effectinstance : list) {
-                IFormattableTextComponent iformattabletextcomponent = new TranslationTextComponent(effectinstance.getEffectName());
-                Effect effect = effectinstance.getPotion();
-                Map<Attribute, AttributeModifier> map = effect.getAttributeModifierMap();
+                IFormattableTextComponent iformattabletextcomponent = new TranslationTextComponent(effectinstance.getDescriptionId());
+                Effect effect = effectinstance.getEffect();
+                Map<Attribute, AttributeModifier> map = effect.getAttributeModifiers();
                 if (!map.isEmpty()) {
                     for(Map.Entry<Attribute, AttributeModifier> entry : map.entrySet()) {
                         AttributeModifier attributemodifier = entry.getValue();
-                        AttributeModifier attributemodifier1 = new AttributeModifier(attributemodifier.getName(), effect.getAttributeModifierAmount(effectinstance.getAmplifier(), attributemodifier), attributemodifier.getOperation());
+                        AttributeModifier attributemodifier1 = new AttributeModifier(attributemodifier.getName(), effect.getAttributeModifierValue(effectinstance.getAmplifier(), attributemodifier), attributemodifier.getOperation());
                         list1.add(new Pair<>(entry.getKey(), attributemodifier1));
                     }
                 }
@@ -45,16 +45,16 @@ public class PotionTooltipHelper {
                 }
 
                 if (effectinstance.getDuration() > 20) {
-                    iformattabletextcomponent = new TranslationTextComponent("potion.withDuration", iformattabletextcomponent, EffectUtils.getPotionDurationString(effectinstance, durationFactor));
+                    iformattabletextcomponent = new TranslationTextComponent("potion.withDuration", iformattabletextcomponent, EffectUtils.formatDuration(effectinstance, durationFactor));
                 }
 
-                tooltip.add(iformattabletextcomponent.mergeStyle(effect.getEffectType().getColor()));
+                tooltip.add(iformattabletextcomponent.withStyle(effect.getCategory().getTooltipFormatting()));
             }
         }
 
         if (!list1.isEmpty()) {
             tooltip.add(StringTextComponent.EMPTY);
-            tooltip.add((new TranslationTextComponent("potion.whenDrank")).mergeStyle(TextFormatting.DARK_PURPLE));
+            tooltip.add((new TranslationTextComponent("potion.whenDrank")).withStyle(TextFormatting.DARK_PURPLE));
 
             for(Pair<Attribute, AttributeModifier> pair : list1) {
                 AttributeModifier attributemodifier2 = pair.getSecond();
@@ -67,21 +67,21 @@ public class PotionTooltipHelper {
                 }
 
                 if (d0 > 0.0D) {
-                    tooltip.add((new TranslationTextComponent("attribute.modifier.plus." + attributemodifier2.getOperation().getId(), ItemStack.DECIMALFORMAT.format(d1), new TranslationTextComponent(pair.getFirst().getAttributeName()))).mergeStyle(TextFormatting.BLUE));
+                    tooltip.add((new TranslationTextComponent("attribute.modifier.plus." + attributemodifier2.getOperation().toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(d1), new TranslationTextComponent(pair.getFirst().getDescriptionId()))).withStyle(TextFormatting.BLUE));
                 } else if (d0 < 0.0D) {
                     d1 = d1 * -1.0D;
-                    tooltip.add((new TranslationTextComponent("attribute.modifier.take." + attributemodifier2.getOperation().getId(), ItemStack.DECIMALFORMAT.format(d1), new TranslationTextComponent(pair.getFirst().getAttributeName()))).mergeStyle(TextFormatting.RED));
+                    tooltip.add((new TranslationTextComponent("attribute.modifier.take." + attributemodifier2.getOperation().toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(d1), new TranslationTextComponent(pair.getFirst().getDescriptionId()))).withStyle(TextFormatting.RED));
                 }
             }
         }
 
     }
 
-    public static int getColor(@Nullable CompoundNBT com) {
+    public static int getColorFromNBT(@Nullable CompoundNBT com) {
         if (com != null && com.contains("CustomPotionColor", 99)) {
             return com.getInt("CustomPotionColor");
         } else {
-            return getPotionTypeFromNBT(com) == Potions.EMPTY ? 16253176 : getPotionColorFromEffectList(getEffectsFromTag(com));
+            return getPotion(com) == Potions.EMPTY ? 16253176 : getColor(getAllEffects(com));
         }
     }
 }

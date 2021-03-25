@@ -11,7 +11,7 @@
         "parent": "minecraft:recipes/root",
         "rewards": {
           "recipes": [
-            "supplementaries:rope_arrow_create_recipe"
+            "supplementaries:rope_arrow_create"
           ]
         },
         "criteria": {
@@ -28,7 +28,7 @@
           "has_the_recipe": {
             "trigger": "minecraft:recipe_unlocked",
             "conditions": {
-              "recipe": "supplementaries:rope_arrow_create_recipe"
+              "recipe": "supplementaries:rope_arrow_create"
             }
           }
         },

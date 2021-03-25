@@ -17,7 +17,7 @@ import net.minecraft.util.math.vector.Vector3f;
 
 
 public class ClockBlockTileRenderer extends TileEntityRenderer<ClockBlockTile> {
-    public static final RenderMaterial HAND_TEXTURE = new RenderMaterial(AtlasTexture.LOCATION_BLOCKS_TEXTURE, Textures.CLOCK_HAND_TEXTURE);
+    public static final RenderMaterial HAND_TEXTURE = new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, Textures.CLOCK_HAND_TEXTURE);
     public final ModelRenderer hourHand = new ModelRenderer(16, 16, 0, 0);
     public final ModelRenderer minuteHand = new ModelRenderer(16, 16, 2, 0);
 
@@ -26,9 +26,9 @@ public class ClockBlockTileRenderer extends TileEntityRenderer<ClockBlockTile> {
         super(rendererDispatcherIn);
 
         this.hourHand.addBox(-0.5F, 0.0F, 0.0F, 1.0F, 5.0F, 0.0F, 0.0F, false);
-        this.hourHand.setRotationPoint(0.0F, 24.0F, 0.0F);
+        this.hourHand.setPos(0.0F, 24.0F, 0.0F);
         this.minuteHand.addBox(-0.5F, 0.0F, 0.0F, 1.0F, 6.0F, 0.0F, 0.0F, false);
-        this.minuteHand.setRotationPoint(0.0F, 24.0F, 0.0F);
+        this.minuteHand.setPos(0.0F, 24.0F, 0.0F);
 
     }
 
@@ -37,35 +37,35 @@ public class ClockBlockTileRenderer extends TileEntityRenderer<ClockBlockTile> {
     public void render(ClockBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
 
-        IVertexBuilder builder = HAND_TEXTURE.getBuffer(bufferIn, RenderType::getEntityCutoutNoCull);
+        IVertexBuilder builder = HAND_TEXTURE.buffer(bufferIn, RenderType::entityCutoutNoCull);
 
-        matrixStackIn.push();
+        matrixStackIn.pushPose();
         matrixStackIn.translate(0.5d, 0.5d, 0.5d);
-        matrixStackIn.rotate(tile.getDirection().getRotation());
+        matrixStackIn.mulPose(tile.getDirection().getRotation());
 
-        matrixStackIn.rotate(Const.X90);
+        matrixStackIn.mulPose(Const.X90);
 
         //hours
-        matrixStackIn.push();
+        matrixStackIn.pushPose();
 
-        matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(MathHelper.interpolateAngle(partialTicks, tile.prevRoll, tile.roll)));
+        matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(MathHelper.rotLerp(partialTicks, tile.prevRoll, tile.roll)));
         matrixStackIn.translate(0,-1.5, -0.5+0.02083333);
 
         this.hourHand.render(matrixStackIn, builder, combinedLightIn,combinedOverlayIn,1,1,1,1);
 
-        matrixStackIn.pop();
+        matrixStackIn.popPose();
 
         //minutes
-        matrixStackIn.push();
+        matrixStackIn.pushPose();
 
-        matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(MathHelper.interpolateAngle(partialTicks, tile.sPrevRoll, tile.sRoll)));
+        matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(MathHelper.rotLerp(partialTicks, tile.sPrevRoll, tile.sRoll)));
         matrixStackIn.translate(0,-1.5, -0.5+0.04166667);
 
         this.minuteHand.render(matrixStackIn, builder, combinedLightIn,combinedOverlayIn,1,1,1,1);
 
-        matrixStackIn.pop();
+        matrixStackIn.popPose();
 
-        matrixStackIn.pop();
+        matrixStackIn.popPose();
     }
 
 

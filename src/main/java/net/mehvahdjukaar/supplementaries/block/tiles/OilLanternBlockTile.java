@@ -16,8 +16,8 @@ public class OilLanternBlockTile extends EnhancedLanternBlockTile{
 
     @Override
     public void tick() {
-        if(this.world.isRemote){
-            if(this.getBlockState().get(OilLanternBlock.FACE)!=AttachFace.FLOOR)
+        if(this.level.isClientSide){
+            if(this.getBlockState().getValue(OilLanternBlock.FACE)!=AttachFace.FLOOR)
                 super.tick();
         }
     }

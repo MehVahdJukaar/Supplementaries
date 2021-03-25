@@ -4,7 +4,7 @@ import net.minecraft.block.material.MaterialColor;
 
 
 public enum TheBumblezoneWoodTypes implements IWoodType {
-    BEESWAX_PLANKS("beeswax",MaterialColor.YELLOW);
+    BEESWAX_PLANKS("beeswax",MaterialColor.COLOR_YELLOW);
 
     private final String name;
     private final MaterialColor color;

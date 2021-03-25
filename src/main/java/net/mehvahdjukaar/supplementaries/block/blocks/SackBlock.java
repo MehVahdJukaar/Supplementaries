@@ -46,10 +46,10 @@ import java.util.List;
 import java.util.Random;
 
 public class SackBlock extends FallingBlock {
-    public static final VoxelShape SHAPE_CLOSED = VoxelShapes.or(Block.makeCuboidShape(2,0,2,14,12,14),
-            Block.makeCuboidShape(6,12,6,10,13,10),Block.makeCuboidShape(5,13,5,11,16,11));
-    public static final VoxelShape SHAPE_OPEN = VoxelShapes.or(Block.makeCuboidShape(2,0,2,14,12,14),
-            Block.makeCuboidShape(6,12,6,10,13,10),Block.makeCuboidShape(3,13,3,13,14,13));
+    public static final VoxelShape SHAPE_CLOSED = VoxelShapes.or(Block.box(2,0,2,14,12,14),
+            Block.box(6,12,6,10,13,10),Block.box(5,13,5,11,16,11));
+    public static final VoxelShape SHAPE_OPEN = VoxelShapes.or(Block.box(2,0,2,14,12,14),
+            Block.box(6,12,6,10,13,10),Block.box(3,13,3,13,14,13));
 
 
     public static final ResourceLocation CONTENTS = new ResourceLocation("contents");
@@ -58,7 +58,7 @@ public class SackBlock extends FallingBlock {
 
     public SackBlock(AbstractBlock.Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(OPEN, false).with(WATERLOGGED,false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(OPEN, false).setValue(WATERLOGGED,false));
     }
 
     @Override
@@ -68,48 +68,48 @@ public class SackBlock extends FallingBlock {
 
     //falling block
     @Override
-    public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+    public void onPlace(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
         if(state.getBlock()!=oldState.getBlock())
-            worldIn.getPendingBlockTicks().scheduleTick(pos, this, this.getFallDelay());
+            worldIn.getBlockTicks().scheduleTick(pos, this, this.getDelayAfterPlace());
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(OPEN,WATERLOGGED);
     }
 
     @Override
     public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
     @Override
-    public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
-        if (stateIn.get(WATERLOGGED)) {
-            worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
+        if (stateIn.getValue(WATERLOGGED)) {
+            worldIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
         }
-        return super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+        return super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        boolean flag = context.getWorld().getFluidState(context.getPos()).getFluid() == Fluids.WATER;
-        return this.getDefaultState().with(WATERLOGGED, flag);
+        boolean flag = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;
+        return this.defaultBlockState().setValue(WATERLOGGED, flag);
     }
 
     //@Override
     //protected void onStartFalling(FallingBlockEntity fallingEntity) { fallingEntity.setHurtEntities(true); }
 
     public static boolean canFall(BlockPos pos, IWorld world){
-        return (world.isAirBlock(pos.down()) || canFallThrough(world.getBlockState(pos.down()))) &&
-                 pos.getY() >= 0 && !RopeBlock.isSupportingCeiling(pos.up(),world);
+        return (world.isEmptyBlock(pos.below()) || isFree(world.getBlockState(pos.below()))) &&
+                 pos.getY() >= 0 && !RopeBlock.isSupportingCeiling(pos.above(),world);
     }
 
     //schedule block tick
     @Override
     public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
 
-        TileEntity tileentity = worldIn.getTileEntity(pos);
+        TileEntity tileentity = worldIn.getBlockEntity(pos);
         if (tileentity instanceof SackBlockTile) {
             SackBlockTile te = ((SackBlockTile)tileentity);
             te.barrelTick();
@@ -117,23 +117,23 @@ public class SackBlock extends FallingBlock {
             if (canFall(pos,worldIn)) {
                 FallingBlockEntity fallingblockentity = new FallingBlockEntity(worldIn, (double)pos.getX() + 0.5D, pos.getY(), (double)pos.getZ() + 0.5D, worldIn.getBlockState(pos)){
                     @Override
-                    public ItemEntity entityDropItem(IItemProvider itemIn, int offset) {
+                    public ItemEntity spawnAtLocation(IItemProvider itemIn, int offset) {
                         ItemStack stack = new ItemStack(itemIn);
-                        if(itemIn instanceof Block && ((Block) itemIn).getDefaultState().hasTileEntity()){
-                            stack.setTagInfo("BlockEntityTag", this.tileEntityData);
+                        if(itemIn instanceof Block && ((Block) itemIn).defaultBlockState().hasTileEntity()){
+                            stack.addTagElement("BlockEntityTag", this.blockData);
                         }
-                        return this.entityDropItem(stack, (float)offset);
+                        return this.spawnAtLocation(stack, (float)offset);
                     }
                     //why are values private?? I have to do this...
                     @Override
-                    public boolean onLivingFall(float distance, float damageMultiplier) {
+                    public boolean causeFallDamage(float distance, float damageMultiplier) {
                         int i = MathHelper.ceil(distance - 1.0F);
                         if (i > 0) {
-                            List<Entity> list = Lists.newArrayList(this.world.getEntitiesWithinAABBExcludingEntity(this, this.getBoundingBox()));
+                            List<Entity> list = Lists.newArrayList(this.level.getEntities(this, this.getBoundingBox()));
                             DamageSource damagesource =  DamageSource.FALLING_BLOCK;
                             //half anvil damage
                             for(Entity entity : list) {
-                                entity.attackEntityFrom(damagesource, (float)Math.min(MathHelper.floor((float)i * 1), 20));
+                                entity.hurt(damagesource, (float)Math.min(MathHelper.floor((float)i * 1), 20));
                             }
                         }
                         return false;
@@ -141,17 +141,17 @@ public class SackBlock extends FallingBlock {
 
                 };
                 CompoundNBT com = new CompoundNBT();
-                te.write(com);
-                fallingblockentity.tileEntityData = com;
-                this.onStartFalling(fallingblockentity);
-                worldIn.addEntity(fallingblockentity);
+                te.save(com);
+                fallingblockentity.blockData = com;
+                this.falling(fallingblockentity);
+                worldIn.addFreshEntity(fallingblockentity);
             }
 
         }
     }
 
     @Override
-    public boolean allowsMovement(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
+    public boolean isPathfindable(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
         return false;
     }
 
@@ -166,17 +166,17 @@ public class SackBlock extends FallingBlock {
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if (worldIn.isRemote) {
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if (worldIn.isClientSide) {
             return ActionResultType.SUCCESS;
         } else if (player.isSpectator()) {
             return ActionResultType.CONSUME;
         } else {
-            TileEntity tileentity = worldIn.getTileEntity(pos);
+            TileEntity tileentity = worldIn.getBlockEntity(pos);
             if (tileentity instanceof SackBlockTile) {
 
-                player.openContainer((INamedContainerProvider) tileentity);
-                PiglinTasks.func_234478_a_(player, true);
+                player.openMenu((INamedContainerProvider) tileentity);
+                PiglinTasks.angerNearbyPiglins(player, true);
 
                 return ActionResultType.CONSUME;
             } else {
@@ -186,39 +186,39 @@ public class SackBlock extends FallingBlock {
     }
 
     @Override
-    public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
-        TileEntity tileentity = worldIn.getTileEntity(pos);
+    public void playerWillDestroy(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
+        TileEntity tileentity = worldIn.getBlockEntity(pos);
         if (tileentity instanceof SackBlockTile) {
             SackBlockTile sack = (SackBlockTile)tileentity;
-            if (!worldIn.isRemote && player.isCreative() && !sack.isEmpty()) {
+            if (!worldIn.isClientSide && player.isCreative() && !sack.isEmpty()) {
                 CompoundNBT compoundnbt = sack.saveToNbt(new CompoundNBT());
                 ItemStack itemstack = new ItemStack(this.getBlock());
                 if (!compoundnbt.isEmpty()) {
-                    itemstack.setTagInfo("BlockEntityTag", compoundnbt);
+                    itemstack.addTagElement("BlockEntityTag", compoundnbt);
                 }
 
                 if (sack.hasCustomName()) {
-                    itemstack.setDisplayName(sack.getCustomName());
+                    itemstack.setHoverName(sack.getCustomName());
                 }
 
                 ItemEntity itementity = new ItemEntity(worldIn, (double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, itemstack);
-                itementity.setDefaultPickupDelay();
-                worldIn.addEntity(itementity);
+                itementity.setDefaultPickUpDelay();
+                worldIn.addFreshEntity(itementity);
             } else {
-                sack.fillWithLoot(player);
+                sack.unpackLootTable(player);
             }
         }
-        super.onBlockHarvested(worldIn, pos, state, player);
+        super.playerWillDestroy(worldIn, pos, state, player);
     }
 
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
-        TileEntity tileentity = builder.get(LootParameters.BLOCK_ENTITY);
+        TileEntity tileentity = builder.getOptionalParameter(LootParameters.BLOCK_ENTITY);
         if (tileentity instanceof SackBlockTile) {
             SackBlockTile sack = (SackBlockTile)tileentity;
             builder = builder.withDynamicDrop(CONTENTS, (context, stackConsumer) -> {
-                for(int i = 0; i < sack.getSizeInventory(); ++i) {
-                    stackConsumer.accept(sack.getStackInSlot(i));
+                for(int i = 0; i < sack.getContainerSize(); ++i) {
+                    stackConsumer.accept(sack.getItem(i));
                 }
             });
         }
@@ -228,64 +228,64 @@ public class SackBlock extends FallingBlock {
     //pick block
     @Override
     public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
-        ItemStack itemstack = super.getItem(world, pos, state);
-        TileEntity te = world.getTileEntity(pos);
+        ItemStack itemstack = super.getCloneItemStack(world, pos, state);
+        TileEntity te = world.getBlockEntity(pos);
         if (te instanceof SackBlockTile){
             CompoundNBT compoundnbt = ((SackBlockTile)te).saveToNbt(new CompoundNBT());
             if (!compoundnbt.isEmpty()) {
-                itemstack.setTagInfo("BlockEntityTag", compoundnbt);
+                itemstack.addTagElement("BlockEntityTag", compoundnbt);
             }
         }
         return itemstack;
     }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        if (stack.hasDisplayName()) {
-            TileEntity tileentity = worldIn.getTileEntity(pos);
+    public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+        if (stack.hasCustomHoverName()) {
+            TileEntity tileentity = worldIn.getBlockEntity(pos);
             if (tileentity instanceof SackBlockTile) {
-                ((LockableTileEntity) tileentity).setCustomName(stack.getDisplayName());
+                ((LockableTileEntity) tileentity).setCustomName(stack.getHoverName());
             }
         }
     }
 
     @Override
-    public PushReaction getPushReaction(BlockState state) {
+    public PushReaction getPistonPushReaction(BlockState state) {
         return PushReaction.DESTROY;
     }
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        if(state.get(OPEN))
+        if(state.getValue(OPEN))
             return SHAPE_OPEN;
         return SHAPE_CLOSED;
     }
 
     @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (!state.isIn(newState.getBlock())) {
-            TileEntity tileentity = worldIn.getTileEntity(pos);
+    public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (!state.is(newState.getBlock())) {
+            TileEntity tileentity = worldIn.getBlockEntity(pos);
             if (tileentity instanceof SackBlockTile) {
-                worldIn.updateComparatorOutputLevel(pos, state.getBlock());
+                worldIn.updateNeighbourForOutputSignal(pos, state.getBlock());
             }
 
-            super.onReplaced(state, worldIn, pos, newState, isMoving);
+            super.onRemove(state, worldIn, pos, newState, isMoving);
         }
     }
 
     @Override
-    public boolean hasComparatorInputOverride(BlockState state) {
+    public boolean hasAnalogOutputSignal(BlockState state) {
         return true;
     }
 
     @Override
-    public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
-        return Container.calcRedstoneFromInventory((IInventory)worldIn.getTileEntity(pos));
+    public int getAnalogOutputSignal(BlockState blockState, World worldIn, BlockPos pos) {
+        return Container.getRedstoneSignalFromContainer((IInventory)worldIn.getBlockEntity(pos));
     }
 
     @Override
-    public INamedContainerProvider getContainer(BlockState state, World worldIn, BlockPos pos) {
-        TileEntity tileentity = worldIn.getTileEntity(pos);
+    public INamedContainerProvider getMenuProvider(BlockState state, World worldIn, BlockPos pos) {
+        TileEntity tileentity = worldIn.getBlockEntity(pos);
         return tileentity instanceof INamedContainerProvider ? (INamedContainerProvider)tileentity : null;
     }
 

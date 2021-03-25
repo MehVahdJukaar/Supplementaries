@@ -18,12 +18,14 @@ import net.minecraft.world.World;
 import java.util.Random;
 import java.util.function.Supplier;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class SconceLeverBlock extends SconceWallBlock{
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     public SconceLeverBlock(Properties properties, Supplier<BasicParticleType> particleData) {
         super(properties, particleData);
-        this.setDefaultState(this.stateContainer.getBaseState().with(POWERED,false)
-                .with(FACING, Direction.NORTH).with(WATERLOGGED, false).with(LIT, true));
+        this.registerDefaultState(this.stateDefinition.any().setValue(POWERED,false)
+                .setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false).setValue(LIT, true));
     }
 
     //need to update neighbours too
@@ -34,82 +36,82 @@ public class SconceLeverBlock extends SconceWallBlock{
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        ActionResultType result = super.onBlockActivated(state,worldIn,pos,player,handIn,hit);
-        if(result.isSuccessOrConsume()) {
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        ActionResultType result = super.use(state,worldIn,pos,player,handIn,hit);
+        if(result.consumesAction()) {
             this.updateNeighbors(state, worldIn, pos);
             return result;
         }
-        if (worldIn.isRemote) {
-            state.func_235896_a_(POWERED);
+        if (worldIn.isClientSide) {
+            state.cycle(POWERED);
             return ActionResultType.SUCCESS;
         } else {
             BlockState blockstate = this.setPowered(state, worldIn, pos);
-            float f = blockstate.get(POWERED) ? 0.6F : 0.5F;
-            worldIn.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 0.3F, f);
+            float f = blockstate.getValue(POWERED) ? 0.6F : 0.5F;
+            worldIn.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundCategory.BLOCKS, 0.3F, f);
             return ActionResultType.CONSUME;
         }
     }
     public BlockState setPowered(BlockState state, World world, BlockPos pos) {
-        state = state.func_235896_a_(POWERED);
-        world.setBlockState(pos, state, 3);
+        state = state.cycle(POWERED);
+        world.setBlock(pos, state, 3);
         this.updateNeighbors(state, world, pos);
         return state;
     }
 
     @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (!isMoving && !state.isIn(newState.getBlock())) {
-            if (state.get(POWERED)) {
+    public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (!isMoving && !state.is(newState.getBlock())) {
+            if (state.getValue(POWERED)) {
                 this.updateNeighbors(state, worldIn, pos);
             }
 
-            super.onReplaced(state, worldIn, pos, newState, isMoving);
+            super.onRemove(state, worldIn, pos, newState, isMoving);
         }
     }
 
     @Override
-    public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
-        return blockState.get(POWERED)^!blockState.get(LIT) ? 15 : 0;
+    public int getSignal(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+        return blockState.getValue(POWERED)^!blockState.getValue(LIT) ? 15 : 0;
     }
 
     @Override
-    public int getStrongPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
-        return blockState.get(POWERED)^!blockState.get(LIT)  && getFacing(blockState) == side ? 15 : 0;
+    public int getDirectSignal(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+        return blockState.getValue(POWERED)^!blockState.getValue(LIT)  && getFacing(blockState) == side ? 15 : 0;
     }
     @Override
-    public boolean canProvidePower(BlockState state) {
+    public boolean isSignalSource(BlockState state) {
         return true;
     }
 
     private void updateNeighbors(BlockState state, World world, BlockPos pos) {
-        world.notifyNeighborsOfStateChange(pos, this);
-        world.notifyNeighborsOfStateChange(pos.offset(getFacing(state).getOpposite()), this);
+        world.updateNeighborsAt(pos, this);
+        world.updateNeighborsAt(pos.relative(getFacing(state).getOpposite()), this);
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        super.fillStateContainer(builder);
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
         builder.add(POWERED);
     }
 
     protected static Direction getFacing(BlockState state) {
-        return state.get(FACING);
+        return state.getValue(FACING);
     }
 
     @Override
     public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
-        if(!stateIn.get(POWERED)) {
+        if(!stateIn.getValue(POWERED)) {
             super.animateTick(stateIn, worldIn, pos, rand);
         }
-        else if(stateIn.get(LIT)){
-            Direction direction = stateIn.get(FACING);
+        else if(stateIn.getValue(LIT)){
+            Direction direction = stateIn.getValue(FACING);
             double d0 = (double) pos.getX() + 0.5D;
             double d1 = (double) pos.getY() + 0.65D;
             double d2 = (double) pos.getZ() + 0.5D;
             Direction direction1 = direction.getOpposite();
-            worldIn.addParticle(ParticleTypes.SMOKE, d0 + 0.125D * (double) direction1.getXOffset(), d1 + 0.15D, d2 + 0.125D * (double) direction1.getZOffset(), 0.0D, 0.0D, 0.0D);
-            worldIn.addParticle(this.particleData.get(), d0 + 0.125D * (double) direction1.getXOffset(), d1 + 0.15D, d2 + 0.125D * (double) direction1.getZOffset(), 0.0D, 0.0D, 0.0D);
+            worldIn.addParticle(ParticleTypes.SMOKE, d0 + 0.125D * (double) direction1.getStepX(), d1 + 0.15D, d2 + 0.125D * (double) direction1.getStepZ(), 0.0D, 0.0D, 0.0D);
+            worldIn.addParticle(this.particleData.get(), d0 + 0.125D * (double) direction1.getStepX(), d1 + 0.15D, d2 + 0.125D * (double) direction1.getStepZ(), 0.0D, 0.0D, 0.0D);
         }
     }
 }

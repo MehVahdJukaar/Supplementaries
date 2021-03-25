@@ -1,7 +1,7 @@
 {
   "itemGroup.supplementaries": "Supplementaries",
   "block.supplementaries.faucet": "Faucet",
-  "block.supplementaries.hanging_sign": "Hunging Sign",
+  "block.supplementaries.hanging_sign": "Hanging Sign",
   "block.supplementaries.wall_lantern": "Wall Lantern",
   "block.supplementaries.planter": "Planter",
   "block.supplementaries.bellows": "Bellows",
@@ -68,7 +68,7 @@
   "message.supplementaries.sack": "Quite heavy to carry",
   "message.supplementaries.globe": "Sold by the Wandering Trader",
   "message.supplementaries.wind_vane": "Reacts to weather",
-  "message.supplementaries.hanging_pot": "Can be hunged",
+  "message.supplementaries.hanging_pot": "Can be hung",
   "message.supplementaries.double_cake": "Stackable in block form",
   "block.supplementaries.double_cake": "Double Cake",
   "message.supplementaries.safe.unbound": "Unbound",
@@ -131,6 +131,8 @@
   "block.supplementaries.magma_cream_block": "Magma Cream Block",
   "message.supplementaries.magma_cream_block": "Install Quark for full functionality",
   "message.supplementaries.command.configs": "Install Configured to access configs",
+  "item.supplementaries.bomb_blue": "Blue Bomb",
+  "fluid.supplementaries.sap": "Sap",
 
   "item.supplementaries.key_chain": "Key Chain",
   "block.supplementaries.skull_candle": "Skull Candle",

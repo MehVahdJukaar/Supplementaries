@@ -31,6 +31,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
 
+import net.minecraft.item.Item.Properties;
+
 public class CageItem extends BlockItem {
     public final Supplier<Item> empty;
     public CageItem(Block blockIn, Properties properties, Supplier<Item> empty) {
@@ -40,24 +42,24 @@ public class CageItem extends BlockItem {
 
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
-        CompoundNBT compoundnbt = stack.getChildTag("BlockEntityTag");
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+        CompoundNBT compoundnbt = stack.getTagElement("BlockEntityTag");
         if (compoundnbt != null) {
             CompoundNBT com = compoundnbt.getCompound("MobHolder");
             if(com==null||com.isEmpty()) com = compoundnbt.getCompound("BucketHolder");
             if (com != null) {
                 if (com.contains("Name")) {
-                    tooltip.add(new StringTextComponent(com.getString("Name")).mergeStyle(TextFormatting.GRAY));
-                    if(!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().gameSettings.advancedItemTooltips)return;
-                    tooltip.add(new TranslationTextComponent("message.supplementaries.cage").mergeStyle(TextFormatting.ITALIC).mergeStyle(TextFormatting.GRAY));
+                    tooltip.add(new StringTextComponent(com.getString("Name")).withStyle(TextFormatting.GRAY));
+                    if(!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().options.advancedItemTooltips)return;
+                    tooltip.add(new TranslationTextComponent("message.supplementaries.cage").withStyle(TextFormatting.ITALIC).withStyle(TextFormatting.GRAY));
                 }
             }
         }
         else{
             CompoundNBT c = stack.getTag();
             if(c!=null&&(c.contains("JarMob")||c.contains("CachedJarMobValues")))
-                tooltip.add(new StringTextComponent("try placing me down").mergeStyle(TextFormatting.GRAY));
+                tooltip.add(new StringTextComponent("try placing me down").withStyle(TextFormatting.GRAY));
         }
 
 
@@ -65,45 +67,45 @@ public class CageItem extends BlockItem {
 
     //free mob
     @Override
-    public ActionResultType onItemUse(ItemUseContext context) {
-        ItemStack stack = context.getItem();
-        CompoundNBT com = stack.getChildTag("BlockEntityTag");
+    public ActionResultType useOn(ItemUseContext context) {
+        ItemStack stack = context.getItemInHand();
+        CompoundNBT com = stack.getTagElement("BlockEntityTag");
         PlayerEntity player = context.getPlayer();
-        if(!context.getPlayer().isSneaking() && com!=null){
+        if(!context.getPlayer().isShiftKeyDown() && com!=null){
             //TODO: add other case
             boolean success = false;
-            World world = context.getWorld();
-            Vector3d v = context.getHitVec();
+            World world = context.getLevel();
+            Vector3d v = context.getClickLocation();
             if(com.contains("BucketHolder")){
-                ItemStack bucketStack = ItemStack.read(com.getCompound("BucketHolder"));
+                ItemStack bucketStack = ItemStack.of(com.getCompound("BucketHolder"));
                 if(bucketStack.getItem() instanceof BucketItem){
-                    ((BucketItem) bucketStack.getItem()).onLiquidPlaced(world,bucketStack,context.getPos());
+                    ((BucketItem) bucketStack.getItem()).checkExtraContent(world,bucketStack,context.getClickedPos());
                     success = true;
                 }
             }
             else if(com.contains("MobHolder")) {
                 CompoundNBT nbt = com.getCompound("MobHolder");
-                Entity entity = EntityType.loadEntityAndExecute(nbt.getCompound("EntityData"), world, o -> o);
+                Entity entity = EntityType.loadEntityRecursive(nbt.getCompound("EntityData"), world, o -> o);
                 if (entity != null) {
-                    if (!world.isRemote) {
+                    if (!world.isClientSide) {
                         //anger entity
                         if (!player.isCreative() && entity instanceof IAngerable) {
                             IAngerable ang = (IAngerable) entity;
-                            ang.func_241355_J__();
-                            ang.setAngerTarget(player.getUniqueID());
-                            ang.setRevengeTarget(player);
+                            ang.forgetCurrentTargetAndRefreshUniversalAnger();
+                            ang.setPersistentAngerTarget(player.getUUID());
+                            ang.setLastHurtByMob(player);
                         }
-                        entity.setPositionAndRotation(v.getX(), v.getY(), v.getZ(), context.getPlacementYaw(), 0);
+                        entity.absMoveTo(v.x(), v.y(), v.z(), context.getRotation(), 0);
 
-                        UUID temp = entity.getUniqueID();
+                        UUID temp = entity.getUUID();
                         if (nbt.contains("UUID")) {
-                            UUID id = nbt.getUniqueId("UUID");
-                            entity.setUniqueId(id);
+                            UUID id = nbt.getUUID("UUID");
+                            entity.setUUID(id);
                         }
-                        if (!world.addEntity(entity)) {
+                        if (!world.addFreshEntity(entity)) {
                             //spawn failed, reverting to old UUID
-                            entity.setUniqueId(temp);
-                            boolean fail = world.addEntity(entity);
+                            entity.setUUID(temp);
+                            boolean fail = world.addFreshEntity(entity);
                             if (!fail) Supplementaries.LOGGER.warn("Failed to release caged mob");
                         }
                         //TODO fix sound categories
@@ -113,31 +115,31 @@ public class CageItem extends BlockItem {
                 }
             }
             if(success) {
-                world.playSound(null, v.getX(), v.getY(), v.getZ(), SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.PLAYERS, 1, 0.05f);
+                world.playSound(null, v.x(), v.y(), v.z(), SoundEvents.CHICKEN_EGG, SoundCategory.PLAYERS, 1, 0.05f);
                 if (!player.isCreative()) {
                     ItemStack returnItem = new ItemStack(empty.get());
-                    if (stack.hasDisplayName()) returnItem.setDisplayName(stack.getDisplayName());
-                    context.getPlayer().setHeldItem(context.getHand(), returnItem);
+                    if (stack.hasCustomHoverName()) returnItem.setHoverName(stack.getHoverName());
+                    context.getPlayer().setItemInHand(context.getHand(), returnItem);
                 }
-                return ActionResultType.func_233537_a_(world.isRemote);
+                return ActionResultType.sidedSuccess(world.isClientSide);
             }
         }
-        return super.onItemUse(context);
+        return super.useOn(context);
     }
 
 
 
     //remove this in the future. it's for backwards compat
     @Override
-    public ActionResultType tryPlace(BlockItemUseContext context) {
-        ActionResultType placeresult = super.tryPlace(context);
-        if(placeresult.isSuccessOrConsume()) {
-            World world = context.getWorld();
-            BlockPos pos = context.getPos();
-            TileEntity te = world.getTileEntity(pos);
+    public ActionResultType place(BlockItemUseContext context) {
+        ActionResultType placeresult = super.place(context);
+        if(placeresult.consumesAction()) {
+            World world = context.getLevel();
+            BlockPos pos = context.getClickedPos();
+            TileEntity te = world.getBlockEntity(pos);
             if(te instanceof CageBlockTile){
                 CageBlockTile mobjar = ((CageBlockTile)te);
-                CompoundNBT compound = context.getItem().getTag();
+                CompoundNBT compound = context.getItemInHand().getTag();
                 if(compound!=null&&compound.contains("JarMob")&&compound.contains("CachedJarMobValues")) {
                     CompoundNBT com2 = compound.getCompound("CachedJarMobValues");
 
@@ -147,7 +149,7 @@ public class CageItem extends BlockItem {
                     mobjar.mobHolder.specialBehaviorType = MobHolder.SpecialBehaviorType.NONE;
                     mobjar.mobHolder.name="reload needed";
 
-                    mobjar.markDirty();
+                    mobjar.setChanged();
                     //mobjar.updateMob();
 
                 }

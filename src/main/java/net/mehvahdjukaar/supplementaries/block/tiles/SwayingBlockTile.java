@@ -31,32 +31,32 @@ public abstract class SwayingBlockTile extends TileEntity implements ITickableTi
     }
 
     @Override
-    public double getMaxRenderDistanceSquared() {
+    public double getViewDistance() {
         return 128;
     }
 
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.pos, 9, this.getUpdateTag());
+        return new SUpdateTileEntityPacket(this.worldPosition, 9, this.getUpdateTag());
     }
 
     @Override
     public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundNBT());
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.read(this.getBlockState(), pkt.getNbtCompound());
+        this.load(this.getBlockState(), pkt.getTag());
     }
 
     public Direction getDirection() {
-        return this.getBlockState().get(SwayingBlock.FACING);
+        return this.getBlockState().getValue(SwayingBlock.FACING);
     }
 
     @Override
     public void tick() {
-        if (this.world.isRemote) {
+        if (this.level.isClientSide) {
             this.counter++;
 
             this.prevAngle = this.angle;

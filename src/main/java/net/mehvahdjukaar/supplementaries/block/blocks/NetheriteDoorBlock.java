@@ -17,6 +17,8 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.ModList;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class NetheriteDoorBlock extends DoorBlock {
 
     public NetheriteDoorBlock(Properties builder) {
@@ -24,23 +26,23 @@ public class NetheriteDoorBlock extends DoorBlock {
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
 
-        BlockPos p = this.hasTileEntity(state) ? pos : pos.down();
-        TileEntity te = worldIn.getTileEntity(p);
+        BlockPos p = this.hasTileEntity(state) ? pos : pos.below();
+        TileEntity te = worldIn.getBlockEntity(p);
         if (te instanceof KeyLockableTile) {
             if (((KeyLockableTile) te).handleAction(player, handIn, "door")) {
 
                 if(ModList.get().isLoaded("quark")) QuarkDoubleDoorPlugin.openDoorKey(worldIn,state,pos,player,handIn);
 
-                state = state.func_235896_a_(OPEN);
-                worldIn.setBlockState(pos, state, 10);
+                state = state.cycle(OPEN);
+                worldIn.setBlock(pos, state, 10);
                 //TODO: replace with proper sound event
-                worldIn.playEvent(player, state.get(OPEN) ? this.getOpenSound() : this.getCloseSound(), pos, 0);
+                worldIn.levelEvent(player, state.getValue(OPEN) ? this.getOpenSound() : this.getCloseSound(), pos, 0);
             }
         }
 
-        return ActionResultType.func_233537_a_(worldIn.isRemote);
+        return ActionResultType.sidedSuccess(worldIn.isClientSide);
     }
 
     @Override
@@ -50,7 +52,7 @@ public class NetheriteDoorBlock extends DoorBlock {
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         BlockState state = super.getStateForPlacement(context);
         if (state == null) return state;
-        return state.with(OPEN, false).with(POWERED, false);
+        return state.setValue(OPEN, false).setValue(POWERED, false);
     }
 
     private int getCloseSound() {
@@ -63,7 +65,7 @@ public class NetheriteDoorBlock extends DoorBlock {
 
     @Override
     public boolean hasTileEntity(BlockState state) {
-        return state.get(HALF) == DoubleBlockHalf.LOWER;
+        return state.getValue(HALF) == DoubleBlockHalf.LOWER;
     }
 
     @Override

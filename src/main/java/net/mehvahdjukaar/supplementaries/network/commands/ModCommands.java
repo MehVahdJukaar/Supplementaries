@@ -11,7 +11,7 @@ public class ModCommands {
         LiteralCommandNode<CommandSource> mymod = dispatcher.register(
                 Commands.literal(Supplementaries.MOD_ID)
                         .then(Commands.literal("globe")
-                                .requires((p) -> p.hasPermissionLevel(2))
+                                .requires((p) -> p.hasPermission(2))
                                 .then(ChangeGlobeSeedCommand.register(dispatcher))
                                 .then(ResetGlobeSeedCommand.register(dispatcher))
                         )

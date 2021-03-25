@@ -56,37 +56,37 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, 
     //update blockstate and plays sound
     public void updateBoardBlock(boolean b) {
 
-        BlockState _bs = this.world.getBlockState(this.pos);
-        if(_bs.get(BlockStateProperties.HAS_BOOK)!=b){
-            this.world.setBlockState(this.pos, _bs.with(BlockStateProperties.HAS_BOOK,b), 2);
+        BlockState _bs = this.level.getBlockState(this.worldPosition);
+        if(_bs.getValue(BlockStateProperties.HAS_BOOK)!=b){
+            this.level.setBlock(this.worldPosition, _bs.setValue(BlockStateProperties.HAS_BOOK,b), 2);
             if(b){
-                this.world.playSound(null, pos, SoundEvents.ITEM_BOOK_PAGE_TURN, SoundCategory.BLOCKS, 1F,
-                        this.world.rand.nextFloat() * 0.10F + 0.85F);
+                this.level.playSound(null, worldPosition, SoundEvents.BOOK_PAGE_TURN, SoundCategory.BLOCKS, 1F,
+                        this.level.random.nextFloat() * 0.10F + 0.85F);
             }
             else{
-                this.world.playSound(null, pos, SoundEvents.ITEM_BOOK_PAGE_TURN, SoundCategory.BLOCKS, 1F,
-                        this.world.rand.nextFloat() * 0.10F + 0.50F);
+                this.level.playSound(null, worldPosition, SoundEvents.BOOK_PAGE_TURN, SoundCategory.BLOCKS, 1F,
+                        this.level.random.nextFloat() * 0.10F + 0.50F);
             }
         }
     }
 
     //hijacking this method to work with hoppers
     @Override
-    public void markDirty() {
+    public void setChanged() {
         this.updateTile();
        //this.updateServerAndClient();
-        super.markDirty();
+        super.setChanged();
     }
 
     @Override
     public ItemStack getMapStack(){
-        return this.getStackInSlot(0);
+        return this.getItem(0);
     }
 
     public void updateTile() {
         //updateTextVisibility();
-        if(this.world != null && !this.world.isRemote()){
-            ItemStack itemstack = getStackInSlot(0);
+        if(this.level != null && !this.level.isClientSide()){
+            ItemStack itemstack = getItem(0);
             Item item = itemstack.getItem();
             String s = null;
             this.inventoryChanged = true;
@@ -94,7 +94,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, 
 
             if (item instanceof  WrittenBookItem) {
                 CompoundNBT com = itemstack.getTag();
-                if(WrittenBookItem.validBookTagContents(com)){
+                if(WrittenBookItem.makeSureTagIsValid(com)){
 
                     ListNBT listnbt = com.getList("pages", 8).copy();
                     s = listnbt.getString(0);
@@ -102,7 +102,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, 
             }
             else if(item instanceof  WritableBookItem){
                 CompoundNBT com = itemstack.getTag();
-                if(WritableBookItem.isNBTValid(com)){
+                if(WritableBookItem.makeSureTagIsValid(com)){
 
                     ListNBT listnbt = com.getList("pages", 8).copy();
                     s = listnbt.getString(0);
@@ -123,16 +123,16 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, 
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
-        super.read(state, compound);
+    public void load(BlockState state, CompoundNBT compound) {
+        super.load(state, compound);
         if (compound.contains("CustomName", 8)) {
-            this.customName = ITextComponent.Serializer.getComponentFromJson(compound.getString("CustomName"));
+            this.customName = ITextComponent.Serializer.fromJson(compound.getString("CustomName"));
         }
         this.txt = compound.getString("Text");
         this.fontScale = compound.getInt("FontScale");
         //TODO: rework this
         this.inventoryChanged = compound.getBoolean("invchanged");
-        this.textColor = DyeColor.byTranslationKey(compound.getString("Color"), DyeColor.BLACK);
+        this.textColor = DyeColor.byName(compound.getString("Color"), DyeColor.BLACK);
         this.textVisible = compound.getBoolean("TextVisible");
 
 
@@ -140,8 +140,8 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, 
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
+    public CompoundNBT save(CompoundNBT compound) {
+        super.save(compound);
         if (this.customName != null) {
             compound.putString("CustomName", ITextComponent.Serializer.toJson(this.customName));
         }
@@ -150,7 +150,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, 
         }
         compound.putInt("FontScale", this.fontScale);
         compound.putBoolean("invchanged", this.inventoryChanged);
-        compound.putString("Color", this.textColor.getTranslationKey());
+        compound.putString("Color", this.textColor.getName());
         compound.putBoolean("TextVisible", this.textVisible);
 
         // compound.putInt("light", this.packedFrontLight);
@@ -165,18 +165,18 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, 
     }
 
     @Override
-    public boolean isItemValidForSlot(int index, ItemStack stack) {
+    public boolean canPlaceItem(int index, ItemStack stack) {
         if(!stack.isEmpty()&&this.isEmpty()&&ServerConfigs.cached.NOTICE_BOARDS_UNRESTRICTED)return true;
-        return (this.isEmpty()&&((ItemTags.LECTERN_BOOKS!=null&&stack.getItem().isIn(ItemTags.LECTERN_BOOKS))|| stack.getItem() instanceof FilledMapItem));
+        return (this.isEmpty()&&((ItemTags.LECTERN_BOOKS!=null&&stack.getItem().is(ItemTags.LECTERN_BOOKS))|| stack.getItem() instanceof FilledMapItem));
     }
 
     @Override
-    public boolean canInsertItem(int index, ItemStack stack, @Nullable Direction direction) {
-        return this.isItemValidForSlot(index, stack);
+    public boolean canPlaceItemThroughFace(int index, ItemStack stack, @Nullable Direction direction) {
+        return this.canPlaceItem(index, stack);
     }
 
     @Override
-    public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
+    public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
         return true;
     }
 
@@ -219,11 +219,11 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, 
     }
 
     public Direction getDirection(){
-        return this.getBlockState().get(NoticeBoardBlock.FACING);
+        return this.getBlockState().getValue(NoticeBoardBlock.FACING);
     }
 
     public float getYaw() {
-        return -this.getDirection().getHorizontalAngle();
+        return -this.getDirection().toYRot();
     }
 
     public boolean getAxis() {
@@ -232,7 +232,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, 
     }
 
     public int getFrontLight() {
-        return WorldRenderer.getCombinedLight(this.world, this.pos.offset(this.getDirection()));
+        return WorldRenderer.getLightColor(this.level, this.worldPosition.relative(this.getDirection()));
     }
 
     public String getText() {

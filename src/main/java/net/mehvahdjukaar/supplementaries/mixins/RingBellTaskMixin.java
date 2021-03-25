@@ -30,29 +30,29 @@ public abstract class RingBellTaskMixin extends Task<LivingEntity> {
     }
 
     //might want to remove this since it barely works
-    @Inject(method = "startExecuting", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "start", at = @At("HEAD"), cancellable = true)
     protected void startExecuting(ServerWorld worldIn, LivingEntity entityIn, long gameTimeIn, CallbackInfo info) {
         Brain<?> brain = entityIn.getBrain();
-        BlockPos blockpos = brain.getMemory(MemoryModuleType.MEETING_POINT).get().getPos();
-        if (CommonUtil.withinDistanceDown(blockpos, entityIn.getPositionVec(), 2.0D, 5)) {
+        BlockPos blockpos = brain.getMemory(MemoryModuleType.MEETING_POINT).get().pos();
+        if (CommonUtil.withinDistanceDown(blockpos, entityIn.position(), 2.0D, 5)) {
             BlockState blockstate = worldIn.getBlockState(blockpos);
-            if (blockstate.isIn(Blocks.BELL)) {
+            if (blockstate.is(Blocks.BELL)) {
                 BellBlock bellblock = (BellBlock)blockstate.getBlock();
-                BlockPos.Mutable mut = blockpos.toMutable();
+                BlockPos.Mutable mut = blockpos.mutable();
                 boolean flag = false;
                 for (int i = 0; i<5; i++){
-                    if(mut.withinDistance(entityIn.getPosition(), 2.0D)){
+                    if(mut.closerThan(entityIn.blockPosition(), 2.0D)){
                         flag = true;
                         break;
                     }
                     mut.move(0,-1,0);
                     BlockState state = worldIn.getBlockState(mut);
-                    if(!(state.getBlock() instanceof ChainBlock && state.get(ChainBlock.AXIS) == Direction.Axis.Y)){
+                    if(!(state.getBlock() instanceof ChainBlock && state.getValue(ChainBlock.AXIS) == Direction.Axis.Y)){
                         break;
                     }
                 }
                 if(flag) {
-                    bellblock.ring(worldIn, blockpos, blockstate.get(BellBlock.HORIZONTAL_FACING).rotateY());
+                    bellblock.attemptToRing(worldIn, blockpos, blockstate.getValue(BellBlock.FACING).getClockWise());
                 }
                 return;
                 //TODO: figure out if this is actually ending the function

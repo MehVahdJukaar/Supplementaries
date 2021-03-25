@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 
+import net.mehvahdjukaar.supplementaries.block.tiles.PulleyBlockTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -19,6 +20,7 @@ import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -34,128 +36,141 @@ import javax.annotation.Nullable;
 import java.util.Random;
 
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class CrankBlock extends Block implements IWaterLoggable{
-    protected static final VoxelShape SHAPE_DOWN = VoxelShapes.create(0.125D, 0.6875D, 0.875D, 0.875D, 1D, 0.125D);
-    protected static final VoxelShape SHAPE_UP = VoxelShapes.create(0.125D, 0.3125D, 0.125D, 0.875D, 0D, 0.875D);
-    protected static final VoxelShape SHAPE_NORTH = VoxelShapes.create(0.125D, 0.125D, 0.6875D, 0.875D, 0.875D, 1D);
-    protected static final VoxelShape SHAPE_SOUTH = VoxelShapes.create(0.875D, 0.125D, 0.3125D, 0.125D, 0.875D, 0D);
-    protected static final VoxelShape SHAPE_EAST = VoxelShapes.create(0.3125D, 0.125D, 0.125D, 0D, 0.875D, 0.875D);
-    protected static final VoxelShape SHAPE_WEST = VoxelShapes.create(0.6875D, 0.125D, 0.875D, 1D, 0.875D, 0.125D);
+    protected static final VoxelShape SHAPE_DOWN = VoxelShapes.box(0.125D, 0.6875D, 0.875D, 0.875D, 1D, 0.125D);
+    protected static final VoxelShape SHAPE_UP = VoxelShapes.box(0.125D, 0.3125D, 0.125D, 0.875D, 0D, 0.875D);
+    protected static final VoxelShape SHAPE_NORTH = VoxelShapes.box(0.125D, 0.125D, 0.6875D, 0.875D, 0.875D, 1D);
+    protected static final VoxelShape SHAPE_SOUTH = VoxelShapes.box(0.875D, 0.125D, 0.3125D, 0.125D, 0.875D, 0D);
+    protected static final VoxelShape SHAPE_EAST = VoxelShapes.box(0.3125D, 0.125D, 0.125D, 0D, 0.875D, 0.875D);
+    protected static final VoxelShape SHAPE_WEST = VoxelShapes.box(0.6875D, 0.125D, 0.875D, 1D, 0.875D, 0.125D);
 
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
-    public static final IntegerProperty POWER = BlockStateProperties.POWER_0_15;
+    public static final IntegerProperty POWER = BlockStateProperties.POWER;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public CrankBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(WATERLOGGED,false).with(POWER, 0).with(FACING, Direction.NORTH));
+        this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED,false).setValue(POWER, 0).setValue(FACING, Direction.NORTH));
     }
 
     @Override
     public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
     @Override
-    public PushReaction getPushReaction(BlockState state) {
+    public PushReaction getPistonPushReaction(BlockState state) {
         return PushReaction.DESTROY;
     }
 
     @Override
-    public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos,
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos,
                                           BlockPos facingPos) {
-        if (stateIn.get(WATERLOGGED)) {
-            worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
+        if (stateIn.getValue(WATERLOGGED)) {
+            worldIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
         }
-        return facing.getOpposite() == stateIn.get(FACING) && !stateIn.isValidPosition(worldIn, currentPos)
-                ? Blocks.AIR.getDefaultState()
+        return facing.getOpposite() == stateIn.getValue(FACING) && !stateIn.canSurvive(worldIn, currentPos)
+                ? Blocks.AIR.defaultBlockState()
                 : stateIn;
     }
 
-    public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-        Direction direction = state.get(FACING);
-        BlockPos blockpos = pos.offset(direction.getOpposite());
+    @Override
+    public boolean canSurvive(BlockState state, IWorldReader worldIn, BlockPos pos) {
+        Direction direction = state.getValue(FACING);
+        BlockPos blockpos = pos.relative(direction.getOpposite());
         BlockState blockstate = worldIn.getBlockState(blockpos);
         if (direction == Direction.UP || direction == Direction.DOWN) {
-            return hasEnoughSolidSide(worldIn, blockpos, direction);
+            return canSupportCenter(worldIn, blockpos, direction);
         } else {
-            return blockstate.isSolidSide(worldIn, blockpos, direction);
+            return blockstate.isFaceSturdy(worldIn, blockpos, direction);
         }
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
                                              BlockRayTraceResult hit) {
-        if (worldIn.isRemote) {
-            Direction direction = state.get(FACING).getOpposite();
+        if (worldIn.isClientSide) {
+            Direction direction = state.getValue(FACING).getOpposite();
             // Direction direction1 = getFacing(state).getOpposite();
-            double d0 = (double) pos.getX() + 0.5D + 0.1D * (double) direction.getXOffset() + 0.2D * (double) direction.getXOffset();
-            double d1 = (double) pos.getY() + 0.5D + 0.1D * (double) direction.getYOffset() + 0.2D * (double) direction.getYOffset();
-            double d2 = (double) pos.getZ() + 0.5D + 0.1D * (double) direction.getZOffset() + 0.2D * (double) direction.getZOffset();
+            double d0 = (double) pos.getX() + 0.5D + 0.1D * (double) direction.getStepX() + 0.2D * (double) direction.getStepX();
+            double d1 = (double) pos.getY() + 0.5D + 0.1D * (double) direction.getStepY() + 0.2D * (double) direction.getStepY();
+            double d2 = (double) pos.getZ() + 0.5D + 0.1D * (double) direction.getStepZ() + 0.2D * (double) direction.getStepZ();
             worldIn.addParticle(ParticleTypes.SMOKE, d0, d1, d2, 0, 0, 0);
             return ActionResultType.SUCCESS;
         } else {
-            this.activate(state, worldIn, pos, player.isSneaking());
+            boolean ccw = player.isShiftKeyDown();
+            this.activate(state, worldIn, pos, ccw);
             float f = 0.4f;
-            worldIn.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 0.3F, f);
+            worldIn.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundCategory.BLOCKS, 0.3F, f);
+
+            Direction dir = state.getValue(FACING).getOpposite();
+            BlockPos behind = pos.relative(dir);
+            BlockState backState = worldIn.getBlockState(behind);
+            if(backState.getBlock() instanceof PulleyBlock && dir.getAxis()==backState.getValue(PulleyBlock.AXIS)){
+                ((PulleyBlock) backState.getBlock()).axisRotate(backState,behind,worldIn,ccw?Rotation.COUNTERCLOCKWISE_90:Rotation.CLOCKWISE_90);
+            }
+
             return ActionResultType.CONSUME;
         }
     }
 
     public void activate(BlockState state, World world, BlockPos pos, boolean ccw) {
-        //func_235896_a_ == cycle
-        state = state.with(POWER, (16+state.get(POWER)+(ccw?-1:1))%16);
-        world.setBlockState(pos, state, 3);
+        //cycle == cycle
+        state = state.setValue(POWER, (16+state.getValue(POWER)+(ccw?-1:1))%16);
+        world.setBlock(pos, state, 3);
         this.updateNeighbors(state, world, pos);
     }
 
-    public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
-        return blockState.get(POWER);
+    @Override
+    public int getSignal(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+        return blockState.getValue(POWER);
     }
 
     @Override
-    public int getStrongPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
-        return blockState.get(FACING) == side ? blockState.get(POWER) : 0;
+    public int getDirectSignal(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+        return blockState.getValue(FACING) == side ? blockState.getValue(POWER) : 0;
     }
 
     @Override
-    public boolean canProvidePower(BlockState state) {
+    public boolean isSignalSource(BlockState state) {
         return true;
     }
 
     private void updateNeighbors(BlockState state, World world, BlockPos pos) {
-        world.notifyNeighborsOfStateChange(pos, this);
-        world.notifyNeighborsOfStateChange(pos.offset(state.get(FACING).getOpposite()), this);
+        world.updateNeighborsAt(pos, this);
+        world.updateNeighborsAt(pos.relative(state.getValue(FACING).getOpposite()), this);
     }
 
     @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!isMoving && state.getBlock() != newState.getBlock()) {
-            if (state.get(POWER) != 0) {
+            if (state.getValue(POWER) != 0) {
                 this.updateNeighbors(state, worldIn, pos);
             }
-            super.onReplaced(state, worldIn, pos, newState, isMoving);
+            super.onRemove(state, worldIn, pos, newState, isMoving);
         }
     }
 
     @Override
-    public boolean isTransparent(BlockState state) {
+    public boolean useShapeForLightOcclusion(BlockState state) {
         return true;
     }
 
 
     public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
-        if (stateIn.get(POWER)>0 && rand.nextFloat() < 0.25F) {
-            Direction direction = stateIn.get(FACING).getOpposite();
+        if (stateIn.getValue(POWER)>0 && rand.nextFloat() < 0.25F) {
+            Direction direction = stateIn.getValue(FACING).getOpposite();
             // Direction direction1 = getFacing(state).getOpposite();
-            double d0 = (double) pos.getX() + 0.5D + 0.1D * (double) direction.getXOffset() + 0.2D * (double) direction.getXOffset();
-            double d1 = (double) pos.getY() + 0.5D + 0.1D * (double) direction.getYOffset() + 0.2D * (double) direction.getYOffset();
-            double d2 = (double) pos.getZ() + 0.5D + 0.1D * (double) direction.getZOffset() + 0.2D * (double) direction.getZOffset();
+            double d0 = (double) pos.getX() + 0.5D + 0.1D * (double) direction.getStepX() + 0.2D * (double) direction.getStepX();
+            double d1 = (double) pos.getY() + 0.5D + 0.1D * (double) direction.getStepY() + 0.2D * (double) direction.getStepY();
+            double d2 = (double) pos.getZ() + 0.5D + 0.1D * (double) direction.getStepZ() + 0.2D * (double) direction.getStepZ();
             worldIn.addParticle(new RedstoneParticleData(1.0F, 0.0F, 0.0F, 0.5f), d0, d1, d2, 0.0D, 0.0D, 0.0D);
         }
     }
 
     @Override
-    public boolean canSpawnInBlock() {
+    public boolean isPossibleToRespawnInThis() {
         return true;
     }
 
@@ -171,7 +186,7 @@ public class CrankBlock extends Block implements IWaterLoggable{
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
-        switch (state.get(FACING)) {
+        switch (state.getValue(FACING)) {
             case SOUTH :
             default :
                 return SHAPE_SOUTH;
@@ -189,34 +204,34 @@ public class CrankBlock extends Block implements IWaterLoggable{
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(FACING, POWER, WATERLOGGED);
     }
 
     @Override
     public BlockState rotate(BlockState state, Rotation rot) {
-        return state.with(FACING, rot.rotate(state.get(FACING)));
+        return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
 
     @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
-        return state.rotate(mirrorIn.toRotation(state.get(FACING)));
+        return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
 
     @Nullable
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        boolean flag = context.getWorld().getFluidState(context.getPos()).getFluid() == Fluids.WATER;
-        BlockState blockstate = this.getDefaultState();
-        IWorldReader iworldreader = context.getWorld();
-        BlockPos blockpos = context.getPos();
+        boolean flag = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;
+        BlockState blockstate = this.defaultBlockState();
+        IWorldReader iworldreader = context.getLevel();
+        BlockPos blockpos = context.getClickedPos();
         Direction[] adirection = context.getNearestLookingDirections();
 
         for(Direction direction : adirection) {
 
             Direction direction1 = direction.getOpposite();
-            blockstate = blockstate.with(FACING, direction1);
-            if (blockstate.isValidPosition(iworldreader, blockpos)) {
-                return blockstate.with(WATERLOGGED, flag);
+            blockstate = blockstate.setValue(FACING, direction1);
+            if (blockstate.canSurvive(iworldreader, blockpos)) {
+                return blockstate.setValue(WATERLOGGED, flag);
             }
 
         }

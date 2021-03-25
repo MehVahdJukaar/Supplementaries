@@ -4,7 +4,7 @@ import net.minecraft.block.material.MaterialColor;
 
 
 public enum ArchitectsPaletteWoodTypes implements IWoodType {
-    TWISTED("twisted",MaterialColor.PURPLE);
+    TWISTED("twisted",MaterialColor.COLOR_PURPLE);
 
     private final String name;
     private final MaterialColor color;

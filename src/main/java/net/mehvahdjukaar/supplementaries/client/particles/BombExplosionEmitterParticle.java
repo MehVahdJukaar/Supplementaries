@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.particles;
 
 import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.minecraft.client.particle.EmitterParticle;
 import net.minecraft.client.particle.IParticleFactory;
 import net.minecraft.client.particle.MetaParticle;
 import net.minecraft.client.particle.Particle;
@@ -14,29 +15,32 @@ public class BombExplosionEmitterParticle extends MetaParticle {
     private int timeSinceStart;
     private final int maximumTime = 8;
 
-    private BombExplosionEmitterParticle(ClientWorld world, double x, double y, double z) {
+    private double radius;
+
+    private BombExplosionEmitterParticle(ClientWorld world, double x, double y, double z, double radius) {
         super(world, x, y, z, 0.0D, 0.0D, 0.0D);
+        this.radius = radius;
     }
 
     public void tick() {
-        for(int i = 0; i < 3; ++i) {
-            double d0 = this.posX + (this.rand.nextDouble() - this.rand.nextDouble()) * 2.2D;
-            double d1 = this.posY + (this.rand.nextDouble() - this.rand.nextDouble()) * 2.2D;
-            double d2 = this.posZ + (this.rand.nextDouble() - this.rand.nextDouble()) * 2.2D;
-            this.world.addParticle(Registry.BOMB_EXPLOSION_PARTICLE.get(), d0, d1, d2, (float)this.timeSinceStart / (float)this.maximumTime, 0.0D, 0.0D);
+        for(int i = 0; i < 3 +(radius-2)*3; ++i) {
+            double d0 = this.x + (this.random.nextDouble() - this.random.nextDouble()) * radius;
+            double d1 = this.y + (this.random.nextDouble() - this.random.nextDouble()) * radius;
+            double d2 = this.z + (this.random.nextDouble() - this.random.nextDouble()) * radius;
+            this.level.addParticle(Registry.BOMB_EXPLOSION_PARTICLE.get(), d0, d1, d2, (float)this.timeSinceStart / (float)this.maximumTime, 0.0D, 0.0D);
         }
 
         ++this.timeSinceStart;
         if (this.timeSinceStart == this.maximumTime) {
-            this.setExpired();
+            this.remove();
         }
 
     }
 
     @OnlyIn(Dist.CLIENT)
     public static class Factory implements IParticleFactory<BasicParticleType> {
-        public Particle makeParticle(BasicParticleType typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-            return new BombExplosionEmitterParticle(worldIn, x, y, z);
+        public Particle createParticle(BasicParticleType typeIn, ClientWorld worldIn, double x, double y, double z, double radius, double ySpeed, double zSpeed) {
+            return new BombExplosionEmitterParticle(worldIn, x, y, z, radius);
         }
     }
 

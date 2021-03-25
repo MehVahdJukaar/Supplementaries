@@ -26,71 +26,73 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class OilLanternBlock extends EnhancedLanternBlock {
-    public static final VoxelShape SHAPE_DOWN = VoxelShapes.or(Block.makeCuboidShape(5.0D, 0.0D, 5.0D, 11.0D, 8.0D, 11.0D), Block.makeCuboidShape(6.0D, 8.0D, 6.0D, 10.0D, 9.0D, 10.0D));
-    public static final VoxelShape SHAPE_UP = VoxelShapes.or(Block.makeCuboidShape(5.0D, 5.0D, 5.0D, 11.0D, 13.0D, 11.0D), Block.makeCuboidShape(6.0D, 13.0D, 6.0D, 10.0D, 14.0D, 10.0D));
+    public static final VoxelShape SHAPE_DOWN = VoxelShapes.or(Block.box(5.0D, 0.0D, 5.0D, 11.0D, 8.0D, 11.0D), Block.box(6.0D, 8.0D, 6.0D, 10.0D, 9.0D, 10.0D));
+    public static final VoxelShape SHAPE_UP = VoxelShapes.or(Block.box(5.0D, 5.0D, 5.0D, 11.0D, 13.0D, 11.0D), Block.box(6.0D, 13.0D, 6.0D, 10.0D, 14.0D, 10.0D));
 
     public static final EnumProperty<AttachFace> FACE = HorizontalFaceBlock.FACE;
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
 
     public OilLanternBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(WATERLOGGED,false).with(LIT,true)
-                .with(FACING,Direction.NORTH).with(EXTENSION,0).with(FACE,AttachFace.FLOOR));
+        this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED,false).setValue(LIT,true)
+                .setValue(FACING,Direction.NORTH).setValue(EXTENSION,0).setValue(FACE,AttachFace.FLOOR));
     }
 
     @Override
-    public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-        switch (state.get(FACE)) {
+    public boolean canSurvive(BlockState state, IWorldReader worldIn, BlockPos pos) {
+        switch (state.getValue(FACE)) {
             default:
             case FLOOR:
-                return Block.hasEnoughSolidSide(worldIn, pos.down(), Direction.UP);
+                return Block.canSupportCenter(worldIn, pos.below(), Direction.UP);
             case CEILING:
-                return RopeBlock.isSupportingCeiling(pos.up(),worldIn);
+                return RopeBlock.isSupportingCeiling(pos.above(),worldIn);
             case WALL:
-                return super.isValidPosition(state,worldIn,pos);
+                return super.canSurvive(state,worldIn,pos);
         }
     }
 
     @Override
-    public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos,
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos,
                                           BlockPos facingPos) {
-        if (stateIn.get(WATERLOGGED)) {
-            worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
+        if (stateIn.getValue(WATERLOGGED)) {
+            worldIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
         }
-        switch(stateIn.get(FACE)) {
+        switch(stateIn.getValue(FACE)) {
             default:
             case WALL:
-                return facing == stateIn.get(FACING).getOpposite() ? !stateIn.isValidPosition(worldIn, currentPos)
-                        ? Blocks.AIR.getDefaultState()
+                return facing == stateIn.getValue(FACING).getOpposite() ? !stateIn.canSurvive(worldIn, currentPos)
+                        ? Blocks.AIR.defaultBlockState()
                         : this.getConnectedState(stateIn, facingState, worldIn, facingPos) : stateIn;
             case CEILING:
-                return facing == Direction.UP && !stateIn.isValidPosition(worldIn, currentPos) ? Blocks.AIR.getDefaultState() : stateIn;
+                return facing == Direction.UP && !stateIn.canSurvive(worldIn, currentPos) ? Blocks.AIR.defaultBlockState() : stateIn;
             case FLOOR:
-                return facing == Direction.DOWN && !stateIn.isValidPosition(worldIn, currentPos) ? Blocks.AIR.getDefaultState() : stateIn;
+                return facing == Direction.DOWN && !stateIn.canSurvive(worldIn, currentPos) ? Blocks.AIR.defaultBlockState() : stateIn;
         }
     }
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        boolean water = context.getWorld().getFluidState(context.getPos()).getFluid() == Fluids.WATER;
+        boolean water = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;
 
         for(Direction direction : context.getNearestLookingDirections()) {
             BlockState blockstate;
             if (direction.getAxis() == Direction.Axis.Y) {
-                blockstate = this.getDefaultState().with(FACE, direction == Direction.UP ? AttachFace.CEILING : AttachFace.FLOOR).with(FACING, context.getPlacementHorizontalFacing());
+                blockstate = this.defaultBlockState().setValue(FACE, direction == Direction.UP ? AttachFace.CEILING : AttachFace.FLOOR).setValue(FACING, context.getHorizontalDirection());
             } else {
-                blockstate = this.getDefaultState().with(FACE, AttachFace.WALL).with(FACING, direction.getOpposite());
+                blockstate = this.defaultBlockState().setValue(FACE, AttachFace.WALL).setValue(FACING, direction.getOpposite());
             }
 
-            World world = context.getWorld();
-            BlockPos blockpos = context.getPos();
-            if (blockstate.isValidPosition(world, blockpos)) {
+            World world = context.getLevel();
+            BlockPos blockpos = context.getClickedPos();
+            if (blockstate.canSurvive(world, blockpos)) {
 
-                BlockPos facingpos = blockpos.offset(direction);
+                BlockPos facingpos = blockpos.relative(direction);
                 BlockState facingState = world.getBlockState(facingpos);
 
-                return this.getConnectedState(blockstate,facingState, world, facingpos).with(WATERLOGGED,water);
+                return this.getConnectedState(blockstate,facingState, world, facingpos).setValue(WATERLOGGED,water);
             }
         }
         return null;
@@ -98,7 +100,7 @@ public class OilLanternBlock extends EnhancedLanternBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
-        switch(state.get(FACE)) {
+        switch(state.getValue(FACE)) {
             default:
             case FLOOR:
                 return SHAPE_DOWN;
@@ -110,52 +112,52 @@ public class OilLanternBlock extends EnhancedLanternBlock {
     }
 
     @Override
-    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        if(state.get(FACE)==AttachFace.WALL)
-            super.onEntityCollision(state, world, pos, entity);
+    public void entityInside(BlockState state, World world, BlockPos pos, Entity entity) {
+        if(state.getValue(FACE)==AttachFace.WALL)
+            super.entityInside(state, world, pos, entity);
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        if(state.get(FACE)==AttachFace.CEILING)return BlockRenderType.ENTITYBLOCK_ANIMATED;
+    public BlockRenderType getRenderShape(BlockState state) {
+        if(state.getValue(FACE)==AttachFace.CEILING)return BlockRenderType.ENTITYBLOCK_ANIMATED;
         return BlockRenderType.MODEL;
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if(player.abilities.allowEdit) {
-            ItemStack item = player.getHeldItem(handIn);
-            if(!state.get(LIT)) {
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if(player.abilities.mayBuild) {
+            ItemStack item = player.getItemInHand(handIn);
+            if(!state.getValue(LIT)) {
                 if (item.getItem() instanceof FlintAndSteelItem) {
-                    if (!worldIn.isRemote) {
-                        worldIn.playSound(null, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, worldIn.getRandom().nextFloat() * 0.4F + 0.8F);
-                        worldIn.setBlockState(pos, state.with(LIT, true), 3);
+                    if (!worldIn.isClientSide) {
+                        worldIn.playSound(null, pos, SoundEvents.FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, worldIn.getRandom().nextFloat() * 0.4F + 0.8F);
+                        worldIn.setBlock(pos, state.setValue(LIT, true), 3);
                     }
-                    item.damageItem(1, player, (playerIn) -> playerIn.sendBreakAnimation(handIn));
-                    return ActionResultType.func_233537_a_(worldIn.isRemote);
+                    item.hurtAndBreak(1, player, (playerIn) -> playerIn.broadcastBreakEvent(handIn));
+                    return ActionResultType.sidedSuccess(worldIn.isClientSide);
                 } else if (item.getItem() instanceof FireChargeItem) {
-                    if (!worldIn.isRemote) {
-                        worldIn.playSound(null, pos, SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.BLOCKS, 1.0F, (worldIn.getRandom().nextFloat() - worldIn.getRandom().nextFloat()) * 0.2F + 1.0F);
-                        worldIn.setBlockState(pos, state.with(LIT, true), 3);
+                    if (!worldIn.isClientSide) {
+                        worldIn.playSound(null, pos, SoundEvents.FIRECHARGE_USE, SoundCategory.BLOCKS, 1.0F, (worldIn.getRandom().nextFloat() - worldIn.getRandom().nextFloat()) * 0.2F + 1.0F);
+                        worldIn.setBlock(pos, state.setValue(LIT, true), 3);
                     }
                     if (!player.isCreative()) item.shrink(1);
-                    return ActionResultType.func_233537_a_(worldIn.isRemote);
+                    return ActionResultType.sidedSuccess(worldIn.isClientSide);
                 }
             }
             else if(item.isEmpty()){
-                if (!worldIn.isRemote) {
-                    worldIn.playSound(null, pos, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.BLOCKS, 0.5F, 1.5F);
-                    worldIn.setBlockState(pos, state.with(LIT, false), 3);
+                if (!worldIn.isClientSide) {
+                    worldIn.playSound(null, pos, SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundCategory.BLOCKS, 0.5F, 1.5F);
+                    worldIn.setBlock(pos, state.setValue(LIT, false), 3);
                 }
-                return ActionResultType.func_233537_a_(worldIn.isRemote);
+                return ActionResultType.sidedSuccess(worldIn.isClientSide);
             }
         }
         return ActionResultType.PASS;
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        super.fillStateContainer(builder);
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
         builder.add(LIT, FACE);
     }
 

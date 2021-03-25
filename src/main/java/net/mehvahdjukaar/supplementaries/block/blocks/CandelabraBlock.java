@@ -26,59 +26,61 @@ import net.minecraft.world.World;
 
 import java.util.Random;
 
-public class CandelabraBlock extends LightUpBlock {
-    protected static final VoxelShape SHAPE_FLOOR = Block.makeCuboidShape(5D, 0D, 5D, 11D, 14D, 11D);
-    protected static final VoxelShape SHAPE_WALL_NORTH = Block.makeCuboidShape(5D, 0D, 11D, 11D, 14D, 16D);
-    protected static final VoxelShape SHAPE_WALL_SOUTH = Block.makeCuboidShape(5D, 0D, 0D, 11D, 14D, 5D);
-    protected static final VoxelShape SHAPE_WALL_WEST = Block.makeCuboidShape(11D, 0D, 5D, 16D, 14D, 11D);
-    protected static final VoxelShape SHAPE_WALL_EAST = Block.makeCuboidShape(0D, 0D, 5D, 5D, 14D, 11D);
-    protected static final VoxelShape SHAPE_CEILING = Block.makeCuboidShape(5D, 3D, 5D, 11D, 16D, 11D);
+import net.minecraft.block.AbstractBlock.Properties;
 
-    public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
-    public static final EnumProperty<AttachFace> FACE = BlockStateProperties.FACE;
+public class CandelabraBlock extends LightUpBlock {
+    protected static final VoxelShape SHAPE_FLOOR = Block.box(5D, 0D, 5D, 11D, 14D, 11D);
+    protected static final VoxelShape SHAPE_WALL_NORTH = Block.box(5D, 0D, 11D, 11D, 14D, 16D);
+    protected static final VoxelShape SHAPE_WALL_SOUTH = Block.box(5D, 0D, 0D, 11D, 14D, 5D);
+    protected static final VoxelShape SHAPE_WALL_WEST = Block.box(11D, 0D, 5D, 16D, 14D, 11D);
+    protected static final VoxelShape SHAPE_WALL_EAST = Block.box(0D, 0D, 5D, 5D, 14D, 11D);
+    protected static final VoxelShape SHAPE_CEILING = Block.box(5D, 3D, 5D, 11D, 16D, 11D);
+
+    public static final DirectionProperty FACING = HorizontalBlock.FACING;
+    public static final EnumProperty<AttachFace> FACE = BlockStateProperties.ATTACH_FACE;
     public CandelabraBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(WATERLOGGED,false).with(LIT,true)
-            .with(FACE,AttachFace.FLOOR).with(FACING,Direction.NORTH));
+        this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED,false).setValue(LIT,true)
+            .setValue(FACE,AttachFace.FLOOR).setValue(FACING,Direction.NORTH));
     }
 
     @Override
-    public boolean allowsMovement(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
+    public boolean isPathfindable(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
         return false;
     }
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        boolean flag = context.getWorld().getFluidState(context.getPos()).getFluid() == Fluids.WATER;
+        boolean flag = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;
         for(Direction direction : context.getNearestLookingDirections()) {
             BlockState blockstate;
             if (direction.getAxis() == Direction.Axis.Y) {
-                blockstate = this.getDefaultState().with(FACE, direction == Direction.UP ? AttachFace.CEILING : AttachFace.FLOOR).with(FACING, context.getPlacementHorizontalFacing());
+                blockstate = this.defaultBlockState().setValue(FACE, direction == Direction.UP ? AttachFace.CEILING : AttachFace.FLOOR).setValue(FACING, context.getHorizontalDirection());
             } else {
-                blockstate = this.getDefaultState().with(FACE, AttachFace.WALL).with(FACING, direction.getOpposite());
+                blockstate = this.defaultBlockState().setValue(FACE, AttachFace.WALL).setValue(FACING, direction.getOpposite());
             }
 
-            if (blockstate.isValidPosition(context.getWorld(), context.getPos())) {
-                return blockstate.with(WATERLOGGED, flag).with(LIT,!flag);
+            if (blockstate.canSurvive(context.getLevel(), context.getClickedPos())) {
+                return blockstate.setValue(WATERLOGGED, flag).setValue(LIT,!flag);
             }
         }
         return null;
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        super.fillStateContainer(builder);
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
         builder.add(FACE, FACING);
     }
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        switch(state.get(FACE)){
+        switch(state.getValue(FACE)){
             default:
             case FLOOR:
                 return SHAPE_FLOOR;
             case WALL:
-                switch (state.get(FACING)){
+                switch (state.getValue(FACING)){
                     default:
                     case NORTH:
                         return SHAPE_WALL_NORTH;
@@ -95,25 +97,25 @@ public class CandelabraBlock extends LightUpBlock {
     }
 
     @Override
-    public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-        if(state.get(FACE)==AttachFace.FLOOR){
-            return hasEnoughSolidSide(worldIn, pos.down(), Direction.UP);
+    public boolean canSurvive(BlockState state, IWorldReader worldIn, BlockPos pos) {
+        if(state.getValue(FACE)==AttachFace.FLOOR){
+            return canSupportCenter(worldIn, pos.below(), Direction.UP);
         }
-        else if(state.get(FACE)==AttachFace.CEILING){
-            return RopeBlock.isSupportingCeiling(pos.up(), worldIn);
+        else if(state.getValue(FACE)==AttachFace.CEILING){
+            return RopeBlock.isSupportingCeiling(pos.above(), worldIn);
         }
-        return isSideSolidForDirection(worldIn, pos, state.get(FACING).getOpposite());
+        return isSideSolidForDirection(worldIn, pos, state.getValue(FACING).getOpposite());
     }
 
     @Override
     public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
-        if(!stateIn.get(LIT))return;
-        Direction dir1 = stateIn.get(FACING);
+        if(!stateIn.getValue(LIT))return;
+        Direction dir1 = stateIn.getValue(FACING);
         double xm,ym,zm,xl,yl,zl,xr,zr;
-        Direction dir = dir1.rotateY();
-        double xOff = dir.getXOffset()*0.3125D;
-        double zOff = dir.getZOffset()*0.3125D;
-        switch(stateIn.get(FACE)){
+        Direction dir = dir1.getClockWise();
+        double xOff = dir.getStepX()*0.3125D;
+        double zOff = dir.getStepZ()*0.3125D;
+        switch(stateIn.getValue(FACE)){
             default:
             case FLOOR:
                 xm = pos.getX() + 0.5D;
@@ -126,8 +128,8 @@ public class CandelabraBlock extends LightUpBlock {
                 zr = pos.getZ() + 0.5D + zOff;
                 break;
             case WALL:
-                double xo1 = -dir1.getXOffset()*0.3125;
-                double zo2 = -dir1.getZOffset()*0.3125;
+                double xo1 = -dir1.getStepX()*0.3125;
+                double zo2 = -dir1.getStepZ()*0.3125;
                 xm = pos.getX() + 0.5D + xo1;
                 ym = pos.getY() + 1;
                 zm = pos.getZ() + 0.5D + zo2;
@@ -164,33 +166,33 @@ public class CandelabraBlock extends LightUpBlock {
 
     @Override
     public BlockState rotate(BlockState state, Rotation rot) {
-        return state.with(FACING, rot.rotate(state.get(FACING)));
+        return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
 
     @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
-        return state.rotate(mirrorIn.toRotation(state.get(FACING)));
+        return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
 
     @Override
-    public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
-        return getFacing(stateIn).getOpposite() == facing && !stateIn.isValidPosition(worldIn, currentPos) ? Blocks.AIR.getDefaultState() : super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
+        return getFacing(stateIn).getOpposite() == facing && !stateIn.canSurvive(worldIn, currentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
 
 
     protected static Direction getFacing(BlockState state) {
-        switch(state.get(FACE)) {
+        switch(state.getValue(FACE)) {
             case CEILING:
                 return Direction.DOWN;
             case FLOOR:
                 return Direction.UP;
             default:
-                return state.get(FACING);
+                return state.getValue(FACING);
         }
     }
 
     public static boolean isSideSolidForDirection(IWorldReader reader, BlockPos pos, Direction direction) {
-        BlockPos blockpos = pos.offset(direction);
-        return reader.getBlockState(blockpos).isSolidSide(reader, blockpos, direction.getOpposite());
+        BlockPos blockpos = pos.relative(direction);
+        return reader.getBlockState(blockpos).isFaceSturdy(reader, blockpos, direction.getOpposite());
     }
 }

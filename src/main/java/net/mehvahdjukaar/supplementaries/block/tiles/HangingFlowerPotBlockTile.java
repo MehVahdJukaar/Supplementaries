@@ -11,7 +11,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.common.util.Constants;
 
 public class HangingFlowerPotBlockTile extends SwayingBlockTile implements IBlockHolder {
-    public BlockState pot = Blocks.FLOWER_POT.getDefaultState();
+    public BlockState pot = Blocks.FLOWER_POT.defaultBlockState();
     public HangingFlowerPotBlockTile() {
         super(Registry.HANGING_FLOWER_POT_TILE.get());
     }
@@ -33,9 +33,9 @@ public class HangingFlowerPotBlockTile extends SwayingBlockTile implements IBloc
     public boolean setHeldBlock(BlockState state) {
         if(state.getBlock() instanceof FlowerPotBlock){
             this.pot = state;
-            this.markDirty();
+            this.setChanged();
             //TODO: optimize mark dirty and block update to send only what's needed
-            this.world.notifyBlockUpdate(this.pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
+            this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
             return true;
         }
         return false;
@@ -43,21 +43,21 @@ public class HangingFlowerPotBlockTile extends SwayingBlockTile implements IBloc
 
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
+    public CompoundNBT save(CompoundNBT compound) {
+        super.save(compound);
         //if(pot != Blocks.AIR.getDefaultState())
         compound.put("Pot", NBTUtil.writeBlockState(pot));
         return compound;
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
-        super.read(state, compound);
+    public void load(BlockState state, CompoundNBT compound) {
+        super.load(state, compound);
         pot = NBTUtil.readBlockState(compound.getCompound("Pot"));
     }
 
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
-        return new AxisAlignedBB(this.pos);
+        return new AxisAlignedBB(this.worldPosition);
     }
 }
