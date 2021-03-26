@@ -17,8 +17,6 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class FlagBlock extends Block {
     protected static final VoxelShape SHAPE = Block.box(4.0D, 0.0D, 4.0D, 12.0D, 16.0D, 12.0D);
 

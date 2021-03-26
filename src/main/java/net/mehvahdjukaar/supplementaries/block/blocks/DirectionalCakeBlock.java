@@ -30,8 +30,6 @@ import net.minecraft.world.World;
 import java.util.List;
 import java.util.Random;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class DirectionalCakeBlock extends CakeBlock implements IWaterLoggable {
     protected static final VoxelShape[] SHAPES_NORTH = new VoxelShape[]{
             Block.box(1, 0, 1, 15, 8, 15),

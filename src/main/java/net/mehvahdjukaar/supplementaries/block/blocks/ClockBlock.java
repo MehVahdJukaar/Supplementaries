@@ -31,8 +31,6 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class ClockBlock extends Block implements IWaterLoggable {
     protected static final VoxelShape SHAPE_NORTH = VoxelShapes.box(1D, 0D, 1D, 0D, 1D, 0.0625D);
     protected static final VoxelShape SHAPE_SOUTH = VoxelShapes.box(0D, 0D, 0D, 1D, 1D, 0.9375D);

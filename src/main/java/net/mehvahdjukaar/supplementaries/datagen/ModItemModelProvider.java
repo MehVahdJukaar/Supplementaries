@@ -4,7 +4,7 @@ package net.mehvahdjukaar.supplementaries.datagen;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
-import net.mehvahdjukaar.supplementaries.setup.registration.Variants;
+import net.mehvahdjukaar.supplementaries.setup.Variants;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.client.model.generators.ModelFile;

@@ -24,9 +24,6 @@ import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.extensions.IForgeBlock;
 
-
-import net.minecraft.block.AbstractBlock.Properties;
-
 public abstract class FenceMimicBlock extends Block implements IWaterLoggable, IForgeBlock{
     protected static final VoxelShape SHAPE = Block.box(5D, 0.0D, 5D, 11D, 16.0D, 11D);
     protected static final VoxelShape COLLISION_SHAPE = Block.box(5D, 0.0D, 5D, 11D, 24.0D, 11D);

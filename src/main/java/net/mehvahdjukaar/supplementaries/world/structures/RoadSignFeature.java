@@ -1,45 +1,22 @@
 package net.mehvahdjukaar.supplementaries.world.structures;
 
 import com.mojang.serialization.Codec;
-import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
-import net.minecraft.block.*;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.pattern.BlockStateMatcher;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.util.Direction;
-import net.minecraft.util.RegistryKey;
 import net.minecraft.util.SharedSeedRandom;
-import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.DimensionType;
 import net.minecraft.world.ISeedReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.GenerationStage;
-import net.minecraft.world.gen.Heightmap;
-import net.minecraft.world.gen.blockstateprovider.SimpleBlockStateProvider;
-import net.minecraft.world.gen.feature.*;
-import net.minecraft.world.gen.feature.structure.PillagerOutpostStructure;
+import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.structure.Structure;
-import net.minecraft.world.gen.foliageplacer.BushFoliagePlacer;
 import net.minecraft.world.gen.settings.StructureSeparationSettings;
-import net.minecraft.world.gen.trunkplacer.StraightTrunkPlacer;
-import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.common.BiomeManager;
-import net.minecraftforge.event.world.BiomeLoadingEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.RegistryObject;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.Map;
 import java.util.Random;
 
 

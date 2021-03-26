@@ -11,8 +11,6 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.AxisAlignedBB;
 import org.spongepowered.asm.mixin.Mixin;
 
-import net.mehvahdjukaar.supplementaries.block.util.IBellConnection.BellConnection;
-
 @Mixin(BellTileEntity.class)
 public abstract class BellTileEntityMixin extends TileEntity  implements IBellConnection {
     public BellConnection connection = BellConnection.NONE;

@@ -24,8 +24,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import java.util.List;
 import java.util.function.Supplier;
 
-import net.minecraft.item.Item.Properties;
-
 public class EmptyCageItem extends BlockItem {
     public final Supplier<Item> full;
     public final CageWhitelist cageType;

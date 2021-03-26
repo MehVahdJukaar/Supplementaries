@@ -25,8 +25,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-import net.minecraft.item.Item.Properties;
-
 public class SackItem extends BlockItem {
     public SackItem(Block blockIn, Properties builder) {
         super(blockIn, builder);

@@ -32,12 +32,8 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
-import java.lang.reflect.Field;
 import java.util.Random;
-
-import net.minecraft.block.AbstractBlock.Properties;
 
 public class FaucetBlock extends Block implements IWaterLoggable{
     protected static final VoxelShape SHAPE_NORTH = VoxelShapes.box(0.6875D, 0.3125D, 1D, 0.3125D, 0.9375D, 0.3125D);
@@ -195,12 +191,7 @@ public class FaucetBlock extends Block implements IWaterLoggable{
     }
 
     public static void solidifyConcrete(BlockPos pos, BlockState state, World world){
-        try {
-            //concrete ->solidifiedState
-            Field f = ObfuscationReflectionHelper.findField(ConcretePowderBlock.class,"concrete");
-            f.setAccessible(true);
-            world.setBlock(pos.below(), (BlockState) f.get(state.getBlock()), 2|16);
-        } catch (Exception ignored) {}
+        world.setBlock(pos.below(), ((ConcretePowderBlock) state.getBlock()).concrete, 2|16);
     }
 
 

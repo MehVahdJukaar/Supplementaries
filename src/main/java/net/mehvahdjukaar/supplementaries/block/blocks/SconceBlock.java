@@ -19,8 +19,6 @@ import net.minecraft.world.World;
 import java.util.Random;
 import java.util.function.Supplier;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class SconceBlock extends LightUpBlock{
     protected static final VoxelShape SHAPE = box(6.0D, 0.0D, 6.0D, 10.0D, 11.0D, 10.0D);
     protected final Supplier<BasicParticleType> particleData;

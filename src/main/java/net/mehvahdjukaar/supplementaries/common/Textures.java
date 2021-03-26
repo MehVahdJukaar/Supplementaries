@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.common;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
-import net.mehvahdjukaar.supplementaries.setup.registration.Variants;
+import net.mehvahdjukaar.supplementaries.setup.Variants;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.*;

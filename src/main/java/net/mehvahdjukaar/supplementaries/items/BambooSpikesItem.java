@@ -7,8 +7,6 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 
-import net.minecraft.item.Item.Properties;
-
 public class BambooSpikesItem extends BlockItem {
     public BambooSpikesItem(Block blockIn, Properties builder) {
         super(blockIn, builder);

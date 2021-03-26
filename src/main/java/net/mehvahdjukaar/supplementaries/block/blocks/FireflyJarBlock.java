@@ -15,9 +15,6 @@ import net.minecraft.world.World;
 
 import java.util.Random;
 
-
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class FireflyJarBlock extends Block {
     protected static final VoxelShape SHAPE = VoxelShapes.or(VoxelShapes.box(0.1875D, 0D, 0.1875D, 0.8125D, 0.875D, 0.8125D),
             VoxelShapes.box(0.3125, 0.875, 0.3125, 0.6875, 1, 0.6875));

@@ -30,10 +30,8 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,7 +46,7 @@ public class Dispenser {
 
         if(!RegistryConfigs.reg.DISPENSERS.get())return;
 
-        DEFAULT_BEHAVIORS = Dispenser.getVanillaDispenserBehaviors();
+        DEFAULT_BEHAVIORS = new HashMap<>(DispenserBlock.DISPENSER_REGISTRY);
         if(DEFAULT_BEHAVIORS==null){
             Supplementaries.LOGGER.info("Failed to register dispenser behaviors");
             return;
@@ -88,6 +86,9 @@ public class Dispenser {
         }
         if(RegistryConfigs.reg.BOMB_ENABLED.get()){
             DispenserBlock.registerBehavior(Registry.BOMB_ITEM.get(), new BombsDispenserBehavior());
+            DispenserBlock.registerBehavior(Registry.BOMB_BLUE_ITEM.get(), new BombsDispenserBehavior());
+            DispenserBlock.registerBehavior(Registry.BOMB_ITEM_ON.get(), new BombsDispenserBehavior());
+            DispenserBlock.registerBehavior(Registry.BOMB_BLUE_ITEM_ON.get(), new BombsDispenserBehavior());
         }
 
     }
@@ -103,39 +104,17 @@ public class Dispenser {
     };
     private static final DefaultDispenseItemBehavior shootBehavior = new DefaultDispenseItemBehavior();
 
-    private static Map<Item, IDispenseItemBehavior> getVanillaDispenserBehaviors(){
-        try {
-            Field f = ObfuscationReflectionHelper.findField(DispenserBlock.class,"DISPENSER_REGISTRY");
-            f.setAccessible(true);
-            Map<Item,IDispenseItemBehavior> m = ((Map<Item, IDispenseItemBehavior>) f.get(null));
-            HashMap<Item, IDispenseItemBehavior> map = new HashMap<>();
-            for (Item i:m.keySet()) {
-                map.put(i, m.get(i));
-            }
-            return map;
-        }
-        catch (Exception ignored) {
-            return null;
-        }
-    }
 
     //add item to dispenser and merges it if there's one already
     private static boolean MergeDispenserItem(DispenserTileEntity te, ItemStack filled) {
-        try {
-            //RANDOM, items
-            Field f = ObfuscationReflectionHelper.findField(DispenserTileEntity.class,"items");
-            f.setAccessible(true);
-            NonNullList<ItemStack> stacks = (NonNullList<ItemStack>) f.get(te);
-            for (int i = 0; i < te.getContainerSize(); ++i) {
-                ItemStack s = stacks.get(i);
-                if (s.isEmpty() || (s.getItem() == filled.getItem() && s.getMaxStackSize()>s.getCount())) {
-                    filled.grow(s.getCount());
-                    te.setItem(i, filled);
-                    return true;
-                }
+        NonNullList<ItemStack> stacks = te.items;
+        for (int i = 0; i < te.getContainerSize(); ++i) {
+            ItemStack s = stacks.get(i);
+            if (s.isEmpty() || (s.getItem() == filled.getItem() && s.getMaxStackSize()>s.getCount())) {
+                filled.grow(s.getCount());
+                te.setItem(i, filled);
+                return true;
             }
-        } catch (Exception ignored) {
-            return te.addItem(filled.copy()) < 0;
         }
         return false;
     }

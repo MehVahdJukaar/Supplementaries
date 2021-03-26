@@ -17,9 +17,6 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraftforge.common.IPlantable;
 
-
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class PlanterBlock extends Block implements IWaterLoggable{
     protected static final VoxelShape SHAPE = VoxelShapes.or(VoxelShapes.box(0.125D, 0D, 0.125D, 0.875D, 0.687D, 0.875D), VoxelShapes.box(0D, 0.687D, 0D, 1D, 1D, 1D));
     protected static final VoxelShape SHAPE_C = VoxelShapes.or(VoxelShapes.box(0, 0, 0, 1, 0.9375, 1));

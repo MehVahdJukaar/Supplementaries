@@ -41,9 +41,6 @@ import net.minecraftforge.common.extensions.IForgeBlock;
 import javax.annotation.Nullable;
 import java.util.List;
 
-
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class HourGlassBlock extends Block implements IWaterLoggable, IForgeBlock {
     protected static final VoxelShape SHAPE_Y = Block.box(4D, 0D, 4.0D, 12.0D, 16D, 12.0D);
     protected static final VoxelShape SHAPE_Z = Block.box(4D, 4D, 0.0D, 12.0D, 12D, 16.0D);

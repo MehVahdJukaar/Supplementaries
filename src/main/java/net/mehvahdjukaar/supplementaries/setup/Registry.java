@@ -19,7 +19,6 @@ import net.mehvahdjukaar.supplementaries.inventories.SackContainer;
 import net.mehvahdjukaar.supplementaries.items.*;
 import net.mehvahdjukaar.supplementaries.items.crafting.*;
 import net.mehvahdjukaar.supplementaries.items.tabs.JarTab;
-import net.mehvahdjukaar.supplementaries.setup.registration.Variants;
 import net.mehvahdjukaar.supplementaries.world.structures.FeaturesHandler;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
@@ -76,7 +75,6 @@ public class Registry {
         PARTICLES.register(bus);
         SOUNDS.register(bus);
         RECIPES.register(bus);
-        FeaturesHandler.FEATURES.register(bus);
     }
 
     //creative tab

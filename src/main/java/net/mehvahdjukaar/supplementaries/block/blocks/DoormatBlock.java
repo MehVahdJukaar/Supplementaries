@@ -27,9 +27,6 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class DoormatBlock extends Block {
     protected static final VoxelShape SHAPE_NORTH = Block.box(0.0D, 0.0D, 2.0D, 16.0D, 1.0D, 14.0D);
 

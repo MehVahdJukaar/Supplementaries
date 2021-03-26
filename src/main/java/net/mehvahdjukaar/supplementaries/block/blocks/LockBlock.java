@@ -22,8 +22,6 @@ import net.minecraft.world.server.ServerWorld;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class LockBlock extends Block {
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 

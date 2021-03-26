@@ -66,7 +66,7 @@ public class SoftFluidList {
                 .bottle("alexsmobs:lava_bottle")
                 .bucket(Items.LAVA_BUCKET)
                 .sound(SoundEvents.BUCKET_FILL_LAVA,SoundEvents.BUCKET_EMPTY_LAVA));
-        HONEY = makeSF(new SoftFluid.Builder(Textures.HONEY_TEXTURE,Textures.POTION_TEXTURE_FLOW,"honey")
+        HONEY = makeSF(new SoftFluid.Builder(Textures.HONEY_TEXTURE,Textures.HONEY_TEXTURE,"honey")
                 .translationKey("fluid.supplementaries.honey")
                 .bottle(Items.HONEY_BOTTLE)
                 .textureOverrideF("create:honey")
@@ -225,6 +225,7 @@ public class SoftFluidList {
                 .condition("autumnity")
                 .textureOverride("create:honey")
                 .color(0x8e3f26)
+                .addEqFluid("thermal:syrup")
                 .food("autumnity:syrup_bottle")
                 .translationKey("item.autumnity.syrup")
                 .bottle("autumnity:syrup_bottle")));
@@ -343,6 +344,11 @@ public class SoftFluidList {
                 .color(0xBE53F6)
                 .translationKey("item.betterendforge.umbrella_cluster_juice")
                 .drink("betterendforge:umbrella_cluster_juice")));
+        addOpt(custom,makeSF(new SoftFluid.Builder(Textures.POTION_TEXTURE,Textures.POTION_TEXTURE_FLOW,"soap")
+                .condition("fluffy_farmer")
+                .color(0xcf8df5)
+                .translationKey("item.fluffy_farmer.soap")
+                .bottle("fluffy_farmer:bottle_with_soap_bubbles")));
 
         //inspirations dye bottles. not adding nbt mixed ones
         for (DyeColor c: DyeColor.values()){
@@ -370,30 +376,33 @@ public class SoftFluidList {
         //THIS IS HORRIBLE
         List<SoftFluid> forgeFluidsList = new ArrayList<>();
         for (Fluid f : ForgeRegistries.FLUIDS){
-            if(f instanceof FlowingFluid && ((FlowingFluid) f).getSource()!=f)continue;
-            if(f instanceof ForgeFlowingFluid.Flowing || f==Fluids.EMPTY)continue;
-            boolean eq = false;
-            for (SoftFluid s : custom){
-                if(s.isEquivalent(f)){
-                    //is equivalent, map fluid and item to it
-                    tryAddItem(f.getBucket(),s);
-                    FLUID_MAP.put(f,s);
-                    eq=true;
-                    break;
+            try {
+                if (f == null) continue;
+                if (f instanceof FlowingFluid && ((FlowingFluid) f).getSource() != f) continue;
+                if (f instanceof ForgeFlowingFluid.Flowing || f == Fluids.EMPTY) continue;
+                boolean eq = false;
+                for (SoftFluid s : custom) {
+                    if (s.isEquivalent(f)) {
+                        //is equivalent, map fluid and item to it
+                        tryAddItem(f.getBucket(), s);
+                        FLUID_MAP.put(f, s);
+                        eq = true;
+                        break;
+                    }
                 }
+                if (eq) continue;
+                //is not equivalent: create new SoftFluid
+                SoftFluid newSF = new SoftFluid(new SoftFluid.Builder(f));
+                tryAddItem(f.getBucket(), newSF);
+                FLUID_MAP.put(f, newSF);
+                forgeFluidsList.add(newSF);
             }
-            if(eq)continue;
-            //is not equivalent: create new SoftFluid
-            SoftFluid newSF = new SoftFluid(new SoftFluid.Builder(f));
-            tryAddItem(f.getBucket(),newSF);
-            FLUID_MAP.put(f,newSF);
-            forgeFluidsList.add(newSF);
+            catch (Exception ignored){}
         }
         for(SoftFluid s : forgeFluidsList){
             ID_MAP.put(s.getID(),s);
         }
 
-        int a= 1;
 
     }
 

@@ -35,9 +35,6 @@ import net.minecraft.world.World;
 
 import java.util.Arrays;
 
-
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class PistonLauncherHeadBlock extends DirectionalBlock {
     protected static final VoxelShape PISTON_EXTENSION_EAST_AABB = Block.box(12.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
     protected static final VoxelShape PISTON_EXTENSION_WEST_AABB = Block.box(0.0D, 0.0D, 0.0D, 4.0D, 16.0D, 16.0D);

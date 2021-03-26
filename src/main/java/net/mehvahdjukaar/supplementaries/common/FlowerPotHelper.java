@@ -33,14 +33,15 @@ public class FlowerPotHelper {
 
     public static void init(){
         //maybe not needed since there's only 1 flower pot in vanilla and there are no mods that add more
-        Set<Block> emptyPots = new HashSet<>();
+        Set<FlowerPotBlock> emptyPots = new HashSet<>();
         for (Block b : ForgeRegistries.BLOCKS){
             if(b instanceof FlowerPotBlock){
                 emptyPots.add(((FlowerPotBlock) b).getEmptyPot());
             }
         }
         FULL_POTS = Maps.newHashMap();
-        for (Block pot : emptyPots) {
+        for (FlowerPotBlock pot : emptyPots) {
+
             try {
                 Field f = ObfuscationReflectionHelper.findField(FlowerPotBlock.class, "fullPots");
                 f.setAccessible(true);

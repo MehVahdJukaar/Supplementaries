@@ -5,7 +5,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.SectionPos;
-import net.minecraft.world.IWorldReader;
 import net.minecraft.world.chunk.ChunkStatus;
 import net.minecraft.world.chunk.IChunk;
 import net.minecraft.world.gen.ChunkGenerator;
@@ -15,8 +14,8 @@ import net.minecraft.world.gen.feature.structure.StructureStart;
 import net.minecraft.world.gen.settings.StructureSeparationSettings;
 import net.minecraft.world.server.ServerWorld;
 
-import javax.annotation.Nullable;
-import java.util.*;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class StructureLocator {
 

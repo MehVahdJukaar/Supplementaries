@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.HangingSignBlockTile;
-import net.mehvahdjukaar.supplementaries.block.tiles.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.client.gui.HangingSignGui;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -30,9 +29,6 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
-
-
-import net.minecraft.block.AbstractBlock.Properties;
 
 public class HangingSignBlock extends SwayingBlock {
     protected static final VoxelShape SHAPE_NORTH = VoxelShapes.box(0.4375D, 0D, 0D, 0.5625D, 1D, 1D);

@@ -2,8 +2,6 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.DirectionalBlock;
-import net.minecraft.block.HayBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.DirectionProperty;

@@ -22,8 +22,6 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Supplier;
 
-import net.minecraft.item.Item.Properties;
-
 public class JarItem extends CageItem {
     public JarItem(Block blockIn, Properties properties, Supplier<Item> empty) {
         super(blockIn, properties,empty);

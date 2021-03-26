@@ -15,8 +15,6 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class NetheriteTrapdoorBlock extends TrapDoorBlock {
 
     public NetheriteTrapdoorBlock(Properties builder) {

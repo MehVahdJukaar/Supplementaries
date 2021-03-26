@@ -2,25 +2,6 @@ package net.mehvahdjukaar.supplementaries.plugins.create.behaviors;
 
 
 
-import net.mehvahdjukaar.supplementaries.block.blocks.HourGlassBlock;
-import net.mehvahdjukaar.supplementaries.block.tiles.HourGlassBlockTile;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3i;
-import net.minecraft.world.gen.feature.template.Template;
-
-import java.util.Map;
-import java.util.function.UnaryOperator;
-
-import static net.mehvahdjukaar.supplementaries.client.renderers.tiles.HourGlassBlockTileRenderer.renderSand;
 /*
 
 import com.mojang.blaze3d.matrix.MatrixStack;

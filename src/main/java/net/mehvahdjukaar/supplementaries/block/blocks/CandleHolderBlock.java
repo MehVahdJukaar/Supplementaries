@@ -17,8 +17,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.function.Supplier;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class CandleHolderBlock extends SconceWallBlock {
 
     private static final Map<Direction, VoxelShape> SHAPES = Maps.newEnumMap(ImmutableMap.of(

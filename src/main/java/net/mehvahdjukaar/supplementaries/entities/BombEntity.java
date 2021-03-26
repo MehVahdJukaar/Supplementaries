@@ -1,17 +1,12 @@
 package net.mehvahdjukaar.supplementaries.entities;
 
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.TNTBlock;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.IRendersAsItem;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.EnderCrystalEntity;
-import net.minecraft.entity.monster.GhastEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.entity.projectile.FireballEntity;
 import net.minecraft.entity.projectile.ProjectileItemEntity;
 import net.minecraft.fluid.Fluids;
@@ -126,7 +121,8 @@ public class BombEntity extends ProjectileItemEntity implements IRendersAsItem, 
 
     @Override
     public ItemStack getItem() {
-        return new ItemStack(this.active?Registry.BOMB_ITEM_ON.get():Registry.BOMB_ITEM.get());
+        return this.blue?new ItemStack(this.active?Registry.BOMB_BLUE_ITEM_ON.get():Registry.BOMB_BLUE_ITEM.get())
+                : new ItemStack(this.active?Registry.BOMB_ITEM_ON.get():Registry.BOMB_ITEM.get());
     }
     private IParticleData makeParticle() {
         return  new ItemParticleData(ParticleTypes.ITEM, new ItemStack(Registry.BOMB_ITEM.get()));

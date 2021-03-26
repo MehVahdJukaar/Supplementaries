@@ -8,32 +8,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import vazkii.quark.content.automation.module.PistonsMoveTileEntitiesModule;
-import vazkii.quark.content.client.tooltip.TooltipUtils;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.WeakHashMap;
 
 public class QuarkPistonPlugin {
     //not really a plugin
-    @Nullable
-    public static TileEntity getMovingTile1(BlockPos pos, World world){
-
-        //I could also reference these directly but I'm not sure if it would lead to some possible crashes
-        try {
-            //Class c = Class.forName("vazkii.quark.content.automation.module.PistonsMoveTileEntitiesModule");
-            Class c = PistonsMoveTileEntitiesModule.class;
-            Method m = ObfuscationReflectionHelper.findMethod(c,"getMovement",World.class, BlockPos.class);
-            Object o = m.invoke(null,world,pos);
-            if(o instanceof TileEntity){
-                return (TileEntity) o;
-            }
-        }
-        catch (Exception ignored) {}
-        return null;
-    }
 
     @Nullable
     public static TileEntity getMovingTile(BlockPos pos, World world){
@@ -41,7 +23,7 @@ public class QuarkPistonPlugin {
     }
 
     public static boolean updateMovingTIle(BlockPos pos, World world, TileEntity tile) {
-
+        //not very nice of me to change its private fields :/
         try {
             //Class c = Class.forName("vazkii.quark.content.automation.module.PistonsMoveTileEntitiesModule");
             Class c = PistonsMoveTileEntitiesModule.class;

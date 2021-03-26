@@ -18,8 +18,6 @@ import net.minecraft.world.World;
 import java.util.Random;
 import java.util.function.Supplier;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class SconceLeverBlock extends SconceWallBlock{
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     public SconceLeverBlock(Properties properties, Supplier<BasicParticleType> particleData) {

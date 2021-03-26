@@ -30,8 +30,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class SpeakerBlock extends Block {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;

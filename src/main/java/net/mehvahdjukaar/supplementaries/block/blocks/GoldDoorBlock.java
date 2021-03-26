@@ -15,8 +15,6 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.ModList;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class GoldDoorBlock extends DoorBlock {
 
     public GoldDoorBlock(Properties builder) {

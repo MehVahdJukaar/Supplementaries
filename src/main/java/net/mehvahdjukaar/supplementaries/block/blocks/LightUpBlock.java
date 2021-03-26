@@ -29,8 +29,6 @@ import net.minecraft.world.World;
 
 import java.util.Random;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public abstract class LightUpBlock extends Block implements IWaterLoggable {
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;

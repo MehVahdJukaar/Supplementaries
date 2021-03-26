@@ -26,9 +26,6 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
-import net.minecraft.block.AbstractBlock.OffsetType;
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class FlaxBlock extends CropsBlock {
     private static final int DOUBLE_AGE = 4; //age at which it grows in block above
     private static final VoxelShape FULL_BOTTOM = Block.box(1, 0, 1, 15, 16, 15);

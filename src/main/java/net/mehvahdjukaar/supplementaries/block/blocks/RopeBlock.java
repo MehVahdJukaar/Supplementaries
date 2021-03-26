@@ -52,8 +52,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class RopeBlock extends Block implements IWaterLoggable{
     private final Map<BlockState,VoxelShape> SHAPES_MAP = new HashMap<>();
 

@@ -26,8 +26,6 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class StatuetteBlock extends Block implements IWaterLoggable {
     protected static final VoxelShape SHAPE = Block.box(4,0,4,12,16,12);
 

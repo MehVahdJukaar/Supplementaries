@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.plugins.quark;
 
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.items.SackItem;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.item.ItemStack;
@@ -8,7 +7,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.quark.base.handler.GeneralConfig;
-import vazkii.quark.base.handler.SimilarBlockTypeHandler;
 import vazkii.quark.content.management.capability.ShulkerBoxDropIn;
 
 public class QuarkTooltipPlugin {

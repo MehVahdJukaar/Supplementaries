@@ -53,8 +53,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class SafeBlock extends Block implements IWaterLoggable{
     public static final VoxelShape SHAPE = Block.box(1,0,1,15,16,15);
 

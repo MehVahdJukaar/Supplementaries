@@ -31,7 +31,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import javax.annotation.Nullable;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Random;
 import java.util.UUID;
@@ -329,12 +328,7 @@ public class MobHolder {
     //TODO: react to fluid change
     public void setWaterMobInWater(boolean w){
         if(this.mob != null && this.mob instanceof WaterMobEntity && this.mob.isInWater()!=w){
-            try {
-                Field f = ObfuscationReflectionHelper.findField(Entity.class, "wasTouchingWater");
-                f.setAccessible(true);
-                f.setBoolean(this.mob,w);
-            }
-            catch (Exception ignored){};
+            this.mob.wasTouchingWater = w;
         }
     }
 
@@ -387,7 +381,7 @@ public class MobHolder {
             //don't even need to sync these
             this.specialBehaviorType = SpecialBehaviorType.getType(entity);
             this.capturedMobProperties = CapturedMobs.getType(entity);
-            this.setBucketHolder(entity);
+            //this.setBucketHolder(entity);
 
             //client side stuff
 
@@ -419,11 +413,19 @@ public class MobHolder {
         }
     }
 
+    //todo: delete this
+    //wtf is this.
     //this is horrible
     private void setBucketHolder(Entity entity){
+        /*
+        public net.minecraft.entity.passive.fish.AbstractFishEntity func_203707_dx()Lnet/minecraft/item/ItemStack;
+
+        public net.minecraft.entity.passive.fish.AbstractFishEntity func_204211_f(Lnet/minecraft/item/ItemStack;)V
+        public net.minecraft.entity.passive.fish.TropicalFishEntity func_204211_f(Lnet/minecraft/item/ItemStack;)V*/
         if(entity instanceof AbstractFishEntity){
+
             try {
-                Method m = ObfuscationReflectionHelper.findMethod(AbstractFishEntity.class, "getBucketItemStack");
+                Method m = ObfuscationReflectionHelper.findMethod(AbstractFishEntity.class, "func_203707_dx");
                 m.setAccessible(true);
                 this.bucketHolder = (ItemStack) m.invoke(entity);
             } catch (Exception exception) {
@@ -434,7 +436,7 @@ public class MobHolder {
                 } catch (Exception ignored) {}
             }
             try{
-                Method m2 = ObfuscationReflectionHelper.findMethod(AbstractFishEntity.class, "saveToBucketTag", ItemStack.class);
+                Method m2 = ObfuscationReflectionHelper.findMethod(AbstractFishEntity.class, "func_204211_f", ItemStack.class);
                 m2.setAccessible(true);
                 m2.invoke(entity,this.bucketHolder);
             } catch (Exception exception) {

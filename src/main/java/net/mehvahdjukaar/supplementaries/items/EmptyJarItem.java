@@ -23,9 +23,6 @@ import net.minecraft.world.World;
 
 import java.util.function.Supplier;
 
-import net.mehvahdjukaar.supplementaries.items.EmptyCageItem.CageWhitelist;
-import net.minecraft.item.Item.Properties;
-
 public class EmptyJarItem extends EmptyCageItem {
     public EmptyJarItem(Block blockIn, Properties properties, Supplier<Item> full, CageWhitelist whitelist) {
         super(blockIn, properties, full, whitelist);

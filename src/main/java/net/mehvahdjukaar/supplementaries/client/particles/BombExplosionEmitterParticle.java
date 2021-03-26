@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.particles;
 
 import net.mehvahdjukaar.supplementaries.setup.Registry;
-import net.minecraft.client.particle.EmitterParticle;
 import net.minecraft.client.particle.IParticleFactory;
 import net.minecraft.client.particle.MetaParticle;
 import net.minecraft.client.particle.Particle;

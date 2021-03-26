@@ -2,7 +2,9 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.client.gui.BlackBoardGui;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.IWaterLoggable;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
@@ -33,13 +35,11 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraftforge.common.Tags;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
-
-import net.minecraft.block.AbstractBlock.Properties;
-import net.minecraftforge.common.Tags;
 
 public class BlackboardBlock extends Block implements IWaterLoggable {
     public static final VoxelShape SHAPE_SOUTH = Block.box(0.0D,0.0D,0.0D,16.0D,16.0D,5.0D);
@@ -121,7 +121,7 @@ public class BlackboardBlock extends Block implements IWaterLoggable {
                 if (item == Items.QUARTZ || item.is(Tags.Items.DYES_WHITE)) {
                     te.pixels[x][y] = 1;
                     return ActionResultType.sidedSuccess(worldIn.isClientSide);
-                } else if (item == Items.COAL || item == Items.CHARCOAL || item.is(Tags.Items.DYES_BLACK)) {
+                } else if (item == Items.COAL || item == Items.CHARCOAL || item.is(Tags.Items.DYES_BLACK) || item==Items.SPONGE || item==Items.WET_SPONGE) {
                     te.pixels[x][y] = 0;
                     return ActionResultType.sidedSuccess(worldIn.isClientSide);
                 }

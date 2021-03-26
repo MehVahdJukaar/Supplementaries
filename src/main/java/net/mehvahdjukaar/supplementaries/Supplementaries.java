@@ -8,6 +8,8 @@ import net.mehvahdjukaar.supplementaries.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.setup.ClientSetup;
 import net.mehvahdjukaar.supplementaries.setup.ModSetup;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.world.structures.StructureRegistry;
+import net.minecraft.item.HoneyBottleItem;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -50,10 +52,11 @@ public class Supplementaries{
 
         Registry.init(bus);
 
+        StructureRegistry.init(bus);
+
         bus.addListener(ModSetup::init);
 
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> bus.addListener(ClientSetup::init));
-
 
 
 

@@ -36,8 +36,6 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class WindVaneBlock extends Block implements IWaterLoggable {
     protected static final VoxelShape SHAPE = VoxelShapes.box(0.125D, 0D, 0.125D, 0.875D, 1D, 0.875D);
 

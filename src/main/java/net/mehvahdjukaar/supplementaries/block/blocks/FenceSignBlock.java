@@ -26,9 +26,6 @@ import net.minecraft.world.World;
 import java.util.ArrayList;
 import java.util.List;
 
-
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class FenceSignBlock extends FenceMimicBlock{
 
     public FenceSignBlock(Properties properties) {

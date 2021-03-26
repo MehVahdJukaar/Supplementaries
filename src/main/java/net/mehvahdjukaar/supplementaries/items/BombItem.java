@@ -1,14 +1,10 @@
 package net.mehvahdjukaar.supplementaries.items;
 
 import net.mehvahdjukaar.supplementaries.entities.BombEntity;
-import net.mehvahdjukaar.supplementaries.fluids.SoftFluid;
-import net.mehvahdjukaar.supplementaries.fluids.SoftFluidList;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.EnchantedGoldenAppleItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Rarity;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;

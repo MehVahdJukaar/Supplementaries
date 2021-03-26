@@ -28,8 +28,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.function.Supplier;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class SconceWallBlock extends SconceBlock {
     public static final DirectionProperty FACING = HorizontalBlock.FACING;
     //TODO: make map for other blocks

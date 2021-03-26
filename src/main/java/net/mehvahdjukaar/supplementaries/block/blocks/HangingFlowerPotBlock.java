@@ -36,8 +36,6 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class HangingFlowerPotBlock extends Block{
 
     protected static final VoxelShape SHAPE = Block.box(5.0D, 0.0D, 5.0D, 11.0D, 6.0D, 11.0D);

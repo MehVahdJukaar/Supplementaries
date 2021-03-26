@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 
-import net.mehvahdjukaar.supplementaries.block.tiles.PulleyBlockTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -20,7 +19,6 @@ import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -34,9 +32,6 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.Random;
-
-
-import net.minecraft.block.AbstractBlock.Properties;
 
 public class CrankBlock extends Block implements IWaterLoggable{
     protected static final VoxelShape SHAPE_DOWN = VoxelShapes.box(0.125D, 0.6875D, 0.875D, 0.875D, 1D, 0.125D);

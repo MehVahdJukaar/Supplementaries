@@ -45,9 +45,10 @@ public class Spawns {
     }
 
     public static void registerSpawningStuff(){
-        if(!RegistryConfigs.reg.FIREFLY_ENABLED.get())return;
-        EntitySpawnPlacementRegistry.register((EntityType<FireflyEntity>)Registry.FIREFLY_TYPE, EntitySpawnPlacementRegistry.PlacementType.NO_RESTRICTIONS,
-                Heightmap.Type.MOTION_BLOCKING, FireflyEntity::canSpawnOn);
+        if(RegistryConfigs.reg.FIREFLY_ENABLED.get()) {
+            EntitySpawnPlacementRegistry.register((EntityType<FireflyEntity>) Registry.FIREFLY_TYPE, EntitySpawnPlacementRegistry.PlacementType.NO_RESTRICTIONS,
+                    Heightmap.Type.MOTION_BLOCKING, FireflyEntity::canSpawnOn);
+        }
     }
 
 

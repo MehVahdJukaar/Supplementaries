@@ -23,8 +23,6 @@ import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public abstract class SwayingBlock extends Block implements IWaterLoggable {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final IntegerProperty EXTENSION = BlockProperties.EXTENSION;

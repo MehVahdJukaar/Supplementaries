@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.setup.registration;
+package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.HangingSignBlock;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;

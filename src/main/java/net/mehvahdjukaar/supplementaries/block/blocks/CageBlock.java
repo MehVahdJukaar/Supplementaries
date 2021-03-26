@@ -36,9 +36,6 @@ import net.minecraft.world.World;
 import java.util.Collections;
 import java.util.List;
 
-
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class CageBlock extends Block implements IWaterLoggable {
     private static final ResourceLocation CONTENTS = new ResourceLocation("contents");
     protected static final VoxelShape SHAPE = Block.box(1D,0D,1D,15.0D,16.0D,15.0D);

@@ -26,8 +26,6 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class EnhancedLanternBlock extends SwayingBlock {
     public static final VoxelShape SHAPE_SOUTH = VoxelShapes.box(0.6875D, 0.125D, 0.625D, 0.3125D, 1D, 0D);
     public static final VoxelShape SHAPE_NORTH = VoxelShapes.box(0.3125D, 0.125D, 0.375D, 0.6875D, 1D, 1D);

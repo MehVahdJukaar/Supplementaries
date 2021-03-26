@@ -43,8 +43,6 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Random;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class GlobeBlock extends Block implements IWaterLoggable {
     protected static final VoxelShape SHAPE = VoxelShapes.box(0.125D, 0D, 0.125D, 0.875D, 1D, 0.875D);
 

@@ -31,8 +31,6 @@ import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.ModList;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class PancakeBlock extends Block implements IWaterLoggable{
     protected static final VoxelShape SHAPE_1 = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 2.0D, 14.0D);
     protected static final VoxelShape SHAPE_2 = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 4.0D, 14.0D);

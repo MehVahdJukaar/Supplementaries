@@ -2,29 +2,6 @@ package net.mehvahdjukaar.supplementaries.plugins.create.behaviors;
 
 
 
-import net.mehvahdjukaar.supplementaries.block.blocks.BambooSpikesBlock;
-import net.mehvahdjukaar.supplementaries.block.tiles.BambooSpikesBlockTile;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionUtils;
-import net.minecraft.potion.Potions;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.World;
-
-import javax.annotation.Nonnull;
-
 /*
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;

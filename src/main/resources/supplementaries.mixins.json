@@ -19,7 +19,8 @@
         "LanternBlockMixin",
         "HorseEntityAccessor",
         "ChickenEntityAccessor",
-        "CampfireMixin"
+        "CampfireMixin",
+        "CrossbowItemMixin"
     ],
     "client": [
         "ParrotPartyMixin",

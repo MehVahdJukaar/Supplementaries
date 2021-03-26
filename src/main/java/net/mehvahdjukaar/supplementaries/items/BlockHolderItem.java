@@ -9,8 +9,6 @@ import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 
-import net.minecraft.item.Item.Properties;
-
 public class BlockHolderItem extends BlockItem {
     public BlockHolderItem(Block blockIn, Properties builder) {
         super(blockIn, builder);

@@ -30,9 +30,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class WallLanternBlock extends EnhancedLanternBlock {
 
     public static final BooleanProperty LIT = BlockStateProperties.LIT;

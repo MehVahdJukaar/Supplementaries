@@ -31,9 +31,6 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class ItemShelfBlock extends Block implements IWaterLoggable {
   protected static final VoxelShape SHAPE_NORTH = Block.box(0D, 1.0D, 13.0D, 16.0D, 4.0D, 16.0D);
     protected static final VoxelShape SHAPE_SOUTH = Block.box(0D, 1.0D, 0.0D, 16.0D, 4.0D, 3.0D);

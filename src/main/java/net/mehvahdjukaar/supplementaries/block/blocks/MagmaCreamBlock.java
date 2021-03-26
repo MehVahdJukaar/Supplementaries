@@ -1,7 +1,10 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.BreakableBlock;
+import net.minecraft.block.DirectionalBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -13,20 +16,19 @@ import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Mirror;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.ModList;
+import vazkii.quark.api.IConditionalSticky;
 
 import javax.annotation.Nullable;
 import java.util.List;
-
-import net.minecraft.block.AbstractBlock.Properties;
-import net.minecraftforge.fml.ModList;
-import vazkii.quark.api.IConditionalSticky;
 
 public class MagmaCreamBlock extends BreakableBlock implements IConditionalSticky {
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
@@ -65,6 +67,16 @@ public class MagmaCreamBlock extends BreakableBlock implements IConditionalStick
     @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(FACING);
+    }
+
+    @Override
+    public BlockState rotate(BlockState state, Rotation rot) {
+        return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
+    }
+
+    @Override
+    public BlockState mirror(BlockState state, Mirror mirrorIn) {
+        return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
     /*
     public void onFallenUpon(World worldIn, BlockPos pos, Entity entityIn, float fallDistance) {

@@ -17,9 +17,6 @@ import net.minecraft.world.World;
 
 import java.util.Random;
 
-
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class DoubleCakeBlock extends DirectionalCakeBlock {
 
     protected static final VoxelShape[] SHAPES_WEST = new VoxelShape[]{

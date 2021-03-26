@@ -13,8 +13,6 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class JarBoatBlock extends HorizontalBlock {
     protected static final VoxelShape SHAPE_X = Block.box(3,0,0,13,10,16);
     protected static final VoxelShape SHAPE_Z = Block.box(0,0,3,16,10,13);

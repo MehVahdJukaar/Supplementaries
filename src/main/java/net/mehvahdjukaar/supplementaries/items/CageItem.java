@@ -31,8 +31,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-import net.minecraft.item.Item.Properties;
-
 public class CageItem extends BlockItem {
     public final Supplier<Item> empty;
     public CageItem(Block blockIn, Properties properties, Supplier<Item> empty) {

@@ -17,8 +17,6 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.ModList;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class NetheriteDoorBlock extends DoorBlock {
 
     public NetheriteDoorBlock(Properties builder) {

@@ -14,9 +14,6 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.extensions.IForgeBlock;
 
-
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class RedstoneIlluminatorBlock extends Block implements IForgeBlock {
     public static final IntegerProperty POWER = BlockStateProperties.POWER;
     public RedstoneIlluminatorBlock(Properties properties) {

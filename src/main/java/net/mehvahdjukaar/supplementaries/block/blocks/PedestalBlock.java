@@ -10,7 +10,6 @@ import net.minecraft.block.IWaterLoggable;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
@@ -31,9 +30,6 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-
-
-import net.minecraft.block.AbstractBlock.Properties;
 
 public class PedestalBlock extends Block implements IWaterLoggable {
     protected static final VoxelShape SHAPE = VoxelShapes.or(VoxelShapes.box(0.1875D, 0.125D, 0.1875D, 0.815D, 0.885D, 0.815D),

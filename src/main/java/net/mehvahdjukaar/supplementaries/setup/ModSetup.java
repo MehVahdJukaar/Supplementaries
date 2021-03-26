@@ -4,7 +4,6 @@ package net.mehvahdjukaar.supplementaries.setup;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.util.CapturedMobs;
 import net.mehvahdjukaar.supplementaries.common.FlowerPotHelper;
-import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.datagen.RecipeCondition;
@@ -14,7 +13,7 @@ import net.mehvahdjukaar.supplementaries.mixins.HorseEntityAccessor;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.commands.ModCommands;
 import net.mehvahdjukaar.supplementaries.plugins.create.SupplementariesCreatePlugin;
-import net.mehvahdjukaar.supplementaries.plugins.quark.QuarkTooltipPlugin;
+import net.mehvahdjukaar.supplementaries.world.structures.StructureRegistry;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ComposterBlock;
 import net.minecraft.block.FlowerPotBlock;
@@ -28,7 +27,6 @@ import net.minecraft.loot.RandomValueRange;
 import net.minecraft.loot.conditions.RandomChance;
 import net.minecraft.loot.functions.SetCount;
 import net.minecraftforge.common.BasicTrade;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -48,47 +46,51 @@ public class ModSetup {
 
 
     public static void init(final FMLCommonSetupEvent event) {
+        event.enqueueWork(()-> {
 
-        CraftingHelper.register(new RecipeCondition.Serializer(RecipeCondition.MY_FLAG));
+            CraftingHelper.register(new RecipeCondition.Serializer(RecipeCondition.MY_FLAG));
 
-        NetworkHandler.registerMessages();
+            NetworkHandler.registerMessages();
 
-        //order matters here
-        Spawns.registerSpawningStuff();
+            //order matters here
+            Spawns.registerSpawningStuff();
 
-        ComposterBlock.COMPOSTABLES.put(Registry.FLAX_SEEDS_ITEM.get().asItem(),0.3F);
-        ComposterBlock.COMPOSTABLES.put(Registry.FLAX_ITEM.get().asItem(),0.65F);
-        ComposterBlock.COMPOSTABLES.put(Registry.FLAX_BLOCK.get().asItem(),1);
-
-
-        List<ItemStack> chickenFood = new ArrayList<>();
-        Collections.addAll(chickenFood, ChickenEntityAccessor.getFoodItems().getItems());
-        chickenFood.add(new ItemStack(Registry.FLAX_SEEDS_ITEM.get()));
-        ChickenEntityAccessor.setFoodItems(Ingredient.of(chickenFood.stream()));
-
-        List<ItemStack> horseFood = new ArrayList<>();
-        Collections.addAll(horseFood, HorseEntityAccessor.getFoodItems().getItems());
-        horseFood.add(new ItemStack(Registry.FLAX_ITEM.get()));
-        horseFood.add(new ItemStack(Registry.FLAX_BLOCK_ITEM.get()));
-        HorseEntityAccessor.setFoodItems(Ingredient.of(horseFood.stream()));
+            ComposterBlock.COMPOSTABLES.put(Registry.FLAX_SEEDS_ITEM.get().asItem(), 0.3F);
+            ComposterBlock.COMPOSTABLES.put(Registry.FLAX_ITEM.get().asItem(), 0.65F);
+            ComposterBlock.COMPOSTABLES.put(Registry.FLAX_BLOCK.get().asItem(), 1);
 
 
+            List<ItemStack> chickenFood = new ArrayList<>();
+            Collections.addAll(chickenFood, ChickenEntityAccessor.getFoodItems().getItems());
+            chickenFood.add(new ItemStack(Registry.FLAX_SEEDS_ITEM.get()));
+            ChickenEntityAccessor.setFoodItems(Ingredient.of(chickenFood.stream()));
 
-        if (ModList.get().isLoaded("create")) {
-            SupplementariesCreatePlugin.initialize();
-        }
+            List<ItemStack> horseFood = new ArrayList<>();
+            Collections.addAll(horseFood, HorseEntityAccessor.getFoodItems().getItems());
+            horseFood.add(new ItemStack(Registry.FLAX_ITEM.get()));
+            horseFood.add(new ItemStack(Registry.FLAX_BLOCK_ITEM.get()));
+            HorseEntityAccessor.setFoodItems(Ingredient.of(horseFood.stream()));
 
 
-        ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(Registry.FLAX_ITEM.get().getRegistryName(), Registry.FLAX_POT);
+            if (ModList.get().isLoaded("create")) {
+                SupplementariesCreatePlugin.initialize();
+            }
 
-        FlowerPotHelper.init();
 
-        SoftFluidList.init();
+            ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(Registry.FLAX_ITEM.get().getRegistryName(), Registry.FLAX_POT);
 
-        CapturedMobs.refresh();
+            FlowerPotHelper.init();
 
-        Dispenser.registerBehaviors();
-        //event.enqueueWork(Dispenser::registerBehaviors);
+            SoftFluidList.init();
+
+            CapturedMobs.refresh();
+
+            Dispenser.registerBehaviors();
+            //event.enqueueWork(Dispenser::registerBehaviors);
+
+            StructureRegistry.setup();
+
+        });
     }
 
     @SubscribeEvent
