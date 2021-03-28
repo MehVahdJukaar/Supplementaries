@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.RepeaterBlock;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.IntegerProperty;

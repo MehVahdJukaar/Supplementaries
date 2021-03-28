@@ -2,16 +2,20 @@ package net.mehvahdjukaar.supplementaries.world.structures;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
+import javafx.collections.transformation.SortedList;
 import net.fluffyfarmer.FluffyFarmerMod;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SharedSeedRandom;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.MobSpawnInfo;
 import net.minecraft.world.biome.provider.BiomeProvider;
@@ -20,14 +24,16 @@ import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.jigsaw.JigsawManager;
-import net.minecraft.world.gen.feature.structure.AbstractVillagePiece;
-import net.minecraft.world.gen.feature.structure.Structure;
-import net.minecraft.world.gen.feature.structure.StructureStart;
-import net.minecraft.world.gen.feature.structure.VillageConfig;
+import net.minecraft.world.gen.feature.structure.*;
+import net.minecraft.world.gen.feature.template.StructureProcessor;
 import net.minecraft.world.gen.feature.template.TemplateManager;
+import net.minecraft.world.gen.settings.StructureSeparationSettings;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.world.BlockEvent;
 import org.apache.logging.log4j.Level;
+import vazkii.quark.content.world.gen.structure.processor.BigDungeonChestProcessor;
 
-import java.util.List;
+import java.util.*;
 
 public class RoadSignStructure extends Structure<NoFeatureConfig> {
     public RoadSignStructure(Codec<NoFeatureConfig> codec) {
@@ -96,41 +102,66 @@ public class RoadSignStructure extends Structure<NoFeatureConfig> {
 
 
 
-    /**
-     * This is where extra checks can be done to determine if the structure can spawn here.
-     * This only needs to be overridden if you're adding additional spawn conditions.
-     *
-     * Fun fact, if you set your structure separation/spacing to be 0/1, you can use
-     * func_230363_a_ to return true only if certain chunk coordinates are passed in
-     * which allows you to spawn structures only at certain coordinates in the world.
-     *
-     * Notice how the biome is also passed in. Though, you are not going to
-     * do any biome checking here as you should've added this structure to
-     * the biomes you wanted already with the biome load event.
-     *
-     * Basically, this method is used for determining if the land is at a suitable height,
-     * if certain other structures are too close or not, or some other restrictive condition.
-     *
-     * For example, Pillager Outposts added a check to make sure it cannot spawn within 10 chunk of a Village.
-     * (Bedrock Edition seems to not have the same check)
-     *
-     *
-     * Also, please for the love of god, do not do dimension checking here. If you do and
-     * another mod's dimension is trying to spawn your structure, the locate
-     * command will make minecraft hang forever and break the game.
-     *
-     * Instead, use the addDimensionalSpacing method in StructureTutorialMain class.
-     * If you check for the dimension there and do not add your structure's
-     * spacing into the chunk generator, the structure will not spawn in that dimension!
-     */
+        /**
+         * This is where extra checks can be done to determine if the structure can spawn here.
+         * This only needs to be overridden if you're adding additional spawn conditions.
+         *
+         * Fun fact, if you set your structure separation/spacing to be 0/1, you can use
+         * func_230363_a_ to return true only if certain chunk coordinates are passed in
+         * which allows you to spawn structures only at certain coordinates in the world.
+         *
+         * Notice how the biome is also passed in. Though, you are not going to
+         * do any biome checking here as you should've added this structure to
+         * the biomes you wanted already with the biome load event.
+         *
+         * Basically, this method is used for determining if the land is at a suitable height,
+         * if certain other structures are too close or not, or some other restrictive condition.
+         *
+         * For example, Pillager Outposts added a check to make sure it cannot spawn within 10 chunk of a Village.
+         * (Bedrock Edition seems to not have the same check)
+         *
+         *
+         * Also, please for the love of god, do not do dimension checking here. If you do and
+         * another mod's dimension is trying to spawn your structure, the locate
+         * command will make minecraft hang forever and break the game.
+         *
+         * Instead, use the addDimensionalSpacing method in StructureTutorialMain class.
+         * If you check for the dimension there and do not add your structure's
+         * spacing into the chunk generator, the structure will not spawn in that dimension!
+         */
 
+
+    private boolean isValidPos(ChunkGenerator gen, int x, int z, Set<Integer> heightMap){
+        int y = gen.getFirstOccupiedHeight(x,z, Heightmap.Type.WORLD_SURFACE_WG);
+        IBlockReader reader = gen.getBaseColumn(x,z);
+        if(!reader.getFluidState(new BlockPos(x,y,z)).isEmpty())return false;
+        heightMap.add(y);
+        return true;
+    }
 
     @Override
     protected boolean isFeatureChunk(ChunkGenerator chunkGenerator, BiomeProvider biomeSource, long seed, SharedSeedRandom chunkRandom, int chunkX, int chunkZ, Biome biome, ChunkPos chunkPos, NoFeatureConfig featureConfig) {
+        int x = (chunkX << 4) + 7;
+        int z = (chunkZ << 4) + 7;
+
+
+        int y = chunkGenerator.getFirstOccupiedHeight(x,z, Heightmap.Type.WORLD_SURFACE_WG);
+
+        if(y>100||y<60)return false;
+
+        TreeSet<Integer> set = new TreeSet<>();
+
+        set.add(y);
+        if(!isValidPos(chunkGenerator,x+2,z+2, set))return false;
+        if(!isValidPos(chunkGenerator,x+2,z-2, set))return false;
+        if(!isValidPos(chunkGenerator,x-2,z+2, set))return false;
+        if(!isValidPos(chunkGenerator,x-2,z-2, set))return false;
+
+
+        if(set.last()-set.first()>3) return false;
 
         //chunkGenerator.findNearestMapFeature()
-        int landHeight = chunkGenerator.getFirstFreeHeight(chunkX << 4, chunkZ << 4, Heightmap.Type.WORLD_SURFACE_WG);
-        return true;//landHeight > 64;
+        return true;
     }
 
 
@@ -139,18 +170,27 @@ public class RoadSignStructure extends Structure<NoFeatureConfig> {
      */
     //
     public static class Start extends StructureStart<NoFeatureConfig>  {
+
         public Start(Structure<NoFeatureConfig> structureIn, int chunkX, int chunkZ, MutableBoundingBox mutableBoundingBox, int referenceIn, long seedIn) {
             super(structureIn, chunkX, chunkZ, mutableBoundingBox, referenceIn, seedIn);
         }
 
         @Override
         public void generatePieces(DynamicRegistries dynamicRegistryManager, ChunkGenerator chunkGenerator, TemplateManager templateManagerIn, int chunkX, int chunkZ, Biome biomeIn, NoFeatureConfig config) {
-
             // Turns the chunk coordinates into actual coordinates we can use. (Gets center of that chunk)
             int x = (chunkX << 4) + 7;
             int z = (chunkZ << 4) + 7;
 
+            //I could remove this but it makes for nicer generation
 
+            int sum = 0;
+            sum+=chunkGenerator.getFirstOccupiedHeight(x,z, Heightmap.Type.WORLD_SURFACE_WG);
+            sum+=chunkGenerator.getFirstOccupiedHeight(x+2,z+2, Heightmap.Type.WORLD_SURFACE_WG);
+            sum+=chunkGenerator.getFirstOccupiedHeight(x+2,z-2, Heightmap.Type.WORLD_SURFACE_WG);
+            sum+=chunkGenerator.getFirstOccupiedHeight(x-2,z+2, Heightmap.Type.WORLD_SURFACE_WG);
+            sum+=chunkGenerator.getFirstOccupiedHeight(x-2,z-2, Heightmap.Type.WORLD_SURFACE_WG);
+
+            int y = Math.round(sum/5f);
 
             /*
              * We pass this into addPieces to tell it where to generate the structure.
@@ -216,9 +256,8 @@ public class RoadSignStructure extends Structure<NoFeatureConfig> {
             //
             // By lifting the house up by 1 and lowering the bounding box, the land at bottom of house will now be
             // flush with the surrounding terrain without blocking off the doorstep.
-            this.pieces.forEach(piece -> piece.move(0, 1, 0));
+            this.pieces.forEach(piece -> piece.move(0, 0, 0));
             this.pieces.forEach(piece -> piece.getBoundingBox().y0 -= 1);
-
 
 
 

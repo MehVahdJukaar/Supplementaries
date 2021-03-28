@@ -1,0 +1,10 @@
+{
+  "processors": [
+    {
+      "processor_type": "supplementaries:data_processor"
+    },
+    {
+      "processor_type": "supplementaries:air_processor"
+    }
+  ]
+}

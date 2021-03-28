@@ -49,14 +49,14 @@ public class HangingSignBlock extends SwayingBlock {
         TileEntity tileentity = worldIn.getBlockEntity(pos);
         if (tileentity instanceof HangingSignBlockTile) {
             HangingSignBlockTile te = (HangingSignBlockTile) tileentity;
-            ItemStack itemstack = player.getItemInHand(handIn);
+            ItemStack handItem = player.getItemInHand(handIn);
             boolean server = !worldIn.isClientSide();
-            boolean isDye = itemstack.getItem() instanceof DyeItem && player.abilities.mayBuild;
+            boolean isDye = handItem.getItem() instanceof DyeItem && player.abilities.mayBuild;
             //color
             if (isDye){
-                if(te.textHolder.setTextColor(((DyeItem) itemstack.getItem()).getDyeColor())){
+                if(te.textHolder.setTextColor(((DyeItem) handItem.getItem()).getDyeColor())){
                     if (!player.isCreative()) {
-                        itemstack.shrink(1);
+                        handItem.shrink(1);
                     }
                     if(server)te.setChanged();
                     return ActionResultType.sidedSuccess(worldIn.isClientSide);
@@ -65,7 +65,6 @@ public class HangingSignBlock extends SwayingBlock {
             //not an else to allow to place dye items after coloring
             //place item
             if(handIn==Hand.MAIN_HAND) {
-                ItemStack handItem = player.getItemInHand(handIn);
                 //remove
                 if (!te.isEmpty() && handItem.isEmpty()) {
                     ItemStack it = te.removeStackFromSlot(0);
@@ -76,7 +75,7 @@ public class HangingSignBlock extends SwayingBlock {
                     return ActionResultType.sidedSuccess(worldIn.isClientSide);
                 }
                 //place
-                else if (!handItem.isEmpty()) {
+                else if (!handItem.isEmpty() && te.isEmpty()) {
                     ItemStack it = handItem.copy();
                     it.setCount(1);
                     te.setItems(NonNullList.withSize(1, it));
@@ -92,7 +91,7 @@ public class HangingSignBlock extends SwayingBlock {
                 }
             }
             // open gui (edit sign with empty hand)
-            else if (itemstack.isEmpty()) {
+            else if (handItem.isEmpty()) {
                 if(!server) HangingSignGui.open(te);
                 return ActionResultType.sidedSuccess(worldIn.isClientSide);
             }

@@ -4,9 +4,11 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.Codec;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.WorldGenRegistries;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.FlatChunkGenerator;
@@ -18,6 +20,8 @@ import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.settings.DimensionStructuresSettings;
 import net.minecraft.world.gen.settings.StructureSeparationSettings;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -35,38 +39,15 @@ import java.util.function.Supplier;
 
 public class StructureRegistry {
 
-    /**
-     * We are using the Deferred Registry system to register our structure as this is the preferred way on Forge.
-     * This will handle registering the base structure for us at the correct time so we don't have to handle it ourselves.
-     *
-     * HOWEVER, do note that Deferred Registries only work for anything that is a Forge Registry. This means that
-     * configured structures and configured features need to be registered directly to WorldGenRegistries as there
-     * is no Deferred Registry system for them.
-     */
+
     public static final DeferredRegister<Structure<?>> STRUCTURES = DeferredRegister.create(ForgeRegistries.STRUCTURE_FEATURES, Supplementaries.MOD_ID);
 
-    /**
-     * Registers the structure itself and sets what its path is. In this case, the
-     * structure will have the resourcelocation of structure_tutorial:run_down_house.
-     *
-     * It is always a good idea to register your Structures so that other mods and datapacks can
-     * use them too directly from the registries. It great for mod/datapacks compatibility.
-     *
-     * IMPORTANT: Once you have set the name for your structure below and distributed your mod,
-     * it should NEVER be changed or else it can cause worlds to become corrupted if they generated
-     * any chunks with your mod with the old structure name. See MC-194811 in Mojang's bug tracker for details.
-     *
-     * Forge has an issue report here: https://github.com/MinecraftForge/MinecraftForge/issues/7363
-     * Keep watch on that to know when it is safe to remove or change structure's registry names
-     */
     public static final RegistryObject<Structure<NoFeatureConfig>> ROAD_SIGN = STRUCTURES.register("road_sign",
             () -> (new RoadSignStructure(NoFeatureConfig.CODEC)));
 
-    /**
-     * Static instance of our structure so we can reference it and add it to biomes easily.
-     */
     public static Supplier<StructureFeature<?, ?>> CONFIGURED_ROAD_SIGN = ()->ROAD_SIGN.get().configured(IFeatureConfig.NONE);
 
+    //mod init. registers events
     public static void init(IEventBus bus) {
         // For registration and init stuff.
         STRUCTURES.register(bus);
@@ -79,28 +60,16 @@ public class StructureRegistry {
         forgeBus.addListener(EventPriority.HIGH, StructureRegistry::addStructureToBiome);
     }
 
-    /**
-     * Here, setupStructures will be ran after registration of all structures are finished.
-     * This is important to be done here so that the Deferred Registry has already ran and
-     * registered/created our structure for us.
-     *
-     * Once after that structure instance is made, we then can now do the rest of the setup
-     * that requires a structure instance such as setting the structure spacing, creating the
-     * configured structure instance, and more.
-     */
+    //common seutp
     public static void setup() {
         setupStructures();
         registerConfiguredStructures();
+
+        RoadSignProcessor.register();
+        AirProcessor.register();
     }
 
 
-    /**
-     * This is the event you will use to add anything to any biome.
-     * This includes spawns, changing the biome's looks, messing with its surfacebuilders,
-     * adding carvers, spawning new features... etc
-     *
-     * Here, we will use this to add our structure to all biomes.
-     */
     public static void addStructureToBiome(final BiomeLoadingEvent event) {
         /*
          * Add our structure to all biomes including other modded biomes.
@@ -111,6 +80,8 @@ public class StructureRegistry {
          * RegistryKey.getOrCreateKey(Registry.BIOME_KEY, event.getName()) to get the biome's
          * registrykey. Then that can be fed into the dictionary to get the biome's types.
          */
+        BiomeDictionary.hasType(RegistryKey.create(Registry.BIOME_REGISTRY, event.getName()), BiomeDictionary.Type.OCEAN);
+
         event.getGeneration().getStructures().add(() -> CONFIGURED_ROAD_SIGN.get());
     }
 
@@ -153,6 +124,8 @@ public class StructureRegistry {
                     serverWorld.dimension().equals(World.OVERWORLD)){
                 return;
             }
+            //serverWorld.getChunkSource().generator.getBiomeSource().possibleBiomes().stream().forEach(b->b.cange);
+
 
             //adding only to biomes and dimensions that can generate vanilla villages
             if(serverWorld.getChunkSource().generator.getBiomeSource().canGenerateStructure(Structure.VILLAGE)) {
@@ -190,8 +163,8 @@ public class StructureRegistry {
                 ROAD_SIGN.get(), /* The instance of the structure */
                 new StructureSeparationSettings(10 /* average distance apart in chunks between spawn attempts */,
                         5 /* minimum distance apart in chunks between spawn attempts */,
-                        214986419 /* this modifies the seed of the structure so no two structures always spawn over each-other. Make this large and unique. */),
-                true);
+                        431041527 /* this modifies the seed of the structure so no two structures always spawn over each-other. Make this large and unique. */),
+                false);
 
 
         // Add more structures here and so on

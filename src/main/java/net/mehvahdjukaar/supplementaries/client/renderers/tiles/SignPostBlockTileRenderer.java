@@ -60,7 +60,7 @@ public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockT
 
         Lod lod = new Lod(cameraPos,pos);
 
-        if(!lod.isMedium())return;
+        if(!lod.isFar())return;
 
 
         boolean up = tile.up;

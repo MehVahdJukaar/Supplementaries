@@ -50,6 +50,7 @@ import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.PacketDistributor;
+import slimeknights.mantle.inventory.ItemHandlerSlot;
 
 import java.util.HashMap;
 import java.util.Map;
