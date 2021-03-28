@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.client.gui.BlackBoardGui;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IWaterLoggable;
@@ -9,10 +10,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.item.*;
 import net.minecraft.loot.LootContext;
 import net.minecraft.loot.LootParameters;
 import net.minecraft.nbt.CompoundNBT;
@@ -26,6 +24,7 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.vector.Vector3d;
@@ -102,6 +101,26 @@ public class BlackboardBlock extends Block implements IWaterLoggable {
         }
     }
 
+    //I started using this convention so I have to keep it for backwards compat
+    private static byte colorToByte(DyeColor color){
+        switch (color){
+            case BLACK:return 0;
+            case WHITE:return 1;
+            case ORANGE:return 15;
+            default:return (byte) color.getId();
+        }
+    }
+
+    public static int colorFromByte(byte b){
+        switch (b){
+            case 0:
+            case 1:
+                return 0xffffff;
+            case 15:return DyeColor.ORANGE.getColorValue();
+            default:return DyeColor.byId(b).getColorValue();
+        }
+    }
+
     @Override
     public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
                                              BlockRayTraceResult hit) {
@@ -110,7 +129,8 @@ public class BlackboardBlock extends Block implements IWaterLoggable {
             BlackboardBlockTile te = (BlackboardBlockTile) tileentity;
 
             if(hit.getDirection()==state.getValue(FACING)) {
-                Item item = player.getItemInHand(handIn).getItem();
+                ItemStack stack = player.getItemInHand(handIn);
+                Item item = stack.getItem();
                 Vector3d v2 = hit.getLocation();
                 Vector3d v = v2.yRot((float) ((hit.getDirection().toYRot()) * Math.PI / 180f));
                 double fx = ((v.x % 1) * 16);
@@ -118,6 +138,14 @@ public class BlackboardBlock extends Block implements IWaterLoggable {
                 int x = MathHelper.clamp((int) fx, -15, 15);
 
                 int y = 15 - (int) MathHelper.clamp(Math.abs((v.y % 1) * 16), 0, 15);
+
+                if(ServerConfigs.cached.BLACKBOARD_COLOR) {
+                    DyeColor col = DyeColor.getColor(stack);
+                    if (col != null) {
+                        te.pixels[x][y] = colorToByte(col);
+                        return ActionResultType.sidedSuccess(worldIn.isClientSide);
+                    }
+                }
                 if (item == Items.QUARTZ || item.is(Tags.Items.DYES_WHITE)) {
                     te.pixels[x][y] = 1;
                     return ActionResultType.sidedSuccess(worldIn.isClientSide);
@@ -191,15 +219,13 @@ public class BlackboardBlock extends Block implements IWaterLoggable {
         return super.getDrops(state, builder);
     }
 
-
-    //pick block. TODO: maybe replace with getpickblock
     @Override
-    public ItemStack getCloneItemStack(IBlockReader worldIn, BlockPos pos, BlockState state) {
-        TileEntity te = worldIn.getBlockEntity(pos);
+    public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
+        TileEntity te = world.getBlockEntity(pos);
         if (te instanceof BlackboardBlockTile){
             return this.getBlackboardItem((BlackboardBlockTile) te);
         }
-        return super.getCloneItemStack(worldIn,pos,state);
+        return super.getPickBlock(state,target,world,pos,player);
     }
 
 

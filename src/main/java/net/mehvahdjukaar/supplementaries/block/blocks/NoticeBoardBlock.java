@@ -61,13 +61,10 @@ public class NoticeBoardBlock extends Block {
         if (tileentity instanceof NoticeBoardBlockTile) {
             ItemStack itemstack = player.getItemInHand(handIn);
             NoticeBoardBlockTile te = (NoticeBoardBlockTile) tileentity;
-            boolean flag = itemstack.getItem() instanceof DyeItem && player.abilities.mayBuild;
-            boolean flag2 = (te.isEmpty() && (te.canPlaceItemThroughFace(0, itemstack, null))&& player.abilities.mayBuild);
-            boolean flag3 = (player.isShiftKeyDown() && !te.isEmpty());
 
 
             //insert Item
-            if (flag2) {
+            if (te.isEmpty() && (te.canPlaceItemThroughFace(0, itemstack, null))&& player.abilities.mayBuild) {
                 if(server){
                     ItemStack it = itemstack.copy();
                     it.setCount(1);
@@ -81,7 +78,7 @@ public class NoticeBoardBlock extends Block {
                 }
             }
             // change color
-            else if (flag) {
+            else if (itemstack.getItem() instanceof DyeItem && player.abilities.mayBuild) {
                 if(te.setTextColor(((DyeItem) itemstack.getItem()).getDyeColor())){
                     if (!player.isCreative()) {
                         itemstack.shrink(1);
@@ -92,7 +89,7 @@ public class NoticeBoardBlock extends Block {
                 }
             }
             //pop item
-            else if (flag3) {
+            else if (player.isShiftKeyDown() && !te.isEmpty()) {
                 if(server){
                     ItemStack it = te.removeItemNoUpdate(0);
                     BlockPos newpos = pos.offset(state.getValue(FACING).getNormal());

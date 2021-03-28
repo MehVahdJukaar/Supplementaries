@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.mehvahdjukaar.supplementaries.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
@@ -10,6 +11,7 @@ import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.IRenderable;
+import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.util.SoundEvents;
 
 
@@ -22,7 +24,7 @@ public class BlackBoardButton extends AbstractGui implements IRenderable, IGuiEv
     public static final int WIDTH =6;
     private boolean wasHovered;
     protected boolean isHovered;
-    public boolean on = false;
+    public byte color = 0;
     private boolean focused;
 
     private final BlackBoardButton.IDraggable onDragged;
@@ -55,11 +57,15 @@ public class BlackBoardButton extends AbstractGui implements IRenderable, IGuiEv
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
 
-        int b = this.on?16:0;
+        int offset = this.color>0?16:0;
 
+        int rgb = BlackboardBlock.colorFromByte(this.color);
+        float b = NativeImage.getR(rgb)/255f;
+        float g = NativeImage.getG(rgb)/255f;
+        float r = NativeImage.getB(rgb)/255f;
 
-        RenderSystem.color4f(1, 1, 1, 1);
-        blit(matrixStack, this.x, this.y, (this.u+b)* WIDTH, this.v* WIDTH, WIDTH, WIDTH,32* WIDTH,16* WIDTH);
+        RenderSystem.color4f(r, g, b, 1);
+        blit(matrixStack, this.x, this.y, (this.u+offset)* WIDTH, this.v* WIDTH, WIDTH, WIDTH,32* WIDTH,16* WIDTH);
 
     }
 
@@ -75,8 +81,8 @@ public class BlackBoardButton extends AbstractGui implements IRenderable, IGuiEv
 
     //toggle
     public void onClick(double mouseX, double mouseY) {
-        this.on = !this.on;
-        this.onPress.onPress(this.u,this.v,this.on);
+        this.color = (byte) (this.color==0?1:0);
+        this.onPress.onPress(this.u,this.v,this.color!=0);
 
     }
 
@@ -84,8 +90,8 @@ public class BlackBoardButton extends AbstractGui implements IRenderable, IGuiEv
 
     //set
     protected void onDrag(double mouseX, double mouseY, boolean on) {
-        this.on=on;
-        this.onPress.onPress(this.u,this.v,this.on);
+        this.color= (byte) (on?1:0);
+        this.onPress.onPress(this.u,this.v,this.color!=0);
     }
 
     @Override
@@ -117,9 +123,9 @@ public class BlackBoardButton extends AbstractGui implements IRenderable, IGuiEv
 
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-        int a = this.u;
+
         if (this.isValidClickButton(button)) {
-            this.onDragged.onPress(mouseX,mouseY, this.on);
+            this.onDragged.onPress(mouseX,mouseY, this.color!=0);
             return true;
         } else {
             return false;

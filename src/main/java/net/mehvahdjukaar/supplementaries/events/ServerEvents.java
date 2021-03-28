@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.events;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.DirectionalCakeBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.DoubleCakeBlock;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.PicklePlayer;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.entities.ThrowableBrickEntity;
@@ -210,6 +211,9 @@ public class ServerEvents {
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) event.getPlayer()),
                 new SendLoginMessagePacket());
+
+        //send in pickles
+        PicklePlayer.PickleData.onPlayerLogin(event.getPlayer());
 
     }
 

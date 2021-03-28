@@ -184,6 +184,8 @@ public class ServerConfigs {
         public static ForgeConfigSpec.BooleanValue SAFE_UNBREAKABLE;
         public static ForgeConfigSpec.BooleanValue SAFE_SIMPLE;
 
+        public static ForgeConfigSpec.BooleanValue BLACKBOARD_COLOR;
+
         private static void  init(ForgeConfigSpec.Builder builder){
 
             builder.comment("Server side blocks configs")
@@ -328,6 +330,11 @@ public class ServerConfigs {
                     .define("simple_safes",false);
             builder.pop();
 
+            builder.push("blackboard");
+            BLACKBOARD_COLOR = builder.comment("enable to draw directly on a blackboard using any dye. Gui still only works in black and white")
+                    .define("colored_blackboard",false);
+            builder.pop();
+
 
 
 
@@ -463,6 +470,7 @@ public class ServerConfigs {
         public static boolean SAFE_SIMPLE;
         public static int GLOBE_TRADES;
         public static double GLOBE_TREASURE_CHANCE;
+        public static boolean BLACKBOARD_COLOR;
         //entity
         public static int FIREFLY_PERIOD;
         public static double FIREFLY_SPEED;
@@ -528,6 +536,8 @@ public class ServerConfigs {
 
             SAFE_UNBREAKABLE= block.SAFE_UNBREAKABLE.get();
             SAFE_SIMPLE = block.SAFE_SIMPLE.get();
+
+            BLACKBOARD_COLOR = block.BLACKBOARD_COLOR.get();
 
             FIREFLY_PERIOD = entity.FIREFLY_PERIOD.get();
             FIREFLY_SPEED = entity.FIREFLY_SPEED.get();

@@ -60,4 +60,9 @@ public class HangingFlowerPotBlockTile extends SwayingBlockTile implements IBloc
     public AxisAlignedBB getRenderBoundingBox() {
         return new AxisAlignedBB(this.worldPosition);
     }
+
+    @Override
+    public double getViewDistance() {
+        return 64;
+    }
 }

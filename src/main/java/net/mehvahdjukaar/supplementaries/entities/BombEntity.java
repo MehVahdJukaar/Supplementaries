@@ -8,6 +8,7 @@ import net.minecraft.entity.IRendersAsItem;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.FireballEntity;
+import net.minecraft.entity.projectile.FireworkRocketEntity;
 import net.minecraft.entity.projectile.ProjectileItemEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
@@ -107,7 +108,6 @@ public class BombEntity extends ProjectileItemEntity implements IRendersAsItem, 
         buffer.writeBoolean(this.blue);
     }
 
-
     @Override
     public IPacket<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
@@ -115,8 +115,7 @@ public class BombEntity extends ProjectileItemEntity implements IRendersAsItem, 
 
     @Override
     protected Item getDefaultItem() {
-        return Items.ACACIA_BUTTON;
-        //return Registry.BOMB_ITEM_ON.get();
+        return Registry.BOMB_ITEM_ON.get();
     }
 
     @Override
@@ -138,13 +137,14 @@ public class BombEntity extends ProjectileItemEntity implements IRendersAsItem, 
     }
 
     public double r(){
-        return (random.nextFloat()-0.5)*0.3;
+        return (random.nextGaussian())*0.05;
     }
 
     @Override
     public void tick() {
         if(this.changeTimer==0){
             if(this.level.isClientSide)
+
                 level.addParticle(Registry.BOMB_EXPLOSION_PARTICLE_EMITTER.get(), this.position().x, this.position().y + 1, this.position().z, 6D, 0, 0);
             else {
                 this.explodeOrBreak();
@@ -154,6 +154,7 @@ public class BombEntity extends ProjectileItemEntity implements IRendersAsItem, 
 
         if(this.changeTimer>0){
             this.changeTimer--;
+            level.addParticle(ParticleTypes.SMOKE, this.position().x, this.position().y + 0.5, this.position().z, 0.0D, 0.0D, 0.0D);
         }
 
 

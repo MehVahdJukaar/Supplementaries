@@ -80,6 +80,8 @@ public class Textures {
     public static final ResourceLocation BELL_ROPE_TEXTURE = new ResourceLocation(MOD_ID,"textures/entity/bell_rope.png");
     public static final ResourceLocation BELL_CHAIN_TEXTURE = new ResourceLocation(MOD_ID,"textures/entity/bell_chain.png");
     public static final ResourceLocation THICK_GOLEM = new ResourceLocation(MOD_ID,"textures/entity/misc/iron_golem.png");
+    public static final ResourceLocation SEA_PICKLE_RICK = new ResourceLocation(MOD_ID,"textures/entity/misc/sea_pickle.png");
+
 
     //gui
     public static final ResourceLocation NOTICE_BOARD_GUI_TEXTURE = new ResourceLocation(MOD_ID,"textures/gui/notice_board_gui.png");

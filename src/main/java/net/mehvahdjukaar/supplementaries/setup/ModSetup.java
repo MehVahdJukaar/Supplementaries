@@ -59,7 +59,7 @@ public class ModSetup {
             ComposterBlock.COMPOSTABLES.put(Registry.FLAX_ITEM.get().asItem(), 0.65F);
             ComposterBlock.COMPOSTABLES.put(Registry.FLAX_BLOCK.get().asItem(), 1);
 
-
+            /*
             List<ItemStack> chickenFood = new ArrayList<>();
             Collections.addAll(chickenFood, ChickenEntityAccessor.getFoodItems().getItems());
             chickenFood.add(new ItemStack(Registry.FLAX_SEEDS_ITEM.get()));
@@ -70,7 +70,7 @@ public class ModSetup {
             horseFood.add(new ItemStack(Registry.FLAX_ITEM.get()));
             horseFood.add(new ItemStack(Registry.FLAX_BLOCK_ITEM.get()));
             HorseEntityAccessor.setFoodItems(Ingredient.of(horseFood.stream()));
-
+            */
 
             if (ModList.get().isLoaded("create")) {
                 SupplementariesCreatePlugin.initialize();

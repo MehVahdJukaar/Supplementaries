@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.mehvahdjukaar.supplementaries.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.client.Materials;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
+import net.mehvahdjukaar.supplementaries.client.renderers.Lod;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -18,6 +19,9 @@ import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.IReorderingProcessor;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
 
 import java.util.List;
@@ -37,22 +41,34 @@ public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockT
         super(rendererDispatcherIn);
    }
 
-
     @Override
     public void render(SignPostBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
 
         BlockState fence = tile.fenceBlock;
+        BlockPos pos = tile.getBlockPos();
         if(fence !=null){
             BlockRendererDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
-            RendererUtil.renderBlockPlus(fence, matrixStackIn, bufferIn, blockRenderer, tile.getLevel(), tile.getBlockPos());
+            RendererUtil.renderBlockPlus(fence, matrixStackIn, bufferIn, blockRenderer, tile.getLevel(), pos);
             //blockRenderer.renderBlock(fence, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
         }
+
+
+        Vector3d cameraPos = this.renderer.camera.getPosition();
+
+        //don't render signs from far away
+
+        Lod lod = new Lod(cameraPos,pos);
+
+        if(!lod.isMedium())return;
+
 
         boolean up = tile.up;
         boolean down = tile.down;
         //render signs
         if(up||down){
+
+            float relAngle = (float) (MathHelper.atan2(cameraPos.x-(pos.getX()+0.5f),cameraPos.z-(pos.getZ()+0.5f))*180/Math.PI);
 
 
             // sign code
@@ -67,8 +83,6 @@ public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockT
 
             matrixStackIn.pushPose();
             matrixStackIn.translate(0.5, 0.5, 0.5);
-
-
 
 
             if(up){
@@ -95,10 +109,13 @@ public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockT
 
                 matrixStackIn.popPose();
 
-                //text up
-                matrixStackIn.translate(-0.03125*o, 0.28125, 0.1875 + 0.005);
-                matrixStackIn.scale(0.010416667F, -0.010416667F, 0.010416667F);
-                matrixStackIn.translate(0, 1, 0);
+                //culling
+                if(lod.isNear() && MathHelper.degreesDifference(relAngle,tile.yawUp)>-2) {
+
+                    //text up
+                    matrixStackIn.translate(-0.03125 * o, 0.28125, 0.1875 + 0.005);
+                    matrixStackIn.scale(0.010416667F, -0.010416667F, 0.010416667F);
+                    matrixStackIn.translate(0, 1, 0);
 
 
                     IReorderingProcessor ireorderingprocessor = tile.textHolder.getRenderText(0, (p_243502_1_) -> {
@@ -106,12 +123,14 @@ public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockT
                         return list.isEmpty() ? IReorderingProcessor.EMPTY : list.get(0);
                     });
                     if (ireorderingprocessor != null) {
-                        float f3 = (float)(-fontrenderer.width(ireorderingprocessor) / 2);
-                        fontrenderer.drawInBatch(ireorderingprocessor, f3, (float)(-5), i1, false, matrixStackIn.last().pose(), bufferIn, false, 0, combinedLightIn);
+                        float f3 = (float) (-fontrenderer.width(ireorderingprocessor) / 2);
+                        fontrenderer.drawInBatch(ireorderingprocessor, f3, (float) (-5), i1, false, matrixStackIn.last().pose(), bufferIn, false, 0, combinedLightIn);
                     }
+                }
 
                 matrixStackIn.popPose();
             }
+
             if(down){
                 matrixStackIn.pushPose();
 
@@ -136,20 +155,22 @@ public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockT
 
                 matrixStackIn.popPose();
 
-                //text down
-                matrixStackIn.translate(-0.03125*o, 0.28125, 0.1875 + 0.005);
-                matrixStackIn.scale(0.010416667F, -0.010416667F, 0.010416667F);
-                matrixStackIn.translate(0, 1, 0);
+                if(lod.isNear() && MathHelper.degreesDifference(relAngle,tile.yawDown)>-2) {
 
-                IReorderingProcessor ireorderingprocessor = tile.textHolder.getRenderText(1, (p_243502_1_) -> {
-                    List<IReorderingProcessor> list = fontrenderer.split(p_243502_1_, 90);
-                    return list.isEmpty() ? IReorderingProcessor.EMPTY : list.get(0);
-                });
-                if (ireorderingprocessor != null) {
-                    float f3 = (float)(-fontrenderer.width(ireorderingprocessor) / 2);
-                    fontrenderer.drawInBatch(ireorderingprocessor, f3, (float)(-5), i1, false, matrixStackIn.last().pose(), bufferIn, false, 0, combinedLightIn);
+                    //text down
+                    matrixStackIn.translate(-0.03125 * o, 0.28125, 0.1875 + 0.005);
+                    matrixStackIn.scale(0.010416667F, -0.010416667F, 0.010416667F);
+                    matrixStackIn.translate(0, 1, 0);
+
+                    IReorderingProcessor ireorderingprocessor = tile.textHolder.getRenderText(1, (p_243502_1_) -> {
+                        List<IReorderingProcessor> list = fontrenderer.split(p_243502_1_, 90);
+                        return list.isEmpty() ? IReorderingProcessor.EMPTY : list.get(0);
+                    });
+                    if (ireorderingprocessor != null) {
+                        float f3 = (float) (-fontrenderer.width(ireorderingprocessor) / 2);
+                        fontrenderer.drawInBatch(ireorderingprocessor, f3, (float) (-5), i1, false, matrixStackIn.last().pose(), bufferIn, false, 0, combinedLightIn);
+                    }
                 }
-
 
                 matrixStackIn.popPose();
             }

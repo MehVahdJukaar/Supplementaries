@@ -58,7 +58,7 @@
         ],
         "key": {
           "1": {
-            "item": "supplementaries:candles"
+            "tag": "supplementaries:candles"
           },
           "2": {
             "tag": "forge:nuggets/iron"

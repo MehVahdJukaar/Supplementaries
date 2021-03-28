@@ -32,7 +32,7 @@ public abstract class SwayingBlockTile extends TileEntity implements ITickableTi
 
     @Override
     public double getViewDistance() {
-        return 128;
+        return 112;
     }
 
     @Override

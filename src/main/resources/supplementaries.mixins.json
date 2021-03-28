@@ -17,8 +17,8 @@
         "LivingEntityMixin",
         "EatGrassGoalMixin",
         "LanternBlockMixin",
-        "HorseEntityAccessor",
-        "ChickenEntityAccessor",
+
+
         "CampfireMixin",
         "CrossbowItemMixin"
     ],

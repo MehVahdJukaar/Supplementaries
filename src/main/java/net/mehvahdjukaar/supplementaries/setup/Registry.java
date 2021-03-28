@@ -19,7 +19,6 @@ import net.mehvahdjukaar.supplementaries.inventories.SackContainer;
 import net.mehvahdjukaar.supplementaries.items.*;
 import net.mehvahdjukaar.supplementaries.items.crafting.*;
 import net.mehvahdjukaar.supplementaries.items.tabs.JarTab;
-import net.mehvahdjukaar.supplementaries.world.structures.FeaturesHandler;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
@@ -186,9 +185,9 @@ public class Registry {
 
     public static final String BOMB_BLUE_NAME = "bomb_blue";
     public static final RegistryObject<Item> BOMB_BLUE_ITEM = ITEMS.register(BOMB_BLUE_NAME,()-> new BombItem(new Item.Properties()
-            .tab(getTab(ItemGroup.TAB_COMBAT,BOMB_NAME)),true));
+            .tab(getTab(ItemGroup.TAB_COMBAT,BOMB_NAME)),true,true));
     public static final RegistryObject<Item> BOMB_BLUE_ITEM_ON = ITEMS.register("bomb_blue_projectile",()-> new BombItem(new Item.Properties()
-            .tab(null),true));
+            .tab(null),true,false));
 
     //rope arrow
     public static final String ROPE_ARROW_NAME = "rope_arrow";

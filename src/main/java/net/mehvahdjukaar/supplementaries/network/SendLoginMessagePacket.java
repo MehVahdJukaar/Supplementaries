@@ -32,7 +32,7 @@ public class SendLoginMessagePacket {
                 try {
                     String fileName = ModList.get().getModFileById(Supplementaries.MOD_ID).getFile().getFileName();
 
-                    if (!fileName.toLowerCase().contains("supplementaries-1")||fileName.toLowerCase().contains("supplementaries-mod")) {
+                    if (!fileName.toLowerCase().contains("supplementaries-1")||fileName.toLowerCase().contains("supplementaries-mod")||fileName.contains("supplementaries-1.16.53")) {
                         ClientPlayerEntity player = Minecraft.getInstance().player;
                         IFormattableTextComponent link = new TranslationTextComponent("message.supplementaries.anti_repost_link");
                         String url = "http://www.curseforge.com/minecraft/mc-mods/supplementaries";

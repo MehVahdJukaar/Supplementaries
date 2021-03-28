@@ -109,7 +109,7 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
                     sign.leftUp = left;
                     sign.pointToward(village1,true);
 
-                    sign.textHolder.setText(0, new StringTextComponent(""+v.get(0)));
+
 
                     sign.down = twoSigns;
                     sign.leftDown = left;
@@ -119,7 +119,8 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
                         sign.pointToward(village2,false);
                     }
 
-                    sign.textHolder.setText(1, new StringTextComponent(""+v.get(1)));
+                    //sign.textHolder.setText(0, new StringTextComponent(""+v.get(0)));
+                    //sign.textHolder.setText(1, new StringTextComponent(""+v.get(1)));
 
 
                     float yaw = MathHelper.wrapDegrees(90 + (float)this.averageAngles(-sign.yawUp+180, -sign.yawDown+180));

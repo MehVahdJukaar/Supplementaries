@@ -15,18 +15,20 @@ import net.minecraft.world.World;
 
 public class BombItem extends Item {
     private final boolean blue;
+    private final boolean glint;
     public BombItem(Item.Properties builder) {
-        this(builder, false);
+        this(builder, false, false);
 
     }
-    public BombItem(Item.Properties builder, boolean blue) {
+    public BombItem(Item.Properties builder, boolean blue, boolean glint) {
         super(builder);
         this.blue = blue;
+        this.glint = glint;
     }
 
     @Override
     public boolean isFoil(ItemStack stack) {
-        return blue;
+        return glint;
     }
 
     @Override

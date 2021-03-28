@@ -2,17 +2,22 @@ package net.mehvahdjukaar.supplementaries.world.structures;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
+import net.fluffyfarmer.FluffyFarmerMod;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SharedSeedRandom;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.MobSpawnInfo;
+import net.minecraft.world.biome.provider.BiomeProvider;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationStage;
+import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.jigsaw.JigsawManager;
 import net.minecraft.world.gen.feature.structure.AbstractVillagePiece;
@@ -89,7 +94,9 @@ public class RoadSignStructure extends Structure<NoFeatureConfig> {
     }
 
 
-    /*
+
+
+    /**
      * This is where extra checks can be done to determine if the structure can spawn here.
      * This only needs to be overridden if you're adding additional spawn conditions.
      *
@@ -116,11 +123,16 @@ public class RoadSignStructure extends Structure<NoFeatureConfig> {
      * If you check for the dimension there and do not add your structure's
      * spacing into the chunk generator, the structure will not spawn in that dimension!
      */
-//    @Override
-//    protected boolean func_230363_a_(ChunkGenerator chunkGenerator, BiomeProvider biomeSource, long seed, SharedSeedRandom chunkRandom, int chunkX, int chunkZ, Biome biome, ChunkPos chunkPos, NoFeatureConfig featureConfig) {
-//        int landHeight = chunkGenerator.getNoiseHeight(chunkX << 4, chunkZ << 4, Heightmap.Type.WORLD_SURFACE_WG);
-//        return landHeight > 100;
-//    }
+
+
+    @Override
+    protected boolean isFeatureChunk(ChunkGenerator chunkGenerator, BiomeProvider biomeSource, long seed, SharedSeedRandom chunkRandom, int chunkX, int chunkZ, Biome biome, ChunkPos chunkPos, NoFeatureConfig featureConfig) {
+
+        //chunkGenerator.findNearestMapFeature()
+        int landHeight = chunkGenerator.getFirstFreeHeight(chunkX << 4, chunkZ << 4, Heightmap.Type.WORLD_SURFACE_WG);
+        return true;//landHeight > 64;
+    }
+
 
     /**
      * Handles calling up the structure's pieces class and height that structure will spawn at.
@@ -141,8 +153,8 @@ public class RoadSignStructure extends Structure<NoFeatureConfig> {
 
 
             /*
-             * We pass this into func_242837_a to tell it where to generate the structure.
-             * If func_242837_a's last parameter is true, blockpos's Y value is ignored and the
+             * We pass this into addPieces to tell it where to generate the structure.
+             * If addPieces's last parameter is true, blockpos's Y value is ignored and the
              * structure will spawn at terrain height instead. Set that parameter to false to
              * force the structure to spawn at blockpos's Y value instead. You got options here!
              */
@@ -152,10 +164,10 @@ public class RoadSignStructure extends Structure<NoFeatureConfig> {
              * If you are doing Nether structures, you'll probably want to spawn your structure on top of ledges.
              * Best way to do that is to use getColumnSample to grab a column of blocks at the structure's x/z position.
              * Then loop through it and look for land with air above it and set blockpos's Y value to it.
-             * Make sure to set the final boolean in JigsawManager.func_242837_a to false so
+             * Make sure to set the final boolean in JigsawManager.addPieces to false so
              * that the structure spawns at blockpos's y value instead of placing the structure on the Bedrock roof!
              */
-            //IBlockReader blockReader = chunkGenerator.func_230348_a_(blockpos.getX(), blockpos.getZ());
+            //IBlockReader blockReader = chunkGenerator.getBaseColumn(blockpos.getX(), blockpos.getZ());
 
             // All a structure has to do is call this method to turn it into a jigsaw based structure!
             JigsawManager.addPieces(
@@ -165,7 +177,7 @@ public class RoadSignStructure extends Structure<NoFeatureConfig> {
                             //
                             // Note, this is "structure_tutorial:run_down_house/start_pool" which means
                             // the game will automatically look into the following path for the template pool:
-                            // "resources/data/structure_tutorial/worldgen/template_pool/run_down_house/start_pool.json"
+                            // "resources/data/structure_tutorial/worldgen/template_pool/run_down_house/side_pool.json"
                             // This is why your pool files must be in "data/<modid>/worldgen/template_pool/<the path to the pool here>"
                             // because the game automatically will check in worldgen/template_pool for the pools.
                             .get().get(new ResourceLocation(Supplementaries.MOD_ID, "road_sign/start_pool")),
@@ -206,6 +218,8 @@ public class RoadSignStructure extends Structure<NoFeatureConfig> {
             // flush with the surrounding terrain without blocking off the doorstep.
             this.pieces.forEach(piece -> piece.move(0, 1, 0));
             this.pieces.forEach(piece -> piece.getBoundingBox().y0 -= 1);
+
+
 
 
             // Sets the bounds of the structure once you are finished.

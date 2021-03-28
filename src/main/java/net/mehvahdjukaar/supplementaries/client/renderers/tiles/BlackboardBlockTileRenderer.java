@@ -9,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 
@@ -44,9 +45,14 @@ public class BlackboardBlockTileRenderer extends TileEntityRenderer<BlackboardBl
                 float x1 = (x + 1) * w;
                 float y0 = y * w;
                 float y1 = (y + 1) * w;
-                float b = tile.pixels[x][y] > 0?0.5f:0;
+                float offset = tile.pixels[x][y] > 0?0.5f:0;
 
-                RendererUtil.addQuadSide(builder, matrixStackIn, x1, y0, 0, x0, y1, 0, b + x0/2f, y0, b + x1/2f, y1, 1, 1, 1, 1, lu, lv, 0, 0, 1);
+                int rgb = BlackboardBlock.colorFromByte(tile.pixels[x][y]);
+                float b = NativeImage.getR(rgb)/255f;
+                float g = NativeImage.getG(rgb)/255f;
+                float r = NativeImage.getB(rgb)/255f;
+
+                RendererUtil.addQuadSide(builder, matrixStackIn, x1, y0, 0, x0, y1, 0, offset + x0/2f, y0, offset + x1/2f, y1, r, g, b, 1, lu, lv, 0, 0, 1);
 
             }
         }

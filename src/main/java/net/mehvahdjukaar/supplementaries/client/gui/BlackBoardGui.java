@@ -50,7 +50,7 @@ public class BlackBoardGui extends Screen {
         byte[][] pixels = new byte[16][16];
         for (int xx=0; xx < 16; xx++) {
             for (int yy = 0; yy < 16; yy++) {
-                pixels[xx][yy]= (byte) (this.buttons[xx][yy].on?1:0);
+                pixels[xx][yy] = (this.buttons[xx][yy].color);
             }
         }
         NetworkHandler.INSTANCE.sendToServer(new UpdateServerBlackboardPacket(this.tileBoard.getBlockPos(),pixels));
@@ -82,7 +82,7 @@ public class BlackBoardGui extends Screen {
         for (int xx=0; xx < 16; xx++) {
             for (int yy = 0; yy < 16; yy++) {
                 setPixel(xx,yy,false);
-                this.buttons[xx][yy].on = false;
+                this.buttons[xx][yy].color = 0;
             }
         }
     }
@@ -93,7 +93,7 @@ public class BlackBoardGui extends Screen {
             for (int yy = 0; yy < 16; yy++) {
                 this.buttons[xx][yy]=new BlackBoardButton((this.width / 2), 40 + 25, xx, yy, this::setPixel, this::dragButtons);
                 this.addWidget(this.buttons[xx][yy]);
-                this.buttons[xx][yy].on=this.tileBoard.pixels[xx][yy]>0;
+                this.buttons[xx][yy].color=this.tileBoard.pixels[xx][yy];
             }
         }
 

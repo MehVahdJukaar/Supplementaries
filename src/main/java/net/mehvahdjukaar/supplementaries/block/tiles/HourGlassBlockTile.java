@@ -62,6 +62,11 @@ public class HourGlassBlockTile extends ItemDisplayTile implements ITickableTile
     }
 
     @Override
+    public double getViewDistance() {
+        return 48;
+    }
+
+    @Override
     public void tick() {
 
         Direction dir = this.getDirection();

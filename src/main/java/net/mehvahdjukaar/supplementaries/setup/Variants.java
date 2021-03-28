@@ -5,7 +5,6 @@ import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.items.BurnableBlockItem;
 import net.mehvahdjukaar.supplementaries.items.SignPostItem;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;

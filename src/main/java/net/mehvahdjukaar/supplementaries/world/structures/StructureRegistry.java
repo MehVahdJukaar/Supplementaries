@@ -1,4 +1,5 @@
 package net.mehvahdjukaar.supplementaries.world.structures;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.Codec;
@@ -24,8 +25,6 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -77,7 +76,7 @@ public class StructureRegistry {
         forgeBus.addListener(EventPriority.NORMAL, StructureRegistry::addDimensionalSpacing);
 
         // The comments for BiomeLoadingEvent and StructureSpawnListGatherEvent says to do HIGH for additions.
-        forgeBus.addListener(EventPriority.HIGH, StructureRegistry::biomeModification);
+        forgeBus.addListener(EventPriority.HIGH, StructureRegistry::addStructureToBiome);
     }
 
     /**
@@ -102,7 +101,7 @@ public class StructureRegistry {
      *
      * Here, we will use this to add our structure to all biomes.
      */
-    public static void biomeModification(final BiomeLoadingEvent event) {
+    public static void addStructureToBiome(final BiomeLoadingEvent event) {
         /*
          * Add our structure to all biomes including other modded biomes.
          * You can skip or add only to certain biomes based on stuff like biome category,
@@ -155,16 +154,20 @@ public class StructureRegistry {
                 return;
             }
 
-            /*
-             * putIfAbsent so people can override the spacing with dimension datapacks themselves if they wish to customize spacing more precisely per dimension.
-             *
-             * NOTE: if you add per-dimension spacing configs, you can't use putIfAbsent as WorldGenRegistries.NOISE_SETTINGS in FMLCommonSetupEvent
-             * already added your default structure spacing to some dimensions. You would need to override the spacing with .put(...)
-             * And if you want to do dimension blacklisting, you need to remove the spacing entry entirely from the map below to prevent generation safely.
-             */
-            Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(serverWorld.getChunkSource().generator.getSettings().structureConfig());
-            tempMap.putIfAbsent(ROAD_SIGN.get(), DimensionStructuresSettings.DEFAULTS.get(ROAD_SIGN.get()));
-            serverWorld.getChunkSource().generator.getSettings().structureConfig = tempMap;
+            //adding only to biomes and dimensions that can generate vanilla villages
+            if(serverWorld.getChunkSource().generator.getBiomeSource().canGenerateStructure(Structure.VILLAGE)) {
+
+                /*
+                 * putIfAbsent so people can override the spacing with dimension datapacks themselves if they wish to customize spacing more precisely per dimension.
+                 *
+                 * NOTE: if you add per-dimension spacing configs, you can't use putIfAbsent as WorldGenRegistries.NOISE_SETTINGS in FMLCommonSetupEvent
+                 * already added your default structure spacing to some dimensions. You would need to override the spacing with .put(...)
+                 * And if you want to do dimension blacklisting, you need to remove the spacing entry entirely from the map below to prevent generation safely.
+                 */
+                Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(serverWorld.getChunkSource().generator.getSettings().structureConfig());
+                tempMap.putIfAbsent(ROAD_SIGN.get(), DimensionStructuresSettings.DEFAULTS.get(ROAD_SIGN.get()));
+                serverWorld.getChunkSource().generator.getSettings().structureConfig = tempMap;
+            }
         }
     }
 

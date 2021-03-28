@@ -346,7 +346,7 @@ public class SoftFluidList {
                 .drink("betterendforge:umbrella_cluster_juice")));
         addOpt(custom,makeSF(new SoftFluid.Builder(Textures.POTION_TEXTURE,Textures.POTION_TEXTURE_FLOW,"soap")
                 .condition("fluffy_farmer")
-                .color(0xcf8df5)
+                .color(0xdb9eff)
                 .translationKey("item.fluffy_farmer.soap")
                 .bottle("fluffy_farmer:bottle_with_soap_bubbles")));
 
