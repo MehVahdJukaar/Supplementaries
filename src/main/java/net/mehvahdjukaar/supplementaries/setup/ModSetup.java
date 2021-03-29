@@ -8,18 +8,16 @@ import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.datagen.RecipeCondition;
 import net.mehvahdjukaar.supplementaries.fluids.SoftFluidList;
-import net.mehvahdjukaar.supplementaries.mixins.ChickenEntityAccessor;
-import net.mehvahdjukaar.supplementaries.mixins.HorseEntityAccessor;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.commands.ModCommands;
 import net.mehvahdjukaar.supplementaries.plugins.create.SupplementariesCreatePlugin;
+import net.mehvahdjukaar.supplementaries.world.structures.StructureLocator;
 import net.mehvahdjukaar.supplementaries.world.structures.StructureRegistry;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ComposterBlock;
 import net.minecraft.block.FlowerPotBlock;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.loot.ConstantRange;
 import net.minecraft.loot.ItemLootEntry;
 import net.minecraft.loot.LootPool;
@@ -36,10 +34,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 @Mod.EventBusSubscriber(modid = Supplementaries.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ModSetup {
@@ -89,6 +83,8 @@ public class ModSetup {
             //event.enqueueWork(Dispenser::registerBehaviors);
 
             StructureRegistry.setup();
+
+            StructureLocator.init();
 
         });
     }

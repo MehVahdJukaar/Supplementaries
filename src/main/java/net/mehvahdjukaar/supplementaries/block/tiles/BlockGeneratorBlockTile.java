@@ -1,21 +1,23 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.NoticeBoardBlock;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.mehvahdjukaar.supplementaries.world.structures.RoadSignFeature;
 import net.mehvahdjukaar.supplementaries.world.structures.StructureLocator;
-import net.minecraft.block.*;
-import net.minecraft.state.BooleanProperty;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.LanternBlock;
+import net.minecraft.block.StairsBlock;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.RegistryKey;
-import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -31,15 +33,13 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
         super(Registry.BLOCK_GENERATOR_TILE.get());
     }
 
-    private static final Map<Direction, BooleanProperty> PROPERTY_BY_DIRECTION = SixWayBlock.PROPERTY_BY_DIRECTION.entrySet().stream().filter((prop) -> prop.getKey().getAxis().isHorizontal()).collect(Util.toMap());
-
-
     private final BlockState trapdoor = Blocks.SPRUCE_TRAPDOOR.defaultBlockState();
     private final BlockState lantern = Blocks.LANTERN.defaultBlockState().setValue(LanternBlock.HANGING,true);
     private final BlockState lanternDown = Blocks.LANTERN.defaultBlockState();
     private final BlockState fence = Blocks.SPRUCE_FENCE.defaultBlockState();
     private final BlockState jar = Registry.FIREFLY_JAR.get().defaultBlockState();
     private final BlockState slab = Blocks.SPRUCE_SLAB.defaultBlockState();
+    private final BlockState log = Blocks.STRIPPED_SPRUCE_LOG.defaultBlockState();
     private final BlockState stoneSlab = Blocks.STONE_SLAB.defaultBlockState();
     private final BlockState stone = Blocks.STONE.defaultBlockState();
     private final BlockState stair = Blocks.STONE_STAIRS.defaultBlockState();
@@ -67,7 +67,7 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
 
             BlockState topState = this.trapdoor;
 
-            Map<Integer, BlockPos> villages = StructureLocator.find(world,pos,Structure.VILLAGE,25,2);
+            Map<Integer, BlockPos> villages = StructureLocator.find(world,pos,25,2);
 
 
             if(villages.size()>=1) {
@@ -81,19 +81,25 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
                 boolean twoSigns = true;
                 BlockPos village1;
                 BlockPos village2;
-                boolean inv = rand.nextBoolean();
+                int dist1 = 0;
+                int dist2 = 0;
+
+
                 //only 1 sing found/ 1 sign post. always to closest village. posts that are relatively close to a village will always have two.
                 //posts in a village will point away
                 if(villages.size()==1 || (0.3>rand.nextFloat() && v.get(0)>192)){
-                    village1 = villages.get(v.get(0));
-                    village2 = village1;
+                    dist1 = v.get(0);
+                    dist2 = dist1;
                     twoSigns = false;
                 }
                 else{
-                    village1 = villages.get(v.get(inv?0:1));
-                    village2 = villages.get(v.get(inv?1:0));
+                    boolean inv = rand.nextBoolean();
+                    dist1 = v.get(inv?0:1);
+                    dist2 = v.get(inv?1:0);
                 }
 
+                village1 = villages.get(dist1);
+                village2 = villages.get(dist2);
 
 
                 this.level.setBlock(pos, Registry.SIGN_POST.get().defaultBlockState(), 3);
@@ -119,8 +125,11 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
                         sign.pointToward(village2,false);
                     }
 
-                    //sign.textHolder.setText(0, new StringTextComponent(""+v.get(0)));
-                    //sign.textHolder.setText(1, new StringTextComponent(""+v.get(1)));
+
+                    if(ServerConfigs.cached.DISTANCE_TEXT){
+                        sign.textHolder.setText(0, getSignText(dist1));
+                        sign.textHolder.setText(1, getSignText(dist2));
+                    }
 
 
                     float yaw = MathHelper.wrapDegrees(90 + (float)this.averageAngles(-sign.yawUp+180, -sign.yawDown+180));
@@ -132,16 +141,23 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
 
                     //lamp spawn chances
                     lampDir.remove(backDir);
+                    lampDir.remove(sideDir);
                     //lampDir.remove(sideDir);
                     lampDir.add(backDir.getOpposite());
                     lampDir.add(backDir.getOpposite());
                     lampDir.add(backDir.getOpposite());
                     if(Math.abs(diff)>30) {
                         lampDir.add(sideDir.getOpposite());
-                        lampDir.remove(sideDir);
                     }
 
                     boolean hasGroundLantern = false;
+
+                    RegistryKey<Biome> biome = RegistryKey.create(ForgeRegistries.Keys.BIOMES, world.getBiome(pos).getRegistryName());
+                    boolean hasFirefly = (BiomeDictionary.hasType(biome, BiomeDictionary.Type.MAGICAL) ||
+                            BiomeDictionary.hasType(biome, BiomeDictionary.Type.SWAMP) ||
+                            BiomeDictionary.hasType(biome, BiomeDictionary.Type.SPOOKY) ? 0.2f : 0.02f)> rand.nextFloat();
+
+
 
                     //stone
                     if(0.3>rand.nextFloat() && MathHelper.degreesDifferenceAbs(sign.getPointingYaw(true)+180,yaw)>70) {
@@ -155,12 +171,11 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
                         stonePos = stonePos.offset(sideDir.getNormal());
                         world.setBlock(stonePos, stone, 2);
                         if(0.35>rand.nextFloat()){
-                            world.setBlock(stonePos.above(), lanternDown, 3);
+                            world.setBlock(stonePos.above(), hasFirefly?jar:lanternDown, 3);
                             hasGroundLantern = true;
                         }
                         stonePos = stonePos.offset(sideDir.getNormal());
-                        if(!RoadSignFeature.isNotSolid(world,stonePos.below()) &&
-                                RoadSignFeature.isReplaceable(world,stonePos)){
+                        if(!RoadSignFeature.isNotSolid(world,stonePos.below())){
                             if(rand.nextBoolean()) {
                                 world.setBlock(stonePos, stoneSlab, 2);
                             }
@@ -168,6 +183,7 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
                                 world.setBlock(stonePos, stair.setValue(StairsBlock.FACING,sideDir.getOpposite()), 2);
                             }
                         }
+
                     }
 
 
@@ -176,13 +192,7 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
                         //lanterns
                         pos = pos.above(2);
 
-                        RegistryKey<Biome> biome = RegistryKey.create(ForgeRegistries.Keys.BIOMES, world.getBiome(pos).getRegistryName());
-                        float chance = BiomeDictionary.hasType(biome, BiomeDictionary.Type.MAGICAL) ||
-                                BiomeDictionary.hasType(biome, BiomeDictionary.Type.SWAMP) ||
-                                BiomeDictionary.hasType(biome, BiomeDictionary.Type.SPOOKY) ? 0.2f : 0.02f;
-
-                        BlockState light = chance > rand.nextFloat() ? this.jar : this.lantern;
-
+                        BlockState light = hasFirefly ? this.jar : this.lantern;
 
                         Direction dir = lampDir.get(rand.nextInt(lampDir.size()));
 
@@ -199,13 +209,11 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
                         if (doubleSided) {
                             BlockPos backPos = pos.offset(dir.getOpposite().getNormal());
 
-                            if (isTrapdoor) {
-                                world.setBlock(backPos, this.trapdoor, 2);
-                                if (0.25 > rand.nextFloat()) {
-                                    topState = slab;
-                                }
+                            world.setBlock(backPos, isTrapdoor?this.trapdoor:this.fence, 2);
+
+                            if (0.25 > rand.nextFloat()) {
+                                topState = isTrapdoor?slab:log;
                             }
-                            else world.setBlock(backPos, this.fence, 2);
 
                             world.setBlock(backPos.below(), light, 3);
                         }
@@ -218,8 +226,6 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
                     }
 
 
-                    //sign.textHolder.setText(0,new StringTextComponent(yaw+"°"));
-                    //sign.textHolder.setText(1,new StringTextComponent(diff+"°"));
 
                 }
             }
@@ -229,11 +235,19 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
             }
 
 
-
             world.setBlock(this.worldPosition, topState,3);
 
 
             //this.level.removeBlock(this.worldPosition,false);
         }
+    }
+
+
+    private static ITextComponent getSignText(int d){
+        int s;
+        if(d<100)s=10;
+        else if(d<2000)s=100;
+        else s = 1000;
+        return new TranslationTextComponent("message.supplementaries.road_sign",(((d + (s/2)) / s) * s));
     }
 }

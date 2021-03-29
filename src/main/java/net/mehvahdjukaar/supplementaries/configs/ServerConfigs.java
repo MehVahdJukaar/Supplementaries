@@ -185,6 +185,7 @@ public class ServerConfigs {
         public static ForgeConfigSpec.BooleanValue SAFE_SIMPLE;
 
         public static ForgeConfigSpec.BooleanValue BLACKBOARD_COLOR;
+        public static ForgeConfigSpec.IntValue CANDLE_HOLDER_LIGHT;
 
         private static void  init(ForgeConfigSpec.Builder builder){
 
@@ -335,8 +336,12 @@ public class ServerConfigs {
                     .define("colored_blackboard",false);
             builder.pop();
 
+            builder.push("candle_holder");
+            CANDLE_HOLDER_LIGHT = builder.comment("candle holder light level")
+                    .defineInRange("light_level",12,1,15);
 
 
+            builder.pop();
 
             builder.pop();
 
@@ -351,8 +356,11 @@ public class ServerConfigs {
         public static ForgeConfigSpec.ConfigValue<List<? extends String>> FIREFLY_BIOMES;
         public static ForgeConfigSpec.ConfigValue<List<? extends String>> FIREFLY_MOD_WHITELIST;
 
-        public static ForgeConfigSpec.IntValue ROAD_SIGN_SPAWN_CHANCE;
-        public static ForgeConfigSpec.BooleanValue EXPERIMENTAL_ROAD_SIGN;
+
+        public static ForgeConfigSpec.ConfigValue<List<? extends String>> SIGNS_VILLAGES;
+        public static ForgeConfigSpec.BooleanValue DISTANCE_TEXT;
+        public static ForgeConfigSpec.IntValue ROAD_SIGN_DISTANCE_MIN;
+        public static ForgeConfigSpec.IntValue ROAD_SIGN_DISTANCE_AVR;
 
         private static void init(ForgeConfigSpec.Builder builder) {
             builder.comment("Configure spawning conditions")
@@ -383,11 +391,27 @@ public class ServerConfigs {
             builder.pop();
 
             builder.push("structures");
-            EXPERIMENTAL_ROAD_SIGN = builder.comment("enable experimental road sign structures. This will likely change in the nar future")
-                    .define("experimental_road_signs",true);
-            ROAD_SIGN_SPAWN_CHANCE = builder.comment("the higher this number is the less sign posts you'll find")
-                    .defineInRange("rarity",80,1,2000);
+            builder.push("road_sign");
+            //TODO: redo
+            ROAD_SIGN_DISTANCE_AVR = builder.comment("average distance apart in chunks between spawn attempts")
+                    .defineInRange("average_distance",17,0,200);
+            ROAD_SIGN_DISTANCE_MIN = builder.comment("minimum distance apart in chunks between spawn attempts")
+                    .defineInRange("minimum_distance",8,0,200);
+            List<String> villages = Arrays.asList("minecraft:village","repurposed_structures:village_badlands","repurposed_structures:village_dark_oak","repurposed_structures:village_birch",
+                    "repurposed_structures:village_giant_taiga","repurposed_structures:village_jungle","repurposed_structures:village_mountains","repurposed_structures:village_oak",
+                    "repurposed_structures:village_swamp","pokecube:village","pokecube_legends:village","pokecube_legends:village/ocean",
+                    "valhelsia_structures:castle","valhelsia_structures:castle_ruin","valhelsia_structures:small_castle","valhelsia_structures:tower_ruin");
+
+            DISTANCE_TEXT = builder.comment("with this option road signs will display the distance to the structure that they are pointing to")
+                    .define("show_distance_text",true);
+
+            SIGNS_VILLAGES = builder.comment("list of structure that a sign can point to. Note that they will only spawn in dimensions where vanilla villages can")
+                    .define("villages", villages);
+
             builder.pop();
+
+            builder.pop();
+
             builder.pop();
         }
     }
@@ -441,6 +465,7 @@ public class ServerConfigs {
         public static List<? extends String> FIREFLY_BIOMES;
         public static List<? extends String> FIREFLY_MOD_WHITELIST;
         public static boolean FIREFLY_DESPAWN;
+        public static boolean DISTANCE_TEXT;
         //blocks
         public static int SPEAKER_RANGE;
         public static int BELLOWS_PERIOD;
@@ -471,6 +496,7 @@ public class ServerConfigs {
         public static int GLOBE_TRADES;
         public static double GLOBE_TREASURE_CHANCE;
         public static boolean BLACKBOARD_COLOR;
+        public static int CANDLE_HOLDER_LIGHT;
         //entity
         public static int FIREFLY_PERIOD;
         public static double FIREFLY_SPEED;
@@ -497,6 +523,8 @@ public class ServerConfigs {
             FIREFLY_WEIGHT = spawn.FIREFLY_WEIGHT.get();
             FIREFLY_BIOMES = spawn.FIREFLY_BIOMES.get();
             FIREFLY_MOD_WHITELIST = spawn.FIREFLY_MOD_WHITELIST.get();
+
+            DISTANCE_TEXT = spawn.DISTANCE_TEXT.get();
 
             GLOBE_TRADES = block.GLOBE_TRADES.get();
             GLOBE_TREASURE_CHANCE = block.GLOBE_TREASURE_CHANCHE.get();
@@ -538,6 +566,8 @@ public class ServerConfigs {
             SAFE_SIMPLE = block.SAFE_SIMPLE.get();
 
             BLACKBOARD_COLOR = block.BLACKBOARD_COLOR.get();
+
+            CANDLE_HOLDER_LIGHT = block.CANDLE_HOLDER_LIGHT.get();
 
             FIREFLY_PERIOD = entity.FIREFLY_PERIOD.get();
             FIREFLY_SPEED = entity.FIREFLY_SPEED.get();

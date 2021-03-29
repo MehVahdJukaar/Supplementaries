@@ -21,6 +21,9 @@ public class Lod {
     public boolean isNear(){
         return this.dist<NEAR_DIST;
     }
+    public boolean isNearMed(){
+        return this.dist<NEAR_MED_DIST;
+    }
     public boolean isMedium(){
         return this.dist<MEDIUM_DIST;
     }
@@ -32,6 +35,7 @@ public class Lod {
 
 
     public static final int NEAR_DIST = 32*32;
+    public static final int NEAR_MED_DIST = 48*48;
     public static final int MEDIUM_DIST = 64*64;
     public static final int FAR_DIST = 96*96;
 

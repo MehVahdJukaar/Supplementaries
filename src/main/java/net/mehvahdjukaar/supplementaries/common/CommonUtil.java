@@ -29,6 +29,11 @@ import static net.mehvahdjukaar.supplementaries.common.Textures.*;
 
 public class CommonUtil {
 
+    public static void swapItem(PlayerEntity player, Hand hand, ItemStack oldItem, ItemStack newItem, boolean bothsides){
+        if(!player.level.isClientSide || bothsides)
+            player.setItemInHand(hand, DrinkHelper.createFilledResult(oldItem.copy(), player, newItem, player.isCreative()));
+    }
+
     public static void swapItem(PlayerEntity player, Hand hand, ItemStack oldItem, ItemStack newItem){
         if(!player.level.isClientSide)
         player.setItemInHand(hand, DrinkHelper.createFilledResult(oldItem.copy(), player, newItem, player.isCreative()));
@@ -401,6 +406,8 @@ public class CommonUtil {
         ISelectionContext iselectioncontext = playerentity == null ? ISelectionContext.empty() : ISelectionContext.of(playerentity);
         return state.canSurvive(context.getLevel(), context.getClickedPos()) && context.getLevel().isUnobstructed(state, context.getClickedPos(), iselectioncontext);
     }
+
+
 
 
 }

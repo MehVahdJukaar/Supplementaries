@@ -4,11 +4,12 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.Codec;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.world.structures.processors.SignDataProcessor;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.WorldGenRegistries;
-import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.FlatChunkGenerator;
@@ -21,7 +22,6 @@ import net.minecraft.world.gen.settings.DimensionStructuresSettings;
 import net.minecraft.world.gen.settings.StructureSeparationSettings;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -52,6 +52,8 @@ public class StructureRegistry {
         // For registration and init stuff.
         STRUCTURES.register(bus);
 
+        FeaturesHandler.FEATURES.register(bus);
+
         // For events that happen after initialization. This is probably going to be used a lot.
         IEventBus forgeBus = MinecraftForge.EVENT_BUS;
         forgeBus.addListener(EventPriority.NORMAL, StructureRegistry::addDimensionalSpacing);
@@ -65,8 +67,8 @@ public class StructureRegistry {
         setupStructures();
         registerConfiguredStructures();
 
-        RoadSignProcessor.register();
-        AirProcessor.register();
+        SignDataProcessor.register();
+
     }
 
 
@@ -161,10 +163,10 @@ public class StructureRegistry {
     private static void setupStructures() {
         setupMapSpacingAndLand(
                 ROAD_SIGN.get(), /* The instance of the structure */
-                new StructureSeparationSettings(10 /* average distance apart in chunks between spawn attempts */,
-                        5 /* minimum distance apart in chunks between spawn attempts */,
+                new StructureSeparationSettings(ServerConfigs.spawn.ROAD_SIGN_DISTANCE_AVR.get() /* average distance apart in chunks between spawn attempts */,
+                        ServerConfigs.spawn.ROAD_SIGN_DISTANCE_MIN.get() /* minimum distance apart in chunks between spawn attempts */,
                         431041527 /* this modifies the seed of the structure so no two structures always spawn over each-other. Make this large and unique. */),
-                false);
+                true);
 
 
         // Add more structures here and so on

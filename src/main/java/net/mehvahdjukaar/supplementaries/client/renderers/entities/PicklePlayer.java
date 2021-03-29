@@ -4,7 +4,6 @@ package net.mehvahdjukaar.supplementaries.client.renderers.entities;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import its_meow.betteranimalsplus.Ref;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
@@ -38,6 +37,7 @@ import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.util.Hand;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
@@ -50,7 +50,6 @@ import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.PacketDistributor;
-import slimeknights.mantle.inventory.ItemHandlerSlot;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -77,7 +76,7 @@ public class PicklePlayer {
 
                 if(turnOn) {
                     Minecraft.getInstance().player.sendMessage(
-                            new StringTextComponent("I turned myself into a pickle!"), Ref.EMPTY_UUID);
+                            new StringTextComponent("I turned myself into a pickle!"), Util.NIL_UUID);
                 }
 
                 PickleData.set(id, turnOn);

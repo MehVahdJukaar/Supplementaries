@@ -133,6 +133,7 @@
   "message.supplementaries.command.configs": "Install Configured to access configs",
   "item.supplementaries.bomb_blue": "Blue Bomb",
   "fluid.supplementaries.sap": "Sap",
+  "message.supplementaries.road_sign": "%d bl",
 
   "item.supplementaries.key_chain": "Key Chain",
   "block.supplementaries.skull_candle": "Skull Candle",

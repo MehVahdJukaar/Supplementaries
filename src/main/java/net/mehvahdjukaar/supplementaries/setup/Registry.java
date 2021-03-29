@@ -1128,12 +1128,17 @@ public class Registry {
             (new Item.Properties()).tab(getTab(ItemGroup.TAB_DECORATIONS,MAGMA_CREAM_BLOCK_NAME))));
 
     //block generator
+    public static final String STRUCTURE_TEMP_NAME = "structure_temp";
+    public static final RegistryObject<Block> STRUCTURE_TEMP = BLOCKS.register(STRUCTURE_TEMP_NAME,()-> new StructureTempBlock(
+            AbstractBlock.Properties.of(Material.STONE).strength(0).noDrops().noCollission().noOcclusion()));
+    public static final RegistryObject<TileEntityType<StructureTempBlockTile>> STRUCTURE_TEMP_TILE = TILES.register(STRUCTURE_TEMP_NAME,()-> TileEntityType.Builder.of(
+            StructureTempBlockTile::new, STRUCTURE_TEMP.get()).build(null));
+
     public static final String BLOCK_GENERATOR_NAME = "block_generator";
     public static final RegistryObject<Block> BLOCK_GENERATOR = BLOCKS.register(BLOCK_GENERATOR_NAME,()-> new BlockGeneratorBlock(
-            AbstractBlock.Properties.of(Material.STONE).strength(0).noDrops().noCollission()));
+            AbstractBlock.Properties.copy(STRUCTURE_TEMP.get())));
     public static final RegistryObject<TileEntityType<BlockGeneratorBlockTile>> BLOCK_GENERATOR_TILE = TILES.register(BLOCK_GENERATOR_NAME,()-> TileEntityType.Builder.of(
             BlockGeneratorBlockTile::new, BLOCK_GENERATOR.get()).build(null));
-
 
     /*
     //statue

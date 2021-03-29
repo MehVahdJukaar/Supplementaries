@@ -70,7 +70,6 @@ public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockT
 
             float relAngle = (float) (MathHelper.atan2(cameraPos.x-(pos.getX()+0.5f),cameraPos.z-(pos.getZ()+0.5f))*180/Math.PI);
 
-
             // sign code
             FontRenderer fontrenderer = this.renderer.getFont();
             int i = tile.textHolder.textColor.getTextColor();
@@ -80,10 +79,8 @@ public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockT
             int i1 = NativeImage.combine(0, l, k, j);
 
 
-
             matrixStackIn.pushPose();
             matrixStackIn.translate(0.5, 0.5, 0.5);
-
 
             if(up){
                 matrixStackIn.pushPose();

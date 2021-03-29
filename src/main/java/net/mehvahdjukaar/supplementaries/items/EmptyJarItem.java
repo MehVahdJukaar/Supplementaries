@@ -61,7 +61,7 @@ public class EmptyJarItem extends EmptyCageItem {
 
                     player.startUsingItem(hand);
 
-                    CommonUtil.swapItem(player,hand,stack,returnItem);
+                    CommonUtil.swapItem(player,hand,stack,returnItem,true);
                     return ActionResultType.sidedSuccess(player.level.isClientSide);
                 }
             }

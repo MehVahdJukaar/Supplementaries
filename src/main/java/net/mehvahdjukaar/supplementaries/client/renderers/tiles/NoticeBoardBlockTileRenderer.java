@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.mehvahdjukaar.supplementaries.block.tiles.NoticeBoardBlockTile;
+import net.mehvahdjukaar.supplementaries.client.renderers.Lod;
 import net.mehvahdjukaar.supplementaries.client.renderers.TextUtil;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.RequestMapDataFromServerPacket;
@@ -19,7 +20,9 @@ import net.minecraft.item.AbstractMapItem;
 import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IReorderingProcessor;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.ITextProperties;
 import net.minecraft.world.storage.MapData;
@@ -39,14 +42,30 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
     public void render(NoticeBoardBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
 
+
+
+
         if(tile.textVisible){
+
+            Vector3d cameraPos = this.renderer.camera.getPosition();
+
+
+
+            BlockPos pos = tile.getBlockPos();
+
+            float yaw = tile.getYaw();
+            float relAngle = (float) (MathHelper.atan2(cameraPos.x-(pos.getX()+0.5f),cameraPos.z-(pos.getZ()+0.5f))*180/Math.PI);
+            if(MathHelper.degreesDifference(relAngle,yaw-90)>-2)return;
+
+
             //TODO: fix book with nothing in it
             int frontLight = tile.getFrontLight();
             ItemStack stack = tile.getItem(0);
 
+
             matrixStackIn.pushPose();
             matrixStackIn.translate(0.5, 0.5, 0.5);
-            matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(tile.getYaw()));
+            matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(yaw));
             matrixStackIn.translate(0, 0, 0.5);
 
             //render map
@@ -73,6 +92,12 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
             //render book
             String page = tile.getText();
             if (!(page == null || page.equals(""))) {
+
+                Lod lod = new Lod(cameraPos,pos);
+                if(!lod.isNearMed()) {
+                    matrixStackIn.popPose();
+                    return;
+                }
 
                 FontRenderer fontrenderer = this.renderer.getFont();
 

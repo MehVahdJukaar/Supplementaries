@@ -1,33 +1,31 @@
 
 {
-    "minVersion": "0.8",
-    "required": true,
-    "compatibilityLevel": "JAVA_8",
-    "refmap": "supplementaries.refmap.json",
-
-    "package": "net.mehvahdjukaar.supplementaries.mixins",
-    "mixins": [
-        "CatSitOnBlockMixin",
-        "ShulkerBoxTileEntityMixin",
-        "MapDataPostsMixin",
-        "ShulkerBoxSlotMixin",
-        "BellBlockMixin",
-        "BellTileEntityMixin",
-        "PistonTileEntityMixin",
-        "LivingEntityMixin",
-        "EatGrassGoalMixin",
-        "LanternBlockMixin",
-
-
-        "CampfireMixin",
-        "CrossbowItemMixin"
-    ],
-    "client": [
-        "ParrotPartyMixin",
-        "BellTileEntityRendererMixin",
-        "IronGolemRendererMixin"
-    ],
-    "injectors": {
-        "defaultRequire": 1
-    }
+  "minVersion": "0.8",
+  "required": true,
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "supplementaries.refmap.json",
+  "package": "net.mehvahdjukaar.supplementaries.mixins",
+  "mixins": [
+    "BellBlockMixin",
+    "BellTileEntityMixin",
+    "CampfireMixin",
+    "CatSitOnBlockMixin",
+    "CrossbowItemMixin",
+    "EatGrassGoalMixin",
+    "LakeMixin",
+    "LanternBlockMixin",
+    "LivingEntityMixin",
+    "MapDataPostsMixin",
+    "PistonTileEntityMixin",
+    "ShulkerBoxSlotMixin",
+    "ShulkerBoxTileEntityMixin"
+  ],
+  "client": [
+    "BellTileEntityRendererMixin",
+    "IronGolemRendererMixin",
+    "ParrotPartyMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
 }

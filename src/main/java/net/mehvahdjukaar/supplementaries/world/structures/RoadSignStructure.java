@@ -1,39 +1,31 @@
 package net.mehvahdjukaar.supplementaries.world.structures;
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
-import javafx.collections.transformation.SortedList;
-import net.fluffyfarmer.FluffyFarmerMod;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SharedSeedRandom;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.MobSpawnInfo;
 import net.minecraft.world.biome.provider.BiomeProvider;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.jigsaw.JigsawManager;
-import net.minecraft.world.gen.feature.structure.*;
-import net.minecraft.world.gen.feature.template.StructureProcessor;
+import net.minecraft.world.gen.feature.structure.AbstractVillagePiece;
+import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.world.gen.feature.structure.StructureStart;
+import net.minecraft.world.gen.feature.structure.VillageConfig;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 import net.minecraft.world.gen.settings.StructureSeparationSettings;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.world.BlockEvent;
-import org.apache.logging.log4j.Level;
-import vazkii.quark.content.world.gen.structure.processor.BigDungeonChestProcessor;
 
-import java.util.*;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class RoadSignStructure extends Structure<NoFeatureConfig> {
     public RoadSignStructure(Codec<NoFeatureConfig> codec) {
@@ -57,78 +49,39 @@ public class RoadSignStructure extends Structure<NoFeatureConfig> {
     //getDecorationStage
     @Override
     public GenerationStage.Decoration step() {
-        return GenerationStage.Decoration.SURFACE_STRUCTURES;
+        return GenerationStage.Decoration.UNDERGROUND_ORES;
     }
+
+
 
 
     /**
-     * || ONLY WORKS IN FORGE 34.1.12+ ||
+     * This is where extra checks can be done to determine if the structure can spawn here.
+     * This only needs to be overridden if you're adding additional spawn conditions.
      *
-     * This method allows us to have mobs that spawn naturally over time in our structure.
-     * No other mobs will spawn in the structure of the same entity classification.
-     * The reason you want to match the classifications is so that your structure's mob
-     * will contribute to that classification's cap. Otherwise, it may cause a runaway
-     * spawning of the mob that will never stop.
+     * Fun fact, if you set your structure separation/spacing to be 0/1, you can use
+     * func_230363_a_ to return true only if certain chunk coordinates are passed in
+     * which allows you to spawn structures only at certain coordinates in the world.
      *
-     * NOTE: getDefaultSpawnList is for monsters only and getDefaultCreatureSpawnList is
-     *       for creatures only. If you want to add entities of another classification,
-     *       use the StructureSpawnListGatherEvent to add water_creatures, water_ambient,
-     *       ambient, or misc mobs. Use that event to add/remove mobs from structures
-     *       that are not your own.
+     * Notice how the biome is also passed in. Though, you are not going to
+     * do any biome checking here as you should've added this structure to
+     * the biomes you wanted already with the biome load event.
      *
-     * NOTE 2: getSpawnList and getCreatureSpawnList is the vanilla methods that Forge does
-     *         not hook up. Do not use those methods or else the mobs won't spawn. You would
-     *         have to manually implement spawning for them. Stick with Forge's Default form
-     *         as it is easier to use that.
+     * Basically, this method is used for determining if the land is at a suitable height,
+     * if certain other structures are too close or not, or some other restrictive condition.
+     *
+     * For example, Pillager Outposts added a check to make sure it cannot spawn within 10 chunk of a Village.
+     * (Bedrock Edition seems to not have the same check)
+     *
+     *
+     * Also, please for the love of god, do not do dimension checking here. If you do and
+     * another mod's dimension is trying to spawn your structure, the locate
+     * command will make minecraft hang forever and break the game.
+     *
+     * Instead, use the addDimensionalSpacing method in StructureTutorialMain class.
+     * If you check for the dimension there and do not add your structure's
+     * spacing into the chunk generator, the structure will not spawn in that dimension!
      */
-    private static final List<MobSpawnInfo.Spawners> STRUCTURE_MONSTERS = ImmutableList.of(
-            new MobSpawnInfo.Spawners(EntityType.ILLUSIONER, 100, 4, 9),
-            new MobSpawnInfo.Spawners(EntityType.VINDICATOR, 100, 4, 9)
-    );
-    @Override
-    public List<MobSpawnInfo.Spawners> getDefaultSpawnList() {
-        return STRUCTURE_MONSTERS;
-    }
-
-    private static final List<MobSpawnInfo.Spawners> STRUCTURE_CREATURES = ImmutableList.of(
-            new MobSpawnInfo.Spawners(EntityType.SHEEP, 30, 10, 15),
-            new MobSpawnInfo.Spawners(EntityType.RABBIT, 100, 1, 2)
-    );
-    @Override
-    public List<MobSpawnInfo.Spawners> getDefaultCreatureSpawnList() {
-        return STRUCTURE_CREATURES;
-    }
-
-
-
-
-        /**
-         * This is where extra checks can be done to determine if the structure can spawn here.
-         * This only needs to be overridden if you're adding additional spawn conditions.
-         *
-         * Fun fact, if you set your structure separation/spacing to be 0/1, you can use
-         * func_230363_a_ to return true only if certain chunk coordinates are passed in
-         * which allows you to spawn structures only at certain coordinates in the world.
-         *
-         * Notice how the biome is also passed in. Though, you are not going to
-         * do any biome checking here as you should've added this structure to
-         * the biomes you wanted already with the biome load event.
-         *
-         * Basically, this method is used for determining if the land is at a suitable height,
-         * if certain other structures are too close or not, or some other restrictive condition.
-         *
-         * For example, Pillager Outposts added a check to make sure it cannot spawn within 10 chunk of a Village.
-         * (Bedrock Edition seems to not have the same check)
-         *
-         *
-         * Also, please for the love of god, do not do dimension checking here. If you do and
-         * another mod's dimension is trying to spawn your structure, the locate
-         * command will make minecraft hang forever and break the game.
-         *
-         * Instead, use the addDimensionalSpacing method in StructureTutorialMain class.
-         * If you check for the dimension there and do not add your structure's
-         * spacing into the chunk generator, the structure will not spawn in that dimension!
-         */
 
 
     private boolean isValidPos(ChunkGenerator gen, int x, int z, Set<Integer> heightMap){
@@ -139,6 +92,24 @@ public class RoadSignStructure extends Structure<NoFeatureConfig> {
         return true;
     }
 
+
+    private boolean isNearOutpost(ChunkGenerator generator, long seed, SharedSeedRandom sharedSeedRandom, int chunkX, int chunkZ) {
+        StructureSeparationSettings structureseparationsettings = generator.getSettings().getConfig(Structure.PILLAGER_OUTPOST);
+        if (structureseparationsettings == null) {
+            return false;
+        } else {
+            for(int i = chunkX - 8; i <= chunkX + 8; ++i) {
+                for(int j = chunkZ - 8; j <= chunkZ + 8; ++j) {
+                    ChunkPos chunkpos = Structure.PILLAGER_OUTPOST.getPotentialFeatureChunk(structureseparationsettings, seed, sharedSeedRandom, i, j);
+                    if (i == chunkpos.x && j == chunkpos.z) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+    }
+
     @Override
     protected boolean isFeatureChunk(ChunkGenerator chunkGenerator, BiomeProvider biomeSource, long seed, SharedSeedRandom chunkRandom, int chunkX, int chunkZ, Biome biome, ChunkPos chunkPos, NoFeatureConfig featureConfig) {
         int x = (chunkX << 4) + 7;
@@ -147,7 +118,7 @@ public class RoadSignStructure extends Structure<NoFeatureConfig> {
 
         int y = chunkGenerator.getFirstOccupiedHeight(x,z, Heightmap.Type.WORLD_SURFACE_WG);
 
-        if(y>100||y<60)return false;
+        if(y>105||y<chunkGenerator.getSeaLevel()-1)return false;
 
         TreeSet<Integer> set = new TreeSet<>();
 
@@ -158,9 +129,11 @@ public class RoadSignStructure extends Structure<NoFeatureConfig> {
         if(!isValidPos(chunkGenerator,x-2,z-2, set))return false;
 
 
-        if(set.last()-set.first()>3) return false;
+        if(set.last()-set.first()>1) return false;
 
-        //chunkGenerator.findNearestMapFeature()
+        if(isNearOutpost(chunkGenerator,seed,chunkRandom,chunkX,chunkZ))return false;
+
+
         return true;
     }
 
@@ -182,7 +155,6 @@ public class RoadSignStructure extends Structure<NoFeatureConfig> {
             int z = (chunkZ << 4) + 7;
 
             //I could remove this but it makes for nicer generation
-
             int sum = 0;
             sum+=chunkGenerator.getFirstOccupiedHeight(x,z, Heightmap.Type.WORLD_SURFACE_WG);
             sum+=chunkGenerator.getFirstOccupiedHeight(x+2,z+2, Heightmap.Type.WORLD_SURFACE_WG);
@@ -198,7 +170,7 @@ public class RoadSignStructure extends Structure<NoFeatureConfig> {
              * structure will spawn at terrain height instead. Set that parameter to false to
              * force the structure to spawn at blockpos's Y value instead. You got options here!
              */
-            BlockPos blockpos = new BlockPos(x, 0, z);
+            BlockPos blockpos = new BlockPos(x, y, z);
 
             /*
              * If you are doing Nether structures, you'll probably want to spawn your structure on top of ledges.
@@ -235,7 +207,7 @@ public class RoadSignStructure extends Structure<NoFeatureConfig> {
                     this.random,
                     false, // Special boundary adjustments for villages. It's... hard to explain. Keep this false and make your pieces not be partially intersecting.
                     // Either not intersecting or fully contained will make children pieces spawn just fine. It's easier that way.
-                    true);  // Place at heightmap (top land). Set this to false for structure to be place at the passed in blockpos's Y value instead.
+                    false);  // Place at heightmap (top land). Set this to false for structure to be place at the passed in blockpos's Y value instead.
             // Definitely keep this false when placing structures in the nether as otherwise, heightmap placing will put the structure on the Bedrock roof.
 
 
@@ -256,20 +228,19 @@ public class RoadSignStructure extends Structure<NoFeatureConfig> {
             //
             // By lifting the house up by 1 and lowering the bounding box, the land at bottom of house will now be
             // flush with the surrounding terrain without blocking off the doorstep.
-            this.pieces.forEach(piece -> piece.move(0, 0, 0));
-            this.pieces.forEach(piece -> piece.getBoundingBox().y0 -= 1);
-
+            this.pieces.forEach(piece -> piece.move(0, 1, 0));
 
 
             // Sets the bounds of the structure once you are finished.
             this.calculateBoundingBox();
+            this.boundingBox.x0-=2;
+            this.boundingBox.x1+=3;
+            this.boundingBox.z0-=2;
+            this.boundingBox.z1+=3;
+            this.boundingBox.y1+=4;
+            this.boundingBox.y0-=0;
 
-            // I use to debug and quickly find out if the structure is spawning or not and where it is.
-            // This is returning the coordinates of the center starting piece.
-            Supplementaries.LOGGER.log(Level.DEBUG, "Rundown House at " +
-                    this.pieces.get(0).getBoundingBox().x0 + " " +
-                    this.pieces.get(0).getBoundingBox().y0 + " " +
-                    this.pieces.get(0).getBoundingBox().z0);
+
         }
 
     }
