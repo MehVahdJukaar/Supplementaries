@@ -23,6 +23,8 @@ public class ModTags {
     public static final Tags.IOptionalNamedTag<Block> ROPE_HANG_TAG = blockTag("hang_from_ropes");
     public static final Tags.IOptionalNamedTag<Block> BELLOWS_TICKABLE_TAG = blockTag("bellows_tickable");
     public static final Tags.IOptionalNamedTag<Block> WATER_HOLDER = blockTag("water_holder");
+    public static final Tags.IOptionalNamedTag<Block> POURING_TANK = blockTag("pouring_tank");
+    public static final Tags.IOptionalNamedTag<Block> WALL_LANTERNS = blockTag("wall_lanterns");
     //item tags
     public static final Tags.IOptionalNamedTag<Item> SHULKER_BLACKLIST_TAG = itemTag("shulker_blacklist");
     public static final Tags.IOptionalNamedTag<Item> COOKIES = itemTag("cookies");

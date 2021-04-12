@@ -42,8 +42,9 @@ public class StructureRegistry {
 
     public static final DeferredRegister<Structure<?>> STRUCTURES = DeferredRegister.create(ForgeRegistries.STRUCTURE_FEATURES, Supplementaries.MOD_ID);
 
-    public static final RegistryObject<Structure<NoFeatureConfig>> ROAD_SIGN = STRUCTURES.register("road_sign",
-            () -> (new RoadSignStructure(NoFeatureConfig.CODEC)));
+    //do NOT change this
+    public static final RegistryObject<Structure<NoFeatureConfig>> ROAD_SIGN = STRUCTURES.register("way_sign",
+            () -> (new WaySignStructure(NoFeatureConfig.CODEC)));
 
     public static Supplier<StructureFeature<?, ?>> CONFIGURED_ROAD_SIGN = ()->ROAD_SIGN.get().configured(IFeatureConfig.NONE);
 
@@ -265,7 +266,7 @@ public class StructureRegistry {
      */
     private static void registerConfiguredStructures() {
         Registry<StructureFeature<?, ?>> registry = WorldGenRegistries.CONFIGURED_STRUCTURE_FEATURE;
-        Registry.register(registry, new ResourceLocation(Supplementaries.MOD_ID, "configured_road_sign"), CONFIGURED_ROAD_SIGN.get());
+        Registry.register(registry, new ResourceLocation(Supplementaries.MOD_ID, "configured_way_sign"), CONFIGURED_ROAD_SIGN.get());
 
         /* Ok so, this part may be hard to grasp but basically, just add your structure to this to
          * prevent any sort of crash or issue with other mod's custom ChunkGenerators. If they use

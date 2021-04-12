@@ -16,16 +16,31 @@ public class ClientConfigs {
         particle.init(builder);
         entity.init(builder);
         general.init(builder);
+        tweaks.init(builder);
 
         CLIENT_CONFIG = builder.build();
     }
 
+    public static class tweaks {
+        public static ForgeConfigSpec.BooleanValue COLORED_BWERING_STAND;
+        private static void init(ForgeConfigSpec.Builder builder) {
+            builder.comment("game tweaks")
+                    .push("tweaks");
+            COLORED_BWERING_STAND = builder.comment("make the brewing stand block get the correct color depending on the potions it's brewing")
+                    .define("brewing_stand_colors",true);
+            builder.pop();
+        }
+    }
+
     public static class general {
+        public static ForgeConfigSpec.BooleanValue CONFIG_BUTTON;
         public static ForgeConfigSpec.BooleanValue TOOLTIP_HINTS;
         public static ForgeConfigSpec.BooleanValue ANTI_REPOST_WARNING;
         private static void init(ForgeConfigSpec.Builder builder) {
             builder.comment("general settings")
                     .push("general");
+            CONFIG_BUTTON = builder.comment("enable Quark styled config button on main menu. Needs Configured installed to work")
+                    .define("config_button",false);
             TOOLTIP_HINTS = builder.comment("show some tooltip hints to guide players through the mod")
                     .define("tooltip_hints",true);
             ANTI_REPOST_WARNING = builder.comment("tries to detect when the mod hasn't been downloaded from curseforge. " +
@@ -139,7 +154,7 @@ public class ClientConfigs {
             FLAG_AMPLITUDE_INCREMENT = builder.comment("how much the wave amplitude increases each pixel")
                     .defineInRange("amplitude_increment", 0.3d, 0, 10);
             builder.pop();
-            //TODO: add more
+            //TODO: add more(hourGlass, sawying blocks...)
 
 
             builder.push("captured_mobs");
@@ -207,6 +222,7 @@ public class ClientConfigs {
 
 
     public static class cached {
+        public static boolean COLORED_BWERING_STAND;
         public static boolean TOOLTIP_HINTS;
         public static int FIREFLY_PAR_MAXAGE;
         public static double FIREFLY_PAR_SCALE;
@@ -226,10 +242,14 @@ public class ClientConfigs {
         public static double WIND_VANE_PERIOD_2;
         public static boolean CLOCK_24H;
         public static boolean GLOBE_RANDOM;
+        public static boolean CONFIG_BUTTON;
 
         public static void refresh(){
+            //tweaks
+            COLORED_BWERING_STAND = tweaks.COLORED_BWERING_STAND.get();
             //general
             TOOLTIP_HINTS = general.TOOLTIP_HINTS.get();
+            CONFIG_BUTTON = general.CONFIG_BUTTON.get();
             //particles
             FIREFLY_PAR_MAXAGE = particle.FIREFLY_PAR_MAXAGE.get();
             FIREFLY_PAR_SCALE = particle.FIREFLY_PAR_SCALE.get();

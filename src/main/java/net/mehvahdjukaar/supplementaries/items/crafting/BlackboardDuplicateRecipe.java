@@ -81,7 +81,6 @@ public class BlackboardDuplicateRecipe extends SpecialRecipe {
                 }
             }
         }
-
         return nonnulllist;
     }
 

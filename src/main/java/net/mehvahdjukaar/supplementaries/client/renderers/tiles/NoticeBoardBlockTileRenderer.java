@@ -1,15 +1,19 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.mehvahdjukaar.supplementaries.block.tiles.NoticeBoardBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.Lod;
+import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.client.renderers.TextUtil;
+import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.RequestMapDataFromServerPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.NativeImage;
@@ -47,20 +51,19 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
 
         if(tile.textVisible){
 
+            ItemStack stack = tile.getDisplayedItem();
+            if(stack.isEmpty())return;
+
             Vector3d cameraPos = this.renderer.camera.getPosition();
-
-
-
             BlockPos pos = tile.getBlockPos();
-
             float yaw = tile.getYaw();
             float relAngle = (float) (MathHelper.atan2(cameraPos.x-(pos.getX()+0.5f),cameraPos.z-(pos.getZ()+0.5f))*180/Math.PI);
+
             if(MathHelper.degreesDifference(relAngle,yaw-90)>-2)return;
 
 
             //TODO: fix book with nothing in it
             int frontLight = tile.getFrontLight();
-            ItemStack stack = tile.getItem(0);
 
 
             matrixStackIn.pushPose();
@@ -90,7 +93,7 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
             }
 
             //render book
-            String page = tile.getText();
+            String page = tile.text;
             if (!(page == null || page.equals(""))) {
 
                 Lod lod = new Lod(cameraPos,pos);
@@ -109,6 +112,14 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
                     d0 = 0.8f * 0.7f;
                 } else {
                     d0 = 0.6f * 0.7f;
+                }
+
+
+                if(CommonUtil.FESTIVITY.isAprilsFool()){
+                    TextUtil.renderBeeMovie(matrixStackIn,bufferIn,frontLight,fontrenderer,d0);
+                    matrixStackIn.popPose();
+                    matrixStackIn.popPose();
+                    return;
                 }
 
                 String bookName = tile.getItem(0).getHoverName().getString().toLowerCase();
@@ -185,18 +196,35 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
             }
 
             //render item
-            if(!stack.isEmpty()){
-                ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-                IBakedModel ibakedmodel = itemRenderer.getModel(stack, tile.getLevel(), null);
+            if(!stack.isEmpty()) {
 
-                matrixStackIn.pushPose();
-                matrixStackIn.translate(0,0,0.015625+0.00005);
-                matrixStackIn.scale(-0.5f, 0.5f, -0.5f);
-                itemRenderer.render(stack, ItemCameraTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, frontLight,
-                        combinedOverlayIn, ibakedmodel);
-                //itemRenderer.renderItem(stack, ItemCameraTransforms.TransformType.FIXED, newl, OverlayTexture.NO_OVERLAY, matrixStackIn, bufferIn);
+                if (tile.cachedPattern!=null) {
+                    //TODO: replace with flag material
+                    IVertexBuilder builder = bufferIn.getBuffer(RenderType.itemEntityTranslucentCull(tile.cachedPattern));
 
-                matrixStackIn.popPose();
+                    int i = tile.getTextColor().getTextColor();
+                    float b = (NativeImage.getR(i) )/255f;
+                    float g = (NativeImage.getG(i) )/255f;
+                    float r = (NativeImage.getB(i) )/255f;
+                    int lu = frontLight & '\uffff';
+                    int lv = frontLight >> 16 & '\uffff';
+                    RendererUtil.addQuadSide(builder, matrixStackIn, -0.5f, -0.5f, 0.008f, 0.5f, 0.5f, 0.008f,
+                            0.125f, 0, 0.5f+0.125f, 1, r, g, b, 1, lu, lv, 0, 0, 1);
+
+
+                }
+                else{
+                    ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
+                    IBakedModel ibakedmodel = itemRenderer.getModel(stack, tile.getLevel(), null);
+
+
+                    matrixStackIn.translate(0, 0, 0.015625 + 0.00005);
+                    matrixStackIn.scale(-0.5f, 0.5f, -0.5f);
+                    itemRenderer.render(stack, ItemCameraTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, frontLight,
+                            combinedOverlayIn, ibakedmodel);
+                    //itemRenderer.renderItem(stack, ItemCameraTransforms.TransformType.FIXED, newl, OverlayTexture.NO_OVERLAY, matrixStackIn, bufferIn);
+                }
+
                 matrixStackIn.popPose();
                 return;
 

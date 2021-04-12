@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.WallLanternBlock;
 import net.mehvahdjukaar.supplementaries.block.util.IBlockHolder;
-import net.mehvahdjukaar.supplementaries.block.util.ILightMimic;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -11,7 +10,7 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.ITickableTileEntity;
 
 
-public class WallLanternBlockTile extends EnhancedLanternBlockTile implements ITickableTileEntity, IBlockHolder, ILightMimic {
+public class WallLanternBlockTile extends EnhancedLanternBlockTile implements ITickableTileEntity, IBlockHolder {
 
     public BlockState lanternBlock = Blocks.LANTERN.defaultBlockState();//Blocks.AIR.getDefaultState();
     public boolean isRedstoneLantern = false;
@@ -51,11 +50,8 @@ public class WallLanternBlockTile extends EnhancedLanternBlockTile implements IT
     @Override
     public boolean setHeldBlock(BlockState state) {
         this.lanternBlock = state;
-        return true;
-    }
-//maybe merge these two
-    @Override
-    public void setLight(int light) {
+
+        int light = state.getLightEmission();
         boolean lit = true;
         if(this.lanternBlock.getBlock().getRegistryName().toString().equals("charm:redstone_lantern")) {
             this.isRedstoneLantern = true;
@@ -65,5 +61,8 @@ public class WallLanternBlockTile extends EnhancedLanternBlockTile implements IT
         if(this.getBlockState().getValue(WallLanternBlock.LIGHT_LEVEL)!=light)
             this.getLevel().setBlock(this.worldPosition, this.getBlockState().setValue(WallLanternBlock.LIT,lit)
                     .setValue(WallLanternBlock.LIGHT_LEVEL,light),4|16);
+
+        return true;
     }
+
 }

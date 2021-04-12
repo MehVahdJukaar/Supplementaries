@@ -185,7 +185,7 @@ public class Registry {
 
     public static final String BOMB_BLUE_NAME = "bomb_blue";
     public static final RegistryObject<Item> BOMB_BLUE_ITEM = ITEMS.register(BOMB_BLUE_NAME,()-> new BombItem(new Item.Properties()
-            .tab(getTab(ItemGroup.TAB_COMBAT,BOMB_NAME)),true,true));
+            .tab(getTab(ItemGroup.TAB_COMBAT,BOMB_BLUE_NAME)),true,true));
     public static final RegistryObject<Item> BOMB_BLUE_ITEM_ON = ITEMS.register("bomb_blue_projectile",()-> new BombItem(new Item.Properties()
             .tab(null),true,false));
 
@@ -235,7 +235,10 @@ public class Registry {
             new SpecialRecipeSerializer<>(RopeArrowCreateRecipe::new));
     public static final RegistryObject<IRecipeSerializer<?>> ROPE_ARROW_ADD_RECIPE = RECIPES.register("rope_arrow_add_recipe", ()->
             new SpecialRecipeSerializer<>(RopeArrowAddRecipe::new));
-
+    public static final RegistryObject<IRecipeSerializer<?>> FLAG_DUPLICATE_RECIPE = RECIPES.register("flag_duplicate_recipe", ()->
+            new SpecialRecipeSerializer<>(FlagDuplicateRecipe::new));
+    public static final RegistryObject<IRecipeSerializer<?>> FLAG_FROM_BANNER_RECIPE = RECIPES.register("flag_from_banner_recipe", ()->
+            new SpecialRecipeSerializer<>(FlagFromBannerRecipe::new));
     //blocks
 
     //variants:
@@ -264,7 +267,14 @@ public class Registry {
 
     public static final Map<IWoodType, RegistryObject<Item>> SIGN_POST_ITEMS = Variants.makeSignPostItems();
 
+    //flags
+    public static final String FLAG_NAME = "flag";
+    public static final Map<DyeColor, RegistryObject<Block>> FLAGS = Variants.makeFlagBlocks();
+    public static final Map<DyeColor, RegistryObject<Item>> FLAGS_ITEMS = Variants.makeFlagItems();
 
+    public static final RegistryObject<TileEntityType<FlagBlockTile>> FLAG_TILE = TILES
+            .register(FLAG_NAME, ()-> TileEntityType.Builder.of(FlagBlockTile::new,
+                    FLAGS.values().stream().map(RegistryObject::get).toArray(Block[]::new)).build(null));
 
     //planter
     public static final String PLANTER_NAME = "planter";
@@ -572,20 +582,6 @@ public class Registry {
             new Item.Properties().tab(null)
     )); //getTab(ItemGroup.REDSTONE,LASER_NAME)
 
-    //flag
-    public static final String FLAG_NAME = "flag";
-    public static final RegistryObject<Block> FLAG = BLOCKS.register(FLAG_NAME,()-> new FlagBlock(
-            AbstractBlock.Properties.of(Material.WOOD, MaterialColor.NONE)
-                    .strength(1f, 1f)
-                    .sound(SoundType.WOOD)
-                    .harvestTool(ToolType.AXE)
-                    .noOcclusion()
-    ));
-    public static final RegistryObject<TileEntityType<FlagBlockTile>> FLAG_TILE = TILES.register(FLAG_NAME,()->  TileEntityType.Builder.of(
-            FlagBlockTile::new, FLAG.get()).build(null));
-    public static final RegistryObject<Item> FLAG_ITEM = ITEMS.register(FLAG_NAME,()-> new BlockItem(FLAG.get(),
-            new Item.Properties().tab(null)
-    ));//getTab(ItemGroup.DECORATIONS,FLAG_NAME)
 
 
     //drawers
@@ -876,11 +872,11 @@ public class Registry {
 
     //copper lantern
     public static final String COPPER_LANTERN_NAME = "copper_lantern";
-    public static final RegistryObject<Block> COPPER_LANTERN = BLOCKS.register(COPPER_LANTERN_NAME,()-> new OilLanternBlock(
+    public static final RegistryObject<Block> COPPER_LANTERN = BLOCKS.register(COPPER_LANTERN_NAME,()-> new CopperLanternBlock(
             AbstractBlock.Properties.of(Material.METAL, MaterialColor.TERRACOTTA_ORANGE)
                     .strength(3.5f)
                     .requiresCorrectToolForDrops()
-                    .lightLevel((state)->state.getValue(OilLanternBlock.LIT)?15:0)
+                    .lightLevel((state)->state.getValue(CopperLanternBlock.LIT)?15:0)
                     .sound(SoundType.LANTERN)
                     .noOcclusion()
     ));
@@ -901,7 +897,7 @@ public class Registry {
     public static final RegistryObject<TileEntityType<OilLanternBlockTile>> CRIMSON_LANTERN_TILE = TILES.register(CRIMSON_LANTERN_NAME,()-> TileEntityType.Builder.of(
             OilLanternBlockTile::new, CRIMSON_LANTERN.get()).build(null));
     public static final RegistryObject<Item> CRIMSON_LANTERN_ITEM = ITEMS.register(CRIMSON_LANTERN_NAME,()-> new BlockItem(CRIMSON_LANTERN.get(),
-            (new Item.Properties()).tab(null)
+            (new Item.Properties()).tab(getTab(ItemGroup.TAB_DECORATIONS,CRIMSON_LANTERN_NAME))
     ));
 
     public static final RegistryObject<TileEntityType<OilLanternBlockTile>> COPPER_LANTERN_TILE = TILES.register(COPPER_LANTERN_NAME,()-> TileEntityType.Builder.of(
@@ -1139,6 +1135,17 @@ public class Registry {
             AbstractBlock.Properties.copy(STRUCTURE_TEMP.get())));
     public static final RegistryObject<TileEntityType<BlockGeneratorBlockTile>> BLOCK_GENERATOR_TILE = TILES.register(BLOCK_GENERATOR_NAME,()-> TileEntityType.Builder.of(
             BlockGeneratorBlockTile::new, BLOCK_GENERATOR.get()).build(null));
+
+    /*
+    public static final String REDSTONE_DRIVER_NAME = "redstone_driver";
+    public static final RegistryObject<Block> REDSTONE_DRIVER = BLOCKS.register(REDSTONE_DRIVER_NAME,()-> new RedstoneDriverBlock(
+            AbstractBlock.Properties.copy(Blocks.REPEATER)));
+    public static final RegistryObject<Item> REDSTONE_DRIVER_ITEM = ITEMS.register(REDSTONE_DRIVER_NAME,()-> new BlockItem(REDSTONE_DRIVER.get(),
+            (new Item.Properties()).tab(getTab(ItemGroup.TAB_REDSTONE,REDSTONE_DRIVER_NAME))));
+
+    */
+
+
 
     /*
     //statue

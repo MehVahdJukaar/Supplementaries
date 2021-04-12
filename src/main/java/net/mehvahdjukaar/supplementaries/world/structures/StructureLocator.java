@@ -17,11 +17,12 @@ import net.minecraft.world.gen.feature.structure.StructureStart;
 import net.minecraft.world.gen.settings.StructureSeparationSettings;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 public class StructureLocator {
 
@@ -42,8 +43,9 @@ public class StructureLocator {
         return MathHelper.floor(MathHelper.sqrt((float)(i * i + j * j)));
     }
 
-    public static Map<Integer, BlockPos> find(ServerWorld world, BlockPos pos, int range, int count){
-        TreeMap<Integer,BlockPos> found = new TreeMap<>();
+    public static List<Pair<Integer, BlockPos>> find(ServerWorld world, BlockPos pos, int range, int count){
+        //TreeMap<Integer,BlockPos> found = new TreeMap<>();
+        List<Pair<Integer,BlockPos>> found = new ArrayList<>();
 
         //TODO: add to structure biome event
 
@@ -106,7 +108,7 @@ public class StructureLocator {
                                         BlockPos p = structureStart.getLocatePos();
                                         int distance = dist(pos, p);
                                         //discard one spawning in a village
-                                        if (distance > 64) found.put(distance, p);
+                                        if (distance > 64) found.add(new ImmutablePair<>(distance, p));
                                         //checking all nearby villages to find the closest
                                     }
 
@@ -131,6 +133,10 @@ public class StructureLocator {
 
             }
         }
+
+        //sort
+
+        Collections.sort(found);
         return found;
     }
 

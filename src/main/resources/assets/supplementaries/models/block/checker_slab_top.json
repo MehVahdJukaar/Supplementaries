@@ -1,9 +1,9 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"particle": "supplementaries:blocks/checkerboard2",
-		"top": "supplementaries:blocks/checkerboard2",
-		"bottom": "supplementaries:blocks/checkerboard"
+		"particle": "supplementaries:blocks/checkerboard",
+		"top": "supplementaries:blocks/checkerboard",
+		"bottom": "supplementaries:blocks/checkerboard2"
 	},
 	"elements": [
 		{

@@ -15,7 +15,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.DamageSource;
@@ -81,10 +80,10 @@ public class BombEntity extends ProjectileItemEntity implements IRendersAsItem, 
     @Override
     public void addAdditionalSaveData(CompoundNBT compound) {
         super.addAdditionalSaveData(compound);
-        compound.putBoolean("Active",this.active);
-        compound.putInt("Age",this.age);
-        compound.putBoolean("Blue",this.blue);
-        compound.putInt("Timer",this.changeTimer);
+        compound.putBoolean("Active", this.active);
+        compound.putInt("Age", this.age);
+        compound.putBoolean("Blue", this.blue);
+        compound.putInt("Timer", this.changeTimer);
     }
 
     @Override
@@ -118,39 +117,57 @@ public class BombEntity extends ProjectileItemEntity implements IRendersAsItem, 
 
     @Override
     public ItemStack getItem() {
-        return this.blue?new ItemStack(this.active?Registry.BOMB_BLUE_ITEM_ON.get():Registry.BOMB_BLUE_ITEM.get())
-                : new ItemStack(this.active?Registry.BOMB_ITEM_ON.get():Registry.BOMB_ITEM.get());
-    }
-    private IParticleData makeParticle() {
-        return  new ItemParticleData(ParticleTypes.ITEM, new ItemStack(Registry.BOMB_ITEM.get()));
+        return this.blue ? new ItemStack(this.active ? Registry.BOMB_BLUE_ITEM_ON.get() : Registry.BOMB_BLUE_ITEM.get())
+                : new ItemStack(this.active ? Registry.BOMB_ITEM_ON.get() : Registry.BOMB_ITEM.get());
     }
 
-    public void handleEntityEvent(byte id) {
-        if (id == 3) {
-            IParticleData iparticledata = this.makeParticle();
-            for(int i = 0; i < 8; ++i) {
-                this.level.addParticle(iparticledata, this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
-            }
+    private void spawnBreakParticles() {
+        for (int i = 0; i < 8; ++i) {
+            this.level.addParticle(new ItemParticleData(ParticleTypes.ITEM, new ItemStack(Registry.BOMB_ITEM.get())), this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
         }
     }
 
-    public double r(){
-        return (random.nextGaussian())*0.05;
+    @Override
+    public void handleEntityEvent(byte id) {
+        switch (id) {
+        default:
+            super.handleEntityEvent(id);
+            break;
+        case 3:
+            spawnBreakParticles();
+            break;
+        case 10:
+            spawnBreakParticles();
+            level.addParticle(Registry.BOMB_EXPLOSION_PARTICLE_EMITTER.get(), this.getX(), this.getY() + 1, this.getZ(), this.blue ? 6D : 2D, 0, 0);
+            break;
+        case 68:
+            level.addParticle(ParticleTypes.FLASH, this.getX(), this.getY() + 1, this.getZ(), 0, 0, 0);
+            break;
+        case 67:
+            Random random = level.getRandom();
+            for (int i = 0; i < 10; ++i) {
+                level.addParticle(ParticleTypes.SMOKE, this.getX() + 0.25f - random.nextFloat() * 0.5f, this.getY() + 0.45f - random.nextFloat() * 0.5f, this.getZ() + 0.25f - random.nextFloat() * 0.5f, 0, 0.005, 0);
+            }
+            this.active = false;
+            break;
+
+        }
+    }
+
+    public double r() {
+        return (random.nextGaussian()) * 0.05;
     }
 
     @Override
     public void tick() {
-        if(this.changeTimer==0){
-            if(this.level.isClientSide)
-
-                level.addParticle(Registry.BOMB_EXPLOSION_PARTICLE_EMITTER.get(), this.position().x, this.position().y + 1, this.position().z, 6D, 0, 0);
-            else {
+        if (this.changeTimer == 0) {
+            if (!this.level.isClientSide) {
                 this.explodeOrBreak();
             }
             return;
         }
 
-        if(this.changeTimer>0){
+        if (this.changeTimer > 0) {
             this.changeTimer--;
             level.addParticle(ParticleTypes.SMOKE, this.position().x, this.position().y + 0.5, this.position().z, 0.0D, 0.0D, 0.0D);
         }
@@ -160,30 +177,29 @@ public class BombEntity extends ProjectileItemEntity implements IRendersAsItem, 
             this.turnOff();
         }
         if (this.level.isClientSide && this.active) {
-            if(this.random.nextFloat()<1) {
-                double x = this.getX() ;
-                double y = this.getY() ;
-                double z = this.getZ() ;
-                double x2 = (x-this.prevX);
-                double y2 = (y-this.prevY);
-                double z2 = (z-this.prevZ);
+            if (this.random.nextFloat() < 1 && !this.firstTick) {
+                double x = this.getX();
+                double y = this.getY();
+                double z = this.getZ();
+                double x2 = (x - this.prevX);
+                double y2 = (y - this.prevY);
+                double z2 = (z - this.prevZ);
                 level.addParticle(Registry.BOMB_SMOKE_PARTICLE.get(),
-                        x+r(), y + 0.5+r(), z+r(), 0, 0.01, 0);
+                        x + r(), y + 0.5 + r(), z + r(), 0, 0.01, 0);
                 level.addParticle(Registry.BOMB_SMOKE_PARTICLE.get(),
-                        x+(x2/2)+r(), 0.5 + y+(y2/2), z+(z2/2)+r(), 0, 0., 0);
+                        x + (x2 / 2) + r(), 0.5 + y + (y2 / 2), z + (z2 / 2) + r(), 0, 0., 0);
                 level.addParticle(Registry.BOMB_SMOKE_PARTICLE.get(),
-                        x+(x2/4)+r(), 0.5 + y+(y2/4), z+(z2/4)+r(), 0, 0, 0);
+                        x + (x2 / 4) + r(), 0.5 + y + (y2 / 4), z + (z2 / 4) + r(), 0, 0, 0);
                 level.addParticle(Registry.BOMB_SMOKE_PARTICLE.get(),
-                        x+(x2*0.75)+r(), 0.5 + y+(y2*0.75), z+(z2*0.75)+r(), 0, 0, 0);
+                        x + (x2 * 0.75) + r(), 0.5 + y + (y2 * 0.75), z + (z2 * 0.75) + r(), 0, 0, 0);
             }
             this.prevX = this.getX();
             this.prevY = this.getY();
             this.prevZ = this.getZ();
 
-        }
-        else{
+        } else {
             this.age++;
-            if(this.age >=200)this.explode();
+            if (this.age >= 200) this.explodeOrBreak();
         }
         super.tick();
 
@@ -194,28 +210,33 @@ public class BombEntity extends ProjectileItemEntity implements IRendersAsItem, 
         return 0.05F;
     }
 
-    public static boolean canBreakBlock(IBlockReader world, BlockPos pos, BlockState state, float power){
+    public static boolean canBreakBlock(IBlockReader world, BlockPos pos, BlockState state, float power) {
         return state.canBeReplaced(Fluids.WATER) || state.getBlock() instanceof TNTBlock;
     }
 
-    public void explode(){
-        Explosion explosion = new Explosion(this.level, this, null, new ExplosionContext(){
+    public void explode() {
+        Explosion explosion = new Explosion(this.level, this, null, new ExplosionContext() {
             public boolean shouldBlockExplode(Explosion explosion, IBlockReader reader, BlockPos pos, BlockState state, float power) {
-                return canBreakBlock(reader,pos,state,power);
-            }},
-                this.getX(),this.getY()+0.25,this.getZ(), blue?6f:2f, false, Explosion.Mode.BREAK);
+                return canBreakBlock(reader, pos, state, power);
+            }
+        },
+                this.getX(), this.getY() + 0.25, this.getZ(), blue ? 6f : 2f, false, Explosion.Mode.BREAK);
 
         explosion.explode();
         explosion.finalizeExplosion(false);
 
-        this.level.playSound(null, this.getX(),this.getY(),this.getZ(), Registry.BOMB_SOUND.get(), SoundCategory.NEUTRAL, blue?5F:3f, (1.2F + (this.level.random.nextFloat() - this.level.random.nextFloat()) * 0.2F) );
+        this.level.playSound(null, this.getX(), this.getY(), this.getZ(), Registry.BOMB_SOUND.get(), SoundCategory.NEUTRAL, blue ? 5F : 3f, (1.2F + (this.level.random.nextFloat() - this.level.random.nextFloat()) * 0.2F));
     }
 
     //explode
-    public void explodeOrBreak(){
-        if(this.active)this.explode();
-        this.level.playSound(null, this.getX(),this.getY(),this.getZ(), SoundEvents.NETHERITE_BLOCK_BREAK, SoundCategory.NEUTRAL, 1.5F, 1.5f);
-        this.level.broadcastEntityEvent(this, (byte)3);
+    public void explodeOrBreak() {
+        if (this.active) {
+            this.explode();
+            this.level.broadcastEntityEvent(this, (byte) 10);
+        } else {
+            this.level.broadcastEntityEvent(this, (byte) 3);
+        }
+        this.level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.NETHERITE_BLOCK_BREAK, SoundCategory.NEUTRAL, 1.5F, 1.5f);
         this.remove();
     }
 
@@ -223,25 +244,21 @@ public class BombEntity extends ProjectileItemEntity implements IRendersAsItem, 
     protected void onHitEntity(EntityRayTraceResult hit) {
         super.onHitEntity(hit);
         hit.getEntity().hurt(DamageSource.thrown(this, this.getOwner()), 1);
-        if(hit.getEntity() instanceof FireballEntity){
+        if (hit.getEntity() instanceof FireballEntity) {
             this.superCharged = true;
             hit.getEntity().remove();
         }
     }
 
-    public void turnOff(){
+    public void turnOff() {
         if (!level.isClientSide()) {
-            level.playSound(null, this.getX(),this.getY(),this.getZ(), SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundCategory.BLOCKS, 0.5F, 1.5F);
-        }
-        else{
-            Random random = level.getRandom();
-            for (int i = 0; i < 10; ++i) {
-                level.addParticle(ParticleTypes.SMOKE,this.getX()+0.25f-random.nextFloat()*0.5f,this.getY()+0.45f-random.nextFloat()*0.5f,this.getZ()+0.25f-random.nextFloat()*0.5f,0, 0.005, 0);
-            }
+            this.level.broadcastEntityEvent(this, (byte)67);
+            level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundCategory.BLOCKS, 0.5F, 1.5F);
         }
         this.active = false;
     }
 
+    @Override
     public void playerTouch(PlayerEntity entityIn) {
         if (!this.level.isClientSide) {
             if (!this.active && entityIn.inventory.add(this.getItemStack())) {
@@ -251,48 +268,45 @@ public class BombEntity extends ProjectileItemEntity implements IRendersAsItem, 
         }
     }
 
-    private ItemStack getItemStack(){
+    private ItemStack getItemStack() {
         return new ItemStack(Registry.BOMB_ITEM.get());
     }
 
     //onBlockHit
     protected void onHitBlock(BlockRayTraceResult hit) {
+        //TODO: fix collision
         super.onHitBlock(hit);
         Vector3d vector3d = hit.getLocation().subtract(this.getX(), this.getY(), this.getZ());
         this.setDeltaMovement(vector3d);
-        Vector3d vector3d1 = vector3d.normalize().scale((double)0.05F);
+        Vector3d vector3d1 = vector3d.normalize();
         this.setPosRaw(this.getX() - vector3d1.x, this.getY() - vector3d1.y, this.getZ() - vector3d1.z);
     }
 
     @Override
     protected void onHit(RayTraceResult result) {
         super.onHit(result);
-        Vector3d v = result.getLocation();
-        if(this.blue&&this.changeTimer==-1){
-            this.changeTimer = 10;
-            this.setDeltaMovement(Vector3d.ZERO);
-        }
+
 
         if (!this.level.isClientSide) {
-            if(this.superCharged){
+
+            if (this.blue && this.changeTimer == -1) {
+                this.changeTimer = 10;
+                //this.setDeltaMovement(Vector3d.ZERO);
+                this.level.broadcastEntityEvent(this, (byte) 68);
+            }
+
+
+            if (this.superCharged) {
                 boolean flag = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level, this.getOwner());
                 this.level.explode(this, this.getX(), this.getY(), this.getZ(), 6, flag, flag ? Explosion.Mode.DESTROY : Explosion.Mode.NONE);
                 this.remove();
-            }
-            else if (!this.removed){
-                if(!this.blue){
+            } else if (!this.removed) {
+                if (!this.blue) {
                     this.explodeOrBreak();
                 }
             }
         }
-        else if(this.active) {
-            if (this.changeTimer == 10) {
-                level.addParticle(ParticleTypes.FLASH, v.x, v.y + 0.5, v.z, 0, 0, 0);
-            }
-            else if(!this.blue) {
-                level.addParticle(Registry.BOMB_EXPLOSION_PARTICLE_EMITTER.get(), v.x, v.y + 0.5, v.z, 2.2D, 0, 0);
-            }
-        }
+
 
     }
 

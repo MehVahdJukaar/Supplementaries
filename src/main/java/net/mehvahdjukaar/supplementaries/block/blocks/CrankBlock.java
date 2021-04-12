@@ -99,13 +99,15 @@ public class CrankBlock extends Block implements IWaterLoggable{
             float f = 0.4f;
             worldIn.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundCategory.BLOCKS, 0.3F, f);
 
-            Direction dir = state.getValue(FACING).getOpposite();
-            BlockPos behind = pos.relative(dir);
-            BlockState backState = worldIn.getBlockState(behind);
-            if(backState.getBlock() instanceof PulleyBlock && dir.getAxis()==backState.getValue(PulleyBlock.AXIS)){
-                ((PulleyBlock) backState.getBlock()).axisRotate(backState,behind,worldIn,ccw?Rotation.COUNTERCLOCKWISE_90:Rotation.CLOCKWISE_90);
-            }
 
+            Direction dir = state.getValue(FACING).getOpposite();
+            if(dir.getAxis()!= Direction.Axis.Y) {
+                BlockPos behind = pos.relative(dir);
+                BlockState backState = worldIn.getBlockState(behind);
+                if (backState.getBlock() instanceof PulleyBlock && dir.getAxis() == backState.getValue(PulleyBlock.AXIS)) {
+                    ((PulleyBlock) backState.getBlock()).axisRotate(backState, behind, worldIn, ccw ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90);
+                }
+            }
             return ActionResultType.CONSUME;
         }
     }

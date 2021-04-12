@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.fluids;
 
-import net.mehvahdjukaar.supplementaries.client.renderers.FluidColors;
+import net.mehvahdjukaar.supplementaries.client.renderers.FluidParticleColors;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
@@ -467,7 +467,7 @@ public class SoftFluidHolder {
     public int getParticleColor() {
         if (this.isEmpty()) return -1;
         int tintColor = this.getTintColor();
-        if (tintColor == -1) return FluidColors.get(this.fluid.getID());
+        if (tintColor == -1) return FluidParticleColors.get(this.fluid.getID());
         return tintColor;
     }
 

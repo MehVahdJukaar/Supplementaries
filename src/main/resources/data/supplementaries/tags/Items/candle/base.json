@@ -1,9 +1,10 @@
 {
   "replace": false,
   "values": [
-    "#forge:honeycombs"
+    "minecraft:honeycomb"
   ],
   "optional": [
+    "#forge:honeycombs",
     "quark:tallow",
     "#resourcefulbees:resourceful_honeycomb",
     "resourcefulbees:wax",

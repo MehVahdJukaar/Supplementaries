@@ -9,6 +9,7 @@ import net.minecraft.entity.ai.goal.EatGrassGoal;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -21,15 +22,18 @@ import java.util.function.Predicate;
 @Mixin(EatGrassGoal.class)
 public abstract class EatGrassGoalMixin extends Goal {
 
+    @Final
     @Shadow
     private MobEntity mob;
 
     @Shadow
     private int eatAnimationTick;
 
+    @Final
     @Shadow
     private static Predicate<BlockState> IS_TALL_GRASS;
 
+    @Final
     @Shadow
     private World level;
 

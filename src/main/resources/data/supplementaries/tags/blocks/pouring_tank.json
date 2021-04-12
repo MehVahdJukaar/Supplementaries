@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id" :"tconstruct:channel",
+      "required": false
+    },
+    {
+      "id" :"tconstruct:casting_basin",
+      "required": false
+    },
+    {
+      "id" :"tconstrust:casting_table",
+      "required": false
+    }
+    ]
+}

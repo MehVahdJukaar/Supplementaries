@@ -5,7 +5,8 @@ import net.mehvahdjukaar.supplementaries.client.gui.NoticeBoardGui;
 import net.mehvahdjukaar.supplementaries.client.gui.PulleyBlockGui;
 import net.mehvahdjukaar.supplementaries.client.gui.SackGui;
 import net.mehvahdjukaar.supplementaries.client.particles.*;
-import net.mehvahdjukaar.supplementaries.client.renderers.FluidColors;
+import net.mehvahdjukaar.supplementaries.client.renderers.BrewingStandColor;
+import net.mehvahdjukaar.supplementaries.client.renderers.FluidParticleColors;
 import net.mehvahdjukaar.supplementaries.client.renderers.TippedSpikesColor;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.FireflyEntityRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.RopeArrowRenderer;
@@ -15,6 +16,7 @@ import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.entities.FireflyEntity;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.particle.FlameParticle;
@@ -113,7 +115,7 @@ public class ClientSetup {
         //laser
         ClientRegistry.bindTileEntityRenderer(Registry.LASER_BLOCK_TILE.get(), LaserBlockTileRenderer::new);
         //flag
-        RenderTypeLookup.setRenderLayer(Registry.FLAG.get(), RenderType.cutout());
+        //RenderTypeLookup.setRenderLayer(Registry.FLAG.get(), RenderType.cutout());
         ClientRegistry.bindTileEntityRenderer(Registry.FLAG_TILE.get(), FlagBlockTileRenderer::new);
         //drawers
         //RenderTypeLookup.setRenderLayer(Registry.DRAWERS.get(), RenderType.getCutout());
@@ -181,6 +183,8 @@ public class ClientSetup {
         RenderTypeLookup.setRenderLayer(Registry.JAR_BOAT.get(), RenderType.translucent());
         //magma cream block
         RenderTypeLookup.setRenderLayer(Registry.MAGMA_CREAM_BLOCK.get(), RenderType.translucent());
+
+        //if(ModList.get().isLoaded("configured")) CustomConfiguredScreen.registerScreen();
     }
 
     //particles
@@ -203,6 +207,7 @@ public class ClientSetup {
     public static void registerBlockColors(ColorHandlerEvent.Block event){
         event.getBlockColors().register(new TippedSpikesColor(), Registry.BAMBOO_SPIKES.get());
         event.getBlockColors().register(new defWater(), Registry.JAR_BOAT.get());
+        event.getBlockColors().register(new BrewingStandColor(), Blocks.BREWING_STAND);
     }
 
     @SubscribeEvent
@@ -243,8 +248,10 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void onResourcePackChanged(ModelBakeEvent event) {
-        FluidColors.refresh();
+        FluidParticleColors.refresh();
     }
+
+
 
 
 }

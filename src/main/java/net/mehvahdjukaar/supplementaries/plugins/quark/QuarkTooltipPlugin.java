@@ -24,4 +24,9 @@ public class QuarkTooltipPlugin {
         }
     }
 
+    public static boolean hasQButtonOnRight(){
+        return GeneralConfig.qButtonOnRight && GeneralConfig.enableQButton;
+    }
+
+
 }

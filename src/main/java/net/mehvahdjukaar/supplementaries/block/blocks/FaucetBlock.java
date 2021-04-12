@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.FaucetBlockTile;
+import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -136,12 +137,20 @@ public class FaucetBlock extends Block implements IWaterLoggable{
         if(hasWater != state.getValue(HAS_WATER)) worldIn.setBlockAndUpdate(pos,state.setValue(HAS_WATER,hasWater));
     }
 
+    public boolean isSpecialTankBelow(BlockState state){
+        return ModTags.isTagged(ModTags.POURING_TANK,state.getBlock());
+    }
+
     @Override
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
         if (stateIn.getValue(WATERLOGGED)) {
             worldIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
         }
-        if(facing==Direction.DOWN)return stateIn.setValue(HAS_JAR,canConnect(facingState,worldIn,facingPos,facing.getOpposite()));
+        if(facing==Direction.DOWN){
+            boolean canConnectDown = canConnect(facingState,worldIn,facingPos,facing.getOpposite());
+            //boolean water = canConnectDown?stateIn.getValue(HAS_WATER)&&this.isSpecialTankBelow(facingState): updateTileFluid(stateIn,currentPos,worldIn);
+            return stateIn.setValue(HAS_JAR,canConnectDown);
+        }
         if(facing==stateIn.getValue(FACING).getOpposite()){
             boolean hasWater = updateTileFluid(stateIn,currentPos,worldIn);
             return stateIn.setValue(EXTENDED,canConnect(facingState,worldIn,facingPos,facing.getOpposite())).setValue(HAS_WATER,hasWater);
@@ -153,7 +162,7 @@ public class FaucetBlock extends Block implements IWaterLoggable{
     public boolean updateTileFluid(BlockState state, BlockPos pos, IWorld world){
         TileEntity te = world.getBlockEntity(pos);
         if(te instanceof FaucetBlockTile){
-            return ((FaucetBlockTile) te).updateDisplayedFluid(state);
+            return ((FaucetBlockTile) te).updateContainedFluid(state);
         }
         return false;
     }

@@ -4,7 +4,7 @@ package net.mehvahdjukaar.supplementaries.network;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.plugins.configured.CustomConfiguredScreen;
+import net.mehvahdjukaar.supplementaries.plugins.configured.ConfiguredPlugin;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.ExtensionPoint;
@@ -34,7 +34,7 @@ public class OpenConfigsPacket {
 
 
             if(ModList.get().isLoaded("configured"))
-                CustomConfiguredScreen.openScreen(mc);
+                ConfiguredPlugin.openScreen(mc);
             else{
                 mc.setScreen(ModList.get().getModContainerById(Supplementaries.MOD_ID).get()
                         .getCustomExtension(ExtensionPoint.CONFIGGUIFACTORY).get()

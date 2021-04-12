@@ -55,7 +55,7 @@ public class CommonUtil {
         public boolean isStValentine(){return this==ST_VALENTINE;}
         public boolean isChristmas(){return this==CHRISTMAS;}
         public boolean isEarthDay(){return this==EARTH_DAY;}
-        public static Festivity get(){
+        private static Festivity get(){
             Calendar calendar = Calendar.getInstance();
             if((calendar.get(Calendar.MONTH)==Calendar.OCTOBER && calendar.get(Calendar.DATE)>=29)||
                     (calendar.get(Calendar.MONTH)== Calendar.NOVEMBER&&calendar.get(Calendar.DATE) <= 1))return HALLOWEEN;
@@ -402,6 +402,9 @@ public class CommonUtil {
 
     //BlockItem method
     public static boolean canPlace(BlockItemUseContext context, BlockState state){
+
+
+
         PlayerEntity playerentity = context.getPlayer();
         ISelectionContext iselectioncontext = playerentity == null ? ISelectionContext.empty() : ISelectionContext.of(playerentity);
         return state.canSurvive(context.getLevel(), context.getClickedPos()) && context.getLevel().isUnobstructed(state, context.getClickedPos(), iselectioncontext);

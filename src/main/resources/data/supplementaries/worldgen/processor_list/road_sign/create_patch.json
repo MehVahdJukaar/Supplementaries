@@ -1,7 +1,0 @@
-{
-  "processors": [
-    {
-      "processor_type": "supplementaries:create_patch_processor"
-    }
-  ]
-}

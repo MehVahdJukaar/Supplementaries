@@ -62,7 +62,7 @@ public abstract class SwayingBlock extends Block implements IWaterLoggable {
         return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
 
-    public BlockState getConnectedState(BlockState state, BlockState facingState, IWorld world, BlockPos pos){
+    public static BlockState getConnectedState(BlockState state, BlockState facingState, IWorld world, BlockPos pos){
         int ext = CommonUtil.getPostSize(facingState,pos,world);
         return state.setValue(EXTENSION, ext);
     }

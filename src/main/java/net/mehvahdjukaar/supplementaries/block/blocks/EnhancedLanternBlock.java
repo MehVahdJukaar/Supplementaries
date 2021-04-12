@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.tiles.EnhancedLanternBlockTile;
+import net.mehvahdjukaar.supplementaries.block.util.IBlockHolder;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.block.BlockState;
@@ -57,7 +58,18 @@ public class EnhancedLanternBlock extends SwayingBlock {
 
         boolean flag = world.getFluidState(blockpos).getType() == Fluids.WATER;;
 
-        return this.getConnectedState(this.defaultBlockState(), facingState, world, facingpos).setValue(FACING, context.getClickedFace()).setValue(WATERLOGGED,flag);
+        return getConnectedState(this.defaultBlockState(), facingState, world, facingpos).setValue(FACING, context.getClickedFace()).setValue(WATERLOGGED,flag);
+    }
+
+    public void placeOn(BlockState lantern, BlockPos onPos, Direction face, World world){
+        BlockState state = getConnectedState(this.defaultBlockState(),world.getBlockState(onPos),world,onPos)
+                .setValue(FACING,face);
+        BlockPos newPos = onPos.relative(face);
+        world.setBlock(newPos,state,3);
+        TileEntity te = world.getBlockEntity(newPos);
+        if(te instanceof IBlockHolder){
+            ((IBlockHolder) te).setHeldBlock(lantern);
+        }
     }
 
 

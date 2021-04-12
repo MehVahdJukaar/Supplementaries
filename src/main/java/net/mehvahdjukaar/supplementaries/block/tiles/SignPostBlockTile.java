@@ -58,7 +58,7 @@ public class SignPostBlockTile extends TileEntity implements ITextHolder, IBlock
 
     @Override
     public double getViewDistance() {
-        return 144;
+        return 156;
     }
 
     @Override

@@ -12,6 +12,10 @@
     {
       "id":"#quark:candles",
       "required":false
+    },
+    {
+      "id":"caves_and_cliffs_mod:candle",
+      "required":false
     }
   ]
 }

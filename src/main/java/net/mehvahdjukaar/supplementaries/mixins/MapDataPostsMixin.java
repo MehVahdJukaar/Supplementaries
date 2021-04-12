@@ -32,7 +32,7 @@ public abstract class MapDataPostsMixin extends WorldSavedData {
     }
 
     @Shadow
-    public abstract void addDecoration(MapDecoration.Type type, @Nullable IWorld worldIn, String decorationName, double worldX, double worldZ, double rotationIn, @Nullable ITextComponent name);
+    protected abstract void addDecoration(MapDecoration.Type type, @Nullable IWorld worldIn, String decorationName, double worldX, double worldZ, double rotationIn, @Nullable ITextComponent name);
 
     @Final
     private final Map<String, MapPost> posts = Maps.newHashMap();
@@ -46,6 +46,7 @@ public abstract class MapDataPostsMixin extends WorldSavedData {
     @Shadow
     public byte scale;
 
+    @Final
     @Shadow
     public Map<String, MapDecoration> decorations;
 
@@ -121,7 +122,7 @@ public abstract class MapDataPostsMixin extends WorldSavedData {
     }
 
     @Inject(method = "save", at = @At("TAIL"), cancellable = true)
-    public CompoundNBT write(CompoundNBT compound, CallbackInfoReturnable<CompoundNBT> info) {
+    public void write(CompoundNBT compound, CallbackInfoReturnable<CompoundNBT> info) {
 
         ListNBT listnbt2 = new ListNBT();
 
@@ -130,7 +131,6 @@ public abstract class MapDataPostsMixin extends WorldSavedData {
         }
 
         info.getReturnValue().put("posts", listnbt2);
-        return compound;
     }
 
 }

@@ -16,7 +16,7 @@ public class RequestConfigReloadPacket {
     public static void handler(RequestConfigReloadPacket message, Supplier<NetworkEvent.Context> ctx) {
         //server
         ctx.get().enqueueWork(() -> {
-
+            //TODO: fix confis synginc
             ServerConfigs.loadLocal();
             ConfigHandler.syncServerConfigs(ctx.get().getSender());
             ServerConfigs.cached.refresh();

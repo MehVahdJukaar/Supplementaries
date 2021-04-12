@@ -56,6 +56,7 @@ public class Textures {
     public static final ResourceLocation SOUP_TEXTURE = new ResourceLocation(MOD_ID, "blocks/soup_liquid");
     public static final ResourceLocation SOUL_TEXTURE = new ResourceLocation(MOD_ID, "blocks/soul");
     public static final ResourceLocation CLOCK_HAND_TEXTURE = new ResourceLocation(MOD_ID, "blocks/clock_hand");
+    public static final ResourceLocation CRIMSON_LANTERN_TEXTURE = new ResourceLocation(MOD_ID, "blocks/crimson_lantern_front");
     public static final ResourceLocation HOURGLASS_REDSTONE = new ResourceLocation(MOD_ID, "blocks/hourglass_redstone");
     public static final ResourceLocation HOURGLASS_GLOWSTONE = new ResourceLocation(MOD_ID, "blocks/hourglass_glowstone");
     public static final ResourceLocation HOURGLASS_SUGAR = new ResourceLocation(MOD_ID, "blocks/hourglass_sugar");
@@ -81,9 +82,11 @@ public class Textures {
     public static final ResourceLocation BELL_CHAIN_TEXTURE = new ResourceLocation(MOD_ID,"textures/entity/bell_chain.png");
     public static final ResourceLocation THICK_GOLEM = new ResourceLocation(MOD_ID,"textures/entity/misc/iron_golem.png");
     public static final ResourceLocation SEA_PICKLE_RICK = new ResourceLocation(MOD_ID,"textures/entity/misc/sea_pickle.png");
+    public static final ResourceLocation JAR_MAN = new ResourceLocation(MOD_ID,"textures/entity/misc/jar_man.png");
 
 
     //gui
+    public static final ResourceLocation EMPTY_TEXTURE = new ResourceLocation(MOD_ID,"textures/gui/config_background.png");
     public static final ResourceLocation NOTICE_BOARD_GUI_TEXTURE = new ResourceLocation(MOD_ID,"textures/gui/notice_board_gui.png");
     public static final ResourceLocation SACK_GUI_TEXTURE = new ResourceLocation(MOD_ID,"textures/gui/sack_gui.png");
     public static final ResourceLocation SACK_GUI_TEXTURE_7 = new ResourceLocation(MOD_ID,"textures/gui/sack_gui_7.png");
@@ -100,12 +103,13 @@ public class Textures {
         }
     }
 
+
     //TODO: rethink this
     public static List<ResourceLocation> getBlockTextures() {
         return new ArrayList<>(Arrays.asList(
                 MILK_TEXTURE, POTION_TEXTURE, POTION_TEXTURE_FLOW, HONEY_TEXTURE, DRAGON_BREATH_TEXTURE, SOUP_TEXTURE,MAGMA_TEXTURE,MAGMA_TEXTURE_FLOW,
                 XP_TEXTURE, XP_TEXTURE_FLOW, FISHIES_TEXTURE, BELLOWS_TEXTURE, LASER_BEAM_TEXTURE, LASER_BEAM_END_TEXTURE,LASER_OVERLAY_TEXTURE,
-                CLOCK_HAND_TEXTURE, HOURGLASS_REDSTONE, HOURGLASS_GLOWSTONE, HOURGLASS_SUGAR, HOURGLASS_BLAZE, HOURGLASS_GUNPOWDER));
+                CLOCK_HAND_TEXTURE,HOURGLASS_REDSTONE, HOURGLASS_GLOWSTONE, HOURGLASS_SUGAR, HOURGLASS_BLAZE, HOURGLASS_GUNPOWDER));
     }
 
 

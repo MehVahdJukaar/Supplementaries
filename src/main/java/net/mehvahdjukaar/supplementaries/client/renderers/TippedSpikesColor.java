@@ -76,7 +76,7 @@ public class TippedSpikesColor implements IBlockColor, IItemColor {
         //return getProcessedColor(PotionUtils.getColor(stack), tint-1);
     }
 
-    private static int getProcessedColor(int rgb, int tint){
+    public static int getProcessedColor(int rgb, int tint){
         //float[] hsb = Color.RGBtoHSB(r,g,b,null);
         //int rgb2 = Color.HSBtoRGB(hsb[0],0.75f,0.85f);
         float[] hsl = HSLColor.rgbToHsl(rgb);

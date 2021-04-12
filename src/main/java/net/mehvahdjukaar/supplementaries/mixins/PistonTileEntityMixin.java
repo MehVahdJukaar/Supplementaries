@@ -51,7 +51,7 @@ public abstract class PistonTileEntityMixin extends TileEntity implements IBlock
     }
 
     @Shadow
-    public abstract AxisAlignedBB moveByPositionAndProgress(AxisAlignedBB bb);
+    protected abstract AxisAlignedBB moveByPositionAndProgress(AxisAlignedBB bb);
 
     @Shadow
     public abstract Direction getMovementDirection();

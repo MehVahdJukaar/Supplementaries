@@ -254,9 +254,10 @@ public class ServerConfigs {
             List<String> jarMobs = Arrays.asList("minecraft:slime", "minecraft:bee","minecraft:magma_cube",
                     "iceandfire:pixie","alexsmobs:fly", "alexsmobs:hummingbird","alexsmobs:cockroach","terraincognita:butterfly",
                     "buzzierbees:honey_slime", "mysticalworld:frog","mysticalworld:beetle","mysticalworld:silkworm",
-                    "druidcraft:lunar_moth", "druidcraft:dreadfish","swampexpansion:slabfish","betteranimalsplus:goose",
+                    "druidcraft:lunar_moth", "druidcraft:dreadfish","swampexpansion:slabfish",
                     "endergetic:puff_bug", "betterendforge:end_slime", "betterendforge:dragonfly", "betterendforge:silk_moth",
-                    "savageandravage:creepie","betteranimalsplus:butterfly","whisperwoods:moth","fins:river_pebble_snail");
+                    "savageandravage:creepie","betteranimalsplus:butterfly","whisperwoods:moth","fins:river_pebble_snail",
+                    "tconstruct:sky_slime","twilightforest:maze_slime");
             List<String> jarMobsAndFishes = new ArrayList<>(jarMobs);
             jarMobsAndFishes.addAll(CapturedMobs.getFishes());
             MOB_JAR_ALLOWED_MOBS = builder.comment("catchable mobs \n"+
@@ -294,6 +295,7 @@ public class ServerConfigs {
                     "betteranimalsplus:horseshoecrab", "betteranimalsplus:crab", "whisperwoods:wisp",
                     "undergarden:muncher", "undergarden:scintling", "undergarden:rotling",  "undergarden:sploogie",
                     "dungeonsmod:crow", "dungeonsmod:anthermite", "pandoras_creatures:crab",
+                    "twilightforest:raven", "twilightforest:bunny", "twilightforest:penguin", "twilightforest:tiny_bird", "twilightforest:squirrel", "twilightforest:kobold", "twilightforest:death_tome",
                     "environmental:duck", "environmental:cardinal", "environmental:fennec_fox", "environmental:slabfish", "environmental:penguin",
                     "fins:flatback_leaf_snail","fins:penglil", "fins:river_pebble_snail", "fins:siderol_whiskered_snail", "fins:red_bull_crab", "fins:white_bull_crab");
             cageMobs.addAll(additionalCageMobs);
@@ -394,19 +396,22 @@ public class ServerConfigs {
             builder.push("road_sign");
             //TODO: redo
             ROAD_SIGN_DISTANCE_AVR = builder.comment("average distance apart in chunks between spawn attempts")
-                    .defineInRange("average_distance",17,0,200);
+                    .defineInRange("average_distance",18,0,200);
             ROAD_SIGN_DISTANCE_MIN = builder.comment("minimum distance apart in chunks between spawn attempts")
-                    .defineInRange("minimum_distance",8,0,200);
+                    .defineInRange("minimum_distance",9,0,200);
+
+
+            DISTANCE_TEXT = builder.comment("with this option road signs will display the distance to the structure that they are pointing to")
+                    .define("show_distance_text",true);
+
+
             List<String> villages = Arrays.asList("minecraft:village","repurposed_structures:village_badlands","repurposed_structures:village_dark_oak","repurposed_structures:village_birch",
                     "repurposed_structures:village_giant_taiga","repurposed_structures:village_jungle","repurposed_structures:village_mountains","repurposed_structures:village_oak",
                     "repurposed_structures:village_swamp","pokecube:village","pokecube_legends:village","pokecube_legends:village/ocean",
                     "valhelsia_structures:castle","valhelsia_structures:castle_ruin","valhelsia_structures:small_castle","valhelsia_structures:tower_ruin");
 
-            DISTANCE_TEXT = builder.comment("with this option road signs will display the distance to the structure that they are pointing to")
-                    .define("show_distance_text",true);
-
             SIGNS_VILLAGES = builder.comment("list of structure that a sign can point to. Note that they will only spawn in dimensions where vanilla villages can")
-                    .define("villages", villages);
+                    .defineList("villages", villages, s->true);
 
             builder.pop();
 

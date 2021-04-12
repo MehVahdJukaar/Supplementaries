@@ -40,7 +40,7 @@ import java.util.stream.IntStream;
 public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
     private int transferCooldown = 0;
     protected final Random rand = new Random();
-    public final SoftFluidHolder fluidHolder = new SoftFluidHolder(1);
+    public final SoftFluidHolder fluidHolder = new SoftFluidHolder(2);
 
     public FaucetBlockTile() {
         super(Registry.FAUCET_TILE.get());
@@ -60,10 +60,12 @@ public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
         super.setChanged();
     }
 
+    //TODO: rework all of this
+    //TODO: make it connect with pipes
     //returns true if it has water
-    public boolean updateDisplayedFluid(BlockState state){
-        Direction dir = state.getValue(FaucetBlock.FACING).getOpposite();
-        BlockPos backPos = worldPosition.relative(dir);
+    public boolean updateContainedFluid(BlockState state){
+        Direction backDir = state.getValue(FaucetBlock.FACING).getOpposite();
+        BlockPos backPos = worldPosition.relative(backDir);
         BlockState backState = level.getBlockState(backPos);
 
         Block b = backState.getBlock();
@@ -98,7 +100,7 @@ public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
             this.fluidHolder.fill(SoftFluidList.fromFluid(fluidState.getType()));
             return true;
         }
-        IFluidHandler handler = FluidUtil.getFluidHandler(level,backPos,dir.getOpposite()).orElse(null);
+        IFluidHandler handler = FluidUtil.getFluidHandler(level,backPos,backDir.getOpposite()).orElse(null);
         if(handler!=null){
             FluidStack fluid = handler.getFluidInTank(0);
             if(!fluid.isEmpty()){
@@ -169,6 +171,15 @@ public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
         BlockState backState = this.level.getBlockState(behind);
         Block backBlock = backState.getBlock();
         //TODO: optimize thiis
+
+
+
+
+
+
+
+
+
         if (this.hasFluidTankBelow()){
             if (backBlock instanceof BeehiveBlock && backState.getValue(BlockStateProperties.LEVEL_HONEY) > 0) {
                 if(tryFillingBlockBelow(SoftFluidList.HONEY)) {
@@ -190,11 +201,15 @@ public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
                 return false;
             }
             else if(backBlock instanceof CauldronBlock && backState.getValue(BlockStateProperties.LEVEL_CAULDRON) > 0) {
-                if(level.getBlockEntity(behind)==null && tryFillingBlockBelow(SoftFluidList.WATER)) {
+                TileEntity cauldronTile = level.getBlockEntity(behind);
+                if(cauldronTile==null && tryFillingBlockBelow(SoftFluidList.WATER)) {
                     this.level.setBlock(behind, backState.setValue(BlockStateProperties.LEVEL_CAULDRON,
                             backState.getValue(BlockStateProperties.LEVEL_CAULDRON) - 1), 3);
                     return true;
                 }
+                //else if(ModList.get().isLoaded("inspirations")){
+                    //ItemStack s = CauldronPlugin.tryExtractFluid(cauldronTile);
+                //}
                 //TODO: add inspirations cauldron support
                 return false;
             }

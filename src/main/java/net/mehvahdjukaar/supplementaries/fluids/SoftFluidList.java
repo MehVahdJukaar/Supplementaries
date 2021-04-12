@@ -349,6 +349,31 @@ public class SoftFluidList {
                 .color(0xdb9eff)
                 .translationKey("item.fluffy_farmer.soap")
                 .bottle("fluffy_farmer:bottle_with_soap_bubbles")));
+        addOpt(custom,makeSF(new SoftFluid.Builder(Textures.POTION_TEXTURE,Textures.POTION_TEXTURE_FLOW,"soap")
+                .condition("betteranimalsplus")
+                .color(0x60A8E0)
+                .translationKey("item.betteranimalsplus.horseshoe_crab_blood")
+                .drink("betteranimalsplus:horseshoe_crab_blood")));
+        addOpt(custom,makeSF(new SoftFluid.Builder(new ResourceLocation("tconstruct:sky_congealed_slime"),
+                new ResourceLocation("tconstruct:sky_congealed_slime"),"sky_slime")
+                .condition("tconstruct")
+                .specialItem("tconstruct:sky_slime_ball")
+                .food("tconstruct:sky_slime_ball")));
+        addOpt(custom,makeSF(new SoftFluid.Builder(new ResourceLocation("tconstruct:ichor_congealed_slime"),
+                new ResourceLocation("tconstruct:ichor_congealed_slime"),"ichor_slime")
+                .condition("tconstruct")
+                .specialItem("tconstruct:ichor_slime_ball")
+                .food("tconstruct:ichor_slime_ball")));
+        addOpt(custom,makeSF(new SoftFluid.Builder(new ResourceLocation("tconstruct:blood_congealed_slime"),
+                new ResourceLocation("tconstruct:blood_congealed_slime"),"blood_slime")
+                .condition("tconstruct")
+                .specialItem("tconstruct:blood_slime_ball")
+                .food("tconstruct:blood_slime_ball")));
+        addOpt(custom,makeSF(new SoftFluid.Builder(new ResourceLocation("tconstruct:ender_congealed_slime"),
+                new ResourceLocation("tconstruct:ender_congealed_slime"),"ender_slime")
+                .condition("tconstruct")
+                .specialItem("tconstruct:ender_slime_ball")
+                .food("tconstruct:ender_slime_ball")));
 
         //inspirations dye bottles. not adding nbt mixed ones
         for (DyeColor c: DyeColor.values()){

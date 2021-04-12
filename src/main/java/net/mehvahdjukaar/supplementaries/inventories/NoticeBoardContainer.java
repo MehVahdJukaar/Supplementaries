@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.inventories;
 
+import net.mehvahdjukaar.supplementaries.block.tiles.NoticeBoardBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.entity.player.PlayerEntity;
@@ -8,10 +9,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.tags.ItemTags;
 
 
 public class NoticeBoardContainer extends Container  {
@@ -41,8 +40,7 @@ public class NoticeBoardContainer extends Container  {
             }
             @Override
             public boolean mayPlace(ItemStack stack) {
-                if(!stack.isEmpty()&& ServerConfigs.cached.NOTICE_BOARDS_UNRESTRICTED)return true;
-                return ((ItemTags.LECTERN_BOOKS!=null&&stack.getItem().is(ItemTags.LECTERN_BOOKS)) || stack.getItem() instanceof FilledMapItem);
+                return(ServerConfigs.cached.NOTICE_BOARDS_UNRESTRICTED|| NoticeBoardBlockTile.isPageItem(stack.getItem()));
             }
         });
 

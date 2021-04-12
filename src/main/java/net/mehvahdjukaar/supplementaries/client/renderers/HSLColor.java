@@ -5,6 +5,20 @@ import net.minecraft.util.math.MathHelper;
 
 public class HSLColor {
 
+    public static int getRainbowColorPost(float division){
+        float scale = 3600f/division;
+        float h = (((int)((System.currentTimeMillis())%(int)scale)/scale));
+        float[] hsl = postProcess(new float[]{h,0.6f,0.5f});
+        return hslToRgb(hsl[0],hsl[1],hsl[2]);
+    }
+
+    public static int getRainbowColor(float division){
+        float scale = 3600f/division;
+        float h = (((int)((System.currentTimeMillis())%(int)scale)/scale));
+        return hslToRgb(h,0.6f,0.5f);
+    }
+
+
     public static float[] postProcess(float[] hsl){
         float h = hsl[0];
         float s = hsl[1];

@@ -8,6 +8,7 @@
   "mixins": [
     "BellBlockMixin",
     "BellTileEntityMixin",
+    "BrewingStandTileMixin",
     "CampfireMixin",
     "CatSitOnBlockMixin",
     "CrossbowItemMixin",
@@ -16,9 +17,15 @@
     "LanternBlockMixin",
     "LivingEntityMixin",
     "MapDataPostsMixin",
+    "MineshaftMixin",
     "PistonTileEntityMixin",
     "ShulkerBoxSlotMixin",
-    "ShulkerBoxTileEntityMixin"
+    "ShulkerBoxTileEntityMixin",
+    "StrongholdCrossingMixin",
+    "StrongholdRoomMixin",
+    "accessors.ChickenEntityAccessor",
+    "accessors.HorseEntityAccessor",
+    "accessors.MineshaftAccessor"
   ],
   "client": [
     "BellTileEntityRendererMixin",

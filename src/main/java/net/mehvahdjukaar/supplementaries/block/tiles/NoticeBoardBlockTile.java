@@ -24,15 +24,21 @@ import java.util.List;
 
 
 public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, IMapDisplay {
-    private String txt = null;
+    //client stuff
+    public String text = null;
     private int fontScale = 1;
-    private DyeColor textColor = DyeColor.BLACK;
     private List<IReorderingProcessor> cachedPageLines = Collections.emptyList();
     //used to tell renderer when it has to slit new line(have to do it there cause i need fontrenderer function)
     private boolean inventoryChanged = true;
+    public ResourceLocation cachedPattern = null;
+
+
+
+    private DyeColor textColor = DyeColor.BLACK;
     // private int packedFrontLight =0;
     public boolean textVisible = true; //for culling
     private ITextComponent customName;
+
 
     public NoticeBoardBlockTile() {
         super(Registry.NOTICE_BOARD_TILE.get());
@@ -54,7 +60,9 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, 
     }
 
     //update blockstate and plays sound
-    public void updateBoardBlock(boolean b) {
+    public void updateBoardBlock() {
+
+        boolean b = !this.getDisplayedItem().isEmpty();
 
         BlockState _bs = this.level.getBlockState(this.worldPosition);
         if(_bs.getValue(BlockStateProperties.HAS_BOOK)!=b){
@@ -73,8 +81,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, 
     //hijacking this method to work with hoppers
     @Override
     public void setChanged() {
-        this.updateTile();
-       //this.updateServerAndClient();
+        this.updateBoardBlock();
         super.setChanged();
     }
 
@@ -83,21 +90,27 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, 
         return this.getItem(0);
     }
 
-    public void updateTile() {
-        //updateTextVisibility();
-        if(this.level != null && !this.level.isClientSide()){
-            ItemStack itemstack = getItem(0);
+    public void updateTileClient() {
+
+        if(this.level!=null&&this.level.isClientSide()){
+
+            ItemStack itemstack = getDisplayedItem();
             Item item = itemstack.getItem();
-            String s = null;
+            this.cachedPattern = null;
+            if(item instanceof BannerPatternItem){
+                this.cachedPattern = FlagBlockTile.getFlagLocation(((BannerPatternItem) item).getBannerPattern());
+            }
+
             this.inventoryChanged = true;
             this.cachedPageLines = Collections.emptyList();
+            this.text = null;
 
             if (item instanceof  WrittenBookItem) {
                 CompoundNBT com = itemstack.getTag();
                 if(WrittenBookItem.makeSureTagIsValid(com)){
 
                     ListNBT listnbt = com.getList("pages", 8).copy();
-                    s = listnbt.getString(0);
+                    this.text = listnbt.getString(0);
                 }
             }
             else if(item instanceof  WritableBookItem){
@@ -105,19 +118,8 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, 
                 if(WritableBookItem.makeSureTagIsValid(com)){
 
                     ListNBT listnbt = com.getList("pages", 8).copy();
-                    s = listnbt.getString(0);
+                    this.text = listnbt.getString(0);
                 }
-            }
-
-
-            if (s != null) {
-                //this.inventoryChanged = true;
-                this.txt = s;
-                this.updateBoardBlock(true);
-            }
-            else {
-                this.txt = null;
-                this.updateBoardBlock(false);
             }
         }
     }
@@ -128,14 +130,11 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, 
         if (compound.contains("CustomName", 8)) {
             this.customName = ITextComponent.Serializer.fromJson(compound.getString("CustomName"));
         }
-        this.txt = compound.getString("Text");
-        this.fontScale = compound.getInt("FontScale");
-        //TODO: rework this
-        this.inventoryChanged = compound.getBoolean("invchanged");
+
         this.textColor = DyeColor.byName(compound.getString("Color"), DyeColor.BLACK);
         this.textVisible = compound.getBoolean("TextVisible");
 
-
+        this.updateTileClient();
         // this.packedFrontLight = compound.getInt("light");
     }
 
@@ -145,11 +144,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, 
         if (this.customName != null) {
             compound.putString("CustomName", ITextComponent.Serializer.toJson(this.customName));
         }
-        if (this.txt != null) {
-            compound.putString("Text", this.txt);
-        }
-        compound.putInt("FontScale", this.fontScale);
-        compound.putBoolean("invchanged", this.inventoryChanged);
+
         compound.putString("Color", this.textColor.getName());
         compound.putBoolean("TextVisible", this.textVisible);
 
@@ -166,8 +161,12 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, 
 
     @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
-        if(!stack.isEmpty()&&this.isEmpty()&&ServerConfigs.cached.NOTICE_BOARDS_UNRESTRICTED)return true;
-        return (this.isEmpty()&&((ItemTags.LECTERN_BOOKS!=null&&stack.getItem().is(ItemTags.LECTERN_BOOKS))|| stack.getItem() instanceof FilledMapItem));
+        return this.isEmpty()&&(ServerConfigs.cached.NOTICE_BOARDS_UNRESTRICTED||isPageItem(stack.getItem()));
+    }
+
+    public static boolean isPageItem(Item item){
+        return (ItemTags.LECTERN_BOOKS!=null&&item.is(ItemTags.LECTERN_BOOKS))
+                ||item instanceof FilledMapItem|| item instanceof BannerPatternItem;
     }
 
     @Override
@@ -235,11 +234,4 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, 
         return WorldRenderer.getLightColor(this.level, this.worldPosition.relative(this.getDirection()));
     }
 
-    public String getText() {
-        if (this.txt != null) {
-            return this.txt;
-        } else {
-            return "";
-        }
-    }
 }

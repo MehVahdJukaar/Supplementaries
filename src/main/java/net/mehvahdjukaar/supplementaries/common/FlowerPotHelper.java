@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common;
 import com.google.common.collect.Maps;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FlowerPotBlock;
 import net.minecraft.util.ResourceLocation;
@@ -10,10 +11,9 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.lang.reflect.Field;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 
 public class FlowerPotHelper {
@@ -21,6 +21,13 @@ public class FlowerPotHelper {
     //vanilla pot flower pots
     //empty pot, map(flower item registry name, full block provider)
     private static Map<Block,Map<ResourceLocation, Supplier<? extends Block>> > FULL_POTS;
+
+    private static final List<BlockState> FULL_POT_LIST = new ArrayList<>();
+
+    public static BlockState getAprilPot(){
+        int ind = (int) ((System.currentTimeMillis()/15000)%FULL_POT_LIST.size());
+        return FULL_POT_LIST.get(ind);
+    }
 
     public static Block getFullPot(FlowerPotBlock emptyPot, Block flowerBlock){
         return FULL_POTS.get(emptyPot.getEmptyPot()).getOrDefault(flowerBlock.getRegistryName(), Blocks.AIR.delegate).get();
@@ -46,6 +53,7 @@ public class FlowerPotHelper {
                 Field f = ObfuscationReflectionHelper.findField(FlowerPotBlock.class, "fullPots");
                 f.setAccessible(true);
                 FULL_POTS.put(pot,(Map<ResourceLocation, Supplier<? extends Block>>) f.get(pot));
+                FULL_POT_LIST.addAll(((Map<ResourceLocation, Supplier<? extends Block>>) f.get(pot)).values().stream().map(s->s.get().defaultBlockState()).collect(Collectors.toList()));
 
                 //Block block = fullPots.getOrDefault(((BlockItem) item).getBlock().getRegistryName(), Blocks.AIR.delegate).get();
 

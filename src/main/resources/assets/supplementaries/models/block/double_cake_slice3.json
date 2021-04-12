@@ -4,10 +4,10 @@
 		"3": "supplementaries:blocks/double_cake_side",
 		"4": "supplementaries:blocks/double_cake_top",
 		"5": "supplementaries:blocks/double_cake_inner",
-		"bottom": "block/cake_bottom",
-		"top": "block/cake_top",
-		"particle": "block/cake_side",
-		"side": "block/cake_side"
+		"bottom": "supplementaries:blocks/cake_bottom",
+		"top": "supplementaries:blocks/cake_top",
+		"particle": "supplementaries:blocks/cake_side",
+		"side": "supplementaries:blocks/cake_side"
 	},
 	"elements": [
 		{

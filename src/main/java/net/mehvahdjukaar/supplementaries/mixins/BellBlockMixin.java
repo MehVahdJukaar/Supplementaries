@@ -44,8 +44,8 @@ public abstract class BellBlockMixin extends Block{
     }
 
     @Inject(method = "updateShape", at = @At("HEAD"), cancellable = true)
-    public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn,
-                                          BlockPos currentPos, BlockPos facingPos, CallbackInfoReturnable<BlockState> info) {
+    public void updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn,
+                                    BlockPos currentPos, BlockPos facingPos, CallbackInfoReturnable<BlockState> info) {
         try{
             if (facing == Direction.DOWN) {
                 if (this.tryConnect(currentPos, facingState, worldIn)) {
@@ -54,7 +54,6 @@ public abstract class BellBlockMixin extends Block{
                 }
             }
         }catch (Exception ignored){};
-        return stateIn;
     }
 
 

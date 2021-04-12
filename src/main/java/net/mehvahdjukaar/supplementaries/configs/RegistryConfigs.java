@@ -34,6 +34,8 @@ public class RegistryConfigs {
         catch(Exception ignored){};
 
 
+
+
     }
     public static void load(){
         CommentedFileConfig replacementConfig = CommentedFileConfig
@@ -45,6 +47,9 @@ public class RegistryConfigs {
         replacementConfig.load();
         replacementConfig.save();
         REGISTRY_CONFIG.setConfig(replacementConfig);
+
+        reg.HAS_MINESHAFT_LANTERN = reg.COPPER_LANTERN_ENABLED.get();
+        reg.HAS_STRONGHOLD_SCONCE = reg.SCONCE_ENABLED.get();
     }
 
     public static class reg {
@@ -99,6 +104,7 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue FODDER_ENABLED;
         public static ForgeConfigSpec.BooleanValue BOMB_ENABLED;
         public static ForgeConfigSpec.BooleanValue MAGMA_CREAM_BLOCK_ENABLED;
+        public static ForgeConfigSpec.BooleanValue CRIMSON_LANTERN_ENABLED;
 
         public static ForgeConfigSpec.BooleanValue JAR_TAB;
         public static ForgeConfigSpec.BooleanValue CREATIVE_TAB;
@@ -106,16 +112,21 @@ public class RegistryConfigs {
 
         public static boolean HAS_SILVER = false;
 
+        public static boolean HAS_MINESHAFT_LANTERN = false;
+        public static boolean HAS_STRONGHOLD_SCONCE = false;
+
         //oh god what have I done
         public static boolean isEnabled(String path){
 
-            if(path.equals(Registry.BOMB_NAME)){
-                return false;
-            }
+
             //special double condition cases
-            if(path.equals(Registry.CRIMSON_LANTERN_NAME)){
+            if(path.equals(Registry.BOMB_BLUE_NAME)){
                 return false;
             }
+            if(path.equals(Registry.FLAG_NAME)){
+                return false;
+            }
+
 
             if(path.equals(Registry.FIREFLY_JAR_NAME)){
                 return reg.FIREFLY_ENABLED.get() && reg.JAR_ENABLED.get();
@@ -206,12 +217,12 @@ public class RegistryConfigs {
             PULLEY_ENABLED = builder.define(Registry.PULLEY_BLOCK_NAME,true);
             FODDER_ENABLED = builder.define(Registry.FODDER_NAME,true);
             BOMB_ENABLED = builder.define(Registry.BOMB_NAME,true);
+            CRIMSON_LANTERN_ENABLED = builder.define(Registry.CRIMSON_LANTERN_NAME,true);
             MAGMA_CREAM_BLOCK_ENABLED = builder.define(Registry.MAGMA_CREAM_BLOCK_NAME,true);
 
             LASER_ENABLED = builder.comment("WIP")
                     .define(Registry.LASER_NAME, false);
-            FLAG_ENABLED = builder.comment("WIP")
-                    .define(Registry.FLAG_NAME, false);
+            FLAG_ENABLED = builder.define(Registry.FLAG_NAME, false);
             builder.pop();
 
             builder.push("entities");

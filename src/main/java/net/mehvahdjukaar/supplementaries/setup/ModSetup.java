@@ -8,6 +8,8 @@ import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.datagen.RecipeCondition;
 import net.mehvahdjukaar.supplementaries.fluids.SoftFluidList;
+import net.mehvahdjukaar.supplementaries.mixins.accessors.ChickenEntityAccessor;
+import net.mehvahdjukaar.supplementaries.mixins.accessors.HorseEntityAccessor;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.commands.ModCommands;
 import net.mehvahdjukaar.supplementaries.plugins.create.SupplementariesCreatePlugin;
@@ -18,6 +20,7 @@ import net.minecraft.block.ComposterBlock;
 import net.minecraft.block.FlowerPotBlock;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.loot.ConstantRange;
 import net.minecraft.loot.ItemLootEntry;
 import net.minecraft.loot.LootPool;
@@ -34,6 +37,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Mod.EventBusSubscriber(modid = Supplementaries.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ModSetup {
@@ -53,7 +60,7 @@ public class ModSetup {
             ComposterBlock.COMPOSTABLES.put(Registry.FLAX_ITEM.get().asItem(), 0.65F);
             ComposterBlock.COMPOSTABLES.put(Registry.FLAX_BLOCK.get().asItem(), 1);
 
-            /*
+
             List<ItemStack> chickenFood = new ArrayList<>();
             Collections.addAll(chickenFood, ChickenEntityAccessor.getFoodItems().getItems());
             chickenFood.add(new ItemStack(Registry.FLAX_SEEDS_ITEM.get()));
@@ -64,7 +71,7 @@ public class ModSetup {
             horseFood.add(new ItemStack(Registry.FLAX_ITEM.get()));
             horseFood.add(new ItemStack(Registry.FLAX_BLOCK_ITEM.get()));
             HorseEntityAccessor.setFoodItems(Ingredient.of(horseFood.stream()));
-            */
+
 
             if (ModList.get().isLoaded("create")) {
                 SupplementariesCreatePlugin.initialize();

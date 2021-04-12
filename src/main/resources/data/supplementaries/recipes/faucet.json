@@ -4,47 +4,8 @@
     {
       "conditions": [
         {
-          "type": "forge:not",
-          "value": {
-            "type": "forge:tag_empty",
-            "tag": "forge:ingots/copper"
-          }
-        },
-        {
           "flag": "faucet",
           "type": "supplementaries:flag"
-        }
-      ],
-      "recipe": {
-        "type": "minecraft:crafting_shaped",
-        "pattern": [
-          " 1 ",
-          "222",
-          "  2"
-        ],
-        "key": {
-          "1": {
-            "tag": "forge:rods/wooden"
-          },
-          "2": {
-            "tag": "forge:ingots/copper"
-          }
-        },
-        "result": {
-          "item": "supplementaries:faucet",
-          "count": 1
-        }
-      }
-    },
-    {
-      "conditions": [
-        {
-          "flag": "faucet",
-          "type": "supplementaries:flag"
-        },
-        {
-          "type": "forge:tag_empty",
-          "tag": "forge:ingots/copper"
         }
       ],
       "recipe": {

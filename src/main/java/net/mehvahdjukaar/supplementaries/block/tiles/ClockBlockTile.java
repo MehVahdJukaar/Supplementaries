@@ -79,31 +79,48 @@ public class ClockBlockTile extends TileEntity implements ITickableTileEntity {
     }
 
     public void updateTime(int time){
-        //minute here are 1 rl second -> 50m in a minecraft hour
-        int minute = MathHelper.clamp((time%1000)/20 , 0, 50);
-        int hour = MathHelper.clamp(time / 1000, 0, 24);
 
-        //server
-        if(!this.level.isClientSide){
-            BlockState state = this.getBlockState();
-            if(hour!=state.getValue(ClockBlock.HOUR)){
-                //if they are sent to the client the animation gets broken. Side effect is that you can't see hour with f3
-                level.setBlock(this.worldPosition, state.setValue(ClockBlock.HOUR, hour),3);
+        if(this.level.dimensionType().natural()) {
+
+            //minute here are 1 rl second -> 50m in a minecraft hour
+            int minute = MathHelper.clamp((time % 1000) / 20, 0, 50);
+            int hour = MathHelper.clamp(time / 1000, 0, 24);
+
+            //server
+            if (!this.level.isClientSide) {
+                BlockState state = this.getBlockState();
+                if (hour != state.getValue(ClockBlock.HOUR)) {
+                    //if they are sent to the client the animation gets broken. Side effect is that you can't see hour with f3
+                    level.setBlock(this.worldPosition, state.setValue(ClockBlock.HOUR, hour), 3);
+                }
+                int p = MathHelper.clamp(time / 1500, 0, 15);
+                if (p != this.power) {
+                    this.power = p;
+                    this.level.updateNeighbourForOutputSignal(this.worldPosition, this.getBlockState().getBlock());
+                }
+                //TODO: add proper sounds
+                //this.world.playSound(null, this.pos, SoundEvents.BLOCK_NOTE_BLOCK_SNARE, SoundCategory.BLOCKS,0.03f,time%40==0?2:1.92f);
+
             }
-            int p = MathHelper.clamp(time / 1500, 0, 15);
-            if (p!=this.power){
-                this.power=p;
-                this.level.updateNeighbourForOutputSignal(this.worldPosition, this.getBlockState().getBlock());
-            }
-            //TODO: add proper sounds
-            //this.world.playSound(null, this.pos, SoundEvents.BLOCK_NOTE_BLOCK_SNARE, SoundCategory.BLOCKS,0.03f,time%40==0?2:1.92f);
+            //hours
+            this.targetRoll = (hour * 30) % 360;
+            //minutes
+            this.sTargetRoll = (minute * 7.2f + 180) % 360f;
 
         }
-        //hours
-        this.targetRoll = (hour*30)%360;
-        //minutes
-        this.sTargetRoll = (minute*7.2f + 180)%360f;
+        else {
+            this.targetRoll = this.level.random.nextFloat()*360;
+            this.sTargetRoll = this.level.random.nextFloat()*360;
+            //TODO: make it wobbly
+        }
+
+
+
+
+
     }
+
+
 
     //TODO: use this on other blocks
     //can't access chunk data. use with care

@@ -48,7 +48,7 @@ public class ConfigHandler {
         }
     }
     public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
-        if (event.getPlayer().level.isClientSide) {
+        if (event.getPlayer().level.isClientSide||true) {
             //reload local common configs
             //maybe not needed
             ServerConfigs.loadLocal();

@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.items;
 
 import net.mehvahdjukaar.supplementaries.block.util.IBlockHolder;
-import net.mehvahdjukaar.supplementaries.block.util.ILightMimic;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItem;
@@ -21,9 +20,6 @@ public class BlockHolderItem extends BlockItem {
             if(te instanceof IBlockHolder){
                 BlockState state = mimicBlock.defaultBlockState();
                 ((IBlockHolder) te).setHeldBlock(state);
-                if(te instanceof ILightMimic){
-                    ((ILightMimic) te).setLight(state.getLightEmission());
-               }
             }
 
         }

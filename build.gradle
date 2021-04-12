@@ -21,7 +21,7 @@ mixin {
     add sourceSets.main, "supplementaries.refmap.json"
 }
 
-version = '1.16.5-0.11.2'
+version = '1.16.5-0.12.0'
 group = 'net.mehvahdjukaar.supplementaries' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'supplementaries'
 
@@ -251,6 +251,8 @@ repositories {
 def dev_mods = fileTree(dev_mods_dir).filter { it -> it.isFile() }.files.name.collect( { getModVersion(it) } )
 
 dependencies {
+    implementation 'org.jetbrains:annotations:19.0.0'
+
 
     // Snip: Minecraft dependencies, Forge
 

@@ -7,6 +7,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
@@ -39,10 +40,12 @@ public class NoticeBoardBlock extends Block {
         builder.add(FACING, HAS_BOOK);
     }
 
+    @Override
     public BlockState rotate(BlockState state, Rotation rot) {
         return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
 
+    @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
         return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
@@ -151,7 +154,7 @@ public class NoticeBoardBlock extends Block {
         if (state.getBlock() != newState.getBlock()) {
             TileEntity tileentity = world.getBlockEntity(pos);
             if (tileentity instanceof NoticeBoardBlockTile) {
-                InventoryHelper.dropContents(world, pos, (NoticeBoardBlockTile) tileentity);
+                InventoryHelper.dropContents(world, pos, (IInventory) tileentity);
                 world.updateNeighbourForOutputSignal(pos, this);
             }
             super.onRemove(state, world, pos, newState, isMoving);
@@ -167,7 +170,7 @@ public class NoticeBoardBlock extends Block {
     public int getAnalogOutputSignal(BlockState blockState, World world, BlockPos pos) {
         TileEntity tileentity = world.getBlockEntity(pos);
         if (tileentity instanceof NoticeBoardBlockTile)
-            return Container.getRedstoneSignalFromContainer((NoticeBoardBlockTile) tileentity);
+            return Container.getRedstoneSignalFromContainer((IInventory) tileentity);
         else
             return 0;
     }

@@ -1,23 +1,52 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "   ",
-    " 1 ",
-    "   "
-  ],
-  "key": {
-    "1": {
-      "item": "supplementaries:firefly_jar"
-    }
-  },
-  "result": {
-    "item": "supplementaries:jar",
-    "count": 1
-  },
-  "conditions": [
+  "type": "forge:conditional",
+  "recipes": [
     {
-      "type": "supplementaries:flag",
-      "flag": "firefly_jar"
+      "conditions": [
+        {
+          "flag": "firefly_jar",
+          "type": "supplementaries:flag"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shapeless",
+        "ingredients": [
+          {
+            "item": "supplementaries:firefly_jar"
+          }
+        ],
+        "result": {
+          "item": "supplementaries:jar",
+          "count": 1
+        }
+      }
+    },
+    {
+      "conditions": [
+        {
+          "modid": "twilightforest",
+          "type": "forge:mod_loaded"
+        },
+        {
+          "flag": "firefly_jar",
+          "type": "supplementaries:flag"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shapeless",
+        "ingredients": [
+          {
+            "item": "supplementaries:jar"
+          },
+          {
+            "item": "twilightforest:firefly"
+          }
+        ],
+        "result": {
+          "item": "supplementaries:firefly_jar",
+          "count": 1
+        }
+      }
     }
   ]
 }

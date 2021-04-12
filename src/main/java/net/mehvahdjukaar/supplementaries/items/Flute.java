@@ -40,7 +40,6 @@ public class Flute extends Item {
 
     @Override
     public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
-
         ItemStack stack = playerIn.getItemInHand(handIn);
         if (!worldIn.isClientSide) {
             double x = playerIn.getX();
@@ -74,7 +73,7 @@ public class Flute extends Item {
 
             playerIn.getCooldowns().addCooldown(this, 20);
             stack.hurtAndBreak(1, playerIn, (en) -> en.broadcastBreakEvent(EquipmentSlotType.MAINHAND));
-            worldIn.playSound(null, playerIn.blockPosition(), SoundEvents.NOTE_BLOCK_FLUTE, SoundCategory.PLAYERS, 1f, 1.45f);
+            worldIn.playSound(null, playerIn.blockPosition(), SoundEvents.NOTE_BLOCK_FLUTE, SoundCategory.PLAYERS, 1f, 1.30f+random.nextFloat()*0.3f);
 
             return ActionResult.consume(stack);
         }

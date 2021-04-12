@@ -11,7 +11,7 @@ public class BombSmokeParticle extends SpriteTexturedParticle {
         this.scale(3.0F);
         this.setSize(0.35F, 0.35F);
 
-        this.lifetime = this.random.nextInt(35) + 30;
+        this.lifetime = this.random.nextInt(30) + 20;
 
         this.gravity = 3.0E-6F;
         this.xd = motionX;

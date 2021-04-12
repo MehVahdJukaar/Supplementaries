@@ -1,10 +1,13 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.mehvahdjukaar.supplementaries.block.blocks.HangingSignBlock;
+import net.mehvahdjukaar.supplementaries.block.tiles.FlagBlockTile;
 import net.mehvahdjukaar.supplementaries.block.tiles.HangingSignBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.client.renderers.Lod;
+import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.RequestMapDataFromServerPacket;
 import net.minecraft.block.BlockState;
@@ -13,15 +16,14 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.AbstractMapItem;
-import net.minecraft.item.FilledMapItem;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3f;
@@ -69,32 +71,52 @@ public class HangingSignBlockTileRenderer extends TileEntityRenderer<HangingSign
             matrixStackIn.mulPose(Const.YN90);
             // render item
             if (!tile.isEmpty()) {
-                ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
+
                 ItemStack stack = tile.getStackInSlot(0);
+
+                Item item = stack.getItem();
+
+
+                ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
+
                 IBakedModel ibakedmodel = itemRenderer.getModel(stack, tile.getLevel(), null);
 
                 MapData mapdata = FilledMapItem.getOrCreateSavedData(stack, tile.getLevel());
 
                 for (int v = 0; v < 2; v++) {
+
                     matrixStackIn.pushPose();
                     //render map
-                    if(stack.getItem() instanceof AbstractMapItem) {
+                    if (item instanceof AbstractMapItem) {
                         if (mapdata != null) {
                             matrixStackIn.translate(0, 0, -0.0625 - 0.005);
                             matrixStackIn.scale(-0.0068359375F, -0.0068359375F, -0.0068359375F);
                             matrixStackIn.translate(-64.0D, -64.0D, 0.0D);
                             //matrixStackIn.translate(0.0D, 0.0D, -1.0D);
                             Minecraft.getInstance().gameRenderer.getMapRenderer().render(matrixStackIn, bufferIn, mapdata, true, combinedLightIn);
-                        }
-                        else{
+                        } else {
                             //request map data from server
                             PlayerEntity player = Minecraft.getInstance().player;
-                            NetworkHandler.INSTANCE.sendToServer(new RequestMapDataFromServerPacket(tile.getBlockPos(),player.getUUID()));
+                            NetworkHandler.INSTANCE.sendToServer(new RequestMapDataFromServerPacket(tile.getBlockPos(), player.getUUID()));
                         }
                     }
+                    else if(item instanceof BannerPatternItem){
+                        //TODO: replace with flag material
+                        IVertexBuilder builder = bufferIn.getBuffer(RenderType.itemEntityTranslucentCull(FlagBlockTile.getFlagLocation(((BannerPatternItem) item).getBannerPattern())));
+
+                        int i = tile.textHolder.textColor.getColorValue();
+                        float b = (NativeImage.getR(i) )/255f;
+                        float g = (NativeImage.getG(i) )/255f;
+                        float r = (NativeImage.getB(i) )/255f;
+                        int lu = combinedLightIn & '\uffff';
+                        int lv = combinedLightIn >> 16 & '\uffff';
+                        RendererUtil.addQuadSide(builder, matrixStackIn, -0.5f, -0.5f, 0.0705f, 0.5f, 0.5f, 0.0705f,
+                                0.125f, 0, 0.5f+0.125f, 1, r, g, b, 1, lu, lv, 0, 0, 1);
+
+                    }
                     //render item
-                    else{
-                        matrixStackIn.translate(0, 0, 0.078125);
+                    else {
+                        matrixStackIn.translate(0, 0, 0.0705);
                         matrixStackIn.scale(0.5f, 0.5f, 0.5f);
                         matrixStackIn.mulPose(Const.Y180);
                         itemRenderer.render(stack, ItemCameraTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
@@ -104,10 +126,11 @@ public class HangingSignBlockTileRenderer extends TileEntityRenderer<HangingSign
 
                     matrixStackIn.mulPose(Const.Y180);
 
+
                 }
             }
             // render text
-            else if(lod.isNear()){
+            else if(lod.isNearMed()){
                 // sign code
                 FontRenderer fontrenderer = this.renderer.getFont();
                 int i = tile.textHolder.textColor.getTextColor();

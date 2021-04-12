@@ -31,11 +31,8 @@ public class RoadSignFeature extends Feature<NoFeatureConfig> {
     private final BlockState mossyWall = Blocks.MOSSY_COBBLESTONE_WALL.defaultBlockState();
 
     private static boolean canGoThrough(IWorld world, BlockPos pos) {
-        try {
-            if (!world.getFluidState(pos).isEmpty()) return false;
-        }
-        catch (Exception e){
-        }
+        if (!world.getFluidState(pos).isEmpty()) return false;
+
         return world.isStateAtPosition(pos, (state) ->{
             Material material = state.getMaterial();
             return material.isReplaceable() || material==Material.LEAVES || material==Material.PLANT;});
@@ -92,12 +89,16 @@ public class RoadSignFeature extends Feature<NoFeatureConfig> {
             }
         }*/
 
+        //for jigsaw
+        pos = pos.below();
 
-
+        //add air blocks around
         for(int i = -2; i <= 2; ++i) {
             for (int j = -2; j <= 2; ++j) {
+
                 if(Math.abs(i)==2&&Math.abs(j)==2)continue;
                 for (int k = 1; k <= 4; ++k) {
+                    if((Math.abs(i)==2||Math.abs(j)==2)&&k==1)continue;
                     reader.setBlock(pos.offset(i, k, j),Registry.STRUCTURE_TEMP.get().defaultBlockState(), 2);
                 }
             }
@@ -135,53 +136,6 @@ public class RoadSignFeature extends Feature<NoFeatureConfig> {
         reader.setBlock(pos, this.fence,2);
         reader.setBlock(pos.above(), Registry.BLOCK_GENERATOR.get().defaultBlockState(),2);
 
-        /*
-        //lanterns
-        pos = pos.above();
-        Direction dir = Direction.Plane.HORIZONTAL.getRandomDirection(rand);
-
-
-
-        RegistryKey<Biome> biome = RegistryKey.create(ForgeRegistries.Keys.BIOMES, reader.getBiome(pos).getRegistryName());
-        float chance = BiomeDictionary.hasType(biome, BiomeDictionary.Type.MAGICAL)||
-                BiomeDictionary.hasType(biome, BiomeDictionary.Type.SWAMP)||
-                BiomeDictionary.hasType(biome, BiomeDictionary.Type.SPOOKY)?0.3f:0.02f;
-
-        BlockState light = chance > rand.nextFloat()? this.jar : this.lantern;
-
-        boolean isTrapdoor = 0.35 > rand.nextFloat();
-
-        BlockState topState = isTrapdoor? this.trapdoor :
-                this.fence.setValue(PROPERTY_BY_DIRECTION.get(dir),true);
-
-        //double
-        if(0.2>rand.nextFloat()){
-            BlockPos backPos = pos.offset(dir.getOpposite().getNormal());
-
-            if(isTrapdoor){
-                reader.setBlock(backPos, this.trapdoor, 2);
-                if(0.25>rand.nextFloat()){
-                    topState = slab;
-                }
-            }
-            else {
-                topState = topState.setValue(PROPERTY_BY_DIRECTION.get(dir.getOpposite()), true);
-                reader.setBlock(backPos, this.fence.setValue(PROPERTY_BY_DIRECTION.get(dir), true), 2);
-            }
-
-            reader.setBlock(backPos.below(), light,2);
-        }
-
-        reader.setBlock(pos, topState ,2);
-
-        pos = pos.offset(dir.getNormal());
-        BlockState frontState = isTrapdoor? this.trapdoor :
-                this.fence.setValue(PROPERTY_BY_DIRECTION.get(dir.getOpposite()),true);
-        reader.setBlock(pos, frontState,2);
-
-        reader.setBlock(pos.below(), light,2);
-
-        */
 
 
         return true;

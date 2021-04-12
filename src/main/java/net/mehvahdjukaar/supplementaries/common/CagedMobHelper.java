@@ -48,4 +48,18 @@ public class CagedMobHelper {
     }
 
 
+    //todo use cache
+    /*
+    public static LoadingCache<UUID, Entity> voxelCache = CacheBuilder.newBuilder()
+                .expireAfterAccess(5, TimeUnit.MINUTES)
+                .build(new CacheLoader<UUID, Entity>() {
+                    @Override
+                    public Entity load(UUID key) {
+                        return null;
+                    }
+                });*/
+
+
+
+
 }

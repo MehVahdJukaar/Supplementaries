@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import net.mehvahdjukaar.supplementaries.block.blocks.OilLanternBlock;
+import net.mehvahdjukaar.supplementaries.block.blocks.CopperLanternBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.OilLanternBlockTile;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -17,10 +17,10 @@ public class OilLanternBlockTileRenderer extends EnhancedLanternBlockTileRendere
     @Override
     public void render(OilLanternBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
-        AttachFace face = tile.getBlockState().getValue(OilLanternBlock.FACE);
+        AttachFace face = tile.getBlockState().getValue(CopperLanternBlock.FACE);
         if(face==AttachFace.FLOOR)return;
 
-        BlockState state = tile.getBlockState().getBlock().defaultBlockState().setValue(OilLanternBlock.LIT,tile.getBlockState().getValue(OilLanternBlock.LIT));
+        BlockState state = tile.getBlockState().getBlock().defaultBlockState().setValue(CopperLanternBlock.LIT,tile.getBlockState().getValue(CopperLanternBlock.LIT));
         this.renderLantern(tile,state,partialTicks,matrixStackIn,bufferIn,combinedLightIn,combinedOverlayIn,face==AttachFace.CEILING);
 
 

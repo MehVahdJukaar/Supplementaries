@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.events;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.client.gui.ConfigButton;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
@@ -9,8 +10,10 @@ import net.minecraft.item.Item;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 
 
@@ -72,5 +75,13 @@ public class ClientEvents {
         }
     }*/
 
+
+    @SubscribeEvent
+    public static void onGuiInit(GuiScreenEvent.InitGuiEvent event) {
+        if(!ClientConfigs.cached.CONFIG_BUTTON)return;
+        if(!ModList.get().isLoaded("configured"))return;
+        ConfigButton.setupConfigButton(event);
+
+    }
 
 }

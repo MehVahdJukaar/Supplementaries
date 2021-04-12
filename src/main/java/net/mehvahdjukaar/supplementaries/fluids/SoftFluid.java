@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.fluids;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.client.renderers.FluidColors;
+import net.mehvahdjukaar.supplementaries.client.renderers.FluidParticleColors;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
@@ -131,7 +131,7 @@ public class SoftFluid {
 
     //only client
     public int getParticleColor() {
-        if(!this.isColored()) return FluidColors.get(this.id);
+        if(!this.isColored()) return FluidParticleColors.get(this.id);
         return this.tintColor;
     }
 
@@ -392,6 +392,10 @@ public class SoftFluid {
         public final Builder specialEmptyBottle(Item item){
             this.bottleReturnItem = item;
             return this;
+        }
+        public final Builder specialItem(String item){
+            this.bottle(item);
+            return this.specialEmptyBottle(Items.AIR);
         }
         //food
         public final Builder food(Item item) {

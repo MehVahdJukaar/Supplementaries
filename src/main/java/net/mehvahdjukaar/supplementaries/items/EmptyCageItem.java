@@ -47,6 +47,7 @@ public class EmptyCageItem extends BlockItem {
 
     }
 
+
     public ActionResultType doInteract(ItemStack stack, PlayerEntity player, Entity entity, Hand hand) {
         ResourceLocation n = entity.getType().getRegistryName();
         if(n==null)return ActionResultType.PASS;
@@ -88,7 +89,10 @@ public class EmptyCageItem extends BlockItem {
 
         CommonUtil.swapItem(player,hand,stack,returnStack);
         //TODO: cage sound here
-        player.level.playSound(null, player.blockPosition(),  SoundEvents.ARMOR_EQUIP_GENERIC, SoundCategory.BLOCKS,1,1);
+        if(this.cageType==CageWhitelist.CAGE)
+            player.level.playSound(null, player.blockPosition(),  SoundEvents.CHAIN_FALL, SoundCategory.BLOCKS,1,0.7f);
+        else
+            player.level.playSound(null, player.blockPosition(),  SoundEvents.ARMOR_EQUIP_GENERIC, SoundCategory.BLOCKS,1,1);
 
         //anger entities
         if(entity instanceof IAngerable && entity instanceof MobEntity){

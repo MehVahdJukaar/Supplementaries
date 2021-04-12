@@ -1,13 +1,17 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
+import net.mehvahdjukaar.supplementaries.block.blocks.FlagBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.HangingSignBlock;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.items.BurnableBlockItem;
+import net.mehvahdjukaar.supplementaries.items.FlagItem;
 import net.mehvahdjukaar.supplementaries.items.SignPostItem;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
+import net.minecraft.item.DyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraftforge.common.ToolType;
@@ -22,7 +26,7 @@ import java.util.function.Supplier;
 
 public class Variants {
 
-    public static boolean hasWood(IWoodType wood){
+    public static boolean hasWoodInstalled(IWoodType wood){
         return ModList.get().isLoaded(wood.getNamespace());
     }
 
@@ -60,11 +64,15 @@ public class Variants {
         for(IWoodType wood : WoodTypes.TYPES.values()){
             String name = getHangingSignName(wood);
             map.put(wood, Registry.ITEMS.register(name, ()-> new BurnableBlockItem(Registry.HANGING_SIGNS.get(wood).get(),
-                    new Item.Properties().tab(Registry.getTab(!hasWood(wood)?null:
+                    new Item.Properties().tab(Registry.getTab(!hasWoodInstalled(wood)?null:
                             ItemGroup.TAB_DECORATIONS,Registry.HANGING_SIGN_NAME)),200
             )));
         }
         return map;
+    }
+
+    public static String getHangingSignName(IWoodType type){
+        return Registry.HANGING_SIGN_NAME+"_"+type.getRegName();
     }
 
     //sign posts
@@ -74,22 +82,51 @@ public class Variants {
         for(IWoodType wood : WoodTypes.TYPES.values()){
             String name = getSignPostName(wood);
             map.put(wood, Registry.ITEMS.register(name, ()-> new SignPostItem(
-                    new Item.Properties().tab(!hasWood(wood)?null:
+                    new Item.Properties().tab(!hasWoodInstalled(wood)?null:
                             Registry.getTab(ItemGroup.TAB_DECORATIONS,Registry.SIGN_POST_NAME)),wood
+            )));
+        }
+        return map;
+    }
+    public static String getSignPostName(IWoodType type){
+        return Registry.SIGN_POST_NAME+"_"+type.getRegName();
+    }
+
+    //flags
+
+    //hanging signs
+    public static Map<DyeColor, RegistryObject<Block>> makeFlagBlocks(){
+        Map<DyeColor, RegistryObject<Block>> map = new HashMap<>();
+
+        for(DyeColor color : DyeColor.values()){
+            String name = "flag_"+color.getName();
+            map.put(color, Registry.BLOCKS.register(name, ()-> new FlagBlock(color,
+                    AbstractBlock.Properties.of(Material.WOOD)
+                            .noCollission()
+                            .strength(1.0F)
+                            .sound(SoundType.WOOL))
+            ));
+        }
+        return map;
+    }
+
+    public static Map<DyeColor, RegistryObject<Item>> makeFlagItems(){
+        Map<DyeColor, RegistryObject<Item>> map = new HashMap<>();
+
+        for(DyeColor color : DyeColor.values()){
+            String name = "flag_"+color.getName();
+            map.put(color, Registry.ITEMS.register(name, ()-> new FlagItem(Registry.FLAGS.get(color).get(),
+                    new Item.Properties().stacksTo(16).tab(Registry.getTab(ItemGroup.TAB_DECORATIONS,Registry.FLAG_NAME))
             )));
         }
         return map;
     }
 
 
-    public static String getHangingSignName(IWoodType type){
-        return Registry.HANGING_SIGN_NAME+"_"+type.getRegName();
-    }
 
 
-    public static String getSignPostName(IWoodType type){
-        return Registry.SIGN_POST_NAME+"_"+type.getRegName();
-    }
+
+
 
 
 }

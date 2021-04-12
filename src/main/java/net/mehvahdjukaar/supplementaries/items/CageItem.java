@@ -85,6 +85,8 @@ public class CageItem extends BlockItem {
                 CompoundNBT nbt = com.getCompound("MobHolder");
                 Entity entity = EntityType.loadEntityRecursive(nbt.getCompound("EntityData"), world, o -> o);
                 if (entity != null) {
+
+
                     if (!world.isClientSide) {
                         //anger entity
                         if (!player.isCreative() && entity instanceof IAngerable) {
