@@ -131,6 +131,13 @@
   "block.supplementaries.magma_cream_block": "マグマクリームブロック",
   "message.supplementaries.magma_cream_block": "すべての機能を使うにはQuarkをインストールしてください",
   "message.supplementaries.command.configs": "ConfigはConfiguredをインストールすることで簡単に編集できます",
+  "item.supplementaries.bomb_blue": "青色の爆弾",
+  "fluid.supplementaries.sap": "Sap",
+  "message.supplementaries.road_sign": "%d bl",
+  "item.supplementaries.bomb_blue_projectile": "青色の爆弾",
+  "advancements.adventure.way_sign.title": "This is the wae",
+  "advancements.adventure.way_sign.description": "うーん、この道標はどこを指し示しているのでしょう。",
+  "supplementaries.gui.info": "SupplementariesのCurseForgeページを開く",
 
   "item.supplementaries.key_chain": "キーホルダー",
   "block.supplementaries.skull_candle": "頭蓋骨のろうそく",
