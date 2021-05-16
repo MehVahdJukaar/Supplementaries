@@ -1,0 +1,6 @@
+{
+  "parent": "supplementaries:item/sign_post_template",
+  "textures": {
+    "0": "supplementaries:entity/sign_posts/twilightforest/sign_post_mangrove_tf"
+  }
+}

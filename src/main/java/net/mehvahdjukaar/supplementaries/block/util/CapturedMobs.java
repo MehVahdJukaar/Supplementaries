@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.block.util;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
@@ -16,6 +15,7 @@ import java.util.*;
 public class CapturedMobs {
 
     public static final List<List<String>> DEFAULT_CONFIG = new ArrayList<>();
+    public static final List<String> CATCHABLE_FISHES = new ArrayList<>();
     public static final Map<String, CapturedMobProperties> TYPES = new HashMap<>();
     //bucket item mob id,
     public static final Map<Item,String> VALID_BUCKETS = new HashMap<>();
@@ -98,7 +98,12 @@ public class CapturedMobs {
         //DEFAULT_VALUES.add(addDef("----", ++fishIndex));
 
 
-
+        for (List<String> d : DEFAULT_CONFIG){
+            if(d.size()==5){
+                int f = strToInt(d.get(4));
+                if(f>0 && !d.get(0).equals(""))CATCHABLE_FISHES.add(d.get(0));
+            }
+        }
 
     }
 
@@ -202,12 +207,9 @@ public class CapturedMobs {
             }
         }
 
-        List<? extends String> jarCatchable = ServerConfigs.block.MOB_JAR_ALLOWED_MOBS.get();
-        List<? extends String> jarCatchableTinted = ServerConfigs.block.MOB_JAR_TINTED_ALLOWED_MOBS.get();
-        for (String id : jarCatchable){
-            tryAddingValidBucket(id);
-        }
-        for (String id : jarCatchableTinted){
+        //TODO: redo this
+
+        for (String id : CATCHABLE_FISHES){
             tryAddingValidBucket(id);
         }
     }

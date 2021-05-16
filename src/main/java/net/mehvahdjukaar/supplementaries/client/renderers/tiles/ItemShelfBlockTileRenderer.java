@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -21,8 +22,10 @@ import net.minecraft.util.text.ITextComponent;
 
 
 public class ItemShelfBlockTileRenderer extends TileEntityRenderer<ItemShelfBlockTile> {
+    protected final ItemRenderer itemRenderer;
     public ItemShelfBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
+        itemRenderer = Minecraft.getInstance().getItemRenderer();
     }
 
     protected boolean canRenderName(ItemShelfBlockTile tile) {
@@ -81,21 +84,19 @@ public class ItemShelfBlockTileRenderer extends TileEntityRenderer<ItemShelfBloc
                 matrixStackIn.popPose();
             }
 
-
-
-
-            //TODO: make all blocks and tiles extend a basic block with all the boilerplate in it
-
-
-            ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
             ItemStack stack = tile.getItem(0);
             if(CommonUtil.FESTIVITY.isAprilsFool())stack= new ItemStack(Items.SALMON);
             IBakedModel ibakedmodel = itemRenderer.getModel(stack, tile.getLevel(), null);
             if(ibakedmodel.isGui3d()&&ClientConfigs.cached.SHELF_TRANSLATE)matrixStackIn.translate(0,-0.25,0);
+
+
             itemRenderer.render(stack, ItemCameraTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
                     combinedOverlayIn, ibakedmodel);
 
+
             matrixStackIn.popPose();
         }
+
     }
+
 }

@@ -169,6 +169,7 @@ public class FaucetBlock extends Block implements IWaterLoggable{
 
     private boolean canConnect(BlockState downState, IWorld world, BlockPos pos, Direction dir){
         if(downState.getBlock() instanceof JarBlock)return true;
+        else if(downState.hasProperty(BlockStateProperties.LEVEL_HONEY))return true;
         return world instanceof World && FluidUtil.getFluidHandler((World) world, pos, dir).isPresent();
     }
 
@@ -191,16 +192,14 @@ public class FaucetBlock extends Block implements IWaterLoggable{
 
         //handles concrete
         if (state.getValue(ENABLED) ^ toggle ^ isPowered && state.getValue(HAS_WATER)) {
-            BlockPos downPos = pos.below();
-            BlockState downState = world.getBlockState(downPos);
-            if (downState.getBlock() instanceof ConcretePowderBlock) {
-                solidifyConcrete(downPos, state, world);
-            }
+            trySolidifyConcrete(pos.below(), world);
         }
     }
 
-    public static void solidifyConcrete(BlockPos pos, BlockState state, World world){
-        world.setBlock(pos.below(), ((ConcretePowderBlock) state.getBlock()).concrete, 2|16);
+    public void trySolidifyConcrete(BlockPos pos, World world){
+        Block b = world.getBlockState(pos).getBlock();
+        if(b instanceof ConcretePowderBlock)
+            world.setBlock(pos, ((ConcretePowderBlock) b).concrete, 2|16);
     }
 
 

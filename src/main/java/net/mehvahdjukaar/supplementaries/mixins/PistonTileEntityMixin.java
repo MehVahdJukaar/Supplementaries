@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.block.util.IBlockHolder;
-import net.mehvahdjukaar.supplementaries.plugins.quark.BambooSpikesPistonMovement;
+import net.mehvahdjukaar.supplementaries.compat.quark.BambooSpikesPistonMovement;
 import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.PistonTileEntity;
 import net.minecraft.tileentity.TileEntity;

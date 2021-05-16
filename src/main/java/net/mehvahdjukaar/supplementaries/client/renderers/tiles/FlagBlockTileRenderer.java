@@ -12,7 +12,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Atlases;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.model.ModelBakery;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.client.renderer.model.RenderMaterial;
 import net.minecraft.client.renderer.texture.NativeImage;
@@ -20,7 +19,7 @@ import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.item.DyeColor;
 import net.minecraft.tileentity.BannerPattern;
-import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Quaternion;
@@ -29,42 +28,9 @@ import net.minecraft.util.math.vector.Vector3f;
 import java.util.List;
 
 public class FlagBlockTileRenderer extends TileEntityRenderer<FlagBlockTile> {
+    private final Minecraft minecraft = Minecraft.getInstance();
     public FlagBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
-    }
-
-
-
-
-
-    //render(FlagBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
-     //      int combinedOverlayIn) {
-
-    public void render2(FlagBlockTile tile, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int light, int overlay) {
-        List<Pair<BannerPattern, DyeColor>> list = tile.getPatterns();
-        if (list != null) {
-
-            matrixStack.pushPose();
-            long time = 0;
-
-            if(tile.hasLevel()){
-                time = tile.getLevel().getGameTime();
-                matrixStack.translate(0.5,0,0.5);
-                matrixStack.mulPose(tile.getDirection().getRotation());
-                matrixStack.mulPose(Const.XN90) ;
-            }
-
-            matrixStack.pushPose();
-            IVertexBuilder ivertexbuilder = ModelBakery.BANNER_BASE.buffer(buffer, RenderType::entitySolid);
-
-            BlockPos blockpos = tile.getBlockPos();
-            float blockOffset = ((float)Math.floorMod((long)(blockpos.getX() * 7 + blockpos.getY() * 9 + blockpos.getZ() * 13) + time, 100L) + partialTicks) / 100.0F;
-            //this.flag.xRot = (-0.0125F + 0.01F * MathHelper.cos(((float)Math.PI * 2F) * blockOffset)) * (float)Math.PI;
-
-            //renderPatterns(matrixStack, buffer, light, overlay, this.flag, ModelBakery.BANNER_BASE, true, list);
-            matrixStack.popPose();
-            matrixStack.popPose();
-        }
     }
 
 
@@ -81,15 +47,12 @@ public class FlagBlockTileRenderer extends TileEntityRenderer<FlagBlockTile> {
     }
 
 
-
-
     @Override
     public void render(FlagBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
 
         List<Pair<BannerPattern, DyeColor>> list = tile.getPatterns();
         if (list != null) {
-
 
             int lu = combinedLightIn & '\uffff';
             int lv = combinedLightIn >> 16 & '\uffff';
@@ -101,81 +64,50 @@ public class FlagBlockTileRenderer extends TileEntityRenderer<FlagBlockTile> {
             matrixStackIn.translate(0.5, 0, 0.5);
             matrixStackIn.mulPose(tile.getDirection().getRotation());
             matrixStackIn.mulPose(Const.XN90);
-            matrixStackIn.translate(0, 0, -1+(1/16f));
+            matrixStackIn.translate(0, 0, (1/16f));
 
             long time = tile.getLevel().getGameTime();
 
-            double l = ClientConfigs.block.FLAG_WAVELENGTH.get();
-            double speed = ClientConfigs.block.FLAG_SPEED.get();
-            double wavyness = ClientConfigs.block.FLAG_AMPLITUDE.get();
-            double invdamping = ClientConfigs.block.FLAG_AMPLITUDE_INCREMENT.get();
+            double l = ClientConfigs.cached.FLAG_WAVELENGTH;
+            long period = ClientConfigs.cached.FLAG_PERIOD;
+            double wavyness = ClientConfigs.cached.FLAG_AMPLITUDE;
+            double invdamping = ClientConfigs.cached.FLAG_AMPLITUDE_INCREMENT;
 
-            BlockPos blockpos = tile.getBlockPos();
-            float period = ((float) Math.floorMod((long) (blockpos.getX() * 7 + blockpos.getZ() * 13) + time, 100L) + partialTicks) / 100.0F;
-
-
-
-            if (Minecraft.getInstance().options.graphicsMode.getId() < 1) {
-                float ang = 2 * MathHelper.sin(((period) / 35f) % (2 * (float) Math.PI));
-                //renderCurvedSegment(builder, matrixStackIn, ang, 0, w, h, lu, lv, true, false,r,g,b);
-            } else {
-
-                boolean zAxis = tile.getDirection().getAxis().equals(Direction.Axis.Z);
+            BlockPos bp = tile.getBlockPos();
+            //alaways from 0 to 1
+            float t = ((float) Math.floorMod((long) (bp.getX() * 7 + bp.getZ() * 13) + time, period) + partialTicks) / ((float)period);
 
 
+            int segmentlen =  (minecraft.options.graphicsMode.getId() >= ClientConfigs.cached.FLAG_FANCINESS) ? 1 : w;
+
+            for (int z = 0; z < w; z += segmentlen) {
+
+                float ang = (float) ((wavyness + invdamping * z) * MathHelper.sin((float) ((((z / l) - t * 2 * (float) Math.PI)))));
 
 
+                for(int p = 0; p<list.size(); p++) {
+                    ResourceLocation texture = FlagBlockTile.getFlagLocation(list.get(p).getFirst());
+                    RenderType renderType = p==0? RenderType.entitySolid(texture) : RenderType.entityNoOutline(texture);
+                    IVertexBuilder builder = bufferIn.getBuffer(renderType);
 
-                float t = (period);
+                    matrixStackIn.pushPose();
 
-                //float l = 15f; //wave length in pixels
-                //float speed = 0.5f;
-                //float invdamping = 0.3f;
-                //float wavyness = 1f;
-
-
-
-
-                int segmentlen = 1;
-                /*
-                if(Minecraft.getInstance().gameSettings.graphicFanciness.getId()==2){
-                    invdamping =0.5f;
-                    wavyness = 4;
-                    speed=1f;
+                    int color = list.get(p).getSecond().getColorValue();
+                    float b = (NativeImage.getR(color)) / 255f;
+                    float g = (NativeImage.getG(color)) / 255f;
+                    float r = (NativeImage.getB(color)) / 255f;
 
 
-                }*/
+                    renderCurvedSegment(builder, matrixStackIn, ang, z, segmentlen, h, lu, lv, z + segmentlen >= w, r, g, b);
+                    //IVertexBuilder builder2 = bufferIn.getBuffer(RenderType.getEntityNoOutline(new ResourceLocation("supplementaries:textures/entity/flagcross.png")));
 
+                    //renderCurvedSegment(builder2, matrixStackIn, ang, z, segmentlen, h, lu, lv, z + segmentlen >= w, zAxis);
 
-                for (int z = 0; z < w; z += segmentlen) {
-
-                    float ang = (float) ((wavyness + invdamping * z) * MathHelper.sin((float) ((((z / (l)) - speed * t) * (float) Math.PI) % (2 * (float) Math.PI))));
-
-
-                    for(int p = 0; p<list.size(); p++) {
-                        matrixStackIn.pushPose();
-
-                        IVertexBuilder builder = bufferIn.getBuffer(RenderType.entitySolid(FlagBlockTile.getFlagLocation(list.get(p).getFirst())));
-
-                        int color = list.get(p).getSecond().getColorValue();
-                        float b = (NativeImage.getR(color)) / 255f;
-                        float g = (NativeImage.getG(color)) / 255f;
-                        float r = (NativeImage.getB(color)) / 255f;
-
-
-                        renderCurvedSegment(builder, matrixStackIn, ang, z, segmentlen, h, lu, lv, z + segmentlen >= w, zAxis, r, g, b);
-                        //IVertexBuilder builder2 = bufferIn.getBuffer(RenderType.getEntityNoOutline(new ResourceLocation("supplementaries:textures/entity/flagcross.png")));
-
-                        //renderCurvedSegment(builder2, matrixStackIn, ang, z, segmentlen, h, lu, lv, z + segmentlen >= w, zAxis);
-
-                        matrixStackIn.popPose();
-                    }
-                    matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(ang));
-                    matrixStackIn.translate(0, 0, segmentlen / 16f);
-                    matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-ang));
+                    matrixStackIn.popPose();
                 }
-
-
+                matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(ang));
+                matrixStackIn.translate(0, 0, segmentlen / 16f);
+                matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-ang));
             }
 
             matrixStackIn.popPose();
@@ -187,7 +119,7 @@ public class FlagBlockTileRenderer extends TileEntityRenderer<FlagBlockTile> {
 
 
 
-    private static void renderCurvedSegment(IVertexBuilder builder, MatrixStack matrixStack, float angle, int posz, int lenght, int height, int lu, int lv, boolean end, boolean zAxis, float r, float g, float b) {
+    private static void renderCurvedSegment(IVertexBuilder builder, MatrixStack matrixStack, float angle, int posz, int lenght, int height, int lu, int lv, boolean end, float r, float g, float b) {
         float textw = 32f;
 
         float u = posz/textw;
@@ -202,11 +134,8 @@ public class FlagBlockTileRenderer extends TileEntityRenderer<FlagBlockTile> {
         Quaternion rotation = Vector3f.YP.rotationDegrees(angle);
         Quaternion rotation2 = Vector3f.YP.rotationDegrees(-angle);
 
-        int lus = (int)(lu*(zAxis? 0.8f : 1));
-        int lvs = (int)(lv*(zAxis? 0.8f : 1));
-
-        int nx = zAxis? 0 : 1;
-        int nz = zAxis? 1 : 0;
+        int nx = 1;
+        int nz = 0;
         //0.4, 0.6
 
         //left
@@ -214,14 +143,14 @@ public class FlagBlockTileRenderer extends TileEntityRenderer<FlagBlockTile> {
 
         matrixStack.translate(hw,0,0);
 
-        RendererUtil.addVert(builder, matrixStack, 0, 0, 0, u, maxv, r, g, b, 1, lus, lvs, nx,0, nz);
-        RendererUtil.addVert(builder, matrixStack, 0, h, 0, u, v, r, g, b, 1, lus, lvs, nx,0, nz);
+        RendererUtil.addVert(builder, matrixStack, 0, 0, 0, u, maxv, r, g, b, 1, lu, lv, nx,0, nz);
+        RendererUtil.addVert(builder, matrixStack, 0, h, 0, u, v, r, g, b, 1, lu, lv, nx,0, nz);
 
         matrixStack.mulPose(rotation);
         matrixStack.translate(0, 0, l);
 
-        RendererUtil.addVert(builder, matrixStack, 0, h, 0,maxu , v, r, g, b, 1, lus, lvs, nx, 0, nz);
-        RendererUtil.addVert(builder, matrixStack, 0, 0, 0, maxu, maxv, r, g, b, 1, lus, lvs, nx, 0, nz);
+        RendererUtil.addVert(builder, matrixStack, 0, h, 0,maxu , v, r, g, b, 1, lu, lv, nx, 0, nz);
+        RendererUtil.addVert(builder, matrixStack, 0, 0, 0, maxu, maxv, r, g, b, 1, lu, lv, nx, 0, nz);
 
         matrixStack.popPose();
 
@@ -230,14 +159,14 @@ public class FlagBlockTileRenderer extends TileEntityRenderer<FlagBlockTile> {
 
         matrixStack.translate(-hw,0,0);
 
-        RendererUtil.addVert(builder, matrixStack, 0, h, 0, u, v, r, g, b, 1, lus, lvs, -nx, 0, nz);
-        RendererUtil.addVert(builder, matrixStack, 0, 0, 0, u, maxv, r, g, b, 1, lus, lvs, -nx, 0, nz);
+        RendererUtil.addVert(builder, matrixStack, 0, h, 0, u, v, r, g, b, 1, lu, lv, -nx, 0, nz);
+        RendererUtil.addVert(builder, matrixStack, 0, 0, 0, u, maxv, r, g, b, 1, lu, lv, -nx, 0, nz);
 
         matrixStack.mulPose(rotation);
         matrixStack.translate(0, 0, l);
 
-        RendererUtil.addVert(builder, matrixStack, 0, 0, 0, maxu, maxv, r, g, b, 1, lus, lvs, -nx, 0, nz);
-        RendererUtil.addVert(builder, matrixStack, 0, h, 0, maxu, v, r, g, b, 1, lus, lvs, -nx, 0, nz);
+        RendererUtil.addVert(builder, matrixStack, 0, 0, 0, maxu, maxv, r, g, b, 1, lu, lv, -nx, 0, nz);
+        RendererUtil.addVert(builder, matrixStack, 0, h, 0, maxu, v, r, g, b, 1, lu, lv, -nx, 0, nz);
 
         matrixStack.popPose();
 

@@ -44,6 +44,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class BambooSpikesBlock extends Block {
     protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 13.0D, 16.0D);
@@ -237,4 +238,14 @@ public class BambooSpikesBlock extends Block {
         return new BambooSpikesBlockTile();
     }
 
+    @Override
+    public void animateTick(BlockState state, World world, BlockPos pos, Random random) {
+        if(0.01>random.nextFloat() && state.getValue(TIPPED)){
+            TileEntity te = world.getBlockEntity(pos);
+            if(te instanceof BambooSpikesBlockTile) {
+                ((BambooSpikesBlockTile) te).makeParticle();
+            }
+        }
+
+    }
 }

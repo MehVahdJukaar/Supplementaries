@@ -7,8 +7,10 @@ import net.mehvahdjukaar.supplementaries.block.tiles.PulleyBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.PlayerlessContext;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
+import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
+import net.mehvahdjukaar.supplementaries.compat.decorativeblocks.RopeChandelierBlock;
+import net.mehvahdjukaar.supplementaries.compat.quark.QuarkPistonPlugin;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.plugins.quark.QuarkPistonPlugin;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.*;
@@ -45,7 +47,6 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.fml.ModList;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -231,7 +232,7 @@ public class RopeBlock extends Block implements IWaterLoggable{
         else if(facing==Direction.DOWN){
             boolean down = canConnectDown(currentPos, worldIn) || stateIn.getValue(UP);
             stateIn = stateIn.setValue(DOWN,down);
-
+            if(!worldIn.isClientSide() && CompatHandler.deco_blocks) RopeChandelierBlock.tryConverting(facingState, worldIn, facingPos);
         }
         else{
             stateIn = stateIn.setValue(FACING_TO_PROPERTY_MAP.get(facing),
@@ -260,6 +261,10 @@ public class RopeBlock extends Block implements IWaterLoggable{
     public void onPlace(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
         if (!worldIn.isClientSide) {
             worldIn.getBlockTicks().scheduleTick(pos, this, 1);
+            if(CompatHandler.deco_blocks){
+                BlockPos down = pos.below();
+                RopeChandelierBlock.tryConverting(worldIn.getBlockState(down), worldIn, down);
+            }
         }
     }
 
@@ -508,7 +513,8 @@ public class RopeBlock extends Block implements IWaterLoggable{
 
             TileEntity tile = world.getBlockEntity(fromPos);
             if (tile != null) {
-                if(!(ModList.get().isLoaded("quark") && !QuarkPistonPlugin.canMoveTile(state))){
+                //moves everything if quark is not enabled. bad :/ install quark guys
+                if(CompatHandler.quark && !QuarkPistonPlugin.canMoveTile(state)){
                     return false;
                 }
                 else{
@@ -528,8 +534,9 @@ public class RopeBlock extends Block implements IWaterLoggable{
 
 
             FluidState fromFluid = world.getFluidState(fromPos);
-            boolean water = (fromFluid.getType()==Fluids.WATER && fromFluid.isSource());
-            if(!canHoldWater) world.setBlockAndUpdate(fromPos, water?Blocks.WATER.defaultBlockState():Blocks.AIR.defaultBlockState());
+            boolean leaveWater = (fromFluid.getType()==Fluids.WATER && fromFluid.isSource()) && !canHoldWater;
+            world.setBlockAndUpdate(fromPos, leaveWater?Blocks.WATER.defaultBlockState():Blocks.AIR.defaultBlockState());
+
             //update existing block block to new position
             BlockState newState = Block.updateFromNeighbourShapes(state, world, toPos);
             world.setBlockAndUpdate(toPos, newState);

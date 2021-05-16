@@ -10,11 +10,13 @@ import net.minecraft.block.IWaterLoggable;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
@@ -29,7 +31,10 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import vazkii.quark.content.building.block.CandleBlock;
+import vazkii.quark.content.building.block.VariantBookshelfBlock;
 
 public class PedestalBlock extends Block implements IWaterLoggable {
     protected static final VoxelShape SHAPE = VoxelShapes.or(VoxelShapes.box(0.1875D, 0.125D, 0.1875D, 0.815D, 0.885D, 0.815D),
@@ -50,6 +55,15 @@ public class PedestalBlock extends Block implements IWaterLoggable {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(UP, false)
                 .setValue(DOWN, false).setValue(WATERLOGGED,false).setValue(HAS_ITEM,false));
+    }
+
+    @Override
+    public float getEnchantPowerBonus(BlockState state, IWorldReader world, BlockPos pos) {
+        TileEntity te = world.getBlockEntity(pos);
+        if (te instanceof PedestalBlockTile) {
+            if(((PedestalBlockTile) te).type == PedestalBlockTile.DisplayType.CRYSTAL)return 3;
+        }
+        return 0;
     }
 
     @Override
@@ -222,7 +236,7 @@ public class PedestalBlock extends Block implements IWaterLoggable {
     public int getAnalogOutputSignal(BlockState blockState, World world, BlockPos pos) {
         TileEntity tileentity = world.getBlockEntity(pos);
         if (tileentity instanceof PedestalBlockTile)
-            return Container.getRedstoneSignalFromContainer((PedestalBlockTile) tileentity);
+            return Container.getRedstoneSignalFromContainer((IInventory) tileentity);
         else
             return 0;
     }

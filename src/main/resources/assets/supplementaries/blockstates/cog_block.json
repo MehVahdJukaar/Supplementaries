@@ -4,7 +4,7 @@
       "model": "supplementaries:block/cog_block_off"
     },
     "power=1": {
-      "model": "supplementaries:block/cog_block_on"
+      "model": "supplementaries:block/cog_block_semi_on"
     },
 	"power=2": {
       "model": "supplementaries:block/cog_block_on"

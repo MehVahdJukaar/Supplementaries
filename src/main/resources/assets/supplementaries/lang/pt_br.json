@@ -132,7 +132,12 @@
   "message.supplementaries.magma_cream_block": "Instale o mod 'Quark' para funcionalidade completa",
   "message.supplementaries.command.configs": "Instale o mod 'Configured' para acessar as configurações",
   "item.supplementaries.bomb_blue": "Bomba Azul",
-  "fluid.supplementaries.sap": "Sap",
+  "fluid.supplementaries.sap": "Seiva",
+  "message.supplementaries.road_sign": "%d blocos",
+  "item.supplementaries.bomb_blue_projectile": "Bomba Azul",
+  "advancements.adventure.way_sign.title": "Esta é a Guerra",
+  "advancements.adventure.way_sign.description": "Hmm, quem sabe onde isso leva",
+  "supplementaries.gui.info": "Abra a página de Supplementaries no site CurseForge",
   
   "item.supplementaries.key_chain": "Chaveiro",
   "block.supplementaries.skull_candle": "Crânio com Vela",

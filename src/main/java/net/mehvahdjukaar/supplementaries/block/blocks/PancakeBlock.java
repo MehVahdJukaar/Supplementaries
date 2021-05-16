@@ -6,20 +6,16 @@ import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.IWaterLoggable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.*;
 import net.minecraft.pathfinding.PathType;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
-import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -31,7 +27,7 @@ import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.ModList;
 
-public class PancakeBlock extends Block implements IWaterLoggable{
+public class PancakeBlock extends WaterBlock{
     protected static final VoxelShape SHAPE_1 = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 2.0D, 14.0D);
     protected static final VoxelShape SHAPE_2 = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 4.0D, 14.0D);
     protected static final VoxelShape SHAPE_3 = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 6.0D, 14.0D);
@@ -41,7 +37,6 @@ public class PancakeBlock extends Block implements IWaterLoggable{
     protected static final VoxelShape SHAPE_7 = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 14.0D, 14.0D);
     protected static final VoxelShape SHAPE_8 = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 16.0D, 14.0D);
 
-    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final IntegerProperty PANCAKES = BlockProperties.PANCAKES_1_8;
     public static final EnumProperty<BlockProperties.Topping> TOPPING = BlockProperties.TOPPING;
 
@@ -49,15 +44,10 @@ public class PancakeBlock extends Block implements IWaterLoggable{
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(PANCAKES, 1).setValue(TOPPING, BlockProperties.Topping.NONE).setValue(WATERLOGGED,false));
     }
-    //TODO: add waterloggable block base class
-    @Override
-    public FluidState getFluidState(BlockState state) {
-        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
-    }
-
 
     private BlockProperties.Topping getTopping(Item item){
         if(item instanceof HoneyBottleItem)return BlockProperties.Topping.HONEY;
+        //TODO: add tag support here
         if(ModList.get().isLoaded("create")) {
             if (item.getRegistryName().toString().equals("create:bar_of_chocolate")) return BlockProperties.Topping.CHOCOLATE;
         }

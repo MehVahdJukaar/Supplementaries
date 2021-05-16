@@ -1,6 +1,7 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "supplementaries:items/flag_green"
+		"layer0": "supplementaries:items/flag",
+		"layer1": "supplementaries:items/flag_overlay"
 	}
 }

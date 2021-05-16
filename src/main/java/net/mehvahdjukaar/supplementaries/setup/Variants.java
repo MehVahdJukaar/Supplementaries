@@ -64,8 +64,8 @@ public class Variants {
         for(IWoodType wood : WoodTypes.TYPES.values()){
             String name = getHangingSignName(wood);
             map.put(wood, Registry.ITEMS.register(name, ()-> new BurnableBlockItem(Registry.HANGING_SIGNS.get(wood).get(),
-                    new Item.Properties().tab(Registry.getTab(!hasWoodInstalled(wood)?null:
-                            ItemGroup.TAB_DECORATIONS,Registry.HANGING_SIGN_NAME)),200
+                    new Item.Properties().tab(!hasWoodInstalled(wood)?null:
+                            Registry.getTab(ItemGroup.TAB_DECORATIONS,Registry.HANGING_SIGN_NAME)),200
             )));
         }
         return map;
@@ -101,10 +101,10 @@ public class Variants {
         for(DyeColor color : DyeColor.values()){
             String name = "flag_"+color.getName();
             map.put(color, Registry.BLOCKS.register(name, ()-> new FlagBlock(color,
-                    AbstractBlock.Properties.of(Material.WOOD)
-                            .noCollission()
+                    AbstractBlock.Properties.of(Material.WOOD, color.getMaterialColor())
                             .strength(1.0F)
-                            .sound(SoundType.WOOL))
+                            .noOcclusion()
+                            .sound(SoundType.WOOD))
             ));
         }
         return map;

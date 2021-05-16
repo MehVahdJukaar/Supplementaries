@@ -55,7 +55,7 @@ public class ClientConfigs {
         public static ForgeConfigSpec.IntValue FIREFLY_SPAWN_PERIOD;
 
         public static ForgeConfigSpec.BooleanValue PEDESTAL_SPIN;
-        public static ForgeConfigSpec.BooleanValue PEDESTAL_SWORD;
+        public static ForgeConfigSpec.BooleanValue PEDESTAL_SPECIAL;
         public static ForgeConfigSpec.DoubleValue PEDESTAL_SPEED;
         public static ForgeConfigSpec.BooleanValue SHELF_TRANSLATE;
         public static ForgeConfigSpec.DoubleValue WIND_VANE_POWER_SCALING;
@@ -67,8 +67,8 @@ public class ClientConfigs {
         public static ForgeConfigSpec.BooleanValue GLOBE_RANDOM;
         public static ForgeConfigSpec.ConfigValue<List<? extends List<String>>> GLOBE_COLORS;
 
-        public static ForgeConfigSpec.DoubleValue FLAG_SEGMENT_LENGTH;
-        public static ForgeConfigSpec.DoubleValue FLAG_SPEED;
+        public static ForgeConfigSpec.IntValue FLAG_FANCINESS;
+        public static ForgeConfigSpec.IntValue FLAG_PERIOD;
         public static ForgeConfigSpec.DoubleValue FLAG_WAVELENGTH;
         public static ForgeConfigSpec.DoubleValue FLAG_AMPLITUDE;
         public static ForgeConfigSpec.DoubleValue FLAG_AMPLITUDE_INCREMENT;
@@ -121,8 +121,8 @@ public class ClientConfigs {
                     .define("spin",true);
             PEDESTAL_SPEED = builder.comment("spin speed")
                     .defineInRange("speed",2f,0f,100f);
-            PEDESTAL_SWORD = builder.comment("enable swords to display inserted into the block")
-                    .define("fancy_swords",true);
+            PEDESTAL_SPECIAL = builder.comment("enable special display types for items like swords, tridents or end crystals")
+                    .define("fancy_renderers",true);
             builder.pop();
 
             builder.push("item_shelf");
@@ -147,12 +147,16 @@ public class ClientConfigs {
             builder.pop();
 
             builder.push("flag");
-            FLAG_SPEED = builder.comment("I don't remember what these are, I'll adde proper descriptions later. names may be a bit random and non descriptive")
-                    .defineInRange("speed", 1d, 0, 10);
-            FLAG_WAVELENGTH = builder.defineInRange("wavelenght", 15d, 0.001, 100);
-            FLAG_AMPLITUDE = builder.defineInRange("amplitude", 1d, 0d, 100d);
-            FLAG_AMPLITUDE_INCREMENT = builder.comment("how much the wave amplitude increases each pixel")
-                    .defineInRange("amplitude_increment", 0.3d, 0, 10);
+            FLAG_PERIOD = builder.comment("(period of oscillation) how slow a flag will oscillate. lower value = faster oscillation")
+                    .defineInRange("slowness", 100, 0, 10000);
+            FLAG_WAVELENGTH = builder.comment("(wavelength) how wavy the animation will be in pixels")
+                    .defineInRange("wavyness", 6d, 0.001, 100);
+            FLAG_AMPLITUDE = builder.comment("(wave amplitude) how tall the wave lobes will be")
+                    .defineInRange("intensity", 1d, 0d, 100d);
+            FLAG_AMPLITUDE_INCREMENT = builder.comment("(amplitude increment per pixel) how much the wave amplitude increases each pixel")
+                    .defineInRange("intensity_increment", 0.3d, 0, 10);
+            FLAG_FANCINESS = builder.comment("at which graphic settings flags will have a fancy renderer: 0=fast, 1=fancy, 2=fabulous")
+                    .defineInRange("fanciness",2,0,2);
             builder.pop();
             //TODO: add more(hourGlass, sawying blocks...)
 
@@ -233,7 +237,7 @@ public class ClientConfigs {
         public static int FIREFLY_SPAWN_PERIOD;
         public static boolean PEDESTAL_SPIN;
         public static double PEDESTAL_SPEED;
-        public static boolean PEDESTAL_SWORD;
+        public static boolean PEDESTAL_SPECIAL;
         public static boolean SHELF_TRANSLATE;
         public static double WIND_VANE_POWER_SCALING;
         public static double WIND_VANE_ANGLE_1;
@@ -243,6 +247,11 @@ public class ClientConfigs {
         public static boolean CLOCK_24H;
         public static boolean GLOBE_RANDOM;
         public static boolean CONFIG_BUTTON;
+        public static int FLAG_PERIOD;
+        public static double FLAG_WAVELENGTH;
+        public static double FLAG_AMPLITUDE;
+        public static double FLAG_AMPLITUDE_INCREMENT;
+        public static int FLAG_FANCINESS;
 
         public static void refresh(){
             //tweaks
@@ -262,7 +271,7 @@ public class ClientConfigs {
             FIREFLY_SPAWN_PERIOD = block.FIREFLY_SPAWN_PERIOD.get();
             PEDESTAL_SPIN = block.PEDESTAL_SPIN.get();
             PEDESTAL_SPEED = block.PEDESTAL_SPEED.get();
-            PEDESTAL_SWORD = block.PEDESTAL_SWORD.get();
+            PEDESTAL_SPECIAL = block.PEDESTAL_SPECIAL.get();
             SHELF_TRANSLATE = block.SHELF_TRANSLATE.get();
             WIND_VANE_POWER_SCALING = block.WIND_VANE_POWER_SCALING.get();
             WIND_VANE_ANGLE_1 = block.WIND_VANE_ANGLE_1.get();
@@ -271,6 +280,11 @@ public class ClientConfigs {
             WIND_VANE_PERIOD_2 = block.WIND_VANE_PERIOD_2.get();
             CLOCK_24H = block.CLOCK_24H.get();
             GLOBE_RANDOM = block.GLOBE_RANDOM.get();
+            FLAG_AMPLITUDE = block.FLAG_AMPLITUDE.get();
+            FLAG_AMPLITUDE_INCREMENT = block.FLAG_AMPLITUDE_INCREMENT.get();
+            FLAG_PERIOD = block.FLAG_PERIOD.get();
+            FLAG_WAVELENGTH = block.FLAG_WAVELENGTH.get();
+            FLAG_FANCINESS = block.FLAG_FANCINESS.get();
 
             CapturedMobs.refresh();
             GlobeDataGenerator.refreshColorsFromConfig();

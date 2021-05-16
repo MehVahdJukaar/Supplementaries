@@ -1,0 +1,14 @@
+
+{
+  "variants": {
+    "tile_3=0": {
+      "model": "supplementaries:block/timber_frame"
+    },
+    "tile_3=2": {
+      "model": "supplementaries:block/timber_frame_overlay"
+    },
+    "tile_3=1": {
+      "model": "supplementaries:block/mimic_block"
+    }
+  }
+}

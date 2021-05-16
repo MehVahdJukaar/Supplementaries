@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:block/cube",
   "textures": {
-    "particle": "supplementaries:blocks/flax_block",
+    "particle": "supplementaries:blocks/flax_block_top",
     "north": "supplementaries:blocks/flax_block",
     "south": "supplementaries:blocks/flax_block",
     "east": "supplementaries:blocks/flax_block",

@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.items;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.mehvahdjukaar.supplementaries.block.util.MobHolder;
-import net.mehvahdjukaar.supplementaries.common.CagedMobHelper;
+import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
@@ -42,15 +42,16 @@ public class CageItemRenderer extends ItemStackTileEntityRenderer {
                 if(cmp2.contains("FishTexture"))return;
                 if (cmp2.contains("UUID")) {
                     UUID id = cmp2.getUUID("UUID");
-                    Entity e = CagedMobHelper.getCachedMob(id);
+                    Entity e = CapturedMobCache.getCachedMob(id);
 
                     if (e == null) {
                         World world = Minecraft.getInstance().level;
                         if(world != null) {
                             CompoundNBT mobData = cmp2.getCompound("EntityData");
 
+                            //TODO:
                             e = MobHolder.createEntityFromNBT(mobData,id,world);
-                            CagedMobHelper.addMob(e);
+                            CapturedMobCache.addMob(e);
                         }
                     }
                     if (e != null) {

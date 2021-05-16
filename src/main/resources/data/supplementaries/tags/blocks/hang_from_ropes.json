@@ -3,26 +3,13 @@
   "values": [
     "supplementaries:rope",
     "supplementaries:sack",
-    "supplementaries:hanging_flower_pot",
-    {
-      "id" :"farmersdelight:rope",
-      "required": false
-    },
-    {
-      "id" :"inspirations:rope",
-      "required": false
-    },
-    {
-      "id" :"inspirations:vine",
-      "required": false
-    },
-    {
-      "id" :"druidcraft:rope",
-      "required": false
-    },
-    {
-      "id" :"xercamod:rope",
-      "required": false
-    }
+    "supplementaries:hanging_flower_pot"
+  ],
+  "optional": [
+    "farmersdelight:rope",
+    "inspirations:rope",
+    "inspirations:vine",
+    "druidcraft:rope",
+    "xercamod:rope"
   ]
 }

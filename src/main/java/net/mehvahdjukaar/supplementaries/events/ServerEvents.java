@@ -4,6 +4,7 @@ import net.mehvahdjukaar.supplementaries.block.blocks.DirectionalCakeBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.DoubleCakeBlock;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.PicklePlayer;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.items.BlockHolderItem;
@@ -26,7 +27,6 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 //@Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.FORGE)
@@ -143,24 +143,38 @@ public class ServerEvents {
         }
 
         //block overrides
-        if(player.abilities.mayBuild && i instanceof BlockItem) {
-            BlockItem bi = (BlockItem) i;
+        if(player.abilities.mayBuild) {
+
             ActionResultType result = ActionResultType.PASS;
-            if (ServerConfigs.cached.WALL_LANTERN_PLACEMENT && CommonUtil.isLantern(bi)) {
-                if(ModList.get().isLoaded("torchslabmod")){
-                    double y = event.getHitVec().getLocation().y()%1;
-                    if(y<0.5)return;
+
+            //sticks
+            if (ServerConfigs.cached.PLACEABLE_STICKS && i == Items.STICK) {
+                result = paceBlockOverride(Registry.STICK_BLOCK_ITEM.get(), player, hand, null, pos, dir, world);
+            }
+            else if (ServerConfigs.cached.PLACEABLE_RODS && i == Items.BLAZE_ROD) {
+                result = paceBlockOverride(Registry.BLAZE_ROD_ITEM.get(), player, hand, null, pos, dir, world);
+            }
+            else if(i instanceof BlockItem) {
+            BlockItem bi = (BlockItem) i;
+                //wall lantern
+                if (ServerConfigs.cached.WALL_LANTERN_PLACEMENT && CommonUtil.isLantern(bi)) {
+                    if (CompatHandler.torchslab) {
+                        double y = event.getHitVec().getLocation().y() % 1;
+                        if (y < 0.5) return;
+                    }
+                    result = paceBlockOverride(Registry.WALL_LANTERN_ITEM.get(), player, hand, bi, pos, dir, world);
                 }
-                result = paceBlockOverride(Registry.WALL_LANTERN_ITEM.get(), player, hand, bi, pos, dir, world);
-            }
-            else if (ServerConfigs.cached.HANGING_POT_PLACEMENT && CommonUtil.isPot(bi)) {
-                result = paceBlockOverride(Registry.HANGING_FLOWER_POT_ITEM.get(), player, hand, bi, pos, dir, world);
-            }
-            else if (CommonUtil.isCake(bi)) {
-                if(ServerConfigs.cached.DOUBLE_CAKE_PLACEMENT)
-                    result = placeDoubleCake(player, stack, pos, world);
-                if(!result.consumesAction() && ServerConfigs.cached.DIRECTIONAL_CAKE)
-                    result = paceBlockOverride(Registry.DIRECTIONAL_CAKE_ITEM.get(), player, hand, bi, pos, dir, world);
+                //hanging pot
+                else if (ServerConfigs.cached.HANGING_POT_PLACEMENT && CommonUtil.isPot(bi)) {
+                    result = paceBlockOverride(Registry.HANGING_FLOWER_POT_ITEM.get(), player, hand, bi, pos, dir, world);
+                }
+                //double cake
+                else if (CommonUtil.isCake(bi)) {
+                    if (ServerConfigs.cached.DOUBLE_CAKE_PLACEMENT)
+                        result = placeDoubleCake(player, stack, pos, world);
+                    if (!result.consumesAction() && ServerConfigs.cached.DIRECTIONAL_CAKE)
+                        result = paceBlockOverride(Registry.DIRECTIONAL_CAKE_ITEM.get(), player, hand, bi, pos, dir, world);
+                }
             }
 
             if (result.consumesAction()) {

@@ -38,6 +38,10 @@ public class CommonUtil {
         if(!player.level.isClientSide)
         player.setItemInHand(hand, DrinkHelper.createFilledResult(oldItem.copy(), player, newItem, player.isCreative()));
     }
+    public static void swapItemNBT(PlayerEntity player, Hand hand, ItemStack oldItem, ItemStack newItem){
+        if(!player.level.isClientSide)
+            player.setItemInHand(hand, DrinkHelper.createFilledResult(oldItem.copy(), player, newItem,false));
+    }
     public static void swapItem(PlayerEntity player, Hand hand, ItemStack newItem){
         if(!player.level.isClientSide)
         player.setItemInHand(hand, DrinkHelper.createFilledResult(player.getItemInHand(hand).copy(), player, newItem, player.isCreative()));

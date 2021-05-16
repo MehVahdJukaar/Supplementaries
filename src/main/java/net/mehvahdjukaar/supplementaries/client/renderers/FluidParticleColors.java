@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.renderers;
 
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.fluids.SoftFluid;
 import net.mehvahdjukaar.supplementaries.fluids.SoftFluidList;
 import net.minecraft.client.Minecraft;
@@ -38,8 +39,12 @@ public class FluidParticleColors {
                 AtlasTexture textureMap = Minecraft.getInstance().getModelManager().getAtlas(AtlasTexture.LOCATION_BLOCKS);
                 TextureAtlasSprite sprite = textureMap.getSprite(location);
                 if(sprite==null)continue;
-
-                int averageColor = getColorFrom(sprite,s.getTintColor());
+                int averageColor = -1;
+                try {
+                    averageColor = getColorFrom(sprite, s.getTintColor());
+                }catch (Exception e){
+                    Supplementaries.LOGGER.warn("failed to load particle color for "+sprite.toString()+" using current resource pack. might be a broken png.mcmeta");
+                }
                 particleColor.put(s.getID(), averageColor);
             }
         }
@@ -62,7 +67,10 @@ public class FluidParticleColors {
         int total = 0, totalR = 0, totalB = 0, totalG = 0;
         for (int x = 0; x < sprite.getWidth(); x++) {
             for (int y = 0; y < sprite.getHeight(); y++) {
-                int pixel = sprite.getPixelRGBA(0, x, y);
+                int pixel = 0;
+
+                pixel = sprite.getPixelRGBA(0, x, y);
+
                 // this is in 0xAABBGGRR format, not the usual 0xAARRGGBB.
                 int pixelB = pixel >> 16 & 255;
                 int pixelG = pixel >> 8 & 255;

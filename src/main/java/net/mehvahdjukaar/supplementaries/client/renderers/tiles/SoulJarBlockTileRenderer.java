@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.model.RenderMaterial;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
@@ -17,6 +18,8 @@ import net.minecraft.util.math.vector.Quaternion;
 
 
 public class SoulJarBlockTileRenderer extends TileEntityRenderer<FireflyJarBlockTile> {
+    private final Minecraft minecraft = Minecraft.getInstance();
+    public static final RenderMaterial SOUL_MATERIAL = new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, Textures.SOUL_TEXTURE);
 
 
     public SoulJarBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
@@ -117,7 +120,7 @@ public class SoulJarBlockTileRenderer extends TileEntityRenderer<FireflyJarBlock
 
 
 
-        if(!tile.soul || Minecraft.getInstance().options.graphicsMode== GraphicsFanciness.FABULOUS)return;
+        if(!tile.soul || minecraft.options.graphicsMode== GraphicsFanciness.FABULOUS)return;
         matrixStackIn.pushPose();
         int lu = combinedLightIn & '\uffff';
         int lv = combinedLightIn >> 16 & '\uffff'; // ok
@@ -125,10 +128,11 @@ public class SoulJarBlockTileRenderer extends TileEntityRenderer<FireflyJarBlock
         matrixStackIn.translate(0.5, 0.5-0.125, 0.5);
         matrixStackIn.scale(0.5f, 0.5f, 0.5f);
 
-        TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(Textures.SOUL_TEXTURE);
+        TextureAtlasSprite sprite = minecraft.getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(Textures.SOUL_TEXTURE);
         IVertexBuilder builder = bufferIn.getBuffer(RenderType.cutout());
+        //IVertexBuilder builder = SOUL_MATERIAL.buffer(bufferIn, RenderType::entityCutout);
 
-        Quaternion rotation = Minecraft.getInstance().getEntityRenderDispatcher().cameraOrientation();
+        Quaternion rotation = minecraft.getEntityRenderDispatcher().cameraOrientation();
         matrixStackIn.mulPose(rotation);
 
 

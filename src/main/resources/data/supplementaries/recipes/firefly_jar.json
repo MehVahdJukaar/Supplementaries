@@ -20,33 +20,6 @@
           "count": 1
         }
       }
-    },
-    {
-      "conditions": [
-        {
-          "modid": "twilightforest",
-          "type": "forge:mod_loaded"
-        },
-        {
-          "flag": "firefly_jar",
-          "type": "supplementaries:flag"
-        }
-      ],
-      "recipe": {
-        "type": "minecraft:crafting_shapeless",
-        "ingredients": [
-          {
-            "item": "supplementaries:jar"
-          },
-          {
-            "item": "twilightforest:firefly"
-          }
-        ],
-        "result": {
-          "item": "supplementaries:firefly_jar",
-          "count": 1
-        }
-      }
     }
   ]
 }

@@ -1,0 +1,14 @@
+
+{
+  "variants": {
+    "tile_3=0": {
+      "model": "supplementaries:block/timber_cross_brace"
+    },
+    "tile_3=1": {
+      "model": "supplementaries:block/mimic_block"
+    },
+    "tile_3=2": {
+      "model": "supplementaries:block/timber_cross_brace_overlay"
+    }
+  }
+}

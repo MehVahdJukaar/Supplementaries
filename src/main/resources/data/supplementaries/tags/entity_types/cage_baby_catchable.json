@@ -1,0 +1,19 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:cow",
+    "minecraft:sheep",
+    "minecraft:pig"
+  ],
+  "optional": [
+    "alexsmobs:crocodile",
+    "alexsmobs:endergrade",
+    "alexsmobs:gazelle",
+    "alexsmobs:gorilla",
+    "alexsmobs:komodo_dragon",
+    "alexsmobs:raccoon",
+    "alexsmobs:seal",
+    "alexsmobs:warped_toad"
+  ]
+}
+

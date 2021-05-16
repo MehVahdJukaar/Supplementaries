@@ -23,6 +23,7 @@ import java.util.List;
 
 
 public class FenceSignBlockTileRenderer extends TileEntityRenderer<FenceSignBlockTile> {
+    private final BlockRendererDispatcher blockRenderer;
     public static final ModelRenderer signBoard = new ModelRenderer(64, 32, 0, 0);
    //TODO: make other tiles this way
     static {
@@ -32,6 +33,7 @@ public class FenceSignBlockTileRenderer extends TileEntityRenderer<FenceSignBloc
 
     public FenceSignBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
+        blockRenderer = Minecraft.getInstance().getBlockRenderer();
    }
 
     @Override
@@ -40,7 +42,6 @@ public class FenceSignBlockTileRenderer extends TileEntityRenderer<FenceSignBloc
 
         BlockState fence = tile.fenceBlock;
         if(fence !=null){
-            BlockRendererDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
             RendererUtil.renderBlockPlus(fence, matrixStackIn, bufferIn, blockRenderer, tile.getLevel(), tile.getBlockPos());
             //blockRenderer.renderBlock(fence, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
         }
@@ -62,9 +63,6 @@ public class FenceSignBlockTileRenderer extends TileEntityRenderer<FenceSignBloc
 
             matrixStackIn.pushPose();
             matrixStackIn.translate(0.5, 0.5, 0.5);
-
-
-
 
 
 

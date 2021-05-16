@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.block.util.MobHolder;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.entity.Entity;
@@ -15,8 +16,10 @@ import net.minecraft.util.math.MathHelper;
 
 
 public class CageBlockTileRenderer<T extends TileEntity & IMobHolder> extends TileEntityRenderer<T> {
+    private final EntityRendererManager entityRenderer;
     public CageBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
+        entityRenderer = Minecraft.getInstance().getEntityRenderDispatcher();
     }
 
     public void renderMob(MobHolder mobHolder, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, Direction dir){
@@ -30,7 +33,7 @@ public class CageBlockTileRenderer<T extends TileEntity & IMobHolder> extends Ti
             matrixStackIn.mulPose(dir.getRotation());
             matrixStackIn.mulPose(Const.XN90);
             matrixStackIn.scale(s,s,s);
-            Minecraft.getInstance().getEntityRenderDispatcher().render(mob, 0.0D, 0.0D, 0.0D, 0.0F, partialTicks, matrixStackIn, bufferIn, combinedLightIn);
+            entityRenderer.render(mob, 0.0D, 0.0D, 0.0D, 0.0F, partialTicks, matrixStackIn, bufferIn, combinedLightIn);
             matrixStackIn.popPose();
         }
     }

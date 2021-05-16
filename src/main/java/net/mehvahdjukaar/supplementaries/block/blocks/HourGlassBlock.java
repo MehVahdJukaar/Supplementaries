@@ -41,7 +41,7 @@ import net.minecraftforge.common.extensions.IForgeBlock;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class HourGlassBlock extends Block implements IWaterLoggable, IForgeBlock {
+public class HourGlassBlock extends WaterBlock implements IForgeBlock {
     protected static final VoxelShape SHAPE_Y = Block.box(4D, 0D, 4.0D, 12.0D, 16D, 12.0D);
     protected static final VoxelShape SHAPE_Z = Block.box(4D, 4D, 0.0D, 12.0D, 12D, 16.0D);
     protected static final VoxelShape SHAPE_X = Block.box(0D, 4D, 4D, 16D, 12D, 12.0D);
@@ -53,11 +53,6 @@ public class HourGlassBlock extends Block implements IWaterLoggable, IForgeBlock
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.UP).setValue(LIGHT_LEVEL, 0)
                 .setValue(WATERLOGGED, false));
-    }
-
-    @Override
-    public boolean isPathfindable(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
-        return false;
     }
 
     @Override
@@ -76,11 +71,6 @@ public class HourGlassBlock extends Block implements IWaterLoggable, IForgeBlock
     }
 
     @Override
-    public FluidState getFluidState(BlockState state) {
-        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
-    }
-
-    @Override
     public BlockState rotate(BlockState state, Rotation rot) {
         return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
@@ -92,19 +82,7 @@ public class HourGlassBlock extends Block implements IWaterLoggable, IForgeBlock
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        World world = context.getLevel();
-        BlockPos pos = context.getClickedPos();
-        boolean flag = world.getFluidState(pos).getType() == Fluids.WATER;
-        return this.defaultBlockState().setValue(WATERLOGGED, flag).setValue(FACING, context.getClickedFace());
-    }
-
-    //called when a neighbor is placed
-    @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
-        if (stateIn.getValue(WATERLOGGED)) {
-            worldIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
-        }
-        return stateIn;
+        return super.getStateForPlacement(context).setValue(FACING, context.getClickedFace());
     }
 
     @Override

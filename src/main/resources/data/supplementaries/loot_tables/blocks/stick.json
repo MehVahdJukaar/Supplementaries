@@ -1,0 +1,127 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "conditions": [
+                {
+                  "condition": "minecraft:block_state_property",
+                  "block": "supplementaries:stick",
+                  "properties": {
+                    "axis_y": "true"
+                  }
+                },
+                {
+                  "condition": "minecraft:block_state_property",
+                  "block": "supplementaries:stick",
+                  "properties": {
+                    "axis_x": "true"
+                  }
+                },
+                {
+                  "condition": "minecraft:block_state_property",
+                  "block": "supplementaries:stick",
+                  "properties": {
+                    "axis_z": "true"
+                  }
+                }
+              ],
+              "count": 3
+            },
+            {
+              "function": "minecraft:set_count",
+              "conditions": [
+                {
+                  "condition": "minecraft:block_state_property",
+                  "block": "supplementaries:stick",
+                  "properties": {
+                    "axis_y": "true"
+                  }
+                },
+                {
+                  "condition": "minecraft:block_state_property",
+                  "block": "supplementaries:stick",
+                  "properties": {
+                    "axis_x": "true"
+                  }
+                },
+                {
+                  "condition": "minecraft:block_state_property",
+                  "block": "supplementaries:stick",
+                  "properties": {
+                    "axis_z": "false"
+                  }
+                }
+              ],
+              "count": 2
+            },
+            {
+              "function": "minecraft:set_count",
+              "conditions": [
+                {
+                  "condition": "minecraft:block_state_property",
+                  "block": "supplementaries:stick",
+                  "properties": {
+                    "axis_y": "true"
+                  }
+                },
+                {
+                  "condition": "minecraft:block_state_property",
+                  "block": "supplementaries:stick",
+                  "properties": {
+                    "axis_x": "false"
+                  }
+                },
+                {
+                  "condition": "minecraft:block_state_property",
+                  "block": "supplementaries:stick",
+                  "properties": {
+                    "axis_z": "true"
+                  }
+                }
+              ],
+              "count": 2
+            },
+            {
+              "function": "minecraft:set_count",
+              "conditions": [
+                {
+                  "condition": "minecraft:block_state_property",
+                  "block": "supplementaries:stick",
+                  "properties": {
+                    "axis_y": "false"
+                  }
+                },
+                {
+                  "condition": "minecraft:block_state_property",
+                  "block": "supplementaries:stick",
+                  "properties": {
+                    "axis_x": "true"
+                  }
+                },
+                {
+                  "condition": "minecraft:block_state_property",
+                  "block": "supplementaries:stick",
+                  "properties": {
+                    "axis_z": "true"
+                  }
+                }
+              ],
+              "count": 2
+            },
+            {
+              "function": "minecraft:explosion_decay"
+            }
+          ],
+          "name": "minecraft:stick"
+        }
+      ]
+    }
+  ]
+}

@@ -1,8 +1,10 @@
 package net.mehvahdjukaar.supplementaries.items;
 
 
+import net.mehvahdjukaar.supplementaries.block.util.CapturedMobs;
 import net.mehvahdjukaar.supplementaries.block.util.MobHolder;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
@@ -55,20 +57,26 @@ public class EmptyCageItem extends BlockItem {
 
         boolean isFirefly = false;
         boolean canBeCaught = false;
-        switch (this.cageType){
-            case CAGE:
-                canBeCaught = (ServerConfigs.cached.CAGE_ALL_MOBS ||
-                        (entity instanceof LivingEntity && ServerConfigs.cached.CAGE_ALL_BABIES && ((LivingEntity) entity).isBaby()) ||
-                        ServerConfigs.cached.CAGE_ALLOWED_MOBS.contains(name) ||
-                        (entity instanceof LivingEntity && ServerConfigs.cached.CAGE_ALLOWED_BABY_MOBS.contains(name)&&((LivingEntity) entity).isBaby()));
-                break;
-            case JAR:
-                isFirefly = entity.getType().getRegistryName().getPath().toLowerCase().contains("firefl");
-                canBeCaught = ServerConfigs.cached.CAGE_ALL_MOBS || isFirefly || ServerConfigs.cached.MOB_JAR_ALLOWED_MOBS.contains(name);
-                break;
-            case TINTED_JAR:
-                canBeCaught = ServerConfigs.cached.CAGE_ALL_MOBS || ServerConfigs.cached.MOB_JAR_TINTED_ALLOWED_MOBS.contains(name);
-                break;
+        if(ServerConfigs.cached.CAGE_ALL_MOBS) {
+            canBeCaught = true;
+        }
+        else{
+            switch (this.cageType) {
+                case CAGE:
+                    boolean dababy = entity instanceof LivingEntity && ((LivingEntity) entity).isBaby();
+                    canBeCaught = ((ServerConfigs.cached.CAGE_ALL_BABIES && dababy) ||
+                            ModTags.isTagged(ModTags.CAGE_CATCHABLE, entity.getType()) ||
+                            (ModTags.isTagged(ModTags.CAGE_BABY_CATCHABLE, entity.getType()) && dababy));
+                    break;
+                case JAR:
+                    isFirefly = entity.getType().getRegistryName().getPath().toLowerCase().contains("firefl");
+                    canBeCaught = isFirefly || ModTags.isTagged(ModTags.JAR_CATCHABLE, entity.getType()) ||
+                            CapturedMobs.CATCHABLE_FISHES.contains(entity.getType().getRegistryName().toString());
+                    break;
+                case TINTED_JAR:
+                    canBeCaught = ModTags.isTagged(ModTags.TINTED_JAR_CATCHABLE, entity.getType())|| CapturedMobs.CATCHABLE_FISHES.contains(entity.getType().getRegistryName().toString());
+                    break;
+            }
         }
         if(!canBeCaught)return ActionResultType.PASS;
 
@@ -87,7 +95,7 @@ public class EmptyCageItem extends BlockItem {
             if(cmp!=null) returnStack.addTagElement("BlockEntityTag", cmp);
         }
 
-        CommonUtil.swapItem(player,hand,stack,returnStack);
+        CommonUtil.swapItemNBT(player,hand,stack,returnStack);
         //TODO: cage sound here
         if(this.cageType==CageWhitelist.CAGE)
             player.level.playSound(null, player.blockPosition(),  SoundEvents.CHAIN_FALL, SoundCategory.BLOCKS,1,0.7f);

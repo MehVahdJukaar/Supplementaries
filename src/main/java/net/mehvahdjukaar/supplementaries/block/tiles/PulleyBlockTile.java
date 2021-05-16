@@ -26,7 +26,7 @@ public class PulleyBlockTile extends ItemDisplayTile {
     }
 
     @Override
-    public void updateVisuals() {}
+    public void updateOnChanged() {}
 
     //hijacking this method to work with hoppers
     @Override

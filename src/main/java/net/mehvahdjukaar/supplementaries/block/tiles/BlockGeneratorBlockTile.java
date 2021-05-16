@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
+
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.blocks.EnhancedLanternBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.NoticeBoardBlock;
@@ -64,6 +65,8 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
     @Override
     public void tick() {
         //if you are reading this I'm sorry...
+
+
 
         if(!(this.level instanceof ServerWorld))return;
 
@@ -196,14 +199,14 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
 
                             Direction dir = lampDir.get(rand.nextInt(lampDir.size()));
 
-                            boolean doubleSided = 0.22 > rand.nextFloat();
+                            boolean doubleSided = 0.25 > rand.nextFloat();
                             if (doubleSided) {
                                 dir = dir.getClockWise();
                             }
 
                             //wall lanterns
-                            if(0.21>rand.nextFloat()){
-                                topState = air;
+                            if(0.28>rand.nextFloat()){
+                                topState = 0.32>rand.nextFloat()?trapdoor:air;
 
                                 EnhancedLanternBlock wl = ((EnhancedLanternBlock) Registry.WALL_LANTERN.get());
                                 wl.placeOn(lanternDown,pos.below(),dir,world);
@@ -215,7 +218,7 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
 
                             }
                             else {
-                                boolean isTrapdoor = 0.39 > rand.nextFloat();
+                                boolean isTrapdoor = 0.4 > rand.nextFloat();
 
                                 if (!isTrapdoor) topState = fence;
 
@@ -252,12 +255,12 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
                     listnbt.add(StringNBT.valueOf("nothing here but monsters\n\n\n"));
                     com.put("pages",listnbt);
                     book.setTag(com);
-                    this.level.setBlock(this.worldPosition.below(2), Registry.NOTICE_BOARD.get().defaultBlockState()
+                    this.level.setBlock(this.worldPosition.below(2), Registry.NOTICE_BOARD.get().defaultBlockState().setValue(NoticeBoardBlock.HAS_BOOK,true)
                             .setValue(NoticeBoardBlock.FACING, Direction.Plane.HORIZONTAL.getRandomDirection(this.getLevel().random)), 3);
                     TileEntity te = world.getBlockEntity(this.worldPosition.below(2));
                     if(te instanceof NoticeBoardBlockTile){
                         ((ItemDisplayTile) te).setDisplayedItem(book);
-                        te.setChanged();
+                        //te.setChanged();
                     }
                 }
 

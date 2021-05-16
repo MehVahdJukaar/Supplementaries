@@ -9,15 +9,18 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.potion.Potions;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
+import java.util.Random;
 
 
 public class BambooSpikesBlockTile extends TileEntity {
@@ -25,9 +28,12 @@ public class BambooSpikesBlockTile extends TileEntity {
     public Potion potion = Potions.EMPTY;
     public int charges = 0;
     public long lastTicked = 0;
+    private final Random rand = new Random();
     //put these two in config
     public static final float POTION_MULTIPLIER = 0.1f;
     public static final int MAX_CHARGES = 16;
+
+
 
     public BambooSpikesBlockTile() {
         super(Registry.BAMBOO_SPIKES_TILE.get());
@@ -35,7 +41,7 @@ public class BambooSpikesBlockTile extends TileEntity {
 
     public int getColor(){
         if(this.hasPotion())
-            return PotionUtils.getColor(potion);
+            return PotionUtils.getColor(this.potion);
         return 0xffffff;
     }
 
@@ -98,10 +104,21 @@ public class BambooSpikesBlockTile extends TileEntity {
                 used=true;
             }
             if(used){
+                this.makeParticle();
                 return this.consumeCharge(world);
             }
         }
         return false;
+    }
+
+    public void makeParticle(){
+        int i = this.getColor();
+        double d0 = (double) (i >> 16 & 255) / 255.0D;
+        double d1 = (double) (i >> 8 & 255) / 255.0D;
+        double d2 = (double) (i & 255) / 255.0D;
+        BlockPos pos = this.getBlockPos();
+        //TODO: fix on server side
+        this.level.addParticle(ParticleTypes.ENTITY_EFFECT, pos.getX()+0.5+(this.rand.nextFloat()-0.5)*0.75, pos.getY()+0.5+(this.rand.nextFloat()-0.5)*0.75, pos.getZ()+0.5+(this.rand.nextFloat()-0.5)*0.75, d0, d1, d2);
     }
 
     public ItemStack getSpikeItem(){

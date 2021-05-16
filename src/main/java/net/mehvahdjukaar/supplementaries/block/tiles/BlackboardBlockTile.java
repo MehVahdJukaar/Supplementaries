@@ -1,11 +1,13 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
+import net.mehvahdjukaar.supplementaries.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.util.Constants;
 
 
@@ -97,5 +99,13 @@ public class BlackboardBlockTile extends TileEntity {
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         this.load(this.getBlockState(), pkt.getTag());
+    }
+
+    public Direction getDirection(){
+        return this.getBlockState().getValue(NoticeBoardBlock.FACING);
+    }
+
+    public float getYaw() {
+        return -this.getDirection().toYRot();
     }
 }

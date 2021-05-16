@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.items;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.tiles.CageBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.MobHolder;
-import net.mehvahdjukaar.supplementaries.common.CagedMobHelper;
+import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -110,7 +110,7 @@ public class CageItem extends BlockItem {
                         }
                         //TODO fix sound categories
                     }
-                    CagedMobHelper.addMob(entity);
+                    CapturedMobCache.addMob(entity);
                     success = true;
                 }
             }

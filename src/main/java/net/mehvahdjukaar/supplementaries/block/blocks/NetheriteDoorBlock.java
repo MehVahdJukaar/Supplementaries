@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.tiles.KeyLockableTile;
-import net.mehvahdjukaar.supplementaries.plugins.quark.QuarkDoubleDoorPlugin;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DoorBlock;
@@ -15,7 +14,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.ModList;
 
 public class NetheriteDoorBlock extends DoorBlock {
 
@@ -31,7 +29,7 @@ public class NetheriteDoorBlock extends DoorBlock {
         if (te instanceof KeyLockableTile) {
             if (((KeyLockableTile) te).handleAction(player, handIn, "door")) {
 
-                if(ModList.get().isLoaded("quark")) QuarkDoubleDoorPlugin.openDoorKey(worldIn,state,pos,player,handIn);
+                //if(ModList.get().isLoaded("quark")) QuarkDoubleDoorPlugin.openDoorKey(worldIn,state,pos,player,handIn);
 
                 state = state.cycle(OPEN);
                 worldIn.setBlock(pos, state, 10);

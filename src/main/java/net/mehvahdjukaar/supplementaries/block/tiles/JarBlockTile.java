@@ -68,7 +68,7 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
         ItemStack displayedStack = this.getDisplayedItem();
 
         //interact with fluid holder
-        if (this.isEmpty() && this.mobHolder.isEmpty() &&this.fluidHolder.interactWithPlayer(player, hand)) {
+        if (this.isEmpty() && (this.mobHolder.isEmpty()||isPonyJar()) && this.fluidHolder.interactWithPlayer(player, hand)) {
             return true;
         }
         //empty hand: eat food
@@ -163,6 +163,11 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
         this.fluidHolder.clear();
         this.mobHolder.clear();
         this.setDisplayedItem(ItemStack.EMPTY);
+    }
+
+    private boolean isPonyJar(){
+        //hahaha, funy pony jar meme
+        return this.getCustomName().getString().contains("cum");
     }
 
     //can this item be added?

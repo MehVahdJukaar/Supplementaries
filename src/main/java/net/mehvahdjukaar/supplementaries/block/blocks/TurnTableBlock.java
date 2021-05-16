@@ -154,7 +154,7 @@ public class TurnTableBlock extends Block {
 
             e.move(MoverType.SHULKER_BOX, posdiff);
             // e.setMotion(e.getMotion().add(adjustedposdiff));
-            //e.velocityChanged = true;
+            e.hurtMarked = true;
 
 
             //TODO: use setMotion

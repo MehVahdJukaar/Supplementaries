@@ -1,15 +1,15 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 
-import net.mehvahdjukaar.supplementaries.block.util.IBlockHolder;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.IWaterLoggable;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -22,9 +22,9 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
-import net.minecraftforge.common.extensions.IForgeBlock;
+import org.jetbrains.annotations.Nullable;
 
-public abstract class FenceMimicBlock extends Block implements IWaterLoggable, IForgeBlock{
+public abstract class FenceMimicBlock extends MimicBlock implements IWaterLoggable{
     protected static final VoxelShape SHAPE = Block.box(5D, 0.0D, 5D, 11D, 16.0D, 11D);
     protected static final VoxelShape COLLISION_SHAPE = Block.box(5D, 0.0D, 5D, 11D, 24.0D, 11D);
 
@@ -35,28 +35,9 @@ public abstract class FenceMimicBlock extends Block implements IWaterLoggable, I
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false));
     }
 
-    //THIS IS DANGEROUS
     @Override
-    public float getDestroyProgress(BlockState state, PlayerEntity player, IBlockReader worldIn, BlockPos pos) {
-        TileEntity te = worldIn.getBlockEntity(pos);
-        if(te instanceof IBlockHolder){
-            BlockState mimicState = ((IBlockHolder) te).getHeldBlock();
-            //prevent infinite recursion
-            if(mimicState!=null&&!(mimicState.getBlock() instanceof FenceMimicBlock))
-                return mimicState.getDestroyProgress(player,worldIn,pos);
-        }
-        return super.getDestroyProgress(state, player, worldIn, pos);
-    }
-
-    //might cause lag when breaking?
-    @Override
-    public SoundType getSoundType(BlockState state, IWorldReader world, BlockPos pos, Entity entity) {
-        TileEntity te = world.getBlockEntity(pos);
-        if(te instanceof IBlockHolder){
-            BlockState mimicState = ((IBlockHolder) te).getHeldBlock();
-            if(mimicState!=null)return mimicState.getSoundType(world,pos,entity);
-        }
-        return super.getSoundType(state,world,pos,entity);
+    public float getSlipperiness(BlockState state, IWorldReader world, BlockPos pos, @Nullable Entity entity) {
+        return 0;
     }
 
     @Override
@@ -99,19 +80,9 @@ public abstract class FenceMimicBlock extends Block implements IWaterLoggable, I
     }
 
     @Override
-    public boolean isPathfindable(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
-        return false;
-    }
-
-    @Override
     public INamedContainerProvider getMenuProvider(BlockState state, World worldIn, BlockPos pos) {
         TileEntity tileEntity = worldIn.getBlockEntity(pos);
         return tileEntity instanceof INamedContainerProvider ? (INamedContainerProvider) tileEntity : null;
-    }
-
-    @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
     }
 
 }

@@ -13,10 +13,7 @@ import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.FlatChunkGenerator;
-import net.minecraft.world.gen.FlatGenerationSettings;
-import net.minecraft.world.gen.feature.IFeatureConfig;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
-import net.minecraft.world.gen.feature.StructureFeature;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.settings.DimensionStructuresSettings;
 import net.minecraft.world.gen.settings.StructureSeparationSettings;
@@ -35,7 +32,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Supplier;
 
 public class StructureRegistry {
 
@@ -43,10 +39,9 @@ public class StructureRegistry {
     public static final DeferredRegister<Structure<?>> STRUCTURES = DeferredRegister.create(ForgeRegistries.STRUCTURE_FEATURES, Supplementaries.MOD_ID);
 
     //do NOT change this
-    public static final RegistryObject<Structure<NoFeatureConfig>> ROAD_SIGN = STRUCTURES.register("way_sign",
+    public static final RegistryObject<Structure<NoFeatureConfig>> WAY_SIGN = STRUCTURES.register("way_sign",
             () -> (new WaySignStructure(NoFeatureConfig.CODEC)));
 
-    public static Supplier<StructureFeature<?, ?>> CONFIGURED_ROAD_SIGN = ()->ROAD_SIGN.get().configured(IFeatureConfig.NONE);
 
     //mod init. registers events
     public static void init(IEventBus bus) {
@@ -66,10 +61,9 @@ public class StructureRegistry {
     //common seutp
     public static void setup() {
         setupStructures();
-        registerConfiguredStructures();
+        ConfiguredFeatures.register();
 
         SignDataProcessor.register();
-
     }
 
 
@@ -83,9 +77,10 @@ public class StructureRegistry {
          * RegistryKey.getOrCreateKey(Registry.BIOME_KEY, event.getName()) to get the biome's
          * registrykey. Then that can be fed into the dictionary to get the biome's types.
          */
-        BiomeDictionary.hasType(RegistryKey.create(Registry.BIOME_REGISTRY, event.getName()), BiomeDictionary.Type.OCEAN);
+        if(BiomeDictionary.hasType(RegistryKey.create(Registry.BIOME_REGISTRY, event.getName()), BiomeDictionary.Type.OCEAN)
+            ||ServerConfigs.spawn.ROAD_SIGN_DISTANCE_MIN.get()==1001)return;
 
-        event.getGeneration().getStructures().add(() -> CONFIGURED_ROAD_SIGN.get());
+        event.getGeneration().getStructures().add(() -> ConfiguredFeatures.CONFIGURED_WAY_SIGN);
     }
 
     /**
@@ -131,7 +126,8 @@ public class StructureRegistry {
 
 
             //adding only to biomes and dimensions that can generate vanilla villages
-            if(serverWorld.getChunkSource().generator.getBiomeSource().canGenerateStructure(Structure.VILLAGE)) {
+            if(serverWorld.getChunkSource().generator.getBiomeSource().canGenerateStructure(Structure.VILLAGE)&&serverWorld.dimensionType().natural()
+                &&ServerConfigs.spawn.ROAD_SIGN_DISTANCE_MIN.get()!=1001) {
 
                 /*
                  * putIfAbsent so people can override the spacing with dimension datapacks themselves if they wish to customize spacing more precisely per dimension.
@@ -141,7 +137,13 @@ public class StructureRegistry {
                  * And if you want to do dimension blacklisting, you need to remove the spacing entry entirely from the map below to prevent generation safely.
                  */
                 Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(serverWorld.getChunkSource().generator.getSettings().structureConfig());
-                tempMap.putIfAbsent(ROAD_SIGN.get(), DimensionStructuresSettings.DEFAULTS.get(ROAD_SIGN.get()));
+                tempMap.putIfAbsent(WAY_SIGN.get(), DimensionStructuresSettings.DEFAULTS.get(WAY_SIGN.get()));
+                serverWorld.getChunkSource().generator.getSettings().structureConfig = tempMap;
+            }
+            else{
+                //removing it from the map if it's there already for some damn reason
+                Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(serverWorld.getChunkSource().generator.getSettings().structureConfig());
+                tempMap.remove(WAY_SIGN.get());
                 serverWorld.getChunkSource().generator.getSettings().structureConfig = tempMap;
             }
         }
@@ -163,7 +165,7 @@ public class StructureRegistry {
      */
     private static void setupStructures() {
         setupMapSpacingAndLand(
-                ROAD_SIGN.get(), /* The instance of the structure */
+                WAY_SIGN.get(), /* The instance of the structure */
                 new StructureSeparationSettings(ServerConfigs.spawn.ROAD_SIGN_DISTANCE_AVR.get() /* average distance apart in chunks between spawn attempts */,
                         ServerConfigs.spawn.ROAD_SIGN_DISTANCE_MIN.get() /* minimum distance apart in chunks between spawn attempts */,
                         431041527 /* this modifies the seed of the structure so no two structures always spawn over each-other. Make this large and unique. */),
@@ -251,36 +253,4 @@ public class StructureRegistry {
         });
     }
 
-
-
-
-
-
-
-    /**
-     * Registers the configured structure which is what gets added to the biomes.
-     * Noticed we are not using a forge registry because there is none for configured structures.
-     *
-     * We can register configured structures at any time before a world is clicked on and made.
-     * But the best time to register configured features by code is honestly to do it in FMLCommonSetupEvent.
-     */
-    private static void registerConfiguredStructures() {
-        Registry<StructureFeature<?, ?>> registry = WorldGenRegistries.CONFIGURED_STRUCTURE_FEATURE;
-        Registry.register(registry, new ResourceLocation(Supplementaries.MOD_ID, "configured_way_sign"), CONFIGURED_ROAD_SIGN.get());
-
-        /* Ok so, this part may be hard to grasp but basically, just add your structure to this to
-         * prevent any sort of crash or issue with other mod's custom ChunkGenerators. If they use
-         * FlatGenerationSettings.STRUCTURES in it and you don't add your structure to it, the game
-         * could crash later when you attempt to add the StructureSeparationSettings to the dimension.
-         *
-         * (It would also crash with superflat worldtype if you omit the below line
-         * and attempt to add the structure's StructureSeparationSettings to the world)
-         *
-         * Note: If you want your structure to spawn in superflat, remove the FlatChunkGenerator check
-         * in StructureTutorialMain.addDimensionalSpacing and then create a superflat world, exit it,
-         * and re-enter it and your structures will be spawning. I could not figure out why it needs
-         * the restart but honestly, superflat is really buggy and shouldn't be your main focus in my opinion.
-         */
-        FlatGenerationSettings.STRUCTURE_FEATURES.put(StructureRegistry.ROAD_SIGN.get(), CONFIGURED_ROAD_SIGN.get());
-    }
 }

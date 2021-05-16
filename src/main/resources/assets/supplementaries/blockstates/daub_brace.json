@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "flipped=false": {
+      "model": "supplementaries:block/daub_brace"
+    },
+    "flipped=true": {
+      "model": "supplementaries:block/daub_brace_f"
+    }
+  }
+}

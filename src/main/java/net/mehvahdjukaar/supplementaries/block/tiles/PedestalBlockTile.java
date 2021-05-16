@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.PedestalBlock;
+import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.*;
@@ -14,20 +15,14 @@ import net.minecraft.util.text.TranslationTextComponent;
 import javax.annotation.Nullable;
 
 public class PedestalBlockTile extends ItemDisplayTile implements ITickableTileEntity {
-    public int type =0;
+    public DisplayType type = DisplayType.ITEM;
     public float yaw = 0;
     public int counter = 0;
     public PedestalBlockTile() {
         super(Registry.PEDESTAL_TILE.get());
     }
 
-    //hijacking this method to work with hoppers & multiplayer
-    @Override
-    public void setChanged() {
-        //this.updateServerAndClient();
-        this.updateTile();
-        super.setChanged();
-    }
+
 
 
     @Override
@@ -40,7 +35,8 @@ public class PedestalBlockTile extends ItemDisplayTile implements ITickableTileE
         if(this.level.isClientSide)this.counter++;
     }
 
-    public void updateTile() {
+    @Override
+    public void updateOnChanged() {
         //TODO: rewrite this
         if(!this.level.isClientSide()) {
             BlockState state = this.getBlockState();
@@ -51,22 +47,22 @@ public class PedestalBlockTile extends ItemDisplayTile implements ITickableTileE
                 this.level.setBlock(this.worldPosition, newstate, 3);
             }
         }
-
-        Item it = getItem(0).getItem();
+        Item it = getDisplayedItem().getItem();
+        //TODO: maybe add tag ModTags.isTagged(ModTags.PEDESTAL_DOWNRIGHT,it)
         if (it instanceof BlockItem){
-            this.type=1;
+            this.type=DisplayType.BLOCK;
         }
-        else if(it instanceof SwordItem){
-            this.type=2;
+        else if(it instanceof SwordItem || ModTags.isTagged(ModTags.PEDESTAL_DOWNRIGHT,it)){
+            this.type=DisplayType.SWORD;
         }
-        else if(it instanceof TridentItem){
-            this.type=4;
+        else if(it instanceof TridentItem || ModTags.isTagged(ModTags.PEDESTAL_UPRIGHT,it)){
+            this.type=DisplayType.TRIDENT;
         }
-        else if(it instanceof ToolItem){
-            this.type=3;
-
-        }else{
-            this.type=0;
+        else if(it instanceof EnderCrystalItem){
+            this.type=DisplayType.CRYSTAL;
+        }
+        else{
+            this.type=DisplayType.ITEM;
         }
     }
 
@@ -74,14 +70,14 @@ public class PedestalBlockTile extends ItemDisplayTile implements ITickableTileE
     @Override
     public void load(BlockState state, CompoundNBT compound) {
         super.load(state, compound);
-        this.type=compound.getInt("Type");
+        this.type=DisplayType.values()[compound.getInt("Type")];
         this.yaw=compound.getFloat("Yaw");
     }
 
     @Override
     public CompoundNBT save(CompoundNBT compound) {
         super.save(compound);
-        compound.putInt("Type",this.type);
+        compound.putInt("Type",this.type.ordinal());
         compound.putFloat("Yaw",this.yaw);
         return compound;
     }
@@ -99,6 +95,14 @@ public class PedestalBlockTile extends ItemDisplayTile implements ITickableTileE
     @Override
     public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
         return true;
+    }
+
+    public enum DisplayType{
+        ITEM,
+        BLOCK,
+        SWORD,
+        TRIDENT,
+        CRYSTAL
     }
 
 }

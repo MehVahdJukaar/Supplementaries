@@ -31,7 +31,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class ClockBlock extends Block implements IWaterLoggable {
+public class ClockBlock extends WaterBlock {
     protected static final VoxelShape SHAPE_NORTH = VoxelShapes.box(1D, 0D, 1D, 0D, 1D, 0.0625D);
     protected static final VoxelShape SHAPE_SOUTH = VoxelShapes.box(0D, 0D, 0D, 1D, 1D, 0.9375D);
     protected static final VoxelShape SHAPE_EAST = VoxelShapes.box(0D, 0D, 1D, 0.9375D, 1D, 0D);
@@ -39,22 +39,12 @@ public class ClockBlock extends Block implements IWaterLoggable {
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final IntegerProperty HOUR = BlockProperties.HOUR;
-    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     public ClockBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED,false).setValue(FACING, Direction.NORTH));
     }
 
-    @Override
-    public boolean isPathfindable(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
-        return false;
-    }
-
-    @Override
-    public FluidState getFluidState(BlockState state) {
-        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
-    }
 
     @Override
     public BlockRenderType getRenderShape(BlockState state) {
@@ -77,7 +67,6 @@ public class ClockBlock extends Block implements IWaterLoggable {
             player.displayClientMessage(new StringTextComponent(h + ":" + ((m<10)?"0":"") + m + a), true);
 
         }
-        //TODO: do this fo all ActionResultType
         return ActionResultType.sidedSuccess(worldIn.isClientSide);
     }
 
@@ -151,20 +140,11 @@ public class ClockBlock extends Block implements IWaterLoggable {
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
-        if (stateIn.getValue(WATERLOGGED)) {
-            worldIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
-        }
-        return super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
-    }
-
-    @Override
     public void onPlace(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
         super.onPlace(state, worldIn, pos, oldState, isMoving);
         TileEntity te = worldIn.getBlockEntity(pos);
         if(te instanceof ClockBlockTile){
             ((ClockBlockTile) te).updateInitialTime();
-
         }
     }
 

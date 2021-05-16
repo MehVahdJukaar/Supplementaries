@@ -4,15 +4,14 @@ package net.mehvahdjukaar.supplementaries.setup;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.util.CapturedMobs;
 import net.mehvahdjukaar.supplementaries.common.FlowerPotHelper;
+import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.datagen.RecipeCondition;
 import net.mehvahdjukaar.supplementaries.fluids.SoftFluidList;
 import net.mehvahdjukaar.supplementaries.mixins.accessors.ChickenEntityAccessor;
 import net.mehvahdjukaar.supplementaries.mixins.accessors.HorseEntityAccessor;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.commands.ModCommands;
-import net.mehvahdjukaar.supplementaries.plugins.create.SupplementariesCreatePlugin;
 import net.mehvahdjukaar.supplementaries.world.structures.StructureLocator;
 import net.mehvahdjukaar.supplementaries.world.structures.StructureRegistry;
 import net.minecraft.block.Blocks;
@@ -28,13 +27,11 @@ import net.minecraft.loot.RandomValueRange;
 import net.minecraft.loot.conditions.RandomChance;
 import net.minecraft.loot.functions.SetCount;
 import net.minecraftforge.common.BasicTrade;
-import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.event.village.WandererTradesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
@@ -47,13 +44,12 @@ public class ModSetup {
 
 
     public static void init(final FMLCommonSetupEvent event) {
-        event.enqueueWork(()-> {
 
-            CraftingHelper.register(new RecipeCondition.Serializer(RecipeCondition.MY_FLAG));
+        event.enqueueWork(()-> {
 
             NetworkHandler.registerMessages();
 
-            //order matters here
+            //order matters here (maybe?)
             Spawns.registerSpawningStuff();
 
             ComposterBlock.COMPOSTABLES.put(Registry.FLAX_SEEDS_ITEM.get().asItem(), 0.3F);
@@ -73,9 +69,7 @@ public class ModSetup {
             HorseEntityAccessor.setFoodItems(Ingredient.of(horseFood.stream()));
 
 
-            if (ModList.get().isLoaded("create")) {
-                SupplementariesCreatePlugin.initialize();
-            }
+            CompatHandler.init();
 
 
             ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(Registry.FLAX_ITEM.get().getRegistryName(), Registry.FLAX_POT);
@@ -133,70 +127,67 @@ public class ModSetup {
     @SubscribeEvent
     public static void onLootLoad(LootTableLoadEvent e) {
         String name = e.getName().toString();
-        switch (name) {
-            case "minecraft:chests/shipwreck_treasure": {
-                if (!RegistryConfigs.reg.GLOBE_ENABLED.get()) return;
-                float chance = (float) ServerConfigs.cached.GLOBE_TREASURE_CHANCE;
-                LootPool pool = LootPool.lootPool()
-                        .name("supplementaries_injected_globe")
-                        .setRolls(ConstantRange.exactly(1))
-                        .when(RandomChance.randomChance(chance))
-                        .add(ItemLootEntry.lootTableItem(Registry.GLOBE_ITEM.get()).setWeight(1))
-                        .build();
-                e.getTable().addPool(pool);
-                break;
-            }
-            case "minecraft:chests/abandoned_mineshaft": {
-                if (RegistryConfigs.reg.ROPE_ENABLED.get()) {
-                    float chance = 0.35f;
-                    LootPool pool = LootPool.lootPool()
-                            .name("supplementaries_injected_rope")
-                            .apply(SetCount.setCount(RandomValueRange.between(4.0F, 8.0F)))
-                            .setRolls(new RandomValueRange(1, 2))
-                            .when(RandomChance.randomChance(chance))
-                            .add(ItemLootEntry.lootTableItem(Registry.ROPE_ITEM.get()).setWeight(1))
-                            .build();
-                    e.getTable().addPool(pool);
-                }
 
-                if (RegistryConfigs.reg.FLAX_ENABLED.get()) {
-                    float chance2 = 0.10f;
-                    LootPool pool2 = LootPool.lootPool()
-                            .name("supplementaries_injected_flax")
-                            .setRolls(new RandomValueRange(1, 3))
-                            .when(RandomChance.randomChance(chance2))
-                            .add(ItemLootEntry.lootTableItem(Registry.FLAX_SEEDS_ITEM.get()).setWeight(1))
-                            .build();
-                    e.getTable().addPool(pool2);
-                }
-                break;
-            }
-            case "minecraft:chests/pillager_outpost": {
-                if (!RegistryConfigs.reg.FLAX_ENABLED.get()) return;
-                float chance = 0.95f;
+        if(name.equals("minecraft:chests/shipwreck_treasure")) {
+            if (!RegistryConfigs.reg.GLOBE_ENABLED.get()) return;
+            float chance = (float) ServerConfigs.cached.GLOBE_TREASURE_CHANCE;
+            LootPool pool = LootPool.lootPool()
+                    .name("supplementaries_injected_globe")
+                    .setRolls(ConstantRange.exactly(1))
+                    .when(RandomChance.randomChance(chance))
+                    .add(ItemLootEntry.lootTableItem(Registry.GLOBE_ITEM.get()).setWeight(1))
+                    .build();
+            e.getTable().addPool(pool);
+        }
+        else if(name.equals("minecraft:chests/abandoned_mineshaft")||name.contains("repurposed_structures:chests/mineshaft")) {
+            if (RegistryConfigs.reg.ROPE_ENABLED.get()) {
+                float chance = 0.35f;
                 LootPool pool = LootPool.lootPool()
-                        .name("supplementaries_injected_flax")
-                        .apply(SetCount.setCount(RandomValueRange.between(2F,5.0F)))
+                        .name("supplementaries_injected_rope")
+                        .apply(SetCount.setCount(RandomValueRange.between(4.0F, 8.0F)))
+                        .setRolls(new RandomValueRange(1, 2))
                         .when(RandomChance.randomChance(chance))
-                        .add(ItemLootEntry.lootTableItem(Registry.FLAX_SEEDS_ITEM.get()).setWeight(1))
+                        .add(ItemLootEntry.lootTableItem(Registry.ROPE_ITEM.get()).setWeight(1))
                         .build();
                 e.getTable().addPool(pool);
-                break;
             }
-            case "minecraft:chests/simple_dungeon": {
-                if (!RegistryConfigs.reg.FLAX_ENABLED.get()) return;
-                float chance = 0.2f;
-                LootPool pool = LootPool.lootPool()
+
+            if (RegistryConfigs.reg.FLAX_ENABLED.get()) {
+                float chance2 = 0.10f;
+                LootPool pool2 = LootPool.lootPool()
                         .name("supplementaries_injected_flax")
                         .setRolls(new RandomValueRange(1, 3))
-                        .when(RandomChance.randomChance(chance))
+                        .when(RandomChance.randomChance(chance2))
                         .add(ItemLootEntry.lootTableItem(Registry.FLAX_SEEDS_ITEM.get()).setWeight(1))
                         .build();
-                e.getTable().addPool(pool);
-                break;
+                e.getTable().addPool(pool2);
             }
         }
+        else if(name.equals("minecraft:chests/simple_dungeon")||name.contains("repurposed_structures:chests/dungeon")) {
+            if (!RegistryConfigs.reg.FLAX_ENABLED.get()) return;
+            float chance = 0.2f;
+            LootPool pool = LootPool.lootPool()
+                    .name("supplementaries_injected_flax")
+                    .setRolls(new RandomValueRange(1, 3))
+                    .when(RandomChance.randomChance(chance))
+                    .add(ItemLootEntry.lootTableItem(Registry.FLAX_SEEDS_ITEM.get()).setWeight(1))
+                    .build();
+            e.getTable().addPool(pool);
+        }
+
+         else if(name.contains("chests/pillager_outpost")){
+            if (!RegistryConfigs.reg.FLAX_ENABLED.get()) return;
+            float chance = 0.95f;
+            LootPool pool = LootPool.lootPool()
+                    .name("supplementaries_injected_flax")
+                    .apply(SetCount.setCount(RandomValueRange.between(2F,5.0F)))
+                    .when(RandomChance.randomChance(chance))
+                    .add(ItemLootEntry.lootTableItem(Registry.FLAX_SEEDS_ITEM.get()).setWeight(1))
+                    .build();
+            e.getTable().addPool(pool);
+        }
     }
+
 
 
 }

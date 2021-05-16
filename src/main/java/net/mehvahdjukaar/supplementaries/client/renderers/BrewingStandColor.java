@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.color.IBlockColor;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.tileentity.BrewingStandTileEntity;
@@ -18,7 +19,7 @@ public class BrewingStandColor implements IBlockColor {
         if(world!=null&&pos!=null) {
             TileEntity te = world.getBlockEntity(pos);
             if (te instanceof BrewingStandTileEntity) {
-                ItemStack item = ((BrewingStandTileEntity) te).getItem(tint);
+                ItemStack item = ((IInventory) te).getItem(tint);
                 if(!item.isEmpty()){
                     if(!ClientConfigs.cached.COLORED_BWERING_STAND)return 0xff3434;
                     return PotionUtils.getColor(item);

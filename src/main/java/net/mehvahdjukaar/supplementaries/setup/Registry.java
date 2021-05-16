@@ -7,13 +7,13 @@ import net.mehvahdjukaar.supplementaries.client.renderers.items.BlackboardItemRe
 import net.mehvahdjukaar.supplementaries.client.renderers.items.CageItemRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.FireflyJarItemRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.JarItemRenderer;
+import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
+import net.mehvahdjukaar.supplementaries.compat.decorativeblocks.DecoBlocksCompatRegistry;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
-import net.mehvahdjukaar.supplementaries.entities.BombEntity;
-import net.mehvahdjukaar.supplementaries.entities.FireflyEntity;
-import net.mehvahdjukaar.supplementaries.entities.RopeArrowEntity;
-import net.mehvahdjukaar.supplementaries.entities.ThrowableBrickEntity;
+import net.mehvahdjukaar.supplementaries.entities.*;
 import net.mehvahdjukaar.supplementaries.inventories.NoticeBoardContainer;
+import net.mehvahdjukaar.supplementaries.inventories.OrangeMerchantContainer;
 import net.mehvahdjukaar.supplementaries.inventories.PulleyBlockContainer;
 import net.mehvahdjukaar.supplementaries.inventories.SackContainer;
 import net.mehvahdjukaar.supplementaries.items.*;
@@ -24,7 +24,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.container.ContainerType;
@@ -50,6 +50,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Map;
+import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
 @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
@@ -76,6 +77,14 @@ public class Registry {
         RECIPES.register(bus);
     }
 
+    private static RegistryObject<Item> regItem(String name, Supplier<? extends Item> sup) {
+        return ITEMS.register(name, sup);
+    }
+
+    private static RegistryObject<Item> regBlockItem(RegistryObject<Block> blockSup, ItemGroup group) {
+        return regItem(blockSup.getId().getPath(), ()-> new BlockItem(blockSup.get(), (new Item.Properties()).tab(group)));
+    }
+
     //creative tab
     private static final boolean tab = RegistryConfigs.reg.CREATIVE_TAB.get();
     private static final boolean jar_tab = RegistryConfigs.reg.JAR_TAB.get();
@@ -100,11 +109,15 @@ public class Registry {
                 }
             };
 
-    public static ItemGroup getTab(ItemGroup g,String reg_name){
-        if(RegistryConfigs.reg.isEnabled(reg_name)) {
+    public static ItemGroup getTab(ItemGroup g,String regName){
+        if(RegistryConfigs.reg.isEnabled(regName)) {
             return tab ? MOD_TAB : g;
         }
         return null;
+    }
+
+    public static ItemGroup getTab(String modId, ItemGroup g,String regName){
+        return ModList.get().isLoaded(modId)?getTab(g,regName):null;
     }
 
     public static RegistryObject<SoundEvent> makeSoundEvent(String name){
@@ -117,14 +130,22 @@ public class Registry {
     public static final RegistryObject<SoundEvent> BOMB_SOUND = makeSoundEvent("item.bomb");
 
 
-    //TODO: use deferred reg
+    //dynamic registration so I can use their classes
     @SubscribeEvent
-    public static void registerEntities(final RegistryEvent.Register<EntityType<?>> event){
+    public static void registerCompatBlocks(final RegistryEvent.Register<Block> event){
+        CompatHandler.registerOptionalBlocks(event);
+    }
+    @SubscribeEvent
+    public static void registerCompatItems(final RegistryEvent.Register<Item> event){
+        CompatHandler.registerOptionalItems(event);
+    }
+
+    @SubscribeEvent
+    public static void registerEntityAttributes(final RegistryEvent.Register<EntityType<?>> event){
         //event.getRegistry().register(POTAT_TYPE);
         //GlobalEntityTypeAttributes.put((EntityType<? extends LivingEntity>) POTAT_TYPE, MashlingEntity.setCustomAttributes().create());
-
-        event.getRegistry().register(FIREFLY_TYPE);
-        GlobalEntityTypeAttributes.put((EntityType<? extends LivingEntity>) FIREFLY_TYPE, FireflyEntity.setCustomAttributes().build());
+        GlobalEntityTypeAttributes.put(ORANGE_TRADER.get(), MobEntity.createMobAttributes().build());
+        GlobalEntityTypeAttributes.put(FIREFLY_TYPE.get(), FireflyEntity.setCustomAttributes().build());
     }
 
     /*
@@ -136,27 +157,38 @@ public class Registry {
             .setRegistryName(POTAT_NAME);
     //public static final RegistryObject<Item> POTAT_SPAWN_EGG = ITEMS.register(POTAT_NAME+"_spawn_egg",()-> new SpawnEggItem(POTAT_TYPE,  -5048018, -14409439, //-4784384, -16777216,
      //       new Item.Properties().group(getTab(ItemGroup.MISC,POTAT_NAME))));
-
+    */
     //entities
 
+
+    //orange trader
     public static final String ORANGE_TRADER_NAME = "orange_trader";
-    public static final EntityType<?> ORANGE_TRADER = (EntityType.Builder.create(FireflyEntity::new, EntityClassification.AMBIENT)
-            .setShouldReceiveVelocityUpdates(true).setTrackingRange(128).setUpdateInterval(3)
-            .size(0.3125f, 1f))
-            .build(FIREFLY_NAME)
-            .setRegistryName(FIREFLY_NAME);
-    public static final RegistryObject<Item> FIREFLY_SPAWN_EGG_ITEM = ITEMS.register(FIREFLY_NAME+"_spawn_egg",()-> new SpawnEggItem(FIREFLY_TYPE,  -5048018, -14409439, //-4784384, -16777216,
-            new Item.Properties().group(getTab(ItemGroup.MISC,FI
-    */
+    public static final RegistryObject<EntityType<OrangeTraderEntity>> ORANGE_TRADER = ENTITIES.register(ORANGE_TRADER_NAME,()-> (
+            EntityType.Builder.<OrangeTraderEntity>of(OrangeTraderEntity::new, EntityClassification.CREATURE)
+                .setShouldReceiveVelocityUpdates(true).clientTrackingRange(10).setUpdateInterval(3)
+                .sized(0.6F, 1.95F))
+            .build(ORANGE_TRADER_NAME));
+    public static final RegistryObject<ContainerType<OrangeMerchantContainer>> ORANGE_TRADER_CONTAINER = CONTAINERS
+            .register(ORANGE_TRADER_NAME,()-> IForgeContainerType.create(OrangeMerchantContainer::new));
+
+    //label
+    public static final String LABEL_NAME = "label";
+    public static final RegistryObject<EntityType<LabelEntity>> LABEL = ENTITIES.register(LABEL_NAME,()->(
+            EntityType.Builder.<LabelEntity>of(LabelEntity::new, EntityClassification.MISC)
+                    .setCustomClientFactory(LabelEntity::new)
+                    .sized(0.5F, 0.5F).clientTrackingRange(10).updateInterval(10))
+            .build(LABEL_NAME));
 
     //firefly
     public static final String FIREFLY_NAME = "firefly";
-    public static final EntityType<?> FIREFLY_TYPE = (EntityType.Builder.of(FireflyEntity::new, EntityClassification.AMBIENT)
-            .setShouldReceiveVelocityUpdates(true).setTrackingRange(128).setUpdateInterval(3)
+    public static final EntityType<FireflyEntity> FIREFLY_TYPE_RAW = (EntityType.Builder.of(FireflyEntity::new, EntityClassification.AMBIENT)
+            .setShouldReceiveVelocityUpdates(true).setTrackingRange(12).setUpdateInterval(3)
             .sized(0.3125f, 1f))
-            .build(FIREFLY_NAME)
-            .setRegistryName(FIREFLY_NAME);
-    public static final RegistryObject<Item> FIREFLY_SPAWN_EGG_ITEM = ITEMS.register(FIREFLY_NAME+"_spawn_egg",()-> new SpawnEggItem(FIREFLY_TYPE,  -5048018, -14409439, //-4784384, -16777216,
+            .build(FIREFLY_NAME);
+
+    public static final RegistryObject<EntityType<FireflyEntity>> FIREFLY_TYPE = ENTITIES.register(FIREFLY_NAME,()->FIREFLY_TYPE_RAW);
+
+    public static final RegistryObject<Item> FIREFLY_SPAWN_EGG_ITEM = ITEMS.register(FIREFLY_NAME+"_spawn_egg",()-> new SpawnEggItem(FIREFLY_TYPE_RAW,  -5048018, -14409439, //-4784384, -16777216,
             new Item.Properties().tab(getTab(ItemGroup.TAB_MISC,FIREFLY_NAME))));
 
 
@@ -283,7 +315,6 @@ public class Registry {
                     .strength(2f, 6f)
                     .requiresCorrectToolForDrops()
                     .harvestTool(ToolType.PICKAXE)
-                    .noOcclusion()
     ));
     public static final RegistryObject<Item> PLANTER_ITEM = ITEMS.register(PLANTER_NAME,()-> new BlockItem(PLANTER.get(),
             new Item.Properties().tab(getTab(ItemGroup.TAB_DECORATIONS,PLANTER_NAME))
@@ -652,7 +683,7 @@ public class Registry {
                     .dropsLike(SCONCE_ENDER.get())
                     .sound(SoundType.LANTERN), ENDERGETIC_FLAME));
     public static final RegistryObject<Item> SCONCE_ITEM_ENDER = ITEMS.register(SCONCE_NAME_ENDER,()-> new WallOrFloorItem(SCONCE_ENDER.get(), SCONCE_WALL_ENDER.get(),
-            (new Item.Properties()).tab(ModList.get().isLoaded("endergetic")?(getTab(ItemGroup.TAB_DECORATIONS,SCONCE_NAME_ENDER)):null)
+            (new Item.Properties()).tab(getTab("endergetic",ItemGroup.TAB_DECORATIONS,SCONCE_NAME_ENDER))
     ));
 
     //green
@@ -732,18 +763,6 @@ public class Registry {
     ));
     public static final RegistryObject<Item> COG_BLOCK_ITEM = ITEMS.register(COG_BLOCK_NAME,()-> new BlockItem(COG_BLOCK.get(),
             new Item.Properties().tab(getTab(ItemGroup.TAB_REDSTONE,COG_BLOCK_NAME))
-    ));
-
-    //stone lamp
-
-    public static final String STONE_LAMP_NAME = "stone_lamp";
-    public static final RegistryObject<Block> STONE_LAMP = BLOCKS.register(STONE_LAMP_NAME,()-> new Block(
-            AbstractBlock.Properties.of(Material.STONE,MaterialColor.COLOR_YELLOW)
-                    .strength(1.5f, 6f)
-                    .lightLevel((s) -> 15)
-                    .sound(SoundType.STONE)));
-    public static final RegistryObject<Item> STONE_LAMP_ITEM = ITEMS.register(STONE_LAMP_NAME,()-> new BlockItem(STONE_LAMP.get(),
-            (new Item.Properties()).tab(getTab(ItemGroup.TAB_DECORATIONS,STONE_LAMP_NAME))
     ));
 
     //cage
@@ -1046,12 +1065,21 @@ public class Registry {
     public static final RegistryObject<Item> CHECKER_BLOCK_ITEM = ITEMS.register(CHECKER_BLOCK_NAME,()-> new BlockItem(CHECKER_BLOCK.get(),
             (new Item.Properties()).tab(getTab(ItemGroup.TAB_BUILDING_BLOCKS, CHECKER_BLOCK_NAME))
     ));
+    //slab
     public static final String CHECKER_SLAB_NAME = "checker_slab";
     public static final RegistryObject<Block> CHECKER_SLAB = BLOCKS.register(CHECKER_SLAB_NAME,()-> new SlabBlock(
             AbstractBlock.Properties.copy(CHECKER_BLOCK.get()))
     );
     public static final RegistryObject<Item> CHECKER_SLAB_ITEM = ITEMS.register(CHECKER_SLAB_NAME,()-> new BlockItem(CHECKER_SLAB.get(),
             (new Item.Properties()).tab(getTab(ItemGroup.TAB_BUILDING_BLOCKS, CHECKER_BLOCK_NAME))
+    ));
+    //vertical slab
+    public static final String CHECKER_VERTICAL_SLAB_NAME = "checker_vertical_slab";
+    public static final RegistryObject<Block> CHECKER_VERTICAL_SLAB = BLOCKS.register(CHECKER_VERTICAL_SLAB_NAME,()-> new VerticalSlabBlock(
+            AbstractBlock.Properties.copy(CHECKER_BLOCK.get()))
+    );
+    public static final RegistryObject<Item> CHECKER_VERTICAL_SLAB_ITEM = ITEMS.register(CHECKER_VERTICAL_SLAB_NAME,()-> new BlockItem(CHECKER_VERTICAL_SLAB.get(),
+            (new Item.Properties()).tab(getTab("quark",ItemGroup.TAB_BUILDING_BLOCKS, CHECKER_VERTICAL_SLAB_NAME))
     ));
 
     //pancakes
@@ -1135,6 +1163,165 @@ public class Registry {
             AbstractBlock.Properties.copy(STRUCTURE_TEMP.get())));
     public static final RegistryObject<TileEntityType<BlockGeneratorBlockTile>> BLOCK_GENERATOR_TILE = TILES.register(BLOCK_GENERATOR_NAME,()-> TileEntityType.Builder.of(
             BlockGeneratorBlockTile::new, BLOCK_GENERATOR.get()).build(null));
+
+    //sticks
+    public static final String STICK_NAME = "stick";
+    public static final RegistryObject<Block> STICK_BLOCK = BLOCKS.register(STICK_NAME,()-> new StickBlock(
+            AbstractBlock.Properties.of(Material.WOOD, MaterialColor.WOOD)
+                    .strength(0.25F, 0F)
+                    .sound(SoundType.WOOD))
+    );
+    public static final RegistryObject<Item> STICK_BLOCK_ITEM = ITEMS.register(STICK_NAME,()-> new BlockItem(STICK_BLOCK.get(),
+            (new Item.Properties()).tab(null)
+    ));
+    //blaze rod
+    public static final String BLAZE_ROD_NAME = "blaze_rod";
+    //TODO: blaze sound
+    public static final RegistryObject<Block> BLAZE_ROD_BLOCK = BLOCKS.register(BLAZE_ROD_NAME,()-> new BlazeRodBlock(
+            AbstractBlock.Properties.of(Material.STONE, MaterialColor.COLOR_YELLOW)
+                    .strength(0.25F, 0F)
+                    .harvestTool(ToolType.PICKAXE)
+                    .lightLevel(state->12)
+                    .emissiveRendering((p,w,s)->true)
+                    .sound(SoundType.GILDED_BLACKSTONE))
+    );
+    public static final RegistryObject<Item> BLAZE_ROD_ITEM = ITEMS.register(BLAZE_ROD_NAME,()-> new BlockItem(BLAZE_ROD_BLOCK.get(),
+            (new Item.Properties()).tab(null)
+    ));
+
+    //daub
+    public static final String DAUB_NAME = "daub";
+    public static final RegistryObject<Block> DAUB = BLOCKS.register(DAUB_NAME,()-> new Block(
+            AbstractBlock.Properties.of(Material.STONE,MaterialColor.SNOW)
+                    .strength(1.5f, 3f)
+    ));
+    public static final RegistryObject<Item> DAUB_ITEM = ITEMS.register(DAUB_NAME,()-> new BlockItem(DAUB.get(),
+            (new Item.Properties()).tab(getTab(ItemGroup.TAB_BUILDING_BLOCKS,DAUB_NAME))
+    ));
+    //wattle and daub
+    //frame
+    public static final String DAUB_FRAME_NAME = "daub_frame";
+    public static final RegistryObject<Block> DAUB_FRAME = BLOCKS.register(DAUB_FRAME_NAME,()-> new Block(
+            AbstractBlock.Properties.copy(DAUB.get())));
+    public static final RegistryObject<Item> DAUB_FRAME_ITEM = ITEMS.register(DAUB_FRAME_NAME,()-> new BlockItem(DAUB_FRAME.get(),
+            (new Item.Properties()).tab(getTab(ItemGroup.TAB_BUILDING_BLOCKS,DAUB_NAME))));
+    //brace
+    public static final String DAUB_BRACE_NAME = "daub_brace";
+    public static final RegistryObject<Block> DAUB_BRACE = BLOCKS.register(DAUB_BRACE_NAME,()-> new FlippedBlock(
+            AbstractBlock.Properties.copy(DAUB.get())));
+    public static final RegistryObject<Item> DAUB_BRACE_ITEM = ITEMS.register(DAUB_BRACE_NAME,()-> new BlockItem(DAUB_BRACE.get(),
+            (new Item.Properties()).tab(getTab(ItemGroup.TAB_BUILDING_BLOCKS,DAUB_NAME))));
+    //cross brace
+    public static final String DAUB_CROSS_BRACE_NAME = "daub_cross_brace";
+    public static final RegistryObject<Block> DAUB_CROSS_BRACE = BLOCKS.register(DAUB_CROSS_BRACE_NAME,()-> new Block(
+            AbstractBlock.Properties.copy(DAUB.get())));
+    public static final RegistryObject<Item> DAUB_CROSS_BRACE_ITEM = ITEMS.register(DAUB_CROSS_BRACE_NAME,()-> new BlockItem(DAUB_CROSS_BRACE.get(),
+            (new Item.Properties()).tab(getTab(ItemGroup.TAB_BUILDING_BLOCKS,DAUB_NAME))));
+    //timber frame
+    public static final String TIMBER_FRAME_NAME = "timber_frame";
+    public static final RegistryObject<Block> TIMBER_FRAME = BLOCKS.register(TIMBER_FRAME_NAME,()-> new FrameBlock(
+            AbstractBlock.Properties.of(Material.WOOD,MaterialColor.WOOD)
+                    .strength(1f, 2f)
+                    .dynamicShape()
+                    .sound(SoundType.SCAFFOLDING),DAUB_FRAME));
+    public static final RegistryObject<Item> TIMBER_FRAME_ITEM = ITEMS.register(TIMBER_FRAME_NAME,()-> new BurnableBlockItem(TIMBER_FRAME.get(),
+            (new Item.Properties()).tab(getTab(ItemGroup.TAB_BUILDING_BLOCKS,TIMBER_FRAME_NAME)),200));
+
+    //timber brace
+    public static final String TIMBER_BRACE_NAME = "timber_brace";
+    public static final RegistryObject<Block> TIMBER_BRACE = BLOCKS.register(TIMBER_BRACE_NAME,()-> new FrameBraceBlock(
+            AbstractBlock.Properties.copy(TIMBER_FRAME.get()),DAUB_BRACE));
+    public static final RegistryObject<Item> TIMBER_BRACE_ITEM = ITEMS.register(TIMBER_BRACE_NAME,()-> new BurnableBlockItem(TIMBER_BRACE.get(),
+            (new Item.Properties()).tab(getTab(ItemGroup.TAB_BUILDING_BLOCKS,TIMBER_FRAME_NAME)),200));
+
+    //timber cross brace
+    public static final String TIMBER_CROSS_BRACE_NAME = "timber_cross_brace";
+    public static final RegistryObject<Block> TIMBER_CROSS_BRACE = BLOCKS.register(TIMBER_CROSS_BRACE_NAME,()-> new FrameBlock(
+            AbstractBlock.Properties.copy(TIMBER_FRAME.get()),DAUB_CROSS_BRACE));
+    public static final RegistryObject<Item> TIMBER_CROSS_BRACE_ITEM = ITEMS.register(TIMBER_CROSS_BRACE_NAME,()-> new BurnableBlockItem(TIMBER_CROSS_BRACE.get(),
+            (new Item.Properties()).tab(getTab(ItemGroup.TAB_BUILDING_BLOCKS,TIMBER_FRAME_NAME)),200));
+    public static final RegistryObject<TileEntityType<FrameBlockTile>> TIMBER_FRAME_TILE = TILES.register(TIMBER_FRAME_NAME,()-> TileEntityType.Builder.of(
+            FrameBlockTile::new, TIMBER_FRAME.get(),TIMBER_CROSS_BRACE.get(),TIMBER_BRACE.get()).build(null));
+
+    //stone lamp
+    public static final String STONE_LAMP_NAME = "stone_lamp";
+    public static final RegistryObject<Block> STONE_LAMP = BLOCKS.register(STONE_LAMP_NAME,()-> new Block(
+            AbstractBlock.Properties.of(Material.STONE,MaterialColor.COLOR_YELLOW)
+                    .strength(1.5f, 6f)
+                    .lightLevel((s) -> 15)
+                    .sound(SoundType.STONE)));
+    public static final RegistryObject<Item> STONE_LAMP_ITEM = ITEMS.register(STONE_LAMP_NAME,()-> new BlockItem(STONE_LAMP.get(),
+            (new Item.Properties()).tab(getTab(ItemGroup.TAB_BUILDING_BLOCKS,STONE_LAMP_NAME))
+    ));
+    //stone tile
+    public static final String STONE_TILE_NAME = "stone_tile";
+    public static final RegistryObject<Block> STONE_TILE = BLOCKS.register(STONE_TILE_NAME,()-> new Block(
+            AbstractBlock.Properties.copy(Blocks.STONE_BRICKS))
+    );
+    public static final RegistryObject<Item> STONE_TILE_ITEM = ITEMS.register(STONE_TILE_NAME,()-> new BlockItem(STONE_TILE.get(),
+            (new Item.Properties()).tab(getTab(ItemGroup.TAB_BUILDING_BLOCKS, STONE_TILE_NAME))
+    ));
+    //slab
+    public static final String STONE_TILE_SLAB_NAME = "stone_tile_slab";
+    public static final RegistryObject<Block> STONE_TILE_SLAB = BLOCKS.register(STONE_TILE_SLAB_NAME,()-> new SlabBlock(
+            AbstractBlock.Properties.copy(STONE_TILE.get()))
+    );
+    public static final RegistryObject<Item> STONE_TILE_SLAB_ITEM = ITEMS.register(STONE_TILE_SLAB_NAME,()-> new BlockItem(STONE_TILE_SLAB.get(),
+            (new Item.Properties()).tab(getTab(ItemGroup.TAB_BUILDING_BLOCKS, STONE_TILE_NAME))
+    ));
+    //vertical slab
+    public static final String STONE_TILE_VERTICAL_SLAB_NAME = "stone_tile_vertical_slab";
+    public static final RegistryObject<Block> STONE_TILE_VERTICAL_SLAB = BLOCKS.register(STONE_TILE_VERTICAL_SLAB_NAME,()-> new VerticalSlabBlock(
+            AbstractBlock.Properties.copy(STONE_TILE.get()))
+    );
+    public static final RegistryObject<Item> STONE_TILE_VERTICAL_SLAB_ITEM = ITEMS.register(STONE_TILE_VERTICAL_SLAB_NAME,()-> new BlockItem(STONE_TILE_VERTICAL_SLAB.get(),
+            (new Item.Properties()).tab(getTab("quark",ItemGroup.TAB_BUILDING_BLOCKS, STONE_TILE_NAME))
+    ));
+
+    //blackstone lamp
+    public static final String BLACKSTONE_LAMP_NAME = "blackstone_lamp";
+    public static final RegistryObject<Block> BLACKSTONE_LAMP = BLOCKS.register(BLACKSTONE_LAMP_NAME,()-> new Block(
+            AbstractBlock.Properties.of(Material.STONE,MaterialColor.COLOR_YELLOW)
+                    .strength(1.5f, 6f)
+                    .lightLevel((s) -> 15)
+                    .sound(SoundType.STONE)));
+    public static final RegistryObject<Item> BLACKSTONE_LAMP_ITEM = ITEMS.register(BLACKSTONE_LAMP_NAME,()-> new BlockItem(BLACKSTONE_LAMP.get(),
+            (new Item.Properties()).tab(getTab(ItemGroup.TAB_BUILDING_BLOCKS,STONE_LAMP_NAME))
+    ));
+    //blackstone tile
+    public static final String BLACKSTONE_TILE_NAME = "blackstone_tile";
+    public static final RegistryObject<Block> BLACKSTONE_TILE = BLOCKS.register(BLACKSTONE_TILE_NAME,()-> new Block(
+            AbstractBlock.Properties.copy(Blocks.BLACKSTONE))
+    );
+    public static final RegistryObject<Item> BLACKSTONE_TILE_ITEM = ITEMS.register(BLACKSTONE_TILE_NAME,()-> new BlockItem(BLACKSTONE_TILE.get(),
+            (new Item.Properties()).tab(getTab(ItemGroup.TAB_BUILDING_BLOCKS, STONE_TILE_NAME))
+    ));
+    //slab
+    public static final String BLACKSTONE_TILE_SLAB_NAME = "blackstone_tile_slab";
+    public static final RegistryObject<Block> BLACKSTONE_TILE_SLAB = BLOCKS.register(BLACKSTONE_TILE_SLAB_NAME,()-> new SlabBlock(
+            AbstractBlock.Properties.copy(BLACKSTONE_TILE.get()))
+    );
+    public static final RegistryObject<Item> BLACKSTONE_TILE_SLAB_ITEM = regBlockItem(BLACKSTONE_TILE_SLAB,
+            getTab(ItemGroup.TAB_BUILDING_BLOCKS, STONE_TILE_NAME));
+    //vertical slab
+    public static final String BLACKSTONE_TILE_VERTICAL_SLAB_NAME = "blackstone_tile_vertical_slab";
+    public static final RegistryObject<Block> BLACKSTONE_TILE_VERTICAL_SLAB = BLOCKS.register(BLACKSTONE_TILE_VERTICAL_SLAB_NAME,()-> new VerticalSlabBlock(
+            AbstractBlock.Properties.copy(BLACKSTONE_TILE.get()))
+    );
+    public static final RegistryObject<Item> BLACKSTONE_TILE_VERTICAL_SLAB_ITEM = regBlockItem(BLACKSTONE_TILE_VERTICAL_SLAB,
+           getTab("quark",ItemGroup.TAB_BUILDING_BLOCKS, STONE_TILE_NAME));
+
+
+    //flower box
+    public static final String FLOWER_BOX_NAME = "flower_box";
+    public static final RegistryObject<Block> FLOWER_BOX = BLOCKS.register(FLOWER_BOX_NAME,()-> new FlowerBoxBlock(
+            AbstractBlock.Properties.copy(Blocks.SPRUCE_TRAPDOOR))
+    );
+    public static final RegistryObject<Item> FLOWER_BOX_ITEM = regBlockItem(FLOWER_BOX, getTab(ItemGroup.TAB_DECORATIONS, FLOWER_BOX_NAME));
+
+    public static final RegistryObject<TileEntityType<FlowerBoxBlockTile>> FLOWER_BOX_TILE = TILES.register(FLOWER_BOX_NAME,()-> TileEntityType.Builder.of(
+            FlowerBoxBlockTile::new, FLOWER_BOX.get()).build(null));
+
 
     /*
     public static final String REDSTONE_DRIVER_NAME = "redstone_driver";

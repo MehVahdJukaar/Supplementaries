@@ -27,13 +27,16 @@ public class BlockProperties {
     public static final EnumProperty<RopeAttachment> CONNECTION_EAST = EnumProperty.create("east_connection", RopeAttachment.class);
     public static final EnumProperty<RopeAttachment> CONNECTION_WEST = EnumProperty.create("west_connection", RopeAttachment.class);
     public static final BooleanProperty KNOT = BooleanProperty.create("knot");
-    public static final IntegerProperty POISON = IntegerProperty.create("poison", 0, 15);
     public static final BooleanProperty TIPPED = BooleanProperty.create("tipped");
     public static final IntegerProperty PANCAKES_1_8 = IntegerProperty.create("pancakes", 1, 8);
-    public static final BooleanProperty HAS_HONEY = BooleanProperty.create("has_honey");
     public static final EnumProperty<Topping> TOPPING = EnumProperty.create("topping",Topping.class);
     public static final EnumProperty<Winding> WINDING = EnumProperty.create("winding",Winding.class);
     public static final BooleanProperty FLIPPED = BooleanProperty.create("flipped");
+    public static final BooleanProperty AXIS_Y = BooleanProperty.create("axis_y");
+    public static final BooleanProperty AXIS_X = BooleanProperty.create("axis_x");
+    public static final BooleanProperty AXIS_Z = BooleanProperty.create("axis_z");
+    public static final BooleanProperty FLOOR = BooleanProperty.create("floor");
+    public static final BooleanProperty LAVALOGGED = BooleanProperty.create("lavalogged");
 
     public enum RopeAttachment implements IStringSerializable{
 

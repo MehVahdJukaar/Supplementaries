@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.items;
 
+import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -87,7 +88,7 @@ public class Flute extends Item {
         String s  = target.getType().getRegistryName().toString();
         if((c==null||!c.contains("Pet")) && (target instanceof TameableEntity && ((TameableEntity) target).isTame() &&
                 ((TameableEntity) target).getOwnerUUID().equals(playerIn.getUUID())) ||
-                ServerConfigs.cached.FLUTE_EXTRA_MOBS.contains(target.getType().getRegistryName().toString())) {
+                ModTags.isTagged(ModTags.FLUTE_PET, target.getType()) ) {
             if(target instanceof AbstractHorseEntity && !((AbstractHorseEntity) target).isTamed())return ActionResultType.PASS;
             //if(target instanceof FoxEntity && ! ((FoxEntity)target).isTrustedUUID(p_213497_1_.getUniqueID())return ActionResultType.PASS;
             CompoundNBT com = new CompoundNBT();

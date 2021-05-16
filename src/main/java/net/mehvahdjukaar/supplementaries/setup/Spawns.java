@@ -6,7 +6,6 @@ import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.entities.FireflyEntity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
-import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.MobSpawnInfo;
@@ -34,7 +33,7 @@ public class Spawns {
                     if (ServerConfigs.spawn.FIREFLY_MOD_WHITELIST.get().contains(modbiomes) ||
                             ServerConfigs.spawn.FIREFLY_BIOMES.get().contains(biomeres.toString())) {
                         event.getSpawns().getSpawner(EntityClassification.AMBIENT).add(new MobSpawnInfo.Spawners(
-                                Registry.FIREFLY_TYPE, ServerConfigs.spawn.FIREFLY_WEIGHT.get(),
+                                Registry.FIREFLY_TYPE.get(), ServerConfigs.spawn.FIREFLY_WEIGHT.get(),
                                 ServerConfigs.spawn.FIREFLY_MIN.get(),
                                 ServerConfigs.spawn.FIREFLY_MAX.get()));
                     }
@@ -47,7 +46,7 @@ public class Spawns {
     public static void registerSpawningStuff(){
 
         if(RegistryConfigs.reg.FIREFLY_ENABLED.get()) {
-            EntitySpawnPlacementRegistry.register((EntityType<FireflyEntity>) Registry.FIREFLY_TYPE, EntitySpawnPlacementRegistry.PlacementType.NO_RESTRICTIONS,
+            EntitySpawnPlacementRegistry.register(Registry.FIREFLY_TYPE.get(), EntitySpawnPlacementRegistry.PlacementType.NO_RESTRICTIONS,
                     Heightmap.Type.MOTION_BLOCKING, FireflyEntity::canSpawnOn);
         }
     }

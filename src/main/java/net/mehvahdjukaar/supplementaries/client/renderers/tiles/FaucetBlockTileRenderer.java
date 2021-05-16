@@ -16,6 +16,7 @@ import net.minecraft.util.ResourceLocation;
 
 
 public class FaucetBlockTileRenderer extends TileEntityRenderer<FaucetBlockTile> {
+    private final Minecraft minecraft = Minecraft.getInstance();
     public FaucetBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
     }
@@ -23,9 +24,9 @@ public class FaucetBlockTileRenderer extends TileEntityRenderer<FaucetBlockTile>
     @Override
     public void render(FaucetBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int light,
                        int ov) {
-        if (tile.hasWater() && tile.isOpen() && !tile.hasFluidTankBelow() && !CommonUtil.FESTIVITY.isEarthDay()) {
+        if (tile.hasWater() && tile.isOpen() && !tile.isConnectedBelow() && !CommonUtil.FESTIVITY.isEarthDay()) {
             ResourceLocation texture = tile.fluidHolder.getFluid().getFlowingTexture();
-            TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(texture);
+            TextureAtlasSprite sprite = minecraft.getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(texture);
             IVertexBuilder builder = bufferIn.getBuffer(RenderType.translucentMovingBlock());
             int color = tile.fluidHolder.getTintColor();
             int luminosity = tile.fluidHolder.getFluid().getLuminosity();

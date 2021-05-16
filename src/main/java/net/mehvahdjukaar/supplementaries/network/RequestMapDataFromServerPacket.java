@@ -47,13 +47,15 @@ public class RequestMapDataFromServerPacket {
                     ItemStack stack = ((IMapDisplay)tileentity).getMapStack();
                     PlayerEntity player = world.getPlayerByUUID(message.id);
                     if(stack.getItem() instanceof FilledMapItem){
-                        MapData data =  FilledMapItem.getSavedData(stack, world);
-                        FilledMapItem map = (FilledMapItem)stack.getItem();
-                        data.tickCarriedBy(player, stack);
-                        map.update(world, player, data);
-                        IPacket<?> ipacket = map.getUpdatePacket(stack, world, player);
-                        if (ipacket != null && player instanceof ServerPlayerEntity) {
-                            ((ServerPlayerEntity)player).connection.send(ipacket);
+                        MapData data =  FilledMapItem.getOrCreateSavedData(stack, world);
+                        if(data!=null) {
+                            FilledMapItem map = (FilledMapItem) stack.getItem();
+                            data.tickCarriedBy(player, stack);
+                            map.update(world, player, data);
+                            IPacket<?> ipacket = map.getUpdatePacket(stack, world, player);
+                            if (ipacket != null && player instanceof ServerPlayerEntity) {
+                                ((ServerPlayerEntity) player).connection.send(ipacket);
+                            }
                         }
                     }
                 }

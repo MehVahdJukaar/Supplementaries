@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "111",
+    "   ",
+    "   "
+  ],
+  "key": {
+    "1": {
+      "item": "supplementaries:blackstone_tile"
+    }
+  },
+  "result": {
+    "item": "supplementaries:blackstone_tile_slab",
+    "count": 6
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "stone_tile"
+    }
+  ]
+}

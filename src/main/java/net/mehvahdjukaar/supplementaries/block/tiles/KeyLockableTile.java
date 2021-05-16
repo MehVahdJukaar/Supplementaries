@@ -1,7 +1,8 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
+import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
+import net.mehvahdjukaar.supplementaries.compat.curios.SupplementariesCuriosPlugin;
 import net.mehvahdjukaar.supplementaries.items.KeyItem;
-import net.mehvahdjukaar.supplementaries.plugins.curios.SupplementariesCuriosPlugin;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -15,7 +16,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
@@ -50,8 +50,7 @@ public class KeyLockableTile extends TileEntity {
 
     public static boolean isKeyInInventory(PlayerEntity player, String key, String translName){
 
-        if(ModList.get().isLoaded("curios") &&
-                SupplementariesCuriosPlugin.isKeyInCurio(player, key, translName))return true;
+        if(CompatHandler.curios && SupplementariesCuriosPlugin.isKeyInCurio(player, key, translName))return true;
 
         AtomicReference<IItemHandler> itemHandler = new AtomicReference<>();
         player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent(itemHandler::set);

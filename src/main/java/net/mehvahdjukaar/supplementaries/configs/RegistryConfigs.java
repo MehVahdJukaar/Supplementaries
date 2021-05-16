@@ -105,6 +105,11 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue BOMB_ENABLED;
         public static ForgeConfigSpec.BooleanValue MAGMA_CREAM_BLOCK_ENABLED;
         public static ForgeConfigSpec.BooleanValue CRIMSON_LANTERN_ENABLED;
+        public static ForgeConfigSpec.BooleanValue STICK_ENABLED;
+        public static ForgeConfigSpec.BooleanValue ROD_ENABLED;
+        public static ForgeConfigSpec.BooleanValue DAUB_ENABLED;
+        public static ForgeConfigSpec.BooleanValue TIMBER_FRAME_ENABLED;
+        public static ForgeConfigSpec.BooleanValue TILE_ENABLED;
 
         public static ForgeConfigSpec.BooleanValue JAR_TAB;
         public static ForgeConfigSpec.BooleanValue CREATIVE_TAB;
@@ -124,7 +129,7 @@ public class RegistryConfigs {
                 return false;
             }
             if(path.equals(Registry.FLAG_NAME)){
-                return false;
+                return true;
             }
 
 
@@ -219,10 +224,16 @@ public class RegistryConfigs {
             BOMB_ENABLED = builder.define(Registry.BOMB_NAME,true);
             CRIMSON_LANTERN_ENABLED = builder.define(Registry.CRIMSON_LANTERN_NAME,true);
             MAGMA_CREAM_BLOCK_ENABLED = builder.define(Registry.MAGMA_CREAM_BLOCK_NAME,true);
+            STICK_ENABLED = builder.define(Registry.STICK_NAME,true);
+            ROD_ENABLED = builder.define(Registry.BLAZE_ROD_NAME,true);
+            DAUB_ENABLED = builder.define(Registry.DAUB_NAME,true);
+            TIMBER_FRAME_ENABLED = builder.define(Registry.DAUB_NAME,true);
+            FLAG_ENABLED = builder.define(Registry.FLAG_NAME, true);
+            TILE_ENABLED = builder.define(Registry.STONE_TILE_NAME,true);
 
             LASER_ENABLED = builder.comment("WIP")
                     .define(Registry.LASER_NAME, false);
-            FLAG_ENABLED = builder.define(Registry.FLAG_NAME, false);
+
             builder.pop();
 
             builder.push("entities");

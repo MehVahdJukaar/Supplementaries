@@ -3,17 +3,18 @@ package net.mehvahdjukaar.supplementaries.events;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.gui.ConfigButton;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
+import net.minecraft.item.Items;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 
 
@@ -36,6 +37,10 @@ public class ClientEvents {
         }
         else if(ServerConfigs.cached.DOUBLE_CAKE_PLACEMENT && CommonUtil.isCake(i)){
             event.getToolTip().add(new TranslationTextComponent("message.supplementaries.double_cake").withStyle(TextFormatting.GRAY).withStyle(TextFormatting.ITALIC));
+        }
+        else if((ServerConfigs.cached.PLACEABLE_STICKS && i == Items.STICK) ||
+                (ServerConfigs.cached.PLACEABLE_RODS && i == Items.BLAZE_ROD)){
+            event.getToolTip().add(new TranslationTextComponent("message.supplementaries.sticks").withStyle(TextFormatting.GRAY).withStyle(TextFormatting.ITALIC));
         }
     }
 
@@ -79,7 +84,7 @@ public class ClientEvents {
     @SubscribeEvent
     public static void onGuiInit(GuiScreenEvent.InitGuiEvent event) {
         if(!ClientConfigs.cached.CONFIG_BUTTON)return;
-        if(!ModList.get().isLoaded("configured"))return;
+        if(!CompatHandler.configured)return;
         ConfigButton.setupConfigButton(event);
 
     }

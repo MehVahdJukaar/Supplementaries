@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "supplementaries:block/blackstone_tile"
+    }
+  }
+}

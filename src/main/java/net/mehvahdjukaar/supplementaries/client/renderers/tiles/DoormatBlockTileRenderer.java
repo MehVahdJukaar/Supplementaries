@@ -23,19 +23,9 @@ public class DoormatBlockTileRenderer extends TileEntityRenderer<DoormatBlockTil
                        int combinedOverlayIn) {
 
         matrixStackIn.pushPose();
-        //rotate towards direction
-        //if(tile.getBlockState().get(HangingSignBlock.HANGING))matrixStackIn.translate(0,0.125, 0);
+
         matrixStackIn.translate(0.5, 0, 0.5);
         matrixStackIn.mulPose(tile.getDirection().getOpposite().getRotation());
-        //matrixStackIn.rotate(Const.XN90);
-
-        //animation
-
-        //matrixStackIn.translate(-0.5, -0.875, -0.5);
-        //render block
-        //matrixStackIn.translate(0.5, 0.5 - 0.1875, 0.5);
-        //matrixStackIn.rotate(Const.YN90);
-
 
         // render text
         FontRenderer fontrenderer = this.renderer.getFont();
@@ -45,11 +35,8 @@ public class DoormatBlockTileRenderer extends TileEntityRenderer<DoormatBlockTil
         int l = (int) ((double) NativeImage.getB(i) * 0.4D);
         int i1 = NativeImage.combine(0, l, k, j);
 
-
-
         matrixStackIn.translate(0, 0, -0.0625 - 0.005);
         matrixStackIn.scale(0.010416667F, 0.010416667F, -0.010416667F);
-
 
         for(int k1 = 0; k1 < MAXLINES; ++k1) {
             IReorderingProcessor ireorderingprocessor = tile.textHolder.getRenderText(k1, (p_243502_1_) -> {
@@ -61,7 +48,6 @@ public class DoormatBlockTileRenderer extends TileEntityRenderer<DoormatBlockTil
                 fontrenderer.drawInBatch(ireorderingprocessor, f3, (float)(k1 * 15 - 20), i1, false, matrixStackIn.last().pose(), bufferIn, false, 0, combinedLightIn);
             }
         }
-
 
         matrixStackIn.popPose();
     }

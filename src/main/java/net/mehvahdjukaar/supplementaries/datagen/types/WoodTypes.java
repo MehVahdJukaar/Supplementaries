@@ -10,6 +10,7 @@ public class WoodTypes {
     public static final Map<String,IWoodType> TYPES = new HashMap<>();
 
     static {
+
         for (IWoodType w : VanillaWoodTypes.values()){
             TYPES.put(w.toNBT(),w);
         }
@@ -110,6 +111,15 @@ public class WoodTypes {
             TYPES.put(w.toNBT(),w);
         }
         for (IWoodType w : BiomesoplentyWoodTypes.values()){
+            TYPES.put(w.toNBT(),w);
+        }
+        for (IWoodType w : MowzieMobsWoodTypes.values()){
+            TYPES.put(w.toNBT(),w);
+        }
+        for (IWoodType w : TwilightForestWoodTypes.values()){
+            TYPES.put(w.toNBT(),w);
+        }
+        for (IWoodType w : UndergardenWoodTypes.values()){
             TYPES.put(w.toNBT(),w);
         }
 

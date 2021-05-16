@@ -2,5 +2,8 @@
   "replace": false,
   "values": [
     "supplementaries:planter"
+  ],
+  "optional": [
+    "supplementaries:planter_rich"
   ]
 }

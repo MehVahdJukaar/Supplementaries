@@ -4,6 +4,7 @@ import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
 
 public class Const {
+
     public static final Quaternion Y180 = Vector3f.YP.rotationDegrees(180);
     public static final Quaternion Y90 = Vector3f.YP.rotationDegrees(90);
     public static final Quaternion Y45 = Vector3f.YP.rotationDegrees(45);

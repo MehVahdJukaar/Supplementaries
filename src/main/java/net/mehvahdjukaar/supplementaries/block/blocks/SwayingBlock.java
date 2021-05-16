@@ -39,7 +39,7 @@ public abstract class SwayingBlock extends Block implements IWaterLoggable {
         }
         return facing == stateIn.getValue(FACING).getOpposite()?  !stateIn.canSurvive(worldIn, currentPos)
                 ? Blocks.AIR.defaultBlockState()
-                : this.getConnectedState(stateIn,facingState, worldIn,facingPos) : stateIn;
+                : getConnectedState(stateIn,facingState, worldIn,facingPos) : stateIn;
     }
 
     @Override

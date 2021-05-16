@@ -4,6 +4,9 @@ import net.mehvahdjukaar.supplementaries.block.blocks.HourGlassBlock;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.model.BakedQuad;
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.MissingTextureSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -16,9 +19,13 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.Tags;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.stream.IntStream;
 
 import static net.mehvahdjukaar.supplementaries.common.Textures.*;
@@ -53,10 +60,10 @@ public class HourGlassBlockTile extends ItemDisplayTile implements ITickableTile
         this.progress=p;
     }
 
-
+    @OnlyIn(Dist.CLIENT)
     public TextureAtlasSprite getOrCreateSprite(){
         if(this.cachedTexture==null){
-            this.cachedTexture = this.sandType.getSprite(this.getItem(0).getItem());
+            this.cachedTexture = this.sandType.getSprite(this.getDisplayedItem(),this.level);
         }
         return this.cachedTexture;
     }
@@ -193,7 +200,7 @@ public class HourGlassBlockTile extends ItemDisplayTile implements ITickableTile
             return 0;
         }
 
-        public TextureAtlasSprite getSprite(Item i){
+        public TextureAtlasSprite getBlockSprite(Item i){
             ResourceLocation reg = i.getRegistryName();
             if(this==SAND||this==FORGE_DUST){
                 ResourceLocation texture;
@@ -220,6 +227,22 @@ public class HourGlassBlockTile extends ItemDisplayTile implements ITickableTile
                 return sprite;
             }
             return Minecraft.getInstance().getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(this.texture);
+        }
+
+        public TextureAtlasSprite getSprite(ItemStack i, World world){
+            Minecraft mc = Minecraft.getInstance();
+            if(this==FORGE_DUST){
+                ItemRenderer itemRenderer = mc.getItemRenderer();
+                IBakedModel ibakedmodel = itemRenderer.getModel(i, world, null);
+                List<BakedQuad> quads = ibakedmodel.getQuads(null,null,null);
+                if(quads.size()>0) {
+                    TextureAtlasSprite sprite = quads.get(0).getSprite();
+                    if (sprite instanceof MissingTextureSprite)
+                        sprite = mc.getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(this.texture);
+                    return sprite;
+                }
+            }
+            return mc.getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(this.texture);
         }
 
         public boolean isSand(){

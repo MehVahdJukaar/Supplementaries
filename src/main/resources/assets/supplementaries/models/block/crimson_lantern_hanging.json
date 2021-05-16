@@ -1,0 +1,9 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "supplementaries:blocks/crimson_lantern_front",
+		"1": "supplementaries:blocks/crimson_lantern_bottom",
+		"2": "supplementaries:blocks/crimson_lantern_top",
+		"particle": "supplementaries:blocks/crimson_lantern_front"
+	}
+}

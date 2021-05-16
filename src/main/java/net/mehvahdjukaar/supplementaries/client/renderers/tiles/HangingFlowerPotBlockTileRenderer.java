@@ -18,15 +18,16 @@ import net.minecraft.util.math.vector.Vector3f;
 
 
 public class HangingFlowerPotBlockTileRenderer extends TileEntityRenderer<HangingFlowerPotBlockTile> {
+    protected final BlockRendererDispatcher blockRenderer;
     public HangingFlowerPotBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
+        blockRenderer = Minecraft.getInstance().getBlockRenderer();
     }
 
     @Override
     public void render(HangingFlowerPotBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
 
-        BlockRendererDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
         BlockState state = CommonUtil.FESTIVITY.isAprilsFool()? FlowerPotHelper.getAprilPot() : tile.pot;
         BlockState state2 = tile.getBlockState().setValue(HangingFlowerPotBlock.TILE,true);
 

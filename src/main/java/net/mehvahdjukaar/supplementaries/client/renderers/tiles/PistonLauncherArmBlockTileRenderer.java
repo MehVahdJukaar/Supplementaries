@@ -18,10 +18,11 @@ import net.minecraftforge.client.model.data.EmptyModelData;
 
 
 public class PistonLauncherArmBlockTileRenderer extends TileEntityRenderer<PistonLauncherArmBlockTile> {
-
+    private final BlockRendererDispatcher blockRenderer;
 
     public PistonLauncherArmBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
+        blockRenderer = Minecraft.getInstance().getBlockRenderer();
     }
 
     @Override
@@ -33,7 +34,6 @@ public class PistonLauncherArmBlockTileRenderer extends TileEntityRenderer<Pisto
         matrixStackIn.mulPose(Const.X180);
         matrixStackIn.translate(-0.5, -0.5, -0.5);
         matrixStackIn.translate(0, MathHelper.lerp(partialTicks, tile.prevOffset, tile.offset), 0);
-        BlockRendererDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
         boolean flag1 = tile.getExtending() == tile.age < 2;
         BlockState state = Registry.PISTON_LAUNCHER_HEAD.get().defaultBlockState().setValue(PistonLauncherHeadBlock.FACING, Direction.UP).setValue(BlockStateProperties.SHORT, flag1);
         //RendererUtil.renderBlockPlus(state, matrixStackIn, bufferIn, blockRenderer, tile.getWorld(), tile.getPos());

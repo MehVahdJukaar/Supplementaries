@@ -1,0 +1,9 @@
+{
+  "variants": {
+    "type=north": { "model": "supplementaries:block/checker_vertical_slab", "y": 0, "uvlock": true },
+    "type=south": { "model": "supplementaries:block/checker_vertical_slab", "y": 180, "uvlock": true },
+    "type=east": { "model": "supplementaries:block/checker_vertical_slab2", "y": 90, "uvlock": true },
+    "type=west": { "model": "supplementaries:block/checker_vertical_slab2", "y": 270, "uvlock": true },
+    "type=double": { "model": "supplementaries:block/checker_block" }
+  }
+}

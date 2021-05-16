@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.configs;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.block.util.CapturedMobs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -12,7 +11,6 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -58,7 +56,6 @@ public class ServerConfigs {
         public static ForgeConfigSpec.ConfigValue<String> ROPE_ARROW_ROPE;
         public static ForgeConfigSpec.IntValue FLUTE_RADIUS;
         public static ForgeConfigSpec.IntValue FLUTE_DISTANCE;
-        public static ForgeConfigSpec.ConfigValue<List<? extends String>> FLUTE_EXTRA_MOBS;
 
 
         private static void init(ForgeConfigSpec.Builder builder){
@@ -76,8 +73,6 @@ public class ServerConfigs {
                     .defineInRange("unbound_radius",64, 0, 500);
             FLUTE_DISTANCE = builder.comment("max distance at which a bound flute will allow a pet to teleport")
                     .defineInRange("bound_distance",64, 0, 500);
-            FLUTE_EXTRA_MOBS = builder.comment("additional non tameable entities that you can bind to flutes")
-                    .defineList("flute_extra_mobs", Arrays.asList("minecraft:horse","minecraft:llama","minecraft:mule","minecraft:donkey","minecraft:fox"),s->true);
 
             builder.pop();
 
@@ -97,6 +92,8 @@ public class ServerConfigs {
         public static ForgeConfigSpec.ConfigValue<List<? extends String>> WALL_LANTERN_BLACKLIST;
         public static ForgeConfigSpec.BooleanValue BELL_CHAIN;
         public static ForgeConfigSpec.IntValue BELL_CHAIN_LENGTH;
+        public static ForgeConfigSpec.BooleanValue PLACEABLE_STICKS;
+        public static ForgeConfigSpec.BooleanValue PLACEABLE_RODS;
 
         private static void init(ForgeConfigSpec.Builder builder){
             builder.comment("Vanilla tweaks")
@@ -138,6 +135,13 @@ public class ServerConfigs {
                     .defineInRange("chain_length",16,0,1024);
             builder.pop();
 
+            builder.push("placeable_sticks");
+            PLACEABLE_STICKS = builder.comment("allow placeable sticks")
+                    .define("enabled",true);
+            PLACEABLE_RODS = builder.comment("allow placeable blaze rods")
+                    .define("enabled",true);
+            builder.pop();
+
 
             builder.pop();
         }
@@ -167,11 +171,6 @@ public class ServerConfigs {
         public static ForgeConfigSpec.IntValue JAR_CAPACITY;
         public static ForgeConfigSpec.BooleanValue JAR_EAT;
 
-        public static ForgeConfigSpec.ConfigValue<List<? extends String>> MOB_JAR_ALLOWED_MOBS;
-        public static ForgeConfigSpec.ConfigValue<List<? extends String>> MOB_JAR_TINTED_ALLOWED_MOBS;
-
-        public static ForgeConfigSpec.ConfigValue<List<? extends String>> CAGE_ALLOWED_MOBS;
-        public static ForgeConfigSpec.ConfigValue<List<? extends String>> CAGE_ALLOWED_BABY_MOBS;
         public static ForgeConfigSpec.BooleanValue CAGE_ALL_MOBS;
         public static ForgeConfigSpec.BooleanValue CAGE_ALL_BABIES;
 
@@ -185,7 +184,10 @@ public class ServerConfigs {
         public static ForgeConfigSpec.BooleanValue SAFE_SIMPLE;
 
         public static ForgeConfigSpec.BooleanValue BLACKBOARD_COLOR;
+
         public static ForgeConfigSpec.IntValue CANDLE_HOLDER_LIGHT;
+
+        public static ForgeConfigSpec.BooleanValue REPLACE_DAUB;
 
         private static void  init(ForgeConfigSpec.Builder builder){
 
@@ -194,8 +196,8 @@ public class ServerConfigs {
 
             //globe
             builder.push("globe");
-            GLOBE_TRADES = builder.comment("how many globe trades to give to the wandering trader. If you have mods that add more trades to him you might want to increase this so it's not as rare")
-                    .defineInRange("trades",2,0,50);
+            GLOBE_TRADES = builder.comment("how many globe trades to give to the wandering trader. This will effectively increase the chance of him having a globe trader. Increase this if you have other mods that add stuff to that trader")
+                    .defineInRange("chance",2,0,50);
             GLOBE_TREASURE_CHANCHE = builder.comment("chanche of finding a globe in a shipwreck treasure chest.")
                     .defineInRange("shipwreck_treasure_chance",0.25,0,1);
             builder.pop();
@@ -251,59 +253,10 @@ public class ServerConfigs {
                     "Disable if you think this ability is op. Cookies are excluded")
                     .define("drink_from_jar",true);
 
-            List<String> jarMobs = Arrays.asList("minecraft:slime", "minecraft:bee","minecraft:magma_cube",
-                    "iceandfire:pixie","alexsmobs:fly", "alexsmobs:hummingbird","alexsmobs:cockroach","terraincognita:butterfly",
-                    "buzzierbees:honey_slime", "mysticalworld:frog","mysticalworld:beetle","mysticalworld:silkworm",
-                    "druidcraft:lunar_moth", "druidcraft:dreadfish","swampexpansion:slabfish",
-                    "endergetic:puff_bug", "betterendforge:end_slime", "betterendforge:dragonfly", "betterendforge:silk_moth",
-                    "savageandravage:creepie","betteranimalsplus:butterfly","whisperwoods:moth","fins:river_pebble_snail",
-                    "tconstruct:sky_slime","twilightforest:maze_slime");
-            List<String> jarMobsAndFishes = new ArrayList<>(jarMobs);
-            jarMobsAndFishes.addAll(CapturedMobs.getFishes());
-            MOB_JAR_ALLOWED_MOBS = builder.comment("catchable mobs \n"+
-                    "due to a vanilla bug some mobs might not render correctly or at all")
-                    .defineList("mobs", jarMobsAndFishes,s -> true);
-            List<String> tintedMobs = new ArrayList<>(jarMobs);
-            tintedMobs.addAll(Arrays.asList("minecraft:endermite","minecraft:vex","alexsmobs:mimicube"));
-            List<String> tintedMobsAndFishes = new ArrayList<>(tintedMobs);
-            tintedMobsAndFishes.addAll(CapturedMobs.getFishes());
-            MOB_JAR_TINTED_ALLOWED_MOBS = builder.comment("tinted jar catchable mobs")
-                    .defineList("tinted_jar_mobs", tintedMobsAndFishes,s -> true);
             builder.pop();
 
             //cage
-            builder.comment("I haven't tested most of the mods included here. let me know if they work")
-                    .push("cage");
-            List<String> cageMobs = new ArrayList<>(tintedMobs);
-            List<String> additionalCageMobs = Arrays.asList("minecraft:parrot","minecraft:rabbit", "minecraft:cat", "minecraft:chicken",
-                    "minecraft:bat","minecraft:fox","minecraft:ocelot",
-                    "alexsmobs:roadrunner", "alexsmobs:rattlesnake", "alexsmobs:lobster", "alexsmobs:capuchin_monkey",
-                    "mysticalworld:silver_fox", "mysticalworld:sprout", "mysticalworld:endermini", "mysticalworld:lava_cat",
-                    "mysticalworld:owl","mysticalworld:hell_sprout",
-                    "quark:toretoise", "quark:crab", "quark:foxhound", "quark:stoneling", "quark:frog","rats:rat",
-                    "rats:piper", "rats:plague_doctor", "rats:black_death", "rats:plague_cloud", "rats:plague_beast", "rats:rat_king",
-                    "rats:demon_rat", "rats:ratlantean_spirit", "rats:ratlantean_automation", "rats:feral_ratlantean", "rats:neo_ratlantean",
-                    "rats:pirat", "rats:ghost_pirat", "rats:dutchrat", "rats:ratfish", "rats:ratlantean_ratbot", "rats:rat_baron",
-                    "goblintraders:goblin_trader", "goblintraders:vein_goblin_trader",
-                    "autumnity:snail","betteranimalsplus:lammergeier","betteranimalsplus:songbird",
-                    "betteranimalsplus:pheasant", "betteranimalsplus:squirrel", "betteranimalsplus:badger", "betteranimalsplus:turkey",
-                    "exoticbirds:roadrunner","exoticbirds:hummingbird","exoticbirds:woodpecker","exoticbirds:kingfisher",
-                    "exoticbirds:toucan","exoticbirds:macaw","exoticbirds:magpie", "exoticbirds:kiwi", "exoticbirds:owl",
-                    "exoticbirds:gouldianfinch", "exoticbirds:gull", "exoticbirds:pigeon", "exoticbirds:penguin", "exoticbirds:duck",
-                    "exoticbirds:booby", "exoticbirds:cardinal", "exoticbirds:bluejay", "exoticbirds:robin", "exoticbirds:kookaburra",
-                    "exoticbirds:budgerigar", "exoticbirds:cockatoo","swampexpansion:slabfish",
-                    "betteranimalsplus:horseshoecrab", "betteranimalsplus:crab", "whisperwoods:wisp",
-                    "undergarden:muncher", "undergarden:scintling", "undergarden:rotling",  "undergarden:sploogie",
-                    "dungeonsmod:crow", "dungeonsmod:anthermite", "pandoras_creatures:crab",
-                    "twilightforest:raven", "twilightforest:bunny", "twilightforest:penguin", "twilightforest:tiny_bird", "twilightforest:squirrel", "twilightforest:kobold", "twilightforest:death_tome",
-                    "environmental:duck", "environmental:cardinal", "environmental:fennec_fox", "environmental:slabfish", "environmental:penguin",
-                    "fins:flatback_leaf_snail","fins:penglil", "fins:river_pebble_snail", "fins:siderol_whiskered_snail", "fins:red_bull_crab", "fins:white_bull_crab");
-            cageMobs.addAll(additionalCageMobs);
-            CAGE_ALLOWED_MOBS = builder.comment("catchable mobs")
-                    .defineList("cage_mobs", cageMobs,s -> true);
-            List<String> cageBabyMobs = Arrays.asList("minecraft:cow","minecraft:sheep","minecraft:pig","alexsmobs:crocodile", "alexsmobs:endergrade", "alexsmobs:gazelle", "alexsmobs:gorilla", "alexsmobs:komodo_dragon", "alexsmobs:raccoon", "alexsmobs:seal", "alexsmobs:warped_toad");
-            CAGE_ALLOWED_BABY_MOBS = builder.comment("additional mobs that you'll be able to catch with the added condition that it has to be a baby variant. No need to include the ones already in cage_mobs")
-                    .defineList("cage_baby_mobs", cageBabyMobs,s -> true);
+            builder.push("cage");
             CAGE_ALL_MOBS = builder.comment("allow all entities to be captured by cages and jars. Not meant for survival")
                     .define("cage_allow_all_mobs", false);
             CAGE_ALL_BABIES = builder.comment("allow all baby mobs to be captured by cages")
@@ -341,6 +294,13 @@ public class ServerConfigs {
             builder.push("candle_holder");
             CANDLE_HOLDER_LIGHT = builder.comment("candle holder light level")
                     .defineInRange("light_level",12,1,15);
+
+
+            builder.pop();
+
+            builder.push("timber_frame");
+            REPLACE_DAUB = builder.comment("replace a timber frame with wattle and daub when daub is placed in it")
+                    .define("replace_daub",true);
 
 
             builder.pop();
@@ -393,12 +353,12 @@ public class ServerConfigs {
             builder.pop();
 
             builder.push("structures");
-            builder.push("road_sign");
+            builder.push("way_sign");
             //TODO: redo
             ROAD_SIGN_DISTANCE_AVR = builder.comment("average distance apart in chunks between spawn attempts")
-                    .defineInRange("average_distance",18,0,200);
-            ROAD_SIGN_DISTANCE_MIN = builder.comment("minimum distance apart in chunks between spawn attempts")
-                    .defineInRange("minimum_distance",9,0,200);
+                    .defineInRange("average_distance",19,0,1001);
+            ROAD_SIGN_DISTANCE_MIN = builder.comment("minimum distance apart in chunks between spawn attempts. 1001 to disable them entirely")
+                    .defineInRange("minimum_distance",10,0,1001);
 
 
             DISTANCE_TEXT = builder.comment("with this option road signs will display the distance to the structure that they are pointing to")
@@ -453,7 +413,6 @@ public class ServerConfigs {
         public static Block ROPE_ARROW_BLOCK;
         public static int FLUTE_RADIUS;
         public static int FLUTE_DISTANCE;
-        public static List<? extends String> FLUTE_EXTRA_MOBS;
         //tweaks
         public static boolean DIRECTIONAL_CAKE;
         public static boolean DOUBLE_CAKE_PLACEMENT;
@@ -463,6 +422,8 @@ public class ServerConfigs {
         public static List<? extends String> WALL_LANTERN_BLACKLIST;
         public static boolean BELL_CHAIN;
         public static int BELL_CHAIN_LENGTH;
+        public static boolean PLACEABLE_STICKS;
+        public static boolean PLACEABLE_RODS;
         //spawns
         public static int FIREFLY_MIN;
         public static int FIREFLY_MAX;
@@ -487,10 +448,6 @@ public class ServerConfigs {
         public static int JAR_CAPACITY;
         public static boolean JAR_EAT;
         public static boolean NOTICE_BOARDS_UNRESTRICTED;
-        public static List<? extends String> MOB_JAR_ALLOWED_MOBS;
-        public static List<? extends String> MOB_JAR_TINTED_ALLOWED_MOBS;
-        public static List<? extends String> CAGE_ALLOWED_MOBS;
-        public static List<? extends String> CAGE_ALLOWED_BABY_MOBS;
         public static boolean CAGE_ALL_MOBS;
         public static boolean CAGE_ALL_BABIES;
         public static int SACK_INCREMENT;
@@ -502,17 +459,19 @@ public class ServerConfigs {
         public static double GLOBE_TREASURE_CHANCE;
         public static boolean BLACKBOARD_COLOR;
         public static int CANDLE_HOLDER_LIGHT;
+        public static boolean REPLACE_DAUB;
         //entity
         public static int FIREFLY_PERIOD;
         public static double FIREFLY_SPEED;
 
         public static void refresh(){
+            PLACEABLE_RODS = tweaks.PLACEABLE_RODS.get();
+            PLACEABLE_STICKS = tweaks.PLACEABLE_STICKS.get();
             ROPE_ARROW_ROPE = item.ROPE_ARROW_ROPE.get();
             ROPE_ARROW_BLOCK = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ROPE_ARROW_ROPE));
             if(ROPE_ARROW_BLOCK == Blocks.AIR)ROPE_ARROW_BLOCK = Registry.ROPE.get();
             FLUTE_DISTANCE = item.FLUTE_DISTANCE.get();
             FLUTE_RADIUS = item.FLUTE_RADIUS.get();
-            FLUTE_EXTRA_MOBS = item.FLUTE_EXTRA_MOBS.get();
 
             DIRECTIONAL_CAKE = tweaks.DIRECTIONAL_CAKE.get();
             DOUBLE_CAKE_PLACEMENT = tweaks.DOUBLE_CAKE_PLACEMENT.get();
@@ -555,11 +514,6 @@ public class ServerConfigs {
 
             NOTICE_BOARDS_UNRESTRICTED = block.NOTICE_BOARDS_UNRESTRICTED.get();
 
-            MOB_JAR_ALLOWED_MOBS = block.MOB_JAR_ALLOWED_MOBS.get();
-            MOB_JAR_TINTED_ALLOWED_MOBS = block.MOB_JAR_TINTED_ALLOWED_MOBS.get();
-
-            CAGE_ALLOWED_MOBS = block.CAGE_ALLOWED_MOBS.get();
-            CAGE_ALLOWED_BABY_MOBS = block.CAGE_ALLOWED_BABY_MOBS.get();
             CAGE_ALL_MOBS = block.CAGE_ALL_MOBS.get();
             CAGE_ALL_BABIES = block.CAGE_ALL_BABIES.get();
 
@@ -573,6 +527,8 @@ public class ServerConfigs {
             BLACKBOARD_COLOR = block.BLACKBOARD_COLOR.get();
 
             CANDLE_HOLDER_LIGHT = block.CANDLE_HOLDER_LIGHT.get();
+
+            REPLACE_DAUB = block.REPLACE_DAUB.get();
 
             FIREFLY_PERIOD = entity.FIREFLY_PERIOD.get();
             FIREFLY_SPEED = entity.FIREFLY_SPEED.get();

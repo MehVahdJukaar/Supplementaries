@@ -1,0 +1,37 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:slime",
+    "minecraft:bee",
+    "minecraft:magma_cube",
+    "minecraft:endermite",
+    "minecraft:vex"
+  ],
+  "optional": [
+    "alexsmobs:enderiophage",
+    "alexsmobs:mimicube",
+    "iceandfire:pixie",
+    "alexsmobs:fly",
+    "alexsmobs:hummingbird",
+    "alexsmobs:cockroach",
+    "terraincognita:butterfly",
+    "buzzierbees:honey_slime",
+    "mysticalworld:frog",
+    "mysticalworld:beetle",
+    "mysticalworld:silkworm",
+    "druidcraft:lunar_moth",
+    "druidcraft:dreadfish",
+    "swampexpansion:slabfish",
+    "endergetic:puff_bug",
+    "betterendforge:end_slime",
+    "betterendforge:dragonfly",
+    "betterendforge:silk_moth",
+    "savageandravage:creepie",
+    "betteranimalsplus:butterfly",
+    "whisperwoods:moth",
+    "fins:river_pebble_snail",
+    "tconstruct:sky_slime",
+    "twilightforest:maze_slime"
+  ]
+}
+

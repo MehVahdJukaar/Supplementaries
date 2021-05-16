@@ -15,7 +15,7 @@ public class Materials {
     public static final RenderMaterial BELLOWS_MATERIAL = new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, Textures.BELLOWS_TEXTURE);
 
     public static final Map<IWoodType, RenderMaterial> HANGING_SIGNS_MATERIAL = new HashMap<>();
-    public static final Map<IWoodType,RenderMaterial> SIGN_POSTS_MATERIAL = new HashMap<>();
+    public static final Map<IWoodType, RenderMaterial> SIGN_POSTS_MATERIAL = new HashMap<>();
     static {
         for(IWoodType type : WoodTypes.TYPES.values()){
             HANGING_SIGNS_MATERIAL.put(type, new RenderMaterial(Atlases.SIGN_SHEET, Textures.HANGING_SIGNS_TEXTURES.get(type)));

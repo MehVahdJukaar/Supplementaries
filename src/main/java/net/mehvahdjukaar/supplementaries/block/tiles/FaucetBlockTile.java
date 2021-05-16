@@ -80,7 +80,7 @@ public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
             }
             return false;
         }
-        else if(b instanceof BeehiveBlock){
+        else if(backState.hasProperty(BeehiveBlock.HONEY_LEVEL)){
             if(backState.getValue(BeehiveBlock.HONEY_LEVEL) > 0){
                 this.fluidHolder.fill(SoftFluidList.HONEY);
                 return true;
@@ -140,6 +140,16 @@ public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
     }
     //sf->ff/sf
     private boolean tryFillingBlockBelow(SoftFluid softFluid){
+        if(softFluid==SoftFluidList.HONEY && level.getBlockState(worldPosition.below()).hasProperty(BlockStateProperties.LEVEL_HONEY)){
+            BlockState state = level.getBlockState(worldPosition.below());
+            int h = state.getValue(BlockStateProperties.LEVEL_HONEY);
+            if(h<5){
+                level.setBlock(worldPosition.below(),state.setValue(BlockStateProperties.LEVEL_HONEY,h+1),3);
+                return true;
+            }
+            return false;
+        }
+
         TileEntity tileDown = level.getBlockEntity(worldPosition.below());
         if (tileDown instanceof JarBlockTile) {
             if(((JarBlockTile) tileDown).fluidHolder.tryAddingFluid(softFluid)){
@@ -172,17 +182,10 @@ public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
         Block backBlock = backState.getBlock();
         //TODO: optimize thiis
 
-
-
-
-
-
-
-
-
-        if (this.hasFluidTankBelow()){
-            if (backBlock instanceof BeehiveBlock && backState.getValue(BlockStateProperties.LEVEL_HONEY) > 0) {
+        if (this.isConnectedBelow()){
+            if (backState.hasProperty(BlockStateProperties.LEVEL_HONEY) && backState.getValue(BlockStateProperties.LEVEL_HONEY) > 0) {
                 if(tryFillingBlockBelow(SoftFluidList.HONEY)) {
+                    //TODO: support fulling beehives and honeypots
                     this.level.setBlock(behind, backState.setValue(BlockStateProperties.LEVEL_HONEY,
                             backState.getValue(BlockStateProperties.LEVEL_HONEY) - 1), 3);
                     return true;
@@ -299,7 +302,7 @@ public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
         return this.getBlockState().getValue(FaucetBlock.HAS_WATER);
     }
 
-    public boolean hasFluidTankBelow() {
+    public boolean isConnectedBelow() {
         return this.getBlockState().getValue(FaucetBlock.HAS_JAR);
     }
 
@@ -312,7 +315,7 @@ public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
         ItemStack itemstack = inventoryIn.getItem(index);
         // special case for jars. has to be done to prevent other hoppers
         // frominteracting with them cause canextractitems is always false
-        if (this.hasFluidTankBelow()) {
+        if (this.isConnectedBelow()) {
             return false;
         }
         else if (!itemstack.isEmpty() && canExtractItemFromSlot(inventoryIn, itemstack, index, direction)) {

@@ -1,7 +1,9 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
+import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.KeyLockableTile;
 import net.mehvahdjukaar.supplementaries.block.tiles.SafeBlockTile;
+import net.mehvahdjukaar.supplementaries.block.util.ILavaAndWaterLoggable;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.items.KeyItem;
 import net.minecraft.block.Block;
@@ -15,6 +17,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.monster.piglin.PiglinTasks;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.IInventory;
@@ -53,21 +56,23 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
-public class SafeBlock extends Block implements IWaterLoggable{
+public class SafeBlock extends Block implements ILavaAndWaterLoggable {
     public static final VoxelShape SHAPE = Block.box(1,0,1,15,16,15);
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+    public static final BooleanProperty LAVALOGGED = BlockProperties.LAVALOGGED;
     public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
 
     public SafeBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(OPEN, false).setValue(FACING, Direction.NORTH).setValue(WATERLOGGED,false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(OPEN, false)
+                .setValue(FACING, Direction.NORTH).setValue(WATERLOGGED,false).setValue(LAVALOGGED,false));
     }
 
     @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(OPEN,FACING,WATERLOGGED);
+        builder.add(OPEN,FACING,WATERLOGGED,LAVALOGGED);
     }
 
     //schedule block tick
@@ -90,13 +95,11 @@ public class SafeBlock extends Block implements IWaterLoggable{
     }
 
     @Override
-    public FluidState getFluidState(BlockState state) {
-        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
-    }
-
-    @Override
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
-        if (stateIn.getValue(WATERLOGGED)) {
+        if (stateIn.getValue(LAVALOGGED)) {
+            worldIn.getLiquidTicks().scheduleTick(currentPos, Fluids.LAVA, Fluids.LAVA.getTickDelay(worldIn));
+        }
+        else if (stateIn.getValue(WATERLOGGED)) {
             worldIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
         }
         return super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
@@ -104,8 +107,9 @@ public class SafeBlock extends Block implements IWaterLoggable{
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        boolean flag = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;
-        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite()).setValue(WATERLOGGED, flag);
+        Fluid fluid = context.getLevel().getFluidState(context.getClickedPos()).getType();
+        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite())
+                .setValue(WATERLOGGED, fluid == Fluids.WATER).setValue(LAVALOGGED, fluid == Fluids.LAVA);
     }
 
     @Override
@@ -396,5 +400,16 @@ public class SafeBlock extends Block implements IWaterLoggable{
     }
 
 
+    @Override
+    public FluidState getFluidState(BlockState state) {
+        if(state.getValue(LAVALOGGED))return Fluids.LAVA.getSource(false);
+        else if(state.getValue(WATERLOGGED))return Fluids.WATER.getSource(false);
+        return super.getFluidState(state);
+    }
+
+    @Override
+    public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
+        return state.getValue(LAVALOGGED) ? 15 : 0;
+    }
 
 }

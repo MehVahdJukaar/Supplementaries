@@ -7,13 +7,9 @@ import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.IWaterLoggable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.MobEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.pathfinding.PathType;
@@ -31,17 +27,15 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import java.util.List;
 
-public class WindVaneBlock extends Block implements IWaterLoggable {
+public class WindVaneBlock extends WaterBlock {
     protected static final VoxelShape SHAPE = VoxelShapes.box(0.125D, 0D, 0.125D, 0.875D, 1D, 0.875D);
 
     public static final BooleanProperty TILE = BlockProperties.TILE; // is it rooster only?
     public static final IntegerProperty POWER = BlockStateProperties.POWER;
-    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public WindVaneBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED,false).setValue(TILE, false).setValue(POWER, 0));
@@ -60,24 +54,10 @@ public class WindVaneBlock extends Block implements IWaterLoggable {
         return false;
     }
 
-
     //model=block model+ tile. animated=tile, inv=inv
     @Override
     public BlockRenderType getRenderShape(BlockState state) {
         return BlockRenderType.MODEL;
-    }
-
-    @Override
-    public FluidState getFluidState(BlockState state) {
-        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
-    }
-
-    @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
-        if (stateIn.getValue(WATERLOGGED)) {
-            worldIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
-        }
-        return stateIn;
     }
 
     public static void updatePower(BlockState bs, World world, BlockPos pos) {
@@ -120,7 +100,8 @@ public class WindVaneBlock extends Block implements IWaterLoggable {
 
     @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(POWER, TILE, WATERLOGGED);
+        super.createBlockStateDefinition(builder);
+        builder.add(POWER, TILE);
     }
 
     @Override
@@ -131,12 +112,6 @@ public class WindVaneBlock extends Block implements IWaterLoggable {
     @Override
     public PathNodeType getAiPathNodeType(BlockState state, IBlockReader world, BlockPos pos, MobEntity entity) {
         return PathNodeType.BLOCKED;
-    }
-
-    @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
-        boolean flag = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;
-        return this.defaultBlockState().setValue(WATERLOGGED, flag);
     }
 
     @Override

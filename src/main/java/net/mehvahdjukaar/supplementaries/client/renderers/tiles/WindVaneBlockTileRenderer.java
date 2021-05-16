@@ -18,8 +18,12 @@ import net.minecraft.util.math.vector.Vector3f;
 
 
 public class WindVaneBlockTileRenderer extends TileEntityRenderer<WindVaneBlockTile> {
+    private final BlockRendererDispatcher blockRenderer;
+    private final BlockState STATE;
     public WindVaneBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
+        blockRenderer = Minecraft.getInstance().getBlockRenderer();
+        STATE = Registry.WIND_VANE.get().defaultBlockState().setValue(WindVaneBlock.TILE, true);
     }
 
     @Override
@@ -29,10 +33,9 @@ public class WindVaneBlockTileRenderer extends TileEntityRenderer<WindVaneBlockT
         matrixStackIn.translate(0.5, 0.5, 0.5);
         matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(90 + MathHelper.lerp(partialTicks, tile.prevYaw, tile.yaw)));
         matrixStackIn.translate(-0.5, -0.5, -0.5);
-        BlockRendererDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
-        BlockState state = Registry.WIND_VANE.get().defaultBlockState().setValue(WindVaneBlock.TILE, true);
+
         //blockRenderer.renderBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
-        RendererUtil.renderBlockPlus(state, matrixStackIn, bufferIn, blockRenderer, tile.getLevel(), tile.getBlockPos(), RenderType.cutout());
+        RendererUtil.renderBlockPlus(STATE, matrixStackIn, bufferIn, blockRenderer, tile.getLevel(), tile.getBlockPos(), RenderType.cutout());
         matrixStackIn.popPose();
 
     }

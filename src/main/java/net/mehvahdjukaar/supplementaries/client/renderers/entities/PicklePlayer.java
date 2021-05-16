@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.entities;
 
 
+import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -724,11 +725,17 @@ public class PicklePlayer {
         private static final ImmutableList<UUID> DEVS = ImmutableList.of(
                 UUID.fromString("380df991-f603-344c-a090-369bad2a924a"),
                 UUID.fromString("898b3a39-e486-405c-a873-d6b472dc3ba2"),
-                UUID.fromString("720f165c-b066-4113-9622-63fc63c65696"));
+
+                UUID.fromString("720f165c-b066-4113-9622-63fc63c65696"),
+                UUID.fromString("5672a110-0d77-3aaa-b35c-3143bed23e33"),
+                UUID.fromString("df3aa2e6-b821-4c7d-8833-88be79a9079b"),
+                UUID.nameUUIDFromBytes(("OfflinePlayer:" + "TheEvilGolem").getBytes(Charsets.UTF_8)));
 
         public static final Map<UUID, PickleValues> PICKLE_PLAYERS = new HashMap<>();
 
         static{
+
+
             for(UUID id : DEVS)PICKLE_PLAYERS.put(id,new PickleValues());
         }
 

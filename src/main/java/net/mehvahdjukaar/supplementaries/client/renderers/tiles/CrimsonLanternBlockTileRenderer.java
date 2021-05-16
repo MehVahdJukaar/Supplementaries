@@ -8,8 +8,6 @@ import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.model.ModelRenderer;
@@ -22,6 +20,7 @@ import net.minecraft.util.math.vector.Vector3f;
 
 
 public class CrimsonLanternBlockTileRenderer extends EnhancedLanternBlockTileRenderer<OilLanternBlockTile> {
+
     public static final RenderMaterial GOLD_TEXTURE = new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, Textures.CRIMSON_LANTERN_TEXTURE);
     private final ModelRenderer gold = new ModelRenderer(16, 16, 0, 0);
     public CrimsonLanternBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
@@ -47,10 +46,6 @@ public class CrimsonLanternBlockTileRenderer extends EnhancedLanternBlockTileRen
         gold.addChild(cube_r3);
         cube_r3.yRot=-1.5708F;
         cube_r3.addBox(-2.0F, 0.0F, 2.0F, 4.0F, 5.0F, 0.0F, 0.0F, false);
-
-
-
-
 
     }
 
@@ -79,8 +74,10 @@ public class CrimsonLanternBlockTileRenderer extends EnhancedLanternBlockTileRen
             float yrot = MathHelper.lerp(partialTicks, tile.prevAngle * 1.5f, tile.angle * 1.5f);
             matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(yrot));
             matrixStackIn.translate(-0.5, -0.5625, -0.5);
-            BlockRendererDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
-            RendererUtil.renderBlockPlus(state, matrixStackIn, bufferIn, blockRenderer, tile.getLevel(), tile.getBlockPos());
+
+
+
+            RendererUtil.renderBlockPlus(state, matrixStackIn, bufferIn, blockRenderer, tile.getLevel(), tile.getBlockPos(), RenderType.cutout());
 
 
             IVertexBuilder builder = GOLD_TEXTURE.buffer(bufferIn, RenderType::entityCutoutNoCull);
@@ -92,7 +89,7 @@ public class CrimsonLanternBlockTileRenderer extends EnhancedLanternBlockTileRen
             float xrot = MathHelper.lerp(partialTicks, tile.prevAngle, tile.angle);
             matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(xrot));
             matrixStackIn.translate(-0.5, -0.75, -0.375);
-            BlockRendererDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
+
             RendererUtil.renderBlockPlus(state, matrixStackIn, bufferIn, blockRenderer, tile.getLevel(), tile.getBlockPos());
 
 

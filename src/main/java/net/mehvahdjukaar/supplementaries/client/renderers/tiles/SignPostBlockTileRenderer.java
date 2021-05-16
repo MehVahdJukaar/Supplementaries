@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.mehvahdjukaar.supplementaries.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.client.Materials;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
-import net.mehvahdjukaar.supplementaries.client.renderers.Lod;
+import net.mehvahdjukaar.supplementaries.client.renderers.LOD;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -28,6 +28,7 @@ import java.util.List;
 
 
 public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockTile> {
+    private final BlockRendererDispatcher blockRenderer;
     public static final ModelRenderer signModel = new ModelRenderer(64, 16, 0, 0);
    //TODO: make other tiles this way
     static {
@@ -39,6 +40,7 @@ public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockT
 
     public SignPostBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
+        blockRenderer = Minecraft.getInstance().getBlockRenderer();
    }
 
     @Override
@@ -48,7 +50,6 @@ public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockT
         BlockState fence = tile.fenceBlock;
         BlockPos pos = tile.getBlockPos();
         if(fence !=null){
-            BlockRendererDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
             RendererUtil.renderBlockPlus(fence, matrixStackIn, bufferIn, blockRenderer, tile.getLevel(), pos);
             //blockRenderer.renderBlock(fence, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
         }
@@ -58,7 +59,7 @@ public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockT
 
         //don't render signs from far away
 
-        Lod lod = new Lod(cameraPos,pos);
+        LOD lod = new LOD(cameraPos,pos);
 
         if(!lod.isFar())return;
 

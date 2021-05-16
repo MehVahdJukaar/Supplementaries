@@ -9,9 +9,10 @@ import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.BannerPattern;
 import net.minecraft.tileentity.BannerTileEntity;
-import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
@@ -24,7 +25,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class FlagBlockTile extends TileEntity implements ITickableTileEntity {
+public class FlagBlockTile extends TileEntity {
 
     //client side param
     public final float offset = 3f * (MathHelper.sin(this.worldPosition.getX()) + MathHelper.sin(this.worldPosition.getZ()));
@@ -53,7 +54,7 @@ public class FlagBlockTile extends TileEntity implements ITickableTileEntity {
 
     @OnlyIn(Dist.CLIENT)
     public void fromItem(ItemStack stack, DyeColor color) {
-        this.itemPatterns = getItemPatterns(stack);
+        this.itemPatterns = BannerTileEntity.getItemPatterns(stack);
         this.baseColor = color;
         this.patterns = null;
         this.receivedData = true;
@@ -62,33 +63,10 @@ public class FlagBlockTile extends TileEntity implements ITickableTileEntity {
     @OnlyIn(Dist.CLIENT)
     public List<Pair<BannerPattern, DyeColor>> getPatterns() {
         if (this.patterns == null && this.receivedData) {
-            this.patterns = createPatterns(this.getBaseColor(this::getBlockState), this.itemPatterns);
+            this.patterns = BannerTileEntity.createPatterns(this.getBaseColor(this::getBlockState), this.itemPatterns);
         }
-
         return this.patterns;
     }
-
-    //static stuff. might remove
-
-    @Nullable
-    public static ListNBT getItemPatterns(ItemStack stack) {
-        return BannerTileEntity.getItemPatterns(stack);
-    }
-
-    public static int getPatternCount(ItemStack stack) {
-        return BannerTileEntity.getPatternCount(stack);
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public static List<Pair<BannerPattern, DyeColor>> createPatterns(DyeColor color, @Nullable ListNBT nbt) {
-        return BannerTileEntity.createPatterns(color, nbt);
-    }
-
-    public static void removeLastPattern(ItemStack stack) {
-        BannerTileEntity.removeLastPattern(stack);
-    }
-
-    //
 
 
     public ItemStack getItem(BlockState state) {
@@ -129,28 +107,24 @@ public class FlagBlockTile extends TileEntity implements ITickableTileEntity {
         this.receivedData = true;
     }
 
+    @Override
+    public SUpdateTileEntityPacket getUpdatePacket() {
+        return new SUpdateTileEntityPacket(this.worldPosition, 0, this.getUpdateTag());
+    }
+
+    @Override
+    public CompoundNBT getUpdateTag() {
+        return this.save(new CompoundNBT());
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+        this.load(this.getBlockState(), pkt.getTag());
+    }
 
     @Override
     public double getViewDistance() {
-        return 96;
-    }
-
-    //TODO: do this in renderer
-    @Override
-    public void tick() {
-
-        if(!this.level.isClientSide){
-            int b = 1;
-        }
-        else{
-            int c = 1;
-        }
-
-        if(this.level.isClientSide) {
-            //TODO:cache?
-            //TODO: make long or float. wind vane too
-            this.counter = (this.level.getGameTime()%24000)+offset;
-        }
+        return 112;
     }
 
     @Override
@@ -159,8 +133,6 @@ public class FlagBlockTile extends TileEntity implements ITickableTileEntity {
         return new AxisAlignedBB(0.25,0, 0.25, 0.75, 1, 0.75).expandTowards(
                 dir.getStepX()*1.35f,0,dir.getStepZ()*1.35f).move(this.worldPosition);
     }
-
-
 
     public Direction getDirection() {
         return this.getBlockState().getValue(FlagBlock.FACING);

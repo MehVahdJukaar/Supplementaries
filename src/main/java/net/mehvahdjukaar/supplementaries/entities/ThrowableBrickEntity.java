@@ -49,7 +49,7 @@ public class ThrowableBrickEntity extends ProjectileItemEntity implements IRende
 
     @Override
     protected float getGravity() {
-        return 0.035F;
+        return 0.03F;
     }
 
     @Override
@@ -116,7 +116,7 @@ public class ThrowableBrickEntity extends ProjectileItemEntity implements IRende
     private void breakGlass(BlockPos pos, int chance){
         int c = chance -1 -this.random.nextInt(4);
         BlockState state = level.getBlockState(pos);
-
+        if(state.getBlock().getExplosionResistance()>3)return;
         if(c < 0 || !isGlass(state))return;
 
         level.destroyBlock(pos,true);

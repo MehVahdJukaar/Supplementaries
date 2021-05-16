@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
+import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.minecraft.block.*;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -16,6 +17,7 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraftforge.common.IPlantable;
+import vectorwing.farmersdelight.blocks.RichSoilBlock;
 
 public class PlanterBlock extends Block implements IWaterLoggable{
     protected static final VoxelShape SHAPE = VoxelShapes.or(VoxelShapes.box(0.125D, 0D, 0.125D, 0.875D, 0.687D, 0.875D), VoxelShapes.box(0D, 0.687D, 0D, 1D, 1D, 1D));
@@ -26,8 +28,8 @@ public class PlanterBlock extends Block implements IWaterLoggable{
 
     public PlanterBlock(Properties properties) {
         super(properties);
-
-        this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false).setValue(EXTENDED, false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false)
+                .setValue(EXTENDED, false));
     }
 
     @Override

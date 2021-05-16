@@ -64,6 +64,7 @@ public class HangingSignBlock extends SwayingBlock {
             }
             //not an else to allow to place dye items after coloring
             //place item
+            //TODO: return early for client. fix left hand(shield)
             if(handIn==Hand.MAIN_HAND) {
                 //remove
                 if (!te.isEmpty() && handItem.isEmpty()) {

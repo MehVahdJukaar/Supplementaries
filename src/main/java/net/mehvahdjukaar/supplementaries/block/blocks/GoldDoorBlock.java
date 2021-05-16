@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
-import net.mehvahdjukaar.supplementaries.plugins.quark.QuarkDoubleDoorPlugin;
+import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
+import net.mehvahdjukaar.supplementaries.compat.quark.QuarkDoubleDoorPlugin;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DoorBlock;
@@ -13,7 +14,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.ModList;
 
 public class GoldDoorBlock extends DoorBlock {
 
@@ -25,7 +25,7 @@ public class GoldDoorBlock extends DoorBlock {
     public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         if(state.getValue(POWERED))return ActionResultType.PASS;
 
-        if(ModList.get().isLoaded("quark")) QuarkDoubleDoorPlugin.openDoor(worldIn,state,pos);
+        if(CompatHandler.quark) QuarkDoubleDoorPlugin.openDoor(worldIn,state,pos);
 
         state = state.cycle(OPEN);
         worldIn.setBlock(pos, state, 10);

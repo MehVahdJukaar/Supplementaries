@@ -14,6 +14,7 @@ import net.minecraft.util.SoundEvents;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 public class SoftFluidList {
@@ -21,7 +22,7 @@ public class SoftFluidList {
     public static final HashMap<String,SoftFluid> ID_MAP = new HashMap<>();
     // filled item -> SoftFluid. need to handle potions separately since they map to same item id
     public static final HashMap<Item,SoftFluid> ITEM_MAP = new HashMap<>();
-    // fluid item -> SoftFluid
+    // forge fluid  -> SoftFluid
     public static final HashMap<Fluid,SoftFluid> FLUID_MAP = new HashMap<>();
 
     public static SoftFluid fromID(String id){
@@ -71,6 +72,7 @@ public class SoftFluidList {
                 .bottle(Items.HONEY_BOTTLE)
                 .textureOverrideF("create:honey")
                 .addEqFluid("create:honey")
+                .addEqFluid("cyclic:honey")
                 .addEqFluid("inspirations:honey"));
         MILK = makeSF(new SoftFluid.Builder(Textures.MILK_TEXTURE,Textures.POTION_TEXTURE_FLOW,"milk")
                 .bucket(Items.MILK_BUCKET)
@@ -122,11 +124,14 @@ public class SoftFluidList {
                 .bottle(Items.DRAGON_BREATH));
         XP = makeSF(new SoftFluid.Builder(Textures.XP_TEXTURE,Textures.XP_TEXTURE_FLOW,"experience")
                 .translationKey("fluid.supplementaries.experience")
+                .textureOverride("cyclic:xpjuice")
+                .addEqFluid("cyclic:xpjuice")
                 .bottle(Items.EXPERIENCE_BOTTLE));
         SLIME = makeSF(new SoftFluid.Builder(Textures.SLIME_TEXTURE,Textures.SLIME_TEXTURE,"slime")
                 .bottle(Items.SLIME_BALL)
                 .specialEmptyBottle(Items.AIR)
                 .emptySound(SoundEvents.SLIME_BLOCK_PLACE)
+                .addEqFluid("cyclic:slime")
                 .translationKey("fluid.supplementaries.slime"));
         DIRT = makeSF(new SoftFluid.Builder(Textures.DIRT_TEXTURE,Textures.DIRT_TEXTURE,"dirt")
                 .bottle(Items.DIRT)
@@ -393,11 +398,12 @@ public class SoftFluidList {
         for(SoftFluid s : custom){
             if(s==null)continue;
             ID_MAP.put(s.getID(),s);
-            if(s.hasBowl())tryAddItems(s.getBowls(),s);
-            if(s.hasBottle())tryAddItems(s.getBottles(),s);
-            if(s.hasBucket())tryAddItems(s.getBuckets(),s);
+            tryAddItems(s.getBowls(),s);
+            tryAddItems(s.getBottles(),s);
+            tryAddItems(s.getBuckets(),s);
         }
 
+        //adds forge fluids if they aren't already there
         //THIS IS HORRIBLE
         List<SoftFluid> forgeFluidsList = new ArrayList<>();
         for (Fluid f : ForgeRegistries.FLUIDS){
@@ -416,7 +422,7 @@ public class SoftFluidList {
                     }
                 }
                 if (eq) continue;
-                //is not equivalent: create new SoftFluid
+                //is not equivalent: create new SoftFluid from forge fluid
                 SoftFluid newSF = new SoftFluid(new SoftFluid.Builder(f));
                 tryAddItem(f.getBucket(), newSF);
                 FLUID_MAP.put(f, newSF);
@@ -427,8 +433,36 @@ public class SoftFluidList {
         for(SoftFluid s : forgeFluidsList){
             ID_MAP.put(s.getID(),s);
         }
+    }
 
 
+    //for modders
+    /**
+     * adds a jar soft fluid. can override existing registered fluids. try to call after I register my stuff.
+     * Use softFluidBuilder to make a soft fluid
+     * @return false if the newly added fluid overrote an existing soft fluid by having the same id
+     */
+    public static boolean registerModdedSoftFluid(@Nonnull SoftFluid newFluid){
+        boolean override = false;
+        if(ID_MAP.containsKey(newFluid.getID()))override=true;
+        ID_MAP.put(newFluid.getID(),newFluid);
+        boolean o;
+        o = tryAddingItemsStrong(newFluid.getBowls(),newFluid);
+        if(o)override=true;
+        o = tryAddingItemsStrong(newFluid.getBottles(),newFluid);
+        if(o)override=true;
+        o = tryAddingItemsStrong(newFluid.getBuckets(),newFluid);
+        if(o)override=true;
+        return override;
+    }
+
+    private static boolean tryAddingItemsStrong(Collection<Item> c, SoftFluid s){
+        boolean override = false;
+        for (Item i : c){
+            if(ITEM_MAP.containsKey(i))override = true;
+            ITEM_MAP.put(i,s);
+        }
+        return override;
     }
 
     private static void tryAddItems(Collection<Item> c, SoftFluid s){
@@ -443,10 +477,12 @@ public class SoftFluidList {
         }
     }
 
+    //gets a soft fluid from a forge fluid
     public static SoftFluid fromFluid(Fluid fluid){
         return FLUID_MAP.getOrDefault(fluid,EMPTY);
     }
 
+    //gets a soft fluid from an item
     public static SoftFluid fromItem(Item item){
         return ITEM_MAP.getOrDefault(item,EMPTY);
     }

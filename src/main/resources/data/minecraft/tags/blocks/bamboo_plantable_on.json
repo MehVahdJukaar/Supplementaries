@@ -1,6 +1,10 @@
 {
   "replace": false,
   "values": [
-    "supplementaries:fodder"
+    "supplementaries:fodder",
+    "supplementaries:planter"
+  ],
+  "optional": [
+    "supplementaries:planter_rich"
   ]
 }

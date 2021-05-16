@@ -11,7 +11,7 @@ issueTrackerURL="https://www.curseforge.com/minecraft/mc-mods/supplementaries/is
 
 modId="supplementaries" #mandatory
 
-version="1.16.5-0.12.0" #mandatory
+version="1.16.5-0.13.0" #mandatory
 
 displayName="Supplementaries" #mandatory
 
@@ -26,6 +26,8 @@ credits="put a book named 'credits' inside a notice board" #optional
 authors="MehVahdJukaar" #optional
 
 description='''Many functional and useful Vanilla+ blocks'''
+
+itemIcon="supplementaries:globe" #catalogue icon
 
 [[dependencies.supplementaries]] #optional
 

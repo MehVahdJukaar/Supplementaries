@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
+import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -24,7 +25,6 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.ModList;
 import vazkii.quark.api.IConditionalSticky;
 
 import javax.annotation.Nullable;
@@ -32,7 +32,6 @@ import java.util.List;
 
 public class MagmaCreamBlock extends BreakableBlock implements IConditionalSticky {
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
-    public static final boolean hasQuark = ModList.get().isLoaded("quark");
     public MagmaCreamBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.UP));
@@ -51,7 +50,7 @@ public class MagmaCreamBlock extends BreakableBlock implements IConditionalStick
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        if(hasQuark)return;
+        if(CompatHandler.quark)return;
         if(!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().options.advancedItemTooltips)return;
         tooltip.add(new TranslationTextComponent("message.supplementaries.magma_cream_block").withStyle(TextFormatting.ITALIC).withStyle(TextFormatting.GRAY));
     }

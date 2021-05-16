@@ -35,13 +35,16 @@ public abstract class ItemDisplayTile extends LockableLootTileEntity implements 
     //for server
     @Override
     public void setChanged() {
-        this.updateVisuals();
+        this.updateOnChanged();
         super.setChanged();
     }
 
-    public void updateVisuals(){
+    //TODO: this is shit. do it better
+    public void updateOnChanged(){
         this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
     }
+
+    public void updateClientVisuals(){}
 
     //TODO: use this
     public ItemStack getDisplayedItem(){
@@ -49,33 +52,45 @@ public abstract class ItemDisplayTile extends LockableLootTileEntity implements 
     }
 
     public void setDisplayedItem(ItemStack stack){
-        this.setItems(NonNullList.withSize(1, stack));
+        this.setItem(0,stack);
     }
 
     public ActionResultType interact(PlayerEntity player, Hand handIn){
+        return this.interact(player,handIn,0);
+    }
+
+    public ActionResultType interact(PlayerEntity player, Hand handIn, int slot){
         if(handIn==Hand.MAIN_HAND) {
             ItemStack handItem = player.getItemInHand(handIn);
             //remove
             if (!this.isEmpty() && handItem.isEmpty()) {
-                ItemStack it = this.removeItemNoUpdate(0);
+                ItemStack it = this.removeItemNoUpdate(slot);
                 if (!this.level.isClientSide()) {
                     player.setItemInHand(handIn, it);
                     this.setChanged();
                 }
+                else{
+                    //also update visuals on client. will get overwritten by packet tho
+                    this.updateClientVisuals();
+                }
                 return ActionResultType.sidedSuccess(this.level.isClientSide);
             }
             //place
-            else if (!handItem.isEmpty() && this.canPlaceItem(0, handItem)) {
+            else if (!handItem.isEmpty() && this.canPlaceItem(slot, handItem)) {
                 ItemStack it = handItem.copy();
                 it.setCount(1);
-                this.setDisplayedItem(it);
+                this.setItem(slot,it);
 
                 if (!player.isCreative()) {
                     handItem.shrink(1);
                 }
                 if (!this.level.isClientSide()) {
                     this.level.playSound(null, this.worldPosition, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundCategory.BLOCKS, 1.0F, this.level.random.nextFloat() * 0.10F + 0.95F);
-                    this.setChanged();
+                    //this.setChanged();
+                }
+                else{
+                    //also update visuals on client. will get overwritten by packet tho
+                    this.updateClientVisuals();
                 }
                 return ActionResultType.sidedSuccess(this.level.isClientSide);
             }
@@ -90,6 +105,7 @@ public abstract class ItemDisplayTile extends LockableLootTileEntity implements 
             this.stacks = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
         }
         ItemStackHelper.loadAllItems(compound, this.stacks);
+        this.updateClientVisuals();
     }
 
     @Override

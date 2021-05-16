@@ -143,7 +143,10 @@ public class NoticeBoardBlock extends Block {
         if(facing==stateIn.getValue(FACING)){
             TileEntity te = worldIn.getBlockEntity(currentPos);
             if(te instanceof NoticeBoardBlockTile){
-                ((NoticeBoardBlockTile)te).textVisible=!facingState.isFaceSturdy(worldIn,currentPos,facing.getOpposite());
+                //((NoticeBoardBlockTile)te).textVisible = this.skipRendering(stateIn,facingState,facing);
+                boolean culled = facingState.isSolidRender(worldIn,currentPos) &&
+                        facingState.isFaceSturdy(worldIn, facingPos, facing.getOpposite());
+                ((NoticeBoardBlockTile)te).textVisible=!culled;
             }
         }
         return stateIn;

@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.mehvahdjukaar.supplementaries.block.tiles.NoticeBoardBlockTile;
-import net.mehvahdjukaar.supplementaries.client.renderers.Lod;
+import net.mehvahdjukaar.supplementaries.client.renderers.LOD;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.client.renderers.TextUtil;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
@@ -11,6 +11,7 @@ import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.RequestMapDataFromServerPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.MapItemRenderer;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderType;
@@ -35,9 +36,13 @@ import java.util.List;
 
 
 public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoardBlockTile> {
-
+    protected final ItemRenderer itemRenderer;
+    protected final MapItemRenderer mapRenderer;
     public NoticeBoardBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
+        Minecraft minecraft = Minecraft.getInstance();
+        itemRenderer = minecraft.getItemRenderer();
+        mapRenderer = minecraft.gameRenderer.getMapRenderer();
     }
 
 
@@ -54,13 +59,10 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
             ItemStack stack = tile.getDisplayedItem();
             if(stack.isEmpty())return;
 
+            float yaw = tile.getYaw();
             Vector3d cameraPos = this.renderer.camera.getPosition();
             BlockPos pos = tile.getBlockPos();
-            float yaw = tile.getYaw();
-            float relAngle = (float) (MathHelper.atan2(cameraPos.x-(pos.getX()+0.5f),cameraPos.z-(pos.getZ()+0.5f))*180/Math.PI);
-
-            if(MathHelper.degreesDifference(relAngle,yaw-90)>-2)return;
-
+            if(LOD.isOutOfFocus(cameraPos, pos, yaw))return;
 
             //TODO: fix book with nothing in it
             int frontLight = tile.getFrontLight();
@@ -80,7 +82,7 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
                     matrixStackIn.scale(0.0078125F, -0.0078125F, -0.0078125F);
                     matrixStackIn.translate(-64.0D, -64.0D, 0.0D);
 
-                    Minecraft.getInstance().gameRenderer.getMapRenderer().render(matrixStackIn, bufferIn, mapdata, true, frontLight);
+                    mapRenderer.render(matrixStackIn, bufferIn, mapdata, true, frontLight);
                     matrixStackIn.popPose();
                 }
                 else{
@@ -96,7 +98,7 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
             String page = tile.text;
             if (!(page == null || page.equals(""))) {
 
-                Lod lod = new Lod(cameraPos,pos);
+                LOD lod = new LOD(cameraPos,pos);
                 if(!lod.isNearMed()) {
                     matrixStackIn.popPose();
                     return;
@@ -214,9 +216,7 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
 
                 }
                 else{
-                    ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
                     IBakedModel ibakedmodel = itemRenderer.getModel(stack, tile.getLevel(), null);
-
 
                     matrixStackIn.translate(0, 0, 0.015625 + 0.00005);
                     matrixStackIn.scale(-0.5f, 0.5f, -0.5f);

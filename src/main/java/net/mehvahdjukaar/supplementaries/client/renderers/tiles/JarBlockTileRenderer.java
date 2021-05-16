@@ -27,10 +27,12 @@ import java.util.Random;
 
 
 public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
-
+    private final ItemRenderer itemRenderer;
+    private final Minecraft minecraft = Minecraft.getInstance();
 
     public JarBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
+        itemRenderer = minecraft.getItemRenderer();
     }
 
     public static void renderFluid(float height, int color, int luminosity, ResourceLocation texture, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int light, int combinedOverlayIn, boolean shading){
@@ -65,7 +67,6 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
                 matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(rand.nextInt(360)));
                 // matrixStackIn.translate(0, 0, 0.0625);
                 matrixStackIn.translate(0, 0, 1 / (16f * scale));
-                ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
                 IBakedModel ibakedmodel = itemRenderer.getModel(stack, tile.getLevel(), null);
                 itemRenderer.render(stack, ItemCameraTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
                         combinedOverlayIn, ibakedmodel);
@@ -103,7 +104,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
                 matrixStackIn.pushPose();
                 matrixStackIn.translate(0.5, 0.0635, 0.5);
                 IVertexBuilder builder = bufferIn.getBuffer(RenderType.cutout());
-                TextureAtlasSprite sprite_s = Minecraft.getInstance().getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(Textures.SAND_TEXTURE);
+                TextureAtlasSprite sprite_s = minecraft.getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(Textures.SAND_TEXTURE);
                 RendererUtil.addCube(builder, matrixStackIn, 0.499f, 0.0625f, sprite_s, combinedLightIn, 16777215, 1f, combinedOverlayIn, true, true, true, true);
                 matrixStackIn.popPose();
                 matrixStackIn.pushPose();
@@ -114,7 +115,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
             }
         }
         //render fluid
-        else if(!tile.fluidHolder.isEmpty()){
+        if(!tile.fluidHolder.isEmpty()){
             renderFluid(tile.fluidHolder.getHeight(), tile.fluidHolder.getTintColor(), tile.fluidHolder.getFluid().getLuminosity(),
                     tile.fluidHolder.getFluid().getStillTexture(), matrixStackIn,bufferIn,combinedLightIn,combinedOverlayIn,true);
         }

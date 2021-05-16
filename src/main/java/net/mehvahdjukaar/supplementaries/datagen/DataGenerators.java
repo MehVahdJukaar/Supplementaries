@@ -16,11 +16,12 @@ public final class DataGenerators {
         DataGenerator gen = event.getGenerator();
         ExistingFileHelper helper = event.getExistingFileHelper();
         if(false) {
-            gen.addProvider(new ModBlockStateProvider(gen, Supplementaries.MOD_ID, helper));
-            gen.addProvider(new ModItemModelProvider(gen, Supplementaries.MOD_ID, helper));
+            //gen.addProvider(new ModBlockStateProvider(gen, Supplementaries.MOD_ID, helper));
+            //gen.addProvider(new ModItemModelProvider(gen, Supplementaries.MOD_ID, helper));
             gen.addProvider(new ModRecipeProvider(gen));
-            gen.addProvider(new ModLanguageProvider(gen, Supplementaries.MOD_ID, "en_us"));
+            //gen.addProvider(new ModLanguageProvider(gen, Supplementaries.MOD_ID, "en_us"));
             gen.addProvider(new ModLootTableProvider(gen));
         }
+
     }
 }

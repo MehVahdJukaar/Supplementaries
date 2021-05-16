@@ -49,18 +49,18 @@
       "model": "supplementaries:block/crimson_lantern"
     },
     "face=ceiling,facing=north": {
-      "model": "supplementaries:block/gold_lantern_hanging"
+      "model": "supplementaries:block/crimson_lantern_hanging"
     },
     "face=ceiling,facing=east": {
-      "model": "supplementaries:block/gold_lantern_hanging",
+      "model": "supplementaries:block/crimson_lantern_hanging",
       "y": 90
     },
     "face=ceiling,facing=south": {
-      "model": "supplementaries:block/gold_lantern_hanging",
+      "model": "supplementaries:block/crimson_lantern_hanging",
       "y": 180
     },
     "face=ceiling,facing=west": {
-      "model": "supplementaries:block/gold_lantern_hanging",
+      "model": "supplementaries:block/crimson_lantern_hanging",
       "y": 270
     }
   }

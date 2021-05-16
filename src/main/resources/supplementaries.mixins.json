@@ -11,7 +11,9 @@
     "BrewingStandTileMixin",
     "CampfireMixin",
     "CatSitOnBlockMixin",
+    "CauldronBlockMixin",
     "CrossbowItemMixin",
+
     "EatGrassGoalMixin",
     "LakeMixin",
     "LanternBlockMixin",
@@ -23,6 +25,7 @@
     "ShulkerBoxTileEntityMixin",
     "StrongholdCrossingMixin",
     "StrongholdRoomMixin",
+    "VineBlockMixin",
     "accessors.ChickenEntityAccessor",
     "accessors.HorseEntityAccessor",
     "accessors.MineshaftAccessor"

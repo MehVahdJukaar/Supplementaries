@@ -15,8 +15,10 @@ import net.minecraft.util.math.vector.Vector3f;
 
 
 public class EnhancedLanternBlockTileRenderer<T extends  EnhancedLanternBlockTile> extends TileEntityRenderer<T> {
+    protected final BlockRendererDispatcher blockRenderer;
     public EnhancedLanternBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
+        blockRenderer = Minecraft.getInstance().getBlockRenderer();
     }
 
 
@@ -37,7 +39,7 @@ public class EnhancedLanternBlockTileRenderer<T extends  EnhancedLanternBlockTil
             matrixStackIn.translate(-0.5, -0.75, -0.375);
         }
         // render block
-        BlockRendererDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
+
         RendererUtil.renderBlockPlus(state, matrixStackIn, bufferIn, blockRenderer, tile.getLevel(), tile.getBlockPos());
         //blockRenderer.renderBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
         matrixStackIn.popPose();

@@ -19,9 +19,10 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 public class CrimsonLanternBlock extends CopperLanternBlock {
-    public static final VoxelShape SHAPE_DOWN = VoxelShapes.or(Block.box(5.0D, 0.0D, 5.0D, 11.0D, 8.0D, 11.0D), Block.box(6.0D, 8.0D, 6.0D, 10.0D, 9.0D, 10.0D));
-    public static final VoxelShape SHAPE_UP = VoxelShapes.or(Block.box(5.0D, 5.0D, 5.0D, 11.0D, 13.0D, 11.0D), Block.box(6.0D, 13.0D, 6.0D, 10.0D, 14.0D, 10.0D));
-
+    public static final VoxelShape SHAPE_DOWN = VoxelShapes.or(Block.box(5.0D, 0.0D, 5.0D, 11.0D, 10.0D, 11.0D),
+            Block.box(3.0D, 1.0D, 3.0D, 13.0D, 9.0D, 13.0D));
+    public static final VoxelShape SHAPE_UP = VoxelShapes.or(Block.box(5.0D, 4.0D, 5.0D, 11.0D, 14.0D, 11.0D),
+            Block.box(3.0D, 5.0D, 3.0D, 13.0D, 13.0D, 13.0D));
     public CrimsonLanternBlock(Properties properties) {
         super(properties);
     }
@@ -47,15 +48,10 @@ public class CrimsonLanternBlock extends CopperLanternBlock {
         }
     }
 
-
-
-
     @Override
     public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if(worldIn.getFluidState(pos).getType() != Fluids.WATER)return super.use(state,worldIn,pos,player,handIn,hit);
         return ActionResultType.PASS;
     }
-
 
 
     @Override

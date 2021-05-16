@@ -74,6 +74,7 @@ public class SoftFluid {
     public String toString(){return this.getID();}
     public String getString(){return this.getID();}
 
+    //gets equivalent forge fluid if present
     public Fluid getFluid(){
         for(Fluid fluid : this.equivalentFluids){
             return fluid;
@@ -422,6 +423,7 @@ public class SoftFluid {
             return this.food(res);
         }
 
+        //I can only have 1 food item
         protected Item getOrCreateFood(){
             for (Item i : this.filledBuckets){
                 if(i.isEdible()){
