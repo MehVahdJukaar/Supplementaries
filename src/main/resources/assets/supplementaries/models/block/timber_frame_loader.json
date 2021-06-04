@@ -1,0 +1,9 @@
+{
+	"loader": "supplementaries:frame_block_loader",
+	"overlay": {
+		"parent": "supplementaries:block/timber_frame_overlay",
+		"textures": {
+			"all": "supplementaries:blocks/timber_frame"
+		}
+	}
+}

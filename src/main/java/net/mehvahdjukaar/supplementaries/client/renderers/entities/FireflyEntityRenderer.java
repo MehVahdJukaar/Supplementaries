@@ -6,7 +6,6 @@ import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.Textures;
-import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.entities.FireflyEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
@@ -34,7 +33,7 @@ public class FireflyEntityRenderer extends EntityRenderer<FireflyEntity> {
         matrixStackIn.translate(0.0D, 0.5, 0.0D);
         matrixStackIn.mulPose(this.entityRenderDispatcher.cameraOrientation());
         matrixStackIn.mulPose(Const.Y180);
-        float scale = (float) ClientConfigs.cached.FIREFLY_SCALE;
+        float scale = 0.15f;
         matrixStackIn.scale(a*scale, a*scale, a*scale);
         IVertexBuilder builder = bufferIn.getBuffer(RenderType.beaconBeam(Textures.FIREFLY_TEXTURE, true));
 

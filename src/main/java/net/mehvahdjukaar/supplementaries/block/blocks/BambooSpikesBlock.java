@@ -100,7 +100,7 @@ public class BambooSpikesBlock extends Block {
                     ((BambooSpikesBlockTile) te).potion = p;
                     ((BambooSpikesBlockTile) te).setMissingCharges(com.getInt("Damage"));
                 }
-                //remove in the future
+                //TODO: remove in the future
                 if(com.contains("BlockEntityTag"))((BambooSpikesBlockTile) te).potion = PotionUtils.getPotion(com.getCompound("BlockEntityTag"));
             }
         }

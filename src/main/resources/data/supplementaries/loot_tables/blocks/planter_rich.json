@@ -11,6 +11,10 @@
       ],
       "conditions": [
         {
+          "value": {
+            "modid": "farmersdelight",
+            "type": "forge:mod_loaded"
+          },
           "condition": "minecraft:survives_explosion"
         }
       ]

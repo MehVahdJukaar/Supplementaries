@@ -3,7 +3,8 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.FlowerBoxBlockTile;
 import net.mehvahdjukaar.supplementaries.block.tiles.ItemDisplayTile;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.IInventory;
@@ -20,7 +21,8 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.*;
+import net.minecraft.world.IBlockReader;
+import net.minecraft.world.World;
 
 public class FlowerBoxBlock extends WaterBlock{
 
@@ -74,14 +76,19 @@ public class FlowerBoxBlock extends WaterBlock{
         TileEntity tileentity = worldIn.getBlockEntity(pos);
         if (tileentity instanceof FlowerBoxBlockTile) {
             int ind;
+
             Direction dir = state.getValue(FACING);
             if(dir.getAxis() == Direction.Axis.X){
-                ind = MathHelper.clamp((int)((hit.getLocation().z%1d)/(1/3d)),0,2);
-                if(dir.getStepX()<0) ind = 2-ind;
+                ind = (int)((hit.getLocation().z%1d)/(1/3d));
+                if(ind<0)ind = 3+ind;
+                ind = MathHelper.clamp(ind,0,2);
+                if(dir.getStepX()<0 ) ind = 2-ind;
             }
             else{
-                ind = MathHelper.clamp((int)((hit.getLocation().x%1d)/(1/3d)),0,2);
-                if(dir.getStepZ()>0) ind = 2-ind;
+                ind = (int)((hit.getLocation().x%1d)/(1/3d));
+                if(ind<0)ind = 3+ind;
+                ind = MathHelper.clamp(ind,0,2);
+                if(dir.getStepZ()>0 ^ dir.getStepX()>0) ind = 2-ind;
             }
             return ((ItemDisplayTile) tileentity).interact(player,handIn,ind);
         }

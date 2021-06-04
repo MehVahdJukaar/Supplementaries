@@ -29,7 +29,8 @@ public class SyncGlobeDataPacket {
         context.enqueueWork(() -> {
             if (!context.getDirection().getReceptionSide().isServer()) {
                 //assigns data to client
-                GlobeData.clientSide = message.data;
+
+                GlobeData.setClientData(message.data);
                 Supplementaries.LOGGER.info("Synced Globe data");
             }
         });

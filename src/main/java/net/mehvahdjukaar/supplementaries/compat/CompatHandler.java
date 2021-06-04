@@ -7,7 +7,6 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.ModList;
-import vectorwing.farmersdelight.FarmersDelight;
 
 public class CompatHandler {
     public static final boolean quark;
@@ -41,4 +40,5 @@ public class CompatHandler {
     public static void registerOptionalItems(final RegistryEvent.Register<Item> event){
         if (farmers_delight) FDCompatRegistry.registerItems(event);
     }
+
 }

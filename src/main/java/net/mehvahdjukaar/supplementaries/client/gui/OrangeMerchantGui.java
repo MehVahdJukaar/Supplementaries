@@ -16,6 +16,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -62,15 +63,21 @@ public class OrangeMerchantGui extends ContainerScreen<OrangeMerchantContainer> 
     }
 
     protected void renderLabels(MatrixStack p_230451_1_, int p_230451_2_, int p_230451_3_) {
-        int i = this.menu.getTraderLevel();
-        if (i > 0 && i <= 5 && this.menu.showProgressBar()) {
-            ITextComponent itextcomponent = this.title.copy().append(LEVEL_SEPARATOR).append(new TranslationTextComponent("merchant.level." + i));
-            int j = this.font.width(itextcomponent);
-            int k = 49 + this.imageWidth / 2 - j / 2;
-            this.font.draw(p_230451_1_, itextcomponent, (float)k, 6.0F, 4210752);
-        } else {
-            this.font.draw(p_230451_1_, this.title, (float)(49 + this.imageWidth / 2 - this.font.width(this.title) / 2), 6.0F, 4210752);
-        }
+
+
+        ITextComponent tradeOffer = new TranslationTextComponent("gui.supplementaries.orange_trader.trade")
+                .withStyle(TextFormatting.WHITE)
+                .withStyle(TextFormatting.BOLD);
+        this.font.draw(p_230451_1_, tradeOffer, (float)(49 + this.imageWidth / 2 - this.font.width(tradeOffer) / 2), 10.0F, 4210752);
+
+        ITextComponent iReceive = new TranslationTextComponent("gui.supplementaries.orange_trader.get")
+                .withStyle(TextFormatting.WHITE);
+        this.font.draw(p_230451_1_, iReceive, (float)(49 -29 + this.imageWidth / 2 - this.font.width(iReceive) / 2), 24.0F, 4210752);
+
+        ITextComponent uReceive = new TranslationTextComponent("gui.supplementaries.orange_trader.receive")
+                .withStyle(TextFormatting.WHITE);
+        this.font.draw(p_230451_1_, uReceive, (float)(49 + 42 + this.imageWidth / 2 - this.font.width(uReceive) / 2), 24.0F, 4210752);
+
 
         this.font.draw(p_230451_1_, this.inventory.getDisplayName(), (float)this.inventoryLabelX, (float)this.inventoryLabelY, 4210752);
         int l = this.font.width(TRADES_LABEL);

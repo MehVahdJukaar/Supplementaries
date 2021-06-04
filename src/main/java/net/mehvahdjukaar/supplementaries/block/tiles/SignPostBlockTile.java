@@ -63,6 +63,7 @@ public class SignPostBlockTile extends TileEntity implements ITextHolder, IBlock
 
     @Override
     public void setChanged() {
+        if(this.level==null)return;
         this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
         super.setChanged();
     }

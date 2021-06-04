@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.HourGlassBlock;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -44,7 +45,7 @@ public class HourGlassBlockTile extends ItemDisplayTile implements ITickableTile
     //hijacking this method to work with hoppers
     @Override
     public void setChanged() {
-        //this.updateServerAndClient();
+        if(this.level==null)return;
         this.updateTile();
         super.setChanged();
     }
@@ -158,30 +159,32 @@ public class HourGlassBlockTile extends ItemDisplayTile implements ITickableTile
 
     public enum HourGlassSandType {
         DEFAULT(null,null,0),
-        SAND(SAND_TEXTURE,"minecraft:sand", 60),
-        RED_SAND(RED_SAND_TEXTURE,"minecraft:red_sand", 60),
-        WHITE_CONCRETE(WHITE_CONCRETE_TEXTURE,"minecraft:white_concrete_powder", 90),
-        ORANGE_CONCRETE(ORANGE_CONCRETE_TEXTURE,"minecraft:orange_concrete_powder", 90),
-        LIGHT_BLUE_CONCRETE(LIGHT_BLUE_CONCRETE_TEXTURE,"minecraft:light_blue_concrete_powder", 90),
-        YELLOW_CONCRETE(YELLOW_CONCRETE_TEXTURE,"minecraft:yellow_concrete_powder", 90),
-        LIME_CONCRETE(LIME_CONCRETE_TEXTURE,"minecraft:lime_concrete_powder", 90),
-        GREEN_CONCRETE(GREEN_CONCRETE_TEXTURE,"minecraft:green_concrete_powder",90),
-        PINK_CONCRETE(PINK_CONCRETE_TEXTURE,"minecraft:pink_concrete_powder", 90),
-        GRAY_CONCRETE(GRAY_CONCRETE_TEXTURE,"minecraft:gray_concrete_powder", 90),
-        LIGHT_GRAY_CONCRETE(LIGHT_GRAY_CONCRETE_TEXTURE,"minecraft:light_gray_concrete_powder", 90),
-        CYAN_CONCRETE(CYAN_CONCRETE_TEXTURE,"minecraft:cyan_concrete_powder", 90),
-        PURPLE_CONCRETE(PURPLE_CONCRETE_TEXTURE,"minecraft:purple_concrete_powder", 90),
-        BLUE_CONCRETE(BLUE_CONCRETE_TEXTURE,"minecraft:blue_concrete_powder", 90),
-        BROWN_CONCRETE(BROWN_CONCRETE_TEXTURE,"minecraft:brown_concrete_powder", 90),
-        RED_CONCRETE(RED_CONCRETE_TEXTURE,"minecraft:red_concrete_powder", 90),
-        BLACK_CONCRETE(BLACK_CONCRETE_TEXTURE,"minecraft:black_concrete_powder", 90),
-        MAGENTA_CONCRETE(MAGENTA_CONCRETE_TEXTURE,"minecraft:magenta_concrete_powder", 90),
-        GUNPOWDER(HOURGLASS_GUNPOWDER,"minecraft:gunpowder", 150),
-        SUGAR(HOURGLASS_SUGAR,"minecraft:sugar", 40),
-        GLOWSTONE_DUST(HOURGLASS_GLOWSTONE,"minecraft:glowstone_dust", 120),
-        REDSTONE_DUST(HOURGLASS_REDSTONE,"minecraft:redstone", 200),
-        BLAZE_POWDER(HOURGLASS_BLAZE,"minecraft:blaze_powder", 100),
-        FORGE_DUST(HOURGLASS_GUNPOWDER,"minecraft:gunpowder", 150);
+        SAND(SAND_TEXTURE,"minecraft:sand", ServerConfigs.block.HOURGLASS_SAND.get()),
+        RED_SAND(RED_SAND_TEXTURE,"minecraft:red_sand", ServerConfigs.block.HOURGLASS_SAND.get()),
+        WHITE_CONCRETE(WHITE_CONCRETE_TEXTURE,"minecraft:white_concrete_powder", ServerConfigs.block.HOURGLASS_CONCRETE.get()),
+        ORANGE_CONCRETE(ORANGE_CONCRETE_TEXTURE,"minecraft:orange_concrete_powder", ServerConfigs.block.HOURGLASS_CONCRETE.get()),
+        LIGHT_BLUE_CONCRETE(LIGHT_BLUE_CONCRETE_TEXTURE,"minecraft:light_blue_concrete_powder", ServerConfigs.block.HOURGLASS_CONCRETE.get()),
+        YELLOW_CONCRETE(YELLOW_CONCRETE_TEXTURE,"minecraft:yellow_concrete_powder", ServerConfigs.block.HOURGLASS_CONCRETE.get()),
+        LIME_CONCRETE(LIME_CONCRETE_TEXTURE,"minecraft:lime_concrete_powder", ServerConfigs.block.HOURGLASS_CONCRETE.get()),
+        GREEN_CONCRETE(GREEN_CONCRETE_TEXTURE,"minecraft:green_concrete_powder",ServerConfigs.block.HOURGLASS_CONCRETE.get()),
+        PINK_CONCRETE(PINK_CONCRETE_TEXTURE,"minecraft:pink_concrete_powder", ServerConfigs.block.HOURGLASS_CONCRETE.get()),
+        GRAY_CONCRETE(GRAY_CONCRETE_TEXTURE,"minecraft:gray_concrete_powder", ServerConfigs.block.HOURGLASS_CONCRETE.get()),
+        LIGHT_GRAY_CONCRETE(LIGHT_GRAY_CONCRETE_TEXTURE,"minecraft:light_gray_concrete_powder", ServerConfigs.block.HOURGLASS_CONCRETE.get()),
+        CYAN_CONCRETE(CYAN_CONCRETE_TEXTURE,"minecraft:cyan_concrete_powder", ServerConfigs.block.HOURGLASS_CONCRETE.get()),
+        PURPLE_CONCRETE(PURPLE_CONCRETE_TEXTURE,"minecraft:purple_concrete_powder", ServerConfigs.block.HOURGLASS_CONCRETE.get()),
+        BLUE_CONCRETE(BLUE_CONCRETE_TEXTURE,"minecraft:blue_concrete_powder", ServerConfigs.block.HOURGLASS_CONCRETE.get()),
+        BROWN_CONCRETE(BROWN_CONCRETE_TEXTURE,"minecraft:brown_concrete_powder", ServerConfigs.block.HOURGLASS_CONCRETE.get()),
+        RED_CONCRETE(RED_CONCRETE_TEXTURE,"minecraft:red_concrete_powder", ServerConfigs.block.HOURGLASS_CONCRETE.get()),
+        BLACK_CONCRETE(BLACK_CONCRETE_TEXTURE,"minecraft:black_concrete_powder", ServerConfigs.block.HOURGLASS_CONCRETE.get()),
+        MAGENTA_CONCRETE(MAGENTA_CONCRETE_TEXTURE,"minecraft:magenta_concrete_powder", ServerConfigs.block.HOURGLASS_CONCRETE.get()),
+        GUNPOWDER(HOURGLASS_GUNPOWDER,"minecraft:gunpowder", ServerConfigs.block.HOURGLASS_DUST.get()),
+        SUGAR(HOURGLASS_SUGAR,"minecraft:sugar", ServerConfigs.block.HOURGLASS_SUGAR.get()),
+        GLOWSTONE_DUST(HOURGLASS_GLOWSTONE,"minecraft:glowstone_dust", ServerConfigs.block.HOURGLASS_GLOWSTONE.get()),
+        REDSTONE_DUST(HOURGLASS_REDSTONE,"minecraft:redstone", ServerConfigs.block.HOURGLASS_REDSTONE.get()),
+        BLAZE_POWDER(HOURGLASS_BLAZE,"minecraft:blaze_powder", ServerConfigs.block.HOURGLASS_BLAZE_POWDER.get()),
+        FORGE_DUST(HOURGLASS_GUNPOWDER,"minecraft:gunpowder", ServerConfigs.block.HOURGLASS_DUST.get()),
+        HONEY(HONEY_TEXTURE,"minecraft:honey_bottle", ServerConfigs.block.HOURGLASS_HONEY.get()),
+        SLIME(SLIME_TEXTURE,"minecraft:slime_ball", ServerConfigs.block.HOURGLASS_SLIME.get());
 
         public final ResourceLocation texture;
         public final String name;
@@ -200,35 +203,6 @@ public class HourGlassBlockTile extends ItemDisplayTile implements ITickableTile
             return 0;
         }
 
-        public TextureAtlasSprite getBlockSprite(Item i){
-            ResourceLocation reg = i.getRegistryName();
-            if(this==SAND||this==FORGE_DUST){
-                ResourceLocation texture;
-                TextureAtlasSprite sprite;
-                if(this==SAND) {
-                    texture = new ResourceLocation(reg.getNamespace(), "block/" + reg.getPath());
-                    sprite = Minecraft.getInstance().getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(texture);
-                }
-                else{
-                    if(reg.getNamespace().equals("thermal")){
-                        texture = new ResourceLocation(reg.getNamespace(), "item/dusts/" + reg.getPath());
-                        sprite = Minecraft.getInstance().getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(texture);
-                    }
-                    else {
-                        texture = new ResourceLocation(reg.getNamespace(), "item/" + reg.getPath());
-                        sprite = Minecraft.getInstance().getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(texture);
-                        if (sprite instanceof MissingTextureSprite) {
-                            texture = new ResourceLocation(reg.getNamespace(), "items/" + reg.getPath());
-                            sprite = Minecraft.getInstance().getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(texture);
-                        }
-                    }
-                }
-                if(sprite instanceof MissingTextureSprite)sprite = Minecraft.getInstance().getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(this.texture);
-                return sprite;
-            }
-            return Minecraft.getInstance().getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(this.texture);
-        }
-
         public TextureAtlasSprite getSprite(ItemStack i, World world){
             Minecraft mc = Minecraft.getInstance();
             if(this==FORGE_DUST){
@@ -243,10 +217,6 @@ public class HourGlassBlockTile extends ItemDisplayTile implements ITickableTile
                 }
             }
             return mc.getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(this.texture);
-        }
-
-        public boolean isSand(){
-            return this==SAND;
         }
 
         public static HourGlassSandType getHourGlassSandType(Item i){

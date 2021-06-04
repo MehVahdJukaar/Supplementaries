@@ -36,12 +36,6 @@ public class SpeakerBlockTile extends TileEntity implements INameable {
     }
 
     @Override
-    public void setChanged() {
-        //this.world.notifyBlockUpdate(this.pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
-        super.setChanged();
-    }
-
-    @Override
     public void load(BlockState state, CompoundNBT compound) {
         super.load(state, compound);
         if (compound.contains("CustomName", 8)) {

@@ -19,12 +19,13 @@ public class FrameBraceBlock extends FrameBlock {
     public FrameBraceBlock(Properties properties, Supplier<Block> daub) {
         super(properties,daub);
         this.registerDefaultState(this.stateDefinition.any().setValue(FLIPPED,false)
-                .setValue(LIGHT_LEVEL, 0).setValue(TILE,0));
+                .setValue(LIGHT_LEVEL, 0).setValue(HAS_BLOCK,false));
     }
 
     @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(LIGHT_LEVEL,TILE,FLIPPED);
+        super.createBlockStateDefinition(builder);
+        builder.add(FLIPPED);
     }
 
     @Nullable

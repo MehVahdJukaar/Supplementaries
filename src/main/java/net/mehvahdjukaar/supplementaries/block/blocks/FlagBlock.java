@@ -2,27 +2,32 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import com.google.common.collect.Maps;
 import net.mehvahdjukaar.supplementaries.block.tiles.FlagBlockTile;
+import net.mehvahdjukaar.supplementaries.world.data.map.lib.CustomDecorationHolder;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.DyeColor;
+import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.World;
+import net.minecraft.world.storage.MapData;
 
+import javax.annotation.Nullable;
 import java.util.Map;
 
 public class FlagBlock extends WaterBlock {
@@ -97,5 +102,33 @@ public class FlagBlock extends WaterBlock {
     @Override
     public BlockRenderType getRenderShape(BlockState state) {
         return BlockRenderType.MODEL;
+    }
+
+    @Override
+    public void setPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
+        if (stack.hasCustomHoverName()) {
+            TileEntity tileentity = world.getBlockEntity(pos);
+            if (tileentity instanceof FlagBlockTile) {
+                ((FlagBlockTile)tileentity).setCustomName(stack.getHoverName());
+            }
+        }
+    }
+
+    @Override
+    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        TileEntity tileentity = world.getBlockEntity(pos);
+        if (tileentity instanceof FlagBlockTile) {
+            ItemStack itemstack = player.getItemInHand(hand);
+            if (itemstack.getItem() instanceof FilledMapItem) {
+                if(!world.isClientSide) {
+                    MapData data = FilledMapItem.getOrCreateSavedData(itemstack, world);
+                    if (data instanceof CustomDecorationHolder) {
+                        ((CustomDecorationHolder) data).toggleCustomDecoration(world, pos);
+                    }
+                }
+                return ActionResultType.sidedSuccess(world.isClientSide);
+            }
+        }
+        return ActionResultType.PASS;
     }
 }

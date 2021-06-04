@@ -10,9 +10,7 @@ import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
@@ -32,7 +30,7 @@ public class HourGlassBlockTileRenderer extends TileEntityRenderer<HourGlassBloc
     public static void renderSand(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
                                    int combinedOverlayIn, TextureAtlasSprite sprite, float height, Direction dir){
 
-        IVertexBuilder builder = bufferIn.getBuffer(RenderType.solid());
+        IVertexBuilder builder = bufferIn.getBuffer(RenderType.translucent());
 
         int color = 0xffffff;
         if(CommonUtil.FESTIVITY.isAprilsFool()){

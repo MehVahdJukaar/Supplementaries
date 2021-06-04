@@ -23,11 +23,15 @@ public class RegistryConfigs {
         REGISTRY_CONFIG = REGISTRY_BUILDER.build();
         //remove try?
         try{
-            if(ModList.get().isLoaded("mysticalworld")||ModList.get().isLoaded("immersiveengineering")||
-                    ModList.get().isLoaded("bluepower")||ModList.get().isLoaded("silents_mechanisms ")||
-                    ModList.get().isLoaded("thermal")||ModList.get().isLoaded("iceandfire")
-                    ||ModList.get().isLoaded("silentgems")||ModList.get().isLoaded("occultism")){
+            ModList ml = ModList.get();
+            if(ml.isLoaded("mysticalworld")||ml.isLoaded("immersiveengineering")||
+                    ml.isLoaded("bluepower")||ml.isLoaded("silents_mechanisms ")||
+                    ml.isLoaded("thermal")||ml.isLoaded("iceandfire")
+                    ||ml.isLoaded("silentgems")||ml.isLoaded("occultism")){
                 reg.HAS_SILVER=true;
+            }
+            if(ml.isLoaded("create")){
+                reg.HAS_BRASS=true;
             }
 
         }
@@ -110,12 +114,15 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue DAUB_ENABLED;
         public static ForgeConfigSpec.BooleanValue TIMBER_FRAME_ENABLED;
         public static ForgeConfigSpec.BooleanValue TILE_ENABLED;
+        public static ForgeConfigSpec.BooleanValue GOBLET_ENABLED;
+        public static ForgeConfigSpec.BooleanValue RAKED_GRAVEL_ENABLED;
 
         public static ForgeConfigSpec.BooleanValue JAR_TAB;
         public static ForgeConfigSpec.BooleanValue CREATIVE_TAB;
         public static ForgeConfigSpec.BooleanValue DISPENSERS;
 
         public static boolean HAS_SILVER = false;
+        public static boolean HAS_BRASS = false;
 
         public static boolean HAS_MINESHAFT_LANTERN = false;
         public static boolean HAS_STRONGHOLD_SCONCE = false;
@@ -135,6 +142,9 @@ public class RegistryConfigs {
 
             if(path.equals(Registry.FIREFLY_JAR_NAME)){
                 return reg.FIREFLY_ENABLED.get() && reg.JAR_ENABLED.get();
+            }
+            if(path.equals(Registry.BRASS_LANTERN_NAME)){
+                return reg.HAS_BRASS;
             }
             if(path.equals(Registry.CANDELABRA_NAME_SILVER)){
                 return reg.CANDELABRA_ENABLED.get() && reg.HAS_SILVER;
@@ -230,6 +240,8 @@ public class RegistryConfigs {
             TIMBER_FRAME_ENABLED = builder.define(Registry.DAUB_NAME,true);
             FLAG_ENABLED = builder.define(Registry.FLAG_NAME, true);
             TILE_ENABLED = builder.define(Registry.STONE_TILE_NAME,true);
+            GOBLET_ENABLED = builder.define(Registry.GOBLET_NAME,true);
+            RAKED_GRAVEL_ENABLED = builder.define(Registry.RAKED_GRAVEL_NAME,true);
 
             LASER_ENABLED = builder.comment("WIP")
                     .define(Registry.LASER_NAME, false);

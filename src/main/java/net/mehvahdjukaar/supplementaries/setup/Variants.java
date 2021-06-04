@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.FlagBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.HangingSignBlock;
+import net.mehvahdjukaar.supplementaries.client.renderers.items.FlagItemRenderer;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.items.BurnableBlockItem;
@@ -116,7 +117,10 @@ public class Variants {
         for(DyeColor color : DyeColor.values()){
             String name = "flag_"+color.getName();
             map.put(color, Registry.ITEMS.register(name, ()-> new FlagItem(Registry.FLAGS.get(color).get(),
-                    new Item.Properties().stacksTo(16).tab(Registry.getTab(ItemGroup.TAB_DECORATIONS,Registry.FLAG_NAME))
+                    new Item.Properties()
+                            .stacksTo(16)
+                            .setISTER(()-> FlagItemRenderer::new)
+                            .tab(Registry.getTab(ItemGroup.TAB_DECORATIONS,Registry.FLAG_NAME))
             )));
         }
         return map;

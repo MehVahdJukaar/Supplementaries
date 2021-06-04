@@ -18,5 +18,6 @@ public abstract class LanternBlockMixin {
         if(state.getValue(LanternBlock.HANGING) && RopeBlock.isSupportingCeiling(pos.above(),worldIn))
             callbackInfoReturnable.setReturnValue(true);
     }
+
 }
 

@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.client.gui.SignPostGui;
 import net.mehvahdjukaar.supplementaries.datagen.types.VanillaWoodTypes;
 import net.mehvahdjukaar.supplementaries.items.SignPostItem;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.world.data.map.lib.CustomDecorationHolder;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
@@ -48,11 +49,13 @@ public class SignPostBlock extends FenceMimicBlock{
 
             //put post on map
             if(item instanceof FilledMapItem){
-                MapData data = FilledMapItem.getOrCreateSavedData(itemstack,worldIn);
-                if(data!=null) {
-                    data.toggleBanner(worldIn, pos);
-                    return ActionResultType.sidedSuccess(worldIn.isClientSide);
+                if(!worldIn.isClientSide){
+                    MapData data = FilledMapItem.getOrCreateSavedData(itemstack,worldIn);
+                    if(data instanceof CustomDecorationHolder) {
+                        ((CustomDecorationHolder) data).toggleCustomDecoration(worldIn, pos);
+                    }
                 }
+                return ActionResultType.sidedSuccess(worldIn.isClientSide);
             }
 
 

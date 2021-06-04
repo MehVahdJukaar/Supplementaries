@@ -109,6 +109,18 @@ public class ClockBlockTile extends TileEntity implements ITickableTileEntity {
 
         }
         else {
+
+            /*
+            double d0 = Math.random() - (this.targetRoll/360f);
+            d0 = MathHelper.positiveModulo(d0 + 0.5D, 1.0D) - 0.5D;
+            this.rota += d0 * 0.1D;
+            this.rota *= 0.9D;
+            this.targetRoll = 360*((float) MathHelper.positiveModulo(this.targetRoll/360f + this.rota, 1.0D));
+
+            this.roll = this.targetRoll;
+            */
+
+
             this.targetRoll = this.level.random.nextFloat()*360;
             this.sTargetRoll = this.level.random.nextFloat()*360;
             //TODO: make it wobbly
@@ -119,8 +131,6 @@ public class ClockBlockTile extends TileEntity implements ITickableTileEntity {
 
 
     }
-
-
 
     //TODO: use this on other blocks
     //can't access chunk data. use with care

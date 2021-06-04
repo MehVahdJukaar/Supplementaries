@@ -52,6 +52,7 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
     // hijacking this method to work with hoppers
     @Override
     public void setChanged() {
+        if(this.level==null)return;
         //TODO: only call after you finished updating your tile so others can react properly (faucets)
         this.level.updateNeighborsAt(worldPosition,this.getBlockState().getBlock());
         int light = this.fluidHolder.getFluid().getLuminosity();
@@ -167,7 +168,11 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
 
     private boolean isPonyJar(){
         //hahaha, funy pony jar meme
-        return this.getCustomName().getString().contains("cum");
+        if(this.hasCustomName()){
+            ITextComponent c = this.getCustomName();
+            return (c!=null && c.getString().contains("cum"));
+        }
+        return false;
     }
 
     //can this item be added?

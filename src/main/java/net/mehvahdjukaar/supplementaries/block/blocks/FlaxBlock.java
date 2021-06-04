@@ -173,7 +173,7 @@ public class FlaxBlock extends CropsBlock {
     //for bonemeal
     @Override
     public boolean isValidBonemealTarget(IBlockReader worldIn, BlockPos pos, BlockState state, boolean isClient) {
-        return !this.isMaxAge(state) && (this.canGrowUp(worldIn,pos)||this.getAge(state)<DOUBLE_AGE-1);
+        return state.getValue(HALF)==DoubleBlockHalf.LOWER&&(!this.isMaxAge(state) && (this.canGrowUp(worldIn,pos)||this.getAge(state)<DOUBLE_AGE-1));
     }
 
     //here I'm assuming canGrow has already been called

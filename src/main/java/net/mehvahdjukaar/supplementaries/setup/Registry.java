@@ -8,7 +8,6 @@ import net.mehvahdjukaar.supplementaries.client.renderers.items.CageItemRenderer
 import net.mehvahdjukaar.supplementaries.client.renderers.items.FireflyJarItemRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.JarItemRenderer;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
-import net.mehvahdjukaar.supplementaries.compat.decorativeblocks.DecoBlocksCompatRegistry;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.entities.*;
@@ -25,7 +24,6 @@ import net.minecraft.block.material.MaterialColor;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.*;
@@ -41,6 +39,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
@@ -140,33 +139,59 @@ public class Registry {
         CompatHandler.registerOptionalItems(event);
     }
 
-    @SubscribeEvent
-    public static void registerEntityAttributes(final RegistryEvent.Register<EntityType<?>> event){
-        //event.getRegistry().register(POTAT_TYPE);
-        //GlobalEntityTypeAttributes.put((EntityType<? extends LivingEntity>) POTAT_TYPE, MashlingEntity.setCustomAttributes().create());
-        GlobalEntityTypeAttributes.put(ORANGE_TRADER.get(), MobEntity.createMobAttributes().build());
-        GlobalEntityTypeAttributes.put(FIREFLY_TYPE.get(), FireflyEntity.setCustomAttributes().build());
-    }
+    //particles
+    public static final RegistryObject<BasicParticleType> ENDERGETIC_FLAME = PARTICLES
+            .register("endergetic_flame", ()-> new BasicParticleType(true));
+    public static final RegistryObject<BasicParticleType> FIREFLY_GLOW = PARTICLES
+            .register("firefly_glow", ()-> new BasicParticleType(true));
+    public static final RegistryObject<BasicParticleType> SPEAKER_SOUND = PARTICLES
+            .register("speaker_sound", ()-> new BasicParticleType(true));
+    public static final RegistryObject<BasicParticleType> GREEN_FLAME = PARTICLES
+            .register("green_flame", ()-> new BasicParticleType(true));
+    public static final RegistryObject<BasicParticleType> DRIPPING_LIQUID = PARTICLES
+            .register("dripping_liquid", ()-> new BasicParticleType(true));
+    public static final RegistryObject<BasicParticleType> FALLING_LIQUID = PARTICLES
+            .register("falling_liquid", ()-> new BasicParticleType(true));
+    public static final RegistryObject<BasicParticleType> SPLASHING_LIQUID = PARTICLES
+            .register("splashing_liquid", ()-> new BasicParticleType(true));
+    public static final RegistryObject<BasicParticleType> BOMB_EXPLOSION_PARTICLE = PARTICLES
+            .register("bomb_explosion", ()-> new BasicParticleType(true));
+    public static final RegistryObject<BasicParticleType> BOMB_EXPLOSION_PARTICLE_EMITTER = PARTICLES
+            .register("bomb_explosion_emitter", ()-> new BasicParticleType(true));
+    public static final RegistryObject<BasicParticleType> BOMB_SMOKE_PARTICLE = PARTICLES
+            .register("bomb_smoke", ()-> new BasicParticleType(true));
+    public static final RegistryObject<BasicParticleType> BOTTLING_XP_PARTICLE = PARTICLES
+            .register("bottling_xp", ()-> new BasicParticleType(true));
 
-    /*
-    public static final String POTAT_NAME = "potat";
-    public static final EntityType<?> POTAT_TYPE = (EntityType.Builder.create(MashlingEntity::new, EntityClassification.AMBIENT)
-            .setShouldReceiveVelocityUpdates(true).setTrackingRange(128).setUpdateInterval(3)
-            .size(0.3125f, 1f))
-            .build(POTAT_NAME)
-            .setRegistryName(POTAT_NAME);
-    //public static final RegistryObject<Item> POTAT_SPAWN_EGG = ITEMS.register(POTAT_NAME+"_spawn_egg",()-> new SpawnEggItem(POTAT_TYPE,  -5048018, -14409439, //-4784384, -16777216,
-     //       new Item.Properties().group(getTab(ItemGroup.MISC,POTAT_NAME))));
-    */
+
+    //recipes
+    public static final RegistryObject<IRecipeSerializer<?>> BLACKBOARD_DUPLICATE_RECIPE = RECIPES.register("blackboard_duplicate_recipe", ()->
+            new SpecialRecipeSerializer<>(BlackboardDuplicateRecipe::new));
+    public static final RegistryObject<IRecipeSerializer<?>> BLACKBOARD_CLEAR_RECIPE = RECIPES.register("blackboard_clear_recipe", ()->
+            new SpecialRecipeSerializer<>(BlackboardClearRecipe::new));
+    public static final RegistryObject<IRecipeSerializer<?>> BAMBOO_SPIKES_TIPPED_RECIPE = RECIPES.register("bamboo_spikes_tipped_recipe", ()->
+            new SpecialRecipeSerializer<>(TippedBambooSpikesRecipe::new));
+    public static final RegistryObject<IRecipeSerializer<?>> ROPE_ARROW_CREATE_RECIPE = RECIPES.register("rope_arrow_create_recipe", ()->
+            new SpecialRecipeSerializer<>(RopeArrowCreateRecipe::new));
+    public static final RegistryObject<IRecipeSerializer<?>> ROPE_ARROW_ADD_RECIPE = RECIPES.register("rope_arrow_add_recipe", ()->
+            new SpecialRecipeSerializer<>(RopeArrowAddRecipe::new));
+    public static final RegistryObject<IRecipeSerializer<?>> FLAG_FROM_BANNER_RECIPE = RECIPES.register("flag_from_banner_recipe", ()->
+            new SpecialRecipeSerializer<>(FlagFromBannerRecipe::new));
+
     //entities
 
+    @SubscribeEvent
+    public static void registerEntityAttributes(EntityAttributeCreationEvent event){
+        event.put(Registry.ORANGE_TRADER.get(), MobEntity.createMobAttributes().build());
+        event.put(Registry.FIREFLY_TYPE.get(), FireflyEntity.setCustomAttributes().build());
+    }
 
     //orange trader
     public static final String ORANGE_TRADER_NAME = "orange_trader";
     public static final RegistryObject<EntityType<OrangeTraderEntity>> ORANGE_TRADER = ENTITIES.register(ORANGE_TRADER_NAME,()-> (
             EntityType.Builder.<OrangeTraderEntity>of(OrangeTraderEntity::new, EntityClassification.CREATURE)
-                .setShouldReceiveVelocityUpdates(true).clientTrackingRange(10).setUpdateInterval(3)
-                .sized(0.6F, 1.95F))
+                    .setShouldReceiveVelocityUpdates(true).clientTrackingRange(10).setUpdateInterval(3)
+                    .sized(0.6F, 1.95F))
             .build(ORANGE_TRADER_NAME));
     public static final RegistryObject<ContainerType<OrangeMerchantContainer>> ORANGE_TRADER_CONTAINER = CONTAINERS
             .register(ORANGE_TRADER_NAME,()-> IForgeContainerType.create(OrangeMerchantContainer::new));
@@ -198,7 +223,7 @@ public class Registry {
             EntityType.Builder.<ThrowableBrickEntity>of(ThrowableBrickEntity::new, EntityClassification.MISC)
                     .setCustomClientFactory(ThrowableBrickEntity::new)
                     .sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(10))//.size(0.25F, 0.25F).trackingRange(4).updateInterval(10))
-                    .build(THROWABLE_BRICK_NAME));
+            .build(THROWABLE_BRICK_NAME));
 
 
     //bomb
@@ -207,7 +232,7 @@ public class Registry {
             EntityType.Builder.<BombEntity>of(BombEntity::new, EntityClassification.MISC)
                     .setCustomClientFactory(BombEntity::new)
                     .sized(0.5F, 0.5F).clientTrackingRange(8).updateInterval(10))
-                    //.setTrackingRange(64).setUpdateInterval(1)) //.size(0.25F, 0.25F).trackingRange(4).updateInterval(10))
+            //.setTrackingRange(64).setUpdateInterval(1)) //.size(0.25F, 0.25F).trackingRange(4).updateInterval(10))
             .build(BOMB_NAME));
 
     public static final RegistryObject<Item> BOMB_ITEM = ITEMS.register(BOMB_NAME,()-> new BombItem(new Item.Properties()
@@ -227,50 +252,12 @@ public class Registry {
             EntityType.Builder.<RopeArrowEntity>of(RopeArrowEntity::new, EntityClassification.MISC)
                     .setCustomClientFactory(RopeArrowEntity::new)
                     .sized(0.5F, 0.5F).clientTrackingRange(4).updateInterval(20))//.size(0.25F, 0.25F).trackingRange(4).updateInterval(10))
-                    .build(ROPE_ARROW_NAME));
+            .build(ROPE_ARROW_NAME));
     public static final RegistryObject<Item> ROPE_ARROW_ITEM = ITEMS.register(ROPE_ARROW_NAME,()-> new RopeArrowItem(
             new Item.Properties().tab(getTab(ItemGroup.TAB_MISC,ROPE_ARROW_NAME)).defaultDurability(16).setNoRepair()));
 
 
-    //particles
-    public static final RegistryObject<BasicParticleType> ENDERGETIC_FLAME = PARTICLES
-            .register("endergetic_flame", ()-> new BasicParticleType(true));
-    public static final RegistryObject<BasicParticleType> FIREFLY_GLOW = PARTICLES
-            .register("firefly_glow", ()-> new BasicParticleType(true));
-    public static final RegistryObject<BasicParticleType> SPEAKER_SOUND = PARTICLES
-            .register("speaker_sound", ()-> new BasicParticleType(true));
-    public static final RegistryObject<BasicParticleType> GREEN_FLAME = PARTICLES
-            .register("green_flame", ()-> new BasicParticleType(true));
-    public static final RegistryObject<BasicParticleType> DRIPPING_LIQUID = PARTICLES
-            .register("dripping_liquid", ()-> new BasicParticleType(true));
-    public static final RegistryObject<BasicParticleType> FALLING_LIQUID = PARTICLES
-            .register("falling_liquid", ()-> new BasicParticleType(true));
-    public static final RegistryObject<BasicParticleType> SPLASHING_LIQUID = PARTICLES
-            .register("splashing_liquid", ()-> new BasicParticleType(true));
-    public static final RegistryObject<BasicParticleType> BOMB_EXPLOSION_PARTICLE = PARTICLES
-            .register("bomb_explosion", ()-> new BasicParticleType(true));
-    public static final RegistryObject<BasicParticleType> BOMB_EXPLOSION_PARTICLE_EMITTER = PARTICLES
-            .register("bomb_explosion_emitter", ()-> new BasicParticleType(true));
-    public static final RegistryObject<BasicParticleType> BOMB_SMOKE_PARTICLE = PARTICLES
-            .register("bomb_smoke", ()-> new BasicParticleType(true));
 
-
-
-    //recipes
-    public static final RegistryObject<IRecipeSerializer<?>> BLACKBOARD_DUPLICATE_RECIPE = RECIPES.register("blackboard_duplicate_recipe", ()->
-            new SpecialRecipeSerializer<>(BlackboardDuplicateRecipe::new));
-    public static final RegistryObject<IRecipeSerializer<?>> BLACKBOARD_CLEAR_RECIPE = RECIPES.register("blackboard_clear_recipe", ()->
-            new SpecialRecipeSerializer<>(BlackboardClearRecipe::new));
-    public static final RegistryObject<IRecipeSerializer<?>> BAMBOO_SPIKES_TIPPED_RECIPE = RECIPES.register("bamboo_spikes_tipped_recipe", ()->
-            new SpecialRecipeSerializer<>(TippedBambooSpikesRecipe::new));
-    public static final RegistryObject<IRecipeSerializer<?>> ROPE_ARROW_CREATE_RECIPE = RECIPES.register("rope_arrow_create_recipe", ()->
-            new SpecialRecipeSerializer<>(RopeArrowCreateRecipe::new));
-    public static final RegistryObject<IRecipeSerializer<?>> ROPE_ARROW_ADD_RECIPE = RECIPES.register("rope_arrow_add_recipe", ()->
-            new SpecialRecipeSerializer<>(RopeArrowAddRecipe::new));
-    public static final RegistryObject<IRecipeSerializer<?>> FLAG_DUPLICATE_RECIPE = RECIPES.register("flag_duplicate_recipe", ()->
-            new SpecialRecipeSerializer<>(FlagDuplicateRecipe::new));
-    public static final RegistryObject<IRecipeSerializer<?>> FLAG_FROM_BANNER_RECIPE = RECIPES.register("flag_from_banner_recipe", ()->
-            new SpecialRecipeSerializer<>(FlagFromBannerRecipe::new));
     //blocks
 
     //variants:
@@ -901,8 +888,19 @@ public class Registry {
     ));
 
     public static final RegistryObject<Item> COPPER_LANTERN_ITEM = ITEMS.register(COPPER_LANTERN_NAME,()-> new BlockItem(COPPER_LANTERN.get(),
-            (new Item.Properties()).tab(getTab(ItemGroup.TAB_DECORATIONS,COPPER_LANTERN_NAME))
-    ));
+            (new Item.Properties()).tab(getTab(ItemGroup.TAB_DECORATIONS,COPPER_LANTERN_NAME))));
+
+    //brass lantern
+    public static final String BRASS_LANTERN_NAME = "brass_lantern";
+    public static final RegistryObject<Block> BRASS_LANTERN = BLOCKS.register(BRASS_LANTERN_NAME,()-> new CopperLanternBlock(
+            AbstractBlock.Properties.copy(COPPER_LANTERN.get())));
+
+    public static final RegistryObject<Item> BRASS_LANTERN_ITEM = ITEMS.register(BRASS_LANTERN_NAME,()-> new BlockItem(BRASS_LANTERN.get(),
+            (new Item.Properties()).tab(getTab(ItemGroup.TAB_DECORATIONS,BRASS_LANTERN_NAME))));
+
+
+    public static final RegistryObject<TileEntityType<OilLanternBlockTile>> COPPER_LANTERN_TILE = TILES.register(COPPER_LANTERN_NAME,()-> TileEntityType.Builder.of(
+            OilLanternBlockTile::new, COPPER_LANTERN.get(),BRASS_LANTERN.get()).build(null));
 
     //crimson lantern
     public static final String CRIMSON_LANTERN_NAME = "crimson_lantern";
@@ -919,8 +917,7 @@ public class Registry {
             (new Item.Properties()).tab(getTab(ItemGroup.TAB_DECORATIONS,CRIMSON_LANTERN_NAME))
     ));
 
-    public static final RegistryObject<TileEntityType<OilLanternBlockTile>> COPPER_LANTERN_TILE = TILES.register(COPPER_LANTERN_NAME,()-> TileEntityType.Builder.of(
-            OilLanternBlockTile::new, COPPER_LANTERN.get()).build(null));
+
 
     //doormat
     public static final String DOORMAT_NAME = "doormat";
@@ -1322,6 +1319,24 @@ public class Registry {
     public static final RegistryObject<TileEntityType<FlowerBoxBlockTile>> FLOWER_BOX_TILE = TILES.register(FLOWER_BOX_NAME,()-> TileEntityType.Builder.of(
             FlowerBoxBlockTile::new, FLOWER_BOX.get()).build(null));
 
+    //goblet
+    public static final String GOBLET_NAME = "goblet";
+    public static final RegistryObject<Block> GOBLET = BLOCKS.register(GOBLET_NAME,()-> new GobletBlock(
+            AbstractBlock.Properties.of(Material.METAL,MaterialColor.METAL)
+                    .strength(1.5f, 2f)
+                    .sound(SoundType.METAL)));
+
+    public static final RegistryObject<Item> GOBLET_ITEM = regBlockItem(GOBLET, getTab(ItemGroup.TAB_DECORATIONS, GOBLET_NAME));
+
+    public static final RegistryObject<TileEntityType<GobletBlockTile>> GOBLET_TILE = TILES.register(GOBLET_NAME,()-> TileEntityType.Builder.of(
+            GobletBlockTile::new, GOBLET.get()).build(null));
+
+    //raked gravel
+    public static final String RAKED_GRAVEL_NAME = "raked_gravel";
+    public static final RegistryObject<Block> RAKED_GRAVEL = BLOCKS.register(RAKED_GRAVEL_NAME,()-> new RakedGravelBlock(
+            AbstractBlock.Properties.copy(Blocks.GRAVEL)));
+
+    public static final RegistryObject<Item> RAKED_GRAVEL_ITEM = regBlockItem(RAKED_GRAVEL, getTab(ItemGroup.TAB_DECORATIONS, RAKED_GRAVEL_NAME));
 
     /*
     public static final String REDSTONE_DRIVER_NAME = "redstone_driver";

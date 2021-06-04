@@ -23,7 +23,7 @@
       "model": "supplementaries:block/laser_on",
       "x": 90
     },
-	    "facing=north,powered=false": {
+    "facing=north,powered=false": {
       "model": "supplementaries:block/laser_off"
     },
     "facing=east,powered=false": {

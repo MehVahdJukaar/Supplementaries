@@ -41,6 +41,7 @@ public abstract class MineshaftMixin extends StructurePiece {
 
     /**
      * @author mehvahdjukaar
+     * @reason replacing some torches with lanterns
      */
     @Overwrite
     private void placeSupport(ISeedReader reader, MutableBoundingBox boundingBox, int minX, int minY, int z, int y, int maxX, Random random) {

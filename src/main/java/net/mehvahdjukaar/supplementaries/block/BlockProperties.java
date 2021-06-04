@@ -3,7 +3,11 @@ package net.mehvahdjukaar.supplementaries.block;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.IntegerProperty;
+import net.minecraft.util.Direction;
 import net.minecraft.util.IStringSerializable;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class BlockProperties {
 
@@ -37,16 +41,20 @@ public class BlockProperties {
     public static final BooleanProperty AXIS_Z = BooleanProperty.create("axis_z");
     public static final BooleanProperty FLOOR = BooleanProperty.create("floor");
     public static final BooleanProperty LAVALOGGED = BooleanProperty.create("lavalogged");
+    public static final EnumProperty<RakeDirection> RAKE_DIRECTION = EnumProperty.create("shape",RakeDirection.class);
+    public static final BooleanProperty HAS_BLOCK = BooleanProperty.create("has_block");
+    public static final BooleanProperty ROTATING = BooleanProperty.create("rotating");
 
     public enum RopeAttachment implements IStringSerializable{
-
         NONE("none"), //default /no attachment
         BLOCK("block"), //block attachment / pillar attachment
         //WALL("wall"), //wall attachment
         //POST("post"), //post attachment (druid craft ie)
-        KNOT("knot"),
+        KNOT("knot"), //fence+ knot
         FENCE("fence"); //fence attachment
+
         private final String name;
+
         RopeAttachment(String name) {
             this.name = name;
         }
@@ -55,6 +63,7 @@ public class BlockProperties {
             return this.name;
         }
 
+        @Override
         public String getSerializedName() {
             return this.name;
         }
@@ -66,6 +75,7 @@ public class BlockProperties {
         public boolean isNone(){
             return this==NONE;
         }
+
         public boolean isBlock(){
             return this==BLOCK;
         }
@@ -79,8 +89,8 @@ public class BlockProperties {
         SYRUP("syrup"),
         CHOCOLATE("chocolate");
 
-
         private final String name;
+
         Topping(String name) {
             this.name = name;
         }
@@ -96,6 +106,7 @@ public class BlockProperties {
         ROPE("rope");
 
         private final String name;
+
         Winding(String name) {
             this.name = name;
         }
@@ -103,8 +114,44 @@ public class BlockProperties {
         @Override
         public String getSerializedName() {
             return this.name;
-
         }
     }
+    public enum RakeDirection implements IStringSerializable {
+        NORTH_SOUTH("north_south",Direction.NORTH,Direction.SOUTH),
+        EAST_WEST("east_west",Direction.EAST,Direction.WEST),
+        SOUTH_EAST("south_east",Direction.SOUTH,Direction.EAST),
+        SOUTH_WEST("south_west",Direction.SOUTH,Direction.WEST),
+        NORTH_WEST("north_west",Direction.NORTH,Direction.WEST),
+        NORTH_EAST("north_east",Direction.NORTH,Direction.EAST);
+
+        private final List<Direction> directions;
+        private final String name;
+
+        RakeDirection(String name, Direction dir1, Direction dir2) {
+            this.name = name;
+            this.directions = Arrays.asList(dir1,dir2);
+        }
+
+        public String toString() {
+            return this.name;
+        }
+
+        @Override
+        public String getSerializedName() {
+            return this.name;
+        }
+
+        public List<Direction> getDirections() {
+            return directions;
+        }
+
+        public static RakeDirection fromDirections(List<Direction> directions){
+            for(RakeDirection shape : values()){
+                if(shape.getDirections().containsAll(directions))return shape;
+            }
+            return directions.get(0).getAxis() == Direction.Axis.Z ? NORTH_SOUTH : EAST_WEST;
+        }
+    }
+
 
 }

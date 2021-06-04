@@ -1,23 +1,17 @@
 
 {
   "variants": {
-    "tile_3=0,flipped=true": {
+    "has_block=false,flipped=true": {
       "model": "supplementaries:block/timber_brace_f"
     },
-    "tile_3=1,flipped=true": {
-      "model": "supplementaries:block/mimic_block"
+    "has_block=true,flipped=true": {
+      "model": "supplementaries:block/timber_brace_loader_f"
     },
-    "tile_3=2,flipped=true": {
-      "model": "supplementaries:block/timber_brace_f_overlay"
-    },
-    "tile_3=0,flipped=false": {
+    "has_block=false,flipped=false": {
       "model": "supplementaries:block/timber_brace"
     },
-    "tile_3=1,flipped=false": {
-      "model": "supplementaries:block/mimic_block"
-    },
-    "tile_3=2,flipped=false": {
-      "model": "supplementaries:block/timber_brace_overlay"
+    "has_block=true,flipped=false": {
+      "model": "supplementaries:block/timber_brace_loader"
     }
   }
 }

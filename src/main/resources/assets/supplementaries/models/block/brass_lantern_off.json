@@ -1,0 +1,7 @@
+{
+	"parent": "supplementaries:block/brass_lantern",
+	"textures": {
+		"particle": "supplementaries:blocks/brass_lantern_off",
+		"0": "supplementaries:blocks/brass_lantern_off"
+	}
+}

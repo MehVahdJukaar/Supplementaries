@@ -53,6 +53,7 @@ public class FenceSignBlockTile extends TileEntity implements ITextHolder, IBloc
 
     @Override
     public void setChanged() {
+        if(this.level==null)return;
         this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
         super.setChanged();
     }

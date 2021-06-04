@@ -4,7 +4,7 @@
 	"textures": {
 		"0": "supplementaries:blocks/blackboard_side",
 		"1": "supplementaries:blocks/blackboard_back",
-		"2": "supplementaries:entity/blackboard",
+		"2": "supplementaries:blocks/blackboard",
 		"particle": "supplementaries:blocks/blackboard_side"
 	},
 	"elements": [
@@ -20,9 +20,9 @@
 			}
 		},
 		{
-			"from": [0, 0, 11.5],
-			"to": [16, 16, 11.5],
-			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8.5]},
+			"from": [0, 0, 11.25],
+			"to": [16, 16, 11.25],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8.25]},
 			"faces": {
 				"north": {"uv": [0, 0, 8, 16], "texture": "#2"}
 			}

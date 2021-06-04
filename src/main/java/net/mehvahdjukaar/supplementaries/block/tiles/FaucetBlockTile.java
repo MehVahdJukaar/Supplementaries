@@ -53,6 +53,7 @@ public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
 
     @Override
     public void setChanged() {
+        if(this.level==null)return;
         int light = this.fluidHolder.getFluid().getLuminosity();
         if(light!=this.getBlockState().getValue(BlockProperties.LIGHT_LEVEL_0_15)){
             this.level.setBlock(this.worldPosition,this.getBlockState().setValue(BlockProperties.LIGHT_LEVEL_0_15,light),2);

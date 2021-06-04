@@ -9,11 +9,8 @@ import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.Atlases;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.client.renderer.model.RenderMaterial;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
@@ -33,18 +30,6 @@ public class FlagBlockTileRenderer extends TileEntityRenderer<FlagBlockTile> {
         super(rendererDispatcherIn);
     }
 
-
-    public static void renderPatterns(MatrixStack matrixStack, IRenderTypeBuffer buffer, int light, int overlay, ModelRenderer model, RenderMaterial material, List<Pair<BannerPattern, DyeColor>> patternsList, boolean hasFoil) {
-        model.render(matrixStack, material.buffer(buffer, RenderType::entitySolid, hasFoil), light, overlay);
-
-        for(int i = 0; i < 17 && i < patternsList.size(); ++i) {
-            Pair<BannerPattern, DyeColor> pair = patternsList.get(i);
-            float[] afloat = pair.getSecond().getTextureDiffuseColors();
-            RenderMaterial rendermaterial = new RenderMaterial(Atlases.BANNER_SHEET, FlagBlockTile.getFlagLocation(pair.getFirst()));
-            model.render(matrixStack, rendermaterial.buffer(buffer, RenderType::entityNoOutline), light, overlay, afloat[0], afloat[1], afloat[2], 1.0F);
-        }
-
-    }
 
 
     @Override
@@ -79,32 +64,11 @@ public class FlagBlockTileRenderer extends TileEntityRenderer<FlagBlockTile> {
 
 
             int segmentlen =  (minecraft.options.graphicsMode.getId() >= ClientConfigs.cached.FLAG_FANCINESS) ? 1 : w;
-
             for (int z = 0; z < w; z += segmentlen) {
 
                 float ang = (float) ((wavyness + invdamping * z) * MathHelper.sin((float) ((((z / l) - t * 2 * (float) Math.PI)))));
 
-
-                for(int p = 0; p<list.size(); p++) {
-                    ResourceLocation texture = FlagBlockTile.getFlagLocation(list.get(p).getFirst());
-                    RenderType renderType = p==0? RenderType.entitySolid(texture) : RenderType.entityNoOutline(texture);
-                    IVertexBuilder builder = bufferIn.getBuffer(renderType);
-
-                    matrixStackIn.pushPose();
-
-                    int color = list.get(p).getSecond().getColorValue();
-                    float b = (NativeImage.getR(color)) / 255f;
-                    float g = (NativeImage.getG(color)) / 255f;
-                    float r = (NativeImage.getB(color)) / 255f;
-
-
-                    renderCurvedSegment(builder, matrixStackIn, ang, z, segmentlen, h, lu, lv, z + segmentlen >= w, r, g, b);
-                    //IVertexBuilder builder2 = bufferIn.getBuffer(RenderType.getEntityNoOutline(new ResourceLocation("supplementaries:textures/entity/flagcross.png")));
-
-                    //renderCurvedSegment(builder2, matrixStackIn, ang, z, segmentlen, h, lu, lv, z + segmentlen >= w, zAxis);
-
-                    matrixStackIn.popPose();
-                }
+                renderPatterns(bufferIn,matrixStackIn,list,lu,lv,z,w,h,segmentlen,ang);
                 matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(ang));
                 matrixStackIn.translate(0, 0, segmentlen / 16f);
                 matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-ang));
@@ -115,6 +79,37 @@ public class FlagBlockTileRenderer extends TileEntityRenderer<FlagBlockTile> {
 
     }
 
+    public static void renderPatterns(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn,  List<Pair<BannerPattern, DyeColor>> list, int combinedLightIn) {
+        int lu = combinedLightIn & '\uffff';
+        int lv = combinedLightIn >> 16 & '\uffff';
+        renderPatterns(bufferIn,matrixStackIn,list,lu,lv,0,24,16,24,0);
+    }
+
+    private static void renderPatterns(IRenderTypeBuffer bufferIn, MatrixStack matrixStackIn, List<Pair<BannerPattern, DyeColor>> list, int lu, int lv, int z, int w, int h, int segmentlen, float ang){
+
+        for(int p = 0; p<list.size(); p++) {
+            ResourceLocation texture = FlagBlockTile.getFlagLocation(list.get(p).getFirst());
+            RenderType renderType = p==0? RenderType.entitySolid(texture) : RenderType.entityNoOutline(texture);
+            IVertexBuilder builder = bufferIn.getBuffer(renderType);
+
+            matrixStackIn.pushPose();
+
+            int color = list.get(p).getSecond().getColorValue();
+            float b = (NativeImage.getR(color)) / 255f;
+            float g = (NativeImage.getG(color)) / 255f;
+            float r = (NativeImage.getB(color)) / 255f;
+
+
+            renderCurvedSegment(builder, matrixStackIn, ang, z, segmentlen, h, lu, lv, z + segmentlen >= w, r, g, b);
+            //IVertexBuilder builder2 = bufferIn.getBuffer(RenderType.getEntityNoOutline(new ResourceLocation("supplementaries:textures/entity/flagcross.png")));
+
+            //renderCurvedSegment(builder2, matrixStackIn, ang, z, segmentlen, h, lu, lv, z + segmentlen >= w, zAxis);
+
+            matrixStackIn.popPose();
+        }
+
+
+    }
 
 
 

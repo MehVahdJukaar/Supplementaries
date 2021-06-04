@@ -54,7 +54,6 @@ public class BlackBoardGui extends Screen {
             }
         }
         NetworkHandler.INSTANCE.sendToServer(new UpdateServerBlackboardPacket(this.tileBoard.getBlockPos(),pixels));
-        this.tileBoard.setEditable(true);
     }
 
     private void close() {
@@ -100,7 +99,6 @@ public class BlackBoardGui extends Screen {
         this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
         this.addButton(new Button(this.width / 2 - 100, this.height / 4 + 120, 100-4, 20, new TranslationTextComponent("gui.supplementaries.blackboard.clear"), (b) -> this.clear()));
         this.addButton(new Button(this.width / 2 + 4, this.height / 4 + 120, 100-4, 20, DialogTexts.GUI_DONE, (p_238847_1_) -> this.close()));
-        this.tileBoard.setEditable(false);
     }
 
     @Override

@@ -13,12 +13,13 @@
     "CatSitOnBlockMixin",
     "CauldronBlockMixin",
     "CrossbowItemMixin",
-
     "EatGrassGoalMixin",
     "LakeMixin",
     "LanternBlockMixin",
     "LivingEntityMixin",
+    "LoomContainerMixin",
     "MapDataPostsMixin",
+    "MapExtendingRecipeMixin",
     "MineshaftMixin",
     "PistonTileEntityMixin",
     "ShulkerBoxSlotMixin",
@@ -33,6 +34,8 @@
   "client": [
     "BellTileEntityRendererMixin",
     "IronGolemRendererMixin",
+    "LoomScreenMixin",
+    "MapItemRendererMixin",
     "ParrotPartyMixin"
   ],
   "injectors": {

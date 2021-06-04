@@ -1,0 +1,7 @@
+{
+	"parent": "minecraft:block/template_farmland",
+	"textures": {
+		"dirt": "minecraft:block/gravel",
+		"top": "supplementaries:blocks/raked_gravel"
+	}
+}

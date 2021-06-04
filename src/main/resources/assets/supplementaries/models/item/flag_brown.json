@@ -1,8 +1,3 @@
 {
-	"parent": "item/generated",
-	"textures": {
-		"layer0": "supplementaries:items/flag",
-		"layer1": "supplementaries:items/flag_overlay"
-	}
+	"parent": "supplementaries:item/flag_black"
 }
-

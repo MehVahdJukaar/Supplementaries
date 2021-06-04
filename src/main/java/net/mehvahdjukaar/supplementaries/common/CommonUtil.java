@@ -75,7 +75,7 @@ public class CommonUtil {
     public static Festivity FESTIVITY = Festivity.get();
 
 
-    //TODO: I hope nobody is reading this
+    //TODO: I hope nobody is reading this. also delete this is obsolete
 
 
     //fluids
@@ -257,6 +257,7 @@ public class CommonUtil {
         else return 1;
     }
 
+    //TODO: delete this too
     public enum TempWoodType implements IStringSerializable {
         NONE("none"),
         OAK("oak"),

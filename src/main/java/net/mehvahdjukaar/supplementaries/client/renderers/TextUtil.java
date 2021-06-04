@@ -40,10 +40,11 @@ public class TextUtil {
                 "\nNary"+
                 "\nVladimirLemon"+
                 "\n\n\u00A75Mod Compat.:\u00A7r\n\n\u00A70"+
-                "WenXin2"+
+                "Agrona"+
+                "\nWenXin2"+
                 "\nFrogbirdd"+
                 "\nMightyGoat"+
-                "\nAgrona"+
+                "\nFr_z_n"+
                 "\nAlleCraft"+
                 "\n\n\u00A75Translations:\u00A7r\n\n\u00A70"+
                 "Bart_Riot23"+

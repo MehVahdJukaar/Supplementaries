@@ -271,8 +271,8 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
             }
 
         }
-        catch (Exception ignored){
-            Supplementaries.LOGGER.warn("failed to generate road sign at "+this.worldPosition.toShortString());
+        catch (Exception exception){
+            Supplementaries.LOGGER.warn("failed to generate road sign at "+this.worldPosition.toString()+": "+exception);
         }
 
         this.level.removeBlock(this.worldPosition, false);

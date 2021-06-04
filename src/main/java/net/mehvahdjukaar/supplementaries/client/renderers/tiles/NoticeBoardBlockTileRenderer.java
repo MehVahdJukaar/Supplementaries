@@ -51,9 +51,6 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
     public void render(NoticeBoardBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
 
-
-
-
         if(tile.textVisible){
 
             ItemStack stack = tile.getDisplayedItem();

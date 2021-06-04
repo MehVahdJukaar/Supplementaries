@@ -1,7 +1,7 @@
 {
   "type": "minecraft:stonecutting",
   "ingredient": {
-    "item": "supplementaries:polished_blackstone_bricks"
+    "item": "minecraft:polished_blackstone_bricks"
   },
   "result": "supplementaries:blackstone_tile",
   "count": 1

@@ -46,7 +46,6 @@ public class BellowsBlockTileRenderer extends TileEntityRenderer<BellowsBlockTil
     @Override
     public void render(BellowsBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
-
         IVertexBuilder builder = Materials.BELLOWS_MATERIAL.buffer(bufferIn, RenderType::entitySolid);
 
 

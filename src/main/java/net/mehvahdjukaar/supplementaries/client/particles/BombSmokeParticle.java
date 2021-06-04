@@ -48,6 +48,7 @@ public class BombSmokeParticle extends SpriteTexturedParticle {
             this.spriteSet = spriteSet;
         }
 
+        @Override
         public Particle createParticle(BasicParticleType typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
             BombSmokeParticle particle = new BombSmokeParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed);
             particle.setAlpha(0.9F);

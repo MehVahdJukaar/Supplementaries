@@ -15,9 +15,12 @@ import net.minecraft.tileentity.BannerPattern;
 import net.minecraft.tileentity.BannerTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.INameable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -25,14 +28,15 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class FlagBlockTile extends TileEntity {
+public class FlagBlockTile extends TileEntity implements INameable {
 
     //client side param
     public final float offset = 3f * (MathHelper.sin(this.worldPosition.getX()) + MathHelper.sin(this.worldPosition.getZ()));
     public float counter = 0;
-
     @Nullable
-    private DyeColor baseColor = DyeColor.WHITE;
+    private ITextComponent name;
+    @Nullable
+    private DyeColor baseColor = null;
     @Nullable
     private ListNBT itemPatterns;
     private boolean receivedData;
@@ -50,6 +54,10 @@ public class FlagBlockTile extends TileEntity {
 
     public static ResourceLocation getFlagLocation(BannerPattern pattern){
         return new ResourceLocation(Supplementaries.MOD_ID, "textures/entity/flags/"+ pattern.getFilename()+".png");
+    }
+
+    public void setCustomName(ITextComponent p_213136_1_) {
+        this.name = p_213136_1_;
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -74,6 +82,9 @@ public class FlagBlockTile extends TileEntity {
         if (this.itemPatterns != null && !this.itemPatterns.isEmpty()) {
             itemstack.getOrCreateTagElement("BlockEntityTag").put("Patterns", this.itemPatterns.copy());
         }
+        if (this.name != null) {
+            itemstack.setHoverName(this.name);
+        }
         return itemstack;
     }
 
@@ -90,13 +101,18 @@ public class FlagBlockTile extends TileEntity {
         if (this.itemPatterns != null) {
             compoundNBT.put("Patterns", this.itemPatterns);
         }
+        if (this.name != null) {
+            compoundNBT.putString("CustomName", ITextComponent.Serializer.toJson(this.name));
+        }
         return compoundNBT;
     }
 
     @Override
     public void load(BlockState state, CompoundNBT compoundNBT) {
         super.load(state, compoundNBT);
-
+        if (compoundNBT.contains("CustomName", 8)) {
+            this.name = ITextComponent.Serializer.fromJson(compoundNBT.getString("CustomName"));
+        }
         if (this.hasLevel()) {
             this.baseColor = ((FlagBlock)this.getBlockState().getBlock()).getColor();
         } else {
@@ -124,7 +140,7 @@ public class FlagBlockTile extends TileEntity {
 
     @Override
     public double getViewDistance() {
-        return 112;
+        return 128;
     }
 
     @Override
@@ -138,5 +154,13 @@ public class FlagBlockTile extends TileEntity {
         return this.getBlockState().getValue(FlagBlock.FACING);
     }
 
+    @Override
+    public ITextComponent getName() {
+        return this.name != null ? this.name : new TranslationTextComponent("block.supplementaries.flag_"+this.getBaseColor(this::getBlockState).getName());
+    }
 
+    @Nullable
+    public ITextComponent getCustomName() {
+        return this.name;
+    }
 }

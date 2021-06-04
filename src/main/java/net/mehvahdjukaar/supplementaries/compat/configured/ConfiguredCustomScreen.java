@@ -82,6 +82,9 @@ public class ConfiguredCustomScreen extends ConfigScreen {
         addIcon("placeable sticks", Items.STICK);
         addIcon("brewing stand colors", Items.BREWING_STAND);
         addIcon("timber frame", Registry.TIMBER_BRACE_ITEM.get());
+        addIcon("raked gravel", Registry.RAKED_GRAVEL_ITEM.get());
+        addIcon("bottle xp", Items.EXPERIENCE_BOTTLE);
+        addIcon("hourglass", Registry.HOURGLASS_ITEM.get());
     }
 
     private static void addIcon(String s, Item i){

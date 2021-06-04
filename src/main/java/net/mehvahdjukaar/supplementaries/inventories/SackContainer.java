@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.inventories;
 
-import net.mehvahdjukaar.supplementaries.client.gui.SackSlot;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.entity.player.PlayerEntity;

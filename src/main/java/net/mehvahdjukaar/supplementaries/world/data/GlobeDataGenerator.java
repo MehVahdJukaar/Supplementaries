@@ -1,26 +1,17 @@
 package net.mehvahdjukaar.supplementaries.world.data;
 
-import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
-import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.util.math.MathHelper;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Random;
 
 public class GlobeDataGenerator {
     //object instance
 
-    public static final int SIDE = 8;
-    public static final int WIDTH = SIDE*4;
-    public static final int HEIGHT = SIDE*2;
-    public static final int SCALE = 20;
-
-    //might make this an array
-    public static final HashMap<String,HashMap<Byte,Integer>> dimensionColorMap = new HashMap<>();
-    public static final HashMap<Byte,Integer> colorMap = new HashMap<>();
+    private static final int SIDE = 8;
+    private static final int WIDTH = SIDE*4;
+    private static final int HEIGHT = SIDE*2;
+    private static final int SCALE = 20;
 
     public static Random RAND = new Random(1);
     public static Pixel[][] pixels = new Pixel[WIDTH][HEIGHT];
@@ -39,93 +30,6 @@ public class GlobeDataGenerator {
 
     public enum Face{
         F1,F2,F3,F4,TOP,BOT,NA
-    }
-
-    //TODO: merge these two
-    static{
-        colorMap.put(Col.BLACK,0); //black
-        colorMap.put(Col.WATER,0x23658d);
-
-        colorMap.put(Col.WATER_S,0x25527d);
-
-        colorMap.put(Col.WATER_D,0x1d396d);
-
-        colorMap.put(Col.SUNKEN,0x2d8a5c);
-
-        colorMap.put(Col.GREEN,0x34a03a);
-
-        colorMap.put(Col.GREEN_S,0x6ea14b);
-
-        colorMap.put(Col.HOT_S,0x89a83d);
-
-        colorMap.put(Col.HOT,0xb5ba65);
-
-        colorMap.put(Col.COLD,0xccd7d5);
-
-        colorMap.put(Col.COLD_S,0x83b4c6);
-
-        colorMap.put(Col.ICEBERG,0x2f83a2);
-
-        colorMap.put(Col.MUSHROOM,0x826e71);
-
-        colorMap.put(Col.MUSHROOM_S,0x8e8675);
-
-        //TODO: finish this
-        colorMap.put(Col.TAIGA,0x2d8a5c);
-
-
-        colorMap.put(Col.MESA,0xc28947);
-
-        colorMap.put(Col.MESA_S,0xba9f65);
-
-        colorMap.put(Col.MOUNTAIN,0xba9f65);
-
-        colorMap.put(Col.MOUNTAIN_S,0x769169);
-
-
-    }
-
-    public static List<List<String>> getDefaultConfig(){
-        List<List<String>> l = new ArrayList<>();
-        List<String> col = new ArrayList<>();
-        col.add("minecraft:overworld");
-        for(int i = 1; i<13; i++) {
-            col.add(Integer.toHexString(colorMap.get((byte)i)));
-        }
-        l.add(col);
-
-        //l.add(Arrays.asList("minecraft:the_nether", "941818", "7b0000", "6a0400", "16615b", "941818", "ca4e06", "e66410", "f48522", "5a0000", "32333d", "118066", "100c1c"));
-        //l.add(Arrays.asList("minecraft:the_end", "061914", "000000", "2a0d2a", "000000", "d5da94", "cdc68b", "061914", "2a0d2a", "cdc68b", "000000", "eef6b4", "b286b2"));
-        return l;
-    }
-
-
-    public static void refreshColorsFromConfig(){
-        dimensionColorMap.clear();
-        try {
-            List<? extends List<String>> customColors = ClientConfigs.block.GLOBE_COLORS.get();
-            for (List<String> l : customColors) {
-                if (l.size() >= 13) {
-                    String id = l.get(0);
-                    HashMap<Byte, Integer> col = new HashMap<>();
-                    for (int i = 1; i < 13; i++) {
-                        int hex;
-                        try {
-                            hex = Integer.parseInt(l.get(i).replace("0x", ""), 16);
-                        } catch (Exception e) {
-                            Supplementaries.LOGGER.warn("failed to parse config 'globe_colors' (at dimension" + id + "). Try deleting them");
-                            continue;
-                        }
-                        col.put((byte) i, hex);
-                    }
-                    dimensionColorMap.put(id, col);
-                }
-            }
-        }
-        catch (Exception e){
-            Supplementaries.LOGGER.warn("failed to parse config globe_color configs. Try deleting them");
-            dimensionColorMap.put("minecraft:overworld",new HashMap<>(colorMap));
-        }
     }
 
     public static class Col{
@@ -150,12 +54,8 @@ public class GlobeDataGenerator {
         public static final byte MESA_S = 16;
         public static final byte MOUNTAIN = 17;
         public static final byte MOUNTAIN_S = 18;
-
     }
 
-    public static int getRGB(byte b, String dimension){
-        return dimensionColorMap.getOrDefault(dimension,colorMap).getOrDefault(b,0);
-    }
 
     public static class Pos{
         public final int x;
@@ -275,7 +175,29 @@ public class GlobeDataGenerator {
         }
         generateLand();
         applyEffects();
+
+        fixBottomFace();
         return getByteMatrix();
+    }
+
+    //I messed up I have to rotate bottom face by 180
+    public static void fixBottomFace(){
+        int N = 8;
+        Pixel[][] mat = new Pixel[N][N];
+        for (int x=16; x< 24; x++) {
+            System.arraycopy(pixels[x], 0, mat[x - 16], 0, 8);
+        }
+        // rotate the matrix by 180 degrees
+        for (int i = 0; i < N /2; i++) {
+            for (int j = 0; j < N; j++) {
+                Pixel temp = mat[i][j];
+                mat[i][j] = mat[N - i - 1][N - j - 1];
+                mat[N - i - 1][N - j - 1] = temp;
+            }
+        }
+        for (int k=0; k< 8; k++) {
+            System.arraycopy(mat[k], 0, pixels[k + 16], 0, 8);
+        }
     }
 
     public static byte[][] getByteMatrix(){

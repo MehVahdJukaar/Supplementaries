@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.block.util.IBlockHolder;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
@@ -25,7 +26,8 @@ import net.minecraft.world.World;
 import java.util.function.Supplier;
 
 public class FrameBlock extends MimicBlock {
-    public static final IntegerProperty TILE = BlockProperties.TILE_3;
+
+    public static final BooleanProperty HAS_BLOCK = BlockProperties.HAS_BLOCK;
     public static final IntegerProperty LIGHT_LEVEL = BlockProperties.LIGHT_LEVEL_0_15;
     public static final VoxelShape OCCLUSION_SHAPE = Block.box(0.01,0.01,0.01,15.99,15.99,15.99);
     public static final VoxelShape OCCLUSION_SHAPE_2 = Block.box(-0.01,-0.01,-0.01,16.01,16.01,16.01);
@@ -34,7 +36,7 @@ public class FrameBlock extends MimicBlock {
     public FrameBlock(Properties properties,Supplier<Block> daub) {
         super(properties);
         this.daub = daub;
-        this.registerDefaultState(this.stateDefinition.any().setValue(LIGHT_LEVEL, 0).setValue(TILE,0));
+        this.registerDefaultState(this.stateDefinition.any().setValue(LIGHT_LEVEL, 0).setValue(HAS_BLOCK,false));
     }
 
 
@@ -46,8 +48,8 @@ public class FrameBlock extends MimicBlock {
 
     @Override
     public boolean skipRendering(BlockState state, BlockState adjacentBlockState, Direction side) {
-        if(state.getValue(TILE)!=1) {
-            return (adjacentBlockState.getBlock() instanceof FrameBlock && state.getValue(TILE).equals(adjacentBlockState.getValue(TILE))) || super.skipRendering(state, adjacentBlockState, side);
+        if(!state.getValue(HAS_BLOCK)) {
+            return (adjacentBlockState.getBlock() instanceof FrameBlock && state.getValue(HAS_BLOCK).equals(adjacentBlockState.getValue(HAS_BLOCK))) || super.skipRendering(state, adjacentBlockState, side);
         }
         return false;
     }
@@ -61,7 +63,7 @@ public class FrameBlock extends MimicBlock {
 
     @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(LIGHT_LEVEL,TILE);
+        builder.add(LIGHT_LEVEL,HAS_BLOCK);
     }
 
     @Override
@@ -91,7 +93,7 @@ public class FrameBlock extends MimicBlock {
     //handles dynamic culling
     @Override
     public VoxelShape getOcclusionShape(BlockState state, IBlockReader reader, BlockPos pos) {
-        if(state.getValue(TILE)==1){
+        if(state.getValue(HAS_BLOCK)){
             TileEntity te = reader.getBlockEntity(pos);
             if (te instanceof FrameBlockTile && !((IBlockHolder) te).getHeldBlock().isAir()) {
                 return VoxelShapes.block();
@@ -131,7 +133,7 @@ public class FrameBlock extends MimicBlock {
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext p_220071_4_) {
-        if(state.getValue(TILE)==1){
+        if(state.getValue(HAS_BLOCK)){
             return VoxelShapes.block();
         }
         return OCCLUSION_SHAPE_2;
@@ -144,11 +146,11 @@ public class FrameBlock extends MimicBlock {
 
     //occlusion shading
     public float getShadeBrightness(BlockState state, IBlockReader reader, BlockPos pos) {
-        return state.getValue(TILE) == 0 ? 1: 0.2f;
+        return state.getValue(HAS_BLOCK) ? 0.2f: 1;
     }
     //let light through
     @Override
     public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
-        return state.getValue(TILE) == 0 || super.propagatesSkylightDown(state, reader, pos);
+        return !state.getValue(HAS_BLOCK) || super.propagatesSkylightDown(state, reader, pos);
     }
 }

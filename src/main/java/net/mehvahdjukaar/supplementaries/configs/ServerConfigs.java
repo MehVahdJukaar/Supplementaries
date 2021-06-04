@@ -3,6 +3,8 @@ package net.mehvahdjukaar.supplementaries.configs;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
+import net.mehvahdjukaar.supplementaries.common.AdventurerMapsHandler;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -94,6 +96,10 @@ public class ServerConfigs {
         public static ForgeConfigSpec.IntValue BELL_CHAIN_LENGTH;
         public static ForgeConfigSpec.BooleanValue PLACEABLE_STICKS;
         public static ForgeConfigSpec.BooleanValue PLACEABLE_RODS;
+        public static ForgeConfigSpec.BooleanValue RAKED_GRAVEL;
+        public static ForgeConfigSpec.BooleanValue BOTTLE_XP;
+        public static ForgeConfigSpec.IntValue BOTTLING_COST;
+        public static ForgeConfigSpec.ConfigValue<List<? extends List<String>>> CUSTOM_ADVENTURER_MAPS_TRADES;
 
         private static void init(ForgeConfigSpec.Builder builder){
             builder.comment("Vanilla tweaks")
@@ -142,6 +148,21 @@ public class ServerConfigs {
                     .define("enabled",true);
             builder.pop();
 
+            builder.push("raked_gravel");
+            RAKED_GRAVEL = builder.comment("allow gravel to be raked with a hoe")
+                    .define("enabled",true);
+            builder.pop();
+
+            builder.push("bottle_xp");
+            BOTTLE_XP = builder.comment("allow bottling up xp by using a bottle on an enchanting table")
+                    .define("enabled",true);
+            BOTTLING_COST = builder.comment("bottling health cost")
+                    .defineInRange("cost",2,0,20);
+            builder.pop();
+
+            builder.push("adventurer_maps");
+            CUSTOM_ADVENTURER_MAPS_TRADES = builder.defineList("custom_adventurer_maps", GlobeTextureManager.GlobeColors.getDefaultConfig(), s->true);
+            builder.pop();
 
             builder.pop();
         }
@@ -189,7 +210,17 @@ public class ServerConfigs {
 
         public static ForgeConfigSpec.BooleanValue REPLACE_DAUB;
 
-        private static void  init(ForgeConfigSpec.Builder builder){
+        public static ForgeConfigSpec.IntValue HOURGLASS_DUST;
+        public static ForgeConfigSpec.IntValue HOURGLASS_SAND;
+        public static ForgeConfigSpec.IntValue HOURGLASS_CONCRETE;
+        public static ForgeConfigSpec.IntValue HOURGLASS_BLAZE_POWDER;
+        public static ForgeConfigSpec.IntValue HOURGLASS_GLOWSTONE;
+        public static ForgeConfigSpec.IntValue HOURGLASS_REDSTONE;
+        public static ForgeConfigSpec.IntValue HOURGLASS_SUGAR;
+        public static ForgeConfigSpec.IntValue HOURGLASS_SLIME;
+        public static ForgeConfigSpec.IntValue HOURGLASS_HONEY;
+
+        private static void init(ForgeConfigSpec.Builder builder){
 
             builder.comment("Server side blocks configs")
                     .push("blocks");
@@ -305,8 +336,28 @@ public class ServerConfigs {
 
             builder.pop();
 
+            builder.push("hourglass");
+            HOURGLASS_SUGAR = builder.comment("Time in ticks for sugar")
+                    .defineInRange("sugar_time",40,0,10000);
+            HOURGLASS_SAND = builder.comment("Time in ticks for sand blocks")
+                    .defineInRange("sand_time",70,0,10000);
+            HOURGLASS_CONCRETE = builder.comment("Time in ticks for concrete blocks")
+                    .defineInRange("concrete_time",105,0,10000);
+            HOURGLASS_DUST = builder.comment("Time in ticks for generic dust")
+                    .defineInRange("dust_time",150,0,10000);
+            HOURGLASS_GLOWSTONE = builder.comment("Time in ticks for glowstone dust")
+                    .defineInRange("glowstone_time",190,0,10000);
+            HOURGLASS_BLAZE_POWDER = builder.comment("Time in ticks for blaze powder")
+                    .defineInRange("blaze_powder_time",277,0,10000);
+            HOURGLASS_REDSTONE = builder.comment("Time in ticks for redstone dust")
+                    .defineInRange("redstone_time",400,0,10000);
+            HOURGLASS_SLIME = builder.comment("Time in ticks for slime balls")
+                    .defineInRange("slime_time",1750,0,10000);
+            HOURGLASS_HONEY = builder.comment("Time in ticks for honey")
+                    .defineInRange("honey_time",2000,0,10000);
             builder.pop();
 
+            builder.pop();
 
         }
     }
@@ -424,6 +475,9 @@ public class ServerConfigs {
         public static int BELL_CHAIN_LENGTH;
         public static boolean PLACEABLE_STICKS;
         public static boolean PLACEABLE_RODS;
+        public static boolean RAKED_GRAVEL;
+        public static boolean BOTTLE_XP;
+        public static int BOTTLING_COST;
         //spawns
         public static int FIREFLY_MIN;
         public static int FIREFLY_MAX;
@@ -465,8 +519,11 @@ public class ServerConfigs {
         public static double FIREFLY_SPEED;
 
         public static void refresh(){
-            PLACEABLE_RODS = tweaks.PLACEABLE_RODS.get();
-            PLACEABLE_STICKS = tweaks.PLACEABLE_STICKS.get();
+            BOTTLING_COST = tweaks.BOTTLING_COST.get();
+            BOTTLE_XP = tweaks.BOTTLE_XP.get();
+            RAKED_GRAVEL = tweaks.RAKED_GRAVEL.get() && RegistryConfigs.reg.RAKED_GRAVEL_ENABLED.get();
+            PLACEABLE_RODS = tweaks.PLACEABLE_RODS.get() && RegistryConfigs.reg.ROD_ENABLED.get();
+            PLACEABLE_STICKS = tweaks.PLACEABLE_STICKS.get() && RegistryConfigs.reg.STICK_ENABLED.get();
             ROPE_ARROW_ROPE = item.ROPE_ARROW_ROPE.get();
             ROPE_ARROW_BLOCK = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ROPE_ARROW_ROPE));
             if(ROPE_ARROW_BLOCK == Blocks.AIR)ROPE_ARROW_BLOCK = Registry.ROPE.get();
@@ -533,6 +590,8 @@ public class ServerConfigs {
             FIREFLY_PERIOD = entity.FIREFLY_PERIOD.get();
             FIREFLY_SPEED = entity.FIREFLY_SPEED.get();
             FIREFLY_DESPAWN = entity.FIREFLY_DESPAWN.get();
+
+            AdventurerMapsHandler.loadCustomTrades();
 
         }
     }

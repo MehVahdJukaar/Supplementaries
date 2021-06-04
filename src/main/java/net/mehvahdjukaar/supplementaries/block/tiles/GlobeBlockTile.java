@@ -128,7 +128,7 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, I
         return this.getBlockState().getValue(GlobeBlock.FACING);
     }
 
-
+    //keep order
     public enum GlobeType {
         DEFAULT(null, null, GLOBE_TEXTURE),
         FLAT(new String[]{"flat","flat earth"}, new TranslationTextComponent("globe.supplementaries.flat"), GLOBE_FLAT_TEXTURE),
@@ -141,8 +141,8 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, I
         CUSTOM_2(new String[]{"toffanelly"}, null, GLOBE_CUSTOM_2),
         CUSTOM_3(new String[]{"sylvetichearts"}, null, GLOBE_CUSTOM_3),
         SUN(new String[]{"sun","sol","helios"},
-                new TranslationTextComponent("globe.supplementaries.sun"),GLOBE_SUN_TEXTURE);
-
+                new TranslationTextComponent("globe.supplementaries.sun"),GLOBE_SUN_TEXTURE),
+        CUSTOM_4(new String[]{"agrona"},null,GLOBE_CUSTOM_4);
 
         GlobeType(String[] key, TranslationTextComponent tr, ResourceLocation res){
             this.keyWords = key;

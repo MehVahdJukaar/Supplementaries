@@ -17,6 +17,7 @@ public class ModCommands {
                         )
                         .then(ReloadConfigsCommand.register(dispatcher))
                         .then(OpenConfiguredCommand.register(dispatcher))
+                        .then(RollDiceCommand.register(dispatcher))
         );
 
         //dispatcher.register(Commands.literal("splm").redirect(mymod));

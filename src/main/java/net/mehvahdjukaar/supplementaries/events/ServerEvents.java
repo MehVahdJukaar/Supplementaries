@@ -1,7 +1,9 @@
 package net.mehvahdjukaar.supplementaries.events;
 
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.blocks.DirectionalCakeBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.DoubleCakeBlock;
+import net.mehvahdjukaar.supplementaries.block.blocks.RakedGravelBlock;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.PicklePlayer;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
@@ -11,8 +13,10 @@ import net.mehvahdjukaar.supplementaries.items.BlockHolderItem;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.SendLoginMessagePacket;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.world.data.map.lib.CustomDecorationHolder;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.*;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.Fluids;
@@ -23,8 +27,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
+import net.minecraft.world.storage.MapData;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.entity.player.UseHoeEvent;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
@@ -115,18 +122,38 @@ public class ServerEvents {
         World world = event.getWorld();
         BlockPos pos = event.getPos();
 
+        BlockState blockstate = world.getBlockState(pos);
+
+        //map markers
+        if (i instanceof FilledMapItem){
+            Block b = blockstate.getBlock();
+            if(b instanceof BedBlock||b.is(Blocks.LODESTONE)||b.is(Blocks.NETHER_PORTAL)||b.is(Blocks.BEACON)||
+                    b.is(Blocks.CONDUIT)||b.is(Blocks.RESPAWN_ANCHOR)||b.is(Blocks.END_GATEWAY)||b.is(Blocks.END_PORTAL)){
+                if(!world.isClientSide) {
+                    MapData data = FilledMapItem.getOrCreateSavedData(stack, world);
+                    if (data instanceof CustomDecorationHolder) {
+                        ((CustomDecorationHolder) data).toggleCustomDecoration(world, pos);
+                    }
+                }
+                event.setCanceled(true);
+                event.setCancellationResult(ActionResultType.sidedSuccess(world.isClientSide));
+                return;
+            }
+        }
+
 
         //order matters here
         if (!player.isShiftKeyDown()) {
+
             //directional cake conversion
-            if (ServerConfigs.cached.DIRECTIONAL_CAKE && world.getBlockState(pos) == Blocks.CAKE.defaultBlockState() &&
+            if (ServerConfigs.cached.DIRECTIONAL_CAKE && blockstate == Blocks.CAKE.defaultBlockState() &&
                     !(ServerConfigs.cached.DOUBLE_CAKE_PLACEMENT && i == Items.CAKE)) {
                 world.setBlock(pos, Registry.DIRECTIONAL_CAKE.get().defaultBlockState(), 4);
-                BlockState blockstate = world.getBlockState(pos);
                 BlockRayTraceResult raytrace = new BlockRayTraceResult(
                         new Vector3d(pos.getX(), pos.getY(), pos.getZ()), dir, pos, false);
                 event.setCancellationResult(blockstate.use(world, player, hand, raytrace));
                 event.setCanceled(true);
+
                 return;
             }
 
@@ -140,6 +167,26 @@ public class ServerEvents {
                     return;
                 }
             }
+        }
+
+        //xp bottling
+        if (ServerConfigs.cached.BOTTLE_XP && blockstate.getBlock() instanceof EnchantingTableBlock && i == Items.GLASS_BOTTLE){
+            if(player.experienceLevel>0 || player.isCreative()) {
+                player.hurt(DamageSource.MAGIC, ServerConfigs.cached.BOTTLING_COST);
+                CommonUtil.swapItem(player, hand, new ItemStack(Items.EXPERIENCE_BOTTLE));
+
+                if(!player.isCreative())
+                    player.giveExperiencePoints(-(3 + world.random.nextInt(5) + world.random.nextInt(5)));
+
+                if(world.isClientSide) {
+                    Minecraft.getInstance().particleEngine.createTrackingEmitter(player, Registry.BOTTLING_XP_PARTICLE.get(), 1);
+                }
+                world.playSound(null, player.blockPosition(), SoundEvents.BOTTLE_FILL_DRAGONBREATH, SoundCategory.BLOCKS, 1, 1);
+                event.setCanceled(true);
+                event.setCancellationResult(ActionResultType.sidedSuccess(world.isClientSide));
+                return;
+            }
+
         }
 
         //block overrides
@@ -217,15 +264,34 @@ public class ServerEvents {
         }
 
     }
+    //raked gravel
+    @SubscribeEvent
+    public static void onHoeUsed(UseHoeEvent event) {
+        ItemUseContext context = event.getContext();
+        World world = context.getLevel();
+        BlockPos pos = context.getClickedPos();
+        if (ServerConfigs.cached.RAKED_GRAVEL){
+            if(world.getBlockState(pos).is(Blocks.GRAVEL)){
+                BlockState raked = Registry.RAKED_GRAVEL.get().defaultBlockState();
+                if(raked.canSurvive(world,pos)){
+                    world.setBlock(pos, RakedGravelBlock.getConnectedState(raked,world,pos,context.getHorizontalDirection()),11);
+                    world.playSound(context.getPlayer(), pos, SoundEvents.HOE_TILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    event.setResult(Event.Result.ALLOW);
+                }
+            }
+        }
 
+    }
 
-
-    //TODO: maybe use player logged in and send packet
     @SubscribeEvent
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-        NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) event.getPlayer()),
-                new SendLoginMessagePacket());
-
+        try {
+            NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) event.getPlayer()),
+                    new SendLoginMessagePacket());
+        }
+        catch (Exception exception){
+            Supplementaries.LOGGER.warn("failed to end login message: "+ exception);
+        }
         //send in pickles
         PicklePlayer.PickleData.onPlayerLogin(event.getPlayer());
 

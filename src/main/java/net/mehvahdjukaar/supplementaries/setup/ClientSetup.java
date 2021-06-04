@@ -1,10 +1,12 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.block.blocks.CogBlock;
 import net.mehvahdjukaar.supplementaries.client.gui.NoticeBoardGui;
 import net.mehvahdjukaar.supplementaries.client.gui.OrangeMerchantGui;
 import net.mehvahdjukaar.supplementaries.client.gui.PulleyBlockGui;
 import net.mehvahdjukaar.supplementaries.client.gui.SackGui;
+import net.mehvahdjukaar.supplementaries.client.models.FrameBlockLoader;
 import net.mehvahdjukaar.supplementaries.client.particles.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.FireflyEntityRenderer;
@@ -18,12 +20,15 @@ import net.mehvahdjukaar.supplementaries.compat.configured.ConfiguredCustomScree
 import net.mehvahdjukaar.supplementaries.compat.decorativeblocks.DecoBlocksCompatClient;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
+import net.mehvahdjukaar.supplementaries.world.data.map.sup.client.CMDclient;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.RedstoneWireBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.particle.FlameParticle;
+import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.renderer.Atlases;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderType;
@@ -35,7 +40,6 @@ import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.client.renderer.entity.SpriteRenderer;
 import net.minecraft.client.renderer.model.ModelBakery;
 import net.minecraft.client.renderer.texture.AtlasTexture;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer;
 import net.minecraft.util.ResourceLocation;
@@ -48,7 +52,6 @@ import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -74,37 +77,34 @@ public class ClientSetup {
                 renderManager -> new SpriteRenderer<>(renderManager, itemRenderer));
         RenderingRegistry.registerEntityRenderingHandler(Registry.LABEL.get(),
                 renderManager -> new LabelEntityRenderer(renderManager, itemRenderer));
-
     }
-
-
 
     public static void init(final FMLClientSetupEvent event) {
 
+        //compat
         if(CompatHandler.deco_blocks) DecoBlocksCompatClient.registerRenderLayers();
         if(CompatHandler.configured) ConfiguredCustomScreen.registerScreen();
+
+        //throwable brick
+        onlyClientPls(event);
+
+        //map markers
+        CMDclient.init(event);
+
+        //dynamic textures
+        GlobeTextureManager.init(Minecraft.getInstance().textureManager);
+        BlackboardTextureManager.init(Minecraft.getInstance().textureManager);
+
 
         //orange trader
         RenderingRegistry.registerEntityRenderingHandler(Registry.ORANGE_TRADER.get(), OrangeTraderEntityRenderer::new);
         ScreenManager.register(Registry.ORANGE_TRADER_CONTAINER.get(), OrangeMerchantGui::new);
 
-        //timber frames
-        RenderTypeLookup.setRenderLayer(Registry.TIMBER_FRAME.get(), RenderType.cutout());
-        RenderTypeLookup.setRenderLayer(Registry.TIMBER_BRACE.get(), RenderType.cutout());
-        RenderTypeLookup.setRenderLayer(Registry.TIMBER_CROSS_BRACE.get(), RenderType.cutout());
-        //RenderingRegistry.registerEntityRenderingHandler((EntityType<MashlingEntity>) Registry.POTAT_TYPE, MashlingEntityRenderer::new);
-
-        //falling block tile entity
-        //RenderingRegistry.registerEntityRenderingHandler( (EntityType<FallingBlockTileEntity>) Registry.FALLING_BLOCK_TILE_ENTITY.get(),
-        //        FallingBlockRenderer::new);
-
+        //rope arrow
         RenderingRegistry.registerEntityRenderingHandler(Registry.ROPE_ARROW.get(), RopeArrowRenderer::new);
         //firefly & jar
         RenderingRegistry.registerEntityRenderingHandler(Registry.FIREFLY_TYPE.get(), FireflyEntityRenderer::new);
         RenderTypeLookup.setRenderLayer(Registry.FIREFLY_JAR.get(), RenderType.cutout());
-
-        //throwable brick
-        onlyClientPls(event);
         //clock
         ClientRegistry.bindTileEntityRenderer(Registry.CLOCK_BLOCK_TILE.get(), ClockBlockTileRenderer::new);
         //pedestal
@@ -141,7 +141,6 @@ public class ClientSetup {
         //laser
         ClientRegistry.bindTileEntityRenderer(Registry.LASER_BLOCK_TILE.get(), LaserBlockTileRenderer::new);
         //flag
-        //RenderTypeLookup.setRenderLayer(Registry.FLAG.get(), RenderType.cutout());
         ClientRegistry.bindTileEntityRenderer(Registry.FLAG_TILE.get(), FlagBlockTileRenderer::new);
         //drawers
         //RenderTypeLookup.setRenderLayer(Registry.DRAWERS.get(), RenderType.getCutout());
@@ -166,7 +165,6 @@ public class ClientSetup {
         //sconce lever
         RenderTypeLookup.setRenderLayer(Registry.SCONCE_LEVER.get(), RenderType.cutout());
         //globe
-        //RenderTypeLookup.setRenderLayer(Registry.GLOBE.get(), RenderType.getCutout());
         ClientRegistry.bindTileEntityRenderer(Registry.GLOBE_TILE.get(), GlobeBlockTileRenderer::new);
         //hourglass
         RenderTypeLookup.setRenderLayer(Registry.HOURGLASS.get(), RenderType.cutout());
@@ -182,6 +180,8 @@ public class ClientSetup {
         //copper lantern
         RenderTypeLookup.setRenderLayer(Registry.COPPER_LANTERN.get(), RenderType.cutout());
         ClientRegistry.bindTileEntityRenderer(Registry.COPPER_LANTERN_TILE.get(), OilLanternBlockTileRenderer::new);
+        //brass lantern
+        RenderTypeLookup.setRenderLayer(Registry.BRASS_LANTERN.get(), RenderType.cutout());
         //crimson lantern
         RenderTypeLookup.setRenderLayer(Registry.CRIMSON_LANTERN.get(), RenderType.cutout());
         ClientRegistry.bindTileEntityRenderer(Registry.CRIMSON_LANTERN_TILE.get(), CrimsonLanternBlockTileRenderer::new);
@@ -212,24 +212,32 @@ public class ClientSetup {
         //flower box
         RenderTypeLookup.setRenderLayer(Registry.FLOWER_BOX.get(), RenderType.cutout());
         ClientRegistry.bindTileEntityRenderer(Registry.FLOWER_BOX_TILE.get(), FlowerBoxBlockTileRenderer::new);
-
+        //timber frames
+        RenderTypeLookup.setRenderLayer(Registry.TIMBER_FRAME.get(), RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(Registry.TIMBER_BRACE.get(), RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(Registry.TIMBER_CROSS_BRACE.get(), RenderType.cutout());
+        //goblet
+        ClientRegistry.bindTileEntityRenderer(Registry.GOBLET_TILE.get(), GobletBlockTileRenderer::new);
+        //cog block
+        RenderTypeLookup.setRenderLayer(Registry.COG_BLOCK.get(), RenderType.cutout());
     }
 
 
     //particles
-
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void registerParticles(ParticleFactoryRegisterEvent event) {
-        Minecraft.getInstance().particleEngine.register(Registry.FIREFLY_GLOW.get(), FireflyGlowParticle.Factory::new);
-        Minecraft.getInstance().particleEngine.register(Registry.SPEAKER_SOUND.get(), SpeakerSoundParticle.Factory::new);
-        Minecraft.getInstance().particleEngine.register(Registry.ENDERGETIC_FLAME.get(), FlameParticle.Factory::new);
-        Minecraft.getInstance().particleEngine.register(Registry.GREEN_FLAME.get(), FlameParticle.Factory::new);
-        Minecraft.getInstance().particleEngine.register(Registry.DRIPPING_LIQUID.get(), DrippingLiquidParticle.Factory::new);
-        Minecraft.getInstance().particleEngine.register(Registry.FALLING_LIQUID.get(), FallingLiquidParticle.Factory::new);
-        Minecraft.getInstance().particleEngine.register(Registry.SPLASHING_LIQUID.get(), SplashingLiquidParticle.Factory::new);
-        Minecraft.getInstance().particleEngine.register(Registry.BOMB_EXPLOSION_PARTICLE.get(), BombExplosionParticle.Factory::new);
-        Minecraft.getInstance().particleEngine.register(Registry.BOMB_EXPLOSION_PARTICLE_EMITTER.get(), new BombExplosionEmitterParticle.Factory());
-        Minecraft.getInstance().particleEngine.register(Registry.BOMB_SMOKE_PARTICLE.get(), BombSmokeParticle.Factory::new);
+        ParticleManager particleManager = Minecraft.getInstance().particleEngine;
+        particleManager.register(Registry.FIREFLY_GLOW.get(), FireflyGlowParticle.Factory::new);
+        particleManager.register(Registry.SPEAKER_SOUND.get(), SpeakerSoundParticle.Factory::new);
+        particleManager.register(Registry.ENDERGETIC_FLAME.get(), FlameParticle.Factory::new);
+        particleManager.register(Registry.GREEN_FLAME.get(), FlameParticle.Factory::new);
+        particleManager.register(Registry.DRIPPING_LIQUID.get(), DrippingLiquidParticle.Factory::new);
+        particleManager.register(Registry.FALLING_LIQUID.get(), FallingLiquidParticle.Factory::new);
+        particleManager.register(Registry.SPLASHING_LIQUID.get(), SplashingLiquidParticle.Factory::new);
+        particleManager.register(Registry.BOMB_EXPLOSION_PARTICLE.get(), BombExplosionParticle.Factory::new);
+        particleManager.register(Registry.BOMB_EXPLOSION_PARTICLE_EMITTER.get(), new BombExplosionEmitterParticle.Factory());
+        particleManager.register(Registry.BOMB_SMOKE_PARTICLE.get(), BombSmokeParticle.Factory::new);
+        particleManager.register(Registry.BOTTLING_XP_PARTICLE.get(), BottlingXpParticle.Factory::new);
     }
 
     @SubscribeEvent
@@ -239,6 +247,8 @@ public class ClientSetup {
         colors.register(new DefWaterColor(), Registry.JAR_BOAT.get());
         colors.register(new BrewingStandColor(), Blocks.BREWING_STAND);
         colors.register(new MimicBlockColor(), Registry.TIMBER_BRACE.get(),Registry.TIMBER_FRAME.get(),Registry.TIMBER_CROSS_BRACE.get());
+        colors.register((state, w, p, t) -> RedstoneWireBlock.getColorForPower(state.getValue(CogBlock.POWER)),Registry.COG_BLOCK.get());
+
     }
 
     @SubscribeEvent
@@ -246,7 +256,6 @@ public class ClientSetup {
         ItemColors colors = event.getItemColors();
         colors.register(new TippedSpikesColor(), Registry.BAMBOO_SPIKES_TIPPED_ITEM.get());
         colors.register(new DefWaterColor(), Registry.JAR_BOAT_ITEM.get());
-        colors.register(new FlagItemColor(), Registry.FLAGS_ITEMS.values().stream().map(RegistryObject::get).toArray(Item[]::new));
     }
 
     private static class DefWaterColor implements IItemColor, IBlockColor {
@@ -286,8 +295,12 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void onModelRegistry(ModelRegistryEvent event){
+        //loaders
         ModelLoaderRegistry.registerLoader(new ResourceLocation(Supplementaries.MOD_ID, "frame_block_loader"), new FrameBlockLoader());
-        //god forgive me
+        //ModelLoaderRegistry.registerLoader(new ResourceLocation(Supplementaries.MOD_ID, "blackboard_loader"), new BlackboardBlockLoader());
+
+
+        //fake models & blockstates
         Map<ResourceLocation, StateContainer<Block, BlockState>> tempMap = new HashMap<>(ModelBakery.STATIC_DEFINITIONS);
         tempMap.put(Registry.LABEL.get().getRegistryName(), LabelEntityRenderer.LABEL_FAKE_DEFINITION);
         ModelBakery.STATIC_DEFINITIONS = tempMap;

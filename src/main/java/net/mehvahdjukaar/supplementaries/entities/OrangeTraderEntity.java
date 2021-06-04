@@ -1,6 +1,8 @@
 package net.mehvahdjukaar.supplementaries.entities;
 
 import net.mehvahdjukaar.supplementaries.inventories.OrangeMerchantContainer;
+import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.network.SendOrangeTraderOffersPacket;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.EntityType;
@@ -11,6 +13,7 @@ import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerTrades;
 import net.minecraft.entity.monster.*;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.SimpleNamedContainerProvider;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
@@ -27,6 +30,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.BasicTrade;
 import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.fml.network.PacketDistributor;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
@@ -110,7 +114,7 @@ public class OrangeTraderEntity extends AbstractVillagerEntity {
 
 
     @Override
-    protected void updateTrades() {
+    public void updateTrades() {
         MerchantOffers merchantoffers = this.getOffers();
         this.addOffersFromItemListings(merchantoffers, ORANGE_TRADER_TRADES, 5);
     }
@@ -118,10 +122,12 @@ public class OrangeTraderEntity extends AbstractVillagerEntity {
     @Override
     public void openTradingScreen(PlayerEntity player, ITextComponent name, int level) {
         OptionalInt optionalint = player.openMenu(new SimpleNamedContainerProvider((i, p, m) -> new OrangeMerchantContainer(i, p, this), name));
-        if (optionalint.isPresent()) {
+        if (optionalint.isPresent() && player instanceof ServerPlayerEntity) {
             MerchantOffers merchantoffers = this.getOffers();
             if (!merchantoffers.isEmpty()) {
-                player.sendMerchantOffers(optionalint.getAsInt(), merchantoffers, level, this.getVillagerXp(), this.showProgressBar(), this.canRestock());
+                NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player),
+                    new SendOrangeTraderOffersPacket(optionalint.getAsInt(), merchantoffers, level, this.getVillagerXp(), this.showProgressBar(), this.canRestock())
+                );
             }
         }
 
@@ -242,7 +248,7 @@ public class OrangeTraderEntity extends AbstractVillagerEntity {
         }
 
         public void stop() {
-            this.trader.setWanderTarget((BlockPos)null);
+            this.trader.setWanderTarget(null);
             OrangeTraderEntity.this.navigation.stop();
         }
 

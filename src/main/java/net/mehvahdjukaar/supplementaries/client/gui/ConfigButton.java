@@ -39,13 +39,14 @@ public class ConfigButton extends Button {
         if (gui instanceof MainMenuScreen || gui instanceof IngameMenuScreen) {
             boolean isOnRight = !CompatHandler.quark || !QuarkTooltipPlugin.hasQButtonOnRight();
             List<String> targets = isOnRight ?
-                    Arrays.asList(new TranslationTextComponent("menu.online").getString(),new TranslationTextComponent("menu.shareToLan").getString())
+                    Arrays.asList(new TranslationTextComponent("menu.online").getString(),new TranslationTextComponent("fml.menu.modoptions").getString(),new TranslationTextComponent("menu.shareToLan").getString())
                     :Arrays.asList(new TranslationTextComponent("menu.options").getString(),new TranslationTextComponent("fml.menu.mods").getString());
 
             List<Widget> widgets = event.getWidgetList();
 
             for (Widget b : widgets) {
-                if (targets.contains(b.getMessage().getString())) {
+                String name = b.getMessage().getString();
+                if (targets.contains(name)) {
                     Button button = new ConfigButton(b.x + (isOnRight ? 102 : -24), b.y);
                     event.addWidget(button);
                     return;

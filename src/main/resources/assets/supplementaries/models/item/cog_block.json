@@ -1,5 +1,11 @@
 {
-  "parent": "supplementaries:block/cog_block_on",
+	"parent": "minecraft:block/cube_all",
+  
+
+	"textures": {
+		"particle": "supplementaries:blocks/cog_block_on",
+		"all": "supplementaries:blocks/cog_block_on"
+	},
   "display": {
     "thirdperson": {
       "rotation": [

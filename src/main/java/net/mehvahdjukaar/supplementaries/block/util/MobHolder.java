@@ -474,6 +474,9 @@ public class MobHolder {
             le.hurtDuration=0;
             le.hurtTime=0;
         }
+        if(mob instanceof AbstractFishEntity){
+            ((AbstractFishEntity) mob).setFromBucket(true);
+        }
         mob.yRot = 0;
         mob.yRotO = 0;
         mob.xRotO = 0;

@@ -56,36 +56,39 @@ public class JarItemRenderer extends CageItemRenderer {
                         matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, false);
             }
         }
-        else if(compound.contains("FluidHolder")){
+        if(compound.contains("FluidHolder")){
             CompoundNBT com = compound.getCompound("FluidHolder");
-            int color = com.getInt("CachedColor");
             int height = com.getInt("Count");
-            SoftFluid fluid = SoftFluidList.fromID(com.getString("Fluid"));
-            if(!fluid.isEmpty()&&height>0)
-            renderFluid(height/16f, color, 0, fluid.getStillTexture(),
-                    matrixStackIn,bufferIn,combinedLightIn,combinedOverlayIn,false);
+            if(height!=0) {
+                int color = com.getInt("CachedColor");
+                SoftFluid fluid = SoftFluidList.fromID(com.getString("Fluid"));
+                if (!fluid.isEmpty() && height > 0)
+                    renderFluid(height / 16f, color, 0, fluid.getStillTexture(),
+                            matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, false);
+            }
         }
-        else if(compound.contains("Items")) {
-            RAND.setSeed(420);
+        if(compound.contains("Items")) {
             ItemStack cookieStack = ItemStack.of((compound.getList("Items", 10)).getCompound(0));
             int height = cookieStack.getCount();
-            if(height==0)return;
-            matrixStackIn.pushPose();
-            matrixStackIn.translate(0.5, 0.5, 0.5);
-            matrixStackIn.mulPose(Const.XN90);
-            matrixStackIn.translate(0, 0, -0.5);
-            float scale = 8f / 14f;
-            matrixStackIn.scale(scale, scale, scale);
-            for (float i = 0; i < height; i ++) {
-                matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(RAND.nextInt(360)));
-                // matrixStackIn.translate(0, 0, 0.0625);
-                matrixStackIn.translate(0, 0, 1 / (16f * scale));
-                ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-                IBakedModel ibakedmodel = itemRenderer.getModel(cookieStack, null, null);
-                itemRenderer.render(stack, ItemCameraTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
-                        combinedOverlayIn, ibakedmodel);
+            if(height!=0) {
+                RAND.setSeed(420);
+                matrixStackIn.pushPose();
+                matrixStackIn.translate(0.5, 0.5, 0.5);
+                matrixStackIn.mulPose(Const.XN90);
+                matrixStackIn.translate(0, 0, -0.5);
+                float scale = 8f / 14f;
+                matrixStackIn.scale(scale, scale, scale);
+                for (float i = 0; i < height; i++) {
+                    matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(RAND.nextInt(360)));
+                    // matrixStackIn.translate(0, 0, 0.0625);
+                    matrixStackIn.translate(0, 0, 1 / (16f * scale));
+                    ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
+                    IBakedModel ibakedmodel = itemRenderer.getModel(cookieStack, null, null);
+                    itemRenderer.render(stack, ItemCameraTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
+                            combinedOverlayIn, ibakedmodel);
+                }
+                matrixStackIn.popPose();
             }
-            matrixStackIn.popPose();
         }
         //render block & mob using cage renderer
         super.renderByItem(stack,transformType,matrixStackIn,bufferIn,combinedLightIn,combinedOverlayIn);

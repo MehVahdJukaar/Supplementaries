@@ -10,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.setup.ClientSetup;
 import net.mehvahdjukaar.supplementaries.setup.ModSetup;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.mehvahdjukaar.supplementaries.world.structures.StructureRegistry;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
@@ -28,6 +29,10 @@ public class Supplementaries{
     public static final String MOD_ID = "supplementaries";
 
     public static final Logger LOGGER = LogManager.getLogger();
+
+    public static ResourceLocation res(String n){
+        return new ResourceLocation(MOD_ID,n);
+    }
 
     public Supplementaries() {
 

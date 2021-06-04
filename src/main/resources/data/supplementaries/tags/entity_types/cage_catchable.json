@@ -15,6 +15,9 @@
     "minecraft:ocelot"
   ],
   "optional": [
+    "kobolds:kobold_zombie",
+    "kobolds:kobold_child",
+    "fins:mudhorse",
     "alexsmobs:raccoon",
     "alexsmobs:mungus",
     "alexsmobs:tasmanian_devil",

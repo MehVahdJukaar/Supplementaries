@@ -8,7 +8,6 @@ import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.items.KeyItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.IWaterLoggable;
 import net.minecraft.block.TripWireHookBlock;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.client.Minecraft;

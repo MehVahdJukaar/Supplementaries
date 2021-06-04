@@ -33,6 +33,7 @@ public class ModTags {
     public static final Tags.IOptionalNamedTag<Item> COOKIES = itemTag("cookies");
     public static final Tags.IOptionalNamedTag<Item> BRICKS = itemTag("throwable_bricks");
     public static final Tags.IOptionalNamedTag<Item> ROPES = itemTag("ropes");
+    public static final Tags.IOptionalNamedTag<Item> CHAINS = itemTag("chains");
     public static final Tags.IOptionalNamedTag<Item> PEDESTAL_UPRIGHT = itemTag("pedestal_upright");
     public static final Tags.IOptionalNamedTag<Item> PEDESTAL_DOWNRIGHT = itemTag("pedestal_downright");
     //entity tags

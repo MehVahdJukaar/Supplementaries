@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.util.CapturedMobs;
+import net.mehvahdjukaar.supplementaries.common.AdventurerMapsHandler;
 import net.mehvahdjukaar.supplementaries.common.FlowerPotHelper;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
@@ -12,6 +13,7 @@ import net.mehvahdjukaar.supplementaries.mixins.accessors.ChickenEntityAccessor;
 import net.mehvahdjukaar.supplementaries.mixins.accessors.HorseEntityAccessor;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.commands.ModCommands;
+import net.mehvahdjukaar.supplementaries.world.data.map.sup.CMDreg;
 import net.mehvahdjukaar.supplementaries.world.structures.StructureLocator;
 import net.mehvahdjukaar.supplementaries.world.structures.StructureRegistry;
 import net.minecraft.block.Blocks;
@@ -49,6 +51,8 @@ public class ModSetup {
 
             NetworkHandler.registerMessages();
 
+            CMDreg.init(event);
+
             //order matters here (maybe?)
             Spawns.registerSpawningStuff();
 
@@ -81,7 +85,6 @@ public class ModSetup {
             CapturedMobs.refresh();
 
             Dispenser.registerBehaviors();
-            //event.enqueueWork(Dispenser::registerBehaviors);
 
             StructureRegistry.setup();
 
@@ -89,6 +92,7 @@ public class ModSetup {
 
         });
     }
+
 
     @SubscribeEvent
     public static void registerCommands(RegisterCommandsEvent event) {
@@ -102,6 +106,7 @@ public class ModSetup {
                 ev.getTrades().get(3).add(new BasicTrade(new ItemStack(Registry.FLAX_SEEDS_ITEM.get(), 15), new ItemStack(net.minecraft.item.Items.EMERALD), 16, 2, 0.05f));
             }
         }
+        AdventurerMapsHandler.addTrades(ev);
     }
 
     @SubscribeEvent
@@ -187,6 +192,7 @@ public class ModSetup {
             e.getTable().addPool(pool);
         }
     }
+
 
 
 

@@ -16,6 +16,14 @@
     {
       "id":"caves_and_cliffs_mod:candle",
       "required":false
+    },
+    {
+      "id":"buzzier_bees:candle",
+      "required":false
+    },
+    {
+      "id":"lotr:candle",
+      "required":false
     }
   ]
 }

@@ -81,6 +81,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, 
     //hijacking this method to work with hoppers
     @Override
     public void setChanged() {
+        if(this.level==null)return;
         this.updateBoardBlock();
         super.setChanged();
     }

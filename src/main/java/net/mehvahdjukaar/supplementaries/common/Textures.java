@@ -37,7 +37,7 @@ public class Textures {
     public static final ResourceLocation CHAIN_TEXTURE = new ResourceLocation("minecraft:block/chain");
     public static final ResourceLocation FLOWING_WATER_TEXTURE = new ResourceLocation("minecraft:block/water_flow");
     public static final ResourceLocation SLIME_TEXTURE = new ResourceLocation("minecraft:block/slime_block");
-
+    public static final ResourceLocation BLACKBOARD_TEXTURE = new ResourceLocation(MOD_ID+":blocks/blackboard");
 
     //blocks (to stitch)
     public static final ResourceLocation MILK_TEXTURE = new ResourceLocation(MOD_ID, "blocks/milk_liquid");
@@ -69,7 +69,6 @@ public class Textures {
     public static final ResourceLocation TIMBER_BRACE_F_TEXTURE = new ResourceLocation(MOD_ID, "blocks/timber_brace_f");
     public static final ResourceLocation TIMBER_CROSS_BRACE_TEXTURE = new ResourceLocation(MOD_ID, "blocks/timber_cross_brace");
     //entities
-    public static final ResourceLocation BLACKBOARD_TEXTURE = new ResourceLocation(MOD_ID,"textures/entity/blackboard.png");
     public static final ResourceLocation GLOBE_TEXTURE = new ResourceLocation(MOD_ID,"textures/entity/globes/globe_the_world.png");
     public static final ResourceLocation GLOBE_FLAT_TEXTURE = new ResourceLocation(MOD_ID,"textures/entity/globes/globe_flat.png");
     public static final ResourceLocation GLOBE_MOON_TEXTURE = new ResourceLocation(MOD_ID,"textures/entity/globes/globe_moon.png");
@@ -78,6 +77,7 @@ public class Textures {
     public static final ResourceLocation GLOBE_CUSTOM_1 = new ResourceLocation(MOD_ID,"textures/entity/globes/globe_plantkillable.png");
     public static final ResourceLocation GLOBE_CUSTOM_2 = new ResourceLocation(MOD_ID,"textures/entity/globes/globe_toffanelly.png");
     public static final ResourceLocation GLOBE_CUSTOM_3 = new ResourceLocation(MOD_ID,"textures/entity/globes/globe_sylvetichearts.png");
+    public static final ResourceLocation GLOBE_CUSTOM_4 = new ResourceLocation(MOD_ID,"textures/entity/globes/globe_agrona.png");
     public static final ResourceLocation ROPE_ARROW = new ResourceLocation(MOD_ID,"textures/entity/rope_arrow.png");
     public static final ResourceLocation ORANGE_TRADER = new ResourceLocation(MOD_ID,"textures/entity/misc/orange_trader.png");
 
@@ -90,6 +90,7 @@ public class Textures {
 
 
     //gui
+    public static final ResourceLocation BLACKBOARD_GUI_TEXTURE = new ResourceLocation(MOD_ID,"textures/gui/blackboard.png");
     public static final ResourceLocation EMPTY_TEXTURE = new ResourceLocation(MOD_ID,"textures/gui/config_background.png");
     public static final ResourceLocation NOTICE_BOARD_GUI_TEXTURE = new ResourceLocation(MOD_ID,"textures/gui/notice_board_gui.png");
     public static final ResourceLocation SACK_GUI_TEXTURE = new ResourceLocation(MOD_ID,"textures/gui/sack_gui.png");
@@ -97,6 +98,18 @@ public class Textures {
     public static final ResourceLocation SACK_GUI_TEXTURE_9 = new ResourceLocation(MOD_ID,"textures/gui/sack_gui_9.png");
     public static final ResourceLocation PULLEY_BLOCK_GUI_TEXTURE = new ResourceLocation(MOD_ID,"textures/gui/pulley_block_gui.png");
     public static final ResourceLocation ORANGE_MERCHANT_GUI_TEXTURE = new ResourceLocation(MOD_ID,"textures/gui/orange_trader.png");
+    //map markers
+    public static final ResourceLocation SIGN_POST_MARKER_TEXTURE = new ResourceLocation(MOD_ID,"textures/map/sign_post.png");
+    public static final ResourceLocation FLAG_MARKER_TEXTURE = new ResourceLocation(MOD_ID,"textures/map/flag.png");
+    public static final ResourceLocation BED_MARKER_TEXTURE = new ResourceLocation(MOD_ID,"textures/map/bed.png");
+    public static final ResourceLocation RESPAWN_ANCHOR_MARKER_TEXTURE = new ResourceLocation(MOD_ID,"textures/map/respawn_anchor.png");
+    public static final ResourceLocation LODESTONE_MARKER_TEXTURE = new ResourceLocation(MOD_ID,"textures/map/lodestone.png");
+    public static final ResourceLocation BEACON_MARKER_TEXTURE = new ResourceLocation(MOD_ID,"textures/map/beacon.png");
+    public static final ResourceLocation CONDUIT_MARKER_TEXTURE = new ResourceLocation(MOD_ID,"textures/map/conduit.png");
+    public static final ResourceLocation NETHER_PORTAL_MARKER_TEXTURE = new ResourceLocation(MOD_ID,"textures/map/nether_portal.png");
+    public static final ResourceLocation END_PORTAL_MARKER_TEXTURE = new ResourceLocation(MOD_ID,"textures/map/end_portal.png");
+    public static final ResourceLocation END_GATEWAY_MARKER_TEXTURE = new ResourceLocation(MOD_ID,"textures/map/end_gateway.png");
+
 
 
     public static final Map<IWoodType,ResourceLocation> HANGING_SIGNS_TEXTURES = new HashMap<>();

@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 
+import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.TurnTableBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
@@ -32,27 +33,30 @@ public class TurnTableBlock extends Block {
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final IntegerProperty POWER = BlockStateProperties.POWER;
     public static final BooleanProperty INVERTED = BlockStateProperties.INVERTED;
+    public static final BooleanProperty ROTATING = BlockProperties.ROTATING;
     public TurnTableBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.UP).setValue(POWER, 0).setValue(INVERTED, false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.UP)
+                .setValue(POWER, 0).setValue(INVERTED, false).setValue(ROTATING,false));
     }
 
     @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(FACING, POWER, INVERTED);
+        builder.add(FACING, POWER, INVERTED, ROTATING);
     }
 
+    @Override
     public BlockState rotate(BlockState state, Rotation rot) {
         return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
 
+    @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
         return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-
         return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
     }
 
@@ -93,6 +97,7 @@ public class TurnTableBlock extends Block {
                 TurnTableBlockTile table = ((TurnTableBlockTile) te);
 
             }
+            if(blockpower!=0)state = state.setValue(ROTATING,true);
             world.setBlock(pos, state.setValue(POWER, blockpower), 2 | 4);
             return true;
             //returns if state changed

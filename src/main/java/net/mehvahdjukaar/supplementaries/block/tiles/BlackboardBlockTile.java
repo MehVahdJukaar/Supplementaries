@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.NoticeBoardBlock;
+import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager.BlackboardKey;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
@@ -15,7 +16,10 @@ public class BlackboardBlockTile extends TileEntity {
 
     public byte[][] pixels = new byte[16][16];
 
-    private boolean isEditable = true;
+    //client side
+    public BlackboardKey textureKey = null;
+    //public static final ModelProperty<BlackboardKey> TEXTURE = new ModelProperty<>();
+    //private final IModelData data;
 
     public BlackboardBlockTile() {
         super(Registry.BLACKBOARD_TILE.get());
@@ -25,7 +29,11 @@ public class BlackboardBlockTile extends TileEntity {
                 this.pixels[x][y] = 0;
             }
         }
+        //this.data = (new ModelDataMap.Builder()).withInitial(TEXTURE, null).build();
     }
+
+
+    //public IModelData getModelData() return this.data;
 
     public boolean isEmpty(){
         boolean flag = false;
@@ -44,6 +52,7 @@ public class BlackboardBlockTile extends TileEntity {
     //TODO: optimize update packets
     @Override
     public void setChanged() {
+        if(this.level==null)return;
         this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
         super.setChanged();
     }
@@ -53,12 +62,26 @@ public class BlackboardBlockTile extends TileEntity {
     public void load(BlockState state, CompoundNBT compound) {
         super.load(state, compound);
         this.pixels=new byte[16][16];
-        for(int i = 0; i<16; i++) {
-            byte[] b = compound.getByteArray("pixels_"+i);
-            if(b.length==16)
-                this.pixels[i] = b;
+        if(compound.contains("Pixels")){
+            this.pixels = unpackPixels(compound.getLongArray("Pixels"));
         }
+        //TODO: backwards compat. remove
+        if(compound.contains("pixels_0")){
+            for(int i = 0; i<16; i++) {
+                byte[] b = compound.getByteArray("pixels_"+i);
+                if(b.length==16) this.pixels[i] = b;
+            }
+        }
+    }
 
+
+    //client
+    public void updateModelData() {
+        this.textureKey = null;
+        //this.textureKey = BlackboardTextureManager.INSTANCE.getUpdatedKey(this);
+        //this.data.setData(TEXTURE, textureKey);
+        //ModelDataManager.requestModelDataRefresh(this);
+        //this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
     }
 
     @Override
@@ -70,21 +93,31 @@ public class BlackboardBlockTile extends TileEntity {
 
     //doesn't save stuff it doesn't need. TODO: use this for update packet
     public CompoundNBT saveItemNBT(CompoundNBT compound){
-        for(int i = 0; i<16; i++) {
-            compound.putByteArray("pixels_"+i, this.pixels[i]);
-        }
+        compound.putLongArray("Pixels",packPixels(pixels));
         return compound;
     }
 
-    //not sure if needed
-    public boolean getIsEditable() {
-        return this.isEditable;
+    public static long[] packPixels(byte[][] pixels){
+        long[] packed =  new long[pixels.length];
+        for(int i = 0; i<pixels.length; i++){
+            long l = 0;
+            for(int j = 0; j<pixels[i].length;j++) {
+                l = l | (((long) (pixels[i][j] & 15)) << j * 4);
+            }
+            packed[i] = l;
+        }
+        return packed;
     }
 
-    public void setEditable(boolean isEditableIn) {
-        this.isEditable = isEditableIn;
+    public static byte[][] unpackPixels(long[] packed){
+        byte[][] bytes = new byte[16][16];
+        for(int i = 0; i<packed.length; i++) {
+            for (int j = 0; j < 16; j++) {
+                bytes[i][j] = (byte) ((packed[i] >> j * 4) & 15);
+            }
+        }
+        return bytes;
     }
-
 
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
@@ -99,6 +132,7 @@ public class BlackboardBlockTile extends TileEntity {
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         this.load(this.getBlockState(), pkt.getTag());
+        this.updateModelData();
     }
 
     public Direction getDirection(){
@@ -107,5 +141,10 @@ public class BlackboardBlockTile extends TileEntity {
 
     public float getYaw() {
         return -this.getDirection().toYRot();
+    }
+
+    @Override
+    public double getViewDistance() {
+        return 96;
     }
 }

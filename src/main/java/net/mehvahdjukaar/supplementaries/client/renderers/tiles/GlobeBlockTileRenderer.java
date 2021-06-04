@@ -5,10 +5,8 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.mehvahdjukaar.supplementaries.block.tiles.GlobeBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
-import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
+import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.world.data.GlobeData;
-import net.mehvahdjukaar.supplementaries.world.data.GlobeDataGenerator;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.model.ModelRenderer;
@@ -38,32 +36,14 @@ public class GlobeBlockTileRenderer extends TileEntityRenderer<GlobeBlockTile> {
         sheared.texOffs(0, 12).addBox(0.0F, -28.0F, 0.0F, 4.0F, 8.0F, 4.0F, 0.0F, false);
     }
 
-
     public GlobeBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
-
     }
 
-    public void renderEarth(MatrixStack matrixStack, IVertexBuilder vertexBuilder, int combinedLightIn, int combinedOverlayIn){
-        matrixStack.mulPose(Const.X180);
-        globe.render(matrixStack, vertexBuilder, combinedLightIn,combinedOverlayIn,1,1,1,1);
-    }
-
-    public void renderFlat(MatrixStack matrixStack, IVertexBuilder vertexBuilder, int combinedLightIn, int combinedOverlayIn){
-        matrixStack.mulPose(Const.X180);
-        flat.render(matrixStack, vertexBuilder, combinedLightIn,combinedOverlayIn,1,1,1,1);
-    }
-
-    public void renderSheared(MatrixStack matrixStack, IVertexBuilder vertexBuilder, int combinedLightIn, int combinedOverlayIn){
-        matrixStack.mulPose(Const.X180);
-        sheared.render(matrixStack, vertexBuilder, combinedLightIn,combinedOverlayIn,1,1,1,1);
-    }
 
     @Override
     public void render(GlobeBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
-        //TODO: maybe convert into an int(might be faster for map access idk)
-        String dimension = tile.getLevel().dimension().location().toString();
 
         matrixStackIn.pushPose();
         matrixStackIn.translate(0.5,0.5,0.5);
@@ -72,114 +52,34 @@ public class GlobeBlockTileRenderer extends TileEntityRenderer<GlobeBlockTile> {
         matrixStackIn.translate(0,+0.0625,0);
         matrixStackIn.mulPose(Const.XN22);
         matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(MathHelper.lerp(partialTicks, tile.prevYaw+tile.face, tile.yaw+tile.face)));
+        matrixStackIn.mulPose(Const.X180);
 
-        IVertexBuilder builder = bufferIn.getBuffer(RenderType.entityCutout(tile.type.texture));
-
-        if(!ClientConfigs.cached.GLOBE_RANDOM){
-            this.renderEarth(matrixStackIn,builder,combinedLightIn,combinedOverlayIn);
-        }
-
-        //special cases for random generated, sheared and flat. custom ones are in earth
-        switch(tile.type){
+        IVertexBuilder builder;
+        GlobeBlockTile.GlobeType type = ClientConfigs.cached.GLOBE_RANDOM ? tile.type : GlobeBlockTile.GlobeType.EARTH;
+        ModelRenderer selected;
+        switch(type){
             case FLAT:
-                this.renderFlat(matrixStackIn,builder,combinedLightIn,combinedOverlayIn);
+                builder = bufferIn.getBuffer(RenderType.entityCutout(tile.type.texture));
+                selected = flat;
                 break;
             default:
             case EARTH:
-                this.renderEarth(matrixStackIn,builder,combinedLightIn,combinedOverlayIn);
+                builder = bufferIn.getBuffer(RenderType.entityCutout(tile.type.texture));
+                selected = globe;
                 break;
             case SHEARED:
-                this.renderSheared(matrixStackIn,builder,combinedLightIn,combinedOverlayIn);
+                builder = bufferIn.getBuffer(RenderType.entityCutout(tile.type.texture));
+                selected = sheared;
                 break;
             case DEFAULT:
-                matrixStackIn.translate(-0.25, 0.25, 0.25);
-
-                //TODO: use less transforms
-
-                byte[][] colors = GlobeData.get(tile.getLevel()).globePixels;
-
-                if (colors[0].length != 16) {
-                    matrixStackIn.popPose();
-                    return;
-                }
-
-                int lu = combinedLightIn & '\uffff';
-                int lv = combinedLightIn >> 16 & '\uffff'; // ok
-
-                matrixStackIn.scale(0.0625f, 0.0625f, 0.0625f);
-
-
-                renderFace(matrixStackIn, builder, colors, 0, 8, lu, lv, dimension);
-
-                matrixStackIn.mulPose(Const.Y90);
-
-                //up
-                matrixStackIn.pushPose();
-                matrixStackIn.mulPose(Const.XN90);
-                matrixStackIn.translate(0, 8, 0);
-                renderFaceUp(matrixStackIn, builder, colors, 8, 0, lu, lv, dimension);
-                matrixStackIn.popPose();
-
-                //down
-                matrixStackIn.pushPose();
-                matrixStackIn.translate(0, -8, 0);
-                matrixStackIn.mulPose(Const.X90);
-                renderFace(matrixStackIn, builder, colors, 16, 0, lu, lv, dimension);
-                matrixStackIn.popPose();
-
-                renderFace(matrixStackIn, builder, colors, 8, 8, lu, lv, dimension);
-                matrixStackIn.mulPose(Const.Y90);
-                renderFace(matrixStackIn, builder, colors, 16, 8, lu, lv, dimension);
-                matrixStackIn.mulPose(Const.Y90);
-                renderFace(matrixStackIn, builder, colors, 24, 8, lu, lv, dimension);
+                builder = bufferIn.getBuffer(GlobeTextureManager.INSTANCE.getRenderType(tile.getLevel()));
+                selected = globe;
                 break;
+        }
 
-            }
+        selected.render(matrixStackIn, builder, combinedLightIn,combinedOverlayIn,1,1,1,1);
+
         matrixStackIn.popPose();
     }
-
-
-    public static void renderFace(MatrixStack matrixStackIn, IVertexBuilder builder, byte[][] colors, int ux, int uv, int lu, int lv, String dimension){
-        for(int x=0; x<8; x++) {
-            matrixStackIn.pushPose();
-            for (int y = 0; y < 8; y++) {
-                matrixStackIn.translate(0, -1, 0);
-                int color = GlobeDataGenerator.getRGB(colors[ux + x][uv + y], dimension);
-
-                float r = (float) ((color >> 16 & 255)) / 255.0F;
-                float g = (float) ((color >> 8 & 255)) / 255.0F;
-                float b = (float) ((color & 255)) / 255.0F;
-
-                //RendererUtil.addQuadSide();
-                // x y z u v r g b a lu lv
-                RendererUtil.addQuadSide(builder, matrixStackIn, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, r, g, b, 1, lu, lv, 0, 0, 1);
-            }
-            matrixStackIn.popPose();
-            matrixStackIn.translate(1,0,0);
-        }
-
-    }
-
-    public static void renderFaceUp(MatrixStack matrixStackIn, IVertexBuilder builder, byte[][] colors, int ux, int uv, int lu, int lv, String dimension){
-        for(int x=0; x<8; x++) {
-            matrixStackIn.pushPose();
-            for (int y = 0; y < 8; y++) {
-                matrixStackIn.translate(0, -1, 0);
-                int color = GlobeDataGenerator.getRGB(colors[ux + x][uv + y],dimension);
-
-                float r = ((float) ((color >> 16 & 255)) / 255.0F)*0.775f;
-                float g = ((float) ((color >> 8 & 255)) / 255.0F)*0.775f;
-                float b = ((float) ((color & 255)) / 255.0F)*0.775f;
-
-                //RendererUtil.addQuadSide();
-                // x y z u v r g b a lu lv
-                RendererUtil.addQuadSide(builder, matrixStackIn, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, r, g, b, 1, lu, lv, 0, 0, 1);
-            }
-            matrixStackIn.popPose();
-            matrixStackIn.translate(1,0,0);
-        }
-
-    }
-
 
 }

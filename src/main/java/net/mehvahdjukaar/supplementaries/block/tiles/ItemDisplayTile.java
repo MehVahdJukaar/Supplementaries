@@ -35,6 +35,7 @@ public abstract class ItemDisplayTile extends LockableLootTileEntity implements 
     //for server
     @Override
     public void setChanged() {
+        if(this.level==null)return;
         this.updateOnChanged();
         super.setChanged();
     }
@@ -46,7 +47,6 @@ public abstract class ItemDisplayTile extends LockableLootTileEntity implements 
 
     public void updateClientVisuals(){}
 
-    //TODO: use this
     public ItemStack getDisplayedItem(){
         return this.getItem(0);
     }

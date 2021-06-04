@@ -20,8 +20,8 @@ public class FlagFromBannerRecipe extends SpecialRecipe {
 
     public boolean matches(CraftingInventory inv, World world) {
         DyeColor dyecolor = null;
-        ItemStack itemstack = null;
-        ItemStack itemstack1 = null;
+        ItemStack withPatterns = null;
+        ItemStack empty = null;
 
         for(int i = 0; i < inv.getContainerSize(); ++i) {
             ItemStack itemstack2 = inv.getItem(i);
@@ -40,18 +40,20 @@ public class FlagFromBannerRecipe extends SpecialRecipe {
                 }
 
                 if (j > 0) {
-                    if (itemstack != null) {
+                    if (withPatterns != null) {
                         return false;
                     }
 
-                    itemstack = itemstack2;
-                } else {
-                    if (itemstack1 != null) {
-                        return false;
-                    }
-
-                    itemstack1 = itemstack2;
+                    withPatterns = itemstack2;
                 }
+                else {
+                    if (empty != null) {
+                        return false;
+                    }
+
+                    empty = itemstack2;
+                }
+
             }
             if (item instanceof BannerItem) {
                 BannerItem banneritem = (BannerItem)item;
@@ -65,39 +67,46 @@ public class FlagFromBannerRecipe extends SpecialRecipe {
                 if (j > 6) {
                     return false;
                 }
-
-                if (j > 0) {
-                    if (itemstack != null) {
+                //exclude banner to banner
+                if (j > 0 && !(empty!=null && empty.getItem() instanceof BannerItem)) {
+                    if (withPatterns != null) {
+                        return false;
+                    }
+                    withPatterns = itemstack2;
+                }
+                else if(!(withPatterns!=null && withPatterns.getItem() instanceof BannerItem)){
+                    if (empty != null) {
                         return false;
                     }
 
-                    itemstack = itemstack2;
-                } else {
-                    if (itemstack1 != null) {
-                        return false;
-                    }
-
-                    itemstack1 = itemstack2;
+                    empty = itemstack2;
                 }
             }
         }
 
-        return itemstack != null && itemstack1 != null;
+        return withPatterns != null && empty != null;
     }
 
     public ItemStack assemble(CraftingInventory inv) {
         for(int i = 0; i < inv.getContainerSize(); ++i) {
-            ItemStack itemstack = inv.getItem(i);
-            if (!itemstack.isEmpty()) {
-                int j = BannerTileEntity.getPatternCount(itemstack);
+            ItemStack withPatterns = inv.getItem(i);
+            if (!withPatterns.isEmpty()) {
+                int j = BannerTileEntity.getPatternCount(withPatterns);
+                //find item with patterns
                 if (j > 0 && j <= 6) {
                     for(int k = 0; k < inv.getContainerSize(); ++k) {
-                        ItemStack itemstack1 = inv.getItem(k);
-                        if(itemstack1.getItem() instanceof FlagItem){
-                            ItemStack itemStack2 = itemstack1.copy();
-                            itemStack2.setCount(1);
-                            itemStack2.setTag(itemstack.getTag());
-                            return itemStack2;
+                        if(i!=j) {
+                            ItemStack empty = inv.getItem(k);
+
+
+                            //find other which must be empty. exclude banner to banner
+                            Item it = empty.getItem();
+                            if (it instanceof FlagItem || it instanceof BannerItem) {
+                                ItemStack result = empty.copy();
+                                result.setCount(1);
+                                result.setTag(withPatterns.getTag());
+                                return result;
+                            }
                         }
                     }
 

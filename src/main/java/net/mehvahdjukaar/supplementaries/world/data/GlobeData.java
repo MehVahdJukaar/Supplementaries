@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.world.data;
 
+import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.SyncGlobeDataPacket;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -62,7 +63,7 @@ public class GlobeData extends WorldSavedData {
             NetworkHandler.INSTANCE.send(PacketDistributor.ALL.noArg(), new SyncGlobeDataPacket(this));
     }
     //data received from network is stored here
-    public static GlobeData clientSide = new GlobeData();
+    private static GlobeData clientSide = new GlobeData();
     public static GlobeData get(World world) {
         if (world instanceof ServerWorld) {
             return world.getServer().getLevel(World.OVERWORLD).getDataStorage().computeIfAbsent(
@@ -70,6 +71,10 @@ public class GlobeData extends WorldSavedData {
         } else {
             return clientSide;
         }
+    }
+    public static void setClientData(GlobeData data){
+        clientSide = data;
+        GlobeTextureManager.INSTANCE.update();
     }
 
 

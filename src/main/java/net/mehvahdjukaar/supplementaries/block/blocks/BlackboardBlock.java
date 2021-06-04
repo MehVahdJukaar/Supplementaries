@@ -5,17 +5,14 @@ import net.mehvahdjukaar.supplementaries.client.gui.BlackBoardGui;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.IWaterLoggable;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.*;
 import net.minecraft.loot.LootContext;
 import net.minecraft.loot.LootParameters;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.pathfinding.PathType;
-import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -32,7 +29,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Tags;
 
@@ -40,14 +36,13 @@ import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-public class BlackboardBlock extends Block implements IWaterLoggable {
+public class BlackboardBlock extends WaterBlock {
     public static final VoxelShape SHAPE_SOUTH = Block.box(0.0D,0.0D,0.0D,16.0D,16.0D,5.0D);
     public static final VoxelShape SHAPE_NORTH= Block.box(0.0D,0.0D,11.0D,16.0D,16.0D,16.0D);
     public static final VoxelShape SHAPE_EAST = Block.box(0.0D,0.0D,0.0D,5.0D,16.0D,16.0D);
     public static final VoxelShape SHAPE_WEST = Block.box(11.0D,0.0D,0.0D,16.0D,16.0D,16.0D);
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
-    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public BlackboardBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED,false));
@@ -57,23 +52,23 @@ public class BlackboardBlock extends Block implements IWaterLoggable {
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(FACING, WATERLOGGED);
     }
-/*
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
-    }*/
-
-
-
-    @Override
-    public FluidState getFluidState(BlockState state) {
-        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
-    }
-
-    @Override
-    public boolean isPathfindable(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
-        return false;
+    public void setPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        super.setPlacedBy(world, pos, state, placer, stack);
+        //TODO: backwards compat. remove
+        CompoundNBT compoundnbt = stack.getTagElement("BlockEntityTag");
+        if (compoundnbt != null) {
+            TileEntity te = world.getBlockEntity(pos);
+            if(te instanceof BlackboardBlockTile) {
+                if (compoundnbt.contains("pixels_0")) {
+                    for (int i = 0; i < 16; i++) {
+                        byte[] b = compoundnbt.getByteArray("pixels_" + i);
+                        if (b.length == 16) ((BlackboardBlockTile) te).pixels[i] = b;
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -149,9 +144,15 @@ public class BlackboardBlock extends Block implements IWaterLoggable {
                 if (item == Items.QUARTZ || item.is(Tags.Items.DYES_WHITE)) {
                     te.pixels[x][y] = 1;
                     return ActionResultType.sidedSuccess(worldIn.isClientSide);
-                } else if (item == Items.COAL || item == Items.CHARCOAL || item.is(Tags.Items.DYES_BLACK) || item==Items.SPONGE || item==Items.WET_SPONGE) {
+                }
+                else if (item == Items.COAL || item == Items.CHARCOAL || item.is(Tags.Items.DYES_BLACK)) {
                     te.pixels[x][y] = 0;
                     return ActionResultType.sidedSuccess(worldIn.isClientSide);
+                }
+                else if (item==Items.SPONGE || item==Items.WET_SPONGE){
+                    te.pixels = new byte[16][16];
+                    return ActionResultType.sidedSuccess(worldIn.isClientSide);
+                    //TODO: check if it's synced works in myltiplayer (might need mark dirty)
                 }
             }
 
@@ -162,14 +163,6 @@ public class BlackboardBlock extends Block implements IWaterLoggable {
         return ActionResultType.PASS;
     }
 
-
-    @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
-        if (stateIn.getValue(WATERLOGGED)) {
-            worldIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
-        }
-        return stateIn;
-    }
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {

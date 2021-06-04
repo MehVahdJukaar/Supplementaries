@@ -52,7 +52,7 @@ public class BlackBoardButton extends AbstractGui implements IRenderable, IGuiEv
 
     public void renderButton(MatrixStack matrixStack) {
         Minecraft minecraft = Minecraft.getInstance();
-        minecraft.getTextureManager().bind(Textures.BLACKBOARD_TEXTURE);
+        minecraft.getTextureManager().bind(Textures.BLACKBOARD_GUI_TEXTURE);
         RenderSystem.enableDepthTest();
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();

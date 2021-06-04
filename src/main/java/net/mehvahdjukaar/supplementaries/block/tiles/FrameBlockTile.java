@@ -38,9 +38,21 @@ public class FrameBlockTile extends TileEntity implements IBlockHolder {
     public BlockState held = Blocks.AIR.defaultBlockState();
 
     public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
+    //private final IModelData data;
 
     public FrameBlockTile() {
         super(Registry.TIMBER_FRAME_TILE.get());
+        //data = new ModelDataMap.Builder().withInitial(MIMIC, held).build();
+    }
+
+    @Override
+    public IModelData getModelData() {
+        //return data;
+
+        return new ModelDataMap.Builder()
+                .withInitial(MIMIC, held)
+                .build();
+
     }
 
     @Override
@@ -56,7 +68,7 @@ public class FrameBlockTile extends TileEntity implements IBlockHolder {
         if(!this.level.isClientSide) {
             this.setChanged();
             int newLight = this.getLightValue();
-            this.level.setBlock(this.worldPosition, this.getBlockState().setValue(FrameBlock.TILE, 1)
+            this.level.setBlock(this.worldPosition, this.getBlockState().setValue(FrameBlock.HAS_BLOCK, true)
                     .setValue(FrameBlock.LIGHT_LEVEL, newLight), 3);
             this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
         }
@@ -102,16 +114,11 @@ public class FrameBlockTile extends TileEntity implements IBlockHolder {
         CompoundNBT tag = pkt.getTag();
         handleUpdateTag(this.getBlockState(), tag);
         if (!Objects.equals(oldMimic, this.held)) {
+            //not needed cause model data doesn't create new obj. updating old one insead
             ModelDataManager.requestModelDataRefresh(this);
+            //this.data.setData(MIMIC, this.getHeldBlock());
             this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
         }
-    }
-
-    @Override
-    public IModelData getModelData() {
-        return new ModelDataMap.Builder()
-                .withInitial(MIMIC, held)
-                .build();
     }
 
     public int getLightValue(){

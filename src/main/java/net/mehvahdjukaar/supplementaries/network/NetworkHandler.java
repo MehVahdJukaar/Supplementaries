@@ -49,5 +49,11 @@ public class NetworkHandler {
         INSTANCE.registerMessage(nextID(), PicklePacket.class, PicklePacket::buffer,
                 PicklePacket::new, PicklePacket::handler);
 
+        INSTANCE.registerMessage(nextID(), SendOrangeTraderOffersPacket.class, SendOrangeTraderOffersPacket::buffer,
+                SendOrangeTraderOffersPacket::new, SendOrangeTraderOffersPacket::handler);
+
+        INSTANCE.registerMessage(nextID(), SyncCustomMapDecorationPacket.class, SyncCustomMapDecorationPacket::buffer,
+                SyncCustomMapDecorationPacket::new, SyncCustomMapDecorationPacket::handler);
+
     }
 }
