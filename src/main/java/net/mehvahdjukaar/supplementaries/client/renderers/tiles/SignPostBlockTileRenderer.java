@@ -6,11 +6,7 @@ import net.mehvahdjukaar.supplementaries.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.client.Materials;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.client.renderers.LOD;
-import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.model.ModelRenderer;
@@ -28,7 +24,7 @@ import java.util.List;
 
 
 public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockTile> {
-    private final BlockRendererDispatcher blockRenderer;
+
     public static final ModelRenderer signModel = new ModelRenderer(64, 16, 0, 0);
    //TODO: make other tiles this way
     static {
@@ -40,21 +36,14 @@ public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockT
 
     public SignPostBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
-        blockRenderer = Minecraft.getInstance().getBlockRenderer();
+
    }
 
     @Override
     public void render(SignPostBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
 
-        BlockState fence = tile.fenceBlock;
         BlockPos pos = tile.getBlockPos();
-        if(fence !=null){
-            RendererUtil.renderBlockPlus(fence, matrixStackIn, bufferIn, blockRenderer, tile.getLevel(), pos);
-            //blockRenderer.renderBlock(fence, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
-        }
-
-
         Vector3d cameraPos = this.renderer.camera.getPosition();
 
         //don't render signs from far away

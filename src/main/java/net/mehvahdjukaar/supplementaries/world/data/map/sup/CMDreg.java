@@ -34,7 +34,7 @@ public class CMDreg {
             Supplementaries.res( "beacon"), BeaconMarker::loadFromNBT, BeaconMarker::getFromWorld,CustomDecoration::new);
 
     private static CustomDecorationType<?,?> makeSimple(String id){
-        return new CustomDecorationType<>(Supplementaries.res( id),CustomDecoration::new);
+        return new CustomDecorationType<>(Supplementaries.res(id),CustomDecoration::new);
     }
 
     //simple for structures
@@ -51,6 +51,7 @@ public class CMDreg {
     public static final CustomDecorationType<?,?> STRONGHOLD_TYPE = makeSimple( "stronghold");
     public static final CustomDecorationType<?,?> MINESHAFT_TYPE = makeSimple( "mineshaft");
     public static final CustomDecorationType<?,?> SWAMP_HUT_TYPE = makeSimple( "swamp_hut");
+    public static final CustomDecorationType<?,?> OCEAN_RUIN_TYPE = makeSimple( "ocean_ruin");
 
     public static void init(FMLCommonSetupEvent event){
         MapDecorationHandler.register(SIGN_POST_DECORATION_TYPE);
@@ -78,7 +79,7 @@ public class CMDreg {
         MapDecorationHandler.register(STRONGHOLD_TYPE);
         MapDecorationHandler.register(MINESHAFT_TYPE);
         MapDecorationHandler.register(SWAMP_HUT_TYPE);
-
+        MapDecorationHandler.register(OCEAN_RUIN_TYPE);
 
     }
 

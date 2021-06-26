@@ -16,6 +16,7 @@ public class CompatHandler {
     public static final boolean torchslab;
     public static final boolean curios;
     public static final boolean farmers_delight;
+    public static final boolean infernalexp;
 
     static {
         ModList ml = ModList.get();
@@ -26,6 +27,7 @@ public class CompatHandler {
         torchslab = ml.isLoaded("torchslabmod");
         curios = ml.isLoaded("curios");
         farmers_delight = ml.isLoaded("farmersdelight");
+        infernalexp = ml.isLoaded("infernalexp");
     }
 
     public static void init(){

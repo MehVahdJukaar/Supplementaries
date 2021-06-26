@@ -222,6 +222,7 @@ public class SoftFluid {
             FluidAttributes att = fluid.getAttributes();
             this.stillTexture = att.getStillTexture();
             this.flowingTexture = att.getFlowingTexture();
+            //TODO: fluid colors can depend on fluid stack
             this.color(att.getColor());
             this.bucket(fluid.getBucket());
             this.luminosity = att.getLuminosity();

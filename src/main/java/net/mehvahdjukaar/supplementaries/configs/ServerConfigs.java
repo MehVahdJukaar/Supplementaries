@@ -3,8 +3,6 @@ package net.mehvahdjukaar.supplementaries.configs;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
-import net.mehvahdjukaar.supplementaries.common.AdventurerMapsHandler;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -14,6 +12,7 @@ import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -100,6 +99,9 @@ public class ServerConfigs {
         public static ForgeConfigSpec.BooleanValue BOTTLE_XP;
         public static ForgeConfigSpec.IntValue BOTTLING_COST;
         public static ForgeConfigSpec.ConfigValue<List<? extends List<String>>> CUSTOM_ADVENTURER_MAPS_TRADES;
+        public static ForgeConfigSpec.BooleanValue RANDOM_ADVENTURER_MAPS;
+        public static ForgeConfigSpec.BooleanValue MAP_MARKERS;
+        public static ForgeConfigSpec.BooleanValue CEILING_BANNERS;
 
         private static void init(ForgeConfigSpec.Builder builder){
             builder.comment("Vanilla tweaks")
@@ -154,14 +156,39 @@ public class ServerConfigs {
             builder.pop();
 
             builder.push("bottle_xp");
-            BOTTLE_XP = builder.comment("allow bottling up xp by using a bottle on an enchanting table")
+            BOTTLE_XP = builder.comment("Allow bottling up xp by using a bottle on an enchanting table")
                     .define("enabled",true);
             BOTTLING_COST = builder.comment("bottling health cost")
                     .defineInRange("cost",2,0,20);
             builder.pop();
 
-            builder.push("adventurer_maps");
-            CUSTOM_ADVENTURER_MAPS_TRADES = builder.defineList("custom_adventurer_maps", GlobeTextureManager.GlobeColors.getDefaultConfig(), s->true);
+            builder.push("map_tweaks");
+            CUSTOM_ADVENTURER_MAPS_TRADES = builder.comment("In this section you can add custom structure maps to cartographers\n"+
+                    "The format required is as follows:\n"+
+                    "[[<structure>,<level>,<min_price>,<max_price>,<map_name>,<map_color>,<map_marker>],[<structure>,...,<map_marker>],...]\n"+
+                    "With the following parameters:\n"+
+                    " - <structure> structure id to be located (ie: minecraft:igloo)\n"+
+                    " - <level> villager trading level at which the map will be sold. Must be between 1 and 5\n"+
+                    " - <min_price> minimum emerald price\n"+
+                    " - <max_price> maximum emerald price\n"+
+                    " - <map_name> map item name\n"+
+                    " - <map_color> hex color of the map item overlay texture\n"+
+                    " - <map_marker> id of the map marker to be used (ie: supplementaries:igloo). \n"+
+                    "See texture folder for all the names. Leave empty for default ones\n"+
+                    "Note that ony the first parameter is required, each of the others others can me removed and will be defaulted to reasonable values\n"+
+                    "example: ['minecraft:swamp_hut','2','5','7','witch hut map','0x00ff33']")
+
+                    .defineList("custom_adventurer_maps", Collections.singletonList(Collections.singletonList("")), s->true);
+            RANDOM_ADVENTURER_MAPS = builder.comment("Cartographers will sell 'adventurer maps' that will lead to a random vanilla structure.\n"+
+                    "Best kept disabled if you are adding custom adventurer maps with its config")
+                    .define("random_adventurer_maps",true);
+            MAP_MARKERS = builder.comment("enables beacons, lodestones, respawn anchors, beds, conduits, portals to be displayed on maps by clicking one of them with a map")
+                    .define("block_map_markers",true);
+            builder.pop();
+
+            builder.push("ceiling_banners");
+            CEILING_BANNERS = builder.comment("allow banners to be placed on ceilings")
+                    .define("enabled",true);
             builder.pop();
 
             builder.pop();
@@ -219,6 +246,10 @@ public class ServerConfigs {
         public static ForgeConfigSpec.IntValue HOURGLASS_SUGAR;
         public static ForgeConfigSpec.IntValue HOURGLASS_SLIME;
         public static ForgeConfigSpec.IntValue HOURGLASS_HONEY;
+
+        public static ForgeConfigSpec.BooleanValue ITEM_SHELF_LADDER;
+
+        public static ForgeConfigSpec.BooleanValue DOUBLE_IRON_GATE;
 
         private static void init(ForgeConfigSpec.Builder builder){
 
@@ -301,7 +332,7 @@ public class ServerConfigs {
             builder.pop();
 
             builder.push("sack");
-            SACK_PENALTY = builder.comment("penalize the player with slowness effect when carrying too many sacks")
+            SACK_PENALTY = builder.comment("Penalize the player with slowness effect when carrying too many sacks")
                     .define("sack_penality", true);
             SACK_INCREMENT = builder.comment("maximum number of sacks after which the slowness effect will be applied. each multiple of this number will further slow the player down")
                     .defineInRange("sack_increment",2,0,50);
@@ -310,27 +341,27 @@ public class ServerConfigs {
             builder.pop();
 
             builder.push("safe");
-            SAFE_UNBREAKABLE = builder.comment("makes safes only breakable by their owner or by a player in creative")
+            SAFE_UNBREAKABLE = builder.comment("Makes safes only breakable by their owner or by a player in creative")
                     .define("prevent_breaking",false);
-            SAFE_SIMPLE = builder.comment("make safes simpler so they do not require keys:\n" +
+            SAFE_SIMPLE = builder.comment("Make safes simpler so they do not require keys:\n" +
                     "they will be bound to the first person that opens one and only that person will be able to interact with them")
                     .define("simple_safes",false);
             builder.pop();
 
             builder.push("blackboard");
-            BLACKBOARD_COLOR = builder.comment("enable to draw directly on a blackboard using any dye. Gui still only works in black and white")
+            BLACKBOARD_COLOR = builder.comment("Enable to draw directly on a blackboard using any dye. Gui still only works in black and white")
                     .define("colored_blackboard",false);
             builder.pop();
 
             builder.push("candle_holder");
-            CANDLE_HOLDER_LIGHT = builder.comment("candle holder light level")
+            CANDLE_HOLDER_LIGHT = builder.comment("Candle holder light level")
                     .defineInRange("light_level",12,1,15);
 
 
             builder.pop();
 
             builder.push("timber_frame");
-            REPLACE_DAUB = builder.comment("replace a timber frame with wattle and daub when daub is placed in it")
+            REPLACE_DAUB = builder.comment("Replace a timber frame with wattle and daub block when daub is placed in it")
                     .define("replace_daub",true);
 
 
@@ -355,6 +386,16 @@ public class ServerConfigs {
                     .defineInRange("slime_time",1750,0,10000);
             HOURGLASS_HONEY = builder.comment("Time in ticks for honey")
                     .defineInRange("honey_time",2000,0,10000);
+            builder.pop();
+
+            builder.push("item_shelf");
+            ITEM_SHELF_LADDER = builder.comment("Makes item shelves climbable")
+                    .define("climbable_shelves",false);
+            builder.pop();
+
+            builder.push("iron_gate");
+            DOUBLE_IRON_GATE = builder.comment("Allows two iron gates to be opened simultaneously when on top of the other")
+                    .define("double_opening", true);
             builder.pop();
 
             builder.pop();
@@ -406,20 +447,21 @@ public class ServerConfigs {
             builder.push("structures");
             builder.push("way_sign");
             //TODO: redo
-            ROAD_SIGN_DISTANCE_AVR = builder.comment("average distance apart in chunks between spawn attempts")
+            ROAD_SIGN_DISTANCE_AVR = builder.comment("Average distance apart in chunks between spawn attempts")
                     .defineInRange("average_distance",19,0,1001);
-            ROAD_SIGN_DISTANCE_MIN = builder.comment("minimum distance apart in chunks between spawn attempts. 1001 to disable them entirely")
+            ROAD_SIGN_DISTANCE_MIN = builder.comment("Minimum distance apart in chunks between spawn attempts. 1001 to disable them entirely")
                     .defineInRange("minimum_distance",10,0,1001);
 
 
-            DISTANCE_TEXT = builder.comment("with this option road signs will display the distance to the structure that they are pointing to")
+            DISTANCE_TEXT = builder.comment("With this option road signs will display the distance to the structure that they are pointing to")
                     .define("show_distance_text",true);
 
 
             List<String> villages = Arrays.asList("minecraft:village","repurposed_structures:village_badlands","repurposed_structures:village_dark_oak","repurposed_structures:village_birch",
                     "repurposed_structures:village_giant_taiga","repurposed_structures:village_jungle","repurposed_structures:village_mountains","repurposed_structures:village_oak",
                     "repurposed_structures:village_swamp","pokecube:village","pokecube_legends:village","pokecube_legends:village/ocean",
-                    "valhelsia_structures:castle","valhelsia_structures:castle_ruin","valhelsia_structures:small_castle","valhelsia_structures:tower_ruin");
+                    "valhelsia_structures:castle","valhelsia_structures:castle_ruin","valhelsia_structures:small_castle","valhelsia_structures:tower_ruin",
+                    "stoneholm:underground_village");
 
             SIGNS_VILLAGES = builder.comment("list of structure that a sign can point to. Note that they will only spawn in dimensions where vanilla villages can")
                     .defineList("villages", villages, s->true);
@@ -478,6 +520,8 @@ public class ServerConfigs {
         public static boolean RAKED_GRAVEL;
         public static boolean BOTTLE_XP;
         public static int BOTTLING_COST;
+        public static boolean MAP_MARKERS;
+        public static boolean CEILING_BANNERS;
         //spawns
         public static int FIREFLY_MIN;
         public static int FIREFLY_MAX;
@@ -514,6 +558,8 @@ public class ServerConfigs {
         public static boolean BLACKBOARD_COLOR;
         public static int CANDLE_HOLDER_LIGHT;
         public static boolean REPLACE_DAUB;
+        public static boolean ITEM_SHELF_LADDER;
+        public static boolean DOUBLE_IRON_GATE;
         //entity
         public static int FIREFLY_PERIOD;
         public static double FIREFLY_SPEED;
@@ -524,12 +570,6 @@ public class ServerConfigs {
             RAKED_GRAVEL = tweaks.RAKED_GRAVEL.get() && RegistryConfigs.reg.RAKED_GRAVEL_ENABLED.get();
             PLACEABLE_RODS = tweaks.PLACEABLE_RODS.get() && RegistryConfigs.reg.ROD_ENABLED.get();
             PLACEABLE_STICKS = tweaks.PLACEABLE_STICKS.get() && RegistryConfigs.reg.STICK_ENABLED.get();
-            ROPE_ARROW_ROPE = item.ROPE_ARROW_ROPE.get();
-            ROPE_ARROW_BLOCK = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ROPE_ARROW_ROPE));
-            if(ROPE_ARROW_BLOCK == Blocks.AIR)ROPE_ARROW_BLOCK = Registry.ROPE.get();
-            FLUTE_DISTANCE = item.FLUTE_DISTANCE.get();
-            FLUTE_RADIUS = item.FLUTE_RADIUS.get();
-
             DIRECTIONAL_CAKE = tweaks.DIRECTIONAL_CAKE.get();
             DOUBLE_CAKE_PLACEMENT = tweaks.DOUBLE_CAKE_PLACEMENT.get();
             HANGING_POT_PLACEMENT = tweaks.WALL_LANTERN_PLACEMENT.get();
@@ -538,6 +578,14 @@ public class ServerConfigs {
             WALL_LANTERN_BLACKLIST = tweaks.WALL_LANTERN_BLACKLIST.get();
             BELL_CHAIN = tweaks.BELL_CHAIN.get();
             BELL_CHAIN_LENGTH = tweaks.BELL_CHAIN_LENGTH.get();
+            MAP_MARKERS = tweaks.MAP_MARKERS.get();
+            CEILING_BANNERS = tweaks.CEILING_BANNERS.get();
+
+            ROPE_ARROW_ROPE = item.ROPE_ARROW_ROPE.get();
+            ROPE_ARROW_BLOCK = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ROPE_ARROW_ROPE));
+            if(ROPE_ARROW_BLOCK == Blocks.AIR)ROPE_ARROW_BLOCK = Registry.ROPE.get();
+            FLUTE_DISTANCE = item.FLUTE_DISTANCE.get();
+            FLUTE_RADIUS = item.FLUTE_RADIUS.get();
 
             FIREFLY_MIN = spawn.FIREFLY_MIN.get();
             FIREFLY_MAX = spawn.FIREFLY_MAX.get();
@@ -587,11 +635,13 @@ public class ServerConfigs {
 
             REPLACE_DAUB = block.REPLACE_DAUB.get();
 
+            ITEM_SHELF_LADDER = block.ITEM_SHELF_LADDER.get();
+
+            DOUBLE_IRON_GATE = block.DOUBLE_IRON_GATE.get();
+
             FIREFLY_PERIOD = entity.FIREFLY_PERIOD.get();
             FIREFLY_SPEED = entity.FIREFLY_SPEED.get();
             FIREFLY_DESPAWN = entity.FIREFLY_DESPAWN.get();
-
-            AdventurerMapsHandler.loadCustomTrades();
 
         }
     }

@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "optional": [
+    "valhelsia_structures:oak_beam",
+    "valhelsia_structures:birch_beam",
+    "valhelsia_structures:spruce_beam",
+    "valhelsia_structures:acacia_beam",
+    "valhelsia_structures:dark_beam",
+    "valhelsia_structures:jungle_beam",
+    "valhelsia_structures:warped_beam",
+    "valhelsia_structures:crimson_beam"
+  ],
+  "values": [
+  ]
+}

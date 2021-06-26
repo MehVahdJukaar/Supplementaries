@@ -22,7 +22,7 @@ import net.minecraft.world.IWorld;
 import org.jetbrains.annotations.Nullable;
 
 
-//credit to Vazkii & Abnormalis core
+//credit to Vazkii & Abnormals core
 public class VerticalSlabBlock extends WaterBlock {
     public static final EnumProperty<VerticalSlabType> TYPE = EnumProperty.create("type", VerticalSlabType.class);
 

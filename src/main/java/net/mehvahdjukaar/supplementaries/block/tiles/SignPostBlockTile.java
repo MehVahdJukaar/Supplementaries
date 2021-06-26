@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
 
-import net.mehvahdjukaar.supplementaries.block.util.IBlockHolder;
 import net.mehvahdjukaar.supplementaries.block.util.ITextHolder;
 import net.mehvahdjukaar.supplementaries.block.util.TextHolder;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil.TempWoodType;
@@ -10,23 +9,18 @@ import net.mehvahdjukaar.supplementaries.datagen.types.VanillaWoodTypes;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.util.Constants;
 
 
-public class SignPostBlockTile extends TileEntity implements ITextHolder, IBlockHolder {
+public class SignPostBlockTile extends MimicBlockTile implements ITextHolder {
 
     public TextHolder textHolder;
 
-    public BlockState fenceBlock = Blocks.AIR.defaultBlockState();
     public float yawUp = 0;
     public float yawDown = 0;
     public boolean leftUp = true;
@@ -40,17 +34,6 @@ public class SignPostBlockTile extends TileEntity implements ITextHolder, IBlock
     public SignPostBlockTile() {
         super(Registry.SIGN_POST_TILE.get());
         this.textHolder = new TextHolder(2);
-    }
-
-    @Override
-    public BlockState getHeldBlock() {
-        return this.fenceBlock;
-    }
-
-    @Override
-    public boolean setHeldBlock(BlockState state) {
-        this.fenceBlock = state;
-        return true;
     }
 
     @Override
@@ -101,7 +84,10 @@ public class SignPostBlockTile extends TileEntity implements ITextHolder, IBlock
 
         this.textHolder.read(compound);
 
-        this.fenceBlock = NBTUtil.readBlockState(compound.getCompound("Fence"));
+        //TODO: REMOVE
+        if(compound.contains("Fence"))
+            this.mimic = NBTUtil.readBlockState(compound.getCompound("Fence"));
+
         this.yawUp = compound.getFloat("YawUp");
         this.yawDown = compound.getFloat("YawDown");
         this.leftUp = compound.getBoolean("LeftUp");
@@ -111,8 +97,7 @@ public class SignPostBlockTile extends TileEntity implements ITextHolder, IBlock
         this.woodTypeUp = WoodTypes.fromNBT(compound.getString("TypeUp"));
         this.woodTypeDown = WoodTypes.fromNBT(compound.getString("TypeDown"));
 
-
-        //remove in the future
+        //TODO: remove in the future
         if(compound.contains("WoodTypeUp"))
         this.woodTypeUp = TempWoodType.values()[compound.getInt("WoodTypeUp")].convertWoodType();
         if(compound.contains("WoodTypeDown"))
@@ -124,7 +109,6 @@ public class SignPostBlockTile extends TileEntity implements ITextHolder, IBlock
         if(compound.contains("Left_down"))this.leftDown=compound.getBoolean("Left_down");
         if(compound.contains("Yaw_up"))this.yawUp=compound.getFloat("Yaw_up");
         if(compound.contains("Yaw_down"))this.yawDown=compound.getFloat("Yaw_down");
-
     }
 
     @Override
@@ -133,7 +117,6 @@ public class SignPostBlockTile extends TileEntity implements ITextHolder, IBlock
 
         this.textHolder.write(compound);
 
-        compound.put("Fence", NBTUtil.writeBlockState(fenceBlock));
         compound.putFloat("YawUp",this.yawUp);
         compound.putFloat("YawDown",this.yawDown);
         compound.putBoolean("LeftUp",this.leftUp);
@@ -144,20 +127,5 @@ public class SignPostBlockTile extends TileEntity implements ITextHolder, IBlock
         compound.putString("TypeDown", this.woodTypeDown.toNBT());
 
         return compound;
-    }
-
-    @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.worldPosition, 0, this.getUpdateTag());
-    }
-
-    @Override
-    public CompoundNBT getUpdateTag() {
-        return this.save(new CompoundNBT());
-    }
-
-    @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.load(this.getBlockState(), pkt.getTag());
     }
 }

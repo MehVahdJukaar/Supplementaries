@@ -30,7 +30,7 @@ public class ConfigHandler {
 
 
     public static void reloadConfigsEvent(ModConfig.ModConfigEvent event) {
-
+        //TODO: common aren't working..
         if(event.getConfig().getSpec() == ServerConfigs.SERVER_CONFIG) {
             //send this configuration to connected clients
             syncServerConfigs();

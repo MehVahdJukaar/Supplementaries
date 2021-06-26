@@ -26,7 +26,7 @@ public class PulleyBlockTile extends ItemDisplayTile {
     }
 
     @Override
-    public void updateOnChanged() {}
+    public void updateOnChangedBeforePacket() {}
 
     //hijacking this method to work with hoppers
     @Override
@@ -48,8 +48,8 @@ public class PulleyBlockTile extends ItemDisplayTile {
 
     public static Winding getContentType(Item item){
         Winding type = Winding.NONE;
-        if(item instanceof BlockItem && ((BlockItem) item).getBlock() instanceof ChainBlock || ModTags.isTagged(ModTags.CHAINS,item))type = Winding.CHAIN;
-        else if(ModTags.isTagged(ModTags.ROPES,item))type = Winding.ROPE;
+        if(item instanceof BlockItem && ((BlockItem) item).getBlock() instanceof ChainBlock || item.is(ModTags.CHAINS))type = Winding.CHAIN;
+        else if(item.is(ModTags.ROPES))type = Winding.ROPE;
         return type;
     }
 

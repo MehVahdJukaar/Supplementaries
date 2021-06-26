@@ -17,7 +17,7 @@ public class FrameBlockLoader  implements IModelLoader<FrameBlockGeometry> {
 
     @Override
     public FrameBlockGeometry read(JsonDeserializationContext context, JsonObject json) {
-        BlockModel model = null;
+        BlockModel model;
         model = ModelLoaderRegistry.ExpandedBlockModelDeserializer.INSTANCE
                 .getAdapter(BlockModel.class).fromJsonTree(json.get("overlay"));
         return new FrameBlockGeometry(model);

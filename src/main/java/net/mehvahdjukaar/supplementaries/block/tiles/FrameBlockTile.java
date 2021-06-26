@@ -2,12 +2,10 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.blocks.FrameBlock;
-import net.mehvahdjukaar.supplementaries.block.util.IBlockHolder;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.SoundType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
@@ -16,29 +14,16 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraftforge.client.model.ModelDataManager;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
-import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.common.util.Constants;
 
-import javax.annotation.Nullable;
-import java.util.Objects;
 import java.util.function.Supplier;
 
-public class FrameBlockTile extends TileEntity implements IBlockHolder {
-
-    public BlockState held = Blocks.AIR.defaultBlockState();
-
-    public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
-    //private final IModelData data;
+public class FrameBlockTile extends MimicBlockTile {
 
     public FrameBlockTile() {
         super(Registry.TIMBER_FRAME_TILE.get());
@@ -46,24 +31,9 @@ public class FrameBlockTile extends TileEntity implements IBlockHolder {
     }
 
     @Override
-    public IModelData getModelData() {
-        //return data;
-
-        return new ModelDataMap.Builder()
-                .withInitial(MIMIC, held)
-                .build();
-
-    }
-
-    @Override
-    public BlockState getHeldBlock() {
-        return held;
-    }
-
-    @Override
     public boolean setHeldBlock(BlockState state) {
         //int oldLight = this.getLightValue();
-        this.held = state;
+        this.mimic = state;
 
         if(!this.level.isClientSide) {
             this.setChanged();
@@ -79,46 +49,9 @@ public class FrameBlockTile extends TileEntity implements IBlockHolder {
     @Override
     public void load(BlockState state, CompoundNBT compound) {
         super.load(state, compound);
-        this.held = NBTUtil.readBlockState(compound.getCompound("Held"));
-    }
-
-    @Override
-    public CompoundNBT save(CompoundNBT compound) {
-        super.save(compound);
-        compound.put("Held", NBTUtil.writeBlockState(held));
-        return compound;
-    }
-
-    // The getUpdateTag()/handleUpdateTag() pair is called whenever the client receives a new chunk
-    // it hasn't seen before. i.e. the chunk is loaded
-
-    @Override
-    public CompoundNBT getUpdateTag() {
-        return this.save(new CompoundNBT());
-    }
-
-    // The getUpdatePacket()/onDataPacket() pair is used when a block update happens on the client
-    // (a blockstate change or an explicit notificiation of a block update from the server). It's
-    // easiest to implement them based on getUpdateTag()/handleUpdateTag()
-
-    @Nullable
-    @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.worldPosition, 1, getUpdateTag());
-    }
-
-    //client
-    @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        BlockState oldMimic = this.held;
-        CompoundNBT tag = pkt.getTag();
-        handleUpdateTag(this.getBlockState(), tag);
-        if (!Objects.equals(oldMimic, this.held)) {
-            //not needed cause model data doesn't create new obj. updating old one insead
-            ModelDataManager.requestModelDataRefresh(this);
-            //this.data.setData(MIMIC, this.getHeldBlock());
-            this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
-        }
+        //TODO: REMOVE
+        if(compound.contains("Held"))
+            this.mimic = NBTUtil.readBlockState(compound.getCompound("Held"));
     }
 
     public int getLightValue(){

@@ -15,22 +15,6 @@ public class Textures {
     //minecraft
     public static final ResourceLocation DIRT_TEXTURE = new ResourceLocation("minecraft:block/dirt");
     public static final ResourceLocation WHITE_CONCRETE_TEXTURE = new ResourceLocation("minecraft:block/white_concrete_powder");
-    public static final ResourceLocation ORANGE_CONCRETE_TEXTURE = new ResourceLocation("minecraft:block/orange_concrete_powder");
-    public static final ResourceLocation LIGHT_BLUE_CONCRETE_TEXTURE = new ResourceLocation("minecraft:block/light_blue_concrete_powder");
-    public static final ResourceLocation YELLOW_CONCRETE_TEXTURE = new ResourceLocation("minecraft:block/yellow_concrete_powder");
-    public static final ResourceLocation LIME_CONCRETE_TEXTURE = new ResourceLocation("minecraft:block/lime_concrete_powder");
-    public static final ResourceLocation PINK_CONCRETE_TEXTURE = new ResourceLocation("minecraft:block/pink_concrete_powder");
-    public static final ResourceLocation GRAY_CONCRETE_TEXTURE = new ResourceLocation("minecraft:block/gray_concrete_powder");
-    public static final ResourceLocation LIGHT_GRAY_CONCRETE_TEXTURE = new ResourceLocation("minecraft:block/light_gray_concrete_powder");
-    public static final ResourceLocation CYAN_CONCRETE_TEXTURE = new ResourceLocation("minecraft:block/cyan_concrete_powder");
-    public static final ResourceLocation PURPLE_CONCRETE_TEXTURE = new ResourceLocation("minecraft:block/purple_concrete_powder");
-    public static final ResourceLocation BLUE_CONCRETE_TEXTURE = new ResourceLocation("minecraft:block/blue_concrete_powder");
-    public static final ResourceLocation BROWN_CONCRETE_TEXTURE = new ResourceLocation("minecraft:block/brown_concrete_powder");
-    public static final ResourceLocation GREEN_CONCRETE_TEXTURE = new ResourceLocation("minecraft:block/green_concrete_powder");
-    public static final ResourceLocation RED_CONCRETE_TEXTURE = new ResourceLocation("minecraft:block/red_concrete_powder");
-    public static final ResourceLocation BLACK_CONCRETE_TEXTURE = new ResourceLocation("minecraft:block/black_concrete_powder");
-    public static final ResourceLocation MAGENTA_CONCRETE_TEXTURE = new ResourceLocation("minecraft:block/magenta_concrete_powder");
-    public static final ResourceLocation RED_SAND_TEXTURE = new ResourceLocation("minecraft:block/red_sand");
     public static final ResourceLocation SAND_TEXTURE = new ResourceLocation("minecraft:block/sand");
     public static final ResourceLocation WATER_TEXTURE = new ResourceLocation("minecraft:block/water_still");
     public static final ResourceLocation LAVA_TEXTURE = new ResourceLocation("minecraft:block/lava_still");
@@ -78,8 +62,11 @@ public class Textures {
     public static final ResourceLocation GLOBE_CUSTOM_2 = new ResourceLocation(MOD_ID,"textures/entity/globes/globe_toffanelly.png");
     public static final ResourceLocation GLOBE_CUSTOM_3 = new ResourceLocation(MOD_ID,"textures/entity/globes/globe_sylvetichearts.png");
     public static final ResourceLocation GLOBE_CUSTOM_4 = new ResourceLocation(MOD_ID,"textures/entity/globes/globe_agrona.png");
+    public static final ResourceLocation GLOBE_CUSTOM_5 = new ResourceLocation(MOD_ID,"textures/entity/globes/globe_thugpug43.png");
+
     public static final ResourceLocation ROPE_ARROW = new ResourceLocation(MOD_ID,"textures/entity/rope_arrow.png");
     public static final ResourceLocation ORANGE_TRADER = new ResourceLocation(MOD_ID,"textures/entity/misc/orange_trader.png");
+    public static final ResourceLocation STATUE = new ResourceLocation(MOD_ID,"textures/entity/statue.png");
 
     public static final ResourceLocation FIREFLY_TEXTURE =  new ResourceLocation(MOD_ID,"textures/entity/firefly.png");
     public static final ResourceLocation BELL_ROPE_TEXTURE = new ResourceLocation(MOD_ID,"textures/entity/bell_rope.png");
@@ -123,7 +110,7 @@ public class Textures {
 
 
     //TODO: rethink this
-    public static List<ResourceLocation> getBlockTextures() {
+    public static List<ResourceLocation> getTexturesToStitch() {
         return new ArrayList<>(Arrays.asList(
                 MILK_TEXTURE, POTION_TEXTURE, POTION_TEXTURE_FLOW, HONEY_TEXTURE, DRAGON_BREATH_TEXTURE, SOUP_TEXTURE,MAGMA_TEXTURE,MAGMA_TEXTURE_FLOW,
                 XP_TEXTURE, XP_TEXTURE_FLOW, FISHIES_TEXTURE, BELLOWS_TEXTURE, LASER_BEAM_TEXTURE, LASER_BEAM_END_TEXTURE,LASER_OVERLAY_TEXTURE,

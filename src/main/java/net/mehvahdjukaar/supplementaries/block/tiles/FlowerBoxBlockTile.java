@@ -41,7 +41,7 @@ public class FlowerBoxBlockTile extends ItemDisplayTile {
         return new AxisAlignedBB(this.worldPosition).move(0,0.25,0);
     }
 
-    public void updateClientVisuals() {
+    public void updateClientVisualsOnLoad() {
 
         Item item = this.getItem(0).getItem();
         flower0_up = null;

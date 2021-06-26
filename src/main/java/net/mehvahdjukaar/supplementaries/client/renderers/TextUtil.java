@@ -44,8 +44,9 @@ public class TextUtil {
                 "\nWenXin2"+
                 "\nFrogbirdd"+
                 "\nMightyGoat"+
-                "\nFr_z_n"+
                 "\nAlleCraft"+
+                "\nFr_z_n"+
+                "\nBrun333rp"+
                 "\n\n\u00A75Translations:\u00A7r\n\n\u00A70"+
                 "Bart_Riot23"+
                 "\nMikeliro"+
@@ -60,6 +61,7 @@ public class TextUtil {
                 "\nNick Defrunct"+
                 "\nKevinl2000"+
                 "\nfixmes"+
+                "\nDoiqotaq"+
                 "\n\n\u00A75Others:\u00A7r\n\n\u00A70"+
                  "Guys on Discord"+
                 "\nUmaroth"+

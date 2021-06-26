@@ -19,7 +19,10 @@ public class MapDecorationHandler {
 
     public static final CustomDecorationType<?,?> GENERIC_STRUCTURE_TYPE = makeSimpleType(Supplementaries.MOD_ID, "generic_structure");
 
-
+    /**
+     * registers a decoration type. use register simple for decoration that don't need a world marker
+     * @param newType new decoration type
+     */
     public static void register(CustomDecorationType<?,?> newType){
         String id = newType.getSerializeId();
         if(DECORATION_TYPES.containsKey(id)){
@@ -31,7 +34,7 @@ public class MapDecorationHandler {
     }
 
     /**
-     * registers a simple decoration with no associated world marker.<br>
+     * creates & registers a simple decoration with no associated world marker.<br>
      * useful for exploration maps
      * @param modId mod id
      * @param name decoration name
@@ -91,12 +94,10 @@ public class MapDecorationHandler {
      * Such decoration will not have any world marker associated and wont be toggleable
      * @param stack map item stack
      * @param pos decoration world pos
-     * @param id decorationType id. if invalid will default to generic structure decoration
+     * @param type decorationType
      * @param mapColor map item tint color
      */
-    public static void addTargetDecoration(ItemStack stack, BlockPos pos, ResourceLocation id, int mapColor) {
-
-        CustomDecorationType<?,?> type = DECORATION_TYPES.getOrDefault(id.toString(),GENERIC_STRUCTURE_TYPE);
+    public static void addTargetDecoration(ItemStack stack, BlockPos pos, CustomDecorationType<?,?> type, int mapColor) {
 
         ListNBT listnbt;
         if (stack.hasTag() && stack.getTag().contains("CustomDecorations", 9)) {
@@ -115,6 +116,15 @@ public class MapDecorationHandler {
             com.putInt("MapColor", mapColor);
         }
 
+    }
+
+    /**
+     * see addTargetDecoration
+     * @param id decoration type id. if invalid will default to generic structure decoration
+     */
+    public static void addTargetDecoration(ItemStack stack, BlockPos pos, ResourceLocation id, int mapColor) {
+        CustomDecorationType<?,?> type = DECORATION_TYPES.getOrDefault(id.toString(),GENERIC_STRUCTURE_TYPE);
+        addTargetDecoration(stack,pos,type,mapColor);
     }
 
 

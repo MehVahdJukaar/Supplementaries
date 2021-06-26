@@ -1,17 +1,14 @@
 package net.mehvahdjukaar.supplementaries.items;
 
 
-import net.mehvahdjukaar.supplementaries.block.util.CapturedMobs;
+import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.block.util.MobHolder;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.IAngerable;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.monster.SlimeEntity;
 import net.minecraft.entity.monster.piglin.PiglinEntity;
@@ -51,13 +48,12 @@ public class EmptyCageItem extends BlockItem {
 
 
     public ActionResultType doInteract(ItemStack stack, PlayerEntity player, Entity entity, Hand hand) {
-        ResourceLocation n = entity.getType().getRegistryName();
-        if(n==null)return ActionResultType.PASS;
-        String name = n.toString();
 
         boolean isFirefly = false;
         boolean canBeCaught = false;
-        if(ServerConfigs.cached.CAGE_ALL_MOBS) {
+        EntityType<?> type = entity.getType();
+        String name = type.getRegistryName().toString();
+        if(ServerConfigs.cached.CAGE_ALL_MOBS || CapturedMobsHelper.COMMAND_MOBS.contains(name)) {
             canBeCaught = true;
         }
         else{
@@ -65,16 +61,17 @@ public class EmptyCageItem extends BlockItem {
                 case CAGE:
                     boolean dababy = entity instanceof LivingEntity && ((LivingEntity) entity).isBaby();
                     canBeCaught = ((ServerConfigs.cached.CAGE_ALL_BABIES && dababy) ||
-                            ModTags.isTagged(ModTags.CAGE_CATCHABLE, entity.getType()) ||
-                            (ModTags.isTagged(ModTags.CAGE_BABY_CATCHABLE, entity.getType()) && dababy));
+                            type.is(ModTags.CAGE_CATCHABLE) ||
+                            (type.is(ModTags.CAGE_BABY_CATCHABLE) && dababy));
                     break;
                 case JAR:
-                    isFirefly = entity.getType().getRegistryName().getPath().toLowerCase().contains("firefl");
-                    canBeCaught = isFirefly || ModTags.isTagged(ModTags.JAR_CATCHABLE, entity.getType()) ||
-                            CapturedMobs.CATCHABLE_FISHES.contains(entity.getType().getRegistryName().toString());
+                    isFirefly = type.getRegistryName().getPath().toLowerCase().contains("firefl");
+                    canBeCaught = isFirefly ||  type.is(ModTags.JAR_CATCHABLE) ||
+                            CapturedMobsHelper.CATCHABLE_FISHES.contains(name);
                     break;
                 case TINTED_JAR:
-                    canBeCaught = ModTags.isTagged(ModTags.TINTED_JAR_CATCHABLE, entity.getType())|| CapturedMobs.CATCHABLE_FISHES.contains(entity.getType().getRegistryName().toString());
+                    canBeCaught =  type.is(ModTags.TINTED_JAR_CATCHABLE) ||
+                            CapturedMobsHelper.CATCHABLE_FISHES.contains(name);
                     break;
             }
         }

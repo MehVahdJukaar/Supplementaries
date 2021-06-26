@@ -1,0 +1,52 @@
+{
+  "variants": {
+    "axis=x,type=post": {
+      "model": "supplementaries:block/rope_knot_post_r",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y,type=post": {
+      "model": "supplementaries:block/rope_knot_post"
+    },
+    "axis=z,type=post": {
+      "model": "supplementaries:block/rope_knot_post_r",
+      "x": 90
+    },
+    "axis=x,type=palisade": {
+      "model": "supplementaries:block/rope_knot_palisade_r",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y,type=palisade": {
+      "model": "supplementaries:block/rope_knot_palisade"
+    },
+    "axis=z,type=palisade": {
+      "model": "supplementaries:block/rope_knot_palisade_r",
+      "x": 90
+    },
+    "axis=x,type=wall": {
+      "model": "supplementaries:block/rope_knot_wall_r",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y,type=wall": {
+      "model": "supplementaries:block/rope_knot_wall"
+    },
+    "axis=z,type=wall": {
+      "model": "supplementaries:block/rope_knot_wall_r",
+      "x": 90
+    },
+    "axis=x,type=beam": {
+      "model": "supplementaries:block/rope_knot_beam_r",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y,type=beam": {
+      "model": "supplementaries:block/rope_knot_beam"
+    },
+    "axis=z,type=beam": {
+      "model": "supplementaries:block/rope_knot_beam_r",
+      "x": 90
+    }
+  }
+}

@@ -2,8 +2,6 @@ package net.mehvahdjukaar.supplementaries.network;
 
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
-import net.mehvahdjukaar.supplementaries.compat.configured.ConfiguredCustomScreen;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.PacketBuffer;
@@ -32,14 +30,12 @@ public class OpenConfigsPacket {
 
             ServerConfigs.loadLocal();
 
+            //if(configured)ConfiguredCustomScreen.openScreen();
 
-            if(CompatHandler.configured)
-                ConfiguredCustomScreen.openScreen(mc);
-            else{
-                mc.setScreen(ModList.get().getModContainerById(Supplementaries.MOD_ID).get()
-                        .getCustomExtension(ExtensionPoint.CONFIGGUIFACTORY).get()
-                        .apply(mc,mc.screen));
-            }
+            mc.setScreen(ModList.get().getModContainerById(Supplementaries.MOD_ID).get()
+                    .getCustomExtension(ExtensionPoint.CONFIGGUIFACTORY).get()
+                    .apply(mc,mc.screen));
+
 
         });
         ctx.get().setPacketHandled(true);

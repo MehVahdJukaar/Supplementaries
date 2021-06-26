@@ -1,12 +1,15 @@
 package net.mehvahdjukaar.supplementaries.items;
 
 
-import net.mehvahdjukaar.supplementaries.block.util.CapturedMobs;
+import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.block.util.MobHolder;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.WaterMobEntity;
@@ -19,8 +22,13 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 public class EmptyJarItem extends EmptyCageItem {
@@ -28,7 +36,15 @@ public class EmptyJarItem extends EmptyCageItem {
         super(blockIn, properties, full, whitelist);
     }
 
+    @Override
+    public void appendHoverText(ItemStack p_77624_1_, @Nullable World p_77624_2_, List<ITextComponent> tooltip, ITooltipFlag p_77624_4_) {
+        super.appendHoverText(p_77624_1_, p_77624_2_, tooltip, p_77624_4_);
+        if(!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().options.advancedItemTooltips)return;
+        tooltip.add(new TranslationTextComponent("message.supplementaries.jar").withStyle(TextFormatting.ITALIC).withStyle(TextFormatting.GRAY));
+    }
+
     //TODO: merge with full jars?
+    //TODO: redo this
 
     private static boolean isSoulSand(BlockState s){
         try {
@@ -56,7 +72,7 @@ public class EmptyJarItem extends EmptyCageItem {
                     ItemStack returnItem = new ItemStack(this.full.get());
 
                     CompoundNBT com = new CompoundNBT();
-                    MobHolder.saveBucketToNBT(com, filledBucket, entity.getName().getString(), CapturedMobs.getType(entity).getFishTexture());
+                    MobHolder.saveBucketToNBT(com, filledBucket, entity.getName().getString(), CapturedMobsHelper.getType(entity).getFishTexture());
                     returnItem.addTagElement("BlockEntityTag", com);
 
                     player.startUsingItem(hand);

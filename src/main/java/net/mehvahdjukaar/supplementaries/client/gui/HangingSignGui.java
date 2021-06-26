@@ -34,13 +34,12 @@ public class HangingSignGui extends Screen {
     //for ticking cursor
     private int updateCounter;
     private final HangingSignBlockTile tileSign;
-    private static final int MAXLINES = 5;
     private final String[] cachedLines;
 
     public HangingSignGui(HangingSignBlockTile teSign) {
         super(new TranslationTextComponent("sign.edit"));
         this.tileSign = teSign;
-        this.cachedLines = IntStream.range(0, MAXLINES).mapToObj(teSign.textHolder::getText).map(ITextComponent::getString).toArray(String[]::new);
+        this.cachedLines = IntStream.range(0, HangingSignBlockTile.MAXLINES).mapToObj(teSign.textHolder::getText).map(ITextComponent::getString).toArray(String[]::new);
 
     }
 
@@ -62,7 +61,7 @@ public class HangingSignGui extends Screen {
     }
 
     public void scrollText(int amount){
-        this.editLine = Math.floorMod(this.editLine - amount, MAXLINES);
+        this.editLine = Math.floorMod(this.editLine - amount, HangingSignBlockTile.MAXLINES);
         this.textInputUtil.setCursorToEnd();
     }
 
@@ -172,7 +171,7 @@ public class HangingSignGui extends Screen {
                 float f3 = (float) (-this.minecraft.font.width(s) / 2);
                 //this.minecraft.fontRenderer.renderString(s, f3, (float) (k1 * 48 - this.tileSign.signText.length * 5), i, false, matrix4f,
                 //       irendertypebuffer$impl, false, 0, 15728880); //*10
-                this.minecraft.font.drawInBatch(s, f3, (float)(i1 * 10 - this.cachedLines.length * 5), i, false, matrix4f, irendertypebuffer$impl, false, 0, 15728880, false);
+                this.minecraft.font.drawInBatch(s, f3, 1+(float)(i1 * 10 - this.cachedLines.length * 5), i, false, matrix4f, irendertypebuffer$impl, false, 0, 15728880, false);
                 if (i1 == this.editLine && j >= 0 && flag1) {
                     int j1 = this.minecraft.font.width(s.substring(0, Math.max(Math.min(j, s.length()), 0)));
 

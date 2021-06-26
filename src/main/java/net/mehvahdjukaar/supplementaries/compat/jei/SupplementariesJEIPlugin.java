@@ -7,6 +7,7 @@ import mezz.jei.api.ingredients.subtypes.ISubtypeInterpreter;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.items.BambooSpikesTippedItem;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
@@ -135,23 +136,24 @@ public class SupplementariesJEIPlugin implements IModPlugin {
 
         ItemStack blackboard = new ItemStack(Registry.BLACKBOARD_ITEM.get());
         CompoundNBT com = new CompoundNBT();
-
-        com.putByteArray("pixels_"+0, new byte[]{0,0,0,0,0,1,1,0,0,0,0,1,1,1,0,0});
-        com.putByteArray("pixels_"+1, new byte[]{0,0,0,1,1,0,0,1,1,1,1,0,0,0,1,0});
-        com.putByteArray("pixels_"+2, new byte[]{0,0,1,0,0,1,0,0,0,1,0,1,0,0,1,0});
-        com.putByteArray("pixels_"+3, new byte[]{0,0,1,0,0,1,1,1,0,1,1,1,0,0,1,0});
-        com.putByteArray("pixels_"+4, new byte[]{0,0,1,0,0,1,1,0,1,1,0,1,0,0,1,0});
-        com.putByteArray("pixels_"+5, new byte[]{0,0,1,0,0,0,0,0,1,1,1,1,0,0,1,0});
-        com.putByteArray("pixels_"+6, new byte[]{0,0,1,0,0,1,0,1,0,1,0,1,0,1,0,0});
-        com.putByteArray("pixels_"+7, new byte[]{0,0,1,0,0,1,0,0,0,1,1,1,0,1,0,0});
-        com.putByteArray("pixels_"+8, new byte[]{0,0,1,0,0,1,1,0,0,1,0,1,0,1,0,0});
-        com.putByteArray("pixels_"+9, new byte[]{0,0,1,0,0,1,1,0,1,0,1,0,0,1,0,0});
-        com.putByteArray("pixels_"+10, new byte[]{0,0,1,0,0,0,0,0,1,1,0,0,1,0,0,0});
-        com.putByteArray("pixels_"+11, new byte[]{0,0,1,0,0,0,1,0,1,0,0,0,1,0,0,0});
-        com.putByteArray("pixels_"+12, new byte[]{0,0,1,0,0,0,1,1,0,0,0,1,0,0,0,0});
-        com.putByteArray("pixels_"+13, new byte[]{0,0,0,1,1,0,0,1,1,0,1,0,0,0,0,0});
-        com.putByteArray("pixels_"+14, new byte[]{0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0});
-        com.putByteArray("pixels_"+15, new byte[]{0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0});
+        byte[][] pixels = new byte[][]{
+                {0,0,0,0,0,1,1,0,0,0,0,1,1,1,0,0},
+                {0,0,0,1,1,0,0,1,1,1,1,0,0,0,1,0},
+                {0,0,1,0,0,1,0,0,0,1,0,1,0,0,1,0},
+                {0,0,1,0,0,1,1,1,0,1,1,1,0,0,1,0},
+                {0,0,1,0,0,1,1,0,1,1,0,1,0,0,1,0},
+                {0,0,1,0,0,0,0,0,1,1,1,1,0,0,1,0},
+                {0,0,1,0,0,1,0,1,0,1,0,1,0,1,0,0},
+                {0,0,1,0,0,1,0,0,0,1,1,1,0,1,0,0},
+                {0,0,1,0,0,1,1,0,0,1,0,1,0,1,0,0},
+                {0,0,1,0,0,1,1,0,1,0,1,0,0,1,0,0},
+                {0,0,1,0,0,0,0,0,1,1,0,0,1,0,0,0},
+                {0,0,1,0,0,0,1,0,1,0,0,0,1,0,0,0},
+                {0,0,1,0,0,0,1,1,0,0,0,1,0,0,0,0},
+                {0,0,0,1,1,0,0,1,1,0,1,0,0,0,0,0},
+                {0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0},
+                {0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0}};
+        com.putLongArray("Pixels", BlackboardBlockTile.packPixels(pixels));
         blackboard.addTagElement("BlockEntityTag", com);
 
         Ingredient emptyBoard = Ingredient.of(new ItemStack(Registry.BLACKBOARD_ITEM.get()));
@@ -171,22 +173,24 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         ItemStack blackboard = new ItemStack(Registry.BLACKBOARD_ITEM.get());
         CompoundNBT com = new CompoundNBT();
 
-        com.putByteArray("pixels_1", new byte[]{0,0,0,1,1,0,0,0,0,1,1,0,0,1,0,0});
-        com.putByteArray("pixels_0", new byte[]{0,0,0,0,0,1,1,1,1,0,1,1,1,0,0,0});
-        com.putByteArray("pixels_10", new byte[]{0,1,0,0,0,1,1,1,1,0,0,1,0,1,0,1});
-        com.putByteArray("pixels_11", new byte[]{0,1,0,0,1,0,1,0,1,0,0,1,1,0,1,0});
-        com.putByteArray("pixels_12", new byte[]{0,0,1,0,0,0,1,1,1,0,1,1,0,0,1,0});
-        com.putByteArray("pixels_13", new byte[]{0,0,1,0,0,0,0,1,0,0,0,0,0,1,0,0});
-        com.putByteArray("pixels_14", new byte[]{0,0,0,1,1,0,0,0,0,1,1,0,0,1,0,0});
-        com.putByteArray("pixels_15", new byte[]{0,0,0,0,0,1,1,1,1,0,1,1,1,0,0,0});
-        com.putByteArray("pixels_3", new byte[]{0,0,1,0,0,0,1,1,1,0,1,1,0,0,1,0});
-        com.putByteArray("pixels_2", new byte[]{0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0});
-        com.putByteArray("pixels_5", new byte[]{0,1,0,0,0,0,1,1,1,0,0,1,1,1,0,1});
-        com.putByteArray("pixels_4", new byte[]{0,1,0,0,0,0,1,1,1,0,0,1,0,0,1,0});
-        com.putByteArray("pixels_7", new byte[]{0,1,0,0,0,0,0,0,0,1,0,1,1,1,0,1});
-        com.putByteArray("pixels_6", new byte[]{0,1,0,0,0,0,0,0,0,0,0,1,0,1,0,1});
-        com.putByteArray("pixels_9", new byte[]{0,1,0,0,0,0,0,1,0,0,0,1,1,1,0,1});
-        com.putByteArray("pixels_8", new byte[]{0,1,0,0,0,0,0,0,0,1,0,1,0,1,0,1});
+        byte[][] pixels = new byte[][]{
+                {0,0,0,0,0,1,1,1,1,0,1,1,1,0,0,0},
+                {0,0,0,1,1,0,0,0,0,1,1,0,0,1,0,0},
+                {0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0},
+                {0,0,1,0,0,0,1,1,1,0,1,1,0,0,1,0},
+                {0,1,0,0,0,0,1,1,1,0,0,1,0,0,1,0},
+                {0,1,0,0,0,0,1,1,1,0,0,1,1,1,0,1},
+                {0,1,0,0,0,0,0,0,0,0,0,1,0,1,0,1},
+                {0,1,0,0,0,0,0,0,0,1,0,1,1,1,0,1},
+                {0,1,0,0,0,0,0,0,0,1,0,1,0,1,0,1},
+                {0,1,0,0,0,0,0,1,0,0,0,1,1,1,0,1},
+                {0,1,0,0,0,1,1,1,1,0,0,1,0,1,0,1},
+                {0,1,0,0,1,0,1,0,1,0,0,1,1,0,1,0},
+                {0,0,1,0,0,0,1,1,1,0,1,1,0,0,1,0},
+                {0,0,1,0,0,0,0,1,0,0,0,0,0,1,0,0},
+                {0,0,0,1,1,0,0,0,0,1,1,0,0,1,0,0},
+                {0,0,0,0,0,1,1,1,1,0,1,1,1,0,0,0}};
+        com.putLongArray("Pixels", BlackboardBlockTile.packPixels(pixels));
         blackboard.addTagElement("BlockEntityTag", com);
 
         Ingredient emptyBoard = Ingredient.of(new ItemStack(Items.WATER_BUCKET));

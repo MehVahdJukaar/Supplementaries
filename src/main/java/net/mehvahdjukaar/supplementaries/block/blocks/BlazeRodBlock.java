@@ -35,7 +35,7 @@ public class BlazeRodBlock extends StickBlock{
             BooleanProperty axis = this.axisToProperty.get(context.getClickedFace().getAxis());
             if(!state.getValue(axis))return true;
         }
-        return super.canBeReplaced(state, context);
+        return state.getMaterial().isReplaceable() && (context.getItemInHand().isEmpty() || context.getItemInHand().getItem() != this.asItem());
     }
 
     @Override

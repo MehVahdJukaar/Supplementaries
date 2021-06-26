@@ -24,7 +24,7 @@ public class BottlingXpParticle extends SpriteTexturedParticle {
         if (this.random.nextInt(3) != 0) {
             this.setColor(0.65F + this.random.nextFloat() * 0.25F, 0.85F + this.random.nextFloat() * 0.15F, this.random.nextFloat() * 0.2F);
         } else {
-            this.setColor(0.2F + this.random.nextFloat() * 0.2F, 0.8F + this.random.nextFloat() * 0.2F, 0.1f+this.random.nextFloat() * 0.25F);
+            this.setColor(0.3F + this.random.nextFloat() * 0.2F, 0.8F + this.random.nextFloat() * 0.2F, 0.1f+this.random.nextFloat() * 0.25F);
         }
 
         this.lifetime = (int)(Math.random() * 8.0D) + 5;

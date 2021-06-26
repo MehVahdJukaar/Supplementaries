@@ -1,12 +1,15 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.mehvahdjukaar.supplementaries.block.tiles.FireflyJarBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.RenderState;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.model.RenderMaterial;
 import net.minecraft.client.renderer.texture.AtlasTexture;
@@ -14,7 +17,15 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.settings.GraphicsFanciness;
+import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Util;
+import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Quaternion;
+
+import java.util.List;
+import java.util.Random;
+import java.util.stream.IntStream;
 
 
 public class SoulJarBlockTileRenderer extends TileEntityRenderer<FireflyJarBlockTile> {
@@ -25,11 +36,11 @@ public class SoulJarBlockTileRenderer extends TileEntityRenderer<FireflyJarBlock
     public SoulJarBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
     }
-/*
+
     public static final ResourceLocation END_SKY_TEXTURE = new ResourceLocation("textures/environment/end_sky.png");
     public static final ResourceLocation END_PORTAL_TEXTURE = new ResourceLocation("textures/entity/end_portal.png");
     private static final Random RANDOM = new Random(31100L);
-    private static final List<RenderType> RENDER_TYPES = IntStream.range(0, 16).mapToObj((i) -> RenderType.getEndPortal(i + 1)).collect(ImmutableList.toImmutableList());
+    private static final List<RenderType> RENDER_TYPES = IntStream.range(0, 16).mapToObj((i) -> RenderType.endPortal(i + 1)).collect(ImmutableList.toImmutableList());
 
 
     protected int getPasses(double p_191286_1_) {
@@ -68,30 +79,31 @@ public class SoulJarBlockTileRenderer extends TileEntityRenderer<FireflyJarBlock
 
     private void renderFace(Matrix4f matrix4f, IVertexBuilder builder, float p_228884_4_, float p_228884_5_, float p_228884_6_, float p_228884_7_, float p_228884_8_, float p_228884_9_, float p_228884_10_, float p_228884_11_, float r, float g, float b, Direction p_228884_15_) {
 
-        builder.pos(matrix4f, p_228884_4_, p_228884_6_, p_228884_8_).color(r, g, b, 1.0F).endVertex();
-        builder.pos(matrix4f, p_228884_5_, p_228884_6_, p_228884_9_).color(r, g, b, 1.0F).endVertex();
-        builder.pos(matrix4f, p_228884_5_, p_228884_7_, p_228884_10_).color(r, g, b, 1.0F).endVertex();
-        builder.pos(matrix4f, p_228884_4_, p_228884_7_, p_228884_11_).color(r, g, b, 1.0F).endVertex();
+        builder.vertex(matrix4f, p_228884_4_, p_228884_6_, p_228884_8_).color(r, g, b, 1.0F).endVertex();
+        builder.vertex(matrix4f, p_228884_5_, p_228884_6_, p_228884_9_).color(r, g, b, 1.0F).endVertex();
+        builder.vertex(matrix4f, p_228884_5_, p_228884_7_, p_228884_10_).color(r, g, b, 1.0F).endVertex();
+        builder.vertex(matrix4f, p_228884_4_, p_228884_7_, p_228884_11_).color(r, g, b, 1.0F).endVertex();
 
 
-    }*/
+    }
 
     @Override
     public void render(FireflyJarBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
+
         /*
         matrixStackIn.translate(0,-0.3,0);
         RANDOM.setSeed(31100L);
-        double d0 = tile.getPos().distanceSq(this.renderDispatcher.renderInfo.getProjectedView(), true);
+        double d0 = 3;//tile.getBlockPos().distSqr(this.renderer.renderInfo.getProjectedView(), true);
         int i = 3;//this.getPasses(d0);
         float f = 0.75F;
-        Matrix4f matrix4f = matrixStackIn.getLast().getMatrix();
+        Matrix4f matrix4f = matrixStackIn.last().pose();
         this.renderCube(f, 0.15F, matrix4f, bufferIn.getBuffer(RENDER_TYPES.get(0)));
 
         for(int j = 1; j < i; ++j) {
-            //this.renderCube( f, 2.0F / (float)(18 - j), matrix4f, bufferIn.getBuffer(RENDER_TYPES.get(j)));
+            this.renderCube( f, 2.0F / (float)(18 - j), matrix4f, bufferIn.getBuffer(RENDER_TYPES.get(j)));
         }
-        //this.renderFace(matrix4f, bufferIn.getBuffer(RENDER_TYPES.get(5)), 0.0F, 1.0F, 0.0F, 1.0F, 1.0F, 1.0F, 1.0F, 1.0F, 1, 1, 1, Direction.SOUTH);
+        this.renderFace(matrix4f, bufferIn.getBuffer(RENDER_TYPES.get(5)), 0.0F, 1.0F, 0.0F, 1.0F, 1.0F, 1.0F, 1.0F, 1.0F, 1, 1, 1, Direction.SOUTH);
 
         RenderState.TransparencyState st = new RenderState.TransparencyState("additive_transparency", () -> {
             RenderSystem.enableBlend();
@@ -100,20 +112,19 @@ public class SoulJarBlockTileRenderer extends TileEntityRenderer<FireflyJarBlock
             RenderSystem.disableBlend();
             RenderSystem.defaultBlendFunc();
         });
-        RenderState.TextureState text = new RenderState.TextureState(EndPortalTileEntityRenderer.END_PORTAL_TEXTURE, false, false);
+        RenderState.TextureState text = new RenderState.TextureState(Textures.FAUCET_TEXTURE, false, false);
 
-        RenderType t =RenderType.makeType("end_portal", DefaultVertexFormats.POSITION_COLOR, 7, 256,
-                false, true, RenderType.State.getBuilder().transparency(st).texture(text)
-                        .texturing(new PortalTexturingState(5)).build(false));
+        RenderType t =RenderType.create("end_portal", DefaultVertexFormats.POSITION_COLOR, 7, 256,
+                false, true, RenderType.State.builder().setTransparencyState(st).setTextureState(text)
+                        .setTexturingState(new PortalTexturingState(5)).createCompositeState(false));
 
 
-        this.renderFace( matrix4f, bufferIn.getBuffer(t), 0.0F, 1.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1, 1, 1, Direction.DOWN);
+        //this.renderFace( matrix4f, bufferIn.getBuffer(t), 0.0F, 1.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1, 1, 1, Direction.DOWN);
+
+
 
 
         */
-
-
-
 
 
 
@@ -146,7 +157,6 @@ public class SoulJarBlockTileRenderer extends TileEntityRenderer<FireflyJarBlock
 
     }
 
-/*
 
     public static final class PortalTexturingState extends RenderState.TexturingState {
         private final int iteration;
@@ -159,12 +169,12 @@ public class SoulJarBlockTileRenderer extends TileEntityRenderer<FireflyJarBlock
                 RenderSystem.pushMatrix();
                 RenderSystem.loadIdentity();
 
-                RenderSystem.multMatrix(Matrix4f.perspective(85.0D, (float)Minecraft.getInstance().getMainWindow().getFramebufferWidth() / (float)Minecraft.getInstance().getMainWindow().getFramebufferHeight(), 0.05F, 10.0F));
+                RenderSystem.multMatrix(Matrix4f.perspective(85.0D, (float)Minecraft.getInstance().getWindow().getWidth() / (float)Minecraft.getInstance().getWindow().getHeight(), 0.05F, 10.0F));
                 RenderSystem.matrixMode(5888);
 
                 RenderSystem.translatef(0.5F, 0.5F, 0.0F);
                 RenderSystem.scalef(0.5F, 0.5F, 1.0F);
-                RenderSystem.translatef(17.0F / (float)it, (2.0F + (float)it / 1.5F) * ((float)(Util.milliTime() % 800000L) / 800000.0F), 0.0F);
+                RenderSystem.translatef(17.0F / (float)it, (2.0F + (float)it / 1.5F) * ((float)(Util.getMillis() % 800000L) / 800000.0F), 0.0F);
                 //RenderSystem.rotatef(((float)(it * it) * 4321.0F + (float)it * 9.0F) * 2.0F, 0.0F, 0.0F, 1.0F);
                 RenderSystem.scalef(4.5F - (float)it / 4.0F, 4.5F - (float)it / 4.0F, 1.0F);
                 RenderSystem.mulTextureByProjModelView();
@@ -180,6 +190,6 @@ public class SoulJarBlockTileRenderer extends TileEntityRenderer<FireflyJarBlock
         }
 
 
-    }*/
+    }
 }
 

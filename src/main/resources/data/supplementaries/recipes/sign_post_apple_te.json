@@ -8,7 +8,7 @@
           "type": "supplementaries:flag"
         },
         {
-          "modid": "terraqueous",
+          "modid": "terraincognita",
           "type": "forge:mod_loaded"
         }
       ],
@@ -17,7 +17,7 @@
         "group": "sign_post",
         "ingredients": [
           {
-            "item": "terraqueous:apple_sign"
+            "item": "terraincognita:apple_sign"
           }
         ],
         "result": {

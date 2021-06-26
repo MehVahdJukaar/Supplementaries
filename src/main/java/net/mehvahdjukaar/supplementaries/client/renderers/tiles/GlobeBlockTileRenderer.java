@@ -6,12 +6,14 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.mehvahdjukaar.supplementaries.block.tiles.GlobeBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
+import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3f;
 
@@ -55,27 +57,30 @@ public class GlobeBlockTileRenderer extends TileEntityRenderer<GlobeBlockTile> {
         matrixStackIn.mulPose(Const.X180);
 
         IVertexBuilder builder;
-        GlobeBlockTile.GlobeType type = ClientConfigs.cached.GLOBE_RANDOM ? tile.type : GlobeBlockTile.GlobeType.EARTH;
+
+        ResourceLocation texture = ClientConfigs.cached.GLOBE_RANDOM ? tile.texture : GlobeBlockTile.GlobeType.EARTH.texture;
+
         ModelRenderer selected;
-        switch(type){
-            case FLAT:
-                builder = bufferIn.getBuffer(RenderType.entityCutout(tile.type.texture));
-                selected = flat;
-                break;
-            default:
-            case EARTH:
-                builder = bufferIn.getBuffer(RenderType.entityCutout(tile.type.texture));
-                selected = globe;
-                break;
-            case SHEARED:
-                builder = bufferIn.getBuffer(RenderType.entityCutout(tile.type.texture));
-                selected = sheared;
-                break;
-            case DEFAULT:
-                builder = bufferIn.getBuffer(GlobeTextureManager.INSTANCE.getRenderType(tile.getLevel()));
-                selected = globe;
-                break;
+
+        if(tile.sheared){
+            selected = sheared;
+            texture = Textures.GLOBE_SHEARED_TEXTURE;
         }
+        else if(tile.isFlat){
+            selected = flat;
+            texture = Textures.GLOBE_FLAT_TEXTURE;
+        }
+        else{
+            selected = globe;
+        }
+
+        if(texture==null){
+            builder = bufferIn.getBuffer(GlobeTextureManager.INSTANCE.getRenderType(tile.getLevel()));
+        }
+        else{
+            builder = bufferIn.getBuffer(RenderType.entityCutout(texture));
+        }
+
 
         selected.render(matrixStackIn, builder, combinedLightIn,combinedOverlayIn,1,1,1,1);
 

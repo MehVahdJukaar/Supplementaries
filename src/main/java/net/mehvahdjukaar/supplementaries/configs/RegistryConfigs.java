@@ -74,9 +74,7 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue HANGING_SIGN_ENABLED;
         public static ForgeConfigSpec.BooleanValue BELLOWS_ENABLED;
         public static ForgeConfigSpec.BooleanValue SCONCE_ENABLED;
-        public static ForgeConfigSpec.BooleanValue SCONCE_ENDER_ENABLED;
         public static ForgeConfigSpec.BooleanValue SCONCE_GREEN_ENABLED;
-        public static ForgeConfigSpec.BooleanValue SCONCE_SOUL_ENABLED;
         public static ForgeConfigSpec.BooleanValue CANDELABRA_ENABLED;
         public static ForgeConfigSpec.BooleanValue CAGE_ENABLED;
         public static ForgeConfigSpec.BooleanValue ITEM_SHELF_ENABLED;
@@ -116,10 +114,13 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue TILE_ENABLED;
         public static ForgeConfigSpec.BooleanValue GOBLET_ENABLED;
         public static ForgeConfigSpec.BooleanValue RAKED_GRAVEL_ENABLED;
+        public static ForgeConfigSpec.BooleanValue STATUE_ENABLED;
+        public static ForgeConfigSpec.BooleanValue IRON_GATE_ENABLED;
 
         public static ForgeConfigSpec.BooleanValue JAR_TAB;
         public static ForgeConfigSpec.BooleanValue CREATIVE_TAB;
         public static ForgeConfigSpec.BooleanValue DISPENSERS;
+        public static ForgeConfigSpec.BooleanValue CUSTOM_CONFIGURED_SCREEN;
 
         public static boolean HAS_SILVER = false;
         public static boolean HAS_BRASS = false;
@@ -168,20 +169,20 @@ public class RegistryConfigs {
         }
 
         private static void init(ForgeConfigSpec.Builder builder) {
-            builder.comment("all these don't actually disable blocks anymore, they just remove their recipe and remove them from the creative tabs(like all other mods do)\n"+
-                    "to access server configuration go into /saves/serverconfigs")
-                    .push("general");
-            CREATIVE_TAB = builder.comment("enable creative tab").define("creative_tab",false);
+            builder.comment("Here are configs that need reloading to take effect")
+                    .push("initialization");
 
-            DISPENSERS = builder.comment("set to false to disable custom dispenser behaviors (filling jars) if for some reason they are causing trouble").define("dispensers",true);
+            builder.push("general");
+            CREATIVE_TAB = builder.comment("Enable Creative Tab").define("creative_tab",false);
 
-            JAR_TAB = builder.comment("creates a creative tab full of filled jars")
+            DISPENSERS = builder.comment("Set to false to disable custom dispenser behaviors (i.e: filling jars) if for some reason they are causing trouble").define("dispensers",true);
+
+            JAR_TAB = builder.comment("Creates a creative tab full of filled jars")
                     .define("jar_tab",false);
+            CUSTOM_CONFIGURED_SCREEN = builder.comment("Enables custom Configured config screen")
+                    .define("custom_configured_screen",true);
             builder.pop();
 
-            builder.comment("Enable and disable blocks / entities");
-
-            builder.push("registration");
 
             builder.push("blocks");
             PLANTER_ENABLED = builder.define(Registry.PLANTER_NAME, true);
@@ -202,8 +203,6 @@ public class RegistryConfigs {
             BELLOWS_ENABLED = builder.define(Registry.BELLOWS_NAME, true);
             SCONCE_ENABLED = builder.define(Registry.SCONCE_NAME, true);
             SCONCE_GREEN_ENABLED = builder.define(Registry.SCONCE_NAME_GREEN, false);
-            SCONCE_ENDER_ENABLED = builder.define(Registry.SCONCE_NAME_ENDER, true);
-            SCONCE_SOUL_ENABLED = builder.define(Registry.SCONCE_NAME_SOUL, true);
             CANDELABRA_ENABLED = builder.define(Registry.CANDELABRA_NAME, true);
             CAGE_ENABLED = builder.define(Registry.CAGE_NAME, true);
             ITEM_SHELF_ENABLED = builder.define(Registry.ITEM_SHELF_NAME, true);
@@ -242,6 +241,8 @@ public class RegistryConfigs {
             TILE_ENABLED = builder.define(Registry.STONE_TILE_NAME,true);
             GOBLET_ENABLED = builder.define(Registry.GOBLET_NAME,true);
             RAKED_GRAVEL_ENABLED = builder.define(Registry.RAKED_GRAVEL_NAME,true);
+            STATUE_ENABLED = builder.define(Registry.STATUE_NAME,true);
+            IRON_GATE_ENABLED = builder.define(Registry.IRON_GATE_NAME,true);
 
             LASER_ENABLED = builder.comment("WIP")
                     .define(Registry.LASER_NAME, false);

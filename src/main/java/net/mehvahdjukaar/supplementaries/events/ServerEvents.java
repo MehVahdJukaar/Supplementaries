@@ -3,13 +3,18 @@ package net.mehvahdjukaar.supplementaries.events;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.blocks.DirectionalCakeBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.DoubleCakeBlock;
+import net.mehvahdjukaar.supplementaries.block.blocks.JarBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.RakedGravelBlock;
+import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
+import net.mehvahdjukaar.supplementaries.block.tiles.StatueBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.PicklePlayer;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.items.BlockHolderItem;
+import net.mehvahdjukaar.supplementaries.items.EmptyJarItem;
+import net.mehvahdjukaar.supplementaries.items.JarItem;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.SendLoginMessagePacket;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
@@ -21,6 +26,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.*;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -34,6 +41,7 @@ import net.minecraftforge.event.entity.player.UseHoeEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 //@Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.FORGE)
@@ -111,6 +119,8 @@ public class ServerEvents {
         return false;
     }
 
+    private static final JarBlockTile tempJar = new JarBlockTile();
+
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
         PlayerEntity player = event.getPlayer();
@@ -125,7 +135,7 @@ public class ServerEvents {
         BlockState blockstate = world.getBlockState(pos);
 
         //map markers
-        if (i instanceof FilledMapItem){
+        if (i instanceof FilledMapItem && ServerConfigs.cached.MAP_MARKERS){
             Block b = blockstate.getBlock();
             if(b instanceof BedBlock||b.is(Blocks.LODESTONE)||b.is(Blocks.NETHER_PORTAL)||b.is(Blocks.BEACON)||
                     b.is(Blocks.CONDUIT)||b.is(Blocks.RESPAWN_ANCHOR)||b.is(Blocks.END_GATEWAY)||b.is(Blocks.END_PORTAL)){
@@ -170,23 +180,54 @@ public class ServerEvents {
         }
 
         //xp bottling
-        if (ServerConfigs.cached.BOTTLE_XP && blockstate.getBlock() instanceof EnchantingTableBlock && i == Items.GLASS_BOTTLE){
-            if(player.experienceLevel>0 || player.isCreative()) {
-                player.hurt(DamageSource.MAGIC, ServerConfigs.cached.BOTTLING_COST);
-                CommonUtil.swapItem(player, hand, new ItemStack(Items.EXPERIENCE_BOTTLE));
+        if (ServerConfigs.cached.BOTTLE_XP && blockstate.getBlock() instanceof EnchantingTableBlock) {
+            ItemStack returnStack = null;
 
-                if(!player.isCreative())
-                    player.giveExperiencePoints(-(3 + world.random.nextInt(5) + world.random.nextInt(5)));
-
-                if(world.isClientSide) {
-                    Minecraft.getInstance().particleEngine.createTrackingEmitter(player, Registry.BOTTLING_XP_PARTICLE.get(), 1);
-                }
-                world.playSound(null, player.blockPosition(), SoundEvents.BOTTLE_FILL_DRAGONBREATH, SoundCategory.BLOCKS, 1, 1);
+            //prevent accidentally releasing bottles
+            if(i == Items.EXPERIENCE_BOTTLE){
                 event.setCanceled(true);
-                event.setCancellationResult(ActionResultType.sidedSuccess(world.isClientSide));
+                event.setCancellationResult(ActionResultType.FAIL);
                 return;
             }
 
+            if(player.experienceLevel > 0 || player.isCreative()){
+                if (i == Items.GLASS_BOTTLE){
+                    returnStack = new ItemStack(Items.EXPERIENCE_BOTTLE);
+                }
+                else if(i instanceof EmptyJarItem || i instanceof JarItem){
+                    tempJar.resetHolders();
+                    CompoundNBT compoundnbt = stack.getTagElement("BlockEntityTag");
+                    if (compoundnbt != null) {
+                        tempJar.load(((BlockItem) i).getBlock().defaultBlockState(), compoundnbt);
+                    }
+
+                    if (tempJar.isEmpty() && (tempJar.mobHolder.isEmpty()||tempJar.isPonyJar())) {
+                        ItemStack tempStack = new ItemStack(Items.EXPERIENCE_BOTTLE);
+                        ItemStack temp = tempJar.fluidHolder.interactWithItem(tempStack);
+                        if(temp!=null && temp.getItem() == Items.GLASS_BOTTLE){
+                            returnStack = ((JarBlock)((BlockItem) i).getBlock()).getJarItem(tempJar);
+                        }
+                    }
+                }
+
+
+                if(returnStack!=null){
+                    player.hurt(CommonUtil.BOTTLING_DAMAGE, ServerConfigs.cached.BOTTLING_COST);
+                    CommonUtil.swapItem(player, hand, returnStack);
+
+                    if (!player.isCreative())
+                        player.giveExperiencePoints(-CommonUtil.bottleToXP(1,world.random));
+
+                    if (world.isClientSide) {
+                        Minecraft.getInstance().particleEngine.createTrackingEmitter(player, Registry.BOTTLING_XP_PARTICLE.get(), 1);
+                    }
+                    world.playSound(null, player.blockPosition(), SoundEvents.BOTTLE_FILL_DRAGONBREATH, SoundCategory.BLOCKS, 1, 1);
+                    event.setCanceled(true);
+                    event.setCancellationResult(ActionResultType.sidedSuccess(world.isClientSide));
+                    return;
+                }
+            }
+            return;
         }
 
         //block overrides
@@ -202,7 +243,7 @@ public class ServerEvents {
                 result = paceBlockOverride(Registry.BLAZE_ROD_ITEM.get(), player, hand, null, pos, dir, world);
             }
             else if(i instanceof BlockItem) {
-            BlockItem bi = (BlockItem) i;
+                BlockItem bi = (BlockItem) i;
                 //wall lantern
                 if (ServerConfigs.cached.WALL_LANTERN_PLACEMENT && CommonUtil.isLantern(bi)) {
                     if (CompatHandler.torchslab) {
@@ -221,6 +262,9 @@ public class ServerEvents {
                         result = placeDoubleCake(player, stack, pos, world);
                     if (!result.consumesAction() && ServerConfigs.cached.DIRECTIONAL_CAKE)
                         result = paceBlockOverride(Registry.DIRECTIONAL_CAKE_ITEM.get(), player, hand, bi, pos, dir, world);
+                }
+                else if (ServerConfigs.cached.CEILING_BANNERS && bi instanceof BannerItem && dir==Direction.DOWN){
+                    result = paceBlockOverride(Registry.CEILING_BANNERS_ITEMS.get(((BannerItem) bi).getColor()).get(), player, hand, bi, pos, dir, world);
                 }
             }
 
@@ -295,6 +339,14 @@ public class ServerEvents {
         //send in pickles
         PicklePlayer.PickleData.onPlayerLogin(event.getPlayer());
 
+    }
+
+    @SubscribeEvent
+    public static void serverAboutToStart(final FMLServerAboutToStartEvent event) {
+        MinecraftServer server = event.getServer();
+        StatueBlockTile.profileCache = server.getProfileCache();
+        StatueBlockTile.sessionService = server.getSessionService();
+        //PlayerProfileCache.setOnlineMode(server.isServerInOnlineMode());
     }
 
 }

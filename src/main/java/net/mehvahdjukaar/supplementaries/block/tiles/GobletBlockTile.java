@@ -67,7 +67,7 @@ public class GobletBlockTile extends TileEntity {
         if(!player.isShiftKeyDown()) {
             //from drink
             if(ServerConfigs.cached.JAR_EAT) {
-                return this.fluidHolder.isFood() && this.fluidHolder.drinkUpFluid(player, this.level, hand);
+                return this.fluidHolder.tryDrinkUpFluid(player, this.level, hand);
             }
         }
         return false;
@@ -76,14 +76,14 @@ public class GobletBlockTile extends TileEntity {
     @Override
     public void load(BlockState state, CompoundNBT compound) {
         super.load(state, compound);
-        this.fluidHolder.read(compound);
+        this.fluidHolder.load(compound);
         this.onLoad();
     }
 
     @Override
     public CompoundNBT save(CompoundNBT compound) {
         super.save(compound);
-        this.fluidHolder.write(compound);
+        this.fluidHolder.save(compound);
         return compound;
     }
 }

@@ -2,9 +2,10 @@ package net.mehvahdjukaar.supplementaries.setup;
 
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.block.util.CapturedMobs;
+import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.common.AdventurerMapsHandler;
 import net.mehvahdjukaar.supplementaries.common.FlowerPotHelper;
+import net.mehvahdjukaar.supplementaries.common.ModCriteriaTriggers;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
@@ -49,6 +50,8 @@ public class ModSetup {
 
         event.enqueueWork(()-> {
 
+            ModCriteriaTriggers.init();
+
             NetworkHandler.registerMessages();
 
             CMDreg.init(event);
@@ -82,7 +85,7 @@ public class ModSetup {
 
             SoftFluidList.init();
 
-            CapturedMobs.refresh();
+            CapturedMobsHelper.refresh();
 
             Dispenser.registerBehaviors();
 
@@ -106,6 +109,7 @@ public class ModSetup {
                 ev.getTrades().get(3).add(new BasicTrade(new ItemStack(Registry.FLAX_SEEDS_ITEM.get(), 15), new ItemStack(net.minecraft.item.Items.EMERALD), 16, 2, 0.05f));
             }
         }
+        AdventurerMapsHandler.loadCustomTrades();
         AdventurerMapsHandler.addTrades(ev);
     }
 

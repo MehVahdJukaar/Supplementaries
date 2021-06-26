@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "   ",
+    " 1 ",
+    " 2 "
+  ],
+  "key": {
+    "1": {
+      "item": "minecraft:clay"
+    },
+    "2": {
+      "item": "minecraft:smooth_stone_slab"
+    }
+  },
+  "result": {
+    "item": "supplementaries:statue",
+    "count": 1
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "statue"
+    }
+  ]
+}

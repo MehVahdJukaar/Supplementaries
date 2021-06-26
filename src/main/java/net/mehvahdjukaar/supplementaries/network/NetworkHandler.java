@@ -1,7 +1,10 @@
 package net.mehvahdjukaar.supplementaries.network;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 
@@ -11,6 +14,7 @@ public class NetworkHandler {
     private static int ID = 0;
     private static final String PROTOCOL_VERSION = "1";
     public static int nextID() { return ID++; }
+
 
     public static void registerMessages() {
         INSTANCE = NetworkRegistry.newSimpleChannel(new ResourceLocation(Supplementaries.MOD_ID, "splmchannel"), () -> PROTOCOL_VERSION,
@@ -54,6 +58,17 @@ public class NetworkHandler {
 
         INSTANCE.registerMessage(nextID(), SyncCustomMapDecorationPacket.class, SyncCustomMapDecorationPacket::buffer,
                 SyncCustomMapDecorationPacket::new, SyncCustomMapDecorationPacket::handler);
+
+        INSTANCE.registerMessage(nextID(), NosePacket.class, NosePacket::buffer,
+                NosePacket::new, NosePacket::handler);
+
+    }
+
+    public static void sendToAllTracking(Entity entity, ServerWorld world, Message message) {
+        world.getChunkSource().broadcast(entity, INSTANCE.toVanillaPacket(message, NetworkDirection.PLAY_TO_CLIENT));
+    }
+
+    public interface Message{
 
     }
 }

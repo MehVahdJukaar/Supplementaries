@@ -43,7 +43,6 @@ public class CandleHolderBlock extends SconceWallBlock {
     }
 
     @Override
-
     public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
         if(stateIn.getValue(LIT)){
             Direction direction = stateIn.getValue(FACING);

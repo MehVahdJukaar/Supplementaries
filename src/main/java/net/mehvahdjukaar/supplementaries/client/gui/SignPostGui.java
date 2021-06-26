@@ -187,7 +187,7 @@ public class SignPostGui extends Screen {
 
         //render fence
         matrixstack.translate(-0.5, -0.5, -0.5);
-        BlockState fence = this.tileSign.fenceBlock;
+        BlockState fence = this.tileSign.mimic;
         if(fence !=null)blockRenderer.renderBlock(fence, matrixstack, irendertypebuffer$impl, 15728880, OverlayTexture.NO_OVERLAY, EmptyModelData.INSTANCE);
 
         matrixstack.popPose();

@@ -92,8 +92,8 @@ public class GlobeBlock extends WaterBlock {
                                              BlockRayTraceResult hit) {
         if(player.getItemInHand(handIn).getItem() instanceof ShearsItem){
             TileEntity te = worldIn.getBlockEntity(pos);
-            if(te instanceof GlobeBlockTile && ((GlobeBlockTile) te).type == GlobeBlockTile.GlobeType.DEFAULT){
-                ((GlobeBlockTile) te).type= GlobeBlockTile.GlobeType.SHEARED;
+            if(te instanceof GlobeBlockTile ){
+                ((GlobeBlockTile) te).sheared = !((GlobeBlockTile) te).sheared;
                 if(worldIn.isClientSide){
                     Minecraft.getInstance().particleEngine.destroy(pos, state);
                 }

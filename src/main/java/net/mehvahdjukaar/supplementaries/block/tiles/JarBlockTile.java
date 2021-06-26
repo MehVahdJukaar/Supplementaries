@@ -87,20 +87,12 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
         if(!player.isShiftKeyDown()) {
             //from drink
             if(ServerConfigs.cached.JAR_EAT) {
-                if (this.fluidHolder.isFood()&&this.fluidHolder.drinkUpFluid(player, this.level, hand)) return true;
+                if (this.fluidHolder.tryDrinkUpFluid(player, this.level, hand)) return true;
                 //cookies
                 if (displayedStack.isEdible() && player.canEat(false)) {
                     //eat cookies
-                    /*
-                    if (this.level.isClientSide) return true;
-                    Food food = displayedStack.getItem().getFoodProperties();
-                    player.getFoodData().eat(food.getNutrition(), food.getSaturationModifier());
-                    this.extractItem();
-                    player.playNotifySound(SoundEvents.GENERIC_EAT, SoundCategory.PLAYERS, 1, 1);
-                    return true;*/
                     player.eat(level, displayedStack);
                     return true;
-
                 }
             }
         }
@@ -166,7 +158,7 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
         this.setDisplayedItem(ItemStack.EMPTY);
     }
 
-    private boolean isPonyJar(){
+    public boolean isPonyJar(){
         //hahaha, funy pony jar meme
         if(this.hasCustomName()){
             ITextComponent c = this.getCustomName();
@@ -190,6 +182,7 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
         return false;
     }
 
+    //TODO: remove
     public boolean convertOldJars(CompoundNBT compound){
         if(compound==null)return false;
         NonNullList<ItemStack> oldStacks = NonNullList.withSize(1, ItemStack.EMPTY);
@@ -216,7 +209,7 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
         super.load(state, compound);
         //todo: remove in future
         if(!(compound.contains("LiquidHolder") && this.convertOldJars(compound))) {
-            this.fluidHolder.read(compound);
+            this.fluidHolder.load(compound);
         }
         this.mobHolder.read(compound);
 
@@ -228,7 +221,7 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
         //stacks are done by itemDisplayTile
         super.save(compound);
         this.mobHolder.write(compound);
-        this.fluidHolder.write(compound);
+        this.fluidHolder.save(compound);
         return compound;
     }
 

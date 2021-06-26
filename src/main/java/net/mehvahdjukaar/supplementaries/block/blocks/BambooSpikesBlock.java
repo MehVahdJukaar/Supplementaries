@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.BambooSpikesBlockTile;
+import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -59,7 +60,6 @@ public class BambooSpikesBlock extends Block {
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
     public static final BooleanProperty TIPPED = BlockProperties.TIPPED;
 
-    public static DamageSource SPIKE_DAMAGE = (new DamageSource("supplementaries.bamboo_spikes"));
 
     public BambooSpikesBlock(Properties properties) {
         super(properties);
@@ -173,7 +173,7 @@ public class BambooSpikesBlock extends Block {
             if(!worldIn.isClientSide) {
                 if(up && entityIn instanceof PlayerEntity && entityIn.isShiftKeyDown())return;
                 float damage = entityIn.getY() > (pos.getY() + 0.0625) ? 2 : 1;
-                entityIn.hurt(SPIKE_DAMAGE, damage);
+                entityIn.hurt(CommonUtil.SPIKE_DAMAGE, damage);
                 if(state.getValue(TIPPED)) {
                     TileEntity te = worldIn.getBlockEntity(pos);
                     if (te instanceof BambooSpikesBlockTile) {

@@ -6,9 +6,7 @@ import net.mehvahdjukaar.supplementaries.block.tiles.PedestalBlockTile;
 import net.mehvahdjukaar.supplementaries.items.SackItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.IWaterLoggable;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
@@ -16,7 +14,6 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -33,7 +30,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class PedestalBlock extends Block implements IWaterLoggable {
+public class PedestalBlock extends WaterBlock {
     protected static final VoxelShape SHAPE = VoxelShapes.or(VoxelShapes.box(0.1875D, 0.125D, 0.1875D, 0.815D, 0.885D, 0.815D),
             VoxelShapes.box(0.0625D, 0.8125D, 0.0625D, 0.9375D, 1D, 0.9375D),
             VoxelShapes.box(0.0625D, 0D, 0.0625D, 0.9375D, 0.1875D, 0.9375D));
@@ -45,7 +42,6 @@ public class PedestalBlock extends Block implements IWaterLoggable {
 
     public static final BooleanProperty UP = BlockStateProperties.UP;
     public static final BooleanProperty DOWN = BlockStateProperties.DOWN;
-    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final BooleanProperty HAS_ITEM = BlockProperties.HAS_ITEM;
 
     public PedestalBlock(Properties properties) {
@@ -66,16 +62,6 @@ public class PedestalBlock extends Block implements IWaterLoggable {
     @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(UP,DOWN,WATERLOGGED,HAS_ITEM);
-    }
-
-    @Override
-    public boolean isPathfindable(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
-        return false;
-    }
-
-    @Override
-    public FluidState getFluidState(BlockState state) {
-        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
     @Override
@@ -157,7 +143,7 @@ public class PedestalBlock extends Block implements IWaterLoggable {
                 }
                 else{
                     //also update visuals on client. will get overwritten by packet tho
-                    te.updateClientVisuals();
+                    te.updateClientVisualsOnLoad();
                 }
                 resultType = ActionResultType.sidedSuccess(worldIn.isClientSide);
             }
@@ -170,11 +156,6 @@ public class PedestalBlock extends Block implements IWaterLoggable {
             }
         }
         return ActionResultType.PASS;
-    }
-
-    @Override
-    public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
-        return true;
     }
 
     @Override
@@ -220,8 +201,8 @@ public class PedestalBlock extends Block implements IWaterLoggable {
     public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
             TileEntity tileentity = world.getBlockEntity(pos);
-            if (tileentity instanceof PedestalBlockTile) {
-                InventoryHelper.dropContents(world, pos, (PedestalBlockTile) tileentity);
+            if (tileentity instanceof ItemDisplayTile) {
+                InventoryHelper.dropContents(world, pos, (IInventory) tileentity);
                 world.updateNeighbourForOutputSignal(pos, this);
             }
             super.onRemove(state, world, pos, newState, isMoving);

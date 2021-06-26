@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.block.util;
 
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
-import net.mehvahdjukaar.supplementaries.block.util.CapturedMobs.CapturedMobProperties;
+import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper.CapturedMobProperties;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.AgeableEntity;
@@ -43,7 +43,7 @@ public class MobHolder {
 
     private ItemStack bucketHolder = ItemStack.EMPTY;
     public SpecialBehaviorType specialBehaviorType = SpecialBehaviorType.NONE;
-    public CapturedMobProperties capturedMobProperties = CapturedMobs.DEFAULT;
+    public CapturedMobProperties capturedMobProperties = CapturedMobsHelper.DEFAULT;
 
     private boolean firstTick = true;
 
@@ -174,7 +174,7 @@ public class MobHolder {
 
         ItemStack returnStack = ItemStack.EMPTY;
         //fill
-        if(CapturedMobs.isFishBucket(item) && this.isEmpty()) {
+        if(CapturedMobsHelper.isFishBucket(item) && this.isEmpty()) {
             this.bucketHolder = stack.copy();
             this.world.playSound(null, this.pos, SoundEvents.BUCKET_EMPTY_FISH, SoundCategory.BLOCKS, 1.0F, 1.0F);
             returnStack = new ItemStack(Items.BUCKET);
@@ -370,8 +370,8 @@ public class MobHolder {
     public void init(){
         //this has two mode: normal and bucket mode
         if(!this.bucketHolder.isEmpty()){
-            this.capturedMobProperties = CapturedMobs.getTypeFromBucket(this.bucketHolder.getItem());
-            if(this.name==null||this.name.isEmpty()) this.name = CapturedMobs.getDefaultNameFromBucket(this.bucketHolder.getItem());
+            this.capturedMobProperties = CapturedMobsHelper.getTypeFromBucket(this.bucketHolder.getItem());
+            if(this.name==null||this.name.isEmpty()) this.name = CapturedMobsHelper.getDefaultNameFromBucket(this.bucketHolder.getItem());
         }
         else if(this.world!=null && this.entityData!=null) {
 
@@ -380,7 +380,7 @@ public class MobHolder {
 
             //don't even need to sync these
             this.specialBehaviorType = SpecialBehaviorType.getType(entity);
-            this.capturedMobProperties = CapturedMobs.getType(entity);
+            this.capturedMobProperties = CapturedMobsHelper.getType(entity);
             //this.setBucketHolder(entity);
 
             //client side stuff
@@ -495,7 +495,7 @@ public class MobHolder {
             mobCompound.remove("UUID");
 
             //TODO: improve for acquatic entities to react and not fly when not in water
-            CapturedMobProperties type = CapturedMobs.getType(mob);
+            CapturedMobProperties type = CapturedMobsHelper.getType(mob);
             boolean isAir = isInAir(mob,type);
 
             //MobHolderType type = MobHolderType.getType(mob);
@@ -529,7 +529,7 @@ public class MobHolder {
             }
             CompoundNBT cmp = new CompoundNBT();
             //TODO: stop coding like this omg
-            int fishTexture = mob instanceof WaterMobEntity? -69:CapturedMobs.getType(name).getFishTexture();
+            int fishTexture = mob instanceof WaterMobEntity? -69: CapturedMobsHelper.getType(name).getFishTexture();
             saveMobToNBT(cmp, mobCompound, s, y, mob.getName().getString(), id, fishTexture);
             return cmp;
         }

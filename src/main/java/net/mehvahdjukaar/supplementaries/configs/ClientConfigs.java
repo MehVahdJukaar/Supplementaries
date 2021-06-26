@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.configs;
 
-import net.mehvahdjukaar.supplementaries.block.util.CapturedMobs;
+import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
 import net.minecraftforge.common.ForgeConfigSpec;
 
@@ -22,6 +22,7 @@ public class ClientConfigs {
     }
 
     public static class tweaks {
+        public static ForgeConfigSpec.BooleanValue COLORED_ARROWS;
         public static ForgeConfigSpec.BooleanValue COLORED_BWERING_STAND;
         private static void init(ForgeConfigSpec.Builder builder) {
             builder.comment("Game tweaks")
@@ -29,6 +30,8 @@ public class ClientConfigs {
             COLORED_BWERING_STAND = builder.comment("Colors the brewing stand potion texture depending on the potions it's brewing.\n"+
                     "If using a resource pack add tint index from 0 to 3 to the 3 potion layers")
                     .define("brewing_stand_colors",true);
+            COLORED_ARROWS = builder.comment("Makes tipped arrows show their colors when loaded with a crossbow")
+                    .define("crossbows_colors",true);
             builder.pop();
         }
     }
@@ -37,6 +40,11 @@ public class ClientConfigs {
         public static ForgeConfigSpec.BooleanValue CONFIG_BUTTON;
         public static ForgeConfigSpec.BooleanValue TOOLTIP_HINTS;
         public static ForgeConfigSpec.BooleanValue ANTI_REPOST_WARNING;
+
+        public static ForgeConfigSpec.DoubleValue TEST1;
+        public static ForgeConfigSpec.DoubleValue TEST2;
+        public static ForgeConfigSpec.DoubleValue TEST3;
+
         private static void init(ForgeConfigSpec.Builder builder) {
             builder.comment("General settings")
                     .push("general");
@@ -47,6 +55,9 @@ public class ClientConfigs {
             ANTI_REPOST_WARNING = builder.comment("Tries to detect when the mod hasn't been downloaded from Curseforge." +
                     "Set to false if you have manually changed the mod jar name")
                     .define("anti_reposting_warning", true);
+            TEST1 = builder.comment("ignore this").defineInRange("test1",0f,-10,10);
+            TEST2 = builder.comment("ignore this").defineInRange("test2",0f,-10,10);
+            TEST3 = builder.comment("ignore this").defineInRange("test3",0f,-10,10);
             builder.pop();
         }
     }
@@ -192,7 +203,7 @@ public class ClientConfigs {
                     " - any number > 0 to make it render as a 2d fish whose index matches the 'fishies' texture sheet\n" +
                     " - 0 or any other values will be ignored and treated as default\n"+
                     "Note that only the first 3 parameters are needed, the others are optional")
-                    .defineList("rendering_parameters", CapturedMobs.DEFAULT_CONFIG, s->true);
+                    .defineList("rendering_parameters", CapturedMobsHelper.DEFAULT_CONFIG, s->true);
             builder.pop();
 
             builder.pop();
@@ -243,6 +254,7 @@ public class ClientConfigs {
 
 
     public static class cached {
+        public static boolean COLORED_ARROWS;
         public static boolean COLORED_BWERING_STAND;
         public static boolean TOOLTIP_HINTS;
         public static int FIREFLY_PAR_MAXAGE;
@@ -272,6 +284,7 @@ public class ClientConfigs {
         public static void refresh(){
             //tweaks
             COLORED_BWERING_STAND = tweaks.COLORED_BWERING_STAND.get();
+            COLORED_ARROWS = tweaks.COLORED_ARROWS.get();
             //general
             TOOLTIP_HINTS = general.TOOLTIP_HINTS.get();
             CONFIG_BUTTON = general.CONFIG_BUTTON.get();
@@ -301,7 +314,7 @@ public class ClientConfigs {
             FLAG_WAVELENGTH = block.FLAG_WAVELENGTH.get();
             FLAG_FANCINESS = block.FLAG_FANCINESS.get();
 
-            CapturedMobs.refresh();
+            CapturedMobsHelper.refresh();
             GlobeTextureManager.GlobeColors.refreshColorsFromConfig();
 
         }

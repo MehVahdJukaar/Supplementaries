@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
+import net.mehvahdjukaar.supplementaries.block.blocks.CeilingBannerBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.FlagBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.HangingSignBlock;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.FlagItemRenderer;
@@ -9,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.items.BurnableBlockItem;
 import net.mehvahdjukaar.supplementaries.items.FlagItem;
 import net.mehvahdjukaar.supplementaries.items.SignPostItem;
 import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.BannerBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -95,12 +97,11 @@ public class Variants {
 
     //flags
 
-    //hanging signs
-    public static Map<DyeColor, RegistryObject<Block>> makeFlagBlocks(){
+    public static Map<DyeColor, RegistryObject<Block>> makeFlagBlocks(String baseName){
         Map<DyeColor, RegistryObject<Block>> map = new HashMap<>();
 
         for(DyeColor color : DyeColor.values()){
-            String name = "flag_"+color.getName();
+            String name = baseName+"_"+color.getName();
             map.put(color, Registry.BLOCKS.register(name, ()-> new FlagBlock(color,
                     AbstractBlock.Properties.of(Material.WOOD, color.getMaterialColor())
                             .strength(1.0F)
@@ -111,11 +112,11 @@ public class Variants {
         return map;
     }
 
-    public static Map<DyeColor, RegistryObject<Item>> makeFlagItems(){
+    public static Map<DyeColor, RegistryObject<Item>> makeFlagItems(String baseName){
         Map<DyeColor, RegistryObject<Item>> map = new HashMap<>();
 
         for(DyeColor color : DyeColor.values()){
-            String name = "flag_"+color.getName();
+            String name = baseName+"_"+color.getName();
             map.put(color, Registry.ITEMS.register(name, ()-> new FlagItem(Registry.FLAGS.get(color).get(),
                     new Item.Properties()
                             .stacksTo(16)
@@ -125,6 +126,36 @@ public class Variants {
         }
         return map;
     }
+
+    //ceiling banners
+    public static Map<DyeColor, RegistryObject<Block>> makeCeilingBanners(String baseName){
+        Map<DyeColor, RegistryObject<Block>> map = new HashMap<>();
+
+        for(DyeColor color : DyeColor.values()){
+            String name = baseName+"_"+color.getName();
+            map.put(color, Registry.BLOCKS.register(name, ()-> new CeilingBannerBlock(color,
+                    AbstractBlock.Properties.of(Material.WOOD, color.getMaterialColor())
+                            .strength(1.0F)
+                            .noCollission()
+                            .sound(SoundType.WOOD)
+                            .lootFrom(()->BannerBlock.byColor(color))
+                    )
+            ));
+        }
+        return map;
+    }
+
+
+    //ceiling banners
+    public static Map<DyeColor, RegistryObject<Item>> makeCeilingBannersItems(){
+        Map<DyeColor, RegistryObject<Item>> map = new HashMap<>();
+
+        for(DyeColor color : DyeColor.values()){
+            map.put(color, Registry.regBlockItem(Registry.CEILING_BANNERS.get(color),null));
+        }
+        return map;
+    }
+
 
 
 

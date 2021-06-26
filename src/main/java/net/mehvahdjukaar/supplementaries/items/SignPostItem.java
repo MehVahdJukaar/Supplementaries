@@ -36,7 +36,7 @@ public class SignPostItem  extends Item {
     private boolean isFence(Block b){
         ResourceLocation res = b.getRegistryName();
         if(res.getNamespace().equals("blockcarpentry"))return false;
-        return (ModTags.isTagged(ModTags.POSTS,b));
+        return (b.is(ModTags.POSTS));
     }
 
     @Override
@@ -87,7 +87,7 @@ public class SignPostItem  extends Item {
                     flag = true;
                 }
                 if(flag) {
-                    if (isfence) signtile.fenceBlock = targetblock.defaultBlockState();
+                    if (isfence) signtile.mimic = targetblock.defaultBlockState();
                     signtile.setChanged();
                 }
 

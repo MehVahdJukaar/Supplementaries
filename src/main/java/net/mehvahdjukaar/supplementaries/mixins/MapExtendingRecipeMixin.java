@@ -22,7 +22,7 @@ public abstract class MapExtendingRecipeMixin {
         if (compoundnbt != null && compoundnbt.contains("CustomDecorations", 9)) {
             return true;
         }
-        return false;
+        return original.isEmpty();
     }
 
 }

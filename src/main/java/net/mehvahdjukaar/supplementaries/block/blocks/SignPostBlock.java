@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.datagen.types.VanillaWoodTypes;
 import net.mehvahdjukaar.supplementaries.items.SignPostItem;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.mehvahdjukaar.supplementaries.world.data.map.lib.CustomDecorationHolder;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
@@ -34,6 +35,11 @@ public class SignPostBlock extends FenceMimicBlock{
 
     public SignPostBlock(Properties properties) {
         super(properties);
+    }
+
+    @Override
+    public BlockRenderType getRenderShape(BlockState state) {
+        return BlockRenderType.MODEL;
     }
 
     @Override
@@ -150,7 +156,7 @@ public class SignPostBlock extends FenceMimicBlock{
             else if(!up && tile.down){
                 return new ItemStack(Registry.SIGN_POST_ITEMS.get(tile.woodTypeDown).get());
             }
-            else return new ItemStack(tile.fenceBlock.getBlock());
+            else return new ItemStack(tile.mimic.getBlock());
         }
         return new ItemStack(Registry.SIGN_POST_ITEMS.get(VanillaWoodTypes.OAK).get());
     }
@@ -161,7 +167,7 @@ public class SignPostBlock extends FenceMimicBlock{
         if (tileentity instanceof SignPostBlockTile){
             SignPostBlockTile tile = ((SignPostBlockTile) tileentity);
             List<ItemStack> list = new ArrayList<>();
-            list.add(new ItemStack(tile.fenceBlock.getBlock()));
+            list.add(new ItemStack(tile.mimic.getBlock()));
 
             if (tile.up) {
                 ItemStack s = new ItemStack(Registry.SIGN_POST_ITEMS.get(tile.woodTypeUp).get());

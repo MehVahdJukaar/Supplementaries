@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.models;
 
 import com.google.common.collect.ImmutableList;
 import net.mehvahdjukaar.supplementaries.block.blocks.FrameBlock;
+import net.mehvahdjukaar.supplementaries.block.blocks.MimicBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.FrameBlockTile;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.minecraft.block.BlockState;
@@ -50,7 +51,7 @@ public class FrameBlockBakedModel implements IDynamicBakedModel {
             return quads;
         }
 
-        if (!(mimic.getBlock() instanceof FrameBlock)) {
+        if (!(mimic.getBlock() instanceof MimicBlock)) {
             IBakedModel model = blockModelShaper.getBlockModel(mimic);
             try {
                 quads.addAll(model.getQuads(mimic, side, rand, EmptyModelData.INSTANCE));

@@ -1,0 +1,16 @@
+{
+  "replace": false,
+  "optional": [
+    "decorative_blocks:oak_palisade",
+    "decorative_blocks:birch_palisade",
+    "decorative_blocks:spruce_palisade",
+    "decorative_blocks:acacia_palisade",
+    "decorative_blocks:dark_oak_palisade",
+    "decorative_blocks:jungle_palisade",
+    "decorative_blocks:warped_palisade",
+    "decorative_blocks:crimson_palisade"
+  ],
+  "values": [
+    "minecraft:end_rod"
+  ]
+}

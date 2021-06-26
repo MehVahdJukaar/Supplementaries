@@ -171,7 +171,7 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
         TileEntity te = level.getBlockEntity(frontPos);
         Block b = level.getBlockState(frontPos).getBlock();
         if (te instanceof ITickableTileEntity &&
-                ModTags.isTagged(ModTags.BELLOWS_TICKABLE_TAG,b)) {
+                b.is(ModTags.BELLOWS_TICKABLE_TAG)) {
             ((ITickableTileEntity) te).tick();
         }
     }

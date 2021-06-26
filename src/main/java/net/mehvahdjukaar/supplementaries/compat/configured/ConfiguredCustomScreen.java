@@ -9,6 +9,7 @@ import joptsimple.internal.Strings;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.datagen.types.VanillaWoodTypes;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
@@ -33,9 +34,9 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+//credits to MrCrayfish's Configured Mod
 
 public class ConfiguredCustomScreen extends ConfigScreen {
 
@@ -85,18 +86,25 @@ public class ConfiguredCustomScreen extends ConfigScreen {
         addIcon("raked gravel", Registry.RAKED_GRAVEL_ITEM.get());
         addIcon("bottle xp", Items.EXPERIENCE_BOTTLE);
         addIcon("hourglass", Registry.HOURGLASS_ITEM.get());
+        addIcon("map tweaks", Items.FILLED_MAP);
+        addIcon("ceiling banners", Items.RED_BANNER);
+        addIcon("initialization", Registry.COG_BLOCK_ITEM.get());
+        addIcon("iron gate", Registry.IRON_GATE_ITEM.get());
+    }
+
+    public static void openScreen(){
+        ServerConfigs.loadLocal();
+        openScreen(Minecraft.getInstance());
+    }
+    private static void openScreen(Minecraft mc){
+        mc.setScreen(new ConfiguredCustomScreen(mc.screen));
     }
 
     private static void addIcon(String s, Item i){
         ICONS.put(s,new ItemStack(i));
     }
 
-    public static void openScreen(){
-        openScreen(Minecraft.getInstance());
-    }
-    public static void openScreen(Minecraft mc){
-        mc.setScreen(new ConfiguredCustomScreen(mc.screen));
-    }
+
 
     public static void registerScreen(){
         ModContainer container = ModList.get().getModContainerById(Supplementaries.MOD_ID).get();
@@ -107,13 +115,19 @@ public class ConfiguredCustomScreen extends ConfigScreen {
 
     private ConfigScreen.ConfigList list = null;
 
+    //needed for custom title
     public ConfiguredCustomScreen(Screen parent) {
-        super(parent, "\u00A76Supplementaries Configured", ClientConfigs.CLIENT_CONFIG, ServerConfigs.SERVER_CONFIG, Textures.EMPTY_TEXTURE);
+        super(parent, "\u00A76Supplementaries Configured",
+                Collections.singletonList(new ConfigFileEntry(ClientConfigs.CLIENT_CONFIG, ClientConfigs.CLIENT_CONFIG.getValues())),
+                Arrays.asList(new ConfigFileEntry(ServerConfigs.SERVER_CONFIG, ServerConfigs.SERVER_CONFIG.getValues()),
+                        new ConfigFileEntry(RegistryConfigs.REGISTRY_CONFIG, RegistryConfigs.REGISTRY_CONFIG.getValues())),
+                Textures.EMPTY_TEXTURE);
     }
 
     public ConfiguredCustomScreen(Screen parent, String displayName, ForgeConfigSpec spec, UnmodifiableConfig values) {
-        super(parent,displayName,spec,values,Textures.EMPTY_TEXTURE);
+        super(parent,displayName,new ConfigFileEntry(spec,values),Textures.EMPTY_TEXTURE);
     }
+
 
 
     //this is the worst thing ever. Idk why I did this
@@ -126,9 +140,6 @@ public class ConfiguredCustomScreen extends ConfigScreen {
             this.list = (ConfigScreen.ConfigList)f.get(this);
 
         }catch (Exception ignored){}
-
-        UnmodifiableConfig clientValues = ClientConfigs.CLIENT_CONFIG.getValues();
-        UnmodifiableConfig commonValues = ServerConfigs.SERVER_CONFIG.getValues();
 
         Field f;
         try {
@@ -144,55 +155,39 @@ public class ConfiguredCustomScreen extends ConfigScreen {
             if(c instanceof SubMenu){
                 SubMenu subMenu = (SubMenu) c;
 
-
                 if(!isCommon) {
-                    clientValues.valueMap().forEach((s, o) -> {
-                        if (o instanceof AbstractConfig) {
-                            String label = createLabel(s);
-                            if (subMenu.getLabel().equals(label)) {
-                                f.setAccessible(true);
-                                try {
-                                    f.set(subMenu, new Button(10, 5, 44, 20,
-                                            (new StringTextComponent(label)).withStyle(TextFormatting.BOLD).withStyle(TextFormatting.WHITE),
-                                            (onPress) -> {
-                                                String newTitle = "\u00A76Supplementaries" + " > " + label;
-                                                this.minecraft.setScreen(new ConfiguredCustomScreen(this, newTitle, ClientConfigs.CLIENT_CONFIG, (AbstractConfig) o));
-                                            }));
-                                } catch (IllegalAccessException ignored) {}
-
-                            }
-
-                        }
-                    });
+                    modifySubmenus(f, subMenu, ClientConfigs.CLIENT_CONFIG);
                 }
                 else{
-                    commonValues.valueMap().forEach((s, o) -> {
-                        if (o instanceof AbstractConfig) {
-                            String label = createLabel(s);
-                            if (subMenu.getLabel().equals(label)) {
-                                f.setAccessible(true);
-                                try {
-                                    f.set(subMenu, new Button(10, 5, 44, 20,
-                                            (new StringTextComponent(label)).withStyle(TextFormatting.BOLD).withStyle(TextFormatting.WHITE),
-                                            (onPress) -> {
-                                                String newTitle = "\u00A76Supplementaries" + " > " + label;
-                                                this.minecraft.setScreen(new ConfiguredCustomScreen(this, newTitle, ServerConfigs.SERVER_CONFIG, (AbstractConfig) o));
-                                            }));
-                                } catch (IllegalAccessException ignored) {}
+                    modifySubmenus(f, subMenu, ServerConfigs.SERVER_CONFIG);
+                    //TODO: add icons to reg configs
+                    //modifySubmenus(f, subMenu, RegistryConfigs.REGISTRY_CONFIG);
 
-                            }
-
-                        }
-                    });
                 }
                 if(subMenu.getLabel().equals("Tweaks"))isCommon = true;
             }
         }
 
+    }
 
+    private void modifySubmenus(Field f, SubMenu subMenu, ForgeConfigSpec spec){
 
-
-
+        spec.getValues().valueMap().forEach((s, o) -> {
+            if (o instanceof AbstractConfig) {
+                String label = createLabel(s);
+                if (subMenu.getLabel().equals(label)) {
+                    f.setAccessible(true);
+                    try {
+                        f.set(subMenu, new Button(10, 5, 44, 20,
+                                (new StringTextComponent(label)).withStyle(TextFormatting.BOLD).withStyle(TextFormatting.WHITE),
+                                (onPress) -> {
+                                    String newTitle = "\u00A76Supplementaries" + " > " + label;
+                                    this.minecraft.setScreen(new ConfiguredCustomScreen(this, newTitle, spec, (UnmodifiableConfig) o));
+                                }));
+                    } catch (IllegalAccessException ignored) {}
+                }
+            }
+        });
     }
 
 
@@ -287,6 +282,7 @@ public class ConfiguredCustomScreen extends ConfigScreen {
         //TODO: only sync cached stuff
         ClientConfigs.cached.refresh();
         ServerConfigs.cached.refresh();
+
         //reload server values and get new ones with packet
         //this isn't working...
         //NetworkHandler.INSTANCE.sendToServer(new RequestConfigReloadPacket());

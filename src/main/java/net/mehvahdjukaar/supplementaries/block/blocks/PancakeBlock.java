@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -25,7 +26,6 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.ModList;
 
 public class PancakeBlock extends WaterBlock{
     protected static final VoxelShape SHAPE_1 = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 2.0D, 14.0D);
@@ -48,10 +48,9 @@ public class PancakeBlock extends WaterBlock{
     private BlockProperties.Topping getTopping(Item item){
         if(item instanceof HoneyBottleItem)return BlockProperties.Topping.HONEY;
         //TODO: add tag support here
-        if(ModList.get().isLoaded("create")) {
-            if (item.getRegistryName().toString().equals("create:bar_of_chocolate")) return BlockProperties.Topping.CHOCOLATE;
+        if((ModTags.CHOCOLATE_BARS.getValues().isEmpty() && item == Items.COCOA_BEANS) || item.is(ModTags.CHOCOLATE_BARS)) {
+            return BlockProperties.Topping.CHOCOLATE;
         }
-        else if(item == Items.COCOA_BEANS)return BlockProperties.Topping.CHOCOLATE;
         if(item.getRegistryName().toString().equals("autumnity:syrup_bottle"))return BlockProperties.Topping.SYRUP;
         //if(item.isIn(ItemTags.getCollection().get(ResourceLocation.tryCreate("forge:sugar"))))return BlockProperties.Topping.CHOCOLATE;
         return BlockProperties.Topping.NONE;

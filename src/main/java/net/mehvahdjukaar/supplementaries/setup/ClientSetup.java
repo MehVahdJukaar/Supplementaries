@@ -1,12 +1,13 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.block.blocks.CogBlock;
 import net.mehvahdjukaar.supplementaries.client.gui.NoticeBoardGui;
 import net.mehvahdjukaar.supplementaries.client.gui.OrangeMerchantGui;
 import net.mehvahdjukaar.supplementaries.client.gui.PulleyBlockGui;
 import net.mehvahdjukaar.supplementaries.client.gui.SackGui;
 import net.mehvahdjukaar.supplementaries.client.models.FrameBlockLoader;
+import net.mehvahdjukaar.supplementaries.client.models.MimicBlockLoader;
+import net.mehvahdjukaar.supplementaries.client.models.RopeKnotBlockLoader;
 import net.mehvahdjukaar.supplementaries.client.particles.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.FireflyEntityRenderer;
@@ -18,13 +19,13 @@ import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.configured.ConfiguredCustomScreen;
 import net.mehvahdjukaar.supplementaries.compat.decorativeblocks.DecoBlocksCompatClient;
+import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.world.data.map.sup.client.CMDclient;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.RedstoneWireBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.particle.FlameParticle;
@@ -40,7 +41,10 @@ import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.client.renderer.entity.SpriteRenderer;
 import net.minecraft.client.renderer.model.ModelBakery;
 import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.item.CrossbowItem;
+import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.state.StateContainer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -83,7 +87,12 @@ public class ClientSetup {
 
         //compat
         if(CompatHandler.deco_blocks) DecoBlocksCompatClient.registerRenderLayers();
-        if(CompatHandler.configured) ConfiguredCustomScreen.registerScreen();
+        //registers custom screen instead of default configured one
+        if(CompatHandler.configured && RegistryConfigs.reg.CUSTOM_CONFIGURED_SCREEN.get()){
+            try {
+                ConfiguredCustomScreen.registerScreen();
+            }catch (Exception e){ Supplementaries.LOGGER.warn("Failed to register custom configured screen: "+e);}
+        }
 
         //throwable brick
         onlyClientPls(event);
@@ -127,7 +136,7 @@ public class ClientSetup {
         //piston launcher
         ClientRegistry.bindTileEntityRenderer(Registry.PISTON_LAUNCHER_ARM_TILE.get(), PistonLauncherArmBlockTileRenderer::new);
         //sign post
-        RenderTypeLookup.setRenderLayer(Registry.SIGN_POST.get(), RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(Registry.SIGN_POST.get(), RenderType.solid());
         ClientRegistry.bindTileEntityRenderer(Registry.SIGN_POST_TILE.get(), SignPostBlockTileRenderer::new);
         //hanging sign
         RenderTypeLookup.setRenderLayer(Registry.SIGN_POST.get(), RenderType.cutout());
@@ -152,6 +161,8 @@ public class ClientSetup {
         RenderTypeLookup.setRenderLayer(Registry.SCONCE_SOUL.get(), RenderType.cutout());
         RenderTypeLookup.setRenderLayer(Registry.SCONCE_WALL_ENDER.get(), RenderType.cutout());
         RenderTypeLookup.setRenderLayer(Registry.SCONCE_ENDER.get(), RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(Registry.SCONCE_WALL_GLOW.get(), RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(Registry.SCONCE_GLOW.get(), RenderType.cutout());
         RenderTypeLookup.setRenderLayer(Registry.SCONCE_WALL_GREEN.get(), RenderType.cutout());
         RenderTypeLookup.setRenderLayer(Registry.SCONCE_GREEN.get(), RenderType.cutout());
         //candelabra
@@ -220,6 +231,18 @@ public class ClientSetup {
         ClientRegistry.bindTileEntityRenderer(Registry.GOBLET_TILE.get(), GobletBlockTileRenderer::new);
         //cog block
         RenderTypeLookup.setRenderLayer(Registry.COG_BLOCK.get(), RenderType.cutout());
+        //ceiling banner
+        ClientRegistry.bindTileEntityRenderer(Registry.CEILING_BANNER_TILE.get(), CeilingBannerBlockTileRenderer::new);
+        //statue
+        ClientRegistry.bindTileEntityRenderer(Registry.STATUE_TILE.get(), StatueBlockTileRenderer::new);
+        //statue
+        RenderTypeLookup.setRenderLayer(Registry.IRON_GATE.get(), RenderType.cutout());
+
+
+        ItemModelsProperties.register(Items.CROSSBOW, new ResourceLocation("rope_arrow"),
+                (stack, world, entity) -> entity != null && CrossbowItem.isCharged(stack) && CrossbowItem.containsChargedProjectile(stack, Registry.ROPE_ARROW_ITEM.get()) ? 1.0F : 0.0F);
+
+
     }
 
 
@@ -247,7 +270,7 @@ public class ClientSetup {
         colors.register(new DefWaterColor(), Registry.JAR_BOAT.get());
         colors.register(new BrewingStandColor(), Blocks.BREWING_STAND);
         colors.register(new MimicBlockColor(), Registry.TIMBER_BRACE.get(),Registry.TIMBER_FRAME.get(),Registry.TIMBER_CROSS_BRACE.get());
-        colors.register((state, w, p, t) -> RedstoneWireBlock.getColorForPower(state.getValue(CogBlock.POWER)),Registry.COG_BLOCK.get());
+        colors.register(new CogBlockColor(),Registry.COG_BLOCK.get());
 
     }
 
@@ -256,6 +279,7 @@ public class ClientSetup {
         ItemColors colors = event.getItemColors();
         colors.register(new TippedSpikesColor(), Registry.BAMBOO_SPIKES_TIPPED_ITEM.get());
         colors.register(new DefWaterColor(), Registry.JAR_BOAT_ITEM.get());
+        colors.register(new CrossbowColor(), Items.CROSSBOW);
     }
 
     private static class DefWaterColor implements IItemColor, IBlockColor {
@@ -271,6 +295,7 @@ public class ClientSetup {
         }
     }
 
+
     //textures
     @SubscribeEvent
     public static void onTextureStitch(TextureStitchEvent.Pre event) {
@@ -282,7 +307,7 @@ public class ClientSetup {
             }
         }
         if (event.getMap().location().equals(AtlasTexture.LOCATION_BLOCKS)) {
-            for (ResourceLocation r : Textures.getBlockTextures()) {
+            for (ResourceLocation r : Textures.getTexturesToStitch()) {
                 event.addSprite(r);
             }
         }
@@ -297,6 +322,9 @@ public class ClientSetup {
     public static void onModelRegistry(ModelRegistryEvent event){
         //loaders
         ModelLoaderRegistry.registerLoader(new ResourceLocation(Supplementaries.MOD_ID, "frame_block_loader"), new FrameBlockLoader());
+        ModelLoaderRegistry.registerLoader(new ResourceLocation(Supplementaries.MOD_ID, "mimic_block_loader"), new MimicBlockLoader());
+        ModelLoaderRegistry.registerLoader(new ResourceLocation(Supplementaries.MOD_ID, "rope_knot_loader"), new RopeKnotBlockLoader());
+
         //ModelLoaderRegistry.registerLoader(new ResourceLocation(Supplementaries.MOD_ID, "blackboard_loader"), new BlackboardBlockLoader());
 
 

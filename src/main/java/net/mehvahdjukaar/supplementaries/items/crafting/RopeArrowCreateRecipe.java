@@ -32,7 +32,7 @@ public class RopeArrowCreateRecipe extends SpecialRecipe {
                 }
                 itemstack = stack;
             }
-            if(ModTags.isTagged(ModTags.ROPES,stack.getItem())) {
+            if(stack.getItem().is(ModTags.ROPES)) {
 
                 itemstack1 = stack;
 
@@ -47,7 +47,7 @@ public class RopeArrowCreateRecipe extends SpecialRecipe {
     public ItemStack assemble(CraftingInventory inv) {
         int ropes = 0;
         for(int i = 0; i < inv.getContainerSize(); ++i) {
-            if(ModTags.isTagged(ModTags.ROPES,inv.getItem(i).getItem())){
+            if(inv.getItem(i).getItem().is(ModTags.ROPES)){
                 ropes++;
             }
         }

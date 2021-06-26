@@ -93,8 +93,9 @@ public class JarBlock extends Block implements IWaterLoggable {
             // make te do the work
             JarBlockTile te = (JarBlockTile) tileentity;
             if (te.handleInteraction(player, handIn)) {
-                if (!worldIn.isClientSide())
+                if (!worldIn.isClientSide()) {
                     te.setChanged();
+                }
                 return ActionResultType.sidedSuccess(worldIn.isClientSide);
             }
         }

@@ -36,16 +36,16 @@ public abstract class ItemDisplayTile extends LockableLootTileEntity implements 
     @Override
     public void setChanged() {
         if(this.level==null)return;
-        this.updateOnChanged();
+        this.updateOnChangedBeforePacket();
         super.setChanged();
     }
 
     //TODO: this is shit. do it better
-    public void updateOnChanged(){
+    public void updateOnChangedBeforePacket(){
         this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
     }
 
-    public void updateClientVisuals(){}
+    public void updateClientVisualsOnLoad(){}
 
     public ItemStack getDisplayedItem(){
         return this.getItem(0);
@@ -71,7 +71,7 @@ public abstract class ItemDisplayTile extends LockableLootTileEntity implements 
                 }
                 else{
                     //also update visuals on client. will get overwritten by packet tho
-                    this.updateClientVisuals();
+                    this.updateClientVisualsOnLoad();
                 }
                 return ActionResultType.sidedSuccess(this.level.isClientSide);
             }
@@ -90,7 +90,7 @@ public abstract class ItemDisplayTile extends LockableLootTileEntity implements 
                 }
                 else{
                     //also update visuals on client. will get overwritten by packet tho
-                    this.updateClientVisuals();
+                    this.updateClientVisualsOnLoad();
                 }
                 return ActionResultType.sidedSuccess(this.level.isClientSide);
             }
@@ -105,7 +105,7 @@ public abstract class ItemDisplayTile extends LockableLootTileEntity implements 
             this.stacks = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
         }
         ItemStackHelper.loadAllItems(compound, this.stacks);
-        this.updateClientVisuals();
+        if(this.level !=null && this.level.isClientSide) this.updateClientVisualsOnLoad();
     }
 
     @Override

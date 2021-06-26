@@ -38,7 +38,6 @@ public class HangingSignBlockTileRenderer extends TileEntityRenderer<HangingSign
     protected final BlockRendererDispatcher blockRenderer;
     protected final ItemRenderer itemRenderer;
     protected final MapItemRenderer mapRenderer;
-    private static final int MAXLINES = 5;
     
     public HangingSignBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
@@ -154,7 +153,7 @@ public class HangingSignBlockTileRenderer extends TileEntityRenderer<HangingSign
 
                 matrixStackIn.scale(0.010416667F, -0.010416667F, 0.010416667F);
 
-                for(int k1 = 0; k1 < MAXLINES; ++k1) {
+                for(int k1 = 0; k1 < HangingSignBlockTile.MAXLINES; ++k1) {
                     IReorderingProcessor ireorderingprocessor = tile.textHolder.getRenderText(k1, (ss) -> {
                         List<IReorderingProcessor> list = fontrenderer.split(ss, 75);
                         return list.isEmpty() ? IReorderingProcessor.EMPTY : list.get(0);
@@ -167,7 +166,7 @@ public class HangingSignBlockTileRenderer extends TileEntityRenderer<HangingSign
                             matrixStackIn.translate(0, 0, (0.0625 + 0.005)/0.010416667F);
 
                             float f3 = (float) (-fontrenderer.width(ireorderingprocessor) / 2);
-                            fontrenderer.drawInBatch(ireorderingprocessor, f3, (float) (k1 * 10 - 20), i1, false, matrixStackIn.last().pose(), bufferIn, false, 0, combinedLightIn);
+                            fontrenderer.drawInBatch(ireorderingprocessor, f3, (float) (k1 * 10 - 34), i1, false, matrixStackIn.last().pose(), bufferIn, false, 0, combinedLightIn);
 
                             matrixStackIn.popPose();
 

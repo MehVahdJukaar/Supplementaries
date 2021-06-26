@@ -5,7 +5,7 @@ import net.mehvahdjukaar.supplementaries.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.FireflyJarBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.LightUpBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
-import net.mehvahdjukaar.supplementaries.block.util.CapturedMobs;
+import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
@@ -67,7 +67,7 @@ public class Dispenser {
             DispenserBlock.registerBehavior(Items.BOWL, new BucketJarDispenserBehavior());
             DispenserBlock.registerBehavior(Items.GLASS_BOTTLE, new BucketJarDispenserBehavior());
 
-            for(Item i : CapturedMobs.VALID_BUCKETS.keySet()){
+            for(Item i : CapturedMobsHelper.VALID_BUCKETS.keySet()){
                 DispenserBlock.registerBehavior(i, new FishBucketJarDispenserBehavior());
             }
         }
@@ -139,7 +139,7 @@ public class Dispenser {
         }
         @Override
         public ItemStack execute(IBlockSource source, ItemStack stack) {
-            if(ModTags.isTagged(tag,stack.getItem())){
+            if(stack.getItem().is(tag)){
                 return super.execute(source,stack);
             }
             //vanilla behavior

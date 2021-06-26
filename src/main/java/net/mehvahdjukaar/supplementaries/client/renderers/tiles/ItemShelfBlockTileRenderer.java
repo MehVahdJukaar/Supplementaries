@@ -83,8 +83,8 @@ public class ItemShelfBlockTileRenderer extends TileEntityRenderer<ItemShelfBloc
                 matrixStackIn.popPose();
             }
 
-            ItemStack stack = tile.getItem(0);
-            if(CommonUtil.FESTIVITY.isAprilsFool())stack= new ItemStack(Items.SALMON);
+            ItemStack stack = tile.getDisplayedItem();
+            if(CommonUtil.FESTIVITY.isAprilsFool())stack = new ItemStack(Items.SALMON);
             IBakedModel ibakedmodel = itemRenderer.getModel(stack, tile.getLevel(), null);
             if(ibakedmodel.isGui3d()&&ClientConfigs.cached.SHELF_TRANSLATE)matrixStackIn.translate(0,-0.25,0);
 

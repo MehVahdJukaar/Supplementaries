@@ -138,7 +138,7 @@ public class FaucetBlock extends Block implements IWaterLoggable{
     }
 
     public boolean isSpecialTankBelow(BlockState state){
-        return ModTags.isTagged(ModTags.POURING_TANK,state.getBlock());
+        return state.is(ModTags.POURING_TANK);
     }
 
     @Override

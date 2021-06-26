@@ -27,7 +27,7 @@
         },
         {
           "type": "supplementaries:flag",
-          "flag": "sconce_ender"
+          "flag": "sconce"
         }
       ]
     }

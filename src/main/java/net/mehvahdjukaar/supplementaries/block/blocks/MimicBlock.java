@@ -74,6 +74,7 @@ public abstract class MimicBlock extends Block implements  IForgeBlock{
         return 2;
     }
 
+    /*
     @Override
     public float getSlipperiness(BlockState state, IWorldReader world, BlockPos pos, @org.jetbrains.annotations.Nullable Entity entity) {
         TileEntity te = world.getBlockEntity(pos);
@@ -84,7 +85,7 @@ public abstract class MimicBlock extends Block implements  IForgeBlock{
             }
         }
         return super.getSlipperiness(state,world,pos,entity);
-    }
+    }*/
 
     @Override
     public boolean isPathfindable(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {

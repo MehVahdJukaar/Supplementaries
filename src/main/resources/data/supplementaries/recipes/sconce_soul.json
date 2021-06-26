@@ -20,7 +20,7 @@
   "conditions": [
     {
       "type": "supplementaries:flag",
-      "flag": "sconce_soul"
+      "flag": "sconce"
     }
   ]
 }

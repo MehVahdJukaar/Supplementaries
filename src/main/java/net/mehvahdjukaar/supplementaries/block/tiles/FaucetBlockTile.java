@@ -368,14 +368,14 @@ public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
     public void load(BlockState state, CompoundNBT compound) {
         super.load(state, compound);
         this.transferCooldown = compound.getInt("TransferCooldown");
-        this.fluidHolder.read(compound);
+        this.fluidHolder.load(compound);
     }
 
     @Override
     public CompoundNBT save(CompoundNBT compound) {
         super.save(compound);
         compound.putInt("TransferCooldown", this.transferCooldown);
-        this.fluidHolder.write(compound);
+        this.fluidHolder.save(compound);
         return compound;
     }
 

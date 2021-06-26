@@ -291,13 +291,13 @@ public class RopeBlock extends Block implements IWaterLoggable{
     public static boolean isSupportingCeiling(BlockPos pos, IWorldReader world){
         Block b = world.getBlockState(pos).getBlock();
         return canSupportCenter(world, pos, Direction.DOWN)||
-                ModTags.isTagged(ModTags.ROPE_SUPPORT_TAG,b);
+                b.is(ModTags.ROPE_SUPPORT_TAG);
     }
 
     public static boolean canConnectDown(BlockPos currentPos, IWorldReader world){
         BlockState state = world.getBlockState(currentPos.below());
         Block b = state.getBlock();
-        return (b instanceof RopeBlock || ModTags.isTagged(ModTags.ROPE_HANG_TAG,b) ||
+        return (b instanceof RopeBlock || b.is(ModTags.ROPE_HANG_TAG) ||
                 (state.hasProperty(HorizontalFaceBlock.FACE) && state.getValue(HorizontalFaceBlock.FACE)== AttachFace.CEILING)
                 || (b instanceof ChainBlock && state.getValue(BlockStateProperties.AXIS)== Direction.Axis.Y) ||
                 (state.hasProperty(BlockStateProperties.HANGING) && state.getValue(BlockStateProperties.HANGING)));
@@ -508,7 +508,7 @@ public class RopeBlock extends Block implements IWaterLoggable{
         Block block = state.getBlock();
         PushReaction push = state.getPistonPushReaction();
 
-        if ((push==PushReaction.NORMAL||(toPos.getY()<fromPos.getY()&&push==PushReaction.PUSH_ONLY)||ModTags.isTagged(ModTags.ROPE_HANG_TAG,block)) && state.getDestroySpeed(world, fromPos) != -1
+        if ((push==PushReaction.NORMAL||(toPos.getY()<fromPos.getY()&&push==PushReaction.PUSH_ONLY)||block.is(ModTags.ROPE_HANG_TAG)) && state.getDestroySpeed(world, fromPos) != -1
                 && state.canSurvive(world, toPos) && !block.isAir(state, world, fromPos) && !isObsidian(state)){
 
             TileEntity tile = world.getBlockEntity(fromPos);
@@ -527,7 +527,7 @@ public class RopeBlock extends Block implements IWaterLoggable{
             boolean toFluid = world.getFluidState(toPos).getType()==Fluids.WATER;
             boolean canHoldWater = false;
             if(state.hasProperty(WATERLOGGED)){
-                canHoldWater = ModTags.isTagged(ModTags.WATER_HOLDER, state.getBlock());
+                canHoldWater = state.is(ModTags.WATER_HOLDER);
                 if(!canHoldWater) state = state.setValue(WATERLOGGED,toFluid);
             }
             if(state.getBlock() instanceof CauldronBlock && toFluid)state = state.setValue(CauldronBlock.LEVEL,3);

@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.compat.quark;
 import net.mehvahdjukaar.supplementaries.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.IBlockHolder;
+import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -45,7 +46,7 @@ public class BambooSpikesPistonMovement {
                         }
                     }
 
-                    entity.hurt(BambooSpikesBlock.SPIKE_DAMAGE, sameDir ? 3 : 1);
+                    entity.hurt(CommonUtil.SPIKE_DAMAGE, sameDir ? 3 : 1);
 
                 }
             }

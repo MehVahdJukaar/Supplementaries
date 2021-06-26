@@ -88,7 +88,7 @@ public class Flute extends Item {
         String s  = target.getType().getRegistryName().toString();
         if((c==null||!c.contains("Pet")) && (target instanceof TameableEntity && ((TameableEntity) target).isTame() &&
                 ((TameableEntity) target).getOwnerUUID().equals(playerIn.getUUID())) ||
-                ModTags.isTagged(ModTags.FLUTE_PET, target.getType()) ) {
+                target.getType().is(ModTags.FLUTE_PET)) {
             if(target instanceof AbstractHorseEntity && !((AbstractHorseEntity) target).isTamed())return ActionResultType.PASS;
             //if(target instanceof FoxEntity && ! ((FoxEntity)target).isTrustedUUID(p_213497_1_.getUniqueID())return ActionResultType.PASS;
             CompoundNBT com = new CompoundNBT();

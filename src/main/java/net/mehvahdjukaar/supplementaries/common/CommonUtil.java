@@ -24,10 +24,14 @@ import net.minecraft.world.IWorldReader;
 import net.minecraftforge.common.Tags;
 
 import java.util.Calendar;
+import java.util.Random;
 
 import static net.mehvahdjukaar.supplementaries.common.Textures.*;
 
 public class CommonUtil {
+
+    public static DamageSource SPIKE_DAMAGE = (new DamageSource("supplementaries.bamboo_spikes"));
+    public static DamageSource BOTTLING_DAMAGE = (new DamageSource("supplementaries.xp_extracting"));
 
     public static void swapItem(PlayerEntity player, Hand hand, ItemStack oldItem, ItemStack newItem, boolean bothsides){
         if(!player.level.isClientSide || bothsides)
@@ -76,8 +80,7 @@ public class CommonUtil {
 
 
     //TODO: I hope nobody is reading this. also delete this is obsolete
-
-
+    //can't wait to delete this mf
     //fluids
     public enum JarLiquidType {
         //TODO: move to config and add mod support
@@ -169,7 +172,7 @@ public class CommonUtil {
     }
 
     public static boolean isCookie(Item i){
-        return (ModTags.isTagged(ModTags.COOKIES,i));
+        return (i.is(ModTags.COOKIES));
     }
 
     //TODO: move to tag
@@ -184,7 +187,7 @@ public class CommonUtil {
     }
 
     public static boolean isBrick(Item i){
-        return (ModTags.isTagged(ModTags.BRICKS,i));
+        return (i.is(ModTags.BRICKS));
     }
 
     public static boolean isCake(Item i){
@@ -385,11 +388,13 @@ public class CommonUtil {
     }
 
     public static boolean isPost(BlockState state){
-        return isVertical(state) && isNotExtended(state) && ModTags.isTagged(ModTags.POSTS,state.getBlock());
+        return isVertical(state) && isNotExtended(state) && state.is(ModTags.POSTS);
     }
 
     //this is how you do it :D
     private static final ShulkerBoxTileEntity SHULKER_TILE = new ShulkerBoxTileEntity();
+
+
     public static boolean isAllowedInShulker(ItemStack stack){
         return SHULKER_TILE.canPlaceItemThroughFace(0,stack,null);
     }
@@ -408,12 +413,19 @@ public class CommonUtil {
     //BlockItem method
     public static boolean canPlace(BlockItemUseContext context, BlockState state){
 
-
-
         PlayerEntity playerentity = context.getPlayer();
         ISelectionContext iselectioncontext = playerentity == null ? ISelectionContext.empty() : ISelectionContext.of(playerentity);
         return state.canSurvive(context.getLevel(), context.getClickedPos()) && context.getLevel().isUnobstructed(state, context.getClickedPos(), iselectioncontext);
     }
+
+
+    public static int bottleToXP(int bottleCount, Random rand){
+        int xp = 0;
+        for(int i = 0; i<bottleCount; i++) xp += (3 + rand.nextInt(5) + rand.nextInt(5));
+        return xp;
+    }
+
+
 
 
 

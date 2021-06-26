@@ -16,7 +16,7 @@ public abstract class VineBlockMixin {
 
     @Inject(method = "isAcceptableNeighbour", at = @At("HEAD"), cancellable = true)
     private static void isAcceptableNeighbour(IBlockReader world, BlockPos pos, Direction direction, CallbackInfoReturnable<Boolean> info) {
-        if(direction==Direction.DOWN && ModTags.isTagged(ModTags.VINE_SUPPORT, world.getBlockState(pos).getBlock()))
+        if(direction==Direction.DOWN && world.getBlockState(pos).is(ModTags.VINE_SUPPORT))
             info.setReturnValue(true);
 
     }

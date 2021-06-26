@@ -13,7 +13,7 @@ import net.minecraftforge.common.util.Constants;
 
 
 public class HangingSignBlockTile extends SwayingBlockTile implements IMapDisplay, ITextHolder {
-    public static final int MAXLINES = 5;
+    public static final int MAXLINES = 7;
 
     public TextHolder textHolder;
     private NonNullList<ItemStack> stacks = NonNullList.withSize(1, ItemStack.EMPTY);

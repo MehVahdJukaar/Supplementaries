@@ -36,7 +36,7 @@ public class PedestalBlockTile extends ItemDisplayTile implements ITickableTileE
     }
 
     @Override
-    public void updateOnChanged() {
+    public void updateOnChangedBeforePacket() {
         //TODO: rewrite this
         if(!this.level.isClientSide()) {
             BlockState state = this.getBlockState();
@@ -52,10 +52,10 @@ public class PedestalBlockTile extends ItemDisplayTile implements ITickableTileE
         if (it instanceof BlockItem){
             this.type=DisplayType.BLOCK;
         }
-        else if(it instanceof SwordItem || ModTags.isTagged(ModTags.PEDESTAL_DOWNRIGHT,it)){
+        else if(it instanceof SwordItem || it.is(ModTags.PEDESTAL_DOWNRIGHT)){
             this.type=DisplayType.SWORD;
         }
-        else if(it instanceof TridentItem || ModTags.isTagged(ModTags.PEDESTAL_UPRIGHT,it)){
+        else if(it instanceof TridentItem || it.is(ModTags.PEDESTAL_UPRIGHT)){
             this.type=DisplayType.TRIDENT;
         }
         else if(it instanceof EnderCrystalItem){

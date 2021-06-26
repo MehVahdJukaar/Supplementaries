@@ -44,7 +44,7 @@ public abstract class BellBlockMixin extends Block{
     }
 
     @Inject(method = "updateShape", at = @At("HEAD"), cancellable = true)
-    public void updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn,
+    public void updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn,
                                     BlockPos currentPos, BlockPos facingPos, CallbackInfoReturnable<BlockState> info) {
         try{
             if (facing == Direction.DOWN) {
@@ -55,7 +55,6 @@ public abstract class BellBlockMixin extends Block{
             }
         }catch (Exception ignored){};
     }
-
 
     @Override
     public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {

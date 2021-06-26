@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "supplementaries:iron_gate"
+  ],
+  "optional": [
+    "#quark:vertical_slabs"
+  ]
+}

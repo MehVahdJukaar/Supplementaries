@@ -16,6 +16,6 @@ public class KeyItem extends Item {
     @Override
     public boolean doesSneakBypassUse(ItemStack stack, IWorldReader world, BlockPos pos, PlayerEntity player) {
         return true;
-
     }
+
 }

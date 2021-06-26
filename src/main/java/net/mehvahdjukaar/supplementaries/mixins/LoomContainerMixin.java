@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.inventories.LoomSlot;
 import net.mehvahdjukaar.supplementaries.items.FlagItem;
 import net.minecraft.block.BannerBlock;
 import net.minecraft.inventory.IInventory;
@@ -30,14 +29,14 @@ public abstract class LoomContainerMixin extends Container {
     protected LoomContainerMixin(@Nullable ContainerType<?> p_i50105_1_, int p_i50105_2_) {
         super(p_i50105_1_, p_i50105_2_);
     }
-
+    /*
     @Redirect(method ="<init>(ILnet/minecraft/entity/player/PlayerInventory;Lnet/minecraft/util/IWorldPosCallable;)V",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/inventory/container/LoomContainer;addSlot(Lnet/minecraft/inventory/container/Slot;)Lnet/minecraft/inventory/container/Slot;",
                     ordinal = 0))
     public Slot LoomContainer(LoomContainer loomContainer, Slot p_75146_1_) {
         return this.addSlot(new LoomSlot(this.inputContainer, 0, 13, 26));
-    }
+    }*/
 
     @Redirect(method ="quickMoveStack",
             at = @At(value = "INVOKE",

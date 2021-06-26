@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.mehvahdjukaar.supplementaries.world.data.map.lib.CustomDecoration;
 import net.mehvahdjukaar.supplementaries.world.data.map.lib.CustomDecorationType;
+import net.mehvahdjukaar.supplementaries.world.data.map.lib.MapDecorationHandler;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.MapData;
@@ -14,7 +15,11 @@ import java.util.Map;
 public class MapDecorationClient {
     private static final Map<CustomDecorationType<?,?>, DecorationRenderer<?>> RENDERERS = Maps.newHashMap();
 
+    static {
+        bindSimpleRenderer(MapDecorationHandler.GENERIC_STRUCTURE_TYPE);
+    }
 
+    //TODO: stitch all textures on an atlas for simple renderers
 
     public static <T extends CustomDecoration> void bindDecorationRenderer(CustomDecorationType<T,?> type, DecorationRenderer<T> renderer){
         if(RENDERERS.containsKey(type)){
@@ -29,7 +34,7 @@ public class MapDecorationClient {
      * binds the default simple decoration renderer.<br>
      * will associate each decoration a texture based on its name<br>
      * texture location will be as follows:<br>
-     * "textures/map/end_gateway.png" under the namespace the decoration is registered under<br>
+     * "textures/map/[type.id].png" under the namespace the decoration is registered under<br>
      *
      * For more control use {@link MapDecorationClient#bindDecorationRenderer(CustomDecorationType, DecorationRenderer)}<br>
      */

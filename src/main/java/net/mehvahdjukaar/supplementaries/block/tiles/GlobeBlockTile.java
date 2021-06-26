@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.GlobeBlock;
+import net.mehvahdjukaar.supplementaries.common.SpecialPlayers;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
@@ -20,8 +21,14 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, I
     public float yaw = 0;
     public float prevYaw = 0;
     public int face = 0;
-    public GlobeType type = GlobeType.DEFAULT;
+
     private ITextComponent customName;
+
+    public boolean sheared = false;
+
+    //client
+    public ResourceLocation texture = null;
+    public boolean isFlat = false;
 
     public GlobeBlockTile() {
         super(Registry.GLOBE_TILE.get());
@@ -30,7 +37,14 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, I
 
     public void setCustomName(ITextComponent name) {
         this.customName = name;
-        this.type = GlobeType.getGlobeType(name.getString());
+        this.updateTexture();
+    }
+
+    private void updateTexture(){
+        if(this.hasCustomName()) {
+            this.isFlat = false;
+            this.texture = GlobeType.getGlobeTexture(this.getCustomName().getString(),this);
+        }else this.texture = null;
     }
 
     @Override
@@ -54,13 +68,14 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, I
 
     @Override
     public void load(BlockState state, CompoundNBT compound) {
-        super.load(state, compound);
         if (compound.contains("CustomName", 8)) {
-            this.customName = ITextComponent.Serializer.fromJson(compound.getString("CustomName"));
+            this.setCustomName(ITextComponent.Serializer.fromJson(compound.getString("CustomName")));
         }
         this.face = compound.getInt("Face");
         this.yaw = compound.getFloat("Yaw");
-        this.type = GlobeType.values()[compound.getInt("GlobeType")];
+        this.sheared = compound.getBoolean("Sheared");
+        super.load(state, compound);
+
     }
 
     @Override
@@ -71,7 +86,7 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, I
         }
         compound.putInt("Face",this.face);
         compound.putFloat("Yaw",this.yaw);
-        compound.putInt("GlobeType", this.type.ordinal());
+        compound.putBoolean("Sheared",this.sheared);
         return compound;
     }
 
@@ -128,21 +143,15 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, I
         return this.getBlockState().getValue(GlobeBlock.FACING);
     }
 
-    //keep order
+    //TODO: improve
     public enum GlobeType {
-        DEFAULT(null, null, GLOBE_TEXTURE),
         FLAT(new String[]{"flat","flat earth"}, new TranslationTextComponent("globe.supplementaries.flat"), GLOBE_FLAT_TEXTURE),
         MOON(new String[]{"moon","luna","selene","cynthia"},
                 new TranslationTextComponent("globe.supplementaries.moon"),GLOBE_MOON_TEXTURE),
         EARTH(new String[]{"earth","terra","gaia","gaea","tierra","tellus","terre"},
                 new TranslationTextComponent("globe.supplementaries.earth"),GLOBE_TEXTURE),
-        SHEARED(null,null,GLOBE_SHEARED_TEXTURE),
-        CUSTOM_1(new String[]{"plantkillable"}, null, GLOBE_CUSTOM_1),
-        CUSTOM_2(new String[]{"toffanelly"}, null, GLOBE_CUSTOM_2),
-        CUSTOM_3(new String[]{"sylvetichearts"}, null, GLOBE_CUSTOM_3),
         SUN(new String[]{"sun","sol","helios"},
-                new TranslationTextComponent("globe.supplementaries.sun"),GLOBE_SUN_TEXTURE),
-        CUSTOM_4(new String[]{"agrona"},null,GLOBE_CUSTOM_4);
+                new TranslationTextComponent("globe.supplementaries.sun"),GLOBE_SUN_TEXTURE);
 
         GlobeType(String[] key, TranslationTextComponent tr, ResourceLocation res){
             this.keyWords = key;
@@ -154,26 +163,26 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, I
         public final TranslationTextComponent transKeyWord;
         public final ResourceLocation texture;
 
-        public static GlobeType getGlobeType(String text){
+        public static ResourceLocation getGlobeTexture(String text, GlobeBlockTile tile){
             String name = text.toLowerCase();
+            ResourceLocation r = SpecialPlayers.GLOBES.get(name);
+            if(r != null)return r;
             for (GlobeType n : GlobeType.values()) {
                 if(n.keyWords==null)continue;
-                if(n.transKeyWord!=null && !n.transKeyWord.getString().equals("") && name.equals(n.transKeyWord.getString().toLowerCase()))return n;
+                if(n.transKeyWord!=null && !n.transKeyWord.getString().equals("") && name.equals(n.transKeyWord.getString().toLowerCase())){
+                    tile.isFlat = (n==FLAT);
+                    return n.texture;
+                }
                 for (String s : n.keyWords) {
                     if (!s.equals("") && name.equals(s)) {
-                        return n;
+                        tile.isFlat = (n==FLAT);
+                        return n.texture;
                     }
                 }
             }
-            return GlobeType.DEFAULT;
+            return null;
         }
-
-        public static GlobeType getGlobeType(TileEntity t){
-            if(t instanceof INameable && ((INameable) t).hasCustomName()) {
-                return getGlobeType(((INameable) t).getCustomName().getString());
-            }
-            return GlobeType.DEFAULT;
-        }
+        
     }
 
 }

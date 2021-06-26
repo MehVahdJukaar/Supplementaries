@@ -1,10 +1,12 @@
 package net.mehvahdjukaar.supplementaries.block;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.util.Direction;
 import net.minecraft.util.IStringSerializable;
+import net.minecraftforge.client.model.data.ModelProperty;
 
 import java.util.Arrays;
 import java.util.List;
@@ -44,6 +46,12 @@ public class BlockProperties {
     public static final EnumProperty<RakeDirection> RAKE_DIRECTION = EnumProperty.create("shape",RakeDirection.class);
     public static final BooleanProperty HAS_BLOCK = BooleanProperty.create("has_block");
     public static final BooleanProperty ROTATING = BooleanProperty.create("rotating");
+    public static final EnumProperty<PostType> POST_TYPE = EnumProperty.create("type",PostType.class);
+
+
+
+    //model properties
+    public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
 
     public enum RopeAttachment implements IStringSerializable{
         NONE("none"), //default /no attachment
@@ -82,6 +90,33 @@ public class BlockProperties {
 
         public boolean isKnot() {return  this==KNOT;}
     }
+
+    public enum PostType implements IStringSerializable{
+        POST("post"), //4x4
+        PALISADE("palisade"), //8x8
+        WALL("wall"), //10x10
+        BEAM("beam"); //12x12
+
+        private final String name;
+
+        PostType(String name) {
+            this.name = name;
+        }
+
+        public String toString() {
+            return this.name;
+        }
+
+        @Override
+        public String getSerializedName() {
+            return this.name;
+        }
+
+        public String getName() {
+            return this.name;
+        }
+    }
+
 
     public enum Topping implements IStringSerializable{
         NONE("none"),

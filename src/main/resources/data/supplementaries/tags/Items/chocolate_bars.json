@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "optional": [
+    "create:bar_of_chocolate",
+    "neapolitan:chocolate_bar",
+    "fluffy_farmer:chocolate_bar",
+    "xercamod:item_chocolate",
+    "simplefarming:chocolate"
+  ]
+}

@@ -95,5 +95,4 @@ public class SackItem extends BlockItem {
         if(!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().options.advancedItemTooltips)return;
         tooltip.add(new TranslationTextComponent("message.supplementaries.sack").withStyle(TextFormatting.ITALIC).withStyle(TextFormatting.GRAY));
     }
-
 }

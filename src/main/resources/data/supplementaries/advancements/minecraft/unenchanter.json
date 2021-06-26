@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:story/enchant_item",
+  "display": {
+    "icon": {
+      "item": "minecraft:enchanted_golden_apple"
+    },
+    "title": {
+      "translate":   "advancements.story.unenchanter.title"
+    },
+    "description": {
+      "translate":   "advancements.story.unenchanter.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": true
+  },
+  "criteria": {
+    "apple": {
+      "trigger": "minecraft:grind_item",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:golden_apple"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "apple"
+    ]
+  ]
+}

@@ -15,6 +15,10 @@ import net.minecraft.entity.passive.IFlyingAnimal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.fluid.Fluid;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.pathfinding.FlyingPathNavigator;
@@ -26,6 +30,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
@@ -50,6 +56,16 @@ public class FireflyEntity extends CreatureEntity implements IFlyingAnimal, IEnt
         //this.navigator = new FlyingPathNavigator(this, this.world);
 
     }
+
+    @Nullable
+    public ILivingEntityData finalizeSpawn(IServerWorld world, DifficultyInstance difficulty, SpawnReason spawnReason, @Nullable ILivingEntityData data, @Nullable CompoundNBT compound) {
+        data = super.finalizeSpawn(world, difficulty, spawnReason, data, compound);
+
+        //this.setItemSlot(EquipmentSlotType.HEAD, new ItemStack(Items.REDSTONE_TORCH));
+
+        return data;
+    }
+
 
     @Override
     protected PathNavigator createNavigation(World worldIn) {
@@ -87,35 +103,6 @@ public class FireflyEntity extends CreatureEntity implements IFlyingAnimal, IEnt
         super.tick();
 
 
-        //despawn when entity is not lit
-        if (this.alpha == 0f && !this.level.isClientSide){
-
-            if(this.level.isRaining() && this.random.nextFloat()<0.1) {
-                this.remove();
-            }
-            if(ServerConfigs.cached.FIREFLY_DESPAWN) {
-                long dayTime = this.level.getDayTime() % 24000;
-                if (dayTime > 23500 || dayTime < 12500 && this.random.nextFloat() < 0.1)
-                    this.remove();
-            }
-
-        }
-
-        //this.flickerCounter++;
-        this.prevAlpha = this.alpha;
-        float a = (float) ClientConfigs.cached.FIREFLY_INTENSITY; //0.3
-        float p = (float) ClientConfigs.cached.FIREFLY_EXPONENT;
-        float time = this.tickCount+this.offset;
-        boolean w = this.level.isClientSide;
-
-        this.alpha = Math.max(((1-a)*MathHelper.sin(time * ((float)Math.PI*2 / this.flickerPeriod))+a),0);
-        if (this.alpha!=0)this.alpha= (float) Math.pow(this.alpha,p);
-        //this.alpha =  Math.max( ( (1-p)*MathHelper.sin(this.ticksExisted * ((float) Math.PI / this.flickerPeriod))+p), 0);
-
-
-        this.setDeltaMovement(this.getDeltaMovement().multiply(1.0D, 0.65D, 1.0D));
-        this.setDeltaMovement(this.getDeltaMovement().add(0.02 * (this.random.nextDouble() - 0.5), 0.03 * (this.random.nextDouble() - 0.5),
-                0.02 * (this.random.nextDouble() - 0.5)));
 
 
     }
@@ -252,6 +239,46 @@ public class FireflyEntity extends CreatureEntity implements IFlyingAnimal, IEnt
         super.aiStep();
         //this.particleCooldown--;
 
+        //despawn when entity is not lit
+        if (this.alpha == 0f && !this.level.isClientSide){
+
+            if(this.level.isRaining() && this.random.nextFloat()<0.1) {
+                this.remove();
+            }
+            if(ServerConfigs.cached.FIREFLY_DESPAWN) {
+                long dayTime = this.level.getDayTime() % 24000;
+                if (dayTime > 23500 || dayTime < 12500 && this.random.nextFloat() < 0.1)
+                    this.remove();
+            }
+
+        }
+
+        //this.flickerCounter++;
+
+
+        this.prevAlpha = this.alpha;
+        float a = (float) ClientConfigs.cached.FIREFLY_INTENSITY; //0.3
+        float p = (float) ClientConfigs.cached.FIREFLY_EXPONENT;
+        float time = this.tickCount+this.offset;
+        boolean w = this.level.isClientSide;
+
+        this.alpha = Math.max(((1-a)*MathHelper.sin(time * ((float)Math.PI*2 / this.flickerPeriod))+a),0);
+        if (this.alpha!=0)this.alpha= (float) Math.pow(this.alpha,p);
+        //this.alpha =  Math.max( ( (1-p)*MathHelper.sin(this.ticksExisted * ((float) Math.PI / this.flickerPeriod))+p), 0);
+
+        if(this.level.isClientSide) {
+            if (prevAlpha == 0 && this.alpha != 0) this.switchLight(true);
+            else if (prevAlpha != 0 && this.alpha == 0) this.switchLight(false);
+        }
+
+        this.setDeltaMovement(this.getDeltaMovement().multiply(1.0D, 0.65D, 1.0D));
+        this.setDeltaMovement(this.getDeltaMovement().add(0.02 * (this.random.nextDouble() - 0.5), 0.03 * (this.random.nextDouble() - 0.5),
+                0.02 * (this.random.nextDouble() - 0.5)));
+    }
+
+    private void switchLight(boolean on){
+        if(on)this.setItemSlot(EquipmentSlotType.HEAD, new ItemStack(Items.MAGMA_BLOCK));
+        else this.setItemSlot(EquipmentSlotType.HEAD, ItemStack.EMPTY);
     }
 
 

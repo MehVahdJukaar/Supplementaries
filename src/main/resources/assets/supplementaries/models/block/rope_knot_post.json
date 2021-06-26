@@ -1,0 +1,24 @@
+{
+	"loader": "supplementaries:rope_knot_loader",
+	"knot": {
+		"textures": {
+			"2": "supplementaries:blocks/rope",
+			"particle": "supplementaries:blocks/rope"
+		},
+		"elements": [
+			{
+				"from": [5, 9, 5],
+				"to": [11, 13, 11],
+				"rotation": {"angle": 0, "axis": "y", "origin": [15, 19, 13]},
+				"faces": {
+					"north": {"uv": [10, 12, 16, 16], "texture": "#2"},
+					"east": {"uv": [10, 12, 16, 16], "texture": "#2"},
+					"south": {"uv": [10, 12, 16, 16], "texture": "#2"},
+					"west": {"uv": [10, 12, 16, 16], "texture": "#2"},
+					"up": {"uv": [10, 0, 16, 6], "texture": "#2"},
+					"down": {"uv": [10, 0, 16, 6], "texture": "#2"}
+				}
+			}
+		]
+	}
+}

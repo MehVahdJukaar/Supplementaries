@@ -205,7 +205,7 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
                             }
 
                             //wall lanterns
-                            if(0.28>rand.nextFloat()){
+                            if(0.32>rand.nextFloat()){
                                 topState = 0.32>rand.nextFloat()?trapdoor:air;
 
                                 EnhancedLanternBlock wl = ((EnhancedLanternBlock) Registry.WALL_LANTERN.get());

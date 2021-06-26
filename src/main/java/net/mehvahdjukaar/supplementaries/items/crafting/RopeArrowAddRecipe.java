@@ -36,7 +36,7 @@ public class RopeArrowAddRecipe extends SpecialRecipe {
         }
         for(int i = 0; i < inv.getContainerSize(); ++i) {
             ItemStack stack = inv.getItem(i);
-            if(ModTags.isTagged(ModTags.ROPES,stack.getItem())) {
+            if(stack.getItem().is(ModTags.ROPES)) {
                 if (missingRopes <= 0) return false;
                 rope = stack;
                 missingRopes--;
@@ -53,7 +53,7 @@ public class RopeArrowAddRecipe extends SpecialRecipe {
         ItemStack arrow = null;
         for(int i = 0; i < inv.getContainerSize(); ++i) {
             ItemStack stack = inv.getItem(i);
-            if(ModTags.isTagged(ModTags.ROPES,stack.getItem())){
+            if(stack.getItem().is(ModTags.ROPES)){
                 ropes++;
             }
             if(stack.getItem() == Registry.ROPE_ARROW_ITEM.get()) {

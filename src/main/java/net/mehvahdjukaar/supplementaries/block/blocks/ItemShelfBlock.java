@@ -2,9 +2,11 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.tiles.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.block.tiles.ItemShelfBlockTile;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.IInventory;
@@ -44,6 +46,11 @@ public class ItemShelfBlock extends WaterBlock {
     @Override
     public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType pathType) {
         return true;
+    }
+
+    @Override
+    public boolean isLadder(BlockState state, IWorldReader world, BlockPos pos, LivingEntity entity) {
+        return ServerConfigs.cached.ITEM_SHELF_LADDER;
     }
 
     @Override
