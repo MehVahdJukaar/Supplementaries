@@ -264,7 +264,7 @@ public class FaucetBlock extends Block implements IWaterLoggable{
     public int getTileParticleColor(BlockPos pos, World world){
         TileEntity te = world.getBlockEntity(pos);
         if(te instanceof FaucetBlockTile)
-            return ((FaucetBlockTile) te).fluidHolder.getParticleColor();
+            return ((FaucetBlockTile) te).fluidHolder.getParticleColor(world, pos);
         return 0x423cf7;
     }
 

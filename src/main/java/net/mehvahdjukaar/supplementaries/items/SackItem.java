@@ -1,5 +1,8 @@
 package net.mehvahdjukaar.supplementaries.items;
 
+
+import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
+import net.mehvahdjukaar.supplementaries.compat.quark.QuarkSackTooltip;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.block.Block;
@@ -59,36 +62,37 @@ public class SackItem extends BlockItem {
         }
     }
 
-
-
+    @Override
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
 
-        CompoundNBT compoundnbt = stack.getTagElement("BlockEntityTag");
-        if (compoundnbt != null) {
-            if (compoundnbt.contains("LootTable", 8)) {
-                tooltip.add(new StringTextComponent("???????").withStyle(TextFormatting.GRAY));
-            }
+        if(!CompatHandler.quark || !QuarkSackTooltip.canRenderTooltip()) {
+            CompoundNBT compoundnbt = stack.getTagElement("BlockEntityTag");
+            if (compoundnbt != null) {
+                if (compoundnbt.contains("LootTable", 8)) {
+                    tooltip.add(new StringTextComponent("???????").withStyle(TextFormatting.GRAY));
+                }
 
-            if (compoundnbt.contains("Items", 9)) {
-                NonNullList<ItemStack> nonnulllist = NonNullList.withSize(9, ItemStack.EMPTY);
-                ItemStackHelper.loadAllItems(compoundnbt, nonnulllist);
-                int i = 0;
-                int j = 0;
+                if (compoundnbt.contains("Items", 9)) {
+                    NonNullList<ItemStack> nonnulllist = NonNullList.withSize(9, ItemStack.EMPTY);
+                    ItemStackHelper.loadAllItems(compoundnbt, nonnulllist);
+                    int i = 0;
+                    int j = 0;
 
-                for(ItemStack itemstack : nonnulllist) {
-                    if (!itemstack.isEmpty()) {
-                        ++j;
-                        if (i <= 4) {
-                            ++i;
-                            IFormattableTextComponent iformattabletextcomponent = itemstack.getHoverName().copy();
-                            iformattabletextcomponent.append(" x").append(String.valueOf(itemstack.getCount()));
-                            tooltip.add(iformattabletextcomponent.withStyle(TextFormatting.GRAY));
+                    for (ItemStack itemstack : nonnulllist) {
+                        if (!itemstack.isEmpty()) {
+                            ++j;
+                            if (i <= 4) {
+                                ++i;
+                                IFormattableTextComponent iformattabletextcomponent = itemstack.getHoverName().copy();
+                                iformattabletextcomponent.append(" x").append(String.valueOf(itemstack.getCount()));
+                                tooltip.add(iformattabletextcomponent.withStyle(TextFormatting.GRAY));
+                            }
                         }
                     }
-                }
-                if (j - i > 0) {
-                    tooltip.add((new TranslationTextComponent("container.shulkerBox.more", j - i)).withStyle(TextFormatting.ITALIC).withStyle(TextFormatting.GRAY));
+                    if (j - i > 0) {
+                        tooltip.add((new TranslationTextComponent("container.shulkerBox.more", j - i)).withStyle(TextFormatting.ITALIC).withStyle(TextFormatting.GRAY));
+                    }
                 }
             }
         }

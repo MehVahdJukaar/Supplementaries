@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.tiles.ItemDisplayTile;
-import net.mehvahdjukaar.supplementaries.block.tiles.PedestalBlockTile;
 import net.mehvahdjukaar.supplementaries.block.tiles.StatueBlockTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -128,7 +127,7 @@ public class StatueBlock extends WaterBlock {
     @Override
     public int getAnalogOutputSignal(BlockState blockState, World world, BlockPos pos) {
         TileEntity tileentity = world.getBlockEntity(pos);
-        if (tileentity instanceof PedestalBlockTile)
+        if (tileentity instanceof StatueBlockTile)
             return Container.getRedstoneSignalFromContainer((IInventory) tileentity);
         else
             return 0;

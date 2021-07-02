@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.block.util.ICustomDataHolder;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.horse.AbstractHorseEntity;
@@ -58,15 +59,19 @@ public abstract class SkeletonHorseMixin extends AbstractHorseEntity implements 
         this.conversionTime = compoundNBT.getInt("ConversionTile");
     }
 
-    @Inject(method = "mobInteract", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;isEmpty()Z"), cancellable = true)
+    @Inject(method = "mobInteract", at = @At(value = "HEAD"), cancellable = true)
     public void mobInteract(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResultType> cir) {
-        ItemStack stack = player.getItemInHand(hand);
-        if(stack.getItem() == Items.ROTTEN_FLESH && fleshCount < FLESH_NEEDED){
-            this.feedRottenFlesh(player,hand,stack);
-            cir.cancel();
-            cir.setReturnValue(ActionResultType.sidedSuccess(player.level.isClientSide));
+        if(ServerConfigs.cached.ZOMBIE_HORSE && this.isTamed() && !this.isBaby()) {
+            ItemStack stack = player.getItemInHand(hand);
+            if (stack.getItem() == Items.ROTTEN_FLESH && fleshCount < ServerConfigs.cached.ZOMBIE_HORSE_COST) {
+                this.feedRottenFlesh(player, hand, stack);
+                cir.cancel();
+                cir.setReturnValue(ActionResultType.sidedSuccess(player.level.isClientSide));
+            }
         }
     }
+
+
     /*
     @Redirect(method ="mobInteract",
             at = @At(value = "INVOKE",
@@ -104,7 +109,7 @@ public abstract class SkeletonHorseMixin extends AbstractHorseEntity implements 
         this.setEating();
         this.fleshCount++;
 
-        if(this.fleshCount>=FLESH_NEEDED){
+        if(this.fleshCount>=ServerConfigs.cached.ZOMBIE_HORSE_COST){
             this.conversionTime=200;
             this.level.broadcastEntityEvent(this, (byte)16);
         }

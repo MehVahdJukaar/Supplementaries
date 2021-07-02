@@ -1,11 +1,12 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
+import net.mehvahdjukaar.selene.fluids.SoftFluid;
+import net.mehvahdjukaar.selene.fluids.SoftFluidHolder;
+import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.blocks.FaucetBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.JarBlock;
-import net.mehvahdjukaar.supplementaries.fluids.SoftFluid;
-import net.mehvahdjukaar.supplementaries.fluids.SoftFluidHolder;
-import net.mehvahdjukaar.supplementaries.fluids.SoftFluidList;
+import net.mehvahdjukaar.supplementaries.fluids.FluidStuff;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.*;
 import net.minecraft.entity.item.ExperienceOrbEntity;
@@ -48,7 +49,6 @@ public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
 
     @Override
     public void onLoad() {
-        this.fluidHolder.setWorldAndPos(this.level, this.worldPosition);
     }
 
     @Override
@@ -83,14 +83,14 @@ public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
         }
         else if(backState.hasProperty(BeehiveBlock.HONEY_LEVEL)){
             if(backState.getValue(BeehiveBlock.HONEY_LEVEL) > 0){
-                this.fluidHolder.fill(SoftFluidList.HONEY);
+                this.fluidHolder.fill(SoftFluidRegistry.HONEY);
                 return true;
             }
             return false;
         }
         else if(b instanceof CauldronBlock){
             if(level instanceof World && backState.getAnalogOutputSignal(level,backPos)>0){
-                this.fluidHolder.fill(SoftFluidList.WATER);
+                this.fluidHolder.fill(SoftFluidRegistry.WATER);
                 return true;
             }
             return false;
@@ -98,7 +98,7 @@ public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
         //fluid stuff
         FluidState fluidState = level.getFluidState(backPos);
         if(!fluidState.isEmpty()){
-            this.fluidHolder.fill(SoftFluidList.fromFluid(fluidState.getType()));
+            this.fluidHolder.fill(SoftFluidRegistry.fromForgeFluid(fluidState.getType()));
             return true;
         }
         IFluidHandler handler = FluidUtil.getFluidHandler(level,backPos,backDir.getOpposite()).orElse(null);
@@ -141,7 +141,7 @@ public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
     }
     //sf->ff/sf
     private boolean tryFillingBlockBelow(SoftFluid softFluid){
-        if(softFluid==SoftFluidList.HONEY && level.getBlockState(worldPosition.below()).hasProperty(BlockStateProperties.LEVEL_HONEY)){
+        if(softFluid== SoftFluidRegistry.HONEY && level.getBlockState(worldPosition.below()).hasProperty(BlockStateProperties.LEVEL_HONEY)){
             BlockState state = level.getBlockState(worldPosition.below());
             int h = state.getValue(BlockStateProperties.LEVEL_HONEY);
             if(h<5){
@@ -161,7 +161,7 @@ public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
         }
         IFluidHandler handlerDown = FluidUtil.getFluidHandler(this.level, worldPosition.below(), Direction.UP).orElse(null);
         if(handlerDown!=null){
-            FluidStack honeyStack = new FluidStack(softFluid.getFluid(),250);
+            FluidStack honeyStack = new FluidStack(softFluid.getForgeFluid(),250);
             if(!honeyStack.isEmpty() && handlerDown.fill(honeyStack, IFluidHandler.FluidAction.SIMULATE)>0){
                 handlerDown.fill(honeyStack, IFluidHandler.FluidAction.EXECUTE);
                 return true;
@@ -185,7 +185,7 @@ public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
 
         if (this.isConnectedBelow()){
             if (backState.hasProperty(BlockStateProperties.LEVEL_HONEY) && backState.getValue(BlockStateProperties.LEVEL_HONEY) > 0) {
-                if(tryFillingBlockBelow(SoftFluidList.HONEY)) {
+                if(tryFillingBlockBelow(SoftFluidRegistry.HONEY)) {
                     //TODO: support fulling beehives and honeypots
                     this.level.setBlock(behind, backState.setValue(BlockStateProperties.LEVEL_HONEY,
                             backState.getValue(BlockStateProperties.LEVEL_HONEY) - 1), 3);
@@ -194,7 +194,7 @@ public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
                 return false;
             }
             if (isSapLog(backBlock)) {
-                if(tryFillingBlockBelow(SoftFluidList.SAP)) {
+                if(tryFillingBlockBelow(FluidStuff.SAP)) {
                     Block log = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(backBlock.getRegistryName().toString().replace("sappy","stripped")));
                     if(log!=null) {
                         this.level.setBlock(behind, log.defaultBlockState().setValue(BlockStateProperties.AXIS,
@@ -206,7 +206,7 @@ public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
             }
             else if(backBlock instanceof CauldronBlock && backState.getValue(BlockStateProperties.LEVEL_CAULDRON) > 0) {
                 TileEntity cauldronTile = level.getBlockEntity(behind);
-                if(cauldronTile==null && tryFillingBlockBelow(SoftFluidList.WATER)) {
+                if(cauldronTile==null && tryFillingBlockBelow(SoftFluidRegistry.WATER)) {
                     this.level.setBlock(behind, backState.setValue(BlockStateProperties.LEVEL_CAULDRON,
                             backState.getValue(BlockStateProperties.LEVEL_CAULDRON) - 1), 3);
                     return true;
@@ -224,7 +224,7 @@ public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
                 TileEntity tileBack = level.getBlockEntity(behind);
                 if(tileBack instanceof JarBlockTile) {
                     if(handlerDown!=null){
-                        if(((JarBlockTile) tileBack).fluidHolder.fillFluidTank(handlerDown)){
+                        if(((JarBlockTile) tileBack).fluidHolder.tryTransferToFluidTank(handlerDown)){
                             tileBack.setChanged();
                             return true;
                         }
@@ -263,7 +263,7 @@ public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
                 if(((IInventory) te).isEmpty()) {
                     SoftFluidHolder holder = ((JarBlockTile) te).fluidHolder;
                     if (holder.canRemove(1)) {
-                        if (holder.getFluid() == SoftFluidList.XP) {
+                        if (holder.getFluid() == SoftFluidRegistry.XP) {
                             ((JarBlockTile) te).fluidHolder.shrink(1);
                             this.dropXP();
                             te.setChanged();

@@ -22,7 +22,7 @@ import net.mehvahdjukaar.supplementaries.compat.decorativeblocks.DecoBlocksCompa
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
-import net.mehvahdjukaar.supplementaries.world.data.map.sup.client.CMDclient;
+import net.mehvahdjukaar.supplementaries.world.data.map.client.CMDclient;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -52,7 +52,10 @@ import net.minecraft.world.IBlockDisplayReader;
 import net.minecraft.world.biome.BiomeColors;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.*;
+import net.minecraftforge.client.event.ColorHandlerEvent;
+import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -235,9 +238,12 @@ public class ClientSetup {
         ClientRegistry.bindTileEntityRenderer(Registry.CEILING_BANNER_TILE.get(), CeilingBannerBlockTileRenderer::new);
         //statue
         ClientRegistry.bindTileEntityRenderer(Registry.STATUE_TILE.get(), StatueBlockTileRenderer::new);
-        //statue
+        //iron gate
         RenderTypeLookup.setRenderLayer(Registry.IRON_GATE.get(), RenderType.cutout());
-
+        //gold gate
+        RenderTypeLookup.setRenderLayer(Registry.GOLD_GATE.get(), RenderType.cutout());
+        //cracked bell
+        ClientRegistry.bindTileEntityRenderer(Registry.CRACKED_BELL_TILE.get(), CrackedBellTileEntityRenderer::new);
 
         ItemModelsProperties.register(Items.CROSSBOW, new ResourceLocation("rope_arrow"),
                 (stack, world, entity) -> entity != null && CrossbowItem.isCharged(stack) && CrossbowItem.containsChargedProjectile(stack, Registry.ROPE_ARROW_ITEM.get()) ? 1.0F : 0.0F);
@@ -313,10 +319,6 @@ public class ClientSetup {
         }
     }
 
-    @SubscribeEvent
-    public static void onResourcePackChanged(ModelBakeEvent event) {
-        FluidParticleColors.refresh();
-    }
 
     @SubscribeEvent
     public static void onModelRegistry(ModelRegistryEvent event){

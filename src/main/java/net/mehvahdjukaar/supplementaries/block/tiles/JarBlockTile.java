@@ -1,12 +1,12 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
+import net.mehvahdjukaar.selene.fluids.SoftFluidHolder;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.blocks.ClockBlock;
 import net.mehvahdjukaar.supplementaries.block.util.IMobHolder;
 import net.mehvahdjukaar.supplementaries.block.util.MobHolder;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.fluids.SoftFluidHolder;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -46,7 +46,6 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
     @Override
     public void onLoad() {
         this.mobHolder.setWorldAndPos(this.level, this.worldPosition);
-        this.fluidHolder.setWorldAndPos(this.level, this.worldPosition);
     }
 
     // hijacking this method to work with hoppers
@@ -69,7 +68,7 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
         ItemStack displayedStack = this.getDisplayedItem();
 
         //interact with fluid holder
-        if (this.isEmpty() && (this.mobHolder.isEmpty()||isPonyJar()) && this.fluidHolder.interactWithPlayer(player, hand)) {
+        if (this.isEmpty() && (this.mobHolder.isEmpty()||isPonyJar()) && this.fluidHolder.interactWithPlayer(player, hand, level, worldPosition)) {
             return true;
         }
         //empty hand: eat food
@@ -89,7 +88,7 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
             if(ServerConfigs.cached.JAR_EAT) {
                 if (this.fluidHolder.tryDrinkUpFluid(player, this.level, hand)) return true;
                 //cookies
-                if (displayedStack.isEdible() && player.canEat(false)) {
+                if (displayedStack.isEdible() && player.canEat(false) && !player.isCreative()) {
                     //eat cookies
                     player.eat(level, displayedStack);
                     return true;
@@ -190,7 +189,8 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
         ItemStack oldStack = oldStacks.get(0);
         if(!oldStacks.isEmpty()&&!oldStack.isEmpty()) {
             this.fluidHolder.clear();
-            if(!this.fluidHolder.interactWithItem(oldStack).isEmpty()){
+            ItemStack r = this.fluidHolder.interactWithItem(oldStack, null, null);
+            if(r!=null && !r.isEmpty()){
                 if(compound.contains("LiquidHolder")) {
                     this.fluidHolder.setCount((int) (compound.getCompound("LiquidHolder").getFloat("Level") * 16));
                 }

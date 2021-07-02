@@ -36,7 +36,7 @@ import java.util.stream.IntStream;
 
 public class SackBlockTile extends LockableLootTileEntity implements INameable, ISidedInventory, ICapabilityProvider, ITransferManager {
 
-    private NonNullList<ItemStack> items = NonNullList.withSize(9, ItemStack.EMPTY);
+    private NonNullList<ItemStack> items = NonNullList.withSize(27, ItemStack.EMPTY);
     private int numPlayersUsing;
 
     private ITextComponent customName;
@@ -191,9 +191,12 @@ public class SackBlockTile extends LockableLootTileEntity implements INameable, 
         this.load(this.getBlockState(), pkt.getTag());
     }
 
+    public int getUnlockedSlots(){
+        return ServerConfigs.cached.SACK_SLOTS;
+    }
+
     public boolean isSlotUnlocked(int ind){
-        int add = ServerConfigs.cached.SACK_SLOTS;
-        return (ind<(this.getContainerSize()-4+(2*add)));
+        return ind <= this.getUnlockedSlots();
     }
 
     @Override
@@ -217,6 +220,7 @@ public class SackBlockTile extends LockableLootTileEntity implements INameable, 
     public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
         return isSlotUnlocked(index);
     }
+    //TODO: add quark transfer capability
 
     private final LazyOptional<? extends IItemHandler>[] handlers = SidedInvWrapper.create(this, Direction.values());
     @Override
@@ -235,6 +239,6 @@ public class SackBlockTile extends LockableLootTileEntity implements INameable, 
 
     @Override
     public boolean acceptsTransfer(PlayerEntity player) {
-        return false;
+        return true;
     }
 }

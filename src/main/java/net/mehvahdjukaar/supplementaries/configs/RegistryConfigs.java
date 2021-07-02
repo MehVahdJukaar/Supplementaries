@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.configs;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.mixins.MixinConfig;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModList;
@@ -10,37 +11,22 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLPaths;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
 //loaded before registry
 public class RegistryConfigs {
     public static ForgeConfigSpec REGISTRY_CONFIG;
 
-    static {
+
+    public static void createSpec(){
         ForgeConfigSpec.Builder REGISTRY_BUILDER = new ForgeConfigSpec.Builder();
         reg.init(REGISTRY_BUILDER);
-
         REGISTRY_CONFIG = REGISTRY_BUILDER.build();
-        //remove try?
-        try{
-            ModList ml = ModList.get();
-            if(ml.isLoaded("mysticalworld")||ml.isLoaded("immersiveengineering")||
-                    ml.isLoaded("bluepower")||ml.isLoaded("silents_mechanisms ")||
-                    ml.isLoaded("thermal")||ml.isLoaded("iceandfire")
-                    ||ml.isLoaded("silentgems")||ml.isLoaded("occultism")){
-                reg.HAS_SILVER=true;
-            }
-            if(ml.isLoaded("create")){
-                reg.HAS_BRASS=true;
-            }
-
-        }
-        catch(Exception ignored){};
-
-
-
-
     }
+
     public static void load(){
         CommentedFileConfig replacementConfig = CommentedFileConfig
                 .builder(FMLPaths.CONFIGDIR.get().resolve(Supplementaries.MOD_ID + "-registry.toml"))
@@ -128,18 +114,15 @@ public class RegistryConfigs {
         public static boolean HAS_MINESHAFT_LANTERN = false;
         public static boolean HAS_STRONGHOLD_SCONCE = false;
 
+        public static final Map<String,ForgeConfigSpec.BooleanValue> MIXIN_VALUES = new HashMap<>();
+
         //oh god what have I done
         public static boolean isEnabled(String path){
-
 
             //special double condition cases
             if(path.equals(Registry.BOMB_BLUE_NAME)){
                 return false;
             }
-            if(path.equals(Registry.FLAG_NAME)){
-                return true;
-            }
-
 
             if(path.equals(Registry.FIREFLY_JAR_NAME)){
                 return reg.FIREFLY_ENABLED.get() && reg.JAR_ENABLED.get();
@@ -169,6 +152,21 @@ public class RegistryConfigs {
         }
 
         private static void init(ForgeConfigSpec.Builder builder) {
+            try{
+                ModList ml = ModList.get();
+                if(ml.isLoaded("mysticalworld")||ml.isLoaded("immersiveengineering")||
+                        ml.isLoaded("bluepower")||ml.isLoaded("silents_mechanisms ")||
+                        ml.isLoaded("thermal")||ml.isLoaded("iceandfire")
+                        ||ml.isLoaded("silentgems")||ml.isLoaded("occultism")){
+                    HAS_SILVER=true;
+                }
+                if(ml.isLoaded("create")){
+                    HAS_BRASS=true;
+                }
+            }
+            catch(Exception ignored){};
+
+
             builder.comment("Here are configs that need reloading to take effect")
                     .push("initialization");
 
@@ -251,6 +249,14 @@ public class RegistryConfigs {
 
             builder.push("entities");
             FIREFLY_ENABLED = builder.define(Registry.FIREFLY_NAME, true);
+            builder.pop();
+
+            builder.comment("Here you can disable mixins if they clash with other mods ones")
+                    .push("mixins");
+            List<String> mixins = MixinConfig.getMixinClassesNames();
+            for(String c : mixins){
+                MIXIN_VALUES.put(c, builder.define(c.replace("Mixin",""), true));
+            }
             builder.pop();
 
             builder.pop();

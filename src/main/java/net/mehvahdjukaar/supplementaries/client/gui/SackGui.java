@@ -8,7 +8,6 @@ import net.mehvahdjukaar.supplementaries.inventories.SackContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
 
@@ -23,27 +22,53 @@ import net.minecraft.util.text.ITextComponent;
 
     @Override
     protected void renderBg(MatrixStack matrixStack, float partialTicks, int x, int y) {
+    }
+
+    private void renderBack(MatrixStack matrixStack, float partialTicks, int x, int y) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        Minecraft.getInstance().getTextureManager().bind(getBackground());
+        Minecraft.getInstance().getTextureManager().bind(Textures.SACK_GUI_TEXTURE);
         int k = (this.width - this.imageWidth) / 2;
         int l = (this.height - this.imageHeight) / 2;
         this.blit(matrixStack, k, l, 0, 0, this.imageWidth, this.imageHeight);
     }
 
-    private ResourceLocation getBackground(){
-        int add = ServerConfigs.cached.SACK_SLOTS;
-        if(add==0){
-            return Textures.SACK_GUI_TEXTURE;
+
+    private void renderSlots(MatrixStack matrixStack){
+
+        Minecraft.getInstance().getTextureManager().bind(Textures.SLOT_TEXTURE);
+
+        int k = -1+(this.width - this.imageWidth) / 2;
+        int l = -1+(this.height - this.imageHeight) / 2;
+
+        int size = ServerConfigs.cached.SACK_SLOTS;
+
+
+
+        int[] dims = SackContainer.getRatio(size);
+        if(dims[0]>9){
+            dims[0] = 9;
+            dims[1] = (int) Math.ceil(size/9f);
         }
-        else if(add==1){
-            return Textures.SACK_GUI_TEXTURE_7;
+
+        int yp = 17 +(18*3)/2 - (9)*dims[1];
+
+        int dimx;
+        int xp;
+        for(int h = 0; h < dims[1]; ++h) {
+            dimx = Math.min(dims[0],size);
+            xp = 8+ (18*9)/2 -(dimx*18)/2;
+            for (int j = 0; j < dimx; ++j) {
+                blit(matrixStack, k + xp + j * 18, l + yp+18*h, 0, 0, 18, 18, 18, 18);
+            }
+            size-=dims[0];
         }
-        return Textures.SACK_GUI_TEXTURE_9;
     }
 
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(matrixStack);
+        this.renderBack(matrixStack,partialTicks,mouseX,mouseY);
+        this.renderSlots(matrixStack);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
         this.renderTooltip(matrixStack, mouseX, mouseY);
     }

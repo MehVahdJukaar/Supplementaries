@@ -11,7 +11,7 @@ issueTrackerURL="https://www.curseforge.com/minecraft/mc-mods/supplementaries/is
 
 modId="supplementaries" #mandatory
 
-version="1.16.5-0.14.0" #mandatory
+version="${file.jarVersion}" #mandatory
 
 displayName="Supplementaries" #mandatory
 
@@ -23,7 +23,7 @@ logoFile="logo.png" #optional
 
 credits="put a book named 'credits' inside a notice board" #optional
 
-authors="MehVahdJukaar" #optional
+authors="MehVahdJukaar, Plantkillable" #optional
 
 description='''Many functional and useful Vanilla+ blocks'''
 
@@ -44,5 +44,14 @@ configuredBackground= "supplementaries:textures/blocks/blackboard_back.png"
     modId="minecraft"
     mandatory=true
     versionRange="[1.16,1.17]"
+    ordering="NONE"
+    side="BOTH"
+
+
+[[dependencies.supplementaries]]
+
+    modId="selene"
+    mandatory=true
+    versionRange="[1.0,]"
     ordering="NONE"
     side="BOTH"

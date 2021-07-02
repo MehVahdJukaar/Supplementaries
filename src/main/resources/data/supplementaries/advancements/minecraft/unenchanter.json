@@ -19,11 +19,9 @@
     "apple": {
       "trigger": "minecraft:grind_item",
       "conditions": {
-        "items": [
-          {
-            "item": "minecraft:golden_apple"
-          }
-        ]
+        "item": {
+          "item": "minecraft:golden_apple"
+        }
       }
     }
   },

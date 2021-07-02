@@ -188,7 +188,7 @@
   "advancements.adventure.way_sign.description": "Follow me to find a village",
   "advancements.story.unenchanter.title": "Why would you do that!?",
   "advancements.story.unenchanter.description": "Grind an Enchanted Golden Apple",
-  "message.supplementaries.jar": "Can store bowls, bottles buckets and cookies as well as small mobs",
+  "message.supplementaries.jar": "Can store bowls, bottles, buckets, cookies and small mobs",
   "block.supplementaries.statue": "Statue",
   "filled_map.adventure": "Adventurer Map",
   "filled_map.structure": "%s Explorer Map",
@@ -207,6 +207,9 @@
   "filled_map.swamp_hut": "Swamp Explorer Map",
   "filled_map.ocean_ruin": "Ocean Depths Explorer Map",
   "block.supplementaries.iron_gate": "Iron Gate",
+  "block.supplementaries.gold_gate": "Gold Gate",
+  "advancements.husbandry.sus_stew.title": "When the Stew is Sus",
+  "advancements.husbandry.sus_stew.description": "Drink a suspicious stew",
 
   "item.supplementaries.key_chain": "Key Chain",
   "block.supplementaries.skull_candle": "Skull Candle",

@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.events;
 
+
+import net.mehvahdjukaar.selene.map.CustomDecorationHolder;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.blocks.DirectionalCakeBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.DoubleCakeBlock;
@@ -10,6 +12,7 @@ import net.mehvahdjukaar.supplementaries.block.tiles.StatueBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.PicklePlayer;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
+import net.mehvahdjukaar.supplementaries.compat.quark.QuarkPlugin;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.items.BlockHolderItem;
@@ -18,7 +21,6 @@ import net.mehvahdjukaar.supplementaries.items.JarItem;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.SendLoginMessagePacket;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
-import net.mehvahdjukaar.supplementaries.world.data.map.lib.CustomDecorationHolder;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.*;
 import net.minecraft.client.Minecraft;
@@ -35,6 +37,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.MapData;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
@@ -119,7 +122,7 @@ public class ServerEvents {
         return false;
     }
 
-    private static final JarBlockTile tempJar = new JarBlockTile();
+    private static final JarBlockTile DUMMY_JAR_TILE = new JarBlockTile();
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
@@ -195,17 +198,17 @@ public class ServerEvents {
                     returnStack = new ItemStack(Items.EXPERIENCE_BOTTLE);
                 }
                 else if(i instanceof EmptyJarItem || i instanceof JarItem){
-                    tempJar.resetHolders();
+                    DUMMY_JAR_TILE.resetHolders();
                     CompoundNBT compoundnbt = stack.getTagElement("BlockEntityTag");
                     if (compoundnbt != null) {
-                        tempJar.load(((BlockItem) i).getBlock().defaultBlockState(), compoundnbt);
+                        DUMMY_JAR_TILE.load(((BlockItem) i).getBlock().defaultBlockState(), compoundnbt);
                     }
 
-                    if (tempJar.isEmpty() && (tempJar.mobHolder.isEmpty()||tempJar.isPonyJar())) {
+                    if (DUMMY_JAR_TILE.isEmpty() && (DUMMY_JAR_TILE.mobHolder.isEmpty()|| DUMMY_JAR_TILE.isPonyJar())) {
                         ItemStack tempStack = new ItemStack(Items.EXPERIENCE_BOTTLE);
-                        ItemStack temp = tempJar.fluidHolder.interactWithItem(tempStack);
+                        ItemStack temp = DUMMY_JAR_TILE.fluidHolder.interactWithItem(tempStack, null, null);
                         if(temp!=null && temp.getItem() == Items.GLASS_BOTTLE){
-                            returnStack = ((JarBlock)((BlockItem) i).getBlock()).getJarItem(tempJar);
+                            returnStack = ((JarBlock)((BlockItem) i).getBlock()).getJarItem(DUMMY_JAR_TILE);
                         }
                     }
                 }
@@ -323,6 +326,13 @@ public class ServerEvents {
                     event.setResult(Event.Result.ALLOW);
                 }
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onAttachItemCapabilities(AttachCapabilitiesEvent<ItemStack> event) {
+        if (CompatHandler.quark && event.getObject().getItem() == Registry.SACK_ITEM.get()) {
+            QuarkPlugin.attachSackDropIn(event);
         }
 
     }

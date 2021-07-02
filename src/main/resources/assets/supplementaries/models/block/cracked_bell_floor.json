@@ -1,0 +1,35 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"bottom": "supplementaries:blocks/cracked_bell_bottom",
+		"particle": "supplementaries:blocks/cracked_bell_top",
+		"top": "supplementaries:blocks/cracked_bell_top",
+		"side": "supplementaries:blocks/cracked_bell_side"
+	},
+	"elements": [
+		{
+			"from": [2, 0, 2],
+			"to": [14, 3, 14],
+			"faces": {
+				"north": {"uv": [2, 13, 14, 16], "texture": "#side"},
+				"east": {"uv": [2, 13, 14, 16], "texture": "#side"},
+				"south": {"uv": [2, 13, 14, 16], "texture": "#side"},
+				"west": {"uv": [2, 13, 14, 16], "texture": "#side"},
+				"up": {"uv": [2, 2, 14, 14], "texture": "#top"},
+				"down": {"uv": [2, 2, 14, 14], "texture": "#bottom", "cullface": "down"}
+			}
+		},
+		{
+			"from": [4, 3, 4],
+			"to": [12, 12, 12],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 11, 8]},
+			"faces": {
+				"north": {"uv": [4, 4, 12, 13], "texture": "#side"},
+				"east": {"uv": [4, 4, 12, 13], "texture": "#side"},
+				"south": {"uv": [4, 4, 12, 13], "texture": "#side"},
+				"west": {"uv": [4, 4, 12, 13], "texture": "#side"},
+				"up": {"uv": [4, 4, 12, 12], "texture": "#top"}
+			}
+		}
+	]
+}

@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import com.google.common.collect.Maps;
+import net.mehvahdjukaar.selene.map.CustomDecorationHolder;
 import net.mehvahdjukaar.supplementaries.block.tiles.FlagBlockTile;
-import net.mehvahdjukaar.supplementaries.world.data.map.lib.CustomDecorationHolder;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;

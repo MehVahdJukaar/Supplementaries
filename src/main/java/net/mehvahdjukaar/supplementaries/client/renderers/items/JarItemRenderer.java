@@ -3,10 +3,10 @@ package net.mehvahdjukaar.supplementaries.client.renderers.items;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import net.mehvahdjukaar.selene.fluids.SoftFluid;
+import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
-import net.mehvahdjukaar.supplementaries.fluids.SoftFluid;
-import net.mehvahdjukaar.supplementaries.fluids.SoftFluidList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
@@ -51,7 +51,7 @@ public class JarItemRenderer extends CageItemRenderer {
                     RendererUtil.renderFish(builder1, matrixStackIn, 0, 0, fishTexture, combinedLightIn, combinedOverlayIn);
                     matrixStackIn.popPose();
                 }
-                SoftFluid s = SoftFluidList.WATER;
+                SoftFluid s = SoftFluidRegistry.WATER;
                 renderFluid(0.5625f, s.getTintColor(), 0, s.getStillTexture(),
                         matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, false);
             }
@@ -61,7 +61,7 @@ public class JarItemRenderer extends CageItemRenderer {
             int height = com.getInt("Count");
             if(height!=0) {
                 int color = com.getInt("CachedColor");
-                SoftFluid fluid = SoftFluidList.fromID(com.getString("Fluid"));
+                SoftFluid fluid = SoftFluidRegistry.get(com.getString("Fluid"));
                 if (!fluid.isEmpty() && height > 0)
                     renderFluid(height / 16f, color, 0, fluid.getStillTexture(),
                             matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, false);

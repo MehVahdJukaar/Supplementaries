@@ -8,7 +8,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.MissingTextureSprite;
@@ -29,7 +28,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.Tags;
 
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.stream.IntStream;
 
 import static net.mehvahdjukaar.supplementaries.common.Textures.*;
@@ -109,7 +107,8 @@ public class HourGlassBlockTile extends ItemDisplayTile implements ITickableTile
     @Override
     public void load(BlockState state, CompoundNBT compound) {
         super.load(state, compound);
-        this.sandType = HourGlassSandType.values()[compound.getInt("SandType")];
+        int i = compound.getInt("SandType");
+        this.sandType = HourGlassSandType.values()[Math.min(i,HourGlassSandType.values().length)];
         this.progress = compound.getFloat("Progress");
         this.prevProgress = compound.getFloat("PrevProgress");
         this.cachedTexture=null;
@@ -162,8 +161,8 @@ public class HourGlassBlockTile extends ItemDisplayTile implements ITickableTile
 
     public enum HourGlassSandType {
         DEFAULT(null,null,0),
-        SAND(null, null, ServerConfigs.block.HOURGLASS_SAND.get()),
-        CONCRETE(null,null, ServerConfigs.block.HOURGLASS_CONCRETE.get()),
+        SAND(SAND_TEXTURE, null, ServerConfigs.block.HOURGLASS_SAND.get()),
+        CONCRETE(WHITE_CONCRETE_TEXTURE,null, ServerConfigs.block.HOURGLASS_CONCRETE.get()),
         GUNPOWDER(HOURGLASS_GUNPOWDER,Items.GUNPOWDER, ServerConfigs.block.HOURGLASS_DUST.get()),
         SUGAR(HOURGLASS_SUGAR,Items.SUGAR, ServerConfigs.block.HOURGLASS_SUGAR.get()),
         GLOWSTONE_DUST(HOURGLASS_GLOWSTONE,Items.GLOWSTONE_DUST, ServerConfigs.block.HOURGLASS_GLOWSTONE.get()),
@@ -197,13 +196,11 @@ public class HourGlassBlockTile extends ItemDisplayTile implements ITickableTile
             if(this == FORGE_DUST || this == SAND || this == CONCRETE){
                 ItemRenderer itemRenderer = mc.getItemRenderer();
                 IBakedModel ibakedmodel = itemRenderer.getModel(i, world, null);
-                List<BakedQuad> quads = ibakedmodel.getQuads(null,null,null);
-                if(quads.size()>0) {
-                    TextureAtlasSprite sprite = quads.get(0).getSprite();
-                    if (sprite instanceof MissingTextureSprite)
-                        sprite = mc.getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(this.texture);
-                    return sprite;
-                }
+                TextureAtlasSprite sprite = ibakedmodel.getParticleIcon();
+                if (sprite instanceof MissingTextureSprite)
+                    sprite = mc.getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(this.texture);
+                return sprite;
+
             }
             return mc.getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(this.texture);
         }

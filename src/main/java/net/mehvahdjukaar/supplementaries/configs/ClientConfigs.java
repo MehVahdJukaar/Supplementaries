@@ -149,7 +149,7 @@ public class ClientConfigs {
                     .define("supported_blocks", true);
             builder.pop();
 
-            builder.push("wind_vane").comment();
+            builder.push("wind_vane");
             WIND_VANE_POWER_SCALING = builder.comment("Wind vane animation swings according to this equation: \n"+
                     "angle(time) = max_angle_1*sin(2pi*time*pow/period_1) + <max_angle_2>*sin(2pi*time*pow/<period_2>)\n"+
                     "where:\n"+

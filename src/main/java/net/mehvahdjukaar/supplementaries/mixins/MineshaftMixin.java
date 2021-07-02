@@ -70,16 +70,6 @@ public abstract class MineshaftMixin extends StructurePiece {
                             .setValue(HorizontalFaceBlock.FACE,AttachFace.WALL).setValue(CopperLanternBlock.LIT,on));
 
 
-
-
-
-
-
-
-
-
-
-
                 }
                 else{
                     this.maybeGenerateBlock(reader, boundingBox, random, 0.05F, minX + 1, y, z - 1, torch.setValue(WallTorchBlock.FACING, Direction.SOUTH));
@@ -91,5 +81,4 @@ public abstract class MineshaftMixin extends StructurePiece {
     }
 
 
-
-    }
+}

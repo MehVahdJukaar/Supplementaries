@@ -17,7 +17,7 @@ public class NetworkHandler {
 
 
     public static void registerMessages() {
-        INSTANCE = NetworkRegistry.newSimpleChannel(new ResourceLocation(Supplementaries.MOD_ID, "splmchannel"), () -> PROTOCOL_VERSION,
+        INSTANCE = NetworkRegistry.newSimpleChannel(new ResourceLocation(Supplementaries.MOD_ID, "network"), () -> PROTOCOL_VERSION,
                 PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
 
         INSTANCE.registerMessage(nextID(), SendSpeakerBlockMessagePacket.class, SendSpeakerBlockMessagePacket::buffer,
@@ -56,8 +56,6 @@ public class NetworkHandler {
         INSTANCE.registerMessage(nextID(), SendOrangeTraderOffersPacket.class, SendOrangeTraderOffersPacket::buffer,
                 SendOrangeTraderOffersPacket::new, SendOrangeTraderOffersPacket::handler);
 
-        INSTANCE.registerMessage(nextID(), SyncCustomMapDecorationPacket.class, SyncCustomMapDecorationPacket::buffer,
-                SyncCustomMapDecorationPacket::new, SyncCustomMapDecorationPacket::handler);
 
         INSTANCE.registerMessage(nextID(), NosePacket.class, NosePacket::buffer,
                 NosePacket::new, NosePacket::handler);

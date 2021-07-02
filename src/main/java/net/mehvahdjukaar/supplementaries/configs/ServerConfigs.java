@@ -102,6 +102,8 @@ public class ServerConfigs {
         public static ForgeConfigSpec.BooleanValue RANDOM_ADVENTURER_MAPS;
         public static ForgeConfigSpec.BooleanValue MAP_MARKERS;
         public static ForgeConfigSpec.BooleanValue CEILING_BANNERS;
+        public static ForgeConfigSpec.BooleanValue ZOMBIE_HORSE;
+        public static ForgeConfigSpec.IntValue ZOMBIE_HORSE_COST;
 
         private static void init(ForgeConfigSpec.Builder builder){
             builder.comment("Vanilla tweaks")
@@ -131,7 +133,7 @@ public class ServerConfigs {
             WALL_LANTERN_PLACEMENT = builder.comment("allow wall lanterns placement")
                     .define("enabled",true);
 
-            List<String> modBlacklist = Arrays.asList("extlights","betterendforge");
+            List<String> modBlacklist = Arrays.asList("extlights","betterendforge","tconstruct");
             WALL_LANTERN_BLACKLIST = builder.comment("mod ids of mods that have lantern block that extend the base lantern class but don't look like one")
                     .defineList("mod_blacklist", modBlacklist,s -> true);
             builder.pop();
@@ -179,7 +181,7 @@ public class ServerConfigs {
                     "example: ['minecraft:swamp_hut','2','5','7','witch hut map','0x00ff33']")
 
                     .defineList("custom_adventurer_maps", Collections.singletonList(Collections.singletonList("")), s->true);
-            RANDOM_ADVENTURER_MAPS = builder.comment("Cartographers will sell 'adventurer maps' that will lead to a random vanilla structure.\n"+
+            RANDOM_ADVENTURER_MAPS = builder.comment("Cartographers will sell 'adventurer maps' that will lead to a random vanilla structure (choosen from a thought out preset list).\n"+
                     "Best kept disabled if you are adding custom adventurer maps with its config")
                     .define("random_adventurer_maps",true);
             MAP_MARKERS = builder.comment("enables beacons, lodestones, respawn anchors, beds, conduits, portals to be displayed on maps by clicking one of them with a map")
@@ -187,9 +189,17 @@ public class ServerConfigs {
             builder.pop();
 
             builder.push("ceiling_banners");
-            CEILING_BANNERS = builder.comment("allow banners to be placed on ceilings")
+            CEILING_BANNERS = builder.comment("Allow banners to be placed on ceilings")
                     .define("enabled",true);
             builder.pop();
+
+            builder.push("zombie_horse");
+            ZOMBIE_HORSE = builder.comment("Feed a stack of rotten flesh to a skeleton horse to buff him up to a zombie horse")
+                    .define("zombie_horse_conversion",true);
+            ZOMBIE_HORSE_COST = builder.comment("Amount of rotten flesh needed")
+                    .defineInRange("rotten_flesh",64,1,1000);
+            builder.pop();
+
 
             builder.pop();
         }
@@ -336,8 +346,8 @@ public class ServerConfigs {
                     .define("sack_penality", true);
             SACK_INCREMENT = builder.comment("maximum number of sacks after which the slowness effect will be applied. each multiple of this number will further slow the player down")
                     .defineInRange("sack_increment",2,0,50);
-            SACK_SLOTS = builder.comment("additional sack slots divided by 2. Number of slots will be 5 + additional_slots*2")
-                    .defineInRange("additional_slots",1,0,2);
+            SACK_SLOTS = builder.comment("How many slots should a sack have")
+                    .defineInRange("slots",9,1,27);
             builder.pop();
 
             builder.push("safe");
@@ -446,7 +456,6 @@ public class ServerConfigs {
 
             builder.push("structures");
             builder.push("way_sign");
-            //TODO: redo
             ROAD_SIGN_DISTANCE_AVR = builder.comment("Average distance apart in chunks between spawn attempts")
                     .defineInRange("average_distance",19,0,1001);
             ROAD_SIGN_DISTANCE_MIN = builder.comment("Minimum distance apart in chunks between spawn attempts. 1001 to disable them entirely")
@@ -507,6 +516,8 @@ public class ServerConfigs {
         public static int FLUTE_RADIUS;
         public static int FLUTE_DISTANCE;
         //tweaks
+        public static int ZOMBIE_HORSE_COST;
+        public static boolean ZOMBIE_HORSE;
         public static boolean DIRECTIONAL_CAKE;
         public static boolean DOUBLE_CAKE_PLACEMENT;
         public static boolean HANGING_POT_PLACEMENT;
@@ -565,6 +576,8 @@ public class ServerConfigs {
         public static double FIREFLY_SPEED;
 
         public static void refresh(){
+            ZOMBIE_HORSE_COST = tweaks.ZOMBIE_HORSE_COST.get();
+            ZOMBIE_HORSE = tweaks.ZOMBIE_HORSE.get();
             BOTTLING_COST = tweaks.BOTTLING_COST.get();
             BOTTLE_XP = tweaks.BOTTLE_XP.get();
             RAKED_GRAVEL = tweaks.RAKED_GRAVEL.get() && RegistryConfigs.reg.RAKED_GRAVEL_ENABLED.get();

@@ -24,6 +24,7 @@ public class SpecialPlayers {
         addSpecialPlayer("SylveticHearts",false,true,false,"bd337926-7396-4d3e-bfb9-7e562b077219");
         addSpecialPlayer("Toffanelly",false,true,false,null);
         addSpecialPlayer("Agrona",true,true,false,null,"Pancake","Pancakes");
+        addSpecialPlayer("StonkManHanz",false,false,true,"8b69ac73-b7d8-439f-972d-1ed43e583b47");
     }
 
     private static void addSpecialPlayer(String name, boolean isDev, boolean hasGlobe, boolean hasStatue, String id, String ... alias){

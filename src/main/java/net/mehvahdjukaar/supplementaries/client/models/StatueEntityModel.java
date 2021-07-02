@@ -58,17 +58,17 @@ public class StatueEntityModel extends Model {
         this.cloak.addBox(-5.0F, 0.0F, -1.0F, 10.0F, 16.0F, 1.0F, offset);
 
         this.leftArmS = new ModelRenderer(this, 32, 48);
-        this.leftArmS.addBox(-1.0F, -2.0F, -2.0F, 3.0F, 12.0F, 4.0F, offset);
-        this.leftArmS.setPos(5.0F, 2.5F, 0.0F);
+        this.leftArmS.addBox(-2.0F, -2.0F, -2.0F, 3.0F, 12.0F, 4.0F, offset);
+        this.leftArmS.setPos(6.0F, 2.5F, 0.0F);
         this.rightArmS = new ModelRenderer(this, 40, 16);
-        this.rightArmS.addBox(-2.0F, -2.0F, -2.0F, 3.0F, 12.0F, 4.0F, offset);
-        this.rightArmS.setPos(-5.0F, 2.5F, 0.0F);
+        this.rightArmS.addBox(-1.0F, -2.0F, -2.0F, 3.0F, 12.0F, 4.0F, offset);
+        this.rightArmS.setPos(-6.0F, 2.5F, 0.0F);
         this.leftSleeveS = new ModelRenderer(this, 48, 48);
         this.leftSleeveS.addBox(-1.0F, -2.0F, -2.0F, 3.0F, 12.0F, 4.0F, offset + 0.25F);
-        this.leftSleeveS.setPos(5.0F, 2.5F, 0.0F);
+        this.leftSleeveS.setPos(6.0F, 2.5F, 0.0F);
         this.rightSleeveS = new ModelRenderer(this, 40, 32);
         this.rightSleeveS.addBox(-2.0F, -2.0F, -2.0F, 3.0F, 12.0F, 4.0F, offset + 0.25F);
-        this.rightSleeveS.setPos(-5.0F, 2.5F, 10.0F);
+        this.rightSleeveS.setPos(-6.0F, 2.5F, 10.0F);
 
 
         this.leftArm = new ModelRenderer(this, 32, 48);

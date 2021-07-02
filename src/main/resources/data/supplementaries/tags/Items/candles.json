@@ -24,6 +24,18 @@
     {
       "id":"lotr:candle",
       "required":false
+    },
+    {
+      "id":"eidon:candle",
+      "required":false
+    },
+    {
+      "id":"buildersaddiction:large_candle",
+      "required":false
+    },
+    {
+      "id":"buildersaddiction:large_soul_candle",
+      "required":false
     }
   ]
 }

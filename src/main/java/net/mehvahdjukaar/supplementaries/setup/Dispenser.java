@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
+import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.FireflyJarBlock;
@@ -11,7 +12,6 @@ import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.entities.ThrowableBrickEntity;
-import net.mehvahdjukaar.supplementaries.fluids.SoftFluidList;
 import net.mehvahdjukaar.supplementaries.items.EmptyJarItem;
 import net.mehvahdjukaar.supplementaries.items.JarItem;
 import net.mehvahdjukaar.supplementaries.items.SackItem;
@@ -59,7 +59,7 @@ public class Dispenser {
                     DispenserBlock.registerBehavior(item, new PlaceBlockDispenseBehavior());
                 }
                 else if(item instanceof FishBucketItem || item==Items.COOKIE || item==Items.WATER_BUCKET
-                        || SoftFluidList.ITEM_MAP.containsKey(item))
+                        || SoftFluidRegistry.fromItem(item)!=null)
                     DispenserBlock.registerBehavior(item, new FillJarDispenserBehavior());
 
             }
@@ -188,7 +188,7 @@ public class Dispenser {
                         return Dispenser.glassBottleFill(source, stack, ItemStack.EMPTY);
                     }
                     else if (tile.isEmpty() && !tile.fluidHolder.isFull()) {
-                        returnStack = tile.fluidHolder.interactWithItem(stack);
+                        returnStack = tile.fluidHolder.interactWithItem(stack, world, blockpos);
                         if(returnStack !=null && !returnStack.isEmpty()) {
                             tile.setChanged();
                             return Dispenser.glassBottleFill(source, stack, returnStack);
@@ -334,7 +334,7 @@ public class Dispenser {
                 JarBlockTile tile = ((JarBlockTile)te);
                 if(tile.isEmpty())
                 if(tile.mobHolder.isEmpty() && tile.isEmpty()) {
-                    ItemStack returnStack = tile.fluidHolder.interactWithItem(stack);
+                    ItemStack returnStack = tile.fluidHolder.interactWithItem(stack, world, blockpos);
                     if(returnStack !=null && !returnStack.isEmpty()){
                         tile.setChanged();
                         return Dispenser.glassBottleFill(source, stack,returnStack);

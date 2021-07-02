@@ -20,7 +20,7 @@ public class SackContainer extends Container  {
     }
 
     public SackContainer(int id, PlayerInventory playerInventory) {
-        this(id, playerInventory, new Inventory(9));
+        this(id, playerInventory, new Inventory(27));
     }
 
     public SackContainer(int id, PlayerInventory playerInventory, IInventory inventory) {
@@ -28,15 +28,29 @@ public class SackContainer extends Container  {
         super(Registry.SACK_CONTAINER.get(), id);
         //tile inventory
         this.inventory = inventory;
-        checkContainerSize(inventory, 9);
+        checkContainerSize(inventory, 27);
         inventory.startOpen(playerInventory.player);
 
-        int add = ServerConfigs.cached.SACK_SLOTS;
-        int xp = 44-(add*18);
-        for(int j = 0; j < (5+(add*2)); ++j) {
-            this.addSlot(new SackSlot(inventory, j, xp + j * 18, 35));
+        int size = ServerConfigs.cached.SACK_SLOTS;
+
+        int[] dims = SackContainer.getRatio(size);
+        if(dims[0]>9){
+            dims[0] = 9;
+            dims[1] = (int) Math.ceil(size/9f);
         }
 
+        int yp = 17 +(18*3)/2 - (9)*dims[1];
+
+        int dimx;
+        int xp;
+        for(int h = 0; h < dims[1]; ++h) {
+            dimx = Math.min(dims[0],size);
+            xp = 8+ (18*9)/2 -(dimx*18)/2;
+            for (int j = 0; j < dimx; ++j) {
+                this.addSlot(new SackSlot(inventory, j + (h*dimx), xp + j * 18, yp+18*h));
+            }
+            size-=dims[0];
+        }
 
         for (int si = 0; si < 3; ++si)
             for (int sj = 0; sj < 9; ++sj)
@@ -88,6 +102,37 @@ public class SackContainer extends Container  {
         super.removed(playerIn);
         this.inventory.stopOpen(playerIn);
     }
+
+
+    public static int[] getRatio(int size) {
+        int[] dims = {Math.min(size, 23), Math.max(size / 23, 1)};
+        for (int[] testAgainst : TARGET_RATIOS) {
+            if (testAgainst[0] * testAgainst[1] == size) {
+                dims = testAgainst;
+                break;
+            }
+        }
+        return dims;
+    }
+
+
+    private static final int[][] TARGET_RATIOS = new int[][] {
+            { 1, 1 },
+            { 2, 2 },
+            { 3, 3 },
+            { 4, 2 },
+            { 5, 2 },
+            { 6, 2 },
+            { 7, 2 },
+            { 8, 2 },
+            { 8, 2 },
+            { 9, 2 },
+            { 10, 2 },
+            { 7, 3 },
+            { 8, 3 },
+            { 9, 3 }
+    };
+
 
 }
 

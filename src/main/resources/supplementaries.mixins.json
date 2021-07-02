@@ -24,8 +24,6 @@
     "LivingEntitesMixin",
     "LoomContainerMixin",
     "LoomInputSlotMixin",
-    "MapDataPostsMixin",
-    "MapExtendingRecipeMixin",
     "MineshaftMixin",
     "PaneBlockMixin",
     "PistonTileEntityMixin",
@@ -44,12 +42,12 @@
     "BellTileEntityRendererMixin",
     "IronGolemRendererMixin",
     "LoomScreenMixin",
-    "MapItemRendererMixin",
     "ParrotPartyMixin",
     "UndeadHorseRendererMixin",
     "VillagerModelMixin"
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "plugin": "net.mehvahdjukaar.supplementaries.mixins.MixinConfig"
 }

@@ -1,0 +1,37 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "flag": "iron_gate",
+          "type": "supplementaries:flag"
+        },
+        {
+          "modid": "quark",
+          "type": "forge:mod_loaded"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "pattern": [
+          "   ",
+          "101",
+          "101"
+        ],
+        "key": {
+          "1": {
+            "item": "minecraft:gold_nugget"
+          },
+          "0": {
+            "item": "minecraft:gold_ingot"
+          }
+        },
+        "result": {
+          "item": "supplementaries:gold_gate",
+          "count": 2
+        }
+      }
+    }
+  ]
+}

@@ -11,6 +11,7 @@ import java.util.*;
 public class Textures {
 
     private static final String MOD_ID = Supplementaries.MOD_ID;
+    private static final String LIB = "selene";
 
     //minecraft
     public static final ResourceLocation DIRT_TEXTURE = new ResourceLocation("minecraft:block/dirt");
@@ -24,21 +25,23 @@ public class Textures {
     public static final ResourceLocation BLACKBOARD_TEXTURE = new ResourceLocation(MOD_ID+":blocks/blackboard");
 
     //blocks (to stitch)
-    public static final ResourceLocation MILK_TEXTURE = new ResourceLocation(MOD_ID, "blocks/milk_liquid");
-    public static final ResourceLocation POTION_TEXTURE = new ResourceLocation(MOD_ID, "blocks/potion_still");
-    public static final ResourceLocation POTION_TEXTURE_FLOW = new ResourceLocation(MOD_ID, "blocks/potion_flow");
-    public static final ResourceLocation HONEY_TEXTURE = new ResourceLocation(MOD_ID, "blocks/honey_liquid");
-    public static final ResourceLocation DRAGON_BREATH_TEXTURE = new ResourceLocation(MOD_ID, "blocks/dragon_breath_liquid");
-    public static final ResourceLocation XP_TEXTURE = new ResourceLocation(MOD_ID, "blocks/xp_still");
-    public static final ResourceLocation XP_TEXTURE_FLOW = new ResourceLocation(MOD_ID, "blocks/xp_flow");
+    public static final ResourceLocation MILK_TEXTURE = new ResourceLocation(LIB, "blocks/milk_liquid");
+    public static final ResourceLocation POTION_TEXTURE = new ResourceLocation(LIB, "blocks/potion_still");
+    public static final ResourceLocation POTION_TEXTURE_FLOW = new ResourceLocation(LIB, "blocks/potion_flow");
+    public static final ResourceLocation HONEY_TEXTURE = new ResourceLocation(LIB, "blocks/honey_liquid");
+    public static final ResourceLocation DRAGON_BREATH_TEXTURE = new ResourceLocation(LIB, "blocks/dragon_breath_liquid");
+    public static final ResourceLocation SOUP_TEXTURE = new ResourceLocation(LIB, "blocks/soup_liquid");
+    public static final ResourceLocation SOUL_TEXTURE = new ResourceLocation(LIB, "blocks/soul");
+    public static final ResourceLocation XP_TEXTURE = new ResourceLocation(LIB, "blocks/xp_still");
+    public static final ResourceLocation XP_TEXTURE_FLOW = new ResourceLocation(LIB, "blocks/xp_flow");
+    public static final ResourceLocation MAGMA_TEXTURE = new ResourceLocation(LIB, "blocks/magma_still");
+    public static final ResourceLocation MAGMA_TEXTURE_FLOW = new ResourceLocation(LIB, "blocks/magma_flow");
     public static final ResourceLocation FAUCET_TEXTURE = new ResourceLocation(MOD_ID, "blocks/faucet_water");
     public static final ResourceLocation FISHIES_TEXTURE = new ResourceLocation(MOD_ID, "blocks/fishies");
     public static final ResourceLocation BELLOWS_TEXTURE = new ResourceLocation(MOD_ID, "entity/bellows");
     public static final ResourceLocation LASER_BEAM_TEXTURE = new ResourceLocation(MOD_ID, "blocks/laser_beam");
     public static final ResourceLocation LASER_OVERLAY_TEXTURE = new ResourceLocation(MOD_ID, "blocks/laser_overlay");
     public static final ResourceLocation LASER_BEAM_END_TEXTURE = new ResourceLocation(MOD_ID, "blocks/laser_beam_end");
-    public static final ResourceLocation SOUP_TEXTURE = new ResourceLocation(MOD_ID, "blocks/soup_liquid");
-    public static final ResourceLocation SOUL_TEXTURE = new ResourceLocation(MOD_ID, "blocks/soul");
     public static final ResourceLocation CLOCK_HAND_TEXTURE = new ResourceLocation(MOD_ID, "blocks/clock_hand");
     public static final ResourceLocation CRIMSON_LANTERN_TEXTURE = new ResourceLocation(MOD_ID, "blocks/crimson_lantern_front");
     public static final ResourceLocation HOURGLASS_REDSTONE = new ResourceLocation(MOD_ID, "blocks/hourglass_redstone");
@@ -46,8 +49,7 @@ public class Textures {
     public static final ResourceLocation HOURGLASS_SUGAR = new ResourceLocation(MOD_ID, "blocks/hourglass_sugar");
     public static final ResourceLocation HOURGLASS_BLAZE = new ResourceLocation(MOD_ID, "blocks/hourglass_blaze");
     public static final ResourceLocation HOURGLASS_GUNPOWDER = new ResourceLocation(MOD_ID, "blocks/hourglass_gunpowder");
-    public static final ResourceLocation MAGMA_TEXTURE = new ResourceLocation(MOD_ID, "blocks/magma_still");
-    public static final ResourceLocation MAGMA_TEXTURE_FLOW = new ResourceLocation(MOD_ID, "blocks/magma_flow");
+
     public static final ResourceLocation TIMBER_FRAME_TEXTURE = new ResourceLocation(MOD_ID, "blocks/timber_frame");
     public static final ResourceLocation TIMBER_BRACE_TEXTURE = new ResourceLocation(MOD_ID, "blocks/timber_brace");
     public static final ResourceLocation TIMBER_BRACE_F_TEXTURE = new ResourceLocation(MOD_ID, "blocks/timber_brace_f");
@@ -81,8 +83,7 @@ public class Textures {
     public static final ResourceLocation EMPTY_TEXTURE = new ResourceLocation(MOD_ID,"textures/gui/config_background.png");
     public static final ResourceLocation NOTICE_BOARD_GUI_TEXTURE = new ResourceLocation(MOD_ID,"textures/gui/notice_board_gui.png");
     public static final ResourceLocation SACK_GUI_TEXTURE = new ResourceLocation(MOD_ID,"textures/gui/sack_gui.png");
-    public static final ResourceLocation SACK_GUI_TEXTURE_7 = new ResourceLocation(MOD_ID,"textures/gui/sack_gui_7.png");
-    public static final ResourceLocation SACK_GUI_TEXTURE_9 = new ResourceLocation(MOD_ID,"textures/gui/sack_gui_9.png");
+    public static final ResourceLocation SLOT_TEXTURE = new ResourceLocation(MOD_ID, "textures/gui/slot.png");
     public static final ResourceLocation PULLEY_BLOCK_GUI_TEXTURE = new ResourceLocation(MOD_ID,"textures/gui/pulley_block_gui.png");
     public static final ResourceLocation ORANGE_MERCHANT_GUI_TEXTURE = new ResourceLocation(MOD_ID,"textures/gui/orange_trader.png");
     //map markers
@@ -112,8 +113,7 @@ public class Textures {
     //TODO: rethink this
     public static List<ResourceLocation> getTexturesToStitch() {
         return new ArrayList<>(Arrays.asList(
-                MILK_TEXTURE, POTION_TEXTURE, POTION_TEXTURE_FLOW, HONEY_TEXTURE, DRAGON_BREATH_TEXTURE, SOUP_TEXTURE,MAGMA_TEXTURE,MAGMA_TEXTURE_FLOW,
-                XP_TEXTURE, XP_TEXTURE_FLOW, FISHIES_TEXTURE, BELLOWS_TEXTURE, LASER_BEAM_TEXTURE, LASER_BEAM_END_TEXTURE,LASER_OVERLAY_TEXTURE,
+                FISHIES_TEXTURE, BELLOWS_TEXTURE, LASER_BEAM_TEXTURE, LASER_BEAM_END_TEXTURE,LASER_OVERLAY_TEXTURE,
                 CLOCK_HAND_TEXTURE,HOURGLASS_REDSTONE, HOURGLASS_GLOWSTONE, HOURGLASS_SUGAR, HOURGLASS_BLAZE, HOURGLASS_GUNPOWDER));
     }
 

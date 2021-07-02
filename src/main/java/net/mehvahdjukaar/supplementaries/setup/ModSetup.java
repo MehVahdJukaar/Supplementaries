@@ -5,16 +5,15 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.common.AdventurerMapsHandler;
 import net.mehvahdjukaar.supplementaries.common.FlowerPotHelper;
-import net.mehvahdjukaar.supplementaries.common.ModCriteriaTriggers;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.fluids.SoftFluidList;
+import net.mehvahdjukaar.supplementaries.fluids.FluidStuff;
 import net.mehvahdjukaar.supplementaries.mixins.accessors.ChickenEntityAccessor;
 import net.mehvahdjukaar.supplementaries.mixins.accessors.HorseEntityAccessor;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.commands.ModCommands;
-import net.mehvahdjukaar.supplementaries.world.data.map.sup.CMDreg;
+import net.mehvahdjukaar.supplementaries.world.data.map.CMDreg;
 import net.mehvahdjukaar.supplementaries.world.structures.StructureLocator;
 import net.mehvahdjukaar.supplementaries.world.structures.StructureRegistry;
 import net.minecraft.block.Blocks;
@@ -50,13 +49,10 @@ public class ModSetup {
 
         event.enqueueWork(()-> {
 
-            ModCriteriaTriggers.init();
-
             NetworkHandler.registerMessages();
 
             CMDreg.init(event);
 
-            //order matters here (maybe?)
             Spawns.registerSpawningStuff();
 
             ComposterBlock.COMPOSTABLES.put(Registry.FLAX_SEEDS_ITEM.get().asItem(), 0.3F);
@@ -83,8 +79,6 @@ public class ModSetup {
 
             FlowerPotHelper.init();
 
-            SoftFluidList.init();
-
             CapturedMobsHelper.refresh();
 
             Dispenser.registerBehaviors();
@@ -92,6 +86,8 @@ public class ModSetup {
             StructureRegistry.setup();
 
             StructureLocator.init();
+
+            FluidStuff.init();
 
         });
     }

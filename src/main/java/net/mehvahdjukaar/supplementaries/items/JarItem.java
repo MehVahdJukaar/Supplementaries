@@ -1,9 +1,10 @@
 package net.mehvahdjukaar.supplementaries.items;
 
+import net.mehvahdjukaar.selene.fluids.SoftFluid;
+import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.supplementaries.client.renderers.PotionTooltipHelper;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
-import net.mehvahdjukaar.supplementaries.fluids.SoftFluid;
-import net.mehvahdjukaar.supplementaries.fluids.SoftFluidList;
+import net.mehvahdjukaar.supplementaries.fluids.FluidStuff;
 import net.mehvahdjukaar.supplementaries.items.tabs.JarTab;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
@@ -37,7 +38,7 @@ public class JarItem extends CageItem {
 
             if(compoundnbt.contains("FluidHolder")) {
                 CompoundNBT com = compoundnbt.getCompound("FluidHolder");
-                SoftFluid s = SoftFluidList.fromID(com.getString("Fluid"));
+                SoftFluid s = SoftFluidRegistry.get(com.getString("Fluid"));
                 int count = com.getInt("Count");
                 if (!s.isEmpty() && count > 0) {
                     tooltip.add(new TranslationTextComponent("message.supplementaries.fluid_tooltip",
@@ -95,8 +96,8 @@ public class JarItem extends CageItem {
         if (compoundnbt != null) {
             if (compoundnbt.contains("FluidHolder")) {
                 CompoundNBT com = compoundnbt.getCompound("FluidHolder");
-                SoftFluid s = SoftFluidList.fromID(com.getString("Fluid"));
-                if(s==SoftFluidList.DIRT)return Rarity.RARE;
+                SoftFluid s = SoftFluidRegistry.get(com.getString("Fluid"));
+                if(s== FluidStuff.DIRT)return Rarity.RARE;
             }
         }
         return super.getRarity(stack);

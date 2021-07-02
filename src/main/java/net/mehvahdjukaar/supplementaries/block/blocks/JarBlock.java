@@ -70,7 +70,7 @@ public class JarBlock extends Block implements IWaterLoggable {
     public int getJarLiquidColor(BlockPos pos, IWorldReader world){
         TileEntity te = world.getBlockEntity(pos);
         if (te instanceof JarBlockTile) {
-            return ((JarBlockTile)te).fluidHolder.getParticleColor();
+            return ((JarBlockTile)te).fluidHolder.getParticleColor(world, pos);
         }
         return 0xffffff;
     }
@@ -246,7 +246,7 @@ public class JarBlock extends Block implements IWaterLoggable {
             if (!te.isEmpty())
                 return Container.getRedstoneSignalFromContainer(te);
             else if (!te.fluidHolder.isEmpty()) {
-                return ((JarBlockTile) tileentity).fluidHolder.getComparator();
+                return ((JarBlockTile) tileentity).fluidHolder.getComparatorOutput();
             }
             else if(!te.mobHolder.isEmpty())return 15;
         }

@@ -2,12 +2,12 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import net.mehvahdjukaar.selene.fluids.SoftFluid;
+import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.Textures;
-import net.mehvahdjukaar.supplementaries.fluids.SoftFluid;
-import net.mehvahdjukaar.supplementaries.fluids.SoftFluidList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
@@ -108,7 +108,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
                 RendererUtil.addCube(builder, matrixStackIn, 0.499f, 0.0625f, sprite_s, combinedLightIn, 16777215, 1f, combinedOverlayIn, true, true, true, true);
                 matrixStackIn.popPose();
                 matrixStackIn.pushPose();
-                SoftFluid s = SoftFluidList.WATER;
+                SoftFluid s = SoftFluidRegistry.WATER;
                 renderFluid(0.5625f, s.getTintColor(), 0, s.getStillTexture(),
                         matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, true);
                 matrixStackIn.popPose();
@@ -116,8 +116,9 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
         }
         //render fluid
         if(!tile.fluidHolder.isEmpty()){
-            renderFluid(tile.fluidHolder.getHeight(), tile.fluidHolder.getTintColor(), tile.fluidHolder.getFluid().getLuminosity(),
-                    tile.fluidHolder.getFluid().getStillTexture(), matrixStackIn,bufferIn,combinedLightIn,combinedOverlayIn,true);
+            renderFluid(tile.fluidHolder.getHeight(0.75f), tile.fluidHolder.getTintColor(tile.getLevel(),tile.getBlockPos()),
+                    tile.fluidHolder.getFluid().getLuminosity(), tile.fluidHolder.getFluid().getStillTexture(),
+                    matrixStackIn,bufferIn,combinedLightIn,combinedOverlayIn,true);
         }
     }
 }

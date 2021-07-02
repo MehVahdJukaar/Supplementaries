@@ -36,6 +36,7 @@ public class StatueBlockTileRenderer extends TileEntityRenderer<StatueBlockTile>
         itemRenderer = Minecraft.getInstance().getItemRenderer();
         model = new StatueEntityModel(0);
     }
+    private boolean slim = false;
 
     private ResourceLocation getSkin(GameProfile gameProfile) {
         if (!gameProfile.isComplete()) {
@@ -47,7 +48,11 @@ public class StatueBlockTileRenderer extends TileEntityRenderer<StatueBlockTile>
 
             Map<Type, MinecraftProfileTexture> loadSkinFromCache = skinManager.getInsecureSkinInformation(gameProfile); // returned map may or may not be typed
             if (loadSkinFromCache.containsKey(Type.SKIN)) {
-                return skinManager.registerTexture(loadSkinFromCache.get(Type.SKIN), Type.SKIN);
+                MinecraftProfileTexture texture = loadSkinFromCache.get(Type.SKIN);
+                String s = texture.getMetadata("model");
+                this.slim = s!=null && !s.equals("default");
+
+                return skinManager.registerTexture(texture, Type.SKIN);
             }
             else {
                 return DefaultPlayerSkin.getDefaultSkin(gameProfile.getId());
@@ -56,7 +61,8 @@ public class StatueBlockTileRenderer extends TileEntityRenderer<StatueBlockTile>
     }
 
     private boolean isSkinSlim(GameProfile gameProfile){
-        return gameProfile != null && gameProfile.getId() != null && (gameProfile.getId().hashCode() & 1) != 1;
+
+        return gameProfile != null && gameProfile.getId() != null && (gameProfile.getId().hashCode() & 1) == 1;
     }
 
     @Override
@@ -64,8 +70,8 @@ public class StatueBlockTileRenderer extends TileEntityRenderer<StatueBlockTile>
                        int combinedOverlayIn) {
 
         matrixStackIn.pushPose();
-        GameProfile playerInfo = tile.playerInfo;
-        ResourceLocation resourceLocation = tile.playerInfo==null ? Textures.STATUE : getSkin(playerInfo);
+        GameProfile playerInfo = tile.playerProfile;
+        ResourceLocation resourceLocation = tile.playerProfile ==null ? Textures.STATUE : getSkin(playerInfo);
         matrixStackIn.translate(0.5,0.5,0.5);
         Direction d = tile.getDirection();
         matrixStackIn.mulPose(d.getRotation());
@@ -76,15 +82,17 @@ public class StatueBlockTileRenderer extends TileEntityRenderer<StatueBlockTile>
         //
         RenderType renderType = RenderType.entityCutout(resourceLocation);
 
+
         if (renderType != null) {
             matrixStackIn.pushPose();
             matrixStackIn.scale(0.5f,+0.499f,0.5f);
             IVertexBuilder ivertexbuilder = bufferIn.getBuffer(renderType);
 
-            this.model.setupAnim(tile.getLevel().getGameTime(),partialTicks, d, tile.pose, tile.isWaving, isSkinSlim(playerInfo));
+            this.model.setupAnim(tile.getLevel().getGameTime(),partialTicks, d, tile.pose, tile.isWaving, slim);
             this.model.renderToBuffer(matrixStackIn, ivertexbuilder, combinedLightIn, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F,   1.0F);
             matrixStackIn.popPose();
         }
+        slim = false;
 
 
         ItemStack stack = tile.getDisplayedItem();

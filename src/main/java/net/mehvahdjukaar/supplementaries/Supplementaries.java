@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries;
 
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.datagen.RecipeCondition;
 import net.mehvahdjukaar.supplementaries.events.ServerEvents;
@@ -39,18 +38,11 @@ public class Supplementaries{
 
         MinecraftForge.EVENT_BUS.register(ServerEvents.class);
 
-        try {
-            RegistryConfigs.load();
-        }catch (Exception exception){
-            throw new RuntimeException("Failed to load config supplementaries-registry.toml. Try deleting it");
-        }
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ServerConfigs.SERVER_CONFIG);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfigs.CLIENT_CONFIG);
 
         ConfigHandler.init();
-
-        //TODO: make flax like hay
 
 
         CraftingHelper.register(new RecipeCondition.Serializer(RecipeCondition.MY_FLAG));

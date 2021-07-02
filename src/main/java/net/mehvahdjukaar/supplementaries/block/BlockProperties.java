@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.block;
 
+import net.mehvahdjukaar.supplementaries.block.util.IBellConnection;
 import net.minecraft.block.BlockState;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.EnumProperty;
@@ -47,6 +48,8 @@ public class BlockProperties {
     public static final BooleanProperty HAS_BLOCK = BooleanProperty.create("has_block");
     public static final BooleanProperty ROTATING = BooleanProperty.create("rotating");
     public static final EnumProperty<PostType> POST_TYPE = EnumProperty.create("type",PostType.class);
+    public static final EnumProperty<BellAttachment> BELL_ATTACHMENT = EnumProperty.create("attachment",BellAttachment.class);
+    public static final EnumProperty<IBellConnection.BellConnection> BELL_CONNECTION = EnumProperty.create("connection", IBellConnection.BellConnection.class);
 
 
 
@@ -185,6 +188,24 @@ public class BlockProperties {
                 if(shape.getDirections().containsAll(directions))return shape;
             }
             return directions.get(0).getAxis() == Direction.Axis.Z ? NORTH_SOUTH : EAST_WEST;
+        }
+    }
+
+
+    public enum BellAttachment implements IStringSerializable {
+        CEILING("ceiling"),
+        SINGLE_WALL("single_block"),
+        DOUBLE_WALL("double_block");
+
+        private final String name;
+
+        BellAttachment(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String getSerializedName() {
+            return this.name;
         }
     }
 

@@ -4,18 +4,26 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.gui.ConfigButton;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
+import net.mehvahdjukaar.supplementaries.compat.quark.QuarkSackTooltip;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import vazkii.arl.util.ItemNBTHelper;
+
+import java.util.List;
 
 
 @Mod.EventBusSubscriber(modid = Supplementaries.MOD_ID, value = Dist.CLIENT, bus=Mod.EventBusSubscriber.Bus.FORGE)
@@ -23,24 +31,36 @@ public class ClientEvents {
 
     @SubscribeEvent
     public static void onItemTooltip(ItemTooltipEvent event) {
-        if((event.getPlayer()==null) || (event.getPlayer().level==null) ||
-                !ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().options.advancedItemTooltips)return;
         Item i = event.getItemStack().getItem();
-        if(ServerConfigs.cached.WALL_LANTERN_PLACEMENT && CommonUtil.isLantern(i)){
-            event.getToolTip().add(new TranslationTextComponent("message.supplementaries.wall_lantern").withStyle(TextFormatting.GRAY).withStyle(TextFormatting.ITALIC));
+        List<ITextComponent> tooltip = event.getToolTip();
+         if((event.getPlayer()!=null) && (event.getPlayer().level!=null) && ClientConfigs.cached.TOOLTIP_HINTS
+                && Minecraft.getInstance().options.advancedItemTooltips){
+            if (ServerConfigs.cached.WALL_LANTERN_PLACEMENT && CommonUtil.isLantern(i)) {
+                tooltip.add(new TranslationTextComponent("message.supplementaries.wall_lantern").withStyle(TextFormatting.GRAY).withStyle(TextFormatting.ITALIC));
+            } else if (ServerConfigs.cached.THROWABLE_BRICKS_ENABLED && CommonUtil.isBrick(i)) {
+                tooltip.add(new TranslationTextComponent("message.supplementaries.throwable_brick").withStyle(TextFormatting.GRAY).withStyle(TextFormatting.ITALIC));
+            } else if (ServerConfigs.cached.HANGING_POT_PLACEMENT && CommonUtil.isPot(i)) {
+                tooltip.add(new TranslationTextComponent("message.supplementaries.hanging_pot").withStyle(TextFormatting.GRAY).withStyle(TextFormatting.ITALIC));
+            } else if (ServerConfigs.cached.DOUBLE_CAKE_PLACEMENT && CommonUtil.isCake(i)) {
+                tooltip.add(new TranslationTextComponent("message.supplementaries.double_cake").withStyle(TextFormatting.GRAY).withStyle(TextFormatting.ITALIC));
+            } else if ((ServerConfigs.cached.PLACEABLE_STICKS && i == Items.STICK) ||
+                    (ServerConfigs.cached.PLACEABLE_RODS && i == Items.BLAZE_ROD)) {
+                tooltip.add(new TranslationTextComponent("message.supplementaries.sticks").withStyle(TextFormatting.GRAY).withStyle(TextFormatting.ITALIC));
+            }
         }
-        else if(ServerConfigs.cached.THROWABLE_BRICKS_ENABLED && CommonUtil.isBrick(i)){
-            event.getToolTip().add(new TranslationTextComponent("message.supplementaries.throwable_brick").withStyle(TextFormatting.GRAY).withStyle(TextFormatting.ITALIC));
+        if(i == Registry.SACK_ITEM.get() && event.getItemStack().hasTag()) {
+            CompoundNBT cmp = ItemNBTHelper.getCompound(event.getItemStack(), "BlockEntityTag", true);
+            if (cmp != null && !cmp.contains("LootTable")){
+                QuarkSackTooltip.setupTooltip(tooltip);
+            }
         }
-        else if(ServerConfigs.cached.HANGING_POT_PLACEMENT && CommonUtil.isPot(i)){
-            event.getToolTip().add(new TranslationTextComponent("message.supplementaries.hanging_pot").withStyle(TextFormatting.GRAY).withStyle(TextFormatting.ITALIC));
-        }
-        else if(ServerConfigs.cached.DOUBLE_CAKE_PLACEMENT && CommonUtil.isCake(i)){
-            event.getToolTip().add(new TranslationTextComponent("message.supplementaries.double_cake").withStyle(TextFormatting.GRAY).withStyle(TextFormatting.ITALIC));
-        }
-        else if((ServerConfigs.cached.PLACEABLE_STICKS && i == Items.STICK) ||
-                (ServerConfigs.cached.PLACEABLE_RODS && i == Items.BLAZE_ROD)){
-            event.getToolTip().add(new TranslationTextComponent("message.supplementaries.sticks").withStyle(TextFormatting.GRAY).withStyle(TextFormatting.ITALIC));
+
+    }
+
+    @SubscribeEvent
+    public static void renderTooltip(RenderTooltipEvent.PostText event) {
+        if(CompatHandler.quark && event.getStack().getItem() == Registry.SACK_ITEM.get()){
+            QuarkSackTooltip.renderTooltip(event);
         }
     }
 

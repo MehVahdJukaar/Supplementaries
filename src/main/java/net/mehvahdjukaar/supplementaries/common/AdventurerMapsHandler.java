@@ -1,11 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import net.mehvahdjukaar.selene.map.CustomDecorationType;
+import net.mehvahdjukaar.selene.map.MapDecorationHandler;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.world.data.map.lib.CustomDecorationType;
-import net.mehvahdjukaar.supplementaries.world.data.map.lib.MapDecorationHandler;
-import net.mehvahdjukaar.supplementaries.world.data.map.sup.CMDreg;
+import net.mehvahdjukaar.supplementaries.world.data.map.CMDreg;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.entity.merchant.villager.VillagerTrades;
@@ -103,6 +103,10 @@ public class AdventurerMapsHandler {
                 if (s > 0){
                     try {
 
+                        String res = l.get(0);
+                        if(res.isEmpty())continue;
+                        ResourceLocation structure = new ResourceLocation(res);
+
                         //default values
                         int level = 2;
                         int minPrice = 7;
@@ -112,7 +116,8 @@ public class AdventurerMapsHandler {
                         int mapColor = 0xffffff;
                         ResourceLocation marker = null;
 
-                        ResourceLocation structure = new ResourceLocation(l.get(0));
+
+
                         if(s>1)level = Integer.parseInt(l.get(1));
                         if(level<1||level>5){
                             Supplementaries.LOGGER.warn("skipping configs 'custom_adventurer_maps' ("+l.toString()+"): invalid level, must be between 1 and 5");

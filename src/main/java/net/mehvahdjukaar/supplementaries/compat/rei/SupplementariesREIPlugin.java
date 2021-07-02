@@ -1,5 +1,5 @@
 package net.mehvahdjukaar.supplementaries.compat.rei;
-
+/*
 import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
 import me.shedaniel.rei.api.client.registry.display.DisplayRegistry;
 import me.shedaniel.rei.api.common.util.EntryStacks;
@@ -16,3 +16,4 @@ public class SupplementariesREIPlugin implements REIClientPlugin {
         registry.add(new DefaultTillingDisplay(EntryStacks.of(Blocks.GRAVEL), EntryStacks.of(Registry.RAKED_GRAVEL.get())));
     }
 }
+*/

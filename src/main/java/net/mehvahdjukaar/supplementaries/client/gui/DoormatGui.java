@@ -35,13 +35,12 @@ public class DoormatGui extends Screen {
     //for ticking cursor
     private int updateCounter;
     private final DoormatBlockTile tileSign;
-    private static final int MAXLINES = 3; //TODO: remove hardcoding?
     private final String[] cachedLines;
 
     public DoormatGui(DoormatBlockTile teSign) {
         super(new TranslationTextComponent("gui.supplementaries.doormat.edit"));
         this.tileSign = teSign;
-        this.cachedLines = IntStream.range(0, MAXLINES).mapToObj(teSign.textHolder::getText).map(ITextComponent::getString).toArray(String[]::new);
+        this.cachedLines = IntStream.range(0, DoormatBlockTile.MAXLINES).mapToObj(teSign.textHolder::getText).map(ITextComponent::getString).toArray(String[]::new);
 
     }
 
@@ -63,7 +62,7 @@ public class DoormatGui extends Screen {
     }
 
     public void scrollText(int amount){
-        this.editLine = Math.floorMod(this.editLine - amount, MAXLINES);
+        this.editLine = Math.floorMod(this.editLine - amount, DoormatBlockTile.MAXLINES);
         this.textInputUtil.setCursorToEnd();
     }
 
@@ -84,8 +83,6 @@ public class DoormatGui extends Screen {
             return true;
         }
     }
-
-    //TODO: make all these subclasses
 
     @Override
     public void tick() {

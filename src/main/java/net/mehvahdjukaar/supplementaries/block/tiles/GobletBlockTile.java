@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
+import net.mehvahdjukaar.selene.fluids.SoftFluidHolder;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.fluids.SoftFluidHolder;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -25,7 +25,6 @@ public class GobletBlockTile extends TileEntity {
 
     @Override
     public void onLoad() {
-        this.fluidHolder.setWorldAndPos(this.level, this.worldPosition);
     }
 
     @Override
@@ -60,7 +59,7 @@ public class GobletBlockTile extends TileEntity {
     public boolean handleInteraction(PlayerEntity player, Hand hand) {
 
         //interact with fluid holder
-        if (this.fluidHolder.interactWithPlayer(player, hand)) {
+        if (this.fluidHolder.interactWithPlayer(player, hand, level, worldPosition)) {
             return true;
         }
         //empty hand: eat food

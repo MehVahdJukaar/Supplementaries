@@ -46,6 +46,7 @@ public class EmptyCageItem extends BlockItem {
 
     }
 
+    //TODO: fix left click duplicating cages to off hand
 
     public ActionResultType doInteract(ItemStack stack, PlayerEntity player, Entity entity, Hand hand) {
 

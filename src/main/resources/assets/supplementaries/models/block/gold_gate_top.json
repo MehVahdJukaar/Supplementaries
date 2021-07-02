@@ -1,0 +1,7 @@
+{
+  "parent": "supplementaries:block/iron_gate_top",
+  "textures": {
+    "1": "supplementaries:blocks/gold_gate_top",
+    "particle": "supplementaries:blocks/gold_gate_top"
+  }
+}

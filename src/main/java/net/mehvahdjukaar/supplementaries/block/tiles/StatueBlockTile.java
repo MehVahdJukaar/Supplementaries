@@ -22,7 +22,7 @@ import java.util.UUID;
 public class StatueBlockTile extends ItemDisplayTile {
     public static PlayerProfileCache profileCache;
     public static MinecraftSessionService sessionService;
-    public GameProfile playerInfo = null;
+    public GameProfile playerProfile = null;
 
     //clientside
     public StatuePose pose = StatuePose.STANDING;
@@ -51,12 +51,12 @@ public class StatueBlockTile extends ItemDisplayTile {
             String name = this.getCustomName().getString().toLowerCase();
             UUID id = SpecialPlayers.STATUES.get(name);
             if(id != null) {
-                this.playerInfo = this.updateGameProfile(new GameProfile(id, null));
+                this.playerProfile = this.updateGameProfile(new GameProfile(id, name));
             }
             //ClientPlayNetHandler connection = Minecraft.getInstance().getConnection();
             //if(connection!=null)
                 //this.playerInfo = connection.getPlayerInfo(SpecialPlayers.STATUES.get(this.getCustomName().getString().toLowerCase()));
-        }else this.playerInfo = null;
+        }else this.playerProfile = null;
 
     }
 
@@ -66,7 +66,7 @@ public class StatueBlockTile extends ItemDisplayTile {
             if (input.isComplete() && input.getProperties().containsKey("textures")) {
                 return input;
             } else if (profileCache != null && sessionService != null) {
-                GameProfile gameprofile = profileCache.get(input.getId());
+                GameProfile gameprofile = profileCache.get(input.getName());
                 if (gameprofile != null) {
                     Property property = Iterables.getFirst(gameprofile.getProperties().get("textures"), null);
                     if (property == null) {

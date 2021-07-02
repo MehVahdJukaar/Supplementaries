@@ -61,7 +61,7 @@ public class GobletBlockTileRenderer extends TileEntityRenderer<GobletBlockTile>
 
         if(!tile.fluidHolder.isEmpty()){
 
-            renderFluid(7/16f, tile.fluidHolder.getTintColor(), tile.fluidHolder.getFluid().getLuminosity(),
+            renderFluid(7/16f, tile.fluidHolder.getTintColor(tile.getLevel(),tile.getBlockPos()), tile.fluidHolder.getFluid().getLuminosity(),
                     tile.fluidHolder.getFluid().getStillTexture(), matrixStackIn,bufferIn,combinedLightIn,combinedOverlayIn,true);
         }
     }

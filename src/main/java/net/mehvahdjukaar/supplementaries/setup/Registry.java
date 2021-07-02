@@ -944,6 +944,13 @@ public class Registry {
             AbstractBlock.Properties.copy(Blocks.IRON_BARS)));
     public static final RegistryObject<Item> IRON_GATE_ITEM = regBlockItem(IRON_GATE,getTab(ItemGroup.TAB_REDSTONE,IRON_GATE_NAME));
 
+    //gold gate
+    public static final String GOLD_GATE_NAME = "gold_gate";
+    public static final RegistryObject<Block> GOLD_GATE = BLOCKS.register(GOLD_GATE_NAME,()-> new IronGateBlock(
+            AbstractBlock.Properties.copy(Blocks.IRON_BARS)));
+    public static final RegistryObject<Item> GOLD_GATE_ITEM = regBlockItem(GOLD_GATE,getTab("quark",ItemGroup.TAB_REDSTONE,GOLD_GATE_NAME));
+
+
 
     //technical blocks
 
@@ -1273,6 +1280,14 @@ public class Registry {
     public static final RegistryObject<TileEntityType<StatueBlockTile>> STATUE_TILE = TILES.register(STATUE_NAME,()-> TileEntityType.Builder.of(
             StatueBlockTile::new, STATUE.get()).build(null));
 
+    //cracked bell
+    public static final String CRACKED_BELL_NAME = "cracked_bell";
+    public static final RegistryObject<Block> CRACKED_BELL = BLOCKS.register(CRACKED_BELL_NAME,()-> new CrackedBellBlock(
+            AbstractBlock.Properties.copy(Blocks.ANVIL)));
+    public static final RegistryObject<Item> CRACKED_BELL_ITEM = regBlockItem(CRACKED_BELL,getTab(ItemGroup.TAB_DECORATIONS,CRACKED_BELL_NAME));
+
+    public static final RegistryObject<TileEntityType<CrackedBellBlockTile>> CRACKED_BELL_TILE = TILES.register(CRACKED_BELL_NAME,()-> TileEntityType.Builder.of(
+            CrackedBellBlockTile::new, CRACKED_BELL.get()).build(null));
 
 
     /*

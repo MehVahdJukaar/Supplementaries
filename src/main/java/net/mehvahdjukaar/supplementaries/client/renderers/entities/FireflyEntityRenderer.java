@@ -35,7 +35,7 @@ public class FireflyEntityRenderer extends EntityRenderer<FireflyEntity> {
         matrixStackIn.mulPose(Const.Y180);
         float scale = 0.15f;
         matrixStackIn.scale(a*scale, a*scale, a*scale);
-        IVertexBuilder builder = bufferIn.getBuffer(RenderType.beaconBeam(Textures.FIREFLY_TEXTURE, true));
+        IVertexBuilder builder = bufferIn.getBuffer(RenderType.beaconBeam(Textures.FIREFLY_TEXTURE,true));
 
         RendererUtil.addQuadSide(builder, matrixStackIn, -0.5f, -0.5f, 0f, 0.5f, 0.5f, 0f, 0, 0, 1, 1, r, g,b, a, 240, 0, 0, 1, 0);
 

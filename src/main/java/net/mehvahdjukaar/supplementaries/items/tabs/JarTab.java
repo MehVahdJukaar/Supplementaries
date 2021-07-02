@@ -1,11 +1,11 @@
 package net.mehvahdjukaar.supplementaries.items.tabs;
 
+import net.mehvahdjukaar.selene.fluids.SoftFluid;
+import net.mehvahdjukaar.selene.fluids.SoftFluidHolder;
+import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.block.util.MobHolder;
-import net.mehvahdjukaar.supplementaries.fluids.SoftFluid;
-import net.mehvahdjukaar.supplementaries.fluids.SoftFluidHolder;
-import net.mehvahdjukaar.supplementaries.fluids.SoftFluidList;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
@@ -52,9 +52,8 @@ public class JarTab {
                 tryAdd(items, com);
             }
         }
-        for (String id : SoftFluidList.ID_MAP.keySet()) {
-            SoftFluid s = SoftFluidList.ID_MAP.get(id);
-            if(s==SoftFluidList.POTION||s.isEmpty())continue;
+        for ( SoftFluid s  : SoftFluidRegistry.getFluids()) {
+            if(s== SoftFluidRegistry.POTION||s.isEmpty())continue;
             CompoundNBT com = new CompoundNBT();
             fluidHolder.clear();
             fluidHolder.fill(s);
@@ -65,7 +64,7 @@ public class JarTab {
         for(ResourceLocation potion : net.minecraft.util.registry.Registry.POTION.keySet()) {
             CompoundNBT com = new CompoundNBT();
             com.putString("Potion",potion.toString());
-            fluidHolder.fill(SoftFluidList.POTION,com);
+            fluidHolder.fill(SoftFluidRegistry.POTION,com);
             CompoundNBT com2 = new CompoundNBT();
             fluidHolder.save(com2);
             tryAdd(items,com2);
@@ -77,7 +76,7 @@ public class JarTab {
     public static ItemStack getIcon(){
         ItemStack icon = new ItemStack(Registry.JAR_ITEM.get());
         SoftFluidHolder fluidHolder = new SoftFluidHolder(12);
-        fluidHolder.fill(SoftFluidList.HONEY);
+        fluidHolder.fill(SoftFluidRegistry.HONEY);
         CompoundNBT com = new CompoundNBT();
         fluidHolder.save(com);
         icon.addTagElement("BlockEntityTag", com);

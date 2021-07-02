@@ -31,8 +31,10 @@ public class TextUtil {
                 "\n\n\u00A74Author:\u00A7r\n\n\u00A70"+
                 "MehVahdJukaar"+
                 "\n\n\n\u00A74Donators:\u00A7r\n\n\u00A70"+
-                "Toffanelly"+
+                "ThugPug43"+
+                "\nStonkManHanz"+
                 "\nSylveticHearts"+
+                "\nToffanelly"+
                 "\n\n\n\u00A74Credits:"+
                 "\n\n\u00A75Textures:\u00A7r\n\n\u00A70"+
                 "Plantkillable"+
