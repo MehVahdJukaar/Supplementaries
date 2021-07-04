@@ -5,6 +5,8 @@ import net.mehvahdjukaar.selene.fluids.SoftFluid;
 import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.Textures;
+import net.minecraft.client.renderer.entity.ZombieRenderer;
+import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -18,12 +20,13 @@ import java.util.List;
 
 public class FluidStuff {
     public static SoftFluid makeSF(SoftFluid.Builder builder) {
-        return builder.isDisabled ? null : new SoftFluid(builder);
+        return new SoftFluid(builder);
     }
 
 
     public static final SoftFluid DIRT;
     public static final SoftFluid SAP;
+    public static final SoftFluid SUGAR;
 
     static{
         DIRT = makeSF(new SoftFluid.Builder(Textures.DIRT_TEXTURE, Textures.DIRT_TEXTURE,"dirt")
@@ -39,6 +42,11 @@ public class FluidStuff {
                 .drink("autumnity:sap_bottle")
                 .bucket("thermal:sap_bucket")
                 .translationKey("fluid.supplementaries.sap"));
+        SUGAR = makeSF(new SoftFluid.Builder(Textures.SUGAR_TEXTURE, Textures.SUGAR_TEXTURE,"sugar")
+                .fromMod(Supplementaries.MOD_ID)
+                .setSoundsForCategory(SoundEvents.SAND_PLACE,SoundEvents.SAND_BREAK,Items.AIR)
+                .emptyHandContainerItem(Items.SUGAR,1)
+                .translationKey("item.minecraft.sugar"));
     }
 
 
@@ -46,6 +54,7 @@ public class FluidStuff {
 
         SoftFluidRegistry.register(SAP);
         SoftFluidRegistry.register(DIRT);
+        SoftFluidRegistry.register(SUGAR);
         
         List<SoftFluid> custom = new ArrayList<>(Collections.emptyList());
 
@@ -70,7 +79,7 @@ public class FluidStuff {
         custom.add(makeSF(new SoftFluid.Builder(Textures.POTION_TEXTURE,Textures.POTION_TEXTURE_FLOW,"poison")
                 .fromMod("alexsmobs")
                 .color(0x8AEB67)
-                .translationKey("item.alexsmobs:poison")
+                .translationKey("item.alexsmobs.poison_bottle")
                 .bottle("alexsmobs:poison_bottle")));
         custom.add(makeSF(new SoftFluid.Builder(Textures.SOUP_TEXTURE,Textures.POTION_TEXTURE_FLOW,"sopa_de_macaco")
                 .fromMod("alexsmobs")
@@ -224,39 +233,82 @@ public class FluidStuff {
                 .color(0x60A8E0)
                 .translationKey("item.betteranimalsplus.horseshoe_crab_blood")
                 .drink("betteranimalsplus:horseshoe_crab_blood")));
-        custom.add(makeSF(new SoftFluid.Builder("tconstruct:sky_congealed_slime",
-                "tconstruct:sky_congealed_slime","sky_slime")
+        custom.add(makeSF(new SoftFluid.Builder("tconstruct:block/sky_congealed_slime",
+                "tconstruct:block/sky_congealed_slime","sky_slime")
                 .fromMod("tconstruct")
                 .emptyHandContainerItem("tconstruct:sky_slime_ball",1)
+                .setSoundsForCategory(SoundEvents.SLIME_BLOCK_PLACE,SoundEvents.SLIME_BLOCK_BREAK,Items.AIR)
                 .food("tconstruct:sky_slime_ball")));
-        custom.add(makeSF(new SoftFluid.Builder("tconstruct:ichor_congealed_slime",
-                "tconstruct:ichor_congealed_slime","ichor_slime")
+        custom.add(makeSF(new SoftFluid.Builder("tconstruct:block/ichor_congealed_slime",
+                "tconstruct:block/ichor_congealed_slime","ichor_slime")
                 .fromMod("tconstruct")
                 .emptyHandContainerItem("tconstruct:ichor_slime_ball",1)
+                .setSoundsForCategory(SoundEvents.SLIME_BLOCK_PLACE,SoundEvents.SLIME_BLOCK_BREAK,Items.AIR)
                 .food("tconstruct:ichor_slime_ball")));
-        custom.add(makeSF(new SoftFluid.Builder("tconstruct:blood_congealed_slime",
-                "tconstruct:blood_congealed_slime","blood_slime")
+        custom.add(makeSF(new SoftFluid.Builder("tconstruct:block/blood_congealed_slime",
+                "tconstruct:block/blood_congealed_slime","blood_slime")
                 .fromMod("tconstruct")
                 .emptyHandContainerItem("tconstruct:blood_slime_ball",1)
+                .setSoundsForCategory(SoundEvents.SLIME_BLOCK_PLACE,SoundEvents.SLIME_BLOCK_BREAK,Items.AIR)
                 .food("tconstruct:blood_slime_ball")));
-        custom.add(makeSF(new SoftFluid.Builder("tconstruct:ender_congealed_slime",
-                "tconstruct:ender_congealed_slime","ender_slime")
+        custom.add(makeSF(new SoftFluid.Builder("tconstruct:block/ender_congealed_slime",
+                "tconstruct:block/ender_congealed_slime","ender_slime")
                 .fromMod("tconstruct")
                 .emptyHandContainerItem("tconstruct:ender_slime_ball",1)
+                .setSoundsForCategory(SoundEvents.SLIME_BLOCK_PLACE,SoundEvents.SLIME_BLOCK_BREAK,Items.AIR)
                 .food("tconstruct:ender_slime_ball")));
 
-        custom.add(makeSF(new SoftFluid.Builder(Textures.POTION_TEXTURE,Textures.POTION_TEXTURE_FLOW,"aloe_vera")
-                .fromMod("atmospehric")
-                .color(0x66dc46)
-                .translationKey("item.atmospehric:aloe_vera_bottle")
-                .drink("atmospehric:aloe_vera_bottle")));
+        custom.add(makeSF(new SoftFluid.Builder("atmospheric:block/aloe_gel_block_top",Textures.POTION_TEXTURE_FLOW.toString(),"aloe_gel")
+                .fromMod("atmospheric")
+                .useParticleColorForFlowingTexture()
+                .translationKey("item.atmospheric:aloe_gel_bottle")
+                .drink("atmospheric:aloe_gel_bottle")));
+        custom.add(makeSF(new SoftFluid.Builder(Textures.POTION_TEXTURE,Textures.POTION_TEXTURE_FLOW,"yucca_juice")
+                .fromMod("atmospheric")
+                .color(0x4EE13B)
+                .translationKey("item.atmospheric:yucca_juice")
+                .drink("atmospheric:yucca_juice")));
 
-        custom.add(makeSF(new SoftFluid.Builder(Textures.HONEY_TEXTURE,Textures.POTION_TEXTURE_FLOW,"mulberry_jam")
+        custom.add(makeSF(new SoftFluid.Builder("upgrade_aquatic:block/mulberry_jam_block_top",Textures.POTION_TEXTURE_FLOW.toString(),"mulberry_jam")
                 .fromMod("upgrade_aquatic")
-                .color(0xd3385d)
+                .useParticleColorForFlowingTexture()
                 .translationKey("item.upgrade_aquatic:mulberry_jam_bottle")
                 .drink("upgrade_aquatic:mulberry_jam_bottle")));
 
+
+
+
+        custom.add(makeSF(new SoftFluid.Builder(Textures.DRAGON_BREATH_TEXTURE,Textures.POTION_TEXTURE_FLOW,"ambrosia")
+                .fromMod("iceandfire")
+                .color(0xf8a0db)
+                .translationKey("item.iceandfire.ambrosia")
+                .stew("iceandfire:ambrosia")));
+        custom.add(makeSF(new SoftFluid.Builder(Textures.WATER_TEXTURE,Textures.FLOWING_WATER_TEXTURE,"builders_tea")
+                .fromMod("create")
+                .color(0xdf8367)
+                .translationKey("item.create.builders_tea")
+                .drink("create:builders_tea")));
+        custom.add(makeSF(new SoftFluid.Builder(Textures.WATER_TEXTURE,Textures.FLOWING_WATER_TEXTURE,"lavender_tea")
+                .fromMod("abundance")
+                .color(0x82472)
+                .translationKey("item.abundance.lavender_tea")
+                .drink("abundance:lavender_tea")));
+        custom.add(makeSF(new SoftFluid.Builder(Textures.SOUP_TEXTURE,Textures.POTION_TEXTURE_FLOW,"scrambled_eggs")
+                .fromMod("environmental")
+                .color(0xdd9d23)
+                .translationKey("item.environmental.scrambled_eggs")
+                .stew("environmental:scrambled_eggs")));
+        custom.add(makeSF(new SoftFluid.Builder(Textures.MILK_TEXTURE,Textures.MILK_TEXTURE,"siren_tear")
+                .fromMod("iceandfire")
+                .color(0xa4e0fc)
+                .translationKey("item.iceandfire.siren_tear")
+                .emptyHandContainerItem("iceandfire:siren_tear",1)));
+        custom.add(makeSF(new SoftFluid.Builder(Textures.DRAGON_BREATH_TEXTURE,Textures.POTION_TEXTURE_FLOW,"mimicream")
+                .fromMod("alexsmobs")
+                .color(0x8071ab)
+                .translationKey("item.alexsmobs.mimicream")
+                .emptyHandContainerItem("alexsmobs:mimicream",1)
+                .setSoundsForCategory(SoundEvents.SLIME_BLOCK_PLACE,SoundEvents.SLIME_BLOCK_BREAK,Items.AIR)));
 
 
         //inspirations dye bottles. not adding nbt mixed ones

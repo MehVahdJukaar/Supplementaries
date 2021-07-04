@@ -19,6 +19,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
+import javax.annotation.Nullable;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class KeyLockableTile extends TileEntity {
@@ -48,29 +49,46 @@ public class KeyLockableTile extends TileEntity {
         return isCorrectKey(key,this.password);
     }
 
-    public static boolean isKeyInInventory(PlayerEntity player, String key, String translName){
+    public enum KeyStatus{
+        CORRECT_KEY,
+        INCORRECT_KEY,
+        NO_KEY
+    }
 
-        if(CompatHandler.curios && SupplementariesCuriosPlugin.isKeyInCurio(player, key, translName))return true;
+    public static KeyStatus hasKeyInInventory(PlayerEntity player, String key){
+        KeyStatus found = KeyStatus.INCORRECT_KEY;
+        if(CompatHandler.curios){
+            found = SupplementariesCuriosPlugin.isKeyInCurio(player, key);
+            if(found == KeyStatus.CORRECT_KEY)return found;
+        }
 
         AtomicReference<IItemHandler> itemHandler = new AtomicReference<>();
         player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent(itemHandler::set);
         if (itemHandler.get() != null) {
-            boolean hasKey = false;
             for (int _idx = 0; _idx < itemHandler.get().getSlots(); _idx++) {
                 ItemStack stack = itemHandler.get().getStackInSlot(_idx);
                 if(stack.getItem() instanceof KeyItem){
-                    hasKey = true;
-                    if(isCorrectKey(stack,key))return true;
+                    found = KeyStatus.INCORRECT_KEY;
+                    if(isCorrectKey(stack,key))return KeyStatus.CORRECT_KEY;
                 }
             }
-            if(hasKey){
-                player.displayClientMessage(new TranslationTextComponent("message.supplementaries.safe.incorrect_key"), true);
-                return false;
-            }
         }
-        player.displayClientMessage(new TranslationTextComponent("message.supplementaries."+translName+".locked"), true);
+        return found;
+    }
+
+    public static boolean doesPlayerHaveKeyToOpen(PlayerEntity player, String lockPassword, boolean feedbackMessage, @Nullable String translName){
+        KeyStatus key = hasKeyInInventory(player,lockPassword);
+        if(key == KeyStatus.INCORRECT_KEY){
+            if(feedbackMessage)
+                player.displayClientMessage(new TranslationTextComponent("message.supplementaries.safe.incorrect_key"), true);
+            return false;
+        }
+        else if(key == KeyStatus.CORRECT_KEY)return true;
+        if(feedbackMessage)
+            player.displayClientMessage(new TranslationTextComponent("message.supplementaries."+translName+".locked"), true);
         return false;
     }
+
 
     //returns true if door has to open
     public boolean handleAction(PlayerEntity player, Hand handIn, String translName) {
@@ -80,7 +98,7 @@ public class KeyLockableTile extends TileEntity {
         Item item = stack.getItem();
 
         boolean isKey = item instanceof KeyItem;
-        //clear ownership with tripwire
+        //clear ownership
         if(player.isShiftKeyDown() && isKey && (player.isCreative() || this.isCorrectKey(stack))){
             this.clearOwner();
             player.displayClientMessage(new TranslationTextComponent("message.supplementaries.safe.cleared"),true);
@@ -100,7 +118,7 @@ public class KeyLockableTile extends TileEntity {
             return true;
         }
         //open
-        else return isKeyInInventory(player, this.password,translName) || player.isCreative();
+        else return player.isCreative() || doesPlayerHaveKeyToOpen(player, this.password,true, translName) ;
     }
 
     @Override

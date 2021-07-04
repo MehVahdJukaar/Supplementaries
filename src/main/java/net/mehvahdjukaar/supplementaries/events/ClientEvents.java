@@ -4,7 +4,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.gui.ConfigButton;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
-import net.mehvahdjukaar.supplementaries.compat.quark.QuarkSackTooltip;
+import net.mehvahdjukaar.supplementaries.compat.quark.QuarkTooltipPlugin;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
@@ -48,19 +48,22 @@ public class ClientEvents {
                 tooltip.add(new TranslationTextComponent("message.supplementaries.sticks").withStyle(TextFormatting.GRAY).withStyle(TextFormatting.ITALIC));
             }
         }
-        if(i == Registry.SACK_ITEM.get() && event.getItemStack().hasTag()) {
-            CompoundNBT cmp = ItemNBTHelper.getCompound(event.getItemStack(), "BlockEntityTag", true);
-            if (cmp != null && !cmp.contains("LootTable")){
-                QuarkSackTooltip.setupTooltip(tooltip);
-            }
-        }
+         if(CompatHandler.quark) {
+             QuarkTooltipPlugin.onItemTooltipEvent(event);
+         }
 
     }
 
     @SubscribeEvent
-    public static void renderTooltip(RenderTooltipEvent.PostText event) {
-        if(CompatHandler.quark && event.getStack().getItem() == Registry.SACK_ITEM.get()){
-            QuarkSackTooltip.renderTooltip(event);
+    public static void renderTooltipEvent(RenderTooltipEvent.PostText event) {
+        if(CompatHandler.quark){
+            Item i = event.getStack().getItem();
+            if(i == Registry.SACK_ITEM.get()){
+                QuarkTooltipPlugin.renderTooltipEvent(event);
+            }
+            else if(i == Registry.SAFE_ITEM.get()){
+                QuarkTooltipPlugin.renderTooltipEvent(event);
+            }
         }
     }
 

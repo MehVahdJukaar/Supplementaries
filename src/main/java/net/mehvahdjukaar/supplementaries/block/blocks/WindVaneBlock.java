@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 
+import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.WindVaneBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -47,11 +48,6 @@ public class WindVaneBlock extends WaterBlock {
         if(!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().options.advancedItemTooltips)return;
         tooltip.add(new TranslationTextComponent("message.supplementaries.wind_vane").withStyle(TextFormatting.ITALIC).withStyle(TextFormatting.GRAY));
 
-    }
-
-    @Override
-    public boolean isPathfindable(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
-        return false;
     }
 
     //model=block model+ tile. animated=tile, inv=inv

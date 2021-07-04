@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
+import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.SwayingBlockTile;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
@@ -23,10 +24,10 @@ import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
-public abstract class SwayingBlock extends Block implements IWaterLoggable {
+public abstract class SwayingBlock extends WaterBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final IntegerProperty EXTENSION = BlockProperties.EXTENSION;
-    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+
     public SwayingBlock(Properties properties) {
         super(properties);
     }
@@ -40,11 +41,6 @@ public abstract class SwayingBlock extends Block implements IWaterLoggable {
         return facing == stateIn.getValue(FACING).getOpposite()?  !stateIn.canSurvive(worldIn, currentPos)
                 ? Blocks.AIR.defaultBlockState()
                 : getConnectedState(stateIn,facingState, worldIn,facingPos) : stateIn;
-    }
-
-    @Override
-    public FluidState getFluidState(BlockState state) {
-        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
     @Override

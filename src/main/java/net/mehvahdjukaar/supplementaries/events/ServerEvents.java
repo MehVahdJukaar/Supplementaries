@@ -331,7 +331,7 @@ public class ServerEvents {
 
     @SubscribeEvent
     public static void onAttachItemCapabilities(AttachCapabilitiesEvent<ItemStack> event) {
-        if (CompatHandler.quark && event.getObject().getItem() == Registry.SACK_ITEM.get()) {
+        if (CompatHandler.quark) {
             QuarkPlugin.attachSackDropIn(event);
         }
 

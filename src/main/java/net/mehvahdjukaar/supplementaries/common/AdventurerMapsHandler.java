@@ -216,20 +216,21 @@ public class AdventurerMapsHandler {
                 List<Structure<?>> pool = randomMapPool.stream().filter(s->serverWorld.getChunkSource().getGenerator()
                         .getBiomeSource().canGenerateStructure(s)).collect(Collectors.toList());
 
-                Structure<?> structure = pool.get(serverWorld.random.nextInt(pool.size()));
+                int size = pool.size();
+                if(size>0) {
+                    Structure<?> structure = pool.get(serverWorld.random.nextInt(size));
+                    BlockPos toPos = ((ServerWorld) world).findNearestMapFeature(structure, pos, SEARCH_RADIUS, true);
+                    if (toPos != null) {
+                        ItemStack stack = FilledMapItem.create(world, toPos.getX(), toPos.getZ(), (byte) 2, true, true);
+                        FilledMapItem.renderBiomePreviewMap((ServerWorld) world, stack);
 
-                BlockPos toPos = ((ServerWorld) world).findNearestMapFeature(structure, pos, SEARCH_RADIUS, true);
-                if (toPos == null) {
-                    return ItemStack.EMPTY;
-                } else {
-                    ItemStack stack = FilledMapItem.create(world, toPos.getX(), toPos.getZ(), (byte)2, true, true);
-                    FilledMapItem.renderBiomePreviewMap((ServerWorld)world, stack);
-
-                    //adds custom decoration
-                    MapDecorationHandler.addTargetDecoration(stack, toPos, getVanillaMarker(structure), 0x78151a);
-                    stack.setHoverName(new TranslationTextComponent("filled_map.adventure"));
-                    return stack;
+                        //adds custom decoration
+                        MapDecorationHandler.addTargetDecoration(stack, toPos, getVanillaMarker(structure), 0x78151a);
+                        stack.setHoverName(new TranslationTextComponent("filled_map.adventure"));
+                        return stack;
+                    }
                 }
+                return ItemStack.EMPTY;
             }
         }
     }
@@ -244,7 +245,7 @@ public class AdventurerMapsHandler {
         @Override
         public MerchantOffer getOffer(@Nonnull Entity entity, @Nonnull Random random) {
 
-            int i = random.nextInt(tradeData.maxPrice - tradeData.minPrice + 1) + tradeData.minPrice;
+            int i = random.nextInt(Math.max(1,tradeData.maxPrice - tradeData.minPrice + 1) + tradeData.minPrice);
 
             ItemStack itemstack = createMap(entity.level, entity.blockPosition());
             if (itemstack.isEmpty()) return null;

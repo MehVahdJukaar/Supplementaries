@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.items;
 
 
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
-import net.mehvahdjukaar.supplementaries.compat.quark.QuarkSackTooltip;
+import net.mehvahdjukaar.supplementaries.compat.quark.QuarkTooltipPlugin;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.block.Block;
@@ -66,7 +66,7 @@ public class SackItem extends BlockItem {
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
 
-        if(!CompatHandler.quark || !QuarkSackTooltip.canRenderTooltip()) {
+        if(!CompatHandler.quark || !QuarkTooltipPlugin.canRenderTooltip()) {
             CompoundNBT compoundnbt = stack.getTagElement("BlockEntityTag");
             if (compoundnbt != null) {
                 if (compoundnbt.contains("LootTable", 8)) {

@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 
+import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -14,6 +15,7 @@ import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.particles.RedstoneParticleData;
 import net.minecraft.pathfinding.PathNodeType;
+import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.IntegerProperty;
@@ -33,7 +35,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public class CrankBlock extends Block implements IWaterLoggable{
+public class CrankBlock extends WaterBlock {
     protected static final VoxelShape SHAPE_DOWN = VoxelShapes.box(0.125D, 0.6875D, 0.875D, 0.875D, 1D, 0.125D);
     protected static final VoxelShape SHAPE_UP = VoxelShapes.box(0.125D, 0.3125D, 0.125D, 0.875D, 0D, 0.875D);
     protected static final VoxelShape SHAPE_NORTH = VoxelShapes.box(0.125D, 0.125D, 0.6875D, 0.875D, 0.875D, 1D);
@@ -43,15 +45,10 @@ public class CrankBlock extends Block implements IWaterLoggable{
 
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final IntegerProperty POWER = BlockStateProperties.POWER;
-    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+
     public CrankBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED,false).setValue(POWER, 0).setValue(FACING, Direction.NORTH));
-    }
-
-    @Override
-    public FluidState getFluidState(BlockState state) {
-        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
     @Override
@@ -198,6 +195,11 @@ public class CrankBlock extends Block implements IWaterLoggable{
             case DOWN :
                 return SHAPE_DOWN;
         }
+    }
+
+    @Override
+    public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType pathType) {
+        return true;
     }
 
     @Override

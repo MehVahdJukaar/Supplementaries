@@ -28,7 +28,7 @@ public class FaucetBlockTileRenderer extends TileEntityRenderer<FaucetBlockTile>
             ResourceLocation texture = tile.fluidHolder.getFluid().getFlowingTexture();
             TextureAtlasSprite sprite = minecraft.getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(texture);
             IVertexBuilder builder = bufferIn.getBuffer(RenderType.translucentMovingBlock());
-            int color = tile.fluidHolder.getTintColor(tile.getLevel(),tile.getBlockPos());
+            int color = tile.fluidHolder.getFlowingTint(tile.getLevel(),tile.getBlockPos());
             int luminosity = tile.fluidHolder.getFluid().getLuminosity();
             if(luminosity!=0) light = light & 15728640 | luminosity << 4;
             float opacity = 1.3f;

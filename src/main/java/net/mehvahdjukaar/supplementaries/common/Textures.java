@@ -25,6 +25,7 @@ public class Textures {
     public static final ResourceLocation BLACKBOARD_TEXTURE = new ResourceLocation(MOD_ID+":blocks/blackboard");
 
     //blocks (to stitch)
+    public static final ResourceLocation SUGAR_TEXTURE = new ResourceLocation(MOD_ID, "blocks/sugar");
     public static final ResourceLocation MILK_TEXTURE = new ResourceLocation(LIB, "blocks/milk_liquid");
     public static final ResourceLocation POTION_TEXTURE = new ResourceLocation(LIB, "blocks/potion_still");
     public static final ResourceLocation POTION_TEXTURE_FLOW = new ResourceLocation(LIB, "blocks/potion_flow");
@@ -113,7 +114,7 @@ public class Textures {
     //TODO: rethink this
     public static List<ResourceLocation> getTexturesToStitch() {
         return new ArrayList<>(Arrays.asList(
-                FISHIES_TEXTURE, BELLOWS_TEXTURE, LASER_BEAM_TEXTURE, LASER_BEAM_END_TEXTURE,LASER_OVERLAY_TEXTURE,
+                FISHIES_TEXTURE, BELLOWS_TEXTURE, LASER_BEAM_TEXTURE, LASER_BEAM_END_TEXTURE,LASER_OVERLAY_TEXTURE,SUGAR_TEXTURE,
                 CLOCK_HAND_TEXTURE,HOURGLASS_REDSTONE, HOURGLASS_GLOWSTONE, HOURGLASS_SUGAR, HOURGLASS_BLAZE, HOURGLASS_GUNPOWDER));
     }
 

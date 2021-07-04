@@ -25,7 +25,7 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 
-public class PistonLauncherArmBlock  extends Block {
+public class PistonLauncherArmBlock extends Block {
     protected static final VoxelShape SHAPE = VoxelShapes.empty();
 
     public static final DirectionProperty FACING = BlockStateProperties.FACING;

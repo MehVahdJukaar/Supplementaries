@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
+import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.minecraft.block.*;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -17,22 +18,16 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraftforge.common.IPlantable;
 
-public class PlanterBlock extends Block implements IWaterLoggable{
+public class PlanterBlock extends WaterBlock {
     protected static final VoxelShape SHAPE = VoxelShapes.or(VoxelShapes.box(0.125D, 0D, 0.125D, 0.875D, 0.687D, 0.875D), VoxelShapes.box(0D, 0.687D, 0D, 1D, 1D, 1D));
     protected static final VoxelShape SHAPE_C = VoxelShapes.or(VoxelShapes.box(0, 0, 0, 1, 0.9375, 1));
 
     public static final BooleanProperty EXTENDED = BlockStateProperties.EXTENDED; // raised dirt?
-    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     public PlanterBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false)
                 .setValue(EXTENDED, false));
-    }
-
-    @Override
-    public boolean isPathfindable(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
-        return false;
     }
 
     @Override
@@ -46,19 +41,13 @@ public class PlanterBlock extends Block implements IWaterLoggable{
     }
 
     @Override
-    public FluidState getFluidState(BlockState state) {
-        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
-    }
-
-    @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(EXTENDED,WATERLOGGED);
     }
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        boolean flag = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;
-        return this.defaultBlockState().setValue(WATERLOGGED, flag).setValue(EXTENDED, this.canConnect(context.getLevel(),context.getClickedPos()));
+        return super.getStateForPlacement(context).setValue(EXTENDED, this.canConnect(context.getLevel(),context.getClickedPos()));
     }
 
     //called when a neighbor is placed

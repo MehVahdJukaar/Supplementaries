@@ -20,7 +20,7 @@ import net.minecraftforge.common.extensions.IForgeBlock;
 
 import java.util.List;
 
-public abstract class MimicBlock extends Block implements  IForgeBlock{
+public abstract class MimicBlock extends Block implements IForgeBlock{
     public MimicBlock(Properties properties) {
         super(properties);
     }

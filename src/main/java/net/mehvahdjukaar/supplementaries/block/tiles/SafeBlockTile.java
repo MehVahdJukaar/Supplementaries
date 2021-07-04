@@ -57,6 +57,22 @@ public class SafeBlockTile extends LockableLootTileEntity implements ISidedInven
         return this.items.size();
     }
 
+    public boolean canPlayerOpen(PlayerEntity player, boolean feedbackMessage){
+        if(player.isCreative())return true;
+        if(ServerConfigs.cached.SAFE_SIMPLE) {
+            if (this.isNotOwnedBy(player)) {
+                if(feedbackMessage)
+                    player.displayClientMessage(new TranslationTextComponent("message.supplementaries.safe.owner", this.ownerName), true);
+                return false;
+            }
+        }
+        else{
+            return KeyLockableTile.doesPlayerHaveKeyToOpen(player, this.password, feedbackMessage, "safe");
+        }
+        return true;
+    }
+
+
     public void setOwner(UUID owner){
         this.ownerName=level.getPlayerByUUID(owner).getName().getString();
         this.owner=owner;

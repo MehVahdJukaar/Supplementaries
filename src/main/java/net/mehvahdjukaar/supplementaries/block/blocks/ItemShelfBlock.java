@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
+import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.block.tiles.ItemShelfBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;

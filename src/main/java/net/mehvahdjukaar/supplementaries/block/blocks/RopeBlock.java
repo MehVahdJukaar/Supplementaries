@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import com.google.common.collect.Maps;
+import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties.RopeAttachment;
 import net.mehvahdjukaar.supplementaries.block.tiles.PulleyBlockTile;
@@ -53,7 +54,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-public class RopeBlock extends Block implements IWaterLoggable{
+public class RopeBlock extends WaterBlock {
     private final Map<BlockState,VoxelShape> SHAPES_MAP = new HashMap<>();
 
     public static final EnumProperty<RopeAttachment> NORTH = BlockProperties.CONNECTION_NORTH;
@@ -63,7 +64,6 @@ public class RopeBlock extends Block implements IWaterLoggable{
     public static final BooleanProperty UP = BlockStateProperties.UP;
     public static final BooleanProperty DOWN = BlockStateProperties.DOWN;
     public static final IntegerProperty DISTANCE = BlockStateProperties.STABILITY_DISTANCE;
-    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final BooleanProperty KNOT = BlockProperties.KNOT;
 
     public static final Map<Direction, EnumProperty<RopeAttachment>> FACING_TO_PROPERTY_MAP = Util.make(Maps.newEnumMap(Direction.class), (directions) -> {
@@ -152,11 +152,6 @@ public class RopeBlock extends Block implements IWaterLoggable{
                 || !(context.getEntity() instanceof LivingEntity)) ?
                 getShape(state,worldIn,pos,context) : VoxelShapes.empty();
 
-    }
-
-    @Override
-    public FluidState getFluidState(BlockState state) {
-        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
     @Override
@@ -337,11 +332,6 @@ public class RopeBlock extends Block implements IWaterLoggable{
         } else if (state != blockstate) {
             worldIn.setBlock(pos, blockstate, 3);
         }
-    }
-
-    @Override
-    public boolean isPathfindable(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
-        return false;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
+import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.FaucetBlockTile;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
@@ -36,7 +37,7 @@ import net.minecraftforge.fluids.FluidUtil;
 
 import java.util.Random;
 
-public class FaucetBlock extends Block implements IWaterLoggable{
+public class FaucetBlock extends WaterBlock {
     protected static final VoxelShape SHAPE_NORTH = VoxelShapes.box(0.6875D, 0.3125D, 1D, 0.3125D, 0.9375D, 0.3125D);
     protected static final VoxelShape SHAPE_SOUTH = VoxelShapes.box(0.3125D, 0.3125D, 0D, 0.6875D, 0.9375D, 0.6875D);
     protected static final VoxelShape SHAPE_WEST = VoxelShapes.box(1D, 0.3125D, 0.3125D, 0.3125D, 0.9375D, 0.6875D);
@@ -53,22 +54,12 @@ public class FaucetBlock extends Block implements IWaterLoggable{
     public static final IntegerProperty LIGHT_LEVEL = BlockProperties.LIGHT_LEVEL_0_15;
     public static final BooleanProperty HAS_JAR = BlockProperties.HAS_JAR;
     public static final BooleanProperty EXTENDED = BlockStateProperties.ATTACHED; //glass extension
-    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+
     public FaucetBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(HAS_JAR, false).setValue(FACING, Direction.NORTH)
                 .setValue(ENABLED, false).setValue(EXTENDED, false).setValue(POWERED, false)
                 .setValue(HAS_WATER, false).setValue(WATERLOGGED,false).setValue(LIGHT_LEVEL,0));
-    }
-
-    @Override
-    public boolean isPathfindable(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
-        return false;
-    }
-
-    @Override
-    public FluidState getFluidState(BlockState state) {
-        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
     @Override

@@ -45,7 +45,7 @@ public class CrackedBellBlock extends FallingBlock {
     public static final EnumProperty<BellConnection> BELL_CONNECTION = BlockProperties.BELL_CONNECTION;
 
 
-    private static final VoxelShape BELL_TOP_SHAPE = Block.box(4.0D, 6.0D, 3.0D, 12.0D, 12.0D, 12.0D);
+    private static final VoxelShape BELL_TOP_SHAPE = Block.box(4.0D, 3.0D, 4.0D, 12.0D, 12.0D, 12.0D);
     private static final VoxelShape BELL_BOTTOM_SHAPE = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 3.0D, 14.0D);
     private static final VoxelShape FLOOR_SHAPE = VoxelShapes.or(BELL_BOTTOM_SHAPE, BELL_TOP_SHAPE);
     private static final VoxelShape BELL_SHAPE = FLOOR_SHAPE.move(0,0.0625,0);

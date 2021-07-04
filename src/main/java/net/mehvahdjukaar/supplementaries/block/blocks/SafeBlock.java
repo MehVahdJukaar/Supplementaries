@@ -23,10 +23,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.loot.LootContext;
 import net.minecraft.loot.LootParameters;
 import net.minecraft.nbt.CompoundNBT;
@@ -147,18 +144,18 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable {
                 //clear ownership with tripwire
                 boolean cleared = false;
                 if(ServerConfigs.cached.SAFE_SIMPLE){
-                    if(((item instanceof BlockItem && ((BlockItem) item).getBlock() instanceof TripWireHookBlock)||
-                            item instanceof KeyItem) &&
+                    if((item == Items.TRIPWIRE_HOOK || item instanceof KeyItem) &&
                             (safe.isOwnedBy(player)||(safe.isNotOwnedBy(player)&&player.isCreative()))){
                         cleared = true;
                     }
                 }
                 else{
                     if(player.isShiftKeyDown() && item instanceof KeyItem && (player.isCreative() ||
-                            stack.getHoverName().getString().equals(safe.password))){
+                            KeyLockableTile.isCorrectKey(stack, safe.password))){
                         cleared = true;
                     }
                 }
+
                 if(cleared){
                     safe.clearOwner();
                     player.displayClientMessage(new TranslationTextComponent("message.supplementaries.safe.cleared"),true);
@@ -191,7 +188,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable {
                                 return ActionResultType.CONSUME;
                             }
                         }
-                        else if(!KeyLockableTile.isKeyInInventory(player, safe.password,"safe")&&!player.isCreative()){
+                        else if(!safe.canPlayerOpen(player,true)&&!player.isCreative()){
                             return ActionResultType.CONSUME;
                         }
                     }
@@ -200,9 +197,8 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable {
                 }
 
                 return ActionResultType.CONSUME;
-            } else {
-                return ActionResultType.PASS;
             }
+            return ActionResultType.PASS;
         }
     }
 
@@ -280,19 +276,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable {
         if(ServerConfigs.cached.SAFE_UNBREAKABLE) {
             TileEntity tileentity = world.getBlockEntity(pos);
             if (tileentity instanceof SafeBlockTile) {
-                SafeBlockTile te = (SafeBlockTile) tileentity;
-                if(ServerConfigs.cached.SAFE_SIMPLE) {
-                    if (!player.isCreative() && te.isNotOwnedBy(player)) {
-                        player.displayClientMessage(new TranslationTextComponent("message.supplementaries.safe.owner", te.ownerName), true);
-                        return false;
-                    }
-                }
-                else{
-                    if (!player.isCreative() && !KeyLockableTile.isKeyInInventory(player,te.password,"safe")) {
-                        player.displayClientMessage(new TranslationTextComponent("message.supplementaries.safe.locked", te.ownerName), true);
-                        return false;
-                    }
-                }
+                return ((SafeBlockTile) tileentity).canPlayerOpen(player,true);
             }
         }
         return super.removedByPlayer(state,world,pos,player,willHarvest,fluid);
