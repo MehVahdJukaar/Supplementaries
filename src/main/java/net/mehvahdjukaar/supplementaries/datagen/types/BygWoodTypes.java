@@ -29,6 +29,7 @@ public enum BygWoodTypes implements IWoodType {
     LAMENTS("lament"),
     BULBISS("bulbis"),
     NIGHTSHADES("nightshade"),
+    IMPARIUS("imparius"),
     ETHERS("ether");
 
     private final String name;

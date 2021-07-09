@@ -5,7 +5,7 @@
 		"2": "supplementaries:blocks/flower_box_top",
 		"particle": "supplementaries:blocks/flower_box_sides",
 		"flowerpot": "supplementaries:blocks/flower_box_sides",
-		"dirt": "supplementaries:block/dirt"
+		"dirt": "minecraft:block/dirt"
 	},
 	"elements": [
 		{

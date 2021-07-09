@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
+import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
-import net.mehvahdjukaar.supplementaries.block.tiles.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.block.tiles.PedestalBlockTile;
 import net.mehvahdjukaar.supplementaries.items.SackItem;
 import net.minecraft.block.Block;

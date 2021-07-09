@@ -12,6 +12,7 @@ public enum BetterEndWoodTypes implements IWoodType {
     TENANEA ("tenanea", MaterialColor.COLOR_PINK),
     HELIX_TREE ("helix_tree", MaterialColor.COLOR_ORANGE),
     UMBRELLA_TREE ("umbrella_tree",  MaterialColor.COLOR_GREEN),
+    LUCERNIA ("lucernia",  MaterialColor.COLOR_ORANGE),
     JELLYSHROOM ("jellyshroom",  MaterialColor.COLOR_LIGHT_BLUE);
 
     private final String name;

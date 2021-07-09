@@ -6,9 +6,10 @@ import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.common.AdventurerMapsHandler;
 import net.mehvahdjukaar.supplementaries.common.FlowerPotHelper;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
+import net.mehvahdjukaar.supplementaries.compat.quark.QuarkPlugin;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.fluids.FluidStuff;
+import net.mehvahdjukaar.supplementaries.fluids.ModSoftFluids;
 import net.mehvahdjukaar.supplementaries.mixins.accessors.ChickenEntityAccessor;
 import net.mehvahdjukaar.supplementaries.mixins.accessors.HorseEntityAccessor;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
@@ -81,13 +82,15 @@ public class ModSetup {
 
             CapturedMobsHelper.refresh();
 
-            Dispenser.registerBehaviors();
+            DispenserStuff.registerBehaviors();
 
             StructureRegistry.setup();
 
             StructureLocator.init();
 
-            FluidStuff.init();
+            ModSoftFluids.init();
+
+            //if(CompatHandler.quark) QuarkPlugin.addMissingDispenserBlockPlacingBehaviors();
 
         });
     }

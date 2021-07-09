@@ -1,9 +1,9 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
+import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.FlowerBoxBlockTile;
-import net.mehvahdjukaar.supplementaries.block.tiles.ItemDisplayTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,9 +19,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
@@ -79,17 +79,18 @@ public class FlowerBoxBlock extends WaterBlock {
             int ind;
 
             Direction dir = state.getValue(FACING);
+            Vector3d v = hit.getLocation();
+            v = v.add(Math.round(Math.abs(v.x)+1),0,Math.round(Math.abs(v.z)+1));
+
             if(dir.getAxis() == Direction.Axis.X){
-                ind = (int)((hit.getLocation().z%1d)/(1/3d));
-                if(ind<0)ind = 3+ind;
-                ind = MathHelper.clamp(ind,0,2);
+
+                ind = (int)((v.z%1d)/(1/3d));
                 if(dir.getStepX()<0 ) ind = 2-ind;
             }
             else{
-                ind = (int)((hit.getLocation().x%1d)/(1/3d));
-                if(ind<0)ind = 3+ind;
-                ind = MathHelper.clamp(ind,0,2);
-                if(dir.getStepZ()>0 ^ dir.getStepX()>0) ind = 2-ind;
+                ind = (int)((v.x%1d)/(1/3d));
+                if(dir.getStepZ()>0 ) ind = 2-ind;
+
             }
             return ((ItemDisplayTile) tileentity).interact(player,handIn,ind);
         }

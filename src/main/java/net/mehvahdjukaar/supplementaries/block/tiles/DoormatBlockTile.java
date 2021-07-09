@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
+import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.block.blocks.DoormatBlock;
 import net.mehvahdjukaar.supplementaries.block.util.ITextHolder;
 import net.mehvahdjukaar.supplementaries.block.util.TextHolder;

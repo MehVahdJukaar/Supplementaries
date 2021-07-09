@@ -75,8 +75,8 @@ public class Registry {
     }
 
     //creative tab
-    private static final boolean tab = RegistryConfigs.reg.CREATIVE_TAB.get();
-    private static final boolean jar_tab = RegistryConfigs.reg.JAR_TAB.get();
+    private static final boolean tab = false;//RegistryConfigs.reg.CREATIVE_TAB.get();
+    private static final boolean jar_tab = false;//RegistryConfigs.reg.JAR_TAB.get();
     public static final ItemGroup MOD_TAB = !tab?null:
             new ItemGroup("supplementaries") {
                 @Override
@@ -304,6 +304,10 @@ public class Registry {
     public static final String FLUTE_NAME = "flute";
     public static final RegistryObject<Item> FLUTE_ITEM = regItem(FLUTE_NAME,()-> new Flute((new Item.Properties())
             .tab(getTab(ItemGroup.TAB_TOOLS,FLUTE_NAME)).stacksTo(1).durability(32)));
+    //key
+    public static final String SPEEDOMETER_NAME = "speedometer";
+    public static final RegistryObject<Item> SPEEDOMETER_ITEM = regItem(SPEEDOMETER_NAME,()-> new SpeedometerItem(
+            (new Item.Properties()).tab(getTab(ItemGroup.TAB_TOOLS,SPEEDOMETER_NAME))));
 
     //decoration blocks
 

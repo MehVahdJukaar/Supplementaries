@@ -8,6 +8,8 @@ import net.mehvahdjukaar.supplementaries.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.client.Materials;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.SignPostBlockTileRenderer;
+import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
+import net.mehvahdjukaar.supplementaries.compat.framedblocks.FramedSignPost;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.UpdateServerTextHolderPacket;
 import net.minecraft.block.BlockState;
@@ -188,6 +190,7 @@ public class SignPostGui extends Screen {
         //render fence
         matrixstack.translate(-0.5, -0.5, -0.5);
         BlockState fence = this.tileSign.mimic;
+        if(CompatHandler.framedblocks && tileSign.framed)fence = FramedSignPost.framedFence;
         if(fence !=null)blockRenderer.renderBlock(fence, matrixstack, irendertypebuffer$impl, 15728880, OverlayTexture.NO_OVERLAY, EmptyModelData.INSTANCE);
 
         matrixstack.popPose();

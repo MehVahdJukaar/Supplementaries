@@ -13,24 +13,16 @@
         }
       ],
       "recipe": {
-        "type": "minecraft:crafting_shaped",
+        "type": "minecraft:crafting_shapeless",
         "group": "sign_post",
-        "pattern": [
-          "   ",
-          "222",
-          " 1 "
-        ],
-        "key": {
-          "1": {
-            "item": "minecraft:stick"
-          },
-          "2": {
-            "item": "omni:cave_mushroom_planks"
+        "ingredients": [
+          {
+            "item": "omni:cave_mushroom_sign"
           }
-        },
+        ],
         "result": {
           "item": "supplementaries:sign_post_cave_mushroom",
-          "count": 3
+          "count": 2
         }
       }
     }

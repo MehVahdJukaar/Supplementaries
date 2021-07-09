@@ -1,7 +1,10 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
+import net.mehvahdjukaar.selene.fluids.ISoftFluidConsumer;
+import net.mehvahdjukaar.selene.fluids.SoftFluid;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.block.BlockProperties.Topping;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
@@ -12,7 +15,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.*;
-import net.minecraft.pathfinding.PathType;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.state.EnumProperty;
@@ -28,7 +31,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class PancakeBlock extends WaterBlock {
+public class PancakeBlock extends WaterBlock implements ISoftFluidConsumer {
     protected static final VoxelShape SHAPE_1 = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 2.0D, 14.0D);
     protected static final VoxelShape SHAPE_2 = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 4.0D, 14.0D);
     protected static final VoxelShape SHAPE_3 = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 6.0D, 14.0D);
@@ -39,36 +42,36 @@ public class PancakeBlock extends WaterBlock {
     protected static final VoxelShape SHAPE_8 = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 16.0D, 14.0D);
 
     public static final IntegerProperty PANCAKES = BlockProperties.PANCAKES_1_8;
-    public static final EnumProperty<BlockProperties.Topping> TOPPING = BlockProperties.TOPPING;
+    public static final EnumProperty<Topping> TOPPING = BlockProperties.TOPPING;
 
     public PancakeBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(PANCAKES, 1).setValue(TOPPING, BlockProperties.Topping.NONE).setValue(WATERLOGGED,false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(PANCAKES, 1).setValue(TOPPING, Topping.NONE).setValue(WATERLOGGED,false));
     }
 
-    private BlockProperties.Topping getTopping(Item item){
+    private Topping getTopping(Item item){
         if(item instanceof HoneyBottleItem)return BlockProperties.Topping.HONEY;
         //TODO: add tag support here
         if((ModTags.CHOCOLATE_BARS.getValues().isEmpty() && item == Items.COCOA_BEANS) || item.is(ModTags.CHOCOLATE_BARS)) {
-            return BlockProperties.Topping.CHOCOLATE;
+            return Topping.CHOCOLATE;
         }
-        if(item.getRegistryName().toString().equals("autumnity:syrup_bottle"))return BlockProperties.Topping.SYRUP;
+        if(item.getRegistryName().toString().equals("autumnity:syrup_bottle"))return Topping.SYRUP;
         //if(item.isIn(ItemTags.getCollection().get(ResourceLocation.tryCreate("forge:sugar"))))return BlockProperties.Topping.CHOCOLATE;
-        return BlockProperties.Topping.NONE;
+        return Topping.NONE;
     }
 
     @Override
     public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         ItemStack stack = player.getItemInHand(handIn);
         Item item = stack.getItem();
-        BlockProperties.Topping t = getTopping(item);
-        if(t!= BlockProperties.Topping.NONE){
-            if(state.getValue(TOPPING) == BlockProperties.Topping.NONE) {
+        Topping t = getTopping(item);
+        if(t!= Topping.NONE){
+            if(state.getValue(TOPPING) == Topping.NONE) {
                 if (!worldIn.isClientSide) {
                     worldIn.setBlock(pos, state.setValue(TOPPING, t), 3);
                     worldIn.playSound(null,pos, SoundEvents.HONEY_BLOCK_PLACE, SoundCategory.BLOCKS,1,1.2f);
                 }
-                ItemStack returnItem = t==BlockProperties.Topping.CHOCOLATE? ItemStack.EMPTY : new ItemStack(Items.GLASS_BOTTLE);
+                ItemStack returnItem = t==Topping.CHOCOLATE? ItemStack.EMPTY : new ItemStack(Items.GLASS_BOTTLE);
                 if(!player.isCreative())
                     CommonUtil.swapItem(player,handIn,returnItem);
                 //player.setHeldItem(handIn, DrinkHelper.fill(stack.copy(), player, new ItemStack(Items.GLASS_BOTTLE), false));
@@ -112,7 +115,7 @@ public class PancakeBlock extends WaterBlock {
         } else {
             world.removeBlock(pos, false);
         }
-        if(state.getValue(TOPPING)!= BlockProperties.Topping.NONE){
+        if(state.getValue(TOPPING)!= Topping.NONE){
             player.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED,8*20));
         }
     }
@@ -183,9 +186,12 @@ public class PancakeBlock extends WaterBlock {
     }
 
     @Override
-    public boolean isPathfindable(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
+    public boolean tryAcceptingFluid(World world, BlockState state, BlockPos pos, SoftFluid f, CompoundNBT nbt, int amount) {
+        Topping topping = Topping.fromFluid(f);
+        if(state.getValue(TOPPING) == Topping.NONE && topping != Topping.NONE){
+            world.setBlock(pos,state.setValue(TOPPING,topping),2);
+            return true;
+        }
         return false;
     }
-
-
 }

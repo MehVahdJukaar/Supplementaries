@@ -1,0 +1,94 @@
+{
+  "variants": {
+    "extension=0,facing=north,tile=false": {
+      "model": "supplementaries:block/hanging_sign_0_fairy_ring_mushroom_hbt"
+    },
+    "extension=1,facing=north,tile=false": {
+      "model": "supplementaries:block/hanging_sign_1_fairy_ring_mushroom_hbt"
+    },
+    "extension=2,facing=north,tile=false": {
+      "model": "supplementaries:block/hanging_sign_2_fairy_ring_mushroom_hbt"
+    },
+    "extension=0,facing=south,tile=false": {
+      "model": "supplementaries:block/hanging_sign_0_fairy_ring_mushroom_hbt",
+      "y": 180
+    },
+    "extension=1,facing=south,tile=false": {
+      "model": "supplementaries:block/hanging_sign_1_fairy_ring_mushroom_hbt",
+      "y": 180
+    },
+    "extension=2,facing=south,tile=false": {
+      "model": "supplementaries:block/hanging_sign_2_fairy_ring_mushroom_hbt",
+      "y": 180
+    },
+    "extension=0,facing=west,tile=false": {
+      "model": "supplementaries:block/hanging_sign_0_fairy_ring_mushroom_hbt",
+      "y": 270
+    },
+    "extension=1,facing=west,tile=false": {
+      "model": "supplementaries:block/hanging_sign_1_fairy_ring_mushroom_hbt",
+      "y": 270
+    },
+    "extension=2,facing=west,tile=false": {
+      "model": "supplementaries:block/hanging_sign_2_fairy_ring_mushroom_hbt",
+      "y": 270
+    },
+    "extension=0,facing=east,tile=false": {
+      "model": "supplementaries:block/hanging_sign_0_fairy_ring_mushroom_hbt",
+      "y": 90
+    },
+    "extension=1,facing=east,tile=false": {
+      "model": "supplementaries:block/hanging_sign_1_fairy_ring_mushroom_hbt",
+      "y": 90
+    },
+    "extension=2,facing=east,tile=false": {
+      "model": "supplementaries:block/hanging_sign_2_fairy_ring_mushroom_hbt",
+      "y": 90
+    },
+    "extension=0,facing=north,tile=true": {
+      "model": "supplementaries:block/hanging_sign_tile_fairy_ring_mushroom_hbt"
+    },
+    "extension=1,facing=north,tile=true": {
+      "model": "supplementaries:block/hanging_sign_tile_fairy_ring_mushroom_hbt"
+    },
+    "extension=2,facing=north,tile=true": {
+      "model": "supplementaries:block/hanging_sign_tile_fairy_ring_mushroom_hbt"
+    },
+    "extension=0,facing=south,tile=true": {
+      "model": "supplementaries:block/hanging_sign_tile_fairy_ring_mushroom_hbt",
+      "y": 180
+    },
+    "extension=1,facing=south,tile=true": {
+      "model": "supplementaries:block/hanging_sign_tile_fairy_ring_mushroom_hbt",
+      "y": 180
+    },
+    "extension=2,facing=south,tile=true": {
+      "model": "supplementaries:block/hanging_sign_tile_fairy_ring_mushroom_hbt",
+      "y": 180
+    },
+    "extension=0,facing=west,tile=true": {
+      "model": "supplementaries:block/hanging_sign_tile_fairy_ring_mushroom_hbt",
+      "y": 270
+    },
+    "extension=1,facing=west,tile=true": {
+      "model": "supplementaries:block/hanging_sign_tile_fairy_ring_mushroom_hbt",
+      "y": 270
+    },
+    "extension=2,facing=west,tile=true": {
+      "model": "supplementaries:block/hanging_sign_tile_fairy_ring_mushroom_hbt",
+      "y": 270
+    },
+    "extension=0,facing=east,tile=true": {
+      "model": "supplementaries:block/hanging_sign_tile_fairy_ring_mushroom_hbt",
+      "y": 90
+    },
+    "extension=1,facing=east,tile=true": {
+      "model": "supplementaries:block/hanging_sign_tile_fairy_ring_mushroom_hbt",
+      "y": 90
+    },
+    "extension=2,facing=east,tile=true": {
+      "model": "supplementaries:block/hanging_sign_tile_fairy_ring_mushroom_hbt",
+      "y": 90
+    }
+  }
+}

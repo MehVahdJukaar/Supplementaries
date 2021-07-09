@@ -43,11 +43,13 @@ public class StructureLocator {
         return MathHelper.floor(MathHelper.sqrt((float)(i * i + j * j)));
     }
 
-    public static List<Pair<Integer, BlockPos>> find(ServerWorld world, BlockPos pos, int range, int count){
+    public static Pair<List<Pair<Integer, BlockPos>>,Boolean> find(ServerWorld world, BlockPos pos, int range, int count){
         //TreeMap<Integer,BlockPos> found = new TreeMap<>();
         List<Pair<Integer,BlockPos>> found = new ArrayList<>();
 
         //TODO: add to structure biome event
+
+        boolean inVillage = false;
 
         if(world.getServer().getWorldData().worldGenSettings().generateFeatures()){
 
@@ -108,7 +110,8 @@ public class StructureLocator {
                                         BlockPos p = structureStart.getLocatePos();
                                         int distance = dist(pos, p);
                                         //discard one spawning in a village
-                                        if (distance > 64) found.add(new ImmutablePair<>(distance, p));
+                                        if (distance > 90) found.add(new ImmutablePair<>(distance, p));
+                                        else inVillage = true;
                                         //checking all nearby villages to find the closest
                                     }
 
@@ -137,7 +140,7 @@ public class StructureLocator {
         //sort
 
         Collections.sort(found);
-        return found;
+        return new ImmutablePair<>(found,inVillage);
     }
 
 

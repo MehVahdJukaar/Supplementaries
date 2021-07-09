@@ -14,6 +14,7 @@ public class ModTags {
 
     //block tags
     public static final Tags.IOptionalNamedTag<Block> POSTS = blockTag("posts");
+    public static final Tags.IOptionalNamedTag<Block> ENCHANTMENT_BYPASS = blockTag("enchantment_bypass");
     public static final Tags.IOptionalNamedTag<Block> PALISADES = blockTag("palisades");
     public static final Tags.IOptionalNamedTag<Block> BEAMS = blockTag("beams");
     public static final Tags.IOptionalNamedTag<Block> ROPE_SUPPORT_TAG = blockTag("rope_support");

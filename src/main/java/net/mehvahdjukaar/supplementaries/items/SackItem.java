@@ -1,8 +1,6 @@
 package net.mehvahdjukaar.supplementaries.items;
 
 
-import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
-import net.mehvahdjukaar.supplementaries.compat.quark.QuarkTooltipPlugin;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.block.Block;
@@ -11,14 +9,13 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.*;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -65,7 +62,7 @@ public class SackItem extends BlockItem {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-
+        /*
         if(!CompatHandler.quark || !QuarkTooltipPlugin.canRenderTooltip()) {
             CompoundNBT compoundnbt = stack.getTagElement("BlockEntityTag");
             if (compoundnbt != null) {
@@ -96,6 +93,8 @@ public class SackItem extends BlockItem {
                 }
             }
         }
+        */
+
         if(!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().options.advancedItemTooltips)return;
         tooltip.add(new TranslationTextComponent("message.supplementaries.sack").withStyle(TextFormatting.ITALIC).withStyle(TextFormatting.GRAY));
     }

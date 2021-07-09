@@ -71,8 +71,7 @@ public class BambooSpikesBlockTile extends TileEntity {
         this.charges = Math.max(MAX_CHARGES-missing,0);
     }
 
-    public boolean tryApplyPotion(ItemStack stack){
-        Potion p = PotionUtils.getPotion(stack);
+    public boolean tryApplyPotion(Potion p){
         if(this.charges==0||this.potion==Potions.EMPTY||(this.potion.equals(p)&&this.charges!=MAX_CHARGES)) {
             this.potion = p;
             this.charges = MAX_CHARGES;

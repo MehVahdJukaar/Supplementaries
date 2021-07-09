@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
+import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties.Winding;
 import net.mehvahdjukaar.supplementaries.block.blocks.PulleyBlock;
 import net.mehvahdjukaar.supplementaries.common.ModTags;

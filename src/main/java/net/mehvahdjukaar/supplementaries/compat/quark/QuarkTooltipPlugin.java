@@ -30,6 +30,7 @@ import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.content.client.module.ChestSearchingModule;
 import vazkii.quark.content.client.module.ImprovedTooltipsModule;
 import vazkii.quark.content.client.tooltip.ShulkerBoxTooltips;
+import vazkii.quark.content.client.tooltip.TooltipUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -167,3 +168,4 @@ public class QuarkTooltipPlugin {
 
 
 }
+

@@ -32,10 +32,12 @@ public class Spawns {
                     String modbiomes = biomeres.getNamespace();
                     if (ServerConfigs.spawn.FIREFLY_MOD_WHITELIST.get().contains(modbiomes) ||
                             ServerConfigs.spawn.FIREFLY_BIOMES.get().contains(biomeres.toString())) {
+                        int min = ServerConfigs.spawn.FIREFLY_MIN.get();
+                        int max = Math.max(min,ServerConfigs.spawn.FIREFLY_MAX.get());
+
                         event.getSpawns().getSpawner(EntityClassification.AMBIENT).add(new MobSpawnInfo.Spawners(
                                 Registry.FIREFLY_TYPE.get(), ServerConfigs.spawn.FIREFLY_WEIGHT.get(),
-                                ServerConfigs.spawn.FIREFLY_MIN.get(),
-                                ServerConfigs.spawn.FIREFLY_MAX.get()));
+                                min,max));
                     }
 
                 }

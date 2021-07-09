@@ -1,9 +1,8 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
+import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties.Winding;
-import net.mehvahdjukaar.supplementaries.block.tiles.ItemDisplayTile;
-import net.mehvahdjukaar.supplementaries.block.tiles.NoticeBoardBlockTile;
 import net.mehvahdjukaar.supplementaries.block.tiles.PulleyBlockTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -151,7 +150,7 @@ public class PulleyBlock extends RotatedPillarBlock {
     @Override
     public int getAnalogOutputSignal(BlockState blockState, World world, BlockPos pos) {
         TileEntity tileentity = world.getBlockEntity(pos);
-        if (tileentity instanceof NoticeBoardBlockTile)
+        if (tileentity instanceof PulleyBlockTile)
             return Container.getRedstoneSignalFromContainer((IInventory) tileentity);
         else
             return 0;

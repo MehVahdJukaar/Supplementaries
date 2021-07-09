@@ -4,14 +4,11 @@
     "#minecraft:campfires",
     "minecraft:furnace",
     "minecraft:blast_furnace",
-    "minecraft:smoker",
-    {
-      "id" :"environmental:kiln",
-      "required": false
-    },
-    {
-      "id" :"charm:kiln",
-      "required": false
-    }
+    "minecraft:smoker"
+  ],
+  "optional": [
+    "charm:kiln",
+    "environmental:kiln",
+    "atum:kiln"
   ]
 }

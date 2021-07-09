@@ -1,9 +1,9 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
+import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.HourGlassBlockTile;
-import net.mehvahdjukaar.supplementaries.block.tiles.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -16,7 +16,6 @@ import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;

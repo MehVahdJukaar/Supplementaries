@@ -1,6 +1,9 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
+import net.mehvahdjukaar.selene.fluids.ISoftFluidConsumer;
+import net.mehvahdjukaar.selene.fluids.SoftFluid;
+import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
@@ -12,7 +15,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
@@ -22,14 +24,12 @@ import net.minecraft.loot.LootContext;
 import net.minecraft.loot.LootParameters;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.pathfinding.PathNodeType;
-import net.minecraft.pathfinding.PathType;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.potion.Potions;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -48,7 +48,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class BambooSpikesBlock extends WaterBlock {
+public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer {
     protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 13.0D, 16.0D);
     protected static final VoxelShape SHAPE_UP = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D);
     protected static final VoxelShape SHAPE_DOWN = Block.box(0.0D, 15.0D, 0.0D, 16.0D, 16.0D, 16.0D);
@@ -170,13 +170,13 @@ public class BambooSpikesBlock extends WaterBlock {
 
     @Override
     public PathNodeType getAiPathNodeType(BlockState state, IBlockReader world, BlockPos pos, MobEntity entity) {
-        return PathNodeType.BLOCKED;
+        return PathNodeType.DAMAGE_OTHER;
     }
 
     public static boolean tryAddingPotion(BlockState state, IWorld world, BlockPos pos, ItemStack stack){
         TileEntity te = world.getBlockEntity(pos);
         if (te instanceof BambooSpikesBlockTile) {
-            if (((BambooSpikesBlockTile) te).tryApplyPotion(stack)) {
+            if (((BambooSpikesBlockTile) te).tryApplyPotion(PotionUtils.getPotion(stack))) {
                 world.playSound(null, pos, SoundEvents.HONEY_BLOCK_FALL, SoundCategory.BLOCKS, 0.5F, 1.5F);
                 world.setBlock(pos,state.setValue(TIPPED,true),3);
                 return true;
@@ -229,5 +229,20 @@ public class BambooSpikesBlock extends WaterBlock {
             }
         }
 
+    }
+
+    @Override
+    public boolean tryAcceptingFluid(World world, BlockState state, BlockPos pos, SoftFluid f, @Nullable CompoundNBT nbt, int amount) {
+        if(f == SoftFluidRegistry.POTION && nbt != null && !state.getValue(TIPPED) && nbt.getString("PotionType").equals("Lingering")){
+            TileEntity te = world.getBlockEntity(pos);
+            if (te instanceof BambooSpikesBlockTile) {
+                if (((BambooSpikesBlockTile) te).tryApplyPotion(PotionUtils.getPotion(nbt))) {
+                    world.playSound(null, pos, SoundEvents.HONEY_BLOCK_FALL, SoundCategory.BLOCKS, 0.5F, 1.5F);
+                    world.setBlock(pos, state.setValue(TIPPED, true), 3);
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

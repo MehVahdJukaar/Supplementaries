@@ -1,11 +1,29 @@
 {
   "replace": false,
-  "optional": [
-    "create:bar_of_chocolate",
-    "neapolitan:chocolate_bar",
-    "fluffy_farmer:chocolate_bar",
-    "xercamod:item_chocolate",
-    "simplefarming:chocolate",
-    "vanillacookbook:chocolate"
+  "values": [
+    {
+      "id" :"create:bar_of_chocolate",
+      "required": false
+    },
+    {
+      "id" :"neapolitan:chocolate_bar",
+      "required": false
+    },
+    {
+      "id" :"fluffy_farmer:chocolate_bar",
+      "required": false
+    },
+    {
+      "id" :"xercamod:item_chocolate",
+      "required": false
+    },
+    {
+      "id" :"simplefarming:chocolate",
+      "required": false
+    },
+    {
+      "id" :"vanillacookbook:chocolate",
+      "required": false
+    }
   ]
 }

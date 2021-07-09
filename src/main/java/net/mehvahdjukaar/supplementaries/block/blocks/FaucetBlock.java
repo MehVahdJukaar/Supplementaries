@@ -8,15 +8,12 @@ import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ConcretePowderBlock;
-import net.minecraft.block.IWaterLoggable;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
-import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.IntegerProperty;
@@ -149,11 +146,12 @@ public class FaucetBlock extends WaterBlock {
         return stateIn;
     }
 
-    //returns false if no color
+    //returns false if no color (water)
     public boolean updateTileFluid(BlockState state, BlockPos pos, IWorld world){
+
         TileEntity te = world.getBlockEntity(pos);
         if(te instanceof FaucetBlockTile){
-            return ((FaucetBlockTile) te).updateContainedFluid(state);
+            return ((FaucetBlockTile) te).updateContainedFluidVisuals(state);
         }
         return false;
     }

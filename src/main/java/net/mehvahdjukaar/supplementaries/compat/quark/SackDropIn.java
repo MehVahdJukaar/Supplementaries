@@ -14,12 +14,12 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.EmptyHandler;
+import vazkii.arl.util.AbstractDropIn;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.base.module.ModuleLoader;
-import vazkii.quark.content.management.capability.ShulkerBoxDropIn;
 import vazkii.quark.content.management.module.ShulkerBoxRightClickModule;
 
-public class SackDropIn extends ShulkerBoxDropIn {
+public class SackDropIn extends AbstractDropIn {
 
     private static final SackBlockTile DUMMY_SACK_TILE = new SackBlockTile();
     private static final BlockState DEFAULT_SACK = Registry.SACK.get().defaultBlockState();

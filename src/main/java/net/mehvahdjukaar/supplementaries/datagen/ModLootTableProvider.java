@@ -2,6 +2,8 @@ package net.mehvahdjukaar.supplementaries.datagen;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
+import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
@@ -33,14 +35,14 @@ public class ModLootTableProvider extends LootTableProvider {
     public void run(DirectoryCache cache) {
 
         for(DyeColor color : DyeColor.values()){
-            addBlockLoot(Registry.FLAGS.get(color).get());
+            //addBlockLoot(Registry.FLAGS.get(color).get());
         }
 
-        /*
+
         for(IWoodType wood : WoodTypes.TYPES.values()){
             addBlockLoot(Registry.HANGING_SIGNS.get(wood).get());
         }
-        */
+
 
 
         saveTables(cache, tables);

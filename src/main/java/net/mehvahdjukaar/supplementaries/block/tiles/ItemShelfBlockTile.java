@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
+import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.block.blocks.ItemShelfBlock;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.util.Direction;

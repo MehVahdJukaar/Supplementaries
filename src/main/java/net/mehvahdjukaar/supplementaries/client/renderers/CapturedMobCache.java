@@ -3,14 +3,13 @@ package net.mehvahdjukaar.supplementaries.client.renderers;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.item.EnderCrystalEntity;
 import net.minecraft.entity.passive.PigEntity;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -31,13 +30,17 @@ public class CapturedMobCache {
             });
 
     public static void addMob(Entity e){
-        if(e==null) e=defaultPig;
+        if(e==null) e=defaultPig.get();
         cachedMobs.put(e.getUUID(), e);
     }
 
-    public static EnderCrystalEntity pedestalCrystal;
+    public static final Lazy<EnderCrystalEntity> pedestalCrystal = Lazy.of(()->{
+        EnderCrystalEntity entity = new EnderCrystalEntity(EntityType.END_CRYSTAL, Minecraft.getInstance().level);
+        entity.setShowBottom(false);
+        return entity;
+    });
 
-    private static Entity defaultPig;
+    private static final Lazy<Entity> defaultPig = Lazy.of(()->new PigEntity(EntityType.PIG, Minecraft.getInstance().level));
     @Nullable
     public static Entity getCachedMob(UUID id){
         return cachedMobs.getIfPresent(id);
@@ -45,18 +48,7 @@ public class CapturedMobCache {
 
     @SubscribeEvent
     public static void onClientTick(TickEvent.ClientTickEvent event) {
-        if(event.phase == TickEvent.Phase.END && pedestalCrystal!=null)pedestalCrystal.time++;
+        if(event.phase == TickEvent.Phase.END && pedestalCrystal.get()!=null)pedestalCrystal.get().time++;
     }
 
-    //remove?
-    @SubscribeEvent
-    public static void onWorldLoad(WorldEvent.Load event) {
-        IWorld world = event.getWorld();
-        //TODO: might remove this on final release
-        if(world instanceof World && ((World) world).dimension()==World.OVERWORLD){
-            defaultPig = new PigEntity(EntityType.PIG, (World) world);
-            pedestalCrystal = new EnderCrystalEntity(EntityType.END_CRYSTAL,(World)world);
-            pedestalCrystal.setShowBottom(false);
-        }
-    }
 }

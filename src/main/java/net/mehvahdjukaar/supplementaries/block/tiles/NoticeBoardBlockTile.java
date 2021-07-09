@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
+import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.block.util.IMapDisplay;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;

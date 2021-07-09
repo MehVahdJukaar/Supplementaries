@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.configs;
 
 import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
+import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.List;
@@ -23,15 +24,18 @@ public class ClientConfigs {
 
     public static class tweaks {
         public static ForgeConfigSpec.BooleanValue COLORED_ARROWS;
-        public static ForgeConfigSpec.BooleanValue COLORED_BWERING_STAND;
+        public static ForgeConfigSpec.BooleanValue COLORED_BREWING_STAND;
+        public static ForgeConfigSpec.BooleanValue CLOCK_CLICK;
         private static void init(ForgeConfigSpec.Builder builder) {
             builder.comment("Game tweaks")
                     .push("tweaks");
-            COLORED_BWERING_STAND = builder.comment("Colors the brewing stand potion texture depending on the potions it's brewing.\n"+
+            COLORED_BREWING_STAND = builder.comment("Colors the brewing stand potion texture depending on the potions it's brewing.\n"+
                     "If using a resource pack add tint index from 0 to 3 to the 3 potion layers")
                     .define("brewing_stand_colors",true);
             COLORED_ARROWS = builder.comment("Makes tipped arrows show their colors when loaded with a crossbow")
                     .define("crossbows_colors",true);
+            CLOCK_CLICK = builder.comment("Allow to right click with a clock to display current time in numerical form")
+                    .define("clock_right_click",true);
             builder.pop();
         }
     }
@@ -49,7 +53,7 @@ public class ClientConfigs {
             builder.comment("General settings")
                     .push("general");
             CONFIG_BUTTON = builder.comment("Enable Quark style config button on main menu. Needs Configured installed to work")
-                    .define("config_button",false);
+                    .define("config_button", CompatHandler.configured);
             TOOLTIP_HINTS = builder.comment("Show some tooltip hints to guide players through the mod")
                     .define("tooltip_hints",true);
             ANTI_REPOST_WARNING = builder.comment("Tries to detect when the mod hasn't been downloaded from Curseforge." +
@@ -256,6 +260,7 @@ public class ClientConfigs {
     public static class cached {
         public static boolean COLORED_ARROWS;
         public static boolean COLORED_BWERING_STAND;
+        public static boolean CLOCK_CLICK;
         public static boolean TOOLTIP_HINTS;
         public static int FIREFLY_PAR_MAXAGE;
         public static double FIREFLY_PAR_SCALE;
@@ -283,8 +288,9 @@ public class ClientConfigs {
 
         public static void refresh(){
             //tweaks
-            COLORED_BWERING_STAND = tweaks.COLORED_BWERING_STAND.get();
+            COLORED_BWERING_STAND = tweaks.COLORED_BREWING_STAND.get();
             COLORED_ARROWS = tweaks.COLORED_ARROWS.get();
+            CLOCK_CLICK = tweaks.CLOCK_CLICK.get();
             //general
             TOOLTIP_HINTS = general.TOOLTIP_HINTS.get();
             CONFIG_BUTTON = general.CONFIG_BUTTON.get();

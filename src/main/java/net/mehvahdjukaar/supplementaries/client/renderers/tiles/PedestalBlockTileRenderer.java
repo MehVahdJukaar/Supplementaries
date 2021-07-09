@@ -102,7 +102,7 @@ public class PedestalBlockTileRenderer extends TileEntityRenderer<PedestalBlockT
                 matrixStackIn.mulPose(Const.ZN45);
             }
             else if (tile.type == PedestalBlockTile.DisplayType.CRYSTAL && fancy) {
-                entityRenderer.render(CapturedMobCache.pedestalCrystal, 0.0D, 0.0D, 0.0D, 0.0F, partialTicks, matrixStackIn, bufferIn, combinedLightIn);
+                entityRenderer.render(CapturedMobCache.pedestalCrystal.get(), 0.0D, 0.0D, 0.0D, 0.0F, partialTicks, matrixStackIn, bufferIn, combinedLightIn);
                 matrixStackIn.popPose();
                 return;
             }

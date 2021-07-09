@@ -4,6 +4,7 @@ import com.google.common.collect.Iterables;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftSessionService;
 import com.mojang.authlib.properties.Property;
+import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.StatueBlock;
 import net.mehvahdjukaar.supplementaries.common.ModTags;

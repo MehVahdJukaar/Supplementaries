@@ -1,0 +1,7 @@
+{
+  "parent": "supplementaries:item/hanging_sign_template",
+  "textures": {
+    "0": "supplementaries:blocks/hanging_signs/omni/hanging_sign_front_palo_verde",
+    "2": "supplementaries:blocks/hanging_signs/omni/hanging_sign_details_palo_verde"
+  }
+}

@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
 
+import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.blocks.EnhancedLanternBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.NoticeBoardBlock;
@@ -25,6 +26,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.BiomeDictionary;
@@ -52,6 +54,7 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
     private static final BlockState stone = Blocks.STONE.defaultBlockState();
     private static final BlockState stair = Blocks.STONE_STAIRS.defaultBlockState();
     private static final BlockState air = Blocks.AIR.defaultBlockState();
+    private static final BlockState path = Blocks.GRASS_PATH.defaultBlockState();
 
 
     private double averageAngles(float a, float b){
@@ -78,7 +81,13 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
 
                 BlockState topState = trapdoor;
 
-                List<Pair<Integer,BlockPos>> villages = StructureLocator.find(world, pos, 25, 2);
+                Pair<List<Pair<Integer,BlockPos>>,Boolean> locateResult = StructureLocator.find(world, pos, 25, 2);
+                List<Pair<Integer,BlockPos>> villages = locateResult.getLeft();
+
+                //if I am in a village
+                boolean inVillage = locateResult.getRight();
+
+                if(inVillage)replaceCobbleWithPath(world, pos);
 
 
                 if (villages.size() >= 1) {
@@ -264,7 +273,6 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
                     }
                 }
 
-
                 world.setBlock(this.worldPosition, topState, 3);
 
                 return;
@@ -287,4 +295,21 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
         else s = 1000;
         return new TranslationTextComponent("message.supplementaries.road_sign",(((d + (s/2)) / s) * s));
     }
+
+    private static void replaceCobbleWithPath(World world, BlockPos pos){
+        //generate cobble path
+
+        for(int i = -2; i <= 2; ++i) {
+            for (int j = -2; j <= 2; ++j) {
+                if(Math.abs(i)==2&&Math.abs(j)==2)continue;
+                if(i==0&&j==0)continue;
+                BlockPos pathPos = pos.offset(i, -2, j);
+                BlockState state = world.getBlockState(pathPos);
+                if(state.is(Blocks.COBBLESTONE)||state.is(Blocks.MOSSY_COBBLESTONE)){
+                    world.setBlock(pathPos, path, 2);
+                }
+            }
+        }
+    }
+
 }

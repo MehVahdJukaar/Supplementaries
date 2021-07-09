@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.entities;
 
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.TNTBlock;
@@ -138,7 +139,7 @@ public class BombEntity extends ProjectileItemEntity implements IRendersAsItem, 
             break;
         case 10:
             spawnBreakParticles();
-            level.addParticle(Registry.BOMB_EXPLOSION_PARTICLE_EMITTER.get(), this.getX(), this.getY() + 1, this.getZ(), this.blue ? 6D : 2D, 0, 0);
+            level.addParticle(Registry.BOMB_EXPLOSION_PARTICLE_EMITTER.get(), this.getX(), this.getY() + 1, this.getZ(), this.blue ? 6D : ServerConfigs.cached.BOMB_RADIUS, 0, 0);
             break;
         case 68:
             level.addParticle(ParticleTypes.FLASH, this.getX(), this.getY() + 1, this.getZ(), 0, 0, 0);
@@ -211,7 +212,7 @@ public class BombEntity extends ProjectileItemEntity implements IRendersAsItem, 
     }
 
     public static boolean canBreakBlock(IBlockReader world, BlockPos pos, BlockState state, float power) {
-        return state.canBeReplaced(Fluids.WATER) || state.getBlock() instanceof TNTBlock;
+        return state.canBeReplaced(Fluids.WATER) || state.getBlock() instanceof TNTBlock || ServerConfigs.cached.BOMB_BREAKS;
     }
 
     public void explode() {
@@ -220,7 +221,7 @@ public class BombEntity extends ProjectileItemEntity implements IRendersAsItem, 
                 return canBreakBlock(reader, pos, state, power);
             }
         },
-                this.getX(), this.getY() + 0.25, this.getZ(), blue ? 6f : 2f, false, Explosion.Mode.BREAK);
+                this.getX(), this.getY() + 0.25, this.getZ(), blue ? 6f : ServerConfigs.cached.BOMB_RADIUS, false, Explosion.Mode.BREAK);
 
         explosion.explode();
         explosion.finalizeExplosion(false);

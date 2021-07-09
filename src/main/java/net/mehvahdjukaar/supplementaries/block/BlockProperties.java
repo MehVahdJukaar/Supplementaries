@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.block;
 
+import net.mehvahdjukaar.selene.fluids.SoftFluid;
+import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.supplementaries.block.util.IBellConnection;
 import net.minecraft.block.BlockState;
 import net.minecraft.state.BooleanProperty;
@@ -50,11 +52,13 @@ public class BlockProperties {
     public static final EnumProperty<PostType> POST_TYPE = EnumProperty.create("type",PostType.class);
     public static final EnumProperty<BellAttachment> BELL_ATTACHMENT = EnumProperty.create("attachment",BellAttachment.class);
     public static final EnumProperty<IBellConnection.BellConnection> BELL_CONNECTION = EnumProperty.create("connection", IBellConnection.BellConnection.class);
+    public static final IntegerProperty HONEY_LEVEL_POT = IntegerProperty.create("honey_level", 0, 4);
 
 
 
     //model properties
     public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
+    public static final ModelProperty<Boolean> FRAMED = new ModelProperty<>();
 
     public enum RopeAttachment implements IStringSerializable{
         NONE("none"), //default /no attachment
@@ -136,6 +140,14 @@ public class BlockProperties {
         @Override
         public String getSerializedName() {
             return this.name;
+        }
+
+        public static Topping fromFluid(SoftFluid s){
+            if(s == SoftFluidRegistry.HONEY)return HONEY;
+            String name = s.getRegistryName().getPath();
+            if(name.equals("chocolate"))return CHOCOLATE;
+            if(name.equals("syrup")||name.equals("maple_syrup"))return SYRUP;
+            return NONE;
         }
     }
     public enum Winding implements IStringSerializable{

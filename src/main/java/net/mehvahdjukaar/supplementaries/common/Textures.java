@@ -32,12 +32,11 @@ public class Textures {
     public static final ResourceLocation HONEY_TEXTURE = new ResourceLocation(LIB, "blocks/honey_liquid");
     public static final ResourceLocation DRAGON_BREATH_TEXTURE = new ResourceLocation(LIB, "blocks/dragon_breath_liquid");
     public static final ResourceLocation SOUP_TEXTURE = new ResourceLocation(LIB, "blocks/soup_liquid");
-    public static final ResourceLocation SOUL_TEXTURE = new ResourceLocation(LIB, "blocks/soul");
     public static final ResourceLocation XP_TEXTURE = new ResourceLocation(LIB, "blocks/xp_still");
     public static final ResourceLocation XP_TEXTURE_FLOW = new ResourceLocation(LIB, "blocks/xp_flow");
     public static final ResourceLocation MAGMA_TEXTURE = new ResourceLocation(LIB, "blocks/magma_still");
     public static final ResourceLocation MAGMA_TEXTURE_FLOW = new ResourceLocation(LIB, "blocks/magma_flow");
-    public static final ResourceLocation FAUCET_TEXTURE = new ResourceLocation(MOD_ID, "blocks/faucet_water");
+    public static final ResourceLocation SOUL_TEXTURE = new ResourceLocation(MOD_ID, "blocks/soul");
     public static final ResourceLocation FISHIES_TEXTURE = new ResourceLocation(MOD_ID, "blocks/fishies");
     public static final ResourceLocation BELLOWS_TEXTURE = new ResourceLocation(MOD_ID, "entity/bellows");
     public static final ResourceLocation LASER_BEAM_TEXTURE = new ResourceLocation(MOD_ID, "blocks/laser_beam");
@@ -61,11 +60,7 @@ public class Textures {
     public static final ResourceLocation GLOBE_MOON_TEXTURE = new ResourceLocation(MOD_ID,"textures/entity/globes/globe_moon.png");
     public static final ResourceLocation GLOBE_SUN_TEXTURE = new ResourceLocation(MOD_ID,"textures/entity/globes/globe_sun.png");
     public static final ResourceLocation GLOBE_SHEARED_TEXTURE = new ResourceLocation(MOD_ID,"textures/entity/globes/globe_sheared.png");
-    public static final ResourceLocation GLOBE_CUSTOM_1 = new ResourceLocation(MOD_ID,"textures/entity/globes/globe_plantkillable.png");
-    public static final ResourceLocation GLOBE_CUSTOM_2 = new ResourceLocation(MOD_ID,"textures/entity/globes/globe_toffanelly.png");
-    public static final ResourceLocation GLOBE_CUSTOM_3 = new ResourceLocation(MOD_ID,"textures/entity/globes/globe_sylvetichearts.png");
-    public static final ResourceLocation GLOBE_CUSTOM_4 = new ResourceLocation(MOD_ID,"textures/entity/globes/globe_agrona.png");
-    public static final ResourceLocation GLOBE_CUSTOM_5 = new ResourceLocation(MOD_ID,"textures/entity/globes/globe_thugpug43.png");
+
 
     public static final ResourceLocation ROPE_ARROW = new ResourceLocation(MOD_ID,"textures/entity/rope_arrow.png");
     public static final ResourceLocation ORANGE_TRADER = new ResourceLocation(MOD_ID,"textures/entity/misc/orange_trader.png");

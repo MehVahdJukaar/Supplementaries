@@ -23,8 +23,11 @@ import java.util.Objects;
 public abstract class MimicBlockTile extends TileEntity implements IBlockHolder {
 
     public BlockState mimic = Blocks.AIR.defaultBlockState();
+    //is holding a framed fence
+    public boolean framed = false;
 
     public static final ModelProperty<BlockState> MIMIC = BlockProperties.MIMIC;
+    public static final ModelProperty<Boolean> FRAMED = BlockProperties.FRAMED;
 
     public MimicBlockTile(TileEntityType<?> type) {
         super(type);
@@ -34,6 +37,7 @@ public abstract class MimicBlockTile extends TileEntity implements IBlockHolder 
     public IModelData getModelData() {
         //return data;
         return new ModelDataMap.Builder()
+                .withInitial(FRAMED,this.framed)
                 .withInitial(MIMIC, this.getHeldBlock())
                 .build();
     }
@@ -53,12 +57,14 @@ public abstract class MimicBlockTile extends TileEntity implements IBlockHolder 
     public void load(BlockState state, CompoundNBT compound) {
         super.load(state, compound);
         this.mimic = NBTUtil.readBlockState(compound.getCompound("Mimic"));
+        this.framed = compound.getBoolean("Framed");
     }
 
     @Override
     public CompoundNBT save(CompoundNBT compound) {
         super.save(compound);
         compound.put("Mimic", NBTUtil.writeBlockState(mimic));
+        compound.putBoolean("Framed",this.framed);
         return compound;
     }
 

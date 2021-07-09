@@ -91,6 +91,8 @@ public class ConfiguredCustomScreen extends ConfigScreen {
         addIcon("initialization", Registry.COG_BLOCK_ITEM.get());
         addIcon("iron gate", Registry.IRON_GATE_ITEM.get());
         addIcon("zombie horse", Items.ROTTEN_FLESH);
+        addIcon("bomb", Registry.BOMB_ITEM.get());
+        addIcon("clock_right_click", Items.CLOCK);
     }
 
     public static void openScreen(){

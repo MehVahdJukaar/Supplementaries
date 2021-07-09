@@ -122,6 +122,28 @@ public class WoodTypes {
         for (IWoodType w : UndergardenWoodTypes.values()){
             TYPES.put(w.toNBT(),w);
         }
+        for (IWoodType w : LotrWoodTypes.values()){
+            TYPES.put(w.toNBT(),w);
+        }
+        for (IWoodType w : UnnamedAnimalModWoodType.values()){
+            TYPES.put(w.toNBT(),w);
+        }
+        for (IWoodType w : AtumWoodType.values()){
+            TYPES.put(w.toNBT(),w);
+        }
+        for (IWoodType w : MalumWoodType.values()){
+            TYPES.put(w.toNBT(),w);
+        }
+        for (IWoodType w : HabitatWoodType.values()){
+            TYPES.put(w.toNBT(),w);
+        }
+        for (IWoodType w : DesolationWoodType.values()){
+            TYPES.put(w.toNBT(),w);
+        }
+        for (IWoodType w : ArsNouveauWoodType.values()){
+            TYPES.put(w.toNBT(),w);
+        }
+
 
     }
     public static IWoodType fromNBT(String s){
@@ -131,6 +153,5 @@ public class WoodTypes {
     public static Collection<IWoodType> all(){
         return TYPES.values();
     }
-
 
 }

@@ -3,11 +3,15 @@ package net.mehvahdjukaar.supplementaries.items;
 import net.mehvahdjukaar.supplementaries.block.blocks.SignPostBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
+import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
+import net.mehvahdjukaar.supplementaries.compat.framedblocks.FramedSignPost;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.SoundType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -51,19 +55,32 @@ public class SignPostItem  extends Item {
 
         Block targetblock = world.getBlockState(blockpos).getBlock();
 
+        boolean framed = false;
+
         boolean isfence = isFence(targetblock);
         boolean issignpost = targetblock instanceof SignPostBlock;
         if(isfence || issignpost){
 
             //if(!world.isRemote) world.setBlockState(blockpos, Registry.SIGN_POST.get().getDefaultState(), 3);
 
-            world.setBlock(blockpos, Registry.SIGN_POST.get().getStateForPlacement(new BlockItemUseContext(context)), 3);
+            if(CompatHandler.framedblocks){
+                Block f = FramedSignPost.tryGettingFramedBlock(targetblock,world,blockpos);
+                if(f != null){
+                    framed = true;
+                    if(f != Blocks.AIR)targetblock = f;
+                }
+            }
+
+            boolean waterlogged = world.getFluidState(blockpos).getType() == Fluids.WATER;
+            world.setBlock(blockpos, Registry.SIGN_POST.get()
+                    .getStateForPlacement(new BlockItemUseContext(context)).setValue(SignPostBlock.WATERLOGGED, waterlogged), 3);
 
             boolean flag = false;
 
             TileEntity tileentity = world.getBlockEntity(blockpos);
             if(tileentity instanceof SignPostBlockTile){
                 SignPostBlockTile signtile = ((SignPostBlockTile) tileentity);
+
 
 
                 int r = MathHelper.floor((double) ((180.0F + context.getRotation()) * 16.0F / 360.0F) + 0.5D) & 15;
@@ -88,6 +105,7 @@ public class SignPostItem  extends Item {
                 }
                 if(flag) {
                     if (isfence) signtile.mimic = targetblock.defaultBlockState();
+                    signtile.framed = framed;
                     signtile.setChanged();
                 }
 

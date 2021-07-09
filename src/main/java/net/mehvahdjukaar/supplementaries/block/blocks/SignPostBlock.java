@@ -4,6 +4,8 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 import net.mehvahdjukaar.selene.map.CustomDecorationHolder;
 import net.mehvahdjukaar.supplementaries.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.client.gui.SignPostGui;
+import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
+import net.mehvahdjukaar.supplementaries.compat.framedblocks.FramedSignPost;
 import net.mehvahdjukaar.supplementaries.datagen.types.VanillaWoodTypes;
 import net.mehvahdjukaar.supplementaries.items.SignPostItem;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
@@ -78,7 +80,9 @@ public class SignPostBlock extends FenceMimicBlock{
                         itemstack.shrink(1);
                     }
                     if(server)te.setChanged();
+                    return ActionResultType.sidedSuccess(worldIn.isClientSide);
                 }
+                return ActionResultType.FAIL;
             }
             //sneak right click rotates the sign on z axis
             else if (isSneaking){
@@ -91,6 +95,7 @@ public class SignPostBlock extends FenceMimicBlock{
                     te.leftDown = !te.leftDown;
                 }
                 if(server)te.setChanged();
+                return ActionResultType.sidedSuccess(worldIn.isClientSide);
             }
             //change direction with compass
             else if (isCompass){
@@ -109,13 +114,18 @@ public class SignPostBlock extends FenceMimicBlock{
                     if(server)te.setChanged();
                     return ActionResultType.sidedSuccess(worldIn.isClientSide);
                 }
+                return ActionResultType.FAIL;
+            }
+            else if (CompatHandler.framedblocks && te.framed){
+                boolean success = FramedSignPost.handleInteraction(te, player, handIn, itemstack, worldIn, pos);
+                if(success)return ActionResultType.sidedSuccess(worldIn.isClientSide);
             }
             else if (isSignPost){
                 //let sign item handle this one
                 return ActionResultType.PASS;
             }
             // open gui (edit sign with empty hand)
-            else if (!server) {
+            if (!server) {
                 SignPostGui.open(te);
             }
             return ActionResultType.sidedSuccess(worldIn.isClientSide);

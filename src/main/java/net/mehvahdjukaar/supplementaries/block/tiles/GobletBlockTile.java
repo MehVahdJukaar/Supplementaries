@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
+import net.mehvahdjukaar.selene.fluids.ISoftFluidHolder;
 import net.mehvahdjukaar.selene.fluids.SoftFluidHolder;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
@@ -13,7 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Hand;
 import net.minecraftforge.common.util.Constants;
 
-public class GobletBlockTile extends TileEntity {
+public class GobletBlockTile extends TileEntity implements ISoftFluidHolder {
 
     public SoftFluidHolder fluidHolder;
 
@@ -84,5 +85,10 @@ public class GobletBlockTile extends TileEntity {
         super.save(compound);
         this.fluidHolder.save(compound);
         return compound;
+    }
+
+    @Override
+    public SoftFluidHolder getSoftFluidHolder() {
+        return this.fluidHolder;
     }
 }

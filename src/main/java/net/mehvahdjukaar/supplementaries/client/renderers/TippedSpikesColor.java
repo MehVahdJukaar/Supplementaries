@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.client.renderers;
 
 import net.mehvahdjukaar.supplementaries.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
-import net.mehvahdjukaar.supplementaries.compat.quark.QuarkPistonPlugin;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
@@ -58,7 +57,7 @@ public class TippedSpikesColor implements IBlockColor, IItemColor {
         //not actually sure why I need this since quark seems to handle moving tiles pretty well
         else if(CompatHandler.quark){
             if(world instanceof World) {
-                te = QuarkPistonPlugin.getMovingTile(pos, (World) world);
+                //te = QuarkPistonPlugin.getMovingTile(pos, (World) world);
                 if(te instanceof BambooSpikesBlockTile){
                     int color = ((BambooSpikesBlockTile) te).getColor();
                     //return getProcessedColor(color, tint);

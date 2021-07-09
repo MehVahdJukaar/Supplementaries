@@ -48,20 +48,24 @@ public class ClockBlock extends WaterBlock {
         //return BlockRenderType.MODEL;
     }
 
+    public static void displayCurrentHour(World world, PlayerEntity player){
+        int time = ((int) (world.getDayTime()+6000) % 24000);
+        int m = (int) (((time % 1000f) / 1000f) * 60);
+        int h = time / 1000;
+        String a ="";
+        if(!ClientConfigs.cached.CLOCK_24H) {
+            a = time < 12000 ? " AM" : " PM";
+            h=h%13;
+        }
+        player.displayClientMessage(new StringTextComponent(h + ":" + ((m<10)?"0":"") + m + a), true);
+
+    }
+
     @Override
     public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
                                              BlockRayTraceResult hit) {
-        if (!worldIn.isClientSide()) {
-            int time = ((int) (worldIn.getDayTime()+6000) % 24000);
-            int m = (int) (((time % 1000f) / 1000f) * 60);
-            int h = time / 1000;
-            String a ="";
-            if(!ClientConfigs.cached.CLOCK_24H) {
-                a = time < 12000 ? " AM" : " PM";
-                h=h%12;
-            }
-            player.displayClientMessage(new StringTextComponent(h + ":" + ((m<10)?"0":"") + m + a), true);
-
+        if (worldIn.isClientSide()) {
+            displayCurrentHour(worldIn,player);
         }
         return ActionResultType.sidedSuccess(worldIn.isClientSide);
     }

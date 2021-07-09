@@ -45,6 +45,6 @@ public class QuarkPistonPlugin {
     }
 
     public static boolean canMoveTile(BlockState state){
-        return PistonsMoveTileEntitiesModule.shouldMoveTE(true, state);
+        return !PistonsMoveTileEntitiesModule.shouldMoveTE(true, state);
     }
 }

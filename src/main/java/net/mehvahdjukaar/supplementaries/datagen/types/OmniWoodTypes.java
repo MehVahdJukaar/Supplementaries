@@ -1,7 +1,8 @@
 package net.mehvahdjukaar.supplementaries.datagen.types;
 
 public enum OmniWoodTypes implements IWoodType {
-    CAVE_MUSHROOM("cave_mushroom");
+    CAVE_MUSHROOM("cave_mushroom"),
+    PALO_VERDE("palo_verde");
 
     private final String name;
 

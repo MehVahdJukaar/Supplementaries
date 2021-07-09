@@ -4,7 +4,7 @@ import net.mehvahdjukaar.selene.fluids.SoftFluid;
 import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.supplementaries.client.renderers.PotionTooltipHelper;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
-import net.mehvahdjukaar.supplementaries.fluids.FluidStuff;
+import net.mehvahdjukaar.supplementaries.fluids.ModSoftFluids;
 import net.mehvahdjukaar.supplementaries.items.tabs.JarTab;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
@@ -41,11 +41,22 @@ public class JarItem extends CageItem {
                 SoftFluid s = SoftFluidRegistry.get(com.getString("Fluid"));
                 int count = com.getInt("Count");
                 if (!s.isEmpty() && count > 0) {
+
+                    CompoundNBT potion = null;
+                    String add = "";
+                    if (com.contains("NBT")){
+                        CompoundNBT nbt = com.getCompound("NBT");
+                        if(nbt.contains("Potion")) {
+                            potion = com.getCompound("NBT");
+                            if(nbt.contains("PotionType")){
+                                add = "_"+nbt.getString("PotionType").toLowerCase();
+                            }
+                        }
+                    }
+
                     tooltip.add(new TranslationTextComponent("message.supplementaries.fluid_tooltip",
-                            s.getTranslatedName(), count).withStyle(TextFormatting.GRAY));
-
-
-                    if (com.contains("NBT") && com.getCompound("NBT").contains("Potion")) {
+                            new TranslationTextComponent(s.getTranslationKey()+add), count).withStyle(TextFormatting.GRAY));
+                    if(potion != null) {
                         PotionTooltipHelper.addPotionTooltip(com.getCompound("NBT"), tooltip, 1);
                         return;
                     }
@@ -97,7 +108,7 @@ public class JarItem extends CageItem {
             if (compoundnbt.contains("FluidHolder")) {
                 CompoundNBT com = compoundnbt.getCompound("FluidHolder");
                 SoftFluid s = SoftFluidRegistry.get(com.getString("Fluid"));
-                if(s== FluidStuff.DIRT)return Rarity.RARE;
+                if(s== ModSoftFluids.DIRT)return Rarity.RARE;
             }
         }
         return super.getRarity(stack);

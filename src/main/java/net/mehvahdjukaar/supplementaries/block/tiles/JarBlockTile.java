@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
+import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
+import net.mehvahdjukaar.selene.fluids.ISoftFluidHolder;
 import net.mehvahdjukaar.selene.fluids.SoftFluidHolder;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.blocks.ClockBlock;
@@ -24,7 +26,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nullable;
 
-public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity, IMobHolder {
+public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity, IMobHolder, ISoftFluidHolder {
     private final int CAPACITY = ServerConfigs.cached.JAR_CAPACITY;
 
     public MobHolder mobHolder;
@@ -35,6 +37,7 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
         this.mobHolder = new MobHolder(this.level,this.worldPosition);
         this.fluidHolder = new SoftFluidHolder(CAPACITY);
     }
+
 
     public MobHolder getMobHolder(){return this.mobHolder;}
 
@@ -189,7 +192,7 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
         ItemStack oldStack = oldStacks.get(0);
         if(!oldStacks.isEmpty()&&!oldStack.isEmpty()) {
             this.fluidHolder.clear();
-            ItemStack r = this.fluidHolder.interactWithItem(oldStack, null, null);
+            ItemStack r = this.fluidHolder.interactWithItem(oldStack, null, null,false);
             if(r!=null && !r.isEmpty()){
                 if(compound.contains("LiquidHolder")) {
                     this.fluidHolder.setCount((int) (compound.getCompound("LiquidHolder").getFloat("Level") * 16));
@@ -261,5 +264,10 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
     @Override
     public void tick() {
         this.mobHolder.tick();
+    }
+
+    @Override
+    public SoftFluidHolder getSoftFluidHolder() {
+        return this.fluidHolder;
     }
 }

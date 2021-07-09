@@ -17,6 +17,8 @@ public class CompatHandler {
     public static final boolean curios;
     public static final boolean farmers_delight;
     public static final boolean infernalexp;
+    public static final boolean inspirations;
+    public static final boolean framedblocks;
 
     static {
         ModList ml = ModList.get();
@@ -28,6 +30,8 @@ public class CompatHandler {
         curios = ml.isLoaded("curios");
         farmers_delight = ml.isLoaded("farmersdelight");
         infernalexp = ml.isLoaded("infernalexp");
+        inspirations = ml.isLoaded("infernalexp");
+        framedblocks = ml.isLoaded("framedblocks");
     }
 
     public static void init(){

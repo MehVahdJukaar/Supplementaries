@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.datagen;
 
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
+import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.advancements.criterion.InventoryChangeTrigger;
 import net.minecraft.data.*;
@@ -22,14 +23,14 @@ public class ModRecipeProvider extends RecipeProvider {
     protected void buildShapelessRecipes(Consumer<IFinishedRecipe> consumerIn) {
 
         for(DyeColor color : DyeColor.values()){
-            makeFlagRecipe(color,consumerIn);
+            //makeFlagRecipe(color,consumerIn);
         }
-        /*
+
         for (IWoodType wood : WoodTypes.TYPES.values()) {
             makeSignPostRecipe(wood, consumerIn);
             makeHangingSignRecipe(wood,consumerIn);
         }
-        */
+
 
     }
 
@@ -107,7 +108,7 @@ public class ModRecipeProvider extends RecipeProvider {
 
     private static void makeFlagRecipe(DyeColor color, Consumer<IFinishedRecipe> consumer) {
 
-        Item wool = ForgeRegistries.ITEMS.getValue(new ResourceLocation("minecraft", color.name()+"_wool"));
+        Item wool = ForgeRegistries.ITEMS.getValue(new ResourceLocation("minecraft", color.name().toLowerCase()+"_wool"));
         if (wool == null || wool == Items.AIR){
             return;
         }

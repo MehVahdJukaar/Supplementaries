@@ -16,6 +16,7 @@
     "CreateBabyVillagerTaskMixin",
     "CrossbowItemMixin",
     "EatGrassGoalMixin",
+
     "GrindstoneContainerMixin",
     "GrindstoneInputSlotMixin",
     "GrindstoneTestSlotMixin",
@@ -27,6 +28,7 @@
     "MineshaftMixin",
     "PaneBlockMixin",
     "PistonTileEntityMixin",
+
     "ShulkerBoxSlotMixin",
     "ShulkerBoxTileEntityMixin",
     "SkeletonHorseMixin",

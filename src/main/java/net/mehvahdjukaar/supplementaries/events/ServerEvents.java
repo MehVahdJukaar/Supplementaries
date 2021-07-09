@@ -3,21 +3,20 @@ package net.mehvahdjukaar.supplementaries.events;
 
 import net.mehvahdjukaar.selene.map.CustomDecorationHolder;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.block.blocks.DirectionalCakeBlock;
-import net.mehvahdjukaar.supplementaries.block.blocks.DoubleCakeBlock;
-import net.mehvahdjukaar.supplementaries.block.blocks.JarBlock;
-import net.mehvahdjukaar.supplementaries.block.blocks.RakedGravelBlock;
+import net.mehvahdjukaar.supplementaries.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.block.tiles.StatueBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.PicklePlayer;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.quark.QuarkPlugin;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.items.BlockHolderItem;
 import net.mehvahdjukaar.supplementaries.items.EmptyJarItem;
 import net.mehvahdjukaar.supplementaries.items.JarItem;
+import net.mehvahdjukaar.supplementaries.items.SpeedometerItem;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.SendLoginMessagePacket;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
@@ -35,6 +34,7 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.MapData;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -206,7 +206,7 @@ public class ServerEvents {
 
                     if (DUMMY_JAR_TILE.isEmpty() && (DUMMY_JAR_TILE.mobHolder.isEmpty()|| DUMMY_JAR_TILE.isPonyJar())) {
                         ItemStack tempStack = new ItemStack(Items.EXPERIENCE_BOTTLE);
-                        ItemStack temp = DUMMY_JAR_TILE.fluidHolder.interactWithItem(tempStack, null, null);
+                        ItemStack temp = DUMMY_JAR_TILE.fluidHolder.interactWithItem(tempStack, null, null, false);
                         if(temp!=null && temp.getItem() == Items.GLASS_BOTTLE){
                             returnStack = ((JarBlock)((BlockItem) i).getBlock()).getJarItem(DUMMY_JAR_TILE);
                         }
@@ -285,19 +285,18 @@ public class ServerEvents {
     //bricks
     @SubscribeEvent
     public static void onRightClickItem(PlayerInteractEvent.RightClickItem event) {
-        if(!ServerConfigs.cached.THROWABLE_BRICKS_ENABLED)return;
         PlayerEntity playerIn = event.getPlayer();
-        Hand handIn = event.getHand();
-        ItemStack itemstack = playerIn.getItemInHand(handIn);
+        ItemStack itemstack = playerIn.getItemInHand(event.getHand());
         Item i = itemstack.getItem();
-        if(CommonUtil.isBrick(i)) {
-            World worldIn = event.getWorld();
-            worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), SoundEvents.SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (playerIn.getRandom().nextFloat() * 0.4F + 0.8F ));
+        World worldIn = event.getWorld();
+        if(ServerConfigs.cached.THROWABLE_BRICKS_ENABLED && CommonUtil.isBrick(i)) {
+
+            worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), SoundEvents.SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (playerIn.getRandom().nextFloat() * 0.4F + 0.8F));
             if (!worldIn.isClientSide) {
                 ThrowableBrickEntity brickEntity = new ThrowableBrickEntity(worldIn, playerIn);
                 brickEntity.setItem(itemstack);
                 float pow = 0.7f;
-                brickEntity.shootFromRotation(playerIn, playerIn.xRot, playerIn.yRot, 0.0F, 1.5F*pow, 1.0F*pow);
+                brickEntity.shootFromRotation(playerIn, playerIn.xRot, playerIn.yRot, 0.0F, 1.5F * pow, 1.0F * pow);
                 worldIn.addFreshEntity(brickEntity);
             }
 
@@ -306,6 +305,13 @@ public class ServerEvents {
             }
 
             //playerIn.swingArm(handIn);
+            event.setCanceled(true);
+            event.setCancellationResult(ActionResultType.sidedSuccess(worldIn.isClientSide));
+            return;
+
+        }
+        if(worldIn.isClientSide && ClientConfigs.cached.CLOCK_CLICK && i == Items.CLOCK) {
+            ClockBlock.displayCurrentHour(worldIn,playerIn);
             event.setCanceled(true);
             event.setCancellationResult(ActionResultType.sidedSuccess(worldIn.isClientSide));
         }
@@ -332,7 +338,7 @@ public class ServerEvents {
     @SubscribeEvent
     public static void onAttachItemCapabilities(AttachCapabilitiesEvent<ItemStack> event) {
         if (CompatHandler.quark) {
-            QuarkPlugin.attachSackDropIn(event);
+            QuarkPlugin.attachCapabilities(event);
         }
 
     }

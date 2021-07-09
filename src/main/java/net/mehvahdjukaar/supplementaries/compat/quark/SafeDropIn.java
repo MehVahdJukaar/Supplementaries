@@ -1,9 +1,7 @@
 package net.mehvahdjukaar.supplementaries.compat.quark;
 
-import net.mehvahdjukaar.supplementaries.block.tiles.SackBlockTile;
 import net.mehvahdjukaar.supplementaries.block.tiles.SafeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
-import net.mehvahdjukaar.supplementaries.items.SackItem;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -15,12 +13,12 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.EmptyHandler;
+import vazkii.arl.util.AbstractDropIn;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.base.module.ModuleLoader;
-import vazkii.quark.content.management.capability.ShulkerBoxDropIn;
 import vazkii.quark.content.management.module.ShulkerBoxRightClickModule;
 
-public class SafeDropIn extends ShulkerBoxDropIn {
+public class SafeDropIn extends AbstractDropIn {
 
     private static final SafeBlockTile DUMMY_SAFE_TILE = new SafeBlockTile();
     private static final BlockState DEFAULT_SAFE = Registry.SACK.get().defaultBlockState();

@@ -57,7 +57,8 @@ public class ServerConfigs {
         public static ForgeConfigSpec.ConfigValue<String> ROPE_ARROW_ROPE;
         public static ForgeConfigSpec.IntValue FLUTE_RADIUS;
         public static ForgeConfigSpec.IntValue FLUTE_DISTANCE;
-
+        public static ForgeConfigSpec.DoubleValue BOMB_RADIUS;
+        public static ForgeConfigSpec.BooleanValue BOMB_BREAKS;
 
         private static void init(ForgeConfigSpec.Builder builder){
             builder.push("items");
@@ -74,6 +75,14 @@ public class ServerConfigs {
                     .defineInRange("unbound_radius",64, 0, 500);
             FLUTE_DISTANCE = builder.comment("max distance at which a bound flute will allow a pet to teleport")
                     .defineInRange("bound_distance",64, 0, 500);
+
+            builder.pop();
+            //bomb
+            builder.push("bomb");
+            BOMB_RADIUS = builder.comment("Bomb explosion radius (damage depends on this)")
+                    .defineInRange("explosion_radius",2, 0.1, 10);
+            BOMB_BREAKS = builder.comment("Do bombs break blocks like tnt?")
+                    .define("break_blocks",false);
 
             builder.pop();
 
@@ -104,6 +113,7 @@ public class ServerConfigs {
         public static ForgeConfigSpec.BooleanValue CEILING_BANNERS;
         public static ForgeConfigSpec.BooleanValue ZOMBIE_HORSE;
         public static ForgeConfigSpec.IntValue ZOMBIE_HORSE_COST;
+        public static ForgeConfigSpec.BooleanValue ENCHANTMENT_BYPASS;
 
         private static void init(ForgeConfigSpec.Builder builder){
             builder.comment("Vanilla tweaks")
@@ -198,6 +208,11 @@ public class ServerConfigs {
                     .define("zombie_horse_conversion",true);
             ZOMBIE_HORSE_COST = builder.comment("Amount of rotten flesh needed")
                     .defineInRange("rotten_flesh",64,1,1000);
+            builder.pop();
+
+            builder.push("enchanting_table");
+            ENCHANTMENT_BYPASS = builder.comment("Allows enchanting table to interact with bokshelf even if they have carpets or other tagged items in the way. You can add more blocks by adding them to 'enchantment_bypass' block tag")
+                    .define("ignore_carpets",true);
             builder.pop();
 
 
@@ -515,6 +530,8 @@ public class ServerConfigs {
         public static Block ROPE_ARROW_BLOCK;
         public static int FLUTE_RADIUS;
         public static int FLUTE_DISTANCE;
+        public static float BOMB_RADIUS;
+        public static boolean BOMB_BREAKS;
         //tweaks
         public static int ZOMBIE_HORSE_COST;
         public static boolean ZOMBIE_HORSE;
@@ -533,6 +550,7 @@ public class ServerConfigs {
         public static int BOTTLING_COST;
         public static boolean MAP_MARKERS;
         public static boolean CEILING_BANNERS;
+        public static boolean ENCHANTMENT_BYPASS;
         //spawns
         public static int FIREFLY_MIN;
         public static int FIREFLY_MAX;
@@ -571,6 +589,7 @@ public class ServerConfigs {
         public static boolean REPLACE_DAUB;
         public static boolean ITEM_SHELF_LADDER;
         public static boolean DOUBLE_IRON_GATE;
+
         //entity
         public static int FIREFLY_PERIOD;
         public static double FIREFLY_SPEED;
@@ -593,12 +612,15 @@ public class ServerConfigs {
             BELL_CHAIN_LENGTH = tweaks.BELL_CHAIN_LENGTH.get();
             MAP_MARKERS = tweaks.MAP_MARKERS.get();
             CEILING_BANNERS = tweaks.CEILING_BANNERS.get();
+            ENCHANTMENT_BYPASS = tweaks.ENCHANTMENT_BYPASS.get();
 
             ROPE_ARROW_ROPE = item.ROPE_ARROW_ROPE.get();
             ROPE_ARROW_BLOCK = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ROPE_ARROW_ROPE));
             if(ROPE_ARROW_BLOCK == Blocks.AIR)ROPE_ARROW_BLOCK = Registry.ROPE.get();
             FLUTE_DISTANCE = item.FLUTE_DISTANCE.get();
             FLUTE_RADIUS = item.FLUTE_RADIUS.get();
+            BOMB_BREAKS = item.BOMB_BREAKS.get();
+            BOMB_RADIUS = (float)(item.BOMB_RADIUS.get()+0f);
 
             FIREFLY_MIN = spawn.FIREFLY_MIN.get();
             FIREFLY_MAX = spawn.FIREFLY_MAX.get();

@@ -6,8 +6,8 @@ import net.mehvahdjukaar.supplementaries.client.gui.OrangeMerchantGui;
 import net.mehvahdjukaar.supplementaries.client.gui.PulleyBlockGui;
 import net.mehvahdjukaar.supplementaries.client.gui.SackGui;
 import net.mehvahdjukaar.supplementaries.client.models.FrameBlockLoader;
-import net.mehvahdjukaar.supplementaries.client.models.MimicBlockLoader;
 import net.mehvahdjukaar.supplementaries.client.models.RopeKnotBlockLoader;
+import net.mehvahdjukaar.supplementaries.client.models.SignPostBlockLoader;
 import net.mehvahdjukaar.supplementaries.client.particles.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.FireflyEntityRenderer;
@@ -22,6 +22,7 @@ import net.mehvahdjukaar.supplementaries.compat.decorativeblocks.DecoBlocksCompa
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
+import net.mehvahdjukaar.supplementaries.items.SpeedometerItem;
 import net.mehvahdjukaar.supplementaries.world.data.map.client.CMDclient;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -139,10 +140,10 @@ public class ClientSetup {
         //piston launcher
         ClientRegistry.bindTileEntityRenderer(Registry.PISTON_LAUNCHER_ARM_TILE.get(), PistonLauncherArmBlockTileRenderer::new);
         //sign post
-        RenderTypeLookup.setRenderLayer(Registry.SIGN_POST.get(), RenderType.solid());
+        RenderTypeLookup.setRenderLayer(Registry.SIGN_POST.get(), r->true);
         ClientRegistry.bindTileEntityRenderer(Registry.SIGN_POST_TILE.get(), SignPostBlockTileRenderer::new);
         //hanging sign
-        RenderTypeLookup.setRenderLayer(Registry.SIGN_POST.get(), RenderType.cutout());
+        //RenderTypeLookup.setRenderLayer(Registry.HANGING_SIGNS.get(), RenderType.cutout());
         ClientRegistry.bindTileEntityRenderer(Registry.HANGING_SIGN_TILE.get(), HangingSignBlockTileRenderer::new);
         //wall lantern
         RenderTypeLookup.setRenderLayer(Registry.WALL_LANTERN.get(), RenderType.cutout());
@@ -248,8 +249,12 @@ public class ClientSetup {
         ItemModelsProperties.register(Items.CROSSBOW, new ResourceLocation("rope_arrow"),
                 (stack, world, entity) -> entity != null && CrossbowItem.isCharged(stack) && CrossbowItem.containsChargedProjectile(stack, Registry.ROPE_ARROW_ITEM.get()) ? 1.0F : 0.0F);
 
+        ItemModelsProperties.register(Registry.SPEEDOMETER_ITEM.get(), new ResourceLocation("speed"),
+                new SpeedometerItem.SpeedometerItemProperty());
 
     }
+
+
 
 
     //particles
@@ -275,7 +280,7 @@ public class ClientSetup {
         colors.register(new TippedSpikesColor(), Registry.BAMBOO_SPIKES.get());
         colors.register(new DefWaterColor(), Registry.JAR_BOAT.get());
         colors.register(new BrewingStandColor(), Blocks.BREWING_STAND);
-        colors.register(new MimicBlockColor(), Registry.TIMBER_BRACE.get(),Registry.TIMBER_FRAME.get(),Registry.TIMBER_CROSS_BRACE.get());
+        colors.register(new MimicBlockColor(), Registry.SIGN_POST.get(), Registry.TIMBER_BRACE.get(),Registry.TIMBER_FRAME.get(),Registry.TIMBER_CROSS_BRACE.get());
         colors.register(new CogBlockColor(),Registry.COG_BLOCK.get());
 
     }
@@ -324,7 +329,7 @@ public class ClientSetup {
     public static void onModelRegistry(ModelRegistryEvent event){
         //loaders
         ModelLoaderRegistry.registerLoader(new ResourceLocation(Supplementaries.MOD_ID, "frame_block_loader"), new FrameBlockLoader());
-        ModelLoaderRegistry.registerLoader(new ResourceLocation(Supplementaries.MOD_ID, "mimic_block_loader"), new MimicBlockLoader());
+        ModelLoaderRegistry.registerLoader(new ResourceLocation(Supplementaries.MOD_ID, "mimic_block_loader"), new SignPostBlockLoader());
         ModelLoaderRegistry.registerLoader(new ResourceLocation(Supplementaries.MOD_ID, "rope_knot_loader"), new RopeKnotBlockLoader());
 
         //ModelLoaderRegistry.registerLoader(new ResourceLocation(Supplementaries.MOD_ID, "blackboard_loader"), new BlackboardBlockLoader());
