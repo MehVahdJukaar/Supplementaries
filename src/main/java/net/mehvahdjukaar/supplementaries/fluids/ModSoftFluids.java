@@ -35,7 +35,7 @@ public class ModSoftFluids {
         //need this here so I can reference it
         SAP = makeSF(new SoftFluid.Builder(FluidTextures.HONEY_TEXTURE, FluidTextures.POTION_TEXTURE_FLOW,"sap")
                 .fromMod(Supplementaries.MOD_ID)
-                .textureOverride("thermal:sap")
+                .copyTexturesFrom("thermal:sap")
                 .color(0xbd6e2a)
                 .drink("autumnity:sap_bottle")
                 .bucket("thermal:sap_bucket")
@@ -116,7 +116,7 @@ public class ModSoftFluids {
                 .stew("farmersdelight:tomato_sauce")));
         custom.add(makeSF(new SoftFluid.Builder(Textures.HONEY_TEXTURE,Textures.POTION_TEXTURE_FLOW,"syrup")
                 .fromMod("autumnity")
-                .textureOverride("create:honey")
+                .copyTexturesFrom("create:honey")
                 .color(0x8e3f26)
                 .addEqFluid("thermal:syrup")
                 .translationKey("item.autumnity.syrup")
@@ -281,10 +281,7 @@ public class ModSoftFluids {
                 .color(0xf8a0db)
                 .translationKey("item.iceandfire.ambrosia")
                 .stew("iceandfire:ambrosia")));
-        custom.add(makeSF(new SoftFluid.Builder(Textures.WATER_TEXTURE,Textures.FLOWING_WATER_TEXTURE,"builders_tea")
-                .fromMod("create")
-                .color(0xdf8367)
-                .translationKey("item.create.builders_tea")
+        custom.add(makeSF(new SoftFluid.Builder("create:tea")
                 .drink("create:builders_tea")));
         custom.add(makeSF(new SoftFluid.Builder(Textures.WATER_TEXTURE,Textures.FLOWING_WATER_TEXTURE,"lavender_tea")
                 .fromMod("abundance")
@@ -318,7 +315,7 @@ public class ModSoftFluids {
                     .translationKey(dye.getDescriptionId())
                     .color(c.getColorValue())
                     .fromMod("inspirations")
-                    .textureOverride("inspirations:potato_soup")
+                    .copyTexturesFrom("inspirations:potato_soup")
             );
             if(s==null)continue;
             custom.add(s);

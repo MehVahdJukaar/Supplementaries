@@ -30,7 +30,7 @@ public class CompatHandler {
         curios = ml.isLoaded("curios");
         farmers_delight = ml.isLoaded("farmersdelight");
         infernalexp = ml.isLoaded("infernalexp");
-        inspirations = ml.isLoaded("infernalexp");
+        inspirations = ml.isLoaded("inspirations");
         framedblocks = ml.isLoaded("framedblocks");
     }
 

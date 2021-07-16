@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.events;
 
 
 import net.mehvahdjukaar.selene.map.CustomDecorationHolder;
+import net.mehvahdjukaar.selene.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
@@ -16,13 +17,13 @@ import net.mehvahdjukaar.supplementaries.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.items.BlockHolderItem;
 import net.mehvahdjukaar.supplementaries.items.EmptyJarItem;
 import net.mehvahdjukaar.supplementaries.items.JarItem;
-import net.mehvahdjukaar.supplementaries.items.SpeedometerItem;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.SendLoginMessagePacket;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.*;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.Fluids;
@@ -34,7 +35,6 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.MapData;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -47,7 +47,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
 
-//@Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.FORGE)
+import javax.annotation.Nullable;
+
+
 public class ServerEvents {
 
     //TODO: split into different classes
@@ -76,7 +78,6 @@ public class ServerEvents {
                     return ((BlockItem) itemOverride).place(ctx);
                 }
 
-
         }
         return  ActionResultType.PASS;
     }
@@ -104,20 +105,19 @@ public class ServerEvents {
         return ActionResultType.PASS;
     }
 
-
-    private static boolean findConnectedBell(World world, BlockPos pos, PlayerEntity player, int it){
+    private static boolean findConnectedBell(World world, BlockPos pos, @Nullable PlayerEntity player, int it){
         if(it>ServerConfigs.cached.BELL_CHAIN_LENGTH)return false;
         BlockState state = world.getBlockState(pos);
         Block b = state.getBlock();
-        if(b instanceof ChainBlock){
+        if(b instanceof ChainBlock && state.getValue(ChainBlock.AXIS) == Direction.Axis.Y){
             return findConnectedBell(world,pos.above(),player,it+1);
         }
-        else if(b instanceof BellBlock && it !=0){
-            boolean success = ((BellBlock) b).attemptToRing(world, pos, state.getValue(BellBlock.FACING).getClockWise());
-            if (success && player != null) {
-                player.awardStat(Stats.BELL_RING);
-            }
-            return true;
+        else if(b instanceof BellBlock && it!=0){
+            //boolean success = CommonUtil.tryRingBell(Block b, world, pos, state.getValue(BellBlock.FACING).getClockWise());
+            BlockRayTraceResult hit = new BlockRayTraceResult(new Vector3d(pos.getX()+0.5,pos.getY()+0.5,pos.getZ()+0.5),
+                    state.getValue(BellBlock.FACING).getClockWise(),pos, true);
+            //if (success && player != null) {//player.awardStat(Stats.BELL_RING);}
+            return ((BellBlock) b).onHit(world, state,hit,player,true);
         }
         return false;
     }
@@ -204,7 +204,7 @@ public class ServerEvents {
                         DUMMY_JAR_TILE.load(((BlockItem) i).getBlock().defaultBlockState(), compoundnbt);
                     }
 
-                    if (DUMMY_JAR_TILE.isEmpty() && (DUMMY_JAR_TILE.mobHolder.isEmpty()|| DUMMY_JAR_TILE.isPonyJar())) {
+                    if (DUMMY_JAR_TILE.canInteractWithFluidHolder()) {
                         ItemStack tempStack = new ItemStack(Items.EXPERIENCE_BOTTLE);
                         ItemStack temp = DUMMY_JAR_TILE.fluidHolder.interactWithItem(tempStack, null, null, false);
                         if(temp!=null && temp.getItem() == Items.GLASS_BOTTLE){
@@ -216,10 +216,10 @@ public class ServerEvents {
 
                 if(returnStack!=null){
                     player.hurt(CommonUtil.BOTTLING_DAMAGE, ServerConfigs.cached.BOTTLING_COST);
-                    CommonUtil.swapItem(player, hand, returnStack);
+                    Utils.swapItem(player, hand, returnStack);
 
                     if (!player.isCreative())
-                        player.giveExperiencePoints(-CommonUtil.bottleToXP(1,world.random));
+                        player.giveExperiencePoints(-Utils.getXPinaBottle(1,world.random));
 
                     if (world.isClientSide) {
                         Minecraft.getInstance().particleEngine.createTrackingEmitter(player, Registry.BOTTLING_XP_PARTICLE.get(), 1);

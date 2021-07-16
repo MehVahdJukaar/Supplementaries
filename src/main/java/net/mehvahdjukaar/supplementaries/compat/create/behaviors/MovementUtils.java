@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.compat.create.behaviors;
 
-/*
 
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import net.minecraft.block.BlockState;
@@ -22,4 +21,3 @@ public class MovementUtils {
     }
 
 }
-*/

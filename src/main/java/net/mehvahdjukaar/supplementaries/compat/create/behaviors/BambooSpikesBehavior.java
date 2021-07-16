@@ -1,14 +1,15 @@
 package net.mehvahdjukaar.supplementaries.compat.create.behaviors;
 
 
-/*
 
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.foundation.utility.VecHelper;
+import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.BambooSpikesBlockTile;
+import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -34,6 +35,10 @@ public class BambooSpikesBehavior extends MovementBehaviour {
 
     public boolean isSameDir(MovementContext context) {
         return VecHelper.isVecPointingTowards(context.relativeMotion, context.state.getValue(BambooSpikesBlock.FACING));
+    }
+
+    public boolean renderAsNormalTileEntity() {
+        return true;
     }
 
     @Override
@@ -130,7 +135,7 @@ public class BambooSpikesBehavior extends MovementBehaviour {
     }
 
     protected DamageSource getDamageSource() {
-        return BambooSpikesBlock.SPIKE_DAMAGE;
+        return CommonUtil.SPIKE_DAMAGE;
     }
 
-}*/
+}

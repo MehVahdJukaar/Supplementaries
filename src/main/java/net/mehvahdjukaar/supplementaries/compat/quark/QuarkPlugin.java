@@ -3,20 +3,15 @@ package net.mehvahdjukaar.supplementaries.compat.quark;
 
 import net.mehvahdjukaar.selene.util.DispenserHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.setup.DispenserStuff;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
-import net.minecraft.block.Block;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.base.handler.GeneralConfig;
 import vazkii.quark.base.module.ModuleCategory;
-import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.automation.module.DispensersPlaceBlocksModule;
 

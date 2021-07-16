@@ -55,7 +55,8 @@ public class ClockBlock extends WaterBlock {
         String a ="";
         if(!ClientConfigs.cached.CLOCK_24H) {
             a = time < 12000 ? " AM" : " PM";
-            h=h%13;
+            h=h%12;
+            if(h==0)h=12;
         }
         player.displayClientMessage(new StringTextComponent(h + ":" + ((m<10)?"0":"") + m + a), true);
 

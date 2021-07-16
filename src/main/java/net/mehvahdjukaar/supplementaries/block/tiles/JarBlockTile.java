@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.selene.fluids.ISoftFluidHolder;
 import net.mehvahdjukaar.selene.fluids.SoftFluidHolder;
+import net.mehvahdjukaar.selene.util.Utils;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.blocks.ClockBlock;
 import net.mehvahdjukaar.supplementaries.block.util.IMobHolder;
@@ -71,7 +72,7 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
         ItemStack displayedStack = this.getDisplayedItem();
 
         //interact with fluid holder
-        if (this.isEmpty() && (this.mobHolder.isEmpty()||isPonyJar()) && this.fluidHolder.interactWithPlayer(player, hand, level, worldPosition)) {
+        if (canInteractWithFluidHolder() && this.fluidHolder.interactWithPlayer(player, hand, level, worldPosition)) {
             return true;
         }
         //empty hand: eat food
@@ -120,7 +121,7 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
         else if(!player.getItemInHand(hand).isEmpty())return false;
         ItemStack extracted = this.extractItem();
         if(!extracted.isEmpty()) {
-            CommonUtil.swapItem(player,hand,extracted);
+            Utils.swapItem(player,hand,extracted);
             return true;
         }
         return false;
@@ -140,7 +141,7 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
             player.awardStat(Stats.ITEM_USED.get(item));
             // shrink stack and replace bottle /bucket with empty ones
             if (!player.isCreative()) {
-                CommonUtil.swapItem(player, handIn, returnStack);
+                Utils.swapItem(player, handIn, returnStack);
             }
         }
     }
@@ -269,5 +270,10 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
     @Override
     public SoftFluidHolder getSoftFluidHolder() {
         return this.fluidHolder;
+    }
+
+    @Override
+    public boolean canInteractWithFluidHolder() {
+        return this.isEmpty() && (this.mobHolder.isEmpty()||isPonyJar());
     }
 }

@@ -169,7 +169,7 @@ public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
         else{
             //soft fluid holders
             TileEntity tileBack = level.getBlockEntity(behind);
-            if(tileBack instanceof ISoftFluidHolder){
+            if(tileBack instanceof ISoftFluidHolder && ((ISoftFluidHolder) tileBack).canInteractWithFluidHolder()){
                 SoftFluidHolder fluidHolder = ((ISoftFluidHolder) tileBack).getSoftFluidHolder();
                 this.fluidHolder.copy(fluidHolder);
                 if(doTransfer && tryFillingBlockBelow()){

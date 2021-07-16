@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.items;
 
+import net.mehvahdjukaar.selene.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.tiles.CageBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.MobHolder;
@@ -19,6 +20,7 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -59,8 +61,6 @@ public class CageItem extends BlockItem {
             if(c!=null&&(c.contains("JarMob")||c.contains("CachedJarMobValues")))
                 tooltip.add(new StringTextComponent("try placing me down").withStyle(TextFormatting.GRAY));
         }
-
-
     }
 
     //free mob
@@ -86,7 +86,7 @@ public class CageItem extends BlockItem {
                 Entity entity = EntityType.loadEntityRecursive(nbt.getCompound("EntityData"), world, o -> o);
                 if (entity != null) {
 
-
+                    success = true;
                     if (!world.isClientSide) {
                         //anger entity
                         if (!player.isCreative() && entity instanceof IAngerable) {
@@ -105,13 +105,17 @@ public class CageItem extends BlockItem {
                         if (!world.addFreshEntity(entity)) {
                             //spawn failed, reverting to old UUID
                             entity.setUUID(temp);
-                            boolean fail = world.addFreshEntity(entity);
-                            if (!fail) Supplementaries.LOGGER.warn("Failed to release caged mob");
+                            success = world.addFreshEntity(entity);
+                            if (!success) Supplementaries.LOGGER.warn("Failed to release caged mob");
                         }
                         //TODO fix sound categories
                     }
-                    CapturedMobCache.addMob(entity);
-                    success = true;
+                    //create new uuid for creative itemstack
+                    if(player.isCreative()){
+                        if (nbt.contains("UUID")) {
+                            nbt.putUUID("UUID", MathHelper.createInsecureUUID(random));
+                        }
+                    }
                 }
             }
             if(success) {
@@ -119,7 +123,7 @@ public class CageItem extends BlockItem {
                 if (!player.isCreative()) {
                     ItemStack returnItem = new ItemStack(empty.get());
                     if (stack.hasCustomHoverName()) returnItem.setHoverName(stack.getHoverName());
-                    context.getPlayer().setItemInHand(context.getHand(), returnItem);
+                    Utils.swapItem(player,context.getHand(),stack,new ItemStack(empty.get()));
                 }
                 return ActionResultType.sidedSuccess(world.isClientSide);
             }

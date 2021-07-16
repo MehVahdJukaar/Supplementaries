@@ -142,7 +142,6 @@ public class Registry {
     }
 
     //particles
-    public static final RegistryObject<BasicParticleType> ENDERGETIC_FLAME = regParticle("endergetic_flame");
     public static final RegistryObject<BasicParticleType> FIREFLY_GLOW = regParticle("firefly_glow");
     public static final RegistryObject<BasicParticleType> SPEAKER_SOUND = regParticle("speaker_sound");
     public static final RegistryObject<BasicParticleType> GREEN_FLAME = regParticle("green_flame");
@@ -532,11 +531,11 @@ public class Registry {
     public static final RegistryObject<Block> SCONCE_ENDER = BLOCKS.register(SCONCE_NAME_ENDER,()-> new SconceBlock(
             AbstractBlock.Properties.copy(SCONCE.get())
                     .lightLevel((state) -> state.getValue(BlockStateProperties.LIT)? 13 : 0),
-            ENDERGETIC_FLAME));
+            ()-> (BasicParticleType) ForgeRegistries.PARTICLE_TYPES.getValue(new ResourceLocation("endergetic:ender_flame"))));
     public static final RegistryObject<Block> SCONCE_WALL_ENDER = BLOCKS.register("sconce_wall_ender",()-> new SconceWallBlock(
             AbstractBlock.Properties.copy(SCONCE_ENDER.get())
                     .dropsLike(SCONCE_ENDER.get()),
-            ENDERGETIC_FLAME));
+            ()-> (BasicParticleType) ForgeRegistries.PARTICLE_TYPES.getValue(new ResourceLocation("endergetic:ender_flame"))));
     public static final RegistryObject<Item> SCONCE_ITEM_ENDER = ITEMS.register(SCONCE_NAME_ENDER,()-> new WallOrFloorItem(SCONCE_ENDER.get(), SCONCE_WALL_ENDER.get(),
             (new Item.Properties()).tab(getTab("endergetic",ItemGroup.TAB_DECORATIONS,SCONCE_NAME_ENDER))));
 
@@ -545,11 +544,11 @@ public class Registry {
     public static final RegistryObject<Block> SCONCE_GLOW = BLOCKS.register(SCONCE_NAME_GLOW,()-> new SconceBlock(
             AbstractBlock.Properties.copy(SCONCE.get())
                     .lightLevel((state) -> state.getValue(BlockStateProperties.LIT)? 13 : 0),
-            ()->ParticleTypes.CRIT));
+            ()-> (BasicParticleType) ForgeRegistries.PARTICLE_TYPES.getValue(new ResourceLocation("infernalexp:glowstone_sparkle"))));
     public static final RegistryObject<Block> SCONCE_WALL_GLOW = BLOCKS.register("sconce_wall_glow",()-> new SconceWallBlock(
             AbstractBlock.Properties.copy(SCONCE.get())
                     .dropsLike(SCONCE_GLOW.get()),
-            ()->ParticleTypes.CRIT));
+            ()-> (BasicParticleType) ForgeRegistries.PARTICLE_TYPES.getValue(new ResourceLocation("infernalexp:glowstone_sparkle"))));
     public static final RegistryObject<Item> SCONCE_ITEM_GLOW = ITEMS.register(SCONCE_NAME_GLOW,()-> new WallOrFloorItem(SCONCE_GLOW.get(), SCONCE_WALL_GLOW.get(),
             (new Item.Properties()).tab(getTab("infernalexp",ItemGroup.TAB_DECORATIONS,SCONCE_NAME_GLOW))));
 

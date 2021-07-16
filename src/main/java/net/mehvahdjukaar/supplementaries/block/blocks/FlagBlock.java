@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.selene.map.CustomDecorationHolder;
 import net.mehvahdjukaar.supplementaries.block.tiles.FlagBlockTile;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -128,6 +129,17 @@ public class FlagBlock extends WaterBlock {
                     }
                 }
                 return ActionResultType.sidedSuccess(world.isClientSide);
+            }
+            else if (itemstack.isEmpty() && hand == Hand.MAIN_HAND) {
+                if (ServerConfigs.cached.STICK_POLE) {
+                    if(world.isClientSide)return ActionResultType.SUCCESS;
+                    else{
+                        Direction moveDir = player.isShiftKeyDown()?Direction.DOWN:Direction.UP;
+                        StickBlock.findConnectedFlag(world,pos.below(),Direction.UP,moveDir,0);
+                        StickBlock.findConnectedFlag(world,pos.above(),Direction.DOWN,moveDir,0);
+                    }
+                    return ActionResultType.CONSUME;
+                }
             }
         }
         return ActionResultType.PASS;

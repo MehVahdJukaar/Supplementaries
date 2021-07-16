@@ -3,19 +3,29 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties.Winding;
 import net.mehvahdjukaar.supplementaries.block.blocks.PulleyBlock;
+import net.mehvahdjukaar.supplementaries.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.inventories.PulleyBlockContainer;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ChainBlock;
+import net.minecraft.block.SoundType;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
+import net.minecraft.util.Rotation;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.IWorld;
+import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
@@ -83,6 +93,50 @@ public class PulleyBlockTile extends ItemDisplayTile {
     @Override
     public int getMaxStackSize() {
         return 64;
+    }
+
+
+    public boolean handleRotation(Rotation rot){
+        if(rot==Rotation.CLOCKWISE_90) return this.pullUp(this.worldPosition, this.level,1);
+        else return this.pullDown(this.worldPosition, this.level,1);
+    }
+
+    public boolean pullUp(BlockPos pos, IWorld world, int rot){
+
+        if(!(world instanceof World))return false;
+        ItemStack stack = this.getDisplayedItem();
+        boolean flag = false;
+        if(stack.isEmpty()){
+            stack = new ItemStack(world.getBlockState(pos.below()).getBlock().asItem());
+            flag = true;
+        }
+        if(stack.getCount()+rot>stack.getMaxStackSize() || !(stack.getItem() instanceof BlockItem)) return false;
+        Block ropeBlock = ((BlockItem) stack.getItem()).getBlock();
+        boolean success = RopeBlock.removeRope(pos.below(), (World) world,ropeBlock);
+        if(success){
+            SoundType soundtype = ropeBlock.defaultBlockState().getSoundType(world, pos, null);
+            world.playSound(null, pos, soundtype.getBreakSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+            if(flag)this.setDisplayedItem(stack);
+            else stack.grow(1);
+            this.setChanged();
+        }
+        return success;
+    }
+
+    public boolean pullDown(BlockPos pos, IWorld world, int rot){
+
+        if(!(world instanceof World))return false;
+        ItemStack stack = this.getDisplayedItem();
+        if(stack.getCount()<rot || !(stack.getItem() instanceof BlockItem)) return false;
+        Block ropeBlock = ((BlockItem) stack.getItem()).getBlock();
+        boolean success = RopeBlock.addRope(pos.below(), (World) world,null, Hand.MAIN_HAND,ropeBlock);
+        if(success){
+            SoundType soundtype = ropeBlock.defaultBlockState().getSoundType(world, pos, null);
+            world.playSound(null, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+            stack.shrink(1);
+            this.setChanged();
+        }
+        return success;
     }
 
 }

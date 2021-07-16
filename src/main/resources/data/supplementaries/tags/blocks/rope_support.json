@@ -4,26 +4,16 @@
     "supplementaries:rope",
     "supplementaries:cracked_bell",
     "minecraft:bell",
-    "minecraft:grindstone",
-    {
-      "id" :"farmersdelight:rope",
-      "required": false
-    },
-    {
-      "id" :"inspirations:rope",
-      "required": false
-    },
-    {
-      "id" :"inspirations:vine",
-      "required": false
-    },
-    {
-      "id" :"druidcraft:rope",
-      "required": false
-    },
-    {
-      "id" :"xercamod:rope",
-      "required": false
-    }
+    "minecraft:grindstone"
+  ],
+  "optional": [
+    "create:peculiar_bell",
+    "create:haunted_bell",
+    "farmersdelight:rope",
+    "inspirations:rope",
+    "inspirations:vine",
+    "farmersdelight:rope",
+    "xercamod:rope",
+    "druidcraft:rope"
   ]
 }

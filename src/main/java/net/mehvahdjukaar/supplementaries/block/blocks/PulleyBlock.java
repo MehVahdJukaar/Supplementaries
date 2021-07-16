@@ -47,50 +47,9 @@ public class PulleyBlock extends RotatedPillarBlock {
     //all methods here are called server side
     public boolean axisRotate(BlockState state, BlockPos pos, World world, Rotation rot){
         world.setBlockAndUpdate(pos,state.cycle(FLIPPED));
-        if(rot==Rotation.CLOCKWISE_90) return this.pullUp(pos, world,1);
-        else return this.pullDown(pos, world,1);
-    }
-
-    public boolean pullUp(BlockPos pos, IWorld world, int rot){
         TileEntity tile = world.getBlockEntity(pos);
         if(tile instanceof PulleyBlockTile){
-            if(!(world instanceof World))return false;
-            ItemStack stack = ((ItemDisplayTile) tile).getDisplayedItem();
-            boolean flag = false;
-            if(stack.isEmpty()){
-                stack = new ItemStack(world.getBlockState(pos.below()).getBlock().asItem());
-                flag = true;
-            }
-            if(stack.getCount()+rot>stack.getMaxStackSize() || !(stack.getItem() instanceof BlockItem)) return false;
-            Block ropeBlock = ((BlockItem) stack.getItem()).getBlock();
-            boolean success = RopeBlock.removeRope(pos.below(), (World) world,ropeBlock);
-            if(success){
-                SoundType soundtype = ropeBlock.defaultBlockState().getSoundType(world, pos, null);
-                world.playSound(null, pos, soundtype.getBreakSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
-                if(flag)((ItemDisplayTile) tile).setDisplayedItem(stack);
-                else stack.grow(1);
-                tile.setChanged();
-            }
-            return success;
-        }
-        return false;
-    }
-
-    public boolean pullDown(BlockPos pos, IWorld world, int rot){
-        TileEntity tile = world.getBlockEntity(pos);
-        if(tile instanceof PulleyBlockTile){
-            if(!(world instanceof World))return false;
-            ItemStack stack = ((ItemDisplayTile) tile).getDisplayedItem();
-            if(stack.getCount()<rot || !(stack.getItem() instanceof BlockItem)) return false;
-            Block ropeBlock = ((BlockItem) stack.getItem()).getBlock();
-            boolean success = RopeBlock.addRope(pos.below(), (World) world,null,Hand.MAIN_HAND,ropeBlock);
-            if(success){
-                SoundType soundtype = ropeBlock.defaultBlockState().getSoundType(world, pos, null);
-                world.playSound(null, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
-                stack.shrink(1);
-                tile.setChanged();
-            }
-            return success;
+            return ((PulleyBlockTile) tile).handleRotation(rot);
         }
         return false;
     }

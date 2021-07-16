@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.items.SackItem;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -32,6 +33,14 @@ public class JarDropIn extends AbstractDropIn {
         ItemStack s = this.tryAddToShulkerBox(stack, incoming, false);
         if(s!=null)return s;
         return stack;
+    }
+
+    public boolean canDropItemIn(PlayerEntity player, ItemStack stack, ItemStack incoming, Slot slot) {
+        return canDropItemIn(player,stack,incoming);
+    }
+
+    public ItemStack dropItemIn(PlayerEntity player, ItemStack stack, ItemStack incoming, Slot slot) {
+        return dropItemIn(player,stack,incoming);
     }
 
     private ItemStack tryAddToShulkerBox(ItemStack jar, ItemStack stack, boolean simulate) {

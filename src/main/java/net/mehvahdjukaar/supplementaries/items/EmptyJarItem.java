@@ -1,9 +1,9 @@
 package net.mehvahdjukaar.supplementaries.items;
 
 
+import net.mehvahdjukaar.selene.util.Utils;
 import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.block.util.MobHolder;
-import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
@@ -77,7 +77,7 @@ public class EmptyJarItem extends EmptyCageItem {
 
                     player.startUsingItem(hand);
 
-                    CommonUtil.swapItem(player,hand,stack,returnItem,true);
+                    Utils.swapItem(player,hand,stack,returnItem,true);
                     return ActionResultType.sidedSuccess(player.level.isClientSide);
                 }
             }

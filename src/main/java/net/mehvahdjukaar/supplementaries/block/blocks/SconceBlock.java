@@ -15,17 +15,22 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Lazy;
 
 import java.util.Random;
 import java.util.function.Supplier;
 
 public class SconceBlock extends LightUpBlock{
     protected static final VoxelShape SHAPE = box(6.0D, 0.0D, 6.0D, 10.0D, 11.0D, 10.0D);
-    protected final Supplier<BasicParticleType> particleData;
+    protected final Lazy<BasicParticleType> particleData;
 
     public SconceBlock(Properties properties, Supplier<BasicParticleType> particleData) {
         super(properties);
-        this.particleData = particleData;
+        this.particleData = Lazy.of(()->{
+            BasicParticleType data = particleData.get();
+            if(data==null)data = ParticleTypes.FLAME;
+            return data;
+        });
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED,false).setValue(LIT,true));
     }
 

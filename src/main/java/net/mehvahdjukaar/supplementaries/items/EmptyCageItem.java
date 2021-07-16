@@ -1,9 +1,10 @@
 package net.mehvahdjukaar.supplementaries.items;
 
 
+import net.mehvahdjukaar.selene.util.Utils;
+import net.mehvahdjukaar.supplementaries.api.ICageJarCatchable;
 import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.block.util.MobHolder;
-import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
@@ -39,14 +40,18 @@ public class EmptyCageItem extends BlockItem {
     }
 
     @Override
+    public ActionResultType interactLivingEntity(ItemStack stack, PlayerEntity player, LivingEntity entity, Hand hand) {
+        return this.doInteract(stack, player, entity, hand);
+    }
+
+    @Override
     public boolean onLeftClickEntity(ItemStack stack, PlayerEntity player, Entity entity) {
-        if(player.getUsedItemHand()==null)return false;
+        Hand hand = player.getUsedItemHand();
+        if(hand == null || hand == Hand.OFF_HAND)return false;
 
         return this.doInteract(stack,player, entity,player.getUsedItemHand()).consumesAction();
 
     }
-
-    //TODO: fix left click duplicating cages to off hand
 
     public ActionResultType doInteract(ItemStack stack, PlayerEntity player, Entity entity, Hand hand) {
 
@@ -63,15 +68,18 @@ public class EmptyCageItem extends BlockItem {
                     boolean dababy = entity instanceof LivingEntity && ((LivingEntity) entity).isBaby();
                     canBeCaught = ((ServerConfigs.cached.CAGE_ALL_BABIES && dababy) ||
                             type.is(ModTags.CAGE_CATCHABLE) ||
+                            (entity instanceof ICageJarCatchable && ((ICageJarCatchable) entity).canBeCaughtWithCage()) ||
                             (type.is(ModTags.CAGE_BABY_CATCHABLE) && dababy));
                     break;
                 case JAR:
                     isFirefly = type.getRegistryName().getPath().toLowerCase().contains("firefl");
                     canBeCaught = isFirefly ||  type.is(ModTags.JAR_CATCHABLE) ||
+                            (entity instanceof ICageJarCatchable && ((ICageJarCatchable) entity).canBeCaughtWithJar()) ||
                             CapturedMobsHelper.CATCHABLE_FISHES.contains(name);
                     break;
                 case TINTED_JAR:
                     canBeCaught =  type.is(ModTags.TINTED_JAR_CATCHABLE) ||
+                            (entity instanceof ICageJarCatchable && ((ICageJarCatchable) entity).canBeCaughtWithTintedJar()) ||
                             CapturedMobsHelper.CATCHABLE_FISHES.contains(name);
                     break;
             }
@@ -93,7 +101,7 @@ public class EmptyCageItem extends BlockItem {
             if(cmp!=null) returnStack.addTagElement("BlockEntityTag", cmp);
         }
 
-        CommonUtil.swapItemNBT(player,hand,stack,returnStack);
+        Utils.swapItemNBT(player,hand,stack,returnStack);
         //TODO: cage sound here
         if(this.cageType==CageWhitelist.CAGE)
             player.level.playSound(null, player.blockPosition(),  SoundEvents.CHAIN_FALL, SoundCategory.BLOCKS,1,0.7f);
@@ -119,10 +127,6 @@ public class EmptyCageItem extends BlockItem {
         return ActionResultType.CONSUME;
     }
 
-    @Override
-    public ActionResultType interactLivingEntity(ItemStack stack, PlayerEntity player, LivingEntity entity, Hand hand) {
-        return this.doInteract(stack, player, entity, hand);
-    }
 
     //TODO: add whitelist reference in here or in item constructor. maybe ad return item here too
     public enum CageWhitelist{

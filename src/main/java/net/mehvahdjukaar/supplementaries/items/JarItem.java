@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.items;
 
+import net.mehvahdjukaar.selene.util.PotionNBTHelper;
 import net.mehvahdjukaar.selene.fluids.SoftFluid;
 import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
-import net.mehvahdjukaar.supplementaries.client.renderers.PotionTooltipHelper;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.fluids.ModSoftFluids;
 import net.mehvahdjukaar.supplementaries.items.tabs.JarTab;
@@ -10,10 +10,7 @@ import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Rarity;
+import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.*;
@@ -42,22 +39,20 @@ public class JarItem extends CageItem {
                 int count = com.getInt("Count");
                 if (!s.isEmpty() && count > 0) {
 
-                    CompoundNBT potion = null;
+                    CompoundNBT nbt = null;
                     String add = "";
                     if (com.contains("NBT")){
-                        CompoundNBT nbt = com.getCompound("NBT");
-                        if(nbt.contains("Potion")) {
-                            potion = com.getCompound("NBT");
-                            if(nbt.contains("PotionType")){
-                                add = "_"+nbt.getString("PotionType").toLowerCase();
-                            }
+                        nbt = com.getCompound("NBT");
+                        if(nbt.contains("Bottle")){
+                            String bottle = nbt.getString("Bottle").toLowerCase();
+                            if(!bottle.equals("bottle")) add = "_"+bottle;
                         }
                     }
 
                     tooltip.add(new TranslationTextComponent("message.supplementaries.fluid_tooltip",
                             new TranslationTextComponent(s.getTranslationKey()+add), count).withStyle(TextFormatting.GRAY));
-                    if(potion != null) {
-                        PotionTooltipHelper.addPotionTooltip(com.getCompound("NBT"), tooltip, 1);
+                    if(nbt != null) {
+                        PotionNBTHelper.addPotionTooltip(nbt, tooltip, 1);
                         return;
                     }
                 }

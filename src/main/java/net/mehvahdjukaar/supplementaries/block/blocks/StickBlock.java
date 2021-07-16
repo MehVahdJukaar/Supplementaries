@@ -3,27 +3,37 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 import com.google.common.collect.ImmutableMap;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.block.tiles.FlagBlockTile;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.minecraft.block.BellBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.ChainBlock;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
-import net.minecraft.util.Direction;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -129,4 +139,57 @@ public class StickBlock extends WaterBlock {
         return false;
     }
 
+    @Override
+    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+
+        if (player.getItemInHand(hand).isEmpty() && hand == Hand.MAIN_HAND) {
+            if (ServerConfigs.cached.STICK_POLE) {
+                if(world.isClientSide)return ActionResultType.SUCCESS;
+                else{
+                    Direction moveDir = player.isShiftKeyDown()?Direction.DOWN:Direction.UP;
+                    findConnectedFlag(world,pos,Direction.UP,moveDir,0);
+                    findConnectedFlag(world,pos,Direction.DOWN,moveDir,0);
+                }
+                return ActionResultType.CONSUME;
+            }
+        }
+        return ActionResultType.PASS;
+    }
+
+    private static boolean isVertical(BlockState state){
+        return state.getValue(AXIS_Y) && ! state.getValue(AXIS_X) && ! state.getValue(AXIS_Z);
+    }
+
+    public static boolean findConnectedFlag(World world, BlockPos pos, Direction searchDir, Direction moveDir, int it){
+        if(it > ServerConfigs.cached.STICK_POLE_LENGTH)return false;
+        BlockState state = world.getBlockState(pos);
+        Block b = state.getBlock();
+        if(b == Registry.STICK_BLOCK.get() && isVertical(state)){
+            return findConnectedFlag(world, pos.relative(searchDir), searchDir, moveDir,it+1);
+        }
+        else if(b instanceof FlagBlock && it!=0){
+            BlockPos toPos = pos.relative(moveDir);
+            BlockState stick = world.getBlockState(toPos);
+
+            TileEntity tile = world.getBlockEntity(pos);
+            if(tile instanceof FlagBlockTile && stick.getBlock() == Registry.STICK_BLOCK.get() && isVertical(stick)) {
+
+                world.setBlockAndUpdate(pos, stick);
+                world.setBlockAndUpdate(toPos, state);
+
+                tile.setRemoved();
+                if (tile != null) {
+                    tile.setPosition(toPos);
+                    TileEntity target = TileEntity.loadStatic(state, tile.save(new CompoundNBT()));
+                    if (target != null) {
+                        world.setBlockEntity(toPos, target);
+                        target.clearCache();
+                    }
+                }
+                world.playSound(null,toPos, SoundEvents.WOOL_PLACE,SoundCategory.BLOCKS, 1F, 1.4F);
+                return true;
+            }
+        }
+        return false;
+    }
 }

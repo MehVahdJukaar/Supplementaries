@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
+import net.mehvahdjukaar.selene.util.Utils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IWaterLoggable;
@@ -11,10 +12,7 @@ import net.minecraft.entity.projectile.ProjectileItemEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.FireChargeItem;
-import net.minecraft.item.FlintAndSteelItem;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.potion.Potions;
@@ -40,10 +38,9 @@ public abstract class LightUpBlock extends Block implements IWaterLoggable {
     @Override
     public boolean placeLiquid(IWorld worldIn, BlockPos pos, BlockState state, FluidState fluidStateIn) {
         if (!state.getValue(BlockStateProperties.WATERLOGGED) && fluidStateIn.getType() == Fluids.WATER) {
-            boolean flag = state.getValue(LIT);
-            if (flag) {
-                extinguish(state, pos, worldIn);
-            }
+
+            extinguish(state, pos, worldIn);
+
             worldIn.setBlock(pos, state.setValue(WATERLOGGED, true).setValue(LIT, false), 3);
             worldIn.getLiquidTicks().scheduleTick(pos, fluidStateIn.getType(), fluidStateIn.getType().getTickDelay(worldIn));
             return true;
@@ -89,35 +86,46 @@ public abstract class LightUpBlock extends Block implements IWaterLoggable {
         return false;
     }
 
-    public static void extinguish(BlockState state, BlockPos pos, IWorld world) {
-        if (!world.isClientSide()) {
-            world.playSound(null, pos, SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundCategory.BLOCKS, 0.5F, 1.5F);
-            world.setBlock(pos, state.setValue(BlockStateProperties.LIT, false), 11);
-        }
-        else{
-            Random random = world.getRandom();
-            for (int i = 0; i < 10; ++i) {
-                world.addParticle(ParticleTypes.SMOKE,pos.getX()+0.25f+random.nextFloat()*0.5f,pos.getY()+0.35f+random.nextFloat()*0.5f,pos.getZ()+0.25f+random.nextFloat()*0.5f,0, 0.005, 0);
+    public static boolean extinguish(BlockState state, BlockPos pos, IWorld world) {
+        if (state.getValue(LIT)) {
+            if (!world.isClientSide()) {
+                world.playSound(null, pos, SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundCategory.BLOCKS, 0.5F, 1.5F);
+                world.setBlock(pos, state.setValue(BlockStateProperties.LIT, false), 11);
+            } else {
+                Random random = world.getRandom();
+                for (int i = 0; i < 10; ++i) {
+                    world.addParticle(ParticleTypes.SMOKE, pos.getX() + 0.25f + random.nextFloat() * 0.5f, pos.getY() + 0.35f + random.nextFloat() * 0.5f, pos.getZ() + 0.25f + random.nextFloat() * 0.5f, 0, 0.005, 0);
+                }
             }
+            return true;
         }
+        return false;
     }
 
     @Override
     public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         if(!state.getValue(LIT) && !state.getValue(WATERLOGGED) && player.abilities.mayBuild) {
-            ItemStack item = player.getItemInHand(handIn);
-            if (item.getItem() instanceof FlintAndSteelItem) {
+            ItemStack stack = player.getItemInHand(handIn);
+            Item item = stack.getItem();
+            if (item instanceof FlintAndSteelItem) {
                 if(lightUp(state,pos,worldIn,FireSound.FLINT_AND_STEEL)) {
                     this.onChange(state,worldIn,pos);
-                    item.hurtAndBreak(1, player, (playerIn) -> playerIn.broadcastBreakEvent(handIn));
+                    stack.hurtAndBreak(1, player, (playerIn) -> playerIn.broadcastBreakEvent(handIn));
                     return ActionResultType.sidedSuccess(worldIn.isClientSide);
                 }
             }
-            else if(item.getItem() instanceof FireChargeItem) {
+            else if(item instanceof FireChargeItem) {
                 if(lightUp(state,pos,worldIn,FireSound.FIRE_CHANGE)) {
                     this.onChange(state,worldIn,pos);
-                    item.hurtAndBreak(1, player, (playerIn) -> playerIn.broadcastBreakEvent(handIn));
-                    if(!player.isCreative())item.shrink(1);
+                    stack.hurtAndBreak(1, player, (playerIn) -> playerIn.broadcastBreakEvent(handIn));
+                    if(!player.isCreative())stack.shrink(1);
+                    return ActionResultType.sidedSuccess(worldIn.isClientSide);
+                }
+            }
+            else if(item instanceof PotionItem && PotionUtils.getPotion(stack)==Potions.WATER){
+                if(extinguish(state,pos,worldIn)) {
+                    this.onChange(state,worldIn,pos);
+                    Utils.swapItem(player,handIn,stack,new ItemStack(Items.GLASS_BOTTLE));
                     return ActionResultType.sidedSuccess(worldIn.isClientSide);
                 }
             }
@@ -140,8 +148,7 @@ public abstract class LightUpBlock extends Block implements IWaterLoggable {
             else if (projectile instanceof PotionEntity && PotionUtils.getPotion(((ProjectileItemEntity) projectile).getItem())==Potions.WATER) {
                 Entity entity = projectile.getOwner();
                 boolean flag = entity == null || entity instanceof PlayerEntity || net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(worldIn, entity);
-                if (flag && state.getValue(LIT)) {
-                    extinguish(state, pos, worldIn);
+                if (flag && extinguish(state, pos, worldIn)) {
                     this.onChange(state,worldIn,pos);
                 }
             }

@@ -5,6 +5,7 @@ import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -24,15 +25,6 @@ public class SafeDropIn extends AbstractDropIn {
     private static final BlockState DEFAULT_SAFE = Registry.SACK.get().defaultBlockState();
 
     public SafeDropIn() {
-    }
-
-    public boolean canDropItemIn(PlayerEntity player, ItemStack stack, ItemStack incoming) {
-        return ModuleLoader.INSTANCE.isModuleEnabled(ShulkerBoxRightClickModule.class) && this.tryAddToShulkerBox(stack, incoming, true, player);
-    }
-
-    public ItemStack dropItemIn(PlayerEntity player, ItemStack stack, ItemStack incoming) {
-        this.tryAddToShulkerBox(stack, incoming, false, player);
-        return stack;
     }
 
     private boolean tryAddToShulkerBox(ItemStack sack, ItemStack stack, boolean simulate, PlayerEntity player) {
@@ -70,5 +62,22 @@ public class SafeDropIn extends AbstractDropIn {
             }
         }
         return false;
+    }
+
+    public boolean canDropItemIn(PlayerEntity player, ItemStack stack, ItemStack incoming) {
+        return ModuleLoader.INSTANCE.isModuleEnabled(ShulkerBoxRightClickModule.class) && this.tryAddToShulkerBox(stack, incoming, true, player);
+    }
+
+    public ItemStack dropItemIn(PlayerEntity player, ItemStack stack, ItemStack incoming) {
+        this.tryAddToShulkerBox(stack, incoming, false, player);
+        return stack;
+    }
+
+    public boolean canDropItemIn(PlayerEntity player, ItemStack stack, ItemStack incoming, Slot slot) {
+        return canDropItemIn(player,stack,incoming);
+    }
+
+    public ItemStack dropItemIn(PlayerEntity player, ItemStack stack, ItemStack incoming, Slot slot) {
+        return dropItemIn(player,stack,incoming);
     }
 }

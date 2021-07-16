@@ -3,9 +3,9 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.selene.fluids.ISoftFluidConsumer;
 import net.mehvahdjukaar.selene.fluids.SoftFluid;
+import net.mehvahdjukaar.selene.util.Utils;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties.Topping;
-import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
@@ -72,8 +72,7 @@ public class PancakeBlock extends WaterBlock implements ISoftFluidConsumer {
                     worldIn.playSound(null,pos, SoundEvents.HONEY_BLOCK_PLACE, SoundCategory.BLOCKS,1,1.2f);
                 }
                 ItemStack returnItem = t==Topping.CHOCOLATE? ItemStack.EMPTY : new ItemStack(Items.GLASS_BOTTLE);
-                if(!player.isCreative())
-                    CommonUtil.swapItem(player,handIn,returnItem);
+                if(!player.isCreative()) Utils.swapItem(player,handIn,returnItem);
                 //player.setHeldItem(handIn, DrinkHelper.fill(stack.copy(), player, new ItemStack(Items.GLASS_BOTTLE), false));
                 return ActionResultType.sidedSuccess(worldIn.isClientSide);
             }
@@ -190,6 +189,7 @@ public class PancakeBlock extends WaterBlock implements ISoftFluidConsumer {
         Topping topping = Topping.fromFluid(f);
         if(state.getValue(TOPPING) == Topping.NONE && topping != Topping.NONE){
             world.setBlock(pos,state.setValue(TOPPING,topping),2);
+            world.playSound(null,pos, SoundEvents.HONEY_BLOCK_PLACE, SoundCategory.BLOCKS,1,1.2f);
             return true;
         }
         return false;

@@ -40,31 +40,35 @@ public class SignPostBlockBakedModel implements IDynamicBakedModel {
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
 
-        BlockState mimic = extraData.getData(BlockProperties.MIMIC);
+        try {
+            BlockState mimic = extraData.getData(BlockProperties.MIMIC);
+            Boolean isFramed = extraData.getData(BlockProperties.FRAMED);
 
-        boolean framed = extraData.getData(BlockProperties.FRAMED) && CompatHandler.framedblocks;
+            boolean framed = CompatHandler.framedblocks && (isFramed!=null && isFramed);
 
-        RenderType layer = MinecraftForgeClient.getRenderLayer();
+            RenderType layer = MinecraftForgeClient.getRenderLayer();
 
+            //RenderType layer = MinecraftForgeClient.getRenderLayer();
+            // if (layer == null || RenderTypeLookup.canRenderInLayer(mimic, layer)) {
+            //always solid.
+            if (mimic != null && !mimic.isAir() && (layer == null || (framed || RenderTypeLookup.canRenderInLayer(mimic, layer)))) {
 
-        //RenderType layer = MinecraftForgeClient.getRenderLayer();
-        // if (layer == null || RenderTypeLookup.canRenderInLayer(mimic, layer)) {
-        //always solid.
-        if (mimic != null && !mimic.isAir() && (layer==null|| (framed || RenderTypeLookup.canRenderInLayer(mimic, layer)))){
+                IModelData data;
+                if (framed) {
+                    data = FramedSignPost.getModelData(mimic);
+                    mimic = FramedSignPost.framedFence;
+                } else {
+                    data = EmptyModelData.INSTANCE;
+                }
+                IBakedModel model = blockModelShaper.getBlockModel(mimic);
 
-            IModelData data;
-            if(framed){
-                data = FramedSignPost.getModelData(mimic);
-                mimic = FramedSignPost.framedFence;
-            }
-            else{
-                data = EmptyModelData.INSTANCE;
-            }
-            IBakedModel model = blockModelShaper.getBlockModel(mimic);
-            try {
                 return model.getQuads(mimic, side, rand, data);
-            } catch (Exception ignored) {}
 
+
+            }
+        }
+        catch (Exception ignored){
+            int a = 1;
         }
         return Collections.emptyList();
     }

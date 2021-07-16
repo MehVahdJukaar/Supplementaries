@@ -76,9 +76,9 @@ public class SackBlockTile extends LockableLootTileEntity implements INameable, 
             BlockState blockstate = this.getBlockState();
             boolean flag = blockstate.getValue(SackBlock.OPEN);
             if (!flag) {
-                this.level.playSound(null, this.worldPosition.getX()+0.5, this.worldPosition.getY()+0.5, this.worldPosition.getZ()+0.5,
+                this.level.playSound(null, this.worldPosition,
                         SoundEvents.WOOL_BREAK, SoundCategory.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.55F);
-                this.level.playSound(null, this.worldPosition.getX()+0.5, this.worldPosition.getY()+0.5, this.worldPosition.getZ()+0.5,
+                this.level.playSound(null, this.worldPosition,
                         SoundEvents.LEASH_KNOT_PLACE, SoundCategory.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.7F);
                 this.level.setBlock(this.getBlockPos(), blockstate.setValue(SackBlock.OPEN, true), 3);
             }

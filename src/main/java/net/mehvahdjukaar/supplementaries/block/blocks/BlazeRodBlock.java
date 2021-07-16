@@ -12,8 +12,11 @@ import net.minecraft.item.Items;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.BooleanProperty;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
@@ -94,5 +97,10 @@ public class BlazeRodBlock extends StickBlock{
             }
             world.addParticle(particle, x, y, z, 0.0D, 0.0D, 0.0D);
         }
+    }
+
+    @Override
+    public ActionResultType use(BlockState p_225533_1_, World p_225533_2_, BlockPos p_225533_3_, PlayerEntity p_225533_4_, Hand p_225533_5_, BlockRayTraceResult p_225533_6_) {
+        return ActionResultType.PASS;
     }
 }

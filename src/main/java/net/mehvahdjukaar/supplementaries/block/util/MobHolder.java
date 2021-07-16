@@ -1,8 +1,10 @@
 package net.mehvahdjukaar.supplementaries.block.util;
 
+import net.mehvahdjukaar.selene.util.Utils;
+import net.mehvahdjukaar.supplementaries.api.ICageJarCatchable;
+import net.mehvahdjukaar.supplementaries.api.ICageJarCatchable.AnimationCategory;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper.CapturedMobProperties;
-import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.Entity;
@@ -35,6 +37,7 @@ import java.lang.reflect.Method;
 import java.util.Random;
 import java.util.UUID;
 
+//TODO: rewrite and clean up this mess
 public class MobHolder {
     private final Random rand = new Random();
 
@@ -75,7 +78,7 @@ public class MobHolder {
     }
 
     public void read(CompoundNBT compound) {
-        //remove in the future
+        //TODO:remove in the future
         if(compound.contains("jar_mob")){
             this.entityData = compound.getCompound("jar_mob");
             this.scale=0.15f;
@@ -164,7 +167,6 @@ public class MobHolder {
             return true;
         }
         */
-
         return false;
     }
 
@@ -189,7 +191,7 @@ public class MobHolder {
             if (player != null) {
                 player.awardStat(Stats.ITEM_USED.get(item));
                 if (!player.isCreative()) {
-                    CommonUtil.swapItem(player, hand, returnStack);
+                    Utils.swapItem(player, hand, returnStack);
                 }
             }
             return true;
@@ -205,8 +207,6 @@ public class MobHolder {
         this.entityData = null;
     }
 
-
-
     public void tick() {
 
         if(this.firstTick && !this.isEmpty()){
@@ -218,6 +218,12 @@ public class MobHolder {
 
         //needed for eggs
         this.mob.tickCount++;
+
+        //interface stuff
+        boolean hasCustomMethods = this.mob instanceof ICageJarCatchable;
+        if(hasCustomMethods) ((ICageJarCatchable) this.mob).tickInsideCageOrJar();
+
+
         if (!this.world.isClientSide) {
             if (this.specialBehaviorType == SpecialBehaviorType.CHICKEN) {
                 ChickenEntity ch = (ChickenEntity) this.mob;
@@ -319,7 +325,7 @@ public class MobHolder {
                     if (rand.nextFloat() > (ch.isOnGround() ? 0.99 : 0.88)) ch.setOnGround(!ch.isOnGround());
                     break;
             }
-            if (this.capturedMobProperties.isFloating()) {
+            if (this.capturedMobProperties.isFloating() || (hasCustomMethods && ((ICageJarCatchable) this.mob).getAnimationCategory().isFloating())) {
                 this.jumpY = 0.04f * MathHelper.sin(this.mob.tickCount / 10f) - 0.03f;
             }
         }
@@ -404,7 +410,13 @@ public class MobHolder {
             //TODO: make properly react to water
             this.setWaterMobInWater(true); //!this.world.getFluidState(pos).isEmpty()
             if (!this.world.isClientSide) {
-                int light = this.capturedMobProperties.getLightLevel();
+                int light;
+                if(this.mob instanceof ICageJarCatchable){
+                    light = ((ICageJarCatchable) this.mob).getLightLevel();
+                }
+                else{
+                    light = this.capturedMobProperties.getLightLevel();
+                }
                 BlockState state = this.world.getBlockState(this.pos);
                 if (state.getValue(BlockProperties.LIGHT_LEVEL_0_15) != light) {
                     this.world.setBlock(this.pos, state.setValue(BlockProperties.LIGHT_LEVEL_0_15, light), 2 | 4 | 16);
@@ -454,9 +466,9 @@ public class MobHolder {
 
     }
 
-    private static boolean isInAir(Entity mob, CapturedMobProperties type){
-        return (mob.isNoGravity() || mob instanceof IFlyingAnimal || mob.isIgnoringBlockTriggers() || mob instanceof WaterMobEntity
-                ||type.isFlying()) && !type.isLand();
+    private static boolean isInAir(Entity mob, ICageJarCatchable.AnimationCategory category){
+        return !category.isLand() && (category.isFlying() || mob.isNoGravity() || mob instanceof IFlyingAnimal ||
+                mob.isIgnoringBlockTriggers() || mob instanceof WaterMobEntity);
     }
 
     //called by the item. turns a mob into what's store inside item and tile
@@ -473,6 +485,7 @@ public class MobHolder {
             le.hurtTime=0;
             le.hurtDuration=0;
             le.hurtTime=0;
+            le.attackAnim=0;
         }
         if(mob instanceof AbstractFishEntity){
             ((AbstractFishEntity) mob).setFromBucket(true);
@@ -494,11 +507,11 @@ public class MobHolder {
             mobCompound.remove("Leash");
             mobCompound.remove("UUID");
 
-            //TODO: improve for acquatic entities to react and not fly when not in water
-            CapturedMobProperties type = CapturedMobsHelper.getType(mob);
-            boolean isAir = isInAir(mob,type);
+            //TODO: improve for aquatic entities to react and not fly when not in water
+            CapturedMobProperties mobProperties = CapturedMobsHelper.getType(mob);
+            AnimationCategory category = mobProperties.getCategory();
+            boolean isAir = isInAir(mob,category);
 
-            //MobHolderType type = MobHolderType.getType(mob);
 
             float babyScale = 1;
             //non ageable
@@ -511,8 +524,20 @@ public class MobHolder {
             float h = mob.getBbHeight() *babyScale;
             //float maxh = isAir ? 0.5f : 0.75f;
             //1 px border
-            float maxh = blockh - (isAir ? 0.25f : 0.125f) - type.getHeight();
-            float maxw = blockw - 0.25f - type.getWidth();
+
+            float addWidth;
+            float addHeight;
+            if(mob instanceof ICageJarCatchable){
+                addWidth = ((ICageJarCatchable) mob).getHitBoxWidthIncrement();
+                addHeight = ((ICageJarCatchable) mob).getHitBoxHeightIncrement();
+            }
+            else{
+                addWidth = mobProperties.getWidth();
+                addHeight = mobProperties.getHeight();
+            }
+
+            float maxh = blockh - (isAir ? 0.25f : 0.125f) - addHeight;
+            float maxw = blockw - 0.25f - addWidth;
             if (w > maxw || h > maxh) {
                 if (w - maxw > h - maxh)
                     s = maxw / w;

@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.block.util;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.api.ICageJarCatchable.AnimationCategory;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -11,7 +12,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.*;
 
-
+//to whoever is reading I'm sorry :/
 public class CapturedMobsHelper {
 
     public static final List<String> COMMAND_MOBS = new ArrayList<>();
@@ -22,8 +23,8 @@ public class CapturedMobsHelper {
     //bucket item mob id,
     public static final Map<Item,String> VALID_BUCKETS = new HashMap<>();
 
-    public static final CapturedMobProperties DEFAULT = new CapturedMobProperties("69",0,0,0,0,Category.DEFAULT);
-    public static final CapturedMobProperties MODDED_FISH = new CapturedMobProperties("420",0,0,0,1,Category.DEFAULT);
+    public static final CapturedMobProperties DEFAULT = new CapturedMobProperties("69",0,0,0,0,AnimationCategory.DEFAULT);
+    public static final CapturedMobProperties MODDED_FISH = new CapturedMobProperties("420",0,0,0,1,AnimationCategory.DEFAULT);
 
 
     private static List<String> addDef(String id, int fish){
@@ -32,7 +33,7 @@ public class CapturedMobsHelper {
     private static List<String> addDef(String id, float h, float w, int l, int f){
         return Arrays.asList(id,""+h,""+w,""+l,""+f);
     }
-    private static List<String> addDef(String id, float h, float w, int l, Category c){
+    private static List<String> addDef(String id, float h, float w, int l, AnimationCategory c){
         return Arrays.asList(id,""+h,""+w,""+l,c.toString());
     }
     private static List<String> addDef(String id, float h, float w, int l){
@@ -47,12 +48,12 @@ public class CapturedMobsHelper {
         //1=default fish
         int fishIndex = 0;
         DEFAULT_CONFIG.add(addDef("minecraft:bee", 0.3125f, 0));
-        DEFAULT_CONFIG.add(addDef("minecraft:vex", 0, 0.125f,0,Category.FLOATING));
+        DEFAULT_CONFIG.add(addDef("minecraft:vex", 0, 0.125f,0,AnimationCategory.FLOATING));
         DEFAULT_CONFIG.add(addDef("minecraft:silverfish", 0, 0.25f));
         DEFAULT_CONFIG.add(addDef("minecraft:chicken", 0.25f, 0.3125f));
         DEFAULT_CONFIG.add(addDef("minecraft:endermite",0,0,5));
-        DEFAULT_CONFIG.add(addDef("supplementaries:firefly",0,0,9,Category.FLOATING));
-        DEFAULT_CONFIG.add(addDef("druidcraft:lunar_moth", 0.375f, 0.1375f,10,Category.FLOATING));
+        DEFAULT_CONFIG.add(addDef("supplementaries:firefly",0,0,9,AnimationCategory.FLOATING));
+        DEFAULT_CONFIG.add(addDef("druidcraft:lunar_moth", 0.375f, 0.1375f,10,AnimationCategory.FLOATING));
         DEFAULT_CONFIG.add(addDef("iceandfire:pixie", 0, 0,10));
         DEFAULT_CONFIG.add(addDef("minecraft:fish", ++fishIndex));
         DEFAULT_CONFIG.add(addDef("minecraft:tropical_fish", ++fishIndex));
@@ -174,24 +175,24 @@ public class CapturedMobsHelper {
                 float w = 0;
                 int light = 0;
                 int fish = 0;
-                Category cat = Category.DEFAULT;
+                AnimationCategory cat = AnimationCategory.DEFAULT;
                 if (size > 2) w = strToFloat(l.get(2));
                 if (size > 3) light = strToInt(l.get(3));
                 if (size > 4) {
                     String type = l.get(4).toLowerCase();
                     switch (type) {
                         case "air":
-                            cat = Category.AIR;
+                            cat = AnimationCategory.AIR;
                             break;
                         case "land":
-                            cat = Category.LAND;
+                            cat = AnimationCategory.LAND;
                             break;
                         case "floating":
-                            cat = Category.FLOATING;
+                            cat = AnimationCategory.FLOATING;
                             break;
                         default:
                             fish = strToInt(type);
-                            if (fish > 0) cat = Category.FISH;
+                            if (fish > 0) cat = AnimationCategory.FISH;
                             break;
                     }
                 }
@@ -243,9 +244,9 @@ public class CapturedMobsHelper {
         private final float extraHeight;
         private final int lightLevel;
         private final int fishTexture;
-        private final Category category;
+        private final AnimationCategory category;
 
-        private CapturedMobProperties(String id, float h, float w, int light, int fish, Category c){
+        private CapturedMobProperties(String id, float h, float w, int light, int fish, AnimationCategory c){
             this.id = id;
             this.extraWidth = w;
             this.extraHeight = h;
@@ -254,6 +255,9 @@ public class CapturedMobsHelper {
             this.category = c;
         }
 
+        public AnimationCategory getCategory() {
+            return category;
+        }
 
         public boolean canHaveWater() {
             return this.isFlying()||this.isFish();
@@ -274,29 +278,23 @@ public class CapturedMobsHelper {
             return lightLevel;
         }
         public boolean isFish() {
-            return this.category==Category.FISH;
+            return this.category.isFish();
         }
         public boolean isFlying() {
-            return this.category==Category.AIR||this.category==Category.FLOATING;
+            return this.category.isFlying();
         }
         public boolean isLand() {
-            return this.category==Category.LAND;
+            return this.category.isLand();
         }
         public boolean isFloating(){
-            return this.category==Category.FLOATING;
+            return this.category.isFloating();
         }
 
-    }
-    private enum Category {
-        DEFAULT,
-        FISH,
-        LAND,
-        AIR,
-        FLOATING
+        @Override
+        public String toString() {
+            return super.toString().toLowerCase();
+        }
     }
 
-    @Override
-    public String toString() {
-        return super.toString().toLowerCase();
-    }
+
 }

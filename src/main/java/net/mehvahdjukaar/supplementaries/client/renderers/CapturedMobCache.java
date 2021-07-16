@@ -8,6 +8,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.item.EnderCrystalEntity;
 import net.minecraft.entity.passive.PigEntity;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -17,7 +18,7 @@ import javax.annotation.Nullable;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-@Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.FORGE)
+@Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class CapturedMobCache {
 
     public static LoadingCache<UUID, Entity> cachedMobs = CacheBuilder.newBuilder()
@@ -48,7 +49,7 @@ public class CapturedMobCache {
 
     @SubscribeEvent
     public static void onClientTick(TickEvent.ClientTickEvent event) {
-        if(event.phase == TickEvent.Phase.END && pedestalCrystal.get()!=null)pedestalCrystal.get().time++;
+        if(event.phase == TickEvent.Phase.END && Minecraft.getInstance().level!=null) pedestalCrystal.get().time++;
     }
 
 }

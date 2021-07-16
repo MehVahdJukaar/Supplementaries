@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import com.google.common.collect.Maps;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
+import net.mehvahdjukaar.selene.util.Utils;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties.RopeAttachment;
 import net.mehvahdjukaar.supplementaries.block.tiles.PulleyBlockTile;
@@ -413,7 +414,7 @@ public class RopeBlock extends WaterBlock {
                 if (removeRope(pos.below(), world, this)) {
                     world.playSound(player, pos, SoundEvents.LEASH_KNOT_PLACE, SoundCategory.BLOCKS, 1, 0.6f);
                     if (player == null || !player.abilities.instabuild) {
-                        CommonUtil.swapItem(player, handIn, stack, new ItemStack(this.asItem()));
+                        Utils.swapItem(player, handIn, stack, new ItemStack(this.asItem()));
                     }
                     return ActionResultType.sidedSuccess(world.isClientSide);
                 }

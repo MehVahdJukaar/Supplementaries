@@ -6,7 +6,6 @@ import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.common.AdventurerMapsHandler;
 import net.mehvahdjukaar.supplementaries.common.FlowerPotHelper;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
-import net.mehvahdjukaar.supplementaries.compat.quark.QuarkPlugin;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.fluids.ModSoftFluids;

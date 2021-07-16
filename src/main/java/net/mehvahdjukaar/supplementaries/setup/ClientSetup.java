@@ -263,7 +263,6 @@ public class ClientSetup {
         ParticleManager particleManager = Minecraft.getInstance().particleEngine;
         particleManager.register(Registry.FIREFLY_GLOW.get(), FireflyGlowParticle.Factory::new);
         particleManager.register(Registry.SPEAKER_SOUND.get(), SpeakerSoundParticle.Factory::new);
-        particleManager.register(Registry.ENDERGETIC_FLAME.get(), FlameParticle.Factory::new);
         particleManager.register(Registry.GREEN_FLAME.get(), FlameParticle.Factory::new);
         particleManager.register(Registry.DRIPPING_LIQUID.get(), DrippingLiquidParticle.Factory::new);
         particleManager.register(Registry.FALLING_LIQUID.get(), FallingLiquidParticle.Factory::new);

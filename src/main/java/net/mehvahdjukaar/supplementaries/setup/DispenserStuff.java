@@ -1,16 +1,20 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
+import net.mehvahdjukaar.selene.fluids.ISoftFluidConsumer;
+import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.selene.util.DispenserHelper;
 import net.mehvahdjukaar.selene.util.DispenserHelper.AddItemToInventoryBehavior;
 import net.mehvahdjukaar.selene.util.DispenserHelper.AdditionalDispenserBehavior;
 import net.mehvahdjukaar.supplementaries.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.LightUpBlock;
+import net.mehvahdjukaar.supplementaries.block.blocks.PancakeBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.entities.ThrowableBrickEntity;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.dispenser.IBlockSource;
@@ -54,6 +58,7 @@ public class DispenserStuff {
 
         DispenserHelper.registerCustomBehavior(new FlintAndSteelDispenserBehavior(Items.FLINT_AND_STEEL));
         DispenserHelper.registerCustomBehavior(new BambooSpikesDispenserBehavior(Items.LINGERING_POTION));
+        DispenserHelper.registerCustomBehavior(new PancakesDispenserBehavior(Items.HONEY_BOTTLE));
 
         if(ServerConfigs.cached.THROWABLE_BRICKS_ENABLED){
             DispenserHelper.registerCustomBehavior(new ThrowableBricksDispenserBehavior(Items.NETHER_BRICK));
@@ -69,6 +74,7 @@ public class DispenserStuff {
             DispenserBlock.registerBehavior(Registry.BOMB_ITEM_ON.get(), new BombsDispenserBehavior());
             DispenserBlock.registerBehavior(Registry.BOMB_BLUE_ITEM_ON.get(), new BombsDispenserBehavior());
         }
+
     }
 
 
@@ -86,7 +92,7 @@ public class DispenserStuff {
             BlockState state = world.getBlockState(blockpos);
             if(state.getBlock() instanceof LightUpBlock){
                 if(LightUpBlock.lightUp(state,blockpos,world,LightUpBlock.FireSound.FLINT_AND_STEEL)){
-                    if(stack.hurt(1, world.random, (ServerPlayerEntity)null)){
+                    if(stack.hurt(1, world.random, null)){
                         stack.setCount(0);
                     }
                     return ActionResult.success(stack);
@@ -175,6 +181,31 @@ public class DispenserStuff {
             return ActionResult.pass(stack);
         }
     }
+
+    //TODO: generalize for fluid consumer & put into library
+    private static class PancakesDispenserBehavior extends AdditionalDispenserBehavior{
+
+        protected PancakesDispenserBehavior(Item item) {
+            super(item);
+        }
+
+        @Override
+        protected ActionResult<ItemStack> customBehavior(IBlockSource source, ItemStack stack) {
+            //this.setSuccessful(false);
+            ServerWorld world = source.getLevel();
+            BlockPos blockpos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
+            BlockState state = world.getBlockState(blockpos);
+            Block block = state.getBlock();
+            if(block instanceof PancakeBlock){
+                if(((ISoftFluidConsumer) block).tryAcceptingFluid(world,state,blockpos, SoftFluidRegistry.HONEY,null,1)){
+                    return ActionResult.consume(new ItemStack(Items.GLASS_BOTTLE));
+                }
+                return ActionResult.fail(stack);
+            }
+            return ActionResult.pass(stack);
+        }
+    }
+
 
     private static class FishBucketJarDispenserBehavior extends AdditionalDispenserBehavior {
 

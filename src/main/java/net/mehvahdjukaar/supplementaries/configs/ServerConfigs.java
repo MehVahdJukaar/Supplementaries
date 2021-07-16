@@ -30,8 +30,6 @@ public class ServerConfigs {
     public static void createConfig(){
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
 
-        //reg.init(SERVER_BUILDER);
-
         block.init(builder);
         spawn.init(builder);
         entity.init(builder);
@@ -85,7 +83,6 @@ public class ServerConfigs {
                     .define("break_blocks",false);
 
             builder.pop();
-
 
 
             builder.pop();
@@ -149,10 +146,10 @@ public class ServerConfigs {
             builder.pop();
             //bells
             builder.push("bells_tweaks");
-            BELL_CHAIN = builder.comment("ring a bell by clicking on a chain that's connected to it")
+            BELL_CHAIN = builder.comment("Ring a bell by clicking on a chain that's connected to it")
                     .define("chain_ringing",true);
-            BELL_CHAIN_LENGTH = builder.comment("max chain length that allows a bell to ring")
-                    .defineInRange("chain_length",16,0,1024);
+            BELL_CHAIN_LENGTH = builder.comment("Max chain length that allows a bell to ring")
+                    .defineInRange("chain_length",16,0,256);
             builder.pop();
 
             builder.push("placeable_sticks");
@@ -276,6 +273,9 @@ public class ServerConfigs {
 
         public static ForgeConfigSpec.BooleanValue DOUBLE_IRON_GATE;
 
+        public static ForgeConfigSpec.BooleanValue STICK_POLE;
+        public static ForgeConfigSpec.IntValue STICK_POLE_LENGTH;
+
         private static void init(ForgeConfigSpec.Builder builder){
 
             builder.comment("Server side blocks configs")
@@ -291,8 +291,8 @@ public class ServerConfigs {
 
             //speaker
             builder.push("speaker_block");
-            SPEAKER_RANGE = builder.comment("maximum range")
-                    .defineInRange("range", 64, 0, 256);
+            SPEAKER_RANGE = builder.comment("Maximum block range")
+                    .defineInRange("range", 64, 0, 100000000);
             builder.pop();
             //bellows
             builder.push("bellows");
@@ -421,6 +421,13 @@ public class ServerConfigs {
             builder.push("iron_gate");
             DOUBLE_IRON_GATE = builder.comment("Allows two iron gates to be opened simultaneously when on top of the other")
                     .define("double_opening", true);
+            builder.pop();
+
+            builder.push("flag");
+            STICK_POLE = builder.comment("Allows right/left clicking on a stick to lower/raise a flag attached to it")
+                    .define("stick_pole", true);
+            STICK_POLE_LENGTH = builder.comment("Maximum allowed pole length")
+                    .defineInRange("pole_length",16,0,256);
             builder.pop();
 
             builder.pop();
@@ -589,6 +596,8 @@ public class ServerConfigs {
         public static boolean REPLACE_DAUB;
         public static boolean ITEM_SHELF_LADDER;
         public static boolean DOUBLE_IRON_GATE;
+        public static boolean STICK_POLE;
+        public static int STICK_POLE_LENGTH;
 
         //entity
         public static int FIREFLY_PERIOD;
@@ -673,6 +682,9 @@ public class ServerConfigs {
             ITEM_SHELF_LADDER = block.ITEM_SHELF_LADDER.get();
 
             DOUBLE_IRON_GATE = block.DOUBLE_IRON_GATE.get();
+
+            STICK_POLE = block.STICK_POLE.get();
+            STICK_POLE_LENGTH = block.STICK_POLE_LENGTH.get();
 
             FIREFLY_PERIOD = entity.FIREFLY_PERIOD.get();
             FIREFLY_SPEED = entity.FIREFLY_SPEED.get();

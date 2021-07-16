@@ -161,7 +161,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable {
                 if(cleared){
                     safe.clearOwner();
                     player.displayClientMessage(new TranslationTextComponent("message.supplementaries.safe.cleared"),true);
-                    worldIn.playSound(null, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5,
+                    worldIn.playSound(null, pos,
                             SoundEvents.IRON_TRAPDOOR_OPEN, SoundCategory.BLOCKS, 0.5F, 1.5F);
                     return ActionResultType.CONSUME;
                 }

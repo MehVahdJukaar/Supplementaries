@@ -1,19 +1,26 @@
 package net.mehvahdjukaar.supplementaries.compat.create.behaviors;
 
-/*
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
+import com.simibubi.create.content.contraptions.fluids.actors.FillingRecipe;
+import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 import net.mehvahdjukaar.supplementaries.block.blocks.HourGlassBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.HourGlassBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.HourGlassBlockTileRenderer;
+import net.mehvahdjukaar.supplementaries.items.crafting.BlackboardClearRecipe;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.inventory.ItemStackHelper;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
@@ -72,15 +79,17 @@ public class HourglassBehavior extends MovementBehaviour {
         com.remove("PrevProgress");
         com.putFloat("Progress",progress);
         com.putFloat("PrevProgress",prevProgress);
-
     }
 
     @Override
-    public void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal, IRenderTypeBuffer buffer) {
+    public void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld, ContraptionMatrices matrices, IRenderTypeBuffer buffer) {
+
         CompoundNBT com = context.tileData;
         HourGlassBlockTile.HourGlassSandType sandType = HourGlassBlockTile.HourGlassSandType.values()[com.getInt("SandType")];
         float progress = com.getFloat("Progress");
         float prevProgress = com.getFloat("PrevProgress");
+        NonNullList<ItemStack> stacks = NonNullList.withSize(1, ItemStack.EMPTY);
+        ItemStackHelper.loadAllItems(com, stacks);
         float partialTicks = 1;
         if(sandType.isEmpty())return;
 
@@ -92,12 +101,11 @@ public class HourglassBehavior extends MovementBehaviour {
 
         int light = WorldRenderer.getLightColor(context.world, pos);
 
-        TextureAtlasSprite sprite = sandType.getSprite(Items.REDSTONE);
+        TextureAtlasSprite sprite = sandType.getSprite(stacks.get(0),renderWorld.getWorld());
 
         float h = MathHelper.lerp(partialTicks, prevProgress, progress);
         Direction dir = context.state.getValue(HourGlassBlock.FACING);
-        HourGlassBlockTileRenderer.renderSand(ms,buffer,light,0,sprite,h,dir);
+        HourGlassBlockTileRenderer.renderSand(matrices.getFinalStack(), buffer,light,0,sprite,h,dir);
     }
 
 }
-*/
