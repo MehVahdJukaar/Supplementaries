@@ -23,14 +23,12 @@ import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.*;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.stats.Stats;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -46,8 +44,6 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
-
-import javax.annotation.Nullable;
 
 
 public class ServerEvents {
@@ -105,23 +101,6 @@ public class ServerEvents {
         return ActionResultType.PASS;
     }
 
-    private static boolean findConnectedBell(World world, BlockPos pos, @Nullable PlayerEntity player, int it){
-        if(it>ServerConfigs.cached.BELL_CHAIN_LENGTH)return false;
-        BlockState state = world.getBlockState(pos);
-        Block b = state.getBlock();
-        if(b instanceof ChainBlock && state.getValue(ChainBlock.AXIS) == Direction.Axis.Y){
-            return findConnectedBell(world,pos.above(),player,it+1);
-        }
-        else if(b instanceof BellBlock && it!=0){
-            //boolean success = CommonUtil.tryRingBell(Block b, world, pos, state.getValue(BellBlock.FACING).getClockWise());
-            BlockRayTraceResult hit = new BlockRayTraceResult(new Vector3d(pos.getX()+0.5,pos.getY()+0.5,pos.getZ()+0.5),
-                    state.getValue(BellBlock.FACING).getClockWise(),pos, true);
-            //if (success && player != null) {//player.awardStat(Stats.BELL_RING);}
-            return ((BellBlock) b).onHit(world, state,hit,player,true);
-        }
-        return false;
-    }
-
     private static final JarBlockTile DUMMY_JAR_TILE = new JarBlockTile();
 
     @SubscribeEvent(priority = EventPriority.HIGH)
@@ -173,7 +152,7 @@ public class ServerEvents {
             //bell chains
             if (stack.isEmpty() && hand == Hand.MAIN_HAND) {
                 if (ServerConfigs.cached.BELL_CHAIN) {
-                    if (findConnectedBell(world, pos, player, 0)) {
+                    if (RopeBlock.findAndRingBell(world, pos, player, 0, s->s.getBlock() instanceof ChainBlock && s.getValue(ChainBlock.AXIS) == Direction.Axis.Y)) {
                         event.setCanceled(true);
                         event.setCancellationResult(ActionResultType.sidedSuccess(world.isClientSide));
                     }

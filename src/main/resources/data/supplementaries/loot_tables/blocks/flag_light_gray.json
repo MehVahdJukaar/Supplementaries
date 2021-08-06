@@ -6,7 +6,24 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "supplementaries:flag_light_gray"
+          "functions": [
+            {
+              "function": "minecraft:copy_name",
+              "source": "block_entity"
+            },
+            {
+              "function": "minecraft:copy_nbt",
+              "source": "block_entity",
+              "ops": [
+                {
+                  "source": "Patterns",
+                  "target": "BlockEntityTag.Patterns",
+                  "op": "replace"
+                }
+              ]
+            }
+          ],
+          "name": "supplementaries:flag_gray"
         }
       ],
       "conditions": [

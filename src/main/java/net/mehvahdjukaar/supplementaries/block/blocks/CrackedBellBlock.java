@@ -144,7 +144,7 @@ public class CrackedBellBlock extends FallingBlock {
             }
 
             ((CrackedBellBlockTile)tileentity).onHit(direction);
-            world.playSound(null, pos, SoundEvents.BELL_BLOCK, SoundCategory.BLOCKS, 2.0F, 1.0F);
+            world.playSound(null, pos, SoundEvents.BELL_BLOCK, SoundCategory.BLOCKS, 2.0F, 0.65F);
             return true;
         } else {
             return false;

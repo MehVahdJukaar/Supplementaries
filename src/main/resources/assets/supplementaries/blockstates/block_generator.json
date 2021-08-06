@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "supplementaries:block/bellows"
+      "model": "supplementaries:block/structure_temp"
     }
   }
 }

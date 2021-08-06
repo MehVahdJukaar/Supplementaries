@@ -66,6 +66,12 @@ public class ClientConfigs {
         }
     }
 
+    public enum GraphicsFanciness {
+        FAST,
+        FANCY,
+        FABULOUS
+    }
+
     public static class block {
         public static ForgeConfigSpec.DoubleValue FIREFLY_SPAWN_CHANCE;
         public static ForgeConfigSpec.IntValue FIREFLY_SPAWN_PERIOD;
@@ -83,7 +89,7 @@ public class ClientConfigs {
         public static ForgeConfigSpec.BooleanValue GLOBE_RANDOM;
         public static ForgeConfigSpec.ConfigValue<List<? extends List<String>>> GLOBE_COLORS;
 
-        public static ForgeConfigSpec.IntValue FLAG_FANCINESS;
+        public static ForgeConfigSpec.EnumValue<GraphicsFanciness> FLAG_FANCINESS;
         public static ForgeConfigSpec.IntValue FLAG_PERIOD;
         public static ForgeConfigSpec.DoubleValue FLAG_WAVELENGTH;
         public static ForgeConfigSpec.DoubleValue FLAG_AMPLITUDE;
@@ -183,7 +189,7 @@ public class ClientConfigs {
             FLAG_AMPLITUDE_INCREMENT = builder.comment("How much the wave amplitude increases each pixel. (Amplitude increment per pixel)")
                     .defineInRange("intensity_increment", 0.3d, 0, 10);
             FLAG_FANCINESS = builder.comment("At which graphic settings flags will have a fancy renderer: 0=fast, 1=fancy, 2=fabulous")
-                    .defineInRange("fanciness",2,0,2);
+                    .defineEnum("fanciness",GraphicsFanciness.FABULOUS);
             builder.pop();
             //TODO: add more(hourGlass, sawying blocks...)
 
@@ -284,7 +290,7 @@ public class ClientConfigs {
         public static double FLAG_WAVELENGTH;
         public static double FLAG_AMPLITUDE;
         public static double FLAG_AMPLITUDE_INCREMENT;
-        public static int FLAG_FANCINESS;
+        public static GraphicsFanciness FLAG_FANCINESS;
 
         public static void refresh(){
             //tweaks

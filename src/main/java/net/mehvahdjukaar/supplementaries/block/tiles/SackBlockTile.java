@@ -14,11 +14,12 @@ import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.LockableLootTileEntity;
 import net.minecraft.tileentity.LockableTileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.Direction;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -34,12 +35,10 @@ import vazkii.quark.api.ITransferManager;
 import javax.annotation.Nullable;
 import java.util.stream.IntStream;
 
-public class SackBlockTile extends LockableLootTileEntity implements INameable, ISidedInventory, ICapabilityProvider, ITransferManager {
+public class SackBlockTile extends LockableLootTileEntity implements ISidedInventory, ICapabilityProvider, ITransferManager {
 
     private NonNullList<ItemStack> items = NonNullList.withSize(27, ItemStack.EMPTY);
     private int numPlayersUsing;
-
-    private ITextComponent customName;
 
     public SackBlockTile() {
         super(Registry.SACK_TILE.get());
@@ -50,15 +49,6 @@ public class SackBlockTile extends LockableLootTileEntity implements INameable, 
         return this.items.size();
     }
 
-    @Override
-    public void setCustomName(ITextComponent name) {
-        this.customName = name;
-    }
-
-    @Override
-    public ITextComponent getCustomName() {
-        return this.customName;
-    }
 
     @Override
     public ITextComponent getDefaultName() {
@@ -136,34 +126,29 @@ public class SackBlockTile extends LockableLootTileEntity implements INameable, 
     @Override
     public void load(BlockState state, CompoundNBT nbt) {
         super.load(state, nbt);
-        this.loadFromNbt(nbt);
+        this.loadFromTag(nbt);
     }
 
     //TODO: separate save to nbt from write so you don't write data you don't need. it update packet too
     @Override
     public CompoundNBT save(CompoundNBT compound) {
         super.save(compound);
-        return this.saveToNbt(compound);
+        return this.saveToTag(compound);
     }
 
-    public void loadFromNbt(CompoundNBT compound) {
+    public void loadFromTag(CompoundNBT compoundNBT) {
         this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        if (!this.tryLoadLootTable(compound) && compound.contains("Items", 9)) {
-            ItemStackHelper.loadAllItems(compound, this.items);
-        }
-        if (compound.contains("CustomName", 8)) {
-            this.customName = ITextComponent.Serializer.fromJson(compound.getString("CustomName"));
+        if (!this.tryLoadLootTable(compoundNBT) && compoundNBT.contains("Items", 9)) {
+            ItemStackHelper.loadAllItems(compoundNBT, this.items);
         }
     }
 
-    public CompoundNBT saveToNbt(CompoundNBT compound) {
-        if (!this.trySaveLootTable(compound)) {
-            ItemStackHelper.saveAllItems(compound, this.items, false);
+    public CompoundNBT saveToTag(CompoundNBT compoundNBT) {
+        if (!this.trySaveLootTable(compoundNBT)) {
+            ItemStackHelper.saveAllItems(compoundNBT, this.items, false);
         }
-        if (this.customName != null) {
-            compound.putString("CustomName", ITextComponent.Serializer.toJson(this.customName));
-        }
-        return compound;
+
+        return compoundNBT;
     }
 
     @Override
@@ -181,16 +166,6 @@ public class SackBlockTile extends LockableLootTileEntity implements INameable, 
         return new SackContainer(id, player, this);
     }
 
-    @Override
-    public CompoundNBT getUpdateTag() {
-        return this.save(new CompoundNBT());
-    }
-
-    @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.load(this.getBlockState(), pkt.getTag());
-    }
-
     public int getUnlockedSlots(){
         return ServerConfigs.cached.SACK_SLOTS;
     }
@@ -202,7 +177,6 @@ public class SackBlockTile extends LockableLootTileEntity implements INameable, 
     @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
         return isSlotUnlocked(index) && CommonUtil.isAllowedInShulker(stack);
-        //return super.isItemValidForSlot(index,stack);
     }
 
     //TODO: figure out what this handlers and ISided inventory do
@@ -220,7 +194,6 @@ public class SackBlockTile extends LockableLootTileEntity implements INameable, 
     public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
         return isSlotUnlocked(index);
     }
-    //TODO: add quark transfer capability
 
     private final LazyOptional<? extends IItemHandler>[] handlers = SidedInvWrapper.create(this, Direction.values());
     @Override

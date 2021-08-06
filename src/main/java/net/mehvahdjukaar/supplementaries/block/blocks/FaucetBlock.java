@@ -125,10 +125,6 @@ public class FaucetBlock extends WaterBlock {
         if(hasWater != state.getValue(HAS_WATER)) worldIn.setBlockAndUpdate(pos,state.setValue(HAS_WATER,hasWater));
     }
 
-    public boolean isSpecialTankBelow(BlockState state){
-        return state.is(ModTags.POURING_TANK);
-    }
-
     @Override
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
         if (stateIn.getValue(WATERLOGGED)) {
@@ -156,8 +152,10 @@ public class FaucetBlock extends WaterBlock {
         return false;
     }
 
+    //TODO: redo
     private boolean canConnect(BlockState downState, IWorld world, BlockPos pos, Direction dir){
         if(downState.getBlock() instanceof JarBlock)return true;
+        else if (downState.is(ModTags.POURING_TANK))return false;
         else if(downState.hasProperty(BlockStateProperties.LEVEL_HONEY))return true;
         return world instanceof World && FluidUtil.getFluidHandler((World) world, pos, dir).isPresent();
     }

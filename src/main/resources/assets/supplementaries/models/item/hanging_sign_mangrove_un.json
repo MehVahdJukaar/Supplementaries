@@ -1,7 +1,7 @@
 {
   "parent": "supplementaries:item/hanging_sign_template",
   "textures": {
-    "0": "supplementaries:blocks/hanging_signs/twilightforest/hanging_sign_front_mangrove_un",
-    "2": "supplementaries:blocks/hanging_signs/twilightforest/hanging_sign_details_mangrove_un"
+    "0": "supplementaries:blocks/hanging_signs/unnamedanimalmod/hanging_sign_front_mangrove_un",
+    "2": "supplementaries:blocks/hanging_signs/unnamedanimalmod/hanging_sign_details_mangrove_un"
   }
 }

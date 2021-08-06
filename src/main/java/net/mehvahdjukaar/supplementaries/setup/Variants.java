@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.setup;
 import net.mehvahdjukaar.supplementaries.block.blocks.CeilingBannerBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.FlagBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.HangingSignBlock;
+import net.mehvahdjukaar.supplementaries.block.blocks.PresentBlock;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.FlagItemRenderer;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
@@ -152,6 +153,34 @@ public class Variants {
 
         for(DyeColor color : DyeColor.values()){
             map.put(color, Registry.regBlockItem(Registry.CEILING_BANNERS.get(color),null));
+        }
+        return map;
+    }
+
+    //presents
+    public static Map<DyeColor, RegistryObject<Block>> makePresents(String baseName){
+        Map<DyeColor, RegistryObject<Block>> map = new HashMap<>();
+
+        for(DyeColor color : DyeColor.values()){
+            String name = baseName+"_"+color.getName();
+            map.put(color, Registry.BLOCKS.register(name, ()-> new PresentBlock(color,
+                            AbstractBlock.Properties.of(Material.WOOD, color.getMaterialColor())
+                                    .strength(1.0F)
+                                    .noCollission()
+                                    .sound(SoundType.WOOD)
+                    )
+            ));
+        }
+        return map;
+    }
+
+
+    //presents
+    public static Map<DyeColor, RegistryObject<Item>> makePresentsItems(){
+        Map<DyeColor, RegistryObject<Item>> map = new HashMap<>();
+
+        for(DyeColor color : DyeColor.values()){
+            map.put(color, Registry.regBlockItem(Registry.PRESENTS.get(color),Registry.getTab(ItemGroup.TAB_DECORATIONS, Registry.PRESENT_NAME)));
         }
         return map;
     }

@@ -51,7 +51,6 @@ public class PancakeBlock extends WaterBlock implements ISoftFluidConsumer {
 
     private Topping getTopping(Item item){
         if(item instanceof HoneyBottleItem)return BlockProperties.Topping.HONEY;
-        //TODO: add tag support here
         if((ModTags.CHOCOLATE_BARS.getValues().isEmpty() && item == Items.COCOA_BEANS) || item.is(ModTags.CHOCOLATE_BARS)) {
             return Topping.CHOCOLATE;
         }

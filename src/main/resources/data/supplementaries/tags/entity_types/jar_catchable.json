@@ -6,6 +6,9 @@
     "minecraft:magma_cube"
   ],
   "optional": [
+    "bettermushroom:mushrooms_spores",
+    "untamedwilds:tarantula",
+    "wyrmroost:coin_dragon",
     "fantasy:unicorn",
     "alexsmobs:enderiophage",
     "iceandfire:pixie",
@@ -19,7 +22,6 @@
     "mysticalworld:silkworm",
     "druidcraft:lunar_moth",
     "druidcraft:dreadfish",
-    "swampexpansion:slabfish",
     "betterendforge:end_slime",
     "betterendforge:dragonfly",
     "betterendforge:silk_moth",

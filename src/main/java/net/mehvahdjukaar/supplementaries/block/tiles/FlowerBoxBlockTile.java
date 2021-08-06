@@ -2,10 +2,10 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 
 import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.block.blocks.ItemShelfBlock;
+import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.BushBlock;
 import net.minecraft.block.DoublePlantBlock;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -97,7 +97,8 @@ public class FlowerBoxBlockTile extends ItemDisplayTile {
 
     @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
-        return this.getItem(index).isEmpty() && stack.getItem() instanceof BlockItem && ((BlockItem) stack.getItem()).getBlock() instanceof BushBlock;
+
+        return this.getItem(index).isEmpty() && stack.getItem().is(ModTags.FLOWER_BOX_PLANTABLE) ;
     }
 
     @Override

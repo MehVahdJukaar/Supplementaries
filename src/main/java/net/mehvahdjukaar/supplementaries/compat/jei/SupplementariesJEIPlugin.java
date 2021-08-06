@@ -11,12 +11,16 @@ import net.mehvahdjukaar.supplementaries.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.items.BambooSpikesTippedItem;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.minecraft.block.BannerBlock;
+import net.minecraft.item.BannerPatternItem;
+import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.ShapelessRecipe;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionUtils;
@@ -65,9 +69,10 @@ public class SupplementariesJEIPlugin implements IModPlugin {
     public void registerRecipes(IRecipeRegistration registry) {
         registry.addRecipes(createTippedBambooSpikesRecipes(),VanillaRecipeCategoryUid.CRAFTING);
         registry.addRecipes(createBlackboardDuplicate(),VanillaRecipeCategoryUid.CRAFTING);
-        registry.addRecipes(createBlackboardClear(),VanillaRecipeCategoryUid.CRAFTING);
+        //registry.addRecipes(createBlackboardClear(),VanillaRecipeCategoryUid.CRAFTING);
         registry.addRecipes(createRopeArrowCreateRecipe(),VanillaRecipeCategoryUid.CRAFTING);
         registry.addRecipes(createRopeArrowAddRecipe(),VanillaRecipeCategoryUid.CRAFTING);
+        registry.addRecipes(createFlagFromBanner(),VanillaRecipeCategoryUid.CRAFTING);
 
     }
 
@@ -130,6 +135,43 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         return new ShapelessRecipe(id, group, output, inputs);
     }
 
+    public static List<IRecipe<?>> createFlagFromBanner() {
+        List<IRecipe<?>> recipes = new ArrayList<>();
+        String group = "supplementaries.jei.flag_from_banner";
+
+        //List<BannerPatternItem> patterns = ForgeRegistries.ITEMS.getValues().stream().filter(i -> i instanceof BannerPatternItem)
+        //        .map(i -> (BannerPatternItem)i).collect(Collectors.toList());
+
+        for (DyeColor color : DyeColor.values()) {
+
+
+
+            ItemStack banner = new ItemStack(BannerBlock.byColor(color).asItem());
+            ItemStack fullFlag = new ItemStack(Registry.FLAGS.get(color).get());
+
+            ListNBT list = new ListNBT();
+            CompoundNBT compoundnbt1 = new CompoundNBT();
+            compoundnbt1.putString("Pattern", ((BannerPatternItem)Items.MOJANG_BANNER_PATTERN).getBannerPattern().getHashname());
+            compoundnbt1.putInt("Color", color == DyeColor.WHITE ? DyeColor.BLACK.getId() : DyeColor.WHITE.getId());
+            list.add(compoundnbt1);
+
+            CompoundNBT com = banner.getOrCreateTagElement("BlockEntityTag");
+            com.put("Patterns", list);
+            CompoundNBT com2 = fullFlag.getOrCreateTagElement("BlockEntityTag");
+            com2.put("Patterns", list);
+
+            Ingredient emptyFlag = Ingredient.of(new ItemStack(Registry.FLAGS.get(color).get()));
+            NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, emptyFlag, Ingredient.of(banner));
+            ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "jei_flag_from_banner");
+
+            ShapelessRecipe recipe = new ShapelessRecipe(id, group, fullFlag, inputs);
+            recipes.add(recipe);
+
+        }
+
+        return recipes;
+    }
+
     public static List<IRecipe<?>> createBlackboardDuplicate() {
         List<IRecipe<?>> recipes = new ArrayList<>();
         String group = "supplementaries.jei.blackboard_duplicate";
@@ -166,10 +208,7 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         return recipes;
     }
 
-    public static List<IRecipe<?>> createBlackboardClear() {
-        List<IRecipe<?>> recipes = new ArrayList<>();
-        String group = "supplementaries.jei.blackboard_clear";
-
+    public static ItemStack getSans(){
         ItemStack blackboard = new ItemStack(Registry.BLACKBOARD_ITEM.get());
         CompoundNBT com = new CompoundNBT();
 
@@ -183,15 +222,24 @@ public class SupplementariesJEIPlugin implements IModPlugin {
                 {0,1,0,0,0,0,0,0,0,0,0,1,0,1,0,1},
                 {0,1,0,0,0,0,0,0,0,1,0,1,1,1,0,1},
                 {0,1,0,0,0,0,0,0,0,1,0,1,0,1,0,1},
-                {0,1,0,0,0,0,0,1,0,0,0,1,1,1,0,1},
-                {0,1,0,0,0,1,1,1,1,0,0,1,0,1,0,1},
-                {0,1,0,0,1,0,1,0,1,0,0,1,1,0,1,0},
-                {0,0,1,0,0,0,1,1,1,0,1,1,0,0,1,0},
-                {0,0,1,0,0,0,0,1,0,0,0,0,0,1,0,0},
+                {0,1,0,0,0,0,0,3,0,0,0,1,1,1,0,1},
+                {0,1,0,0,0,3,3,3,3,0,0,1,0,1,0,1},
+                {0,1,0,0,3,0,3,0,3,0,0,1,1,0,1,0},
+                {0,0,1,0,0,0,3,3,3,0,1,1,0,0,1,0},
+                {0,0,1,0,0,0,0,3,0,0,0,0,0,1,0,0},
                 {0,0,0,1,1,0,0,0,0,1,1,0,0,1,0,0},
                 {0,0,0,0,0,1,1,1,1,0,1,1,1,0,0,0}};
         com.putLongArray("Pixels", BlackboardBlockTile.packPixels(pixels));
         blackboard.addTagElement("BlockEntityTag", com);
+        return blackboard;
+    }
+
+    public static List<IRecipe<?>> createBlackboardClear() {
+        List<IRecipe<?>> recipes = new ArrayList<>();
+        String group = "supplementaries.jei.blackboard_clear";
+
+
+        ItemStack blackboard = getSans();
 
         Ingredient emptyBoard = Ingredient.of(new ItemStack(Items.WATER_BUCKET));
         Ingredient fullBoard = Ingredient.of(blackboard);

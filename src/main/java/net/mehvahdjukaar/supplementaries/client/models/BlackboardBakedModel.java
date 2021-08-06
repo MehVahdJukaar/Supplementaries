@@ -149,7 +149,7 @@ public class BlackboardBakedModel implements IDynamicBakedModel {
                 //IBakedModel baked2 = SimpleBlockModel.bakeModel(new RetexturedModelConfiguration(owner, retextured, texture),
                 //        unbaked.getElements(), modelTransform,overrides,spriteGetter,modelLocation);
                 //return baked2.getQuads(state,direction,random,data);
-                ResourceLocation texture = BlackboardTextureManager.INSTANCE.getResoucelocation(key);
+                ResourceLocation texture = BlackboardTextureManager.INSTANCE.getResourceLocation(key);
                 this.unbaked.textureMap.replace(this.toRetextureName, Either.right(texture.toString()));
             }
         }

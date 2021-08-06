@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "open=true": {
+      "model": "supplementaries:block/present_opened_magenta"
+    },
+    "open=false": {
+      "model": "supplementaries:block/present_closed_magenta"
+    }
+  }
+}

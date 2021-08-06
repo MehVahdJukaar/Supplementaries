@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.selene.util.Utils;
+import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IWaterLoggable;
@@ -107,7 +108,7 @@ public abstract class LightUpBlock extends Block implements IWaterLoggable {
         if(!state.getValue(LIT) && !state.getValue(WATERLOGGED) && player.abilities.mayBuild) {
             ItemStack stack = player.getItemInHand(handIn);
             Item item = stack.getItem();
-            if (item instanceof FlintAndSteelItem) {
+            if (item instanceof FlintAndSteelItem || item.is(ModTags.FIRE_SOURCES)) {
                 if(lightUp(state,pos,worldIn,FireSound.FLINT_AND_STEEL)) {
                     this.onChange(state,worldIn,pos);
                     stack.hurtAndBreak(1, player, (playerIn) -> playerIn.broadcastBreakEvent(handIn));

@@ -12,7 +12,9 @@ import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.entities.AmethystArrowEntity;
 import net.mehvahdjukaar.supplementaries.entities.BombEntity;
+import net.mehvahdjukaar.supplementaries.entities.RopeArrowEntity;
 import net.mehvahdjukaar.supplementaries.entities.ThrowableBrickEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -20,7 +22,7 @@ import net.minecraft.block.DispenserBlock;
 import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.dispenser.IPosition;
 import net.minecraft.dispenser.ProjectileDispenseBehavior;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -73,6 +75,27 @@ public class DispenserStuff {
             DispenserBlock.registerBehavior(Registry.BOMB_BLUE_ITEM.get(), new BombsDispenserBehavior());
             DispenserBlock.registerBehavior(Registry.BOMB_ITEM_ON.get(), new BombsDispenserBehavior());
             DispenserBlock.registerBehavior(Registry.BOMB_BLUE_ITEM_ON.get(), new BombsDispenserBehavior());
+        }
+        if(RegistryConfigs.reg.ROPE_ARROW_ENABLED.get()){
+
+            DispenserBlock.registerBehavior(Registry.ROPE_ARROW_ITEM.get(), new ProjectileDispenseBehavior() {
+                protected ProjectileEntity getProjectile(World world, IPosition pos, ItemStack stack) {
+                    RopeArrowEntity arrow = new RopeArrowEntity(world, pos.x(), pos.y(), pos.z());
+                    arrow.pickup = AbstractArrowEntity.PickupStatus.ALLOWED;
+                    return arrow;
+                }
+            });
+
+        }
+        if(RegistryConfigs.reg.AMETHYST_ARROW_ENABLED.get()){
+
+            DispenserBlock.registerBehavior(Registry.AMETHYST_ARROW_ITEM.get(), new ProjectileDispenseBehavior() {
+                protected ProjectileEntity getProjectile(World world, IPosition pos, ItemStack stack) {
+                    AmethystArrowEntity arrow = new AmethystArrowEntity(world, pos.x(), pos.y(), pos.z());
+                    arrow.pickup = AbstractArrowEntity.PickupStatus.DISALLOWED;
+                    return arrow;
+                }
+            });
         }
 
     }

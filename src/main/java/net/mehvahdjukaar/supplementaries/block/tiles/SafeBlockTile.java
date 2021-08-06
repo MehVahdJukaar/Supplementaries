@@ -171,6 +171,7 @@ public class SafeBlockTile extends LockableLootTileEntity implements ISidedInven
         }
 
     }
+
     @Override
     public void stopOpen(PlayerEntity player) {
         if (!player.isSpectator()) {
@@ -190,7 +191,6 @@ public class SafeBlockTile extends LockableLootTileEntity implements ISidedInven
         return this.saveToNbt(compound);
     }
 
-    //TODO: make jars use blockentity tag like here. here works fine
     public void loadFromNbt(CompoundNBT compound) {
         this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
         if (!this.tryLoadLootTable(compound) && compound.contains("Items", 9)) {
@@ -234,12 +234,12 @@ public class SafeBlockTile extends LockableLootTileEntity implements ISidedInven
 
     @Override
     public CompoundNBT getUpdateTag() {
-        return this.save(new CompoundNBT());
+        return this.saveToNbt(new CompoundNBT());
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.load(this.getBlockState(), pkt.getTag());
+        this.loadFromNbt(pkt.getTag());
     }
 
     @Override
@@ -252,8 +252,6 @@ public class SafeBlockTile extends LockableLootTileEntity implements ISidedInven
         return CommonUtil.isAllowedInShulker(stack);
     }
 
-
-    //TODO: FIX this so it can only put from top
     @Override
     public int[] getSlotsForFace(Direction side) {
         return IntStream.range(0, this.getContainerSize()).toArray();

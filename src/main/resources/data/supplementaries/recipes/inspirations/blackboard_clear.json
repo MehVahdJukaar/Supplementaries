@@ -1,0 +1,37 @@
+
+
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "flag": "blackboard",
+          "type": "supplementaries:flag"
+        },
+        {
+          "modid": "inspirations",
+          "type": "forge:mod_loaded"
+        }
+      ],
+      "recipe": {
+
+        "type": "supplementaries:cauldron_blackboard",
+        "conditions": [
+          {
+            "prop": "recipes_module",
+            "type": "inspirations:config"
+          },
+          {
+            "prop": "cauldron_recipes",
+            "type": "inspirations:config"
+          }
+        ],
+        "ingredient": {
+          "item": "supplementaries:blackboard"
+        }
+
+      }
+    }
+  ]
+}

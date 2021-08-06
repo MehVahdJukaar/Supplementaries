@@ -118,13 +118,16 @@ public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
             }
         }
         //beehive
-        else if (backState.hasProperty(BlockStateProperties.LEVEL_HONEY) && backState.getValue(BlockStateProperties.LEVEL_HONEY) > 0) {
-            this.fluidHolder.fill(SoftFluidRegistry.HONEY);
-            if(doTransfer && tryFillingBlockBelow()) {
-                this.level.setBlock(behind, backState.setValue(BlockStateProperties.LEVEL_HONEY,
-                        backState.getValue(BlockStateProperties.LEVEL_HONEY) - 1), 3);
-                return true;
+        else if (backState.hasProperty(BlockStateProperties.LEVEL_HONEY)) {
+            if(backState.getValue(BlockStateProperties.LEVEL_HONEY) > 0) {
+                this.fluidHolder.fill(SoftFluidRegistry.HONEY);
+                if (doTransfer && tryFillingBlockBelow()) {
+                    this.level.setBlock(behind, backState.setValue(BlockStateProperties.LEVEL_HONEY,
+                            backState.getValue(BlockStateProperties.LEVEL_HONEY) - 1), 3);
+                    return true;
+                }
             }
+            return false;
         }
         //honey pot
         else if (backState.hasProperty(BlockProperties.HONEY_LEVEL_POT)) {
@@ -136,6 +139,7 @@ public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
                     return true;
                 }
             }
+            return false;
         }
         //sap log
         else if (backBlock.getRegistryName().toString().contains("autumnity:sappy_")) {
@@ -165,6 +169,7 @@ public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
                     return CauldronPlugin.doStuff(cauldronTile, this.fluidHolder, doTransfer, this::tryFillingBlockBelow);
                 }
             }
+            return false;
         }
         else{
             //soft fluid holders

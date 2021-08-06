@@ -2,9 +2,6 @@ package net.mehvahdjukaar.supplementaries.items;
 
 import net.mehvahdjukaar.selene.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.block.tiles.CageBlockTile;
-import net.mehvahdjukaar.supplementaries.block.util.MobHolder;
-import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -15,11 +12,9 @@ import net.minecraft.entity.IAngerable;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
@@ -130,37 +125,5 @@ public class CageItem extends BlockItem {
         }
         return super.useOn(context);
     }
-
-
-
-    //remove this in the future. it's for backwards compat
-    @Override
-    public ActionResultType place(BlockItemUseContext context) {
-        ActionResultType placeresult = super.place(context);
-        if(placeresult.consumesAction()) {
-            World world = context.getLevel();
-            BlockPos pos = context.getClickedPos();
-            TileEntity te = world.getBlockEntity(pos);
-            if(te instanceof CageBlockTile){
-                CageBlockTile mobjar = ((CageBlockTile)te);
-                CompoundNBT compound = context.getItemInHand().getTag();
-                if(compound!=null&&compound.contains("JarMob")&&compound.contains("CachedJarMobValues")) {
-                    CompoundNBT com2 = compound.getCompound("CachedJarMobValues");
-
-                    mobjar.mobHolder.entityData = compound.getCompound("JarMob");
-                    mobjar.mobHolder.yOffset = com2.getFloat("YOffset");
-                    mobjar.mobHolder.scale = com2.getFloat("Scale");
-                    mobjar.mobHolder.specialBehaviorType = MobHolder.SpecialBehaviorType.NONE;
-                    mobjar.mobHolder.name="reload needed";
-
-                    mobjar.setChanged();
-                    //mobjar.updateMob();
-
-                }
-            }
-        }
-        return placeresult;
-    }
-
 
 }

@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.entities;
 
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.world.BombExplosion;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.TNTBlock;
 import net.minecraft.entity.EntityType;
@@ -32,6 +33,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.FMLPlayMessages;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -139,7 +141,17 @@ public class BombEntity extends ProjectileItemEntity implements IRendersAsItem, 
             break;
         case 10:
             spawnBreakParticles();
-            level.addParticle(Registry.BOMB_EXPLOSION_PARTICLE_EMITTER.get(), this.getX(), this.getY() + 1, this.getZ(), this.blue ? 6D : ServerConfigs.cached.BOMB_RADIUS, 0, 0);
+            level.addParticle(Registry.BOMB_EXPLOSION_PARTICLE_EMITTER.get(), this.getX(), this.getY() + 1, this.getZ(), this.blue ? 5.25D : ServerConfigs.cached.BOMB_RADIUS, 0, 0);
+            if(blue){
+                for(float d22 = 0; d22 < (Math.PI * 2D); d22 += 0.15707963267948966F) {
+                    Vector3d v = new Vector3d(0.55,0,0);
+                    v = v.yRot(d22+random.nextFloat()*0.3f);
+                    v = v.zRot((float) ((random.nextFloat())* Math.PI));
+                    this.level.addParticle(ParticleTypes.FLAME, this.getX(), this.getY() + 1, this.getZ(), v.x, v.y, v.z);
+                    //this.level.addParticle(ParticleTypes.SPIT, x, y, z, Math.cos(d22) * -10.0D, 0.0D, Math.sin(d22) * -10.0D);
+                }
+            }
+
             break;
         case 68:
             level.addParticle(ParticleTypes.FLASH, this.getX(), this.getY() + 1, this.getZ(), 0, 0, 0);
@@ -206,40 +218,17 @@ public class BombEntity extends ProjectileItemEntity implements IRendersAsItem, 
 
     }
 
-    @Override
-    protected float getGravity() {
-        return 0.05F;
-    }
+
 
     public static boolean canBreakBlock(IBlockReader world, BlockPos pos, BlockState state, float power) {
-        return state.canBeReplaced(Fluids.WATER) || state.getBlock() instanceof TNTBlock || ServerConfigs.cached.BOMB_BREAKS;
-    }
-
-    public void explode() {
-        Explosion explosion = new Explosion(this.level, this, null, new ExplosionContext() {
-            public boolean shouldBlockExplode(Explosion explosion, IBlockReader reader, BlockPos pos, BlockState state, float power) {
-                return canBreakBlock(reader, pos, state, power);
-            }
-        },
-                this.getX(), this.getY() + 0.25, this.getZ(), blue ? 6f : ServerConfigs.cached.BOMB_RADIUS, false, Explosion.Mode.BREAK);
-
-        explosion.explode();
-        explosion.finalizeExplosion(false);
-
-        this.level.playSound(null, this.getX(), this.getY(), this.getZ(), Registry.BOMB_SOUND.get(), SoundCategory.NEUTRAL, blue ? 5F : 3f, (1.2F + (this.level.random.nextFloat() - this.level.random.nextFloat()) * 0.2F));
-    }
-
-    //explode
-    public void explodeOrBreak() {
-        if (this.active) {
-            this.explode();
-            this.level.broadcastEntityEvent(this, (byte) 10);
-        } else {
-            this.level.broadcastEntityEvent(this, (byte) 3);
+        switch (ServerConfigs.cached.BOMB_BREAKS){
+            default:
+            case NONE:return false;
+            case ALL:return true;
+            case WEAK:return state.canBeReplaced(Fluids.WATER) || state.getBlock() instanceof TNTBlock;
         }
-        this.level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.NETHERITE_BLOCK_BREAK, SoundCategory.NEUTRAL, 1.5F, 1.5f);
-        this.remove();
     }
+
 
     @Override
     protected void onHitEntity(EntityRayTraceResult hit) {
@@ -274,13 +263,19 @@ public class BombEntity extends ProjectileItemEntity implements IRendersAsItem, 
     }
 
     //onBlockHit
+    @Override
     protected void onHitBlock(BlockRayTraceResult hit) {
         //TODO: fix collision
         super.onHitBlock(hit);
         Vector3d vector3d = hit.getLocation().subtract(this.getX(), this.getY(), this.getZ());
         this.setDeltaMovement(vector3d);
-        Vector3d vector3d1 = vector3d.normalize();
+        Vector3d vector3d1 = vector3d.normalize().scale(getGravity());
         this.setPosRaw(this.getX() - vector3d1.x, this.getY() - vector3d1.y, this.getZ() - vector3d1.z);
+    }
+
+    @Override
+    protected float getGravity() {
+        return 0.05F;
     }
 
     @Override
@@ -294,21 +289,59 @@ public class BombEntity extends ProjectileItemEntity implements IRendersAsItem, 
                 this.changeTimer = 10;
                 //this.setDeltaMovement(Vector3d.ZERO);
                 this.level.broadcastEntityEvent(this, (byte) 68);
+                this.level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.FLINTANDSTEEL_USE, SoundCategory.NEUTRAL, 1.5f,1.3f);
             }
 
-
-            if (this.superCharged) {
-                boolean flag = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level, this.getOwner());
-                this.level.explode(this, this.getX(), this.getY(), this.getZ(), 6, flag, flag ? Explosion.Mode.DESTROY : Explosion.Mode.NONE);
-                this.remove();
-            } else if (!this.removed) {
-                if (!this.blue) {
+            //normal explosion
+            if (!this.removed) {
+                if (!this.blue || this.superCharged) {
                     this.explodeOrBreak();
                 }
             }
         }
 
 
+    }
+
+
+    //explode
+    public void explodeOrBreak() {
+        if (this.active) {
+            this.createExplosion();
+            this.level.broadcastEntityEvent(this, (byte) 10);
+        } else {
+            this.level.broadcastEntityEvent(this, (byte) 3);
+        }
+        this.level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.NETHERITE_BLOCK_BREAK, SoundCategory.NEUTRAL, 1.5F, 1.5f);
+        this.remove();
+    }
+
+    private void createExplosion() {
+
+
+        if(this.superCharged) {
+            boolean flag = ForgeEventFactory.getMobGriefingEvent(this.level, this.getOwner());
+            this.level.explode(this, this.getX(), this.getY(), this.getZ(), 6f, flag, flag ? Explosion.Mode.DESTROY : Explosion.Mode.NONE);
+        }
+
+        BombExplosion explosion = new BombExplosion(this.level, this, null, new ExplosionContext() {
+            public boolean shouldBlockExplode(Explosion explosion, IBlockReader reader, BlockPos pos, BlockState state, float power) {
+                return canBreakBlock(reader, pos, state, power);
+            }
+        },
+        this.getX(), this.getY() + 0.25, this.getZ(), blue ? 5 : ServerConfigs.cached.BOMB_RADIUS, this.blue, Explosion.Mode.BREAK);
+
+        explosion.explode();
+        explosion.finalizeExplosion();
+
+        this.level.playSound(null, this.getX(), this.getY(), this.getZ(), Registry.BOMB_SOUND.get(), SoundCategory.NEUTRAL, blue ? 5F : 3f, (1.2F + (this.level.random.nextFloat() - this.level.random.nextFloat()) * 0.2F));
+    }
+
+
+    public enum breakingMode{
+        ALL,
+        WEAK,
+        NONE
     }
 
 }

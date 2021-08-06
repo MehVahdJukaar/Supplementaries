@@ -3,8 +3,10 @@ package net.mehvahdjukaar.supplementaries.compat;
 import net.mehvahdjukaar.supplementaries.compat.create.SupplementariesCreatePlugin;
 import net.mehvahdjukaar.supplementaries.compat.decorativeblocks.DecoBlocksCompatRegistry;
 import net.mehvahdjukaar.supplementaries.compat.farmersdelight.FDCompatRegistry;
+import net.mehvahdjukaar.supplementaries.compat.inspirations.CauldronRecipes;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.ModList;
 
@@ -19,6 +21,8 @@ public class CompatHandler {
     public static final boolean infernalexp;
     public static final boolean inspirations;
     public static final boolean framedblocks;
+    public static final boolean rgblib;
+    public static final boolean endergetic;
 
     static {
         ModList ml = ModList.get();
@@ -32,6 +36,8 @@ public class CompatHandler {
         infernalexp = ml.isLoaded("infernalexp");
         inspirations = ml.isLoaded("inspirations");
         framedblocks = ml.isLoaded("framedblocks");
+        rgblib = ml.isLoaded("rgblib");
+        endergetic = ml.isLoaded("endergetic");
     }
 
     public static void init(){
@@ -45,6 +51,10 @@ public class CompatHandler {
 
     public static void registerOptionalItems(final RegistryEvent.Register<Item> event){
         if (farmers_delight) FDCompatRegistry.registerItems(event);
+    }
+
+    public static void registerOptionalRecipes(final RegistryEvent.Register<IRecipeSerializer<?>> event){
+        if (inspirations) CauldronRecipes.registerRecipes(event);
     }
 
 }

@@ -54,8 +54,6 @@ public class BlockProperties {
     public static final EnumProperty<IBellConnection.BellConnection> BELL_CONNECTION = EnumProperty.create("connection", IBellConnection.BellConnection.class);
     public static final IntegerProperty HONEY_LEVEL_POT = IntegerProperty.create("honey_level", 0, 4);
 
-
-
     //model properties
     public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
     public static final ModelProperty<Boolean> FRAMED = new ModelProperty<>();

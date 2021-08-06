@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.block.util.ITextHolder;
 import net.mehvahdjukaar.supplementaries.block.util.TextHolder;
-import net.mehvahdjukaar.supplementaries.common.CommonUtil.TempWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.VanillaWoodTypes;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
@@ -84,7 +83,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolder {
 
         this.textHolder.read(compound);
 
-        //TODO: REMOVE
+        //TODO: remove in the future
         if(compound.contains("Fence"))
             this.mimic = NBTUtil.readBlockState(compound.getCompound("Fence"));
 
@@ -96,19 +95,6 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolder {
         this.down = compound.getBoolean("Down");
         this.woodTypeUp = WoodTypes.fromNBT(compound.getString("TypeUp"));
         this.woodTypeDown = WoodTypes.fromNBT(compound.getString("TypeDown"));
-
-        //TODO: remove in the future
-        if(compound.contains("WoodTypeUp"))
-        this.woodTypeUp = TempWoodType.values()[compound.getInt("WoodTypeUp")].convertWoodType();
-        if(compound.contains("WoodTypeDown"))
-        this.woodTypeDown = TempWoodType.values()[compound.getInt("WoodTypeDown")].convertWoodType();
-
-        if(compound.contains("Wood_type_up"))this.woodTypeUp = TempWoodType.values()[compound.getInt("Wood_type_up")].convertWoodType();
-        if(compound.contains("Wood_type_down"))this.woodTypeDown = TempWoodType.values()[compound.getInt("Wood_type_down")].convertWoodType();
-        if(compound.contains("Left_up"))this.leftUp=compound.getBoolean("Left_up");
-        if(compound.contains("Left_down"))this.leftDown=compound.getBoolean("Left_down");
-        if(compound.contains("Yaw_up"))this.yawUp=compound.getFloat("Yaw_up");
-        if(compound.contains("Yaw_down"))this.yawDown=compound.getFloat("Yaw_down");
     }
 
     @Override

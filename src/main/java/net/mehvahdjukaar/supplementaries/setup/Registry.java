@@ -11,10 +11,7 @@ import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.entities.*;
-import net.mehvahdjukaar.supplementaries.inventories.NoticeBoardContainer;
-import net.mehvahdjukaar.supplementaries.inventories.OrangeMerchantContainer;
-import net.mehvahdjukaar.supplementaries.inventories.PulleyBlockContainer;
-import net.mehvahdjukaar.supplementaries.inventories.SackContainer;
+import net.mehvahdjukaar.supplementaries.inventories.*;
 import net.mehvahdjukaar.supplementaries.items.*;
 import net.mehvahdjukaar.supplementaries.items.crafting.*;
 import net.mehvahdjukaar.supplementaries.items.tabs.JarTab;
@@ -47,6 +44,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -116,6 +114,9 @@ public class Registry {
     protected static RegistryObject<Item> regBlockItem(RegistryObject<Block> blockSup, ItemGroup group) {
         return regItem(blockSup.getId().getPath(), ()-> new BlockItem(blockSup.get(), (new Item.Properties()).tab(group)));
     }
+    protected static RegistryObject<Item> regBlockItem(RegistryObject<Block> blockSup, ItemGroup group, int burnTime) {
+        return regItem(blockSup.getId().getPath(), ()-> new BurnableBlockItem(blockSup.get(), (new Item.Properties()).tab(group),burnTime));
+    }
 
     private static RegistryObject<BasicParticleType> regParticle(String name) {
         return PARTICLES.register(name, ()-> new BasicParticleType(true));
@@ -129,6 +130,7 @@ public class Registry {
     public static final RegistryObject<SoundEvent> TICK_SOUND = makeSoundEvent("block.tick_1");
     public static final RegistryObject<SoundEvent> TICK_2_SOUND = makeSoundEvent("block.tick_2");
     public static final RegistryObject<SoundEvent> BOMB_SOUND = makeSoundEvent("item.bomb");
+    public static final RegistryObject<SoundEvent> PANCAKE_MUSIC = makeSoundEvent("music.pancake");
 
 
     //dynamic registration so I can use their classes
@@ -139,6 +141,10 @@ public class Registry {
     @SubscribeEvent
     public static void registerCompatItems(final RegistryEvent.Register<Item> event){
         CompatHandler.registerOptionalItems(event);
+    }
+    @SubscribeEvent
+    public static void registerCompatRecipes(final RegistryEvent.Register<IRecipeSerializer<?>> event){
+        CompatHandler.registerOptionalRecipes(event);
     }
 
     //particles
@@ -156,8 +162,8 @@ public class Registry {
     //recipes
     public static final RegistryObject<IRecipeSerializer<?>> BLACKBOARD_DUPLICATE_RECIPE = RECIPES.register("blackboard_duplicate_recipe", ()->
             new SpecialRecipeSerializer<>(BlackboardDuplicateRecipe::new));
-    public static final RegistryObject<IRecipeSerializer<?>> BLACKBOARD_CLEAR_RECIPE = RECIPES.register("blackboard_clear_recipe", ()->
-            new SpecialRecipeSerializer<>(BlackboardClearRecipe::new));
+    //public static final RegistryObject<IRecipeSerializer<?>> BLACKBOARD_CLEAR_RECIPE = RECIPES.register("blackboard_clear_recipe", ()->
+    //        new SpecialRecipeSerializer<>(BlackboardClearRecipe::new));
     public static final RegistryObject<IRecipeSerializer<?>> BAMBOO_SPIKES_TIPPED_RECIPE = RECIPES.register("bamboo_spikes_tipped_recipe", ()->
             new SpecialRecipeSerializer<>(TippedBambooSpikesRecipe::new));
     public static final RegistryObject<IRecipeSerializer<?>> ROPE_ARROW_CREATE_RECIPE = RECIPES.register("rope_arrow_create_recipe", ()->
@@ -166,6 +172,8 @@ public class Registry {
             new SpecialRecipeSerializer<>(RopeArrowAddRecipe::new));
     public static final RegistryObject<IRecipeSerializer<?>> FLAG_FROM_BANNER_RECIPE = RECIPES.register("flag_from_banner_recipe", ()->
             new SpecialRecipeSerializer<>(FlagFromBannerRecipe::new));
+
+
 
     //entities
 
@@ -231,7 +239,7 @@ public class Registry {
 
     public static final String BOMB_BLUE_NAME = "bomb_blue";
     public static final RegistryObject<Item> BOMB_BLUE_ITEM = ITEMS.register(BOMB_BLUE_NAME,()-> new BombItem(new Item.Properties()
-            .tab(getTab(ItemGroup.TAB_COMBAT,BOMB_BLUE_NAME)),true,true));
+            .tab(null),true,true));
     public static final RegistryObject<Item> BOMB_BLUE_ITEM_ON = ITEMS.register("bomb_blue_projectile",()-> new BombItem(new Item.Properties()
             .tab(null),true,false));
 
@@ -244,6 +252,18 @@ public class Registry {
             .build(ROPE_ARROW_NAME));
     public static final RegistryObject<Item> ROPE_ARROW_ITEM = ITEMS.register(ROPE_ARROW_NAME,()-> new RopeArrowItem(
             new Item.Properties().tab(getTab(ItemGroup.TAB_MISC,ROPE_ARROW_NAME)).defaultDurability(16).setNoRepair()));
+
+    //amethyst arrow
+    public static final String AMETHYST_ARROW_NAME = "amethyst_arrow";
+    public static final RegistryObject<EntityType<AmethystArrowEntity>> AMETHYST_ARROW = ENTITIES.register(AMETHYST_ARROW_NAME,()->(
+            EntityType.Builder.<AmethystArrowEntity>of(AmethystArrowEntity::new, EntityClassification.MISC)
+                    .setCustomClientFactory(AmethystArrowEntity::new)
+                    .sized(0.5F, 0.5F).clientTrackingRange(4).updateInterval(20))//.size(0.25F, 0.25F).trackingRange(4).updateInterval(10))
+            .build(AMETHYST_ARROW_NAME));
+    public static final RegistryObject<Item> AMETHYST_ARROW_ITEM = ITEMS.register(AMETHYST_ARROW_NAME,()-> new AmethystArrowItem(
+            new Item.Properties().tab(null)));
+
+
 
 
 
@@ -294,6 +314,23 @@ public class Registry {
 
     public static final Map<DyeColor, RegistryObject<Item>> CEILING_BANNERS_ITEMS = Variants.makeCeilingBannersItems();
 
+    //presents
+    public static final String PRESENT_NAME = "present";
+    public static final Map<DyeColor, RegistryObject<Block>> PRESENTS = new HashMap<>();
+    /*
+    public static final Map<DyeColor, RegistryObject<Block>> PRESENTS = Variants.makePresents(PRESENT_NAME);
+
+    public static final RegistryObject<TileEntityType<PresentBlockTile>> PRESENT_TILE = TILES
+            .register(PRESENT_NAME, ()-> TileEntityType.Builder.of(PresentBlockTile::new,
+                    PRESENTS.values().stream().map(RegistryObject::get).toArray(Block[]::new)).build(null));
+
+
+
+    public static final Map<DyeColor, RegistryObject<Item>> PRESENTS_ITEMS = Variants.makePresentsItems();
+    */
+    public static final RegistryObject<ContainerType<PresentContainer>> PRESENT_BLOCK_CONTAINER = CONTAINERS
+            .register(PRESENT_NAME,()-> IForgeContainerType.create(PresentContainer::new));
+
 
     //key
     public static final String KEY_NAME = "key";
@@ -303,10 +340,13 @@ public class Registry {
     public static final String FLUTE_NAME = "flute";
     public static final RegistryObject<Item> FLUTE_ITEM = regItem(FLUTE_NAME,()-> new Flute((new Item.Properties())
             .tab(getTab(ItemGroup.TAB_TOOLS,FLUTE_NAME)).stacksTo(1).durability(32)));
-    //key
+    //speedometer
+    /*
     public static final String SPEEDOMETER_NAME = "speedometer";
     public static final RegistryObject<Item> SPEEDOMETER_ITEM = regItem(SPEEDOMETER_NAME,()-> new SpeedometerItem(
-            (new Item.Properties()).tab(getTab(ItemGroup.TAB_TOOLS,SPEEDOMETER_NAME))));
+            (new Item.Properties()).tab(null)));
+
+    */
 
     //decoration blocks
 
@@ -446,8 +486,6 @@ public class Registry {
     public static final RegistryObject<Block> BLACKBOARD = BLOCKS.register(BLACKBOARD_NAME,()-> new BlackboardBlock(
             AbstractBlock.Properties.of(Material.METAL, MaterialColor.METAL)
                     .strength(2,3)
-                    .requiresCorrectToolForDrops()
-                    .harvestLevel(0)
                     .harvestTool(ToolType.PICKAXE)
     ));
     public static final RegistryObject<TileEntityType<BlackboardBlockTile>> BLACKBOARD_TILE = TILES.register(BLACKBOARD_NAME,()-> TileEntityType.Builder.of(
@@ -638,8 +676,9 @@ public class Registry {
 
     public static final RegistryObject<Item> BAMBOO_SPIKES_ITEM = ITEMS.register(BAMBOO_SPIKES_NAME,()-> new BambooSpikesItem(BAMBOO_SPIKES.get(),
             (new Item.Properties()).tab(getTab(ItemGroup.TAB_DECORATIONS,BAMBOO_SPIKES_NAME))));
-    public static final RegistryObject<Item> BAMBOO_SPIKES_TIPPED_ITEM = ITEMS.register("bamboo_spikes_tipped",()-> new BambooSpikesTippedItem(BAMBOO_SPIKES.get(),
-            (new Item.Properties()).defaultDurability(BambooSpikesBlockTile.MAX_CHARGES).setNoRepair().tab(getTab(ItemGroup.TAB_BREWING,BAMBOO_SPIKES_NAME))));
+    public static final String TIPPED_SPIKES_NAME = "bamboo_spikes_tipped";
+    public static final RegistryObject<Item> BAMBOO_SPIKES_TIPPED_ITEM = ITEMS.register(TIPPED_SPIKES_NAME,()-> new BambooSpikesTippedItem(BAMBOO_SPIKES.get(),
+            (new Item.Properties()).defaultDurability(BambooSpikesBlockTile.MAX_CHARGES).setNoRepair().tab(getTab(ItemGroup.TAB_BREWING,TIPPED_SPIKES_NAME))));
 
     //goblet
     public static final String GOBLET_NAME = "goblet";
@@ -805,7 +844,7 @@ public class Registry {
     public static final String PULLEY_BLOCK_NAME = "pulley_block";
     public static final RegistryObject<Block> PULLEY_BLOCK = BLOCKS.register(PULLEY_BLOCK_NAME,()-> new PulleyBlock(
             AbstractBlock.Properties.copy(Blocks.BARREL)));
-    public static final RegistryObject<Item> PULLEY_BLOCK_ITEM = regBlockItem(PULLEY_BLOCK,getTab(ItemGroup.TAB_REDSTONE,PULLEY_BLOCK_NAME));
+    public static final RegistryObject<Item> PULLEY_BLOCK_ITEM = regBlockItem(PULLEY_BLOCK,getTab(ItemGroup.TAB_DECORATIONS,PULLEY_BLOCK_NAME),300);
 
     public static final RegistryObject<ContainerType<PulleyBlockContainer>> PULLEY_BLOCK_CONTAINER = CONTAINERS
             .register(PULLEY_BLOCK_NAME,()-> IForgeContainerType.create(PulleyBlockContainer::new));
@@ -1059,8 +1098,11 @@ public class Registry {
                     .strength(0.5F)
                     .sound(SoundType.WOOL))
     );
-    public static final RegistryObject<Item> PANCAKE_ITEM = ITEMS.register(PANCAKE_NAME,()-> new BlockItem(PANCAKE.get(),
+    public static final RegistryObject<Item> PANCAKE_ITEM = ITEMS.register(PANCAKE_NAME,()-> new PancakeItem(PANCAKE.get(),
             (new Item.Properties()).tab(getTab(ItemGroup.TAB_FOOD,PANCAKE_NAME))
+    ));
+    public static final RegistryObject<Item> PANCAKE_DISC = ITEMS.register("pancake_disc",
+            ()-> new MusicDiscItem(15, PANCAKE_MUSIC, new Item.Properties().tab(null)
     ));
 
     //flax
@@ -1266,9 +1308,9 @@ public class Registry {
     //flower box
     public static final String FLOWER_BOX_NAME = "flower_box";
     public static final RegistryObject<Block> FLOWER_BOX = BLOCKS.register(FLOWER_BOX_NAME,()-> new FlowerBoxBlock(
-            AbstractBlock.Properties.copy(Blocks.SPRUCE_TRAPDOOR))
+            AbstractBlock.Properties.of(Material.WOOD).strength(0.5F).sound(SoundType.WOOD).harvestTool(ToolType.AXE))
     );
-    public static final RegistryObject<Item> FLOWER_BOX_ITEM = regBlockItem(FLOWER_BOX, getTab(ItemGroup.TAB_DECORATIONS, FLOWER_BOX_NAME));
+    public static final RegistryObject<Item> FLOWER_BOX_ITEM = regBlockItem(FLOWER_BOX, getTab(ItemGroup.TAB_DECORATIONS, FLOWER_BOX_NAME),300);
 
     public static final RegistryObject<TileEntityType<FlowerBoxBlockTile>> FLOWER_BOX_TILE = TILES.register(FLOWER_BOX_NAME,()-> TileEntityType.Builder.of(
             FlowerBoxBlockTile::new, FLOWER_BOX.get()).build(null));
@@ -1287,10 +1329,11 @@ public class Registry {
     public static final String CRACKED_BELL_NAME = "cracked_bell";
     public static final RegistryObject<Block> CRACKED_BELL = BLOCKS.register(CRACKED_BELL_NAME,()-> new CrackedBellBlock(
             AbstractBlock.Properties.copy(Blocks.ANVIL)));
-    public static final RegistryObject<Item> CRACKED_BELL_ITEM = regBlockItem(CRACKED_BELL,getTab(ItemGroup.TAB_DECORATIONS,CRACKED_BELL_NAME));
+    public static final RegistryObject<Item> CRACKED_BELL_ITEM = regBlockItem(CRACKED_BELL,null);
 
     public static final RegistryObject<TileEntityType<CrackedBellBlockTile>> CRACKED_BELL_TILE = TILES.register(CRACKED_BELL_NAME,()-> TileEntityType.Builder.of(
             CrackedBellBlockTile::new, CRACKED_BELL.get()).build(null));
+
 
 
     /*

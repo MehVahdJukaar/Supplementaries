@@ -34,6 +34,7 @@ public class TextUtil {
                 "ThugPug43"+
                 "\nStonkManHanz"+
                 "\nSylveticHearts"+
+                "\nWais"+
                 "\nToffanelly"+
                 "\n\n\n\u00A74Credits:"+
                 "\n\n\u00A75Textures:\u00A7r\n\n\u00A70"+
@@ -49,6 +50,9 @@ public class TextUtil {
                 "\nAlleCraft"+
                 "\nFr_z_n"+
                 "\nBrun333rp"+
+                "\n\n\u00A75Music and Sound:\u00A7r\n\n\u00A70"+
+                "STiiX"+
+                "\nCydian"+
                 "\n\n\u00A75Translations:\u00A7r\n\n\u00A70"+
                 "Bart_Riot23"+
                 "\nMikeliro"+

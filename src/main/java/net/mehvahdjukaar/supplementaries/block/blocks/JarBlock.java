@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
+
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
@@ -232,10 +233,12 @@ public class JarBlock extends WaterBlock {
         return 0;
     }
 
+    @Override
     public BlockState rotate(BlockState state, Rotation rot) {
         return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
 
+    @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
         return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
@@ -245,6 +248,5 @@ public class JarBlock extends WaterBlock {
         return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite())
                 .setValue(WATERLOGGED,context.getLevel().getFluidState(context.getClickedPos()).getType()==Fluids.WATER);
     }
-
 
 }

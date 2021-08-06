@@ -3,14 +3,18 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.KeyLockableTile;
 import net.mehvahdjukaar.supplementaries.block.util.ILavaAndWaterLoggable;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.TrapDoorBlock;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.Half;
@@ -20,9 +24,14 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 public class NetheriteTrapdoorBlock extends TrapDoorBlock implements ILavaAndWaterLoggable {
     public static final BooleanProperty LAVALOGGED = BlockProperties.LAVALOGGED;
@@ -121,5 +130,12 @@ public class NetheriteTrapdoorBlock extends TrapDoorBlock implements ILavaAndWat
     @Override
     public Fluid takeLiquid(IWorld p_204508_1_, BlockPos p_204508_2_, BlockState p_204508_3_) {
         return ILavaAndWaterLoggable.super.takeLiquid(p_204508_1_, p_204508_2_, p_204508_3_);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+        if(!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().options.advancedItemTooltips)return;
+        tooltip.add(new TranslationTextComponent("message.supplementaries.key.lockable").withStyle(TextFormatting.ITALIC).withStyle(TextFormatting.GRAY));
     }
 }

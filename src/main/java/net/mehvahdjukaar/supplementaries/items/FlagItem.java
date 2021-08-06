@@ -64,4 +64,9 @@ public class FlagItem extends BlockItem {
         }
         return super.useOn(context);
     }
+
+    @Override
+    public int getBurnTime(ItemStack itemStack) {
+        return 300;
+    }
 }

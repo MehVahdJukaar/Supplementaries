@@ -46,6 +46,7 @@ import java.util.List;
 import java.util.Random;
 
 public class SackBlock extends FallingBlock {
+
     public static final VoxelShape SHAPE_CLOSED = VoxelShapes.or(Block.box(2,0,2,14,12,14),
             Block.box(6,12,6,10,13,10),Block.box(5,13,5,11,16,11));
     public static final VoxelShape SHAPE_OPEN = VoxelShapes.or(Block.box(2,0,2,14,12,14),
@@ -191,7 +192,7 @@ public class SackBlock extends FallingBlock {
         if (tileentity instanceof SackBlockTile) {
             SackBlockTile sack = (SackBlockTile)tileentity;
             if (!worldIn.isClientSide && player.isCreative() && !sack.isEmpty()) {
-                CompoundNBT compoundnbt = sack.saveToNbt(new CompoundNBT());
+                CompoundNBT compoundnbt = sack.saveToTag(new CompoundNBT());
                 ItemStack itemstack = new ItemStack(this.getBlock());
                 if (!compoundnbt.isEmpty()) {
                     itemstack.addTagElement("BlockEntityTag", compoundnbt);
@@ -231,7 +232,7 @@ public class SackBlock extends FallingBlock {
         ItemStack itemstack = super.getCloneItemStack(world, pos, state);
         TileEntity te = world.getBlockEntity(pos);
         if (te instanceof SackBlockTile){
-            CompoundNBT compoundnbt = ((SackBlockTile)te).saveToNbt(new CompoundNBT());
+            CompoundNBT compoundnbt = ((SackBlockTile)te).saveToTag(new CompoundNBT());
             if (!compoundnbt.isEmpty()) {
                 itemstack.addTagElement("BlockEntityTag", compoundnbt);
             }

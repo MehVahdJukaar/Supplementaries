@@ -63,7 +63,7 @@ public class FlagBlockTileRenderer extends TileEntityRenderer<FlagBlockTile> {
             float t = ((float) Math.floorMod((long) (bp.getX() * 7 + bp.getZ() * 13) + time, period) + partialTicks) / ((float)period);
 
 
-            int segmentlen =  (minecraft.options.graphicsMode.getId() >= ClientConfigs.cached.FLAG_FANCINESS) ? 1 : w;
+            int segmentlen =  (minecraft.options.graphicsMode.getId() >= ClientConfigs.cached.FLAG_FANCINESS.ordinal()) ? 1 : w;
             for (int z = 0; z < w; z += segmentlen) {
 
                 float ang = (float) ((wavyness + invdamping * z) * MathHelper.sin((float) ((((z / l) - t * 2 * (float) Math.PI)))));

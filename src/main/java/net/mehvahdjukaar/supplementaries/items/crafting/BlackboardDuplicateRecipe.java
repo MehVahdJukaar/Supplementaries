@@ -18,7 +18,7 @@ public class BlackboardDuplicateRecipe extends SpecialRecipe {
 
     private boolean isDrawnBlackboard(ItemStack stack){
         CompoundNBT compoundnbt = stack.getTagElement("BlockEntityTag");
-        return compoundnbt != null && compoundnbt.contains("pixels_0");
+        return compoundnbt != null && compoundnbt.contains("Pixels");
 
     }
 

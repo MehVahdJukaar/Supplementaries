@@ -48,5 +48,16 @@
         "stream": true
       }
     ]
+  },
+  "music.pancake": {
+    "category": "record",
+    "sounds": [
+      {
+        "name": "supplementaries:music/pancake",
+        "stream": true
+      }
+    ],
+    "stream": true,
+    "subtitle": "subtitle.supplementaries.music.pancake"
   }
 }

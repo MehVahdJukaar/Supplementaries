@@ -81,6 +81,7 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue GOLD_TRAPDOOR_ENABLED;
         public static ForgeConfigSpec.BooleanValue GOLD_DOOR_ENABLED;
         public static ForgeConfigSpec.BooleanValue BAMBOO_SPIKES_ENABLED;
+        public static ForgeConfigSpec.BooleanValue TIPPED_SPIKES_ENABLED;
         public static ForgeConfigSpec.BooleanValue CHECKERBOARD_ENABLED;
         public static ForgeConfigSpec.BooleanValue NETHERITE_TRAPDOOR_ENABLED;
         public static ForgeConfigSpec.BooleanValue NETHERITE_DOOR_ENABLED;
@@ -103,6 +104,8 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue RAKED_GRAVEL_ENABLED;
         public static ForgeConfigSpec.BooleanValue STATUE_ENABLED;
         public static ForgeConfigSpec.BooleanValue IRON_GATE_ENABLED;
+        public static ForgeConfigSpec.BooleanValue AMETHYST_ARROW_ENABLED;
+        public static ForgeConfigSpec.BooleanValue PRESENT_ENABLED;
 
         public static ForgeConfigSpec.BooleanValue JAR_TAB;
         public static ForgeConfigSpec.BooleanValue CREATIVE_TAB;
@@ -125,11 +128,6 @@ public class RegistryConfigs {
 
         //oh god what have I done
         public static boolean isEnabled(String path){
-
-            //special double condition cases
-            if(path.equals(Registry.BOMB_BLUE_NAME)){
-                return false;
-            }
 
             if(path.equals(Registry.FIREFLY_JAR_NAME)){
                 return reg.FIREFLY_ENABLED.get() && reg.JAR_ENABLED.get();
@@ -210,6 +208,7 @@ public class RegistryConfigs {
             GOLD_TRAPDOOR_ENABLED = builder.define(Registry.GOLD_TRAPDOOR_NAME,true);
             GOLD_DOOR_ENABLED = builder.define(Registry.GOLD_DOOR_NAME,true);
             BAMBOO_SPIKES_ENABLED = builder.define(Registry.BAMBOO_SPIKES_NAME,true);
+            TIPPED_SPIKES_ENABLED = builder.define(Registry.TIPPED_SPIKES_NAME,true);
             STONE_LAMP_ENABLED = builder.define(Registry.STONE_LAMP_NAME, true);
             CHECKERBOARD_ENABLED = builder.define(Registry.CHECKER_BLOCK_NAME, true);
             NETHERITE_DOOR_ENABLED = builder.define(Registry.NETHERITE_DOOR_NAME, true);
@@ -227,13 +226,17 @@ public class RegistryConfigs {
             STICK_ENABLED = builder.define(Registry.STICK_NAME,true);
             ROD_ENABLED = builder.define(Registry.BLAZE_ROD_NAME,true);
             DAUB_ENABLED = builder.define(Registry.DAUB_NAME,true);
-            TIMBER_FRAME_ENABLED = builder.define(Registry.DAUB_NAME,true);
-            FLAG_ENABLED = builder.define(Registry.FLAG_NAME, true);
+            TIMBER_FRAME_ENABLED = builder.define(Registry.TIMBER_FRAME_NAME,true);
+            FLAG_ENABLED = builder.define(Registry.FLAG_NAME+"s", true);
             TILE_ENABLED = builder.define(Registry.STONE_TILE_NAME,true);
             GOBLET_ENABLED = builder.define(Registry.GOBLET_NAME,true);
             RAKED_GRAVEL_ENABLED = builder.define(Registry.RAKED_GRAVEL_NAME,true);
             STATUE_ENABLED = builder.define(Registry.STATUE_NAME,true);
-            IRON_GATE_ENABLED = builder.define(Registry.IRON_GATE_NAME,true);
+            IRON_GATE_ENABLED = builder.define(Registry.IRON_GATE_NAME, true);
+
+            AMETHYST_ARROW_ENABLED = builder.comment("WIP").define(Registry.AMETHYST_ARROW_NAME,true);
+            //PRESENT_ENABLED = builder.define(Registry.PRESENT_NAME,true);
+
 
             LASER_ENABLED = builder.comment("WIP")
                     .define(Registry.LASER_NAME, false);

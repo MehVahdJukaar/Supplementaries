@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common;
 
+import net.mehvahdjukaar.selene.Selene;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
@@ -11,7 +12,7 @@ import java.util.*;
 public class Textures {
 
     private static final String MOD_ID = Supplementaries.MOD_ID;
-    private static final String LIB = "selene";
+    private static final String LIB = Selene.MOD_ID;
 
     //minecraft
     public static final ResourceLocation DIRT_TEXTURE = new ResourceLocation("minecraft:block/dirt");
@@ -62,6 +63,7 @@ public class Textures {
     public static final ResourceLocation GLOBE_SHEARED_TEXTURE = new ResourceLocation(MOD_ID,"textures/entity/globes/globe_sheared.png");
 
 
+    public static final ResourceLocation AMETHYST_ARROW = new ResourceLocation(MOD_ID,"textures/entity/amethyst_arrow.png");
     public static final ResourceLocation ROPE_ARROW = new ResourceLocation(MOD_ID,"textures/entity/rope_arrow.png");
     public static final ResourceLocation ORANGE_TRADER = new ResourceLocation(MOD_ID,"textures/entity/misc/orange_trader.png");
     public static final ResourceLocation STATUE = new ResourceLocation(MOD_ID,"textures/entity/statue.png");
@@ -81,6 +83,7 @@ public class Textures {
     public static final ResourceLocation SACK_GUI_TEXTURE = new ResourceLocation(MOD_ID,"textures/gui/sack_gui.png");
     public static final ResourceLocation SLOT_TEXTURE = new ResourceLocation(MOD_ID, "textures/gui/slot.png");
     public static final ResourceLocation PULLEY_BLOCK_GUI_TEXTURE = new ResourceLocation(MOD_ID,"textures/gui/pulley_block_gui.png");
+    public static final ResourceLocation PRESENT_BLOCK_GUI_TEXTURE = new ResourceLocation(MOD_ID,"textures/gui/present_block_gui.png");
     public static final ResourceLocation ORANGE_MERCHANT_GUI_TEXTURE = new ResourceLocation(MOD_ID,"textures/gui/orange_trader.png");
     //map markers
     public static final ResourceLocation SIGN_POST_MARKER_TEXTURE = new ResourceLocation(MOD_ID,"textures/map/sign_post.png");
@@ -93,8 +96,6 @@ public class Textures {
     public static final ResourceLocation NETHER_PORTAL_MARKER_TEXTURE = new ResourceLocation(MOD_ID,"textures/map/nether_portal.png");
     public static final ResourceLocation END_PORTAL_MARKER_TEXTURE = new ResourceLocation(MOD_ID,"textures/map/end_portal.png");
     public static final ResourceLocation END_GATEWAY_MARKER_TEXTURE = new ResourceLocation(MOD_ID,"textures/map/end_gateway.png");
-
-
 
     public static final Map<IWoodType,ResourceLocation> HANGING_SIGNS_TEXTURES = new HashMap<>();
     public static final Map<IWoodType,ResourceLocation> SIGN_POSTS_TEXTURES = new HashMap<>();

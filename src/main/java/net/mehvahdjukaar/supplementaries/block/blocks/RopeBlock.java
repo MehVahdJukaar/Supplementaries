@@ -34,7 +34,6 @@ import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.AttachFace;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.stats.Stats;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -53,6 +52,7 @@ import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.function.Predicate;
 
 public class RopeBlock extends WaterBlock {
     private final Map<BlockState,VoxelShape> SHAPES_MAP = new HashMap<>();
@@ -344,19 +344,20 @@ public class RopeBlock extends WaterBlock {
         return 60;
     }
 
-    private static boolean findConnectedBell(World world, BlockPos pos, PlayerEntity player, int it){
+    public static boolean findAndRingBell(World world, BlockPos pos, PlayerEntity player, int it, Predicate<BlockState> predicate){
+
         if(it>ServerConfigs.cached.BELL_CHAIN_LENGTH)return false;
         BlockState state = world.getBlockState(pos);
         Block b = state.getBlock();
-        if(b instanceof RopeBlock){
-            return findConnectedBell(world,pos.above(),player,it+1);
+        if(predicate.test(state)){
+            return findAndRingBell(world,pos.above(),player,it+1, predicate);
         }
-        else if(b instanceof BellBlock && it !=0){
-            boolean success = ((BellBlock) b).attemptToRing(world, pos, state.getValue(BellBlock.FACING).getClockWise());
-            if (success && player != null) {
-                player.awardStat(Stats.BELL_RING);
-            }
-            return true;
+        else if(b instanceof BellBlock && it!=0){
+            //boolean success = CommonUtil.tryRingBell(Block b, world, pos, state.getValue(BellBlock.FACING).getClockWise());
+            BlockRayTraceResult hit = new BlockRayTraceResult(new Vector3d(pos.getX()+0.5,pos.getY()+0.5,pos.getZ()+0.5),
+                    state.getValue(BellBlock.FACING).getClockWise(),pos, true);
+            //if (success && player != null) {//player.awardStat(Stats.BELL_RING);}
+            return ((BellBlock) b).onHit(world, state,hit,player,true);
         }
         return false;
     }
@@ -403,7 +404,7 @@ public class RopeBlock extends WaterBlock {
         }
         if(stack.isEmpty() && state.getValue(UP)){
 
-            if (ServerConfigs.cached.BELL_CHAIN && findConnectedBell(world, pos, player, 0))
+            if (ServerConfigs.cached.BELL_CHAIN && findAndRingBell(world, pos, player, 0, s->s.getBlock() == this))
                 return ActionResultType.sidedSuccess(world.isClientSide);
             else if(findConnectedPulley(world, pos, player, 0, player.isShiftKeyDown()?Rotation.COUNTERCLOCKWISE_90:Rotation.CLOCKWISE_90)){
                 return ActionResultType.sidedSuccess(world.isClientSide);

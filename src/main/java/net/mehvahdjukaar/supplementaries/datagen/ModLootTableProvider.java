@@ -37,10 +37,13 @@ public class ModLootTableProvider extends LootTableProvider {
         for(DyeColor color : DyeColor.values()){
             //addBlockLoot(Registry.FLAGS.get(color).get());
         }
+        for(DyeColor color : DyeColor.values()){
+            addBlockLoot(Registry.PRESENTS.get(color).get());
+        }
 
 
         for(IWoodType wood : WoodTypes.TYPES.values()){
-            addBlockLoot(Registry.HANGING_SIGNS.get(wood).get());
+            //addBlockLoot(Registry.HANGING_SIGNS.get(wood).get());
         }
 
 

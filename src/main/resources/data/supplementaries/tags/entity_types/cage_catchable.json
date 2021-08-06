@@ -15,6 +15,15 @@
     "minecraft:ocelot"
   ],
   "optional": [
+    "bettermushroom:shroomie",
+    "bettermushroom:shroomie_eater",
+    "bettermushroom:mushrooms_spores",
+    "untamedwilds:softshell_turtle",
+    "untamedwilds:tortoise",
+    "untamedwilds:tarantula",
+    "wyrmroost:lesser_desertwyrm",
+    "wyrmroost:roost_stalker",
+    "wyrmroost:coin_dragon",
     "infernalexp:voline",
     "infernalexp:shroomloin",
     "kobolds:kobold_zombie",

@@ -65,6 +65,13 @@
                 "rope_arrow": 1
             },
             "model": "item/crossbow_rope_arrow"
+        },
+        {
+            "predicate": {
+                "charged": 1,
+                "amethyst_arrow": 1
+            },
+            "model": "item/crossbow_amethyst_arrow"
         }
     ]
 }

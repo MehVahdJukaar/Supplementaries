@@ -60,13 +60,15 @@ public abstract class LoomScreenMixin extends ContainerScreen<LoomContainer> {
             IRenderTypeBuffer.Impl renderTypeBuffer = this.minecraft.renderBuffers().bufferSource();
             matrixStack.pushPose();
 
-            matrixStack.translate((double)(i + 139), (double)(j + 52), 0.0D);
+            matrixStack.translate(i + 139, j + 52, 0.0D);
             matrixStack.scale(24.0F, -24.0F, 1.0F);
             matrixStack.translate(0.5D, 0.5D, 0.5D);
             matrixStack.mulPose(Const.Y90);
             matrixStack.mulPose(Const.X90);
             matrixStack.scale(1.125F, 1.125F, 1.125F);
             matrixStack.translate(-1, -0.5, -1.1875);
+
+            //matrixStack.translate(ClientConfigs.general.TEST1.get(),ClientConfigs.general.TEST2.get(),ClientConfigs.general.TEST3.get());
 
             FlagBlockTileRenderer.renderPatterns(matrixStack, renderTypeBuffer,this.resultBannerPatterns,15728880);
 

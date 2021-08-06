@@ -68,7 +68,7 @@ public class BlackboardTextureManager {
         return this.getTextureInstance(tile).resourceLocation;
     }
 
-    public ResourceLocation getResoucelocation(BlackboardKey key){
+    public ResourceLocation getResourceLocation(BlackboardKey key){
         return this.getTextureInstance(key).resourceLocation;
     }
 

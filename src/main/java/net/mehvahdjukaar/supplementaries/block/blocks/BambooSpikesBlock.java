@@ -7,6 +7,7 @@ import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -42,6 +43,7 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Lazy;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -90,8 +92,6 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer 
                     ((BambooSpikesBlockTile) te).potion = p;
                     ((BambooSpikesBlockTile) te).setMissingCharges(com.getInt("Damage"));
                 }
-                //TODO: remove in the future
-                if(com.contains("BlockEntityTag"))((BambooSpikesBlockTile) te).potion = PotionUtils.getPotion(com.getCompound("BlockEntityTag"));
             }
         }
     }
@@ -187,6 +187,7 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer 
 
     @Override
     public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if(!tippedEnabled.get())return ActionResultType.PASS;
         ItemStack stack = player.getItemInHand(handIn);
 
         if(stack.getItem() instanceof LingeringPotionItem) {
@@ -228,11 +229,13 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer 
                 ((BambooSpikesBlockTile) te).makeParticle();
             }
         }
-
     }
+
+    public Lazy<Boolean> tippedEnabled = Lazy.of(()->RegistryConfigs.reg.TIPPED_SPIKES_ENABLED.get());
 
     @Override
     public boolean tryAcceptingFluid(World world, BlockState state, BlockPos pos, SoftFluid f, @Nullable CompoundNBT nbt, int amount) {
+        if(!tippedEnabled.get())return false;
         if(f == SoftFluidRegistry.POTION && nbt != null && !state.getValue(TIPPED) && nbt.getString("PotionType").equals("Lingering")){
             TileEntity te = world.getBlockEntity(pos);
             if (te instanceof BambooSpikesBlockTile) {

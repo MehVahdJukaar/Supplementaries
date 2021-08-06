@@ -16,10 +16,10 @@ public class BlackboardClearRecipe extends SpecialRecipe {
         super(idIn);
     }
 
-    private boolean isDrawnBlackboard(ItemStack stack){
+    public static boolean isDrawnBlackboard(ItemStack stack){
         if (stack.getItem() == Registry.BLACKBOARD_ITEM.get()) {
             CompoundNBT compoundnbt = stack.getTagElement("BlockEntityTag");
-            return compoundnbt != null && compoundnbt.contains("pixels_0");
+            return compoundnbt != null && compoundnbt.contains("Pixels");
         }
         return false;
     }
@@ -50,7 +50,16 @@ public class BlackboardClearRecipe extends SpecialRecipe {
 
     @Override
     public ItemStack assemble(CraftingInventory inv) {
-        return new ItemStack(Registry.BLACKBOARD_ITEM.get());
+        for(int i = 0; i < inv.getContainerSize(); ++i) {
+            ItemStack itemstack = inv.getItem(i);
+            if (isDrawnBlackboard(itemstack) ) {
+                ItemStack itemstack1 = itemstack.copy();
+                itemstack1.getTag().remove("BlockEntityTag");
+                itemstack1.setCount(1);
+                return itemstack1;
+            }
+        }
+        return ItemStack.EMPTY;
     }
 
     @Override
@@ -78,7 +87,7 @@ public class BlackboardClearRecipe extends SpecialRecipe {
 
     @Override
     public IRecipeSerializer<?> getSerializer() {
-        return Registry.BLACKBOARD_CLEAR_RECIPE.get();
+        return null;//Registry.BLACKBOARD_CLEAR_RECIPE.get();
     }
 
 

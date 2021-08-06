@@ -10,10 +10,7 @@ import net.mehvahdjukaar.supplementaries.client.models.RopeKnotBlockLoader;
 import net.mehvahdjukaar.supplementaries.client.models.SignPostBlockLoader;
 import net.mehvahdjukaar.supplementaries.client.particles.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.*;
-import net.mehvahdjukaar.supplementaries.client.renderers.entities.FireflyEntityRenderer;
-import net.mehvahdjukaar.supplementaries.client.renderers.entities.LabelEntityRenderer;
-import net.mehvahdjukaar.supplementaries.client.renderers.entities.OrangeTraderEntityRenderer;
-import net.mehvahdjukaar.supplementaries.client.renderers.entities.RopeArrowRenderer;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
@@ -22,7 +19,6 @@ import net.mehvahdjukaar.supplementaries.compat.decorativeblocks.DecoBlocksCompa
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
-import net.mehvahdjukaar.supplementaries.items.SpeedometerItem;
 import net.mehvahdjukaar.supplementaries.world.data.map.client.CMDclient;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -115,6 +111,9 @@ public class ClientSetup {
 
         //rope arrow
         RenderingRegistry.registerEntityRenderingHandler(Registry.ROPE_ARROW.get(), RopeArrowRenderer::new);
+        //amethyst arrow
+        RenderingRegistry.registerEntityRenderingHandler(Registry.AMETHYST_ARROW.get(), AmethystArrowRenderer::new);
+
         //firefly & jar
         RenderingRegistry.registerEntityRenderingHandler(Registry.FIREFLY_TYPE.get(), FireflyEntityRenderer::new);
         RenderTypeLookup.setRenderLayer(Registry.FIREFLY_JAR.get(), RenderType.cutout());
@@ -245,12 +244,19 @@ public class ClientSetup {
         RenderTypeLookup.setRenderLayer(Registry.GOLD_GATE.get(), RenderType.cutout());
         //cracked bell
         ClientRegistry.bindTileEntityRenderer(Registry.CRACKED_BELL_TILE.get(), CrackedBellTileEntityRenderer::new);
+        //present
+        //ScreenManager.register(Registry.PRESENT_BLOCK_CONTAINER.get(), PresentBlockGui.GUI_FACTORY);
+
 
         ItemModelsProperties.register(Items.CROSSBOW, new ResourceLocation("rope_arrow"),
                 (stack, world, entity) -> entity != null && CrossbowItem.isCharged(stack) && CrossbowItem.containsChargedProjectile(stack, Registry.ROPE_ARROW_ITEM.get()) ? 1.0F : 0.0F);
 
-        ItemModelsProperties.register(Registry.SPEEDOMETER_ITEM.get(), new ResourceLocation("speed"),
-                new SpeedometerItem.SpeedometerItemProperty());
+        ItemModelsProperties.register(Items.CROSSBOW, new ResourceLocation("amethyst_arrow"),
+                (stack, world, entity) -> entity != null && CrossbowItem.isCharged(stack) && CrossbowItem.containsChargedProjectile(stack, Registry.AMETHYST_ARROW_ITEM.get()) ? 1.0F : 0.0F);
+
+
+        //ItemModelsProperties.register(Registry.SPEEDOMETER_ITEM.get(), new ResourceLocation("speed"),
+        //        new SpeedometerItem.SpeedometerItemProperty());
 
     }
 

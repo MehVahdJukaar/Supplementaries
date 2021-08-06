@@ -5,6 +5,7 @@
   ],
   "optional": [
     "decorative_blocks:chain",
-    "charm:gold_chain"
+    "charm:gold_chain",
+    "forbidden_arcanus:iron_chain"
   ]
 }

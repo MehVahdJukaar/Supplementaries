@@ -21,7 +21,7 @@ mixin {
     add sourceSets.main, "supplementaries.refmap.json"
 }
 
-version = '1.16.5-0.14.0'
+version = '1.16.5-0.15.0'
 group = 'net.mehvahdjukaar.supplementaries' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'supplementaries'
 
@@ -44,9 +44,16 @@ minecraft {
     // These can be tweaked, removed, or duplicated as needed.
     runs {
         client {
-            property 'mixin.env.disableRefMap', 'true'
+
+
+
+            property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
+
+
+            property 'mixin.env.remapRefMap', 'true'
+            //property 'mixin.env.disableRefMap', 'true'
             arg "-mixin.config=supplementaries.mixins.json".toString()
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+            //property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
 
             workingDirectory project.file('run')
 
@@ -115,8 +122,7 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 dependencies {
 
-    //mixin stuff fore gradle 5+
-    annotationProcessor 'org.spongepowered:mixin:0.8:processor'
+
 
     // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
@@ -143,7 +149,15 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
+    implementation fg.deobf("curse.maven:create-328085:3384090")
+    implementation fg.deobf("curse.maven:flywheel-486392:3384004")
 
+    //implementation fg.deobf("vazkii.quark:Quark:r2.4-305.1724")
+    implementation fg.deobf("curse.maven:quark-243121:3326040")
+    //implementation fg.deobf("curse.maven:quarkoddities-301051:3088871")
+
+    //mixin stuff fore gradle 5+
+    annotationProcessor 'org.spongepowered:mixin:0.8:processor'
 
 }
 
@@ -181,6 +195,35 @@ publishing {
         }
     }
 }
+
+
+
+repositories {
+    maven {
+        url "https://www.cursemaven.com"
+    }
+    maven {
+        // location of the maven that hosts JEI files (And TiC)
+        name "Progwml6 maven"
+        url "https://dvs1.progwml6.com/files/maven/"
+    }
+    maven {
+        //location of the maven for mixed mappings and registrate
+        name = "tterrag maven"
+        url = "https://maven.tterrag.com/"
+    }
+    maven {
+        // location of the maven that hosts JEI files (And TiC)
+        name "Progwml6 maven"
+        url "https://dvs1.progwml6.com/files/maven/"
+    }
+    maven {
+        //location of the maven for vazkii's mods
+        name "blamejared"
+        url "http://maven.blamejared.com/"
+    }
+}
+
 repositories{
     maven {
         // location of the maven that hosts JEI files
@@ -194,7 +237,6 @@ repositories{
     }
     jcenter()
     mavenCentral()
-
 }
 
 repositories {

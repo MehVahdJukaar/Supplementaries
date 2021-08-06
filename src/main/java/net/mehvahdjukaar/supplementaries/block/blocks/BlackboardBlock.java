@@ -11,8 +11,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.*;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootParameters;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
@@ -34,7 +32,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.Tags;
 
 import javax.annotation.Nullable;
-import java.util.Collections;
 import java.util.List;
 
 public class BlackboardBlock extends WaterBlock {
@@ -139,19 +136,23 @@ public class BlackboardBlock extends WaterBlock {
                     DyeColor col = DyeColor.getColor(stack);
                     if (col != null) {
                         te.pixels[x][y] = colorToByte(col);
+                        te.setChanged();
                         return ActionResultType.sidedSuccess(worldIn.isClientSide);
                     }
                 }
                 if (item == Items.QUARTZ || item.is(Tags.Items.DYES_WHITE)) {
                     te.pixels[x][y] = 1;
+                    te.setChanged();
                     return ActionResultType.sidedSuccess(worldIn.isClientSide);
                 }
                 else if (item == Items.COAL || item == Items.CHARCOAL || item.is(Tags.Items.DYES_BLACK)) {
                     te.pixels[x][y] = 0;
+                    te.setChanged();
                     return ActionResultType.sidedSuccess(worldIn.isClientSide);
                 }
                 else if (item==Items.SPONGE || item==Items.WET_SPONGE){
                     te.pixels = new byte[16][16];
+                    te.setChanged();
                     return ActionResultType.sidedSuccess(worldIn.isClientSide);
                     //TODO: check if it's synced works in myltiplayer (might need mark dirty)
                 }
@@ -193,7 +194,7 @@ public class BlackboardBlock extends WaterBlock {
     public ItemStack getBlackboardItem(BlackboardBlockTile te) {
         ItemStack itemstack = new ItemStack(this);
         if(!te.isEmpty()) {
-            CompoundNBT compoundnbt = te.saveItemNBT(new CompoundNBT());
+            CompoundNBT compoundnbt = te.saveToTag(new CompoundNBT());
             if (!compoundnbt.isEmpty()) {
                 itemstack.addTagElement("BlockEntityTag", compoundnbt);
             }
@@ -202,6 +203,7 @@ public class BlackboardBlock extends WaterBlock {
     }
 
     //normal drop
+    /*
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         TileEntity tileentity = builder.getOptionalParameter(LootParameters.BLOCK_ENTITY);
@@ -211,7 +213,8 @@ public class BlackboardBlock extends WaterBlock {
             return Collections.singletonList(itemstack);
         }
         return super.getDrops(state, builder);
-    }
+    }*/
+
 
     @Override
     public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
@@ -221,6 +224,11 @@ public class BlackboardBlock extends WaterBlock {
         }
         return super.getPickBlock(state,target,world,pos,player);
     }
+
+
+
+
+
 
 
 }

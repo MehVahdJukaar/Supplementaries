@@ -1,12 +1,10 @@
 package net.mehvahdjukaar.supplementaries.compat.create.behaviors;
 
 
-
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.foundation.utility.VecHelper;
-import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;

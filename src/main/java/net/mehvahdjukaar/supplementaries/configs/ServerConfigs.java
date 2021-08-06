@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.configs;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -56,14 +57,14 @@ public class ServerConfigs {
         public static ForgeConfigSpec.IntValue FLUTE_RADIUS;
         public static ForgeConfigSpec.IntValue FLUTE_DISTANCE;
         public static ForgeConfigSpec.DoubleValue BOMB_RADIUS;
-        public static ForgeConfigSpec.BooleanValue BOMB_BREAKS;
+        public static ForgeConfigSpec.EnumValue<BombEntity.breakingMode> BOMB_BREAKS;
 
         private static void init(ForgeConfigSpec.Builder builder){
             builder.push("items");
 
             //rope arrow
             builder.push("rope_arrow");
-            ROPE_ARROW_ROPE = builder.comment("If you really don't like my ropes you can specify here the block id of"+
+            ROPE_ARROW_ROPE = builder.comment("If you don't like my ropes you can specify here the block id of"+
                     "a rope from another mod which will get deployed by rope arrows instead of mine")
                     .define("rope_arrow_override","supplementaries:rope");
             builder.pop();
@@ -80,7 +81,7 @@ public class ServerConfigs {
             BOMB_RADIUS = builder.comment("Bomb explosion radius (damage depends on this)")
                     .defineInRange("explosion_radius",2, 0.1, 10);
             BOMB_BREAKS = builder.comment("Do bombs break blocks like tnt?")
-                    .define("break_blocks",false);
+                    .defineEnum("break_blocks", BombEntity.breakingMode.WEAK);
 
             builder.pop();
 
@@ -492,7 +493,7 @@ public class ServerConfigs {
                     "repurposed_structures:village_giant_taiga","repurposed_structures:village_jungle","repurposed_structures:village_mountains","repurposed_structures:village_oak",
                     "repurposed_structures:village_swamp","pokecube:village","pokecube_legends:village","pokecube_legends:village/ocean",
                     "valhelsia_structures:castle","valhelsia_structures:castle_ruin","valhelsia_structures:small_castle","valhelsia_structures:tower_ruin",
-                    "stoneholm:underground_village");
+                    "stoneholm:underground_village","blue_skies:gatekeeper_house");
 
             SIGNS_VILLAGES = builder.comment("list of structure that a sign can point to. Note that they will only spawn in dimensions where vanilla villages can")
                     .defineList("villages", villages, s->true);
@@ -538,7 +539,7 @@ public class ServerConfigs {
         public static int FLUTE_RADIUS;
         public static int FLUTE_DISTANCE;
         public static float BOMB_RADIUS;
-        public static boolean BOMB_BREAKS;
+        public static BombEntity.breakingMode BOMB_BREAKS;
         //tweaks
         public static int ZOMBIE_HORSE_COST;
         public static boolean ZOMBIE_HORSE;

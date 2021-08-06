@@ -78,25 +78,12 @@ public class MobHolder {
     }
 
     public void read(CompoundNBT compound) {
-        //TODO:remove in the future
-        if(compound.contains("jar_mob")){
-            this.entityData = compound.getCompound("jar_mob");
-            this.scale=0.15f;
-            this.yOffset=0;
-            this.specialBehaviorType = SpecialBehaviorType.NONE;
-            this.name="reload needed";
-        }
-        if(compound.contains("animation_type")) this.specialBehaviorType = SpecialBehaviorType.values()[compound.getInt("animation_type")];
-        if(compound.contains("scale"))this.scale=compound.getFloat("scale");
-
-
-
         if(compound.contains("MobHolder")){
             CompoundNBT cmp = compound.getCompound("MobHolder");
             this.entityData = cmp.getCompound("EntityData");
             this.scale = cmp.getFloat("Scale");
             this.yOffset = cmp.getFloat("YOffset");
-            this.specialBehaviorType = SpecialBehaviorType.values()[cmp.getInt("AnimationType")];
+            //this.specialBehaviorType = SpecialBehaviorType.values()[cmp.getInt("AnimationType")];
             if(cmp.contains("UUID")) this.uuid = cmp.getUUID("UUID");
             this.name = cmp.getString("Name");
         }

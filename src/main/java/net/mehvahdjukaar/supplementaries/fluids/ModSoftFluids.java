@@ -260,6 +260,7 @@ public class ModSoftFluids {
                 .fromMod("atmospheric")
                 .onlyFlowingTinted()
                 .translationKey("item.atmospheric:aloe_gel_bottle")
+                .emptyHandContainerItem("item.atmospheric:aloe_gel_block",4)
                 .drink("atmospheric:aloe_gel_bottle")));
         custom.add(makeSF(new SoftFluid.Builder(Textures.POTION_TEXTURE,Textures.POTION_TEXTURE_FLOW,"yucca_juice")
                 .fromMod("atmospheric")
@@ -271,6 +272,7 @@ public class ModSoftFluids {
                 .fromMod("upgrade_aquatic")
                 .onlyFlowingTinted()
                 .translationKey("item.upgrade_aquatic:mulberry_jam_bottle")
+                .emptyHandContainerItem("item.upgrade_aquatic:mulberry_jam_block",4)
                 .drink("upgrade_aquatic:mulberry_jam_bottle")));
 
 
@@ -304,6 +306,41 @@ public class ModSoftFluids {
                 .translationKey("item.alexsmobs.mimicream")
                 .emptyHandContainerItem("alexsmobs:mimicream",1)
                 .setSoundsForCategory(SoundEvents.SLIME_BLOCK_PLACE,SoundEvents.SLIME_BLOCK_BREAK,Items.AIR)));
+        custom.add(makeSF(new SoftFluid.Builder(Textures.SOUP_TEXTURE,Textures.POTION_TEXTURE_FLOW,"adzuki_milkshake")
+                .fromMod("neapolitan")
+                .color(0xE5828F)
+                .translationKey("item.neapolitan.adzuki_milkshake")
+                .bottle("adzuki_milkshake")));
+        custom.add(makeSF(new SoftFluid.Builder(Textures.SOUP_TEXTURE,Textures.POTION_TEXTURE_FLOW,"mint_milkshake")
+                .fromMod("neapolitan")
+                .color(0xA2EFB0)
+                .translationKey("item.neapolitan.mint_milkshake")
+                .bottle("mint_milkshake")));
+        custom.add(makeSF(new SoftFluid.Builder(Textures.SOUP_TEXTURE,Textures.POTION_TEXTURE_FLOW,"chocolate_milkshake")
+                .fromMod("neapolitan")
+                .color(0x764731)
+                .translationKey("item.neapolitan.chocolate_milkshake")
+                .bottle("chocolate_milkshake")));
+        custom.add(makeSF(new SoftFluid.Builder(Textures.SOUP_TEXTURE,Textures.POTION_TEXTURE_FLOW,"strawberry_milkshake")
+                .fromMod("neapolitan")
+                .color(0xEC8DAA)
+                .translationKey("item.neapolitan.strawberry_milkshake")
+                .bottle("strawberry_milkshake")));
+        custom.add(makeSF(new SoftFluid.Builder(Textures.SOUP_TEXTURE,Textures.POTION_TEXTURE_FLOW,"vanilla_milkshake")
+                .fromMod("neapolitan")
+                .color(0xF6CFCA)
+                .translationKey("item.neapolitan.vanilla_milkshake")
+                .bottle("vanilla_milkshake")));
+        custom.add(makeSF(new SoftFluid.Builder(Textures.SOUP_TEXTURE,Textures.POTION_TEXTURE_FLOW,"banana_milkshake")
+                .fromMod("neapolitan")
+                .color(0xF9D290)
+                .translationKey("item.neapolitan.banana_milkshake")
+                .bottle("banana_milkshake")));
+        custom.add(makeSF(new SoftFluid.Builder(Textures.SOUP_TEXTURE,Textures.POTION_TEXTURE_FLOW,"strawberry_banana_smoothie")
+                .fromMod("neapolitan")
+                .color(0xDD66AF)
+                .translationKey("item.neapolitan.strawberry_banana_smoothie")
+                .bottle("strawberry_banana_smoothie")));
 
 
         //inspirations dye bottles. not adding nbt mixed ones

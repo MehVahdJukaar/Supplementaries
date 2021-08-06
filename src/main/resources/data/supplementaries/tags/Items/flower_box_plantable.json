@@ -1,0 +1,18 @@
+{
+  "replace": false,
+  "values": [
+    "#minecraft:saplings",
+    "#minecraft:flowers",
+    "#minecraft:mushrooms",
+    "minecraft:sweet_berries",
+    "minecraft:warped_fungus",
+    "minecraft:crimson_fungus",
+    "minecraft:warped_roots",
+    "minecraft:crimson_roots"
+  ],
+  "optional": [
+    "farmersdelight:brown_mushroom_colony",
+    "farmersdelight:red_mushroom_colony",
+    "byg:blue_berries"
+  ]
+}

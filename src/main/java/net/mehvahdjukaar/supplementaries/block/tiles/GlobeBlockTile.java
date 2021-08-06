@@ -29,6 +29,7 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, I
     //client
     public ResourceLocation texture = null;
     public boolean isFlat = false;
+    public boolean isSnow = false;
 
     public GlobeBlockTile() {
         super(Registry.GLOBE_TILE.get());
@@ -166,6 +167,8 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, I
         public static ResourceLocation getGlobeTexture(String text, GlobeBlockTile tile){
             String name = text.toLowerCase();
             ResourceLocation r = SpecialPlayers.GLOBES.get(name);
+            //TODO: generalize this mess
+            tile.isSnow = r!=null && r.getPath().contains("globe_wais");
             if(r != null)return r;
             for (GlobeType n : GlobeType.values()) {
                 if(n.keyWords==null)continue;

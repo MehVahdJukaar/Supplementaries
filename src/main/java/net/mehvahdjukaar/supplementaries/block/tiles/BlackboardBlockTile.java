@@ -57,10 +57,35 @@ public class BlackboardBlockTile extends TileEntity {
         super.setChanged();
     }
 
-    //dont change name or it will crash with older saves
+    //client
+    public void updateModelData() {
+        this.textureKey = null;
+        //this.textureKey = BlackboardTextureManager.INSTANCE.getUpdatedKey(this);
+        //this.data.setData(TEXTURE, textureKey);
+        //ModelDataManager.requestModelDataRefresh(this);
+        //this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+    }
+
     @Override
     public void load(BlockState state, CompoundNBT compound) {
         super.load(state, compound);
+        loadFromTag(compound);
+    }
+
+    @Override
+    public CompoundNBT save(CompoundNBT compound) {
+        super.save(compound);
+        this.saveToTag(compound);
+        return compound;
+    }
+
+
+    public CompoundNBT saveToTag(CompoundNBT compound){
+        compound.putLongArray("Pixels",packPixels(pixels));
+        return compound;
+    }
+
+    public void loadFromTag(CompoundNBT compound) {
         this.pixels=new byte[16][16];
         if(compound.contains("Pixels")){
             this.pixels = unpackPixels(compound.getLongArray("Pixels"));
@@ -72,29 +97,6 @@ public class BlackboardBlockTile extends TileEntity {
                 if(b.length==16) this.pixels[i] = b;
             }
         }
-    }
-
-
-    //client
-    public void updateModelData() {
-        this.textureKey = null;
-        //this.textureKey = BlackboardTextureManager.INSTANCE.getUpdatedKey(this);
-        //this.data.setData(TEXTURE, textureKey);
-        //ModelDataManager.requestModelDataRefresh(this);
-        //this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
-    }
-
-    @Override
-    public CompoundNBT save(CompoundNBT compound) {
-        super.save(compound);
-        this.saveItemNBT(compound);
-        return compound;
-    }
-
-    //doesn't save stuff it doesn't need. TODO: use this for update packet
-    public CompoundNBT saveItemNBT(CompoundNBT compound){
-        compound.putLongArray("Pixels",packPixels(pixels));
-        return compound;
     }
 
     public static long[] packPixels(byte[][] pixels){

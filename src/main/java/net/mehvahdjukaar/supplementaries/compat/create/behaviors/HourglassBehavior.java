@@ -1,23 +1,19 @@
 package net.mehvahdjukaar.supplementaries.compat.create.behaviors;
 
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
-import com.simibubi.create.content.contraptions.fluids.actors.FillingRecipe;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 import net.mehvahdjukaar.supplementaries.block.blocks.HourGlassBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.HourGlassBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.HourGlassBlockTileRenderer;
-import net.mehvahdjukaar.supplementaries.items.crafting.BlackboardClearRecipe;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;

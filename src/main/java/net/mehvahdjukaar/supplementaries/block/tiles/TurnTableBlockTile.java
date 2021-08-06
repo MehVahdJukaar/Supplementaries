@@ -19,6 +19,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Rotation;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
@@ -89,6 +91,7 @@ public class TurnTableBlockTile extends TileEntity implements ITickableTileEntit
                 BlockState updatedState = Block.updateFromNeighbourShapes(newState, level, pos);
                 level.setBlock(pos, updatedState, 3);
                 level.updateNeighborsAtExceptFromFacing(pos,newState.getBlock(),mydir.getOpposite());
+                this.level.playSound(null, this.getBlockPos(), SoundEvents.ITEM_FRAME_ROTATE_ITEM, SoundCategory.BLOCKS, 1.0F, 0.6F);
             }
             return true;
             //TODO: this makes block instantly rotate when condition becomes true

@@ -52,6 +52,6 @@ configuredBackground= "supplementaries:textures/blocks/blackboard_back.png"
 
     modId="selene"
     mandatory=true
-    versionRange="[1.0,]"
+    versionRange="[1.6,]"
     ordering="NONE"
     side="BOTH"

@@ -8,6 +8,9 @@
     "minecraft:vex"
   ],
   "optional": [
+    "bettermushroom:mushrooms_spores",
+    "untamedwilds:tarantula",
+    "wyrmroost:coin_dragon",
     "alexsmobs:enderiophage",
     "alexsmobs:mimicube",
     "iceandfire:pixie",
@@ -21,7 +24,6 @@
     "mysticalworld:silkworm",
     "druidcraft:lunar_moth",
     "druidcraft:dreadfish",
-    "swampexpansion:slabfish",
     "endergetic:puff_bug",
     "betterendforge:end_slime",
     "betterendforge:dragonfly",

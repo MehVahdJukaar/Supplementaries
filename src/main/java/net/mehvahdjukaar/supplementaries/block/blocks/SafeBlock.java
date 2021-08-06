@@ -204,8 +204,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable {
         }
     }
 
-
-
+    @Override
     public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
 
@@ -278,7 +277,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable {
         if(ServerConfigs.cached.SAFE_UNBREAKABLE) {
             TileEntity tileentity = world.getBlockEntity(pos);
             if (tileentity instanceof SafeBlockTile) {
-                return ((SafeBlockTile) tileentity).canPlayerOpen(player,true);
+                if (!((SafeBlockTile) tileentity).canPlayerOpen(player,true)) return false;
             }
         }
         return super.removedByPlayer(state,world,pos,player,willHarvest,fluid);
@@ -303,7 +302,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable {
         super.playerWillDestroy(worldIn, pos, state, player);
     }
 
-    //normal drop
+    //TODO: use loot table instead
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         TileEntity tileentity = builder.getOptionalParameter(LootParameters.BLOCK_ENTITY);
@@ -316,16 +315,12 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable {
         return super.getDrops(state, builder);
     }
 
-    //pick block. TODO: use getsafe item here. clean up
     @Override
     public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
         ItemStack itemstack = super.getCloneItemStack(world, pos, state);
         TileEntity te = world.getBlockEntity(pos);
         if (te instanceof SafeBlockTile){
-            CompoundNBT compoundnbt = ((SafeBlockTile)te).saveToNbt(new CompoundNBT());
-            if (!compoundnbt.isEmpty()) {
-                itemstack.addTagElement("BlockEntityTag", compoundnbt);
-            }
+            return getSafeItem((SafeBlockTile) te);
         }
         return itemstack;
     }

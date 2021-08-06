@@ -2,10 +2,14 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 
 import net.mehvahdjukaar.supplementaries.block.tiles.KeyLockableTile;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -15,11 +19,15 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Random;
 
 public class LockBlock extends Block {
@@ -95,4 +103,10 @@ public class LockBlock extends Block {
         return new KeyLockableTile();
     }
 
+    @Override
+    public void appendHoverText(ItemStack stack, IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+        if(!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().options.advancedItemTooltips)return;
+        tooltip.add(new TranslationTextComponent("message.supplementaries.key.lockable").withStyle(TextFormatting.ITALIC).withStyle(TextFormatting.GRAY));
+    }
 }

@@ -55,10 +55,9 @@ public class ModSetup {
 
             Spawns.registerSpawningStuff();
 
-            ComposterBlock.COMPOSTABLES.put(Registry.FLAX_SEEDS_ITEM.get().asItem(), 0.3F);
-            ComposterBlock.COMPOSTABLES.put(Registry.FLAX_ITEM.get().asItem(), 0.65F);
-            ComposterBlock.COMPOSTABLES.put(Registry.FLAX_BLOCK.get().asItem(), 1);
-
+            ComposterBlock.COMPOSTABLES.put(Registry.FLAX_SEEDS_ITEM.get(), 0.3F);
+            ComposterBlock.COMPOSTABLES.put(Registry.FLAX_ITEM.get(), 0.65F);
+            ComposterBlock.COMPOSTABLES.put(Registry.FLAX_BLOCK_ITEM.get(), 1);
 
             List<ItemStack> chickenFood = new ArrayList<>();
             Collections.addAll(chickenFood, ChickenEntityAccessor.getFoodItems().getItems());
@@ -151,8 +150,8 @@ public class ModSetup {
                 float chance = 0.35f;
                 LootPool pool = LootPool.lootPool()
                         .name("supplementaries_injected_rope")
-                        .apply(SetCount.setCount(RandomValueRange.between(4.0F, 8.0F)))
-                        .setRolls(new RandomValueRange(1, 2))
+                        .apply(SetCount.setCount(RandomValueRange.between(5.0F, 17.0F)))
+                        .setRolls(ConstantRange.exactly(1))
                         .when(RandomChance.randomChance(chance))
                         .add(ItemLootEntry.lootTableItem(Registry.ROPE_ITEM.get()).setWeight(1))
                         .build();
@@ -163,7 +162,8 @@ public class ModSetup {
                 float chance2 = 0.10f;
                 LootPool pool2 = LootPool.lootPool()
                         .name("supplementaries_injected_flax")
-                        .setRolls(new RandomValueRange(1, 3))
+                        .apply(SetCount.setCount(RandomValueRange.between(1, 3)))
+                        .setRolls(ConstantRange.exactly(1))
                         .when(RandomChance.randomChance(chance2))
                         .add(ItemLootEntry.lootTableItem(Registry.FLAX_SEEDS_ITEM.get()).setWeight(1))
                         .build();
@@ -175,7 +175,8 @@ public class ModSetup {
             float chance = 0.2f;
             LootPool pool = LootPool.lootPool()
                     .name("supplementaries_injected_flax")
-                    .setRolls(new RandomValueRange(1, 3))
+                    .apply(SetCount.setCount(new RandomValueRange(1, 3)))
+                    .setRolls(ConstantRange.exactly(1))
                     .when(RandomChance.randomChance(chance))
                     .add(ItemLootEntry.lootTableItem(Registry.FLAX_SEEDS_ITEM.get()).setWeight(1))
                     .build();
@@ -188,6 +189,7 @@ public class ModSetup {
             LootPool pool = LootPool.lootPool()
                     .name("supplementaries_injected_flax")
                     .apply(SetCount.setCount(RandomValueRange.between(2F,5.0F)))
+                    .setRolls(ConstantRange.exactly(1))
                     .when(RandomChance.randomChance(chance))
                     .add(ItemLootEntry.lootTableItem(Registry.FLAX_SEEDS_ITEM.get()).setWeight(1))
                     .build();

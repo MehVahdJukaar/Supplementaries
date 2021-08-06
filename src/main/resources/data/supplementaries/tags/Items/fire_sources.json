@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:flint_and_steel"
+  ],
+  "optional": [
+    "simply_steel:flint_and_iron",
+    "realistictorches:matchbox",
+    "lotr:match"
+  ]
+}
