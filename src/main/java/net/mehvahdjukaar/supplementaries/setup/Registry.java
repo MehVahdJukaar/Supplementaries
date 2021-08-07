@@ -316,18 +316,15 @@ public class Registry {
 
     //presents
     public static final String PRESENT_NAME = "present";
-    public static final Map<DyeColor, RegistryObject<Block>> PRESENTS = new HashMap<>();
-    /*
+
     public static final Map<DyeColor, RegistryObject<Block>> PRESENTS = Variants.makePresents(PRESENT_NAME);
 
     public static final RegistryObject<TileEntityType<PresentBlockTile>> PRESENT_TILE = TILES
             .register(PRESENT_NAME, ()-> TileEntityType.Builder.of(PresentBlockTile::new,
                     PRESENTS.values().stream().map(RegistryObject::get).toArray(Block[]::new)).build(null));
 
-
-
     public static final Map<DyeColor, RegistryObject<Item>> PRESENTS_ITEMS = Variants.makePresentsItems();
-    */
+
     public static final RegistryObject<ContainerType<PresentContainer>> PRESENT_BLOCK_CONTAINER = CONTAINERS
             .register(PRESENT_NAME,()-> IForgeContainerType.create(PresentContainer::new));
 

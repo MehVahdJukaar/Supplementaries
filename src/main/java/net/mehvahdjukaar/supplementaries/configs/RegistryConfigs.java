@@ -235,7 +235,7 @@ public class RegistryConfigs {
             IRON_GATE_ENABLED = builder.define(Registry.IRON_GATE_NAME, true);
 
             AMETHYST_ARROW_ENABLED = builder.comment("WIP").define(Registry.AMETHYST_ARROW_NAME,true);
-            //PRESENT_ENABLED = builder.define(Registry.PRESENT_NAME,true);
+            PRESENT_ENABLED = builder.define(Registry.PRESENT_NAME,true);
 
 
             LASER_ENABLED = builder.comment("WIP")

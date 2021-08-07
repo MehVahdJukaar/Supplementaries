@@ -1,10 +1,7 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.client.gui.NoticeBoardGui;
-import net.mehvahdjukaar.supplementaries.client.gui.OrangeMerchantGui;
-import net.mehvahdjukaar.supplementaries.client.gui.PulleyBlockGui;
-import net.mehvahdjukaar.supplementaries.client.gui.SackGui;
+import net.mehvahdjukaar.supplementaries.client.gui.*;
 import net.mehvahdjukaar.supplementaries.client.models.FrameBlockLoader;
 import net.mehvahdjukaar.supplementaries.client.models.RopeKnotBlockLoader;
 import net.mehvahdjukaar.supplementaries.client.models.SignPostBlockLoader;
@@ -245,7 +242,7 @@ public class ClientSetup {
         //cracked bell
         ClientRegistry.bindTileEntityRenderer(Registry.CRACKED_BELL_TILE.get(), CrackedBellTileEntityRenderer::new);
         //present
-        //ScreenManager.register(Registry.PRESENT_BLOCK_CONTAINER.get(), PresentBlockGui.GUI_FACTORY);
+        ScreenManager.register(Registry.PRESENT_BLOCK_CONTAINER.get(), PresentBlockGui.GUI_FACTORY);
 
 
         ItemModelsProperties.register(Items.CROSSBOW, new ResourceLocation("rope_arrow"),

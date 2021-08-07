@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 import net.mehvahdjukaar.supplementaries.block.blocks.PresentBlock;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.inventories.PresentContainer;
+import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -42,10 +43,8 @@ public class PresentBlockTile extends LockableLootTileEntity implements ISidedIn
 
 
     public PresentBlockTile() {
-        super(null);//Registry.PRESENT_TILE.get()
+        super(Registry.PRESENT_TILE.get());
     }
-
-
 
     public boolean isPacked(){
         return this.recipient != null;

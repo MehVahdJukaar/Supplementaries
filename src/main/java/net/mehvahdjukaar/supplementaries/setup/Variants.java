@@ -164,10 +164,9 @@ public class Variants {
         for(DyeColor color : DyeColor.values()){
             String name = baseName+"_"+color.getName();
             map.put(color, Registry.BLOCKS.register(name, ()-> new PresentBlock(color,
-                            AbstractBlock.Properties.of(Material.WOOD, color.getMaterialColor())
+                            AbstractBlock.Properties.of(Material.WOOL, color.getMaterialColor())
                                     .strength(1.0F)
-                                    .noCollission()
-                                    .sound(SoundType.WOOD)
+                                    .sound(SoundType.WOOL)
                     )
             ));
         }
