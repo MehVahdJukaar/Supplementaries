@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.mehvahdjukaar.supplementaries.block.tiles.DoormatBlockTile;
+import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.texture.NativeImage;
@@ -25,7 +26,7 @@ public class DoormatBlockTileRenderer extends TileEntityRenderer<DoormatBlockTil
         matrixStackIn.pushPose();
 
         matrixStackIn.translate(0.5, 0, 0.5);
-        matrixStackIn.mulPose(tile.getDirection().getOpposite().getRotation());
+        matrixStackIn.mulPose(Const.rot(tile.getDirection().getOpposite()));
 
         // render text
         FontRenderer fontrenderer = this.renderer.getFont();

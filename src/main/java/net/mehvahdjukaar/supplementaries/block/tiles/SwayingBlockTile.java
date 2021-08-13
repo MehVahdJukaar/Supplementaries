@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.SwayingBlock;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
@@ -9,6 +10,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.common.util.Constants;
 
 import java.util.Random;
 
@@ -25,6 +27,11 @@ public abstract class SwayingBlockTile extends TileEntity implements ITickableTi
     protected static float angleDamping = 150f;
     protected static float periodDamping = 100f;
 
+    //lod stuff
+    //protected boolean TESRCalled = false;
+    public boolean fancyRenderer = false;
+    protected boolean oldRendererState = false;
+
     public SwayingBlockTile(TileEntityType<?> tileEntityTypeIn) {
         super(tileEntityTypeIn);
 
@@ -32,7 +39,7 @@ public abstract class SwayingBlockTile extends TileEntity implements ITickableTi
 
     @Override
     public double getViewDistance() {
-        return 112;
+        return 64;
     }
 
     @Override
@@ -54,9 +61,32 @@ public abstract class SwayingBlockTile extends TileEntity implements ITickableTi
         return this.getBlockState().getValue(SwayingBlock.FACING);
     }
 
+    public void setFancyRenderer(boolean fancy){
+        if(ClientConfigs.cached.FAST_LANTERNS)fancy = false;
+        if(fancy!=this.fancyRenderer) {
+            this.oldRendererState = this.fancyRenderer;
+            this.fancyRenderer = fancy;
+            this.requestModelDataUpdate();
+            //TODO: replace hardcoded int with const.blockFlags
+            this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.RERENDER_MAIN_THREAD);
+        }
+    }
+
+    public boolean shouldRenderFancy(){
+        //this.TESRCalled = true;
+        if(oldRendererState!=fancyRenderer){
+            //makes tesr wait 1 render cycle,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        so it's in sync with model data refresh
+            this.oldRendererState = this.fancyRenderer;
+            return oldRendererState;
+        }
+        return fancyRenderer;
+    }
+
     @Override
     public void tick() {
-        if (this.level.isClientSide) {
+        if (this.level.isClientSide && this.oldRendererState) {
+
+            //TODO: improve physics
             this.counter++;
 
             this.prevAngle = this.angle;

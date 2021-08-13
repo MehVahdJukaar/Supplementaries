@@ -27,7 +27,7 @@ public class EnhancedLanternBlockTileRenderer<T extends  EnhancedLanternBlockTil
         matrixStackIn.pushPose();
         // rotate towards direction
         matrixStackIn.translate(0.5, 0.875, 0.5);
-        matrixStackIn.mulPose(tile.getDirection().getOpposite().getRotation());
+        matrixStackIn.mulPose(Const.rot(tile.getDirection().getOpposite()));
         matrixStackIn.mulPose(Const.XN90);
         // animation
         if(ceiling) {

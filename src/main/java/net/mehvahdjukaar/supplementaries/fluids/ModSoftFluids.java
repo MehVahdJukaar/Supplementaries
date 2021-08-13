@@ -341,6 +341,16 @@ public class ModSoftFluids {
                 .color(0xDD66AF)
                 .translationKey("item.neapolitan.strawberry_banana_smoothie")
                 .bottle("strawberry_banana_smoothie")));
+        custom.add(makeSF(new SoftFluid.Builder(Textures.SOUP_TEXTURE,Textures.POTION_TEXTURE_FLOW,"gooseberry_jam")
+                .fromMod("bayou_blues")
+                .color(0xF3BF40)
+                .translationKey("item.bayou_blues:gooseberry_jam_bottle")
+                .drink("gooseberry_jam:gooseberry_jam_bottle")));
+        custom.add(makeSF(new SoftFluid.Builder(Textures.POTION_TEXTURE,Textures.POTION_TEXTURE_FLOW,"gooseberry_juice")
+                .fromMod("bayou_blues")
+                .color(0xBBDF62)
+                .translationKey("item.bayou_blues:gooseberry_juice_bottle")
+                .drink("gooseberry_jam:gooseberry_juice_bottle")));
 
 
         //inspirations dye bottles. not adding nbt mixed ones

@@ -171,7 +171,7 @@ public class SackBlockTile extends LockableLootTileEntity implements ISidedInven
     }
 
     public boolean isSlotUnlocked(int ind){
-        return ind <= this.getUnlockedSlots();
+        return ind < this.getUnlockedSlots();
     }
 
     @Override

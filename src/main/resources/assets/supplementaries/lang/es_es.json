@@ -576,5 +576,12 @@
   "item.supplementaries.sign_post_pine_lotr": "Poste con señal de pino",
   "item.supplementaries.sign_post_rotten_lotr": "Poste con señal podrido",
   "item.supplementaries.sign_post_runewood": "Poste con señal de runewood",
-  "item.supplementaries.sign_post_archwood": "Poste con señal de archwood"
+  "item.supplementaries.sign_post_archwood": "Poste con señal de archwood",
+  "subtitle.supplementaries.music.pancake": "Pancake Music",
+  "item.supplementaries.pancake_disc.desc": "STiiX - Pancake Music",
+  "message.supplementaries.key.lockable": "Key Lockable",
+  "death.attack.supplementaries.amethyst_shard": "%1$s was sharded to death",
+  "death.attack.supplementaries.amethyst_shard.player": "%1$s was sharded to death by %2$s",
+  "item.supplementaries.amethyst_arrow": "Amethyst Arrow",
+  "block.supplementaries.present": "Present"
 }

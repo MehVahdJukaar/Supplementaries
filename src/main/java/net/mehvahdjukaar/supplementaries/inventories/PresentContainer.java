@@ -18,7 +18,6 @@ public class PresentContainer extends Container  {
 
     private final BlockPos pos;
 
-
     public PresentContainer(int id, PlayerInventory playerInventory, PacketBuffer packetBuffer) {
         this(id,playerInventory, null, packetBuffer.readBlockPos());
 

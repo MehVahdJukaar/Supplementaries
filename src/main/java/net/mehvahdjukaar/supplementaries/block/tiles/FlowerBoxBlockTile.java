@@ -97,7 +97,6 @@ public class FlowerBoxBlockTile extends ItemDisplayTile {
 
     @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
-
         return this.getItem(index).isEmpty() && stack.getItem().is(ModTags.FLOWER_BOX_PLANTABLE) ;
     }
 

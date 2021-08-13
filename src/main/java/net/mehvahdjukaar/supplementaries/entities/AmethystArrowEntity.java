@@ -14,7 +14,6 @@ import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
@@ -80,28 +79,31 @@ public class AmethystArrowEntity extends AbstractArrowEntity {
     @Override
     protected void onHit(RayTraceResult hit) {
         super.onHit(hit);
+        double x = this.getX();
+        double y = this.getY();
+        double z = this.getZ();
         if(this.level.isClientSide){
-            double x = this.getX();
-            double y = this.getY();
-            double z = this.getZ();
-
             for(int l2 = 0; l2 < 8; ++l2) {
                 this.level.addParticle(new ItemParticleData(ParticleTypes.ITEM, new ItemStack(Registry.AMETHYST_ARROW_ITEM.get())), x, y, z, random.nextGaussian() * 0.1D, random.nextDouble() * 0.15D, random.nextGaussian() * 0.1D);
             }
-
-            for(float d22 = 0; d22 < (Math.PI * 2D); d22 += 0.15707963267948966F) {
-                Vector3d v = new Vector3d(0.45,0,0);
-                v = v.yRot(d22+random.nextFloat()*0.3f);
-                v = v.zRot((random.nextFloat()-0.5f)*1.1f);
-                this.level.addParticle(new ItemParticleData(ParticleTypes.ITEM, new ItemStack(Registry.STICK_BLOCK.get())), x, y, z, v.x, v.y, v.z);
-                //this.level.addParticle(ParticleTypes.SPIT, x, y, z, Math.cos(d22) * -10.0D, 0.0D, Math.sin(d22) * -10.0D);
-            }
         }
         else {
+            for(float d22 = 0; d22 < (Math.PI * 2D); d22 += Math.PI/3.5F) {
+                Vector3d v = new Vector3d(0.45,0,0);
+                v = v.yRot(d22+random.nextFloat()*0.2f);
+                v = v.zRot(0.2f); //+(random.nextFloat()-0.5f)*1.1f
+                ShardProjectileEntity shard = new ShardProjectileEntity(level, (LivingEntity) this.getOwner(),
+                        x, y, z, 0*v.x, 0*v.y, 0*v.z);
+                level.addFreshEntity(shard);
+                //this.level.addParticle(new ItemParticleData(ParticleTypes.ITEM, new ItemStack(Registry.STICK_BLOCK.get())),
+                        //x, y, z, v.x, v.y, v.z);
+                //this.level.addParticle(ParticleTypes.SPIT, x, y, z, Math.cos(d22) * -10.0D, 0.0D, Math.sin(d22) * -10.0D);
+            }
+
             this.playSound(SoundEvents.ENDER_EYE_DEATH, 1.1F, 1.9F);
-            this.applySplash(hit.getType() == RayTraceResult.Type.ENTITY ? ((EntityRayTraceResult) hit).getEntity() : null);
+            //this.applySplash(hit.getType() == RayTraceResult.Type.ENTITY ? ((EntityRayTraceResult) hit).getEntity() : null);
         }
-        this.remove();
+        //this.remove();
     }
 
     private void applySplash(@Nullable Entity target) {

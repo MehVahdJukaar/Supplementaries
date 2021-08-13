@@ -5,6 +5,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.mehvahdjukaar.supplementaries.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.inventories.PresentContainer;
+import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.network.UpdateServerPresentPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.DialogTexts;
 import net.minecraft.client.gui.ScreenManager;
@@ -199,6 +201,8 @@ public class PresentBlockGui extends ContainerScreen<PresentContainer> implement
     public void removed() {
         super.removed();
         Minecraft.getInstance().keyboardHandler.setSendRepeatsToGui(false);
+        NetworkHandler.INSTANCE.sendToServer(new UpdateServerPresentPacket(this.tile.getBlockPos(),
+                !this.packButton.active, this.recipient.getValue(), this.sender.getValue()));
     }
 
     public class PackButton extends AbstractButton {

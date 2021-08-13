@@ -35,6 +35,11 @@ public class StatueBlockTile extends ItemDisplayTile {
     }
 
     @Override
+    public double getViewDistance() {
+        return 60;
+    }
+
+    @Override
     public void setChanged() {
         super.setChanged();
     }

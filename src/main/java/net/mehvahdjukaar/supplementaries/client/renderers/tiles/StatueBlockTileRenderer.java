@@ -73,8 +73,8 @@ public class StatueBlockTileRenderer extends TileEntityRenderer<StatueBlockTile>
         GameProfile playerInfo = tile.playerProfile;
         ResourceLocation resourceLocation = tile.playerProfile ==null ? Textures.STATUE : getSkin(playerInfo);
         matrixStackIn.translate(0.5,0.5,0.5);
-        Direction d = tile.getDirection();
-        matrixStackIn.mulPose(d.getRotation());
+        Direction dir = tile.getDirection();
+        matrixStackIn.mulPose(Const.rot(dir));
         matrixStackIn.mulPose(Const.X90);
 
         matrixStackIn.translate(0,-0.25,0);
@@ -88,7 +88,7 @@ public class StatueBlockTileRenderer extends TileEntityRenderer<StatueBlockTile>
             matrixStackIn.scale(0.5f,+0.499f,0.5f);
             IVertexBuilder ivertexbuilder = bufferIn.getBuffer(renderType);
 
-            this.model.setupAnim(tile.getLevel().getGameTime(),partialTicks, d, tile.pose, tile.isWaving, slim);
+            this.model.setupAnim(tile.getLevel().getGameTime(),partialTicks, dir, tile.pose, tile.isWaving, slim);
             this.model.renderToBuffer(matrixStackIn, ivertexbuilder, combinedLightIn, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F,   1.0F);
             matrixStackIn.popPose();
         }

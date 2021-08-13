@@ -30,7 +30,7 @@ public class CageBlockTileRenderer<T extends TileEntity & IMobHolder> extends Ti
             float s = mobHolder.scale;
 
             matrixStackIn.translate(0.5, y,0.5);
-            matrixStackIn.mulPose(dir.getRotation());
+            matrixStackIn.mulPose(Const.rot(dir));
             matrixStackIn.mulPose(Const.XN90);
             matrixStackIn.scale(s,s,s);
             entityRenderer.render(mob, 0.0D, 0.0D, 0.0D, 0.0F, partialTicks, matrixStackIn, bufferIn, combinedLightIn);

@@ -232,7 +232,7 @@ public class ServerEvents {
                         double y = event.getHitVec().getLocation().y() % 1;
                         if (y < 0.5) return;
                     }
-                    result = paceBlockOverride(Registry.WALL_LANTERN_ITEM.get(), player, hand, bi, pos, dir, world);
+                    //result = paceBlockOverride(Registry.WALL_LANTERN_ITEM.get(), player, hand, bi, pos, dir, world);
                 }
                 //hanging pot
                 else if (ServerConfigs.cached.HANGING_POT_PLACEMENT && CommonUtil.isPot(bi)) {

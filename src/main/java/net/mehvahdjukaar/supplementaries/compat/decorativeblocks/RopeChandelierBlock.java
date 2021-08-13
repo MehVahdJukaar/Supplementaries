@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.compat.decorativeblocks;
 
 import com.lilypuree.decorative_blocks.blocks.ChandelierBlock;
-import com.lilypuree.decorative_blocks.setup.Registration;
 import net.mehvahdjukaar.supplementaries.block.blocks.RopeBlock;
+import net.mehvahdjukaar.supplementaries.compat.CompatObjects;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
@@ -22,13 +22,19 @@ import java.util.Random;
 import java.util.function.Supplier;
 
 public class RopeChandelierBlock extends ChandelierBlock {
-    private final Block mimic;
+    private final Supplier<Block> mimic;
     private final Lazy<BlockState> defMimic;
     protected final Lazy<BasicParticleType> particleData;
-    public RopeChandelierBlock(Properties properties, Block chandelier, Supplier<BasicParticleType> particleData) {
-        super(properties, chandelier==Registration.SOUL_CHANDELIER.get());
-        mimic = chandelier;
-        defMimic = Lazy.of(()->this.mimic.defaultBlockState());
+    public RopeChandelierBlock(Properties properties,  Supplier<Block> chandelier, Supplier<BasicParticleType> particleData) {
+        super(properties, chandelier==CompatObjects.SOUL_CHANDELIER);
+        /*
+        this.mimic = Lazy.of(()->{
+            Block data = chandelier.get();
+            if(data==null)data = Registration.CHANDELIER.get();
+            return data;
+        });*/
+        this.mimic = chandelier;
+        defMimic = Lazy.of(()->this.mimic.get().defaultBlockState());
 
         this.particleData = Lazy.of(()->{
             BasicParticleType data = particleData.get();
@@ -39,17 +45,17 @@ public class RopeChandelierBlock extends ChandelierBlock {
 
     @Override
     public IFormattableTextComponent getName() {
-        return mimic.getName();
+        return mimic.get().getName();
     }
 
     @Override
     public ItemStack getCloneItemStack(IBlockReader reader, BlockPos pos, BlockState state) {
-        return mimic.getCloneItemStack(reader,pos,defMimic.get());
+        return mimic.get().getCloneItemStack(reader,pos,defMimic.get());
     }
 
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
-        return mimic.getDrops(defMimic.get(), builder);
+        return mimic.get().getDrops(defMimic.get(), builder);
     }
 
     @Override
@@ -80,18 +86,18 @@ public class RopeChandelierBlock extends ChandelierBlock {
     }
 
     public static void tryConverting(BlockState state, IWorld world, BlockPos pos){
-        String name = state.getBlock().getRegistryName().toString();
-        switch (name) {
-            case "decorative_blocks:chandelier":
-                world.setBlock(pos, DecoBlocksCompatRegistry.CHANDELIER_ROPE.defaultBlockState(), 3);
-                break;
-            case "decorative_blocks:soul_chandelier":
-                world.setBlock(pos, DecoBlocksCompatRegistry.SOUL_CHANDELIER_ROPE.defaultBlockState(), 3);
-                break;
-            case "decorative_blocks_abnormals:ender_chandelier":
-                world.setBlock(pos,DecoBlocksCompatRegistry.getEnderRopeChandelier()
-                        .defaultBlockState(), 3);
-                break;
+        Block b = state.getBlock();
+        if(b == CompatObjects.CHANDELIER.get()){
+            world.setBlock(pos, DecoBlocksCompatRegistry.CHANDELIER_ROPE.defaultBlockState(), 3);
+        }
+        else if(b == CompatObjects.SOUL_CHANDELIER.get()){
+            world.setBlock(pos, DecoBlocksCompatRegistry.SOUL_CHANDELIER_ROPE.defaultBlockState(), 3);
+        }
+        else if(b == CompatObjects.ENDER_CHANDELIER.get()){
+            world.setBlock(pos, DecoBlocksCompatRegistry.ENDER_CHANDELIER_ROPE.defaultBlockState(), 3);
+        }
+        else if(b == CompatObjects.GLOW_CHANDELIER.get()){
+            world.setBlock(pos, DecoBlocksCompatRegistry.GLOW_CHANDELIER_ROPE.defaultBlockState(), 3);
         }
     }
 }

@@ -13,6 +13,7 @@ import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.monster.SlimeEntity;
 import net.minecraft.entity.monster.piglin.PiglinEntity;
+import net.minecraft.entity.passive.BeeEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -60,6 +61,10 @@ public class EmptyCageItem extends BlockItem {
         EntityType<?> type = entity.getType();
         String name = type.getRegistryName().toString();
         if(ServerConfigs.cached.CAGE_ALL_MOBS || CapturedMobsHelper.COMMAND_MOBS.contains(name)) {
+            canBeCaught = true;
+        }
+        //hardcoding bees to work with resourceful bees
+        else if(entity instanceof BeeEntity){
             canBeCaught = true;
         }
         else{

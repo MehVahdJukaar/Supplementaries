@@ -118,7 +118,7 @@ public class CageItem extends BlockItem {
                 if (!player.isCreative()) {
                     ItemStack returnItem = new ItemStack(empty.get());
                     if (stack.hasCustomHoverName()) returnItem.setHoverName(stack.getHoverName());
-                    Utils.swapItem(player,context.getHand(),stack,new ItemStack(empty.get()));
+                    Utils.swapItemNBT(player, context.getHand(), stack, new ItemStack(empty.get()));
                 }
                 return ActionResultType.sidedSuccess(world.isClientSide);
             }

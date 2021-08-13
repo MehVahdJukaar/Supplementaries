@@ -45,7 +45,10 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
@@ -152,7 +155,7 @@ public class Registry {
     }
 
     //paintings
-    public static final RegistryObject<PaintingType> BOMB_PAINTING = PAINTINGS.register("bombs", () -> new PaintingType(32,32));
+    //public static final RegistryObject<PaintingType> BOMB_PAINTING = PAINTINGS.register("bombs", () -> new PaintingType(32,32));
 
     //particles
     public static final RegistryObject<BasicParticleType> FIREFLY_GLOW = regParticle("firefly_glow");

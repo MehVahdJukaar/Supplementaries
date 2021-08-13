@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.mehvahdjukaar.supplementaries.block.tiles.LaserBlockTile;
+import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.minecraft.client.Minecraft;
@@ -47,7 +48,7 @@ public class LaserBlockTileRenderer extends TileEntityRenderer<LaserBlockTile> {
                 pitch = -90f;
             matrixStackIn.pushPose();
             matrixStackIn.translate(0.5, 0.5, 0.5);
-            matrixStackIn.mulPose(dir.getRotation());
+            matrixStackIn.mulPose(Const.rot(dir));
             matrixStackIn.translate(0, -0.5, 0);
             int j = 240;
             int k = combinedLightIn >> 16 & 255;

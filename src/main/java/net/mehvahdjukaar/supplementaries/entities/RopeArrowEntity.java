@@ -40,6 +40,11 @@ public class RopeArrowEntity extends AbstractArrowEntity {
         this.charges = charges;
     }
 
+    public RopeArrowEntity(World worldIn, double x, double y, double z, int charges) {
+        super(Registry.ROPE_ARROW.get(), x, y, z, worldIn);
+        this.charges = charges;
+    }
+
     public RopeArrowEntity(World worldIn, double x, double y, double z) {
         super(Registry.ROPE_ARROW.get(), x, y, z, worldIn);
     }

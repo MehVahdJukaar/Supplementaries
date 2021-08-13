@@ -23,6 +23,7 @@ import net.minecraft.world.gen.feature.structure.StructureStart;
 import net.minecraft.world.gen.feature.structure.VillageConfig;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 import net.minecraft.world.gen.settings.StructureSeparationSettings;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Set;
 import java.util.TreeSet;
@@ -142,8 +143,7 @@ public class WaySignStructure extends Structure<NoFeatureConfig> {
 
     @Override
     public String getFeatureName() {
-        return super.getFeatureName();
-
+        return ForgeRegistries.STRUCTURE_FEATURES.getKey(this).toString();
     }
 
     /**

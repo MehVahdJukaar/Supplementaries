@@ -8,8 +8,11 @@ public class DecoBlocksCompatClient {
     public static void registerRenderLayers(){
         RenderTypeLookup.setRenderLayer(DecoBlocksCompatRegistry.CHANDELIER_ROPE, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(DecoBlocksCompatRegistry.SOUL_CHANDELIER_ROPE, RenderType.cutout());
-        if(CompatHandler.endergetic){
-            RenderTypeLookup.setRenderLayer(DecoBlocksCompatRegistry.getEnderRopeChandelier(), RenderType.cutout());
+        if(CompatHandler.deco_blocks_abnormals){
+            RenderTypeLookup.setRenderLayer(DecoBlocksCompatRegistry.ENDER_CHANDELIER_ROPE, RenderType.cutout());
+        }
+        if(CompatHandler.much_more_mod_compat){
+            RenderTypeLookup.setRenderLayer(DecoBlocksCompatRegistry.GLOW_CHANDELIER_ROPE, RenderType.cutout());
         }
     }
 }

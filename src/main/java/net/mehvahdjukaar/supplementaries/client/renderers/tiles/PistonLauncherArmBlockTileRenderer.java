@@ -30,7 +30,7 @@ public class PistonLauncherArmBlockTileRenderer extends TileEntityRenderer<Pisto
                        int combinedOverlayIn) {
         matrixStackIn.pushPose();
         matrixStackIn.translate(0.5, 0.5, 0.5);
-        matrixStackIn.mulPose(tile.getDirection().getOpposite().getRotation());
+        matrixStackIn.mulPose(Const.rot(tile.getDirection().getOpposite()));
         matrixStackIn.mulPose(Const.X180);
         matrixStackIn.translate(-0.5, -0.5, -0.5);
         matrixStackIn.translate(0, MathHelper.lerp(partialTicks, tile.prevOffset, tile.offset), 0);

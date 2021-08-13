@@ -85,15 +85,16 @@ public class PresentBlock extends WaterBlock {
             TileEntity tileentity = worldIn.getBlockEntity(pos);
             if (tileentity instanceof PresentBlockTile) {
 
-                NetworkHooks.openGui((ServerPlayerEntity) player, (INamedContainerProvider) tileentity, tileentity.getBlockPos());
-                //player.openMenu((INamedContainerProvider) tileentity);
-                PiglinTasks.angerNearbyPiglins(player, true);
+                if (((PresentBlockTile) tileentity).isUnused()) {
+                    NetworkHooks.openGui((ServerPlayerEntity) player, (INamedContainerProvider) tileentity, tileentity.getBlockPos());
+                    //player.openMenu((INamedContainerProvider) tileentity);
+                    PiglinTasks.angerNearbyPiglins(player, true);
 
-                return ActionResultType.CONSUME;
-            } else {
-                return ActionResultType.PASS;
+                    return ActionResultType.CONSUME;
+                }
             }
         }
+        return ActionResultType.PASS;
     }
 
 

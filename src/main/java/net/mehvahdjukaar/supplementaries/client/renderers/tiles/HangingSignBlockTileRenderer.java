@@ -57,7 +57,7 @@ public class HangingSignBlockTileRenderer extends TileEntityRenderer<HangingSign
         //rotate towards direction
         if(tile.getBlockState().getValue(HangingSignBlock.HANGING))matrixStackIn.translate(0,0.125, 0);
         matrixStackIn.translate(0.5, 0.875, 0.5);
-        matrixStackIn.mulPose(tile.getDirection().getOpposite().getRotation());
+        matrixStackIn.mulPose(Const.rot(tile.getDirection().getOpposite()));
         matrixStackIn.mulPose(Const.XN90);
 
         LOD lod = new LOD(this.renderer,tile.getBlockPos());

@@ -109,5 +109,6 @@ public class BambooSpikesTippedItem extends BlockItem implements IWaterLoggable 
 
         //return new TranslationTextComponent("item.supplementaries.bamboo_spikes_tipped_effect",
         //        TextUtil.format(PotionUtils.getPotionTypeFromNBT(stack.getChildTag("BlockEntityTag")).getNamePrefixed("")));
+
     }
 }

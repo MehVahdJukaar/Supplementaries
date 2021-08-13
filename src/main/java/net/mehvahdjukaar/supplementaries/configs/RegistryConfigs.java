@@ -98,6 +98,7 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue STICK_ENABLED;
         public static ForgeConfigSpec.BooleanValue ROD_ENABLED;
         public static ForgeConfigSpec.BooleanValue DAUB_ENABLED;
+        public static ForgeConfigSpec.BooleanValue WATTLE_AND_DAUB_ENABLED;
         public static ForgeConfigSpec.BooleanValue TIMBER_FRAME_ENABLED;
         public static ForgeConfigSpec.BooleanValue TILE_ENABLED;
         public static ForgeConfigSpec.BooleanValue GOBLET_ENABLED;
@@ -226,6 +227,7 @@ public class RegistryConfigs {
             STICK_ENABLED = builder.define(Registry.STICK_NAME,true);
             ROD_ENABLED = builder.define(Registry.BLAZE_ROD_NAME,true);
             DAUB_ENABLED = builder.define(Registry.DAUB_NAME,true);
+            WATTLE_AND_DAUB_ENABLED = builder.define("wattle_and_daub",true);
             TIMBER_FRAME_ENABLED = builder.define(Registry.TIMBER_FRAME_NAME,true);
             FLAG_ENABLED = builder.define(Registry.FLAG_NAME+"s", true);
             TILE_ENABLED = builder.define(Registry.STONE_TILE_NAME,true);
@@ -235,7 +237,7 @@ public class RegistryConfigs {
             IRON_GATE_ENABLED = builder.define(Registry.IRON_GATE_NAME, true);
 
             AMETHYST_ARROW_ENABLED = builder.comment("WIP").define(Registry.AMETHYST_ARROW_NAME,true);
-            //PRESENT_ENABLED = builder.define(Registry.PRESENT_NAME,true);
+            PRESENT_ENABLED = builder.define(Registry.PRESENT_NAME,true);
 
 
             LASER_ENABLED = builder.comment("WIP")

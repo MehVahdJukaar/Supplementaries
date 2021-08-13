@@ -2,10 +2,10 @@
 	"parent": "block/block",
 	"credit": "Made with Blockbench",
 	"textures": {
-		"bottom": "supplementaries:blocks/presents/present_bottom_white",
-		"top": "supplementaries:blocks/presents/present_top_white",
-		"particle": "supplementaries:blocks/presents/present_side_white",
-		"side": "supplementaries:blocks/presents/present_side_white"
+		"bottom": "supplementaries:blocks/presents/present_bottom",
+		"top": "supplementaries:blocks/presents/present_top",
+		"particle": "supplementaries:blocks/presents/present_side",
+		"side": "supplementaries:blocks/presents/present_side"
 	},
 	"elements": [
 		{

@@ -228,6 +228,9 @@
   "block.supplementaries.laser_block": "Ender Beamer",
 
 
+  "block.supplementaries.hanging_sign_bamboo": "Bamboo Hanging Sign",
+  "item.supplementaries.hanging_sign_bamboo": "Bamboo Hanging Sign",
+  "item.supplementaries.sign_post_bamboo": "Bamboo Sign Post",
 
   "block.supplementaries.hanging_sign_cherry_bop": "Cherry Hanging Sign",
   "block.supplementaries.hanging_sign_dead_bop": "Dead Hanging Sign",

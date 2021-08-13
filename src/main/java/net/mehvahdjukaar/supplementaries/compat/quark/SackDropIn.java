@@ -36,7 +36,6 @@ public class SackDropIn extends AbstractDropIn {
         this.tryAddToShulkerBox(stack, incoming, false);
         return stack;
     }
-
     public boolean canDropItemIn(PlayerEntity player, ItemStack stack, ItemStack incoming, Slot slot) {
         return canDropItemIn(player,stack,incoming);
     }

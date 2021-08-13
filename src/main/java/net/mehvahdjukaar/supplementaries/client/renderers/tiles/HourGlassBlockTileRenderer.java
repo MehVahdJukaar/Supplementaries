@@ -4,6 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.mehvahdjukaar.supplementaries.block.blocks.HourGlassBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.HourGlassBlockTile;
+import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.client.renderers.HSLColor;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
@@ -41,7 +42,7 @@ public class HourGlassBlockTileRenderer extends TileEntityRenderer<HourGlassBloc
 
         matrixStackIn.pushPose();
         matrixStackIn.translate(0.5,0.5,0.5);
-        Quaternion q = dir.getRotation();
+        Quaternion q = Const.rot(dir);
         matrixStackIn.mulPose(q);
 
         q.conj();

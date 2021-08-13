@@ -23,10 +23,10 @@ import java.util.Objects;
 public abstract class MimicBlockTile extends TileEntity implements IBlockHolder {
 
     public BlockState mimic = Blocks.AIR.defaultBlockState();
-    //is holding a framed fence
-    public boolean framed = false;
-
     public static final ModelProperty<BlockState> MIMIC = BlockProperties.MIMIC;
+
+    //is holding a framed fence (for framed blocks mod compat)
+    public boolean framed = false;
     public static final ModelProperty<Boolean> FRAMED = BlockProperties.FRAMED;
 
     public MimicBlockTile(TileEntityType<?> type) {
@@ -76,7 +76,7 @@ public abstract class MimicBlockTile extends TileEntity implements IBlockHolder 
         CompoundNBT tag = pkt.getTag();
         handleUpdateTag(this.getBlockState(), tag);
         if (!Objects.equals(oldMimic, this.mimic)) {
-            //not needed cause model data doesn't create new obj. updating old one insead
+            //not needed cause model data doesn't create new obj. updating old one instead
             ModelDataManager.requestModelDataRefresh(this);
             //this.data.setData(MIMIC, this.getHeldBlock());
             this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);

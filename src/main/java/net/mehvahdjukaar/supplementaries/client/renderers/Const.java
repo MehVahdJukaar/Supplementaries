@@ -1,7 +1,14 @@
 package net.mehvahdjukaar.supplementaries.client.renderers;
 
+import com.google.common.base.Functions;
+import com.google.common.collect.Maps;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
+
+import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Const {
 
@@ -24,4 +31,12 @@ public class Const {
     public static final Quaternion ZN45 = Vector3f.ZP.rotationDegrees(-45);
     public static final Quaternion ZN90 = Vector3f.ZP.rotationDegrees(-90);
     public static final Quaternion ZN180 = Vector3f.ZP.rotationDegrees(-180);
+
+    public static final Map<Direction, Quaternion> DIR2ROT = Maps.newEnumMap((Map<Direction, Quaternion>) Arrays.stream(Direction.values())
+            .collect(Collectors.toMap(Functions.identity(), Direction::getRotation)));
+
+    public static Quaternion rot(Direction dir){
+        return DIR2ROT.get(dir);
+    }
+
 }

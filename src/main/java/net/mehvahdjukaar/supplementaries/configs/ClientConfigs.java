@@ -96,8 +96,7 @@ public class ClientConfigs {
         public static ForgeConfigSpec.DoubleValue FLAG_AMPLITUDE_INCREMENT;
         public static ForgeConfigSpec.ConfigValue<List<? extends List<String>>> CAPTURED_MOBS_PROPERTIES;
 
-
-        //is there a way to store more complicated data structures inside Forge configs. For example I would like to store a list containing many lists made up of lets say a string and an int value
+        public static ForgeConfigSpec.BooleanValue FAST_LANTERNS;
 
         private static void init(ForgeConfigSpec.Builder builder) {
 
@@ -216,6 +215,11 @@ public class ClientConfigs {
                     .defineList("rendering_parameters", CapturedMobsHelper.DEFAULT_CONFIG, s->true);
             builder.pop();
 
+            builder.push("wall_lantern");
+            FAST_LANTERNS = builder.comment("Makes wall lantern use a simple block model instead of the animated tile entity renderer. This will make them render much faster but will also remove the animation. Needs texture pack reload")
+                            .define("fast_lanterns", false);
+            builder.pop();
+
             builder.pop();
         }
     }
@@ -291,6 +295,8 @@ public class ClientConfigs {
         public static double FLAG_AMPLITUDE;
         public static double FLAG_AMPLITUDE_INCREMENT;
         public static GraphicsFanciness FLAG_FANCINESS;
+        public static boolean FAST_LANTERNS;
+
 
         public static void refresh(){
             //tweaks
@@ -325,6 +331,7 @@ public class ClientConfigs {
             FLAG_PERIOD = block.FLAG_PERIOD.get();
             FLAG_WAVELENGTH = block.FLAG_WAVELENGTH.get();
             FLAG_FANCINESS = block.FLAG_FANCINESS.get();
+            FAST_LANTERNS = block.FAST_LANTERNS.get();
 
             CapturedMobsHelper.refresh();
             GlobeTextureManager.GlobeColors.refreshColorsFromConfig();

@@ -56,6 +56,7 @@ public class BlockProperties {
 
     //model properties
     public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
+    public static final ModelProperty<Boolean> FANCY = new ModelProperty<>();
     public static final ModelProperty<Boolean> FRAMED = new ModelProperty<>();
 
     public enum RopeAttachment implements IStringSerializable{

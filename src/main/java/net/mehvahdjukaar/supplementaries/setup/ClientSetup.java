@@ -1,13 +1,11 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.client.gui.NoticeBoardGui;
-import net.mehvahdjukaar.supplementaries.client.gui.OrangeMerchantGui;
-import net.mehvahdjukaar.supplementaries.client.gui.PulleyBlockGui;
-import net.mehvahdjukaar.supplementaries.client.gui.SackGui;
+import net.mehvahdjukaar.supplementaries.client.gui.*;
 import net.mehvahdjukaar.supplementaries.client.models.FrameBlockLoader;
 import net.mehvahdjukaar.supplementaries.client.models.RopeKnotBlockLoader;
 import net.mehvahdjukaar.supplementaries.client.models.SignPostBlockLoader;
+import net.mehvahdjukaar.supplementaries.client.models.WallLanternLoader;
 import net.mehvahdjukaar.supplementaries.client.particles.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.*;
@@ -69,19 +67,24 @@ import java.util.Map;
 public class ClientSetup {
 
 
-    //TODO: figure out why this is making everything crash without ONLY in
-    //TODO: remove this onlyIn
     @OnlyIn(Dist.CLIENT)
     public static void onlyClientPls(final FMLClientSetupEvent event) {
 
+        //projectiles
         ItemRenderer itemRenderer = event.getMinecraftSupplier().get().getItemRenderer();
+
         RenderingRegistry.registerEntityRenderingHandler(Registry.BOMB.get(),
                 renderManager -> new SpriteRenderer<>(renderManager, itemRenderer));
         RenderingRegistry.registerEntityRenderingHandler(Registry.THROWABLE_BRICK.get(),
                 renderManager -> new SpriteRenderer<>(renderManager, itemRenderer));
+        RenderingRegistry.registerEntityRenderingHandler(Registry.AMETHYST_SHARD.get(),
+                renderManager -> new SpriteRenderer<>(renderManager, itemRenderer));
+        RenderingRegistry.registerEntityRenderingHandler(Registry.FLINT_SHARD.get(),
+                renderManager -> new SpriteRenderer<>(renderManager, itemRenderer));
         RenderingRegistry.registerEntityRenderingHandler(Registry.LABEL.get(),
                 renderManager -> new LabelEntityRenderer(renderManager, itemRenderer));
     }
+
 
     public static void init(final FMLClientSetupEvent event) {
 
@@ -94,7 +97,6 @@ public class ClientSetup {
             }catch (Exception e){ Supplementaries.LOGGER.warn("Failed to register custom configured screen: "+e);}
         }
 
-        //throwable brick
         onlyClientPls(event);
 
         //map markers
@@ -245,7 +247,7 @@ public class ClientSetup {
         //cracked bell
         ClientRegistry.bindTileEntityRenderer(Registry.CRACKED_BELL_TILE.get(), CrackedBellTileEntityRenderer::new);
         //present
-        //ScreenManager.register(Registry.PRESENT_BLOCK_CONTAINER.get(), PresentBlockGui.GUI_FACTORY);
+        ScreenManager.register(Registry.PRESENT_BLOCK_CONTAINER.get(), PresentBlockGui.GUI_FACTORY);
 
 
         ItemModelsProperties.register(Items.CROSSBOW, new ResourceLocation("rope_arrow"),
@@ -254,6 +256,9 @@ public class ClientSetup {
         ItemModelsProperties.register(Items.CROSSBOW, new ResourceLocation("amethyst_arrow"),
                 (stack, world, entity) -> entity != null && CrossbowItem.isCharged(stack) && CrossbowItem.containsChargedProjectile(stack, Registry.AMETHYST_ARROW_ITEM.get()) ? 1.0F : 0.0F);
 
+        //Registry.PRESENTS_ITEMS.values().forEach(i ->
+         //       ItemModelsProperties.register(i.get(), new ResourceLocation("packed"),
+        //                (stack, world, entity) -> PresentBlockTile.isPacked(stack) ? 1.0F : 0.0F));
 
         //ItemModelsProperties.register(Registry.SPEEDOMETER_ITEM.get(), new ResourceLocation("speed"),
         //        new SpeedometerItem.SpeedometerItemProperty());
@@ -285,7 +290,8 @@ public class ClientSetup {
         colors.register(new TippedSpikesColor(), Registry.BAMBOO_SPIKES.get());
         colors.register(new DefWaterColor(), Registry.JAR_BOAT.get());
         colors.register(new BrewingStandColor(), Blocks.BREWING_STAND);
-        colors.register(new MimicBlockColor(), Registry.SIGN_POST.get(), Registry.TIMBER_BRACE.get(),Registry.TIMBER_FRAME.get(),Registry.TIMBER_CROSS_BRACE.get());
+        colors.register(new MimicBlockColor(), Registry.SIGN_POST.get(), Registry.TIMBER_BRACE.get(), Registry.TIMBER_FRAME.get(),
+                Registry.TIMBER_CROSS_BRACE.get(), Registry.WALL_LANTERN.get());
         colors.register(new CogBlockColor(),Registry.COG_BLOCK.get());
 
     }
@@ -336,6 +342,8 @@ public class ClientSetup {
         ModelLoaderRegistry.registerLoader(new ResourceLocation(Supplementaries.MOD_ID, "frame_block_loader"), new FrameBlockLoader());
         ModelLoaderRegistry.registerLoader(new ResourceLocation(Supplementaries.MOD_ID, "mimic_block_loader"), new SignPostBlockLoader());
         ModelLoaderRegistry.registerLoader(new ResourceLocation(Supplementaries.MOD_ID, "rope_knot_loader"), new RopeKnotBlockLoader());
+        ModelLoaderRegistry.registerLoader(new ResourceLocation(Supplementaries.MOD_ID, "wall_lantern_loader"), new WallLanternLoader());
+
 
         //ModelLoaderRegistry.registerLoader(new ResourceLocation(Supplementaries.MOD_ID, "blackboard_loader"), new BlackboardBlockLoader());
 

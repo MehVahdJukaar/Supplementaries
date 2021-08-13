@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.compat;
 
-import net.mehvahdjukaar.supplementaries.compat.create.SupplementariesCreatePlugin;
+
 import net.mehvahdjukaar.supplementaries.compat.decorativeblocks.DecoBlocksCompatRegistry;
 import net.mehvahdjukaar.supplementaries.compat.farmersdelight.FDCompatRegistry;
 import net.mehvahdjukaar.supplementaries.compat.inspirations.CauldronRecipes;
@@ -11,6 +11,7 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.ModList;
 
 public class CompatHandler {
+
     public static final boolean quark;
     public static final boolean deco_blocks;
     public static final boolean configured;
@@ -23,6 +24,9 @@ public class CompatHandler {
     public static final boolean framedblocks;
     public static final boolean rgblib;
     public static final boolean endergetic;
+    public static final boolean deco_blocks_abnormals;
+    public static final boolean much_more_mod_compat;
+
 
     static {
         ModList ml = ModList.get();
@@ -38,10 +42,12 @@ public class CompatHandler {
         framedblocks = ml.isLoaded("framedblocks");
         rgblib = ml.isLoaded("rgblib");
         endergetic = ml.isLoaded("endergetic");
+        deco_blocks_abnormals = ml.isLoaded("decorative_blocks_abnormals");
+        much_more_mod_compat = ml.isLoaded("muchmoremodcompat");
     }
 
     public static void init(){
-        if (create) SupplementariesCreatePlugin.initialize();
+        //if (create) SupplementariesCreatePlugin.initialize();
     }
 
     public static void registerOptionalBlocks(final RegistryEvent.Register<Block> event){

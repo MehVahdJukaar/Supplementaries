@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 
+import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
@@ -43,6 +44,18 @@ public abstract class GrindstoneContainerMixin extends Container {
             int count = stack1.getCount() + stack2.getCount();
             if (count <= Items.GOLDEN_APPLE.getMaxStackSize()) {
                 this.resultSlots.setItem(0, new ItemStack(Items.GOLDEN_APPLE, count));
+                this.broadcastChanges();
+                ci.cancel();
+            }
+        }
+
+        boolean bomb1 = stack1.getItem() == Registry.BOMB_BLUE_ITEM.get();
+        boolean bomb2 = stack2.getItem() == Registry.BOMB_BLUE_ITEM.get();
+
+        if((bomb1 && stack2.isEmpty()) || (bomb2 && stack1.isEmpty()) || (bomb1 && bomb2)) {
+            int count = stack1.getCount() + stack2.getCount();
+            if (count <= Registry.BOMB_BLUE_ITEM.get().getMaxStackSize()) {
+                this.resultSlots.setItem(0, new ItemStack(Registry.BOMB_ITEM.get(), count));
                 this.broadcastChanges();
                 ci.cancel();
             }

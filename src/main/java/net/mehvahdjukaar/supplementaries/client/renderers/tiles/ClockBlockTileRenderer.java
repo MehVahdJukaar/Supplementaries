@@ -41,7 +41,7 @@ public class ClockBlockTileRenderer extends TileEntityRenderer<ClockBlockTile> {
 
         matrixStackIn.pushPose();
         matrixStackIn.translate(0.5d, 0.5d, 0.5d);
-        matrixStackIn.mulPose(tile.getDirection().getRotation());
+        matrixStackIn.mulPose(Const.rot(tile.getDirection()));
 
         matrixStackIn.mulPose(Const.X90);
 

@@ -1,16 +1,17 @@
 package net.mehvahdjukaar.supplementaries.client.renderers;
 
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 
 public class LOD {
-    private final double dist;
+    private final double distSq;
 
     public LOD(double distance){
-        this.dist = distance;
+        this.distSq = distance;
     }
 
     public LOD(TileEntityRendererDispatcher renderer, BlockPos pos){
@@ -20,22 +21,23 @@ public class LOD {
         this(Vector3d.atCenterOf(pos).distanceToSqr(cameraPos));
     }
 
+    public boolean isOnEdge(TileEntity te){return this.distSq >(te.getViewDistance()*te.getViewDistance())-BUFFER;}
     public boolean isNear(){
-        return this.dist<NEAR_DIST;
+        return this.distSq <NEAR_DIST;
     }
     public boolean isNearMed(){
-        return this.dist<NEAR_MED_DIST;
+        return this.distSq <NEAR_MED_DIST;
     }
     public boolean isMedium(){
-        return this.dist<MEDIUM_DIST;
+        return this.distSq <MEDIUM_DIST;
     }
     public boolean isFar(){
-        return this.dist<FAR_DIST;
+        return this.distSq <FAR_DIST;
     }
 
 
-
-
+    //all squared
+    public static final int BUFFER = 2*2;
     public static final int NEAR_DIST = 32*32;
     public static final int NEAR_MED_DIST = 48*48;
     public static final int MEDIUM_DIST = 64*64;

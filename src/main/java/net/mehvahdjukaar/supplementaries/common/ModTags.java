@@ -25,8 +25,7 @@ public class ModTags {
     public static final Tags.IOptionalNamedTag<Block> WALL_LANTERNS = blockTag("wall_lanterns");
     public static final Tags.IOptionalNamedTag<Block> VINE_SUPPORT = blockTag("vine_support");
     public static final Tags.IOptionalNamedTag<Block> PANE_CONNECTION = blockTag("pane_connection");
-    public static final Tags.IOptionalNamedTag<Block> CONCRETE_POWDERS = BlockTags.createOptional(
-            new ResourceLocation("forge:concrete_powders"));
+    public static final Tags.IOptionalNamedTag<Block> CONCRETE_POWDERS = blockTag("concrete_powders");
     //item tags
     public static final Tags.IOptionalNamedTag<Item> SHULKER_BLACKLIST_TAG = itemTag("shulker_blacklist");
     public static final Tags.IOptionalNamedTag<Item> COOKIES = itemTag("cookies");

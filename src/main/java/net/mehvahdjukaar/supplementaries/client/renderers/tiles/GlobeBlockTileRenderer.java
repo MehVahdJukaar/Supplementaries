@@ -75,7 +75,7 @@ public class GlobeBlockTileRenderer extends TileEntityRenderer<GlobeBlockTile> {
 
         matrixStackIn.pushPose();
         matrixStackIn.translate(0.5,0.5,0.5);
-        matrixStackIn.mulPose(tile.getDirection().getRotation());
+        matrixStackIn.mulPose(Const.rot(tile.getDirection()));
         matrixStackIn.mulPose(Const.XN90);
         matrixStackIn.translate(0,+0.0625,0);
         matrixStackIn.mulPose(Const.XN22);

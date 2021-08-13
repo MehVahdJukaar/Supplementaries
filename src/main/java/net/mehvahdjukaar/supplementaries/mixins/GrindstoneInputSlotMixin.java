@@ -1,6 +1,8 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 
+import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,7 +16,8 @@ public abstract class GrindstoneInputSlotMixin {
 
     @Inject(method = "mayPlace(Lnet/minecraft/item/ItemStack;)Z", at = @At("HEAD"), cancellable = true)
     private void mayPlace(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
-        if (stack.getItem() == Items.ENCHANTED_GOLDEN_APPLE) {
+        Item i = stack.getItem();
+        if (i == Items.ENCHANTED_GOLDEN_APPLE || i == Registry.BOMB_BLUE_ITEM.get()) {
             cir.setReturnValue(true);
             cir.cancel();
         }

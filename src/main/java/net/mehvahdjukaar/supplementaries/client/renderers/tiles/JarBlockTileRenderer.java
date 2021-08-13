@@ -64,7 +64,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
             float scale = 8f / 14f;
             matrixStackIn.scale(scale, scale, scale);
             for (float i = 0; i < height; i ++) {
-                matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(rand.nextInt(360)));
+                matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(rand.nextInt(16)*22.5f));
                 // matrixStackIn.translate(0, 0, 0.0625);
                 matrixStackIn.translate(0, 0, 1 / (16f * scale));
                 IBakedModel ibakedmodel = itemRenderer.getModel(stack, tile.getLevel(), null);

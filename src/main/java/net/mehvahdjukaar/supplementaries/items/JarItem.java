@@ -111,4 +111,8 @@ public class JarItem extends CageItem {
         }
         return super.getRarity(stack);
     }
+
+
+
+
 }

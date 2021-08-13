@@ -23,11 +23,20 @@
           "item": "minecraft:golden_apple"
         }
       }
+    },
+    "bomb": {
+      "trigger": "minecraft:grind_item",
+      "conditions": {
+        "item": {
+          "item": "supplementaries:bomb"
+        }
+      }
     }
   },
   "requirements": [
     [
-      "apple"
+      "apple",
+      "bomb"
     ]
   ]
 }

@@ -1,4 +1,12 @@
 
 {
-  "parent": "supplementaries:block/present_opened_white"
+  "parent": "supplementaries:block/present_opened_white",
+  "overrides": [
+    {
+      "predicate": {
+        "packed": 1
+      },
+      "model":  "supplementaries:block/present_closed_white"
+    }
+  ]
 }

@@ -32,9 +32,20 @@ public class Supplementaries{
     public static ResourceLocation res(String n){
         return new ResourceLocation(MOD_ID,n);
     }
+    public static String str(String n){
+        return MOD_ID+":"+n;
+    }
 
     public Supplementaries() {
 
+        //TODO:fix fluidHolder registry access. doesnt return null but air...
+        //TODO: replace soft fluid system with forge caps to itemstacks and register actual forge fluids
+
+        //TODO: reworkd ItemDisplayTile with proper capability usage
+
+        //TODO: bugs: bell ropes, sack ender chest
+
+        //TODO: mod ideas: particle block, blackboard banners and flags, lantern holding
 
         MinecraftForge.EVENT_BUS.register(ServerEvents.class);
 

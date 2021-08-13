@@ -60,7 +60,7 @@ public class WallLanternBlock extends EnhancedLanternBlock {
     public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
         TileEntity te = world.getBlockEntity(pos);
         if (te instanceof WallLanternBlockTile) {
-            return new ItemStack(((WallLanternBlockTile) te).lanternBlock.getBlock());
+            return new ItemStack(((WallLanternBlockTile) te).mimic.getBlock());
         }
         return new ItemStack(Blocks.LANTERN, 1);
     }
@@ -83,8 +83,8 @@ public class WallLanternBlock extends EnhancedLanternBlock {
         if (te instanceof WallLanternBlockTile && ((WallLanternBlockTile) te).isRedstoneLantern) {
             if (state.getValue(LIT) && !worldIn.hasNeighborSignal(pos)) {
                 worldIn.setBlock(pos, state.cycle(LIT), 2);
-                if(((WallLanternBlockTile) te).lanternBlock.hasProperty(LIT))
-                    ((WallLanternBlockTile) te).lanternBlock = ((WallLanternBlockTile) te).lanternBlock.cycle(LIT);
+                if(((WallLanternBlockTile) te).mimic.hasProperty(LIT))
+                    ((WallLanternBlockTile) te).mimic = ((WallLanternBlockTile) te).mimic.cycle(LIT);
             }
         }
     }
@@ -101,8 +101,8 @@ public class WallLanternBlock extends EnhancedLanternBlock {
                         world.getBlockTicks().scheduleTick(pos, this, 4);
                     } else {
                         world.setBlock(pos, state.cycle(LIT), 2);
-                        if(((WallLanternBlockTile) te).lanternBlock.hasProperty(LIT))
-                            ((WallLanternBlockTile) te).lanternBlock=((WallLanternBlockTile) te).lanternBlock.cycle(LIT);
+                        if(((WallLanternBlockTile) te).mimic.hasProperty(LIT))
+                            ((WallLanternBlockTile) te).mimic =((WallLanternBlockTile) te).mimic.cycle(LIT);
                     }
                 }
             }
@@ -113,7 +113,7 @@ public class WallLanternBlock extends EnhancedLanternBlock {
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         TileEntity tileentity = builder.getOptionalParameter(LootParameters.BLOCK_ENTITY);
         if (tileentity instanceof WallLanternBlockTile){
-            return Collections.singletonList(new ItemStack(((WallLanternBlockTile) tileentity).lanternBlock.getBlock()));
+            return Collections.singletonList(new ItemStack(((WallLanternBlockTile) tileentity).mimic.getBlock()));
         }
         return super.getDrops(state,builder);
     }

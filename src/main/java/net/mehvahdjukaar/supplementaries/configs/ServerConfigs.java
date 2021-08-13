@@ -111,7 +111,6 @@ public class ServerConfigs {
         public static ForgeConfigSpec.BooleanValue CEILING_BANNERS;
         public static ForgeConfigSpec.BooleanValue ZOMBIE_HORSE;
         public static ForgeConfigSpec.IntValue ZOMBIE_HORSE_COST;
-        public static ForgeConfigSpec.BooleanValue ENCHANTMENT_BYPASS;
 
         private static void init(ForgeConfigSpec.Builder builder){
             builder.comment("Vanilla tweaks")
@@ -206,11 +205,6 @@ public class ServerConfigs {
                     .define("zombie_horse_conversion",true);
             ZOMBIE_HORSE_COST = builder.comment("Amount of rotten flesh needed")
                     .defineInRange("rotten_flesh",64,1,1000);
-            builder.pop();
-
-            builder.push("enchanting_table");
-            ENCHANTMENT_BYPASS = builder.comment("Allows enchanting table to interact with bokshelf even if they have carpets or other tagged items in the way. You can add more blocks by adding them to 'enchantment_bypass' block tag")
-                    .define("ignore_carpets",true);
             builder.pop();
 
 
@@ -558,7 +552,6 @@ public class ServerConfigs {
         public static int BOTTLING_COST;
         public static boolean MAP_MARKERS;
         public static boolean CEILING_BANNERS;
-        public static boolean ENCHANTMENT_BYPASS;
         //spawns
         public static int FIREFLY_MIN;
         public static int FIREFLY_MAX;
@@ -622,7 +615,6 @@ public class ServerConfigs {
             BELL_CHAIN_LENGTH = tweaks.BELL_CHAIN_LENGTH.get();
             MAP_MARKERS = tweaks.MAP_MARKERS.get();
             CEILING_BANNERS = tweaks.CEILING_BANNERS.get();
-            ENCHANTMENT_BYPASS = tweaks.ENCHANTMENT_BYPASS.get();
 
             ROPE_ARROW_ROPE = item.ROPE_ARROW_ROPE.get();
             ROPE_ARROW_BLOCK = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ROPE_ARROW_ROPE));

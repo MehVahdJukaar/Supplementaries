@@ -36,7 +36,7 @@ public class BlackboardBlockTileRenderer extends TileEntityRenderer<BlackboardBl
 
         matrixStackIn.pushPose();
         matrixStackIn.translate(0.5,0.5,0.5);
-        matrixStackIn.mulPose(dir.getRotation());
+        matrixStackIn.mulPose(Const.rot(dir));
         matrixStackIn.mulPose(Const.XN90);
         matrixStackIn.translate(-0.5,-0.5,-0.1875);
 

@@ -27,6 +27,7 @@ import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Direction;
@@ -80,7 +81,14 @@ public class DispenserStuff {
 
             DispenserBlock.registerBehavior(Registry.ROPE_ARROW_ITEM.get(), new ProjectileDispenseBehavior() {
                 protected ProjectileEntity getProjectile(World world, IPosition pos, ItemStack stack) {
-                    RopeArrowEntity arrow = new RopeArrowEntity(world, pos.x(), pos.y(), pos.z());
+                    CompoundNBT com = stack.getTag();
+                    int charges = stack.getMaxDamage();
+                    if(com!=null) {
+                        if (com.contains("Damage")) {
+                            charges = charges - com.getInt("Damage");
+                        }
+                    }
+                    RopeArrowEntity arrow = new RopeArrowEntity(world, pos.x(), pos.y(), pos.z(), charges);
                     arrow.pickup = AbstractArrowEntity.PickupStatus.ALLOWED;
                     return arrow;
                 }

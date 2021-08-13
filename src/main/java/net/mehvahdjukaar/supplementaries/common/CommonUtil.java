@@ -5,7 +5,7 @@ import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.VanillaWoodTypes;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
-import net.mehvahdjukaar.supplementaries.world.BombExplosion;
+
 import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -38,17 +38,17 @@ public class CommonUtil {
     public static DamageSource BOTTLING_DAMAGE = (new DamageSource("supplementaries.xp_extracting"));
     public static DamageSource AMETHYST_SHARD_DAMAGE = (new DamageSource("supplementaries.amethyst_shard"));
 
-    public static DamageSource getAmethystDamageSource(AbstractArrowEntity arrowEntity, @Nullable Entity shooter) {
-        return (new IndirectEntityDamageSource("amethyst_shard", arrowEntity, shooter)).setProjectile();
-    }
-    public static DamageSource getBombExplosionDamage(@Nullable BombExplosion p_94539_0_) {
-        return getBombExplosionDamage(p_94539_0_ != null ? p_94539_0_.getSourceMob() : null);
-    }
+    //public static DamageSource getAmethystDamageSource(AbstractArrowEntity arrowEntity, @Nullable Entity shooter) {
+    //    return (new IndirectEntityDamageSource("amethyst_shard", arrowEntity, shooter)).setProjectile();
+    //}
+    //public static DamageSource getBombExplosionDamage(@Nullable BombExplosion p_94539_0_) {
+    //    return getBombExplosionDamage(p_94539_0_ != null ? p_94539_0_.getSourceMob() : null);
+    //}
 
 
-    public static DamageSource getBombExplosionDamage(@Nullable LivingEntity p_188405_0_) {
-        return p_188405_0_ != null ? (new EntityDamageSource("explosion.player", p_188405_0_)).setScalesWithDifficulty().setExplosion() : (new DamageSource("explosion")).setScalesWithDifficulty().setExplosion();
-    }
+    //public static DamageSource getBombExplosionDamage(@Nullable LivingEntity p_188405_0_) {
+    //    return p_188405_0_ != null ? (new EntityDamageSource("explosion.player", p_188405_0_)).setScalesWithDifficulty().setExplosion() : (new DamageSource("explosion")).setScalesWithDifficulty().setExplosion();
+    //}
 
     public enum Festivity{
         NONE,

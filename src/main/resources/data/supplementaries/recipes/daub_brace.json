@@ -5,7 +5,7 @@
       "conditions": [
         {
           "type": "supplementaries:flag",
-          "flag": "daub"
+          "flag": "wattle_and_daub"
         }
       ],
       "recipe": {

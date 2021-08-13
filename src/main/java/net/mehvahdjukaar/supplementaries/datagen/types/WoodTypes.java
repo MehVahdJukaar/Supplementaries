@@ -143,6 +143,9 @@ public class WoodTypes {
         for (IWoodType w : ArsNouveauWoodType.values()){
             TYPES.put(w.toNBT(),w);
         }
+        for (IWoodType w : BambooBlocksWoodType.values()){
+            TYPES.put(w.toNBT(),w);
+        }
 
 
     }

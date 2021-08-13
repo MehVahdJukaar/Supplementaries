@@ -56,7 +56,7 @@ public class BellowsBlockTileRenderer extends TileEntityRenderer<BellowsBlockTil
         matrixStackIn.translate(0.5, 0.5, 0.5);
 
         Direction dir = tile.getDirection();
-        matrixStackIn.mulPose(dir.getOpposite().getRotation());
+        matrixStackIn.mulPose(Const.rot(dir.getOpposite()));
         matrixStackIn.mulPose(Const.XN90) ;
         matrixStackIn.mulPose(Const.Z180);
         //TODO: figure out why models are always flipped
