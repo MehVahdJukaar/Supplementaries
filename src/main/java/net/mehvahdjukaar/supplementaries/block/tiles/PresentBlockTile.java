@@ -1,8 +1,10 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
+
 import net.mehvahdjukaar.supplementaries.block.blocks.PresentBlock;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.inventories.PresentContainer;
+import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -39,21 +41,50 @@ public class PresentBlockTile extends LockableLootTileEntity implements ISidedIn
 
     private String recipient = null;
     private String sender = null;
+    private boolean packed = false;
 
 
     public PresentBlockTile() {
-        super(null);//Registry.PRESENT_TILE.get()
+        super(null);
+        //super(Registry.PRESENT_TILE.get());
     }
 
+    public boolean isUnused(){
+        return this.numPlayersUsing<=0;
+    }
 
+    public static boolean isPacked(ItemStack stack){
+        CompoundNBT com = stack.getTag();
+        if(com!=null){
+            CompoundNBT nbt = com.getCompound("BlockEntityTag");
+            if(nbt!=null){
+                return nbt.getBoolean("Packed");
+            }
+        }
+        return false;
+    }
 
     public boolean isPacked(){
-        return this.recipient != null;
+        return this.packed;
     }
 
     public void unpack(){
         this.recipient = null;
         this.sender = null;
+        this.packed = false;
+        if(!this.level.isClientSide)
+            this.level.setBlock(this.getBlockPos(), this.getBlockState().setValue(PresentBlock.OPEN, true), 3);
+    }
+
+    public void pack(String recipient, String sender, boolean doPack){
+        this.recipient = recipient;
+        this.sender = sender;
+        this.packed = doPack;
+        if(doPack && !this.level.isClientSide)
+            this.level.setBlock(this.getBlockPos(), this.getBlockState().setValue(PresentBlock.OPEN, false), 3);
+    }
+    public void pack(String recipient, String sender){
+        this.pack(recipient,sender,true);
     }
 
     @Override
@@ -74,57 +105,7 @@ public class PresentBlockTile extends LockableLootTileEntity implements ISidedIn
             }
 
             ++this.numPlayersUsing;
-            BlockState blockstate = this.getBlockState();
-            boolean flag = blockstate.getValue(PresentBlock.OPEN);
-            if (!flag) {
-                this.level.playSound(null, this.worldPosition,
-                        SoundEvents.WOOL_BREAK, SoundCategory.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.55F);
-                this.level.playSound(null, this.worldPosition,
-                        SoundEvents.LEASH_KNOT_PLACE, SoundCategory.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.7F);
-                this.level.setBlock(this.getBlockPos(), blockstate.setValue(PresentBlock.OPEN, true), 3);
-            }
-            this.level.getBlockTicks().scheduleTick(this.getBlockPos(), this.getBlockState().getBlock(), 5);
         }
-    }
-    public static int calculatePlayersUsing(World world, LockableTileEntity tile, int x, int y, int z) {
-        int i = 0;
-        for(PlayerEntity playerentity : world.getEntitiesOfClass(PlayerEntity.class, new AxisAlignedBB((float)x - 5.0F, (float)y - 5.0F, (float)z - 5.0F, (float)(x + 1) + 5.0F, (float)(y + 1) + 5.0F, (float)(z + 1) + 5.0F))) {
-            if (playerentity.containerMenu instanceof PresentContainer) {
-                IInventory iinventory = ((PresentContainer)playerentity.containerMenu).inventory;
-                if (iinventory == tile) {
-                    ++i;
-                }
-            }
-        }
-        return i;
-    }
-
-    public void barrelTick() {
-        int i = this.worldPosition.getX();
-        int j = this.worldPosition.getY();
-        int k = this.worldPosition.getZ();
-        this.numPlayersUsing = calculatePlayersUsing(this.level, this, i, j, k);
-        if (this.numPlayersUsing > 0) {
-            this.level.getBlockTicks().scheduleTick(this.getBlockPos(), this.getBlockState().getBlock(), 5);
-        } else {
-            BlockState blockstate = this.getBlockState();
-            /*
-            if (!blockstate.isIn(Blocks.BARREL)) {
-                this.remove();
-                return;
-            }*/
-
-            boolean flag = blockstate.getValue(PresentBlock.OPEN);
-            if (flag) {
-                //this.playSound(blockstate, SoundEvents.BLOCK_BARREL_CLOSE);
-                this.level.playSound((PlayerEntity)null, this.worldPosition.getX()+0.5, this.worldPosition.getY()+0.5, this.worldPosition.getZ()+0.5,
-                        SoundEvents.WOOL_BREAK, SoundCategory.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.5F);
-                this.level.playSound(null, this.worldPosition.getX()+0.5, this.worldPosition.getY()+0.5, this.worldPosition.getZ()+0.5,
-                        SoundEvents.LEASH_KNOT_PLACE, SoundCategory.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.6F);
-                this.level.setBlock(this.getBlockPos(), blockstate.setValue(PresentBlock.OPEN, false), 3);
-            }
-        }
-
     }
 
     @Override
@@ -146,19 +127,29 @@ public class PresentBlockTile extends LockableLootTileEntity implements ISidedIn
         return this.saveToTag(compound);
     }
 
-    public void loadFromTag(CompoundNBT p_190586_1_) {
+    public void loadFromTag(CompoundNBT tag) {
         this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        if (!this.tryLoadLootTable(p_190586_1_) && p_190586_1_.contains("Items", 9)) {
-            ItemStackHelper.loadAllItems(p_190586_1_, this.items);
+        if (!this.tryLoadLootTable(tag) && tag.contains("Items", 9)) {
+            ItemStackHelper.loadAllItems(tag, this.items);
         }
+        if(tag.contains("Recipient"))
+            this.recipient = tag.getString("Recipient");
+        if(tag.contains("Sender"))
+            this.sender = tag.getString("Sender");
+        this.packed = tag.getBoolean("Packed");
     }
 
-    public CompoundNBT saveToTag(CompoundNBT p_190580_1_) {
-        if (!this.trySaveLootTable(p_190580_1_)) {
-            ItemStackHelper.saveAllItems(p_190580_1_, this.items, false);
+    public CompoundNBT saveToTag(CompoundNBT tag) {
+        if (!this.trySaveLootTable(tag)) {
+            ItemStackHelper.saveAllItems(tag, this.items, false);
         }
+        if(this.recipient!=null)
+            tag.putString("Recipient",this.recipient);
+        if(this.sender!=null)
+            tag.putString("Sender",this.sender);
 
-        return p_190580_1_;
+        tag.putBoolean("Packed",this.packed);
+        return tag;
     }
 
     @Override

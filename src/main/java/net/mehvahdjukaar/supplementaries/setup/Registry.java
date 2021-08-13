@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.items.CageItemRenderer
 import net.mehvahdjukaar.supplementaries.client.renderers.items.FireflyJarItemRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.JarItemRenderer;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
+import net.mehvahdjukaar.supplementaries.compat.CompatObjects;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.entities.*;
@@ -21,6 +22,7 @@ import net.minecraft.block.material.MaterialColor;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.item.PaintingType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.*;
 import net.minecraft.item.crafting.IRecipeSerializer;
@@ -30,7 +32,6 @@ import net.minecraft.particles.ParticleType;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.common.extensions.IForgeContainerType;
@@ -44,8 +45,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
@@ -60,6 +60,8 @@ public class Registry {
     public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, Supplementaries.MOD_ID);
     public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, Supplementaries.MOD_ID);
     public static final DeferredRegister<IRecipeSerializer<?>> RECIPES = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, Supplementaries.MOD_ID);
+    public static final DeferredRegister<PaintingType> PAINTINGS = DeferredRegister.create(ForgeRegistries.PAINTING_TYPES, Supplementaries.MOD_ID);
+
 
     public static void init(IEventBus bus) {
         BLOCKS.register(bus);
@@ -70,6 +72,7 @@ public class Registry {
         PARTICLES.register(bus);
         SOUNDS.register(bus);
         RECIPES.register(bus);
+        PAINTINGS.register(bus);
     }
 
     //creative tab
@@ -123,7 +126,7 @@ public class Registry {
     }
 
     private static RegistryObject<SoundEvent> makeSoundEvent(String name){
-        return SOUNDS.register(name, ()-> new SoundEvent(new ResourceLocation(Supplementaries.MOD_ID, name)));
+        return SOUNDS.register(name, ()-> new SoundEvent(Supplementaries.res(name)));
     }
     //these are the names in sound.json. not actual location. this is so a sound event can play multiple sounds
     public static final RegistryObject<SoundEvent> TOM_SOUND = makeSoundEvent("block.tom");
@@ -134,6 +137,7 @@ public class Registry {
 
 
     //dynamic registration so I can use their classes
+    //TODO: use deferred regiries
     @SubscribeEvent
     public static void registerCompatBlocks(final RegistryEvent.Register<Block> event){
         CompatHandler.registerOptionalBlocks(event);
@@ -146,6 +150,9 @@ public class Registry {
     public static void registerCompatRecipes(final RegistryEvent.Register<IRecipeSerializer<?>> event){
         CompatHandler.registerOptionalRecipes(event);
     }
+
+    //paintings
+    public static final RegistryObject<PaintingType> BOMB_PAINTING = PAINTINGS.register("bombs", () -> new PaintingType(32,32));
 
     //particles
     public static final RegistryObject<BasicParticleType> FIREFLY_GLOW = regParticle("firefly_glow");
@@ -185,8 +192,8 @@ public class Registry {
 
     //orange trader
     public static final String ORANGE_TRADER_NAME = "orange_trader";
-    public static final RegistryObject<EntityType<OrangeTraderEntity>> ORANGE_TRADER = ENTITIES.register(ORANGE_TRADER_NAME,()-> (
-            EntityType.Builder.<OrangeTraderEntity>of(OrangeTraderEntity::new, EntityClassification.CREATURE)
+    public static final RegistryObject<EntityType<OrangeMerchantEntity>> ORANGE_TRADER = ENTITIES.register(ORANGE_TRADER_NAME,()-> (
+            EntityType.Builder.<OrangeMerchantEntity>of(OrangeMerchantEntity::new, EntityClassification.CREATURE)
                     .setShouldReceiveVelocityUpdates(true).clientTrackingRange(10).setUpdateInterval(3)
                     .sized(0.6F, 1.95F))
             .build(ORANGE_TRADER_NAME));
@@ -263,6 +270,25 @@ public class Registry {
     public static final RegistryObject<Item> AMETHYST_ARROW_ITEM = ITEMS.register(AMETHYST_ARROW_NAME,()-> new AmethystArrowItem(
             new Item.Properties().tab(null)));
 
+    public static final String AMETHYST_SHARD_NAME = "amethyst_shard";
+    public static final RegistryObject<EntityType<ShardProjectileEntity>> AMETHYST_SHARD = ENTITIES.register(AMETHYST_SHARD_NAME,()->(
+            EntityType.Builder.<ShardProjectileEntity>of(ShardProjectileEntity::new, EntityClassification.MISC)
+                    .setCustomClientFactory(ShardProjectileEntity::new)
+                    .sized(0.325F, 0.325F).clientTrackingRange(4).updateInterval(20))//.size(0.25F, 0.25F).trackingRange(4).updateInterval(10))
+            .build(AMETHYST_SHARD_NAME));
+    public static final RegistryObject<Item> AMETHYST_SHARD_ITEM = ITEMS.register(AMETHYST_SHARD_NAME,()->
+            new Item(new Item.Properties().tab(null)));
+
+
+    public static final String FLINT_SHARD_NAME = "flint_shard";
+    public static final RegistryObject<EntityType<ShardProjectileEntity>> FLINT_SHARD = ENTITIES.register(FLINT_SHARD_NAME,()->(
+            EntityType.Builder.<ShardProjectileEntity>of(ShardProjectileEntity::new, EntityClassification.MISC)
+                    .setCustomClientFactory(ShardProjectileEntity::new)
+                    .sized(0.5F, 0.5F).clientTrackingRange(4).updateInterval(20))//.size(0.25F, 0.25F).trackingRange(4).updateInterval(10))
+            .build(FLINT_SHARD_NAME));
+    public static final RegistryObject<Item> FLINT_SHARD_ITEM = ITEMS.register(FLINT_SHARD_NAME,()->
+            new Item(new Item.Properties().tab(null)));
+
 
 
 
@@ -316,18 +342,26 @@ public class Registry {
 
     //presents
     public static final String PRESENT_NAME = "present";
-    public static final Map<DyeColor, RegistryObject<Block>> PRESENTS = new HashMap<>();
-    /*
-    public static final Map<DyeColor, RegistryObject<Block>> PRESENTS = Variants.makePresents(PRESENT_NAME);
 
-    public static final RegistryObject<TileEntityType<PresentBlockTile>> PRESENT_TILE = TILES
-            .register(PRESENT_NAME, ()-> TileEntityType.Builder.of(PresentBlockTile::new,
-                    PRESENTS.values().stream().map(RegistryObject::get).toArray(Block[]::new)).build(null));
+    //public static final RegistryObject<Block> PRESENT = BLOCKS.register(PRESENT_NAME,()->  new PresentBlock(null,
+    //        AbstractBlock.Properties.of(Material.WOOL, MaterialColor.WOOD)
+    //                .strength(1.0F)
+    //                .sound(SoundType.WOOL)));
 
+    public static final Map<DyeColor, RegistryObject<Block>> PRESENTS =new HashMap(); //Variants.makePresents(PRESENT_NAME);
 
+    private static final List<RegistryObject<Block>> presentBlocks = new ArrayList<RegistryObject<Block>>(){{
+        addAll(PRESENTS.values());
+        //add(PRESENT);
+    }};
+    //public static final RegistryObject<TileEntityType<PresentBlockTile>> PRESENT_TILE = TILES
+    //        .register(PRESENT_NAME, ()-> TileEntityType.Builder.of(PresentBlockTile::new,
+    //                presentBlocks.stream().map(RegistryObject::get).toArray(Block[]::new)).build(null));
 
-    public static final Map<DyeColor, RegistryObject<Item>> PRESENTS_ITEMS = Variants.makePresentsItems();
-    */
+    //public static final RegistryObject<Item> PRESENT_ITEM = regBlockItem(PRESENT,getTab(ItemGroup.TAB_DECORATIONS,PRESENT_NAME));
+
+   // public static final Map<DyeColor, RegistryObject<Item>> PRESENTS_ITEMS = Variants.makePresentsItems();
+
     public static final RegistryObject<ContainerType<PresentContainer>> PRESENT_BLOCK_CONTAINER = CONTAINERS
             .register(PRESENT_NAME,()-> IForgeContainerType.create(PresentContainer::new));
 
@@ -569,11 +603,11 @@ public class Registry {
     public static final RegistryObject<Block> SCONCE_ENDER = BLOCKS.register(SCONCE_NAME_ENDER,()-> new SconceBlock(
             AbstractBlock.Properties.copy(SCONCE.get())
                     .lightLevel((state) -> state.getValue(BlockStateProperties.LIT)? 13 : 0),
-            ()-> (BasicParticleType) ForgeRegistries.PARTICLE_TYPES.getValue(new ResourceLocation("endergetic:ender_flame"))));
+            ()-> (BasicParticleType) CompatObjects.ENDER_FLAME));
     public static final RegistryObject<Block> SCONCE_WALL_ENDER = BLOCKS.register("sconce_wall_ender",()-> new SconceWallBlock(
             AbstractBlock.Properties.copy(SCONCE_ENDER.get())
                     .dropsLike(SCONCE_ENDER.get()),
-            ()-> (BasicParticleType) ForgeRegistries.PARTICLE_TYPES.getValue(new ResourceLocation("endergetic:ender_flame"))));
+            ()-> (BasicParticleType) CompatObjects.ENDER_FLAME));
     public static final RegistryObject<Item> SCONCE_ITEM_ENDER = ITEMS.register(SCONCE_NAME_ENDER,()-> new WallOrFloorItem(SCONCE_ENDER.get(), SCONCE_WALL_ENDER.get(),
             (new Item.Properties()).tab(getTab("endergetic",ItemGroup.TAB_DECORATIONS,SCONCE_NAME_ENDER))));
 
@@ -582,11 +616,11 @@ public class Registry {
     public static final RegistryObject<Block> SCONCE_GLOW = BLOCKS.register(SCONCE_NAME_GLOW,()-> new SconceBlock(
             AbstractBlock.Properties.copy(SCONCE.get())
                     .lightLevel((state) -> state.getValue(BlockStateProperties.LIT)? 13 : 0),
-            ()-> (BasicParticleType) ForgeRegistries.PARTICLE_TYPES.getValue(new ResourceLocation("infernalexp:glowstone_sparkle"))));
+            ()-> (BasicParticleType) CompatObjects.GLOW_FLAME));
     public static final RegistryObject<Block> SCONCE_WALL_GLOW = BLOCKS.register("sconce_wall_glow",()-> new SconceWallBlock(
             AbstractBlock.Properties.copy(SCONCE.get())
                     .dropsLike(SCONCE_GLOW.get()),
-            ()-> (BasicParticleType) ForgeRegistries.PARTICLE_TYPES.getValue(new ResourceLocation("infernalexp:glowstone_sparkle"))));
+            ()-> (BasicParticleType) CompatObjects.GLOW_FLAME));
     public static final RegistryObject<Item> SCONCE_ITEM_GLOW = ITEMS.register(SCONCE_NAME_GLOW,()-> new WallOrFloorItem(SCONCE_GLOW.get(), SCONCE_WALL_GLOW.get(),
             (new Item.Properties()).tab(getTab("infernalexp",ItemGroup.TAB_DECORATIONS,SCONCE_NAME_GLOW))));
 
@@ -1216,7 +1250,7 @@ public class Registry {
     public static final String TIMBER_FRAME_NAME = "timber_frame";
     public static final RegistryObject<Block> TIMBER_FRAME = BLOCKS.register(TIMBER_FRAME_NAME,()-> new FrameBlock(
             AbstractBlock.Properties.of(Material.WOOD,MaterialColor.WOOD)
-                    .strength(1f, 1f)
+                    .strength(0.5f, 0.5f)
                     .dynamicShape()
                     .sound(SoundType.SCAFFOLDING),DAUB_FRAME));
     public static final RegistryObject<Item> TIMBER_FRAME_ITEM = ITEMS.register(TIMBER_FRAME_NAME,()-> new BurnableBlockItem(TIMBER_FRAME.get(),
