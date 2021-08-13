@@ -9,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.UpdateServerPresentPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.DialogTexts;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -22,6 +23,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import org.jetbrains.annotations.Nullable;
 
 
 public class PresentBlockGui extends ContainerScreen<PresentContainer> implements IContainerListener {
@@ -63,7 +65,7 @@ public class PresentBlockGui extends ContainerScreen<PresentContainer> implement
 
         this.packButton = this.addButton(new PackButton(i + 14, j + 46));
 
-        this.recipient = new TextFieldWidget(this.font, i + 53, j + 27,
+        this.recipient = new PresentTextFieldWidget(this.font, i + 53, j + 27,
                 99, 12, new TranslationTextComponent("container.repair"));
         this.recipient.setCanLoseFocus(true);
         this.recipient.setTextColor(-1);
@@ -72,7 +74,7 @@ public class PresentBlockGui extends ContainerScreen<PresentContainer> implement
         this.recipient.setMaxLength(35);
         this.children.add(this.recipient);
 
-        this.sender = new TextFieldWidget(this.font, i + 53, j + 53,
+        this.sender = new PresentTextFieldWidget(this.font, i + 53, j + 53,
                 99, 12, new TranslationTextComponent("container.repair"));
         this.sender.setCanLoseFocus(true);
         this.sender.setTextColor(-1);
@@ -252,6 +254,25 @@ public class PresentBlockGui extends ContainerScreen<PresentContainer> implement
             //BeaconScreen.this.minecraft.getConnection().send(new CUpdateBeaconPacket(Effect.getId(BeaconScreen.this.primary), Effect.getId(BeaconScreen.this.secondary)));
             //BeaconScreen.this.minecraft.player.connection.send(new CCloseWindowPacket(BeaconScreen.this.minecraft.player.containerMenu.containerId));
             //BeaconScreen.this.minecraft.setScreen((Screen)null);
+        }
+    }
+
+    private class PresentTextFieldWidget extends TextFieldWidget{
+
+        public PresentTextFieldWidget(FontRenderer p_i232260_1_, int p_i232260_2_, int p_i232260_3_, int p_i232260_4_, int p_i232260_5_, ITextComponent p_i232260_6_) {
+            super(p_i232260_1_, p_i232260_2_, p_i232260_3_, p_i232260_4_, p_i232260_5_, p_i232260_6_);
+        }
+
+        public PresentTextFieldWidget(FontRenderer p_i232259_1_, int p_i232259_2_, int p_i232259_3_, int p_i232259_4_, int p_i232259_5_, @Nullable TextFieldWidget p_i232259_6_, ITextComponent p_i232259_7_) {
+            super(p_i232259_1_, p_i232259_2_, p_i232259_3_, p_i232259_4_, p_i232259_5_, p_i232259_6_, p_i232259_7_);
+        }
+
+        @Override
+        public boolean mouseClicked(double p_231044_1_, double p_231044_3_, int p_231044_5_) {
+            if(this.active) {
+                return super.mouseClicked(p_231044_1_, p_231044_3_, p_231044_5_);
+            }
+            return false;
         }
     }
 
