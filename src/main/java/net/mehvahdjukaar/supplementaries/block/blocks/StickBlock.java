@@ -31,12 +31,13 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import vazkii.quark.api.IRotationLockable;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 
-public class StickBlock extends WaterBlock {
+public class StickBlock extends WaterBlock implements IRotationLockable{
     protected static final VoxelShape Y_AXIS_AABB = Block.box(7D, 0.0D, 7D, 9D, 16.0D, 9D);
     protected static final VoxelShape Z_AXIS_AABB = Block.box(7D, 7D, 0.0D, 9D, 9D, 16.0D);
     protected static final VoxelShape X_AXIS_AABB = Block.box(0.0D, 7D, 7D, 16.0D, 9D, 9D);
@@ -54,7 +55,7 @@ public class StickBlock extends WaterBlock {
     public static final BooleanProperty AXIS_Y = BlockProperties.AXIS_Y;
     public static final BooleanProperty AXIS_Z = BlockProperties.AXIS_Z;
 
-    protected final Map<Direction.Axis,BooleanProperty> axisToProperty = ImmutableMap.of(Direction.Axis.X,AXIS_X,Direction.Axis.Y,AXIS_Y,Direction.Axis.Z,AXIS_Z);
+    protected final Map<Direction.Axis,BooleanProperty> AXIS2PROPERTY = ImmutableMap.of(Direction.Axis.X,AXIS_X,Direction.Axis.Y,AXIS_Y,Direction.Axis.Z,AXIS_Z);
 
 
     public StickBlock(Properties properties) {
@@ -108,7 +109,7 @@ public class StickBlock extends WaterBlock {
     @Nullable
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         BlockState blockstate = context.getLevel().getBlockState(context.getClickedPos());
-        BooleanProperty axis = axisToProperty.get(context.getClickedFace().getAxis());
+        BooleanProperty axis = AXIS2PROPERTY.get(context.getClickedFace().getAxis());
         if (blockstate.is(this)) {
             return blockstate.setValue(axis, true);
         } else {
@@ -120,7 +121,7 @@ public class StickBlock extends WaterBlock {
     public boolean canBeReplaced(BlockState state, BlockItemUseContext context) {
         Item item = context.getItemInHand().getItem();
         if(item == Items.STICK || item == this.asItem()){
-            BooleanProperty axis = axisToProperty.get(context.getClickedFace().getAxis());
+            BooleanProperty axis = AXIS2PROPERTY.get(context.getClickedFace().getAxis());
             if(!state.getValue(axis))return true;
         }
         return super.canBeReplaced(state, context);
@@ -188,5 +189,18 @@ public class StickBlock extends WaterBlock {
             }
         }
         return false;
+    }
+
+    //quark
+    //TODO: improve for multiple sticks
+    @Override
+    public BlockState applyRotationLock(World world, BlockPos blockPos, BlockState state, Direction dir, int half) {
+        int i = 0;
+        if(state.getValue(AXIS_X)) i++;
+        if(state.getValue(AXIS_Y)) i++;
+        if(state.getValue(AXIS_Z)) i++;
+        if(i == 1) state.setValue(AXIS_Z,false).setValue(AXIS_X,false)
+                .setValue(AXIS_Y,false).setValue(AXIS2PROPERTY.get(dir.getAxis()),true);
+        return state;
     }
 }

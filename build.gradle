@@ -45,8 +45,6 @@ minecraft {
     runs {
         client {
 
-
-
             property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
 
 
@@ -71,8 +69,15 @@ minecraft {
         }
 
         server {
-            property 'mixin.env.disableRefMap', 'true'
-            arg "-mixin.config="+archivesBaseName+".mixins.json"
+
+            property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
+
+
+            property 'mixin.env.remapRefMap', 'true'
+            //property 'mixin.env.disableRefMap', 'true'
+            arg "-mixin.config=supplementaries.mixins.json".toString()
+            //property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+
             property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
 
             workingDirectory project.file('run')
@@ -262,7 +267,7 @@ def getModVersion(filename) {
     def found = matcher.find()
 
     if(found) {
-        def mod = matcher.group("modid");
+        def mod = matcher.group("modid");           
 
         // Extract MC version or default
         def mcVersion = matcher.group("mcversion");
@@ -278,7 +283,7 @@ def getModVersion(filename) {
             return "${mod}:${mod}-${mcVersion}:${version}";
 
     } else {
-        println(" > not a mod filename ")
+        println(" > not a mod filenamea ")
         return filename;
     }
 }

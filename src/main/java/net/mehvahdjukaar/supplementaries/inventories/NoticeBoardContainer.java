@@ -40,7 +40,7 @@ public class NoticeBoardContainer extends Container  {
             }
             @Override
             public boolean mayPlace(ItemStack stack) {
-                return(ServerConfigs.cached.NOTICE_BOARDS_UNRESTRICTED|| NoticeBoardBlockTile.isPageItem(stack.getItem()));
+                return(ServerConfigs.cached.NOTICE_BOARDS_UNRESTRICTED || NoticeBoardBlockTile.isPageItem(stack.getItem()));
             }
         });
 

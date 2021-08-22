@@ -35,8 +35,16 @@ public class Const {
     public static final Map<Direction, Quaternion> DIR2ROT = Maps.newEnumMap((Map<Direction, Quaternion>) Arrays.stream(Direction.values())
             .collect(Collectors.toMap(Functions.identity(), Direction::getRotation)));
 
+    public static final Map<Integer, Quaternion> YAW2ROT = Arrays.stream(Direction.values()).filter(d->d.getAxis()!= Direction.Axis.Y)
+            .map(d->(int)-d.toYRot()).collect(Collectors.toMap(Functions.identity(), y -> Vector3f.YP.rotationDegrees(y)));
+
     public static Quaternion rot(Direction dir){
         return DIR2ROT.get(dir);
+    }
+
+    private static final Quaternion def = Vector3f.YP.rotationDegrees(0);
+    public static Quaternion rot(int rot){
+        return YAW2ROT.getOrDefault(rot, def);
     }
 
 }

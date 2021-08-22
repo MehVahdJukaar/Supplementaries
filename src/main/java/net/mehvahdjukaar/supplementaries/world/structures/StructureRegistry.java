@@ -192,7 +192,12 @@ public class StructureRegistry {
          * If the registration is setup properly for the structure,
          * getRegistryName() should never return null.
          */
-        Structure.STRUCTURES_REGISTRY.put(structure.getRegistryName().toString(), structure);
+        try {
+            Structure.STRUCTURES_REGISTRY.put(structure.getRegistryName().toString(), structure);
+            Structure.STRUCTURES_REGISTRY.get(structure.getRegistryName().toString()).getRegistryName();
+        }catch(Exception e){
+            Supplementaries.LOGGER.throwing(new Exception("failed to register way sign structure: "+ e +". this is a bug"));
+        }
 
         /*
          * Whether surrounding land will be modified automatically to conform to the bottom of the structure.

@@ -141,12 +141,13 @@ public class NoticeBoardBlock extends Block {
     @Override
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
         if(facing==stateIn.getValue(FACING)){
+            //TODO: check if it can be made client side
             TileEntity te = worldIn.getBlockEntity(currentPos);
             if(te instanceof NoticeBoardBlockTile){
                 //((NoticeBoardBlockTile)te).textVisible = this.skipRendering(stateIn,facingState,facing);
                 boolean culled = facingState.isSolidRender(worldIn,currentPos) &&
                         facingState.isFaceSturdy(worldIn, facingPos, facing.getOpposite());
-                ((NoticeBoardBlockTile)te).textVisible=!culled;
+                ((NoticeBoardBlockTile)te).setTextVisible(!culled);
             }
         }
         return stateIn;

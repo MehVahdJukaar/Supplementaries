@@ -21,7 +21,41 @@ import java.util.UUID;
 
 public class CageItemRenderer extends ItemStackTileEntityRenderer {
 
-    @Override
+    public void renderTileStuff(CompoundNBT tag, ItemCameraTransforms.TransformType transformType, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
+
+        //render mob
+        if (tag.contains("MobHolder")) {
+            CompoundNBT cmp2 = tag.getCompound("MobHolder");
+            if(cmp2.contains("FishTexture"))return;
+            if (cmp2.contains("UUID")) {
+                UUID id = cmp2.getUUID("UUID");
+                Entity e = CapturedMobCache.getCachedMob(id);
+
+                if (e == null) {
+                    World world = Minecraft.getInstance().level;
+                    if(world != null) {
+                        CompoundNBT mobData = cmp2.getCompound("EntityData");
+
+                        //TODO:
+                        e = MobHolder.createEntityFromNBT(mobData,id,world);
+                        CapturedMobCache.addMob(e);
+                    }
+                }
+                if (e != null) {
+                    float y = cmp2.getFloat("YOffset");
+                    float s = cmp2.getFloat("Scale");
+                    matrixStackIn.pushPose();
+                    matrixStackIn.translate(0.5, y, 0.5);
+                    matrixStackIn.scale(-s, s, -s);
+                    Minecraft.getInstance().getEntityRenderDispatcher().render(e, 0.0D, 0.0D, 0.0D, 0.0F, 0, matrixStackIn, bufferIn, combinedLightIn);
+                    matrixStackIn.popPose();
+                }
+            }
+        }
+
+    }
+
+        @Override
     public void renderByItem(ItemStack stack, ItemCameraTransforms.TransformType transformType, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
         //render block
         matrixStackIn.pushPose();
@@ -29,41 +63,11 @@ public class CageItemRenderer extends ItemStackTileEntityRenderer {
         Minecraft.getInstance().getBlockRenderer().renderBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
         matrixStackIn.popPose();
 
-        CompoundNBT compound = stack.getTag();
-        if(compound == null || compound.isEmpty())return;
-
-        //render mob
-        if(compound.contains("BlockEntityTag")) {
-            CompoundNBT cmp = compound.getCompound("BlockEntityTag");
-            if (cmp.contains("MobHolder")) {
-                CompoundNBT cmp2 = cmp.getCompound("MobHolder");
-                if(cmp2.contains("FishTexture"))return;
-                if (cmp2.contains("UUID")) {
-                    UUID id = cmp2.getUUID("UUID");
-                    Entity e = CapturedMobCache.getCachedMob(id);
-
-                    if (e == null) {
-                        World world = Minecraft.getInstance().level;
-                        if(world != null) {
-                            CompoundNBT mobData = cmp2.getCompound("EntityData");
-
-                            //TODO:
-                            e = MobHolder.createEntityFromNBT(mobData,id,world);
-                            CapturedMobCache.addMob(e);
-                        }
-                    }
-                    if (e != null) {
-                        float y = cmp2.getFloat("YOffset");
-                        float s = cmp2.getFloat("Scale");
-                        matrixStackIn.pushPose();
-                        matrixStackIn.translate(0.5, y, 0.5);
-                        matrixStackIn.scale(-s, s, -s);
-                        Minecraft.getInstance().getEntityRenderDispatcher().render(e, 0.0D, 0.0D, 0.0D, 0.0F, 0, matrixStackIn, bufferIn, combinedLightIn);
-                        matrixStackIn.popPose();
-                    }
-                }
-            }
+        CompoundNBT tag = stack.getTagElement("BlockEntityTag");
+        if(tag != null) {
+            this.renderTileStuff(tag, transformType, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
         }
+
     }
 }
 

@@ -59,7 +59,7 @@ public class HangingFlowerPotBlock extends Block{
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return context.getClickedFace() == Direction.DOWN?super.getStateForPlacement(context):null;
+        return context.getClickedFace() == Direction.DOWN ? super.getStateForPlacement(context) : null;
     }
 
     @Override

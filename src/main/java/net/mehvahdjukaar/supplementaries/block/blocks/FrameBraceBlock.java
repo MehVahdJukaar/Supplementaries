@@ -9,11 +9,13 @@ import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import vazkii.quark.api.IRotationLockable;
 
 import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
-public class FrameBraceBlock extends FrameBlock {
+public class FrameBraceBlock extends FrameBlock implements IRotationLockable {
     public static final BooleanProperty FLIPPED = BlockProperties.FLIPPED;
 
     public FrameBraceBlock(Properties properties, Supplier<Block> daub) {
@@ -35,5 +37,9 @@ public class FrameBraceBlock extends FrameBlock {
         return this.defaultBlockState().setValue(FLIPPED, direction != Direction.DOWN && (direction == Direction.UP || !(context.getClickLocation().y - (double)blockpos.getY() > 0.5D)));
     }
 
-
+    //quark rot lock
+    @Override
+    public BlockState applyRotationLock(World world, BlockPos blockPos, BlockState state, Direction direction, int half) {
+        return state.setValue(FLIPPED, half == 1) ;
+    }
 }

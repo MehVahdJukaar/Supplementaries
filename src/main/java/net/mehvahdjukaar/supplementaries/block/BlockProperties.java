@@ -18,7 +18,7 @@ public class BlockProperties {
 
     //TODO: I hope nobody is reading this
 
-    //blockstate properties
+    //BlockState properties
     public static final BooleanProperty EXTENDING = BooleanProperty.create("extending");
     public static final IntegerProperty HOUR = IntegerProperty.create("hour", 0, 23);
     public static final BooleanProperty TILE = BooleanProperty.create("tile");
@@ -53,6 +53,7 @@ public class BlockProperties {
     public static final EnumProperty<BellAttachment> BELL_ATTACHMENT = EnumProperty.create("attachment",BellAttachment.class);
     public static final EnumProperty<IBellConnection.BellConnection> BELL_CONNECTION = EnumProperty.create("connection", IBellConnection.BellConnection.class);
     public static final IntegerProperty HONEY_LEVEL_POT = IntegerProperty.create("honey_level", 0, 4);
+    public static final IntegerProperty BURNING = IntegerProperty.create("burning", 0, 8);
 
     //model properties
     public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();

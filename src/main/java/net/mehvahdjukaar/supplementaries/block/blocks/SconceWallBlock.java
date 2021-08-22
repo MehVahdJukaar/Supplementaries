@@ -8,7 +8,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.HorizontalBlock;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.particles.BasicParticleType;
+import net.minecraft.particles.ParticleType;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
@@ -37,7 +37,7 @@ public class SconceWallBlock extends SconceBlock {
             Direction.WEST, box(10D, 2.0D, 6D, 16.0D, 13.0D, 10D),
             Direction.EAST, box(0.0D, 2.0D, 6D, 6D, 13.0D, 10D)));
 
-    public SconceWallBlock(Properties properties, Supplier<BasicParticleType> particleData) {
+    public <T extends ParticleType<?>> SconceWallBlock(Properties properties, Supplier<T> particleData) {
         super(properties, particleData);
         this.registerDefaultState(this.stateDefinition.any()
                 .setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false).setValue(LIT, true));

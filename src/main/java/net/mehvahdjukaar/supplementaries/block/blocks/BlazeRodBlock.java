@@ -35,7 +35,7 @@ public class BlazeRodBlock extends StickBlock{
     public boolean canBeReplaced(BlockState state, BlockItemUseContext context) {
         Item item = context.getItemInHand().getItem();
         if(item == Items.BLAZE_ROD || item == this.asItem()){
-            BooleanProperty axis = this.axisToProperty.get(context.getClickedFace().getAxis());
+            BooleanProperty axis = this.AXIS2PROPERTY.get(context.getClickedFace().getAxis());
             if(!state.getValue(axis))return true;
         }
         return state.getMaterial().isReplaceable() && (context.getItemInHand().isEmpty() || context.getItemInHand().getItem() != this.asItem());

@@ -1,0 +1,7 @@
+{
+  "parent": "supplementaries:item/hanging_sign_template",
+  "textures": {
+    "0": "supplementaries:blocks/hanging_signs/bamboo_blocks/hanging_sign_front_bamboo",
+    "2": "supplementaries:blocks/hanging_signs/bamboo_blocks/hanging_sign_details_bamboo"
+  }
+}

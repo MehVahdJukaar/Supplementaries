@@ -85,10 +85,6 @@ public class RopeBlock extends WaterBlock {
         return false;
     }
 
-    public boolean isProtruding(BlockState state){
-        return false;
-    }
-
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
         return SHAPES_MAP.getOrDefault(state.setValue(DISTANCE,0).setValue(KNOT,true).setValue(WATERLOGGED,false), VoxelShapes.block());

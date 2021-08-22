@@ -4,6 +4,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers;
 import com.google.common.collect.Maps;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
 import net.mehvahdjukaar.supplementaries.world.data.GlobeData;
 import net.mehvahdjukaar.supplementaries.world.data.GlobeDataGenerator;
 import net.minecraft.client.Minecraft;
@@ -136,7 +137,7 @@ public class GlobeTextureManager implements AutoCloseable{
         public static void refreshColorsFromConfig(){
             dimensionColorMap.clear();
             try {
-                List<? extends List<String>> customColors = ClientConfigs.block.GLOBE_COLORS.get();
+                List<? extends List<String>> customColors = ConfigHandler.safeGetListString(ClientConfigs.CLIENT_SPEC, ClientConfigs.block.GLOBE_COLORS);;
                 for (List<String> l : customColors) {
                     if (l.size() >= 13) {
                         String id = l.get(0);

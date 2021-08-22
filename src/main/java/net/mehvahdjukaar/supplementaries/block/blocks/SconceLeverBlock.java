@@ -27,6 +27,7 @@ public class SconceLeverBlock extends SconceWallBlock{
     }
 
     //need to update neighbours too
+    //TODO: remove by replacing proper update for block change 11->3
     @Override
     public void onChange(BlockState state, IWorld world, BlockPos pos) {
         if(world instanceof World)

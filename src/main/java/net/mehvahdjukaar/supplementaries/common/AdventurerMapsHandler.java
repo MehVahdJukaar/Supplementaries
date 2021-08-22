@@ -4,6 +4,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.mehvahdjukaar.selene.map.CustomDecorationType;
 import net.mehvahdjukaar.selene.map.MapDecorationHandler;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.world.data.map.CMDreg;
 import net.minecraft.entity.Entity;
@@ -97,7 +98,7 @@ public class AdventurerMapsHandler {
         if(!customTrades.isEmpty())return;
 
         try {
-            List<? extends List<String>> tradeData = ServerConfigs.tweaks.CUSTOM_ADVENTURER_MAPS_TRADES.get();
+            List<? extends List<String>> tradeData = ConfigHandler.safeGetListString(ServerConfigs.SERVER_SPEC, ServerConfigs.tweaks.CUSTOM_ADVENTURER_MAPS_TRADES);;
             for (List<String> l : tradeData) {
                 int s = l.size();
                 if (s > 0){

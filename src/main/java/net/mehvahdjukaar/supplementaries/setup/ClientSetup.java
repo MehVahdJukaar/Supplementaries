@@ -7,14 +7,13 @@ import net.mehvahdjukaar.supplementaries.client.models.RopeKnotBlockLoader;
 import net.mehvahdjukaar.supplementaries.client.models.SignPostBlockLoader;
 import net.mehvahdjukaar.supplementaries.client.models.WallLanternLoader;
 import net.mehvahdjukaar.supplementaries.client.particles.*;
-import net.mehvahdjukaar.supplementaries.client.renderers.*;
+import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager;
+import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
+import net.mehvahdjukaar.supplementaries.client.renderers.color.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
 import net.mehvahdjukaar.supplementaries.common.Textures;
-import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
-import net.mehvahdjukaar.supplementaries.compat.configured.ConfiguredCustomScreen;
-import net.mehvahdjukaar.supplementaries.compat.decorativeblocks.DecoBlocksCompatClient;
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.compat.CompatHandlerClient;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.world.data.map.client.CMDclient;
@@ -68,7 +67,13 @@ public class ClientSetup {
 
 
     @OnlyIn(Dist.CLIENT)
-    public static void onlyClientPls(final FMLClientSetupEvent event) {
+    public static void init(final FMLClientSetupEvent event) {
+
+        //compat
+        CompatHandlerClient.init(event);
+
+        //map markers
+        CMDclient.init(event);
 
         //projectiles
         ItemRenderer itemRenderer = event.getMinecraftSupplier().get().getItemRenderer();
@@ -77,30 +82,14 @@ public class ClientSetup {
                 renderManager -> new SpriteRenderer<>(renderManager, itemRenderer));
         RenderingRegistry.registerEntityRenderingHandler(Registry.THROWABLE_BRICK.get(),
                 renderManager -> new SpriteRenderer<>(renderManager, itemRenderer));
-        RenderingRegistry.registerEntityRenderingHandler(Registry.AMETHYST_SHARD.get(),
-                renderManager -> new SpriteRenderer<>(renderManager, itemRenderer));
-        RenderingRegistry.registerEntityRenderingHandler(Registry.FLINT_SHARD.get(),
-                renderManager -> new SpriteRenderer<>(renderManager, itemRenderer));
         RenderingRegistry.registerEntityRenderingHandler(Registry.LABEL.get(),
                 renderManager -> new LabelEntityRenderer(renderManager, itemRenderer));
-    }
 
+        RenderingRegistry.registerEntityRenderingHandler(Registry.AMETHYST_SHARD.get(),
+                ShardProjectileRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(Registry.FLINT_SHARD.get(),
+                ShardProjectileRenderer::new);
 
-    public static void init(final FMLClientSetupEvent event) {
-
-        //compat
-        if(CompatHandler.deco_blocks) DecoBlocksCompatClient.registerRenderLayers();
-        //registers custom screen instead of default configured one
-        if(CompatHandler.configured && RegistryConfigs.reg.CUSTOM_CONFIGURED_SCREEN.get()){
-            try {
-                ConfiguredCustomScreen.registerScreen();
-            }catch (Exception e){ Supplementaries.LOGGER.warn("Failed to register custom configured screen: "+e);}
-        }
-
-        onlyClientPls(event);
-
-        //map markers
-        CMDclient.init(event);
 
         //dynamic textures
         GlobeTextureManager.init(Minecraft.getInstance().textureManager);
@@ -156,9 +145,6 @@ public class ClientSetup {
         ClientRegistry.bindTileEntityRenderer(Registry.LASER_BLOCK_TILE.get(), LaserBlockTileRenderer::new);
         //flag
         ClientRegistry.bindTileEntityRenderer(Registry.FLAG_TILE.get(), FlagBlockTileRenderer::new);
-        //drawers
-        //RenderTypeLookup.setRenderLayer(Registry.DRAWERS.get(), RenderType.getCutout());
-        //ClientRegistry.bindTileEntityRenderer(Registry.DRAWERS_TILE.get(), DrawerBlockTileRenderer::new);
         //sconce
         RenderTypeLookup.setRenderLayer(Registry.SCONCE_WALL.get(), RenderType.cutout());
         RenderTypeLookup.setRenderLayer(Registry.SCONCE.get(), RenderType.cutout());
@@ -248,7 +234,8 @@ public class ClientSetup {
         ClientRegistry.bindTileEntityRenderer(Registry.CRACKED_BELL_TILE.get(), CrackedBellTileEntityRenderer::new);
         //present
         ScreenManager.register(Registry.PRESENT_BLOCK_CONTAINER.get(), PresentBlockGui.GUI_FACTORY);
-
+        //gunpowder
+        RenderTypeLookup.setRenderLayer(Registry.GUNPOWDER_BLOCK.get(), RenderType.cutout());
 
         ItemModelsProperties.register(Items.CROSSBOW, new ResourceLocation("rope_arrow"),
                 (stack, world, entity) -> entity != null && CrossbowItem.isCharged(stack) && CrossbowItem.containsChargedProjectile(stack, Registry.ROPE_ARROW_ITEM.get()) ? 1.0F : 0.0F);
@@ -292,7 +279,8 @@ public class ClientSetup {
         colors.register(new BrewingStandColor(), Blocks.BREWING_STAND);
         colors.register(new MimicBlockColor(), Registry.SIGN_POST.get(), Registry.TIMBER_BRACE.get(), Registry.TIMBER_FRAME.get(),
                 Registry.TIMBER_CROSS_BRACE.get(), Registry.WALL_LANTERN.get());
-        colors.register(new CogBlockColor(),Registry.COG_BLOCK.get());
+        colors.register(new CogBlockColor(), Registry.COG_BLOCK.get());
+        colors.register(new GunpowderBlockColor(), Registry.GUNPOWDER_BLOCK.get());
 
     }
 
@@ -346,7 +334,6 @@ public class ClientSetup {
 
 
         //ModelLoaderRegistry.registerLoader(new ResourceLocation(Supplementaries.MOD_ID, "blackboard_loader"), new BlackboardBlockLoader());
-
 
         //fake models & blockstates
         Map<ResourceLocation, StateContainer<Block, BlockState>> tempMap = new HashMap<>(ModelBakery.STATIC_DEFINITIONS);

@@ -36,7 +36,7 @@ public class SyncConfigsPacket {
 
             //CONFIG.setConfig(TomlFormat.instance().createParser().parse()
 
-            ServerConfigs.SERVER_CONFIG.setConfig(TomlFormat.instance().createParser().parse(new ByteArrayInputStream(message.configData)));
+            ServerConfigs.SERVER_SPEC.setConfig(TomlFormat.instance().createParser().parse(new ByteArrayInputStream(message.configData)));
             ServerConfigs.cached.refresh();
             Supplementaries.LOGGER.info("Synced Common configs");
         });

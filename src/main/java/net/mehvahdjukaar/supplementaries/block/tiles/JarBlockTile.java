@@ -250,7 +250,7 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
     @Override
     public boolean canPlaceItemThroughFace(int index, ItemStack stack, @Nullable Direction direction) {
         //can only insert cookies
-        return CommonUtil.isCookie(stack.getItem())&&(this.isEmpty()||stack.getItem()==this.getDisplayedItem().getItem());
+        return CommonUtil.isCookie(stack.getItem()) && (this.isEmpty() || stack.getItem() == this.getDisplayedItem().getItem());
     }
 
     @Override

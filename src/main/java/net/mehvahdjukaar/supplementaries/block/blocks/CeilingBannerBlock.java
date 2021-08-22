@@ -37,10 +37,12 @@ public class CeilingBannerBlock extends AbstractBannerBlock {
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
 
+    @Override
     public boolean canSurvive(BlockState state, IWorldReader world, BlockPos pos) {
         return world.getBlockState(pos.above()).getMaterial().isSolid();
     }
 
+    @Override
     public BlockState updateShape(BlockState myState, Direction direction, BlockState otherState, IWorld world, BlockPos myPos, BlockPos otherPos) {
         return direction == Direction.UP && !myState.canSurvive(world, myPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(myState, direction, myState, world, myPos, otherPos);
     }
@@ -51,12 +53,14 @@ public class CeilingBannerBlock extends AbstractBannerBlock {
     }
 
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        BlockState blockstate = this.defaultBlockState();
-        IWorldReader iworldreader = context.getLevel();
-        BlockPos blockpos = context.getClickedPos();
-        blockstate = blockstate.setValue(FACING, context.getHorizontalDirection().getOpposite());
-        if (blockstate.canSurvive(iworldreader, blockpos)) {
-            return blockstate;
+        if (context.getClickedFace() == Direction.DOWN) {
+            BlockState blockstate = this.defaultBlockState();
+            IWorldReader iworldreader = context.getLevel();
+            BlockPos blockpos = context.getClickedPos();
+            blockstate = blockstate.setValue(FACING, context.getHorizontalDirection().getOpposite());
+            if (blockstate.canSurvive(iworldreader, blockpos)) {
+                return blockstate;
+            }
         }
         return null;
     }

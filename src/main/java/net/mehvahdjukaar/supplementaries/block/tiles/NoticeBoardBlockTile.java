@@ -7,7 +7,6 @@ import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.inventories.NoticeBoardContainer;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.*;
@@ -26,33 +25,23 @@ import java.util.List;
 
 public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, IMapDisplay {
     //client stuff
-    public String text = null;
+    private String text = null;
     private int fontScale = 1;
     private List<IReorderingProcessor> cachedPageLines = Collections.emptyList();
     //used to tell renderer when it has to slit new line(have to do it there cause i need fontrenderer function)
     private boolean inventoryChanged = true;
-    public ResourceLocation cachedPattern = null;
+    private ResourceLocation cachedPattern = null;
 
 
+    //TODO: add this
+    private int pageNumber = 0;
 
     private DyeColor textColor = DyeColor.BLACK;
     // private int packedFrontLight =0;
-    public boolean textVisible = true; //for culling
-    private ITextComponent customName;
-
+    private boolean textVisible = true; //for culling
 
     public NoticeBoardBlockTile() {
         super(Registry.NOTICE_BOARD_TILE.get());
-    }
-
-    @Override
-    public void setCustomName(ITextComponent name) {
-        this.customName = name;
-    }
-
-    @Override
-    public ITextComponent getCustomName() {
-        return this.customName;
     }
 
     @Override
@@ -60,14 +49,16 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, 
         return new TranslationTextComponent("block.supplementaries.notice_board");
     }
 
-    //update blockstate and plays sound
-    public void updateBoardBlock() {
+    //update blockState and plays sound. server side
+    @Override
+    public void updateOnChangedBeforePacket() {
+        super.updateOnChangedBeforePacket();
 
         boolean b = !this.getDisplayedItem().isEmpty();
 
-        BlockState _bs = this.level.getBlockState(this.worldPosition);
-        if(_bs.getValue(BlockStateProperties.HAS_BOOK)!=b){
-            this.level.setBlock(this.worldPosition, _bs.setValue(BlockStateProperties.HAS_BOOK,b), 2);
+        BlockState state = this.getBlockState();
+        if(state.getValue(BlockStateProperties.HAS_BOOK) != b){
+            this.level.setBlock(this.worldPosition, state.setValue(BlockStateProperties.HAS_BOOK,b), 2);
             if(b){
                 this.level.playSound(null, worldPosition, SoundEvents.BOOK_PAGE_TURN, SoundCategory.BLOCKS, 1F,
                         this.level.random.nextFloat() * 0.10F + 0.85F);
@@ -79,78 +70,58 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, 
         }
     }
 
-    //hijacking this method to work with hoppers
-    @Override
-    public void setChanged() {
-        if(this.level==null)return;
-        this.updateBoardBlock();
-        super.setChanged();
-    }
-
     @Override
     public ItemStack getMapStack(){
-        return this.getItem(0);
+        return this.getDisplayedItem();
     }
 
-    public void updateTileClient() {
+    //TODO: add support to scroll through pages. also rewrite some of this
 
-        if(this.level!=null&&this.level.isClientSide()){
+    @Override
+    public void updateClientVisualsOnLoad() {
 
-            ItemStack itemstack = getDisplayedItem();
-            Item item = itemstack.getItem();
-            this.cachedPattern = null;
-            if(item instanceof BannerPatternItem){
-                this.cachedPattern = FlagBlockTile.getFlagLocation(((BannerPatternItem) item).getBannerPattern());
-            }
+        ItemStack itemstack = getDisplayedItem();
+        Item item = itemstack.getItem();
+        this.cachedPattern = null;
+        if(item instanceof BannerPatternItem){
+            this.cachedPattern = FlagBlockTile.getFlagLocation(((BannerPatternItem) item).getBannerPattern());
+        }
 
-            this.inventoryChanged = true;
-            this.cachedPageLines = Collections.emptyList();
-            this.text = null;
+        this.inventoryChanged = true;
+        this.cachedPageLines = Collections.emptyList();
+        this.text = null;
 
-            if (item instanceof  WrittenBookItem) {
-                CompoundNBT com = itemstack.getTag();
-                if(WrittenBookItem.makeSureTagIsValid(com)){
+        if (item instanceof  WrittenBookItem) {
+            CompoundNBT com = itemstack.getTag();
+            if(WrittenBookItem.makeSureTagIsValid(com)){
 
-                    ListNBT listnbt = com.getList("pages", 8).copy();
-                    this.text = listnbt.getString(0);
-                }
-            }
-            else if(item instanceof  WritableBookItem){
-                CompoundNBT com = itemstack.getTag();
-                if(WritableBookItem.makeSureTagIsValid(com)){
-
-                    ListNBT listnbt = com.getList("pages", 8).copy();
-                    this.text = listnbt.getString(0);
-                }
+                ListNBT listnbt = com.getList("pages", 8).copy();
+                this.text = listnbt.getString(0);
             }
         }
+        else if(item instanceof  WritableBookItem){
+            CompoundNBT com = itemstack.getTag();
+            if(WritableBookItem.makeSureTagIsValid(com)){
+
+                ListNBT listnbt = com.getList("pages", 8).copy();
+                this.text = listnbt.getString(0);
+            }
+        }
+
     }
 
     @Override
     public void load(BlockState state, CompoundNBT compound) {
-        super.load(state, compound);
-        if (compound.contains("CustomName", 8)) {
-            this.customName = ITextComponent.Serializer.fromJson(compound.getString("CustomName"));
-        }
-
         this.textColor = DyeColor.byName(compound.getString("Color"), DyeColor.BLACK);
         this.textVisible = compound.getBoolean("TextVisible");
-
-        this.updateTileClient();
-        // this.packedFrontLight = compound.getInt("light");
+        super.load(state, compound);
     }
 
     @Override
     public CompoundNBT save(CompoundNBT compound) {
         super.save(compound);
-        if (this.customName != null) {
-            compound.putString("CustomName", ITextComponent.Serializer.toJson(this.customName));
-        }
-
         compound.putString("Color", this.textColor.getName());
         compound.putBoolean("TextVisible", this.textVisible);
-
-        // compound.putInt("light", this.packedFrontLight);
 
         return compound;
     }
@@ -163,7 +134,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, 
 
     @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
-        return this.isEmpty()&&(ServerConfigs.cached.NOTICE_BOARDS_UNRESTRICTED||isPageItem(stack.getItem()));
+        return this.isEmpty() && (ServerConfigs.cached.NOTICE_BOARDS_UNRESTRICTED || isPageItem(stack.getItem()));
     }
 
     public static boolean isPageItem(Item item){
@@ -195,6 +166,26 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, 
         }
     }
 
+    public boolean isTextVisible() {
+        return textVisible;
+    }
+
+    public void setTextVisible(boolean textVisible) {
+        this.textVisible = textVisible;
+    }
+
+    public ResourceLocation getCachedPattern() {
+        return cachedPattern;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public int getFontScale() {
+        return this.fontScale;
+    }
+
     public void setFontScale(int s) {
         this.fontScale = s;
     }
@@ -205,10 +196,6 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, 
 
     public List<IReorderingProcessor> getCachedPageLines() {
         return this.cachedPageLines;
-    }
-
-    public int getFontScale() {
-        return this.fontScale;
     }
 
     public boolean getFlag() {
@@ -223,17 +210,5 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, 
         return this.getBlockState().getValue(NoticeBoardBlock.FACING);
     }
 
-    public float getYaw() {
-        return -this.getDirection().toYRot();
-    }
-
-    public boolean getAxis() {
-        Direction d = this.getDirection();
-        return d == Direction.NORTH || d == Direction.SOUTH;
-    }
-
-    public int getFrontLight() {
-        return WorldRenderer.getLightColor(this.level, this.worldPosition.relative(this.getDirection()));
-    }
 
 }

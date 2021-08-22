@@ -8,7 +8,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import java.util.List;
 
 public class ClientConfigs {
-    public static ForgeConfigSpec CLIENT_CONFIG;
+    public static ForgeConfigSpec CLIENT_SPEC;
 
     static {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
@@ -19,7 +19,7 @@ public class ClientConfigs {
         general.init(builder);
         tweaks.init(builder);
 
-        CLIENT_CONFIG = builder.build();
+        CLIENT_SPEC = builder.build();
     }
 
     public static class tweaks {

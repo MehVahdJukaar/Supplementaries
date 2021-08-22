@@ -44,10 +44,11 @@ public class SignPostBlock extends FenceMimicBlock{
         return BlockRenderType.MODEL;
     }
 
+    //TODO: add flip sound here
     @Override
     public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
                                              BlockRayTraceResult hit) {
-        if(hit.getDirection().getAxis()== Direction.Axis.Y)return ActionResultType.PASS;
+        if(hit.getDirection().getAxis() == Direction.Axis.Y) return ActionResultType.PASS;
 
         TileEntity tileentity = worldIn.getBlockEntity(pos);
         if (tileentity instanceof SignPostBlockTile) {

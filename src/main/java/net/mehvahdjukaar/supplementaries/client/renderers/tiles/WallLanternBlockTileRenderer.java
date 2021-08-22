@@ -16,9 +16,6 @@ public class WallLanternBlockTileRenderer extends EnhancedLanternBlockTileRender
     public void render(WallLanternBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
 
-
-
-
         if(tile.shouldRenderFancy()) {
             this.renderLantern(tile, tile.mimic, partialTicks, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, false);
         }

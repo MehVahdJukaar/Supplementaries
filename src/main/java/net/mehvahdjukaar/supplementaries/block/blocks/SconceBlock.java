@@ -5,6 +5,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.particles.BasicParticleType;
+import net.minecraft.particles.ParticleType;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.util.Direction;
@@ -20,14 +21,14 @@ import net.minecraftforge.common.util.Lazy;
 import java.util.Random;
 import java.util.function.Supplier;
 
-public class SconceBlock extends LightUpBlock{
+public class SconceBlock extends LightUpWaterBlock{
     protected static final VoxelShape SHAPE = box(6.0D, 0.0D, 6.0D, 10.0D, 11.0D, 10.0D);
     protected final Lazy<BasicParticleType> particleData;
 
-    public SconceBlock(Properties properties, Supplier<BasicParticleType> particleData) {
+    public <T extends ParticleType<?>> SconceBlock(Properties properties, Supplier<T> particleData) {
         super(properties);
         this.particleData = Lazy.of(()->{
-            BasicParticleType data = particleData.get();
+            BasicParticleType data = (BasicParticleType) particleData.get();
             if(data==null)data = ParticleTypes.FLAME;
             return data;
         });

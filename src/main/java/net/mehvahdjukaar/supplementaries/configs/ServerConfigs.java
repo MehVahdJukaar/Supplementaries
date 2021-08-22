@@ -21,7 +21,7 @@ public class ServerConfigs {
 
 
     //overwritten by server one
-    public static ForgeConfigSpec SERVER_CONFIG;
+    public static ForgeConfigSpec SERVER_SPEC;
 
     static {
         createConfig();
@@ -37,7 +37,7 @@ public class ServerConfigs {
         tweaks.init(builder);
         item.init(builder);
 
-        SERVER_CONFIG = builder.build();
+        SERVER_SPEC = builder.build();
     }
 
     public static void loadLocal(){
@@ -48,7 +48,7 @@ public class ServerConfigs {
                 .writingMode(WritingMode.REPLACE)
                 .build();
         replacementConfig.load();
-        ServerConfigs.SERVER_CONFIG.setConfig(replacementConfig);
+        ServerConfigs.SERVER_SPEC.setConfig(replacementConfig);
     }
 
 
@@ -111,6 +111,7 @@ public class ServerConfigs {
         public static ForgeConfigSpec.BooleanValue CEILING_BANNERS;
         public static ForgeConfigSpec.BooleanValue ZOMBIE_HORSE;
         public static ForgeConfigSpec.IntValue ZOMBIE_HORSE_COST;
+        public static ForgeConfigSpec.BooleanValue PLACEABLE_GUNPOWDER;
 
         private static void init(ForgeConfigSpec.Builder builder){
             builder.comment("Vanilla tweaks")
@@ -154,8 +155,13 @@ public class ServerConfigs {
 
             builder.push("placeable_sticks");
             PLACEABLE_STICKS = builder.comment("allow placeable sticks")
-                    .define("enabled",true);
+                    .define("sticks",true);
             PLACEABLE_RODS = builder.comment("allow placeable blaze rods")
+                    .define("blaze_rods",true);
+            builder.pop();
+
+            builder.push("placeable_gunpowder");
+            PLACEABLE_GUNPOWDER = builder.comment("allow placeable gunpowder")
                     .define("enabled",true);
             builder.pop();
 
@@ -238,6 +244,7 @@ public class ServerConfigs {
 
         public static ForgeConfigSpec.BooleanValue CAGE_ALL_MOBS;
         public static ForgeConfigSpec.BooleanValue CAGE_ALL_BABIES;
+        public static ForgeConfigSpec.BooleanValue CAGE_AUTO_DETECT;
 
         public static ForgeConfigSpec.BooleanValue NOTICE_BOARDS_UNRESTRICTED;
 
@@ -329,32 +336,34 @@ public class ServerConfigs {
             builder.pop();
             //jar
             builder.push("jar");
-            JAR_CAPACITY = builder.comment("jar liquid capacity: leave at 12 for pixel accuracy")
+            JAR_CAPACITY = builder.comment("Jar liquid capacity: leave at 12 for pixel accuracy")
                     .defineInRange("capacity",12,0,1024);
-            JAR_EAT = builder.comment("allow right click to instantly eat or drink food or potions inside a jar.\n" +
-                    "Disable if you think this ability is op. Cookies are excluded")
+            JAR_EAT = builder.comment("Allow right click to instantly eat or drink food or potions inside a jar.\n" +
+                    "Disable if you think this ability is op (honey for example). Cookies are excluded")
                     .define("drink_from_jar",true);
 
             builder.pop();
 
             //cage
             builder.push("cage");
-            CAGE_ALL_MOBS = builder.comment("allow all entities to be captured by cages and jars. Not meant for survival")
-                    .define("cage_allow_all_mobs", false);
-            CAGE_ALL_BABIES = builder.comment("allow all baby mobs to be captured by cages")
+            CAGE_ALL_MOBS = builder.comment("Allows all entities to be captured by cages and jars. Not meant for survival")
+                    .define("allow_all_mobs", false);
+            CAGE_ALL_BABIES = builder.comment("Allows all baby mobs to be captured by cages")
                     .define("cage_allow_all_babies", false);
+            CAGE_AUTO_DETECT = builder.comment("Dynamically allows all small mobs inside cages depending on their hitbox size")
+                            .define("cage_auto_detect", false);
             builder.pop();
 
             //notice boards
             builder.push("notice_board");
-            NOTICE_BOARDS_UNRESTRICTED = builder.comment("allow notice boards to accept and display any item, not just maps and books")
+            NOTICE_BOARDS_UNRESTRICTED = builder.comment("Allows notice boards to accept and display any item, not just maps and books")
                     .define("allow_any_item", false);
             builder.pop();
 
             builder.push("sack");
             SACK_PENALTY = builder.comment("Penalize the player with slowness effect when carrying too many sacks")
-                    .define("sack_penality", true);
-            SACK_INCREMENT = builder.comment("maximum number of sacks after which the slowness effect will be applied. each multiple of this number will further slow the player down")
+                    .define("sack_penalty", true);
+            SACK_INCREMENT = builder.comment("Maximum number of sacks after which the slowness effect will be applied. each multiple of this number will further slow the player down")
                     .defineInRange("sack_increment",2,0,50);
             SACK_SLOTS = builder.comment("How many slots should a sack have")
                     .defineInRange("slots",9,1,27);
@@ -552,6 +561,7 @@ public class ServerConfigs {
         public static int BOTTLING_COST;
         public static boolean MAP_MARKERS;
         public static boolean CEILING_BANNERS;
+        public static boolean PLACEABLE_GUNPOWDER;
         //spawns
         public static int FIREFLY_MIN;
         public static int FIREFLY_MAX;
@@ -578,6 +588,7 @@ public class ServerConfigs {
         public static boolean NOTICE_BOARDS_UNRESTRICTED;
         public static boolean CAGE_ALL_MOBS;
         public static boolean CAGE_ALL_BABIES;
+        public static boolean CAGE_AUTO_DETECT;
         public static int SACK_INCREMENT;
         public static boolean SACK_PENALTY;
         public static int SACK_SLOTS;
@@ -615,6 +626,7 @@ public class ServerConfigs {
             BELL_CHAIN_LENGTH = tweaks.BELL_CHAIN_LENGTH.get();
             MAP_MARKERS = tweaks.MAP_MARKERS.get();
             CEILING_BANNERS = tweaks.CEILING_BANNERS.get();
+            PLACEABLE_GUNPOWDER = tweaks.PLACEABLE_GUNPOWDER.get();
 
             ROPE_ARROW_ROPE = item.ROPE_ARROW_ROPE.get();
             ROPE_ARROW_BLOCK = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ROPE_ARROW_ROPE));
@@ -658,6 +670,7 @@ public class ServerConfigs {
 
             CAGE_ALL_MOBS = block.CAGE_ALL_MOBS.get();
             CAGE_ALL_BABIES = block.CAGE_ALL_BABIES.get();
+            CAGE_AUTO_DETECT = block.CAGE_AUTO_DETECT.get();
 
             SACK_INCREMENT = block.SACK_INCREMENT.get();
             SACK_PENALTY = block.SACK_PENALTY.get();

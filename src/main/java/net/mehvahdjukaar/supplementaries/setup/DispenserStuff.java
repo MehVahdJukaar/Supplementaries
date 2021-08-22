@@ -10,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.block.blocks.LightUpBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.PancakeBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper;
+import net.mehvahdjukaar.supplementaries.block.util.ILightable;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.entities.AmethystArrowEntity;
@@ -121,8 +122,9 @@ public class DispenserStuff {
             ServerWorld world = source.getLevel();
             BlockPos blockpos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
             BlockState state = world.getBlockState(blockpos);
-            if(state.getBlock() instanceof LightUpBlock){
-                if(LightUpBlock.lightUp(state,blockpos,world,LightUpBlock.FireSound.FLINT_AND_STEEL)){
+            Block block = state.getBlock();
+            if(block instanceof ILightable){
+                if(((ILightable) block).lightUp(state,blockpos,world,LightUpBlock.FireSound.FLINT_AND_STEEL)){
                     if(stack.hurt(1, world.random, null)){
                         stack.setCount(0);
                     }

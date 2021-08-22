@@ -33,7 +33,6 @@
     "SpawnOrangeTraderMixin",
     "StrongholdCrossingMixin",
     "StrongholdRoomMixin",
-    "UndeadHorseRendererMixin",
     "VineBlockMixin",
     "accessors.ChickenEntityAccessor",
     "accessors.HorseEntityAccessor",

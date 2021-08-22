@@ -1,0 +1,7 @@
+{
+	"parent": "minecraft:block/redstone_dust_dot",
+	"textures": {
+		"particle": "block/gunpowder_dot",
+		"line": "block/gunpowder_dot"
+	}
+}

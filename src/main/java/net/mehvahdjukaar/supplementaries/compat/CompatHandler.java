@@ -24,6 +24,8 @@ public class CompatHandler {
     public static final boolean framedblocks;
     public static final boolean rgblib;
     public static final boolean endergetic;
+    public static final boolean buzzier_bees;
+    public static final boolean autumnity;
     public static final boolean deco_blocks_abnormals;
     public static final boolean much_more_mod_compat;
 
@@ -44,6 +46,8 @@ public class CompatHandler {
         endergetic = ml.isLoaded("endergetic");
         deco_blocks_abnormals = ml.isLoaded("decorative_blocks_abnormals");
         much_more_mod_compat = ml.isLoaded("muchmoremodcompat");
+        autumnity = ml.isLoaded("autumnity");
+        buzzier_bees = ml.isLoaded("buzzier_bees");
     }
 
     public static void init(){

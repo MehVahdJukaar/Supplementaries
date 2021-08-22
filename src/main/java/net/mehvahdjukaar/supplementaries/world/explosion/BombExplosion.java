@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common;
+package net.mehvahdjukaar.supplementaries.world.explosion;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -39,7 +39,7 @@ import net.minecraftforge.fml.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-/*
+
 public class BombExplosion extends Explosion {
 
     private final Entity source;
@@ -243,4 +243,4 @@ public class BombExplosion extends Explosion {
 
     }
 }
-*/
+

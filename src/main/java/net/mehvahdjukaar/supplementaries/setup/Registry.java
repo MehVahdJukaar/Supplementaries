@@ -155,7 +155,7 @@ public class Registry {
     }
 
     //paintings
-    //public static final RegistryObject<PaintingType> BOMB_PAINTING = PAINTINGS.register("bombs", () -> new PaintingType(32,32));
+    public static final RegistryObject<PaintingType> BOMB_PAINTING = PAINTINGS.register("bombs", () -> new PaintingType(32,32));
 
     //particles
     public static final RegistryObject<BasicParticleType> FIREFLY_GLOW = regParticle("firefly_glow");
@@ -277,7 +277,7 @@ public class Registry {
     public static final RegistryObject<EntityType<ShardProjectileEntity>> AMETHYST_SHARD = ENTITIES.register(AMETHYST_SHARD_NAME,()->(
             EntityType.Builder.<ShardProjectileEntity>of(ShardProjectileEntity::new, EntityClassification.MISC)
                     .setCustomClientFactory(ShardProjectileEntity::new)
-                    .sized(0.325F, 0.325F).clientTrackingRange(4).updateInterval(20))//.size(0.25F, 0.25F).trackingRange(4).updateInterval(10))
+                    .sized(0.5F, 0.5F).clientTrackingRange(4).updateInterval(20))//.size(0.25F, 0.25F).trackingRange(4).updateInterval(10))
             .build(AMETHYST_SHARD_NAME));
     public static final RegistryObject<Item> AMETHYST_SHARD_ITEM = ITEMS.register(AMETHYST_SHARD_NAME,()->
             new Item(new Item.Properties().tab(null)));
@@ -346,20 +346,20 @@ public class Registry {
     //presents
     public static final String PRESENT_NAME = "present";
 
-    //public static final RegistryObject<Block> PRESENT = BLOCKS.register(PRESENT_NAME,()->  new PresentBlock(null,
-    //        AbstractBlock.Properties.of(Material.WOOL, MaterialColor.WOOD)
-    //                .strength(1.0F)
-    //                .sound(SoundType.WOOL)));
+    public static final RegistryObject<Block> PRESENT = BLOCKS.register(PRESENT_NAME,()->  new PresentBlock(null,
+            AbstractBlock.Properties.of(Material.WOOL, MaterialColor.WOOD)
+                    .strength(1.0F)
+                    .sound(SoundType.WOOL)));
 
     public static final Map<DyeColor, RegistryObject<Block>> PRESENTS =new HashMap(); //Variants.makePresents(PRESENT_NAME);
 
     private static final List<RegistryObject<Block>> presentBlocks = new ArrayList<RegistryObject<Block>>(){{
         addAll(PRESENTS.values());
-        //add(PRESENT);
+        add(PRESENT);
     }};
-    //public static final RegistryObject<TileEntityType<PresentBlockTile>> PRESENT_TILE = TILES
-    //        .register(PRESENT_NAME, ()-> TileEntityType.Builder.of(PresentBlockTile::new,
-    //                presentBlocks.stream().map(RegistryObject::get).toArray(Block[]::new)).build(null));
+    public static final RegistryObject<TileEntityType<PresentBlockTile>> PRESENT_TILE = TILES
+            .register(PRESENT_NAME, ()-> TileEntityType.Builder.of(PresentBlockTile::new,
+                    presentBlocks.stream().map(RegistryObject::get).toArray(Block[]::new)).build(null));
 
     //public static final RegistryObject<Item> PRESENT_ITEM = regBlockItem(PRESENT,getTab(ItemGroup.TAB_DECORATIONS,PRESENT_NAME));
 
@@ -439,12 +439,11 @@ public class Registry {
     ));
     public static final RegistryObject<TileEntityType<CageBlockTile>> CAGE_TILE = TILES.register(CAGE_NAME,()->  TileEntityType.Builder.of(
             CageBlockTile::new, CAGE.get()).build(null));
-    public static final RegistryObject<Item> CAGE_ITEM = ITEMS.register("cage_full",()-> new CageItem(CAGE.get(),
-            new Item.Properties().stacksTo(1).setISTER(()-> CageItemRenderer::new)
+    public static final RegistryObject<Item> CAGE_ITEM = ITEMS.register("cage_full",()-> new FullCageItem(CAGE.get(),
+            new Item.Properties().stacksTo(16).setISTER(()-> CageItemRenderer::new)
                     .tab(null), Registry.EMPTY_CAGE_ITEM));
-    public static final RegistryObject<Item> EMPTY_CAGE_ITEM = ITEMS.register(CAGE_NAME,()-> new EmptyCageItem(CAGE.get(),
-            new Item.Properties().stacksTo(16).tab(getTab(ItemGroup.TAB_DECORATIONS,CAGE_NAME)), Registry.CAGE_ITEM, EmptyCageItem.CageWhitelist.CAGE
-    ));
+    public static final RegistryObject<Item> EMPTY_CAGE_ITEM = ITEMS.register(CAGE_NAME,()-> new CageItem(CAGE.get(),
+            new Item.Properties().stacksTo(16).tab(getTab(ItemGroup.TAB_DECORATIONS,CAGE_NAME))));
 
 
     //jar
@@ -467,19 +466,19 @@ public class Registry {
     public static final RegistryObject<TileEntityType<JarBlockTile>> JAR_TILE = TILES.register(JAR_NAME,()->  TileEntityType.Builder.of(
             JarBlockTile::new, JAR.get(),JAR_TINTED.get()).build(null));
 
-    public static final RegistryObject<Item> JAR_ITEM = ITEMS.register("jar_full",()-> new JarItem(JAR.get(), new Item.Properties()
+    public static final RegistryObject<Item> JAR_ITEM = ITEMS.register("jar_full",()-> new FullJarItem(JAR.get(), new Item.Properties()
             .tab(jar_tab?JAR_TAB:null)
-            .stacksTo(1).setISTER(()-> JarItemRenderer::new), Registry.EMPTY_JAR_ITEM));
+            .stacksTo(16).setISTER(()-> JarItemRenderer::new), Registry.EMPTY_JAR_ITEM));
 
-    public static final RegistryObject<Item> JAR_ITEM_TINTED = ITEMS.register("jar_full_tinted",()-> new JarItem(JAR_TINTED.get(), new Item.Properties().tab(null)
+    public static final RegistryObject<Item> JAR_ITEM_TINTED = ITEMS.register("jar_full_tinted",()-> new FullJarItem(JAR_TINTED.get(), new Item.Properties().tab(null)
             .stacksTo(1).setISTER(()-> JarItemRenderer::new), Registry.EMPTY_JAR_ITEM_TINTED));
 
 
-    public static final RegistryObject<Item> EMPTY_JAR_ITEM = ITEMS.register(JAR_NAME,()-> new EmptyJarItem(JAR.get(), new Item.Properties().tab(
-            getTab(ItemGroup.TAB_DECORATIONS,JAR_NAME)).stacksTo(16), Registry.JAR_ITEM, EmptyCageItem.CageWhitelist.JAR));
+    public static final RegistryObject<Item> EMPTY_JAR_ITEM = ITEMS.register(JAR_NAME,()-> new JarItem(JAR.get(), new Item.Properties().tab(
+            getTab(ItemGroup.TAB_DECORATIONS,JAR_NAME)).stacksTo(16)));
 
-    public static final RegistryObject<Item> EMPTY_JAR_ITEM_TINTED = ITEMS.register(JAR_NAME_TINTED,()-> new EmptyJarItem(JAR_TINTED.get(), new Item.Properties().tab(
-            getTab(ItemGroup.TAB_DECORATIONS,JAR_NAME)).stacksTo(16), Registry.JAR_ITEM_TINTED,EmptyCageItem.CageWhitelist.TINTED_JAR));
+    public static final RegistryObject<Item> EMPTY_JAR_ITEM_TINTED = ITEMS.register(JAR_NAME_TINTED,()-> new JarItem(JAR_TINTED.get(), new Item.Properties().tab(
+            getTab(ItemGroup.TAB_DECORATIONS,JAR_NAME)).stacksTo(16)));
 
     //firefly jar
     public static final String FIREFLY_JAR_NAME = "firefly_jar";
@@ -606,11 +605,11 @@ public class Registry {
     public static final RegistryObject<Block> SCONCE_ENDER = BLOCKS.register(SCONCE_NAME_ENDER,()-> new SconceBlock(
             AbstractBlock.Properties.copy(SCONCE.get())
                     .lightLevel((state) -> state.getValue(BlockStateProperties.LIT)? 13 : 0),
-            ()-> (BasicParticleType) CompatObjects.ENDER_FLAME));
+            CompatObjects.ENDER_FLAME));
     public static final RegistryObject<Block> SCONCE_WALL_ENDER = BLOCKS.register("sconce_wall_ender",()-> new SconceWallBlock(
             AbstractBlock.Properties.copy(SCONCE_ENDER.get())
                     .dropsLike(SCONCE_ENDER.get()),
-            ()-> (BasicParticleType) CompatObjects.ENDER_FLAME));
+            CompatObjects.ENDER_FLAME));
     public static final RegistryObject<Item> SCONCE_ITEM_ENDER = ITEMS.register(SCONCE_NAME_ENDER,()-> new WallOrFloorItem(SCONCE_ENDER.get(), SCONCE_WALL_ENDER.get(),
             (new Item.Properties()).tab(getTab("endergetic",ItemGroup.TAB_DECORATIONS,SCONCE_NAME_ENDER))));
 
@@ -619,11 +618,11 @@ public class Registry {
     public static final RegistryObject<Block> SCONCE_GLOW = BLOCKS.register(SCONCE_NAME_GLOW,()-> new SconceBlock(
             AbstractBlock.Properties.copy(SCONCE.get())
                     .lightLevel((state) -> state.getValue(BlockStateProperties.LIT)? 13 : 0),
-            ()-> (BasicParticleType) CompatObjects.GLOW_FLAME));
+            CompatObjects.GLOW_FLAME));
     public static final RegistryObject<Block> SCONCE_WALL_GLOW = BLOCKS.register("sconce_wall_glow",()-> new SconceWallBlock(
             AbstractBlock.Properties.copy(SCONCE.get())
                     .dropsLike(SCONCE_GLOW.get()),
-            ()-> (BasicParticleType) CompatObjects.GLOW_FLAME));
+            CompatObjects.GLOW_FLAME));
     public static final RegistryObject<Item> SCONCE_ITEM_GLOW = ITEMS.register(SCONCE_NAME_GLOW,()-> new WallOrFloorItem(SCONCE_GLOW.get(), SCONCE_WALL_GLOW.get(),
             (new Item.Properties()).tab(getTab("infernalexp",ItemGroup.TAB_DECORATIONS,SCONCE_NAME_GLOW))));
 
@@ -1361,6 +1360,24 @@ public class Registry {
 
     public static final RegistryObject<TileEntityType<StatueBlockTile>> STATUE_TILE = TILES.register(STATUE_NAME,()-> TileEntityType.Builder.of(
             StatueBlockTile::new, STATUE.get()).build(null));
+
+    //feather block
+    public static final String FEATHER_BLOCK_NAME = "feather_block";
+    public static final RegistryObject<Block> FEATHER_BLOCK = BLOCKS.register(FEATHER_BLOCK_NAME,()-> new FeatherBlock(
+            AbstractBlock.Properties.copy(Blocks.WHITE_WOOL)));
+    public static final RegistryObject<Item> FEATHER_BLOCK_ITEM = regBlockItem(FEATHER_BLOCK,getTab(ItemGroup.TAB_DECORATIONS,FEATHER_BLOCK_NAME));
+
+    //gunpowder block
+    public static final String GUNPOWDER_BLOCK_NAME = "gunpowder";
+    public static final RegistryObject<Block> GUNPOWDER_BLOCK = BLOCKS.register(GUNPOWDER_BLOCK_NAME,()-> new GunpowderBlock(
+            AbstractBlock.Properties.of(Material.DECORATION)
+                    .noCollission()
+                    .instabreak()));
+    public static final RegistryObject<Item> GUNPOWDER_BLOCK_ITEM = regBlockItem(GUNPOWDER_BLOCK,null);
+
+
+
+
 
     //cracked bell
     public static final String CRACKED_BELL_NAME = "cracked_bell";

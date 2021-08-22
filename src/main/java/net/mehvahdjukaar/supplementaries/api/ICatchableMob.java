@@ -1,9 +1,28 @@
 package net.mehvahdjukaar.supplementaries.api;
 
+import net.minecraft.item.Item;
+
 /**
  * implement this in your entity class
  */
-public interface ICageJarCatchable {
+public interface ICatchableMob {
+
+    /**
+     * generic method. Implement if needed
+     * @param item catching item
+     * @return can be caught
+     */
+    default boolean canBeCaughtWithItem(Item item){
+        switch (item.getRegistryName().toString()){
+            case "supplementaries:jar":
+                return canBeCaughtWithJar();
+            case "supplementaries:tinted_jar":
+                return canBeCaughtWithTintedJar();
+            case "supplementaries:cage":
+                return canBeCaughtWithCage();
+        }
+        return false;
+    }
 
     boolean canBeCaughtWithJar();
 

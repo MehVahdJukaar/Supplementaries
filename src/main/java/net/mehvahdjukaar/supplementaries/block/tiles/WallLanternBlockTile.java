@@ -8,8 +8,16 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraftforge.client.model.ModelDataManager;
+import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
+import net.minecraftforge.common.util.Constants;
+
+import java.util.Objects;
 
 
 public class WallLanternBlockTile extends EnhancedLanternBlockTile implements ITickableTileEntity, IBlockHolder {
@@ -33,7 +41,7 @@ public class WallLanternBlockTile extends EnhancedLanternBlockTile implements IT
         super(Registry.WALL_LANTERN_TILE.get());
     }
 
-    /*
+
     @Override
     public IModelData getModelData() {
         //return data;
@@ -53,11 +61,9 @@ public class WallLanternBlockTile extends EnhancedLanternBlockTile implements IT
             //not needed cause model data doesn't create new obj. updating old one instead
             ModelDataManager.requestModelDataRefresh(this);
             //this.data.setData(MIMIC, this.getHeldBlock());
-            this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+            this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
         }
     }
-
-*/
 
     @Override
     public void load(BlockState state, CompoundNBT compound) {

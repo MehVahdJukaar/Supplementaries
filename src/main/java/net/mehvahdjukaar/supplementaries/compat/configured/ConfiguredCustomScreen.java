@@ -121,8 +121,8 @@ public class ConfiguredCustomScreen extends ConfigScreen {
     //needed for custom title
     public ConfiguredCustomScreen(Screen parent) {
         super(parent, "\u00A76Supplementaries Configured",
-                Collections.singletonList(new ConfigFileEntry(ClientConfigs.CLIENT_CONFIG, ClientConfigs.CLIENT_CONFIG.getValues())),
-                Arrays.asList(new ConfigFileEntry(ServerConfigs.SERVER_CONFIG, ServerConfigs.SERVER_CONFIG.getValues()),
+                Collections.singletonList(new ConfigFileEntry(ClientConfigs.CLIENT_SPEC, ClientConfigs.CLIENT_SPEC.getValues())),
+                Arrays.asList(new ConfigFileEntry(ServerConfigs.SERVER_SPEC, ServerConfigs.SERVER_SPEC.getValues()),
                         new ConfigFileEntry(RegistryConfigs.REGISTRY_CONFIG, RegistryConfigs.REGISTRY_CONFIG.getValues())),
                 Textures.EMPTY_TEXTURE);
     }
@@ -159,10 +159,10 @@ public class ConfiguredCustomScreen extends ConfigScreen {
                 SubMenu subMenu = (SubMenu) c;
 
                 if(!isCommon) {
-                    modifySubmenus(f, subMenu, ClientConfigs.CLIENT_CONFIG);
+                    modifySubmenus(f, subMenu, ClientConfigs.CLIENT_SPEC);
                 }
                 else{
-                    modifySubmenus(f, subMenu, ServerConfigs.SERVER_CONFIG);
+                    modifySubmenus(f, subMenu, ServerConfigs.SERVER_SPEC);
                     //TODO: add icons to reg configs
                     //modifySubmenus(f, subMenu, RegistryConfigs.REGISTRY_CONFIG);
 

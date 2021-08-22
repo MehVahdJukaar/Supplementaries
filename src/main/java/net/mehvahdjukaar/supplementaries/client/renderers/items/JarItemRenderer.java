@@ -27,20 +27,14 @@ public class JarItemRenderer extends CageItemRenderer {
     private static final Random RAND = new Random(420);
 
     @Override
-    public void renderByItem(ItemStack stack, ItemCameraTransforms.TransformType transformType, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
+    public void renderTileStuff(CompoundNBT tag, ItemCameraTransforms.TransformType transformType, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
 
-        CompoundNBT compound = stack.getTagElement("BlockEntityTag");
-        if(compound == null || compound.isEmpty())return;
+        super.renderTileStuff(tag, transformType, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
 
-        //JarBlockTile.SpecialJarContent specialType = JarBlockTile.SpecialJarContent.values()[compound.getInt("SpecialType")];
-
-
-
-
-        if(compound.contains("MobHolder")||compound.contains("BucketHolder")){
-            CompoundNBT com = compound.getCompound("BucketHolder");
-            if(com.isEmpty())com = compound.getCompound("MobHolder");
-            if(com.contains("FishTexture")) {
+        if (tag.contains("MobHolder") || tag.contains("BucketHolder")) {
+            CompoundNBT com = tag.getCompound("BucketHolder");
+            if (com.isEmpty()) com = tag.getCompound("MobHolder");
+            if (com.contains("FishTexture")) {
                 int fishTexture = com.getInt("FishTexture");
                 if (fishTexture >= 0) {
                     matrixStackIn.pushPose();
@@ -56,10 +50,10 @@ public class JarItemRenderer extends CageItemRenderer {
                         matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, false);
             }
         }
-        if(compound.contains("FluidHolder")){
-            CompoundNBT com = compound.getCompound("FluidHolder");
+        if (tag.contains("FluidHolder")) {
+            CompoundNBT com = tag.getCompound("FluidHolder");
             int height = com.getInt("Count");
-            if(height!=0) {
+            if (height != 0) {
                 int color = com.getInt("CachedColor");
                 SoftFluid fluid = SoftFluidRegistry.get(com.getString("Fluid"));
                 if (!fluid.isEmpty() && height > 0)
@@ -67,10 +61,10 @@ public class JarItemRenderer extends CageItemRenderer {
                             matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, false);
             }
         }
-        if(compound.contains("Items")) {
-            ItemStack cookieStack = ItemStack.of((compound.getList("Items", 10)).getCompound(0));
+        if (tag.contains("Items")) {
+            ItemStack cookieStack = ItemStack.of((tag.getList("Items", 10)).getCompound(0));
             int height = cookieStack.getCount();
-            if(height!=0) {
+            if (height != 0) {
                 RAND.setSeed(420);
                 matrixStackIn.pushPose();
                 matrixStackIn.translate(0.5, 0.5, 0.5);
@@ -84,14 +78,12 @@ public class JarItemRenderer extends CageItemRenderer {
                     matrixStackIn.translate(0, 0, 1 / (16f * scale));
                     ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
                     IBakedModel ibakedmodel = itemRenderer.getModel(cookieStack, null, null);
-                    itemRenderer.render(stack, ItemCameraTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
+                    itemRenderer.render(cookieStack, ItemCameraTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
                             combinedOverlayIn, ibakedmodel);
                 }
                 matrixStackIn.popPose();
             }
         }
-        //render block & mob using cage renderer
-        super.renderByItem(stack,transformType,matrixStackIn,bufferIn,combinedLightIn,combinedOverlayIn);
 
     }
 }

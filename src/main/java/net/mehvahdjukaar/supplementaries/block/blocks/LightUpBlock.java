@@ -1,17 +1,16 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.selene.util.Utils;
+import net.mehvahdjukaar.supplementaries.block.util.ILightable;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.IWaterLoggable;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PotionEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileItemEntity;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.*;
 import net.minecraft.particles.ParticleTypes;
@@ -20,7 +19,10 @@ import net.minecraft.potion.Potions;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IWorld;
@@ -28,26 +30,19 @@ import net.minecraft.world.World;
 
 import java.util.Random;
 
-public abstract class LightUpBlock extends Block implements IWaterLoggable {
+public abstract class LightUpBlock extends Block implements ILightable {
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
-    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+
     public LightUpBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED,false).setValue(LIT,true));
     }
 
-    @Override
-    public boolean placeLiquid(IWorld worldIn, BlockPos pos, BlockState state, FluidState fluidStateIn) {
-        if (!state.getValue(BlockStateProperties.WATERLOGGED) && fluidStateIn.getType() == Fluids.WATER) {
+    public boolean isLit(BlockState state){
+        return state.getValue(LIT);
+    }
 
-            extinguish(state, pos, worldIn);
-
-            worldIn.setBlock(pos, state.setValue(WATERLOGGED, true).setValue(LIT, false), 3);
-            worldIn.getLiquidTicks().scheduleTick(pos, fluidStateIn.getType(), fluidStateIn.getType().getTickDelay(worldIn));
-            return true;
-        } else {
-            return false;
-        }
+    public BlockState toggleListState(BlockState state, boolean lit){
+        return state.setValue(LIT, lit);
     }
 
     @Override
@@ -55,43 +50,27 @@ public abstract class LightUpBlock extends Block implements IWaterLoggable {
         return this.material.isReplaceable();
     }
 
-    public enum FireSound{
-        FLINT_AND_STEEL,
-        FIRE_CHANGE,
-        FLAMING_ARROW;
-        public void playSound(IWorld world, BlockPos pos){
-            switch(this){
-                case FIRE_CHANGE:
-                    world.playSound(null, pos, SoundEvents.FIRECHARGE_USE, SoundCategory.BLOCKS, 1.0F, (world.getRandom().nextFloat() - world.getRandom().nextFloat()) * 0.2F + 1.0F);
-                    break;
-                case FLAMING_ARROW:
-                    world.playSound(null, pos, SoundEvents.FIRECHARGE_USE, SoundCategory.BLOCKS, 0.5F, 1.4F);
-                    break;
-                case FLINT_AND_STEEL:
-                    world.playSound(null, pos, SoundEvents.FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, world.getRandom().nextFloat() * 0.4F + 0.8F);
-                    break;
-            }
-        }
-    }
+    //TODO: remove
+    public void onChange(BlockState state, IWorld world, BlockPos pos){};
 
-    public void onChange(BlockState state, IWorld world, BlockPos pos) {}
-
-    public static boolean lightUp(BlockState state, BlockPos pos, IWorld world, FireSound sound){
-        if (!state.getValue(LIT) && !state.getValue(WATERLOGGED)) {
+    @Override
+    public boolean lightUp(BlockState state, BlockPos pos, IWorld world, ILightable.FireSound sound){
+        if (!isLit(state)) {
             if(!world.isClientSide()) {
-                world.setBlock(pos, state.setValue(LIT, true), 11);
-                sound.playSound(world, pos);
+                world.setBlock(pos, toggleListState(state, true), 11);
+                sound.play(world, pos);
             }
             return true;
         }
         return false;
     }
 
-    public static boolean extinguish(BlockState state, BlockPos pos, IWorld world) {
-        if (state.getValue(LIT)) {
+    @Override
+    public boolean extinguish(BlockState state, BlockPos pos, IWorld world) {
+        if (this.isLit(state)) {
             if (!world.isClientSide()) {
                 world.playSound(null, pos, SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundCategory.BLOCKS, 0.5F, 1.5F);
-                world.setBlock(pos, state.setValue(BlockStateProperties.LIT, false), 11);
+                world.setBlock(pos, toggleListState(state, false), 11);
             } else {
                 Random random = world.getRandom();
                 for (int i = 0; i < 10; ++i) {
@@ -105,7 +84,7 @@ public abstract class LightUpBlock extends Block implements IWaterLoggable {
 
     @Override
     public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if(!state.getValue(LIT) && !state.getValue(WATERLOGGED) && player.abilities.mayBuild) {
+        if(!this.isLit(state) && player.abilities.mayBuild) {
             ItemStack stack = player.getItemInHand(handIn);
             Item item = stack.getItem();
             if (item instanceof FlintAndSteelItem || item.is(ModTags.FIRE_SOURCES)) {
@@ -157,28 +136,15 @@ public abstract class LightUpBlock extends Block implements IWaterLoggable {
     }
 
     @Override
-    public FluidState getFluidState(BlockState state) {
-        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
-    }
-
-    @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
-        if (stateIn.getValue(WATERLOGGED)) {
-            worldIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
-        }
-        return stateIn;
-    }
-
-    @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         boolean flag = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;
         BlockState state = this.defaultBlockState();
-        return state.setValue(WATERLOGGED, flag).setValue(LIT,!flag);
+        return toggleListState(state, !flag);
     }
 
 
     @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(LIT,WATERLOGGED);
+        builder.add(LIT);
     }
 }

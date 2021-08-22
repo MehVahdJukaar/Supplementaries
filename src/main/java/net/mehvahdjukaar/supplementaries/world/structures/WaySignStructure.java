@@ -143,7 +143,13 @@ public class WaySignStructure extends Structure<NoFeatureConfig> {
 
     @Override
     public String getFeatureName() {
-        return ForgeRegistries.STRUCTURE_FEATURES.getKey(this).toString();
+        String name = super.getFeatureName();
+        if(name==null){
+            //fail-safe stuff in case something goes wrong during registration so we dont nuke worlds
+            Supplementaries.LOGGER.error(new Exception("failed to register way sign structure. this is a bug"));
+            return ForgeRegistries.STRUCTURE_FEATURES.getKey(this).toString();
+        }
+        return name;
     }
 
     /**

@@ -4,6 +4,7 @@ import net.mehvahdjukaar.selene.fluids.*;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.blocks.FaucetBlock;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
+import net.mehvahdjukaar.supplementaries.compat.CompatObjects;
 import net.mehvahdjukaar.supplementaries.compat.inspirations.CauldronPlugin;
 import net.mehvahdjukaar.supplementaries.fluids.ModSoftFluids;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
@@ -14,6 +15,7 @@ import net.minecraft.block.HorizontalBlock;
 import net.minecraft.entity.item.ExperienceOrbEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -119,7 +121,7 @@ public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
         }
         //beehive
         else if (backState.hasProperty(BlockStateProperties.LEVEL_HONEY)) {
-            if(backState.getValue(BlockStateProperties.LEVEL_HONEY) > 0) {
+            if(backState.getValue(BlockStateProperties.LEVEL_HONEY) == 5) {
                 this.fluidHolder.fill(SoftFluidRegistry.HONEY);
                 if (doTransfer && tryFillingBlockBelow()) {
                     this.level.setBlock(behind, backState.setValue(BlockStateProperties.LEVEL_HONEY,
@@ -130,7 +132,7 @@ public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
             return false;
         }
         //honey pot
-        else if (backState.hasProperty(BlockProperties.HONEY_LEVEL_POT)) {
+        else if (CompatHandler.buzzier_bees && backState.hasProperty(BlockProperties.HONEY_LEVEL_POT)) {
             if(backState.getValue(BlockProperties.HONEY_LEVEL_POT) > 0) {
                 this.fluidHolder.fill(SoftFluidRegistry.HONEY);
                 if (doTransfer && tryFillingBlockBelow()) {
@@ -142,7 +144,7 @@ public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
             return false;
         }
         //sap log
-        else if (backBlock.getRegistryName().toString().contains("autumnity:sappy_")) {
+        else if (CompatHandler.autumnity && (backBlock == CompatObjects.SAPPY_MAPLE_LOG.get() || backBlock == CompatObjects.SAPPY_MAPLE_WOOD.get())){
             this.fluidHolder.fill(ModSoftFluids.SAP);
             if(doTransfer && tryFillingBlockBelow()) {
                 Block log = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(backBlock.getRegistryName().toString().replace("sappy","stripped")));
@@ -194,6 +196,10 @@ public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
                         return true;
                     }
                 }
+                else if(level.getFluidState(behind).getType() == Fluids.WATER){
+                    this.fluidHolder.fill(SoftFluidRegistry.WATER);
+                    return true;
+                }
             }
         }
         if(!doTransfer)return !this.fluidHolder.isEmpty();
@@ -220,14 +226,14 @@ public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
             //beehives
             if(belowState.hasProperty(BlockStateProperties.LEVEL_HONEY)) {
                 int h = belowState.getValue(BlockStateProperties.LEVEL_HONEY);
-                if (h < 5) {
-                    level.setBlock(below, belowState.setValue(BlockStateProperties.LEVEL_HONEY, h + 1), 3);
+                if (h == 0) {
+                    level.setBlock(below, belowState.setValue(BlockStateProperties.LEVEL_HONEY, 5), 3);
                     return true;
                 }
                 return false;
             }
             //honey pot
-            else if(belowState.hasProperty(BlockProperties.HONEY_LEVEL_POT)) {
+            else if(CompatHandler.buzzier_bees && belowState.hasProperty(BlockProperties.HONEY_LEVEL_POT)) {
                 int h = belowState.getValue(BlockProperties.HONEY_LEVEL_POT);
                 if (h < 4) {
                     level.setBlock(below, belowState.setValue(BlockProperties.HONEY_LEVEL_POT, h + 1), 3);

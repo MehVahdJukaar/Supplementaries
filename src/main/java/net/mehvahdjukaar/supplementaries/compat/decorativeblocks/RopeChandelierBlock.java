@@ -8,6 +8,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootContext;
 import net.minecraft.particles.BasicParticleType;
+import net.minecraft.particles.ParticleType;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -25,7 +26,7 @@ public class RopeChandelierBlock extends ChandelierBlock {
     private final Supplier<Block> mimic;
     private final Lazy<BlockState> defMimic;
     protected final Lazy<BasicParticleType> particleData;
-    public RopeChandelierBlock(Properties properties,  Supplier<Block> chandelier, Supplier<BasicParticleType> particleData) {
+    public <T extends ParticleType<?>> RopeChandelierBlock(Properties properties,  Supplier<Block> chandelier, Supplier<T> particleData) {
         super(properties, chandelier==CompatObjects.SOUL_CHANDELIER);
         /*
         this.mimic = Lazy.of(()->{
@@ -37,7 +38,7 @@ public class RopeChandelierBlock extends ChandelierBlock {
         defMimic = Lazy.of(()->this.mimic.get().defaultBlockState());
 
         this.particleData = Lazy.of(()->{
-            BasicParticleType data = particleData.get();
+            BasicParticleType data = (BasicParticleType) particleData.get();
             if(data==null)data = ParticleTypes.FLAME;
             return data;
         });

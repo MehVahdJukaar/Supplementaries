@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.block.util;
 
 import net.mehvahdjukaar.selene.util.Utils;
-import net.mehvahdjukaar.supplementaries.api.ICageJarCatchable;
-import net.mehvahdjukaar.supplementaries.api.ICageJarCatchable.AnimationCategory;
+import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
+import net.mehvahdjukaar.supplementaries.api.ICatchableMob.AnimationCategory;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper.CapturedMobProperties;
 import net.minecraft.block.BlockState;
@@ -119,10 +119,10 @@ public class MobHolder {
         cmp.put("EntityData", entityData);
         cmp.putFloat("Scale", scale);
         cmp.putFloat("YOffset", yOffset);
-        if(id!=null) cmp.putUUID("UUID", id);
+        if (id != null) cmp.putUUID("UUID", id);
         cmp.putString("Name", name);
-        if(fishTexture>=0||fishTexture==-69)
-            cmp.putInt("FishTexture",fishTexture);
+        if (fishTexture >= 0 || fishTexture == -69)
+            cmp.putInt("FishTexture", fishTexture);
         compound.put("MobHolder", cmp);
     }
 
@@ -207,8 +207,8 @@ public class MobHolder {
         this.mob.tickCount++;
 
         //interface stuff
-        boolean hasCustomMethods = this.mob instanceof ICageJarCatchable;
-        if(hasCustomMethods) ((ICageJarCatchable) this.mob).tickInsideCageOrJar();
+        boolean hasCustomMethods = this.mob instanceof ICatchableMob;
+        if(hasCustomMethods) ((ICatchableMob) this.mob).tickInsideCageOrJar();
 
 
         if (!this.world.isClientSide) {
@@ -312,7 +312,7 @@ public class MobHolder {
                     if (rand.nextFloat() > (ch.isOnGround() ? 0.99 : 0.88)) ch.setOnGround(!ch.isOnGround());
                     break;
             }
-            if (this.capturedMobProperties.isFloating() || (hasCustomMethods && ((ICageJarCatchable) this.mob).getAnimationCategory().isFloating())) {
+            if (this.capturedMobProperties.isFloating() || (hasCustomMethods && ((ICatchableMob) this.mob).getAnimationCategory().isFloating())) {
                 this.jumpY = 0.04f * MathHelper.sin(this.mob.tickCount / 10f) - 0.03f;
             }
         }
@@ -398,8 +398,8 @@ public class MobHolder {
             this.setWaterMobInWater(true); //!this.world.getFluidState(pos).isEmpty()
             if (!this.world.isClientSide) {
                 int light;
-                if(this.mob instanceof ICageJarCatchable){
-                    light = ((ICageJarCatchable) this.mob).getLightLevel();
+                if(this.mob instanceof ICatchableMob){
+                    light = ((ICatchableMob) this.mob).getLightLevel();
                 }
                 else{
                     light = this.capturedMobProperties.getLightLevel();
@@ -453,14 +453,14 @@ public class MobHolder {
 
     }
 
-    private static boolean isInAir(Entity mob, ICageJarCatchable.AnimationCategory category){
+    private static boolean isInAir(Entity mob, ICatchableMob.AnimationCategory category){
         return !category.isLand() && (category.isFlying() || mob.isNoGravity() || mob instanceof IFlyingAnimal ||
                 mob.isIgnoringBlockTriggers() || mob instanceof WaterMobEntity);
     }
 
     //called by the item. turns a mob into what's store inside item and tile
     @Nullable
-    public static CompoundNBT createMobHolderItemNBT(Entity mob, float blockh, float blockw){
+    public static CompoundNBT createMobHolderItemNBT(Entity mob, float blockW, float blockH){
         if(mob==null)return null;
         if(mob instanceof LivingEntity){
             LivingEntity le = (LivingEntity) mob;
@@ -469,7 +469,6 @@ public class MobHolder {
             le.animationSpeed = 0;
             le.animationSpeedOld = 0;
             le.animationPosition = 0;
-            le.hurtTime=0;
             le.hurtDuration=0;
             le.hurtTime=0;
             le.attackAnim=0;
@@ -514,17 +513,17 @@ public class MobHolder {
 
             float addWidth;
             float addHeight;
-            if(mob instanceof ICageJarCatchable){
-                addWidth = ((ICageJarCatchable) mob).getHitBoxWidthIncrement();
-                addHeight = ((ICageJarCatchable) mob).getHitBoxHeightIncrement();
+            if(mob instanceof ICatchableMob){
+                addWidth = ((ICatchableMob) mob).getHitBoxWidthIncrement();
+                addHeight = ((ICatchableMob) mob).getHitBoxHeightIncrement();
             }
             else{
                 addWidth = mobProperties.getWidth();
                 addHeight = mobProperties.getHeight();
             }
 
-            float maxh = blockh - (isAir ? 0.25f : 0.125f) - addHeight;
-            float maxw = blockw - 0.25f - addWidth;
+            float maxh = blockH - (isAir ? 0.25f : 0.125f) - addHeight;
+            float maxw = blockW - 0.25f - addWidth;
             if (w > maxw || h > maxh) {
                 if (w - maxw > h - maxh)
                     s = maxw / w;
@@ -532,7 +531,7 @@ public class MobHolder {
                     s = maxh / h;
             }
             //TODO: rewrite this to account for adjValues
-            float y = isAir ? (blockh/2f) - h * s / 2f : 0.0626f;
+            float y = isAir ? (blockH/2f) - h * s / 2f : 0.0626f;
 
             //ice&fire dragons
             String name = mob.getType().getRegistryName().toString();

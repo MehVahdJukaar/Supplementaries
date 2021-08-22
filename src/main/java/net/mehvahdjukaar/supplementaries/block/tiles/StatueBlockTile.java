@@ -12,6 +12,7 @@ import net.mehvahdjukaar.supplementaries.common.SpecialPlayers;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.*;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.PlayerProfileCache;
 import net.minecraft.util.Direction;
 import net.minecraft.util.text.ITextComponent;
@@ -21,8 +22,9 @@ import javax.annotation.Nullable;
 import java.util.UUID;
 
 public class StatueBlockTile extends ItemDisplayTile {
-    public static PlayerProfileCache profileCache;
-    public static MinecraftSessionService sessionService;
+    private static PlayerProfileCache profileCache;
+    private static MinecraftSessionService sessionService;
+
     public GameProfile playerProfile = null;
 
     //clientside
@@ -32,6 +34,12 @@ public class StatueBlockTile extends ItemDisplayTile {
 
     public StatueBlockTile() {
         super(Registry.STATUE_TILE.get());
+    }
+
+    public static void initializeSessionData(MinecraftServer server){
+        profileCache = server.getProfileCache();
+        sessionService = server.getSessionService();
+        //PlayerProfileCache.setOnlineMode(server.isServerInOnlineMode());
     }
 
     @Override

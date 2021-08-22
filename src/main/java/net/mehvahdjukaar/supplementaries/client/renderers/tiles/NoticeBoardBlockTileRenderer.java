@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.mehvahdjukaar.supplementaries.block.tiles.NoticeBoardBlockTile;
+import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.client.renderers.LOD;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.client.renderers.TextUtil;
@@ -15,6 +16,7 @@ import net.minecraft.client.gui.MapItemRenderer;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.NativeImage;
@@ -24,12 +26,14 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.AbstractMapItem;
 import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Direction;
 import net.minecraft.util.IReorderingProcessor;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.ITextProperties;
+import net.minecraft.world.World;
 import net.minecraft.world.storage.MapData;
 
 import java.util.List;
@@ -45,33 +49,43 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
         mapRenderer = minecraft.gameRenderer.getMapRenderer();
     }
 
+    public int getFrontLight(World world, BlockPos pos, Direction dir) {
+        return WorldRenderer.getLightColor(world, pos.relative(dir));
+    }
 
+    public boolean getAxis(Direction dir) {
+        return dir == Direction.NORTH || dir == Direction.SOUTH;
+    }
 
     @Override
     public void render(NoticeBoardBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
 
-        if(tile.textVisible){
+        //TODO: rewrite
+        if(tile.isTextVisible()){
 
             ItemStack stack = tile.getDisplayedItem();
+
             if(stack.isEmpty())return;
 
-            float yaw = tile.getYaw();
+            World world = tile.getLevel();
+            Direction dir = tile.getDirection();
+
+            float yaw = -dir.toYRot();
             Vector3d cameraPos = this.renderer.camera.getPosition();
             BlockPos pos = tile.getBlockPos();
             if(LOD.isOutOfFocus(cameraPos, pos, yaw))return;
 
             //TODO: fix book with nothing in it
-            int frontLight = tile.getFrontLight();
-
+            int frontLight = this.getFrontLight(world, pos, dir);
 
             matrixStackIn.pushPose();
             matrixStackIn.translate(0.5, 0.5, 0.5);
-            matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(yaw));
+            matrixStackIn.mulPose(Const.rot((int)yaw));
             matrixStackIn.translate(0, 0, 0.5);
 
             //render map
-            MapData mapdata = FilledMapItem.getOrCreateSavedData(stack, tile.getLevel());
+            MapData mapdata = FilledMapItem.getOrCreateSavedData(stack, world);
             if(stack.getItem() instanceof AbstractMapItem) {
                 if (mapdata != null) {
                     matrixStackIn.pushPose();
@@ -92,7 +106,7 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
             }
 
             //render book
-            String page = tile.text;
+            String page = tile.getText();
             if (!(page == null || page.equals(""))) {
 
                 LOD lod = new LOD(cameraPos,pos);
@@ -107,7 +121,7 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
                 matrixStackIn.translate(0,0.5,0.008);
 
                 float d0;
-                if (tile.getAxis()) {
+                if (this.getAxis(dir)) {
                     d0 = 0.8f * 0.7f;
                 } else {
                     d0 = 0.6f * 0.7f;
@@ -197,9 +211,10 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
             //render item
             if(!stack.isEmpty()) {
 
-                if (tile.cachedPattern!=null) {
+                ResourceLocation pattern = tile.getCachedPattern();
+                if (pattern != null) {
                     //TODO: replace with flag material
-                    IVertexBuilder builder = bufferIn.getBuffer(RenderType.itemEntityTranslucentCull(tile.cachedPattern));
+                    IVertexBuilder builder = bufferIn.getBuffer(RenderType.itemEntityTranslucentCull(pattern));
 
                     int i = tile.getTextColor().getTextColor();
                     float b = (NativeImage.getR(i) )/255f;
@@ -213,7 +228,7 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
 
                 }
                 else{
-                    IBakedModel ibakedmodel = itemRenderer.getModel(stack, tile.getLevel(), null);
+                    IBakedModel ibakedmodel = itemRenderer.getModel(stack, world, null);
 
                     matrixStackIn.translate(0, 0, 0.015625 + 0.00005);
                     matrixStackIn.scale(-0.5f, 0.5f, -0.5f);

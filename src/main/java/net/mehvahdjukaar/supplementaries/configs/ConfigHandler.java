@@ -7,6 +7,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.PlayerList;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.config.ModConfig;
@@ -28,15 +29,35 @@ public class ConfigHandler {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(ConfigHandler::reloadConfigsEvent);
     }
 
+    public static <T> void resetConfigValue(ForgeConfigSpec spec, ForgeConfigSpec.ConfigValue<T> value){
+        ForgeConfigSpec.ValueSpec valueSpec = spec.getRaw(value.getPath());
+        if(valueSpec == null) Supplementaries.LOGGER.throwing(
+                new Exception("No such config value: "+ value +"in config "+ spec));
+        value.set((T) valueSpec.getDefault());
+    }
+
+    public static <T> T safeGetListString(ForgeConfigSpec spec, ForgeConfigSpec.ConfigValue<T> value){
+        Object o = value.get();
+        //resets failed config value
+        try{
+            T o1 = (T) o;
+        }catch (Exception e){
+            Supplementaries.LOGGER.warn(
+                    new Exception("Resetting erroneous config value: "+ value +"in config "+ spec));
+            resetConfigValue(spec, value);
+        }
+        return value.get();
+    }
+
 
     public static void reloadConfigsEvent(ModConfig.ModConfigEvent event) {
         //TODO: common aren't working..
-        if(event.getConfig().getSpec() == ServerConfigs.SERVER_CONFIG) {
+        if(event.getConfig().getSpec() == ServerConfigs.SERVER_SPEC) {
             //send this configuration to connected clients
             syncServerConfigs();
             ServerConfigs.cached.refresh();
         }
-        else if(event.getConfig().getSpec() == ClientConfigs.CLIENT_CONFIG)
+        else if(event.getConfig().getSpec() == ClientConfigs.CLIENT_SPEC)
             ClientConfigs.cached.refresh();
     }
 
@@ -48,7 +69,8 @@ public class ConfigHandler {
         }
     }
     public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
-        if (event.getPlayer().level.isClientSide||true) {
+        //TODO: fix server configs sync
+        if (event.getPlayer().level.isClientSide) {
             //reload local common configs
             //maybe not needed
             ServerConfigs.loadLocal();

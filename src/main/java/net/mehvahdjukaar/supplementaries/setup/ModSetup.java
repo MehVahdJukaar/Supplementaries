@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.common.FlowerPotHelper;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.events.ItemSOverrideHandler;
 import net.mehvahdjukaar.supplementaries.fluids.ModSoftFluids;
 import net.mehvahdjukaar.supplementaries.mixins.accessors.ChickenEntityAccessor;
 import net.mehvahdjukaar.supplementaries.mixins.accessors.HorseEntityAccessor;
@@ -48,47 +49,52 @@ public class ModSetup {
     public static void init(final FMLCommonSetupEvent event) {
 
         event.enqueueWork(()-> {
+            try {
 
-            NetworkHandler.registerMessages();
+                StructureRegistry.setup();
 
-            CMDreg.init(event);
+                StructureLocator.init();
 
-            Spawns.registerSpawningStuff();
+                CompatHandler.init();
 
-            ComposterBlock.COMPOSTABLES.put(Registry.FLAX_SEEDS_ITEM.get(), 0.3F);
-            ComposterBlock.COMPOSTABLES.put(Registry.FLAX_ITEM.get(), 0.65F);
-            ComposterBlock.COMPOSTABLES.put(Registry.FLAX_BLOCK_ITEM.get(), 1);
+                CMDreg.init(event);
 
-            List<ItemStack> chickenFood = new ArrayList<>();
-            Collections.addAll(chickenFood, ChickenEntityAccessor.getFoodItems().getItems());
-            chickenFood.add(new ItemStack(Registry.FLAX_SEEDS_ITEM.get()));
-            ChickenEntityAccessor.setFoodItems(Ingredient.of(chickenFood.stream()));
+                Spawns.registerSpawningStuff();
 
-            List<ItemStack> horseFood = new ArrayList<>();
-            Collections.addAll(horseFood, HorseEntityAccessor.getFoodItems().getItems());
-            horseFood.add(new ItemStack(Registry.FLAX_ITEM.get()));
-            horseFood.add(new ItemStack(Registry.FLAX_BLOCK_ITEM.get()));
-            HorseEntityAccessor.setFoodItems(Ingredient.of(horseFood.stream()));
+                ComposterBlock.COMPOSTABLES.put(Registry.FLAX_SEEDS_ITEM.get(), 0.3F);
+                ComposterBlock.COMPOSTABLES.put(Registry.FLAX_ITEM.get(), 0.65F);
+                ComposterBlock.COMPOSTABLES.put(Registry.FLAX_BLOCK_ITEM.get(), 1);
+
+                List<ItemStack> chickenFood = new ArrayList<>();
+                Collections.addAll(chickenFood, ChickenEntityAccessor.getFoodItems().getItems());
+                chickenFood.add(new ItemStack(Registry.FLAX_SEEDS_ITEM.get()));
+                ChickenEntityAccessor.setFoodItems(Ingredient.of(chickenFood.stream()));
+
+                List<ItemStack> horseFood = new ArrayList<>();
+                Collections.addAll(horseFood, HorseEntityAccessor.getFoodItems().getItems());
+                horseFood.add(new ItemStack(Registry.FLAX_ITEM.get()));
+                horseFood.add(new ItemStack(Registry.FLAX_BLOCK_ITEM.get()));
+                HorseEntityAccessor.setFoodItems(Ingredient.of(horseFood.stream()));
+
+                ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(Registry.FLAX_ITEM.get().getRegistryName(), Registry.FLAX_POT);
+
+                FlowerPotHelper.init();
+
+                CapturedMobsHelper.refresh();
+
+                DispenserStuff.registerBehaviors();
+
+                ModSoftFluids.init();
+
+                NetworkHandler.registerMessages();
+
+                ItemSOverrideHandler.init();
 
 
-            CompatHandler.init();
-
-
-            ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(Registry.FLAX_ITEM.get().getRegistryName(), Registry.FLAX_POT);
-
-            FlowerPotHelper.init();
-
-            CapturedMobsHelper.refresh();
-
-            DispenserStuff.registerBehaviors();
-
-            StructureRegistry.setup();
-
-            StructureLocator.init();
-
-            ModSoftFluids.init();
-
-            //if(CompatHandler.quark) QuarkPlugin.addMissingDispenserBlockPlacingBehaviors();
+                //if(CompatHandler.quark) QuarkPlugin.addMissingDispenserBlockPlacingBehaviors();
+            }catch(Exception e){
+                Supplementaries.LOGGER.throwing(new Exception("Mod setup failed: "+e+". This is a big bug"));
+            }
 
         });
     }

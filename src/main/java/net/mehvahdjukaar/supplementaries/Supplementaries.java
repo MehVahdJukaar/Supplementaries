@@ -43,15 +43,29 @@ public class Supplementaries{
 
         //TODO: reworkd ItemDisplayTile with proper capability usage
 
-        //TODO: bugs: bell ropes, sack ender chest
+        //TODO: bugs: bell ropes, brewing starnd colors, wall laerns model
+
+        //TODO: notice board pages, rewrite inventory cap
 
         //TODO: mod ideas: particle block, blackboard banners and flags, lantern holding
+
+        //TODO: add stick window loggable clipping
+
+        //RODO: add redstone config for iron gate
+
+        //add new translations
+
+        //TODO: fix horizontal stick texture
+
+        //TODO: fix wall lanterns particles
+
+        //mod idea: better birch trees
 
         MinecraftForge.EVENT_BUS.register(ServerEvents.class);
 
 
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ServerConfigs.SERVER_CONFIG);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfigs.CLIENT_CONFIG);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ServerConfigs.SERVER_SPEC);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfigs.CLIENT_SPEC);
 
         ConfigHandler.init();
 

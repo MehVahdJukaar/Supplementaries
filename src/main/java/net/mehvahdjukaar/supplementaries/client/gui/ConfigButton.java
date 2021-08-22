@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.gui;
 
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.client.renderers.HSLColor;
+import net.mehvahdjukaar.supplementaries.client.renderers.color.HSLColor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.IngameMenuScreen;
 import net.minecraft.client.gui.screen.MainMenuScreen;

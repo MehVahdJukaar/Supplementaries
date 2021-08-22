@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.client.renderers;
+package net.mehvahdjukaar.supplementaries.client.renderers.color;
 
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.renderer.color.IItemColor;

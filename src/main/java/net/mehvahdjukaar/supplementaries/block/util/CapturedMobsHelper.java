@@ -1,8 +1,9 @@
 package net.mehvahdjukaar.supplementaries.block.util;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.api.ICageJarCatchable.AnimationCategory;
+import net.mehvahdjukaar.supplementaries.api.ICatchableMob.AnimationCategory;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
@@ -163,9 +164,11 @@ public class CapturedMobsHelper {
     }
 
 
+
     public static void refresh(){
         TYPES.clear();
-        List<? extends List<String>> config = ClientConfigs.block.CAPTURED_MOBS_PROPERTIES.get();
+
+        List<? extends List<String>> config = ConfigHandler.safeGetListString(ClientConfigs.CLIENT_SPEC, ClientConfigs.block.CAPTURED_MOBS_PROPERTIES);
         for (List<String> l : config){
             try {
                 int size = l.size();

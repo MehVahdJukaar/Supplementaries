@@ -7,7 +7,6 @@ import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.particles.BasicParticleType;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -55,7 +54,7 @@ public class DecoBlocksCompatRegistry {
                     .sound(SoundType.WOOD)
                     .noOcclusion()
                     .lightLevel((state) -> 15), CompatObjects.ENDER_CHANDELIER,
-                    ()-> (BasicParticleType) CompatObjects.ENDER_FLAME)
+                    CompatObjects.ENDER_FLAME)
                     .setRegistryName(ENDER_CHANDELIER_ROPE_NAME));
         }
         if(CompatHandler.much_more_mod_compat){
@@ -64,7 +63,7 @@ public class DecoBlocksCompatRegistry {
                     .sound(SoundType.WOOD)
                     .noOcclusion()
                     .lightLevel((state) -> 15), CompatObjects.GLOW_CHANDELIER,
-                    ()-> (BasicParticleType) CompatObjects.GLOW_FLAME)
+                    CompatObjects.GLOW_FLAME)
                     .setRegistryName(GLOW_CHANDELIER_ROPE_NAME));
         }
 
