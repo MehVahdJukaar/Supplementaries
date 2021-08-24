@@ -65,7 +65,7 @@ public class ConfiguredCustomScreen extends ConfigScreen {
         addIcon("blackboard", Registry.BLACKBOARD_ITEM.get());
         addIcon("cage", Registry.CAGE_ITEM.get());
         addIcon("candle holder", Registry.CANDLE_HOLDER_ITEM.get());
-        addIcon("jar", Registry.EMPTY_JAR_ITEM.get());
+        addIcon("jar", Registry.JAR_ITEM.get());
         addIcon("notice board", Registry.NOTICE_BOARD_ITEM.get());
         addIcon("sack", Registry.SACK_ITEM.get());
         addIcon("safe", Registry.SAFE_ITEM.get());

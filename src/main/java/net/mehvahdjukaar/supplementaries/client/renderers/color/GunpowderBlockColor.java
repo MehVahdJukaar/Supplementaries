@@ -31,7 +31,9 @@ public class GunpowderBlockColor implements  IBlockColor {
             int greenInt = MathHelper.clamp(MathHelper.floor(green * 255), 0, 255);
             int blueInt = MathHelper.clamp(MathHelper.floor(blue * 255), 0, 255);
 
+
             COLORS[i] = MathHelper.color(redInt, greenInt, blueInt);
+            //if(i==0) COLORS[i] = 0xffffff;
             // return 6579300;
         }
     }

@@ -53,11 +53,6 @@ public class PulleyBlock extends RotatedPillarBlock {
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return super.getStateForPlacement(context);
-    }
-
-    @Override
     public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
                                              BlockRayTraceResult hit) {
         TileEntity tileentity = worldIn.getBlockEntity(pos);

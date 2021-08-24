@@ -36,30 +36,32 @@ public class PulleyBlockTile extends ItemDisplayTile {
     }
 
     @Override
-    public void updateOnChangedBeforePacket() {}
+    public void updateOnChangedBeforePacket() {
+    }
 
     //hijacking this method to work with hoppers
     @Override
     public void setChanged() {
-        if(this.level==null)return;
+        if (this.level == null) return;
         this.updateTile();
-       //this.updateServerAndClient();
+        //this.updateServerAndClient();
         super.setChanged();
     }
 
     public void updateTile() {
-        if(this.level.isClientSide)return;
+        if (this.level.isClientSide) return;
         Winding type = getContentType(this.getDisplayedItem().getItem());
         BlockState state = this.getBlockState();
-        if(state.getValue(PulleyBlock.TYPE)!=type){
-            level.setBlockAndUpdate(this.worldPosition,state.setValue(PulleyBlock.TYPE,type));
+        if (state.getValue(PulleyBlock.TYPE) != type) {
+            level.setBlockAndUpdate(this.worldPosition, state.setValue(PulleyBlock.TYPE, type));
         }
     }
 
-    public static Winding getContentType(Item item){
+    public static Winding getContentType(Item item) {
         Winding type = Winding.NONE;
-        if(item instanceof BlockItem && ((BlockItem) item).getBlock() instanceof ChainBlock || item.is(ModTags.CHAINS))type = Winding.CHAIN;
-        else if(item.is(ModTags.ROPES))type = Winding.ROPE;
+        if (item instanceof BlockItem && ((BlockItem) item).getBlock() instanceof ChainBlock || item.is(ModTags.CHAINS))
+            type = Winding.CHAIN;
+        else if (item.is(ModTags.ROPES)) type = Winding.ROPE;
         return type;
     }
 
@@ -71,12 +73,12 @@ public class PulleyBlockTile extends ItemDisplayTile {
 
     @Override
     public Container createMenu(int id, PlayerInventory player) {
-        return new PulleyBlockContainer(id, player,this);
+        return new PulleyBlockContainer(id, player, this);
     }
 
     @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
-        return (getContentType(stack.getItem())!=Winding.NONE);
+        return (getContentType(stack.getItem()) != Winding.NONE);
     }
 
     @Override
@@ -95,41 +97,43 @@ public class PulleyBlockTile extends ItemDisplayTile {
     }
 
 
-    public boolean handleRotation(Rotation rot){
-        if(rot==Rotation.CLOCKWISE_90) return this.pullUp(this.worldPosition, this.level,1);
-        else return this.pullDown(this.worldPosition, this.level,1);
+    public boolean handleRotation(Rotation rot) {
+        if (rot == Rotation.CLOCKWISE_90) return this.pullUp(this.worldPosition, this.level, 1);
+        else return this.pullDown(this.worldPosition, this.level, 1);
     }
 
-    public boolean pullUp(BlockPos pos, IWorld world, int rot){
+    public boolean pullUp(BlockPos pos, IWorld world, int rot) {
 
-        if(!(world instanceof World))return false;
+        if (!(world instanceof World)) return false;
         ItemStack stack = this.getDisplayedItem();
-        boolean flag = false;
-        if(stack.isEmpty()){
-            stack = new ItemStack(world.getBlockState(pos.below()).getBlock().asItem());
-            flag = true;
+        boolean addNewItem = false;
+        if (stack.isEmpty()) {
+            Item i = world.getBlockState(pos.below()).getBlock().asItem();
+            if (getContentType(i) == Winding.NONE) return false;
+            stack = new ItemStack(i);
+            addNewItem = true;
         }
-        if(stack.getCount()+rot>stack.getMaxStackSize() || !(stack.getItem() instanceof BlockItem)) return false;
+        if (stack.getCount() + rot > stack.getMaxStackSize() || !(stack.getItem() instanceof BlockItem)) return false;
         Block ropeBlock = ((BlockItem) stack.getItem()).getBlock();
-        boolean success = RopeBlock.removeRope(pos.below(), (World) world,ropeBlock);
-        if(success){
+        boolean success = RopeBlock.removeRope(pos.below(), (World) world, ropeBlock);
+        if (success) {
             SoundType soundtype = ropeBlock.defaultBlockState().getSoundType(world, pos, null);
             world.playSound(null, pos, soundtype.getBreakSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
-            if(flag)this.setDisplayedItem(stack);
+            if (addNewItem) this.setDisplayedItem(stack);
             else stack.grow(1);
             this.setChanged();
         }
         return success;
     }
 
-    public boolean pullDown(BlockPos pos, IWorld world, int rot){
+    public boolean pullDown(BlockPos pos, IWorld world, int rot) {
 
-        if(!(world instanceof World))return false;
+        if (!(world instanceof World)) return false;
         ItemStack stack = this.getDisplayedItem();
-        if(stack.getCount()<rot || !(stack.getItem() instanceof BlockItem)) return false;
+        if (stack.getCount() < rot || !(stack.getItem() instanceof BlockItem)) return false;
         Block ropeBlock = ((BlockItem) stack.getItem()).getBlock();
-        boolean success = RopeBlock.addRope(pos.below(), (World) world,null, Hand.MAIN_HAND,ropeBlock);
-        if(success){
+        boolean success = RopeBlock.addRope(pos.below(), (World) world, null, Hand.MAIN_HAND, ropeBlock);
+        if (success) {
             SoundType soundtype = ropeBlock.defaultBlockState().getSoundType(world, pos, null);
             world.playSound(null, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
             stack.shrink(1);

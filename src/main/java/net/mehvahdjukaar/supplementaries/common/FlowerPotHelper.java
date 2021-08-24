@@ -20,29 +20,29 @@ public class FlowerPotHelper {
 
     //vanilla pot flower pots
     //empty pot, map(flower item registry name, full block provider)
-    private static Map<Block,Map<ResourceLocation, Supplier<? extends Block>> > FULL_POTS;
+    private static Map<Block, Map<ResourceLocation, Supplier<? extends Block>>> FULL_POTS;
 
     private static final List<BlockState> FULL_POT_LIST = new ArrayList<>();
 
-    public static BlockState getAprilPot(){
-        int ind = (int) ((System.currentTimeMillis()/15000)%FULL_POT_LIST.size());
+    public static BlockState getAprilPot() {
+        int ind = (int) ((System.currentTimeMillis() / 15000) % FULL_POT_LIST.size());
         return FULL_POT_LIST.get(ind);
     }
 
-    public static Block getFullPot(FlowerPotBlock emptyPot, Block flowerBlock){
+    public static Block getFullPot(FlowerPotBlock emptyPot, Block flowerBlock) {
         return FULL_POTS.get(emptyPot.getEmptyPot()).getOrDefault(flowerBlock.getRegistryName(), Blocks.AIR.delegate).get();
     }
 
-    public static boolean isEmptyPot(Block b){
+    public static boolean isEmptyPot(Block b) {
         //return (emptyPots!=null&&b!=null&&emptyPots.contains(b));
-        return (FULL_POTS !=null&&b!=null&& FULL_POTS.containsKey(b));
+        return (FULL_POTS != null && b != null && FULL_POTS.containsKey(b));
     }
 
-    public static void init(){
+    public static void init() {
         //maybe not needed since there's only 1 flower pot in vanilla and there are no mods that add more
         Set<FlowerPotBlock> emptyPots = new HashSet<>();
-        for (Block b : ForgeRegistries.BLOCKS){
-            if(b instanceof FlowerPotBlock){
+        for (Block b : ForgeRegistries.BLOCKS) {
+            if (b instanceof FlowerPotBlock) {
                 emptyPots.add(((FlowerPotBlock) b).getEmptyPot());
             }
         }
@@ -52,8 +52,8 @@ public class FlowerPotHelper {
             try {
                 Field f = ObfuscationReflectionHelper.findField(FlowerPotBlock.class, "fullPots");
                 f.setAccessible(true);
-                FULL_POTS.put(pot,(Map<ResourceLocation, Supplier<? extends Block>>) f.get(pot));
-                FULL_POT_LIST.addAll(((Map<ResourceLocation, Supplier<? extends Block>>) f.get(pot)).values().stream().map(s->s.get().defaultBlockState()).collect(Collectors.toList()));
+                FULL_POTS.put(pot, (Map<ResourceLocation, Supplier<? extends Block>>) f.get(pot));
+                FULL_POT_LIST.addAll(((Map<ResourceLocation, Supplier<? extends Block>>) f.get(pot)).values().stream().map(s -> s.get().defaultBlockState()).collect(Collectors.toList()));
 
                 //Block block = fullPots.getOrDefault(((BlockItem) item).getBlock().getRegistryName(), Blocks.AIR.delegate).get();
 
@@ -61,7 +61,7 @@ public class FlowerPotHelper {
                 Supplementaries.LOGGER.info("Failed to create flower pots");
             }
         }
-        emptyPots.removeIf(pot -> !FULL_POTS.containsKey(pot));
+        //emptyPots.removeIf(pot -> !FULL_POTS.containsKey(pot));
         //Supplementaries.LOGGER.info(fullPots.toString());
     }
 }

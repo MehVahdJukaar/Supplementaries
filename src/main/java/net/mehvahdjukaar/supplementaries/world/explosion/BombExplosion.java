@@ -80,7 +80,7 @@ public class BombExplosion extends Explosion {
 
         this.level.playSound(null, this.x, this.y, this.z, Registry.BOMB_SOUND.get(), SoundCategory.NEUTRAL, blue ? 5F : 3f, (1.2F + (this.level.random.nextFloat() - this.level.random.nextFloat()) * 0.2F));
 
-        ObjectArrayList<Pair<ItemStack, BlockPos>> objectarraylist = new ObjectArrayList<>();
+        ObjectArrayList<Pair<ItemStack, BlockPos>> drops = new ObjectArrayList<>();
         Collections.shuffle(this.toBlow, this.level.random);
 
 
@@ -91,14 +91,14 @@ public class BombExplosion extends Explosion {
                 this.level.getProfiler().push("explosion_blocks");
                 if (blockstate.canDropFromExplosion(this.level, blockpos, this) && this.level instanceof ServerWorld) {
                     TileEntity tileentity = blockstate.hasTileEntity() ? this.level.getBlockEntity(blockpos) : null;
-                    LootContext.Builder lootcontext$builder = (new LootContext.Builder((ServerWorld)this.level)).withRandom(this.level.random).withParameter(LootParameters.ORIGIN, Vector3d.atCenterOf(blockpos)).withParameter(LootParameters.TOOL, ItemStack.EMPTY).withOptionalParameter(LootParameters.BLOCK_ENTITY, tileentity).withOptionalParameter(LootParameters.THIS_ENTITY, this.source);
+                    LootContext.Builder builder = (new LootContext.Builder((ServerWorld)this.level)).withRandom(this.level.random).withParameter(LootParameters.ORIGIN, Vector3d.atCenterOf(blockpos)).withParameter(LootParameters.TOOL, ItemStack.EMPTY).withOptionalParameter(LootParameters.BLOCK_ENTITY, tileentity).withOptionalParameter(LootParameters.THIS_ENTITY, this.source);
 
                     if (this.mode == Mode.DESTROY) {
-                        lootcontext$builder.withParameter(LootParameters.EXPLOSION_RADIUS, this.radius);
+                        builder.withParameter(LootParameters.EXPLOSION_RADIUS, this.radius);
                     }
 
-                    blockstate.getDrops(lootcontext$builder).forEach((p_229977_2_) -> {
-                        addBlockDrops(objectarraylist, p_229977_2_, blockpos1);
+                    blockstate.getDrops(builder).forEach((p_229977_2_) -> {
+                        addBlockDrops(drops, p_229977_2_, blockpos1);
                     });
                 }
 
@@ -107,28 +107,26 @@ public class BombExplosion extends Explosion {
             }
         }
 
-        for(Pair<ItemStack, BlockPos> pair : objectarraylist) {
+        for(Pair<ItemStack, BlockPos> pair : drops) {
             Block.popResource(this.level, pair.getSecond(), pair.getFirst());
         }
 
     }
 
-    private static void addBlockDrops(ObjectArrayList<Pair<ItemStack, BlockPos>> p_229976_0_, ItemStack p_229976_1_, BlockPos p_229976_2_) {
-        int i = p_229976_0_.size();
-
+    private void addBlockDrops(ObjectArrayList<Pair<ItemStack, BlockPos>> drops, ItemStack stack, BlockPos pos) {
+        int i = drops.size();
         for(int j = 0; j < i; ++j) {
-            Pair<ItemStack, BlockPos> pair = p_229976_0_.get(j);
+            Pair<ItemStack, BlockPos> pair = drops.get(j);
             ItemStack itemstack = pair.getFirst();
-            if (ItemEntity.areMergable(itemstack, p_229976_1_)) {
-                ItemStack itemstack1 = ItemEntity.merge(itemstack, p_229976_1_, 16);
-                p_229976_0_.set(j, Pair.of(itemstack1, pair.getSecond()));
-                if (p_229976_1_.isEmpty()) {
+            if (ItemEntity.areMergable(itemstack, stack)) {
+                ItemStack itemstack1 = ItemEntity.merge(itemstack, stack, 16);
+                drops.set(j, Pair.of(itemstack1, pair.getSecond()));
+                if (stack.isEmpty()) {
                     return;
                 }
             }
         }
-
-        p_229976_0_.add(Pair.of(p_229976_1_, p_229976_2_));
+        drops.add(Pair.of(stack, pos));
     }
 
     @Override

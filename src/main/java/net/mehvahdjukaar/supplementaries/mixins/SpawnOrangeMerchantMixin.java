@@ -26,7 +26,7 @@ import java.util.Optional;
 import java.util.Random;
 
 @Mixin(WanderingTraderSpawner.class)
-public abstract class SpawnOrangeTraderMixin {
+public abstract class SpawnOrangeMerchantMixin {
 
     @Final
     @Shadow

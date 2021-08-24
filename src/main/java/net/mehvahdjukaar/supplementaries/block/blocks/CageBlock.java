@@ -8,6 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.PushReaction;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
@@ -24,6 +25,7 @@ import net.minecraft.util.Mirror;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
@@ -65,12 +67,8 @@ public class CageBlock extends WaterBlock {
 
     // shulker box code
     public ItemStack getCageItem(CageBlockTile te){
-        ItemStack returnStack;
-        if(te.mobHolder.isEmpty()){
-            returnStack = new ItemStack(Registry.EMPTY_CAGE_ITEM.get());
-        }
-        else{
-            returnStack = new ItemStack(Registry.CAGE_ITEM.get());
+        ItemStack returnStack = new ItemStack(this);
+        if(!te.mobHolder.isEmpty()){
             te.saveToNbt(returnStack);
         }
         return returnStack;
@@ -91,16 +89,17 @@ public class CageBlock extends WaterBlock {
     }
 
     //for pick block
-    @Override
-    public ItemStack getCloneItemStack(IBlockReader worldIn, BlockPos pos, BlockState state) {
 
-        TileEntity tileentity = worldIn.getBlockEntity(pos);
+    @Override
+    public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
+
+        TileEntity tileentity = world.getBlockEntity(pos);
 
         if (tileentity instanceof CageBlockTile) {
             CageBlockTile tile = (CageBlockTile) tileentity;
             return this.getCageItem(tile);
         }
-        return super.getCloneItemStack(worldIn, pos, state);
+        return super.getPickBlock(state, target, world, pos, player);
     }
 
     // end shulker box code

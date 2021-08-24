@@ -86,7 +86,7 @@ public class ServerEvents {
             }
         }
 
-        ItemSOverrideHandler.tryPerformOverride(event);
+        ItemsOverrideHandler.tryPerformOverride(event);
 
     }
 

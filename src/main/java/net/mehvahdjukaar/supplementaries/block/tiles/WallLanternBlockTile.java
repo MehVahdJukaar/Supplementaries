@@ -41,6 +41,10 @@ public class WallLanternBlockTile extends EnhancedLanternBlockTile implements IT
         super(Registry.WALL_LANTERN_TILE.get());
     }
 
+    @Override
+    public boolean hasAnimation() {
+        return this.oldRendererState;
+    }
 
     @Override
     public IModelData getModelData() {

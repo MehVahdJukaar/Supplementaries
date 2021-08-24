@@ -81,9 +81,13 @@ public abstract class SwayingBlockTile extends TileEntity implements ITickableTi
         return fancyRenderer;
     }
 
+    public boolean hasAnimation(){
+        return true;
+    }
+
     @Override
     public void tick() {
-        if (this.level.isClientSide && this.oldRendererState) {
+        if (this.level.isClientSide && this.hasAnimation()) {
 
             //TODO: improve physics
             this.counter++;

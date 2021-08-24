@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:chain"
+  ],
+  "optional": [
+    "decorative_blocks:chain",
+    "muchmoremodcompat:ice_chain",
+    "muchmoremodcompat:gold_chain",
+    "charm:gold_chain",
+    "forbidden_arcanus:iron_chain"
+  ]
+}

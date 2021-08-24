@@ -1,6 +1,5 @@
-
 {
-	"parent": "supplementaries:block/cage",
+	"parent": "builtin/entity",
 	"textures": {
 		"particle": "supplementaries:blocks/cage_side"
 	},
@@ -36,4 +35,3 @@
 		}
 	}
 }
-

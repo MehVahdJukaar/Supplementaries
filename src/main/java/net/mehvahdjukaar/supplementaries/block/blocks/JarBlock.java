@@ -94,24 +94,13 @@ public class JarBlock extends WaterBlock {
                 ((LockableTileEntity) tileentity).setCustomName(stack.getHoverName());
             }
         }
-
-        //remove in the future
-        TileEntity tileentity = worldIn.getBlockEntity(pos);
-        if (tileentity instanceof JarBlockTile) {
-            ((JarBlockTile) tileentity).convertOldJars(stack.getTagElement("BlockEntityTag"));
-        }
     }
 
-    //TODO: this is shit. redo
+    //TODO: improve
     public ItemStack getJarItem(JarBlockTile te){
-        ItemStack returnStack;
-        //TODO: generalize this
-        boolean flag = this.getBlock() == Registry.JAR.get();
-        if(!te.hasContent()){
-            returnStack = new ItemStack(flag ? Registry.EMPTY_JAR_ITEM.get() : Registry.EMPTY_JAR_ITEM_TINTED.get());
-        }
-        else{
-            returnStack = new ItemStack(flag ? Registry.JAR_ITEM.get() : Registry.JAR_ITEM_TINTED.get());
+        ItemStack returnStack = new ItemStack(this);
+
+        if(te.hasContent()){
             CompoundNBT compoundnbt = te.save(new CompoundNBT());
             if (!compoundnbt.isEmpty()) {
                 returnStack.addTagElement("BlockEntityTag", compoundnbt);

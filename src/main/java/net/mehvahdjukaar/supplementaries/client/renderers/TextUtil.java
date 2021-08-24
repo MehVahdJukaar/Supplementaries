@@ -68,8 +68,11 @@ public class TextUtil {
                 "\nKevinl2000"+
                 "\nfixmes"+
                 "\nDoiqotaq"+
+                "\nstupid"+
+                "\nHatchbackGuy'doscht"+
                 "\n\n\u00A75Others:\u00A7r\n\n\u00A70"+
                  "Guys on Discord"+
+                "\nTmTravlr"+
                 "\nUmaroth"+
                 "\nHowester84"+
                 "\nspiritwolf_twitch"+

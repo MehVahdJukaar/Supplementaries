@@ -27,25 +27,35 @@
       }
     ]
   },
+  "block.gunpowder.ignite": {
+    "category": "block",
+    "subtitle": "subtitle.supplementaries.gunpowder.ignite",
+    "sounds": [
+      {
+        "name": "supplementaries:block/fizzle",
+        "stream": false
+      }
+    ]
+  },
   "item.bomb": {
     "category": "item",
     "subtitle": "subtitle.supplementaries.bomb",
     "sounds": [
       {
         "name": "supplementaries:item/bomb_explosion_0",
-        "stream": true
+        "stream": false
       },
       {
         "name": "supplementaries:item/bomb_explosion_1",
-        "stream": true
+        "stream": false
       },
       {
         "name": "supplementaries:item/bomb_explosion_2",
-        "stream": true
+        "stream": false
       },
       {
         "name": "supplementaries:item/bomb_explosion_3",
-        "stream": true
+        "stream": false
       }
     ]
   },

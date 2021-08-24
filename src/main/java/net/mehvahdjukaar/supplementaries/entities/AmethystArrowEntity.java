@@ -237,7 +237,7 @@ public class AmethystArrowEntity extends AbstractArrowEntity {
                 } else if (hit.getType() == RayTraceResult.Type.BLOCK) {
                     dir = ((BlockRayTraceResult)hit).getDirection();
                 }
-                vec = vec.scale(0.4f);
+                vec = vec.scale(0.35f);
                 vec = this.rotateVector(vec,dir);
                 ShardProjectileEntity shard = new ShardProjectileEntity(level, (LivingEntity) this.getOwner(),
                         x+vec.x,y+vec.y+0.25, vec.z+z, vec, target);

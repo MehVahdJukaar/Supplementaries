@@ -6,6 +6,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.entity.projectile.ProjectileHelper;
 import net.minecraft.entity.projectile.ProjectileItemEntity;
 import net.minecraft.item.Item;
@@ -28,6 +29,7 @@ public class ShardProjectileEntity extends ProjectileItemEntity{
 
     private BlockState lastState;
     protected boolean inGround;
+    protected int inGroundTime = 0;
 
     private Entity ignoreEntity = null;
 
@@ -127,6 +129,14 @@ public class ShardProjectileEntity extends ProjectileItemEntity{
         if (!this.inGround) {
 
             Vector3d pos = this.position();
+            boolean client = this.level.isClientSide;
+            if(client){
+                for(int i = 0; i < 2; ++i) {
+                    double j = i/2d;
+                    this.level.addParticle(ParticleTypes.CRIT, pos.x + velX * j, pos.y + velY * j, pos.z + velZ * j, -velX, -velY + 0.2D, -velZ);
+                }
+            }
+
             Vector3d newPos = pos.add(movement);
             RayTraceResult raytraceresult = this.level.clip(new RayTraceContext(pos, newPos, RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, this));
             if (raytraceresult.getType() != RayTraceResult.Type.MISS) {
@@ -134,8 +144,8 @@ public class ShardProjectileEntity extends ProjectileItemEntity{
             }
 
             double posX = newPos.x;
-            double posY =  newPos.y;
-            double posZ =  newPos.z;
+            double posY = newPos.y;
+            double posZ = newPos.z;
 
             this.yRot = (float)(MathHelper.atan2(velX, velZ) * (double)(180F / (float)Math.PI));
             this.xRot = (float)(MathHelper.atan2(velY, horizontalVel) * (double)(180F / (float)Math.PI));
@@ -145,12 +155,16 @@ public class ShardProjectileEntity extends ProjectileItemEntity{
 
             float deceleration = 0.99F;
             float gravity = this.getGravity();
+
             if (this.isInWater()) {
-                for(int j = 0; j < 4; ++j) {
-                    this.level.addParticle(ParticleTypes.BUBBLE, posX - velX * 0.25D, posY - velY * 0.25D, posZ - velZ * 0.25D, velX, velY, velZ);
+                if(client) {
+                    for (int j = 0; j < 4; ++j) {
+                        this.level.addParticle(ParticleTypes.BUBBLE, posX - velX * 0.25D, posY - velY * 0.25D, posZ - velZ * 0.25D, velX, velY, velZ);
+                    }
                 }
                 deceleration = 0.6F;
             }
+
 
             this.setDeltaMovement(movement.scale(deceleration));
 
@@ -181,8 +195,11 @@ public class ShardProjectileEntity extends ProjectileItemEntity{
                 }
             }
         }
+        else{
+            ++this.inGroundTime;
+        }
         if (!this.level.isClientSide) {
-            if (this.tickCount > 200) this.remove();
+            if (this.tickCount > 180 || this.inGroundTime > 20) this.remove();
         }
     }
 

@@ -22,18 +22,14 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.dispenser.IPosition;
+import net.minecraft.dispenser.OptionalDispenseBehavior;
 import net.minecraft.dispenser.ProjectileDispenseBehavior;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Direction;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -50,8 +46,8 @@ public class DispenserStuff {
 
             DispenserHelper.registerPlaceBlockBehavior(Registry.SOUL_JAR.get());
             DispenserHelper.registerPlaceBlockBehavior(Registry.FIREFLY_JAR.get());
-            DispenserHelper.registerPlaceBlockBehavior(Registry.EMPTY_JAR_ITEM.get());
             DispenserHelper.registerPlaceBlockBehavior(Registry.JAR_ITEM.get());
+            DispenserHelper.registerPlaceBlockBehavior(Registry.JAR_TINTED.get());
 
             DispenserHelper.registerCustomBehavior(new AddItemToInventoryBehavior(Items.COOKIE));
 
@@ -72,11 +68,16 @@ public class DispenserStuff {
         if(RegistryConfigs.reg.FIREFLY_ENABLED.get()) {
             DispenserHelper.registerSpawnEggBehavior(Registry.FIREFLY_SPAWN_EGG_ITEM.get());
         }
+        //bomb
         if(RegistryConfigs.reg.BOMB_ENABLED.get()){
             DispenserBlock.registerBehavior(Registry.BOMB_ITEM.get(), new BombsDispenserBehavior());
             DispenserBlock.registerBehavior(Registry.BOMB_BLUE_ITEM.get(), new BombsDispenserBehavior());
             DispenserBlock.registerBehavior(Registry.BOMB_ITEM_ON.get(), new BombsDispenserBehavior());
             DispenserBlock.registerBehavior(Registry.BOMB_BLUE_ITEM_ON.get(), new BombsDispenserBehavior());
+        }
+        //gunpowder
+        if(ServerConfigs.cached.PLACEABLE_GUNPOWDER) {
+            DispenserHelper.registerCustomBehavior(new GunpowderBehavior(Items.GUNPOWDER));
         }
         if(RegistryConfigs.reg.ROPE_ARROW_ENABLED.get()){
 
@@ -266,6 +267,25 @@ public class DispenserStuff {
             return ActionResult.pass(stack);
         }
 
+    }
+
+    public static class GunpowderBehavior extends AdditionalDispenserBehavior {
+
+        protected GunpowderBehavior(Item item) {
+            super(item);
+        }
+
+        @Override
+        protected ActionResult<ItemStack> customBehavior(IBlockSource source, ItemStack stack) {
+
+            Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
+            BlockPos blockpos = source.getPos().relative(direction);
+            Direction direction1 = source.getLevel().isEmptyBlock(blockpos.below()) ? direction : Direction.UP;
+            ActionResultType result = ((BlockItem)Registry.GUNPOWDER_BLOCK_ITEM.get()).place(new DirectionalPlaceContext(source.getLevel(), blockpos, direction, stack, direction1));
+            if(result.consumesAction()) return ActionResult.success(stack);
+
+            return ActionResult.pass(stack);
+        }
     }
 
 }

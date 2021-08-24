@@ -19,14 +19,12 @@ import net.minecraft.potion.Potions;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 
 import java.util.Random;
 
@@ -41,7 +39,7 @@ public abstract class LightUpBlock extends Block implements ILightable {
         return state.getValue(LIT);
     }
 
-    public BlockState toggleListState(BlockState state, boolean lit){
+    public BlockState toggleLitState(BlockState state, boolean lit){
         return state.setValue(LIT, lit);
     }
 
@@ -57,7 +55,7 @@ public abstract class LightUpBlock extends Block implements ILightable {
     public boolean lightUp(BlockState state, BlockPos pos, IWorld world, ILightable.FireSound sound){
         if (!isLit(state)) {
             if(!world.isClientSide()) {
-                world.setBlock(pos, toggleListState(state, true), 11);
+                world.setBlock(pos, toggleLitState(state, true), 11);
                 sound.play(world, pos);
             }
             return true;
@@ -70,7 +68,7 @@ public abstract class LightUpBlock extends Block implements ILightable {
         if (this.isLit(state)) {
             if (!world.isClientSide()) {
                 world.playSound(null, pos, SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundCategory.BLOCKS, 0.5F, 1.5F);
-                world.setBlock(pos, toggleListState(state, false), 11);
+                world.setBlock(pos, toggleLitState(state, false), 11);
             } else {
                 Random random = world.getRandom();
                 for (int i = 0; i < 10; ++i) {
@@ -139,7 +137,7 @@ public abstract class LightUpBlock extends Block implements ILightable {
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         boolean flag = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;
         BlockState state = this.defaultBlockState();
-        return toggleListState(state, !flag);
+        return toggleLitState(state, !flag);
     }
 
 
@@ -147,4 +145,5 @@ public abstract class LightUpBlock extends Block implements ILightable {
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(LIT);
     }
+
 }

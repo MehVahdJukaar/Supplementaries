@@ -8,7 +8,7 @@ import net.mehvahdjukaar.supplementaries.common.FlowerPotHelper;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.events.ItemSOverrideHandler;
+import net.mehvahdjukaar.supplementaries.events.ItemsOverrideHandler;
 import net.mehvahdjukaar.supplementaries.fluids.ModSoftFluids;
 import net.mehvahdjukaar.supplementaries.mixins.accessors.ChickenEntityAccessor;
 import net.mehvahdjukaar.supplementaries.mixins.accessors.HorseEntityAccessor;
@@ -88,7 +88,7 @@ public class ModSetup {
 
                 NetworkHandler.registerMessages();
 
-                ItemSOverrideHandler.init();
+                ItemsOverrideHandler.registerOverrides();
 
 
                 //if(CompatHandler.quark) QuarkPlugin.addMissingDispenserBlockPlacingBehaviors();

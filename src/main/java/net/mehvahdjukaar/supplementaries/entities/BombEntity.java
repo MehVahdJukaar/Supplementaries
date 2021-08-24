@@ -194,6 +194,15 @@ public class BombEntity extends ProjectileItemEntity implements IRendersAsItem, 
                 double x = this.getX();
                 double y = this.getY();
                 double z = this.getZ();
+                Vector3d vector3d = this.getDeltaMovement();
+                double dx = vector3d.x;
+                double dy = vector3d.y;
+                double dz = vector3d.z;
+                for(int i = 0; i < 4; ++i) {
+                    double j = i/4d;
+                    this.level.addParticle(Registry.BOMB_SMOKE_PARTICLE.get(), x + dx * j, 0.5 + y + dy * j, z + dz * j, 0, 0.02, 0);
+                }
+                /*
                 double x2 = (x - this.prevX);
                 double y2 = (y - this.prevY);
                 double z2 = (z - this.prevZ);
@@ -205,6 +214,7 @@ public class BombEntity extends ProjectileItemEntity implements IRendersAsItem, 
                         x + (x2 / 4) + r(), 0.5 + y + (y2 / 4), z + (z2 / 4) + r(), 0, 0, 0);
                 level.addParticle(Registry.BOMB_SMOKE_PARTICLE.get(),
                         x + (x2 * 0.75) + r(), 0.5 + y + (y2 * 0.75), z + (z2 * 0.75) + r(), 0, 0, 0);
+                 */
             }
             this.prevX = this.getX();
             this.prevY = this.getY();
@@ -224,7 +234,8 @@ public class BombEntity extends ProjectileItemEntity implements IRendersAsItem, 
             default:
             case NONE:return false;
             case ALL:return true;
-            case WEAK:return state.canBeReplaced(Fluids.WATER) || state.getBlock() instanceof TNTBlock;
+            case WEAK:
+                return state.canBeReplaced(Fluids.WATER) || state.getBlock() instanceof TNTBlock;
         }
     }
 

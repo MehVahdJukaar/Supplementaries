@@ -30,7 +30,7 @@
     "ShulkerBoxSlotMixin",
     "ShulkerBoxTileEntityMixin",
     "SkeletonHorseMixin",
-    "SpawnOrangeTraderMixin",
+    "SpawnOrangeMerchantMixin",
     "StrongholdCrossingMixin",
     "StrongholdRoomMixin",
     "VineBlockMixin",

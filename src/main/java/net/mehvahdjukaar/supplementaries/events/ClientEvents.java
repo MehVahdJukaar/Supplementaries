@@ -33,31 +33,21 @@ import net.minecraftforge.fml.common.Mod;
 import java.util.List;
 
 
-@Mod.EventBusSubscriber(modid = Supplementaries.MOD_ID, value = Dist.CLIENT, bus=Mod.EventBusSubscriber.Bus.FORGE)
+@Mod.EventBusSubscriber(modid = Supplementaries.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ClientEvents {
 
     @SubscribeEvent
     public static void onItemTooltip(ItemTooltipEvent event) {
-        Item i = event.getItemStack().getItem();
-        List<ITextComponent> tooltip = event.getToolTip();
-         if((event.getPlayer()!=null) && (event.getPlayer().level!=null) && ClientConfigs.cached.TOOLTIP_HINTS
-                && Minecraft.getInstance().options.advancedItemTooltips){
-            if (ServerConfigs.cached.WALL_LANTERN_PLACEMENT && CommonUtil.isLantern(i)) {
-                tooltip.add(new TranslationTextComponent("message.supplementaries.wall_lantern").withStyle(TextFormatting.GRAY).withStyle(TextFormatting.ITALIC));
-            } else if (ServerConfigs.cached.THROWABLE_BRICKS_ENABLED && CommonUtil.isBrick(i)) {
-                tooltip.add(new TranslationTextComponent("message.supplementaries.throwable_brick").withStyle(TextFormatting.GRAY).withStyle(TextFormatting.ITALIC));
-            } else if (ServerConfigs.cached.HANGING_POT_PLACEMENT && CommonUtil.isPot(i)) {
-                tooltip.add(new TranslationTextComponent("message.supplementaries.hanging_pot").withStyle(TextFormatting.GRAY).withStyle(TextFormatting.ITALIC));
-            } else if (ServerConfigs.cached.DOUBLE_CAKE_PLACEMENT && CommonUtil.isCake(i)) {
-                tooltip.add(new TranslationTextComponent("message.supplementaries.double_cake").withStyle(TextFormatting.GRAY).withStyle(TextFormatting.ITALIC));
-            } else if ((ServerConfigs.cached.PLACEABLE_STICKS && i == Items.STICK) ||
-                    (ServerConfigs.cached.PLACEABLE_RODS && i == Items.BLAZE_ROD)) {
-                tooltip.add(new TranslationTextComponent("message.supplementaries.sticks").withStyle(TextFormatting.GRAY).withStyle(TextFormatting.ITALIC));
+        if ((event.getPlayer() != null) && (event.getPlayer().level != null)) {
+
+            if (ClientConfigs.cached.TOOLTIP_HINTS && Minecraft.getInstance().options.advancedItemTooltips) {
+                ItemsOverrideHandler.addOverrideTooltips(event);
+            }
+
+            if (CompatHandler.quark) {
+                QuarkTooltipPlugin.onItemTooltipEvent(event);
             }
         }
-         if(CompatHandler.quark) {
-             QuarkTooltipPlugin.onItemTooltipEvent(event);
-         }
 
     }
 
@@ -74,7 +64,7 @@ public class ClientEvents {
         }
         if (i == Registry.BLACKBOARD_ITEM.get()) {
             CompoundNBT cmp = stack.getTagElement("BlockEntityTag");
-            if(cmp!=null && cmp.contains("Pixels")) {
+            if (cmp != null && cmp.contains("Pixels")) {
                 long[] packed = cmp.getLongArray("Pixels");
 
                 //credits to quark. Uses same code so it's consistent with map preview
@@ -90,22 +80,21 @@ public class ClientEvents {
                 Tessellator tessellator = Tessellator.getInstance();
                 BufferBuilder buffer = tessellator.getBuilder();
 
-                matrixStack.translate(event.getX(), (float)event.getY() - size * scale - 5.0F, 500.0D);
+                matrixStack.translate(event.getX(), (float) event.getY() - size * scale - 5.0F, 500.0D);
                 matrixStack.scale(scale, scale, 1.0F);
                 RenderSystem.enableBlend();
                 Matrix4f mat = matrixStack.last().pose();
 
                 //AbstractGui.blit(matrix, x, y, 0.0F, 0.0F, 1*width, 1*width, 16*width, 16*width);
                 buffer.begin(7, DefaultVertexFormats.POSITION_TEX);
-                buffer.vertex(mat, (float)(-pad), size, 0.0F).uv(0.0F, 1.0F).endVertex();
+                buffer.vertex(mat, (float) (-pad), size, 0.0F).uv(0.0F, 1.0F).endVertex();
                 buffer.vertex(mat, size, size, 0.0F).uv(1.0F, 1.0F).endVertex();
-                buffer.vertex(mat, size, (float)(-pad), 0.0F).uv(1.0F, 0.0F).endVertex();
-                buffer.vertex(mat, (float)(-pad), (float)(-pad), 0.0F).uv(0.0F, 0.0F).endVertex();
+                buffer.vertex(mat, size, (float) (-pad), 0.0F).uv(1.0F, 0.0F).endVertex();
+                buffer.vertex(mat, (float) (-pad), (float) (-pad), 0.0F).uv(0.0F, 0.0F).endVertex();
                 tessellator.end();
             }
         }
     }
-
 
 
     //enderman hold block in rain
@@ -147,8 +136,8 @@ public class ClientEvents {
 
     @SubscribeEvent
     public static void onGuiInit(GuiScreenEvent.InitGuiEvent event) {
-        if(!ClientConfigs.cached.CONFIG_BUTTON)return;
-        if(!CompatHandler.configured)return;
+        if (!ClientConfigs.cached.CONFIG_BUTTON) return;
+        if (!CompatHandler.configured) return;
         ConfigButton.setupConfigButton(event);
 
     }
