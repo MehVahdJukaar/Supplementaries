@@ -154,7 +154,6 @@
   "block.supplementaries.blackstone_tile_slab": "Blackstone Tiles Slab",
   "block.supplementaries.blackstone_tile_vertical_slab": "Blackstone Tiles Vertical Slab",
   "block.supplementaries.blackstone_lamp": "Blackstone Lamp",
-  "message.supplementaries.sticks": "Can be placed",
   "block.supplementaries.flag_white": "White Flag",
   "block.supplementaries.flag_orange": "Orange Flag",
   "block.supplementaries.flag_magenta": "Magenta Flag",
@@ -221,6 +220,8 @@
   "death.attack.supplementaries.amethyst_shard.player": "%1$s was sharded to death by %2$s",
   "item.supplementaries.amethyst_arrow": "Amethyst Arrow",
   "block.supplementaries.present": "Present",
+  "message.supplementaries.placeable": "Can be placed",
+  "subtitle.supplementaries.gunpowder.ignite": "Gunpowder fizzles",
 
 
   "item.supplementaries.key_chain": "Key Chain",
