@@ -17,16 +17,26 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelDataManager;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.common.util.Lazy;
 
 import java.util.function.Supplier;
 
 public class FrameBlockTile extends MimicBlockTile {
 
+    public final Lazy<BlockState> WATTLE_AND_DAUB = Lazy.of(()->((FrameBlock)this.getBlockState().getBlock()).daub.get().defaultBlockState());
+
     public FrameBlockTile() {
+        this(()->null);
+    }
+
+    public FrameBlockTile(Supplier<Block> wattle_and_daub) {
         super(Registry.TIMBER_FRAME_TILE.get());
+
         //data = new ModelDataMap.Builder().withInitial(MIMIC, held).build();
     }
 
@@ -58,52 +68,61 @@ public class FrameBlockTile extends MimicBlockTile {
         return this.getHeldBlock().getLightEmission();
     }
 
-    public ActionResultType handleInteraction(PlayerEntity player, Hand hand, BlockRayTraceResult trace, Supplier<Block> daub) {
-        ItemStack stack = player.getItemInHand(hand);
-        Item item = stack.getItem();
-        if(item instanceof BlockItem && this.getHeldBlock().isAir()) {
-            boolean success = false;
-            Block b = ((BlockItem) item).getBlock();
-            BlockState state = b.defaultBlockState();
-            //TODO: add blacklist here
-            if (b == Registry.DAUB_FRAME.get() || b == Registry.DAUB_BRACE.get() || b == Registry.DAUB_CROSS_BRACE.get()){
-                return ActionResultType.PASS;
-            }
-            else if (b == Registry.DAUB.get() && ServerConfigs.cached.REPLACE_DAUB) {
-                state = daub.get().defaultBlockState();
+    /**
+     * returns new modified or contained state, null if failed
+     * unchecked. call isValidBlock first
+     */
+    public BlockState acceptBlock(BlockState state){
+        Block b = state.getBlock();
+
+        if (b == Registry.DAUB.get() && ServerConfigs.cached.REPLACE_DAUB) {
+            if(!this.level.isClientSide) {
+                state = WATTLE_AND_DAUB.get();
                 if (this.getBlockState().hasProperty(BlockProperties.FLIPPED)) {
                     state = state.setValue(BlockProperties.FLIPPED, this.getBlockState().getValue(BlockProperties.FLIPPED));
                 }
                 this.level.setBlock(this.worldPosition, state, 3);
-                success = true;
             }
-            else if (isValidBlock(state)) {
-                state = b.getStateForPlacement(new BlockItemUseContext(player, hand, stack, trace));
-                this.setHeldBlock(state);
-                if (level.isClientSide()) {
-                    ModelDataManager.requestModelDataRefresh(this);
-                }
-                success = true;
+        }
+        else {
+            this.setHeldBlock(state);
+            if (level.isClientSide()) {
+                ModelDataManager.requestModelDataRefresh(this);
             }
-            if(success){
-                SoundType s = state.getSoundType(level, worldPosition, player);
+        }
+        return state;
+    }
+
+    public ActionResultType handleInteraction(PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
+        ItemStack stack = player.getItemInHand(hand);
+        Item item = stack.getItem();
+        if(player.abilities.mayBuild && item instanceof BlockItem && this.getHeldBlock().isAir()) {
+
+            BlockState toPlace = ((BlockItem) item).getBlock().getStateForPlacement(new BlockItemUseContext(player, hand, stack, trace));
+
+            if(isValidBlock(toPlace, this.worldPosition, this.level)) {
+
+                BlockState newState = this.acceptBlock(toPlace);
+
+                SoundType s = newState.getSoundType(level, worldPosition, player);
                 this.level.playSound(player, worldPosition, s.getPlaceSound(), SoundCategory.BLOCKS, (s.getVolume() + 1.0F) / 2.0F, s.getPitch() * 0.8F);
                 if (!player.isCreative() && !level.isClientSide()) {
                     stack.shrink(1);
                 }
                 return ActionResultType.sidedSuccess(this.level.isClientSide);
+
             }
         }
         //don't try filling with other hand
-        //TODO: use correctly FAIL and PASS
         return ActionResultType.FAIL;
     }
 
-    private boolean isValidBlock(BlockState state) {
-        Block block = state.getBlock();
+    public static boolean isValidBlock(BlockState state, BlockPos pos, World world) {
+        Block b = state.getBlock();
+        if(b == Registry.DAUB_FRAME.get() || b == Registry.DAUB_BRACE.get() || b == Registry.DAUB_CROSS_BRACE.get()) return false;
         //if (BLOCK_BLACKLIST.contains(block)) { return false; }
-        if (block.hasTileEntity(state)) { return false; }
-        return state.isSolidRender(this.level, this.worldPosition);
+        if (b.hasTileEntity(state)) { return false; }
+        return state.isSolidRender(world, pos);
     }
 
 }

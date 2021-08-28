@@ -47,7 +47,7 @@ public abstract class SpawnRedMerchantMixin {
                 BlockPos blockpos = playerentity.blockPosition();
 
                 //17.5 % max on hard ->1.75% (wandering trader maxes at 7.5%)
-                if (this.calculateNormalizeDifficulty(world, blockpos) > random.nextFloat() * 100) {
+                if (this.calculateNormalizeDifficulty(world, blockpos) > random.nextFloat() * 99) {
 
                     PointOfInterestManager pointofinterestmanager = world.getPoiManager();
                     Optional<BlockPos> optional = pointofinterestmanager.find(PointOfInterestType.MEETING.getPredicate(), (p_221241_0_) -> true, blockpos, 48, PointOfInterestManager.Status.ANY);

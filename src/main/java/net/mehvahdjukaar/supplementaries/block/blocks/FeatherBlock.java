@@ -6,6 +6,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.Direction;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.*;
 import net.minecraft.world.IBlockReader;
@@ -21,13 +23,13 @@ public class FeatherBlock extends Block {
     private static final TreeMap<Float, VoxelShape> COLLISIONS = new TreeMap<Float, VoxelShape>(){{
         float y = (float) COLLISION_SHAPE.max(Direction.Axis.Y);
 
-        float i = 0.001f;
+        float i = 0.0015f;
         //adds an extra lower one for lower key access
         put(y - i, VoxelShapes.box(0, 0, 0, 1, y, 1));
 
         while (y < 1) {
             put(y, VoxelShapes.box(0, 0, 0, 1, y, 1));
-            i *= 1.13;
+            i *= 1.131;
             y += i;
         }
         put(1f, VoxelShapes.block());
@@ -43,8 +45,16 @@ public class FeatherBlock extends Block {
 
     @Override
     public void fallOn(World world, BlockPos pos, Entity entity, float height) {
-        if (world.isClientSide) {
+        if (!world.isClientSide) {
+            if(height > 2) {
+                //TODO: sound here
+                world.playSound(null, pos, SoundEvents.WOOL_FALL, SoundCategory.BLOCKS, 1F, 0.9F);
+
+            }
+        }
+        else{
             //world.addParticle(ParticleTypes.HEART, pos.getX(), pos.getY(), pos.getZ(), 0.0D, 0.0D, 0.0D);
+
         }
     }
 

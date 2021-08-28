@@ -175,6 +175,8 @@ public class Registry {
     public static final RegistryObject<BasicParticleType> BOMB_EXPLOSION_PARTICLE_EMITTER = regParticle("bomb_explosion_emitter");
     public static final RegistryObject<BasicParticleType> BOMB_SMOKE_PARTICLE = regParticle("bomb_smoke");
     public static final RegistryObject<BasicParticleType> BOTTLING_XP_PARTICLE = regParticle("bottling_xp");
+    public static final RegistryObject<BasicParticleType> FEATHER_PARTICLE = regParticle("feather");
+
 
     //recipes
     public static final RegistryObject<IRecipeSerializer<?>> BLACKBOARD_DUPLICATE_RECIPE = RECIPES.register("blackboard_duplicate_recipe", () ->
@@ -1271,22 +1273,22 @@ public class Registry {
                     .strength(0f, 0f)
                     .dynamicShape()
                     .sound(SoundType.SCAFFOLDING), DAUB_FRAME));
-    public static final RegistryObject<Item> TIMBER_FRAME_ITEM = ITEMS.register(TIMBER_FRAME_NAME, () -> new BurnableBlockItem(TIMBER_FRAME.get(),
-            (new Item.Properties()).tab(getTab(ItemGroup.TAB_BUILDING_BLOCKS, TIMBER_FRAME_NAME)), 200));
+    public static final RegistryObject<Item> TIMBER_FRAME_ITEM = ITEMS.register(TIMBER_FRAME_NAME, () -> new TimberFrameItem(TIMBER_FRAME.get(),
+            (new Item.Properties()).tab(getTab(ItemGroup.TAB_BUILDING_BLOCKS, TIMBER_FRAME_NAME))));
 
     //timber brace
     public static final String TIMBER_BRACE_NAME = "timber_brace";
     public static final RegistryObject<Block> TIMBER_BRACE = BLOCKS.register(TIMBER_BRACE_NAME, () -> new FrameBraceBlock(
             AbstractBlock.Properties.copy(TIMBER_FRAME.get()), DAUB_BRACE));
-    public static final RegistryObject<Item> TIMBER_BRACE_ITEM = ITEMS.register(TIMBER_BRACE_NAME, () -> new BurnableBlockItem(TIMBER_BRACE.get(),
-            (new Item.Properties()).tab(getTab(ItemGroup.TAB_BUILDING_BLOCKS, TIMBER_FRAME_NAME)), 200));
+    public static final RegistryObject<Item> TIMBER_BRACE_ITEM = ITEMS.register(TIMBER_BRACE_NAME, () -> new TimberFrameItem(TIMBER_BRACE.get(),
+            (new Item.Properties()).tab(getTab(ItemGroup.TAB_BUILDING_BLOCKS, TIMBER_FRAME_NAME))));
 
     //timber cross brace
     public static final String TIMBER_CROSS_BRACE_NAME = "timber_cross_brace";
     public static final RegistryObject<Block> TIMBER_CROSS_BRACE = BLOCKS.register(TIMBER_CROSS_BRACE_NAME, () -> new FrameBlock(
             AbstractBlock.Properties.copy(TIMBER_FRAME.get()), DAUB_CROSS_BRACE));
-    public static final RegistryObject<Item> TIMBER_CROSS_BRACE_ITEM = ITEMS.register(TIMBER_CROSS_BRACE_NAME, () -> new BurnableBlockItem(TIMBER_CROSS_BRACE.get(),
-            (new Item.Properties()).tab(getTab(ItemGroup.TAB_BUILDING_BLOCKS, TIMBER_FRAME_NAME)), 200));
+    public static final RegistryObject<Item> TIMBER_CROSS_BRACE_ITEM = ITEMS.register(TIMBER_CROSS_BRACE_NAME, () -> new TimberFrameItem(TIMBER_CROSS_BRACE.get(),
+            (new Item.Properties()).tab(getTab(ItemGroup.TAB_BUILDING_BLOCKS, TIMBER_FRAME_NAME))));
     public static final RegistryObject<TileEntityType<FrameBlockTile>> TIMBER_FRAME_TILE = TILES.register(TIMBER_FRAME_NAME, () -> TileEntityType.Builder.of(
             FrameBlockTile::new, TIMBER_FRAME.get(), TIMBER_CROSS_BRACE.get(), TIMBER_BRACE.get()).build(null));
 

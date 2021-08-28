@@ -222,6 +222,7 @@
   "block.supplementaries.feather_block": "Feather Block",
   "block.supplementaries.flint_block": "Flint Block",
   "entity.supplementaries.red_merchant": "Red Merchant",
+  "message.supplementaries.timber_frame": "Accepts any full block",
 
 
   "item.supplementaries.key_chain": "Key Chain",

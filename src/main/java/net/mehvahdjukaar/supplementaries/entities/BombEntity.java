@@ -69,8 +69,9 @@ public class BombEntity extends ProjectileItemEntity implements IRendersAsItem, 
         this.blue = blue;
     }
 
-    public BombEntity(World worldIn, double x, double y, double z) {
+    public BombEntity(World worldIn, double x, double y, double z, boolean blue) {
         super(Registry.BOMB.get(), x, y, z, worldIn);
+        this.blue = blue;
     }
 
     public BombEntity(FMLPlayMessages.SpawnEntity packet, World world) {

@@ -29,14 +29,15 @@ public class FrameBlock extends MimicBlock {
 
     public static final BooleanProperty HAS_BLOCK = BlockProperties.HAS_BLOCK;
     public static final IntegerProperty LIGHT_LEVEL = BlockProperties.LIGHT_LEVEL_0_15;
-    public static final VoxelShape OCCLUSION_SHAPE = Block.box(0.01,0.01,0.01,15.99,15.99,15.99);
-    public static final VoxelShape OCCLUSION_SHAPE_2 = Block.box(-0.01,-0.01,-0.01,16.01,16.01,16.01);
+    public static final VoxelShape OCCLUSION_SHAPE = Block.box(0.01, 0.01, 0.01, 15.99, 15.99, 15.99);
+    public static final VoxelShape OCCLUSION_SHAPE_2 = Block.box(-0.01, -0.01, -0.01, 16.01, 16.01, 16.01);
 
     public final Supplier<Block> daub;
-    public FrameBlock(Properties properties,Supplier<Block> daub) {
+
+    public FrameBlock(Properties properties, Supplier<Block> daub) {
         super(properties);
         this.daub = daub;
-        this.registerDefaultState(this.stateDefinition.any().setValue(LIGHT_LEVEL, 0).setValue(HAS_BLOCK,false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(LIGHT_LEVEL, 0).setValue(HAS_BLOCK, false));
     }
 
 
@@ -48,12 +49,11 @@ public class FrameBlock extends MimicBlock {
 
     @Override
     public boolean skipRendering(BlockState state, BlockState adjacentBlockState, Direction side) {
-        if(!state.getValue(HAS_BLOCK)) {
+        if (!state.getValue(HAS_BLOCK)) {
             return (adjacentBlockState.getBlock() instanceof FrameBlock && state.getValue(HAS_BLOCK).equals(adjacentBlockState.getValue(HAS_BLOCK))) || super.skipRendering(state, adjacentBlockState, side);
         }
         return false;
     }
-
 
 
     @Override
@@ -63,12 +63,12 @@ public class FrameBlock extends MimicBlock {
 
     @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(LIGHT_LEVEL,HAS_BLOCK);
+        builder.add(LIGHT_LEVEL, HAS_BLOCK);
     }
 
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new FrameBlockTile();
+        return new FrameBlockTile(daub);
     }
 
 
@@ -76,7 +76,7 @@ public class FrameBlock extends MimicBlock {
     public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
         TileEntity te = world.getBlockEntity(pos);
         if (te instanceof FrameBlockTile) {
-            return ((FrameBlockTile) te).handleInteraction(player,hand,trace,daub);
+            return ((FrameBlockTile) te).handleInteraction(player, hand, trace);
         }
         return ActionResultType.PASS;
     }
@@ -93,7 +93,7 @@ public class FrameBlock extends MimicBlock {
     //handles dynamic culling
     @Override
     public VoxelShape getOcclusionShape(BlockState state, IBlockReader reader, BlockPos pos) {
-        if(state.getValue(HAS_BLOCK)){
+        if (state.getValue(HAS_BLOCK)) {
             TileEntity te = reader.getBlockEntity(pos);
             if (te instanceof FrameBlockTile && !((IBlockHolder) te).getHeldBlock().isAir()) {
                 return VoxelShapes.block();
@@ -102,7 +102,7 @@ public class FrameBlock extends MimicBlock {
         return OCCLUSION_SHAPE;
     }
 
-    public static final VoxelShape OCCLUSION_SHAPE_3 = Block.box(1,1,1,15,15,15);
+    public static final VoxelShape OCCLUSION_SHAPE_3 = Block.box(1, 1, 1, 15, 15, 15);
 
 
     @Override
@@ -133,7 +133,7 @@ public class FrameBlock extends MimicBlock {
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext p_220071_4_) {
-        if(state.getValue(HAS_BLOCK)){
+        if (state.getValue(HAS_BLOCK)) {
             return VoxelShapes.block();
         }
         return OCCLUSION_SHAPE_2;
@@ -146,11 +146,13 @@ public class FrameBlock extends MimicBlock {
 
     //occlusion shading
     public float getShadeBrightness(BlockState state, IBlockReader reader, BlockPos pos) {
-        return state.getValue(HAS_BLOCK) ? 0.2f: 1;
+        return state.getValue(HAS_BLOCK) ? 0.2f : 1;
     }
+
     //let light through
     @Override
     public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
         return !state.getValue(HAS_BLOCK) || super.propagatesSkylightDown(state, reader, pos);
     }
+
 }

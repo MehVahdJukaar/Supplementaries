@@ -263,6 +263,7 @@ public class ServerConfigs {
         public static ForgeConfigSpec.IntValue CANDLE_HOLDER_LIGHT;
 
         public static ForgeConfigSpec.BooleanValue REPLACE_DAUB;
+        public static ForgeConfigSpec.BooleanValue SWAP_TIMBER_FRAME;
 
         public static ForgeConfigSpec.IntValue HOURGLASS_DUST;
         public static ForgeConfigSpec.IntValue HOURGLASS_SAND;
@@ -395,7 +396,8 @@ public class ServerConfigs {
             builder.push("timber_frame");
             REPLACE_DAUB = builder.comment("Replace a timber frame with wattle and daub block when daub is placed in it")
                     .define("replace_daub",true);
-
+            SWAP_TIMBER_FRAME = builder.comment("Allow placing a timber frame directly on a block by holding shift")
+                    .define("swap_on_shift", false);
 
             builder.pop();
 
@@ -603,6 +605,7 @@ public class ServerConfigs {
         public static boolean BLACKBOARD_COLOR;
         public static int CANDLE_HOLDER_LIGHT;
         public static boolean REPLACE_DAUB;
+        public static boolean SWAP_TIMBER_FRAME;
         public static boolean ITEM_SHELF_LADDER;
         public static boolean DOUBLE_IRON_GATE;
         public static boolean STICK_POLE;
@@ -689,6 +692,7 @@ public class ServerConfigs {
             CANDLE_HOLDER_LIGHT = block.CANDLE_HOLDER_LIGHT.get();
 
             REPLACE_DAUB = block.REPLACE_DAUB.get();
+            SWAP_TIMBER_FRAME = block.SWAP_TIMBER_FRAME.get();
 
             ITEM_SHELF_LADDER = block.ITEM_SHELF_LADDER.get();
 

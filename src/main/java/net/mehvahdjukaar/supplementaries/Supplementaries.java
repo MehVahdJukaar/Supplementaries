@@ -38,6 +38,8 @@ public class Supplementaries{
 
     public Supplementaries() {
 
+        //TODO: fix tint breaking particle like grass block
+
         //TODO: add bomb loot table
 
         //TODO: replace soft fluid system with forge caps to itemstacks and register actual forge fluids

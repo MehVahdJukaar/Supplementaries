@@ -270,6 +270,7 @@ public class ClientSetup {
         particleManager.register(Registry.BOMB_EXPLOSION_PARTICLE_EMITTER.get(), new BombExplosionEmitterParticle.Factory());
         particleManager.register(Registry.BOMB_SMOKE_PARTICLE.get(), BombSmokeParticle.Factory::new);
         particleManager.register(Registry.BOTTLING_XP_PARTICLE.get(), BottlingXpParticle.Factory::new);
+        particleManager.register(Registry.FEATHER_PARTICLE.get(), FeatherParticle.Factory::new);
     }
 
     @SubscribeEvent
