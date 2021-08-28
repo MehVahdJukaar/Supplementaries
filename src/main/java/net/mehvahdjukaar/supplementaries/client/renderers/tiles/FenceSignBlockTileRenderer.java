@@ -42,7 +42,7 @@ public class FenceSignBlockTileRenderer extends TileEntityRenderer<FenceSignBloc
 
         BlockState fence = tile.fenceBlock;
         if(fence !=null){
-            RendererUtil.renderBlockPlus(fence, matrixStackIn, bufferIn, blockRenderer, tile.getLevel(), tile.getBlockPos());
+            RendererUtil.renderBlockModel(fence, matrixStackIn, bufferIn, blockRenderer, tile.getLevel(), tile.getBlockPos());
             //blockRenderer.renderBlock(fence, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
         }
 

@@ -2,7 +2,7 @@
 
 {
     "variants": {
-        "jar=false": { "model": "supplementaries:block/label" },
+        "jar=false": { "model": "supplementaries:block/wind_vane_up" },
         "jar=true":  { "model": "supplementaries:block/label_jar" }
     }
 }

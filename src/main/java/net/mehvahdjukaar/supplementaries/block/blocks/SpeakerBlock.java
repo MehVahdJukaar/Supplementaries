@@ -33,6 +33,7 @@ import net.minecraftforge.fml.server.ServerLifecycleHooks;
 public class SpeakerBlock extends Block {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
+
     public SpeakerBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(POWERED, false));
@@ -92,9 +93,9 @@ public class SpeakerBlock extends Block {
                             world.blockEvent(pos, this, 0, 0);
                             PlayerList players = mcserv.getPlayerList();
 
-                            ITextComponent message = new StringTextComponent(speaker.getName().getString()+": "+speaker.message).withStyle(TextFormatting.ITALIC);
+                            ITextComponent message = new StringTextComponent(speaker.getName().getString() + ": " + speaker.message).withStyle(TextFormatting.ITALIC);
 
-                            players.broadcast(null, pos.getX(), pos.getY(), pos.getZ(), ServerConfigs.cached.SPEAKER_RANGE*speaker.volume,
+                            players.broadcast(null, pos.getX(), pos.getY(), pos.getZ(), ServerConfigs.cached.SPEAKER_RANGE * speaker.volume,
                                     dimension, NetworkHandler.INSTANCE.toVanillaPacket(
                                             new SendSpeakerBlockMessagePacket(message, speaker.narrator),
                                             NetworkDirection.PLAY_TO_CLIENT));
@@ -107,7 +108,7 @@ public class SpeakerBlock extends Block {
 
     @Override
     public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity entity, Hand hand,
-                                             BlockRayTraceResult hit) {
+                                BlockRayTraceResult hit) {
         TileEntity tileentity = world.getBlockEntity(pos);
         if (tileentity instanceof SpeakerBlockTile) {
             // client
@@ -133,10 +134,12 @@ public class SpeakerBlock extends Block {
 
     @Override
     public boolean triggerEvent(BlockState state, World world, BlockPos pos, int eventID, int eventParam) {
-        super.triggerEvent(state, world, pos, eventID, eventParam);
-        Direction facing = state.getValue(FACING);
-        world.addParticle(Registry.SPEAKER_SOUND.get(), pos.getX() + 0.5 + facing.getStepX() * 0.725, pos.getY() + 0.5,
-                pos.getZ() + 0.5 + facing.getStepZ() * 0.725, (double) world.random.nextInt(24) / 24.0D, 0.0D, 0.0D);
-        return true;
+        if (eventID == 0) {
+            Direction facing = state.getValue(FACING);
+            world.addParticle(Registry.SPEAKER_SOUND.get(), pos.getX() + 0.5 + facing.getStepX() * 0.725, pos.getY() + 0.5,
+                    pos.getZ() + 0.5 + facing.getStepZ() * 0.725, (double) world.random.nextInt(24) / 24.0D, 0.0D, 0.0D);
+            return true;
+        }
+        return super.triggerEvent(state, world, pos, eventID, eventParam);
     }
 }

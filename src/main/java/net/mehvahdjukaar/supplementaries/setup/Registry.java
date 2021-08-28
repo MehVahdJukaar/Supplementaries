@@ -195,19 +195,28 @@ public class Registry {
 
     @SubscribeEvent
     public static void registerEntityAttributes(EntityAttributeCreationEvent event) {
-        event.put(Registry.ORANGE_TRADER.get(), MobEntity.createMobAttributes().build());
+        event.put(Registry.RED_MERCHANT_TYPE.get(), MobEntity.createMobAttributes().build());
         event.put(Registry.FIREFLY_TYPE.get(), FireflyEntity.setCustomAttributes().build());
     }
 
     //orange trader
-    public static final String ORANGE_TRADER_NAME = "orange_trader";
-    public static final RegistryObject<EntityType<OrangeMerchantEntity>> ORANGE_TRADER = ENTITIES.register(ORANGE_TRADER_NAME, () -> (
-            EntityType.Builder.<OrangeMerchantEntity>of(OrangeMerchantEntity::new, EntityClassification.CREATURE)
-                    .setShouldReceiveVelocityUpdates(true).clientTrackingRange(10).setUpdateInterval(3)
-                    .sized(0.6F, 1.95F))
-            .build(ORANGE_TRADER_NAME));
-    public static final RegistryObject<ContainerType<OrangeMerchantContainer>> ORANGE_TRADER_CONTAINER = CONTAINERS
-            .register(ORANGE_TRADER_NAME, () -> IForgeContainerType.create(OrangeMerchantContainer::new));
+    public static final String RED_MERCHANT_NAME = "red_merchant";
+    private static final EntityType<RedMerchantEntity> RED_MERCHANT_TYPE_RAW =
+            EntityType.Builder.<RedMerchantEntity>of(RedMerchantEntity::new, EntityClassification.CREATURE)
+                .setShouldReceiveVelocityUpdates(true)
+                .clientTrackingRange(10)
+                .setUpdateInterval(3)
+                .sized(0.6F, 1.95F)
+                .build(RED_MERCHANT_NAME);
+
+    public static final RegistryObject<EntityType<RedMerchantEntity>> RED_MERCHANT_TYPE = ENTITIES.register(RED_MERCHANT_NAME, () -> RED_MERCHANT_TYPE_RAW);
+
+    public static final RegistryObject<ContainerType<OrangeMerchantContainer>> RED_MERCHANT_CONTAINER = CONTAINERS
+            .register(RED_MERCHANT_NAME, () -> IForgeContainerType.create(OrangeMerchantContainer::new));
+
+    public static final RegistryObject<Item> RED_MERCHANT_SPAWN_EGG_ITEM = ITEMS.register(RED_MERCHANT_NAME + "_spawn_egg", () ->
+            new SpawnEggItem(RED_MERCHANT_TYPE_RAW, 0x7A090F, 0xF4f1e0,
+                new Item.Properties().tab(null)));
 
     //label
     public static final String LABEL_NAME = "label";
@@ -226,8 +235,9 @@ public class Registry {
 
     public static final RegistryObject<EntityType<FireflyEntity>> FIREFLY_TYPE = ENTITIES.register(FIREFLY_NAME, () -> FIREFLY_TYPE_RAW);
 
-    public static final RegistryObject<Item> FIREFLY_SPAWN_EGG_ITEM = ITEMS.register(FIREFLY_NAME + "_spawn_egg", () -> new SpawnEggItem(FIREFLY_TYPE_RAW, -5048018, -14409439, //-4784384, -16777216,
-            new Item.Properties().tab(getTab(ItemGroup.TAB_MISC, FIREFLY_NAME))));
+    public static final RegistryObject<Item> FIREFLY_SPAWN_EGG_ITEM = ITEMS.register(FIREFLY_NAME + "_spawn_egg", () ->
+            new SpawnEggItem(FIREFLY_TYPE_RAW, -5048018, -14409439, //-4784384, -16777216,
+                new Item.Properties().tab(getTab(ItemGroup.TAB_MISC, FIREFLY_NAME))));
 
 
     //brick
@@ -1370,8 +1380,16 @@ public class Registry {
     //feather block
     public static final String FEATHER_BLOCK_NAME = "feather_block";
     public static final RegistryObject<Block> FEATHER_BLOCK = BLOCKS.register(FEATHER_BLOCK_NAME, () -> new FeatherBlock(
-            AbstractBlock.Properties.copy(Blocks.WHITE_WOOL)));
-    public static final RegistryObject<Item> FEATHER_BLOCK_ITEM = regBlockItem(FEATHER_BLOCK, getTab(ItemGroup.TAB_DECORATIONS, FEATHER_BLOCK_NAME));
+            AbstractBlock.Properties.copy(Blocks.WHITE_WOOL)
+                .noCollission()));
+    public static final RegistryObject<Item> FEATHER_BLOCK_ITEM = regBlockItem(FEATHER_BLOCK, getTab(ItemGroup.TAB_BUILDING_BLOCKS, FEATHER_BLOCK_NAME));
+
+    //flint block
+    public static final String FLINT_BLOCK_NAME = "flint_block";
+    public static final RegistryObject<Block> FLINT_BLOCK = BLOCKS.register(FLINT_BLOCK_NAME, () -> new FlintBlock(
+            AbstractBlock.Properties.copy(Blocks.STONE)));
+    public static final RegistryObject<Item> FLINT_BLOCK_ITEM = regBlockItem(FLINT_BLOCK, getTab(ItemGroup.TAB_BUILDING_BLOCKS, FLINT_BLOCK_NAME));
+
 
     //gunpowder block
     public static final String GUNPOWDER_BLOCK_NAME = "gunpowder";

@@ -64,7 +64,6 @@ public class FlowerBoxBlockTileRenderer extends TileEntityRenderer<FlowerBoxBloc
 
             matrixStackIn.translate(0.5,0,0);
 
-
             blockRenderer.renderBlock(tile.flower2, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
             if(tile.flower2_up!=null) {
                 matrixStackIn.translate(0, 1, 0);

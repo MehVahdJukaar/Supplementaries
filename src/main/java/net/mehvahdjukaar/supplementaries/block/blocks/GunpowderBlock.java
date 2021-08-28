@@ -3,9 +3,13 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.block.util.ILightable;
+import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
+import net.mehvahdjukaar.supplementaries.compat.decorativeblocks.DecoBlocksCompatRegistry;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.mehvahdjukaar.supplementaries.world.explosion.GunpowderExplosion;
 import net.minecraft.block.*;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
@@ -238,11 +242,9 @@ public class GunpowderBlock extends LightUpBlock {
 
     //TODO: add more cases
     protected boolean canConnectTo(BlockState state, IBlockReader world, BlockPos pos, @Nullable Direction dir) {
-        if (state.is(this.asBlock())) {
-            return true;
-        } else {
-            return state.getBlock() instanceof TNTBlock;
-        }
+        Block b = state.getBlock();
+        return b instanceof ILightable || b instanceof TNTBlock || b instanceof CampfireBlock ||
+                (CompatHandler.deco_blocks && DecoBlocksCompatRegistry.isBrazier(b));
     }
 
     @Override
@@ -399,10 +401,6 @@ public class GunpowderBlock extends LightUpBlock {
                 }
             }
         }
-        //spawn extra particles when lit on client side
-        else if (burning == 1) {
-            this.animateTick(state, world, pos, world.random);
-        }
     }
 
 
@@ -417,6 +415,10 @@ public class GunpowderBlock extends LightUpBlock {
     public boolean lightUp(BlockState state, BlockPos pos, IWorld world, FireSound sound) {
         boolean ret = super.lightUp(state, pos, world, sound);
         if (ret) {
+            //spawn particles when first lit
+            if (!world.isClientSide()) {
+                ((World) world).blockEvent(pos, this, 0, 0);
+            }
             world.getBlockTicks().scheduleTick(pos, this, DELAY);
         }
         return ret;
@@ -425,8 +427,12 @@ public class GunpowderBlock extends LightUpBlock {
     //for gunpowder -> gunpowder
     private void lightUpByWire(BlockState state, BlockPos pos, IWorld world) {
         if (!isLit(state)) {
+            //spawn particles when first lit
+            if (!world.isClientSide()) {
+                ((World) world).blockEvent(pos, this, 0, 0);
+            }
             world.setBlock(pos, toggleLitState(state, true), 11);
-            world.playSound(null, pos, Registry.GUNPOWDER_IGNITE.get(), SoundCategory.BLOCKS, 1.0f,
+            world.playSound(null, pos, Registry.GUNPOWDER_IGNITE.get(), SoundCategory.BLOCKS, 2.0f,
                     1.9f + world.getRandom().nextFloat() * 0.1f);
         }
     }
@@ -449,6 +455,7 @@ public class GunpowderBlock extends LightUpBlock {
                 }
             } else continue;
             if (neighbourState.is(this)) {
+                world.getBlockTicks().scheduleTick(p, this, Math.max(DELAY - 1, 1));
                 this.lightUpByWire(neighbourState, p, world);
             }
         }
@@ -463,23 +470,39 @@ public class GunpowderBlock extends LightUpBlock {
         //TODO: add tag
         if (b instanceof FireBlock || b instanceof MagmaBlock || b == Registry.BLAZE_ROD_BLOCK.get() || b == Registry.MAGMA_CREAM_BLOCK.get())
             return true;
-        if (b instanceof CampfireBlock && state.getValue(CampfireBlock.LIT)) return true;
+        if (b instanceof CampfireBlock || (CompatHandler.deco_blocks && DecoBlocksCompatRegistry.isBrazier(b))) {
+            return state.getValue(CampfireBlock.LIT);
+        }
         return world.getFluidState(pos).getType() == Fluids.LAVA;
     }
 
     /**
-	 * Called upon the block being destroyed by an explosion
-	 */
+     * Called upon the block being destroyed by an explosion
+     */
     @Override
     public void onBlockExploded(BlockState state, World world, BlockPos pos, Explosion explosion) {
-		if (!world.isClientSide) {
-            //world.setBlockAndUpdate(pos, state);
+        if (!world.isClientSide) {
             this.lightUp(state, pos, world, FireSound.FLAMING_ARROW);
-		}
-	}
+        }
+    }
 
     //----- light up block ------
 
+
+    @Override
+    public int getFireSpreadSpeed(BlockState state, IBlockReader world, BlockPos pos, Direction face) {
+        return 60;
+    }
+
+    @Override
+    public int getFlammability(BlockState state, IBlockReader world, BlockPos pos, Direction face) {
+        return 300;
+    }
+
+    @Override
+    public void catchFire(BlockState state, World world, BlockPos pos, @Nullable Direction face, @Nullable LivingEntity igniter) {
+
+    }
 
     @Override
     public boolean isLit(BlockState state) {
@@ -502,10 +525,21 @@ public class GunpowderBlock extends LightUpBlock {
 
     //client
 
+    //called when first lit
+    @Override
+    public boolean triggerEvent(BlockState state, World world, BlockPos pos, int eventID, int eventParam) {
+        if (eventID == 0) {
+            this.animateTick(state.setValue(BURNING, 1), world, pos, world.random);
+            return true;
+        }
+        return super.triggerEvent(state, world, pos, eventID, eventParam);
+    }
+
     /**
      * A randomly called display update to be able to add particles or other
      * items for display
      */
+    @Override
     public void animateTick(BlockState state, World world, BlockPos pos, Random random) {
         int i = state.getValue(BURNING);
         if (i != 0) {
@@ -522,13 +556,13 @@ public class GunpowderBlock extends LightUpBlock {
                         this.spawnParticlesAlongLine(world, random, pos, i, Direction.DOWN, direction, 0.0F, 0.3F);
                 }
             }
-
         }
     }
 
     private void spawnParticlesAlongLine(World world, Random rand, BlockPos pos, int burning, Direction dir1, Direction dir2, float from, float to) {
         float f = to - from;
-        if (!(rand.nextFloat() >= 0.2F * f)) {
+        float in = (7.5f - (burning - 1)) / 7.5f;
+        if ((rand.nextFloat() < 1 * f * in)) {
             float f2 = from + f * rand.nextFloat();
             double x = pos.getX() + 0.5D + (double) (0.4375F * (float) dir1.getStepX()) + (double) (f2 * (float) dir2.getStepX());
             double y = pos.getY() + 0.5D + (double) (0.4375F * (float) dir1.getStepY()) + (double) (f2 * (float) dir2.getStepY());

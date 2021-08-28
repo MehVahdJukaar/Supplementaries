@@ -38,6 +38,7 @@ import java.util.Random;
 import java.util.UUID;
 
 //TODO: rewrite and clean up this mess
+//TODO: worst code so far. after old jar code
 public class MobHolder {
     private final Random rand = new Random();
 
@@ -462,6 +463,7 @@ public class MobHolder {
     @Nullable
     public static CompoundNBT createMobHolderItemNBT(Entity mob, float blockW, float blockH){
         if(mob==null)return null;
+
         if(mob instanceof LivingEntity){
             LivingEntity le = (LivingEntity) mob;
             le.yHeadRotO = 0;
@@ -472,7 +474,17 @@ public class MobHolder {
             le.hurtDuration=0;
             le.hurtTime=0;
             le.attackAnim=0;
+
+
         }
+
+        boolean isBat = mob instanceof BatEntity;
+        if(isBat){
+            ((BatEntity) mob).setResting(true);
+        }
+
+        boolean isFox = mob instanceof FoxEntity;
+
         if(mob instanceof AbstractFishEntity){
             ((AbstractFishEntity) mob).setFromBucket(true);
         }
@@ -492,6 +504,10 @@ public class MobHolder {
             mobCompound.remove("Passengers");
             mobCompound.remove("Leash");
             mobCompound.remove("UUID");
+
+            if(isFox){
+                mobCompound.putBoolean("Sleeping", true);
+            }
 
             //TODO: improve for aquatic entities to react and not fly when not in water
             CapturedMobProperties mobProperties = CapturedMobsHelper.getType(mob);
@@ -532,6 +548,8 @@ public class MobHolder {
             }
             //TODO: rewrite this to account for adjValues
             float y = isAir ? (blockH/2f) - h * s / 2f : 0.0626f;
+
+            if(isBat) y*=1.5;
 
             //ice&fire dragons
             String name = mob.getType().getRegistryName().toString();

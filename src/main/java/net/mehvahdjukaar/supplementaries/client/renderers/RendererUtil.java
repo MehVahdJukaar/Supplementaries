@@ -5,13 +5,11 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -21,26 +19,37 @@ public class RendererUtil {
     //centered on x,z. aligned on y=0
 
     //stuff that falling sand uses. for some reason renderBlock doesn't use correct light level
-    public static void renderBlockPlus(BlockState state, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn,
-                                       BlockRendererDispatcher blockRenderer, World world, BlockPos pos){
+    public static void renderBlockModel(BlockState state, MatrixStack matrixStack, IRenderTypeBuffer buffer,
+                                        BlockRendererDispatcher blockRenderer, World world, BlockPos pos){
         try {
             for (RenderType type : RenderType.chunkBufferLayers()) {
                 if (RenderTypeLookup.canRenderInLayer(state, type)) {
-                    renderBlockPlus(state, matrixStackIn, bufferIn, blockRenderer, world, pos, type);
+                    renderBlockModel(state, matrixStack, buffer, blockRenderer, world, pos, type);
                 }
             }
         }catch (Exception ignored){}
-
     }
 
-    public static void renderBlockPlus(BlockState state, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn,
-                                       BlockRendererDispatcher blockRenderer, World world, BlockPos pos, RenderType type){
+    public static void renderBlockModel(BlockState state, MatrixStack matrixStack, IRenderTypeBuffer buffer,
+                                        BlockRendererDispatcher blockRenderer, World world, BlockPos pos, RenderType type){
+
         net.minecraftforge.client.ForgeHooksClient.setRenderLayer(type);
         blockRenderer.getModelRenderer().tesselateBlock(world,
-                blockRenderer.getBlockModel(state), state, pos, matrixStackIn,
-                bufferIn.getBuffer(type), false, new Random(),0,
+                blockRenderer.getBlockModel(state), state, pos, matrixStack,
+                buffer.getBuffer(type), false, new Random(),0,
                 OverlayTexture.NO_OVERLAY);
         net.minecraftforge.client.ForgeHooksClient.setRenderLayer(null);
+    }
+
+    public static void renderBlockModel(ResourceLocation modelLocation, MatrixStack matrixStack, IRenderTypeBuffer buffer,
+                                        BlockRendererDispatcher blockRenderer, int light, int overlay, boolean cutout){
+
+        blockRenderer.getModelRenderer().renderModel(matrixStack.last(),
+                buffer.getBuffer(cutout?Atlases.cutoutBlockSheet():Atlases.solidBlockSheet()),
+                null,
+                blockRenderer.getBlockModelShaper().getModelManager().getModel(modelLocation),
+                1.0F, 1.0F, 1.0F,
+                light, overlay);
     }
 
 

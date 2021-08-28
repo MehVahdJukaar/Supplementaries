@@ -21,7 +21,7 @@
     "GrindstoneTestSlotMixin",
     "LakeMixin",
     "LanternBlockMixin",
-    "LivingEntityLadderMixin",
+    "LivingEntityMixin",
     "LoomContainerMixin",
     "LoomInputSlotMixin",
     "MineshaftMixin",
@@ -30,19 +30,17 @@
     "ShulkerBoxSlotMixin",
     "ShulkerBoxTileEntityMixin",
     "SkeletonHorseMixin",
-    "SpawnOrangeMerchantMixin",
+    "SpawnRedMerchantMixin",
     "StrongholdCrossingMixin",
     "StrongholdRoomMixin",
     "VineBlockMixin",
-    "accessors.ChickenEntityAccessor",
-    "accessors.HorseEntityAccessor",
-    "accessors.MineshaftAccessor"
+    "ZombieHorseMixin"
   ],
   "client": [
     "BellTileEntityRendererMixin",
     "IronGolemRendererMixin",
     "LoomScreenMixin",
-    "ParrotPartyMixin",
+    "ParrotPartingMixin",
     "UndeadHorseRendererMixin",
     "VillagerModelMixin"
   ],

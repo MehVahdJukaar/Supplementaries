@@ -77,7 +77,7 @@ public class CrimsonLanternBlockTileRenderer extends EnhancedLanternBlockTileRen
 
 
 
-            RendererUtil.renderBlockPlus(state, matrixStackIn, bufferIn, blockRenderer, tile.getLevel(), tile.getBlockPos(), RenderType.cutout());
+            RendererUtil.renderBlockModel(state, matrixStackIn, bufferIn, blockRenderer, tile.getLevel(), tile.getBlockPos(), RenderType.cutout());
 
 
             IVertexBuilder builder = GOLD_TEXTURE.buffer(bufferIn, RenderType::entityCutoutNoCull);
@@ -90,7 +90,7 @@ public class CrimsonLanternBlockTileRenderer extends EnhancedLanternBlockTileRen
             matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(xrot));
             matrixStackIn.translate(-0.5, -0.75, -0.375);
 
-            RendererUtil.renderBlockPlus(state, matrixStackIn, bufferIn, blockRenderer, tile.getLevel(), tile.getBlockPos());
+            RendererUtil.renderBlockModel(state, matrixStackIn, bufferIn, blockRenderer, tile.getLevel(), tile.getBlockPos());
 
 
             IVertexBuilder builder = GOLD_TEXTURE.buffer(bufferIn, RenderType::entityCutoutNoCull);

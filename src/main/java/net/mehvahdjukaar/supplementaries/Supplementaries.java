@@ -38,7 +38,8 @@ public class Supplementaries{
 
     public Supplementaries() {
 
-        //TODO:fix fluidHolder registry access. doesnt return null but air...
+        //TODO: add bomb loot table
+
         //TODO: replace soft fluid system with forge caps to itemstacks and register actual forge fluids
 
         //TODO: reworkd ItemDisplayTile with proper capability usage
@@ -51,15 +52,17 @@ public class Supplementaries{
 
         //TODO: add stick window loggable clipping
 
-        //RODO: add redstone config for iron gate
-
-        //add new translations
+        //TODO: add redstone config for iron gate
 
         //TODO: fix horizontal stick texture
 
         //TODO: fix wall lanterns particles
 
         //mod idea: better birch trees
+
+        //mod idea: blackboard banners and flags with villager
+
+        //slingshot that places blocks
 
         MinecraftForge.EVENT_BUS.register(ServerEvents.class);
 

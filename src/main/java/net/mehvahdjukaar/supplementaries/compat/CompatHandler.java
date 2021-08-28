@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.compat;
 
 
+import net.mehvahdjukaar.supplementaries.compat.create.SupplementariesCreatePlugin;
 import net.mehvahdjukaar.supplementaries.compat.decorativeblocks.DecoBlocksCompatRegistry;
 import net.mehvahdjukaar.supplementaries.compat.farmersdelight.FDCompatRegistry;
 import net.mehvahdjukaar.supplementaries.compat.inspirations.CauldronRecipes;
@@ -28,7 +29,8 @@ public class CompatHandler {
     public static final boolean autumnity;
     public static final boolean deco_blocks_abnormals;
     public static final boolean much_more_mod_compat;
-
+    public static final boolean flywheel;
+    public static final boolean repurposed_structures;
 
     static {
         ModList ml = ModList.get();
@@ -48,10 +50,12 @@ public class CompatHandler {
         much_more_mod_compat = ml.isLoaded("muchmoremodcompat");
         autumnity = ml.isLoaded("autumnity");
         buzzier_bees = ml.isLoaded("buzzier_bees");
+        flywheel = ml.isLoaded("flywheel");
+        repurposed_structures = ml.isLoaded("repurposed_structures");
     }
 
     public static void init(){
-        //if (create) SupplementariesCreatePlugin.initialize();
+        if (create) SupplementariesCreatePlugin.initialize();
     }
 
     public static void registerOptionalBlocks(final RegistryEvent.Register<Block> event){

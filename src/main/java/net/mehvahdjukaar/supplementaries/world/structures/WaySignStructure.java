@@ -55,7 +55,6 @@ public class WaySignStructure extends Structure<NoFeatureConfig> {
 
 
 
-
     /**
      * This is where extra checks can be done to determine if the structure can spawn here.
      * This only needs to be overridden if you're adding additional spawn conditions.

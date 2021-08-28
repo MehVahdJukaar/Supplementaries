@@ -8,7 +8,6 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import net.mehvahdjukaar.supplementaries.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
@@ -21,7 +20,6 @@ import net.minecraft.potion.PotionUtils;
 import net.minecraft.potion.Potions;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.registry.Registry;
@@ -35,10 +33,12 @@ public class BambooSpikesBehavior extends MovementBehaviour {
         return VecHelper.isVecPointingTowards(context.relativeMotion, context.state.getValue(BambooSpikesBlock.FACING));
     }
 
+    @Override
     public boolean renderAsNormalTileEntity() {
         return true;
     }
 
+    /*
     @Override
     public void visitNewPosition(MovementContext context, BlockPos pos) {
         World world = context.world;
@@ -46,15 +46,24 @@ public class BambooSpikesBehavior extends MovementBehaviour {
 
         if (!stateVisited.isRedstoneConductor(world, pos))
             damageEntities(context, pos, world);
+    }*/
+
+    @Override
+    public void tick(MovementContext context) {
+        damageEntities(context);
     }
 
-    public void damageEntities(MovementContext context, BlockPos pos, World world) {
+    public void damageEntities(MovementContext context) {
+        World world = context.world;
+        Vector3d pos = context.position;
         DamageSource damageSource = getDamageSource();
 
-        Entities: for (Entity entity : world.getEntitiesOfClass(Entity.class, new AxisAlignedBB(pos))) {
+        Entities:
+        for (Entity entity : world.getEntitiesOfClass(Entity.class,
+                new AxisAlignedBB(pos.add(-0.5, -0.5, -0.5), pos.add(0.5, 0.5, 0.5)))) {
             if (entity instanceof ItemEntity) continue;
             if (entity instanceof AbstractContraptionEntity) continue;
-            if (entity instanceof PlayerEntity && ((PlayerEntity) entity).isCreative())continue;
+            if (entity instanceof PlayerEntity && ((PlayerEntity) entity).isCreative()) continue;
             if (entity instanceof AbstractMinecartEntity)
                 for (Entity passenger : entity.getIndirectPassengers())
                     if (passenger instanceof AbstractContraptionEntity
@@ -62,10 +71,10 @@ public class BambooSpikesBehavior extends MovementBehaviour {
                         continue Entities;
             //attack entities
             if (entity.isAlive() && entity instanceof LivingEntity) {
-                if(!world.isClientSide) {
+                if (!world.isClientSide) {
 
-                    double pow = 4 * Math.pow(context.relativeMotion.length(), 0.4) + 1;
-                    float damage = !isSameDir(context)? 1 :
+                    double pow = 5 * Math.pow(context.relativeMotion.length(), 0.4) + 1;
+                    float damage = !isSameDir(context) ? 1 :
                             (float) MathHelper.clamp(pow, 2, 6);
                     entity.hurt(damageSource, damage);
                     this.doTileStuff(context, world, (LivingEntity) entity);
@@ -73,7 +82,7 @@ public class BambooSpikesBehavior extends MovementBehaviour {
 
 
             }
-            //throw entities
+            //throw entities (i forgot why this is here. maybe its from creates saw)
             if (world.isClientSide == (entity instanceof PlayerEntity)) {
                 Vector3d motionBoost = context.motion.add(0, context.motion.length() / 4f, 0);
                 int maxBoost = 4;
@@ -87,16 +96,16 @@ public class BambooSpikesBehavior extends MovementBehaviour {
     }
 
 
-    private void doTileStuff(MovementContext context, @Nonnull World world, LivingEntity le){
+    private void doTileStuff(MovementContext context, @Nonnull World world, LivingEntity le) {
         CompoundNBT com = context.tileData;
         int charges = com.getInt("Charges");
         long lastTicked = com.getLong("LastTicked");
         Potion potion = PotionUtils.getPotion(com);
-        if(potion!= Potions.EMPTY && charges >0 && !this.isOnCooldown(world,lastTicked)) {
+        if (potion != Potions.EMPTY && charges > 0 && !this.isOnCooldown(world, lastTicked)) {
             boolean used = false;
-            for(EffectInstance effect : potion.getEffects()){
-                if(!le.canBeAffected(effect))continue;
-                if(le.hasEffect(effect.getEffect()))continue;
+            for (EffectInstance effect : potion.getEffects()) {
+                if (!le.canBeAffected(effect)) continue;
+                if (le.hasEffect(effect.getEffect())) continue;
 
                 if (effect.getEffect().isInstantenous()) {
                     float health = 0.5f;//no idea of what this does. it's either 0.5 or 1
@@ -106,21 +115,21 @@ public class BambooSpikesBehavior extends MovementBehaviour {
                             (int) (effect.getDuration() * BambooSpikesBlockTile.POTION_MULTIPLIER),
                             effect.getAmplifier()));
                 }
-                used=true;
+                used = true;
             }
-            if(used){
+            if (used) {
                 lastTicked = world.getGameTime();
-                charges-=1;
-                if(charges<=0){
-                    charges=0;
-                    potion=Potions.EMPTY;
-                    MovementUtils.changeState(context, context.state.setValue(BambooSpikesBlock.TIPPED,false));
+                charges -= 1;
+                if (charges <= 0) {
+                    charges = 0;
+                    potion = Potions.EMPTY;
+                    MovementUtils.changeState(context, context.state.setValue(BambooSpikesBlock.TIPPED, false));
                 }
                 com.remove("Charges");
                 com.remove("LastTicked");
                 com.remove("Potion");
-                com.putInt("Charges",charges);
-                com.putLong("LastTicked",lastTicked);
+                com.putInt("Charges", charges);
+                com.putLong("LastTicked", lastTicked);
                 com.putString("Potion", Registry.POTION.getKey(potion).toString());
                 context.tileData = com;
             }
@@ -128,8 +137,8 @@ public class BambooSpikesBehavior extends MovementBehaviour {
     }
 
 
-    public boolean isOnCooldown(World world,long lastTicked){
-        return world.getGameTime()-lastTicked<20;
+    public boolean isOnCooldown(World world, long lastTicked) {
+        return world.getGameTime() - lastTicked < 20;
     }
 
     protected DamageSource getDamageSource() {

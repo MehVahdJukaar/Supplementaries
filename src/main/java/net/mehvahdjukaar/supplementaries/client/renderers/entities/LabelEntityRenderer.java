@@ -3,9 +3,6 @@ package net.mehvahdjukaar.supplementaries.client.renderers.entities;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.entities.LabelEntity;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -18,8 +15,6 @@ import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Matrix3f;
@@ -31,9 +26,9 @@ import java.util.function.Consumer;
 
 
 public class LabelEntityRenderer extends EntityRenderer<LabelEntity> {
-    public static final StateContainer<Block, BlockState> LABEL_FAKE_DEFINITION = (new StateContainer.Builder<Block, BlockState>(Blocks.AIR)).add(BooleanProperty.create("jar")).create(Block::defaultBlockState, BlockState::new);
+    //public static final StateContainer<Block, BlockState> LABEL_FAKE_DEFINITION = (new StateContainer.Builder<Block, BlockState>(Blocks.AIR)).add(BooleanProperty.create("jar")).create(Block::defaultBlockState, BlockState::new);
 
-    private static final ModelResourceLocation LABEL_LOCATION = new ModelResourceLocation(Supplementaries.MOD_ID+":label", "jar=false");
+    public static final ModelResourceLocation LABEL_LOCATION = new ModelResourceLocation(Supplementaries.MOD_ID+":label", "jar=false");
     private static final ModelResourceLocation JAR_LABEL_LOCATION = new ModelResourceLocation(Supplementaries.MOD_ID+":label", "jar=true");
     private final ItemRenderer itemRenderer;
     private final BlockModelRenderer modelRenderer;

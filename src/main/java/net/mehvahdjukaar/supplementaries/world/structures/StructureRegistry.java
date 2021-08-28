@@ -77,8 +77,8 @@ public class StructureRegistry {
          * RegistryKey.getOrCreateKey(Registry.BIOME_KEY, event.getName()) to get the biome's
          * registrykey. Then that can be fed into the dictionary to get the biome's types.
          */
-        if(BiomeDictionary.hasType(RegistryKey.create(Registry.BIOME_REGISTRY, event.getName()), BiomeDictionary.Type.OCEAN)
-            ||ServerConfigs.spawn.ROAD_SIGN_DISTANCE_MIN.get()==1001)return;
+        if (BiomeDictionary.hasType(RegistryKey.create(Registry.BIOME_REGISTRY, event.getName()), BiomeDictionary.Type.OCEAN)
+                || ServerConfigs.spawn.ROAD_SIGN_DISTANCE_MIN.get() == 1001) return;
 
         event.getGeneration().getStructures().add(() -> ConfiguredFeatures.CONFIGURED_WAY_SIGN);
     }
@@ -86,17 +86,18 @@ public class StructureRegistry {
     /**
      * Will go into the world's chunkgenerator and manually add our structure spacing.
      * If the spacing is not added, the structure doesn't spawn.
-     *
+     * <p>
      * Use this for dimension blacklists for your structure.
      * (Don't forget to attempt to remove your structure too from the map if you are blacklisting that dimension!)
      * (It might have your structure in it already.)
-     *
+     * <p>
      * Basically use this to make absolutely sure the chunkgenerator can or cannot spawn your structure.
      */
     private static Method GETCODEC_METHOD;
+
     public static void addDimensionalSpacing(final WorldEvent.Load event) {
-        if(event.getWorld() instanceof ServerWorld){
-            ServerWorld serverWorld = (ServerWorld)event.getWorld();
+        if (event.getWorld() instanceof ServerWorld) {
+            ServerWorld serverWorld = (ServerWorld) event.getWorld();
 
             /*
              * Skip Terraforged's chunk generator as they are a special case of a mod locking down their chunkgenerator.
@@ -105,11 +106,11 @@ public class StructureRegistry {
              * If you are using mixins, you can call getCodec with an invoker mixin instead of using reflection.
              */
             try {
-                if(GETCODEC_METHOD == null) GETCODEC_METHOD = ObfuscationReflectionHelper.findMethod(ChunkGenerator.class, "func_230347_a_");
+                if (GETCODEC_METHOD == null)
+                    GETCODEC_METHOD = ObfuscationReflectionHelper.findMethod(ChunkGenerator.class, "func_230347_a_");
                 ResourceLocation cgRL = Registry.CHUNK_GENERATOR.getKey((Codec<? extends ChunkGenerator>) GETCODEC_METHOD.invoke(serverWorld.getChunkSource().generator));
-                if(cgRL != null && cgRL.getNamespace().equals("terraforged")) return;
-            }
-            catch(Exception e){
+                if (cgRL != null && cgRL.getNamespace().equals("terraforged")) return;
+            } catch (Exception e) {
                 Supplementaries.LOGGER.error("Was unable to check if " + serverWorld.dimension().getRegistryName() + " is using Terraforged's ChunkGenerator.");
             }
 
@@ -118,16 +119,26 @@ public class StructureRegistry {
              * people seem to want their superflat worlds free of modded structures.
              * Also that vanilla superflat is really tricky and buggy to work with in my experience.
              */
-            if(serverWorld.getChunkSource().generator instanceof FlatChunkGenerator &&
-                    serverWorld.dimension().equals(World.OVERWORLD)){
+            if (serverWorld.getChunkSource().generator instanceof FlatChunkGenerator &&
+                    serverWorld.dimension().equals(World.OVERWORLD)) {
                 return;
             }
             //serverWorld.getChunkSource().generator.getBiomeSource().possibleBiomes().stream().forEach(b->b.cange);
 
 
             //adding only to biomes and dimensions that can generate vanilla villages
-            if(serverWorld.getChunkSource().generator.getBiomeSource().canGenerateStructure(Structure.VILLAGE)&&serverWorld.dimensionType().natural()
-                &&ServerConfigs.spawn.ROAD_SIGN_DISTANCE_MIN.get()!=1001) {
+
+
+            boolean isVillageDimension = false;
+
+            //TODO: might be a bug here with .canGenerateStructure
+            try{
+                isVillageDimension = serverWorld.getChunkSource().generator.getBiomeSource().canGenerateStructure(Structure.VILLAGE);
+            }catch (Exception ignored){
+                Supplementaries.LOGGER.warn("failed to add structure to biomes: something went wrong, might be some other mod bug");
+            }
+
+            if (isVillageDimension && serverWorld.dimensionType().natural() && ServerConfigs.spawn.ROAD_SIGN_DISTANCE_MIN.get() != 1001) {
 
                 /*
                  * putIfAbsent so people can override the spacing with dimension datapacks themselves if they wish to customize spacing more precisely per dimension.
@@ -139,8 +150,7 @@ public class StructureRegistry {
                 Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(serverWorld.getChunkSource().generator.getSettings().structureConfig());
                 tempMap.putIfAbsent(WAY_SIGN.get(), DimensionStructuresSettings.DEFAULTS.get(WAY_SIGN.get()));
                 serverWorld.getChunkSource().generator.getSettings().structureConfig = tempMap;
-            }
-            else{
+            } else {
                 //removing it from the map if it's there already for some damn reason
                 Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(serverWorld.getChunkSource().generator.getSettings().structureConfig());
                 tempMap.remove(WAY_SIGN.get());
@@ -148,15 +158,6 @@ public class StructureRegistry {
             }
         }
     }
-
-
-
-
-
-
-
-
-
 
 
     /**
@@ -183,8 +184,7 @@ public class StructureRegistry {
     private static <F extends Structure<?>> void setupMapSpacingAndLand(
             F structure,
             StructureSeparationSettings structureSeparationSettings,
-            boolean transformSurroundingLand)
-    {
+            boolean transformSurroundingLand) {
         /*
          * We need to add our structures into the map in Structure alongside vanilla
          * structures or else it will cause errors. Called by registerStructure.
@@ -195,8 +195,8 @@ public class StructureRegistry {
         try {
             Structure.STRUCTURES_REGISTRY.put(structure.getRegistryName().toString(), structure);
             Structure.STRUCTURES_REGISTRY.get(structure.getRegistryName().toString()).getRegistryName();
-        }catch(Exception e){
-            Supplementaries.LOGGER.throwing(new Exception("failed to register way sign structure: "+ e +". this is a bug"));
+        } catch (Exception e) {
+            Supplementaries.LOGGER.throwing(new Exception("failed to register way sign structure: " + e + ". this is a bug"));
         }
 
         /*
@@ -207,7 +207,7 @@ public class StructureRegistry {
          * Note: The air space this method will create will be filled with water if the structure is below sealevel.
          * This means this is best for structure above sealevel so keep that in mind.
          */
-        if(transformSurroundingLand){
+        if (transformSurroundingLand) {
             Structure.NOISE_AFFECTING_FEATURES =
                     ImmutableList.<Structure<?>>builder()
                             .addAll(Structure.NOISE_AFFECTING_FEATURES)
@@ -247,12 +247,11 @@ public class StructureRegistry {
              * Pre-caution in case a mod makes the structure map immutable like datapacks do.
              * I take no chances myself. You never know what another mods does...
              */
-            if(structureMap instanceof ImmutableMap){
+            if (structureMap instanceof ImmutableMap) {
                 Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(structureMap);
                 tempMap.put(structure, structureSeparationSettings);
                 settings.getValue().structureSettings().structureConfig = tempMap;
-            }
-            else{
+            } else {
                 structureMap.put(structure, structureSeparationSettings);
             }
         });

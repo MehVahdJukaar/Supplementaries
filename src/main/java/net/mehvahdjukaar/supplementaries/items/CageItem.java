@@ -131,6 +131,10 @@ public class CageItem extends BlockItem {
 
             if (this.canCatch(entity)) {
 
+                if(entity.isPassenger()){
+                    entity.getVehicle().ejectPassengers();
+                }
+
                 //return for client
                 if (player.level.isClientSide) return ActionResultType.SUCCESS;
 

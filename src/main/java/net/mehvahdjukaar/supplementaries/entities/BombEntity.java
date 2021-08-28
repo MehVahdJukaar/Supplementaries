@@ -171,6 +171,7 @@ public class BombEntity extends ProjectileItemEntity implements IRendersAsItem, 
         return (random.nextGaussian()) * 0.05;
     }
 
+    //TODO: merge with fixed projectile code. fix smoke
     @Override
     public void tick() {
         if (this.changeTimer == 0) {

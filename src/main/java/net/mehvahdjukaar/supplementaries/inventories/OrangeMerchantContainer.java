@@ -34,7 +34,7 @@ public class OrangeMerchantContainer extends Container {
     }
 
     public OrangeMerchantContainer(int p_i50069_1_, PlayerInventory p_i50069_2_, IMerchant p_i50069_3_) {
-        super(Registry.ORANGE_TRADER_CONTAINER.get(), p_i50069_1_);
+        super(Registry.RED_MERCHANT_CONTAINER.get(), p_i50069_1_);
         this.trader = p_i50069_3_;
         this.tradeContainer = new MerchantInventory(p_i50069_3_);
         this.addSlot(new Slot(this.tradeContainer, 0, 136, 37));

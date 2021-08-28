@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.entities.goals;
 
-import net.mehvahdjukaar.supplementaries.entities.OrangeMerchantEntity;
+import net.mehvahdjukaar.supplementaries.entities.RedMerchantEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -13,7 +13,7 @@ public class EquipAndRangeAttackGoal extends Goal {
 
     private final ItemStack item;
 
-    private final OrangeMerchantEntity mob;
+    private final RedMerchantEntity mob;
     private LivingEntity target;
     private int attackTime = -1;
     private final double speedModifier;
@@ -26,7 +26,7 @@ public class EquipAndRangeAttackGoal extends Goal {
 
 
 
-    public EquipAndRangeAttackGoal(OrangeMerchantEntity mob, double speed, int cooldown, int minInt, int maxInt, float range, ItemStack item) {
+    public EquipAndRangeAttackGoal(RedMerchantEntity mob, double speed, int cooldown, int minInt, int maxInt, float range, ItemStack item) {
         this.mob = mob;
         this.cooldown = cooldown;
         this.speedModifier = speed;
@@ -99,7 +99,7 @@ public class EquipAndRangeAttackGoal extends Goal {
             float lvt_5_1_ = MathHelper.clamp(f, 0.1F, 1.0F);
             this.mob.performRangedAttack(this.target, lvt_5_1_);
             this.attackTime = MathHelper.floor(f * (float) (this.attackIntervalMax - this.attackIntervalMin) + (float) this.attackIntervalMin);
-            this.mob.attackCooldown = cooldown;
+            this.mob.attackCooldown = cooldown + mob.getRandom().nextInt(20);
         } else if (this.attackTime < 0) {
             float f2 = MathHelper.sqrt(d0) / this.attackRadius;
             this.attackTime = MathHelper.floor(f2 * (float) (this.attackIntervalMax - this.attackIntervalMin) + (float) this.attackIntervalMin);

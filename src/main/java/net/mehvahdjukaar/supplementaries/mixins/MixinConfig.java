@@ -22,7 +22,8 @@ public class MixinConfig implements IMixinConfigPlugin {
             String className = MixinConfig.class.getName();
             String packageName = MixinConfig.class.getPackage().getName();
             return getClassesInPackage(packageName).stream()
-                    .filter(s->!s.equals(className)).map(s->s.substring(packageName.length() + 1))
+                    .filter(s->!s.equals(className) && !s.contains("$"))
+                    .map(s->s.substring(packageName.length() + 1))
                     .collect(Collectors.toList());
         } catch (Exception e) {
             throw new IllegalStateException("Could not fetch mixin classes, giving up: " + e.getMessage());

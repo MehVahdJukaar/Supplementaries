@@ -1,13 +1,16 @@
 package net.mehvahdjukaar.supplementaries.compat.decorativeblocks;
 
+import com.lilypuree.decorative_blocks.blocks.BrazierBlock;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.CompatObjects;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
@@ -69,6 +72,13 @@ public class DecoBlocksCompatRegistry {
 
     }
 
+    public static boolean isBrazier(Block b){
+        return b instanceof BrazierBlock;
+    }
 
+    public static boolean canLightBrazier(BlockState state) {
+        return isBrazier(state.getBlock()) && !state.getValue(BlockStateProperties.WATERLOGGED)
+                && !state.getValue(BlockStateProperties.LIT);
+    }
 
 }

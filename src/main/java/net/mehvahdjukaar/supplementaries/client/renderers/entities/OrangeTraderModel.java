@@ -39,8 +39,8 @@ public class OrangeTraderModel <T extends Entity> extends SegmentedModel<T> impl
         this.hatRim.xRot = (-(float)Math.PI / 2F);
         this.hat.addChild(this.hatRim);
         this.nose = (new ModelRenderer(this)).setTexSize(p_i51059_2_, p_i51059_3_);
-        this.nose.setPos(0.0F, -3.0F, 0.0F);
-        this.nose.texOffs(24, 0).addBox(-1.0F, -1.0F, -6.0F, 2.0F, 2.0F, 2.0F, p_i51059_1_);
+        this.nose.setPos(0.0F, -2.0F, 0.0F);
+        this.nose.texOffs(24, 0).addBox(-1.0F, -1.0F, -6.0F, 2.0F, 4.0F, 2.0F, p_i51059_1_);
         this.head.addChild(this.nose);
         this.body = (new ModelRenderer(this)).setTexSize(p_i51059_2_, p_i51059_3_);
         this.body.setPos(0.0F, 0.0F, 0.0F);

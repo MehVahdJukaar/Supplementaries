@@ -4,6 +4,8 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.inventories.OrangeMerchantContainer;
+import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.network.SelectOrangeTraderTradePacket;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.entity.merchant.villager.VillagerData;
@@ -11,7 +13,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.MerchantOffer;
 import net.minecraft.item.MerchantOffers;
-import net.minecraft.network.play.client.CSelectTradePacket;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
@@ -40,7 +41,8 @@ public class OrangeMerchantGui extends ContainerScreen<OrangeMerchantContainer> 
     private void postButtonClick() {
         this.menu.setSelectionHint(this.shopItem);
         this.menu.tryMoveItems(this.shopItem);
-        this.minecraft.getConnection().send(new CSelectTradePacket(this.shopItem));
+
+        NetworkHandler.sendToServerPlayer(new SelectOrangeTraderTradePacket(this.shopItem));
     }
 
     protected void init() {

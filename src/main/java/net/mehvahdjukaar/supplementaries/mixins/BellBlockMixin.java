@@ -53,7 +53,7 @@ public abstract class BellBlockMixin extends Block{
                         ((World) worldIn).sendBlockUpdated(currentPos, stateIn, stateIn, Constants.BlockFlags.BLOCK_UPDATE);
                 }
             }
-        }catch (Exception ignored){};
+        }catch (Exception ignored){}
     }
 
     @Override

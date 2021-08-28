@@ -28,8 +28,11 @@ public class CapturedMobsHelper {
     public static final CapturedMobProperties MODDED_FISH = new CapturedMobProperties("420",0,0,0,1,AnimationCategory.DEFAULT);
 
 
-    private static List<String> addDef(String id, int fish){
-        return addDef(id,0,0.125f, 0, fish);
+    private static List<String> addFish(String id){
+        return addDef(id,0,0.125f, 0, ++fishIndex);
+    }
+    private static List<String> addFish(String id, int fishIndex){
+        return addDef(id,0,0.125f, 0, fishIndex);
     }
     private static List<String> addDef(String id, float h, float w, int l, int f){
         return Arrays.asList(id,""+h,""+w,""+l,""+f);
@@ -44,6 +47,7 @@ public class CapturedMobsHelper {
         return Arrays.asList(id,""+h,""+w);
     }
 
+    private static int fishIndex = 0;
 
     static {
         //1=default fish
@@ -53,53 +57,54 @@ public class CapturedMobsHelper {
         DEFAULT_CONFIG.add(addDef("minecraft:silverfish", 0, 0.25f));
         DEFAULT_CONFIG.add(addDef("minecraft:chicken", 0.25f, 0.3125f));
         DEFAULT_CONFIG.add(addDef("minecraft:endermite",0,0,5));
+        DEFAULT_CONFIG.add(addDef("minecraft:fox",0,0.2f));
         DEFAULT_CONFIG.add(addDef("supplementaries:firefly",0,0,9,AnimationCategory.FLOATING));
         DEFAULT_CONFIG.add(addDef("druidcraft:lunar_moth", 0.375f, 0.1375f,10,AnimationCategory.FLOATING));
         DEFAULT_CONFIG.add(addDef("iceandfire:pixie", 0, 0,10));
-        DEFAULT_CONFIG.add(addDef("minecraft:fish", ++fishIndex));
-        DEFAULT_CONFIG.add(addDef("minecraft:tropical_fish", ++fishIndex));
-        DEFAULT_CONFIG.add(addDef("minecraft:salmon", ++fishIndex));
-        DEFAULT_CONFIG.add(addDef("minecraft:cod", ++fishIndex));
-        DEFAULT_CONFIG.add(addDef("minecraft:pufferfish", ++fishIndex));
-        DEFAULT_CONFIG.add(addDef("minecraft:axolotl", ++fishIndex));
-        DEFAULT_CONFIG.add(addDef("fins:pea_wee", ++fishIndex));
-        DEFAULT_CONFIG.add(addDef("fins:wee_wee", ++fishIndex));
-        DEFAULT_CONFIG.add(addDef("fins:vibra_wee", ++fishIndex));
-        DEFAULT_CONFIG.add(addDef("fins:blu_wee", ++fishIndex));
-        DEFAULT_CONFIG.add(addDef("fins:ornate_bugfish", ++fishIndex));
-        DEFAULT_CONFIG.add(addDef("fins:spindly_gem_crab", ++fishIndex));
-        DEFAULT_CONFIG.add(addDef("fins:phantom_nudibranch", ++fishIndex));
-        DEFAULT_CONFIG.add(addDef("fins:high_finned_blue", ++fishIndex));
-        DEFAULT_CONFIG.add(addDef("fins:teal_arrowfish", ++fishIndex));
-        DEFAULT_CONFIG.add(addDef("fins:midnight_squid", ++fishIndex));
-        DEFAULT_CONFIG.add(addDef("fins:banded_redback_shrimp", ++fishIndex));
-        DEFAULT_CONFIG.add(addDef("fins:flatback_sucker", ++fishIndex));
-        DEFAULT_CONFIG.add(addDef("fins:swamp_mucker", ++fishIndex));
-        DEFAULT_CONFIG.add(addDef("upgrade_aquatic:lionfish", ++fishIndex));
-        DEFAULT_CONFIG.add(addDef("upgrade_aquatic:nautilus", ++fishIndex));
-        DEFAULT_CONFIG.add(addDef("upgrade_aquatic:pike", ++fishIndex));
-        DEFAULT_CONFIG.add(addDef("alexsmobs:stradpole", ++fishIndex));
-        DEFAULT_CONFIG.add(addDef("alexsmobs:blobfish", ++fishIndex));
-        DEFAULT_CONFIG.add(addDef("unnamedanimalmod:flashlight_fish", ++fishIndex));
-        DEFAULT_CONFIG.add(addDef("unnamedanimalmod:elephantnose_fish", ++fishIndex));
-        DEFAULT_CONFIG.add(addDef("unnamedanimalmod:black_diamond_stingray", ++fishIndex));
-        DEFAULT_CONFIG.add(addDef("unnamedanimalmod:humphead_parrotfish", ++fishIndex));
-        DEFAULT_CONFIG.add(addDef("unnamedanimalmod:tomato_frog", ++fishIndex));
-        DEFAULT_CONFIG.add(addDef("unnamedanimalmod:pacman_frog", ++fishIndex));
-        DEFAULT_CONFIG.add(addDef("bettas:betta_fish", ++fishIndex));
-        DEFAULT_CONFIG.add(addDef("pogfish:pogfish", ++fishIndex));
-        DEFAULT_CONFIG.add(addDef("undergarden:gwibling", ++fishIndex));
-        DEFAULT_CONFIG.add(addDef("environmental:koi", ++fishIndex));
-        DEFAULT_CONFIG.add(addDef("betterendforge:end_fish", ++fishIndex));
-        DEFAULT_CONFIG.add(addDef("betteranimalsplus:flying_fish", ++fishIndex));
-        DEFAULT_CONFIG.add(addDef("betteranimalsplus:nautilus", ++fishIndex));
-        DEFAULT_CONFIG.add(addDef("betteranimalsplus:eel_freshwater", ++fishIndex));
-        DEFAULT_CONFIG.add(addDef("betteranimalsplus:eel_saltwater", ++fishIndex));
-        DEFAULT_CONFIG.add(addDef("betteranimalsplus:lamprey", ++fishIndex));
-        DEFAULT_CONFIG.add(addDef("betteranimalsplus:piranha", ++fishIndex));
-        DEFAULT_CONFIG.add(addDef("betteranimalsplus:barracuda", ++fishIndex));
-        DEFAULT_CONFIG.add(addDef("rediscovered:fish", 1));
-        //DEFAULT_VALUES.add(addDef("----", ++fishIndex));
+        DEFAULT_CONFIG.add(addFish("minecraft:fish"));
+        DEFAULT_CONFIG.add(addFish("minecraft:tropical_fish"));
+        DEFAULT_CONFIG.add(addFish("minecraft:salmon"));
+        DEFAULT_CONFIG.add(addFish("minecraft:cod"));
+        DEFAULT_CONFIG.add(addFish("minecraft:pufferfish"));
+        DEFAULT_CONFIG.add(addFish("minecraft:axolotl"));
+        DEFAULT_CONFIG.add(addFish("fins:pea_wee"));
+        DEFAULT_CONFIG.add(addFish("fins:wee_wee"));
+        DEFAULT_CONFIG.add(addFish("fins:vibra_wee"));
+        DEFAULT_CONFIG.add(addFish("fins:blu_wee"));
+        DEFAULT_CONFIG.add(addFish("fins:ornate_bugfish"));
+        DEFAULT_CONFIG.add(addFish("fins:spindly_gem_crab"));
+        DEFAULT_CONFIG.add(addFish("fins:phantom_nudibranch"));
+        DEFAULT_CONFIG.add(addFish("fins:high_finned_blue"));
+        DEFAULT_CONFIG.add(addFish("fins:teal_arrowfish"));
+        DEFAULT_CONFIG.add(addFish("fins:midnight_squid"));
+        DEFAULT_CONFIG.add(addFish("fins:banded_redback_shrimp"));
+        DEFAULT_CONFIG.add(addFish("fins:flatback_sucker"));
+        DEFAULT_CONFIG.add(addFish("fins:swamp_mucker"));
+        DEFAULT_CONFIG.add(addFish("upgrade_aquatic:lionfish"));
+        DEFAULT_CONFIG.add(addFish("upgrade_aquatic:nautilus"));
+        DEFAULT_CONFIG.add(addFish("upgrade_aquatic:pike"));
+        DEFAULT_CONFIG.add(addFish("alexsmobs:stradpole"));
+        DEFAULT_CONFIG.add(addFish("alexsmobs:blobfish"));
+        DEFAULT_CONFIG.add(addFish("unnamedanimalmod:flashlight_fish"));
+        DEFAULT_CONFIG.add(addFish("unnamedanimalmod:elephantnose_fish"));
+        DEFAULT_CONFIG.add(addFish("unnamedanimalmod:black_diamond_stingray"));
+        DEFAULT_CONFIG.add(addFish("unnamedanimalmod:humphead_parrotfish"));
+        DEFAULT_CONFIG.add(addFish("unnamedanimalmod:tomato_frog"));
+        DEFAULT_CONFIG.add(addFish("unnamedanimalmod:pacman_frog"));
+        DEFAULT_CONFIG.add(addFish("bettas:betta_fish"));
+        DEFAULT_CONFIG.add(addFish("pogfish:pogfish"));
+        DEFAULT_CONFIG.add(addFish("undergarden:gwibling"));
+        DEFAULT_CONFIG.add(addFish("environmental:koi"));
+        DEFAULT_CONFIG.add(addFish("betterendforge:end_fish"));
+        DEFAULT_CONFIG.add(addFish("betteranimalsplus:flying_fish"));
+        DEFAULT_CONFIG.add(addFish("betteranimalsplus:nautilus"));
+        DEFAULT_CONFIG.add(addFish("betteranimalsplus:eel_freshwater"));
+        DEFAULT_CONFIG.add(addFish("betteranimalsplus:eel_saltwater"));
+        DEFAULT_CONFIG.add(addFish("betteranimalsplus:lamprey"));
+        DEFAULT_CONFIG.add(addFish("betteranimalsplus:piranha"));
+        DEFAULT_CONFIG.add(addFish("betteranimalsplus:barracuda"));
+        DEFAULT_CONFIG.add(addFish("rediscovered:fish", 1));
+        //DEFAULT_VALUES.add(addDef("----"));
 
 
         for (List<String> d : DEFAULT_CONFIG){

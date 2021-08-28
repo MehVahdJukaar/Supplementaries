@@ -173,7 +173,6 @@
   "block.supplementaries.planter_rich": "Rich Soil Planter",
   "block.supplementaries.flower_box": "Flower Box",
   "block.supplementaries.brass_lantern": "Brass Lantern",
-  "entity.supplementaries.orange_trader": "Orange Trader",
   "block.supplementaries.goblet": "Goblet",
   "block.supplementaries.flag": "Flag",
   "gui.supplementaries.orange_trader.trade": "TRADE OFFER",
@@ -216,17 +215,21 @@
   "subtitle.supplementaries.music.pancake": "Pancake Music",
   "item.supplementaries.pancake_disc.desc": "STiiX - Pancake Music",
   "message.supplementaries.key.lockable": "Key Lockable",
-  "death.attack.supplementaries.amethyst_shard": "%1$s was sharded to death",
-  "death.attack.supplementaries.amethyst_shard.player": "%1$s was sharded to death by %2$s",
-  "item.supplementaries.amethyst_arrow": "Amethyst Arrow",
   "block.supplementaries.present": "Present",
   "message.supplementaries.placeable": "Can be placed",
   "subtitle.supplementaries.gunpowder.ignite": "Gunpowder fizzles",
+  "item.supplementaries.red_merchant_spawn_egg": "Red Merchant Spawn Egg",
+  "block.supplementaries.feather_block": "Feather Block",
+  "block.supplementaries.flint_block": "Flint Block",
+  "entity.supplementaries.red_merchant": "Red Merchant",
 
 
   "item.supplementaries.key_chain": "Key Chain",
   "block.supplementaries.skull_candle": "Skull Candle",
   "block.supplementaries.laser_block": "Ender Beamer",
+  "death.attack.supplementaries.amethyst_shard": "%1$s was sharded to death",
+  "death.attack.supplementaries.amethyst_shard.player": "%1$s was sharded to death by %2$s",
+  "item.supplementaries.amethyst_arrow": "Amethyst Arrow",
 
 
   "block.supplementaries.hanging_sign_bamboo": "Bamboo Hanging Sign",

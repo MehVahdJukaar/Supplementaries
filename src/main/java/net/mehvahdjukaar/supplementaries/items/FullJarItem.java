@@ -3,17 +3,11 @@ package net.mehvahdjukaar.supplementaries.items;
 import net.mehvahdjukaar.selene.fluids.SoftFluid;
 import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.selene.util.PotionNBTHelper;
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
-import net.mehvahdjukaar.supplementaries.fluids.ModSoftFluids;
-import net.mehvahdjukaar.supplementaries.items.tabs.JarTab;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Rarity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.*;
@@ -30,6 +24,7 @@ public class FullJarItem extends FullCageItem {
 
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
+        tooltip.add(new StringTextComponent("pick me up").withStyle(TextFormatting.DARK_PURPLE));
         CompoundNBT compoundnbt = stack.getTagElement("BlockEntityTag");
         if (compoundnbt != null) {
             if (compoundnbt.contains("LootTable", 8)) {
@@ -91,28 +86,6 @@ public class FullJarItem extends FullCageItem {
             }
         }
     }
-
-    @Override
-    public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items) {
-        if (this.allowdedIn(group) && RegistryConfigs.reg.JAR_TAB.get() && group == Registry.JAR_TAB) {
-            JarTab.populateTab(items);
-        }
-    }
-
-    @Override
-    public Rarity getRarity(ItemStack stack) {
-        CompoundNBT compoundnbt = stack.getTagElement("BlockEntityTag");
-        if (compoundnbt != null) {
-            if (compoundnbt.contains("FluidHolder")) {
-                CompoundNBT com = compoundnbt.getCompound("FluidHolder");
-                SoftFluid s = SoftFluidRegistry.get(com.getString("Fluid"));
-                if(s== ModSoftFluids.DIRT)return Rarity.RARE;
-            }
-        }
-        return super.getRarity(stack);
-    }
-
-
 
 
 }

@@ -65,7 +65,7 @@ public class Textures {
 
     public static final ResourceLocation AMETHYST_ARROW = new ResourceLocation(MOD_ID,"textures/entity/amethyst_arrow.png");
     public static final ResourceLocation ROPE_ARROW = new ResourceLocation(MOD_ID,"textures/entity/rope_arrow.png");
-    public static final ResourceLocation ORANGE_TRADER = new ResourceLocation(MOD_ID,"textures/entity/misc/orange_trader.png");
+    public static final ResourceLocation RED_MERCHANT = new ResourceLocation(MOD_ID,"textures/entity/misc/red_merchant.png");
     public static final ResourceLocation STATUE = new ResourceLocation(MOD_ID,"textures/entity/statue.png");
 
     public static final ResourceLocation FIREFLY_TEXTURE =  new ResourceLocation(MOD_ID,"textures/entity/firefly.png");

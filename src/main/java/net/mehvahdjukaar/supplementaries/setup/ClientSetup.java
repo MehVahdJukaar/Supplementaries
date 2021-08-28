@@ -39,6 +39,7 @@ import net.minecraft.item.CrossbowItem;
 import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -97,8 +98,8 @@ public class ClientSetup {
 
 
         //orange trader
-        RenderingRegistry.registerEntityRenderingHandler(Registry.ORANGE_TRADER.get(), OrangeTraderEntityRenderer::new);
-        ScreenManager.register(Registry.ORANGE_TRADER_CONTAINER.get(), OrangeMerchantGui::new);
+        RenderingRegistry.registerEntityRenderingHandler(Registry.RED_MERCHANT_TYPE.get(), OrangeTraderEntityRenderer::new);
+        ScreenManager.register(Registry.RED_MERCHANT_CONTAINER.get(), OrangeMerchantGui::new);
 
         //rope arrow
         RenderingRegistry.registerEntityRenderingHandler(Registry.ROPE_ARROW.get(), RopeArrowRenderer::new);
@@ -336,9 +337,21 @@ public class ClientSetup {
         //ModelLoaderRegistry.registerLoader(new ResourceLocation(Supplementaries.MOD_ID, "blackboard_loader"), new BlackboardBlockLoader());
 
         //fake models & blockstates
-        Map<ResourceLocation, StateContainer<Block, BlockState>> tempMap = new HashMap<>(ModelBakery.STATIC_DEFINITIONS);
-        tempMap.put(Registry.LABEL.get().getRegistryName(), LabelEntityRenderer.LABEL_FAKE_DEFINITION);
-        ModelBakery.STATIC_DEFINITIONS = tempMap;
+        registerStaticBlockState(Registry.LABEL.get().getRegistryName(), Blocks.AIR, "jar");
+        registerStaticBlockState(WindVaneBlockTileRenderer.MODEL_RES, Blocks.AIR);
+
+    }
+
+    private static void registerStaticBlockState(ResourceLocation name, Block parent, String... booleanProperties){
+        Map<ResourceLocation, StateContainer<Block, BlockState>> mapCopy = new HashMap<>(ModelBakery.STATIC_DEFINITIONS);
+
+        StateContainer.Builder<Block, BlockState> builder = (new StateContainer.Builder<>(parent));
+
+        for(String p : booleanProperties) builder.add(BooleanProperty.create(p));
+
+        mapCopy.put(name, builder.create(Block::defaultBlockState, BlockState::new));
+
+        ModelBakery.STATIC_DEFINITIONS = mapCopy;
     }
 
 

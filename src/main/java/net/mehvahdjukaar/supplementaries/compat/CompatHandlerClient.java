@@ -4,6 +4,7 @@ package net.mehvahdjukaar.supplementaries.compat;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.compat.configured.ConfiguredCustomScreen;
 import net.mehvahdjukaar.supplementaries.compat.decorativeblocks.DecoBlocksCompatClient;
+import net.mehvahdjukaar.supplementaries.compat.flywheel.FlywheelPlugin;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
@@ -17,6 +18,10 @@ public class CompatHandlerClient {
             try {
                 ConfiguredCustomScreen.registerScreen();
             }catch (Exception e){ Supplementaries.LOGGER.warn("Failed to register custom configured screen: "+e);}
+        }
+
+        if(CompatHandler.flywheel){
+            FlywheelPlugin.registerInstances();
         }
     }
 }

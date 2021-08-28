@@ -2,10 +2,10 @@ package net.mehvahdjukaar.supplementaries.world.explosion;
 
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.TNTBlock;
+import net.mehvahdjukaar.supplementaries.block.util.ILightable;
+import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
+import net.mehvahdjukaar.supplementaries.compat.decorativeblocks.DecoBlocksCompatRegistry;
+import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.fluid.FluidState;
@@ -13,6 +13,8 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootContext;
 import net.minecraft.loot.LootParameters;
+import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -22,9 +24,11 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
-;import java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+;
 
 /**
  * Creates a tiny explosion that only destroys surrounding blocks if they have 0
@@ -101,6 +105,16 @@ public class GunpowderExplosion extends Explosion {
 				if (!block.isAir(state, level, pos) && block != Blocks.FIRE && block instanceof TNTBlock) {
 					this.toBlow.add(pos);
 				}
+			}
+			//lights up burnable blocks
+			if(block instanceof ILightable){
+				((ILightable) block).lightUp(state, pos, this.level, ILightable.FireSound.FLAMING_ARROW);
+			}
+			//campfire / brazier
+			else if((block.is(BlockTags.CAMPFIRES) && CampfireBlock.canLight(state)) ||
+					(CompatHandler.deco_blocks && DecoBlocksCompatRegistry.canLightBrazier(state))){
+				level.setBlock(pos, state.setValue(BlockStateProperties.LIT, Boolean.TRUE), 11);
+				ILightable.FireSound.FLAMING_ARROW.play(level, pos);
 			}
 		}
 	}

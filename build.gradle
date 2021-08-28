@@ -6,7 +6,8 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.1.+', changing: true
+        //classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
         classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
     }
 }
@@ -133,7 +134,7 @@ dependencies {
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     //minecraft 'net.minecraftforge:forge:1.16.4-35.0.1'
-    minecraft 'net.minecraftforge:forge:1.16.5-36.1.0'
+    minecraft 'net.minecraftforge:forge:1.16.5-36.2.2'
     //1.16.3-34.1.0   1.16.4-35.0.1
 
     // You may put jars on which you depend on in ./libs or you may define them like so..
@@ -154,8 +155,11 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
-    implementation fg.deobf("curse.maven:create-328085:3384090")
-    implementation fg.deobf("curse.maven:flywheel-486392:3384004")
+    //implementation fg.deobf("curse.maven:create-328085:3384090")
+    //implementation fg.deobf("curse.maven:flywheel-486392:3384004")
+
+    implementation fg.deobf("curse.maven:create-328085:3419412")
+    implementation fg.deobf("curse.maven:flywheel-486392:3419392")
 
     //implementation fg.deobf("vazkii.quark:Quark:r2.4-305.1724")
     implementation fg.deobf("curse.maven:quark-243121:3326040")
@@ -197,6 +201,7 @@ publishing {
     repositories {
         maven {
             url "file:///${project.projectDir}/mcmodsrepo"
+            allowInsecureProtocol = true
         }
     }
 }
@@ -206,26 +211,31 @@ publishing {
 repositories {
     maven {
         url "https://www.cursemaven.com"
+        allowInsecureProtocol = true
     }
     maven {
         // location of the maven that hosts JEI files (And TiC)
         name "Progwml6 maven"
         url "https://dvs1.progwml6.com/files/maven/"
+        allowInsecureProtocol = true
     }
     maven {
         //location of the maven for mixed mappings and registrate
         name = "tterrag maven"
         url = "https://maven.tterrag.com/"
+        allowInsecureProtocol = true
     }
     maven {
         // location of the maven that hosts JEI files (And TiC)
         name "Progwml6 maven"
         url "https://dvs1.progwml6.com/files/maven/"
+        allowInsecureProtocol = true
     }
     maven {
         //location of the maven for vazkii's mods
         name "blamejared"
         url "http://maven.blamejared.com/"
+        allowInsecureProtocol = true
     }
 }
 
@@ -234,11 +244,13 @@ repositories{
         // location of the maven that hosts JEI files
         name = "Progwml6 maven"
         url = "https://dvs1.progwml6.com/files/maven/"
+        allowInsecureProtocol = true
     }
     maven {
         // location of a maven mirror for JEI files, as a fallback
         name = "ModMaven"
         url = "https://modmaven.k-4u.nl"
+        allowInsecureProtocol = true
     }
     jcenter()
     mavenCentral()
@@ -247,10 +259,12 @@ repositories{
 repositories {
     maven { // JEI
         url "https://dvs1.progwml6.com/files/maven"
+        allowInsecureProtocol = true
     }
     maven { // TOP
         name 'tterrag maven'
         url "http://maven.tterrag.com/"
+        allowInsecureProtocol = true
     }
 }
 

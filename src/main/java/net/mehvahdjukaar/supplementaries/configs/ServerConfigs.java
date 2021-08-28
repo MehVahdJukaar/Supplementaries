@@ -111,6 +111,7 @@ public class ServerConfigs {
         public static ForgeConfigSpec.BooleanValue CEILING_BANNERS;
         public static ForgeConfigSpec.BooleanValue ZOMBIE_HORSE;
         public static ForgeConfigSpec.IntValue ZOMBIE_HORSE_COST;
+        public static ForgeConfigSpec.BooleanValue ZOMBIE_HORSE_UNDERWATER;
         public static ForgeConfigSpec.BooleanValue PLACEABLE_GUNPOWDER;
 
         private static void init(ForgeConfigSpec.Builder builder){
@@ -211,6 +212,8 @@ public class ServerConfigs {
                     .define("zombie_horse_conversion",true);
             ZOMBIE_HORSE_COST = builder.comment("Amount of rotten flesh needed")
                     .defineInRange("rotten_flesh",64,1,1000);
+            ZOMBIE_HORSE_UNDERWATER = builder.comment("Allows zombie horses to be ridden underwater")
+                    .define("rideable_underwater", true);
             builder.pop();
 
 
@@ -546,6 +549,7 @@ public class ServerConfigs {
         //tweaks
         public static int ZOMBIE_HORSE_COST;
         public static boolean ZOMBIE_HORSE;
+        public static boolean ZOMBIE_HORSE_UNDERWATER;
         public static boolean DIRECTIONAL_CAKE;
         public static boolean DOUBLE_CAKE_PLACEMENT;
         public static boolean HANGING_POT_PLACEMENT;
@@ -611,6 +615,7 @@ public class ServerConfigs {
         public static void refresh(){
             ZOMBIE_HORSE_COST = tweaks.ZOMBIE_HORSE_COST.get();
             ZOMBIE_HORSE = tweaks.ZOMBIE_HORSE.get();
+            ZOMBIE_HORSE_UNDERWATER = tweaks.ZOMBIE_HORSE_UNDERWATER.get();
             BOTTLING_COST = tweaks.BOTTLING_COST.get();
             BOTTLE_XP = tweaks.BOTTLE_XP.get();
             RAKED_GRAVEL = tweaks.RAKED_GRAVEL.get() && RegistryConfigs.reg.RAKED_GRAVEL_ENABLED.get();

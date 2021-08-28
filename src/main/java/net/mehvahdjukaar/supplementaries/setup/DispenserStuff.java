@@ -22,7 +22,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.dispenser.IPosition;
-import net.minecraft.dispenser.OptionalDispenseBehavior;
 import net.minecraft.dispenser.ProjectileDispenseBehavior;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
@@ -284,7 +283,7 @@ public class DispenserStuff {
             ActionResultType result = ((BlockItem)Registry.GUNPOWDER_BLOCK_ITEM.get()).place(new DirectionalPlaceContext(source.getLevel(), blockpos, direction, stack, direction1));
             if(result.consumesAction()) return ActionResult.success(stack);
 
-            return ActionResult.pass(stack);
+            return ActionResult.fail(stack);
         }
     }
 

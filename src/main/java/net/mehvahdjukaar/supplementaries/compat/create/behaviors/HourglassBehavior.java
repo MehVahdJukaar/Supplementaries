@@ -28,15 +28,15 @@ import java.util.function.UnaryOperator;
 
 public class HourglassBehavior extends MovementBehaviour {
 
-    public static void changeState(MovementContext context, BlockState newState){
+    public static void changeState(MovementContext context, BlockState newState) {
         context.state = newState;
         Map<BlockPos, Template.BlockInfo> blocks = context.contraption.getBlocks();
-        if(blocks.containsKey(context.localPos)){
+        if (blocks.containsKey(context.localPos)) {
             Template.BlockInfo info = blocks.get(context.localPos);
             Template.BlockInfo newInfo = new Template.BlockInfo(info.pos,
                     context.state, info.nbt);
             blocks.remove(context.localPos);
-            blocks.put(context.localPos,newInfo);
+            blocks.put(context.localPos, newInfo);
         }
     }
 
@@ -48,7 +48,7 @@ public class HourglassBehavior extends MovementBehaviour {
         Vector3i in = dir.getNormal();
         Vector3d v = new Vector3d(in.getX(), in.getY(), in.getZ());
         Vector3d v2 = rot.apply(v);
-        double dot = v2.dot(new Vector3d(0,1,0));
+        double dot = v2.dot(new Vector3d(0, 1, 0));
 
         CompoundNBT com = context.tileData;
 
@@ -57,15 +57,15 @@ public class HourglassBehavior extends MovementBehaviour {
         float prevProgress = com.getFloat("PrevProgress");
 
 
-        if(!sandType.isEmpty()) {
+        if (!sandType.isEmpty()) {
             prevProgress = progress;
 
 
             //TODO: re do all of this
 
-            if (dot>0 && progress != 1) {
+            if (dot > 0 && progress != 1) {
                 progress = Math.min(progress + sandType.increment, 1f);
-            } else if (dot<0  && progress != 0) {
+            } else if (dot < 0 && progress != 0) {
                 progress = Math.max(progress - sandType.increment, 0f);
             }
 
@@ -73,8 +73,8 @@ public class HourglassBehavior extends MovementBehaviour {
 
         com.remove("Progress");
         com.remove("PrevProgress");
-        com.putFloat("Progress",progress);
-        com.putFloat("PrevProgress",prevProgress);
+        com.putFloat("Progress", progress);
+        com.putFloat("PrevProgress", prevProgress);
     }
 
     @Override
@@ -87,21 +87,21 @@ public class HourglassBehavior extends MovementBehaviour {
         NonNullList<ItemStack> stacks = NonNullList.withSize(1, ItemStack.EMPTY);
         ItemStackHelper.loadAllItems(com, stacks);
         float partialTicks = 1;
-        if(sandType.isEmpty())return;
+        if (sandType.isEmpty()) return;
 
         Vector3d v = context.position;
-        if(v==null){
-            v = new Vector3d(0,0,0);
+        if (v == null) {
+            v = new Vector3d(0, 0, 0);
         }
         BlockPos pos = new BlockPos(v);
 
         int light = WorldRenderer.getLightColor(context.world, pos);
 
-        TextureAtlasSprite sprite = sandType.getSprite(stacks.get(0),renderWorld.getWorld());
+        TextureAtlasSprite sprite = sandType.getSprite(stacks.get(0), renderWorld);
 
         float h = MathHelper.lerp(partialTicks, prevProgress, progress);
         Direction dir = context.state.getValue(HourGlassBlock.FACING);
-        HourGlassBlockTileRenderer.renderSand(matrices.getFinalStack(), buffer,light,0,sprite,h,dir);
+        HourGlassBlockTileRenderer.renderSand(matrices.getModelViewProjection(), buffer, light, 0, sprite, h, dir);
     }
 
 }
