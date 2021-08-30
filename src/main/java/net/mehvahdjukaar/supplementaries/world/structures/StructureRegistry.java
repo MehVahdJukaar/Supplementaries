@@ -11,6 +11,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.provider.BiomeProvider;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.FlatChunkGenerator;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
@@ -31,6 +33,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class StructureRegistry {
@@ -133,9 +136,15 @@ public class StructureRegistry {
 
             //TODO: might be a bug here with .canGenerateStructure
             try{
-                isVillageDimension = serverWorld.getChunkSource().generator.getBiomeSource().canGenerateStructure(Structure.VILLAGE);
+                BiomeProvider provider = serverWorld.getChunkSource().generator.getBiomeSource();
+                List<Biome> biomes = provider.possibleBiomes();
+                if(biomes.contains(null)){
+                    Supplementaries.LOGGER.throwing(new Exception("something went wrong: found a null biome in the biome provider"));
+                }
+
+                isVillageDimension = provider.canGenerateStructure(Structure.VILLAGE);
             }catch (Exception ignored){
-                Supplementaries.LOGGER.warn("failed to add structure to biomes: something went wrong, might be some other mod bug");
+                Supplementaries.LOGGER.throwing(new Exception("failed to add structure to biomes: something went wrong, might be some other mod bug"));
             }
 
             if (isVillageDimension && serverWorld.dimensionType().natural() && ServerConfigs.spawn.ROAD_SIGN_DISTANCE_MIN.get() != 1001) {

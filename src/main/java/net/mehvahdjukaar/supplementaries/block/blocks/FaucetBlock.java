@@ -153,10 +153,10 @@ public class FaucetBlock extends WaterBlock {
     }
 
     //TODO: redo
-    private boolean canConnect(BlockState downState, IWorld world, BlockPos pos, Direction dir){
-        if(downState.getBlock() instanceof JarBlock)return true;
-        else if (downState.is(ModTags.POURING_TANK))return false;
-        else if(downState.hasProperty(BlockStateProperties.LEVEL_HONEY))return true;
+    private boolean canConnect(BlockState downState, IWorld world, BlockPos pos, Direction dir) {
+        if (downState.getBlock() instanceof JarBlock) return true;
+        else if (downState.is(ModTags.POURING_TANK)) return false;
+        else if (downState.hasProperty(BlockStateProperties.LEVEL_HONEY)) return true;
         return world instanceof World && FluidUtil.getFluidHandler((World) world, pos, dir).isPresent();
     }
 

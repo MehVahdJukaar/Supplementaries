@@ -9,7 +9,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.DyeItem;
@@ -173,8 +172,8 @@ public class NoticeBoardBlock extends Block {
     @Override
     public int getAnalogOutputSignal(BlockState blockState, World world, BlockPos pos) {
         TileEntity tileentity = world.getBlockEntity(pos);
-        if (tileentity instanceof NoticeBoardBlockTile)
-            return Container.getRedstoneSignalFromContainer((IInventory) tileentity);
+        if (tileentity instanceof IInventory)
+            return ((IInventory) tileentity).isEmpty() ? 0 : 15;
         else
             return 0;
     }

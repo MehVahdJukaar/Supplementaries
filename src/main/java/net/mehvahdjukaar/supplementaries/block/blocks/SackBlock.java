@@ -15,8 +15,6 @@ import net.minecraft.entity.monster.piglin.PiglinTasks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
@@ -281,7 +279,24 @@ public class SackBlock extends FallingBlock {
 
     @Override
     public int getAnalogOutputSignal(BlockState blockState, World worldIn, BlockPos pos) {
-        return Container.getRedstoneSignalFromContainer((IInventory)worldIn.getBlockEntity(pos));
+        TileEntity tile = worldIn.getBlockEntity(pos);
+
+        if (tile instanceof SackBlockTile) {
+            SackBlockTile sack = ((SackBlockTile) tile);
+            int i = 0;
+            float f = 0.0F;
+            int slots = sack.getUnlockedSlots();
+            for(int j = 0; j < slots; ++j) {
+                ItemStack itemstack = sack.getItem(j);
+                if (!itemstack.isEmpty()) {
+                    f += (float)itemstack.getCount() / (float)Math.min(sack.getMaxStackSize(), itemstack.getMaxStackSize());
+                    ++i;
+                }
+            }
+            f = f / (float)slots;
+            return MathHelper.floor(f * 14.0F) + (i > 0 ? 1 : 0);
+        }
+        return 0;
     }
 
     @Override

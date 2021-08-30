@@ -2,17 +2,14 @@ package net.mehvahdjukaar.supplementaries.common;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.SignPostBlock;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
-import net.mehvahdjukaar.supplementaries.datagen.types.VanillaWoodTypes;
 import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
-import net.minecraft.potion.PotionUtils;
-import net.minecraft.potion.Potions;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tileentity.ShulkerBoxTileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -23,8 +20,6 @@ import net.minecraft.world.IWorldReader;
 import net.minecraftforge.common.Tags;
 
 import java.util.Calendar;
-
-import static net.mehvahdjukaar.supplementaries.common.Textures.*;
 
 public class CommonUtil {
 
@@ -72,108 +67,13 @@ public class CommonUtil {
     public static Festivity FESTIVITY = Festivity.get();
 
 
-
-
-    //TODO: I hope nobody is reading this. also delete this is obsolete
-    //can't wait to delete this mf
-    //fluids
-    public enum JarLiquidType {
-        //TODO: move to config and add mod support
-        // color is handles separately. here it's just for default case  FF6600
-        WATER(WATER_TEXTURE, 0x3F76E4, true, 1f, true, true, false, -1),
-        LAVA(LAVA_TEXTURE, 0xfd6d15, false, 1f, false, true, false, -1),
-        MILK(MILK_TEXTURE, 0xFFFFFF, false, 1f, false, true, false, -1),
-        POTION(POTION_TEXTURE_FLOW, 0x3F76E4, true, 0.88f, true, false, false, -1),
-        HONEY(HONEY_TEXTURE, 0xffa710, false, 0.85f, true, false, false, -1),
-        DRAGON_BREATH(DRAGON_BREATH_TEXTURE, 0xFF33FF, true, 0.8f, true, false, false, -1),
-        XP(XP_TEXTURE, 0x8eff11, false, 0.95f, true, false, false, -1),
-        TROPICAL_FISH(WATER_TEXTURE, 0x3F76E4, true, 1f, false, true, false, 0),
-        SALMON(WATER_TEXTURE, 0x3F76E4, true, 1f, false, true, false, 1),
-        COD(WATER_TEXTURE, 0x3F76E4, true, 1f, false, true, false, 2),
-        PUFFER_FISH(WATER_TEXTURE, 0x3F76E4, true, 1f, false, true, false, 3),
-        COOKIES(WATER_TEXTURE, 0x000000, false, 1f, false, false, false, -1),
-        EMPTY(WATER_TEXTURE, 0x000000, false, 1f, false, false, false, -1),
-        MUSHROOM_STEW(SOUP_TEXTURE, 0xffad89, true, 1f, false, false, true, -1),
-        BEETROOT_SOUP(SOUP_TEXTURE, 0xC93434, true, 1f, false, false, true, -1),
-        SUSPICIOUS_STEW(SOUP_TEXTURE, 0xBAE85F, true, 1f, false, false, true, -1),
-        RABBIT_STEW(SOUP_TEXTURE, 0xFF904F, true, 1f, false, false, true, -1);
-
-        public final ResourceLocation texture;
-        public final float opacity;
-        public final int color;
-        public final boolean applyColor;
-        public final boolean bucket;
-        public final boolean bottle;
-        public final int fishType;
-        public final boolean bowl;
-
-        JarLiquidType(ResourceLocation texture, int color, boolean applycolor, float opacity, boolean bottle, boolean bucket, boolean bowl, int fishtype) {
-            this.texture = texture;
-            this.color = color; // beacon color. this will also be texture color if applycolor is true
-            this.applyColor = applycolor; // is texture grayscale and needs to be colored?
-            this.opacity = opacity;
-            this.bottle = bottle;
-            this.bucket = bucket;
-            this.bowl = bowl;
-            this.fishType = fishtype;
-            // offset for fish textures. -1 is no fish
-        }
-
-        public boolean isEmpty(){
-            return this==EMPTY;
-        }
-
-        public boolean isFish() {
-            return this.fishType != -1;
-        }
-
-        public boolean isLava() {
-            return this == JarLiquidType.LAVA;
-        }
-
-        public boolean isWater() {
-            return this.isFish() || this == JarLiquidType.WATER;
-        }
-
-        public int getLightLevel(){
-            return this.isLava()?15:0;
-        }
-
-        public Item getReturnItem() {
-            if (this.bottle)
-                return Items.GLASS_BOTTLE;
-            else if (this.bucket)
-                return Items.BUCKET;
-            else if (this.bowl)
-                return Items.BOWL;
-            return null;
-        }
-
-        public boolean makesSound() {
-            return this.bottle || this.bowl || this.bucket;
-        }
-
-        //only for bucket
-        public SoundEvent getSound() {
-            if (this.isLava()) return SoundEvents.BUCKET_FILL_LAVA;
-            else if (this.isFish()) return SoundEvents.BUCKET_FILL_FISH;
-            else return SoundEvents.BUCKET_FILL;
-        }
-
-        public SoundEvent getEatSound() {
-            return this==COOKIES?SoundEvents.GENERIC_EAT:SoundEvents.GENERIC_DRINK;
-        }
-
-    }
-
-
-
     //TODO: move to tag
-    public static boolean isLantern(Item i){
-        if(i instanceof BlockItem){
-            Block b =  ((BlockItem) i).getBlock();
+    public static boolean isLantern(Item i) {
+        if (i instanceof BlockItem) {
+            Block b = ((BlockItem) i).getBlock();
+            if (b.hasTileEntity(b.defaultBlockState())) return false;
             String namespace = b.getRegistryName().getNamespace();
-            if(namespace.equals("skinnedlanterns")) return true;
+            if (namespace.equals("skinnedlanterns")) return true;
             return (b instanceof LanternBlock && !ServerConfigs.cached.WALL_LANTERN_BLACKLIST.contains(namespace));
         }
         return false;
@@ -198,113 +98,6 @@ public class CommonUtil {
         }
         return false;
     }
-
-
-    public static JarLiquidType getJarContentTypeFromItem(ItemStack stack) {
-        Item i = stack.getItem();
-        if (i instanceof PotionItem) {
-            if (PotionUtils.getPotion(stack).equals(Potions.WATER)) {
-                return JarLiquidType.WATER;
-            } else {
-                return JarLiquidType.POTION;
-            }
-        } else if (i instanceof FishBucketItem) {
-            if (i == Items.COD_BUCKET) {
-                return JarLiquidType.COD;
-            } else if (i == Items.PUFFERFISH_BUCKET) {
-                return JarLiquidType.PUFFER_FISH;
-            } else if (i == Items.SALMON_BUCKET) {
-                return JarLiquidType.SALMON;
-            } else {
-                return JarLiquidType.TROPICAL_FISH;
-            }
-        } else if (i == Items.LAVA_BUCKET) {
-            return JarLiquidType.LAVA;
-        } else if (i instanceof HoneyBottleItem) {
-            return JarLiquidType.HONEY;
-        } else if (i instanceof MilkBucketItem) {
-            return JarLiquidType.MILK;
-        } else if (i == Items.DRAGON_BREATH) {
-            return JarLiquidType.DRAGON_BREATH;
-        } else if (i instanceof ExperienceBottleItem) {
-            return JarLiquidType.XP;
-        } else if (i == Items.MUSHROOM_STEW) {
-            return JarLiquidType.MUSHROOM_STEW;
-        } else if (i == Items.RABBIT_STEW) {
-            return JarLiquidType.RABBIT_STEW;
-        } else if (i == Items.BEETROOT_SOUP) {
-            return JarLiquidType.BEETROOT_SOUP;
-        } else if (i instanceof SuspiciousStewItem) {
-            return JarLiquidType.SUSPICIOUS_STEW;
-        } else if (i == Items.WATER_BUCKET){
-            return JarLiquidType.WATER;
-        } else if (isCookie(i)) {
-            return JarLiquidType.COOKIES;
-        }
-        return JarLiquidType.EMPTY;
-    }
-
-    //converts bucket and bowls in minecraft bottle fluid unit
-    public static int getLiquidCountFromItem(Item i) {
-        if (i instanceof FishBucketItem) return 1;
-        if (i instanceof MilkBucketItem || i == Items.LAVA_BUCKET || i == Items.WATER_BUCKET) return 3;
-        else if (i instanceof SoupItem || i instanceof SuspiciousStewItem) return 2;
-        else return 1;
-    }
-
-    //TODO: delete this too
-    public enum TempWoodType implements IStringSerializable {
-        NONE("none"),
-        OAK("oak"),
-        BIRCH("birch"),
-        SPRUCE("spruce"),
-        JUNGLE("jungle"),
-        ACACIA("acacia"),
-        DARK_OAK("dark_oak"),
-        CRIMSON("crimson"),
-        WARPED("warped");
-        private final String name;
-
-        TempWoodType(String name) {
-            this.name = name;
-        }
-
-        public String toString() {
-            return this.name;
-        }
-
-        public String getSerializedName() {
-            return this.name;
-        }
-
-        public String getName() {
-            return this.name;
-        }
-
-        public IWoodType convertWoodType(){
-            switch (this){
-                default:
-                case OAK:
-                    return VanillaWoodTypes.OAK;
-                case BIRCH:
-                    return VanillaWoodTypes.BIRCH;
-                case SPRUCE:
-                    return VanillaWoodTypes.SPRUCE;
-                case JUNGLE:
-                    return VanillaWoodTypes.JUNGLE;
-                case DARK_OAK:
-                    return VanillaWoodTypes.DARK_OAK;
-                case WARPED:
-                    return VanillaWoodTypes.WARPED;
-                case CRIMSON:
-                    return VanillaWoodTypes.CRIMSON;
-                case ACACIA:
-                    return VanillaWoodTypes.ACACIA;
-            }
-        }
-
-    }
-
 
     //bounding box
     public static AxisAlignedBB getDirectionBB(BlockPos pos, Direction facing, int offset) {

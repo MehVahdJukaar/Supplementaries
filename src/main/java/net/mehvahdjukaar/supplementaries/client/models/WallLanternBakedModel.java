@@ -4,7 +4,8 @@ import com.google.common.collect.ImmutableList;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.blocks.MimicBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.WallLanternBlock;
-import net.mehvahdjukaar.supplementaries.common.Textures;
+import net.mehvahdjukaar.supplementaries.block.tiles.MimicBlockTile;
+import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
@@ -12,7 +13,6 @@ import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.ItemOverrideList;
-import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -22,6 +22,7 @@ import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -69,8 +70,8 @@ public class WallLanternBakedModel implements IDynamicBakedModel {
 
                     for (BakedQuad q : mimicQuads) {
                         int[] v = Arrays.copyOf(q.getVertices(), q.getVertices().length);
-                        v = moveVertices(v, Direction.UP, 2 / 16f);
-                        v = moveVertices(v, dir, -2 / 16f);
+                        v = RendererUtil.moveVertices(v, Direction.UP, 2 / 16f);
+                        v = RendererUtil.moveVertices(v, dir, -2 / 16f);
 
                         quads.add(new BakedQuad(v, q.getTintIndex(), q.getDirection(), q.getSprite(), q.isShade()));
                     }
@@ -80,17 +81,6 @@ public class WallLanternBakedModel implements IDynamicBakedModel {
 
 
         return quads;
-    }
-
-    private int[] moveVertices(int[] v, Direction dir, float amount){
-        int axis = dir.getAxis().ordinal();
-        float step = amount*dir.getAxisDirection().getStep();
-        int formatLength = 8;
-        for(int i = 0; i<v.length/formatLength; i++){
-            float original = Float.intBitsToFloat(v[i*formatLength+axis]);
-            v[i*formatLength+axis] = Float.floatToIntBits(original+step);
-        }
-        return v;
     }
 
     @Override
@@ -115,7 +105,22 @@ public class WallLanternBakedModel implements IDynamicBakedModel {
 
     @Override
     public TextureAtlasSprite getParticleIcon() {
-        return Minecraft.getInstance().getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(Textures.TIMBER_CROSS_BRACE_TEXTURE);
+        return support.getParticleIcon();
+        //return Minecraft.getInstance().getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(Textures.TIMBER_CROSS_BRACE_TEXTURE);
+    }
+
+    @Override
+    public TextureAtlasSprite getParticleTexture(@NotNull IModelData data) {
+        BlockState mimic = data.getData(MimicBlockTile.MIMIC);
+        if (mimic != null && !mimic.isAir()) {
+
+            IBakedModel model = blockModelShaper.getBlockModel(mimic);
+            try {
+                return model.getParticleIcon();
+            } catch (Exception ignored) {}
+
+        }
+        return getParticleIcon();
     }
 
     @Override

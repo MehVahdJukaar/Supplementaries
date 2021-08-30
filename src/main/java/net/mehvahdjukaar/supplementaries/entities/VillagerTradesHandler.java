@@ -29,8 +29,8 @@ public class VillagerTradesHandler {
             itemForEmeraldTrade(Registry.BOMB_ITEM.get(), 1, 4, 8),
             new StarForEmeraldTrade(4, 8),
             itemForEmeraldTrade(Items.TNT, 1, 6, 8),
-            new RocketForEmeraldTrade(10, 1, 3, 8),
-            itemForEmeraldTrade(Registry.ROPE_ARROW_ITEM.get(), 1, 10, 6),
+            new RocketForEmeraldTrade(6, 1, 3, 8),
+            itemForEmeraldTrade(Registry.ROPE_ARROW_ITEM.get(), 1, 8, 6),
             itemForEmeraldTrade(Registry.BOMB_BLUE_ITEM.get(), 1, Registry.BOMB_ITEM.get(), 1, 40, 3),
     };
 

@@ -63,6 +63,8 @@ public class GunpowderBlock extends LightUpBlock {
 
     public static final int DELAY = 2;
 
+    public static final int SPREAD_AGE = 3;
+
     public GunpowderBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(NORTH, RedstoneSide.NONE)
@@ -383,7 +385,7 @@ public class GunpowderBlock extends LightUpBlock {
                 world.removeBlock(pos, false);
                 explode(world, pos);
             } else if (burning > 0) {
-                if (burning >= 2) {
+                if (burning >= SPREAD_AGE) {
                     this.lightUpNeighbouringWires(pos, state, world);
                 }
                 world.setBlockAndUpdate(pos, state.setValue(BURNING, burning + 1));

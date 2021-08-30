@@ -242,7 +242,7 @@ public class RedMerchantEntity extends AbstractVillagerEntity implements IRanged
 
         BombEntity bomb = new BombEntity(this.level, this, false);
         //bomb.xRot -= -90F;
-        bomb.shoot(d0, d1 + (double) (f * 0.21F), d2, 1.25F, 0.9F);
+        bomb.shoot(d0, d1 + (double) (f * 0.24F), d2, 1.25F, 0.9F);
 
         if (!this.isSilent()) {
             //TODO: sound here

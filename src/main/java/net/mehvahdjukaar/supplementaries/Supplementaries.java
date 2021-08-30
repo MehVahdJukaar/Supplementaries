@@ -37,6 +37,13 @@ public class Supplementaries{
     }
 
     public Supplementaries() {
+        //ghast fireball mob griefing
+
+        //TODO: flower box dynamic baked model
+
+        //Bamboo spikes damage fall
+
+        //TODO: fireflies deflect arrows
 
         //TODO: fix tint breaking particle like grass block
 

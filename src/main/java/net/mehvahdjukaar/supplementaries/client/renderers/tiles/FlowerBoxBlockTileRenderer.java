@@ -32,6 +32,7 @@ public class FlowerBoxBlockTileRenderer extends TileEntityRenderer<FlowerBoxBloc
     public void render(FlowerBoxBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
 
+        //TODO: use baked model
         if(!tile.isEmpty()){
 
 
@@ -49,10 +50,7 @@ public class FlowerBoxBlockTileRenderer extends TileEntityRenderer<FlowerBoxBloc
 
             matrixStackIn.scale(0.625f, 0.625f, 0.625f);
 
-            //IBakedModel ibakedmodel = itemRenderer.getModel(stack, tile.getLevel(), null);
-            //if(ibakedmodel.isGui3d()&&ClientConfigs.cached.SHELF_TRANSLATE)matrixStackIn.translate(0,-0.25,0);
-            //ibakedmodel.getQuads(null,null,null).get(1).getSprite();
-            //RendererUtil.renderBlockPlus(tile.flower1, matrixStackIn, bufferIn, blockRenderer, tile.getLevel(), tile.getBlockPos());
+            //RendererUtil.renderBlockModel(tile.flower1, matrixStackIn, bufferIn, blockRenderer, tile.getLevel(), tile.getBlockPos());
 
 
             blockRenderer.renderBlock(tile.flower1, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);

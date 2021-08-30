@@ -2,10 +2,7 @@ package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.gui.*;
-import net.mehvahdjukaar.supplementaries.client.models.FrameBlockLoader;
-import net.mehvahdjukaar.supplementaries.client.models.RopeKnotBlockLoader;
-import net.mehvahdjukaar.supplementaries.client.models.SignPostBlockLoader;
-import net.mehvahdjukaar.supplementaries.client.models.WallLanternLoader;
+import net.mehvahdjukaar.supplementaries.client.models.*;
 import net.mehvahdjukaar.supplementaries.client.particles.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
@@ -214,7 +211,6 @@ public class ClientSetup {
         RenderTypeLookup.setRenderLayer(Registry.MAGMA_CREAM_BLOCK.get(), RenderType.translucent());
         //flower box
         RenderTypeLookup.setRenderLayer(Registry.FLOWER_BOX.get(), RenderType.cutout());
-        ClientRegistry.bindTileEntityRenderer(Registry.FLOWER_BOX_TILE.get(), FlowerBoxBlockTileRenderer::new);
         //timber frames
         RenderTypeLookup.setRenderLayer(Registry.TIMBER_FRAME.get(), RenderType.cutout());
         RenderTypeLookup.setRenderLayer(Registry.TIMBER_BRACE.get(), RenderType.cutout());
@@ -333,6 +329,8 @@ public class ClientSetup {
         ModelLoaderRegistry.registerLoader(new ResourceLocation(Supplementaries.MOD_ID, "mimic_block_loader"), new SignPostBlockLoader());
         ModelLoaderRegistry.registerLoader(new ResourceLocation(Supplementaries.MOD_ID, "rope_knot_loader"), new RopeKnotBlockLoader());
         ModelLoaderRegistry.registerLoader(new ResourceLocation(Supplementaries.MOD_ID, "wall_lantern_loader"), new WallLanternLoader());
+        ModelLoaderRegistry.registerLoader(new ResourceLocation(Supplementaries.MOD_ID, "flower_box_loader"), new FlowerBoxLoader());
+
 
 
         //ModelLoaderRegistry.registerLoader(new ResourceLocation(Supplementaries.MOD_ID, "blackboard_loader"), new BlackboardBlockLoader());

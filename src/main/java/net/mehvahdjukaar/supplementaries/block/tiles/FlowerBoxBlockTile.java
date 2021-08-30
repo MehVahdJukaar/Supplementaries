@@ -10,16 +10,29 @@ import net.minecraft.block.DoublePlantBlock;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.state.properties.DoubleBlockHalf;
 import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.client.model.ModelDataManager;
+import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelProperty;
+import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 public class FlowerBoxBlockTile extends ItemDisplayTile {
+
+    public static final ModelProperty<BlockState> FLOWER_0 = new ModelProperty<>();;
+    public static final ModelProperty<BlockState> FLOWER_1 = new ModelProperty<>();;
+    public static final ModelProperty<BlockState> FLOWER_2 = new ModelProperty<>();;
 
     public BlockState flower0 = Blocks.AIR.defaultBlockState();
     public BlockState flower1 = Blocks.AIR.defaultBlockState();
@@ -38,10 +51,35 @@ public class FlowerBoxBlockTile extends ItemDisplayTile {
     }
 
     @Override
+    public IModelData getModelData() {
+        //return data;
+        return new ModelDataMap.Builder()
+                .withInitial(FLOWER_0, flower0)
+                .withInitial(FLOWER_1, flower1)
+                .withInitial(FLOWER_2, flower2)
+                .build();
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+        //this.load(this.getBlockState(), pkt.getTag());
+        BlockState oldMimic0 = this.flower0;
+        BlockState oldMimic1 = this.flower1;
+        BlockState oldMimic2 = this.flower2;
+        CompoundNBT tag = pkt.getTag();
+        handleUpdateTag(this.getBlockState(), tag);
+        if (!Objects.equals(oldMimic0, this.flower0) || !Objects.equals(oldMimic1, this.flower1) || !Objects.equals(oldMimic2, this.flower2)) {
+            ModelDataManager.requestModelDataRefresh(this);
+            this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+        }
+    }
+
+    @Override
     public AxisAlignedBB getRenderBoundingBox() {
         return new AxisAlignedBB(this.worldPosition).move(0,0.25,0);
     }
 
+    @Override
     public void updateClientVisualsOnLoad() {
 
         Item item = this.getItem(0).getItem();
@@ -79,6 +117,10 @@ public class FlowerBoxBlockTile extends ItemDisplayTile {
         else{
             flower2 = Blocks.AIR.defaultBlockState();
         }
+
+
+        ModelDataManager.requestModelDataRefresh(this);
+
 
     }
 

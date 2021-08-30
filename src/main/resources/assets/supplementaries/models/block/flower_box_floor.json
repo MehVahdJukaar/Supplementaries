@@ -1,76 +1,12 @@
 {
-	"credit": "Made with Blockbench",
-	"ambientocclusion": false,
-	"textures": {
-		"2": "supplementaries:blocks/flower_box_top",
-		"particle": "supplementaries:blocks/flower_box_sides",
-		"flowerpot": "supplementaries:blocks/flower_box_sides",
-		"dirt": "minecraft:block/dirt"
-	},
-	"elements": [
-		{
-			"from": [15, 0, 5],
-			"to": [16, 6, 11],
-			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 3]},
-			"faces": {
-				"north": {"uv": [0, 10, 1, 16], "texture": "#flowerpot"},
-				"east": {"uv": [0, 0, 6, 6], "texture": "#flowerpot"},
-				"south": {"uv": [15, 10, 16, 16], "texture": "#flowerpot"},
-				"west": {"uv": [0, 0, 6, 6], "texture": "#flowerpot"},
-				"up": {"uv": [0, 0, 1, 6], "texture": "#2"},
-				"down": {"uv": [15, 10, 16, 16], "texture": "#2", "cullface": "down"}
-			}
-		},
-		{
-			"from": [0, 0, 5],
-			"to": [1, 6, 11],
-			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 3]},
-			"faces": {
-				"north": {"uv": [15, 10, 16, 16], "texture": "#flowerpot"},
-				"east": {"uv": [0, 0, 6, 6], "texture": "#flowerpot"},
-				"south": {"uv": [0, 10, 1, 16], "texture": "#flowerpot"},
-				"west": {"uv": [0, 0, 6, 6], "texture": "#flowerpot"},
-				"up": {"uv": [15, 0, 16, 6], "texture": "#2"},
-				"down": {"uv": [0, 10, 1, 16], "texture": "#2", "cullface": "down"}
-			}
-		},
-		{
-			"from": [1, 0, 5],
-			"to": [15, 6, 6],
-			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 3]},
-			"faces": {
-				"north": {"uv": [1, 10, 15, 16], "texture": "#flowerpot"},
-				"south": {"uv": [1, 10, 15, 16], "texture": "#flowerpot"},
-				"up": {"uv": [1, 5, 15, 6], "texture": "#2"},
-				"down": {"uv": [1, 15, 15, 16], "texture": "#2", "cullface": "down"}
-			}
-		},
-		{
-			"from": [1, 0, 10],
-			"to": [15, 6, 11],
-			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 3]},
-			"faces": {
-				"north": {"uv": [1, 10, 15, 16], "texture": "#flowerpot"},
-				"south": {"uv": [1, 10, 15, 16], "texture": "#flowerpot"},
-				"up": {"uv": [1, 0, 15, 1], "texture": "#2"},
-				"down": {"uv": [1, 10, 15, 11], "texture": "#2", "cullface": "down"}
-			}
-		},
-		{
-			"from": [1, 0, 6],
-			"to": [15, 5, 10],
-			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 3]},
-			"faces": {
-				"up": {"uv": [1, 6, 15, 10], "texture": "#dirt"},
-				"down": {"uv": [1, 11, 15, 15], "texture": "#2", "cullface": "down"}
-			}
+	"loader": "supplementaries:flower_box_loader",
+	"box": {
+		"parent": "supplementaries:block/flower_box_floor_model",
+		"textures": {
+			"2": "supplementaries:blocks/flower_box_top",
+			"particle": "supplementaries:blocks/flower_box_sides",
+			"flowerpot": "supplementaries:blocks/flower_box_sides",
+			"dirt": "minecraft:block/dirt"
 		}
-	],
-	"groups": [
-		{
-			"name": "group",
-			"origin": [0, 0, 0],
-			"children": [0, 1, 2, 3, 4]
-		}
-	]
+	}
 }

@@ -9,8 +9,10 @@ import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector4f;
 import net.minecraft.world.World;
 
 import java.util.Random;
@@ -229,4 +231,65 @@ public class RendererUtil {
 
         }
     }
+
+    /**
+     * moves baked vertices in a direction by amount
+     */
+    public static int[] moveVertices(int[] v, Direction dir, float amount) {
+        int axis = dir.getAxis().ordinal();
+        float step = amount * dir.getAxisDirection().getStep();
+        int formatLength = 8;
+        for (int i = 0; i < v.length / formatLength; i++) {
+            float original = Float.intBitsToFloat(v[i * formatLength + axis]);
+            v[i * formatLength + axis] = Float.floatToIntBits(original + step);
+        }
+        return v;
+    }
+
+    /**
+     * moves baked vertices by amount
+     */
+    public static int[] moveVertices(int[] v, float x, float y, float z) {
+        int formatLength = 8;
+        for (int i = 0; i < v.length / formatLength; i++) {
+            float originalX = Float.intBitsToFloat(v[i * formatLength]);
+            v[i * formatLength] = Float.floatToIntBits(originalX + x);
+
+            float originalY = Float.intBitsToFloat(v[i * formatLength + 1]);
+            v[i * formatLength + 1] = Float.floatToIntBits(originalY + y);
+
+            float originalZ = Float.intBitsToFloat(v[i * formatLength + 2]);
+            v[i * formatLength + 2] = Float.floatToIntBits(originalZ + z);
+        }
+        return v;
+    }
+
+
+    /**
+     * moves baked vertices in a direction by amount
+     */
+    public static int[] scaleVertices(int[] v, float scale) {
+
+        int formatLength = 8;
+        for (int i = 0; i < v.length / formatLength; i++) {
+            float originalX = Float.intBitsToFloat(v[i * formatLength]);
+            v[i * formatLength] = Float.floatToIntBits(originalX * scale);
+
+            float originalY = Float.intBitsToFloat(v[i * formatLength + 1]);
+            v[i * formatLength + 1] = Float.floatToIntBits(originalY * scale);
+
+            float originalZ = Float.intBitsToFloat(v[i * formatLength + 2]);
+            v[i * formatLength + 2] = Float.floatToIntBits(originalZ * scale);
+        }
+        return v;
+    }
+
+    public static int[] transformVertices(int[] v, MatrixStack stack) {
+        Vector4f vector4f = new Vector4f(0, 0, 0, 1.0F);
+        vector4f.transform(stack.last().pose());
+        v = moveVertices(v, vector4f.x(), vector4f.y(), vector4f.z());
+        return v;
+    }
+
+
 }

@@ -35,17 +35,17 @@ public class TimberFrameItem extends BlockItem {
     @Override
     public ActionResultType useOn(ItemUseContext context) {
         PlayerEntity player = context.getPlayer();
-        if(ServerConfigs.cached.SWAP_TIMBER_FRAME && player.isShiftKeyDown() && player.abilities.mayBuild){
+        if (ServerConfigs.cached.SWAP_TIMBER_FRAME && player.isShiftKeyDown() && player.abilities.mayBuild) {
             World world = context.getLevel();
             BlockPos pos = context.getClickedPos();
             BlockState clicked = world.getBlockState(pos);
-            if(FrameBlockTile.isValidBlock(clicked, pos, world)){
+            if (FrameBlockTile.isValidBlock(clicked, pos, world)) {
                 BlockState frame = this.getBlock().getStateForPlacement(new BlockItemUseContext(context));
                 world.setBlockAndUpdate(pos, frame);
                 TileEntity tile = world.getBlockEntity(pos);
-                if(tile instanceof FrameBlockTile){
-                    ((FrameBlockTile) tile).acceptBlock(clicked);
+                if (tile instanceof FrameBlockTile) {
                     SoundType s = frame.getSoundType(world, pos, player);
+                    ((FrameBlockTile) tile).acceptBlock(clicked);
                     world.playSound(player, pos, s.getPlaceSound(), SoundCategory.BLOCKS, (s.getVolume() + 1.0F) / 2.0F, s.getPitch() * 0.8F);
                     if (!player.isCreative() && !world.isClientSide()) {
                         context.getItemInHand().shrink(1);
@@ -67,7 +67,7 @@ public class TimberFrameItem extends BlockItem {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        if(!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().options.advancedItemTooltips)return;
-        tooltip.add((new TranslationTextComponent(  "message.supplementaries.timber_frame")).withStyle(TextFormatting.GRAY).withStyle(TextFormatting.ITALIC));
+        if (!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().options.advancedItemTooltips) return;
+        tooltip.add((new TranslationTextComponent("message.supplementaries.timber_frame")).withStyle(TextFormatting.GRAY).withStyle(TextFormatting.ITALIC));
     }
 }

@@ -4,6 +4,7 @@ import net.mehvahdjukaar.supplementaries.entities.RedMerchantEntity;
 import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.village.PointOfInterestManager;
 import net.minecraft.village.PointOfInterestType;
@@ -12,7 +13,6 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.biome.Biomes;
-import net.minecraft.world.end.DragonFightManager;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.spawner.WanderingTraderSpawner;
 import net.minecraft.world.storage.IServerWorldInfo;
@@ -28,6 +28,10 @@ import java.util.Random;
 
 @Mixin(WanderingTraderSpawner.class)
 public abstract class SpawnRedMerchantMixin {
+    @Shadow
+    private int spawnDelay;
+    @Shadow
+    private int tickDelay;
 
     @Final
     @Shadow
@@ -36,18 +40,29 @@ public abstract class SpawnRedMerchantMixin {
     @Shadow
     private IServerWorldInfo serverLevelData;
 
+    private int redSpawnDelay = 0;
+
+    //remove
+    @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
+    public void tick(ServerWorld p_230253_1_, boolean p_230253_2_, boolean p_230253_3_, CallbackInfoReturnable<Integer> cir) {
+        if (this.redSpawnDelay > 0) {
+            this.redSpawnDelay--;
+        }
+    }
+
+
     @Inject(method = "spawn", at = @At("RETURN"), cancellable = true)
     public void spawn(ServerWorld world, CallbackInfoReturnable<Boolean> cir) {
-        if (!cir.getReturnValue()) {
+        if (!cir.getReturnValue() && redSpawnDelay == 0) {
             //doesn't set cir to true, so it doesn't interfere with wandering trader spawn
             PlayerEntity playerentity = world.getRandomPlayer();
-            //1/10 chance here already
-            if (playerentity != null && this.random.nextInt(10) == 0) {
+            //1/10 chance here already. raised it a bit since when normal one spawns it prevents this
+            if (playerentity != null && this.random.nextInt(9) == 0) {
 
                 BlockPos blockpos = playerentity.blockPosition();
 
                 //17.5 % max on hard ->1.75% (wandering trader maxes at 7.5%)
-                if (this.calculateNormalizeDifficulty(world, blockpos) > random.nextFloat() * 99) {
+                if (this.calculateNormalizeDifficulty(world, blockpos) > random.nextFloat() * 90) {
 
                     PointOfInterestManager pointofinterestmanager = world.getPoiManager();
                     Optional<BlockPos> optional = pointofinterestmanager.find(PointOfInterestType.MEETING.getPredicate(), (p_221241_0_) -> true, blockpos, 48, PointOfInterestManager.Status.ANY);
@@ -59,9 +74,11 @@ public abstract class SpawnRedMerchantMixin {
                             RedMerchantEntity trader = Registry.RED_MERCHANT_TYPE.get().spawn(world, null, null, null, spawnPos, SpawnReason.EVENT, false, false);
                             if (trader != null) {
                                 this.serverLevelData.setWanderingTraderId(trader.getUUID());
-                                trader.setDespawnDelay(25000);
+                                int lifetime = 25000;
+                                trader.setDespawnDelay(lifetime);
                                 trader.setWanderTarget(targetPos);
                                 trader.restrictTo(targetPos, 16);
+                                this.redSpawnDelay = lifetime;
                             }
                         }
                     }
@@ -73,8 +90,13 @@ public abstract class SpawnRedMerchantMixin {
 
     private float calculateNormalizeDifficulty(ServerWorld world, BlockPos pos) {
         float dragon = 1;
-        DragonFightManager df = world.dragonFight();
-        if (df != null && df.hasPreviouslyKilledDragon()) dragon = 1.25f;
+        CompoundNBT tag = world.getServer().getWorldData().endDragonFightData();
+
+        if (tag.contains("DragonKilled", 99)) {
+
+            if (tag.getBoolean("DragonKilled")) dragon = 1.25f;
+        }
+
         long i = 0L;
         float f = 0.0F;
         if (world.hasChunkAt(pos)) {
@@ -82,7 +104,8 @@ public abstract class SpawnRedMerchantMixin {
             i = world.getChunkAt(pos).getInhabitedTime();
         }
         //goes from 1.5 to 4 on normal
-        float diff = (new DifficultyInstance(Difficulty.NORMAL, world.getDayTime(), i, f)).getEffectiveDifficulty();
+        DifficultyInstance instance = new DifficultyInstance(Difficulty.NORMAL, world.getDayTime(), i, f);
+        float diff = instance.getEffectiveDifficulty();
         diff -= 1.5;
         //from 0 to 10
         diff *= 4;

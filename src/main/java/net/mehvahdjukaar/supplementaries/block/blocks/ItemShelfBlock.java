@@ -12,7 +12,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
@@ -33,15 +32,16 @@ import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
 public class ItemShelfBlock extends WaterBlock {
-  protected static final VoxelShape SHAPE_NORTH = Block.box(0D, 1.0D, 13.0D, 16.0D, 4.0D, 16.0D);
+    protected static final VoxelShape SHAPE_NORTH = Block.box(0D, 1.0D, 13.0D, 16.0D, 4.0D, 16.0D);
     protected static final VoxelShape SHAPE_SOUTH = Block.box(0D, 1.0D, 0.0D, 16.0D, 4.0D, 3.0D);
     protected static final VoxelShape SHAPE_WEST = Block.box(13.0D, 1.0D, 0D, 16.0D, 4.0D, 16.0D);
     protected static final VoxelShape SHAPE_EAST = Block.box(0.0D, 1.0D, 0D, 3.0D, 4.0D, 16.0D);
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+
     public ItemShelfBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED,false).setValue(FACING, Direction.NORTH));
+        this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false).setValue(FACING, Direction.NORTH));
     }
 
     @Override
@@ -56,7 +56,7 @@ public class ItemShelfBlock extends WaterBlock {
 
     @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(WATERLOGGED,FACING);
+        builder.add(WATERLOGGED, FACING);
     }
 
     @Override
@@ -80,8 +80,8 @@ public class ItemShelfBlock extends WaterBlock {
         BlockPos pos = context.getClickedPos();
         boolean flag = world.getFluidState(pos).getType() == Fluids.WATER;
         if (context.getClickedFace() == Direction.UP || context.getClickedFace() == Direction.DOWN)
-            return this.defaultBlockState().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED,flag);
-        return this.defaultBlockState().setValue(FACING, context.getClickedFace()).setValue(WATERLOGGED,flag);
+            return this.defaultBlockState().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, flag);
+        return this.defaultBlockState().setValue(FACING, context.getClickedFace()).setValue(WATERLOGGED, flag);
     }
 
     //called when a neighbor is placed
@@ -98,7 +98,7 @@ public class ItemShelfBlock extends WaterBlock {
     @Override
     public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
         TileEntity te = world.getBlockEntity(pos);
-        if(target.getLocation().y() >= pos.getY()+0.25) {
+        if (target.getLocation().y() >= pos.getY() + 0.25) {
             if (te instanceof ItemShelfBlockTile) {
                 ItemStack i = ((IInventory) te).getItem(0);
                 if (!i.isEmpty()) return i;
@@ -110,10 +110,10 @@ public class ItemShelfBlock extends WaterBlock {
 
     @Override
     public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
-                                             BlockRayTraceResult hit) {
+                                BlockRayTraceResult hit) {
         TileEntity tileentity = worldIn.getBlockEntity(pos);
         if (tileentity instanceof ItemDisplayTile) {
-            return ((ItemDisplayTile) tileentity).interact(player,handIn);
+            return ((ItemDisplayTile) tileentity).interact(player, handIn);
         }
         return ActionResultType.PASS;
     }
@@ -125,7 +125,7 @@ public class ItemShelfBlock extends WaterBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
-        switch (state.getValue(FACING)){
+        switch (state.getValue(FACING)) {
             default:
             case NORTH:
                 return SHAPE_NORTH;
@@ -174,8 +174,8 @@ public class ItemShelfBlock extends WaterBlock {
     @Override
     public int getAnalogOutputSignal(BlockState blockState, World world, BlockPos pos) {
         TileEntity tileentity = world.getBlockEntity(pos);
-        if (tileentity instanceof ItemShelfBlockTile)
-            return Container.getRedstoneSignalFromContainer((IInventory) tileentity);
+        if (tileentity instanceof IInventory)
+            return ((IInventory) tileentity).isEmpty() ? 0 : 15;
         else
             return 0;
     }

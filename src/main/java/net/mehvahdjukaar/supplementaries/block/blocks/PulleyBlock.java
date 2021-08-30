@@ -12,7 +12,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
@@ -101,10 +100,6 @@ public class PulleyBlock extends RotatedPillarBlock {
 
     @Override
     public int getAnalogOutputSignal(BlockState blockState, World world, BlockPos pos) {
-        TileEntity tileentity = world.getBlockEntity(pos);
-        if (tileentity instanceof PulleyBlockTile)
-            return Container.getRedstoneSignalFromContainer((IInventory) tileentity);
-        else
-            return 0;
+        return Container.getRedstoneSignalFromBlockEntity(world.getBlockEntity(pos));
     }
 }

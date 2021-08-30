@@ -99,7 +99,7 @@ public class GobletBlock extends WaterBlock {
     public int getAnalogOutputSignal(BlockState blockState, World world, BlockPos pos) {
         TileEntity tileentity = world.getBlockEntity(pos);
         if (tileentity instanceof GobletBlockTile) {
-            return ((GobletBlockTile) tileentity).fluidHolder.isEmpty() ? 0 : 1;
+            return ((GobletBlockTile) tileentity).fluidHolder.isEmpty() ? 0 : 15;
         }
         return 0;
     }
