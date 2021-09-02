@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.particles;
 
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.fluid.Fluid;
@@ -48,7 +48,7 @@ public class DrippingLiquidParticle extends SpriteTexturedParticle{
     protected void ageParticle() {
         if (this.lifetime-- <= 0) {
             this.remove();
-            this.level.addParticle(Registry.FALLING_LIQUID.get(), this.x, this.y, this.z, this.rCol, this.gCol, this.bCol);
+            this.level.addParticle(ModRegistry.FALLING_LIQUID.get(), this.x, this.y, this.z, this.rCol, this.gCol, this.bCol);
         }
 
     }

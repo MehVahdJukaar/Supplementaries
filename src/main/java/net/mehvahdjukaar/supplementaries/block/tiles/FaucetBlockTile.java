@@ -7,7 +7,7 @@ import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.CompatObjects;
 import net.mehvahdjukaar.supplementaries.compat.inspirations.CauldronPlugin;
 import net.mehvahdjukaar.supplementaries.fluids.ModSoftFluids;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CauldronBlock;
@@ -47,7 +47,7 @@ public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
     public final SoftFluidHolder fluidHolder = new SoftFluidHolder(2);
 
     public FaucetBlockTile() {
-        super(Registry.FAUCET_TILE.get());
+        super(ModRegistry.FAUCET_TILE.get());
     }
 
     @Override

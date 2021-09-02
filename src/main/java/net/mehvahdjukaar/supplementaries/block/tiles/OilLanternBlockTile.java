@@ -1,13 +1,13 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.CopperLanternBlock;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.state.properties.AttachFace;
 import net.minecraft.tileentity.TileEntityType;
 
 public class OilLanternBlockTile extends EnhancedLanternBlockTile{
     public OilLanternBlockTile() {
-        super(Registry.COPPER_LANTERN_TILE.get());
+        super(ModRegistry.COPPER_LANTERN_TILE.get());
     }
 
     public OilLanternBlockTile(TileEntityType type) {

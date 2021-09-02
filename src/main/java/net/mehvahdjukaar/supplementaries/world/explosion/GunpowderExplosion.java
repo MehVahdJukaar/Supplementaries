@@ -77,8 +77,10 @@ public class GunpowderExplosion extends Explosion {
 		explodeBlock(x, y, z - 1);
 
 		BlockPos pos = new BlockPos(x,y,z);
-		if (this.hasFlammableNeighbours(pos)) {
-			this.level.setBlockAndUpdate(pos, Blocks.FIRE.defaultBlockState());
+		BlockState newFire = AbstractFireBlock.getState(this.level, pos);
+		if (this.hasFlammableNeighbours(pos) || this.level.getBlockState(pos.below()).isFireSource(level, pos, Direction.UP)
+				|| newFire.getBlock() != Blocks.FIRE) {
+			this.level.setBlockAndUpdate(pos, newFire);
 		}
 
 	}

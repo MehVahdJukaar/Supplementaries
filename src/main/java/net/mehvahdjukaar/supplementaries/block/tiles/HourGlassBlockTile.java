@@ -4,7 +4,7 @@ import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.block.blocks.HourGlassBlock;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -41,7 +41,7 @@ public class HourGlassBlockTile extends ItemDisplayTile implements ITickableTile
     //client
     private TextureAtlasSprite cachedTexture = null;
     public HourGlassBlockTile() {
-        super(Registry.HOURGLASS_TILE.get());
+        super(ModRegistry.HOURGLASS_TILE.get());
     }
 
     //hijacking this method to work with hoppers

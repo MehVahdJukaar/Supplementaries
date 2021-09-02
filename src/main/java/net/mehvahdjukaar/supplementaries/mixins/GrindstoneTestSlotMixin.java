@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -16,7 +16,7 @@ public abstract class GrindstoneTestSlotMixin {
     @Inject(method = "getExperienceFromItem(Lnet/minecraft/item/ItemStack;)I", at = @At("HEAD"), cancellable = true)
     private void getExperienceFromItem(ItemStack stack, CallbackInfoReturnable<Integer> cir){
         Item i = stack.getItem();
-        if(i == Items.ENCHANTED_GOLDEN_APPLE || i == Registry.BOMB_BLUE_ITEM.get()){
+        if(i == Items.ENCHANTED_GOLDEN_APPLE || i == ModRegistry.BOMB_BLUE_ITEM.get()){
             cir.setReturnValue(50);
             cir.cancel();
         }

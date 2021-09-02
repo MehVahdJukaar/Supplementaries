@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.RopeBlock;
-import net.mehvahdjukaar.supplementaries.block.util.IBellConnection;
+import net.mehvahdjukaar.supplementaries.block.util.IBellConnections;
 import net.minecraft.block.BellBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -30,13 +30,13 @@ public abstract class BellBlockMixin extends Block{
     //for bells
     public boolean tryConnect(BlockPos pos, BlockState facingState, IWorld world){
         TileEntity te = world.getBlockEntity(pos);
-        if(te instanceof IBellConnection){
-            IBellConnection.BellConnection connection = IBellConnection.BellConnection.NONE;
+        if(te instanceof IBellConnections){
+            IBellConnections.BellConnection connection = IBellConnections.BellConnection.NONE;
             if(facingState.getBlock() instanceof ChainBlock && facingState.getValue(ChainBlock.AXIS)== Direction.Axis.Y)
-                connection = IBellConnection.BellConnection.CHAIN;
+                connection = IBellConnections.BellConnection.CHAIN;
             else if(facingState.getBlock() instanceof RopeBlock)
-                connection = IBellConnection.BellConnection.ROPE;
-            ((IBellConnection) te).setConnected(connection);
+                connection = IBellConnections.BellConnection.ROPE;
+            ((IBellConnections) te).setConnected(connection);
             te.setChanged();
             return true;
        }

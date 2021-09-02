@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.ClockBlock;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
@@ -29,7 +29,7 @@ public class ClockBlockTile extends TileEntity implements ITickableTileEntity {
     private boolean updateOffset = true;
 
     public ClockBlockTile() {
-        super(Registry.CLOCK_BLOCK_TILE.get());
+        super(ModRegistry.CLOCK_BLOCK_TILE.get());
     }
 
     @Override
@@ -78,6 +78,7 @@ public class ClockBlockTile extends TileEntity implements ITickableTileEntity {
         this.sPrevRoll = this.sTargetRoll;
     }
 
+    //TODO: rewrite
     public void updateTime(int time){
 
         if(this.level.dimensionType().natural()) {
@@ -154,6 +155,7 @@ public class ClockBlockTile extends TileEntity implements ITickableTileEntity {
             this.updateTime((int) (this.level.getDayTime()%24000));
 
         }
+        //TODO: fix hour hand
         //hours
         this.prevRoll = this.roll;
         if (this.roll != this.targetRoll) {

@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.CrackedBellBlockTile;
-import net.mehvahdjukaar.supplementaries.block.util.IBellConnection.BellConnection;
+import net.mehvahdjukaar.supplementaries.block.util.IBellConnections.BellConnection;
 import net.minecraft.block.*;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.Entity;

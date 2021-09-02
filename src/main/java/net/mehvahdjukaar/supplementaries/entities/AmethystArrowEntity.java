@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.entities;
 
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -37,17 +37,17 @@ public class AmethystArrowEntity extends AbstractArrowEntity {
     }
 
     public AmethystArrowEntity(World worldIn, LivingEntity throwerIn) {
-        super(Registry.AMETHYST_ARROW.get(), throwerIn, worldIn);
+        super(ModRegistry.AMETHYST_ARROW.get(), throwerIn, worldIn);
         setBaseDamage(1);
     }
 
     public AmethystArrowEntity(World worldIn, double x, double y, double z) {
-        super(Registry.AMETHYST_ARROW.get(), x, y, z, worldIn);
+        super(ModRegistry.AMETHYST_ARROW.get(), x, y, z, worldIn);
         setBaseDamage(1);
     }
 
     public AmethystArrowEntity(FMLPlayMessages.SpawnEntity packet, World world) {
-        super(Registry.AMETHYST_ARROW.get(), world);
+        super(ModRegistry.AMETHYST_ARROW.get(), world);
         setBaseDamage(1);
     }
 
@@ -224,7 +224,7 @@ public class AmethystArrowEntity extends AbstractArrowEntity {
         double z = this.getZ();
         if (this.level.isClientSide){
             for (int l2 = 0; l2 < 8; ++l2) {
-                this.level.addParticle(new ItemParticleData(ParticleTypes.ITEM, new ItemStack(Registry.AMETHYST_ARROW_ITEM.get())), x, y, z, random.nextGaussian() * 0.1D, random.nextDouble() * 0.15D, random.nextGaussian() * 0.1D);
+                this.level.addParticle(new ItemParticleData(ParticleTypes.ITEM, new ItemStack(ModRegistry.AMETHYST_ARROW_ITEM.get())), x, y, z, random.nextGaussian() * 0.1D, random.nextDouble() * 0.15D, random.nextGaussian() * 0.1D);
             }
         }
         else {

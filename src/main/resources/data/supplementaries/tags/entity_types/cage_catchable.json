@@ -15,6 +15,7 @@
     "minecraft:ocelot"
   ],
   "optional": [
+    "quark:foxhound",
     "bettermushroom:shroomie",
     "bettermushroom:shroomie_eater",
     "bettermushroom:mushrooms_spores",

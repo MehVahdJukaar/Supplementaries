@@ -6,7 +6,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.blocks.WindVaneBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.WindVaneBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
@@ -21,7 +21,7 @@ import net.minecraft.util.math.vector.Vector3f;
 
 public class WindVaneBlockTileRenderer extends TileEntityRenderer<WindVaneBlockTile> {
 
-    public static final ResourceLocation MODEL_RES = Supplementaries.res(Registry.WIND_VANE_NAME+"_tile");
+    public static final ResourceLocation MODEL_RES = Supplementaries.res(ModRegistry.WIND_VANE_NAME+"_tile");
 
     private final BlockRendererDispatcher blockRenderer;
     private final BlockState STATE;
@@ -29,7 +29,7 @@ public class WindVaneBlockTileRenderer extends TileEntityRenderer<WindVaneBlockT
     public WindVaneBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
         blockRenderer = Minecraft.getInstance().getBlockRenderer();
-        STATE = Registry.WIND_VANE.get().defaultBlockState().setValue(WindVaneBlock.TILE, true);
+        STATE = ModRegistry.WIND_VANE.get().defaultBlockState().setValue(WindVaneBlock.TILE, true);
     }
 
     @Override

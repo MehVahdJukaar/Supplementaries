@@ -1,11 +1,11 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.tileentity.TileEntityType;
 
 public class EnhancedLanternBlockTile extends SwayingBlockTile{
     public EnhancedLanternBlockTile() {
-        super(Registry.COPPER_LANTERN_TILE.get());
+        super(ModRegistry.COPPER_LANTERN_TILE.get());
     }
 
     public EnhancedLanternBlockTile(TileEntityType<?> tileEntityTypeIn) {

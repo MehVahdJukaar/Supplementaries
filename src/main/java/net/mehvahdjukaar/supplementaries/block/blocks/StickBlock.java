@@ -5,7 +5,7 @@ import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.FlagBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
@@ -162,7 +162,7 @@ public class StickBlock extends WaterBlock implements IRotationLockable{
         if(it > ServerConfigs.cached.STICK_POLE_LENGTH)return false;
         BlockState state = world.getBlockState(pos);
         Block b = state.getBlock();
-        if(b == Registry.STICK_BLOCK.get() && isVertical(state)){
+        if(b == ModRegistry.STICK_BLOCK.get() && isVertical(state)){
             return findConnectedFlag(world, pos.relative(searchDir), searchDir, moveDir,it+1);
         }
         else if(b instanceof FlagBlock && it!=0){
@@ -170,7 +170,7 @@ public class StickBlock extends WaterBlock implements IRotationLockable{
             BlockState stick = world.getBlockState(toPos);
 
             TileEntity tile = world.getBlockEntity(pos);
-            if(tile instanceof FlagBlockTile && stick.getBlock() == Registry.STICK_BLOCK.get() && isVertical(stick)) {
+            if(tile instanceof FlagBlockTile && stick.getBlock() == ModRegistry.STICK_BLOCK.get() && isVertical(stick)) {
 
                 world.setBlockAndUpdate(pos, stick);
                 world.setBlockAndUpdate(toPos, state);

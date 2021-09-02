@@ -8,8 +8,6 @@ import net.mehvahdjukaar.supplementaries.compat.framedblocks.FramedSignPost;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
@@ -17,7 +15,6 @@ import net.minecraft.client.renderer.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Direction;
-import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
@@ -46,12 +43,11 @@ public class SignPostBlockBakedModel implements IDynamicBakedModel {
 
             boolean framed = CompatHandler.framedblocks && (isFramed!=null && isFramed);
 
-            RenderType layer = MinecraftForgeClient.getRenderLayer();
-
             //RenderType layer = MinecraftForgeClient.getRenderLayer();
-            // if (layer == null || RenderTypeLookup.canRenderInLayer(mimic, layer)) {
+            //            if (mimic != null && !mimic.isAir() && (layer == null || (framed || RenderTypeLookup.canRenderInLayer(mimic, layer)))) {
             //always solid.
-            if (mimic != null && !mimic.isAir() && (layer == null || (framed || RenderTypeLookup.canRenderInLayer(mimic, layer)))) {
+
+            if (mimic != null && !mimic.isAir()) {
 
                 IModelData data;
                 if (framed) {
@@ -72,6 +68,7 @@ public class SignPostBlockBakedModel implements IDynamicBakedModel {
         }
         return Collections.emptyList();
     }
+
 
     @Override
     public boolean useAmbientOcclusion() {
@@ -96,9 +93,7 @@ public class SignPostBlockBakedModel implements IDynamicBakedModel {
     @Override
     public TextureAtlasSprite getParticleIcon() {
         return Minecraft.getInstance().getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(Textures.TIMBER_CROSS_BRACE_TEXTURE);
-
     }
-
 
     @Override
     public TextureAtlasSprite getParticleTexture(@NotNull IModelData data) {

@@ -5,7 +5,7 @@ import net.mehvahdjukaar.supplementaries.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.block.util.IMapDisplay;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.inventories.NoticeBoardContainer;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -41,7 +41,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, 
     private boolean textVisible = true; //for culling
 
     public NoticeBoardBlockTile() {
-        super(Registry.NOTICE_BOARD_TILE.get());
+        super(ModRegistry.NOTICE_BOARD_TILE.get());
     }
 
     @Override

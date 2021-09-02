@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.entities;
 
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.EntityType;
@@ -26,7 +26,7 @@ public class LabelEntity extends HangingEntity {
         super(entityType, world);
     }
     public LabelEntity(World world) {
-        this(Registry.LABEL.get(), world);
+        this(ModRegistry.LABEL.get(), world);
     }
 
     public LabelEntity(FMLPlayMessages.SpawnEntity spawnEntity, World world) {

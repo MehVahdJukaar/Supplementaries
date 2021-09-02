@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.CopperLanternBlock;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.state.properties.AttachFace;
@@ -20,7 +20,7 @@ public abstract class MineshaftMixin extends StructurePiece {
         super(p_i51342_1_, p_i51342_2_);
     }
 
-    private static final BlockState lantern = Registry.COPPER_LANTERN.get().defaultBlockState().setValue(CopperLanternBlock.FACE, AttachFace.CEILING);
+    private static final BlockState lantern = ModRegistry.COPPER_LANTERN.get().defaultBlockState().setValue(CopperLanternBlock.FACE, AttachFace.CEILING);
     private static final BlockState torch = Blocks.WALL_TORCH.defaultBlockState();
 
     protected boolean isSupportingBox(IBlockReader p_189918_1_, MutableBoundingBox p_189918_2_, int p_189918_3_, int p_189918_4_, int p_189918_5_, int p_189918_6_) {

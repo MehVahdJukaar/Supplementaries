@@ -5,7 +5,8 @@ import net.mehvahdjukaar.selene.util.Utils;
 import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
@@ -43,6 +44,7 @@ public class SoulJarItem extends JarItem {
     @Override
     public boolean canItemCatch(Entity e) {
         EntityType<?> type = e.getType();
+        if (ServerConfigs.cached.JAR_AUTO_DETECT && this.canFitEntity(e)) return true;
         return type.is(ModTags.TINTED_JAR_CATCHABLE) ||
                 CapturedMobsHelper.CATCHABLE_FISHES.contains(type.getRegistryName().toString());
     }
@@ -67,7 +69,7 @@ public class SoulJarItem extends JarItem {
             //boolean b = Math.abs(motion.x)+Math.abs(motion.z)>0.01;
             if (Math.abs(p.getX() - pos.getX()) < 2 && Math.abs(p.getZ() - pos.getZ()) < 2 && pos.getY() == p.getY()) {
                 if (!world.isClientSide) {
-                    Utils.swapItem(player, context.getHand(), context.getItemInHand(), new ItemStack(Registry.SOUL_JAR_ITEM.get()));
+                    Utils.swapItem(player, context.getHand(), context.getItemInHand(), new ItemStack(ModRegistry.SOUL_JAR_ITEM.get()));
                     //TODO: sound here
                     player.level.playSound(null, player.blockPosition(), SoundEvents.BOTTLE_FILL_DRAGONBREATH, SoundCategory.BLOCKS, 1, 1);
                     player.level.playSound(null, player.blockPosition(), SoundEvents.SOUL_SAND_BREAK, SoundCategory.BLOCKS, 1f, 1.3f);

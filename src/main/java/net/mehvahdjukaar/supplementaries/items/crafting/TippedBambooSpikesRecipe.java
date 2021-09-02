@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.items.crafting;
 
 import net.mehvahdjukaar.supplementaries.items.BambooSpikesTippedItem;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -21,11 +21,11 @@ public class TippedBambooSpikesRecipe extends SpecialRecipe {
     }
 
     private boolean isEmptySpike(ItemStack stack){
-        if (stack.getItem() == Registry.BAMBOO_SPIKES_TIPPED_ITEM.get()) {
+        if (stack.getItem() == ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get()) {
             CompoundNBT compoundnbt = stack.getTag();
             return compoundnbt != null && compoundnbt.getInt("Damage")!=0;
         }
-        else return stack.getItem() == Registry.BAMBOO_SPIKES_ITEM.get();
+        else return stack.getItem() == ModRegistry.BAMBOO_SPIKES_ITEM.get();
     }
 
     @Override
@@ -82,7 +82,7 @@ public class TippedBambooSpikesRecipe extends SpecialRecipe {
 
     @Override
     public IRecipeSerializer<?> getSerializer() {
-        return Registry.BAMBOO_SPIKES_TIPPED_RECIPE.get();
+        return ModRegistry.BAMBOO_SPIKES_TIPPED_RECIPE.get();
     }
 
 

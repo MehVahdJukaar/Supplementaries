@@ -7,7 +7,7 @@ import knightminer.inspirations.library.recipe.cauldron.inventory.ICauldronInven
 import knightminer.inspirations.library.recipe.cauldron.special.DyeableCauldronRecipe;
 import knightminer.inspirations.library.recipe.cauldron.util.DisplayCauldronRecipe;
 import net.mehvahdjukaar.supplementaries.items.FlagItem;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -53,7 +53,7 @@ public class CauldronFlagDyeRecipe extends DyeableCauldronRecipe {
     @Override
     protected ItemStack updateColor(ICauldronContents contents, ItemStack stack) {
         CompoundNBT tag = stack.getTag();
-        ItemStack newStack = new ItemStack(Registry.FLAGS.get(contents.get(CauldronContentTypes.DYE).get()).get());
+        ItemStack newStack = new ItemStack(ModRegistry.FLAGS.get(contents.get(CauldronContentTypes.DYE).get()).get());
         newStack.setTag(tag);
 
         return newStack;
@@ -64,9 +64,9 @@ public class CauldronFlagDyeRecipe extends DyeableCauldronRecipe {
         return Arrays.stream(DyeColor.values())
                 .map(color -> DisplayCauldronRecipe.builder(THIRD, 0)
                         .setItemInputs(Arrays.stream(DyeColor.values()).filter(c->c!=color)
-                                .map(c->new ItemStack(Registry.FLAGS.get(c).get())).collect(Collectors.toList()))
+                                .map(c->new ItemStack(ModRegistry.FLAGS.get(c).get())).collect(Collectors.toList()))
                         .setContentInputs(CauldronContentTypes.DYE.of(color))
-                        .setItemOutput(new ItemStack(Registry.FLAGS.get(color).get()))
+                        .setItemOutput(new ItemStack(ModRegistry.FLAGS.get(color).get()))
                         .build());
     }
 

@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
 import com.mojang.datafixers.util.Pair;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.AbstractBannerBlock;
 import net.minecraft.block.BannerBlock;
 import net.minecraft.block.BlockState;
@@ -37,7 +37,7 @@ public class CeilingBannerBlockTile extends TileEntity implements INameable {
     private List<Pair<BannerPattern, DyeColor>> patterns;
 
     public CeilingBannerBlockTile() {
-        super(Registry.CEILING_BANNER_TILE.get());
+        super(ModRegistry.CEILING_BANNER_TILE.get());
     }
 
     public CeilingBannerBlockTile(DyeColor p_i47731_1_) {

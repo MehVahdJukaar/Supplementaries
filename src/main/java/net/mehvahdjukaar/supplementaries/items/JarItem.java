@@ -10,9 +10,10 @@ import net.mehvahdjukaar.supplementaries.block.util.MobHolder;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.fluids.ModSoftFluids;
 import net.mehvahdjukaar.supplementaries.items.tabs.JarTab;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
@@ -43,6 +44,7 @@ public class JarItem extends CageItem {
     public boolean canItemCatch(Entity e) {
         EntityType<?> type = e.getType();
         if (e instanceof MonsterEntity) return false;
+        if (ServerConfigs.cached.JAR_AUTO_DETECT && this.canFitEntity(e)) return true;
         return this.isFirefly(e) || type.is(ModTags.JAR_CATCHABLE) ||
                 CapturedMobsHelper.CATCHABLE_FISHES.contains(type.getRegistryName().toString());
     }
@@ -57,7 +59,7 @@ public class JarItem extends CageItem {
         if (!this.isFirefly(entity)) {
             return super.getFullItemStack(entity, currentStack);
         } else {
-            return new ItemStack(Registry.FIREFLY_JAR_ITEM.get());
+            return new ItemStack(ModRegistry.FIREFLY_JAR_ITEM.get());
         }
     }
 
@@ -174,7 +176,7 @@ public class JarItem extends CageItem {
 
     @Override
     public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items) {
-        if (this.allowdedIn(group) && RegistryConfigs.reg.JAR_TAB.get() && group == Registry.JAR_TAB) {
+        if (this.allowdedIn(group) && RegistryConfigs.reg.JAR_TAB.get() && group == ModRegistry.JAR_TAB) {
             JarTab.populateTab(items);
         }
     }

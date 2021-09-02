@@ -6,7 +6,7 @@ import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.block.util.MobHolder;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -19,7 +19,7 @@ public class JarTab {
 
     public static void tryAdd(NonNullList<ItemStack> items, CompoundNBT com) {
         if (!com.isEmpty()) {
-            ItemStack returnStack = new ItemStack(Registry.JAR_ITEM.get());
+            ItemStack returnStack = new ItemStack(ModRegistry.JAR_ITEM.get());
             returnStack.addTagElement("BlockEntityTag", com);
             for (ItemStack i : items) {
                 if (i.equals(returnStack)) return;
@@ -73,7 +73,7 @@ public class JarTab {
     }
 
     public static ItemStack getIcon() {
-        ItemStack icon = new ItemStack(Registry.JAR_ITEM.get());
+        ItemStack icon = new ItemStack(ModRegistry.JAR_ITEM.get());
         SoftFluidHolder fluidHolder = new SoftFluidHolder(12);
         fluidHolder.fill(SoftFluidRegistry.HONEY);
         CompoundNBT com = new CompoundNBT();

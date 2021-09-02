@@ -13,7 +13,7 @@ import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.decorativeblocks.RopeChandelierBlock;
 import net.mehvahdjukaar.supplementaries.compat.quark.QuarkPistonPlugin;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.*;
 import net.minecraft.block.material.PushReaction;
@@ -369,7 +369,7 @@ public class RopeBlock extends WaterBlock {
             if(te instanceof PulleyBlockTile){
                 PulleyBlockTile tile = ((PulleyBlockTile) te);
                 if(tile.isEmpty() && !player.isShiftKeyDown()){
-                    tile.setDisplayedItem(new ItemStack(Registry.ROPE_ITEM.get()));
+                    tile.setDisplayedItem(new ItemStack(ModRegistry.ROPE_ITEM.get()));
                     boolean ret = ((PulleyBlock) b).axisRotate(state, pos, world, rot);
                     tile.getDisplayedItem().shrink(1);
                     return ret;

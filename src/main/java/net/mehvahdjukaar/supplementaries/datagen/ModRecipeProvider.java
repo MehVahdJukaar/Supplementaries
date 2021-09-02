@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.datagen;
 
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.advancements.criterion.InventoryChangeTrigger;
 import net.minecraft.data.*;
 import net.minecraft.item.DyeColor;
@@ -61,24 +61,24 @@ public class ModRecipeProvider extends RecipeProvider {
             Item sign = ForgeRegistries.ITEMS.getValue(new ResourceLocation(wood.getSignRegName()));
             if (plank == null || plank == Items.AIR) return;
             if(sign!=null && sign != Items.AIR) {
-                ShapelessRecipeBuilder.shapeless(Registry.SIGN_POST_ITEMS.get(wood).get(), 2)
+                ShapelessRecipeBuilder.shapeless(ModRegistry.SIGN_POST_ITEMS.get(wood).get(), 2)
                         .requires(sign)
-                        .group(Registry.SIGN_POST_NAME)
+                        .group(ModRegistry.SIGN_POST_NAME)
                         .unlockedBy("has_plank", InventoryChangeTrigger.Instance.hasItems(plank))
                         //.build(consumer);
-                        .save((s) -> makeConditionalWoodRec(s, wood, consumer, Registry.SIGN_POST_NAME)); //
+                        .save((s) -> makeConditionalWoodRec(s, wood, consumer, ModRegistry.SIGN_POST_NAME)); //
             }
             else{
-                ShapedRecipeBuilder.shaped(Registry.SIGN_POST_ITEMS.get(wood).get(), 3)
+                ShapedRecipeBuilder.shaped(ModRegistry.SIGN_POST_ITEMS.get(wood).get(), 3)
                         .pattern("   ")
                         .pattern("222")
                         .pattern(" 1 ")
                         .define('1', Items.STICK)
                         .define('2', plank)
-                        .group(Registry.SIGN_POST_NAME)
+                        .group(ModRegistry.SIGN_POST_NAME)
                         .unlockedBy("has_plank", InventoryChangeTrigger.Instance.hasItems(plank))
                         //.build(consumer);
-                        .save((s) -> makeConditionalWoodRec(s, wood, consumer,Registry.SIGN_POST_NAME)); //
+                        .save((s) -> makeConditionalWoodRec(s, wood, consumer, ModRegistry.SIGN_POST_NAME)); //
             }
         }
         catch (Exception ignored){}
@@ -91,17 +91,17 @@ public class ModRecipeProvider extends RecipeProvider {
             if (plank == null || plank == Items.AIR){
                 return;
             }
-            ShapedRecipeBuilder.shaped(Registry.HANGING_SIGNS.get(wood).get(), 2)
+            ShapedRecipeBuilder.shaped(ModRegistry.HANGING_SIGNS.get(wood).get(), 2)
                     .pattern("010")
                     .pattern("222")
                     .pattern("222")
                     .define('0', Items.IRON_NUGGET)
                     .define('1', Items.STICK)
                     .define('2', plank)
-                    .group(Registry.HANGING_SIGN_NAME)
+                    .group(ModRegistry.HANGING_SIGN_NAME)
                     .unlockedBy("has_plank", InventoryChangeTrigger.Instance.hasItems(plank))
                     //.build(consumer);
-                    .save((s) -> makeConditionalWoodRec(s, wood, consumer,Registry.HANGING_SIGN_NAME)); //
+                    .save((s) -> makeConditionalWoodRec(s, wood, consumer, ModRegistry.HANGING_SIGN_NAME)); //
 
 
     }
@@ -112,16 +112,16 @@ public class ModRecipeProvider extends RecipeProvider {
         if (wool == null || wool == Items.AIR){
             return;
         }
-        ShapedRecipeBuilder.shaped(Registry.FLAGS.get(color).get(), 1)
+        ShapedRecipeBuilder.shaped(ModRegistry.FLAGS.get(color).get(), 1)
                 .pattern("222")
                 .pattern("222")
                 .pattern("1  ")
                 .define('1', Items.STICK)
                 .define('2', wool)
-                .group(Registry.FLAG_NAME)
+                .group(ModRegistry.FLAG_NAME)
                 .unlockedBy("has_wool", InventoryChangeTrigger.Instance.hasItems(wool))
                 //.build(consumer);
-                .save((s) -> makeConditionalRec(s, consumer,Registry.HANGING_SIGN_NAME+"_"+color.getName())); //
+                .save((s) -> makeConditionalRec(s, consumer, ModRegistry.HANGING_SIGN_NAME+"_"+color.getName())); //
 
 
     }

@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -36,7 +36,7 @@ public abstract class LivingEntityMixin extends Entity {
     private void handleOnClimbable(Vector3d motion, CallbackInfoReturnable<Vector3d> info) {
         if (this.onClimbable()) {
             Block b = this.getFeetBlockState().getBlock();
-            if (b.is(Registry.ROPE.get())) {
+            if (b.is(ModRegistry.ROPE.get())) {
                 this.fallDistance = 0;
                 double x = MathHelper.clamp(motion.x, -0.15F, 0.15F);
                 double z = MathHelper.clamp(motion.z, -0.15F, 0.15F);

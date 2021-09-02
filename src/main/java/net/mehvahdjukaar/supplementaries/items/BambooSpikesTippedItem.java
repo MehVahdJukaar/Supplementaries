@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.items;
 
 import net.mehvahdjukaar.supplementaries.block.tiles.BambooSpikesBlockTile;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.IWaterLoggable;
 import net.minecraft.client.util.ITooltipFlag;
@@ -83,7 +83,7 @@ public class BambooSpikesTippedItem extends BlockItem implements IWaterLoggable 
     }
 
     public static ItemStack makeSpikeItem(Potion potion){
-        ItemStack stack = new ItemStack(Registry.BAMBOO_SPIKES_TIPPED_ITEM.get());
+        ItemStack stack = new ItemStack(ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get());
         PotionUtils.setPotion(stack,potion);
         return stack;
     }

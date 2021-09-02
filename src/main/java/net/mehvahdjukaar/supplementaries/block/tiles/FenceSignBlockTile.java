@@ -4,7 +4,7 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 import net.mehvahdjukaar.supplementaries.block.util.IBlockHolder;
 import net.mehvahdjukaar.supplementaries.block.util.ITextHolder;
 import net.mehvahdjukaar.supplementaries.block.util.TextHolder;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
@@ -28,7 +28,7 @@ public class FenceSignBlockTile extends TileEntity implements ITextHolder, IBloc
     public static final int LINES = 4;
 
     public FenceSignBlockTile() {
-        super(Registry.SIGN_POST_TILE.get());
+        super(ModRegistry.SIGN_POST_TILE.get());
         this.textHolder = new TextHolder(LINES);
     }
 

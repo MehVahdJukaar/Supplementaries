@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
@@ -17,7 +17,7 @@ public class FireflyJarBlockTile extends TileEntity implements ITickableTileEnti
     public final boolean soul;
 
     public FireflyJarBlockTile(boolean isSoul) {
-        super(Registry.FIREFLY_JAR_TILE.get());
+        super(ModRegistry.FIREFLY_JAR_TILE.get());
         soul=isSoul;
     }
     public FireflyJarBlockTile() {
@@ -79,7 +79,7 @@ public class FireflyJarBlockTile extends TileEntity implements ITickableTileEnti
                         double d0 = (x + 0.5 + (this.rand.nextFloat() - 0.5) * (0.625D - pr));
                         double d1 = (y + 0.5 - 0.0625 + (this.rand.nextFloat() - 0.5) * (0.875D - pr));
                         double d2 = (z + 0.5 + (this.rand.nextFloat() - 0.5) * (0.625D - pr));
-                        level.addParticle(Registry.FIREFLY_GLOW.get(), d0, d1, d2, 0, 0, 0);
+                        level.addParticle(ModRegistry.FIREFLY_GLOW.get(), d0, d1, d2, 0, 0, 0);
                     }
                 }
             }

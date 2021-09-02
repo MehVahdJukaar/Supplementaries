@@ -4,7 +4,7 @@ import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.mixins.MixinConfig;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.fml.ModList;
@@ -107,6 +107,7 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue IRON_GATE_ENABLED;
         public static ForgeConfigSpec.BooleanValue FEATHER_BLOCK_ENABLED;
         public static ForgeConfigSpec.BooleanValue FLINT_BLOCK_ENABLED;
+        public static ForgeConfigSpec.BooleanValue WILD_FLAX_ENABLED;
 
         public static ForgeConfigSpec.BooleanValue AMETHYST_ARROW_ENABLED;
         public static ForgeConfigSpec.BooleanValue PRESENT_ENABLED;
@@ -133,20 +134,19 @@ public class RegistryConfigs {
         //oh god what have I done
         public static boolean isEnabled(String path){
 
-            if(path.equals(Registry.FIREFLY_JAR_NAME)){
-                return reg.FIREFLY_ENABLED.get() && reg.JAR_ENABLED.get();
-            }
-            if(path.equals(Registry.BRASS_LANTERN_NAME)){
-                return reg.HAS_BRASS.get();
-            }
-            if(path.equals(Registry.CANDELABRA_NAME_SILVER)){
-                return reg.CANDELABRA_ENABLED.get() && reg.HAS_SILVER.get();
-            }
-            if(path.equals(Registry.SOUL_JAR_NAME)){
-                return reg.JAR_ENABLED.get();
-            }
-            if(path.equals(Registry.KEY_NAME)){
-                return reg.NETHERITE_DOOR_ENABLED.get() || reg.NETHERITE_TRAPDOOR_ENABLED.get() || reg.SAFE_ENABLED.get();
+            switch (path) {
+                case ModRegistry.FLAX_WILD_NAME:
+                    return reg.WILD_FLAX_ENABLED.get() && reg.FLAX_ENABLED.get();
+                case ModRegistry.FIREFLY_JAR_NAME:
+                    return reg.FIREFLY_ENABLED.get() && reg.JAR_ENABLED.get();
+                case ModRegistry.BRASS_LANTERN_NAME:
+                    return reg.HAS_BRASS.get();
+                case ModRegistry.CANDELABRA_NAME_SILVER:
+                    return reg.CANDELABRA_ENABLED.get() && reg.HAS_SILVER.get();
+                case ModRegistry.SOUL_JAR_NAME:
+                    return reg.JAR_ENABLED.get();
+                case ModRegistry.KEY_NAME:
+                    return reg.NETHERITE_DOOR_ENABLED.get() || reg.NETHERITE_TRAPDOOR_ENABLED.get() || reg.SAFE_ENABLED.get();
             }
             for (Field f : reg.class.getDeclaredFields()) {
                 try{
@@ -178,79 +178,80 @@ public class RegistryConfigs {
 
 
             builder.push("blocks");
-            PLANTER_ENABLED = builder.define(Registry.PLANTER_NAME, true);
-            CLOCK_ENABLED = builder.define(Registry.CLOCK_BLOCK_NAME, true);
-            PEDESTAL_ENABLED = builder.define(Registry.PEDESTAL_NAME, true);
-            WIND_VANE_ENABLED = builder.define(Registry.WIND_VANE_NAME, true);
-            ILLUMINATOR_ENABLED = builder.define(Registry.REDSTONE_ILLUMINATOR_NAME, true);
-            NOTICE_BOARD_ENABLED = builder.define(Registry.NOTICE_BOARD_NAME, true);
-            CRANK_ENABLED = builder.define(Registry.CRANK_NAME, true);
-            JAR_ENABLED = builder.define(Registry.JAR_NAME, true);
-            FAUCET_ENABLED = builder.define(Registry.FAUCET_NAME, true);
-            TURN_TABLE_ENABLED = builder.define(Registry.TURN_TABLE_NAME, true);
-            PISTON_LAUNCHER_ENABLED = builder.define(Registry.PISTON_LAUNCHER_NAME, true);
-            SPEAKER_BLOCK_ENABLED = builder.define(Registry.SPEAKER_BLOCK_NAME, true);
-            SIGN_POST_ENABLED = builder.define(Registry.SIGN_POST_NAME, true);
-            HANGING_SIGN_ENABLED = builder.define(Registry.HANGING_SIGN_NAME, true);
+            PLANTER_ENABLED = builder.define(ModRegistry.PLANTER_NAME, true);
+            CLOCK_ENABLED = builder.define(ModRegistry.CLOCK_BLOCK_NAME, true);
+            PEDESTAL_ENABLED = builder.define(ModRegistry.PEDESTAL_NAME, true);
+            WIND_VANE_ENABLED = builder.define(ModRegistry.WIND_VANE_NAME, true);
+            ILLUMINATOR_ENABLED = builder.define(ModRegistry.REDSTONE_ILLUMINATOR_NAME, true);
+            NOTICE_BOARD_ENABLED = builder.define(ModRegistry.NOTICE_BOARD_NAME, true);
+            CRANK_ENABLED = builder.define(ModRegistry.CRANK_NAME, true);
+            JAR_ENABLED = builder.define(ModRegistry.JAR_NAME, true);
+            FAUCET_ENABLED = builder.define(ModRegistry.FAUCET_NAME, true);
+            TURN_TABLE_ENABLED = builder.define(ModRegistry.TURN_TABLE_NAME, true);
+            PISTON_LAUNCHER_ENABLED = builder.define(ModRegistry.PISTON_LAUNCHER_NAME, true);
+            SPEAKER_BLOCK_ENABLED = builder.define(ModRegistry.SPEAKER_BLOCK_NAME, true);
+            SIGN_POST_ENABLED = builder.define(ModRegistry.SIGN_POST_NAME, true);
+            HANGING_SIGN_ENABLED = builder.define(ModRegistry.HANGING_SIGN_NAME, true);
             //WALL_LANTERN_ENABLED = builder.define("wall_lantern", true);
-            BELLOWS_ENABLED = builder.define(Registry.BELLOWS_NAME, true);
-            SCONCE_ENABLED = builder.define(Registry.SCONCE_NAME, true);
-            SCONCE_GREEN_ENABLED = builder.define(Registry.SCONCE_NAME_GREEN, false);
-            CANDELABRA_ENABLED = builder.define(Registry.CANDELABRA_NAME, true);
-            CAGE_ENABLED = builder.define(Registry.CAGE_NAME, true);
-            ITEM_SHELF_ENABLED = builder.define(Registry.ITEM_SHELF_NAME, true);
-            SCONCE_LEVER_ENABLED = builder.define(Registry.SCONCE_LEVER_NAME, true);
-            COG_BLOCK_ENABLED = builder.define(Registry.COG_BLOCK_NAME, true);
-            CANDLE_HOLDER_ENABLED = builder.define(Registry.CANDLE_HOLDER_NAME, true);
-            GLOBE_ENABLED = builder.define(Registry.GLOBE_NAME, true);
-            HOURGLASS_ENABLED = builder.define(Registry.HOURGLASS_NAME, true);
-            SACK_ENABLED = builder.define(Registry.SACK_NAME, true);
-            BLACKBOARD_ENABLED = builder.define(Registry.BLACKBOARD_NAME, true);
-            SAFE_ENABLED = builder.define(Registry.SAFE_NAME, true);
-            COPPER_LANTERN_ENABLED = builder.define(Registry.COPPER_LANTERN_NAME, true);
-            FLUTE_ENABLED = builder.define(Registry.FLUTE_NAME, true);
-            GOLD_TRAPDOOR_ENABLED = builder.define(Registry.GOLD_TRAPDOOR_NAME,true);
-            GOLD_DOOR_ENABLED = builder.define(Registry.GOLD_DOOR_NAME,true);
-            BAMBOO_SPIKES_ENABLED = builder.define(Registry.BAMBOO_SPIKES_NAME,true);
-            TIPPED_SPIKES_ENABLED = builder.define(Registry.TIPPED_SPIKES_NAME,true);
-            STONE_LAMP_ENABLED = builder.define(Registry.STONE_LAMP_NAME, true);
-            CHECKERBOARD_ENABLED = builder.define(Registry.CHECKER_BLOCK_NAME, true);
-            NETHERITE_DOOR_ENABLED = builder.define(Registry.NETHERITE_DOOR_NAME, true);
-            NETHERITE_TRAPDOOR_ENABLED = builder.define(Registry.NETHERITE_TRAPDOOR_NAME, true);
-            PANCAKES_ENABLED = builder.define(Registry.PANCAKE_NAME,true);
-            LOCK_BLOCK_ENABLED = builder.define(Registry.LOCK_BLOCK_NAME,true);
-            FLAX_ENABLED = builder.define(Registry.FLAX_NAME,true);
-            ROPE_ENABLED = builder.define(Registry.ROPE_NAME,true);
-            ROPE_ARROW_ENABLED = builder.define(Registry.ROPE_ARROW_NAME,true);
-            PULLEY_ENABLED = builder.define(Registry.PULLEY_BLOCK_NAME,true);
-            FODDER_ENABLED = builder.define(Registry.FODDER_NAME,true);
-            BOMB_ENABLED = builder.define(Registry.BOMB_NAME,true);
-            CRIMSON_LANTERN_ENABLED = builder.define(Registry.CRIMSON_LANTERN_NAME,true);
-            MAGMA_CREAM_BLOCK_ENABLED = builder.define(Registry.MAGMA_CREAM_BLOCK_NAME,true);
-            STICK_ENABLED = builder.define(Registry.STICK_NAME,true);
-            ROD_ENABLED = builder.define(Registry.BLAZE_ROD_NAME,true);
-            DAUB_ENABLED = builder.define(Registry.DAUB_NAME,true);
+            BELLOWS_ENABLED = builder.define(ModRegistry.BELLOWS_NAME, true);
+            SCONCE_ENABLED = builder.define(ModRegistry.SCONCE_NAME, true);
+            SCONCE_GREEN_ENABLED = builder.define(ModRegistry.SCONCE_NAME_GREEN, false);
+            CANDELABRA_ENABLED = builder.define(ModRegistry.CANDELABRA_NAME, true);
+            CAGE_ENABLED = builder.define(ModRegistry.CAGE_NAME, true);
+            ITEM_SHELF_ENABLED = builder.define(ModRegistry.ITEM_SHELF_NAME, true);
+            SCONCE_LEVER_ENABLED = builder.define(ModRegistry.SCONCE_LEVER_NAME, true);
+            COG_BLOCK_ENABLED = builder.define(ModRegistry.COG_BLOCK_NAME, true);
+            CANDLE_HOLDER_ENABLED = builder.define(ModRegistry.CANDLE_HOLDER_NAME, true);
+            GLOBE_ENABLED = builder.define(ModRegistry.GLOBE_NAME, true);
+            HOURGLASS_ENABLED = builder.define(ModRegistry.HOURGLASS_NAME, true);
+            SACK_ENABLED = builder.define(ModRegistry.SACK_NAME, true);
+            BLACKBOARD_ENABLED = builder.define(ModRegistry.BLACKBOARD_NAME, true);
+            SAFE_ENABLED = builder.define(ModRegistry.SAFE_NAME, true);
+            COPPER_LANTERN_ENABLED = builder.define(ModRegistry.COPPER_LANTERN_NAME, true);
+            FLUTE_ENABLED = builder.define(ModRegistry.FLUTE_NAME, true);
+            GOLD_TRAPDOOR_ENABLED = builder.define(ModRegistry.GOLD_TRAPDOOR_NAME,true);
+            GOLD_DOOR_ENABLED = builder.define(ModRegistry.GOLD_DOOR_NAME,true);
+            BAMBOO_SPIKES_ENABLED = builder.define(ModRegistry.BAMBOO_SPIKES_NAME,true);
+            TIPPED_SPIKES_ENABLED = builder.define(ModRegistry.TIPPED_SPIKES_NAME,true);
+            STONE_LAMP_ENABLED = builder.define(ModRegistry.STONE_LAMP_NAME, true);
+            CHECKERBOARD_ENABLED = builder.define(ModRegistry.CHECKER_BLOCK_NAME, true);
+            NETHERITE_DOOR_ENABLED = builder.define(ModRegistry.NETHERITE_DOOR_NAME, true);
+            NETHERITE_TRAPDOOR_ENABLED = builder.define(ModRegistry.NETHERITE_TRAPDOOR_NAME, true);
+            PANCAKES_ENABLED = builder.define(ModRegistry.PANCAKE_NAME,true);
+            LOCK_BLOCK_ENABLED = builder.define(ModRegistry.LOCK_BLOCK_NAME,true);
+            FLAX_ENABLED = builder.define(ModRegistry.FLAX_NAME,true);
+            ROPE_ENABLED = builder.define(ModRegistry.ROPE_NAME,true);
+            ROPE_ARROW_ENABLED = builder.define(ModRegistry.ROPE_ARROW_NAME,true);
+            PULLEY_ENABLED = builder.define(ModRegistry.PULLEY_BLOCK_NAME,true);
+            FODDER_ENABLED = builder.define(ModRegistry.FODDER_NAME,true);
+            BOMB_ENABLED = builder.define(ModRegistry.BOMB_NAME,true);
+            CRIMSON_LANTERN_ENABLED = builder.define(ModRegistry.CRIMSON_LANTERN_NAME,true);
+            MAGMA_CREAM_BLOCK_ENABLED = builder.define(ModRegistry.MAGMA_CREAM_BLOCK_NAME,true);
+            STICK_ENABLED = builder.define(ModRegistry.STICK_NAME,true);
+            ROD_ENABLED = builder.define(ModRegistry.BLAZE_ROD_NAME,true);
+            DAUB_ENABLED = builder.define(ModRegistry.DAUB_NAME,true);
             WATTLE_AND_DAUB_ENABLED = builder.define("wattle_and_daub",true);
-            TIMBER_FRAME_ENABLED = builder.define(Registry.TIMBER_FRAME_NAME,true);
-            FLAG_ENABLED = builder.define(Registry.FLAG_NAME+"s", true);
-            TILE_ENABLED = builder.define(Registry.STONE_TILE_NAME,true);
-            GOBLET_ENABLED = builder.define(Registry.GOBLET_NAME,true);
-            RAKED_GRAVEL_ENABLED = builder.define(Registry.RAKED_GRAVEL_NAME,true);
-            STATUE_ENABLED = builder.define(Registry.STATUE_NAME,true);
-            IRON_GATE_ENABLED = builder.define(Registry.IRON_GATE_NAME, true);
-            FEATHER_BLOCK_ENABLED = builder.define(Registry.FEATHER_BLOCK_NAME, true);
-            FLINT_BLOCK_ENABLED = builder.define(Registry.FLINT_BLOCK_NAME, true);
+            TIMBER_FRAME_ENABLED = builder.define(ModRegistry.TIMBER_FRAME_NAME,true);
+            FLAG_ENABLED = builder.define(ModRegistry.FLAG_NAME+"s", true);
+            TILE_ENABLED = builder.define(ModRegistry.STONE_TILE_NAME,true);
+            GOBLET_ENABLED = builder.define(ModRegistry.GOBLET_NAME,true);
+            RAKED_GRAVEL_ENABLED = builder.define(ModRegistry.RAKED_GRAVEL_NAME,true);
+            STATUE_ENABLED = builder.define(ModRegistry.STATUE_NAME,true);
+            IRON_GATE_ENABLED = builder.define(ModRegistry.IRON_GATE_NAME, true);
+            FEATHER_BLOCK_ENABLED = builder.define(ModRegistry.FEATHER_BLOCK_NAME, true);
+            FLINT_BLOCK_ENABLED = builder.define(ModRegistry.FLINT_BLOCK_NAME, true);
+            WILD_FLAX_ENABLED = builder.define(ModRegistry.FLAX_WILD_NAME, true);
 
-            AMETHYST_ARROW_ENABLED = builder.comment("WIP").define(Registry.AMETHYST_ARROW_NAME,false);
-            PRESENT_ENABLED = builder.comment("WIP").define(Registry.PRESENT_NAME,true);
+            AMETHYST_ARROW_ENABLED = builder.comment("WIP").define(ModRegistry.AMETHYST_ARROW_NAME,false);
+            PRESENT_ENABLED = builder.comment("WIP").define(ModRegistry.PRESENT_NAME,true);
 
 
-            LASER_ENABLED = builder.comment("WIP").define(Registry.LASER_NAME, false);
+            LASER_ENABLED = builder.comment("WIP").define(ModRegistry.LASER_NAME, false);
 
             builder.pop();
 
             builder.push("entities");
-            FIREFLY_ENABLED = builder.define(Registry.FIREFLY_NAME, true);
+            FIREFLY_ENABLED = builder.define(ModRegistry.FIREFLY_NAME, true);
             builder.pop();
 
             builder.comment("Here you can disable mixins if they clash with other mods ones")

@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.block.util;
 
 import net.minecraft.util.IStringSerializable;
 
-public interface IBellConnection {
+public interface IBellConnections {
 
     BellConnection getConnected();
     void setConnected(BellConnection connected);

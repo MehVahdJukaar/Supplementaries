@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.entities;
 import com.google.common.collect.Lists;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.merchant.villager.VillagerTrades;
 import net.minecraft.item.*;
@@ -23,15 +23,15 @@ public class VillagerTradesHandler {
 
     public static final VillagerTrades.ITrade[] TRADES = new VillagerTrades.ITrade[]{
 
-            itemForEmeraldTrade(Registry.ROPE_ITEM.get(), 2, 1, 10),
-            itemForEmeraldTrade(Items.GUNPOWDER, 1, 1, 8),
-            itemForEmeraldTrade(Registry.COPPER_LANTERN.get(), 1, 2, 12),
-            itemForEmeraldTrade(Registry.BOMB_ITEM.get(), 1, 4, 8),
-            new StarForEmeraldTrade(4, 8),
-            itemForEmeraldTrade(Items.TNT, 1, 6, 8),
-            new RocketForEmeraldTrade(6, 1, 3, 8),
-            itemForEmeraldTrade(Registry.ROPE_ARROW_ITEM.get(), 1, 8, 6),
-            itemForEmeraldTrade(Registry.BOMB_BLUE_ITEM.get(), 1, Registry.BOMB_ITEM.get(), 1, 40, 3),
+            itemForEmeraldTrade(ModRegistry.ROPE_ITEM.get(), 4, 1, 10),
+            itemForEmeraldTrade(Items.GUNPOWDER, 2, 1, 8),
+            itemForEmeraldTrade(ModRegistry.COPPER_LANTERN.get(), 1, 1, 12),
+            itemForEmeraldTrade(ModRegistry.BOMB_ITEM.get(), 1, 3, 8),
+            new StarForEmeraldTrade(2, 8),
+            new RocketForEmeraldTrade(3, 1, 3, 8),
+            itemForEmeraldTrade(Items.TNT, 1, 4, 8),
+            itemForEmeraldTrade(ModRegistry.ROPE_ARROW_ITEM.get(), 1, 4, 6),
+            itemForEmeraldTrade(ModRegistry.BOMB_BLUE_ITEM.get(), 1, ModRegistry.BOMB_ITEM.get(), 1, 30, 3),
     };
 
     static BasicTrade itemForEmeraldTrade(IItemProvider item, int quantity, int price, int maxTrades) {
@@ -130,12 +130,12 @@ public class VillagerTradesHandler {
 
         if (RegistryConfigs.reg.GLOBE_ENABLED.get()) {
             for (int i = 0; i < ServerConfigs.cached.GLOBE_TRADES; i++) {
-                event.getRareTrades().add(itemForEmeraldTrade(Registry.GLOBE_ITEM.get(),1, 10, 3));
+                event.getRareTrades().add(itemForEmeraldTrade(ModRegistry.GLOBE_ITEM.get(),1, 10, 3));
             }
         }
         if (RegistryConfigs.reg.FLAX_ENABLED.get()) {
             for (int i = 0; i < 3; i++) {
-                event.getGenericTrades().add(itemForEmeraldTrade(Registry.FLAX_SEEDS_ITEM.get(), 1, 6, 8));
+                event.getGenericTrades().add(itemForEmeraldTrade(ModRegistry.FLAX_SEEDS_ITEM.get(), 1, 6, 8));
             }
         }
     }

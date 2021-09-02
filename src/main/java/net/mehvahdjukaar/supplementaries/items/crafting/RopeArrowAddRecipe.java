@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.items.crafting;
 
 import net.mehvahdjukaar.supplementaries.common.ModTags;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
@@ -26,7 +26,7 @@ public class RopeArrowAddRecipe extends SpecialRecipe {
 
         for(int i = 0; i < inv.getContainerSize(); ++i) {
             ItemStack stack = inv.getItem(i);
-            if (stack.getItem() == Registry.ROPE_ARROW_ITEM.get() && stack.getDamageValue()!=0) {
+            if (stack.getItem() == ModRegistry.ROPE_ARROW_ITEM.get() && stack.getDamageValue()!=0) {
                 if (arrow != null) {
                     return false;
                 }
@@ -56,7 +56,7 @@ public class RopeArrowAddRecipe extends SpecialRecipe {
             if(stack.getItem().is(ModTags.ROPES)){
                 ropes++;
             }
-            if(stack.getItem() == Registry.ROPE_ARROW_ITEM.get()) {
+            if(stack.getItem() == ModRegistry.ROPE_ARROW_ITEM.get()) {
                 arrow = stack;
             }
         }
@@ -78,7 +78,7 @@ public class RopeArrowAddRecipe extends SpecialRecipe {
 
     @Override
     public IRecipeSerializer<?> getSerializer() {
-        return Registry.ROPE_ARROW_ADD_RECIPE.get();
+        return ModRegistry.ROPE_ARROW_ADD_RECIPE.get();
     }
 
 

@@ -9,7 +9,7 @@ import net.mehvahdjukaar.supplementaries.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.StatueBlock;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.common.SpecialPlayers;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.*;
 import net.minecraft.server.MinecraftServer;
@@ -33,7 +33,7 @@ public class StatueBlockTile extends ItemDisplayTile {
     public BlockState candle = null;
 
     public StatueBlockTile() {
-        super(Registry.STATUE_TILE.get());
+        super(ModRegistry.STATUE_TILE.get());
     }
 
     public static void initializeSessionData(MinecraftServer server){
@@ -136,7 +136,7 @@ public class StatueBlockTile extends ItemDisplayTile {
             Item i = stack.getItem();
             if(i instanceof SwordItem )return SWORD;
             if(i instanceof ToolItem || i instanceof TridentItem)return TOOL;
-            return (i.is(ModTags.CANDLES)||i==Registry.CANDLE_HOLDER_ITEM.get())  ? StatuePose.CANDLE : StatuePose.HOLDING;
+            return (i.is(ModTags.CANDLES)||i== ModRegistry.CANDLE_HOLDER_ITEM.get())  ? StatuePose.CANDLE : StatuePose.HOLDING;
         }
     }
 }

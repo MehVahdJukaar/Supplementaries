@@ -6,7 +6,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.blocks.EnhancedLanternBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.world.structures.RoadSignFeature;
 import net.mehvahdjukaar.supplementaries.world.structures.StructureLocator;
 import net.minecraft.block.BlockState;
@@ -22,12 +22,14 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.RegistryKey;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -40,14 +42,14 @@ import java.util.Random;
 public class BlockGeneratorBlockTile extends TileEntity implements ITickableTileEntity {
     private boolean firstTick = true;
     public BlockGeneratorBlockTile() {
-        super(Registry.BLOCK_GENERATOR_TILE.get());
+        super(ModRegistry.BLOCK_GENERATOR_TILE.get());
     }
 
     private static final BlockState trapdoor = Blocks.SPRUCE_TRAPDOOR.defaultBlockState();
     private static final BlockState lantern = Blocks.LANTERN.defaultBlockState().setValue(LanternBlock.HANGING,true);
     private static final BlockState lanternDown = Blocks.LANTERN.defaultBlockState();
     private static final BlockState fence = Blocks.SPRUCE_FENCE.defaultBlockState();
-    private static final BlockState jar = Registry.FIREFLY_JAR.get().defaultBlockState();
+    private static final BlockState jar = ModRegistry.FIREFLY_JAR.get().defaultBlockState();
     private static final BlockState slab = Blocks.SPRUCE_SLAB.defaultBlockState();
     private static final BlockState log = Blocks.STRIPPED_SPRUCE_LOG.defaultBlockState();
     private static final BlockState stoneSlab = Blocks.STONE_SLAB.defaultBlockState();
@@ -55,6 +57,7 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
     private static final BlockState stair = Blocks.STONE_STAIRS.defaultBlockState();
     private static final BlockState air = Blocks.AIR.defaultBlockState();
     private static final BlockState path = Blocks.GRASS_PATH.defaultBlockState();
+    private static final BlockState path_2 = Blocks.SMOOTH_SANDSTONE.defaultBlockState();
 
 
     private double averageAngles(float a, float b){
@@ -87,7 +90,12 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
                 //if I am in a village
                 boolean inVillage = locateResult.getRight();
 
-                if(inVillage)replaceCobbleWithPath(world, pos);
+                if(inVillage){
+                    ResourceLocation b = world.getBiome(pos).getRegistryName();
+                    BlockState replace = (b== Biomes.DESERT.getRegistryName() || b == Biomes.DESERT_HILLS.getRegistryName()
+                            || b == Biomes.DESERT_LAKES.getRegistryName()) ? path_2 : path;
+                    replaceCobbleWithPath(world, pos, replace);
+                }
 
 
                 if (villages.size() >= 1) {
@@ -119,7 +127,7 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
                     }
 
 
-                    this.level.setBlock(pos, Registry.SIGN_POST.get().defaultBlockState(), 3);
+                    this.level.setBlock(pos, ModRegistry.SIGN_POST.get().defaultBlockState(), 3);
                     TileEntity te = this.level.getBlockEntity(pos);
                     if (te instanceof SignPostBlockTile) {
                         SignPostBlockTile sign = ((SignPostBlockTile) te);
@@ -217,7 +225,7 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
                             if(0.32>rand.nextFloat()){
                                 topState = 0.32>rand.nextFloat()?trapdoor:air;
 
-                                EnhancedLanternBlock wl = ((EnhancedLanternBlock) Registry.WALL_LANTERN.get());
+                                EnhancedLanternBlock wl = ((EnhancedLanternBlock) ModRegistry.WALL_LANTERN.get());
                                 wl.placeOn(lanternDown,pos.below(),dir,world);
 
                                 //double
@@ -264,7 +272,7 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
                     listnbt.add(StringNBT.valueOf("nothing here but monsters\n\n\n"));
                     com.put("pages",listnbt);
                     book.setTag(com);
-                    this.level.setBlock(this.worldPosition.below(2), Registry.NOTICE_BOARD.get().defaultBlockState().setValue(NoticeBoardBlock.HAS_BOOK,true)
+                    this.level.setBlock(this.worldPosition.below(2), ModRegistry.NOTICE_BOARD.get().defaultBlockState().setValue(NoticeBoardBlock.HAS_BOOK,true)
                             .setValue(NoticeBoardBlock.FACING, Direction.Plane.HORIZONTAL.getRandomDirection(this.getLevel().random)), 3);
                     TileEntity te = world.getBlockEntity(this.worldPosition.below(2));
                     if(te instanceof NoticeBoardBlockTile){
@@ -296,7 +304,7 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
         return new TranslationTextComponent("message.supplementaries.road_sign",(((d + (s/2)) / s) * s));
     }
 
-    private static void replaceCobbleWithPath(World world, BlockPos pos){
+    private static void replaceCobbleWithPath(World world, BlockPos pos, BlockState path){
         //generate cobble path
 
         for(int i = -2; i <= 2; ++i) {

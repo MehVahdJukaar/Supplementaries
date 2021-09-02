@@ -4,7 +4,7 @@ import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.FaucetBlockTile;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ConcretePowderBlock;
@@ -241,7 +241,7 @@ public class FaucetBlock extends WaterBlock {
             float r = ColorHelper.PackedColor.red(color)/255f;
             float g = ColorHelper.PackedColor.green(color)/255f;
             float b = ColorHelper.PackedColor.blue(color)/255f;
-            world.addParticle(Registry.DRIPPING_LIQUID.get(), x, y, z, r, g, b);
+            world.addParticle(ModRegistry.DRIPPING_LIQUID.get(), x, y, z, r, g, b);
 
             //world.addParticle(flag?Registry.FALLING_LIQUID.get():Registry.DRIPPING_LIQUID.get(), x, y, z, 0, 1, 0);
         }

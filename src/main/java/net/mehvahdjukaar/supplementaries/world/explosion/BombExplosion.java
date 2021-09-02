@@ -7,7 +7,7 @@ import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.mehvahdjukaar.supplementaries.network.BombExplosionKnockbackPacket;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.ProtectionEnchantment;
@@ -78,7 +78,7 @@ public class BombExplosion extends Explosion {
 
     public void doFinalizeExplosion() {
 
-        this.level.playSound(null, this.x, this.y, this.z, Registry.BOMB_SOUND.get(), SoundCategory.NEUTRAL, blue ? 5F : 3f, (1.2F + (this.level.random.nextFloat() - this.level.random.nextFloat()) * 0.2F));
+        this.level.playSound(null, this.x, this.y, this.z, ModRegistry.BOMB_SOUND.get(), SoundCategory.NEUTRAL, blue ? 5F : 3f, (1.2F + (this.level.random.nextFloat() - this.level.random.nextFloat()) * 0.2F));
 
         ObjectArrayList<Pair<ItemStack, BlockPos>> drops = new ObjectArrayList<>();
         Collections.shuffle(this.toBlow, this.level.random);
@@ -216,7 +216,7 @@ public class BombExplosion extends Explosion {
                         if (entity instanceof LivingEntity) {
                             if(blue) {
                                 if (!isPlayer || (!playerentity.isSpectator() && !playerentity.isCreative())){
-                                    ((LivingEntity) entity).addEffect(new EffectInstance(Effects.WEAKNESS, 20 * 15));
+                                    ((LivingEntity) entity).addEffect(new EffectInstance(Effects.WEAKNESS, 20 * 30));
                                     entity.setSecondsOnFire(6);
                                 }
                             }

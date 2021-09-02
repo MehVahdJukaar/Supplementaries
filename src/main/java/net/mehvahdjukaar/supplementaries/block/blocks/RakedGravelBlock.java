@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties.RakeDirection;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.*;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.pathfinding.PathType;
@@ -54,7 +54,7 @@ public class RakedGravelBlock extends GravelBlock {
     }
 
     private static boolean canConnect(BlockState state, Direction dir){
-        if(state.getBlock() == Registry.RAKED_GRAVEL.get()){
+        if(state.getBlock() == ModRegistry.RAKED_GRAVEL.get()){
             return state.getValue(RAKE_DIRECTION).getDirections().contains(dir.getOpposite());
         }
         return false;

@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.block.util.IBlockHolder;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FlowerPotBlock;
@@ -13,7 +13,7 @@ import net.minecraftforge.common.util.Constants;
 public class HangingFlowerPotBlockTile extends SwayingBlockTile implements IBlockHolder {
     public BlockState pot = Blocks.FLOWER_POT.defaultBlockState();
     public HangingFlowerPotBlockTile() {
-        super(Registry.HANGING_FLOWER_POT_TILE.get());
+        super(ModRegistry.HANGING_FLOWER_POT_TILE.get());
     }
 
     static {

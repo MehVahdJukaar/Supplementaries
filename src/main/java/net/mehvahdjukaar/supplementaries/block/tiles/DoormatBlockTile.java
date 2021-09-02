@@ -4,7 +4,7 @@ import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.block.blocks.DoormatBlock;
 import net.mehvahdjukaar.supplementaries.block.util.ITextHolder;
 import net.mehvahdjukaar.supplementaries.block.util.TextHolder;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
@@ -20,7 +20,7 @@ public class DoormatBlockTile extends ItemDisplayTile implements ITextHolder {
 
 
     public DoormatBlockTile() {
-        super(Registry.DOORMAT_TILE.get());
+        super(ModRegistry.DOORMAT_TILE.get());
         this.textHolder = new TextHolder(MAXLINES);
     }
 

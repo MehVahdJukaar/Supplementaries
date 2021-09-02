@@ -8,7 +8,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManag
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.quark.QuarkTooltipPlugin;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -49,13 +49,13 @@ public class ClientEvents {
         ItemStack stack = event.getStack();
         Item i = stack.getItem();
         if (CompatHandler.quark) {
-            if (i == Registry.SACK_ITEM.get()) {
+            if (i == ModRegistry.SACK_ITEM.get()) {
                 QuarkTooltipPlugin.renderTooltipEvent(event);
-            } else if (i == Registry.SAFE_ITEM.get()) {
+            } else if (i == ModRegistry.SAFE_ITEM.get()) {
                 QuarkTooltipPlugin.renderTooltipEvent(event);
             }
         }
-        if (i == Registry.BLACKBOARD_ITEM.get()) {
+        if (i == ModRegistry.BLACKBOARD_ITEM.get()) {
             CompoundNBT cmp = stack.getTagElement("BlockEntityTag");
             if (cmp != null && cmp.contains("Pixels")) {
                 long[] packed = cmp.getLongArray("Pixels");

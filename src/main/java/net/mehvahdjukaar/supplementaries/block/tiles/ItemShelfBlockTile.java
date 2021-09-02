@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 
 import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.block.blocks.ItemShelfBlock;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.util.Direction;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -10,7 +10,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 public class ItemShelfBlockTile extends ItemDisplayTile {
 
     public ItemShelfBlockTile() {
-        super(Registry.ITEM_SHELF_TILE.get());
+        super(ModRegistry.ITEM_SHELF_TILE.get());
     }
 
     @Override

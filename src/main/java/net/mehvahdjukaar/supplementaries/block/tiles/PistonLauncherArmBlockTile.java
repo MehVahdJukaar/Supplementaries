@@ -5,7 +5,7 @@ import net.mehvahdjukaar.supplementaries.block.blocks.PistonLauncherArmBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.PistonLauncherBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.PistonLauncherHeadBlock;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.PushReaction;
@@ -37,7 +37,7 @@ public class PistonLauncherArmBlockTile extends TileEntity implements ITickableT
     private int dz = 0;
     protected final Random rand = new Random();
     public PistonLauncherArmBlockTile() {
-        super(Registry.PISTON_LAUNCHER_ARM_TILE.get());
+        super(ModRegistry.PISTON_LAUNCHER_ARM_TILE.get());
         //this.setParameters();
     }
 
@@ -117,10 +117,10 @@ public class PistonLauncherArmBlockTile extends TileEntity implements ITickableT
             this.prevOffset = this.offset;
             if (!this.level.isClientSide()) {
                 if (this.getExtending()) {
-                    BlockState _bs = Registry.PISTON_LAUNCHER_HEAD.get().defaultBlockState();
+                    BlockState _bs = ModRegistry.PISTON_LAUNCHER_HEAD.get().defaultBlockState();
                     level.setBlock(worldPosition, _bs.setValue(PistonLauncherHeadBlock.FACING, this.getDirection()), 3);
                 } else {
-                    BlockState _bs = Registry.PISTON_LAUNCHER.get().defaultBlockState();
+                    BlockState _bs = ModRegistry.PISTON_LAUNCHER.get().defaultBlockState();
                     BlockPos _bp = worldPosition.relative(this.getDirection().getOpposite());
                     BlockState oldstate = level.getBlockState(_bp);
                     if (_bs.setValue(PistonLauncherBlock.FACING, this.getDirection()).setValue(PistonLauncherBlock.EXTENDED, true) == oldstate) {

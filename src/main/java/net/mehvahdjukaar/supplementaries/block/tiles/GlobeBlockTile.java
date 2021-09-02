@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.GlobeBlock;
 import net.mehvahdjukaar.supplementaries.common.SpecialPlayers;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
@@ -32,7 +32,7 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, I
     public boolean isSnow = false;
 
     public GlobeBlockTile() {
-        super(Registry.GLOBE_TILE.get());
+        super(ModRegistry.GLOBE_TILE.get());
     }
 
 

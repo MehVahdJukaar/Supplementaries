@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DirectoryCache;
@@ -38,7 +38,7 @@ public class ModLootTableProvider extends LootTableProvider {
             //addBlockLoot(Registry.FLAGS.get(color).get());
         }
         for(DyeColor color : DyeColor.values()){
-            addBlockLoot(Registry.PRESENTS.get(color).get());
+            addBlockLoot(ModRegistry.PRESENTS.get(color).get());
         }
 
 

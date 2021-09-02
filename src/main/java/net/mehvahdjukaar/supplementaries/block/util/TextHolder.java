@@ -11,7 +11,7 @@ import java.util.function.Function;
 
 public class TextHolder {
 
-    public final int lines;
+    public final int size;
     //text
     public final ITextComponent[] signText;
     //text that gets rendered
@@ -19,11 +19,11 @@ public class TextHolder {
     public DyeColor textColor = DyeColor.BLACK;
 
 
-    public TextHolder(int lines){
-        this.lines = lines;
-        this.renderText = new IReorderingProcessor[lines];
-        this.signText = new ITextComponent[lines];
-        for(int i=0; i<lines; i++){
+    public TextHolder(int size){
+        this.size = size;
+        this.renderText = new IReorderingProcessor[size];
+        this.signText = new ITextComponent[size];
+        for(int i = 0; i< size; i++){
             this.signText[i]= new StringTextComponent("");
         }
     }
@@ -33,7 +33,7 @@ public class TextHolder {
         if(compound.contains("TextHolder")) {
             CompoundNBT com = compound.getCompound("TextHolder");
             this.textColor = DyeColor.byName(com.getString("Color"), DyeColor.BLACK);
-            for (int i = 0; i < this.lines; ++i) {
+            for (int i = 0; i < this.size; ++i) {
                 String s = com.getString("Text" + (i + 1));
                 ITextComponent itextcomponent = ITextComponent.Serializer.fromJson(s.isEmpty() ? "\"\"" : s);
                 this.signText[i] = itextcomponent;
@@ -58,7 +58,7 @@ public class TextHolder {
     public CompoundNBT write(CompoundNBT compound) {
         CompoundNBT com = new CompoundNBT();
         com.putString("Color", this.textColor.getName());
-        for (int i = 0; i < this.lines; ++i) {
+        for (int i = 0; i < this.size; ++i) {
             String s = ITextComponent.Serializer.toJson(this.signText[i]);
             com.putString("Text" + (i + 1), s);
         }

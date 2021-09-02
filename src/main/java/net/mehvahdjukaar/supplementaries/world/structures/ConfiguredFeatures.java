@@ -1,18 +1,32 @@
 package net.mehvahdjukaar.supplementaries.world.structures;
 
+import com.google.common.collect.ImmutableSet;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.minecraft.block.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.gen.FlatGenerationSettings;
-import net.minecraft.world.gen.feature.IFeatureConfig;
-import net.minecraft.world.gen.feature.StructureFeature;
+import net.minecraft.world.gen.blockplacer.SimpleBlockPlacer;
+import net.minecraft.world.gen.blockstateprovider.SimpleBlockStateProvider;
+import net.minecraft.world.gen.feature.*;
 
 public class ConfiguredFeatures {
+
+    public static final BlockClusterFeatureConfig WILD_FLAX_CONFIG = (new BlockClusterFeatureConfig.Builder(
+            new SimpleBlockStateProvider(ModRegistry.FLAX_WILD.get().defaultBlockState()),
+            new SimpleBlockPlacer()))
+            .tries(35).xspread(4).yspread(0).zspread(4).noProjection()
+            .needWater().whitelist(ImmutableSet.of(Blocks.SAND,Blocks.RED_SAND)).build();
+
     /**
      * Static instance of our structure so we can reference it and add it to biomes easily.
      */
-    public static StructureFeature<?, ?> CONFIGURED_WAY_SIGN = StructureRegistry.WAY_SIGN.get().configured(IFeatureConfig.NONE);
+    public static final StructureFeature<?, ?> CONFIGURED_WAY_SIGN = StructureRegistry.WAY_SIGN.get().configured(IFeatureConfig.NONE);
+
+    public static final ConfiguredFeature<?, ?> CONFIGURED_WILD_FLAX = Feature.RANDOM_PATCH.configured(WILD_FLAX_CONFIG)
+            .decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE).count(20);
 
     /**
      * Registers the configured structure which is what gets added to the biomes.
@@ -22,8 +36,14 @@ public class ConfiguredFeatures {
      * But the best time to register configured features by code is honestly to do it in FMLCommonSetupEvent.
      */
     public static void register() {
-        Registry<StructureFeature<?, ?>> registry = WorldGenRegistries.CONFIGURED_STRUCTURE_FEATURE;
-        Registry.register(registry, new ResourceLocation(Supplementaries.MOD_ID, "configured_way_sign"), CONFIGURED_WAY_SIGN);
+
+
+        Registry.register(WorldGenRegistries.CONFIGURED_STRUCTURE_FEATURE,
+                new ResourceLocation(Supplementaries.MOD_ID, "configured_way_sign"), CONFIGURED_WAY_SIGN);
+
+        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE,
+                new ResourceLocation(Supplementaries.MOD_ID, "configured_wild_flax"), CONFIGURED_WILD_FLAX);
+
 
         /* Ok so, this part may be hard to grasp but basically, just add your structure to this to
          * prevent any sort of crash or issue with other mod's custom ChunkGenerators. If they use

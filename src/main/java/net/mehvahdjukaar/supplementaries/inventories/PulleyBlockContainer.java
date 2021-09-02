@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.inventories;
 
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.PulleyBlockTile;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
@@ -26,7 +26,7 @@ public class PulleyBlockContainer extends Container  {
 
     public PulleyBlockContainer(int id, PlayerInventory playerInventory, IInventory inventory) {
 
-        super(Registry.PULLEY_BLOCK_CONTAINER.get(), id);
+        super(ModRegistry.PULLEY_BLOCK_CONTAINER.get(), id);
         //tile inventory
         this.inventory = inventory;
         checkContainerSize(inventory, 1);

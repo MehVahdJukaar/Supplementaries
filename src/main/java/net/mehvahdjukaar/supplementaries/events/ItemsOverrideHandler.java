@@ -8,12 +8,11 @@ import net.mehvahdjukaar.supplementaries.block.blocks.JarBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
-import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.items.BlockHolderItem;
 import net.mehvahdjukaar.supplementaries.items.FullJarItem;
 import net.mehvahdjukaar.supplementaries.items.JarItem;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.*;
 import net.minecraft.client.Minecraft;
@@ -26,7 +25,10 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.*;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.MapData;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -228,7 +230,7 @@ public class ItemsOverrideHandler {
                             player.giveExperiencePoints(-Utils.getXPinaBottle(1, world.random));
 
                         if (world.isClientSide) {
-                            Minecraft.getInstance().particleEngine.createTrackingEmitter(player, Registry.BOTTLING_XP_PARTICLE.get(), 1);
+                            Minecraft.getInstance().particleEngine.createTrackingEmitter(player, ModRegistry.BOTTLING_XP_PARTICLE.get(), 1);
                         }
                         world.playSound(null, player.blockPosition(), SoundEvents.BOTTLE_FILL_DRAGONBREATH, SoundCategory.BLOCKS, 1, 1);
 
@@ -251,7 +253,7 @@ public class ItemsOverrideHandler {
         @Nullable
         @Override
         public Block getBlockOverride(Item i) {
-            return Registry.DOUBLE_CAKE.get();
+            return ModRegistry.DOUBLE_CAKE.get();
         }
 
         @Override
@@ -265,10 +267,10 @@ public class ItemsOverrideHandler {
         }
 
         private ActionResultType placeDoubleCake(PlayerEntity player, ItemStack stack, BlockPos pos, World world, BlockState state) {
-            boolean isDirectional = state.getBlock() == Registry.DIRECTIONAL_CAKE.get();
+            boolean isDirectional = state.getBlock() == ModRegistry.DIRECTIONAL_CAKE.get();
 
             if ((isDirectional && state.getValue(DirectionalCakeBlock.BITES) == 0) || state == Blocks.CAKE.defaultBlockState()) {
-                BlockState newState = Registry.DOUBLE_CAKE.get().defaultBlockState()
+                BlockState newState = ModRegistry.DOUBLE_CAKE.get().defaultBlockState()
                         .setValue(DoubleCakeBlock.FACING, isDirectional ? state.getValue(DoubleCakeBlock.FACING) : Direction.WEST)
                         .setValue(DoubleCakeBlock.WATERLOGGED, world.getFluidState(pos).getType() == Fluids.WATER);
                 if (!world.setBlock(pos, newState, 3)) {
@@ -295,14 +297,14 @@ public class ItemsOverrideHandler {
             if (player.abilities.mayBuild) {
                 BlockState state = world.getBlockState(pos);
                 Block b = state.getBlock();
-                if (b == Blocks.CAKE || b == Registry.DIRECTIONAL_CAKE.get()) {
+                if (b == Blocks.CAKE || b == ModRegistry.DIRECTIONAL_CAKE.get()) {
                     ActionResultType result = ActionResultType.FAIL;
 
                     if (ServerConfigs.cached.DOUBLE_CAKE_PLACEMENT) {
                         result = placeDoubleCake(player, stack, pos, world, state);
                     }
                     if (!result.consumesAction() && ServerConfigs.cached.DIRECTIONAL_CAKE) {
-                        result = paceBlockOverride(Registry.DIRECTIONAL_CAKE_ITEM.get(), player, hand, stack, pos, dir, world);
+                        result = paceBlockOverride(ModRegistry.DIRECTIONAL_CAKE_ITEM.get(), player, hand, stack, pos, dir, world);
                     }
                     return result;
                 }
@@ -316,7 +318,7 @@ public class ItemsOverrideHandler {
         @Nullable
         @Override
         public Block getBlockOverride(Item i) {
-            return Registry.CEILING_BANNERS.get(((BannerItem) i).getColor()).get();
+            return ModRegistry.CEILING_BANNERS.get(((BannerItem) i).getColor()).get();
         }
 
         @Override
@@ -332,7 +334,7 @@ public class ItemsOverrideHandler {
         @Override
         public ActionResultType tryPerformingAction(World world, BlockPos pos, Direction dir, PlayerEntity player, Hand hand, ItemStack stack, BlockRayTraceResult hit) {
             if (player.abilities.mayBuild) {
-                return paceBlockOverride(Registry.CEILING_BANNERS_ITEMS.get(((BannerItem) stack.getItem()).getColor()).get(), player, hand, stack, pos, dir, world);
+                return paceBlockOverride(ModRegistry.CEILING_BANNERS_ITEMS.get(((BannerItem) stack.getItem()).getColor()).get(), player, hand, stack, pos, dir, world);
             }
             return ActionResultType.PASS;
         }
@@ -349,7 +351,7 @@ public class ItemsOverrideHandler {
         @Nullable
         @Override
         public Block getBlockOverride(Item i) {
-            return Registry.HANGING_FLOWER_POT.get();
+            return ModRegistry.HANGING_FLOWER_POT.get();
         }
 
         @Override
@@ -365,7 +367,7 @@ public class ItemsOverrideHandler {
         @Override
         public ActionResultType tryPerformingAction(World world, BlockPos pos, Direction dir, PlayerEntity player, Hand hand, ItemStack stack, BlockRayTraceResult hit) {
             if (player.abilities.mayBuild) {
-                return paceBlockOverride(Registry.HANGING_FLOWER_POT_ITEM.get(), player, hand, stack, pos, dir, world);
+                return paceBlockOverride(ModRegistry.HANGING_FLOWER_POT_ITEM.get(), player, hand, stack, pos, dir, world);
             }
             return ActionResultType.PASS;
         }
@@ -382,7 +384,7 @@ public class ItemsOverrideHandler {
         @Nullable
         @Override
         public Block getBlockOverride(Item i) {
-            return Registry.STICK_BLOCK.get();
+            return ModRegistry.STICK_BLOCK.get();
         }
 
         @Override
@@ -398,7 +400,7 @@ public class ItemsOverrideHandler {
         @Override
         public ActionResultType tryPerformingAction(World world, BlockPos pos, Direction dir, PlayerEntity player, Hand hand, ItemStack stack, BlockRayTraceResult hit) {
             if (player.abilities.mayBuild) {
-                return paceBlockOverride(Registry.STICK_BLOCK_ITEM.get(), player, hand, stack, pos, dir, world);
+                return paceBlockOverride(ModRegistry.STICK_BLOCK_ITEM.get(), player, hand, stack, pos, dir, world);
             }
             return ActionResultType.PASS;
         }
@@ -415,7 +417,7 @@ public class ItemsOverrideHandler {
         @Nullable
         @Override
         public Block getBlockOverride(Item i) {
-            return Registry.BLAZE_ROD_BLOCK.get();
+            return ModRegistry.BLAZE_ROD_BLOCK.get();
         }
 
         @Override
@@ -431,7 +433,7 @@ public class ItemsOverrideHandler {
         @Override
         public ActionResultType tryPerformingAction(World world, BlockPos pos, Direction dir, PlayerEntity player, Hand hand, ItemStack stack, BlockRayTraceResult hit) {
             if (player.abilities.mayBuild) {
-                return paceBlockOverride(Registry.BLAZE_ROD_ITEM.get(), player, hand, stack, pos, dir, world);
+                return paceBlockOverride(ModRegistry.BLAZE_ROD_ITEM.get(), player, hand, stack, pos, dir, world);
             }
             return ActionResultType.PASS;
         }
@@ -448,7 +450,7 @@ public class ItemsOverrideHandler {
         @Nullable
         @Override
         public Block getBlockOverride(Item i) {
-            return Registry.GUNPOWDER_BLOCK.get();
+            return ModRegistry.GUNPOWDER_BLOCK.get();
         }
 
         @Override
@@ -464,7 +466,7 @@ public class ItemsOverrideHandler {
         @Override
         public ActionResultType tryPerformingAction(World world, BlockPos pos, Direction dir, PlayerEntity player, Hand hand, ItemStack stack, BlockRayTraceResult hit) {
             if (player.abilities.mayBuild) {
-                return paceBlockOverride(Registry.GUNPOWDER_BLOCK_ITEM.get(), player, hand, stack, pos, dir, world);
+                return paceBlockOverride(ModRegistry.GUNPOWDER_BLOCK_ITEM.get(), player, hand, stack, pos, dir, world);
             }
             return ActionResultType.PASS;
         }
@@ -481,7 +483,7 @@ public class ItemsOverrideHandler {
         @Nullable
         @Override
         public Block getBlockOverride(Item i) {
-            return Registry.WALL_LANTERN.get();
+            return ModRegistry.WALL_LANTERN.get();
         }
 
         @Override
@@ -501,7 +503,7 @@ public class ItemsOverrideHandler {
                     double y = hit.getLocation().y() % 1;
                     if (y < 0.5) return ActionResultType.FAIL;
                 }
-                return paceBlockOverride(Registry.WALL_LANTERN_ITEM.get(), player, hand, stack, pos, dir, world);
+                return paceBlockOverride(ModRegistry.WALL_LANTERN_ITEM.get(), player, hand, stack, pos, dir, world);
             }
             return ActionResultType.PASS;
         }

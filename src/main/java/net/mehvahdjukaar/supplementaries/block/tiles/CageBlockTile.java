@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 import net.mehvahdjukaar.supplementaries.block.blocks.ClockBlock;
 import net.mehvahdjukaar.supplementaries.block.util.IMobHolder;
 import net.mehvahdjukaar.supplementaries.block.util.MobHolder;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -18,7 +18,7 @@ public class CageBlockTile extends TileEntity implements ITickableTileEntity, IM
     public MobHolder mobHolder;
 
     public CageBlockTile() {
-        super(Registry.CAGE_TILE.get());
+        super(ModRegistry.CAGE_TILE.get());
         this.mobHolder = new MobHolder(this.level,this.worldPosition);
     }
 

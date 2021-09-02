@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 import net.mehvahdjukaar.supplementaries.block.util.IMapDisplay;
 import net.mehvahdjukaar.supplementaries.block.util.ITextHolder;
 import net.mehvahdjukaar.supplementaries.block.util.TextHolder;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
@@ -27,7 +27,7 @@ public class HangingSignBlockTile extends SwayingBlockTile implements IMapDispla
     }
 
     public HangingSignBlockTile() {
-        super(Registry.HANGING_SIGN_TILE.get());
+        super(ModRegistry.HANGING_SIGN_TILE.get());
         this.textHolder = new TextHolder(MAXLINES);
     }
 

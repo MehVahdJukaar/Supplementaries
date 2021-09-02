@@ -1,12 +1,11 @@
 package net.mehvahdjukaar.supplementaries.entities;
 
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.entity.projectile.ProjectileHelper;
 import net.minecraft.entity.projectile.ProjectileItemEntity;
 import net.minecraft.item.Item;
@@ -38,14 +37,14 @@ public class ShardProjectileEntity extends ProjectileItemEntity{
     }
 
     public ShardProjectileEntity(World worldIn, LivingEntity throwerIn, double x, double y, double z, Vector3d movement, @Nullable Entity ignore) {
-        super(Registry.AMETHYST_SHARD.get(), x, y, z, worldIn);
+        super(ModRegistry.AMETHYST_SHARD.get(), x, y, z, worldIn);
         this.setOwner(throwerIn);
         this.setDeltaMovement(movement);
         this.ignoreEntity = ignore;
     }
 
     public ShardProjectileEntity(FMLPlayMessages.SpawnEntity packet, World world) {
-        super(Registry.AMETHYST_SHARD.get(), world);
+        super(ModRegistry.AMETHYST_SHARD.get(), world);
     }
 
     @Override
@@ -74,7 +73,7 @@ public class ShardProjectileEntity extends ProjectileItemEntity{
 
     @Override
     protected Item getDefaultItem() {
-        return Registry.AMETHYST_SHARD_ITEM.get();
+        return ModRegistry.AMETHYST_SHARD_ITEM.get();
     }
 
     @Override

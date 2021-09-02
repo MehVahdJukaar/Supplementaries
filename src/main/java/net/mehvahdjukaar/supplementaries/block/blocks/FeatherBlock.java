@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -86,7 +86,7 @@ public class FeatherBlock extends Block {
                 boolean isMoving = entity.xOld != entity.getX() || entity.zOld != entity.getZ();
                 if (isMoving && random.nextBoolean()) {
                     double dy = 0.04;
-                    level.addParticle(Registry.FEATHER_PARTICLE.get(), entity.getX(), entity.getY(), entity.getZ(),
+                    level.addParticle(ModRegistry.FEATHER_PARTICLE.get(), entity.getX(), entity.getY(), entity.getZ(),
                             randomBetween(random, -1.0F, 1.0F) * 0.083333336F, dy, randomBetween(random, -1.0F, 1.0F) * 0.083333336F);
                 }
             }
@@ -95,7 +95,7 @@ public class FeatherBlock extends Block {
 
     @Override
     public ActionResultType use(BlockState p_225533_1_, World world, BlockPos pos, PlayerEntity p_225533_4_, Hand p_225533_5_, BlockRayTraceResult p_225533_6_) {
-        world.addParticle(Registry.FEATHER_PARTICLE.get(), pos.getX()+2, pos.getY()+1, pos.getZ(),
+        world.addParticle(ModRegistry.FEATHER_PARTICLE.get(), pos.getX()+2, pos.getY()+1, pos.getZ(),
                 0, 0.05, 0);
         return ActionResultType.sidedSuccess(world.isClientSide);
 

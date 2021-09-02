@@ -19,10 +19,7 @@ import net.minecraft.entity.monster.piglin.PiglinEntity;
 import net.minecraft.entity.passive.BeeEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.BucketItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
+import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -61,7 +58,7 @@ public class CageItem extends BlockItem {
         return mobContainerWidth;
     }
 
-    private boolean canFitEntity(Entity e){
+    protected boolean canFitEntity(Entity e){
         float margin = 0.125f;
         float h = e.getBbHeight() - margin;
         float w = e.getBbWidth() - margin;
@@ -97,6 +94,11 @@ public class CageItem extends BlockItem {
     @Override
     public int getItemStackLimit(ItemStack stack) {
          return this.isFull(stack) ? 1 : super.getItemStackLimit(stack);
+    }
+
+    @Override
+    public ActionResult<ItemStack> use(World p_77659_1_, PlayerEntity p_77659_2_, Hand p_77659_3_) {
+        return super.use(p_77659_1_, p_77659_2_, p_77659_3_);
     }
 
     @Override
@@ -180,8 +182,8 @@ public class CageItem extends BlockItem {
     /**
      * specific to item. Override
      */
-    public boolean canItemCatch(Entity e){
-        if(ServerConfigs.cached.CAGE_AUTO_DETECT && this.canFitEntity(e)) return true;
+    public boolean canItemCatch(Entity e) {
+        if (ServerConfigs.cached.CAGE_AUTO_DETECT && this.canFitEntity(e)) return true;
 
         EntityType<?> type = e.getType();
 
@@ -226,11 +228,11 @@ public class CageItem extends BlockItem {
             if (com != null) {
                 if (com.contains("Name")) {
                     tooltip.add(new StringTextComponent(com.getString("Name")).withStyle(TextFormatting.GRAY));
-                    if (!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().options.advancedItemTooltips) return;
-                    tooltip.add(new TranslationTextComponent("message.supplementaries.cage").withStyle(TextFormatting.ITALIC).withStyle(TextFormatting.GRAY));
                 }
             }
         }
+        if (!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().options.advancedItemTooltips) return;
+        tooltip.add(new TranslationTextComponent("message.supplementaries.cage").withStyle(TextFormatting.ITALIC).withStyle(TextFormatting.GRAY));
     }
 
     //free mob
@@ -303,4 +305,13 @@ public class CageItem extends BlockItem {
         return super.useOn(context);
     }
 
+    //cancel block placement when not shifting
+    @Override
+    public ActionResultType place(BlockItemUseContext context) {
+        PlayerEntity player = context.getPlayer();
+        if(player!=null && player.isShiftKeyDown()) {
+            return super.place(context);
+        }
+        return ActionResultType.PASS;
+    }
 }

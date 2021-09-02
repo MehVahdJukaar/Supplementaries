@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.blocks.FrameBlock;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -36,7 +36,7 @@ public class FrameBlockTile extends MimicBlockTile {
     }
 
     public FrameBlockTile(Supplier<Block> wattle_and_daub) {
-        super(Registry.TIMBER_FRAME_TILE.get());
+        super(ModRegistry.TIMBER_FRAME_TILE.get());
 
         //data = new ModelDataMap.Builder().withInitial(MIMIC, held).build();
     }
@@ -76,7 +76,7 @@ public class FrameBlockTile extends MimicBlockTile {
     public BlockState acceptBlock(BlockState state) {
         Block b = state.getBlock();
 
-        if (b == Registry.DAUB.get() && ServerConfigs.cached.REPLACE_DAUB) {
+        if (b == ModRegistry.DAUB.get() && ServerConfigs.cached.REPLACE_DAUB) {
             if (!this.level.isClientSide) {
                 state = WATTLE_AND_DAUB.get();
                 if (this.getBlockState().hasProperty(BlockProperties.FLIPPED)) {
@@ -120,7 +120,7 @@ public class FrameBlockTile extends MimicBlockTile {
     public static boolean isValidBlock(BlockState state, BlockPos pos, World world) {
         Block b = state.getBlock();
         if (b == Blocks.BEDROCK) return false;
-        if (b == Registry.DAUB_FRAME.get() || b == Registry.DAUB_BRACE.get() || b == Registry.DAUB_CROSS_BRACE.get())
+        if (b == ModRegistry.DAUB_FRAME.get() || b == ModRegistry.DAUB_BRACE.get() || b == ModRegistry.DAUB_CROSS_BRACE.get())
             return false;
         //if (BLOCK_BLACKLIST.contains(block)) { return false; }
         if (b.hasTileEntity(state)) {

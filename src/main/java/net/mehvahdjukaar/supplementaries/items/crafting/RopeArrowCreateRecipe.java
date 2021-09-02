@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.items.crafting;
 
 import net.mehvahdjukaar.supplementaries.common.ModTags;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -51,7 +51,7 @@ public class RopeArrowCreateRecipe extends SpecialRecipe {
                 ropes++;
             }
         }
-        ItemStack stack = new ItemStack(Registry.ROPE_ARROW_ITEM.get());
+        ItemStack stack = new ItemStack(ModRegistry.ROPE_ARROW_ITEM.get());
         stack.setDamageValue(stack.getMaxDamage()-ropes);
         return stack;
 
@@ -69,7 +69,7 @@ public class RopeArrowCreateRecipe extends SpecialRecipe {
 
     @Override
     public IRecipeSerializer<?> getSerializer() {
-        return Registry.ROPE_ARROW_CREATE_RECIPE.get();
+        return ModRegistry.ROPE_ARROW_CREATE_RECIPE.get();
     }
 
 

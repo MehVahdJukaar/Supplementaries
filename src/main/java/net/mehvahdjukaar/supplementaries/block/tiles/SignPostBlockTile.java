@@ -6,7 +6,7 @@ import net.mehvahdjukaar.supplementaries.block.util.TextHolder;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.VanillaWoodTypes;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
@@ -31,7 +31,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolder {
     public IWoodType woodTypeDown = VanillaWoodTypes.OAK;
 
     public SignPostBlockTile() {
-        super(Registry.SIGN_POST_TILE.get());
+        super(ModRegistry.SIGN_POST_TILE.get());
         this.textHolder = new TextHolder(2);
     }
 
@@ -40,7 +40,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolder {
 
     @Override
     public double getViewDistance() {
-        return 156;
+        return 96;
     }
 
     @Override

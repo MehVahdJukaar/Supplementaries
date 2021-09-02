@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.items.crafting;
 
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -17,7 +17,7 @@ public class BlackboardClearRecipe extends SpecialRecipe {
     }
 
     public static boolean isDrawnBlackboard(ItemStack stack){
-        if (stack.getItem() == Registry.BLACKBOARD_ITEM.get()) {
+        if (stack.getItem() == ModRegistry.BLACKBOARD_ITEM.get()) {
             CompoundNBT compoundnbt = stack.getTagElement("BlockEntityTag");
             return compoundnbt != null && compoundnbt.contains("Pixels");
         }

@@ -7,7 +7,7 @@ import knightminer.inspirations.library.recipe.cauldron.inventory.IModifyableCau
 import knightminer.inspirations.library.recipe.cauldron.recipe.ICauldronRecipe;
 import knightminer.inspirations.library.recipe.cauldron.util.DisplayCauldronRecipe;
 import net.mehvahdjukaar.supplementaries.items.FlagItem;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BannerPatternItem;
 import net.minecraft.item.DyeColor;
@@ -58,7 +58,7 @@ public class CauldronFlagClearRecipe implements ICauldronRecipe, IMultiRecipe<Di
             for (DyeColor color : DyeColor.values()) {
 
                 //for(BannerPatternItem i : patterns) {
-                    ItemStack stack = new ItemStack(Registry.FLAGS.get(color).get());
+                    ItemStack stack = new ItemStack(ModRegistry.FLAGS.get(color).get());
 
                     CompoundNBT com = stack.getOrCreateTagElement("BlockEntityTag");
                     ListNBT list = new ListNBT();
@@ -72,7 +72,7 @@ public class CauldronFlagClearRecipe implements ICauldronRecipe, IMultiRecipe<Di
                     displayRecipes.add(DisplayCauldronRecipe.builder(THIRD, 0)
                             .setItemInputs(stack)
                             .setContentInputs(CauldronContentTypes.FLUID.of(Fluids.WATER))
-                            .setItemOutput(new ItemStack(Registry.FLAGS.get(color).get()))
+                            .setItemOutput(new ItemStack(ModRegistry.FLAGS.get(color).get()))
                             .build());
                 }
             //}

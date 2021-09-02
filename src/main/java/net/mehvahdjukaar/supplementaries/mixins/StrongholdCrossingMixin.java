@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.WallTorchBlock;
 import net.minecraft.util.Direction;
@@ -28,7 +28,7 @@ public abstract class StrongholdCrossingMixin extends StructurePiece {
         super(p_i51342_1_, p_i51342_2_);
     }
 
-    private final BlockState sconce = Registry.SCONCE_WALL.get().defaultBlockState();
+    private final BlockState sconce = ModRegistry.SCONCE_WALL.get().defaultBlockState();
 
     @Inject(method = "postProcess", at = @At("TAIL"), cancellable = true)
     public void postProcess(ISeedReader reader, StructureManager manager, ChunkGenerator generator, Random random, MutableBoundingBox bb, ChunkPos chunkPos, BlockPos blockPos, CallbackInfoReturnable<Boolean> cir) {

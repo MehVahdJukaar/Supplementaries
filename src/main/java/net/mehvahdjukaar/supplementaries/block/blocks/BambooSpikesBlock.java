@@ -8,7 +8,7 @@ import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DirectionalBlock;
@@ -109,7 +109,7 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer 
         if(te instanceof BambooSpikesBlockTile) {
             return ((BambooSpikesBlockTile) te).getSpikeItem();
         }
-        return new ItemStack(Registry.BAMBOO_SPIKES_ITEM.get());
+        return new ItemStack(ModRegistry.BAMBOO_SPIKES_ITEM.get());
     }
 
     @Override

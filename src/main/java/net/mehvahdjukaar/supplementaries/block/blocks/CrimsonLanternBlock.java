@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.tiles.OilLanternBlockTile;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -56,6 +56,6 @@ public class CrimsonLanternBlock extends CopperLanternBlock {
 
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new OilLanternBlockTile(Registry.CRIMSON_LANTERN_TILE.get());
+        return new OilLanternBlockTile(ModRegistry.CRIMSON_LANTERN_TILE.get());
     }
 }

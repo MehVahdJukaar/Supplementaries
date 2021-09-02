@@ -13,7 +13,6 @@ import net.minecraft.util.IReorderingProcessor;
 import java.util.List;
 
 public class DoormatBlockTileRenderer extends TileEntityRenderer<DoormatBlockTile> {
-    private static final int MAXLINES = 3;
 
     public DoormatBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
@@ -39,7 +38,7 @@ public class DoormatBlockTileRenderer extends TileEntityRenderer<DoormatBlockTil
         matrixStackIn.translate(0, 0, -0.0625 - 0.005);
         matrixStackIn.scale(0.010416667F, 0.010416667F, -0.010416667F);
 
-        for(int k1 = 0; k1 < MAXLINES; ++k1) {
+        for(int k1 = 0; k1 < tile.textHolder.size; ++k1) {
             IReorderingProcessor ireorderingprocessor = tile.textHolder.getRenderText(k1, (p_243502_1_) -> {
                 List<IReorderingProcessor> list = fontrenderer.split(p_243502_1_, 75);
                 return list.isEmpty() ? IReorderingProcessor.EMPTY : list.get(0);

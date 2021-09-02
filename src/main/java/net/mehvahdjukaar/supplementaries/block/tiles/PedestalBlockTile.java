@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.block.blocks.PedestalBlock;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
@@ -20,7 +20,7 @@ public class PedestalBlockTile extends ItemDisplayTile implements ITickableTileE
     public float yaw = 0;
     public int counter = 0;
     public PedestalBlockTile() {
-        super(Registry.PEDESTAL_TILE.get());
+        super(ModRegistry.PEDESTAL_TILE.get());
     }
 
 

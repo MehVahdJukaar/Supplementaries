@@ -11,6 +11,7 @@ import net.mehvahdjukaar.supplementaries.block.blocks.PancakeBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.block.util.ILightable;
+import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.entities.AmethystArrowEntity;
@@ -43,10 +44,10 @@ public class DispenserStuff {
         //jar
         if (RegistryConfigs.reg.JAR_ENABLED.get()) {
 
-            DispenserHelper.registerPlaceBlockBehavior(Registry.SOUL_JAR.get());
-            DispenserHelper.registerPlaceBlockBehavior(Registry.FIREFLY_JAR.get());
-            DispenserHelper.registerPlaceBlockBehavior(Registry.JAR_ITEM.get());
-            DispenserHelper.registerPlaceBlockBehavior(Registry.JAR_TINTED.get());
+            DispenserHelper.registerPlaceBlockBehavior(ModRegistry.SOUL_JAR.get());
+            DispenserHelper.registerPlaceBlockBehavior(ModRegistry.FIREFLY_JAR.get());
+            DispenserHelper.registerPlaceBlockBehavior(ModRegistry.JAR_ITEM.get());
+            DispenserHelper.registerPlaceBlockBehavior(ModRegistry.JAR_TINTED.get());
 
             DispenserHelper.registerCustomBehavior(new AddItemToInventoryBehavior(Items.COOKIE));
 
@@ -60,19 +61,20 @@ public class DispenserStuff {
         DispenserHelper.registerCustomBehavior(new PancakesDispenserBehavior(Items.HONEY_BOTTLE));
 
         if (ServerConfigs.cached.THROWABLE_BRICKS_ENABLED) {
-            DispenserHelper.registerCustomBehavior(new ThrowableBricksDispenserBehavior(Items.NETHER_BRICK));
-            DispenserHelper.registerCustomBehavior(new ThrowableBricksDispenserBehavior(Items.BRICK));
+            for(Item i : ModTags.BRICKS.getValues()){
+                DispenserHelper.registerCustomBehavior(new ThrowableBricksDispenserBehavior(i));
+            }
         }
         //firefly
         if (RegistryConfigs.reg.FIREFLY_ENABLED.get()) {
-            DispenserHelper.registerSpawnEggBehavior(Registry.FIREFLY_SPAWN_EGG_ITEM.get());
+            DispenserHelper.registerSpawnEggBehavior(ModRegistry.FIREFLY_SPAWN_EGG_ITEM.get());
         }
         //bomb
         if (RegistryConfigs.reg.BOMB_ENABLED.get()) {
-            DispenserBlock.registerBehavior(Registry.BOMB_ITEM.get(), new BombsDispenserBehavior(false));
-            DispenserBlock.registerBehavior(Registry.BOMB_BLUE_ITEM.get(), new BombsDispenserBehavior(true));
-            DispenserBlock.registerBehavior(Registry.BOMB_ITEM_ON.get(), new BombsDispenserBehavior(false));
-            DispenserBlock.registerBehavior(Registry.BOMB_BLUE_ITEM_ON.get(), new BombsDispenserBehavior(true));
+            DispenserBlock.registerBehavior(ModRegistry.BOMB_ITEM.get(), new BombsDispenserBehavior(false));
+            DispenserBlock.registerBehavior(ModRegistry.BOMB_BLUE_ITEM.get(), new BombsDispenserBehavior(true));
+            DispenserBlock.registerBehavior(ModRegistry.BOMB_ITEM_ON.get(), new BombsDispenserBehavior(false));
+            DispenserBlock.registerBehavior(ModRegistry.BOMB_BLUE_ITEM_ON.get(), new BombsDispenserBehavior(true));
         }
         //gunpowder
         if (ServerConfigs.cached.PLACEABLE_GUNPOWDER) {
@@ -80,7 +82,7 @@ public class DispenserStuff {
         }
         if (RegistryConfigs.reg.ROPE_ARROW_ENABLED.get()) {
 
-            DispenserBlock.registerBehavior(Registry.ROPE_ARROW_ITEM.get(), new ProjectileDispenseBehavior() {
+            DispenserBlock.registerBehavior(ModRegistry.ROPE_ARROW_ITEM.get(), new ProjectileDispenseBehavior() {
                 protected ProjectileEntity getProjectile(World world, IPosition pos, ItemStack stack) {
                     CompoundNBT com = stack.getTag();
                     int charges = stack.getMaxDamage();
@@ -98,7 +100,7 @@ public class DispenserStuff {
         }
         if (RegistryConfigs.reg.AMETHYST_ARROW_ENABLED.get()) {
 
-            DispenserBlock.registerBehavior(Registry.AMETHYST_ARROW_ITEM.get(), new ProjectileDispenseBehavior() {
+            DispenserBlock.registerBehavior(ModRegistry.AMETHYST_ARROW_ITEM.get(), new ProjectileDispenseBehavior() {
                 protected ProjectileEntity getProjectile(World world, IPosition pos, ItemStack stack) {
                     AmethystArrowEntity arrow = new AmethystArrowEntity(world, pos.x(), pos.y(), pos.z());
                     arrow.pickup = AbstractArrowEntity.PickupStatus.DISALLOWED;
@@ -288,7 +290,7 @@ public class DispenserStuff {
             Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
             BlockPos blockpos = source.getPos().relative(direction);
             Direction direction1 = source.getLevel().isEmptyBlock(blockpos.below()) ? direction : Direction.UP;
-            ActionResultType result = ((BlockItem) Registry.GUNPOWDER_BLOCK_ITEM.get()).place(new DirectionalPlaceContext(source.getLevel(), blockpos, direction, stack, direction1));
+            ActionResultType result = ((BlockItem) ModRegistry.GUNPOWDER_BLOCK_ITEM.get()).place(new DirectionalPlaceContext(source.getLevel(), blockpos, direction, stack, direction1));
             if (result.consumesAction()) return ActionResult.success(stack);
 
             return ActionResult.fail(stack);

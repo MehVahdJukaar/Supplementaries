@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.particles.ParticleTypes;
@@ -108,7 +108,7 @@ public class DoubleCakeBlock extends DirectionalCakeBlock {
             world.setBlock(pos, state.setValue(BITES, i + 1), 3);
         } else {
             if(ServerConfigs.cached.DIRECTIONAL_CAKE){
-                world.setBlock(pos, Registry.DIRECTIONAL_CAKE.get().defaultBlockState()
+                world.setBlock(pos, ModRegistry.DIRECTIONAL_CAKE.get().defaultBlockState()
                         .setValue(FACING,state.getValue(FACING)).setValue(WATERLOGGED,state.getValue(WATERLOGGED)), 3);
             }
             else {

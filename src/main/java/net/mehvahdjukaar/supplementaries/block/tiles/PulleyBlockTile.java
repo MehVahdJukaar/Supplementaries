@@ -6,7 +6,7 @@ import net.mehvahdjukaar.supplementaries.block.blocks.PulleyBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.inventories.PulleyBlockContainer;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ChainBlock;
@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
 public class PulleyBlockTile extends ItemDisplayTile {
 
     public PulleyBlockTile() {
-        super(Registry.PULLEY_BLOCK_TILE.get());
+        super(ModRegistry.PULLEY_BLOCK_TILE.get());
     }
 
     @Override

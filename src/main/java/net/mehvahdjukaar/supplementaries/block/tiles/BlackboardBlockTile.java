@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager.BlackboardKey;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
@@ -22,7 +22,7 @@ public class BlackboardBlockTile extends TileEntity {
     //private final IModelData data;
 
     public BlackboardBlockTile() {
-        super(Registry.BLACKBOARD_TILE.get());
+        super(ModRegistry.BLACKBOARD_TILE.get());
         //Arrays.fill(pixels, Arrays.fill(new boolean[], false));
         for (int x = 0; x < pixels.length; x++) {
             for (int y = 0; y < pixels[x].length; y++) {

@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.compat.quark;
 import net.mehvahdjukaar.supplementaries.block.blocks.JarBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.items.SackItem;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.Slot;
@@ -19,7 +19,7 @@ import vazkii.quark.content.management.module.ShulkerBoxRightClickModule;
 public class JarDropIn extends AbstractDropIn {
 
     private static final JarBlockTile DUMMY_JAR_TILE = new JarBlockTile();
-    private static final BlockState DEFAULT_JAR = Registry.JAR.get().defaultBlockState();
+    private static final BlockState DEFAULT_JAR = ModRegistry.JAR.get().defaultBlockState();
 
     public JarDropIn() {
     }

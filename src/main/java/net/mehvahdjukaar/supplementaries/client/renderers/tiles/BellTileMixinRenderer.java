@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.mehvahdjukaar.supplementaries.block.util.IBellConnection;
+import net.mehvahdjukaar.supplementaries.block.util.IBellConnections;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.Textures;
@@ -35,9 +35,9 @@ public class BellTileMixinRenderer {
 
     public static void render(BellTileEntity tile, float partialTicks, MatrixStack matrixStackIn,
                               IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
-        if(tile instanceof IBellConnection ){
+        if(tile instanceof IBellConnections){
 
-            IBellConnection.BellConnection connection = ((IBellConnection) tile).getConnected();
+            IBellConnections.BellConnection connection = ((IBellConnections) tile).getConnected();
             if(connection==null)return;
 
             matrixStackIn.pushPose();

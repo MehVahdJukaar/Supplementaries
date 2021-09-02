@@ -4,7 +4,7 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 import net.mehvahdjukaar.supplementaries.block.tiles.FenceSignBlockTile;
 import net.mehvahdjukaar.supplementaries.client.gui.FenceSignGui;
 import net.mehvahdjukaar.supplementaries.datagen.types.VanillaWoodTypes;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DyeItem;
@@ -72,7 +72,7 @@ public class FenceSignBlock extends FenceMimicBlock{
             }
             else return new ItemStack(tile.fenceBlock.getBlock());
         }
-        return new ItemStack(Registry.SIGN_POST_ITEMS.get(VanillaWoodTypes.OAK).get());
+        return new ItemStack(ModRegistry.SIGN_POST_ITEMS.get(VanillaWoodTypes.OAK).get());
     }
 
     @Override

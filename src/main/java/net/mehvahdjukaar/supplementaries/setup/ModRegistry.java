@@ -53,7 +53,7 @@ import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
-public class Registry {
+public class ModRegistry {
 
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, Supplementaries.MOD_ID);
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Supplementaries.MOD_ID);
@@ -85,7 +85,7 @@ public class Registry {
             new ItemGroup("supplementaries") {
                 @Override
                 public ItemStack makeIcon() {
-                    return new ItemStack(Registry.GLOBE_ITEM.get());
+                    return new ItemStack(ModRegistry.GLOBE_ITEM.get());
                 }
 
                 public boolean hasSearchBar() {
@@ -197,8 +197,8 @@ public class Registry {
 
     @SubscribeEvent
     public static void registerEntityAttributes(EntityAttributeCreationEvent event) {
-        event.put(Registry.RED_MERCHANT_TYPE.get(), MobEntity.createMobAttributes().build());
-        event.put(Registry.FIREFLY_TYPE.get(), FireflyEntity.setCustomAttributes().build());
+        event.put(ModRegistry.RED_MERCHANT_TYPE.get(), MobEntity.createMobAttributes().build());
+        event.put(ModRegistry.FIREFLY_TYPE.get(), FireflyEntity.setCustomAttributes().build());
     }
 
     //orange trader
@@ -457,7 +457,7 @@ public class Registry {
 
     public static final RegistryObject<Item> CAGE_ITEM_OLD = ITEMS.register("cage_full", () -> new FullCageItem(CAGE.get(),
             new Item.Properties().stacksTo(16).setISTER(() -> CageItemRenderer::new)
-                    .tab(null), Registry.CAGE_ITEM));
+                    .tab(null), ModRegistry.CAGE_ITEM));
 
     public static final RegistryObject<Item> CAGE_ITEM = ITEMS.register(CAGE_NAME, () -> new CageItem(CAGE.get(),
             new Item.Properties().tab(getTab(ItemGroup.TAB_DECORATIONS, CAGE_NAME))
@@ -485,11 +485,11 @@ public class Registry {
 
     public static final RegistryObject<Item> JAR_ITEM_OLD = ITEMS.register("jar_full", () -> new FullJarItem(JAR.get(), new Item.Properties()
             .tab(null)
-            .stacksTo(1).setISTER(() -> JarItemRenderer::new), Registry.JAR_ITEM));
+            .stacksTo(1).setISTER(() -> JarItemRenderer::new), ModRegistry.JAR_ITEM));
 
     public static final RegistryObject<Item> JAR_ITEM_TINTED_OLD = ITEMS.register("jar_full_tinted", () -> new FullJarItem(JAR_TINTED.get(), new Item.Properties().tab(null)
             .tab(null)
-            .stacksTo(1).setISTER(() -> JarItemRenderer::new), Registry.JAR_ITEM_TINTED));
+            .stacksTo(1).setISTER(() -> JarItemRenderer::new), ModRegistry.JAR_ITEM_TINTED));
 
 
     public static final RegistryObject<Item> JAR_ITEM = ITEMS.register(JAR_NAME, () -> new JarItem(JAR.get(), new Item.Properties().tab(
@@ -1170,8 +1170,17 @@ public class Registry {
     );
     public static final RegistryObject<Item> FLAX_ITEM = ITEMS.register(FLAX_NAME, () -> new Item(
             (new Item.Properties()).tab(getTab(ItemGroup.TAB_MISC, FLAX_NAME))));
+
     public static final RegistryObject<Item> FLAX_SEEDS_ITEM = ITEMS.register("flax_seeds", () -> new BlockNamedItem(FLAX.get(),
             (new Item.Properties()).tab(getTab(ItemGroup.TAB_MISC, FLAX_NAME))));
+
+    public static final String FLAX_WILD_NAME = "wild_flax";
+    public static final RegistryObject<Block> FLAX_WILD = BLOCKS.register(FLAX_WILD_NAME, () -> new WildFlaxBlock(
+            AbstractBlock.Properties.copy(Blocks.TALL_GRASS))
+    );
+    public static final RegistryObject<Item> FLAX_WILD_ITEM = ITEMS.register(FLAX_WILD_NAME, () -> new BlockItem(FLAX_WILD.get(),
+            (new Item.Properties()).tab(getTab(ItemGroup.TAB_DECORATIONS, FLAX_WILD_NAME))));
+
     //pot
     public static final RegistryObject<Block> FLAX_POT = BLOCKS.register("potted_flax", () -> new FlowerPotBlock(
             () -> (FlowerPotBlock) Blocks.FLOWER_POT, FLAX, AbstractBlock.Properties.copy(Blocks.FLOWER_POT)));
@@ -1196,7 +1205,7 @@ public class Registry {
     //boat in a jar
     public static final String JAR_BOAT_NAME = "jar_boat";
     public static final RegistryObject<Block> JAR_BOAT = BLOCKS.register(JAR_BOAT_NAME, () -> new JarBoatBlock(
-            AbstractBlock.Properties.copy(Registry.JAR.get())));
+            AbstractBlock.Properties.copy(ModRegistry.JAR.get())));
     public static final RegistryObject<Item> JAR_BOAT_ITEM = ITEMS.register(JAR_BOAT_NAME, () -> new BlockItem(JAR_BOAT.get(),
             (new Item.Properties()).tab(null)));
 

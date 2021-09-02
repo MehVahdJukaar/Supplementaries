@@ -7,7 +7,7 @@ import net.mehvahdjukaar.selene.util.Utils;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties.Topping;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -76,7 +76,7 @@ public class PancakeBlock extends WaterBlock implements ISoftFluidConsumer {
                 return ActionResultType.sidedSuccess(worldIn.isClientSide);
             }
         }
-        else if(item == Registry.PANCAKE_ITEM.get()){
+        else if(item == ModRegistry.PANCAKE_ITEM.get()){
             return ActionResultType.PASS;
         }
         else if (player.canEat(false)) {

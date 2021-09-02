@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.block.blocks.ItemShelfBlock;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.DoublePlantBlock;
@@ -46,7 +46,7 @@ public class FlowerBoxBlockTile extends ItemDisplayTile {
     public BlockState flower2_up = null;
 
     public FlowerBoxBlockTile() {
-        super(Registry.FLOWER_BOX_TILE.get());
+        super(ModRegistry.FLOWER_BOX_TILE.get());
         stacks = NonNullList.withSize(3, ItemStack.EMPTY);
     }
 

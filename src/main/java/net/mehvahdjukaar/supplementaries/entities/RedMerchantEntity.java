@@ -5,7 +5,7 @@ import net.mehvahdjukaar.supplementaries.entities.goals.ShowWaresGoal;
 import net.mehvahdjukaar.supplementaries.inventories.OrangeMerchantContainer;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.SendOrangeTraderOffersPacket;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.item.ExperienceOrbEntity;
@@ -47,7 +47,7 @@ public class RedMerchantEntity extends AbstractVillagerEntity implements IRanged
     }
 
     public RedMerchantEntity(World world) {
-        this(Registry.RED_MERCHANT_TYPE.get(), world);
+        this(ModRegistry.RED_MERCHANT_TYPE.get(), world);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class RedMerchantEntity extends AbstractVillagerEntity implements IRanged
     protected void registerGoals() {
 
         this.goalSelector.addGoal(0, new SwimGoal(this));
-        this.goalSelector.addGoal(2, new EquipAndRangeAttackGoal(this, 0.35D, 60, 10, 20, 15, new ItemStack(Registry.BOMB_ITEM.get())));
+        this.goalSelector.addGoal(2, new EquipAndRangeAttackGoal(this, 0.35D, 60, 10, 20, 15, new ItemStack(ModRegistry.BOMB_ITEM.get())));
 
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, MobEntity.class, 8, true, false,
                 (mob) -> (mob instanceof AbstractRaiderEntity || mob instanceof ZombieEntity || mob instanceof VexEntity || mob instanceof ZoglinEntity)));

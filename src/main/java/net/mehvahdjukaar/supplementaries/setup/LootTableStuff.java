@@ -58,7 +58,8 @@ public class LootTableStuff {
         MANSION,
         FORTRESS,
         BASTION,
-        RUIN
+        RUIN,
+        SHIPWRECK_STORAGE
     }
 
     private static class LootHelper {
@@ -67,6 +68,7 @@ public class LootTableStuff {
 
         public static TableType getType(String name) {
             if (isShipwreck(name)) return TableType.SHIPWRECK;
+            if (isShipwreckStorage(name)) return TableType.SHIPWRECK_STORAGE;
             if (isMineshaft(name)) return TableType.MINESHAFT;
             if (isDungeon(name)) return TableType.DUNGEON;
             if (isTemple(name)) return TableType.TEMPLE;
@@ -81,6 +83,12 @@ public class LootTableStuff {
 
         private static boolean isShipwreck(String s) {
             return s.equals(LootTables.SHIPWRECK_TREASURE.toString()) || RS && RS_SHIPWRECK.matcher(s).matches();
+        }
+
+        private static final Pattern RS_SHIPWRECK_STORAGE = Pattern.compile("repurposed_structures:chests/shipwreck/\\w*/supply_chest");
+
+        private static boolean isShipwreckStorage(String s) {
+            return s.equals(LootTables.SHIPWRECK_SUPPLY.toString()) || RS && RS_SHIPWRECK_STORAGE.matcher(s).matches();
         }
 
         private static boolean isMineshaft(String s) {
@@ -124,7 +132,7 @@ public class LootTableStuff {
                     .name("supplementaries_injected_globe")
                     .setRolls(ConstantRange.exactly(1))
                     .when(RandomChance.randomChance(chance))
-                    .add(ItemLootEntry.lootTableItem(Registry.GLOBE_ITEM.get()).setWeight(1))
+                    .add(ItemLootEntry.lootTableItem(ModRegistry.GLOBE_ITEM.get()).setWeight(1))
                     .build();
             e.getTable().addPool(pool);
         }
@@ -139,7 +147,7 @@ public class LootTableStuff {
                     .apply(SetCount.setCount(RandomValueRange.between(5.0F, 17.0F)))
                     .setRolls(ConstantRange.exactly(1))
                     .when(RandomChance.randomChance(chance))
-                    .add(ItemLootEntry.lootTableItem(Registry.ROPE_ITEM.get()).setWeight(1))
+                    .add(ItemLootEntry.lootTableItem(ModRegistry.ROPE_ITEM.get()).setWeight(1))
                     .build();
             e.getTable().addPool(pool);
         }
@@ -150,11 +158,13 @@ public class LootTableStuff {
         float min = 1;
         float max = 3;
         if (type == TableType.MINESHAFT) {
-            chance = 0.10f;
+            chance = 0.15f;
         } else if (type == TableType.DUNGEON) {
+            chance = 0.23f;
+        } else if (type == TableType.SHIPWRECK_STORAGE) {
             chance = 0.2f;
         } else if (type == TableType.PILLAGER) {
-            chance = 0.95f;
+            chance = 1f;
             min = 2;
             max = 5;
         } else return;
@@ -164,7 +174,7 @@ public class LootTableStuff {
                 .apply(SetCount.setCount(RandomValueRange.between(min, max)))
                 .setRolls(ConstantRange.exactly(1))
                 .when(RandomChance.randomChance(chance))
-                .add(ItemLootEntry.lootTableItem(Registry.FLAX_SEEDS_ITEM.get()).setWeight(1))
+                .add(ItemLootEntry.lootTableItem(ModRegistry.FLAX_SEEDS_ITEM.get()).setWeight(1))
                 .build();
         e.getTable().addPool(pool);
     }
@@ -187,7 +197,7 @@ public class LootTableStuff {
                 .name("supplementaries_injected_blue_bomb")
                 .setRolls(ConstantRange.exactly(1))
                 .when(RandomChance.randomChance(chance))
-                .add(ItemLootEntry.lootTableItem(Registry.BOMB_BLUE_ITEM.get()).setWeight(1))
+                .add(ItemLootEntry.lootTableItem(ModRegistry.BOMB_BLUE_ITEM.get()).setWeight(1))
                 .build();
         e.getTable().addPool(pool);
 
@@ -208,7 +218,7 @@ public class LootTableStuff {
                 .name("supplementaries_injected_bomb")
                 .apply(SetCount.setCount(RandomValueRange.between(1F, 3.0F)))
                 .when(RandomChance.randomChance(chance))
-                .add(ItemLootEntry.lootTableItem(Registry.BOMB_ITEM.get()).setWeight(1))
+                .add(ItemLootEntry.lootTableItem(ModRegistry.BOMB_ITEM.get()).setWeight(1))
                 .build();
         e.getTable().addPool(pool);
     }
@@ -221,8 +231,8 @@ public class LootTableStuff {
                     .name("supplementaries_injected_spikes")
                     .setRolls(ConstantRange.exactly(1))
                     .when(RandomChance.randomChance(chance))
-                    .add(ItemLootEntry.lootTableItem(Registry.BAMBOO_SPIKES_ITEM.get()).setWeight(4))
-                    .add(ItemLootEntry.lootTableItem(Registry.BAMBOO_SPIKES_TIPPED_ITEM.get()).setWeight(3)
+                    .add(ItemLootEntry.lootTableItem(ModRegistry.BAMBOO_SPIKES_ITEM.get()).setWeight(4))
+                    .add(ItemLootEntry.lootTableItem(ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get()).setWeight(3)
                             .apply(SetNBT.setTag(
                                     Util.make(new CompoundNBT(), (c) -> c.putString("Potion", "minecraft:poison"))
                             ))

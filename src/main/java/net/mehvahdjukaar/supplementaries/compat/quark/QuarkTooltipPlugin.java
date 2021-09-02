@@ -5,7 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.mehvahdjukaar.supplementaries.block.tiles.SackBlockTile;
 import net.mehvahdjukaar.supplementaries.block.tiles.SafeBlockTile;
 import net.mehvahdjukaar.supplementaries.inventories.SackContainer;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
@@ -38,10 +38,10 @@ import java.util.List;
 public class QuarkTooltipPlugin {
 
     private static final SackBlockTile DUMMY_SACK_TILE = new SackBlockTile();
-    private static final BlockState DEFAULT_SACK = Registry.SACK.get().defaultBlockState();
+    private static final BlockState DEFAULT_SACK = ModRegistry.SACK.get().defaultBlockState();
 
     private static final SafeBlockTile DUMMY_SAFE_TILE = new SafeBlockTile();
-    private static final BlockState DEFAULT_SAFE = Registry.SAFE.get().defaultBlockState();
+    private static final BlockState DEFAULT_SAFE = ModRegistry.SAFE.get().defaultBlockState();
 
     public static boolean canRenderTooltip(){
        return (!ImprovedTooltipsModule.shulkerBoxRequireShift || Screen.hasShiftDown());
@@ -57,13 +57,13 @@ public class QuarkTooltipPlugin {
             CompoundNBT cmp = ItemNBTHelper.getCompound(stack, "BlockEntityTag", true);
             if (cmp != null && !cmp.contains("LootTable")) {
                 Item i = stack.getItem();
-                if(i == Registry.SAFE_ITEM.get()){
+                if(i == ModRegistry.SAFE_ITEM.get()){
                     DUMMY_SAFE_TILE.load(DEFAULT_SAFE, cmp);
                     PlayerEntity player = Minecraft.getInstance().player;
                     if(player == null || DUMMY_SAFE_TILE.canPlayerOpen(Minecraft.getInstance().player,false)){
                         cleanupTooltip(event.getToolTip());
                     }
-                }else if(i == Registry.SACK_ITEM.get()){
+                }else if(i == ModRegistry.SACK_ITEM.get()){
                     cleanupTooltip(event.getToolTip());
                 }
             }
@@ -76,14 +76,14 @@ public class QuarkTooltipPlugin {
             CompoundNBT cmp = ItemNBTHelper.getCompound(stack, "BlockEntityTag", true);
             if (cmp != null && !cmp.contains("LootTable")) {
                 Item i = stack.getItem();
-                if(i == Registry.SAFE_ITEM.get()){
+                if(i == ModRegistry.SAFE_ITEM.get()){
                     DUMMY_SAFE_TILE.load(DEFAULT_SAFE, cmp);
                     PlayerEntity player = Minecraft.getInstance().player;
                     if(player == null || DUMMY_SAFE_TILE.canPlayerOpen(Minecraft.getInstance().player,false)){
                         doRenderTooltip(event, DUMMY_SAFE_TILE, DUMMY_SAFE_TILE.getContainerSize());
                     }
 
-                }else if(i == Registry.SACK_ITEM.get()){
+                }else if(i == ModRegistry.SACK_ITEM.get()){
                     DUMMY_SACK_TILE.load(DEFAULT_SACK, cmp);
                     doRenderTooltip(event, DUMMY_SACK_TILE, DUMMY_SACK_TILE.getUnlockedSlots());
                 }

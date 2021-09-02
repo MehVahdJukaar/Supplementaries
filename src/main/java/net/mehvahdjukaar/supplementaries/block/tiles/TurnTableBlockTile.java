@@ -5,7 +5,7 @@ import net.mehvahdjukaar.supplementaries.block.blocks.PulleyBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.SignPostBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.TurnTableBlock;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -33,7 +33,7 @@ public class TurnTableBlockTile extends TileEntity implements ITickableTileEntit
     // private long tickedGameTime;
     public int cat = 0;
     public TurnTableBlockTile() {
-        super(Registry.TURN_TABLE_TILE.get());
+        super(ModRegistry.TURN_TABLE_TILE.get());
     }
 
     public void tryRotate() {

@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.curios.SupplementariesCuriosPlugin;
 import net.mehvahdjukaar.supplementaries.items.KeyItem;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -27,7 +27,7 @@ public class KeyLockableTile extends TileEntity {
     public String password = null;
 
     public KeyLockableTile() {
-        super(Registry.KEY_LOCKABLE_TILE.get());
+        super(ModRegistry.KEY_LOCKABLE_TILE.get());
     }
 
     public void setPassword(String password) {

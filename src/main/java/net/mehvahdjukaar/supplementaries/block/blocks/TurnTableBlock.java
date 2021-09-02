@@ -4,7 +4,7 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.TurnTableBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -178,7 +178,7 @@ public class TurnTableBlock extends Block {
                         TurnTableBlockTile table = ((TurnTableBlockTile) te);
                         if(table.cat==0) {
                             ((TurnTableBlockTile) te).cat = 20*20;
-                            world.playSound(null, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, Registry.TOM_SOUND.get(), SoundCategory.BLOCKS, 0.85f, 1);
+                            world.playSound(null, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, ModRegistry.TOM_SOUND.get(), SoundCategory.BLOCKS, 0.85f, 1);
                         }
                     }
                 }

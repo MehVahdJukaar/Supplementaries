@@ -15,7 +15,7 @@ import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.SendLoginMessagePacket;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ChainBlock;
@@ -43,7 +43,8 @@ import net.minecraftforge.fml.network.PacketDistributor;
 
 public class ServerEvents {
 
-    @SubscribeEvent(priority = EventPriority.HIGH)
+    //block placement should stay low in priority to allow other more important mod interaction that use the event
+    @SubscribeEvent(priority = EventPriority.LOW)
     public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
         PlayerEntity player = event.getPlayer();
         if(player.isSpectator())return;
@@ -63,7 +64,7 @@ public class ServerEvents {
             //directional cake conversion
             if (ServerConfigs.cached.DIRECTIONAL_CAKE && blockstate == Blocks.CAKE.defaultBlockState() &&
                     !(ServerConfigs.cached.DOUBLE_CAKE_PLACEMENT && i == Items.CAKE)) {
-                world.setBlock(pos, Registry.DIRECTIONAL_CAKE.get().defaultBlockState(), 4);
+                world.setBlock(pos, ModRegistry.DIRECTIONAL_CAKE.get().defaultBlockState(), 4);
                 BlockRayTraceResult raytrace = new BlockRayTraceResult(
                         new Vector3d(pos.getX(), pos.getY(), pos.getZ()), event.getFace(), pos, false);
 
@@ -86,12 +87,12 @@ public class ServerEvents {
             }
         }
 
+        //others handled here
         ItemsOverrideHandler.tryPerformOverride(event);
 
     }
 
-    //bricks
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOW)
     public static void onRightClickItem(PlayerInteractEvent.RightClickItem event) {
         PlayerEntity playerIn = event.getPlayer();
         ItemStack itemstack = playerIn.getItemInHand(event.getHand());
@@ -137,7 +138,7 @@ public class ServerEvents {
         BlockPos pos = context.getClickedPos();
         if (ServerConfigs.cached.RAKED_GRAVEL){
             if(world.getBlockState(pos).is(Blocks.GRAVEL)){
-                BlockState raked = Registry.RAKED_GRAVEL.get().defaultBlockState();
+                BlockState raked = ModRegistry.RAKED_GRAVEL.get().defaultBlockState();
                 if(raked.canSurvive(world,pos)){
                     world.setBlock(pos, RakedGravelBlock.getConnectedState(raked,world,pos,context.getHorizontalDirection()),11);
                     world.playSound(context.getPlayer(), pos, SoundEvents.HOE_TILL, SoundCategory.BLOCKS, 1.0F, 1.0F);

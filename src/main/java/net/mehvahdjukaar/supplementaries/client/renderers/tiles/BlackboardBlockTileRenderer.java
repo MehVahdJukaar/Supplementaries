@@ -29,7 +29,7 @@ public class BlackboardBlockTileRenderer extends TileEntityRenderer<BlackboardBl
         float yaw = -dir.toYRot();
         Vector3d cameraPos = this.renderer.camera.getPosition();
         BlockPos pos = tile.getBlockPos();
-        if(LOD.isOutOfFocus(cameraPos, pos, yaw, dir, 6/16f))return;
+        if(LOD.isOutOfFocus(cameraPos, pos, yaw, 0, dir, 6/16f))return;
 
         int lu = combinedLightIn & '\uffff';
         int lv = combinedLightIn >> 16 & '\uffff';

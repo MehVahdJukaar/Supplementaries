@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.CrackedBellBlock;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.memory.MemoryModuleType;
 import net.minecraft.particles.ParticleTypes;
@@ -25,7 +25,7 @@ import java.util.List;
 
 public class CrackedBellBlockTile extends TileEntity implements ITickableTileEntity {
     public CrackedBellBlockTile() {
-        super(Registry.CRACKED_BELL_TILE.get());
+        super(ModRegistry.CRACKED_BELL_TILE.get());
     }
     private long lastRingTimestamp;
     public int ticks;

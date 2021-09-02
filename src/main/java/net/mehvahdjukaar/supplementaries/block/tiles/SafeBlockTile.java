@@ -4,7 +4,7 @@ import net.mehvahdjukaar.supplementaries.block.blocks.SackBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.SafeBlock;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -49,7 +49,7 @@ public class SafeBlockTile extends LockableLootTileEntity implements ISidedInven
     public UUID owner = null;
 
     public SafeBlockTile() {
-        super(Registry.SAFE_TILE.get());
+        super(ModRegistry.SAFE_TILE.get());
     }
 
     @Override

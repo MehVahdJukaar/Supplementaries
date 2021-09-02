@@ -4,7 +4,7 @@ import net.mehvahdjukaar.supplementaries.block.blocks.BellowsBlock;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FireBlock;
@@ -36,7 +36,7 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
     public boolean isPressed = false;
 
     public BellowsBlockTile() {
-        super(Registry.BELLOWS_TILE.get());
+        super(ModRegistry.BELLOWS_TILE.get());
     }
 
     @Override

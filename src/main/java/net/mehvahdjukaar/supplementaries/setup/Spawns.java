@@ -36,7 +36,7 @@ public class Spawns {
                         int max = Math.max(min,ServerConfigs.spawn.FIREFLY_MAX.get());
 
                         event.getSpawns().getSpawner(EntityClassification.AMBIENT).add(new MobSpawnInfo.Spawners(
-                                Registry.FIREFLY_TYPE.get(), ServerConfigs.spawn.FIREFLY_WEIGHT.get(),
+                                ModRegistry.FIREFLY_TYPE.get(), ServerConfigs.spawn.FIREFLY_WEIGHT.get(),
                                 min,max));
                     }
 
@@ -48,7 +48,7 @@ public class Spawns {
     public static void registerSpawningStuff(){
 
         if(RegistryConfigs.reg.FIREFLY_ENABLED.get()) {
-            EntitySpawnPlacementRegistry.register(Registry.FIREFLY_TYPE.get(), EntitySpawnPlacementRegistry.PlacementType.NO_RESTRICTIONS,
+            EntitySpawnPlacementRegistry.register(ModRegistry.FIREFLY_TYPE.get(), EntitySpawnPlacementRegistry.PlacementType.NO_RESTRICTIONS,
                     Heightmap.Type.MOTION_BLOCKING, FireflyEntity::canSpawnOn);
         }
     }

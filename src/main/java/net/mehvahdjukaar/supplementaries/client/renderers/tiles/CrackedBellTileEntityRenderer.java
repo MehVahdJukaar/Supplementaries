@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.mehvahdjukaar.supplementaries.block.tiles.CrackedBellBlockTile;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
@@ -22,7 +22,7 @@ public class CrackedBellTileEntityRenderer extends TileEntityRenderer<CrackedBel
     public CrackedBellTileEntityRenderer(TileEntityRendererDispatcher dispatcher) {
         super(dispatcher);
         blockRenderer = Minecraft.getInstance().getBlockRenderer();
-        floorBell = Registry.CRACKED_BELL.get().defaultBlockState();
+        floorBell = ModRegistry.CRACKED_BELL.get().defaultBlockState();
     }
 
     public void render(CrackedBellBlockTile tile, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {

@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.FodderBlock;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.MobEntity;
@@ -43,7 +43,7 @@ public abstract class EatGrassGoalMixin extends Goal {
             BlockPos blockpos = this.mob.blockPosition().below();
             if (IS_TALL_GRASS.test(this.level.getBlockState(blockpos.above())))return;
             if (this.level.getBlockState(blockpos).getBlock() instanceof FodderBlock) {
-                this.level.levelEvent(2001, blockpos, Block.getId(Registry.FODDER.get().defaultBlockState()));
+                this.level.levelEvent(2001, blockpos, Block.getId(ModRegistry.FODDER.get().defaultBlockState()));
                 this.mob.ate();
                 this.eatAnimationTick = Math.max(0, this.eatAnimationTick - 1);
                 info.cancel();

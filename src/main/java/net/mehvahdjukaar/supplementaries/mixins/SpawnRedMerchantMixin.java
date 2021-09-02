@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.entities.RedMerchantEntity;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -71,7 +71,7 @@ public abstract class SpawnRedMerchantMixin {
                     if (spawnPos != null && this.hasEnoughSpace(world, spawnPos)) {
                         if (!world.getBiomeName(spawnPos).equals(Optional.of(Biomes.THE_VOID))) {
 
-                            RedMerchantEntity trader = Registry.RED_MERCHANT_TYPE.get().spawn(world, null, null, null, spawnPos, SpawnReason.EVENT, false, false);
+                            RedMerchantEntity trader = ModRegistry.RED_MERCHANT_TYPE.get().spawn(world, null, null, null, spawnPos, SpawnReason.EVENT, false, false);
                             if (trader != null) {
                                 this.serverLevelData.setWanderingTraderId(trader.getUUID());
                                 int lifetime = 25000;

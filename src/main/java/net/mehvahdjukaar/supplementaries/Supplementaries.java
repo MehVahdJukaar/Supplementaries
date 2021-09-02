@@ -6,8 +6,8 @@ import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.datagen.RecipeCondition;
 import net.mehvahdjukaar.supplementaries.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.setup.ClientSetup;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModSetup;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
 import net.mehvahdjukaar.supplementaries.world.structures.StructureRegistry;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -37,9 +37,10 @@ public class Supplementaries{
     }
 
     public Supplementaries() {
-        //ghast fireball mob griefing
 
-        //TODO: flower box dynamic baked model
+        //GLOBE inv model
+        //TODO: goblet & jars dynamic baked model
+        //ghast fireball mob griefing
 
         //Bamboo spikes damage fall
 
@@ -47,13 +48,11 @@ public class Supplementaries{
 
         //TODO: fix tint breaking particle like grass block
 
-        //TODO: add bomb loot table
-
         //TODO: replace soft fluid system with forge caps to itemstacks and register actual forge fluids
 
         //TODO: reworkd ItemDisplayTile with proper capability usage
 
-        //TODO: bugs: bell ropes, brewing starnd colors, wall laerns model
+        //TODO: bugs: bell ropes, brewing starnd colors
 
         //TODO: notice board pages, rewrite inventory cap
 
@@ -86,7 +85,7 @@ public class Supplementaries{
 
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        Registry.init(bus);
+        ModRegistry.init(bus);
 
         StructureRegistry.init(bus);
 

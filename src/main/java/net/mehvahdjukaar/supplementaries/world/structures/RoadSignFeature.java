@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.world.structures;
 
 import com.mojang.serialization.Codec;
 import net.mehvahdjukaar.supplementaries.block.blocks.StructureTempBlock;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
@@ -99,7 +99,7 @@ public class RoadSignFeature extends Feature<NoFeatureConfig> {
                 if(Math.abs(i)==2&&Math.abs(j)==2)continue;
                 for (int k = 1; k <= 4; ++k) {
                     if((Math.abs(i)==2||Math.abs(j)==2)&&k==1)continue;
-                    reader.setBlock(pos.offset(i, k, j),Registry.STRUCTURE_TEMP.get().defaultBlockState(), 2);
+                    reader.setBlock(pos.offset(i, k, j), ModRegistry.STRUCTURE_TEMP.get().defaultBlockState(), 2);
                 }
             }
         }
@@ -134,7 +134,7 @@ public class RoadSignFeature extends Feature<NoFeatureConfig> {
         reader.setBlock(pos, this.fence,2);
         pos = pos.above();
         reader.setBlock(pos, this.fence,2);
-        reader.setBlock(pos.above(), Registry.BLOCK_GENERATOR.get().defaultBlockState(),2);
+        reader.setBlock(pos.above(), ModRegistry.BLOCK_GENERATOR.get().defaultBlockState(),2);
 
 
 

@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.blocks.FlagBlock;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemStack;
@@ -44,7 +44,7 @@ public class FlagBlockTile extends TileEntity implements INameable {
     private List<Pair<BannerPattern, DyeColor>> patterns;
 
     public FlagBlockTile() {
-        super(Registry.FLAG_TILE.get());
+        super(ModRegistry.FLAG_TILE.get());
     }
 
     public FlagBlockTile(DyeColor color) {

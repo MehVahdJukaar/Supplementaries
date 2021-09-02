@@ -16,7 +16,6 @@ import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
 
@@ -28,10 +27,10 @@ public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockT
     public static final ModelRenderer signModel = new ModelRenderer(64, 16, 0, 0);
    //TODO: make other tiles this way
     static {
-        signModel.setPos(0.0F, -4.0F, 0.0F);
-        signModel.texOffs(0, 10).addBox(-12.0F, -1.0F, -3.0F, 2.0F, 1.0F, 1.0F, 0.0F, false);
-        signModel.texOffs(0, 0).addBox(-8.0F, -3.0F, -3.0F, 16.0F, 5.0F, 1.0F, 0.0F, false);
-        signModel.texOffs(0, 6).addBox(-10.0F, -2.0F, -3.0F, 2.0F, 3.0F, 1.0F, 0.0F, false);
+        signModel.setPos(0.0F, 0.0F, 0.0F);
+        signModel.texOffs(0, 10).addBox(-12.0F, -5.0F, -3.0F, 2.0F, 1.0F, 1.0F, 0.0F, false);
+        signModel.texOffs(0, 0).addBox(-8.0F, -7.0F, -3.0F, 16.0F, 5.0F, 1.0F, 0.0F, false);
+        signModel.texOffs(0, 6).addBox(-10.0F, -6.0F, -3.0F, 2.0F, 3.0F, 1.0F, 0.0F, false);
     }
 
     public SignPostBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
@@ -50,15 +49,12 @@ public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockT
 
         LOD lod = new LOD(cameraPos,pos);
 
-        if(!lod.isFar())return;
-
-
         boolean up = tile.up;
         boolean down = tile.down;
         //render signs
         if(up||down){
 
-            float relAngle = (float) (MathHelper.atan2(cameraPos.x-(pos.getX()+0.5f),cameraPos.z-(pos.getZ()+0.5f))*180/Math.PI);
+            float relAngle = LOD.getRelativeAngle(cameraPos, pos);
 
             // sign code
             FontRenderer fontrenderer = this.renderer.getFont();
@@ -97,7 +93,7 @@ public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockT
                 matrixStackIn.popPose();
 
                 //culling
-                if(lod.isNear() && MathHelper.degreesDifference(relAngle,tile.yawUp)>-2) {
+                if(lod.isNear() && LOD.isOutOfFocus(relAngle,tile.yawUp+90,2)) {
 
                     //text up
                     matrixStackIn.translate(-0.03125 * o, 0.28125, 0.1875 + 0.005);
@@ -105,8 +101,8 @@ public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockT
                     matrixStackIn.translate(0, 1, 0);
 
 
-                    IReorderingProcessor ireorderingprocessor = tile.textHolder.getRenderText(0, (p_243502_1_) -> {
-                        List<IReorderingProcessor> list = fontrenderer.split(p_243502_1_, 90);
+                    IReorderingProcessor ireorderingprocessor = tile.textHolder.getRenderText(0, (t) -> {
+                        List<IReorderingProcessor> list = fontrenderer.split(t, 90);
                         return list.isEmpty() ? IReorderingProcessor.EMPTY : list.get(0);
                     });
                     if (ireorderingprocessor != null) {
@@ -142,7 +138,7 @@ public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockT
 
                 matrixStackIn.popPose();
 
-                if(lod.isNear() && MathHelper.degreesDifference(relAngle,tile.yawDown)>-2) {
+                if(lod.isNear() && LOD.isOutOfFocus(relAngle,tile.yawDown+90,2)) {
 
                     //text down
                     matrixStackIn.translate(-0.03125 * o, 0.28125, 0.1875 + 0.005);

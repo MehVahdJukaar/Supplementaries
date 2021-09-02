@@ -48,7 +48,7 @@ public class UpdateServerTextHolderPacket {
                 TileEntity tileentity = world.getBlockEntity(message.pos);
                 if (tileentity instanceof ITextHolder) {
                     ITextHolder te = (ITextHolder) tileentity;
-                    if(te.getTextHolder().lines == message.lines){
+                    if(te.getTextHolder().size == message.lines){
                         for (int i = 0; i < message.lines; ++i) {
                             te.getTextHolder().setText(i,message.signText[i]);
                         }

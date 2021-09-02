@@ -10,7 +10,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.items.BambooSpikesTippedItem;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BannerBlock;
 import net.minecraft.item.BannerPatternItem;
 import net.minecraft.item.DyeColor;
@@ -41,7 +41,7 @@ public class SupplementariesJEIPlugin implements IModPlugin {
 
     @Override
     public void registerItemSubtypes(ISubtypeRegistration registration) {
-        registration.registerSubtypeInterpreter(Registry.BAMBOO_SPIKES_TIPPED_ITEM.get(), SpikesSubtypeInterpreter.INSTANCE);
+        registration.registerSubtypeInterpreter(ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get(), SpikesSubtypeInterpreter.INSTANCE);
     }
 
     public static class SpikesSubtypeInterpreter implements ISubtypeInterpreter {
@@ -81,7 +81,7 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         List<IRecipe<?>> recipes = new ArrayList<>();
         String group = "supplementaries.jei.rope_arrow";
 
-        ItemStack ropeArrow = new ItemStack(Registry.ROPE_ARROW_ITEM.get());
+        ItemStack ropeArrow = new ItemStack(ModRegistry.ROPE_ARROW_ITEM.get());
         ropeArrow.setDamageValue(ropeArrow.getMaxDamage()-4);
 
         Ingredient arrow = Ingredient.of(new ItemStack(Items.ARROW));
@@ -97,7 +97,7 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         List<IRecipe<?>> recipes = new ArrayList<>();
         String group = "supplementaries.jei.rope_arrow";
 
-        ItemStack ropeArrow = new ItemStack(Registry.ROPE_ARROW_ITEM.get());
+        ItemStack ropeArrow = new ItemStack(ModRegistry.ROPE_ARROW_ITEM.get());
         ItemStack ropeArrow2 = ropeArrow.copy();
         ropeArrow2.setDamageValue(8);
 
@@ -124,7 +124,7 @@ public class SupplementariesJEIPlugin implements IModPlugin {
     }
 
     private static ShapelessRecipe makeSpikeRecipe(Potion potionType, String group){
-        ItemStack spikes = new ItemStack(Registry.BAMBOO_SPIKES_ITEM.get());
+        ItemStack spikes = new ItemStack(ModRegistry.BAMBOO_SPIKES_ITEM.get());
         ItemStack lingeringPotion = PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), potionType);
         Ingredient spikeIngredient = Ingredient.of(spikes);
         Ingredient potionIngredient = Ingredient.of(lingeringPotion);
@@ -147,7 +147,7 @@ public class SupplementariesJEIPlugin implements IModPlugin {
 
 
             ItemStack banner = new ItemStack(BannerBlock.byColor(color).asItem());
-            ItemStack fullFlag = new ItemStack(Registry.FLAGS.get(color).get());
+            ItemStack fullFlag = new ItemStack(ModRegistry.FLAGS.get(color).get());
 
             ListNBT list = new ListNBT();
             CompoundNBT compoundnbt1 = new CompoundNBT();
@@ -160,7 +160,7 @@ public class SupplementariesJEIPlugin implements IModPlugin {
             CompoundNBT com2 = fullFlag.getOrCreateTagElement("BlockEntityTag");
             com2.put("Patterns", list);
 
-            Ingredient emptyFlag = Ingredient.of(new ItemStack(Registry.FLAGS.get(color).get()));
+            Ingredient emptyFlag = Ingredient.of(new ItemStack(ModRegistry.FLAGS.get(color).get()));
             NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, emptyFlag, Ingredient.of(banner));
             ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "jei_flag_from_banner");
 
@@ -176,7 +176,7 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         List<IRecipe<?>> recipes = new ArrayList<>();
         String group = "supplementaries.jei.blackboard_duplicate";
 
-        ItemStack blackboard = new ItemStack(Registry.BLACKBOARD_ITEM.get());
+        ItemStack blackboard = new ItemStack(ModRegistry.BLACKBOARD_ITEM.get());
         CompoundNBT com = new CompoundNBT();
         byte[][] pixels = new byte[][]{
                 {0,0,0,0,0,1,1,0,0,0,0,1,1,1,0,0},
@@ -198,7 +198,7 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         com.putLongArray("Pixels", BlackboardBlockTile.packPixels(pixels));
         blackboard.addTagElement("BlockEntityTag", com);
 
-        Ingredient emptyBoard = Ingredient.of(new ItemStack(Registry.BLACKBOARD_ITEM.get()));
+        Ingredient emptyBoard = Ingredient.of(new ItemStack(ModRegistry.BLACKBOARD_ITEM.get()));
         Ingredient fullBoard = Ingredient.of(blackboard);
         NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, emptyBoard, fullBoard);
         ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "jei_blackboard_duplicate");
@@ -209,7 +209,7 @@ public class SupplementariesJEIPlugin implements IModPlugin {
     }
 
     public static ItemStack getSans(){
-        ItemStack blackboard = new ItemStack(Registry.BLACKBOARD_ITEM.get());
+        ItemStack blackboard = new ItemStack(ModRegistry.BLACKBOARD_ITEM.get());
         CompoundNBT com = new CompoundNBT();
 
         byte[][] pixels = new byte[][]{
@@ -245,7 +245,7 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         Ingredient fullBoard = Ingredient.of(blackboard);
         NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, emptyBoard, fullBoard);
         ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "jei_blackboard_clear");
-        ShapelessRecipe recipe = new ShapelessRecipe(id, group, new ItemStack(Registry.BLACKBOARD_ITEM.get()), inputs);
+        ShapelessRecipe recipe = new ShapelessRecipe(id, group, new ItemStack(ModRegistry.BLACKBOARD_ITEM.get()), inputs);
         recipes.add(recipe);
         return recipes;
 

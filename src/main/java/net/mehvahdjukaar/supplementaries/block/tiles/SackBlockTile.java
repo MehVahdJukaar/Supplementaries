@@ -4,7 +4,7 @@ import net.mehvahdjukaar.supplementaries.block.blocks.SackBlock;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.inventories.SackContainer;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -41,7 +41,7 @@ public class SackBlockTile extends LockableLootTileEntity implements ISidedInven
     private int numPlayersUsing;
 
     public SackBlockTile() {
-        super(Registry.SACK_TILE.get());
+        super(ModRegistry.SACK_TILE.get());
     }
 
     @Override

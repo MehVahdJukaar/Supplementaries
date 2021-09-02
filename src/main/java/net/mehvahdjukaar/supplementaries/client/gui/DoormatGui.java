@@ -102,7 +102,7 @@ public class DoormatGui extends Screen {
     public void removed() {
         this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
         // send new text to the server
-        NetworkHandler.INSTANCE.sendToServer(new UpdateServerTextHolderPacket(this.tileSign.getBlockPos(), this.tileSign.textHolder.signText, this.tileSign.textHolder.lines));
+        NetworkHandler.INSTANCE.sendToServer(new UpdateServerTextHolderPacket(this.tileSign.getBlockPos(), this.tileSign.textHolder.signText, this.tileSign.textHolder.size));
         //this.tileSign.setEditable(true);
     }
 
@@ -163,7 +163,7 @@ public class DoormatGui extends Screen {
         int i = this.tileSign.textHolder.textColor.getTextColor();
         int j = this.textInputUtil.getCursorPos();
         int k = this.textInputUtil.getSelectionPos();
-        int l = this.editLine * 15 - this.tileSign.textHolder.lines * 5;
+        int l = this.editLine * 15 - this.tileSign.textHolder.size * 5;
 
         for(int i1 = 0; i1 < this.cachedLines.length; ++i1) {
             String s = this.cachedLines[i1];

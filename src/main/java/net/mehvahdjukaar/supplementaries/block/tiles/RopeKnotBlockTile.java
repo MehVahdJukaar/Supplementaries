@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
 
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.Blocks;
 import net.minecraftforge.common.util.Constants;
 
@@ -10,7 +10,7 @@ public class RopeKnotBlockTile extends MimicBlockTile {
 
 
     public RopeKnotBlockTile() {
-        super(Registry.ROPE_KNOT_TILE.get());
+        super(ModRegistry.ROPE_KNOT_TILE.get());
         this.setHeldBlock(Blocks.OAK_FENCE.defaultBlockState());
     }
 

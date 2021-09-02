@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.particles;
 
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.client.particle.IParticleFactory;
 import net.minecraft.client.particle.MetaParticle;
 import net.minecraft.client.particle.Particle;
@@ -26,7 +26,7 @@ public class BombExplosionEmitterParticle extends MetaParticle {
             double d0 = this.x + (this.random.nextDouble() - this.random.nextDouble()) * radius;
             double d1 = this.y + (this.random.nextDouble() - this.random.nextDouble()) * radius;
             double d2 = this.z + (this.random.nextDouble() - this.random.nextDouble()) * radius;
-            this.level.addParticle(Registry.BOMB_EXPLOSION_PARTICLE.get(), d0, d1, d2, (float)this.timeSinceStart / (float)this.maximumTime, 0.0D, 0.0D);
+            this.level.addParticle(ModRegistry.BOMB_EXPLOSION_PARTICLE.get(), d0, d1, d2, (float)this.timeSinceStart / (float)this.maximumTime, 0.0D, 0.0D);
         }
 
         ++this.timeSinceStart;

@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.tiles.PistonLauncherArmBlockTile;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.PushReaction;
@@ -123,7 +123,7 @@ public class PistonLauncherBlock extends Block {
                  */
                 if (flag2) {
                     world.setBlock(_bp,
-                            Registry.PISTON_LAUNCHER_ARM.get().defaultBlockState().setValue(PistonLauncherArmBlock.EXTENDING, true).setValue(FACING, state.getValue(FACING)),
+                            ModRegistry.PISTON_LAUNCHER_ARM.get().defaultBlockState().setValue(PistonLauncherArmBlock.EXTENDING, true).setValue(FACING, state.getValue(FACING)),
                             3);
                     world.setBlockAndUpdate(pos, state.setValue(EXTENDED, true));
                     world.playSound(null, pos, SoundEvents.PISTON_EXTEND, SoundCategory.BLOCKS, 0.53F,
@@ -134,7 +134,7 @@ public class PistonLauncherBlock extends Block {
                 if (bs.getBlock() instanceof PistonLauncherHeadBlock && state.getValue(FACING) == bs.getValue(FACING)) {
                     // world.setBlockState(_bp, Blocks.AIR.getDefaultState(), 3);
                     world.setBlock(_bp,
-                            Registry.PISTON_LAUNCHER_ARM.get().defaultBlockState().setValue(PistonLauncherArmBlock.EXTENDING, false).setValue(FACING, state.getValue(FACING)),
+                            ModRegistry.PISTON_LAUNCHER_ARM.get().defaultBlockState().setValue(PistonLauncherArmBlock.EXTENDING, false).setValue(FACING, state.getValue(FACING)),
                             3);
                     world.playSound(null, pos, SoundEvents.PISTON_CONTRACT, SoundCategory.BLOCKS, 0.53F,
                             world.random.nextFloat() * 0.15F + 0.45F);

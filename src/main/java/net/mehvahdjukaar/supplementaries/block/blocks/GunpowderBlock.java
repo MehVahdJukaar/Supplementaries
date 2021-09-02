@@ -6,7 +6,7 @@ import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.util.ILightable;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.decorativeblocks.DecoBlocksCompatRegistry;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.world.explosion.GunpowderExplosion;
 import net.minecraft.block.*;
 import net.minecraft.entity.LivingEntity;
@@ -63,7 +63,7 @@ public class GunpowderBlock extends LightUpBlock {
 
     public static final int DELAY = 2;
 
-    public static final int SPREAD_AGE = 3;
+    public static final int SPREAD_AGE = 2;
 
     public GunpowderBlock(Properties properties) {
         super(properties);
@@ -434,7 +434,7 @@ public class GunpowderBlock extends LightUpBlock {
                 ((World) world).blockEvent(pos, this, 0, 0);
             }
             world.setBlock(pos, toggleLitState(state, true), 11);
-            world.playSound(null, pos, Registry.GUNPOWDER_IGNITE.get(), SoundCategory.BLOCKS, 2.0f,
+            world.playSound(null, pos, ModRegistry.GUNPOWDER_IGNITE.get(), SoundCategory.BLOCKS, 2.0f,
                     1.9f + world.getRandom().nextFloat() * 0.1f);
         }
     }
@@ -470,7 +470,8 @@ public class GunpowderBlock extends LightUpBlock {
         BlockState state = world.getBlockState(pos);
         Block b = state.getBlock();
         //TODO: add tag
-        if (b instanceof FireBlock || b instanceof MagmaBlock || b == Registry.BLAZE_ROD_BLOCK.get() || b == Registry.MAGMA_CREAM_BLOCK.get())
+        if (b instanceof FireBlock || b instanceof MagmaBlock || b instanceof TorchBlock ||
+                b == ModRegistry.BLAZE_ROD_BLOCK.get() || b == ModRegistry.MAGMA_CREAM_BLOCK.get())
             return true;
         if (b instanceof CampfireBlock || (CompatHandler.deco_blocks && DecoBlocksCompatRegistry.isBrazier(b))) {
             return state.getValue(CampfireBlock.LIT);

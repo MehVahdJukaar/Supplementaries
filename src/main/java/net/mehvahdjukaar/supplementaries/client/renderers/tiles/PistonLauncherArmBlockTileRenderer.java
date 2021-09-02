@@ -4,7 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import net.mehvahdjukaar.supplementaries.block.blocks.PistonLauncherHeadBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.PistonLauncherArmBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
@@ -35,7 +35,7 @@ public class PistonLauncherArmBlockTileRenderer extends TileEntityRenderer<Pisto
         matrixStackIn.translate(-0.5, -0.5, -0.5);
         matrixStackIn.translate(0, MathHelper.lerp(partialTicks, tile.prevOffset, tile.offset), 0);
         boolean flag1 = tile.getExtending() == tile.age < 2;
-        BlockState state = Registry.PISTON_LAUNCHER_HEAD.get().defaultBlockState().setValue(PistonLauncherHeadBlock.FACING, Direction.UP).setValue(BlockStateProperties.SHORT, flag1);
+        BlockState state = ModRegistry.PISTON_LAUNCHER_HEAD.get().defaultBlockState().setValue(PistonLauncherHeadBlock.FACING, Direction.UP).setValue(BlockStateProperties.SHORT, flag1);
         //RendererUtil.renderBlockPlus(state, matrixStackIn, bufferIn, blockRenderer, tile.getWorld(), tile.getPos());
         blockRenderer.renderBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
         matrixStackIn.popPose();

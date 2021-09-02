@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 
 
 import net.mehvahdjukaar.supplementaries.items.BambooSpikesTippedItem;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
@@ -36,7 +36,7 @@ public class BambooSpikesBlockTile extends TileEntity {
 
 
     public BambooSpikesBlockTile() {
-        super(Registry.BAMBOO_SPIKES_TILE.get());
+        super(ModRegistry.BAMBOO_SPIKES_TILE.get());
     }
 
     public int getColor(){
@@ -126,7 +126,7 @@ public class BambooSpikesBlockTile extends TileEntity {
             stack.setDamageValue(stack.getMaxDamage() - this.charges);
             return stack;
         }
-        return new ItemStack(Registry.BAMBOO_SPIKES_ITEM.get());
+        return new ItemStack(ModRegistry.BAMBOO_SPIKES_ITEM.get());
     }
 
     @Override

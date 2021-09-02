@@ -4,7 +4,7 @@ import net.mehvahdjukaar.selene.fluids.ISoftFluidHolder;
 import net.mehvahdjukaar.selene.fluids.SoftFluidHolder;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -19,7 +19,7 @@ public class GobletBlockTile extends TileEntity implements ISoftFluidHolder {
     public SoftFluidHolder fluidHolder;
 
     public GobletBlockTile() {
-        super(Registry.GOBLET_TILE.get());
+        super(ModRegistry.GOBLET_TILE.get());
         int CAPACITY = 1;
         this.fluidHolder = new SoftFluidHolder(CAPACITY);
     }

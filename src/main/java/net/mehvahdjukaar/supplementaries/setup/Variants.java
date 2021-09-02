@@ -50,7 +50,7 @@ public class Variants {
 
         for(IWoodType wood : WoodTypes.TYPES.values()){
             String name = getHangingSignName(wood);
-            map.put(wood, Registry.BLOCKS.register(name, ()-> new HangingSignBlock(
+            map.put(wood, ModRegistry.BLOCKS.register(name, ()-> new HangingSignBlock(
                     AbstractBlock.Properties.of(wood.getMaterial(), wood.getColor())
                             .strength(2f, 3f)
                             .sound(SoundType.WOOD)
@@ -67,16 +67,16 @@ public class Variants {
 
         for(IWoodType wood : WoodTypes.TYPES.values()){
             String name = getHangingSignName(wood);
-            map.put(wood, Registry.ITEMS.register(name, ()-> new BurnableBlockItem(Registry.HANGING_SIGNS.get(wood).get(),
+            map.put(wood, ModRegistry.ITEMS.register(name, ()-> new BurnableBlockItem(ModRegistry.HANGING_SIGNS.get(wood).get(),
                     new Item.Properties().tab(!hasWoodInstalled(wood)?null:
-                            Registry.getTab(ItemGroup.TAB_DECORATIONS,Registry.HANGING_SIGN_NAME)),200
+                            ModRegistry.getTab(ItemGroup.TAB_DECORATIONS, ModRegistry.HANGING_SIGN_NAME)),200
             )));
         }
         return map;
     }
 
     public static String getHangingSignName(IWoodType type){
-        return Registry.HANGING_SIGN_NAME+"_"+type.getRegName();
+        return ModRegistry.HANGING_SIGN_NAME+"_"+type.getRegName();
     }
 
     //sign posts
@@ -85,15 +85,15 @@ public class Variants {
 
         for(IWoodType wood : WoodTypes.TYPES.values()){
             String name = getSignPostName(wood);
-            map.put(wood, Registry.ITEMS.register(name, ()-> new SignPostItem(
+            map.put(wood, ModRegistry.ITEMS.register(name, ()-> new SignPostItem(
                     new Item.Properties().tab(!hasWoodInstalled(wood)?null:
-                            Registry.getTab(ItemGroup.TAB_DECORATIONS,Registry.SIGN_POST_NAME)),wood
+                            ModRegistry.getTab(ItemGroup.TAB_DECORATIONS, ModRegistry.SIGN_POST_NAME)),wood
             )));
         }
         return map;
     }
     public static String getSignPostName(IWoodType type){
-        return Registry.SIGN_POST_NAME+"_"+type.getRegName();
+        return ModRegistry.SIGN_POST_NAME+"_"+type.getRegName();
     }
 
     //flags
@@ -103,7 +103,7 @@ public class Variants {
 
         for(DyeColor color : DyeColor.values()){
             String name = baseName+"_"+color.getName();
-            map.put(color, Registry.BLOCKS.register(name, ()-> new FlagBlock(color,
+            map.put(color, ModRegistry.BLOCKS.register(name, ()-> new FlagBlock(color,
                     AbstractBlock.Properties.of(Material.WOOD, color.getMaterialColor())
                             .strength(1.0F)
                             .noOcclusion()
@@ -118,11 +118,11 @@ public class Variants {
 
         for(DyeColor color : DyeColor.values()){
             String name = baseName+"_"+color.getName();
-            map.put(color, Registry.ITEMS.register(name, ()-> new FlagItem(Registry.FLAGS.get(color).get(),
+            map.put(color, ModRegistry.ITEMS.register(name, ()-> new FlagItem(ModRegistry.FLAGS.get(color).get(),
                     new Item.Properties()
                             .stacksTo(16)
                             .setISTER(()-> FlagItemRenderer::new)
-                            .tab(Registry.getTab(ItemGroup.TAB_DECORATIONS,Registry.FLAG_NAME))
+                            .tab(ModRegistry.getTab(ItemGroup.TAB_DECORATIONS, ModRegistry.FLAG_NAME))
             )));
         }
         return map;
@@ -134,7 +134,7 @@ public class Variants {
 
         for(DyeColor color : DyeColor.values()){
             String name = baseName+"_"+color.getName();
-            map.put(color, Registry.BLOCKS.register(name, ()-> new CeilingBannerBlock(color,
+            map.put(color, ModRegistry.BLOCKS.register(name, ()-> new CeilingBannerBlock(color,
                     AbstractBlock.Properties.of(Material.WOOD, color.getMaterialColor())
                             .strength(1.0F)
                             .noCollission()
@@ -152,7 +152,7 @@ public class Variants {
         Map<DyeColor, RegistryObject<Item>> map = new HashMap<>();
 
         for(DyeColor color : DyeColor.values()){
-            map.put(color, Registry.regBlockItem(Registry.CEILING_BANNERS.get(color),null));
+            map.put(color, ModRegistry.regBlockItem(ModRegistry.CEILING_BANNERS.get(color),null));
         }
         return map;
     }
@@ -163,7 +163,7 @@ public class Variants {
 
         for(DyeColor color : DyeColor.values()){
             String name = baseName+"_"+color.getName();
-            map.put(color, Registry.BLOCKS.register(name, ()-> new PresentBlock(color,
+            map.put(color, ModRegistry.BLOCKS.register(name, ()-> new PresentBlock(color,
                             AbstractBlock.Properties.of(Material.WOOL, color.getMaterialColor())
                                     .strength(1.0F)
                                     .sound(SoundType.WOOL))
@@ -178,7 +178,7 @@ public class Variants {
         Map<DyeColor, RegistryObject<Item>> map = new HashMap<>();
 
         for(DyeColor color : DyeColor.values()){
-            map.put(color, Registry.regBlockItem(Registry.PRESENTS.get(color),Registry.getTab(ItemGroup.TAB_DECORATIONS, Registry.PRESENT_NAME)));
+            map.put(color, ModRegistry.regBlockItem(ModRegistry.PRESENTS.get(color), ModRegistry.getTab(ItemGroup.TAB_DECORATIONS, ModRegistry.PRESENT_NAME)));
         }
         return map;
     }

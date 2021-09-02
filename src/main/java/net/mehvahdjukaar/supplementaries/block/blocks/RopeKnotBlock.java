@@ -7,7 +7,7 @@ import net.mehvahdjukaar.supplementaries.block.BlockProperties.PostType;
 import net.mehvahdjukaar.supplementaries.block.tiles.RopeKnotBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.IBlockHolder;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
@@ -196,7 +196,7 @@ public class RopeKnotBlock extends MimicBlock implements IWaterLoggable{
             if(state.hasProperty(BlockStateProperties.AXIS)){
                 axis = state.getValue(BlockStateProperties.AXIS);
             }
-            BlockState newState = Registry.ROPE_KNOT.get().defaultBlockState()
+            BlockState newState = ModRegistry.ROPE_KNOT.get().defaultBlockState()
                     .setValue(AXIS,axis).setValue(POST_TYPE,type);
 
             world.setBlockAndUpdate(pos,newState);

@@ -1,9 +1,15 @@
 package net.mehvahdjukaar.supplementaries.client.particles;
 
+import com.mojang.blaze3d.vertex.IVertexBuilder;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.particle.*;
+import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particles.BasicParticleType;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Quaternion;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -17,9 +23,9 @@ public class FeatherParticle extends SpriteTexturedParticle {
     private FeatherParticle(ClientWorld worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double speedX, double speedY, double speedZ) {
         super(worldIn, xCoordIn, yCoordIn, zCoordIn);
         this.quadSize *= 1F + this.random.nextFloat() * 0.2;
-        this.lifetime = 120 + this.random.nextInt(20);
+        this.lifetime = 320 + this.random.nextInt(20);
         this.rotSpeed = 2f * (0.05f + this.random.nextFloat() * 0.08f);
-        this.roll = 0;//this.random.nextFloat() * ((float) Math.PI * 2F);
+        this.animationOffset = (int) ((this.random.nextFloat() * ((float) Math.PI * 2F))/this.rotSpeed);
         //this.xd = speedX + (this.random.nextFloat() * 2.0D - 1.0D) * (double) 0.05F;
         this.yd = speedY; //+ (this.random.nextFloat() * 2.0D - 1.0D) * (double) 0.05F;
         //this.zd = speedZ + (this.random.nextFloat() * 2.0D - 1.0D) * (double) 0.05F;
@@ -53,7 +59,7 @@ public class FeatherParticle extends SpriteTexturedParticle {
             this.yd -= 0.002F;
             this.yd = Math.max(this.yd, -0.0008F); //0.008
 
-            this.oRoll = this.roll;
+
 
 
             if (this.onGround && this.yd > 0) {
@@ -63,32 +69,49 @@ public class FeatherParticle extends SpriteTexturedParticle {
             if (!this.onGround) {
 
                 if (!this.fallingAnim) {
-                    float rot = (float) ((rotOffset + (this.age * this.rotSpeed)) % (2 * Math.PI));
-                    if (this.yd <= 0 && rot > 0 && rot < 0.01 + this.rotSpeed * 2) {
-                        this.oRoll = 0;
-                        this.fallingAnim = true;
-                        this.animationOffset = this.age - 1;
+                    float rot = (float) (((this.age+this.animationOffset) * this.rotSpeed)%(2*Math.PI));
 
+                    if (this.yd <= 0 && rot > 0 && rot < 0.01 + this.rotSpeed * 2) {
+                        this.fallingAnim = true;
+                        if(this.oRoll>6){
+                            //this.oRoll = (float) (this.oRoll - Math.PI*2);
+                        }
+                        this.animationOffset = this.age;
                     }
-                    else{
-                        this.roll =  rot;
-                    }
+
+                    this.oRoll = this.roll;
+                    this.roll =  rot;
+
                 }
 
-                if (this.fallingAnim) {
-                    int ageWithOffset = age-animationOffset;
+                else if (this.fallingAnim) {
+                    int t = age-animationOffset ;
 
-                    float amp = 1;
+                    //0.5
+                    //frequency scaling
+                    double freq = ClientConfigs.general.TEST1.get() - rotSpeed;
 
-                    float w = rotSpeed/amp;
+                    //attenuation
+                    double k = 20*ClientConfigs.general.TEST1.get();;
 
-                    this.roll = rotOffset + MathHelper.sin(ageWithOffset * this.rotSpeed) * amp; //(float) Math.PI * this.rotSpeed * 1.6F;
+                    //minimum amplitude
+                    float min = (float) (freq/2f);
+
+                    float amp = (float) ((freq - min) * Math.exp(-t/k)) + min;
+
+                    //amp(0)
+                    float w = (float) (this.rotSpeed/(freq));
+
+                    this.oRoll = this.roll;
+                    this.roll = MathHelper.sin(t * w) * amp; //(float) Math.PI * this.rotSpeed * 1.6F;
                     /*
                     float amp = 0.5f;
                     if(ageWithOffset < 30){
                         amp += (30 - ageWithOffset)*0.01;
                         this.rotSpeed -= 0.002f;
                     }*/
+
+
                 }
             } else {
                 this.yd = 0.0D;
@@ -96,6 +119,46 @@ public class FeatherParticle extends SpriteTexturedParticle {
         }
     }
 
+
+    public void render(IVertexBuilder builder, ActiveRenderInfo info, float partialTicks) {
+        Vector3d vector3d = info.getPosition();
+        float f = (float)(MathHelper.lerp(partialTicks, this.xo, this.x) - vector3d.x());
+        float f1 = (float)(MathHelper.lerp(partialTicks, this.yo, this.y) - vector3d.y());
+        float f2 = (float)(MathHelper.lerp(partialTicks, this.zo, this.z) - vector3d.z());
+        Quaternion quaternion;
+        if (this.roll == 0.0F) {
+            quaternion = info.rotation();
+        } else {
+            quaternion = new Quaternion(info.rotation());
+            float p = (float) (180/Math.PI);
+            float f3 = MathHelper.rotLerp(partialTicks, (this.rotOffset+this.oRoll)*p,
+                    (this.rotOffset+this.roll)*p);
+            quaternion.mul(Vector3f.ZP.rotation(f3/p));
+        }
+
+        Vector3f vector3f1 = new Vector3f(-1.0F, -1.0F, 0.0F);
+        vector3f1.transform(quaternion);
+        Vector3f[] avector3f = new Vector3f[]{new Vector3f(-1.0F, -1.0F, 0.0F), new Vector3f(-1.0F, 1.0F, 0.0F), new Vector3f(1.0F, 1.0F, 0.0F), new Vector3f(1.0F, -1.0F, 0.0F)};
+        float f4 = this.getQuadSize(partialTicks);
+
+        for(int i = 0; i < 4; ++i) {
+            Vector3f vector3f = avector3f[i];
+            vector3f.transform(quaternion);
+            vector3f.mul(f4);
+            vector3f.add(f, f1, f2);
+        }
+
+        float f7 = this.getU0();
+        float f8 = this.getU1();
+        float f5 = this.getV0();
+        float f6 = this.getV1();
+        int j = this.getLightColor(partialTicks);
+        double offset = 0.125;
+        builder.vertex(avector3f[0].x(), avector3f[0].y()+offset, avector3f[0].z()).uv(f8, f6).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(j).endVertex();
+        builder.vertex(avector3f[1].x(), avector3f[1].y()+offset, avector3f[1].z()).uv(f8, f5).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(j).endVertex();
+        builder.vertex(avector3f[2].x(), avector3f[2].y()+offset, avector3f[2].z()).uv(f7, f5).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(j).endVertex();
+        builder.vertex(avector3f[3].x(), avector3f[3].y()+offset, avector3f[3].z()).uv(f7, f6).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(j).endVertex();
+    }
 
 
     @OnlyIn(Dist.CLIENT)

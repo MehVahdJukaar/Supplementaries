@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.WindVaneBlock;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
@@ -18,7 +18,7 @@ public class WindVaneBlockTile extends TileEntity implements ITickableTileEntity
     private float offset = 0;
 
     public WindVaneBlockTile() {
-        super(Registry.WIND_VANE_TILE.get());
+        super(ModRegistry.WIND_VANE_TILE.get());
 
     }
 

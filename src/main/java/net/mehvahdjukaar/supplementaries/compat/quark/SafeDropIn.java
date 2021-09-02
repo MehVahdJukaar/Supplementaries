@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.compat.quark;
 
 import net.mehvahdjukaar.supplementaries.block.tiles.SafeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.Slot;
@@ -22,7 +22,7 @@ import vazkii.quark.content.management.module.ShulkerBoxRightClickModule;
 public class SafeDropIn extends AbstractDropIn {
 
     private static final SafeBlockTile DUMMY_SAFE_TILE = new SafeBlockTile();
-    private static final BlockState DEFAULT_SAFE = Registry.SACK.get().defaultBlockState();
+    private static final BlockState DEFAULT_SAFE = ModRegistry.SACK.get().defaultBlockState();
 
     public SafeDropIn() {
     }
@@ -35,7 +35,7 @@ public class SafeDropIn extends AbstractDropIn {
                     cmp = cmp.copy();
                     cmp.putString("id", "supplementaries:safe");
                     Item i = sack.getItem();
-                    if (i == Registry.SAFE_ITEM.get()) {
+                    if (i == ModRegistry.SAFE_ITEM.get()) {
 
                         DUMMY_SAFE_TILE.load(DEFAULT_SAFE, cmp);
 

@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.entities;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.JarBlock;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -36,15 +36,15 @@ public class ThrowableBrickEntity extends ProjectileItemEntity{
     }
 
     public ThrowableBrickEntity(World worldIn, LivingEntity throwerIn) {
-        super(Registry.THROWABLE_BRICK.get(), throwerIn, worldIn);
+        super(ModRegistry.THROWABLE_BRICK.get(), throwerIn, worldIn);
     }
 
     public ThrowableBrickEntity(World worldIn, double x, double y, double z) {
-        super(Registry.THROWABLE_BRICK.get(), x, y, z, worldIn);
+        super(ModRegistry.THROWABLE_BRICK.get(), x, y, z, worldIn);
     }
 
     public ThrowableBrickEntity(FMLPlayMessages.SpawnEntity packet, World world) {
-        super(Registry.THROWABLE_BRICK.get(), world);
+        super(ModRegistry.THROWABLE_BRICK.get(), world);
     }
 
     @Override

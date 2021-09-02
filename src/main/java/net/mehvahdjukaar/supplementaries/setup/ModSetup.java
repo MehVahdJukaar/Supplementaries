@@ -23,6 +23,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.BasicTrade;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.TagsUpdatedEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.event.village.WandererTradesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -48,9 +49,9 @@ public class ModSetup {
 
                 Spawns.registerSpawningStuff();
 
-                ComposterBlock.COMPOSTABLES.put(Registry.FLAX_SEEDS_ITEM.get(), 0.3F);
-                ComposterBlock.COMPOSTABLES.put(Registry.FLAX_ITEM.get(), 0.65F);
-                ComposterBlock.COMPOSTABLES.put(Registry.FLAX_BLOCK_ITEM.get(), 1);
+                ComposterBlock.COMPOSTABLES.put(ModRegistry.FLAX_SEEDS_ITEM.get(), 0.3F);
+                ComposterBlock.COMPOSTABLES.put(ModRegistry.FLAX_ITEM.get(), 0.65F);
+                ComposterBlock.COMPOSTABLES.put(ModRegistry.FLAX_BLOCK_ITEM.get(), 1);
 
                 /*
                 List<ItemStack> chickenFood = new ArrayList<>();
@@ -65,13 +66,11 @@ public class ModSetup {
                 HorseEntityAccessor.setFoodItems(Ingredient.of(horseFood.stream()));
                 */
 
-                ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(Registry.FLAX_ITEM.get().getRegistryName(), Registry.FLAX_POT);
+                ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(ModRegistry.FLAX_ITEM.get().getRegistryName(), ModRegistry.FLAX_POT);
 
                 FlowerPotHelper.init();
 
                 CapturedMobsHelper.refresh();
-
-                DispenserStuff.registerBehaviors();
 
                 ModSoftFluids.init();
 
@@ -92,6 +91,16 @@ public class ModSetup {
 
     //events on setup
 
+    public static boolean firstTagLoad = false;
+
+    @SubscribeEvent
+    public static void onTagLoad(TagsUpdatedEvent event){
+        if(!firstTagLoad) {
+            firstTagLoad = true;
+            DispenserStuff.registerBehaviors();
+        }
+    }
+
     @SubscribeEvent
     public static void registerCommands(RegisterCommandsEvent event) {
         ModCommands.register(event.getDispatcher());
@@ -101,7 +110,7 @@ public class ModSetup {
     public static void villagerTradesEvent(VillagerTradesEvent ev) {
         if(RegistryConfigs.reg.FLAX_ENABLED.get()){
             if(ev.getType().equals(VillagerProfession.FARMER)){
-                ev.getTrades().get(3).add(new BasicTrade(new ItemStack(Registry.FLAX_SEEDS_ITEM.get(), 15), new ItemStack(net.minecraft.item.Items.EMERALD), 16, 2, 0.05f));
+                ev.getTrades().get(3).add(new BasicTrade(new ItemStack(ModRegistry.FLAX_SEEDS_ITEM.get(), 15), new ItemStack(net.minecraft.item.Items.EMERALD), 16, 2, 0.05f));
             }
         }
         AdventurerMapsHandler.loadCustomTrades();

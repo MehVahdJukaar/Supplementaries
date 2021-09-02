@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
@@ -16,7 +16,7 @@ public class SpeakerBlockTile extends TileEntity implements INameable {
     public double volume = 1;
     private ITextComponent customName;
     public SpeakerBlockTile() {
-        super(Registry.SPEAKER_BLOCK_TILE.get());
+        super(ModRegistry.SPEAKER_BLOCK_TILE.get());
     }
 
     public void setCustomName(ITextComponent name) {

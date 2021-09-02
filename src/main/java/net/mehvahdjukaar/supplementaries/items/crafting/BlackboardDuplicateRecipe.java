@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.items.crafting;
 
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -31,7 +31,7 @@ public class BlackboardDuplicateRecipe extends SpecialRecipe {
         for(int i = 0; i < inv.getContainerSize(); ++i) {
             ItemStack stack = inv.getItem(i);
             Item item = stack.getItem();
-            if (item == Registry.BLACKBOARD_ITEM.get()) {
+            if (item == ModRegistry.BLACKBOARD_ITEM.get()) {
 
                 if (isDrawnBlackboard(stack)) {
                     if (itemstack != null) {
@@ -91,7 +91,7 @@ public class BlackboardDuplicateRecipe extends SpecialRecipe {
 
     @Override
     public IRecipeSerializer<?> getSerializer() {
-        return Registry.BLACKBOARD_DUPLICATE_RECIPE.get();
+        return ModRegistry.BLACKBOARD_DUPLICATE_RECIPE.get();
     }
 
 

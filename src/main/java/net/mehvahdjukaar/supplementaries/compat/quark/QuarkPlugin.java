@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.compat.quark;
 
 import net.mehvahdjukaar.selene.util.DispenserHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -23,9 +23,9 @@ public class QuarkPlugin {
 
     public static void attachCapabilities(AttachCapabilitiesEvent<ItemStack> event) {
         Item i = event.getObject().getItem();
-        if(i == Registry.SACK_ITEM.get())
+        if(i == ModRegistry.SACK_ITEM.get())
             event.addCapability(SACK_CAP, new SackDropIn());
-        else if (i == Registry.SAFE_ITEM.get())
+        else if (i == ModRegistry.SAFE_ITEM.get())
             event.addCapability(SAFE_CAP, new SafeDropIn());
         //else if (i instanceof JarItem || i instanceof EmptyJarItem)
         //    event.addCapability(JAR_CAP, new JarDropIn());

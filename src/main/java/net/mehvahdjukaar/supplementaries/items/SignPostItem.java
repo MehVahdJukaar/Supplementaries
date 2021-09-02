@@ -6,7 +6,7 @@ import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.framedblocks.FramedSignPost;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SoundType;
@@ -72,7 +72,7 @@ public class SignPostItem  extends Item {
             }
 
             boolean waterlogged = world.getFluidState(blockpos).getType() == Fluids.WATER;
-            world.setBlock(blockpos, Registry.SIGN_POST.get()
+            world.setBlock(blockpos, ModRegistry.SIGN_POST.get()
                     .getStateForPlacement(new BlockItemUseContext(context)).setValue(SignPostBlock.WATERLOGGED, waterlogged), 3);
 
             boolean flag = false;

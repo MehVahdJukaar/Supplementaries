@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.entities;
 import net.mehvahdjukaar.supplementaries.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -36,21 +36,21 @@ public class RopeArrowEntity extends AbstractArrowEntity {
     }
 
     public RopeArrowEntity(World worldIn, LivingEntity throwerIn, int charges) {
-        super(Registry.ROPE_ARROW.get(), throwerIn, worldIn);
+        super(ModRegistry.ROPE_ARROW.get(), throwerIn, worldIn);
         this.charges = charges;
     }
 
     public RopeArrowEntity(World worldIn, double x, double y, double z, int charges) {
-        super(Registry.ROPE_ARROW.get(), x, y, z, worldIn);
+        super(ModRegistry.ROPE_ARROW.get(), x, y, z, worldIn);
         this.charges = charges;
     }
 
     public RopeArrowEntity(World worldIn, double x, double y, double z) {
-        super(Registry.ROPE_ARROW.get(), x, y, z, worldIn);
+        super(ModRegistry.ROPE_ARROW.get(), x, y, z, worldIn);
     }
 
     public RopeArrowEntity(FMLPlayMessages.SpawnEntity packet, World world) {
-        super(Registry.ROPE_ARROW.get(), world);
+        super(ModRegistry.ROPE_ARROW.get(), world);
     }
 
     @Override
@@ -79,7 +79,7 @@ public class RopeArrowEntity extends AbstractArrowEntity {
     @Override
     protected ItemStack getPickupItem() {
         if(this.charges!=0) {
-            ItemStack stack = new ItemStack(Registry.ROPE_ARROW_ITEM.get());
+            ItemStack stack = new ItemStack(ModRegistry.ROPE_ARROW_ITEM.get());
             stack.setDamageValue(stack.getMaxDamage() - this.charges);
             return stack;
         }

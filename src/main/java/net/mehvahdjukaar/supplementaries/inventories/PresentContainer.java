@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.inventories;
 
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
@@ -24,7 +24,7 @@ public class PresentContainer extends Container  {
     }
 
     public PresentContainer(int id, PlayerInventory playerInventory, IInventory inventory, BlockPos pos) {
-        super(Registry.PRESENT_BLOCK_CONTAINER.get(), id);
+        super(ModRegistry.PRESENT_BLOCK_CONTAINER.get(), id);
 
         this.pos = pos;
 

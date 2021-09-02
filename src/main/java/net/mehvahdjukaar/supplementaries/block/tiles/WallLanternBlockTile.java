@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.blocks.WallLanternBlock;
 import net.mehvahdjukaar.supplementaries.block.util.IBlockHolder;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
@@ -38,7 +38,7 @@ public class WallLanternBlockTile extends EnhancedLanternBlockTile implements IT
     }
 
     public WallLanternBlockTile() {
-        super(Registry.WALL_LANTERN_TILE.get());
+        super(ModRegistry.WALL_LANTERN_TILE.get());
     }
 
     @Override

@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.inventories;
 
 import net.mehvahdjukaar.supplementaries.block.tiles.NoticeBoardBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
@@ -26,7 +26,7 @@ public class NoticeBoardContainer extends Container  {
 
     public NoticeBoardContainer(int id, PlayerInventory playerInventory, IInventory inventory) {
 
-        super(Registry.NOTICE_BOARD_CONTAINER.get(), id);
+        super(ModRegistry.NOTICE_BOARD_CONTAINER.get(), id);
         //tile inventory
         this.inventory = inventory;
         checkContainerSize(inventory, 1);

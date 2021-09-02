@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.entities;
 
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.world.explosion.BombExplosion;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.TNTBlock;
@@ -62,7 +62,7 @@ public class BombEntity extends ProjectileItemEntity implements IRendersAsItem, 
     }
 
     public BombEntity(World worldIn, LivingEntity throwerIn, boolean blue) {
-        super(Registry.BOMB.get(), throwerIn, worldIn);
+        super(ModRegistry.BOMB.get(), throwerIn, worldIn);
         this.prevX = this.getX();
         this.prevY = this.getY();
         this.prevZ = this.getZ();
@@ -70,12 +70,12 @@ public class BombEntity extends ProjectileItemEntity implements IRendersAsItem, 
     }
 
     public BombEntity(World worldIn, double x, double y, double z, boolean blue) {
-        super(Registry.BOMB.get(), x, y, z, worldIn);
+        super(ModRegistry.BOMB.get(), x, y, z, worldIn);
         this.blue = blue;
     }
 
     public BombEntity(FMLPlayMessages.SpawnEntity packet, World world) {
-        super(Registry.BOMB.get(), world);
+        super(ModRegistry.BOMB.get(), world);
         this.prevX = this.getX();
         this.prevY = this.getY();
         this.prevZ = this.getZ();
@@ -116,18 +116,18 @@ public class BombEntity extends ProjectileItemEntity implements IRendersAsItem, 
 
     @Override
     protected Item getDefaultItem() {
-        return Registry.BOMB_ITEM_ON.get();
+        return ModRegistry.BOMB_ITEM_ON.get();
     }
 
     @Override
     public ItemStack getItem() {
-        return this.blue ? new ItemStack(this.active ? Registry.BOMB_BLUE_ITEM_ON.get() : Registry.BOMB_BLUE_ITEM.get())
-                : new ItemStack(this.active ? Registry.BOMB_ITEM_ON.get() : Registry.BOMB_ITEM.get());
+        return this.blue ? new ItemStack(this.active ? ModRegistry.BOMB_BLUE_ITEM_ON.get() : ModRegistry.BOMB_BLUE_ITEM.get())
+                : new ItemStack(this.active ? ModRegistry.BOMB_ITEM_ON.get() : ModRegistry.BOMB_ITEM.get());
     }
 
     private void spawnBreakParticles() {
         for (int i = 0; i < 8; ++i) {
-            this.level.addParticle(new ItemParticleData(ParticleTypes.ITEM, new ItemStack(Registry.BOMB_ITEM.get())), this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
+            this.level.addParticle(new ItemParticleData(ParticleTypes.ITEM, new ItemStack(ModRegistry.BOMB_ITEM.get())), this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
         }
     }
 
@@ -142,7 +142,7 @@ public class BombEntity extends ProjectileItemEntity implements IRendersAsItem, 
             break;
         case 10:
             spawnBreakParticles();
-            level.addParticle(Registry.BOMB_EXPLOSION_PARTICLE_EMITTER.get(), this.getX(), this.getY() + 1, this.getZ(), this.blue ? 5.25D : ServerConfigs.cached.BOMB_RADIUS, 0, 0);
+            level.addParticle(ModRegistry.BOMB_EXPLOSION_PARTICLE_EMITTER.get(), this.getX(), this.getY() + 1, this.getZ(), this.blue ? 5.25D : ServerConfigs.cached.BOMB_RADIUS, 0, 0);
             if(blue){
                 for(float d22 = 0; d22 < (Math.PI * 2D); d22 += 0.15707963267948966F) {
                     Vector3d v = new Vector3d(0.55,0,0);
@@ -202,7 +202,7 @@ public class BombEntity extends ProjectileItemEntity implements IRendersAsItem, 
                 double dz = vector3d.z;
                 for(int i = 0; i < 4; ++i) {
                     double j = i/4d;
-                    this.level.addParticle(Registry.BOMB_SMOKE_PARTICLE.get(), x + dx * j, 0.5 + y + dy * j, z + dz * j, 0, 0.02, 0);
+                    this.level.addParticle(ModRegistry.BOMB_SMOKE_PARTICLE.get(), x + dx * j, 0.5 + y + dy * j, z + dz * j, 0, 0.02, 0);
                 }
                 /*
                 double x2 = (x - this.prevX);
@@ -271,7 +271,7 @@ public class BombEntity extends ProjectileItemEntity implements IRendersAsItem, 
     }
 
     private ItemStack getItemStack() {
-        return new ItemStack(Registry.BOMB_ITEM.get());
+        return new ItemStack(ModRegistry.BOMB_ITEM.get());
     }
 
     @Override

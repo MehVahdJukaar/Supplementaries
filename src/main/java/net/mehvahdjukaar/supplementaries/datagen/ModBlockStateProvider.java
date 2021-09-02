@@ -4,7 +4,7 @@ import net.mehvahdjukaar.supplementaries.block.blocks.HangingSignBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.PresentBlock;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.item.DyeColor;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -39,8 +39,8 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
     private void makeHangingSignsBlock(IWoodType wood){
 
-        getVariantBuilder(Registry.HANGING_SIGNS.get(wood).get()).forAllStatesExcept(state -> {
-            String baseName = Registry.HANGING_SIGN_NAME;
+        getVariantBuilder(ModRegistry.HANGING_SIGNS.get(wood).get()).forAllStatesExcept(state -> {
+            String baseName = ModRegistry.HANGING_SIGN_NAME;
 
             ModelFile model = hangingSignModel(wood,baseName,state.getValue(HangingSignBlock.TILE)?"tile":
                     state.getValue(HangingSignBlock.EXTENSION).toString());
@@ -54,8 +54,8 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
     private void makePresentBlock(DyeColor color){
 
-        getVariantBuilder(Registry.PRESENTS.get(color).get()).forAllStatesExcept(state -> {
-            String baseName = Registry.PRESENT_NAME;
+        getVariantBuilder(ModRegistry.PRESENTS.get(color).get()).forAllStatesExcept(state -> {
+            String baseName = ModRegistry.PRESENT_NAME;
 
             ModelFile model = presentModel(color, baseName,state.getValue(PresentBlock.OPEN)?"opened": "closed");
 

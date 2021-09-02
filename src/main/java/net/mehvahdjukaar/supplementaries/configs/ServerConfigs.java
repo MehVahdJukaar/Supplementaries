@@ -4,7 +4,7 @@ import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.entities.BombEntity;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.ResourceLocation;
@@ -26,6 +26,7 @@ public class ServerConfigs {
     static {
         createConfig();
     }
+
 
 
     public static void createConfig(){
@@ -244,6 +245,7 @@ public class ServerConfigs {
 
         public static ForgeConfigSpec.IntValue JAR_CAPACITY;
         public static ForgeConfigSpec.BooleanValue JAR_EAT;
+        public static ForgeConfigSpec.BooleanValue JAR_AUTO_DETECT;
 
         public static ForgeConfigSpec.BooleanValue CAGE_ALL_MOBS;
         public static ForgeConfigSpec.BooleanValue CAGE_ALL_BABIES;
@@ -345,6 +347,8 @@ public class ServerConfigs {
             JAR_EAT = builder.comment("Allow right click to instantly eat or drink food or potions inside a jar.\n" +
                     "Disable if you think this ability is op (honey for example). Cookies are excluded")
                     .define("drink_from_jar",true);
+            JAR_AUTO_DETECT = builder.comment("Dynamically allows all small mobs inside jars depending on their hitbox size. Tinted jars can accept hostile mbos too")
+                    .define("jar_auto_detect", false);
 
             builder.pop();
 
@@ -591,6 +595,7 @@ public class ServerConfigs {
         public static List<? extends String> TURN_TABLE_BLACKLIST;
         public static int JAR_CAPACITY;
         public static boolean JAR_EAT;
+        public static boolean JAR_AUTO_DETECT;
         public static boolean NOTICE_BOARDS_UNRESTRICTED;
         public static boolean CAGE_ALL_MOBS;
         public static boolean CAGE_ALL_BABIES;
@@ -638,7 +643,7 @@ public class ServerConfigs {
 
             ROPE_ARROW_ROPE = item.ROPE_ARROW_ROPE.get();
             ROPE_ARROW_BLOCK = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ROPE_ARROW_ROPE));
-            if(ROPE_ARROW_BLOCK == Blocks.AIR)ROPE_ARROW_BLOCK = Registry.ROPE.get();
+            if(ROPE_ARROW_BLOCK == Blocks.AIR)ROPE_ARROW_BLOCK = ModRegistry.ROPE.get();
             FLUTE_DISTANCE = item.FLUTE_DISTANCE.get();
             FLUTE_RADIUS = item.FLUTE_RADIUS.get();
             BOMB_BREAKS = item.BOMB_BREAKS.get();
@@ -673,6 +678,7 @@ public class ServerConfigs {
 
             JAR_CAPACITY = block.JAR_CAPACITY.get();
             JAR_EAT = block.JAR_EAT.get();
+            JAR_AUTO_DETECT = block.JAR_AUTO_DETECT.get();
 
             NOTICE_BOARDS_UNRESTRICTED = block.NOTICE_BOARDS_UNRESTRICTED.get();
 

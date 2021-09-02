@@ -5,7 +5,7 @@ import net.mehvahdjukaar.supplementaries.client.gui.SpeakerBlockGui;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.SendSpeakerBlockMessagePacket;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
@@ -136,7 +136,7 @@ public class SpeakerBlock extends Block {
     public boolean triggerEvent(BlockState state, World world, BlockPos pos, int eventID, int eventParam) {
         if (eventID == 0) {
             Direction facing = state.getValue(FACING);
-            world.addParticle(Registry.SPEAKER_SOUND.get(), pos.getX() + 0.5 + facing.getStepX() * 0.725, pos.getY() + 0.5,
+            world.addParticle(ModRegistry.SPEAKER_SOUND.get(), pos.getX() + 0.5 + facing.getStepX() * 0.725, pos.getY() + 0.5,
                     pos.getZ() + 0.5 + facing.getStepZ() * 0.725, (double) world.random.nextInt(24) / 24.0D, 0.0D, 0.0D);
             return true;
         }

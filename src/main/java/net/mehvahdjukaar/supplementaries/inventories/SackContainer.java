@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.inventories;
 
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.setup.Registry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
@@ -25,7 +25,7 @@ public class SackContainer extends Container  {
 
     public SackContainer(int id, PlayerInventory playerInventory, IInventory inventory) {
 
-        super(Registry.SACK_CONTAINER.get(), id);
+        super(ModRegistry.SACK_CONTAINER.get(), id);
         //tile inventory
         this.inventory = inventory;
         checkContainerSize(inventory, 27);
