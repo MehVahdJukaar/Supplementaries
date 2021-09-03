@@ -1,0 +1,22 @@
+{
+	"credit": "Made with Blockbench",
+	"ambientocclusion": false,
+	"textures": {
+		"2": "quark:block/potted/pumpkin",
+		"particle": "block/flower_pot"
+	},
+	"elements": [
+		{
+			"from": [5.5, 0, 5.5],
+			"to": [10.5, 5, 10.5],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 4, 8]},
+			"faces": {
+				"north": {"uv": [11, 11, 16, 16], "texture": "#2"},
+				"east": {"uv": [11, 11, 16, 16], "texture": "#2"},
+				"south": {"uv": [11, 11, 16, 16], "texture": "#2"},
+				"west": {"uv": [11, 11, 16, 16], "texture": "#2"},
+				"up": {"uv": [11, 6, 16, 11], "texture": "#2"}
+			}
+		}
+	]
+}

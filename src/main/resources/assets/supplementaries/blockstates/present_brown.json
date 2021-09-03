@@ -1,10 +1,10 @@
 {
   "variants": {
     "open=true": {
-      "model": "supplementaries:block/present_opened_brown"
+      "model": "supplementaries:block/presents/present_opened_brown"
     },
     "open=false": {
-      "model": "supplementaries:block/present_closed_brown"
+      "model": "supplementaries:block/presents/present_closed_brown"
     }
   }
 }

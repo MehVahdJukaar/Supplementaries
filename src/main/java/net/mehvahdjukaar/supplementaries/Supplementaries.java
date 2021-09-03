@@ -37,6 +37,9 @@ public class Supplementaries{
     }
 
     public Supplementaries() {
+        //yes this is where I write crap
+
+        //TODO: zipline mod ropewalk
 
         //GLOBE inv model
         //TODO: goblet & jars dynamic baked model
@@ -52,7 +55,7 @@ public class Supplementaries{
 
         //TODO: reworkd ItemDisplayTile with proper capability usage
 
-        //TODO: bugs: bell ropes, brewing starnd colors
+        //TODO: bugs: bell ropes(add to flywheel instance), brewing starnd colors(?)
 
         //TODO: notice board pages, rewrite inventory cap
 

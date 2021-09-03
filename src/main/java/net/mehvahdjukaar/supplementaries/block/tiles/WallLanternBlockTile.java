@@ -85,12 +85,12 @@ public class WallLanternBlockTile extends EnhancedLanternBlockTile implements IT
     }
 
     @Override
-    public BlockState getHeldBlock() {
+    public BlockState getHeldBlock(int index) {
         return this.mimic;
     }
 
     @Override
-    public boolean setHeldBlock(BlockState state) {
+    public boolean setHeldBlock(BlockState state, int index) {
         this.mimic = state;
 
         int light = state.getLightEmission();

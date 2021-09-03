@@ -43,12 +43,12 @@ public abstract class MimicBlockTile extends TileEntity implements IBlockHolder 
     }
 
     @Override
-    public BlockState getHeldBlock() {
+    public BlockState getHeldBlock(int index) {
         return this.mimic;
     }
 
     @Override
-    public boolean setHeldBlock(BlockState state) {
+    public boolean setHeldBlock(BlockState state, int index) {
         this.mimic = state;
         return true;
     }

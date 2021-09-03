@@ -25,12 +25,12 @@ public class HangingFlowerPotBlockTile extends SwayingBlockTile implements IBloc
     }
 
     @Override
-    public BlockState getHeldBlock() {
+    public BlockState getHeldBlock(int index) {
         return pot;
     }
 
     @Override
-    public boolean setHeldBlock(BlockState state) {
+    public boolean setHeldBlock(BlockState state, int index) {
         if(state.getBlock() instanceof FlowerPotBlock){
             this.pot = state;
             this.setChanged();

@@ -1,20 +1,20 @@
 package net.mehvahdjukaar.supplementaries.block.util;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.item.BlockItem;
 
 public interface IBlockHolder {
-    BlockState getHeldBlock();
-    boolean setHeldBlock(BlockState state);
 
+    BlockState getHeldBlock(int index);
 
+    boolean setHeldBlock(BlockState state, int index);
 
-    default boolean onPlacement(BlockState targetState, BlockItem handStack){
-        return this.setHeldBlock(targetState);
+    default BlockState getHeldBlock(){
+        return getHeldBlock(0);
+    };
+
+    default boolean setHeldBlock(BlockState state){
+        return setHeldBlock(state, 0);
     }
 
-    default boolean resetHeldBlock(){
-        return this.setHeldBlock(Blocks.AIR.defaultBlockState());
-    };
+
 }

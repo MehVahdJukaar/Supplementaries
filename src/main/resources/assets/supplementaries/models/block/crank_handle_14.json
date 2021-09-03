@@ -1,7 +1,0 @@
-{
-  "parent": "supplementaries:custom/crank_handle_14",
-  "textures": {
-    "particle": "supplementaries:blocks/crank_handle",
-    "0": "supplementaries:blocks/crank_handle"
-  }
-}

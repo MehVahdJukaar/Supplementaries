@@ -2,9 +2,11 @@ package net.mehvahdjukaar.supplementaries.world.explosion;
 
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.mehvahdjukaar.supplementaries.block.blocks.BellowsBlock;
 import net.mehvahdjukaar.supplementaries.block.util.ILightable;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.decorativeblocks.DecoBlocksCompatRegistry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
@@ -87,7 +89,10 @@ public class GunpowderExplosion extends Explosion {
 
 	private boolean hasFlammableNeighbours(BlockPos pos) {
 		for(Direction direction : Direction.values()) {
-			if (this.level.getBlockState(pos.relative(direction)).getMaterial().isFlammable()) {
+			BlockState state = this.level.getBlockState(pos.relative(direction));
+			if (state.getMaterial().isFlammable()
+					|| (state.getBlock() == ModRegistry.BELLOWS.get() && state.getValue(BellowsBlock.POWER) != 0 &&
+						state.getValue(BellowsBlock.FACING) == direction.getOpposite())) {
 				return true;
 			}
 		}

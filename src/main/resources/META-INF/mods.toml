@@ -21,7 +21,7 @@ displayURL="https://www.curseforge.com/minecraft/mc-mods/supplementaries" #optio
 
 logoFile="logo.png" #optional
 
-credits="put a book named 'credits' inside a notice board" #optional
+credits="Put a book named 'credits' inside a notice board" #optional
 
 authors="MehVahdJukaar, Plantkillable" #optional
 
@@ -29,7 +29,7 @@ description='''Many functional and useful Vanilla+ blocks'''
 
 itemIcon="supplementaries:globe" #catalogue icon
 
-configuredBackground= "supplementaries:textures/blocks/blackboard_back.png"
+configuredBackground= "supplementaries:textures/blocks/blackstone_tiles.png"
 
 [[dependencies.supplementaries]] #optional
 

@@ -1,0 +1,8 @@
+{
+  "parent": "supplementaries:block/hs/hanging_sign_tile_template",
+  "textures": {
+    "particle": "supplementaries:blocks/hanging_signs/enhanced_mushrooms/hanging_sign_front_red_mushroom",
+    "0": "supplementaries:blocks/hanging_signs/enhanced_mushrooms/hanging_sign_front_red_mushroom",
+    "1": "supplementaries:blocks/hanging_signs/enhanced_mushrooms/hanging_sign_details_red_mushroom"
+  }
+}

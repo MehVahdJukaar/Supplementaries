@@ -11,12 +11,18 @@
     "minecraft:warped_roots",
     "minecraft:crimson_roots",
     "minecraft:fern",
-    "minecraft:bamboo"
+    "minecraft:bamboo",
+    "minecraft:dead_bush",
+    "minecraft:twisting_vines",
+    "minecraft:cactus",
+    "supplementaries:flax_seeds"
   ],
   "optional": [
     "#forge:mushrooms",
     "farmersdelight:brown_mushroom_colony",
     "farmersdelight:red_mushroom_colony",
-    "byg:blue_berries"
+    "byg:blueberries",
+    "byg:crimson_berries",
+    "byg:nightshade_berries"
   ]
 }

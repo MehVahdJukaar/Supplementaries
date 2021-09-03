@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:supplementaries:block/plants/cross_template",
+  "textures": {
+    "plant": "minecraft:block/twisting_vines"
+  }
+}

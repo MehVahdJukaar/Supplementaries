@@ -33,12 +33,12 @@ public class FenceSignBlockTile extends TileEntity implements ITextHolder, IBloc
     }
 
     @Override
-    public BlockState getHeldBlock() {
+    public BlockState getHeldBlock(int index) {
         return this.fenceBlock;
     }
 
     @Override
-    public boolean setHeldBlock(BlockState state) {
+    public boolean setHeldBlock(BlockState state, int index) {
         this.fenceBlock = state;
         return true;
     }

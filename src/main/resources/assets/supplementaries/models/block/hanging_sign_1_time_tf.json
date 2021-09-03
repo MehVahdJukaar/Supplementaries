@@ -1,8 +1,0 @@
-{
-  "parent": "supplementaries:block/hanging_sign_1_template",
-  "textures": {
-    "particle": "supplementaries:blocks/hanging_signs/twilightforest/hanging_sign_front_time_tf",
-    "0": "supplementaries:blocks/hanging_signs/twilightforest/hanging_sign_front_time_tf",
-    "1": "supplementaries:blocks/hanging_signs/twilightforest/hanging_sign_details_time_tf"
-  }
-}

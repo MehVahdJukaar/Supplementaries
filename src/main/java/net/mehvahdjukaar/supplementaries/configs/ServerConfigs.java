@@ -114,6 +114,8 @@ public class ServerConfigs {
         public static ForgeConfigSpec.IntValue ZOMBIE_HORSE_COST;
         public static ForgeConfigSpec.BooleanValue ZOMBIE_HORSE_UNDERWATER;
         public static ForgeConfigSpec.BooleanValue PLACEABLE_GUNPOWDER;
+        public static ForgeConfigSpec.IntValue GUNPOWDER_BURN_SPEED;
+        public static ForgeConfigSpec.IntValue GUNPOWDER_SPREAD_AGE;
 
         private static void init(ForgeConfigSpec.Builder builder){
             builder.comment("Vanilla tweaks")
@@ -156,15 +158,19 @@ public class ServerConfigs {
             builder.pop();
 
             builder.push("placeable_sticks");
-            PLACEABLE_STICKS = builder.comment("allow placeable sticks")
+            PLACEABLE_STICKS = builder.comment("Allow placeable sticks")
                     .define("sticks",true);
-            PLACEABLE_RODS = builder.comment("allow placeable blaze rods")
+            PLACEABLE_RODS = builder.comment("Allow placeable blaze rods")
                     .define("blaze_rods",true);
             builder.pop();
 
             builder.push("placeable_gunpowder");
-            PLACEABLE_GUNPOWDER = builder.comment("allow placeable gunpowder")
+            PLACEABLE_GUNPOWDER = builder.comment("Allow placeable gunpowder")
                     .define("enabled",true);
+            GUNPOWDER_BURN_SPEED = builder.comment("Number of ticks it takes for gunpowder to burn 1 stage (out of 8). Increase to slow it down")
+                    .defineInRange("speed", 2,0,20);
+            GUNPOWDER_SPREAD_AGE = builder.comment("Age at which it spread to the next gunpowder block. Also affects speed")
+                    .defineInRange("spread_age", 2, 0, 8);
             builder.pop();
 
             builder.push("raked_gravel");
@@ -572,6 +578,9 @@ public class ServerConfigs {
         public static boolean MAP_MARKERS;
         public static boolean CEILING_BANNERS;
         public static boolean PLACEABLE_GUNPOWDER;
+        public static int GUNPOWDER_SP;
+        public static int GUNPOWDER_BURN_SPEED;
+        public static int GUNPOWDER_SPREAD_AGE;
         //spawns
         public static int FIREFLY_MIN;
         public static int FIREFLY_MAX;
@@ -640,6 +649,8 @@ public class ServerConfigs {
             MAP_MARKERS = tweaks.MAP_MARKERS.get();
             CEILING_BANNERS = tweaks.CEILING_BANNERS.get();
             PLACEABLE_GUNPOWDER = tweaks.PLACEABLE_GUNPOWDER.get();
+            GUNPOWDER_BURN_SPEED = tweaks.GUNPOWDER_BURN_SPEED.get();
+            GUNPOWDER_SPREAD_AGE = tweaks.GUNPOWDER_SPREAD_AGE.get();
 
             ROPE_ARROW_ROPE = item.ROPE_ARROW_ROPE.get();
             ROPE_ARROW_BLOCK = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ROPE_ARROW_ROPE));

@@ -6,9 +6,11 @@ import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.util.ILightable;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.decorativeblocks.DecoBlocksCompatRegistry;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.world.explosion.GunpowderExplosion;
 import net.minecraft.block.*;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
@@ -61,9 +63,13 @@ public class GunpowderBlock extends LightUpBlock {
     private final Map<BlockState, VoxelShape> SHAPES_CACHE = Maps.newHashMap();
     private final BlockState crossState;
 
-    public static final int DELAY = 2;
+    private static final int getDelay(){
+        return ServerConfigs.cached.GUNPOWDER_BURN_SPEED;
+    }
 
-    public static final int SPREAD_AGE = 2;
+    private static final int getSpreadAge(){
+        return ServerConfigs.cached.GUNPOWDER_SPREAD_AGE;
+    }
 
     public GunpowderBlock(Properties properties) {
         super(properties);
@@ -282,7 +288,7 @@ public class GunpowderBlock extends LightUpBlock {
     public void onPlace(BlockState state, World world, BlockPos pos, BlockState oldState, boolean moving) {
         if (!oldState.is(state.getBlock()) && !world.isClientSide) {
             //doesn't ignite immediately
-            world.getBlockTicks().scheduleTick(pos, this, DELAY);
+            world.getBlockTicks().scheduleTick(pos, this, getDelay());
 
             for (Direction direction : Direction.Plane.VERTICAL) {
                 world.updateNeighborsAt(pos.relative(direction), this);
@@ -314,7 +320,7 @@ public class GunpowderBlock extends LightUpBlock {
     public void neighborChanged(BlockState state, World world, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean moving) {
         super.neighborChanged(state, world, pos, neighborBlock, neighborPos, moving);
         if (!world.isClientSide) {
-            world.getBlockTicks().scheduleTick(pos, this, DELAY);
+            world.getBlockTicks().scheduleTick(pos, this, getDelay());
         }
     }
 
@@ -385,11 +391,11 @@ public class GunpowderBlock extends LightUpBlock {
                 world.removeBlock(pos, false);
                 explode(world, pos);
             } else if (burning > 0) {
-                if (burning >= SPREAD_AGE) {
+                if (burning >= getSpreadAge()) {
                     this.lightUpNeighbouringWires(pos, state, world);
                 }
                 world.setBlockAndUpdate(pos, state.setValue(BURNING, burning + 1));
-                world.getBlockTicks().scheduleTick(pos, this, DELAY);
+                world.getBlockTicks().scheduleTick(pos, this, getDelay());
             }
             //not burning. check if it should
             else {
@@ -397,7 +403,7 @@ public class GunpowderBlock extends LightUpBlock {
                     BlockPos p = pos.relative(dir);
                     if (this.isFireSource(world, p)) {
                         this.lightUp(state, pos, world, FireSound.FLAMING_ARROW);
-                        world.getBlockTicks().scheduleTick(pos, this, DELAY);
+                        world.getBlockTicks().scheduleTick(pos, this, getDelay());
                         break;
                     }
                 }
@@ -421,7 +427,7 @@ public class GunpowderBlock extends LightUpBlock {
             if (!world.isClientSide()) {
                 ((World) world).blockEvent(pos, this, 0, 0);
             }
-            world.getBlockTicks().scheduleTick(pos, this, DELAY);
+            world.getBlockTicks().scheduleTick(pos, this, getDelay());
         }
         return ret;
     }
@@ -457,14 +463,12 @@ public class GunpowderBlock extends LightUpBlock {
                 }
             } else continue;
             if (neighbourState.is(this)) {
-                world.getBlockTicks().scheduleTick(p, this, Math.max(DELAY - 1, 1));
+                world.getBlockTicks().scheduleTick(p, this, Math.max(getDelay() - 1, 1));
                 this.lightUpByWire(neighbourState, p, world);
             }
         }
     }
 
-
-    //TODO: drop nothing if burning
     private boolean isFireSource(IWorld world, BlockPos pos) {
         //wires handled separately
         BlockState state = world.getBlockState(pos);
@@ -484,8 +488,24 @@ public class GunpowderBlock extends LightUpBlock {
      */
     @Override
     public void onBlockExploded(BlockState state, World world, BlockPos pos, Explosion explosion) {
-        if (!world.isClientSide) {
+        if (!world.isClientSide && this.canSurvive(state, world, pos)) {
             this.lightUp(state, pos, world, FireSound.FLAMING_ARROW);
+        }
+        else{
+            super.onBlockExploded(state, world, pos, explosion);
+        }
+    }
+
+    @Override
+    public void stepOn(World p_176199_1_, BlockPos p_176199_2_, Entity p_176199_3_) {
+        super.stepOn(p_176199_1_, p_176199_2_, p_176199_3_);
+    }
+
+    @Override
+    public void fallOn(World world, BlockPos pos, Entity entity, float height) {
+        super.fallOn(world, pos, entity, height);
+        if(height > 1){
+            this.extinguish(world.getBlockState(pos), pos, world);
         }
     }
 

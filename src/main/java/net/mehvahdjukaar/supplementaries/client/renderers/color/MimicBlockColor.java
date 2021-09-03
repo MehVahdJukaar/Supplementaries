@@ -13,11 +13,11 @@ public class MimicBlockColor implements IBlockColor {
 
     @Override
     public int getColor(BlockState state, @Nullable IBlockDisplayReader world, @Nullable BlockPos pos, int tint) {
-        if(world!=null&&pos!=null) {
+        if (world != null && pos != null) {
             TileEntity te = world.getBlockEntity(pos);
             if (te instanceof IBlockHolder) {
                 BlockState mimic = ((IBlockHolder) te).getHeldBlock();
-                if(mimic!=null){
+                if (mimic != null) {
                     return Minecraft.getInstance().getBlockColors().getColor(mimic, world, pos, tint);
                 }
             }

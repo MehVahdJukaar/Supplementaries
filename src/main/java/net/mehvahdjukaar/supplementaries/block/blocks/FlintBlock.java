@@ -20,15 +20,15 @@ public class FlintBlock extends Block {
     public void stepOn(World world, BlockPos pos, Entity entity) {
 
 
-        if (!world.isClientSide && (entity.xOld != entity.getX() || entity.zOld != entity.getZ())) {
-            if(world.random.nextInt(3) == 0) {
-                double d0 = Math.abs(entity.getX() - entity.xOld);
-                double d1 = Math.abs(entity.getZ() - entity.zOld);
-                if (d0 >= (double) 0.003F || d1 >= (double) 0.003F) {
+        if (!world.isClientSide && (entity.getDeltaMovement().length() > 0.003F)) {
+            if(world.random.nextInt(2) == 0) {
+                //double d0 = Math.abs(entity.getX() - entity.xOld);
+                //double d1 = Math.abs(entity.getZ() - entity.zOld);
+                //if (d0 >= (double) 0.003F || d1 >= (double) 0.003F) {
                     if(entity instanceof LivingEntity && ((LivingEntity) entity).getItemBySlot(EquipmentSlotType.FEET).isEmpty()) {
                         entity.hurt(DamageSource.GENERIC, 1.0F);
                     }
-                }
+                //}
             }
         }
 

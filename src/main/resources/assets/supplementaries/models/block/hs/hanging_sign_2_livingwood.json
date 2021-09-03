@@ -1,0 +1,8 @@
+{
+  "parent": "supplementaries:block/hs/hanging_sign_2_template",
+  "textures": {
+    "particle": "supplementaries:blocks/hanging_signs/botania/hanging_sign_front_livingwood",
+    "0": "supplementaries:blocks/hanging_signs/botania/hanging_sign_front_livingwood",
+    "1": "supplementaries:blocks/hanging_signs/botania/hanging_sign_details_livingwood"
+  }
+}

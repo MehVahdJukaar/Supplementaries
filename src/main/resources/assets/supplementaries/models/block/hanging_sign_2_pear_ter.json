@@ -1,8 +1,0 @@
-{
-  "parent": "supplementaries:block/hanging_sign_2_template",
-  "textures": {
-    "particle": "supplementaries:blocks/hanging_signs/terraqueous/hanging_sign_front_pear_ter",
-    "0": "supplementaries:blocks/hanging_signs/terraqueous/hanging_sign_front_pear_ter",
-    "1": "supplementaries:blocks/hanging_signs/terraqueous/hanging_sign_details_pear_ter"
-  }
-}

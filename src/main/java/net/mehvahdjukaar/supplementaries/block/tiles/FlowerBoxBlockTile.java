@@ -2,18 +2,18 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 
 import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.block.blocks.ItemShelfBlock;
+import net.mehvahdjukaar.supplementaries.block.util.IBlockHolder;
+import net.mehvahdjukaar.supplementaries.common.FlowerPotHelper;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.DoublePlantBlock;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.state.properties.DoubleBlockHalf;
 import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -25,25 +25,20 @@ import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.common.util.Constants;
 
-import javax.annotation.Nullable;
 import java.util.Objects;
 
-public class FlowerBoxBlockTile extends ItemDisplayTile {
+public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder {
 
-    public static final ModelProperty<BlockState> FLOWER_0 = new ModelProperty<>();;
-    public static final ModelProperty<BlockState> FLOWER_1 = new ModelProperty<>();;
-    public static final ModelProperty<BlockState> FLOWER_2 = new ModelProperty<>();;
+    public static final ModelProperty<BlockState> FLOWER_0 = new ModelProperty<>();
 
-    public BlockState flower0 = Blocks.AIR.defaultBlockState();
-    public BlockState flower1 = Blocks.AIR.defaultBlockState();
-    public BlockState flower2 = Blocks.AIR.defaultBlockState();
+    public static final ModelProperty<BlockState> FLOWER_1 = new ModelProperty<>();
 
-    @Nullable
-    public BlockState flower0_up = null;
-    @Nullable
-    public BlockState flower1_up = null;
-    @Nullable
-    public BlockState flower2_up = null;
+    public static final ModelProperty<BlockState> FLOWER_2 = new ModelProperty<>();
+
+
+    private final BlockState[] flowerStates = new BlockState[]{Blocks.AIR.defaultBlockState(),
+            Blocks.AIR.defaultBlockState(), Blocks.AIR.defaultBlockState()};
+
 
     public FlowerBoxBlockTile() {
         super(ModRegistry.FLOWER_BOX_TILE.get());
@@ -51,24 +46,38 @@ public class FlowerBoxBlockTile extends ItemDisplayTile {
     }
 
     @Override
+    public BlockState getHeldBlock(int index) {
+        return flowerStates[index];
+    }
+
+    @Override
+    public boolean setHeldBlock(BlockState state, int index) {
+        if (index >= 0 && index < 3) {
+            this.flowerStates[index] = state;
+        }
+        return false;
+    }
+
+    @Override
     public IModelData getModelData() {
         //return data;
         return new ModelDataMap.Builder()
-                .withInitial(FLOWER_0, flower0)
-                .withInitial(FLOWER_1, flower1)
-                .withInitial(FLOWER_2, flower2)
+                .withInitial(FLOWER_0, flowerStates[0])
+                .withInitial(FLOWER_1, flowerStates[1])
+                .withInitial(FLOWER_2, flowerStates[2])
                 .build();
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         //this.load(this.getBlockState(), pkt.getTag());
-        BlockState oldMimic0 = this.flower0;
-        BlockState oldMimic1 = this.flower1;
-        BlockState oldMimic2 = this.flower2;
+        BlockState oldMimic0 = this.flowerStates[0];
+        BlockState oldMimic1 = this.flowerStates[1];
+        BlockState oldMimic2 = this.flowerStates[2];
         CompoundNBT tag = pkt.getTag();
         handleUpdateTag(this.getBlockState(), tag);
-        if (!Objects.equals(oldMimic0, this.flower0) || !Objects.equals(oldMimic1, this.flower1) || !Objects.equals(oldMimic2, this.flower2)) {
+        if (!Objects.equals(oldMimic0, this.flowerStates[0]) || !Objects.equals(oldMimic1, this.flowerStates[1]) ||
+                !Objects.equals(oldMimic2, this.flowerStates[2])) {
             ModelDataManager.requestModelDataRefresh(this);
             this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
         }
@@ -76,51 +85,21 @@ public class FlowerBoxBlockTile extends ItemDisplayTile {
 
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
-        return new AxisAlignedBB(this.worldPosition).move(0,0.25,0);
+        return new AxisAlignedBB(this.worldPosition).move(0, 0.25, 0);
     }
 
     @Override
     public void updateClientVisualsOnLoad() {
 
-        Item item = this.getItem(0).getItem();
-        flower0_up = null;
-        if(item instanceof BlockItem){
-            flower0 = ((BlockItem)item).getBlock().defaultBlockState();
-            if(flower0.getBlock() instanceof DoublePlantBlock){
-                flower0_up = flower0.setValue(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER);
-            }
-        }
-        else{
-            flower0 = Blocks.AIR.defaultBlockState();
+        for (int n = 0; n < flowerStates.length; n++) {
+            Item item = this.getItem(n).getItem();
+            this.flowerStates[n] = (item instanceof BlockItem) ? ((BlockItem) item).getBlock().defaultBlockState()
+                    : Blocks.AIR.defaultBlockState();
         }
 
-        item = this.getItem(1).getItem();
-        flower1_up = null;
-        if(item instanceof BlockItem){
-            flower1 = ((BlockItem)item).getBlock().defaultBlockState();
-            if(flower1.getBlock() instanceof DoublePlantBlock){
-                flower1_up = flower1.setValue(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER);
-            }
-        }
-        else{
-            flower1 = Blocks.AIR.defaultBlockState();
-        }
-
-        item = this.getItem(2).getItem();
-        flower2_up = null;
-        if(item instanceof BlockItem){
-            flower2 = ((BlockItem)item).getBlock().defaultBlockState();
-            if(flower2.getBlock() instanceof DoublePlantBlock){
-                flower2_up = flower2.setValue(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER);
-            }
-        }
-        else{
-            flower2 = Blocks.AIR.defaultBlockState();
-        }
-
-
+        //TODO: check this
         ModelDataManager.requestModelDataRefresh(this);
-
+        this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
 
     }
 
@@ -139,11 +118,10 @@ public class FlowerBoxBlockTile extends ItemDisplayTile {
 
     @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
-        return this.getItem(index).isEmpty() && stack.getItem().is(ModTags.FLOWER_BOX_PLANTABLE) ;
-    }
-
-    @Override
-    public double getViewDistance() {
-        return 64;
+        if (this.getItem(index).isEmpty()) {
+            Item item = stack.getItem();
+            return item.is(ModTags.FLOWER_BOX_PLANTABLE) || FlowerPotHelper.hasSpecialFlowerModel(item);
+        }
+        return false;
     }
 }

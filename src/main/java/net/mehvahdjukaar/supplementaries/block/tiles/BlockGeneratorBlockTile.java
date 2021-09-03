@@ -22,7 +22,6 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.RegistryKey;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
@@ -91,9 +90,8 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
                 boolean inVillage = locateResult.getRight();
 
                 if(inVillage){
-                    ResourceLocation b = world.getBiome(pos).getRegistryName();
-                    BlockState replace = (b== Biomes.DESERT.getRegistryName() || b == Biomes.DESERT_HILLS.getRegistryName()
-                            || b == Biomes.DESERT_LAKES.getRegistryName()) ? path_2 : path;
+                    RegistryKey<Biome> b = RegistryKey.create(ForgeRegistries.Keys.BIOMES, world.getBiome(pos).getRegistryName());
+                    BlockState replace = (b== Biomes.DESERT || b == Biomes.DESERT_HILLS || b == Biomes.DESERT_LAKES) ? path_2 : path;
                     replaceCobbleWithPath(world, pos, replace);
                 }
 

@@ -1,0 +1,6 @@
+{
+    "parent": "supplementaries:block/plants/tinted_cross_template",
+    "textures": {
+        "plant": "quark:block/potted/tall_grass"
+    }
+}

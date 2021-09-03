@@ -4,17 +4,16 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import net.mehvahdjukaar.supplementaries.block.blocks.FlowerBoxBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.FlowerBoxBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
+import net.mehvahdjukaar.supplementaries.common.FlowerPotHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DoublePlantBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.model.ItemOverrideList;
+import net.minecraft.client.renderer.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.state.properties.DoubleBlockHalf;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
@@ -44,56 +43,16 @@ public class FlowerBoxBakedModel implements IDynamicBakedModel {
 
         try {
             quads.addAll(box.getQuads(state, side, rand, EmptyModelData.INSTANCE));
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
 
-        /*
-                        Direction dir = state.getValue(WallLanternBlock.FACING);
-                        if (mimic.hasProperty(BlockStateProperties.FACING)) {
-                    mimic = mimic.setValue(BlockStateProperties.FACING, dir);
-                } else if (mimic.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
-                    mimic = mimic.setValue(BlockStateProperties.HORIZONTAL_FACING, dir);
-                }
+        try {
 
-            if (flower1 != null && !flower1.isAir()) {
-                this.addBlockToModel(quads, flower1, matrixStack, side, rand);
-                if(flower1.getBlock() instanceof DoublePlantBlock){
-                    BlockState flower1_up = flower1.setValue(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER);
-                    matrixStack.translate(0, 1, 0);
-                    this.addBlockToModel(quads, flower1_up, matrixStack, side, rand);
-                    matrixStack.translate(0, -1, 0);
-                }
-            }
-
-            matrixStack.translate(0.5,0,0);
-
-            if (flower2 != null && !flower2.isAir()) {
-                this.addBlockToModel(quads, flower2, matrixStack, side, rand);
-                if(flower2.getBlock() instanceof DoublePlantBlock){
-                    BlockState flower2_up = flower2.setValue(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER);
-                    matrixStack.translate(0, 1, 0);
-                    this.addBlockToModel(quads, flower2_up, matrixStack, side, rand);
-                    matrixStack.translate(0, -1, 0);
-                }
-            }
-
-            matrixStack.translate(-1,0,0);
-
-            if (flower0 != null && !flower0.isAir()) {
-                this.addBlockToModel(quads, flower0, matrixStack, side, rand);
-                if(flower0.getBlock() instanceof DoublePlantBlock){
-                    BlockState flower0_up = flower0.setValue(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER);
-                    matrixStack.translate(0, 1, 0);
-                    this.addBlockToModel(quads, flower0_up, matrixStack, side, rand);
-                    matrixStack.translate(0, -1, 0);
-                }
-            }
-         */
-        try{
-
-            BlockState flower0 = extraData.getData(FlowerBoxBlockTile.FLOWER_0);
-            BlockState flower1 = extraData.getData(FlowerBoxBlockTile.FLOWER_1);
-            BlockState flower2 = extraData.getData(FlowerBoxBlockTile.FLOWER_2);
-
+            BlockState[] flowers = new BlockState[]{
+                    extraData.getData(FlowerBoxBlockTile.FLOWER_0),
+                    extraData.getData(FlowerBoxBlockTile.FLOWER_1),
+                    extraData.getData(FlowerBoxBlockTile.FLOWER_2)
+            };
 
             MatrixStack matrixStack = new MatrixStack();
 
@@ -101,71 +60,70 @@ public class FlowerBoxBakedModel implements IDynamicBakedModel {
 
             float yaw = -state.getValue(FlowerBoxBlock.FACING).getOpposite().toYRot();
             matrixStack.mulPose(Vector3f.YP.rotationDegrees(yaw));
-            matrixStack.translate(-0.3125,-3/16f,0);
+            matrixStack.translate(-0.3125, -3 / 16f, 0);
 
-            if(state.getValue(FlowerBoxBlock.FLOOR)) {
+            if (state.getValue(FlowerBoxBlock.FLOOR)) {
                 matrixStack.translate(0, 0, -0.3125);
             }
             matrixStack.scale(0.625f, 0.625f, 0.625f);
 
             matrixStack.translate(0.5, 0.5, 0.5);
 
-            if (flower1 != null && !flower1.isAir()) {
-                this.addBlockToModel(quads, flower1, matrixStack, side, rand);
-                if(flower1.getBlock() instanceof DoublePlantBlock){
-                    BlockState flower1_up = flower1.setValue(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER);
-                    matrixStack.translate(0, 1, 0);
-                    this.addBlockToModel(quads, flower1_up, matrixStack, side, rand);
-                    matrixStack.translate(0, -1, 0);
+            matrixStack.translate(-0.5, 0, 0);
+
+            for (int i = 0; i < 3; i++) {
+                BlockState flower = flowers[i];
+                if (flower != null && !flower.isAir()) {
+                    this.addBlockToModel(i, quads, flower, matrixStack, side, rand);
+                    if (flower.getBlock() instanceof DoublePlantBlock) {
+                        matrixStack.translate(0, 1, 0);
+                        this.addBlockToModel(i, quads, flower.setValue(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER), matrixStack, side, rand);
+                        matrixStack.translate(0, -1, 0);
+                    }
                 }
+
+                matrixStack.translate(0.5, 0, 0);
             }
 
-            matrixStack.translate(0.5,0,0);
+        } catch (Exception ignored) {
+        }
 
-            if (flower2 != null && !flower2.isAir()) {
-                this.addBlockToModel(quads, flower2, matrixStack, side, rand);
-                if(flower2.getBlock() instanceof DoublePlantBlock){
-                    BlockState flower2_up = flower2.setValue(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER);
-                    matrixStack.translate(0, 1, 0);
-                    this.addBlockToModel(quads, flower2_up, matrixStack, side, rand);
-                    matrixStack.translate(0, -1, 0);
-                }
-            }
-
-            matrixStack.translate(-1,0,0);
-
-            if (flower0 != null && !flower0.isAir()) {
-                this.addBlockToModel(quads, flower0, matrixStack, side, rand);
-                if(flower0.getBlock() instanceof DoublePlantBlock){
-                    BlockState flower0_up = flower0.setValue(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER);
-                    matrixStack.translate(0, 1, 0);
-                    this.addBlockToModel(quads, flower0_up, matrixStack, side, rand);
-                    matrixStack.translate(0, -1, 0);
-                }
-            }
-
-
-
-        } catch (Exception ignored) {}
-
-
+        //TODO: do this for hanging flower pot
         return quads;
     }
 
-    private void addBlockToModel(final List<BakedQuad> quads, BlockState state, MatrixStack matrixStack, @Nullable Direction side, @Nonnull Random rand){
-        IBakedModel model = blockModelShaper.getBlockModel(state);
+    private void addBlockToModel(int index, final List<BakedQuad> quads, BlockState state, MatrixStack matrixStack, @Nullable Direction side, @Nonnull Random rand) {
+
+        IBakedModel model;
+        //for special flowers
+        //TODO: automatically scan and load models from blockstate flower folder
+        ResourceLocation res = FlowerPotHelper.getSpecialFlowerModel(state.getBlock().asItem());
+        if (res != null) {
+            if (state.hasProperty(DoublePlantBlock.HALF) && state.getValue(DoublePlantBlock.HALF) == DoubleBlockHalf.UPPER) {
+                //dont render double plants
+                return;
+            }
+            model = blockModelShaper.getModelManager().getModel(new ModelResourceLocation(res.toString()));
+        } else {
+            model = blockModelShaper.getBlockModel(state);
+        }
 
         List<BakedQuad> mimicQuads = model.getQuads(state, side, rand, EmptyModelData.INSTANCE);
         for (BakedQuad q : mimicQuads) {
 
             int[] v = Arrays.copyOf(q.getVertices(), q.getVertices().length);
 
-            v = RendererUtil.moveVertices(v, -0.5f, -0.5f, -0.5f);
-            v = RendererUtil.scaleVertices(v, 0.625f);
+            //todo add tint swapping for 3 plants
+            if (res == null) {
+                v = RendererUtil.moveVertices(v, -0.5f, -0.5f, -0.5f);
+                v = RendererUtil.scaleVertices(v, 0.625f);
+            } else {
+                v = RendererUtil.moveVertices(v, -0.5f, -0.5f + 3 / 16f, -0.5f);
+            }
 
             v = RendererUtil.transformVertices(v, matrixStack);
 
-            quads.add(new BakedQuad(v, q.getTintIndex(), q.getDirection(), q.getSprite(), q.isShade()));
+            quads.add(new BakedQuad(v, index, q.getDirection(), q.getSprite(), q.isShade()));
         }
     }
 
@@ -203,8 +161,6 @@ public class FlowerBoxBakedModel implements IDynamicBakedModel {
     public ItemCameraTransforms getTransforms() {
         return ItemCameraTransforms.NO_TRANSFORMS;
     }
-
-
 
 
 }

@@ -18,8 +18,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Set;
 
-import static net.minecraftforge.common.BiomeDictionary.Type.HOT;
-import static net.minecraftforge.common.BiomeDictionary.Type.SANDY;
+import static net.minecraftforge.common.BiomeDictionary.Type.*;
 
 @Mod.EventBusSubscriber(modid = Supplementaries.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class FeaturesHandler {
@@ -38,7 +37,7 @@ public class FeaturesHandler {
 
                 RegistryKey<Biome> key = RegistryKey.create(ForgeRegistries.Keys.BIOMES, res);
                 Set<BiomeDictionary.Type> types = BiomeDictionary.getTypes(key);
-                if (types.contains(SANDY) && types.contains(HOT)) {
+                if (types.contains(SANDY) && (types.contains(HOT) || types.contains(DRY))) {
                     event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION)
                             .add(() -> ConfiguredFeatures.CONFIGURED_WILD_FLAX);
                 }

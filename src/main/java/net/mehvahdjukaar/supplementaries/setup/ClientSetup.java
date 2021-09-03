@@ -9,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
+import net.mehvahdjukaar.supplementaries.common.FlowerPotHelper;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandlerClient;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
@@ -26,22 +27,16 @@ import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.color.BlockColors;
-import net.minecraft.client.renderer.color.IBlockColor;
-import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.client.renderer.entity.SpriteRenderer;
 import net.minecraft.client.renderer.model.ModelBakery;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.item.CrossbowItem;
 import net.minecraft.item.ItemModelsProperties;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockDisplayReader;
-import net.minecraft.world.biome.BiomeColors;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
@@ -274,12 +269,13 @@ public class ClientSetup {
     public static void registerBlockColors(ColorHandlerEvent.Block event){
         BlockColors colors = event.getBlockColors();
         colors.register(new TippedSpikesColor(), ModRegistry.BAMBOO_SPIKES.get());
-        colors.register(new DefWaterColor(), ModRegistry.JAR_BOAT.get());
+        colors.register(new DefaultWaterColor(), ModRegistry.JAR_BOAT.get());
         colors.register(new BrewingStandColor(), Blocks.BREWING_STAND);
         colors.register(new MimicBlockColor(), ModRegistry.SIGN_POST.get(), ModRegistry.TIMBER_BRACE.get(), ModRegistry.TIMBER_FRAME.get(),
                 ModRegistry.TIMBER_CROSS_BRACE.get(), ModRegistry.WALL_LANTERN.get());
         colors.register(new CogBlockColor(), ModRegistry.COG_BLOCK.get());
         colors.register(new GunpowderBlockColor(), ModRegistry.GUNPOWDER_BLOCK.get());
+        colors.register(new FlowerBoxColor(), ModRegistry.FLOWER_BOX.get());
 
     }
 
@@ -287,21 +283,8 @@ public class ClientSetup {
     public static void registerItemColors(ColorHandlerEvent.Item event){
         ItemColors colors = event.getItemColors();
         colors.register(new TippedSpikesColor(), ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get());
-        colors.register(new DefWaterColor(), ModRegistry.JAR_BOAT_ITEM.get());
+        colors.register(new DefaultWaterColor(), ModRegistry.JAR_BOAT_ITEM.get());
         colors.register(new CrossbowColor(), Items.CROSSBOW);
-    }
-
-    private static class DefWaterColor implements IItemColor, IBlockColor {
-
-        @Override
-        public int getColor(ItemStack stack, int color) {
-            return 0x3F76E4;
-        }
-
-        @Override
-        public int getColor(BlockState state, IBlockDisplayReader reader, BlockPos pos, int color) {
-            return reader != null && pos != null ? BiomeColors.getAverageWaterColor(reader, pos) : -1;
-        }
     }
 
 
@@ -338,8 +321,8 @@ public class ClientSetup {
 
         //fake models & blockstates
         registerStaticBlockState(ModRegistry.LABEL.get().getRegistryName(), Blocks.AIR, "jar");
-        registerStaticBlockState(WindVaneBlockTileRenderer.MODEL_RES, Blocks.AIR);
 
+        FlowerPotHelper.registerCustomModels(n -> registerStaticBlockState(new ResourceLocation(n), Blocks.AIR));
     }
 
     private static void registerStaticBlockState(ResourceLocation name, Block parent, String... booleanProperties){
