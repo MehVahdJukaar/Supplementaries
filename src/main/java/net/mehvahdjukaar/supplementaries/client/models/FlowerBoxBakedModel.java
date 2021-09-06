@@ -123,7 +123,7 @@ public class FlowerBoxBakedModel implements IDynamicBakedModel {
 
             v = RendererUtil.transformVertices(v, matrixStack);
 
-            quads.add(new BakedQuad(v, index, q.getDirection(), q.getSprite(), q.isShade()));
+            quads.add(new BakedQuad(v, q.getTintIndex() >= 0 ? index : q.getTintIndex(), q.getDirection(), q.getSprite(), q.isShade()));
         }
     }
 

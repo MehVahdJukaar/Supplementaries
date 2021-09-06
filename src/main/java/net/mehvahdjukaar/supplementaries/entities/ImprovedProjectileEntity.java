@@ -8,6 +8,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileHelper;
 import net.minecraft.entity.projectile.ProjectileItemEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.EndGatewayTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -24,7 +25,7 @@ public abstract class ImprovedProjectileEntity extends ProjectileItemEntity {
     public boolean inGround = false;
     public int groundTime = 0;
 
-    protected int maxAge = 180;
+    protected int maxAge = 200;
     protected int maxGroundTime = 20;
     protected float waterDeceleration = 0.8f;
 
@@ -58,6 +59,7 @@ public abstract class ImprovedProjectileEntity extends ProjectileItemEntity {
         double velY = movement.y;
         double velZ = movement.z;
 
+        /*
         //set initial rot
         if (this.xRotO == 0.0F && this.yRotO == 0.0F) {
             float horizontalVel = MathHelper.sqrt(getHorizontalDistanceSqr(movement));
@@ -65,7 +67,7 @@ public abstract class ImprovedProjectileEntity extends ProjectileItemEntity {
             this.xRot = (float) (MathHelper.atan2(velY, horizontalVel) * (double) (180F / (float) Math.PI));
             this.yRotO = this.yRot;
             this.xRotO = this.xRot;
-        }
+        }*/
 
         BlockPos blockpos = this.blockPosition();
         BlockState blockstate = this.level.getBlockState(blockpos);
@@ -89,6 +91,7 @@ public abstract class ImprovedProjectileEntity extends ProjectileItemEntity {
         }
 
         if (!this.inGround) {
+            this.groundTime = 0;
 
             this.updateRotation();
 
@@ -175,10 +178,13 @@ public abstract class ImprovedProjectileEntity extends ProjectileItemEntity {
         }
         if (!this.level.isClientSide) {
             if (this.tickCount > this.maxAge || this.groundTime > maxGroundTime) {
+                this.doStuffBeforeRemoving();
                 this.remove();
             }
         }
     }
+
+    public void doStuffBeforeRemoving(){};
 
     @Nullable
     protected EntityRayTraceResult findHitEntity(Vector3d oPos, Vector3d pos) {
@@ -186,4 +192,17 @@ public abstract class ImprovedProjectileEntity extends ProjectileItemEntity {
     }
 
     public void spawnTrailParticles(Vector3d currentPos, Vector3d newPos){}
+
+    @Override
+    public void addAdditionalSaveData(CompoundNBT tag) {
+        super.addAdditionalSaveData(tag);
+        tag.putBoolean("inGround", this.inGround);
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundNBT tag) {
+        super.readAdditionalSaveData(tag);
+        this.inGround = tag.getBoolean("inGround");
+    }
+
 }

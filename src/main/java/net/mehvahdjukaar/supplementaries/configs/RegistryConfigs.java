@@ -107,7 +107,7 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue IRON_GATE_ENABLED;
         public static ForgeConfigSpec.BooleanValue FEATHER_BLOCK_ENABLED;
         public static ForgeConfigSpec.BooleanValue FLINT_BLOCK_ENABLED;
-        public static ForgeConfigSpec.BooleanValue WILD_FLAX_ENABLED;
+        public static ForgeConfigSpec.BooleanValue SLINGSHOR_ENABLED;
 
         public static ForgeConfigSpec.BooleanValue AMETHYST_ARROW_ENABLED;
         public static ForgeConfigSpec.BooleanValue PRESENT_ENABLED;
@@ -136,7 +136,7 @@ public class RegistryConfigs {
 
             switch (path) {
                 case ModRegistry.FLAX_WILD_NAME:
-                    return reg.WILD_FLAX_ENABLED.get() && reg.FLAX_ENABLED.get();
+                    return reg.FLAX_ENABLED.get();
                 case ModRegistry.FIREFLY_JAR_NAME:
                     return reg.FIREFLY_ENABLED.get() && reg.JAR_ENABLED.get();
                 case ModRegistry.BRASS_LANTERN_NAME:
@@ -240,7 +240,7 @@ public class RegistryConfigs {
             IRON_GATE_ENABLED = builder.define(ModRegistry.IRON_GATE_NAME, true);
             FEATHER_BLOCK_ENABLED = builder.define(ModRegistry.FEATHER_BLOCK_NAME, true);
             FLINT_BLOCK_ENABLED = builder.define(ModRegistry.FLINT_BLOCK_NAME, true);
-            WILD_FLAX_ENABLED = builder.define(ModRegistry.FLAX_WILD_NAME, true);
+            SLINGSHOR_ENABLED = builder.define(ModRegistry.SLINGSHOT_NAME, true);
 
             AMETHYST_ARROW_ENABLED = builder.comment("WIP").define(ModRegistry.AMETHYST_ARROW_NAME,false);
             PRESENT_ENABLED = builder.comment("WIP").define(ModRegistry.PRESENT_NAME,true);

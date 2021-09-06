@@ -31,6 +31,8 @@ public class CompatHandler {
     public static final boolean much_more_mod_compat;
     public static final boolean flywheel;
     public static final boolean repurposed_structures;
+    public static final boolean tetra;
+
 
     static {
         ModList ml = ModList.get();
@@ -52,6 +54,7 @@ public class CompatHandler {
         buzzier_bees = ml.isLoaded("buzzier_bees");
         flywheel = ml.isLoaded("flywheel");
         repurposed_structures = ml.isLoaded("repurposed_structures");
+        tetra = ml.isLoaded("tetra");
     }
 
     public static void init(){

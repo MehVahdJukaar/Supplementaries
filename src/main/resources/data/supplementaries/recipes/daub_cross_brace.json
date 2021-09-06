@@ -17,7 +17,7 @@
         ],
         "key": {
           "1": {
-            "item": "minecraft:stick"
+            "tag": "forge:rods/wooden"
           },
           "2": {
             "item": "supplementaries:daub"

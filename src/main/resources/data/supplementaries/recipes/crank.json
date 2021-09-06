@@ -2,19 +2,13 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     " 1 ",
-    "345"
+    "333"
   ],
   "key": {
     "1": {
-      "item": "minecraft:stick"
+      "tag": "forge:rods/wooden"
     },
     "3": {
-      "item": "minecraft:cobblestone_slab"
-    },
-    "4": {
-      "item": "minecraft:cobblestone_slab"
-    },
-    "5": {
       "item": "minecraft:cobblestone_slab"
     }
   },

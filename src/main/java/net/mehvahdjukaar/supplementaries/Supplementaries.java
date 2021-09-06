@@ -37,9 +37,12 @@ public class Supplementaries{
     }
 
     public Supplementaries() {
+
         //yes this is where I write crap
 
-        //TODO: zipline mod ropewalk
+        //add alliance contract item
+
+        // zipline mod ropewalk
 
         //GLOBE inv model
         //TODO: goblet & jars dynamic baked model
@@ -66,8 +69,6 @@ public class Supplementaries{
         //TODO: add redstone config for iron gate
 
         //TODO: fix horizontal stick texture
-
-        //TODO: fix wall lanterns particles
 
         //mod idea: better birch trees
 

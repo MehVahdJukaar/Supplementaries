@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.world.structures;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
@@ -31,7 +31,8 @@ public class FeaturesHandler {
 
     @SubscribeEvent
     public static void addFeatureToBiomes(BiomeLoadingEvent event) {
-        if (RegistryConfigs.reg.WILD_FLAX_ENABLED.get()) {
+        if (ServerConfigs.spawn.WILD_FLAX_ENABLED.get()) {
+
             ResourceLocation res = event.getName();
             if (res != null) {
 

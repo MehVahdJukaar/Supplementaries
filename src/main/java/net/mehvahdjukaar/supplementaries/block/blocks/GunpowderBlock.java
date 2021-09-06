@@ -501,6 +501,7 @@ public class GunpowderBlock extends LightUpBlock {
         super.stepOn(p_176199_1_, p_176199_2_, p_176199_3_);
     }
 
+    //TODO: this is not working
     @Override
     public void fallOn(World world, BlockPos pos, Entity entity, float height) {
         super.fallOn(world, pos, entity, height);

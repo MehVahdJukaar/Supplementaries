@@ -467,6 +467,8 @@ public class ServerConfigs {
         public static ForgeConfigSpec.IntValue ROAD_SIGN_DISTANCE_MIN;
         public static ForgeConfigSpec.IntValue ROAD_SIGN_DISTANCE_AVR;
 
+        public static ForgeConfigSpec.BooleanValue WILD_FLAX_ENABLED;
+
         private static void init(ForgeConfigSpec.Builder builder) {
             builder.comment("Configure spawning conditions")
                     .push("spawns");
@@ -516,6 +518,10 @@ public class ServerConfigs {
             SIGNS_VILLAGES = builder.comment("list of structure that a sign can point to. Note that they will only spawn in dimensions where vanilla villages can")
                     .defineList("villages", villages, s->true);
 
+            builder.pop();
+
+            builder.push("wild_flax");
+            WILD_FLAX_ENABLED = builder.define("enabled", true);
             builder.pop();
 
             builder.pop();

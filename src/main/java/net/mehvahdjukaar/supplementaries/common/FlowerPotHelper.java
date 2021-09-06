@@ -97,7 +97,7 @@ public class FlowerPotHelper {
         }
     }
 
-    public static final List<ResourceLocation> CUSTOM_MODELS = new ArrayList<>();
+    private static final List<ResourceLocation> CUSTOM_MODELS = new ArrayList<>();
 
     //static init for client and server sync
     static{
@@ -107,12 +107,13 @@ public class FlowerPotHelper {
         if(CompatHandler.quark) {
             Item[] items = new Item[]{
                     Items.SUGAR_CANE, Items.BEETROOT_SEEDS, Items.CARROT, Items.CHORUS_FLOWER, Items.POTATO, Items.GRASS,
-                    Items.COCOA_BEANS, Items.WHEAT_SEEDS, Items.VINE, Items.LARGE_FERN, Items.SWEET_BERRIES,
-                    Items.NETHER_SPROUTS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.TALL_GRASS
+                    Items.COCOA_BEANS, Items.WHEAT_SEEDS, Items.VINE, Items.LARGE_FERN, Items.SWEET_BERRIES, Items.WEEPING_VINES,
+                    Items.NETHER_SPROUTS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.TALL_GRASS, Items.SEA_PICKLE
             };
             toAdd.add("quark:chorus_weeds");
             toAdd.add("quark:root");
             toAdd.add("quark:chorus_twist");
+
 
             Arrays.stream(items).forEach(i -> toAdd.add(i.getRegistryName().toString()));
         }

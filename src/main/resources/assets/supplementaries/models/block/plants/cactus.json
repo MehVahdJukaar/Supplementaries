@@ -2,9 +2,9 @@
 	"credit": "Made with Blockbench",
 	"ambientocclusion": false,
 	"textures": {
-		"particle": "supplementaries:block/flower_pot",
-		"cactus_top": "supplementaries:block/cactus_top",
-		"cactus": "supplementaries:block/cactus_side"
+		"particle": "minecraft:block/flower_pot",
+		"cactus_top": "minecraft:block/cactus_top",
+		"cactus": "minecraft:block/cactus_side"
 	},
 	"elements": [
 		{

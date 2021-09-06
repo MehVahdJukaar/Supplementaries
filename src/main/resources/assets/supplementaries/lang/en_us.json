@@ -224,6 +224,7 @@
   "entity.supplementaries.red_merchant": "Red Merchant",
   "message.supplementaries.timber_frame": "Accepts any full block",
   "block.supplementaries.wild_flax": "Wild Flax",
+  "item.supplementaries.slingshot": "Slingshot",
 
 
   "item.supplementaries.key_chain": "Key Chain",
@@ -290,6 +291,7 @@
   "item.supplementaries.sign_post_willow_env": "Willow Sign Post",
   "item.supplementaries.sign_post_willow_pw": "Willow Sign Post",
   "item.supplementaries.sign_post_wisteria_env": "Wisteria Sign Post",
+
 
   "supplementaries.comment": "enhanced mushroom: red mushroom, brown mushroom, glowshroom",
   "supplementaries.comment2": "outer end: azure",

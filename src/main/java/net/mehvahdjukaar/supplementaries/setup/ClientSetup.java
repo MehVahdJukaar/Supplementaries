@@ -31,9 +31,9 @@ import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.client.renderer.entity.SpriteRenderer;
 import net.minecraft.client.renderer.model.ModelBakery;
 import net.minecraft.client.renderer.texture.AtlasTexture;
-import net.minecraft.item.CrossbowItem;
-import net.minecraft.item.ItemModelsProperties;
-import net.minecraft.item.Items;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.*;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.util.ResourceLocation;
@@ -50,6 +50,7 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -82,6 +83,8 @@ public class ClientSetup {
                 ShardProjectileRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModRegistry.FLINT_SHARD.get(),
                 ShardProjectileRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModRegistry.SLINGSHOT_PROJECTILE.get(),
+                SlingshotProjectileRenderer::new);
 
 
         //dynamic textures
@@ -231,10 +234,22 @@ public class ClientSetup {
         RenderTypeLookup.setRenderLayer(ModRegistry.GUNPOWDER_BLOCK.get(), RenderType.cutout());
 
         ItemModelsProperties.register(Items.CROSSBOW, new ResourceLocation("rope_arrow"),
-                (stack, world, entity) -> entity != null && CrossbowItem.isCharged(stack) && CrossbowItem.containsChargedProjectile(stack, ModRegistry.ROPE_ARROW_ITEM.get()) ? 1.0F : 0.0F);
+                new CrossbowProperty(ModRegistry.ROPE_ARROW_ITEM.get()));
 
         ItemModelsProperties.register(Items.CROSSBOW, new ResourceLocation("amethyst_arrow"),
-                (stack, world, entity) -> entity != null && CrossbowItem.isCharged(stack) && CrossbowItem.containsChargedProjectile(stack, ModRegistry.AMETHYST_ARROW_ITEM.get()) ? 1.0F : 0.0F);
+                new CrossbowProperty(ModRegistry.ROPE_ARROW_ITEM.get()));
+
+        ItemModelsProperties.register(ModRegistry.SLINGSHOT_ITEM.get(), new ResourceLocation("pull"),
+            (stack, world, entity) -> {
+            if (entity == null) {
+                return 0.0F;
+            } else {
+                return entity.getUseItem() != stack ? 0.0F : (float)(stack.getUseDuration() - entity.getUseItemRemainingTicks()) / 20.0F;
+            }
+        });
+        ItemModelsProperties.register(ModRegistry.SLINGSHOT_ITEM.get(), new ResourceLocation("pulling"),
+                (stack, world, entity) -> entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1.0F : 0.0F);
+
 
         //Registry.PRESENTS_ITEMS.values().forEach(i ->
          //       ItemModelsProperties.register(i.get(), new ResourceLocation("packed"),
@@ -245,7 +260,20 @@ public class ClientSetup {
 
     }
 
+    public static class CrossbowProperty implements IItemPropertyGetter{
 
+        private final Item projectile;
+
+        private CrossbowProperty(Item projectile) {
+            this.projectile = projectile;
+        }
+
+        @Override
+        public float call(ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) {
+            return entity != null && CrossbowItem.isCharged(stack)
+                    && CrossbowItem.containsChargedProjectile(stack, projectile) ? 1.0F : 0.0F;
+        }
+    }
 
 
     //particles

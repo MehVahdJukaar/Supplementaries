@@ -43,6 +43,7 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraftforge.common.extensions.IForgeBlock;
 import net.minecraftforge.common.util.Lazy;
 
 import javax.annotation.Nullable;
@@ -50,7 +51,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer {
+public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer, IForgeBlock {
     protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 13.0D, 16.0D);
     protected static final VoxelShape SHAPE_UP = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D);
     protected static final VoxelShape SHAPE_DOWN = Block.box(0.0D, 15.0D, 0.0D, 16.0D, 16.0D, 16.0D);
@@ -61,7 +62,6 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer 
 
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
     public static final BooleanProperty TIPPED = BlockProperties.TIPPED;
-
 
     public BambooSpikesBlock(Properties properties) {
         super(properties);

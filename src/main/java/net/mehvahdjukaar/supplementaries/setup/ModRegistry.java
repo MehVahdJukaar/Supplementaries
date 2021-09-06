@@ -276,7 +276,9 @@ public class ModRegistry {
     public static final RegistryObject<EntityType<RopeArrowEntity>> ROPE_ARROW = ENTITIES.register(ROPE_ARROW_NAME, () -> (
             EntityType.Builder.<RopeArrowEntity>of(RopeArrowEntity::new, EntityClassification.MISC)
                     .setCustomClientFactory(RopeArrowEntity::new)
-                    .sized(0.5F, 0.5F).clientTrackingRange(4).updateInterval(20))//.size(0.25F, 0.25F).trackingRange(4).updateInterval(10))
+                    .sized(0.5F, 0.5F)
+                    .clientTrackingRange(4)
+                    .updateInterval(20))
             .build(ROPE_ARROW_NAME));
     public static final RegistryObject<Item> ROPE_ARROW_ITEM = ITEMS.register(ROPE_ARROW_NAME, () -> new RopeArrowItem(
             new Item.Properties().tab(getTab(ItemGroup.TAB_MISC, ROPE_ARROW_NAME)).defaultDurability(16).setNoRepair()));
@@ -286,7 +288,9 @@ public class ModRegistry {
     public static final RegistryObject<EntityType<AmethystArrowEntity>> AMETHYST_ARROW = ENTITIES.register(AMETHYST_ARROW_NAME, () -> (
             EntityType.Builder.<AmethystArrowEntity>of(AmethystArrowEntity::new, EntityClassification.MISC)
                     .setCustomClientFactory(AmethystArrowEntity::new)
-                    .sized(0.5F, 0.5F).clientTrackingRange(4).updateInterval(20))//.size(0.25F, 0.25F).trackingRange(4).updateInterval(10))
+                    .sized(0.5F, 0.5F)
+                    .clientTrackingRange(4)
+                    .updateInterval(20))
             .build(AMETHYST_ARROW_NAME));
     public static final RegistryObject<Item> AMETHYST_ARROW_ITEM = ITEMS.register(AMETHYST_ARROW_NAME, () -> new AmethystArrowItem(
             new Item.Properties().tab(null)));
@@ -295,7 +299,9 @@ public class ModRegistry {
     public static final RegistryObject<EntityType<ShardProjectileEntity>> AMETHYST_SHARD = ENTITIES.register(AMETHYST_SHARD_NAME, () -> (
             EntityType.Builder.<ShardProjectileEntity>of(ShardProjectileEntity::new, EntityClassification.MISC)
                     .setCustomClientFactory(ShardProjectileEntity::new)
-                    .sized(0.5F, 0.5F).clientTrackingRange(4).updateInterval(20))//.size(0.25F, 0.25F).trackingRange(4).updateInterval(10))
+                    .sized(0.5F, 0.5F)
+                    .clientTrackingRange(4)
+                    .updateInterval(20))
             .build(AMETHYST_SHARD_NAME));
     public static final RegistryObject<Item> AMETHYST_SHARD_ITEM = ITEMS.register(AMETHYST_SHARD_NAME, () ->
             new Item(new Item.Properties().tab(null)));
@@ -305,10 +311,27 @@ public class ModRegistry {
     public static final RegistryObject<EntityType<ShardProjectileEntity>> FLINT_SHARD = ENTITIES.register(FLINT_SHARD_NAME, () -> (
             EntityType.Builder.<ShardProjectileEntity>of(ShardProjectileEntity::new, EntityClassification.MISC)
                     .setCustomClientFactory(ShardProjectileEntity::new)
-                    .sized(0.5F, 0.5F).clientTrackingRange(4).updateInterval(20))//.size(0.25F, 0.25F).trackingRange(4).updateInterval(10))
+                    .sized(0.5F, 0.5F)
+                    .clientTrackingRange(4)
+                    .updateInterval(20))//.size(0.25F, 0.25F).trackingRange(4).updateInterval(10))
             .build(FLINT_SHARD_NAME));
     public static final RegistryObject<Item> FLINT_SHARD_ITEM = ITEMS.register(FLINT_SHARD_NAME, () ->
             new Item(new Item.Properties().tab(null)));
+
+    //slingshot projectile
+    public static final String SLINGSHOT_PROJECTILE_NAME = "slingshot_projectile";
+    public static final RegistryObject<EntityType<SlingshotProjectileEntity>> SLINGSHOT_PROJECTILE = ENTITIES.register(SLINGSHOT_PROJECTILE_NAME, () -> (
+            EntityType.Builder.<SlingshotProjectileEntity>of(SlingshotProjectileEntity::new, EntityClassification.MISC)
+                    .setCustomClientFactory(SlingshotProjectileEntity::new)
+                    .sized(0.5F, 0.5F)
+                    .clientTrackingRange(4)
+                    .updateInterval(20))
+            .build(SLINGSHOT_PROJECTILE_NAME));
+
+    //slingshot
+    public static final String SLINGSHOT_NAME = "slingshot";
+    public static final RegistryObject<Item> SLINGSHOT_ITEM = regItem(SLINGSHOT_NAME, () -> new SlingshotItem((new Item.Properties())
+            .tab(getTab(ItemGroup.TAB_COMBAT, SLINGSHOT_NAME)).stacksTo(1).durability(192)));
 
 
     //blocks
@@ -392,6 +415,7 @@ public class ModRegistry {
     public static final String FLUTE_NAME = "flute";
     public static final RegistryObject<Item> FLUTE_ITEM = regItem(FLUTE_NAME, () -> new Flute((new Item.Properties())
             .tab(getTab(ItemGroup.TAB_TOOLS, FLUTE_NAME)).stacksTo(1).durability(32)));
+
     //speedometer
     /*
     public static final String SPEEDOMETER_NAME = "speedometer";

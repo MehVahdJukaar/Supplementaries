@@ -8,7 +8,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileItemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -30,7 +29,7 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.fml.network.FMLPlayMessages;
 import net.minecraftforge.fml.network.NetworkHooks;
 
-public class ThrowableBrickEntity extends ProjectileItemEntity{
+public class ThrowableBrickEntity extends ImprovedProjectileEntity{
     public ThrowableBrickEntity(EntityType<? extends ThrowableBrickEntity> type, World world) {
         super(type, world);
     }
@@ -45,11 +44,6 @@ public class ThrowableBrickEntity extends ProjectileItemEntity{
 
     public ThrowableBrickEntity(FMLPlayMessages.SpawnEntity packet, World world) {
         super(ModRegistry.THROWABLE_BRICK.get(), world);
-    }
-
-    @Override
-    protected float getGravity() {
-        return 0.03F;
     }
 
     @Override
@@ -69,8 +63,7 @@ public class ThrowableBrickEntity extends ProjectileItemEntity{
         return itemstack.isEmpty() ? new ItemParticleData(ParticleTypes.ITEM, new ItemStack(this.getDefaultItem())) : new ItemParticleData(ParticleTypes.ITEM, itemstack);
     }
 
-
-    //
+    @Override
     public void handleEntityEvent(byte id) {
         if (id == 3) {
             IParticleData iparticledata = this.makeParticle();
@@ -97,9 +90,7 @@ public class ThrowableBrickEntity extends ProjectileItemEntity{
                 else {
                     breakGlass(pos, 6);
                 }
-
             }
-
         }
     }
 
@@ -149,5 +140,9 @@ public class ThrowableBrickEntity extends ProjectileItemEntity{
             this.remove();
         }
 
+    }
+
+    @Override
+    protected void updateRotation() {
     }
 }

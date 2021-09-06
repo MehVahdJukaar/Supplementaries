@@ -6,11 +6,9 @@ import net.mehvahdjukaar.supplementaries.world.explosion.BombExplosion;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.TNTBlock;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.IRendersAsItem;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.FireballEntity;
-import net.minecraft.entity.projectile.ProjectileItemEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -31,8 +29,6 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.ExplosionContext;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.FMLPlayMessages;
@@ -40,52 +36,43 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 import java.util.Random;
 
-@OnlyIn(value = Dist.CLIENT, _interface = IRendersAsItem.class)
-public class BombEntity extends ProjectileItemEntity implements IRendersAsItem, IEntityAdditionalSpawnData {
-    private double prevX = 0;
-    private double prevY = 0;
-    private double prevZ = 0;
-    private int age = 0;
-    private boolean active = true;
+public class BombEntity extends ImprovedProjectileEntity implements IEntityAdditionalSpawnData {
 
-    private boolean superCharged = false;
+    private boolean blue;
+
+    private boolean active = true;
 
     private int changeTimer = -1;
 
-    private boolean blue = false;
+    private boolean superCharged = false;
 
     public BombEntity(EntityType<? extends BombEntity> type, World world) {
         super(type, world);
-        this.prevX = this.getX();
-        this.prevY = this.getY();
-        this.prevZ = this.getZ();
     }
 
     public BombEntity(World worldIn, LivingEntity throwerIn, boolean blue) {
         super(ModRegistry.BOMB.get(), throwerIn, worldIn);
-        this.prevX = this.getX();
-        this.prevY = this.getY();
-        this.prevZ = this.getZ();
         this.blue = blue;
+        this.maxAge = 200;
     }
 
     public BombEntity(World worldIn, double x, double y, double z, boolean blue) {
         super(ModRegistry.BOMB.get(), x, y, z, worldIn);
         this.blue = blue;
+        this.maxAge = 200;
     }
 
     public BombEntity(FMLPlayMessages.SpawnEntity packet, World world) {
         super(ModRegistry.BOMB.get(), world);
-        this.prevX = this.getX();
-        this.prevY = this.getY();
-        this.prevZ = this.getZ();
+        this.maxAge = 200;
+        //packet.getAdditionalData().rea
     }
 
+    //data to be saved when the entity gets unloaded
     @Override
     public void addAdditionalSaveData(CompoundNBT compound) {
         super.addAdditionalSaveData(compound);
         compound.putBoolean("Active", this.active);
-        compound.putInt("Age", this.age);
         compound.putBoolean("Blue", this.blue);
         compound.putInt("Timer", this.changeTimer);
     }
@@ -94,11 +81,11 @@ public class BombEntity extends ProjectileItemEntity implements IRendersAsItem, 
     public void readAdditionalSaveData(CompoundNBT compound) {
         super.readAdditionalSaveData(compound);
         this.active = compound.getBoolean("Active");
-        this.age = compound.getInt("Age");
         this.blue = compound.getBoolean("Blue");
         this.changeTimer = compound.getInt("Timer");
     }
 
+    //this is extra data needed when an entity creation packet is sent from server to client
     @Override
     public void readSpawnData(PacketBuffer buffer) {
         this.blue = buffer.readBoolean();
@@ -177,7 +164,8 @@ public class BombEntity extends ProjectileItemEntity implements IRendersAsItem, 
     public void tick() {
         if (this.changeTimer == 0) {
             if (!this.level.isClientSide) {
-                this.explodeOrBreak();
+                this.doStuffBeforeRemoving();
+                this.remove();
             }
             return;
         }
@@ -191,45 +179,28 @@ public class BombEntity extends ProjectileItemEntity implements IRendersAsItem, 
         if (this.active && this.isInWater() && !this.blue) {
             this.turnOff();
         }
-        if (this.level.isClientSide && this.active) {
-            if (this.random.nextFloat() < 1 && !this.firstTick) {
-                double x = this.getX();
-                double y = this.getY();
-                double z = this.getZ();
-                Vector3d vector3d = this.getDeltaMovement();
-                double dx = vector3d.x;
-                double dy = vector3d.y;
-                double dz = vector3d.z;
-                for(int i = 0; i < 4; ++i) {
-                    double j = i/4d;
-                    this.level.addParticle(ModRegistry.BOMB_SMOKE_PARTICLE.get(), x + dx * j, 0.5 + y + dy * j, z + dz * j, 0, 0.02, 0);
-                }
-                /*
-                double x2 = (x - this.prevX);
-                double y2 = (y - this.prevY);
-                double z2 = (z - this.prevZ);
-                level.addParticle(Registry.BOMB_SMOKE_PARTICLE.get(),
-                        x + r(), y + 0.5 + r(), z + r(), 0, 0.01, 0);
-                level.addParticle(Registry.BOMB_SMOKE_PARTICLE.get(),
-                        x + (x2 / 2) + r(), 0.5 + y + (y2 / 2), z + (z2 / 2) + r(), 0, 0., 0);
-                level.addParticle(Registry.BOMB_SMOKE_PARTICLE.get(),
-                        x + (x2 / 4) + r(), 0.5 + y + (y2 / 4), z + (z2 / 4) + r(), 0, 0, 0);
-                level.addParticle(Registry.BOMB_SMOKE_PARTICLE.get(),
-                        x + (x2 * 0.75) + r(), 0.5 + y + (y2 * 0.75), z + (z2 * 0.75) + r(), 0, 0, 0);
-                 */
-            }
-            this.prevX = this.getX();
-            this.prevY = this.getY();
-            this.prevZ = this.getZ();
 
-        } else {
-            this.age++;
-            if (this.age >= 200) this.explodeOrBreak();
-        }
         super.tick();
 
     }
 
+    @Override
+    public void spawnTrailParticles(Vector3d currentPos, Vector3d newPos) {
+        if (this.active && !this.firstTick) {
+
+            double x = currentPos.x;
+            double y = currentPos.y;
+            double z = currentPos.z;
+            double dx = newPos.x - x;
+            double dy = newPos.y - y;
+            double dz = newPos.z - z;
+            int s = 4;
+            for(int i = 0; i < s; ++i) {
+                double j = i/(double)s;
+                this.level.addParticle(ModRegistry.BOMB_SMOKE_PARTICLE.get(), x + dx * j, 0.5 + y + dy * j, z + dz * j, 0, 0.02, 0);
+            }
+        }
+    }
 
     public static boolean canBreakBlock(IBlockReader world, BlockPos pos, BlockState state, float power) {
         switch (ServerConfigs.cached.BOMB_BREAKS){
@@ -303,15 +274,19 @@ public class BombEntity extends ProjectileItemEntity implements IRendersAsItem, 
             //normal explosion
             if (!this.removed) {
                 if (!this.blue || this.superCharged) {
-                    this.explodeOrBreak();
+                    this.doStuffBeforeRemoving();
                 }
             }
         }
     }
 
+    @Override
+    protected void updateRotation() {
+    }
 
     //explode
-    public void explodeOrBreak() {
+    @Override
+    public void doStuffBeforeRemoving() {
         if (this.active) {
             this.createExplosion();
             //spawn particles
@@ -351,5 +326,6 @@ public class BombEntity extends ProjectileItemEntity implements IRendersAsItem, 
         WEAK,
         NONE
     }
+
 
 }

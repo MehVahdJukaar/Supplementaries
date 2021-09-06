@@ -31,7 +31,7 @@ public class VillagerTradesHandler {
             new RocketForEmeraldTrade(3, 1, 3, 8),
             itemForEmeraldTrade(Items.TNT, 1, 4, 8),
             itemForEmeraldTrade(ModRegistry.ROPE_ARROW_ITEM.get(), 1, 4, 6),
-            itemForEmeraldTrade(ModRegistry.BOMB_BLUE_ITEM.get(), 1, ModRegistry.BOMB_ITEM.get(), 1, 30, 3),
+            itemForEmeraldTrade(ModRegistry.BOMB_BLUE_ITEM.get(), 1, ModRegistry.BOMB_ITEM.get(), 1, 40, 3),
     };
 
     static BasicTrade itemForEmeraldTrade(IItemProvider item, int quantity, int price, int maxTrades) {
