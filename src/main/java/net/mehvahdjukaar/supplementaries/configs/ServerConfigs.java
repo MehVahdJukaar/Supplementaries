@@ -59,6 +59,8 @@ public class ServerConfigs {
         public static ForgeConfigSpec.IntValue FLUTE_DISTANCE;
         public static ForgeConfigSpec.DoubleValue BOMB_RADIUS;
         public static ForgeConfigSpec.EnumValue<BombEntity.breakingMode> BOMB_BREAKS;
+        public static ForgeConfigSpec.DoubleValue SLINGSHOT_RANGE;
+        public static ForgeConfigSpec.IntValue SLINGSHOT_CHARGE;
 
         private static void init(ForgeConfigSpec.Builder builder){
             builder.push("items");
@@ -84,6 +86,13 @@ public class ServerConfigs {
             BOMB_BREAKS = builder.comment("Do bombs break blocks like tnt?")
                     .defineEnum("break_blocks", BombEntity.breakingMode.WEAK);
 
+            builder.pop();
+
+            builder.push("slingshot");
+            SLINGSHOT_RANGE = builder.comment("Slingshot range multiplier")
+                    .defineInRange("range_multiplier", 1f, 0, 5);
+            SLINGSHOT_CHARGE = builder.comment("Time in ticks to fully charge a slingshot")
+                    .defineInRange("charge_time", 20, 0, 100);
             builder.pop();
 
 
@@ -564,6 +573,8 @@ public class ServerConfigs {
         public static int FLUTE_DISTANCE;
         public static float BOMB_RADIUS;
         public static BombEntity.breakingMode BOMB_BREAKS;
+        public static double SLINGSHOT_RANGE;
+        public static int SLINGSHOT_CHARGE;
         //tweaks
         public static int ZOMBIE_HORSE_COST;
         public static boolean ZOMBIE_HORSE;
@@ -584,7 +595,6 @@ public class ServerConfigs {
         public static boolean MAP_MARKERS;
         public static boolean CEILING_BANNERS;
         public static boolean PLACEABLE_GUNPOWDER;
-        public static int GUNPOWDER_SP;
         public static int GUNPOWDER_BURN_SPEED;
         public static int GUNPOWDER_SPREAD_AGE;
         //spawns
@@ -665,6 +675,8 @@ public class ServerConfigs {
             FLUTE_RADIUS = item.FLUTE_RADIUS.get();
             BOMB_BREAKS = item.BOMB_BREAKS.get();
             BOMB_RADIUS = (float)(item.BOMB_RADIUS.get()+0f);
+            SLINGSHOT_RANGE = item.SLINGSHOT_RANGE.get();
+            SLINGSHOT_CHARGE = item.SLINGSHOT_CHARGE.get();
 
             FIREFLY_MIN = spawn.FIREFLY_MIN.get();
             FIREFLY_MAX = spawn.FIREFLY_MAX.get();

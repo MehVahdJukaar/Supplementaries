@@ -176,13 +176,12 @@ public class ModRegistry {
     public static final RegistryObject<BasicParticleType> BOMB_SMOKE_PARTICLE = regParticle("bomb_smoke");
     public static final RegistryObject<BasicParticleType> BOTTLING_XP_PARTICLE = regParticle("bottling_xp");
     public static final RegistryObject<BasicParticleType> FEATHER_PARTICLE = regParticle("feather");
+    public static final RegistryObject<BasicParticleType> SLINGSHOT_PARTICLE = regParticle("air_burst");
 
 
     //recipes
     public static final RegistryObject<IRecipeSerializer<?>> BLACKBOARD_DUPLICATE_RECIPE = RECIPES.register("blackboard_duplicate_recipe", () ->
             new SpecialRecipeSerializer<>(BlackboardDuplicateRecipe::new));
-    //public static final RegistryObject<IRecipeSerializer<?>> BLACKBOARD_CLEAR_RECIPE = RECIPES.register("blackboard_clear_recipe", ()->
-    //        new SpecialRecipeSerializer<>(BlackboardClearRecipe::new));
     public static final RegistryObject<IRecipeSerializer<?>> BAMBOO_SPIKES_TIPPED_RECIPE = RECIPES.register("bamboo_spikes_tipped_recipe", () ->
             new SpecialRecipeSerializer<>(TippedBambooSpikesRecipe::new));
     public static final RegistryObject<IRecipeSerializer<?>> ROPE_ARROW_CREATE_RECIPE = RECIPES.register("rope_arrow_create_recipe", () ->

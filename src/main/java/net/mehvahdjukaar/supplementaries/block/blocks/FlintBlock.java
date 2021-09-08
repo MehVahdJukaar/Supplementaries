@@ -3,10 +3,7 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -19,7 +16,8 @@ public class FlintBlock extends Block {
     @Override
     public void stepOn(World world, BlockPos pos, Entity entity) {
 
-
+        //TODO: add this functionality
+        /*
         if (!world.isClientSide && (entity.getDeltaMovement().length() > 0.003F)) {
             if(world.random.nextInt(2) == 0) {
                 //double d0 = Math.abs(entity.getX() - entity.xOld);
@@ -30,7 +28,7 @@ public class FlintBlock extends Block {
                     }
                 //}
             }
-        }
+        }*/
 
         super.stepOn(world, pos, entity);
     }

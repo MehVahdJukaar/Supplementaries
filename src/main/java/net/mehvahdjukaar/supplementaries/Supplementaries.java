@@ -40,7 +40,8 @@ public class Supplementaries{
 
         //yes this is where I write crap
 
-        //add alliance contract item
+
+        //TODO: improve finish feather particle & slingshot visuals
 
         // zipline mod ropewalk
 

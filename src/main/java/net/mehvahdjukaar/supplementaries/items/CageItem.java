@@ -7,10 +7,8 @@ import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.block.util.MobHolder;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
-import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.Attributes;
@@ -58,22 +56,22 @@ public class CageItem extends BlockItem {
         return mobContainerWidth;
     }
 
-    protected boolean canFitEntity(Entity e){
+    protected boolean canFitEntity(Entity e) {
         float margin = 0.125f;
         float h = e.getBbHeight() - margin;
         float w = e.getBbWidth() - margin;
-        return w <  this.mobContainerWidth && h < mobContainerHeight;
+        return w < this.mobContainerWidth && h < mobContainerHeight;
     }
 
-    public void playCatchSound(PlayerEntity player){
+    public void playCatchSound(PlayerEntity player) {
         player.level.playSound(null, player.blockPosition(), SoundEvents.CHAIN_FALL, SoundCategory.BLOCKS, 1, 0.7f);
     }
 
-    public void playFailSound(PlayerEntity player){
+    public void playFailSound(PlayerEntity player) {
 
     }
 
-    public void playReleaseSound(World world, Vector3d v){
+    public void playReleaseSound(World world, Vector3d v) {
         world.playSound(null, v.x(), v.y(), v.z(), SoundEvents.CHICKEN_EGG, SoundCategory.PLAYERS, 1, 0.05f);
     }
 
@@ -86,14 +84,14 @@ public class CageItem extends BlockItem {
         return returnStack;
     }
 
-    public boolean isFull(ItemStack stack){
+    public boolean isFull(ItemStack stack) {
         CompoundNBT tag = stack.getTag();
         return tag != null && tag.contains("BlockEntityTag");
     }
 
     @Override
     public int getItemStackLimit(ItemStack stack) {
-         return this.isFull(stack) ? 1 : super.getItemStackLimit(stack);
+        return this.isFull(stack) ? 1 : super.getItemStackLimit(stack);
     }
 
     @Override
@@ -117,10 +115,10 @@ public class CageItem extends BlockItem {
     }
 
     //immediately discards pets and not alive entities
-    protected final boolean isEntityValid(Entity e, PlayerEntity player){
-        if(!e.isAlive() || (e instanceof LivingEntity && ((LivingEntity) e).isDeadOrDying())) return false;
+    protected final boolean isEntityValid(Entity e, PlayerEntity player) {
+        if (!e.isAlive() || (e instanceof LivingEntity && ((LivingEntity) e).isDeadOrDying())) return false;
 
-        if(e instanceof TameableEntity){
+        if (e instanceof TameableEntity) {
             TameableEntity pet = ((TameableEntity) e);
             return !pet.isTame() || pet.isOwnedBy(player);
         }
@@ -133,7 +131,7 @@ public class CageItem extends BlockItem {
 
             if (this.canCatch(entity)) {
 
-                if(entity.isPassenger()){
+                if (entity.isPassenger()) {
                     entity.getVehicle().ejectPassengers();
                 }
 
@@ -154,7 +152,7 @@ public class CageItem extends BlockItem {
         return ActionResultType.PASS;
     }
 
-    private boolean canCatch(Entity e){
+    private boolean canCatch(Entity e) {
         String name = e.getType().getRegistryName().toString();
 
         if (ServerConfigs.cached.CAGE_ALL_MOBS) {
@@ -164,11 +162,11 @@ public class CageItem extends BlockItem {
             return true;
         }
         //only allows small slimes
-        if (e instanceof SlimeEntity && ((SlimeEntity) e).getSize() > 1){
+        if (e instanceof SlimeEntity && ((SlimeEntity) e).getSize() > 1) {
             return false;
         }
 
-        if(CapturedMobsHelper.COMMAND_MOBS.contains(name)){
+        if (CapturedMobsHelper.COMMAND_MOBS.contains(name)) {
             return true;
         }
         //hardcoding bees to work with resourceful bees
@@ -193,16 +191,16 @@ public class CageItem extends BlockItem {
                 (type.is(ModTags.CAGE_BABY_CATCHABLE) && isBaby));
     }
 
-    private void angerNearbyEntities(Entity entity, PlayerEntity player){
+    private void angerNearbyEntities(Entity entity, PlayerEntity player) {
         //anger entities
         if (entity instanceof IAngerable && entity instanceof MobEntity) {
             getEntitiesInRange((MobEntity) entity).stream()
                     .filter((mob) -> mob != entity).map(
-                            (mob) -> (IAngerable) mob).forEach((mob) -> {
-                        mob.forgetCurrentTargetAndRefreshUniversalAnger();
-                        mob.setPersistentAngerTarget(player.getUUID());
-                        mob.setLastHurtByMob(player);
-                    });
+                    (mob) -> (IAngerable) mob).forEach((mob) -> {
+                mob.forgetCurrentTargetAndRefreshUniversalAnger();
+                mob.setPersistentAngerTarget(player.getUUID());
+                mob.setLastHurtByMob(player);
+            });
         }
         //piglin workaround. don't know why they are IAngerable
         if (entity instanceof PiglinEntity) {
@@ -231,7 +229,7 @@ public class CageItem extends BlockItem {
                 }
             }
         }
-        if (!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().options.advancedItemTooltips) return;
+        //if (!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().options.advancedItemTooltips) return;
         tooltip.add(new TranslationTextComponent("message.supplementaries.cage").withStyle(TextFormatting.ITALIC).withStyle(TextFormatting.GRAY));
     }
 
@@ -252,8 +250,7 @@ public class CageItem extends BlockItem {
                     ((BucketItem) bucketStack.getItem()).checkExtraContent(world, bucketStack, context.getClickedPos());
                     success = true;
                 }
-            }
-            else if (com.contains("MobHolder")) {
+            } else if (com.contains("MobHolder")) {
                 CompoundNBT nbt = com.getCompound("MobHolder");
                 Entity entity = EntityType.loadEntityRecursive(nbt.getCompound("EntityData"), world, o -> o);
                 if (entity != null) {
@@ -291,7 +288,7 @@ public class CageItem extends BlockItem {
                 }
             }
             if (success) {
-                if(!world.isClientSide) {
+                if (!world.isClientSide) {
                     this.playReleaseSound(world, v);
                     if (!player.isCreative()) {
                         ItemStack returnItem = new ItemStack(this);
@@ -309,7 +306,7 @@ public class CageItem extends BlockItem {
     @Override
     public ActionResultType place(BlockItemUseContext context) {
         PlayerEntity player = context.getPlayer();
-        if(player!=null && player.isShiftKeyDown()) {
+        if (player != null && (player.isShiftKeyDown() || player.getItemInHand(context.getHand()).getItem() == this)) {
             return super.place(context);
         }
         return ActionResultType.PASS;

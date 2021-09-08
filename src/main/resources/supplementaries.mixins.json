@@ -34,7 +34,10 @@
     "StrongholdCrossingMixin",
     "StrongholdRoomMixin",
     "VineBlockMixin",
-    "ZombieHorseMixin"
+    "ZombieHorseMixin",
+    "accessors.ChickenEntityAccessor",
+    "accessors.HorseEntityAccessor",
+    "accessors.MineshaftAccessor"
   ],
   "client": [
     "BellTileEntityRendererMixin",

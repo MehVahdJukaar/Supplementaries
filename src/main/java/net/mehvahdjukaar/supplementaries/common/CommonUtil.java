@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common;
 import net.mehvahdjukaar.supplementaries.block.blocks.SignPostBlock;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.block.*;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -17,6 +18,8 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IWorldReader;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.Tags;
 
 import java.util.Calendar;
@@ -205,7 +208,10 @@ public class CommonUtil {
 
 
 
-
+    @OnlyIn(Dist.CLIENT)
+    public static PlayerEntity getClientPlayer(){
+        return Minecraft.getInstance().player;
+    }
 
 
 

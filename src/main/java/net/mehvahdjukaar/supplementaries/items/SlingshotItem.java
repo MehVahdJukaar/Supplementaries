@@ -1,13 +1,17 @@
 package net.mehvahdjukaar.supplementaries.items;
 
+import com.google.common.collect.ImmutableSet;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.mehvahdjukaar.selene.api.IFirstPersonAnimationProvider;
 import net.mehvahdjukaar.selene.api.IThirdPersonAnimationProvider;
 import net.mehvahdjukaar.selene.util.TwoHandedAnimation;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.entities.SlingshotProjectileEntity;
+import net.mehvahdjukaar.supplementaries.events.ItemsOverrideHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.enchantment.IVanishable;
@@ -17,8 +21,14 @@ import net.minecraft.item.*;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.*;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Quaternion;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import java.util.function.Predicate;
 
 public class SlingshotItem extends ShootableItem implements IVanishable, IFirstPersonAnimationProvider, IThirdPersonAnimationProvider {
@@ -28,68 +38,85 @@ public class SlingshotItem extends ShootableItem implements IVanishable, IFirstP
     }
 
     @Override
-    public void releaseUsing(ItemStack stack, World world, LivingEntity entity, int useTime) {
+    public void releaseUsing(ItemStack stack, World world, LivingEntity entity, int timeLeft) {
         if (entity instanceof PlayerEntity) {
-            PlayerEntity playerentity = (PlayerEntity)entity;
+            PlayerEntity playerentity = (PlayerEntity) entity;
 
-            ItemStack itemstack = playerentity.getProjectile(stack);
+            ItemStack projectileStack = playerentity.getProjectile(stack);
 
-            int i = this.getUseDuration(stack) - useTime;
+            if (!projectileStack.isEmpty() && this.getAllSupportedProjectiles().test(projectileStack)) {
 
-            if (!itemstack.isEmpty() && this.getAllSupportedProjectiles().test(itemstack)) {
+                float power = getPowerForTime(stack, timeLeft);
+                if (!((double) power < 0.085D)) {
 
-                float f = getPowerForTime(i);
-                if (!((double)f < 0.01D)) {
-                    boolean flag1 = playerentity.abilities.instabuild;
+                    int maxProjectiles = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.MULTISHOT, stack) > 0 ? 3 : 1;
+
+                    List<ItemStack> projectiles = new ArrayList<>();
+
+                    for (int p = 0; p < maxProjectiles; p++) {
+                        if (!this.getAllSupportedProjectiles().test(projectileStack)) {
+                            break;
+                        }
+                        projectiles.add(projectileStack.copy());
+                        if (!playerentity.abilities.instabuild) {
+                            projectileStack.shrink(1);
+                            if (projectileStack.isEmpty()) {
+                                playerentity.inventory.removeItem(projectileStack);
+                            }
+                        }
+                        projectileStack = playerentity.getProjectile(stack);
+                    }
                     if (!world.isClientSide) {
+                        float[] pitches = getShotPitches(world.getRandom());
+                        int count = projectiles.size();
+                        float angle = 10;
+                        for (int j = 0; j < count; j++) {
 
-                        SlingshotProjectileEntity projectile = new SlingshotProjectileEntity(playerentity, world, itemstack);
-
-                        projectile.shootFromRotation(playerentity, playerentity.xRot, playerentity.yRot, 0.0F, f * 3.0F, 1.0F);
-                        if (f == 1.0F) {
-                            //projectile.setCritArrow(true);
-                        }
-
-                        int j = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.POWER_ARROWS, stack);
-                        if (j > 0) {
-                            //projectile.setBaseDamage(projectile.getBaseDamage() + (double)j * 0.5D + 0.5D);
-                        }
-
-                        int k = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PUNCH_ARROWS, stack);
-                        if (k > 0) {
-                            //projectile.setKnockback(k);
-                        }
-
-                        if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FLAMING_ARROWS, stack) > 0) {
-                            projectile.setSecondsOnFire(100);
-                        }
-
-                        stack.hurtAndBreak(1, playerentity, (p_220009_1_) -> {
-                            p_220009_1_.broadcastBreakEvent(playerentity.getUsedItemHand());
-                        });
-                        if (flag1 || playerentity.abilities.instabuild && (itemstack.getItem() == Items.SPECTRAL_ARROW || itemstack.getItem() == Items.TIPPED_ARROW)) {
-                            //projectile.pickup = AbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
-                        }
-
-                        world.addFreshEntity(projectile);
-                    }
-
-                    world.playSound(null, playerentity.getX(), playerentity.getY(), playerentity.getZ(), SoundEvents.ARROW_SHOOT, SoundCategory.PLAYERS, 1.0F, 1.0F / (random.nextFloat() * 0.4F + 1.2F) + f * 0.5F);
-                    if (!flag1 && !playerentity.abilities.instabuild) {
-                        itemstack.shrink(1);
-                        if (itemstack.isEmpty()) {
-                            playerentity.inventory.removeItem(itemstack);
+                            Hand hand = playerentity.getUsedItemHand();
+                            power *= ServerConfigs.cached.SLINGSHOT_RANGE * 1.1;
+                            shootProjectile(world, entity, hand, stack, projectiles.get(j), count == 1 ? 1 : pitches[j], power, 1, angle * (j - (count - 1) / 2f));
                         }
                     }
-
                     playerentity.awardStat(Stats.ITEM_USED.get(this));
                 }
             }
         }
     }
 
-    public static float getPowerForTime(float timeLeft) {
-        float f = timeLeft / 20.0F;
+
+    private static void shootProjectile(World world, LivingEntity entity, Hand hand, ItemStack stack, ItemStack projectileStack, float soundPitch, float power, float accuracy, float yaw) {
+
+        SlingshotProjectileEntity projectile = new SlingshotProjectileEntity(entity, world, projectileStack);
+
+        Vector3d vector3d1 = entity.getUpVector(1.0F);
+        Quaternion quaternion = new Quaternion(new Vector3f(vector3d1), yaw, true);
+        Vector3d vector3d = entity.getViewVector(1.0F);
+        Vector3f vector3f = new Vector3f(vector3d);
+        vector3f.transform(quaternion);
+        projectile.shoot(vector3f.x(), vector3f.y(), vector3f.z(), power, accuracy);
+
+        stack.hurtAndBreak(1, entity, (p) -> p.broadcastBreakEvent(hand));
+        world.addFreshEntity(projectile);
+
+        world.playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.WITCH_THROW, SoundCategory.PLAYERS, 1.0F, soundPitch * (1.0F / (random.nextFloat() * 0.3F + 0.9F) + power * 0.6F));
+
+    }
+
+    //shoot pitches for multi shot
+    private static float[] getShotPitches(Random random) {
+        boolean flag = random.nextBoolean();
+        return new float[]{getRandomShotPitch(flag), 1.0F, getRandomShotPitch(!flag)};
+    }
+
+    private static float getRandomShotPitch(boolean left) {
+        float f = left ? 0.63F : 0.43F;
+        return 1.0F / (random.nextFloat() * 0.5F + 1.8F) + f;
+    }
+
+    public float getPowerForTime(ItemStack stack, float timeLeft) {
+        float useTime = this.getUseDuration(stack) - timeLeft;
+        float f = useTime / getChargeDuration(stack);
+        //parabolic power increase
         f = (f * f + f * 2.0F) / 3.0F;
         if (f > 1.0F) {
             f = 1.0F;
@@ -98,31 +125,28 @@ public class SlingshotItem extends ShootableItem implements IVanishable, IFirstP
         return f;
     }
 
-
-    /** Determines how much force a charged right click item will release on player letting go
-     * To be used in conjunction with onPlayerStoppedUsing
-     * @param stack - Item used (get from onPlayerStoppedUsing)
-     * @param timeLeft - (get from onPlayerStoppedUsing)
-     * @return appropriate charge for item */
-    public float getForce(ItemStack stack, int timeLeft) {
-        int i = this.getUseDuration(stack) - timeLeft;
-        float f = i / 20.0F;
-        f = (f * f + f * 2.0F) / 3.0F;
-        f *= 4f;
-
-        if (f > 6f) {
-            f = 6f;
-        }
-        return f;
-    }
-
+    //this is max use time
     @Override
     public int getUseDuration(ItemStack stack) {
         return 72000;
     }
 
+    //actual use duration
+    public static int getChargeDuration(ItemStack stack) {
+        int i = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.QUICK_CHARGE, stack);
+        int maxCharge = ServerConfigs.cached.SLINGSHOT_CHARGE;
+        return i == 0 ? maxCharge : maxCharge - (maxCharge/5) * i;
+    }
+
+    @Override
+    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+        return super.canApplyAtEnchantingTable(stack, enchantment) || ImmutableSet.of(
+                Enchantments.QUICK_CHARGE, Enchantments.MULTISHOT, Enchantments.LOYALTY).contains(enchantment);
+    }
+
     @Override
     public UseAction getUseAnimation(ItemStack stack) {
+        //needed for custom one
         return UseAction.NONE;
     }
 
@@ -141,7 +165,7 @@ public class SlingshotItem extends ShootableItem implements IVanishable, IFirstP
 
     @Override
     public Predicate<ItemStack> getAllSupportedProjectiles() {
-        return s->s.getItem() instanceof BlockItem;
+        return s -> s.getItem() instanceof BlockItem || ItemsOverrideHandler.hasBlockOverride(s.getItem());
     }
 
     @Override
@@ -155,8 +179,8 @@ public class SlingshotItem extends ShootableItem implements IVanishable, IFirstP
         if (entity.isUsingItem() && entity.getUseItemRemainingTicks() > 0 && entity.getUsedItemHand() == hand) {
             //bow anim
 
-            float timeLeft = (float)stack.getUseDuration() - ((float) Minecraft.getInstance().player.getUseItemRemainingTicks() - partialTicks + 1.0F);
-            float f12 = getPowerForTime(timeLeft);
+            float timeLeft = (float) stack.getUseDuration() - ((float) Minecraft.getInstance().player.getUseItemRemainingTicks() - partialTicks + 1.0F);
+            float f12 = getPowerForTime(stack, timeLeft);
 
             if (f12 > 0.1F) {
                 float f15 = MathHelper.sin((timeLeft - 0.1F) * 1.3F);
@@ -171,25 +195,25 @@ public class SlingshotItem extends ShootableItem implements IVanishable, IFirstP
         }
     }
 
-
+    //TODO: finish this
     @Override
     public <T extends LivingEntity> boolean poseRightArm(ItemStack stack, BipedModel<T> model, T entity, HandSide mainHand, TwoHandedAnimation twoHanded) {
-        twoHanded.setTwoHanded(true);
+        //twoHanded.setTwoHanded(true);
         model.rightArm.yRot = -0.1F + model.head.yRot;
-        model.leftArm.yRot = 0.1F + model.head.yRot + 0.4F;
-        model.rightArm.xRot = (-(float)Math.PI / 2F) + model.head.xRot;
-        model.leftArm.xRot = (-(float)Math.PI / 2F) + model.head.xRot;
-        animateCrossbowCharge(model.rightArm, model.rightArm, entity, mainHand == HandSide.RIGHT);
+        //model.leftArm.yRot = 0.1F + model.head.yRot + 0.4F;
+        model.rightArm.xRot = (-(float) Math.PI / 2F) + model.head.xRot;
+        //model.leftArm.xRot = (-(float) Math.PI / 2F) + model.head.xRot;
+        //animateCrossbowCharge(model.rightArm, model.rightArm, entity, mainHand == HandSide.RIGHT);
         return true;
     }
 
     @Override
     public <T extends LivingEntity> boolean poseLeftArm(ItemStack stack, BipedModel<T> model, T entity, HandSide mainHand, TwoHandedAnimation twoHanded) {
-        twoHanded.setTwoHanded(true);
-        model.rightArm.yRot = -0.1F + model.head.yRot - 0.4F;
+        //twoHanded.setTwoHanded(true);
+        //model.rightArm.yRot = -0.1F + model.head.yRot - 0.4F;
         model.leftArm.yRot = 0.1F + model.head.yRot;
-        model.rightArm.xRot = (-(float)Math.PI / 2F) + model.head.xRot;
-        model.leftArm.xRot = (-(float)Math.PI / 2F) + model.head.xRot;
+        //model.rightArm.xRot = (-(float) Math.PI / 2F) + model.head.xRot;
+        model.leftArm.xRot = (-(float) Math.PI / 2F) + model.head.xRot;
         return true;
     }
 
@@ -199,10 +223,10 @@ public class SlingshotItem extends ShootableItem implements IVanishable, IFirstP
         mainHand.yRot = right ? -0.8F : 0.8F;
         //mainHand.xRot = -0.97079635F;
         offHand.xRot = mainHand.xRot;
-        float f = (float)CrossbowItem.getChargeDuration(entity.getUseItem());
-        float f1 = MathHelper.clamp((float)entity.getTicksUsingItem(), 0.0F, f);
+        float f = (float) CrossbowItem.getChargeDuration(entity.getUseItem());
+        float f1 = MathHelper.clamp((float) entity.getTicksUsingItem(), 0.0F, f);
         float f2 = f1 / f;
-        offHand.yRot = MathHelper.lerp(f2, 0.4F, 0.85F) * (float)(right ? 1 : -1);
-        offHand.xRot = MathHelper.lerp(f2, offHand.xRot, (-(float)Math.PI / 2F));
+        offHand.yRot = MathHelper.lerp(f2, 0.4F, 0.85F) * (float) (right ? 1 : -1);
+        offHand.xRot = MathHelper.lerp(f2, offHand.xRot, (-(float) Math.PI / 2F));
     }
 }

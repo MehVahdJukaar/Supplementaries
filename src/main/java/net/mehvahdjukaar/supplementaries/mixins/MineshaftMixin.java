@@ -1,16 +1,23 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.CopperLanternBlock;
+import net.mehvahdjukaar.supplementaries.block.blocks.WallLanternBlock;
+import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.mixins.accessors.MineshaftAccessor;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
+import net.minecraft.block.*;
 import net.minecraft.state.properties.AttachFace;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.ISeedReader;
 import net.minecraft.world.gen.feature.structure.IStructurePieceType;
 import net.minecraft.world.gen.feature.structure.MineshaftPieces;
 import net.minecraft.world.gen.feature.structure.StructurePiece;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
+
+import java.util.Random;
 
 @Mixin(MineshaftPieces.Corridor.class)
 public abstract class MineshaftMixin extends StructurePiece {
@@ -37,7 +44,7 @@ public abstract class MineshaftMixin extends StructurePiece {
      * @author mehvahdjukaar
      * @reason replacing some torches with lanterns
      */
-        /*
+
     @Overwrite
     private void placeSupport(ISeedReader reader, MutableBoundingBox boundingBox, int minX, int minY, int z, int y, int maxX, Random random) {
         if (this.isSupportingBox(reader, boundingBox, minX, maxX, y, z)) {
@@ -75,7 +82,7 @@ public abstract class MineshaftMixin extends StructurePiece {
         }
     }
 
-         */
+
 
 
 }

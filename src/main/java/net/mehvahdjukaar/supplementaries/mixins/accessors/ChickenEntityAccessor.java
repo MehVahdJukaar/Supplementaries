@@ -1,6 +1,11 @@
 package net.mehvahdjukaar.supplementaries.mixins.accessors;
 
-/*
+
+import net.minecraft.entity.passive.ChickenEntity;
+import net.minecraft.item.crafting.Ingredient;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Accessor;
+
 @Mixin(ChickenEntity.class)
 public interface ChickenEntityAccessor {
 
@@ -14,4 +19,3 @@ public interface ChickenEntityAccessor {
         throw new AssertionError();
     }
 }
-*/

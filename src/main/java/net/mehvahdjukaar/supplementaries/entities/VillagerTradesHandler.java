@@ -13,6 +13,7 @@ import net.minecraft.util.IItemProvider;
 import net.minecraftforge.common.BasicTrade;
 import net.minecraftforge.event.village.WandererTradesEvent;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -21,18 +22,33 @@ public class VillagerTradesHandler {
     private static final float BUY = 0.05f;
     private static final float SELL = 0.2f;
 
-    public static final VillagerTrades.ITrade[] TRADES = new VillagerTrades.ITrade[]{
+    public static final VillagerTrades.ITrade[] TRADES;
 
-            itemForEmeraldTrade(ModRegistry.ROPE_ITEM.get(), 4, 1, 10),
-            itemForEmeraldTrade(Items.GUNPOWDER, 2, 1, 8),
-            itemForEmeraldTrade(ModRegistry.COPPER_LANTERN.get(), 1, 1, 12),
-            itemForEmeraldTrade(ModRegistry.BOMB_ITEM.get(), 1, 3, 8),
-            new StarForEmeraldTrade(2, 8),
-            new RocketForEmeraldTrade(3, 1, 3, 8),
-            itemForEmeraldTrade(Items.TNT, 1, 4, 8),
-            itemForEmeraldTrade(ModRegistry.ROPE_ARROW_ITEM.get(), 1, 4, 6),
-            itemForEmeraldTrade(ModRegistry.BOMB_BLUE_ITEM.get(), 1, ModRegistry.BOMB_ITEM.get(), 1, 40, 3),
-    };
+    static{
+        List<VillagerTrades.ITrade> trades = new ArrayList<>();
+
+        if(RegistryConfigs.reg.ROPE_ENABLED.get()) {
+            trades.add(itemForEmeraldTrade(ModRegistry.ROPE_ITEM.get(), 4, 1, 10));
+        }
+        trades.add(itemForEmeraldTrade(Items.GUNPOWDER, 2, 1, 8));
+        if(RegistryConfigs.reg.COPPER_LANTERN_ENABLED.get()) {
+            trades.add(itemForEmeraldTrade(ModRegistry.COPPER_LANTERN.get(), 1, 1, 12));
+        }
+        if(RegistryConfigs.reg.BOMB_ENABLED.get()) {
+            trades.add(itemForEmeraldTrade(ModRegistry.BOMB_ITEM.get(), 1, 3, 8));
+        }
+        trades.add(new StarForEmeraldTrade(2, 8));
+        trades.add(new RocketForEmeraldTrade(3, 1, 3, 8));
+        trades.add(itemForEmeraldTrade(Items.TNT, 1, 4, 8));
+        if(RegistryConfigs.reg.ROPE_ARROW_ENABLED.get()) {
+            trades.add(itemForEmeraldTrade(ModRegistry.ROPE_ARROW_ITEM.get(), 1, 4, 6));
+        }
+        if(RegistryConfigs.reg.BOMB_ENABLED.get()) {
+            trades.add(itemForEmeraldTrade(ModRegistry.BOMB_BLUE_ITEM.get(), 1, ModRegistry.BOMB_ITEM.get(), 1, 40, 3));
+        }
+
+        TRADES = trades.toArray(new VillagerTrades.ITrade[0]);
+    }
 
     static BasicTrade itemForEmeraldTrade(IItemProvider item, int quantity, int price, int maxTrades) {
         return new BasicTrade(new ItemStack(Items.EMERALD, price), new ItemStack(item, quantity), maxTrades, 1, BUY);

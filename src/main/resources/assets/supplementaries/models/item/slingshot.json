@@ -27,7 +27,7 @@
         {
             "predicate": {
                 "pulling": 1,
-                "pull": 0.65
+                "pull": 0.55
             },
             "model": "supplementaries:item/slingshot_pulling_1"
         },

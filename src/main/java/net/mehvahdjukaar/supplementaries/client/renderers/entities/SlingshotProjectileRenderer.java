@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.entities;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
@@ -11,17 +12,35 @@ import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.IRendersAsItem;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3f;
 
 public class SlingshotProjectileRenderer<T extends Entity & IRendersAsItem> extends EntityRenderer<T> {
     private final ItemRenderer itemRenderer;
-    private final float scale = 1.625f;
+    private final float scale = 1.25f;
 
     public SlingshotProjectileRenderer(EntityRendererManager manager) {
         super(manager);
         this.itemRenderer = Minecraft.getInstance().getItemRenderer();
+    }
+
+    private Integer light = null;
+
+    @Override
+    protected int getBlockLightLevel(T entity, BlockPos pos) {
+        if(this.light == null){
+            Item item = entity.getItem().getItem();
+            if(item instanceof BlockItem) {
+                Block b = ((BlockItem) item).getBlock();
+                this.light = b.getBlock().getLightValue(b.defaultBlockState(), entity.level, pos);
+            }
+            else this.light = 0;
+        }
+        return this.light;
     }
 
     @Override

@@ -179,6 +179,7 @@ public class JarItem extends CageItem {
         if (this.allowdedIn(group) && RegistryConfigs.reg.JAR_TAB.get() && group == ModRegistry.JAR_TAB) {
             JarTab.populateTab(items);
         }
+        else super.fillItemCategory(group, items);
     }
 
     @Override

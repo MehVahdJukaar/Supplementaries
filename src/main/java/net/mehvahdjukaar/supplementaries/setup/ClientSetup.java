@@ -14,6 +14,7 @@ import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandlerClient;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
+import net.mehvahdjukaar.supplementaries.items.SlingshotItem;
 import net.mehvahdjukaar.supplementaries.world.data.map.client.CMDclient;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -129,7 +130,7 @@ public class ClientSetup {
         RenderTypeLookup.setRenderLayer(ModRegistry.SIGN_POST.get(), RenderType.cutout());
         ClientRegistry.bindTileEntityRenderer(ModRegistry.SIGN_POST_TILE.get(), SignPostBlockTileRenderer::new);
         //hanging sign
-        //RenderTypeLookup.setRenderLayer(Registry.HANGING_SIGNS.get(), RenderType.cutout());
+        ModRegistry.HANGING_SIGNS.values().forEach(s -> RenderTypeLookup.setRenderLayer(s.get(), RenderType.translucent()));
         ClientRegistry.bindTileEntityRenderer(ModRegistry.HANGING_SIGN_TILE.get(), HangingSignBlockTileRenderer::new);
         //wall lantern
         RenderTypeLookup.setRenderLayer(ModRegistry.WALL_LANTERN.get(), RenderType.cutout());
@@ -241,10 +242,10 @@ public class ClientSetup {
 
         ItemModelsProperties.register(ModRegistry.SLINGSHOT_ITEM.get(), new ResourceLocation("pull"),
             (stack, world, entity) -> {
-            if (entity == null) {
+            if (entity == null || entity.getUseItem() != stack) {
                 return 0.0F;
             } else {
-                return entity.getUseItem() != stack ? 0.0F : (float)(stack.getUseDuration() - entity.getUseItemRemainingTicks()) / 20.0F;
+                return  (float)(stack.getUseDuration() - entity.getUseItemRemainingTicks()) / SlingshotItem.getChargeDuration(stack);
             }
         });
         ItemModelsProperties.register(ModRegistry.SLINGSHOT_ITEM.get(), new ResourceLocation("pulling"),
@@ -291,6 +292,7 @@ public class ClientSetup {
         particleManager.register(ModRegistry.BOMB_SMOKE_PARTICLE.get(), BombSmokeParticle.Factory::new);
         particleManager.register(ModRegistry.BOTTLING_XP_PARTICLE.get(), BottlingXpParticle.Factory::new);
         particleManager.register(ModRegistry.FEATHER_PARTICLE.get(), FeatherParticle.Factory::new);
+        particleManager.register(ModRegistry.SLINGSHOT_PARTICLE.get(), SlingshotParticle.Factory::new);
     }
 
     @SubscribeEvent

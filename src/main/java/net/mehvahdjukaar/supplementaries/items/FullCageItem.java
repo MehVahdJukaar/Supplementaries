@@ -20,7 +20,6 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -48,6 +47,7 @@ public class FullCageItem extends BlockItem {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
+        tooltip.add(new StringTextComponent("pick me up").withStyle(TextFormatting.DARK_PURPLE));
         CompoundNBT compoundnbt = stack.getTagElement("BlockEntityTag");
         if (compoundnbt != null) {
             CompoundNBT com = compoundnbt.getCompound("MobHolder");
@@ -57,7 +57,6 @@ public class FullCageItem extends BlockItem {
                     tooltip.add(new StringTextComponent(com.getString("Name")).withStyle(TextFormatting.GRAY));
                     if (!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().options.advancedItemTooltips)
                         return;
-                    tooltip.add(new TranslationTextComponent("message.supplementaries.cage").withStyle(TextFormatting.ITALIC).withStyle(TextFormatting.GRAY));
                 }
             }
         } else {
