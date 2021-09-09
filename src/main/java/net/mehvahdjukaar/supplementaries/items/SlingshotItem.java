@@ -26,6 +26,7 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -36,6 +37,7 @@ public class SlingshotItem extends ShootableItem implements IVanishable, IFirstP
     public SlingshotItem(Properties properties) {
         super(properties);
     }
+
 
     @Override
     public void releaseUsing(ItemStack stack, World world, LivingEntity entity, int timeLeft) {
@@ -86,7 +88,7 @@ public class SlingshotItem extends ShootableItem implements IVanishable, IFirstP
 
     private static void shootProjectile(World world, LivingEntity entity, Hand hand, ItemStack stack, ItemStack projectileStack, float soundPitch, float power, float accuracy, float yaw) {
 
-        SlingshotProjectileEntity projectile = new SlingshotProjectileEntity(entity, world, projectileStack);
+        SlingshotProjectileEntity projectile = new SlingshotProjectileEntity(entity, world, projectileStack, stack);
 
         Vector3d vector3d1 = entity.getUpVector(1.0F);
         Quaternion quaternion = new Quaternion(new Vector3f(vector3d1), yaw, true);
@@ -135,7 +137,7 @@ public class SlingshotItem extends ShootableItem implements IVanishable, IFirstP
     public static int getChargeDuration(ItemStack stack) {
         int i = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.QUICK_CHARGE, stack);
         int maxCharge = ServerConfigs.cached.SLINGSHOT_CHARGE;
-        return i == 0 ? maxCharge : maxCharge - (maxCharge/5) * i;
+        return i == 0 ? maxCharge : maxCharge - (maxCharge / 5) * i;
     }
 
     @Override
@@ -198,23 +200,29 @@ public class SlingshotItem extends ShootableItem implements IVanishable, IFirstP
     //TODO: finish this
     @Override
     public <T extends LivingEntity> boolean poseRightArm(ItemStack stack, BipedModel<T> model, T entity, HandSide mainHand, TwoHandedAnimation twoHanded) {
-        //twoHanded.setTwoHanded(true);
-        model.rightArm.yRot = -0.1F + model.head.yRot;
-        //model.leftArm.yRot = 0.1F + model.head.yRot + 0.4F;
-        model.rightArm.xRot = (-(float) Math.PI / 2F) + model.head.xRot;
-        //model.leftArm.xRot = (-(float) Math.PI / 2F) + model.head.xRot;
-        //animateCrossbowCharge(model.rightArm, model.rightArm, entity, mainHand == HandSide.RIGHT);
-        return true;
+        if(entity.getUseItemRemainingTicks() > 0) {
+            //twoHanded.setTwoHanded(true);
+            model.rightArm.yRot = -0.1F + model.head.yRot;
+            //model.leftArm.yRot = 0.1F + model.head.yRot + 0.4F;
+            model.rightArm.xRot = (-(float) Math.PI / 2F) + model.head.xRot;
+            //model.leftArm.xRot = (-(float) Math.PI / 2F) + model.head.xRot;
+            //animateCrossbowCharge(model.rightArm, model.rightArm, entity, mainHand == HandSide.RIGHT);
+            return true;
+        }
+        return false;
     }
 
     @Override
     public <T extends LivingEntity> boolean poseLeftArm(ItemStack stack, BipedModel<T> model, T entity, HandSide mainHand, TwoHandedAnimation twoHanded) {
-        //twoHanded.setTwoHanded(true);
-        //model.rightArm.yRot = -0.1F + model.head.yRot - 0.4F;
-        model.leftArm.yRot = 0.1F + model.head.yRot;
-        //model.rightArm.xRot = (-(float) Math.PI / 2F) + model.head.xRot;
-        model.leftArm.xRot = (-(float) Math.PI / 2F) + model.head.xRot;
-        return true;
+        if(entity.getUseItemRemainingTicks() > 0) {
+            //twoHanded.setTwoHanded(true);
+            //model.rightArm.yRot = -0.1F + model.head.yRot - 0.4F;
+            model.leftArm.yRot = 0.1F + model.head.yRot;
+            //model.rightArm.xRot = (-(float) Math.PI / 2F) + model.head.xRot;
+            model.leftArm.xRot = (-(float) Math.PI / 2F) + model.head.xRot;
+            return true;
+        }
+        return false;
     }
 
     public static void animateCrossbowCharge(ModelRenderer arm1, ModelRenderer arm2, LivingEntity entity, boolean right) {
@@ -229,4 +237,21 @@ public class SlingshotItem extends ShootableItem implements IVanishable, IFirstP
         offHand.yRot = MathHelper.lerp(f2, 0.4F, 0.85F) * (float) (right ? 1 : -1);
         offHand.xRot = MathHelper.lerp(f2, offHand.xRot, (-(float) Math.PI / 2F));
     }
+
+    private static ItemStack CLIENT_CURRENT_AMMO = ItemStack.EMPTY;
+
+    public static ItemStack getAmmoForPreview(ItemStack cannon, @Nullable World world, PlayerEntity player) {
+        if (world != null) {
+            if (world.getGameTime() % 10 == 0) {
+                CLIENT_CURRENT_AMMO = ItemStack.EMPTY;
+
+                ItemStack findAmmo = player.getProjectile(cannon);
+                if (findAmmo.getItem() != Items.ARROW) {
+                    CLIENT_CURRENT_AMMO = findAmmo;
+                }
+            }
+        }
+        return CLIENT_CURRENT_AMMO;
+    }
+
 }

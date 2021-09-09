@@ -78,7 +78,7 @@ public class Textures {
 
     //gui
     public static final ResourceLocation BLACKBOARD_GUI_TEXTURE = new ResourceLocation(MOD_ID,"textures/gui/blackboard.png");
-    public static final ResourceLocation EMPTY_TEXTURE = new ResourceLocation(MOD_ID,"textures/gui/config_background.png");
+    public static final ResourceLocation CONFIG_BACKGROUND = new ResourceLocation(MOD_ID,"textures/gui/config_background.png");
     public static final ResourceLocation NOTICE_BOARD_GUI_TEXTURE = new ResourceLocation(MOD_ID,"textures/gui/notice_board_gui.png");
     public static final ResourceLocation SACK_GUI_TEXTURE = new ResourceLocation(MOD_ID,"textures/gui/sack_gui.png");
     public static final ResourceLocation SLOT_TEXTURE = new ResourceLocation(MOD_ID, "textures/gui/slot.png");

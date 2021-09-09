@@ -109,4 +109,25 @@ public class ConfigHandler {
         }
     }
 
+
+    //TODO: remake config system
+
+    public static class CachedConfigValue<T,  C extends ForgeConfigSpec.ConfigValue<T>>{
+        private T cached;
+        private final C config;
+
+        public CachedConfigValue(C config){
+            this.config = config;
+        }
+
+        public T get(){
+            return cached;
+        }
+
+        public void refresh(){
+            this.cached = this.config.get();
+        }
+
+    }
+
 }

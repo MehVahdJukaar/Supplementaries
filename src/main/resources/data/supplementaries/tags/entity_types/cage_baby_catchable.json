@@ -13,7 +13,12 @@
     "alexsmobs:komodo_dragon",
     "alexsmobs:raccoon",
     "alexsmobs:seal",
-    "alexsmobs:warped_toad"
+    "alexsmobs:warped_toad",
+    "eanimod:enhanced_sheep",
+    "eanimod:enhanced_cow",
+    "eanimod:enhanced_llama",
+    "eanimod:enhanced_pig",
+    "eanimod:enhanced_mooshroom"
   ]
 }
 

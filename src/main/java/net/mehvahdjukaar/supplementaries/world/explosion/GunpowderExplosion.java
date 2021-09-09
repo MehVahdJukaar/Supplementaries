@@ -49,7 +49,7 @@ public class GunpowderExplosion extends Explosion {
 	private final List<BlockPos> toBlow = new ArrayList<>();
 
 	public GunpowderExplosion(World world, Entity entity, double x, double y, double z, float size) {
-		super(world, entity, x, y, z, size, false, Mode.DESTROY);
+		super(world, entity, null, null, x, y, z, size, false, Mode.DESTROY);
 		this.level = world;
 		this.radius = size;
 		this.x = x;

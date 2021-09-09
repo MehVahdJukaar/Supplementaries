@@ -11,7 +11,6 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
@@ -134,9 +133,9 @@ public class PedestalBlockTileRenderer extends TileEntityRenderer<PedestalBlockT
             //TODO: make FIXED
             ItemStack stack = tile.getDisplayedItem();
             if(CommonUtil.FESTIVITY.isAprilsFool())stack = new ItemStack(Items.DIRT);
-            IBakedModel ibakedmodel = itemRenderer.getModel(stack, tile.getLevel(), null);
-            itemRenderer.render(stack, transform, true, matrixStackIn, bufferIn, combinedLightIn,
-                    combinedOverlayIn, ibakedmodel);
+            itemRenderer.renderStatic(stack, transform, combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn);
+            //IBakedModel ibakedmodel = itemRenderer.getModel(stack, tile.getLevel(), null);
+            //itemRenderer.render(stack, transform, true, matrixStackIn, bufferIn, combinedLightIn,combinedOverlayIn, ibakedmodel);
 
             matrixStackIn.popPose();
         }

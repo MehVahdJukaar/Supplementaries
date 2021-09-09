@@ -42,6 +42,7 @@
   "client": [
     "BellTileEntityRendererMixin",
     "IronGolemRendererMixin",
+    "ItemRendererMixin",
     "LoomScreenMixin",
     "ParrotPartingMixin",
     "UndeadHorseRendererMixin",

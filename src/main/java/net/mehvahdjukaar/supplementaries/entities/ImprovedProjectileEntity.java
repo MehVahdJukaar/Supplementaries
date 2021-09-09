@@ -9,6 +9,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileHelper;
 import net.minecraft.entity.projectile.ProjectileItemEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.EndGatewayTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -21,8 +24,9 @@ import net.minecraftforge.event.ForgeEventFactory;
 import javax.annotation.Nullable;
 
 public abstract class ImprovedProjectileEntity extends ProjectileItemEntity {
+    private static final DataParameter<Byte> ID_FLAGS = EntityDataManager.defineId(ImprovedProjectileEntity.class, DataSerializers.BYTE);
 
-    public boolean inGround = false;
+    public boolean touchedGround = false;
     public int groundTime = 0;
 
     protected int maxAge = 200;
@@ -43,6 +47,33 @@ public abstract class ImprovedProjectileEntity extends ProjectileItemEntity {
         this.setOwner(thrower);
     }
 
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(ID_FLAGS, (byte)0);
+    }
+
+    private void setFlag(int id, boolean value) {
+        byte b0 = this.entityData.get(ID_FLAGS);
+        if (value) {
+            this.entityData.set(ID_FLAGS, (byte)(b0 | id));
+        } else {
+            this.entityData.set(ID_FLAGS, (byte)(b0 & ~id));
+        }
+
+    }
+    public void setNoPhysics(boolean noPhysics) {
+        this.noPhysics = noPhysics;
+        this.setFlag(2, noPhysics);
+    }
+
+    public boolean isNoPhysics() {
+        if (!this.level.isClientSide) {
+            return this.noPhysics;
+        } else {
+            return (this.entityData.get(ID_FLAGS) & 2) != 0;
+        }
+    }
     @Override
     public void tick() {
         //base tick stuff
@@ -69,17 +100,19 @@ public abstract class ImprovedProjectileEntity extends ProjectileItemEntity {
             this.xRotO = this.xRot;
         }*/
 
+        boolean noPhysics = this.isNoPhysics();
+
         BlockPos blockpos = this.blockPosition();
         BlockState blockstate = this.level.getBlockState(blockpos);
         //sets on ground
-        if (!blockstate.isAir(this.level, blockpos)) {
+        if (!blockstate.isAir(this.level, blockpos) && !noPhysics) {
             VoxelShape voxelshape = blockstate.getCollisionShape(this.level, blockpos);
             if (!voxelshape.isEmpty()) {
                 Vector3d vector3d1 = this.position();
 
                 for (AxisAlignedBB axisalignedbb : voxelshape.toAabbs()) {
                     if (axisalignedbb.move(blockpos).contains(vector3d1)) {
-                        this.inGround = true;
+                        this.touchedGround = true;
                         break;
                     }
                 }
@@ -90,7 +123,12 @@ public abstract class ImprovedProjectileEntity extends ProjectileItemEntity {
             this.clearFire();
         }
 
-        if (!this.inGround) {
+
+
+        if (this.touchedGround && !noPhysics) {
+            this.groundTime++;
+        }
+        else{
             this.groundTime = 0;
 
             this.updateRotation();
@@ -99,11 +137,16 @@ public abstract class ImprovedProjectileEntity extends ProjectileItemEntity {
             boolean client = this.level.isClientSide;
 
             Vector3d newPos = pos.add(movement);
+
             RayTraceResult raytraceresult = this.level.clip(new RayTraceContext(pos, newPos, RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, this));
             if (raytraceresult.getType() != RayTraceResult.Type.MISS) {
                 //get correct land pos
-                newPos = raytraceresult.getLocation();
+                if(!noPhysics){
+                    newPos = raytraceresult.getLocation();
+                }
+                //no physics clips through blocks
             }
+
 
             if(client){
                 this.spawnTrailParticles(pos, newPos);
@@ -118,7 +161,8 @@ public abstract class ImprovedProjectileEntity extends ProjectileItemEntity {
             if (this.isInWater()) {
                 if (client) {
                     for (int j = 0; j < 4; ++j) {
-                        this.level.addParticle(ParticleTypes.BUBBLE, posX - velX * 0.25D, posY - velY * 0.25D, posZ - velZ * 0.25D, velX, velY, velZ);
+                        double pY = posY + this.getBbHeight()/2d;
+                        this.level.addParticle(ParticleTypes.BUBBLE, posX - velX * 0.25D, pY - velY * 0.25D, posZ - velZ * 0.25D, velX, velY, velZ);
                     }
                 }
                 deceleration = this.waterDeceleration;
@@ -126,7 +170,7 @@ public abstract class ImprovedProjectileEntity extends ProjectileItemEntity {
 
             this.setDeltaMovement(movement.scale(deceleration));
 
-            if (!this.isNoGravity()) {
+            if (!this.isNoGravity() && !noPhysics) {
                 this.setDeltaMovement(velX, velY - this.getGravity(), velZ);
             }
             //first sets correct position, then call hit
@@ -167,24 +211,31 @@ public abstract class ImprovedProjectileEntity extends ProjectileItemEntity {
                         }
                     }
 
-                    if (!portalHit && type != RayTraceResult.Type.MISS && !ForgeEventFactory.onProjectileImpact(this, raytraceresult)) {
+                    if (!portalHit && type != RayTraceResult.Type.MISS && !noPhysics && !ForgeEventFactory.onProjectileImpact(this, raytraceresult)) {
                         this.onHit(raytraceresult);
                         this.hasImpulse = true;
                     }
                 }
             }
-        } else {
-            ++this.groundTime;
         }
-        if (!this.level.isClientSide) {
-            if (this.tickCount > this.maxAge || this.groundTime > maxGroundTime) {
-                this.doStuffBeforeRemoving();
-                this.remove();
-            }
+        if (this.hasReachedEndOfLife()) {
+            this.reachedEndOfLife();
         }
     }
 
-    public void doStuffBeforeRemoving(){};
+    /**
+     * remove condition
+     */
+    public boolean hasReachedEndOfLife(){
+        return this.tickCount > this.maxAge || this.groundTime > maxGroundTime;
+    }
+
+    /**
+     * do stuff before removing, then call remove. Called when age reaches max age
+     */
+    public void reachedEndOfLife(){
+        this.remove();
+    }
 
     @Nullable
     protected EntityRayTraceResult findHitEntity(Vector3d oPos, Vector3d pos) {
@@ -196,13 +247,13 @@ public abstract class ImprovedProjectileEntity extends ProjectileItemEntity {
     @Override
     public void addAdditionalSaveData(CompoundNBT tag) {
         super.addAdditionalSaveData(tag);
-        tag.putBoolean("inGround", this.inGround);
+        tag.putBoolean("touchedGround", this.touchedGround);
     }
 
     @Override
     public void readAdditionalSaveData(CompoundNBT tag) {
         super.readAdditionalSaveData(tag);
-        this.inGround = tag.getBoolean("inGround");
+        this.touchedGround = tag.getBoolean("touchedGround");
     }
 
 }
