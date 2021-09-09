@@ -21,6 +21,7 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
 import java.util.function.Supplier;
@@ -155,4 +156,26 @@ public class FrameBlock extends MimicBlock {
         return !state.getValue(HAS_BLOCK) || super.propagatesSkylightDown(state, reader, pos);
     }
 
+    @Override
+    public boolean hasAnalogOutputSignal(BlockState p_149740_1_) {
+        return true;
+    }
+
+    @Override
+    public int getAnalogOutputSignal(BlockState state, World world, BlockPos pos) {
+        TileEntity te = world.getBlockEntity(pos);
+        if (te instanceof FrameBlockTile) {
+            ((IBlockHolder) te).getHeldBlock().getAnalogOutputSignal(world, pos);
+        }
+        return 0;
+    }
+
+    @Override
+    public float getEnchantPowerBonus(BlockState state, IWorldReader world, BlockPos pos) {
+        TileEntity te = world.getBlockEntity(pos);
+        if (te instanceof FrameBlockTile) {
+            ((IBlockHolder) te).getHeldBlock().getEnchantPowerBonus(world, pos);
+        }
+        return 0;
+    }
 }

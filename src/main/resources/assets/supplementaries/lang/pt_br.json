@@ -154,7 +154,6 @@
   "block.supplementaries.blackstone_tile_slab": "Laje de Ladrilhos de Pedra-Negra",
   "block.supplementaries.blackstone_tile_vertical_slab": "Laje Vertical de Ladrilhos de Pedra-Negra",
   "block.supplementaries.blackstone_lamp": "Lâmpada de Pedra-Negra",
-  "message.supplementaries.sticks": "Pode ser colocado",
   "block.supplementaries.flag_white": "Bandeira Branca",
   "block.supplementaries.flag_orange": "Bandeira Laranja",
   "block.supplementaries.flag_magenta": "Bandeira Magenta",
@@ -174,7 +173,6 @@
   "block.supplementaries.planter_rich": "Caixa de Plantio com Solo Rico",
   "block.supplementaries.flower_box": "Caixa de Flores",
   "block.supplementaries.brass_lantern": "Lanterna de Latão",
-  "entity.supplementaries.orange_trader": "Comerciante de Laranja",
   "block.supplementaries.goblet": "Cálice",
   "block.supplementaries.flag": "Bandeira",
   "gui.supplementaries.orange_trader.trade": "OFERTA DE COMÉRCIO",
@@ -217,17 +215,29 @@
   "subtitle.supplementaries.music.pancake": "Pancake Music",
   "item.supplementaries.pancake_disc.desc": "STiiX - Pancake Music",
   "message.supplementaries.key.lockable": "Key Lockable",
-  "death.attack.supplementaries.amethyst_shard": "%1$s was sharded to death",
-  "death.attack.supplementaries.amethyst_shard.player": "%1$s was sharded to death by %2$s",
-  "item.supplementaries.amethyst_arrow": "Amethyst Arrow",
-  "block.supplementaries.present": "Present",
+  "block.supplementaries.present": "Presente",
+  "message.supplementaries.placeable": "Pode ser colocado",
+  "subtitle.supplementaries.gunpowder.ignite": "Pólvora queimando",
+  "item.supplementaries.red_merchant_spawn_egg": "Ovo Gerador de Comerciante Vermelho",
+  "block.supplementaries.feather_block": "Bloco de Penas",
+  "block.supplementaries.flint_block": "Bloco de sílex",
+  "entity.supplementaries.red_merchant": "Comerciante Vermelho",
+  "message.supplementaries.timber_frame": "Aceita qualquer bloco completo",
+  "block.supplementaries.wild_flax": "Linho Selvagem",
+  "item.supplementaries.slingshot": "Estilingue",
 
 
   "item.supplementaries.key_chain": "Chaveiro",
   "block.supplementaries.skull_candle": "Crânio com Vela",
   "block.supplementaries.laser_block": "Projetor de Ender",
+  "death.attack.supplementaries.amethyst_shard": "%1$s foi estilhaçado até a morte",
+  "death.attack.supplementaries.amethyst_shard.player": "%1$s foi estilhaçado até a morte por %2$s",
+  "item.supplementaries.amethyst_arrow": "Flecha de Ametista",
 
 
+  "block.supplementaries.hanging_sign_bamboo": "Placa Suspensa de Bambu",
+  "item.supplementaries.hanging_sign_bamboo": "Placa Suspensa de Bambu",
+  "item.supplementaries.sign_post_bamboo": "Placa de Sinalização de Bambu",
 
   "block.supplementaries.hanging_sign_cherry_bop": "Placa Suspensa (Cherry)",
   "block.supplementaries.hanging_sign_dead_bop": "Placa Suspensa (Dead)",
@@ -281,6 +291,7 @@
   "item.supplementaries.sign_post_willow_env": "Placa de Sinalização (Willow)",
   "item.supplementaries.sign_post_willow_pw": "Placa de Sinalização (Willow)",
   "item.supplementaries.sign_post_wisteria_env": "Placa de Sinalização (Wisteria)",
+
 
   "supplementaries.comment": "enhanced mushroom: red mushroom, brown mushroom, glowshroom",
   "supplementaries.comment2": "outer end: azure",

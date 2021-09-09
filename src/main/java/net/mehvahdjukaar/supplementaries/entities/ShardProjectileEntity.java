@@ -98,7 +98,7 @@ public class ShardProjectileEntity extends ImprovedProjectileEntity{
         this.setDeltaMovement(vector3d);
         Vector3d vector3d1 = vector3d.normalize().scale(getGravity());
         this.setPosRaw(this.getX() - vector3d1.x, this.getY() - vector3d1.y, this.getZ() - vector3d1.z);
-        this.inGround = true;
+        this.touchedGround = true;
     }
 
     @Override

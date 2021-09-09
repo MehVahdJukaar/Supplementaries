@@ -61,6 +61,7 @@ public class ServerConfigs {
         public static ForgeConfigSpec.EnumValue<BombEntity.breakingMode> BOMB_BREAKS;
         public static ForgeConfigSpec.DoubleValue SLINGSHOT_RANGE;
         public static ForgeConfigSpec.IntValue SLINGSHOT_CHARGE;
+        public static ForgeConfigSpec.BooleanValue UNRESTRICTED_SLINGSHOT;
 
         private static void init(ForgeConfigSpec.Builder builder){
             builder.push("items");
@@ -93,6 +94,8 @@ public class ServerConfigs {
                     .defineInRange("range_multiplier", 1f, 0, 5);
             SLINGSHOT_CHARGE = builder.comment("Time in ticks to fully charge a slingshot")
                     .defineInRange("charge_time", 20, 0, 100);
+            UNRESTRICTED_SLINGSHOT = builder.comment("Allow enderman to intercept any slingshot projectile")
+                    .define("unrestricted_enderman_intercept", true);
             builder.pop();
 
 
@@ -575,6 +578,7 @@ public class ServerConfigs {
         public static BombEntity.breakingMode BOMB_BREAKS;
         public static double SLINGSHOT_RANGE;
         public static int SLINGSHOT_CHARGE;
+        public static boolean UNRESTRICTED_SLINGSHOT;
         //tweaks
         public static int ZOMBIE_HORSE_COST;
         public static boolean ZOMBIE_HORSE;
@@ -677,6 +681,7 @@ public class ServerConfigs {
             BOMB_RADIUS = (float)(item.BOMB_RADIUS.get()+0f);
             SLINGSHOT_RANGE = item.SLINGSHOT_RANGE.get();
             SLINGSHOT_CHARGE = item.SLINGSHOT_CHARGE.get();
+            UNRESTRICTED_SLINGSHOT = item.UNRESTRICTED_SLINGSHOT.get();
 
             FIREFLY_MIN = spawn.FIREFLY_MIN.get();
             FIREFLY_MAX = spawn.FIREFLY_MAX.get();

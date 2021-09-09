@@ -159,29 +159,24 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
         return (random.nextGaussian()) * 0.05;
     }
 
-    //TODO: merge with fixed projectile code. fix smoke
+    @Override
+    public boolean hasReachedEndOfLife() {
+        return super.hasReachedEndOfLife() ||  this.changeTimer == 0;
+    }
+
     @Override
     public void tick() {
-        if (this.changeTimer == 0) {
-            if (!this.level.isClientSide) {
-                this.doStuffBeforeRemoving();
-                this.remove();
-            }
-            return;
-        }
 
         if (this.changeTimer > 0) {
             this.changeTimer--;
             level.addParticle(ParticleTypes.SMOKE, this.position().x, this.position().y + 0.5, this.position().z, 0.0D, 0.0D, 0.0D);
         }
 
-
         if (this.active && this.isInWater() && !this.blue) {
             this.turnOff();
         }
 
         super.tick();
-
     }
 
     @Override
@@ -274,7 +269,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
             //normal explosion
             if (!this.removed) {
                 if (!this.blue || this.superCharged) {
-                    this.doStuffBeforeRemoving();
+                    this.reachedEndOfLife();
                 }
             }
         }
@@ -286,7 +281,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
 
     //explode
     @Override
-    public void doStuffBeforeRemoving() {
+    public void reachedEndOfLife() {
         if (this.active) {
             this.createExplosion();
             //spawn particles

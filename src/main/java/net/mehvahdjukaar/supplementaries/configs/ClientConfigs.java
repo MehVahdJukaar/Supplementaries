@@ -18,8 +18,20 @@ public class ClientConfigs {
         entity.init(builder);
         general.init(builder);
         tweaks.init(builder);
+        items.init(builder);
 
         CLIENT_SPEC = builder.build();
+    }
+
+    public static class items {
+        public static ForgeConfigSpec.BooleanValue SLINGSHOT_OVERLAY;
+        private static void init(ForgeConfigSpec.Builder builder) {
+            builder.comment("Items")
+                    .push("items");
+            SLINGSHOT_OVERLAY = builder.comment("Adds an overlay to slingshots in gui displaying currently selected block")
+                    .define("slingshot_overlay",true);
+            builder.pop();
+        }
     }
 
     public static class tweaks {
@@ -296,6 +308,7 @@ public class ClientConfigs {
         public static double FLAG_AMPLITUDE_INCREMENT;
         public static GraphicsFanciness FLAG_FANCINESS;
         public static boolean FAST_LANTERNS;
+        public static boolean SLINGSHOT_OVERLAY;
 
 
         public static void refresh(){
@@ -332,12 +345,16 @@ public class ClientConfigs {
             FLAG_WAVELENGTH = block.FLAG_WAVELENGTH.get();
             FLAG_FANCINESS = block.FLAG_FANCINESS.get();
             FAST_LANTERNS = block.FAST_LANTERNS.get();
+            FAST_LANTERNS = block.FAST_LANTERNS.get();
+            SLINGSHOT_OVERLAY = items.SLINGSHOT_OVERLAY.get();
 
             CapturedMobsHelper.refresh();
             GlobeTextureManager.GlobeColors.refreshColorsFromConfig();
 
         }
     }
+
+
 
 
 

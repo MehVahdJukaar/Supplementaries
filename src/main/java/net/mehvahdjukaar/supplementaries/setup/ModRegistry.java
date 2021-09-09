@@ -204,11 +204,11 @@ public class ModRegistry {
     public static final String RED_MERCHANT_NAME = "red_merchant";
     private static final EntityType<RedMerchantEntity> RED_MERCHANT_TYPE_RAW =
             EntityType.Builder.<RedMerchantEntity>of(RedMerchantEntity::new, EntityClassification.CREATURE)
-                .setShouldReceiveVelocityUpdates(true)
-                .clientTrackingRange(10)
-                .setUpdateInterval(3)
-                .sized(0.6F, 1.95F)
-                .build(RED_MERCHANT_NAME);
+                    .setShouldReceiveVelocityUpdates(true)
+                    .clientTrackingRange(10)
+                    .setUpdateInterval(3)
+                    .sized(0.6F, 1.95F)
+                    .build(RED_MERCHANT_NAME);
 
     public static final RegistryObject<EntityType<RedMerchantEntity>> RED_MERCHANT_TYPE = ENTITIES.register(RED_MERCHANT_NAME, () -> RED_MERCHANT_TYPE_RAW);
 
@@ -217,7 +217,7 @@ public class ModRegistry {
 
     public static final RegistryObject<Item> RED_MERCHANT_SPAWN_EGG_ITEM = ITEMS.register(RED_MERCHANT_NAME + "_spawn_egg", () ->
             new SpawnEggItem(RED_MERCHANT_TYPE_RAW, 0x7A090F, 0xF4f1e0,
-                new Item.Properties().tab(null)));
+                    new Item.Properties().tab(null)));
 
     //label
     public static final String LABEL_NAME = "label";
@@ -238,7 +238,7 @@ public class ModRegistry {
 
     public static final RegistryObject<Item> FIREFLY_SPAWN_EGG_ITEM = ITEMS.register(FIREFLY_NAME + "_spawn_egg", () ->
             new SpawnEggItem(FIREFLY_TYPE_RAW, -5048018, -14409439, //-4784384, -16777216,
-                new Item.Properties().tab(getTab(ItemGroup.TAB_MISC, FIREFLY_NAME))));
+                    new Item.Properties().tab(getTab(ItemGroup.TAB_MISC, FIREFLY_NAME))));
 
 
     //brick
@@ -330,7 +330,8 @@ public class ModRegistry {
     //slingshot
     public static final String SLINGSHOT_NAME = "slingshot";
     public static final RegistryObject<Item> SLINGSHOT_ITEM = regItem(SLINGSHOT_NAME, () -> new SlingshotItem((new Item.Properties())
-            .tab(getTab(ItemGroup.TAB_COMBAT, SLINGSHOT_NAME)).stacksTo(1).durability(192)));
+            .tab(getTab(ItemGroup.TAB_COMBAT, SLINGSHOT_NAME))
+            .stacksTo(1).durability(192))); //setISTER(() -> SlingshotItemRenderer::new)
 
 
     //blocks
@@ -520,7 +521,6 @@ public class ModRegistry {
 
     public static final RegistryObject<Item> JAR_ITEM_TINTED = ITEMS.register(JAR_NAME_TINTED, () -> new JarItem(JAR_TINTED.get(), new Item.Properties().tab(
             getTab(ItemGroup.TAB_DECORATIONS, JAR_NAME)).stacksTo(16).setISTER(() -> JarItemRenderer::new)));
-
 
 
     //firefly jar
@@ -1415,7 +1415,7 @@ public class ModRegistry {
     public static final String FEATHER_BLOCK_NAME = "feather_block";
     public static final RegistryObject<Block> FEATHER_BLOCK = BLOCKS.register(FEATHER_BLOCK_NAME, () -> new FeatherBlock(
             AbstractBlock.Properties.copy(Blocks.WHITE_WOOL)
-                .noCollission()));
+                    .noCollission()));
     public static final RegistryObject<Item> FEATHER_BLOCK_ITEM = regBlockItem(FEATHER_BLOCK, getTab(ItemGroup.TAB_BUILDING_BLOCKS, FEATHER_BLOCK_NAME));
 
     //flint block

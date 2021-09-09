@@ -125,11 +125,11 @@ public class ConfiguredCustomScreen extends ConfigScreen {
                 Collections.singletonList(new ConfigFileEntry(ClientConfigs.CLIENT_SPEC, ClientConfigs.CLIENT_SPEC.getValues())),
                 Arrays.asList(new ConfigFileEntry(ServerConfigs.SERVER_SPEC, ServerConfigs.SERVER_SPEC.getValues()),
                         new ConfigFileEntry(RegistryConfigs.REGISTRY_CONFIG, RegistryConfigs.REGISTRY_CONFIG.getValues())),
-                Textures.EMPTY_TEXTURE);
+                Textures.CONFIG_BACKGROUND);
     }
 
     public ConfiguredCustomScreen(Screen parent, String displayName, ForgeConfigSpec spec, UnmodifiableConfig values) {
-        super(parent,displayName,new ConfigFileEntry(spec,values),Textures.EMPTY_TEXTURE);
+        super(parent,displayName,new ConfigFileEntry(spec,values),Textures.CONFIG_BACKGROUND);
     }
 
 

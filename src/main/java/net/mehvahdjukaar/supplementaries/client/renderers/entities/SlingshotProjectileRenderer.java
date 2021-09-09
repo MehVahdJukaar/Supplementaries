@@ -21,7 +21,7 @@ import net.minecraft.util.math.vector.Vector3f;
 
 public class SlingshotProjectileRenderer<T extends Entity & IRendersAsItem> extends EntityRenderer<T> {
     private final ItemRenderer itemRenderer;
-    private final float scale = 1.25f;
+    private final float scale = 0.625f;
 
     public SlingshotProjectileRenderer(EntityRendererManager manager) {
         super(manager);
@@ -49,18 +49,12 @@ public class SlingshotProjectileRenderer<T extends Entity & IRendersAsItem> exte
             matrixStack.pushPose();
             matrixStack.translate(0,0.25,0);
 
-            matrixStack.mulPose(Vector3f.YN.rotationDegrees(MathHelper.lerp(partialTicks, entity.yRotO, entity.yRot)));
-            matrixStack.mulPose(Vector3f.ZN.rotationDegrees(MathHelper.lerp(partialTicks, entity.xRotO, entity.xRot)));
-
+            matrixStack.mulPose(Vector3f.YN.rotationDegrees(180 - MathHelper.rotLerp(partialTicks, entity.yRotO, entity.yRot)));
+            matrixStack.mulPose(Vector3f.ZN.rotationDegrees(MathHelper.rotLerp(partialTicks, entity.xRotO, entity.xRot)));
 
             matrixStack.scale(this.scale, this.scale, this.scale);
 
-
-           // matrixStack.mulPose(Vector3f.XN.rotation(entity.tickCount/20f % 360 + partialTicks));
-            //matrixStack.mulPose(Vector3f.YP.rotationDegrees(MathHelper.lerp(partialTicks, entity.yRotO, entity.yRot) - 90.0F));
-            //matrixStack.mulPose(Vector3f.ZP.rotationDegrees(MathHelper.lerp(partialTicks, entity.xRotO, entity.xRot)));
-
-            this.itemRenderer.renderStatic(entity.getItem(), ItemCameraTransforms.TransformType.FIXED, light, OverlayTexture.NO_OVERLAY, matrixStack, buffer);
+            this.itemRenderer.renderStatic(entity.getItem(), ItemCameraTransforms.TransformType.NONE, light, OverlayTexture.NO_OVERLAY, matrixStack, buffer);
             matrixStack.popPose();
             super.render(entity, p_225623_2_, partialTicks, matrixStack, buffer, light);
         }
