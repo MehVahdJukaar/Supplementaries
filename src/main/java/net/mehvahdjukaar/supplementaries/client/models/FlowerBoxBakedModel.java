@@ -4,7 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import net.mehvahdjukaar.supplementaries.block.blocks.FlowerBoxBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.FlowerBoxBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
-import net.mehvahdjukaar.supplementaries.common.FlowerPotHelper;
+import net.mehvahdjukaar.supplementaries.common.FlowerPotHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DoublePlantBlock;
 import net.minecraft.client.Minecraft;
@@ -97,7 +97,7 @@ public class FlowerBoxBakedModel implements IDynamicBakedModel {
         IBakedModel model;
         //for special flowers
         //TODO: automatically scan and load models from blockstate flower folder
-        ResourceLocation res = FlowerPotHelper.getSpecialFlowerModel(state.getBlock().asItem());
+        ResourceLocation res = FlowerPotHandler.getSpecialFlowerModel(state.getBlock().asItem());
         if (res != null) {
             if (state.hasProperty(DoublePlantBlock.HALF) && state.getValue(DoublePlantBlock.HALF) == DoubleBlockHalf.UPPER) {
                 //dont render double plants

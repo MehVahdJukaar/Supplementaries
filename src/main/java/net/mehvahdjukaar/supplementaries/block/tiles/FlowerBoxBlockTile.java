@@ -3,9 +3,12 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.block.blocks.ItemShelfBlock;
 import net.mehvahdjukaar.supplementaries.block.util.IBlockHolder;
-import net.mehvahdjukaar.supplementaries.common.FlowerPotHelper;
+import net.mehvahdjukaar.supplementaries.common.FlowerPotHandler;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
+import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
+import net.mehvahdjukaar.supplementaries.compat.dynamictrees.DynamicTreesCompat;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.BlockItem;
@@ -93,8 +96,15 @@ public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder 
 
         for (int n = 0; n < flowerStates.length; n++) {
             Item item = this.getItem(n).getItem();
-            this.flowerStates[n] = (item instanceof BlockItem) ? ((BlockItem) item).getBlock().defaultBlockState()
-                    : Blocks.AIR.defaultBlockState();
+            Block b = null;
+            if (item instanceof BlockItem) {
+                b = ((BlockItem) item).getBlock();
+            } else if (CompatHandler.dynamictrees) {
+                b = DynamicTreesCompat.getOptionalDynamicSapling(item, this.level, this.worldPosition);
+            }
+            if (b == null) b = Blocks.AIR;
+            this.flowerStates[n] = b.defaultBlockState();
+
         }
 
         //TODO: check this
@@ -120,7 +130,7 @@ public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder 
     public boolean canPlaceItem(int index, ItemStack stack) {
         if (this.getItem(index).isEmpty()) {
             Item item = stack.getItem();
-            return item.is(ModTags.FLOWER_BOX_PLANTABLE) || FlowerPotHelper.hasSpecialFlowerModel(item);
+            return item.is(ModTags.FLOWER_BOX_PLANTABLE) || FlowerPotHandler.hasSpecialFlowerModel(item);
         }
         return false;
     }

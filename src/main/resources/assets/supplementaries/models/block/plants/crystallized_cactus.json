@@ -1,0 +1,23 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "minecraft:block/potted_cactus",
+	"ambientocclusion": false,
+	"textures": {
+		"cactus": "pokecube_legends:blocks/crystallized_cactus_side",
+		"cactus_top": "pokecube_legends:blocks/crystallized_cactus_top"
+	},
+	"elements": [
+		{
+			"from": [6, 0, 6],
+			"to": [10, 11, 10],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 3, 8]},
+			"faces": {
+				"north": {"uv": [6, 4, 10, 16], "texture": "#cactus"},
+				"east": {"uv": [5, 0, 9, 12], "texture": "#cactus"},
+				"south": {"uv": [6, 4, 10, 16], "texture": "#cactus"},
+				"west": {"uv": [5, 0, 9, 12], "texture": "#cactus"},
+				"up": {"uv": [4, 2, 8, 6], "texture": "#cactus_top"}
+			}
+		}
+	]
+}

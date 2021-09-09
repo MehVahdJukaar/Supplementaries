@@ -22,32 +22,33 @@ public class RendererUtil {
 
     //stuff that falling sand uses. for some reason renderBlock doesn't use correct light level
     public static void renderBlockModel(BlockState state, MatrixStack matrixStack, IRenderTypeBuffer buffer,
-                                        BlockRendererDispatcher blockRenderer, World world, BlockPos pos){
+                                        BlockRendererDispatcher blockRenderer, World world, BlockPos pos) {
         try {
             for (RenderType type : RenderType.chunkBufferLayers()) {
                 if (RenderTypeLookup.canRenderInLayer(state, type)) {
                     renderBlockModel(state, matrixStack, buffer, blockRenderer, world, pos, type);
                 }
             }
-        }catch (Exception ignored){}
+        } catch (Exception ignored) {
+        }
     }
 
     public static void renderBlockModel(BlockState state, MatrixStack matrixStack, IRenderTypeBuffer buffer,
-                                        BlockRendererDispatcher blockRenderer, World world, BlockPos pos, RenderType type){
+                                        BlockRendererDispatcher blockRenderer, World world, BlockPos pos, RenderType type) {
 
         net.minecraftforge.client.ForgeHooksClient.setRenderLayer(type);
         blockRenderer.getModelRenderer().tesselateBlock(world,
                 blockRenderer.getBlockModel(state), state, pos, matrixStack,
-                buffer.getBuffer(type), false, new Random(),0,
+                buffer.getBuffer(type), false, new Random(), 0,
                 OverlayTexture.NO_OVERLAY);
         net.minecraftforge.client.ForgeHooksClient.setRenderLayer(null);
     }
 
     public static void renderBlockModel(ResourceLocation modelLocation, MatrixStack matrixStack, IRenderTypeBuffer buffer,
-                                        BlockRendererDispatcher blockRenderer, int light, int overlay, boolean cutout){
+                                        BlockRendererDispatcher blockRenderer, int light, int overlay, boolean cutout) {
 
         blockRenderer.getModelRenderer().renderModel(matrixStack.last(),
-                buffer.getBuffer(cutout?Atlases.cutoutBlockSheet():Atlases.solidBlockSheet()),
+                buffer.getBuffer(cutout ? Atlases.cutoutBlockSheet() : Atlases.solidBlockSheet()),
                 null,
                 blockRenderer.getBlockModelShaper().getModelManager().getModel(modelLocation),
                 1.0F, 1.0F, 1.0F,
@@ -57,27 +58,26 @@ public class RendererUtil {
 
     public static void addCube(IVertexBuilder builder, MatrixStack matrixStackIn, float w, float h, TextureAtlasSprite sprite, int combinedLightIn,
                                int color, float a, int combinedOverlayIn, boolean up, boolean down, boolean fakeshading, boolean flippedY) {
-        addCube(builder,matrixStackIn,0,0,w,h,sprite,combinedLightIn,color,a,combinedOverlayIn,up,down,fakeshading,flippedY,false);
+        addCube(builder, matrixStackIn, 0, 0, w, h, sprite, combinedLightIn, color, a, up, down, fakeshading, flippedY, false);
     }
-    public static void addCube(IVertexBuilder builder, MatrixStack matrixStackIn,float uOff, float vOff, float w, float h, TextureAtlasSprite sprite, int combinedLightIn,
+
+    public static void addCube(IVertexBuilder builder, MatrixStack matrixStackIn, float uOff, float vOff, float w, float h, TextureAtlasSprite sprite, int combinedLightIn,
                                int color, float a, int combinedOverlayIn, boolean up, boolean down, boolean fakeshading, boolean flippedY) {
-        addCube(builder,matrixStackIn,uOff,vOff,w,h,sprite,combinedLightIn,color,a,combinedOverlayIn,up,down,fakeshading,flippedY,false);
+        addCube(builder, matrixStackIn, uOff, vOff, w, h, sprite, combinedLightIn, color, a, up, down, fakeshading, flippedY, false);
     }
 
 
-
-    //TODO: cache sprite coordinates?
-    public static void addCube(IVertexBuilder builder, MatrixStack matrixStackIn,float uOff, float vOff, float w, float h, TextureAtlasSprite sprite, int combinedLightIn,
-                               int color, float a, int combinedOverlayIn, boolean up, boolean down, boolean fakeshading, boolean flippedY, boolean wrap) {
+    public static void addCube(IVertexBuilder builder, MatrixStack matrixStackIn, float uOff, float vOff, float w, float h, TextureAtlasSprite sprite, int combinedLightIn,
+                               int color, float a, boolean up, boolean down, boolean fakeshading, boolean flippedY, boolean wrap) {
         int lu = combinedLightIn & '\uffff';
         int lv = combinedLightIn >> 16 & '\uffff'; // ok
-        float atlasscaleU = sprite.getU1() - sprite.getU0();
-        float atlasscaleV = sprite.getV1() - sprite.getV0();
-        float minu = sprite.getU0() + atlasscaleU * uOff;
-        float minv = sprite.getV0() + atlasscaleV * vOff;
-        float maxu = minu + atlasscaleU * w;
-        float maxv = minv + atlasscaleV * h;
-        float maxv2 = minv + atlasscaleV * w;
+        float atlasScaleU = sprite.getU1() - sprite.getU0();
+        float atlasScaleV = sprite.getV1() - sprite.getV0();
+        float minU = sprite.getU0() + atlasScaleU * uOff;
+        float minV = sprite.getV0() + atlasScaleV * vOff;
+        float maxU = minU + atlasScaleU * w;
+        float maxV = minV + atlasScaleV * h;
+        float maxV2 = minV + atlasScaleV * w;
 
         float r = (float) ((color >> 16 & 255)) / 255.0F;
         float g = (float) ((color >> 8 & 255)) / 255.0F;
@@ -116,31 +116,31 @@ public class RendererUtil {
 
         // up
         if (up)
-            addQuadTop(builder, matrixStackIn, -hw, h, hw, hw, h, -hw, minu, minv, maxu, maxv2, r, g, b, a, lu, lv, 0, 1, 0);
+            addQuadTop(builder, matrixStackIn, -hw, h, hw, hw, h, -hw, minU, minV, maxU, maxV2, r, g, b, a, lu, lv, 0, 1, 0);
         // down
         if (down)
-            addQuadTop(builder, matrixStackIn, -hw, 0, -hw, hw, 0, hw, minu, minv, maxu, maxv2, r5, g5, b5, a, lu, lv, 0, -1, 0);
+            addQuadTop(builder, matrixStackIn, -hw, 0, -hw, hw, 0, hw, minU, minV, maxU, maxV2, r5, g5, b5, a, lu, lv, 0, -1, 0);
 
 
         if (flippedY) {
-            float temp = minv;
-            minv = maxv;
-            maxv = temp;
+            float temp = minV;
+            minV = maxV;
+            maxV = temp;
         }
         float inc = 0;
-        if (wrap){
-            inc = atlasscaleU * w;
+        if (wrap) {
+            inc = atlasScaleU * w;
         }
 
         // north z-
         // x y z u v r g b a lu lv
-        addQuadSide(builder, matrixStackIn, hw, 0, -hw, -hw, h, -hw, minu, minv, maxu, maxv, r8, g8, b8, a, lu, lv, 0, 0, 1);
+        addQuadSide(builder, matrixStackIn, hw, 0, -hw, -hw, h, -hw, minU, minV, maxU, maxV, r8, g8, b8, a, lu, lv, 0, 0, 1);
         // west
-        addQuadSide(builder, matrixStackIn, -hw, 0, -hw, -hw, h, hw, minu+inc, minv, maxu+inc, maxv, r6, g6, b6, a, lu, lv, -1, 0, 0);
+        addQuadSide(builder, matrixStackIn, -hw, 0, -hw, -hw, h, hw, minU + inc, minV, maxU + inc, maxV, r6, g6, b6, a, lu, lv, -1, 0, 0);
         // south
-        addQuadSide(builder, matrixStackIn, -hw, 0, hw, hw, h, hw, minu+2*inc, minv, maxu+2*inc, maxv, r8, g8, b8, a, lu, lv, 0, 0, -1);
+        addQuadSide(builder, matrixStackIn, -hw, 0, hw, hw, h, hw, minU + 2 * inc, minV, maxU + 2 * inc, maxV, r8, g8, b8, a, lu, lv, 0, 0, -1);
         // east
-        addQuadSide(builder, matrixStackIn, hw, 0, hw, hw, h, -hw, minu+3*inc, minv, maxu+3*inc, maxv, r6, g6, b6, a, lu, lv, 1, 0, 0);
+        addQuadSide(builder, matrixStackIn, hw, 0, hw, hw, h, -hw, minU + 3 * inc, minV, maxU + 3 * inc, maxV, r6, g6, b6, a, lu, lv, 1, 0, 0);
     }
 
     /*
@@ -160,16 +160,19 @@ public class RendererUtil {
         addVert(builder, matrixStackIn, x0, y1, z0, u0, v0, r, g, b, a, lu, lv, nx, ny, nz);
     }
 
-    /*
+    public static void addQuadSide(IVertexBuilder builder, MatrixStack matrixStackIn, float x0, float y0, float z0, float x1, float y1, float z1, float u0, float v0, float u1, float v1, float r, float g,
+                                   float b, float a, int lu, int lv, float nx, float ny, float nz, TextureAtlasSprite sprite) {
 
-        public static void addQuadSideF(IVertexBuilder builder, MatrixStack matrixStackIn, float x0, float y0, float z0, float x1, float y1, float z1, float u0, float v0, float u1, float v1, float r, float g,
-                                        float b, float a, int lu, int lv) {
-            addVert(builder, matrixStackIn, x0, y0, z0, u0, v0, r, g, b, a, lu, lv);
-            addVert(builder, matrixStackIn, x1, y0, z1, u1, v0, r, g, b, a, lu, lv);
-            addVert(builder, matrixStackIn, x1, y1, z1, u1, v1, r, g, b, a, lu, lv);
-            addVert(builder, matrixStackIn, x0, y1, z0, u0, v1, r, g, b, a, lu, lv);
-        }
-    */
+        u0 = getRelativeU(sprite, u0);
+        u1 = getRelativeU(sprite, u1);
+        v0 = getRelativeV(sprite, v0);
+        v1 = getRelativeV(sprite, v1);
+
+        addVert(builder, matrixStackIn, x0, y0, z0, u0, v1, r, g, b, a, lu, lv, nx, ny, nz);
+        addVert(builder, matrixStackIn, x1, y0, z1, u1, v1, r, g, b, a, lu, lv, nx, ny, nz);
+        addVert(builder, matrixStackIn, x1, y1, z1, u1, v0, r, g, b, a, lu, lv, nx, ny, nz);
+        addVert(builder, matrixStackIn, x0, y1, z0, u0, v0, r, g, b, a, lu, lv, nx, ny, nz);
+    }
 
     public static void addQuadTop(IVertexBuilder builder, MatrixStack matrixStackIn, float x0, float y0, float z0, float x1, float y1, float z1, float u0, float v0, float u1, float v1, float r, float g,
                                   float b, float a, int lu, int lv, float nx, float ny, float nz) {
@@ -186,23 +189,39 @@ public class RendererUtil {
                 .normal(matrixStackIn.last().normal(), nx, ny, nz).endVertex();
     }
 
-                //RendererUtil.renderFish(builder, matrixStackIn, wo, ho, fishType,240 , combinedOverlayIn);
+    public static void addVert(IVertexBuilder builder, MatrixStack matrixStackIn, float x, float y, float z, float u, float v, float r, float g,
+                               float b, float a, int lu, int lv, float nx, float ny, float nz, TextureAtlasSprite sprite) {
+        builder.vertex(matrixStackIn.last().pose(), x, y, z).color(r, g, b, a).uv(getRelativeU(sprite,u), getRelativeV(sprite,v))
+                .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lu, lv).normal(matrixStackIn.last().normal(), nx, ny, nz).endVertex();
+    }
 
-    public static void renderFish(IVertexBuilder builder, MatrixStack matrixStackIn, float wo, float ho, int fishType, int combinedLightIn,
-                                  int combinedOverlayIn) {
+    public static float getRelativeU(TextureAtlasSprite sprite, float u){
+        float f = sprite.getU1() - sprite.getU0();
+        return sprite.getU0() + f * u;
+    }
+
+    public static float getRelativeV(TextureAtlasSprite sprite, float v){
+        float f = sprite.getV1() - sprite.getV0();
+        return sprite.getV0() + f * v;
+    }
+
+
+    //RendererUtil.renderFish(builder, matrixStackIn, wo, ho, fishType,240 , combinedOverlayIn);
+
+    public static void renderFish(IVertexBuilder builder, MatrixStack matrixStackIn, float wo, float ho, int fishType, int combinedLightIn) {
         int textW = 64;
         int textH = 32;
         int fishW = 5;
         int fishH = 4;
 
-        int fishv = fishType % (textH/fishH);
-        int fishu = fishType / (textH/fishH);
+        int fishv = fishType % (textH / fishH);
+        int fishu = fishType / (textH / fishH);
 
         TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(Textures.FISHIES_TEXTURE);
-        float w = fishW / (float)textW;
-        float h = fishH / (float)textH;
-        float hw = 4*w / 2f;
-        float hh = 2*h / 2f;
+        float w = fishW / (float) textW;
+        float h = fishH / (float) textH;
+        float hw = 4 * w / 2f;
+        float hh = 2 * h / 2f;
         int lu = combinedLightIn & '\uffff';
         int lv = combinedLightIn >> 16 & '\uffff';
         float atlasscaleU = sprite.getU1() - sprite.getU0();
@@ -211,7 +230,6 @@ public class RendererUtil {
         float minv = sprite.getV0() + atlasscaleV * fishv * h;
         float maxu = atlasscaleU * w + minu;
         float maxv = atlasscaleV * h + minv;
-
 
 
         for (int k = 0; k < 2; k++) {
@@ -226,8 +244,8 @@ public class RendererUtil {
                 maxu = temp;
             }
             lu = 240;
-            minu += (atlasscaleU/2);
-            maxu += (atlasscaleU/2);
+            minu += (atlasscaleU / 2);
+            maxu += (atlasscaleU / 2);
 
         }
     }

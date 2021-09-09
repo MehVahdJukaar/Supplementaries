@@ -4,6 +4,7 @@
     "minecraft:flint_and_steel"
   ],
   "optional": [
+    "tconstruct:flint_and_bronze",
     "simply_steel:flint_and_iron",
     "simply_steel:quartz_and_iron",
     "simply_steel:quartz_and_steel",

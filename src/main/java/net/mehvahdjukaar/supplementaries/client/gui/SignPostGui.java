@@ -165,7 +165,7 @@ public class SignPostGui extends Screen {
                 matrixstack.translate(0, 0, -0.3125);
             }
             matrixstack.scale(1,-1,-1);
-            RenderMaterial material = Materials.SIGN_POSTS_MATERIAL.get(this.tileSign.woodTypeUp);
+            RenderMaterial material = Materials.SIGN_POSTS_MATERIALS.get(this.tileSign.woodTypeUp);
             IVertexBuilder builder =  material.buffer(irendertypebuffer$impl, RenderType::entitySolid);
             SignPostBlockTileRenderer.signModel.render(matrixstack, builder, 15728880, OverlayTexture.NO_OVERLAY);
 
@@ -181,7 +181,7 @@ public class SignPostGui extends Screen {
             }
             matrixstack.translate(0, -0.5, 0);
             matrixstack.scale(1,-1,-1);
-            RenderMaterial material = Materials.SIGN_POSTS_MATERIAL.get(this.tileSign.woodTypeDown);
+            RenderMaterial material = Materials.SIGN_POSTS_MATERIALS.get(this.tileSign.woodTypeDown);
             IVertexBuilder builder =  material.buffer(irendertypebuffer$impl, RenderType::entitySolid);
             SignPostBlockTileRenderer.signModel.render(matrixstack, builder, 15728880, OverlayTexture.NO_OVERLAY);
              matrixstack.popPose();

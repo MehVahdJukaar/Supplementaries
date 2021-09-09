@@ -93,7 +93,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
                 int fishType = tile.mobHolder.capturedMobProperties.getFishTexture();
 
                 //overlay
-                RendererUtil.renderFish(builder, matrixStackIn, wo, ho, fishType, combinedLightIn, combinedOverlayIn);
+                RendererUtil.renderFish(builder, matrixStackIn, wo, ho, fishType, combinedLightIn);
                 matrixStackIn.popPose();
 
             }

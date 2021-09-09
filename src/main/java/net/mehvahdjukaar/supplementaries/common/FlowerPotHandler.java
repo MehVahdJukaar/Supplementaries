@@ -24,7 +24,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 
-public class FlowerPotHelper {
+public class FlowerPotHandler {
 
     //vanilla pot flower pots
     //empty pot, map(flower item registry name, full block provider)
@@ -108,18 +108,70 @@ public class FlowerPotHelper {
             Item[] items = new Item[]{
                     Items.SUGAR_CANE, Items.BEETROOT_SEEDS, Items.CARROT, Items.CHORUS_FLOWER, Items.POTATO, Items.GRASS,
                     Items.COCOA_BEANS, Items.WHEAT_SEEDS, Items.VINE, Items.LARGE_FERN, Items.SWEET_BERRIES, Items.WEEPING_VINES,
-                    Items.NETHER_SPROUTS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.TALL_GRASS, Items.SEA_PICKLE
+                    Items.NETHER_SPROUTS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.TALL_GRASS, Items.SEA_PICKLE, Items.NETHER_WART
             };
             toAdd.add("quark:chorus_weeds");
             toAdd.add("quark:root");
             toAdd.add("quark:chorus_twist");
-
-
             Arrays.stream(items).forEach(i -> toAdd.add(i.getRegistryName().toString()));
         }
+
+        if(CompatHandler.pokecube_legends){
+            toAdd.add("pokecube_legends:crystallized_cactus");
+        }
+
+        if(CompatHandler.pokecube){
+            String[] berries = new String[]{
+                "pokecube:berry_aspear",
+                "pokecube:berry_cheri",
+                "pokecube:berry_chesto",
+                "pokecube:berry_cornn",
+                "pokecube:berry_enigma",
+                "pokecube:berry_grepa",
+                "pokecube:berry_hondew",
+                "pokecube:berry_jaboca",
+                "pokecube:berry_kelpsy",
+                "pokecube:berry_leppa",
+                "pokecube:berry_lum",
+                "pokecube:berry_nanab",
+                "pokecube:berry_null",
+                "pokecube:berry_oran",
+                "pokecube:berry_pecha",
+                "pokecube:berry_persim",
+                "pokecube:berry_pinap",
+                "pokecube:berry_pomeg",
+                "pokecube:berry_qualot",
+                "pokecube:berry_rawst",
+                "pokecube:berry_rowap",
+                "pokecube:berry_sitrus",
+                "pokecube:berry_tamato"};
+            toAdd.addAll(Arrays.asList(berries));
+        }
+
+        if(CompatHandler.moreminecarts){
+            toAdd.add("moreminecarts:chunkrodite_block");
+            toAdd.add("moreminecarts:glass_cactus");
+        }
+        if(CompatHandler.habitat){
+            toAdd.add("habitat:rafflesia");
+            toAdd.add("habitat:orange_ball_cactus");
+            toAdd.add("habitat:red_ball_cactus");
+            toAdd.add("habitat:pink_ball_cactus");
+            toAdd.add("habitat:yellow_ball_cactus");
+            toAdd.add("habitat:kabloom_pulp");
+        }
+        if(CompatHandler.endergetic){
+            toAdd.add("endergetic:tall_poise_bush");
+        }
+        if(CompatHandler.simplefarming){
+            toAdd.add("simplefarming:cantaloupe_block");
+            toAdd.add("simplefarming:honeydew_block");
+            toAdd.add("simplefarming:squash_block");
+        }
+
         //flower box
 
-        toAdd.forEach(FlowerPotHelper::registerCompatFlower);
+        toAdd.forEach(FlowerPotHandler::registerCompatFlower);
 
     }
 

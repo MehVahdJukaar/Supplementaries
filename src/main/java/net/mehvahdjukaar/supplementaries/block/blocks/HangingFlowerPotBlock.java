@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.HangingFlowerPotBlockTile;
-import net.mehvahdjukaar.supplementaries.common.FlowerPotHelper;
+import net.mehvahdjukaar.supplementaries.common.FlowerPotHandler;
 import net.minecraft.block.*;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
@@ -73,16 +73,16 @@ public class HangingFlowerPotBlock extends Block{
         if(tileEntity instanceof HangingFlowerPotBlockTile) {
             HangingFlowerPotBlockTile te = ((HangingFlowerPotBlockTile)tileEntity);
             Block pot = te.pot.getBlock();
-            if(pot instanceof FlowerPotBlock && FlowerPotHelper.isEmptyPot(((FlowerPotBlock) pot).getEmptyPot())) {
+            if(pot instanceof FlowerPotBlock && FlowerPotHandler.isEmptyPot(((FlowerPotBlock) pot).getEmptyPot())) {
                 ItemStack itemstack = player.getItemInHand(handIn);
                 Item item = itemstack.getItem();
                 //mimics flowerPorBlock behavior
-                Block newPot = item instanceof BlockItem ? FlowerPotHelper.getFullPot((FlowerPotBlock) pot,((BlockItem)item).getBlock()): Blocks.AIR;
+                Block newPot = item instanceof BlockItem ? FlowerPotHandler.getFullPot((FlowerPotBlock) pot,((BlockItem)item).getBlock()): Blocks.AIR;
                 /*Block newPot = item instanceof BlockItem ? FlowerPotHelper.FULL_POTS.get(((FlowerPotBlock) pot).getEmptyPot())
                         .getOrDefault(((BlockItem)item).getBlock().getRegistryName(), Blocks.AIR.delegate).get() : Blocks.AIR;*/
 
                 boolean isEmptyFlower = newPot == Blocks.AIR;
-                boolean isPotEmpty = FlowerPotHelper.isEmptyPot(pot);
+                boolean isPotEmpty = FlowerPotHandler.isEmptyPot(pot);
 
                 if (isEmptyFlower != isPotEmpty) {
                     if (isPotEmpty) {

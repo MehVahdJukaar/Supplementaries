@@ -5,7 +5,7 @@ import net.mehvahdjukaar.supplementaries.block.blocks.HangingFlowerPotBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.HangingFlowerPotBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
-import net.mehvahdjukaar.supplementaries.common.FlowerPotHelper;
+import net.mehvahdjukaar.supplementaries.common.FlowerPotHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
@@ -28,7 +28,7 @@ public class HangingFlowerPotBlockTileRenderer extends TileEntityRenderer<Hangin
     public void render(HangingFlowerPotBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
 
-        BlockState state = CommonUtil.FESTIVITY.isAprilsFool()? FlowerPotHelper.getAprilPot() : tile.pot;
+        BlockState state = CommonUtil.FESTIVITY.isAprilsFool()? FlowerPotHandler.getAprilPot() : tile.pot;
         BlockState state2 = tile.getBlockState().setValue(HangingFlowerPotBlock.TILE,true);
 
         matrixStackIn.pushPose();

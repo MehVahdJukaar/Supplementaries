@@ -1,0 +1,6 @@
+{
+  "parent": "supplementaries:block/plants/cross_template",
+  "textures": {
+    "plant": "pokecube_legends:blocks/potted_distortic_vines"
+  }
+}

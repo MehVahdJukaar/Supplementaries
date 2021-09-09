@@ -330,7 +330,7 @@ public class ModRegistry {
     //slingshot
     public static final String SLINGSHOT_NAME = "slingshot";
     public static final RegistryObject<Item> SLINGSHOT_ITEM = regItem(SLINGSHOT_NAME, () -> new SlingshotItem((new Item.Properties())
-            .tab(getTab(ItemGroup.TAB_COMBAT, SLINGSHOT_NAME))
+            .tab(getTab(ItemGroup.TAB_TOOLS, SLINGSHOT_NAME))
             .stacksTo(1).durability(192))); //setISTER(() -> SlingshotItemRenderer::new)
 
 

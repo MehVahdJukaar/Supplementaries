@@ -19,6 +19,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.model.RenderMaterial;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
@@ -28,7 +29,6 @@ import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.IReorderingProcessor;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
@@ -211,10 +211,10 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
             //render item
             if(!stack.isEmpty()) {
 
-                ResourceLocation pattern = tile.getCachedPattern();
-                if (pattern != null) {
-                    //TODO: replace with flag material
-                    IVertexBuilder builder = bufferIn.getBuffer(RenderType.itemEntityTranslucentCull(pattern));
+                RenderMaterial rendermaterial = tile.getCachedPattern();
+                if (rendermaterial != null) {
+
+                    IVertexBuilder builder = rendermaterial.buffer(bufferIn, RenderType::entityNoOutline);
 
                     int i = tile.getTextColor().getTextColor();
                     float b = (NativeImage.getR(i) )/255f;
@@ -222,9 +222,8 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
                     float r = (NativeImage.getB(i) )/255f;
                     int lu = frontLight & '\uffff';
                     int lv = frontLight >> 16 & '\uffff';
-                    RendererUtil.addQuadSide(builder, matrixStackIn, -0.5f, -0.5f, 0.008f, 0.5f, 0.5f, 0.008f,
-                            0.125f, 0, 0.5f+0.125f, 1, r, g, b, 1, lu, lv, 0, 0, 1);
-
+                    RendererUtil.addQuadSide(builder, matrixStackIn, -0.4375F, -0.4375F, 0.008f, 0.4375F, 0.4375F, 0.008f,
+                            0.15625f, 0.0625f, 0.5f + 0.09375f, 1 - 0.0625f, r, g, b, 1, lu, lv, 0, 0, 1, rendermaterial.sprite());
 
                 }
                 else{

@@ -9,11 +9,9 @@ import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
-import net.mehvahdjukaar.supplementaries.common.FlowerPotHelper;
+import net.mehvahdjukaar.supplementaries.common.FlowerPotHandler;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandlerClient;
-import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
-import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.items.SlingshotItem;
 import net.mehvahdjukaar.supplementaries.world.data.map.client.CMDclient;
 import net.minecraft.block.Block;
@@ -321,17 +319,20 @@ public class ClientSetup {
     //textures
     @SubscribeEvent
     public static void onTextureStitch(TextureStitchEvent.Pre event) {
-        if(event.getMap().location().equals(Atlases.SIGN_SHEET)){
-            for(IWoodType type : WoodTypes.TYPES.values()){
-                //TODO: make hanging sign use java model
-                //event.addSprite(HANGING_SIGNS_TEXTURES.get(type));
-                event.addSprite(Textures.SIGN_POSTS_TEXTURES.get(type));
-            }
+        ResourceLocation loc = event.getMap().location();
+        if(loc.equals(Atlases.SIGN_SHEET)){
+            //TODO: make hanging sign use java model
+            //event.addSprite(HANGING_SIGNS_TEXTURES.get(type));
+            //event.addSprite(Textures.SIGN_POSTS_TEXTURES.get(type));
+            //disabled since they get automatically stitched on the block texture by their items
         }
-        if (event.getMap().location().equals(AtlasTexture.LOCATION_BLOCKS)) {
+        if (loc.equals(AtlasTexture.LOCATION_BLOCKS)) {
             for (ResourceLocation r : Textures.getTexturesToStitch()) {
                 event.addSprite(r);
             }
+        }
+        if (loc.equals(Atlases.BANNER_SHEET)) {
+            Textures.FLAG_TEXTURES.values().forEach(event::addSprite);
         }
     }
 
@@ -352,7 +353,7 @@ public class ClientSetup {
         //fake models & blockstates
         registerStaticBlockState(ModRegistry.LABEL.get().getRegistryName(), Blocks.AIR, "jar");
 
-        FlowerPotHelper.registerCustomModels(n -> registerStaticBlockState(new ResourceLocation(n), Blocks.AIR));
+        FlowerPotHandler.registerCustomModels(n -> registerStaticBlockState(new ResourceLocation(n), Blocks.AIR));
     }
 
     private static void registerStaticBlockState(ResourceLocation name, Block parent, String... booleanProperties){

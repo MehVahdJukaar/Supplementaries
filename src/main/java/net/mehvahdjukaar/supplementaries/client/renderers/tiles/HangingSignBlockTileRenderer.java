@@ -3,8 +3,8 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.mehvahdjukaar.supplementaries.block.blocks.HangingSignBlock;
-import net.mehvahdjukaar.supplementaries.block.tiles.FlagBlockTile;
 import net.mehvahdjukaar.supplementaries.block.tiles.HangingSignBlockTile;
+import net.mehvahdjukaar.supplementaries.client.Materials;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.client.renderers.LOD;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
@@ -20,6 +20,7 @@ import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.model.RenderMaterial;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
@@ -38,7 +39,7 @@ public class HangingSignBlockTileRenderer extends TileEntityRenderer<HangingSign
     protected final BlockRendererDispatcher blockRenderer;
     protected final ItemRenderer itemRenderer;
     protected final MapItemRenderer mapRenderer;
-    
+
     public HangingSignBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
         Minecraft minecraft = Minecraft.getInstance();
@@ -55,15 +56,15 @@ public class HangingSignBlockTileRenderer extends TileEntityRenderer<HangingSign
         matrixStackIn.pushPose();
 
         //rotate towards direction
-        if(tile.getBlockState().getValue(HangingSignBlock.HANGING))matrixStackIn.translate(0,0.125, 0);
+        if (tile.getBlockState().getValue(HangingSignBlock.HANGING)) matrixStackIn.translate(0, 0.125, 0);
         matrixStackIn.translate(0.5, 0.875, 0.5);
         matrixStackIn.mulPose(Const.rot(tile.getDirection().getOpposite()));
         matrixStackIn.mulPose(Const.XN90);
 
-        LOD lod = new LOD(this.renderer,tile.getBlockPos());
+        LOD lod = new LOD(this.renderer, tile.getBlockPos());
 
         //animation
-        if(lod.isNear()) {
+        if (lod.isNear()) {
             matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(MathHelper.lerp(partialTicks, tile.prevAngle, tile.angle)));
         }
         matrixStackIn.translate(-0.5, -0.875, -0.5);
@@ -73,7 +74,7 @@ public class HangingSignBlockTileRenderer extends TileEntityRenderer<HangingSign
         blockRenderer.renderBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
         //RendererUtil.renderBlockPlus(state, matrixStackIn, bufferIn, blockRenderer, tile.getWorld(), tile.getPos(), RenderType.getCutout());
 
-        if(lod.isMedium()){
+        if (lod.isMedium()) {
             matrixStackIn.translate(0.5, 0.5 - 0.1875, 0.5);
             matrixStackIn.mulPose(Const.YN90);
             // render item
@@ -101,21 +102,24 @@ public class HangingSignBlockTileRenderer extends TileEntityRenderer<HangingSign
                         PlayerEntity player = Minecraft.getInstance().player;
                         NetworkHandler.INSTANCE.sendToServer(new RequestMapDataFromServerPacket(tile.getBlockPos(), player.getUUID()));
                     }
-                }
-                else if(item instanceof BannerPatternItem){
+                } else if (item instanceof BannerPatternItem) {
 
+                    //TODO: cache or not like notice board
+                    RenderMaterial rendermaterial = Materials.FLAG_MATERIALS.get(((BannerPatternItem) item).getBannerPattern());
 
-                    IVertexBuilder builder = bufferIn.getBuffer(RenderType.itemEntityTranslucentCull(FlagBlockTile.getFlagLocation(((BannerPatternItem) item).getBannerPattern())));
+                    IVertexBuilder builder = rendermaterial.buffer(bufferIn, RenderType::entityNoOutline);
+
+                    //IVertexBuilder builder = bufferIn.getBuffer(RenderType.itemEntityTranslucentCull(FlagBlockTile.getFlagLocation(((BannerPatternItem) item).getBannerPattern())));
 
                     int i = tile.textHolder.textColor.getColorValue();
-                    float b = (NativeImage.getR(i) )/255f;
-                    float g = (NativeImage.getG(i) )/255f;
-                    float r = (NativeImage.getB(i) )/255f;
+                    float b = (NativeImage.getR(i)) / 255f;
+                    float g = (NativeImage.getG(i)) / 255f;
+                    float r = (NativeImage.getB(i)) / 255f;
                     int lu = combinedLightIn & '\uffff';
                     int lv = combinedLightIn >> 16 & '\uffff';
                     for (int v = 0; v < 2; v++) {
-                        RendererUtil.addQuadSide(builder, matrixStackIn, -0.5f, -0.5f, 0.0725f, 0.5f, 0.5f, 0.0725f,
-                                0.125f, 0, 0.5f + 0.125f, 1, r, g, b, 1, lu, lv, 0, 0, 1);
+                        RendererUtil.addQuadSide(builder, matrixStackIn, -0.4375F, -0.4375F, 0.07f, 0.4375F, 0.4375F, 0.07f,
+                                0.15625f, 0.0625f, 0.5f + 0.09375f, 1 - 0.0625f, r, g, b, 1, lu, lv, 0, 0, 1, rendermaterial.sprite());
 
                         matrixStackIn.mulPose(Const.Y180);
                     }
@@ -139,7 +143,7 @@ public class HangingSignBlockTileRenderer extends TileEntityRenderer<HangingSign
             }
 
             // render text
-            else if(lod.isNearMed()){
+            else if (lod.isNearMed()) {
                 // sign code
                 FontRenderer fontrenderer = this.renderer.getFont();
                 int i = tile.textHolder.textColor.getTextColor();
@@ -149,10 +153,9 @@ public class HangingSignBlockTileRenderer extends TileEntityRenderer<HangingSign
                 int i1 = NativeImage.combine(0, l, k, j);
 
 
-
                 matrixStackIn.scale(0.010416667F, -0.010416667F, 0.010416667F);
 
-                for(int k1 = 0; k1 < HangingSignBlockTile.MAXLINES; ++k1) {
+                for (int k1 = 0; k1 < HangingSignBlockTile.MAXLINES; ++k1) {
                     IReorderingProcessor ireorderingprocessor = tile.textHolder.getRenderText(k1, (ss) -> {
                         List<IReorderingProcessor> list = fontrenderer.split(ss, 75);
                         return list.isEmpty() ? IReorderingProcessor.EMPTY : list.get(0);
@@ -162,7 +165,7 @@ public class HangingSignBlockTileRenderer extends TileEntityRenderer<HangingSign
                         for (int v = 0; v < 2; v++) {
 
                             matrixStackIn.pushPose();
-                            matrixStackIn.translate(0, 0, (0.0625 + 0.005)/0.010416667F);
+                            matrixStackIn.translate(0, 0, (0.0625 + 0.005) / 0.010416667F);
 
                             float f3 = (float) (-fontrenderer.width(ireorderingprocessor) / 2);
                             fontrenderer.drawInBatch(ireorderingprocessor, f3, (float) (k1 * 10 - 34), i1, false, matrixStackIn.last().pose(), bufferIn, false, 0, combinedLightIn);

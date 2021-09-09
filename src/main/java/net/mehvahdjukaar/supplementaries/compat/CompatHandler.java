@@ -32,7 +32,12 @@ public class CompatHandler {
     public static final boolean flywheel;
     public static final boolean repurposed_structures;
     public static final boolean tetra;
-
+    public static final boolean pokecube_legends;
+    public static final boolean pokecube;
+    public static final boolean dynamictrees;
+    public static final boolean moreminecarts;
+    public static final boolean habitat;
+    public static final boolean simplefarming;
 
     static {
         ModList ml = ModList.get();
@@ -55,6 +60,12 @@ public class CompatHandler {
         flywheel = ml.isLoaded("flywheel");
         repurposed_structures = ml.isLoaded("repurposed_structures");
         tetra = ml.isLoaded("tetra");
+        pokecube_legends = ml.isLoaded("pokecube_legends");
+        pokecube = ml.isLoaded("pokecube");
+        dynamictrees = ml.isLoaded("dynamictrees");
+        moreminecarts = ml.isLoaded("moreminecarts");
+        habitat = ml.isLoaded("habitat");
+        simplefarming = ml.isLoaded("simplefarming");
     }
 
     public static void init(){

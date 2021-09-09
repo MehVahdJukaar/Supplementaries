@@ -3,10 +3,12 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.block.util.IMapDisplay;
+import net.mehvahdjukaar.supplementaries.client.Materials;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.inventories.NoticeBoardContainer;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.renderer.model.RenderMaterial;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.*;
@@ -30,7 +32,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, 
     private List<IReorderingProcessor> cachedPageLines = Collections.emptyList();
     //used to tell renderer when it has to slit new line(have to do it there cause i need fontrenderer function)
     private boolean inventoryChanged = true;
-    private ResourceLocation cachedPattern = null;
+    private RenderMaterial cachedPattern = null;
 
 
     //TODO: add this
@@ -84,7 +86,8 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, 
         Item item = itemstack.getItem();
         this.cachedPattern = null;
         if(item instanceof BannerPatternItem){
-            this.cachedPattern = FlagBlockTile.getFlagLocation(((BannerPatternItem) item).getBannerPattern());
+
+            this.cachedPattern = Materials.FLAG_MATERIALS.get(((BannerPatternItem) item).getBannerPattern());
         }
 
         this.inventoryChanged = true;
@@ -174,7 +177,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, 
         this.textVisible = textVisible;
     }
 
-    public ResourceLocation getCachedPattern() {
+    public RenderMaterial getCachedPattern() {
         return cachedPattern;
     }
 

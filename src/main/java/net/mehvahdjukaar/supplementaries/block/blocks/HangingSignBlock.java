@@ -90,11 +90,12 @@ public class HangingSignBlock extends SwayingBlock {
                     }
                     return ActionResultType.sidedSuccess(worldIn.isClientSide);
                 }
-            }
-            // open gui (edit sign with empty hand)
-            else if (handItem.isEmpty()) {
-                if(!server) HangingSignGui.open(te);
-                return ActionResultType.sidedSuccess(worldIn.isClientSide);
+
+                // open gui (edit sign with empty hand)
+                else if (handItem.isEmpty()) {
+                    if (!server) HangingSignGui.open(te);
+                    return ActionResultType.sidedSuccess(worldIn.isClientSide);
+                }
             }
         }
         return ActionResultType.PASS;
@@ -125,7 +126,7 @@ public class HangingSignBlock extends SwayingBlock {
         else {
             return facing == stateIn.getValue(FACING).getOpposite()? !stateIn.canSurvive(worldIn, currentPos)
                     ? Blocks.AIR.defaultBlockState()
-                    : this.getConnectedState(stateIn,facingState, worldIn,facingPos) : stateIn;
+                    : getConnectedState(stateIn,facingState, worldIn,facingPos) : stateIn;
         }
     }
 
@@ -164,7 +165,7 @@ public class HangingSignBlock extends SwayingBlock {
         BlockPos facingpos = blockpos.relative(context.getClickedFace().getOpposite());
         BlockState facingState = world.getBlockState(facingpos);
 
-        return this.getConnectedState(this.defaultBlockState(),facingState, world,facingpos).setValue(FACING, context.getClickedFace()).setValue(WATERLOGGED,water);
+        return getConnectedState(this.defaultBlockState(),facingState, world,facingpos).setValue(FACING, context.getClickedFace()).setValue(WATERLOGGED,water);
     }
 
     //for player bed spawn

@@ -40,6 +40,7 @@ public class Supplementaries{
 
         //yes this is where I write crap
 
+        //use atlas for flags
 
         //TODO: improve finish feather particle & slingshot visuals
 

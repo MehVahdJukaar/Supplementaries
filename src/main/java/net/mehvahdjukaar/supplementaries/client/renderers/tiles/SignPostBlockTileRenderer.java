@@ -86,7 +86,7 @@ public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockT
                 }
 
                 matrixStackIn.scale(1,-1,-1);
-                RenderMaterial material = Materials.SIGN_POSTS_MATERIAL.get(tile.woodTypeUp);
+                RenderMaterial material = Materials.SIGN_POSTS_MATERIALS.get(tile.woodTypeUp);
                 IVertexBuilder builder =  material.buffer(bufferIn, RenderType::entitySolid);
                 signModel.render(matrixStackIn, builder, combinedLightIn, combinedOverlayIn);
 
@@ -132,7 +132,7 @@ public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockT
                 }
 
                 matrixStackIn.scale(1,-1,-1);
-                RenderMaterial material = Materials.SIGN_POSTS_MATERIAL.get(tile.woodTypeDown);
+                RenderMaterial material = Materials.SIGN_POSTS_MATERIALS.get(tile.woodTypeDown);
                 IVertexBuilder builder =  material.buffer(bufferIn, RenderType::entitySolid);
                 signModel.render(matrixStackIn, builder, combinedLightIn, combinedOverlayIn);
 

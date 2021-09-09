@@ -42,7 +42,7 @@ public class JarItemRenderer extends CageItemRenderer {
                     matrixStackIn.translate(0.5, 0.3125, 0.5);
                     matrixStackIn.mulPose(Const.YN45);
                     matrixStackIn.scale(1.5f, 1.5f, 1.5f);
-                    RendererUtil.renderFish(builder1, matrixStackIn, 0, 0, fishTexture, combinedLightIn, combinedOverlayIn);
+                    RendererUtil.renderFish(builder1, matrixStackIn, 0, 0, fishTexture, combinedLightIn);
                     matrixStackIn.popPose();
                 }
                 SoftFluid s = SoftFluidRegistry.WATER;
