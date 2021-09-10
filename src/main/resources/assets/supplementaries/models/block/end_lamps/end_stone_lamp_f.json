@@ -1,0 +1,6 @@
+{
+	"parent": "minecraft:block/cube_all",
+	"textures": {
+		"all": "supplementaries:blocks/end_lamps/end_stone_lamp_f"
+	}
+}

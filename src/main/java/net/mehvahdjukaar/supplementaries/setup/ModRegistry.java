@@ -1390,6 +1390,19 @@ public class ModRegistry {
     public static final RegistryObject<Item> BLACKSTONE_TILE_VERTICAL_SLAB_ITEM = regBlockItem(BLACKSTONE_TILE_VERTICAL_SLAB,
             getTab("quark", ItemGroup.TAB_BUILDING_BLOCKS, STONE_TILE_NAME));
 
+    //deepslate lamp
+    public static final String DEEPSLATE_LAMP_NAME = "deepslate_lamp";
+    public static final RegistryObject<Block> DEEPSLATE_LAMP = BLOCKS.register(DEEPSLATE_LAMP_NAME, () -> new Block(
+            AbstractBlock.Properties.copy(Blocks.BLACKSTONE).lightLevel(s -> 15)));
+    public static final RegistryObject<Item> DEEPSLATE_LAMP_ITEM = regBlockItem(DEEPSLATE_LAMP, getTab(ItemGroup.TAB_BUILDING_BLOCKS, DEEPSLATE_LAMP_NAME));
+
+
+    //end_stone lamp
+    public static final String END_STONE_LAMP_NAME = "end_stone_lamp";
+    public static final RegistryObject<Block> END_STONE_LAMP = BLOCKS.register(END_STONE_LAMP_NAME, () -> new EndLampBlock(
+            AbstractBlock.Properties.copy(Blocks.END_STONE).lightLevel(s -> 15)));
+    public static final RegistryObject<Item> END_STONE_LAMP_ITEM = regBlockItem(END_STONE_LAMP, getTab(ItemGroup.TAB_BUILDING_BLOCKS, END_STONE_LAMP_NAME));
+
 
     //flower box
     public static final String FLOWER_BOX_NAME = "flower_box";

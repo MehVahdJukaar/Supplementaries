@@ -60,6 +60,8 @@ public class BlockProperties {
     public static final ModelProperty<Boolean> FANCY = new ModelProperty<>();
     public static final ModelProperty<Boolean> FRAMED = new ModelProperty<>();
 
+    public static final EnumProperty<Rune> RUNE = EnumProperty.create("rune", Rune.class);
+
     public enum RopeAttachment implements IStringSerializable{
         NONE("none"), //default /no attachment
         BLOCK("block"), //block attachment / pillar attachment
@@ -212,6 +214,46 @@ public class BlockProperties {
         private final String name;
 
         BellAttachment(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String getSerializedName() {
+            return this.name;
+        }
+    }
+
+    public enum Rune implements IStringSerializable {
+        A("a"),
+        B("b"),
+        C("c"),
+        D("d"),
+        E("e"),
+        F("f"),
+        G("g"),
+        H("h"),
+        I("i"),
+        J("j"),
+        K("k"),
+        L("l"),
+        M("m"),
+        N("n"),
+        O("o"),
+        P("p"),
+        Q("q"),
+        R("s"),
+        T("t"),
+        U("u"),
+        V("v"),
+        W("w"),
+        X("x"),
+        Y("y"),
+        Z("z"),
+        SUS("sus");
+
+        private final String name;
+
+        Rune(String name) {
             this.name = name;
         }
 

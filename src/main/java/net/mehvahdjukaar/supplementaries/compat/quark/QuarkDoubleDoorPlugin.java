@@ -15,7 +15,7 @@ import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.content.tweaks.module.DoubleDoorOpeningModule;
 
 public class QuarkDoubleDoorPlugin {
-    public static void openDoor(World world,BlockState state, BlockPos pos) {
+    public static void openDoor(World world, BlockState state, BlockPos pos) {
 
         if (ModuleLoader.INSTANCE.isModuleEnabled(DoubleDoorOpeningModule.class)) {
             Direction direction = state.getValue(DoorBlock.FACING);
@@ -27,10 +27,11 @@ public class QuarkDoubleDoorPlugin {
             if (other.getBlock() == state.getBlock() && other.getValue(DoorBlock.FACING) == direction && !other.getValue(DoorBlock.POWERED) &&
                     other.getValue(DoorBlock.OPEN) == isOpen && other.getValue(DoorBlock.HINGE) != isMirrored) {
                 BlockState newState = other.cycle(DoorBlock.OPEN);
-                world.setBlock(doorPos, newState,10);
+                world.setBlock(doorPos, newState, 10);
             }
         }
     }
+
     public static void openDoorKey(World world, BlockState state, BlockPos pos, PlayerEntity player, Hand hand) {
 
         if (ModuleLoader.INSTANCE.isModuleEnabled(DoubleDoorOpeningModule.class)) {
@@ -45,7 +46,7 @@ public class QuarkDoubleDoorPlugin {
                 if (te instanceof KeyLockableTile &&
                         (((KeyLockableTile) te).handleAction(player, hand, "door"))) {
                     BlockState newState = other.cycle(DoorBlock.OPEN);
-                    world.setBlock(doorPos, newState,10);
+                    world.setBlock(doorPos, newState, 10);
                 }
             }
         }

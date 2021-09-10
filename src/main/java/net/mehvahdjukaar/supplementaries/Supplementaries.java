@@ -44,7 +44,7 @@ public class Supplementaries{
 
         //TODO: improve finish feather particle & slingshot visuals
 
-        // zipline mod ropewalk
+        //zipline mod ropewalk
 
         //GLOBE inv model
         //TODO: goblet & jars dynamic baked model
