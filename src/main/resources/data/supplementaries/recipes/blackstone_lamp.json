@@ -20,7 +20,7 @@
   "conditions": [
     {
       "type": "supplementaries:flag",
-      "flag": "stone_lamp"
+      "flag": "blackstone_lamp"
     }
   ]
 }

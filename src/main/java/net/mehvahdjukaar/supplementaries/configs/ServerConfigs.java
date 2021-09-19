@@ -54,11 +54,14 @@ public class ServerConfigs {
 
 
     public static class item {
+        public static ForgeConfigSpec.IntValue ROPE_ARROW_CAPACITY;
         public static ForgeConfigSpec.ConfigValue<String> ROPE_ARROW_ROPE;
         public static ForgeConfigSpec.IntValue FLUTE_RADIUS;
         public static ForgeConfigSpec.IntValue FLUTE_DISTANCE;
         public static ForgeConfigSpec.DoubleValue BOMB_RADIUS;
         public static ForgeConfigSpec.EnumValue<BombEntity.breakingMode> BOMB_BREAKS;
+        public static ForgeConfigSpec.DoubleValue BOMB_BLUE_RADIUS;
+        public static ForgeConfigSpec.EnumValue<BombEntity.breakingMode> BOMB_BLUE_BREAKS;
         public static ForgeConfigSpec.DoubleValue SLINGSHOT_RANGE;
         public static ForgeConfigSpec.IntValue SLINGSHOT_CHARGE;
         public static ForgeConfigSpec.BooleanValue UNRESTRICTED_SLINGSHOT;
@@ -71,6 +74,8 @@ public class ServerConfigs {
             ROPE_ARROW_ROPE = builder.comment("If you don't like my ropes you can specify here the block id of"+
                     "a rope from another mod which will get deployed by rope arrows instead of mine")
                     .define("rope_arrow_override","supplementaries:rope");
+            ROPE_ARROW_CAPACITY = builder.comment("Max number of robe items allowed to be stored inside a rope arrow")
+                    .defineInRange("capacity", 24, 1, 256);
             builder.pop();
             //flute
             builder.push("flute");
@@ -85,6 +90,14 @@ public class ServerConfigs {
             BOMB_RADIUS = builder.comment("Bomb explosion radius (damage depends on this)")
                     .defineInRange("explosion_radius",2, 0.1, 10);
             BOMB_BREAKS = builder.comment("Do bombs break blocks like tnt?")
+                    .defineEnum("break_blocks", BombEntity.breakingMode.WEAK);
+
+            builder.pop();
+
+            builder.push("blue_bomb");
+            BOMB_BLUE_RADIUS = builder.comment("Bomb explosion radius (damage depends on this)")
+                    .defineInRange("explosion_radius",5.15, 0.1, 10);
+            BOMB_BLUE_BREAKS = builder.comment("Do bombs break blocks like tnt?")
                     .defineEnum("break_blocks", BombEntity.breakingMode.WEAK);
 
             builder.pop();
@@ -122,6 +135,7 @@ public class ServerConfigs {
         public static ForgeConfigSpec.BooleanValue RANDOM_ADVENTURER_MAPS;
         public static ForgeConfigSpec.BooleanValue MAP_MARKERS;
         public static ForgeConfigSpec.BooleanValue CEILING_BANNERS;
+        public static ForgeConfigSpec.BooleanValue PLACEABLE_BOOKS;
         public static ForgeConfigSpec.BooleanValue ZOMBIE_HORSE;
         public static ForgeConfigSpec.IntValue ZOMBIE_HORSE_COST;
         public static ForgeConfigSpec.BooleanValue ZOMBIE_HORSE_UNDERWATER;
@@ -226,6 +240,11 @@ public class ServerConfigs {
                     .define("enabled",true);
             builder.pop();
 
+            builder.push("placeable_books");
+            PLACEABLE_BOOKS = builder.comment("Allow books and enchanted books to be placed on the ground")
+                    .define("enabled", true);
+            builder.pop();
+
             builder.push("zombie_horse");
             ZOMBIE_HORSE = builder.comment("Feed a stack of rotten flesh to a skeleton horse to buff him up to a zombie horse")
                     .define("zombie_horse_conversion",true);
@@ -263,6 +282,7 @@ public class ServerConfigs {
 
         public static ForgeConfigSpec.IntValue JAR_CAPACITY;
         public static ForgeConfigSpec.BooleanValue JAR_EAT;
+        public static ForgeConfigSpec.BooleanValue JAR_ITEM_DRINK;
         public static ForgeConfigSpec.BooleanValue JAR_AUTO_DETECT;
 
         public static ForgeConfigSpec.BooleanValue CAGE_ALL_MOBS;
@@ -362,9 +382,11 @@ public class ServerConfigs {
             builder.push("jar");
             JAR_CAPACITY = builder.comment("Jar liquid capacity: leave at 12 for pixel accuracy")
                     .defineInRange("capacity",12,0,1024);
-            JAR_EAT = builder.comment("Allow right click to instantly eat or drink food or potions inside a jar.\n" +
+            JAR_EAT = builder.comment("Allow right click to instantly eat or drink food or potions inside a placed jar.\n" +
                     "Disable if you think this ability is op (honey for example). Cookies are excluded")
-                    .define("drink_from_jar",true);
+                    .define("drink_from_jar",false);
+            JAR_ITEM_DRINK = builder.comment("Allows the player to directly drink from jar items")
+                    .define("drink_from_jar_item",false);
             JAR_AUTO_DETECT = builder.comment("Dynamically allows all small mobs inside jars depending on their hitbox size. Tinted jars can accept hostile mbos too")
                     .define("jar_auto_detect", false);
 
@@ -572,10 +594,13 @@ public class ServerConfigs {
         //items
         public static String ROPE_ARROW_ROPE;
         public static Block ROPE_ARROW_BLOCK;
+        public static int ROPE_ARROW_CAPACITY;
         public static int FLUTE_RADIUS;
         public static int FLUTE_DISTANCE;
         public static float BOMB_RADIUS;
         public static BombEntity.breakingMode BOMB_BREAKS;
+        public static float BOMB_BLUE_RADIUS;
+        public static BombEntity.breakingMode BOMB_BLUE_BREAKS;
         public static double SLINGSHOT_RANGE;
         public static int SLINGSHOT_CHARGE;
         public static boolean UNRESTRICTED_SLINGSHOT;
@@ -598,6 +623,7 @@ public class ServerConfigs {
         public static int BOTTLING_COST;
         public static boolean MAP_MARKERS;
         public static boolean CEILING_BANNERS;
+        public static boolean PLACEABLE_BOOKS;
         public static boolean PLACEABLE_GUNPOWDER;
         public static int GUNPOWDER_BURN_SPEED;
         public static int GUNPOWDER_SPREAD_AGE;
@@ -624,6 +650,7 @@ public class ServerConfigs {
         public static List<? extends String> TURN_TABLE_BLACKLIST;
         public static int JAR_CAPACITY;
         public static boolean JAR_EAT;
+        public static boolean JAR_ITEM_DRINK;
         public static boolean JAR_AUTO_DETECT;
         public static boolean NOTICE_BOARDS_UNRESTRICTED;
         public static boolean CAGE_ALL_MOBS;
@@ -668,10 +695,12 @@ public class ServerConfigs {
             BELL_CHAIN_LENGTH = tweaks.BELL_CHAIN_LENGTH.get();
             MAP_MARKERS = tweaks.MAP_MARKERS.get();
             CEILING_BANNERS = tweaks.CEILING_BANNERS.get();
+            PLACEABLE_BOOKS = tweaks.PLACEABLE_BOOKS.get();
             PLACEABLE_GUNPOWDER = tweaks.PLACEABLE_GUNPOWDER.get();
             GUNPOWDER_BURN_SPEED = tweaks.GUNPOWDER_BURN_SPEED.get();
             GUNPOWDER_SPREAD_AGE = tweaks.GUNPOWDER_SPREAD_AGE.get();
 
+            ROPE_ARROW_CAPACITY = item.ROPE_ARROW_CAPACITY.get();
             ROPE_ARROW_ROPE = item.ROPE_ARROW_ROPE.get();
             ROPE_ARROW_BLOCK = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ROPE_ARROW_ROPE));
             if(ROPE_ARROW_BLOCK == Blocks.AIR)ROPE_ARROW_BLOCK = ModRegistry.ROPE.get();
@@ -679,6 +708,8 @@ public class ServerConfigs {
             FLUTE_RADIUS = item.FLUTE_RADIUS.get();
             BOMB_BREAKS = item.BOMB_BREAKS.get();
             BOMB_RADIUS = (float)(item.BOMB_RADIUS.get()+0f);
+            BOMB_BLUE_BREAKS = item.BOMB_BLUE_BREAKS.get();
+            BOMB_BLUE_RADIUS = (float)(item.BOMB_BLUE_RADIUS.get()+0f);
             SLINGSHOT_RANGE = item.SLINGSHOT_RANGE.get();
             SLINGSHOT_CHARGE = item.SLINGSHOT_CHARGE.get();
             UNRESTRICTED_SLINGSHOT = item.UNRESTRICTED_SLINGSHOT.get();
@@ -712,6 +743,7 @@ public class ServerConfigs {
 
             JAR_CAPACITY = block.JAR_CAPACITY.get();
             JAR_EAT = block.JAR_EAT.get();
+            JAR_ITEM_DRINK = block.JAR_ITEM_DRINK.get();
             JAR_AUTO_DETECT = block.JAR_AUTO_DETECT.get();
 
             NOTICE_BOARDS_UNRESTRICTED = block.NOTICE_BOARDS_UNRESTRICTED.get();

@@ -1,0 +1,28 @@
+{
+  "replace": false,
+  "optional": [
+    "#ilikewood:posts",
+    "ilikewood:acacia_post",
+    "ilikewood:oak_post",
+    "ilikewood:dark_oak_post",
+    "ilikewood:jungle_post",
+    "ilikewood:spruce_post",
+    "ilikewood:birch_post",
+    "ilikewood:crimson_post",
+    "ilikewood:warped_post",
+
+    "ilikewood:stripped_acacia_post",
+    "ilikewood:stripped_oak_post",
+    "ilikewood:stripped_dark_oak_post",
+    "ilikewood:stripped_jungle_post",
+    "ilikewood:stripped_spruce_post",
+    "ilikewood:stripped_birch_post",
+    "ilikewood:stripped_crimson_post",
+    "ilikewood:stripped_warped_post",
+    "#ilikewood:stripped_posts",
+    "simplefarming:fruit_log"
+  ],
+  "values": [
+    "#minecraft:walls"
+  ]
+}

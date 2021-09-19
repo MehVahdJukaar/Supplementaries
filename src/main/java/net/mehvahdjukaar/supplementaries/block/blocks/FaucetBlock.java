@@ -56,37 +56,37 @@ public class FaucetBlock extends WaterBlock {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(HAS_JAR, false).setValue(FACING, Direction.NORTH)
                 .setValue(ENABLED, false).setValue(EXTENDED, false).setValue(POWERED, false)
-                .setValue(HAS_WATER, false).setValue(WATERLOGGED,false).setValue(LIGHT_LEVEL,0));
+                .setValue(HAS_WATER, false).setValue(WATERLOGGED, false).setValue(LIGHT_LEVEL, 0));
     }
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
         if (state.getValue(HAS_JAR)) {
             switch (state.getValue(FACING)) {
-                case UP :
-                case DOWN :
-                case NORTH :
-                default :
+                case UP:
+                case DOWN:
+                case NORTH:
+                default:
                     return SHAPE_NORTH_JAR;
-                case SOUTH :
+                case SOUTH:
                     return SHAPE_SOUTH_JAR;
-                case EAST :
+                case EAST:
                     return SHAPE_EAST_JAR;
-                case WEST :
+                case WEST:
                     return SHAPE_WEST_JAR;
             }
         } else {
             switch (state.getValue(FACING)) {
-                case UP :
-                case DOWN :
-                case NORTH :
-                default :
+                case UP:
+                case DOWN:
+                case NORTH:
+                default:
                     return SHAPE_NORTH;
-                case SOUTH :
+                case SOUTH:
                     return SHAPE_SOUTH;
-                case EAST :
+                case EAST:
                     return SHAPE_EAST;
-                case WEST :
+                case WEST:
                     return SHAPE_WEST;
             }
         }
@@ -94,10 +94,10 @@ public class FaucetBlock extends WaterBlock {
 
     @Override
     public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
-                                             BlockRayTraceResult hit) {
+                                BlockRayTraceResult hit) {
         //TODO: add item activated method for bottles
         boolean enabled = state.getValue(ENABLED);
-        if(!state.getValue(HAS_JAR)&&hit.getLocation().y%1<=0.4375) {
+        if (!state.getValue(HAS_JAR) && hit.getLocation().y % 1 <= 0.4375) {
             if (enabled && state.getValue(HAS_WATER)) {
                 Direction dir = state.getValue(FACING);
                 BlockPos backPos = pos.relative(dir.getOpposite());
@@ -105,9 +105,9 @@ public class FaucetBlock extends WaterBlock {
                 BlockRayTraceResult rayTraceResult = new BlockRayTraceResult(new Vector3d(backPos.getX() + 0.5,
                         backPos.getY() + 0.5, backPos.getZ() + 0.5), dir, backPos, false);
                 ActionResultType blockResult = backState.use(worldIn, player, handIn, rayTraceResult);
-                if(blockResult.consumesAction())return blockResult;
+                if (blockResult.consumesAction()) return blockResult;
                 ActionResultType itemResult = player.getItemInHand(handIn).getItem().useOn(new ItemUseContext(player, handIn, rayTraceResult));
-                if(itemResult.consumesAction())return itemResult;
+                if (itemResult.consumesAction()) return itemResult;
             }
             return ActionResultType.sidedSuccess(worldIn.isClientSide);
         }
@@ -121,8 +121,8 @@ public class FaucetBlock extends WaterBlock {
 
     @Override
     public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        boolean hasWater = updateTileFluid(state,pos,worldIn);
-        if(hasWater != state.getValue(HAS_WATER)) worldIn.setBlockAndUpdate(pos,state.setValue(HAS_WATER,hasWater));
+        boolean hasWater = updateTileFluid(state, pos, worldIn);
+        if (hasWater != state.getValue(HAS_WATER)) worldIn.setBlockAndUpdate(pos, state.setValue(HAS_WATER, hasWater));
     }
 
     @Override
@@ -130,23 +130,23 @@ public class FaucetBlock extends WaterBlock {
         if (stateIn.getValue(WATERLOGGED)) {
             worldIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
         }
-        if(facing==Direction.DOWN){
-            boolean canConnectDown = canConnect(facingState,worldIn,facingPos,facing.getOpposite());
+        if (facing == Direction.DOWN) {
+            boolean canConnectDown = canConnect(facingState, worldIn, facingPos, facing.getOpposite());
             //boolean water = canConnectDown?stateIn.getValue(HAS_WATER)&&this.isSpecialTankBelow(facingState): updateTileFluid(stateIn,currentPos,worldIn);
-            return stateIn.setValue(HAS_JAR,canConnectDown);
+            return stateIn.setValue(HAS_JAR, canConnectDown);
         }
-        if(facing==stateIn.getValue(FACING).getOpposite()){
-            boolean hasWater = updateTileFluid(stateIn,currentPos,worldIn);
-            return stateIn.setValue(EXTENDED,canConnect(facingState,worldIn,facingPos,facing.getOpposite())).setValue(HAS_WATER,hasWater);
+        if (facing == stateIn.getValue(FACING).getOpposite()) {
+            boolean hasWater = updateTileFluid(stateIn, currentPos, worldIn);
+            return stateIn.setValue(EXTENDED, canConnect(facingState, worldIn, facingPos, facing.getOpposite())).setValue(HAS_WATER, hasWater);
         }
         return stateIn;
     }
 
     //returns false if no color (water)
-    public boolean updateTileFluid(BlockState state, BlockPos pos, IWorld world){
+    public boolean updateTileFluid(BlockState state, BlockPos pos, IWorld world) {
 
         TileEntity te = world.getBlockEntity(pos);
-        if(te instanceof FaucetBlockTile){
+        if (te instanceof FaucetBlockTile) {
             return ((FaucetBlockTile) te).updateContainedFluidVisuals(state);
         }
         return false;
@@ -173,8 +173,8 @@ public class FaucetBlock extends WaterBlock {
             world.setBlock(pos, state.setValue(POWERED, isPowered).setValue(ENABLED, toggle ^ state.getValue(ENABLED)), 2);
         }
 
-        boolean hasWater = updateTileFluid(state,pos,world);
-        if(hasWater != state.getValue(HAS_WATER)) world.setBlockAndUpdate(pos,state.setValue(HAS_WATER,hasWater));
+        boolean hasWater = updateTileFluid(state, pos, world);
+        if (hasWater != state.getValue(HAS_WATER)) world.setBlockAndUpdate(pos, state.setValue(HAS_WATER, hasWater));
 
 
         //handles concrete
@@ -183,10 +183,10 @@ public class FaucetBlock extends WaterBlock {
         }
     }
 
-    public void trySolidifyConcrete(BlockPos pos, World world){
+    public void trySolidifyConcrete(BlockPos pos, World world) {
         Block b = world.getBlockState(pos).getBlock();
-        if(b instanceof ConcretePowderBlock)
-            world.setBlock(pos, ((ConcretePowderBlock) b).concrete, 2|16);
+        if (b instanceof ConcretePowderBlock)
+            world.setBlock(pos, ((ConcretePowderBlock) b).concrete, 2 | 16);
     }
 
 
@@ -196,7 +196,7 @@ public class FaucetBlock extends WaterBlock {
 
     @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(EXTENDED,FACING, ENABLED, POWERED, HAS_WATER, HAS_JAR, WATERLOGGED, LIGHT_LEVEL);
+        builder.add(EXTENDED, FACING, ENABLED, POWERED, HAS_WATER, HAS_JAR, WATERLOGGED, LIGHT_LEVEL);
     }
 
     @Override
@@ -216,13 +216,13 @@ public class FaucetBlock extends WaterBlock {
         Direction dir = context.getClickedFace().getAxis() == Direction.Axis.Y ? Direction.NORTH : context.getClickedFace();
 
         boolean water = world.getFluidState(pos).getType() == Fluids.WATER;
-        boolean hasJar = canConnect(world.getBlockState(pos.below()),world,pos.below(),Direction.UP);
+        boolean hasJar = canConnect(world.getBlockState(pos.below()), world, pos.below(), Direction.UP);
         BlockPos backPos = pos.relative(dir.getOpposite());
-        boolean jarBehind = canConnect(world.getBlockState(backPos),world,backPos,dir.getOpposite());
+        boolean jarBehind = canConnect(world.getBlockState(backPos), world, backPos, dir.getOpposite());
         boolean powered = world.hasNeighborSignal(pos);
 
         return this.defaultBlockState().setValue(FACING, dir).setValue(EXTENDED, jarBehind)
-                .setValue(HAS_JAR,hasJar).setValue(WATERLOGGED,water).setValue(POWERED,powered);
+                .setValue(HAS_JAR, hasJar).setValue(WATERLOGGED, water).setValue(POWERED, powered);
     }
 
     //TODO: maybe remove haswater state
@@ -231,16 +231,16 @@ public class FaucetBlock extends WaterBlock {
     public void animateTick(BlockState state, World world, BlockPos pos, Random random) {
         boolean flag = this.isOpen(state);
         if (state.getValue(HAS_WATER) && !state.getValue(HAS_JAR)) {
-            if(random.nextFloat()>(flag?0:0.06))return;
+            if (random.nextFloat() > (flag ? 0 : 0.06)) return;
             float d = 0.125f;
-            double x = (pos.getX() + 0.5 + d * (random.nextFloat()-0.5));
+            double x = (pos.getX() + 0.5 + d * (random.nextFloat() - 0.5));
             double y = (pos.getY() + 0.25);
-            double z = (pos.getZ() + 0.5 + d * (random.nextFloat()-0.5));
-            int color = getTileParticleColor(pos,world);
+            double z = (pos.getZ() + 0.5 + d * (random.nextFloat() - 0.5));
+            int color = getTileParticleColor(pos, world);
             //get texture color if color is white
-            float r = ColorHelper.PackedColor.red(color)/255f;
-            float g = ColorHelper.PackedColor.green(color)/255f;
-            float b = ColorHelper.PackedColor.blue(color)/255f;
+            float r = ColorHelper.PackedColor.red(color) / 255f;
+            float g = ColorHelper.PackedColor.green(color) / 255f;
+            float b = ColorHelper.PackedColor.blue(color) / 255f;
             world.addParticle(ModRegistry.DRIPPING_LIQUID.get(), x, y, z, r, g, b);
 
             //world.addParticle(flag?Registry.FALLING_LIQUID.get():Registry.DRIPPING_LIQUID.get(), x, y, z, 0, 1, 0);
@@ -248,9 +248,9 @@ public class FaucetBlock extends WaterBlock {
     }
 
     //only client
-    public int getTileParticleColor(BlockPos pos, World world){
+    public int getTileParticleColor(BlockPos pos, World world) {
         TileEntity te = world.getBlockEntity(pos);
-        if(te instanceof FaucetBlockTile)
+        if (te instanceof FaucetBlockTile)
             return ((FaucetBlockTile) te).fluidHolder.getParticleColor(world, pos);
         return 0x423cf7;
     }

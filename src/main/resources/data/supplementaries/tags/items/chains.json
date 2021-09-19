@@ -8,6 +8,8 @@
     "muchmoremodcompat:ice_chain",
     "muchmoremodcompat:gold_chain",
     "charm:gold_chain",
-    "forbidden_arcanus:iron_chain"
+    "forbidden_arcanus:iron_chain",
+    "decorative_winter:festive_chain",
+    "forbidden_arcanus:arcane_golden_chain"
   ]
 }

@@ -135,7 +135,6 @@ public class WaySignStructure extends Structure<NoFeatureConfig> {
 
         if(isNearOutpost(chunkGenerator,seed,chunkRandom,chunkX,chunkZ))return false;
 
-
         return true;
     }
 

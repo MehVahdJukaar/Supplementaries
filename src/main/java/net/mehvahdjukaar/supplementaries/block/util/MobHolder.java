@@ -597,8 +597,8 @@ public class MobHolder {
             else if(e instanceof CatEntity)return CAT;
             else if(e instanceof RabbitEntity)return RABBIT;
             else if(e instanceof ChickenEntity)return CHICKEN;
-            else if(e.getType().getRegistryName().toString().equals("iceandfire:pixe")||
-                    e.getType().getRegistryName().toString().equals("druidcraft:moth"))return TICKABLE;
+            else if(e.getType().getRegistryName().toString().equals("iceandfire:pixie")||
+                    e.getType().getRegistryName().toString().equals("druidcraft:lunar_moth"))return TICKABLE;
             else if(e instanceof EndermiteEntity)return ENDERMITE;
             return SpecialBehaviorType.NONE;
         }

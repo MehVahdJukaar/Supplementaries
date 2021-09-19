@@ -25,40 +25,51 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
+
 public class PulleyBlock extends RotatedPillarBlock {
     public static final EnumProperty<Winding> TYPE = BlockProperties.WINDING;
     public static final BooleanProperty FLIPPED = BlockProperties.FLIPPED;
 
     public PulleyBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.defaultBlockState().setValue(AXIS, Direction.Axis.Y).setValue(TYPE, Winding.NONE).setValue(FLIPPED,false));
+        this.registerDefaultState(this.defaultBlockState().setValue(AXIS, Direction.Axis.Y).setValue(TYPE, Winding.NONE).setValue(FLIPPED, false));
     }
 
     @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(TYPE,FLIPPED);
+        builder.add(TYPE, FLIPPED);
     }
 
     //rotates itself and pull up/down. unchecked
     //all methods here are called server side
-    public boolean axisRotate(BlockState state, BlockPos pos, World world, Rotation rot){
-        world.setBlockAndUpdate(pos,state.cycle(FLIPPED));
+    public boolean axisRotate(BlockState state, BlockPos pos, World world, Rotation rot, @Nullable Direction normal) {
+        world.setBlockAndUpdate(pos, state.cycle(FLIPPED));
         TileEntity tile = world.getBlockEntity(pos);
-        if(tile instanceof PulleyBlockTile){
-            return ((PulleyBlockTile) tile).handleRotation(rot);
+        if (tile instanceof PulleyBlockTile) {
+            boolean success = ((PulleyBlockTile) tile).handleRotation(rot);
+            //try turning connected
+            if(normal!=null) {
+                BlockPos connectedPos = pos.relative(normal);
+                BlockState connected = world.getBlockState(connectedPos);
+                if (connected.getBlock().is(this) && state.getValue(AXIS) == connected.getValue(AXIS)) {
+                    success = this.axisRotate(connected, connectedPos, world, rot, normal) || success;
+                }
+            }
+            return success;
         }
         return false;
     }
 
     @Override
     public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
-                                             BlockRayTraceResult hit) {
+                                BlockRayTraceResult hit) {
         TileEntity tileentity = worldIn.getBlockEntity(pos);
         if (tileentity instanceof PulleyBlockTile) {
             if (player instanceof ServerPlayerEntity) {
-                if(!(player.isShiftKeyDown()&&this.axisRotate(state,pos,worldIn,Rotation.COUNTERCLOCKWISE_90)))
-                    player.openMenu((INamedContainerProvider)tileentity);
+                if (!(player.isShiftKeyDown() && this.axisRotate(state, pos, worldIn, Rotation.COUNTERCLOCKWISE_90, null)))
+                    player.openMenu((INamedContainerProvider) tileentity);
             }
             return ActionResultType.sidedSuccess(worldIn.isClientSide());
         }

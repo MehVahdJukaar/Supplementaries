@@ -7,9 +7,11 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.text.ITextComponent;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnull;
+
 public class FlagDecoration extends CustomDecoration {
     private final DyeColor color;
-    public FlagDecoration(CustomDecorationType<?, ?> type, byte x, byte y, byte rot, @Nullable ITextComponent displayName, DyeColor color) {
+    public FlagDecoration(CustomDecorationType<?, ?> type, byte x, byte y, byte rot, @Nullable ITextComponent displayName, @Nonnull DyeColor color) {
         super(type, x, y, rot, displayName);
         this.color = color;
     }

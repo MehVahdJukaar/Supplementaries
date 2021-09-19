@@ -25,11 +25,30 @@ public class ClientConfigs {
 
     public static class items {
         public static ForgeConfigSpec.BooleanValue SLINGSHOT_OVERLAY;
+        public static ForgeConfigSpec.BooleanValue SLINGSHOT_OUTLINE;
+        public static ForgeConfigSpec.ConfigValue<String> SLINGSHOT_OUTLINE_COLOR;
+        public static ForgeConfigSpec.DoubleValue SLINGSHOT_PROJECTILE_SCALE;
         private static void init(ForgeConfigSpec.Builder builder) {
             builder.comment("Items")
                     .push("items");
+            builder.push("slingshot");
+
             SLINGSHOT_OVERLAY = builder.comment("Adds an overlay to slingshots in gui displaying currently selected block")
-                    .define("slingshot_overlay",true);
+                    .define("overlay",true);
+            SLINGSHOT_OUTLINE = builder.comment("Render the block outline for distant blocks that are reachable with a slingshot enchanted with Stasis")
+                    .define("stasis_block_outline",true);
+            SLINGSHOT_OUTLINE_COLOR = builder.comment("An RGBA color for the block outline in hex format, for example 0x00000066 for vanilla outline colors")
+                    .define("block_outline_color","ffffff66", s -> {
+                        try {
+                            Integer.parseUnsignedInt(((String) s).replace("0x", ""), 16);
+                            return true;
+                        }catch (Exception e){
+                            return false;
+                        }
+                    });
+            SLINGSHOT_PROJECTILE_SCALE = builder.comment("How big should a slingshot projectile look")
+                    .defineInRange("projectile_scale", 0.5, 0, 1);
+            builder.pop();
             builder.pop();
         }
     }
@@ -38,6 +57,7 @@ public class ClientConfigs {
         public static ForgeConfigSpec.BooleanValue COLORED_ARROWS;
         public static ForgeConfigSpec.BooleanValue COLORED_BREWING_STAND;
         public static ForgeConfigSpec.BooleanValue CLOCK_CLICK;
+        public static ForgeConfigSpec.BooleanValue BOOK_GLINT;
         private static void init(ForgeConfigSpec.Builder builder) {
             builder.comment("Game tweaks")
                     .push("tweaks");
@@ -48,6 +68,8 @@ public class ClientConfigs {
                     .define("crossbows_colors",true);
             CLOCK_CLICK = builder.comment("Allow to right click with a clock to display current time in numerical form")
                     .define("clock_right_click",true);
+            BOOK_GLINT = builder.comment("Renders an enchantment glint on placeable enchanted books")
+                    .define("placeable_books_glint", false);
             builder.pop();
         }
     }
@@ -308,14 +330,18 @@ public class ClientConfigs {
         public static double FLAG_AMPLITUDE_INCREMENT;
         public static GraphicsFanciness FLAG_FANCINESS;
         public static boolean FAST_LANTERNS;
+        public static boolean SLINGSHOT_OUTLINE;
+        public static int SLINGSHOT_OUTLINE_COLOR;
         public static boolean SLINGSHOT_OVERLAY;
-
+        public static float SLINGSHOT_PROJECTILE_SCALE;
+        public static boolean BOOK_GLINT;
 
         public static void refresh(){
             //tweaks
             COLORED_BWERING_STAND = tweaks.COLORED_BREWING_STAND.get();
             COLORED_ARROWS = tweaks.COLORED_ARROWS.get();
             CLOCK_CLICK = tweaks.CLOCK_CLICK.get();
+            BOOK_GLINT = tweaks.BOOK_GLINT.get();
             //general
             TOOLTIP_HINTS = general.TOOLTIP_HINTS.get();
             CONFIG_BUTTON = general.CONFIG_BUTTON.get();
@@ -346,7 +372,11 @@ public class ClientConfigs {
             FLAG_FANCINESS = block.FLAG_FANCINESS.get();
             FAST_LANTERNS = block.FAST_LANTERNS.get();
             FAST_LANTERNS = block.FAST_LANTERNS.get();
+            //items
+            SLINGSHOT_OUTLINE = items.SLINGSHOT_OUTLINE.get();
+            SLINGSHOT_OUTLINE_COLOR = Integer.parseUnsignedInt(items.SLINGSHOT_OUTLINE_COLOR.get().replace("0x", ""), 16);
             SLINGSHOT_OVERLAY = items.SLINGSHOT_OVERLAY.get();
+            SLINGSHOT_PROJECTILE_SCALE = (float)((double)items.SLINGSHOT_PROJECTILE_SCALE.get());
 
             CapturedMobsHelper.refresh();
             GlobeTextureManager.GlobeColors.refreshColorsFromConfig();

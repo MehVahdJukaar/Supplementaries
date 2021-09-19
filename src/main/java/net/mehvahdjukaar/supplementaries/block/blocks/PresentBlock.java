@@ -142,9 +142,10 @@ public class PresentBlock extends WaterBlock {
         return super.getDrops(state, builder);
     }
 
+
     @Override
     public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
-        ItemStack itemstack = super.getCloneItemStack(world, pos, state);
+        ItemStack itemstack = super.getPickBlock(state, target, world, pos, player);
         TileEntity te = world.getBlockEntity(pos);
         if (te instanceof PresentBlockTile){
             return getPresentItem((PresentBlockTile) te);

@@ -5,10 +5,10 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.Direction;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.shapes.*;
 import net.minecraft.world.IBlockReader;
@@ -96,10 +96,8 @@ public class FeatherBlock extends Block {
     }
 
     @Override
-    public ActionResultType use(BlockState p_225533_1_, World world, BlockPos pos, PlayerEntity p_225533_4_, Hand p_225533_5_, BlockRayTraceResult p_225533_6_) {
-        //world.addParticle(ModRegistry.FEATHER_PARTICLE.get(), pos.getX()+2, pos.getY()+1, pos.getZ(),0, 0.05, 0);
-        return ActionResultType.PASS;
-
+    public boolean hasDynamicShape() {
+        return true;
     }
 
     @Override

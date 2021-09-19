@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client;
 
 import net.mehvahdjukaar.supplementaries.common.Textures;
+import net.mehvahdjukaar.supplementaries.common.Textures.BookColor;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.minecraft.client.renderer.Atlases;
@@ -16,6 +17,9 @@ public class Materials {
 
     public static final RenderMaterial BELLOWS_MATERIAL = new RenderMaterial(LOCATION_BLOCKS, Textures.BELLOWS_TEXTURE);
 
+    public static final Map<BookColor, RenderMaterial> BOOK_MATERIALS = new HashMap<>();
+    public static final RenderMaterial ENCHANTED_BOOK_MATERIAL = new RenderMaterial(Atlases.SHULKER_SHEET, Textures.ENCHANTED_BOOK_TEXTURES);
+
     public static final Map<IWoodType, RenderMaterial> HANGING_SIGNS_MATERIALS = new HashMap<>();
     public static final Map<IWoodType, RenderMaterial> SIGN_POSTS_MATERIALS = new HashMap<>();
     public static final Map<BannerPattern, RenderMaterial> FLAG_MATERIALS = new HashMap<>();
@@ -27,6 +31,10 @@ public class Materials {
 
         for(BannerPattern pattern : BannerPattern.values()){
             FLAG_MATERIALS.put(pattern, new RenderMaterial(Atlases.BANNER_SHEET, Textures.FLAG_TEXTURES.get(pattern)));
+        }
+
+        for(BookColor color : BookColor.values()){
+            BOOK_MATERIALS.put(color, new RenderMaterial(Atlases.SHULKER_SHEET,Textures.BOOK_TEXTURES.get(color)));
         }
     }
 

@@ -3,6 +3,9 @@ package net.mehvahdjukaar.supplementaries.setup;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.minecraft.enchantment.EnchantmentData;
+import net.minecraft.item.EnchantedBookItem;
+import net.minecraft.item.Items;
 import net.minecraft.loot.*;
 import net.minecraft.loot.conditions.RandomChance;
 import net.minecraft.loot.functions.SetCount;
@@ -29,6 +32,7 @@ public class LootTableStuff {
         if (RegistryConfigs.reg.FLAX_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectFlax);
         if (RegistryConfigs.reg.BOMB_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectBlueBomb);
         if (RegistryConfigs.reg.BOMB_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectBomb);
+        if (RegistryConfigs.reg.SLINGSHOR_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectStasis);
         if (RegistryConfigs.reg.BAMBOO_SPIKES_ENABLED.get() &&
                 RegistryConfigs.reg.TIPPED_SPIKES_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectSpikes);
     }
@@ -59,7 +63,8 @@ public class LootTableStuff {
         FORTRESS,
         BASTION,
         RUIN,
-        SHIPWRECK_STORAGE
+        SHIPWRECK_STORAGE,
+        END_CITY
     }
 
     private static class LootHelper {
@@ -76,6 +81,7 @@ public class LootTableStuff {
             if (isOutpost(name)) return TableType.PILLAGER;
             if (isStronghold(name)) return TableType.STRONGHOLD;
             if (isFortress(name)) return TableType.FORTRESS;
+            if (isEndCity(name)) return TableType.END_CITY;
             return TableType.OTHER;
         }
 
@@ -121,6 +127,10 @@ public class LootTableStuff {
 
         private static boolean isFortress(String s) {
             return s.equals(LootTables.NETHER_BRIDGE.toString()) || RS && s.contains("repurposed_structures:chests/fortress");
+        }
+
+        private static boolean isEndCity(String s) {
+            return s.equals(LootTables.END_CITY_TREASURE.toString());
         }
     }
 
@@ -238,6 +248,26 @@ public class LootTableStuff {
                             ))
                             .apply(SetDamage.setDamage(RandomValueRange.between(0.2F, 0.9F)))
                     )
+                    .build();
+            e.getTable().addPool(pool);
+        }
+    }
+
+    public static void tryInjectStasis(LootTableLoadEvent e, TableType type) {
+
+        if (type == TableType.END_CITY) {
+            float chance = 0.25f;
+
+            LootPool pool = LootPool.lootPool()
+                    .name("supplementaries_injected_stasis")
+                    .setRolls(ConstantRange.exactly(1))
+                    .when(RandomChance.randomChance(chance))
+                    .add(ItemLootEntry.lootTableItem(Items.ENCHANTED_BOOK)
+                            .apply(SetNBT.setTag(
+                                    (EnchantedBookItem.createForEnchantment(new EnchantmentData(ModRegistry.STASIS_ENCHANTMENT.get(), 1)))
+                                    .getOrCreateTag()
+                            ))
+                            .setWeight(1))
                     .build();
             e.getTable().addPool(pool);
         }

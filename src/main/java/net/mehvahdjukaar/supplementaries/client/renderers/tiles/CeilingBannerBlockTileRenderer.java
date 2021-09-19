@@ -48,14 +48,14 @@ public class CeilingBannerBlockTileRenderer extends TileEntityRenderer<CeilingBa
             i = tile.getLevel().getGameTime();
             BlockState blockstate = tile.getBlockState();
 
-            matrixStack.translate(0.5D, -0.3125, 0.5D);
-            matrixStack.translate(0,-0.04166666875,0);
+            if (blockstate.getValue(CeilingBannerBlock.ATTACHED)) {
+                matrixStack.translate(0, 0.625, 0);
+            }
+            matrixStack.translate(0.5D, -0.3125 - 0.0208333333333, 0.5D); //1/32 * 2/3
             //matrixStack.translate(0.5D, (double)-0.16666667F, 0.5D);
             float f3 = -blockstate.getValue(CeilingBannerBlock.FACING).toYRot();
             matrixStack.mulPose(Vector3f.YP.rotationDegrees(f3));
             //matrixStack.translate(0.0D, -0.3125D, -0.4375D);
-
-
 
 
             matrixStack.pushPose();
@@ -64,8 +64,8 @@ public class CeilingBannerBlockTileRenderer extends TileEntityRenderer<CeilingBa
 
             this.bar.render(matrixStack, ivertexbuilder, p_225616_5_, p_225616_6_);
             BlockPos blockpos = tile.getBlockPos();
-            float f2 = ((float)Math.floorMod((long)(blockpos.getX() * 7 + blockpos.getY() * 9 + blockpos.getZ() * 13) + i, 100L) + p_225616_2_) / 100.0F;
-            this.flag.xRot = (-0.0125F + 0.01F * MathHelper.cos(((float)Math.PI * 2F) * f2)) * (float)Math.PI;
+            float f2 = ((float) Math.floorMod((long) (blockpos.getX() * 7 + blockpos.getY() * 9 + blockpos.getZ() * 13) + i, 100L) + p_225616_2_) / 100.0F;
+            this.flag.xRot = (-0.0125F + 0.01F * MathHelper.cos(((float) Math.PI * 2F) * f2)) * (float) Math.PI;
             this.flag.y = -32.0F;
             BannerTileEntityRenderer.renderPatterns(matrixStack, p_225616_4_, p_225616_5_, p_225616_6_, this.flag, ModelBakery.BANNER_BASE, true, list);
             matrixStack.popPose();

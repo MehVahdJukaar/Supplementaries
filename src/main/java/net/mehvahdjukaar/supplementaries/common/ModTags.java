@@ -17,6 +17,7 @@ public class ModTags {
     public static final Tags.IOptionalNamedTag<Block> ENCHANTMENT_BYPASS = blockTag("enchantment_bypass");
     public static final Tags.IOptionalNamedTag<Block> PALISADES = blockTag("palisades");
     public static final Tags.IOptionalNamedTag<Block> BEAMS = blockTag("beams");
+    public static final Tags.IOptionalNamedTag<Block> WALLS = blockTag("walls");
     public static final Tags.IOptionalNamedTag<Block> ROPE_SUPPORT_TAG = blockTag("rope_support");
     public static final Tags.IOptionalNamedTag<Block> ROPE_HANG_TAG = blockTag("hang_from_ropes");
     public static final Tags.IOptionalNamedTag<Block> BELLOWS_TICKABLE_TAG = blockTag("bellows_tickable");
@@ -26,6 +27,7 @@ public class ModTags {
     public static final Tags.IOptionalNamedTag<Block> VINE_SUPPORT = blockTag("vine_support");
     public static final Tags.IOptionalNamedTag<Block> PANE_CONNECTION = blockTag("pane_connection");
     public static final Tags.IOptionalNamedTag<Block> CONCRETE_POWDERS = blockTag("concrete_powders");
+    public static final Tags.IOptionalNamedTag<Block> DEEPSLATE = blockTag("deepslate");
     //item tags
     public static final Tags.IOptionalNamedTag<Item> SHULKER_BLACKLIST_TAG = itemTag("shulker_blacklist");
     public static final Tags.IOptionalNamedTag<Item> COOKIES = itemTag("cookies");

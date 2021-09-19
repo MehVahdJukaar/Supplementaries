@@ -27,6 +27,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
@@ -152,16 +153,15 @@ public class JarBlock extends WaterBlock {
         return super.getDrops(state, builder);
     }
 
-    //for pick block
     @Override
-    public ItemStack getCloneItemStack(IBlockReader worldIn, BlockPos pos, BlockState state) {
+    public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
 
-        TileEntity tileentity = worldIn.getBlockEntity(pos);
+        TileEntity tileentity = world.getBlockEntity(pos);
         if (tileentity instanceof JarBlockTile) {
             JarBlockTile tile = (JarBlockTile) tileentity;
             return this.getJarItem(tile);
         }
-        return super.getCloneItemStack(worldIn, pos, state);
+        return super.getPickBlock(state, target, world, pos, player);
     }
 
     // end shoulker box code

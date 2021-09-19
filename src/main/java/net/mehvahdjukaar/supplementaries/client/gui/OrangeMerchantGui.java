@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.gui;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.mehvahdjukaar.supplementaries.common.Textures;
-import net.mehvahdjukaar.supplementaries.inventories.OrangeMerchantContainer;
+import net.mehvahdjukaar.supplementaries.inventories.RedMerchantContainer;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.SelectOrangeTraderTradePacket;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -22,7 +22,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class OrangeMerchantGui extends ContainerScreen<OrangeMerchantContainer> {
+public class OrangeMerchantGui extends ContainerScreen<RedMerchantContainer> {
     private static final ResourceLocation VILLAGER_LOCATION = Textures.ORANGE_MERCHANT_GUI_TEXTURE;
     private static final ITextComponent TRADES_LABEL = new TranslationTextComponent("merchant.trades");
     private static final ITextComponent LEVEL_SEPARATOR = new StringTextComponent(" - ");
@@ -32,7 +32,7 @@ public class OrangeMerchantGui extends ContainerScreen<OrangeMerchantContainer> 
     private int scrollOff;
     private boolean isDragging;
 
-    public OrangeMerchantGui(OrangeMerchantContainer p_i51080_1_, PlayerInventory p_i51080_2_, ITextComponent p_i51080_3_) {
+    public OrangeMerchantGui(RedMerchantContainer p_i51080_1_, PlayerInventory p_i51080_2_, ITextComponent p_i51080_3_) {
         super(p_i51080_1_, p_i51080_2_, p_i51080_3_);
         this.imageWidth = 276;
         this.inventoryLabelX = 107;

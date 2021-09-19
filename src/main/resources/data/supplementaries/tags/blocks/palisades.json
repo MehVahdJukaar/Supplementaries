@@ -8,9 +8,25 @@
     "decorative_blocks:dark_oak_palisade",
     "decorative_blocks:jungle_palisade",
     "decorative_blocks:warped_palisade",
-    "decorative_blocks:crimson_palisade"
+    "decorative_blocks:crimson_palisade",
+    "#druidcraft:beams",
+    "druidcraft:oak_beam",
+    "druidcraft:birch_beam",
+    "druidcraft:spruce_beam",
+    "druidcraft:jungle_beam",
+    "druidcraft:acacia_beam",
+    "druidcraft:dark_oak_beam",
+    "druidcraft:darkwood_beam",
+    "druidcraft:elder_beam",
+    "druidcraft:oak_small_beam",
+    "druidcraft:birch_small_beam",
+    "druidcraft:spruce_small_beam",
+    "druidcraft:jungle_small_beam",
+    "druidcraft:acacia_small_beam",
+    "druidcraft:dark_oak_small_beam",
+    "druidcraft:darkwood_small_beam",
+    "druidcraft:elder_small_beam"
   ],
   "values": [
-    "minecraft:end_rod"
   ]
 }

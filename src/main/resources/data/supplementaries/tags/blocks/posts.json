@@ -1,7 +1,6 @@
 {
   "replace": false,
   "optional": [
-    "#quark:hedges",
     "#adorn:posts",
 
     "quark:oak_post",
@@ -46,7 +45,39 @@
     "environmental:stripped_cherry_post",
     "environmental:cherry_post",
     "environmental:stripped_wisteria_post",
-    "environmental:wisteria_post"
+    "environmental:wisteria_post",
+    "atmospheric:stripped_rosewood_post",
+    "atmospheric:rosewood_post",
+    "atmospheric:stripped_morado_post",
+    "atmospheric:morado_post",
+    "atmospheric:stripped_yucca_post",
+    "atmospheric:yucca_post",
+    "atmospheric:stripped_kousa_post",
+    "atmospheric:kousa_post",
+    "atmospheric:stripped_aspen_post",
+    "atmospheric:aspen_post",
+    "atmospheric:stripped_grimwood_post",
+    "atmospheric:grimwood_post",
+    "autumnity:stripped_maple_post",
+    "autumnity:maple_post",
+    "upgrade_aquatic:stripped_driftwood_post",
+    "upgrade_aquatic:driftwood_post",
+    "upgrade_aquatic:stripped_river_post",
+    "upgrade_aquatic:river_post",
+    "abundance:stripped_jacaranda_post",
+    "abundance:jacaranda_post",
+    "abundance:stripped_redbud_post",
+    "abundance:redbud_post",
+    "enhanced_mushrooms:stripped_red_mushroom_post",
+    "enhanced_mushrooms:red_mushroom_post",
+    "enhanced_mushrooms:stripped_brown_mushroom_post",
+    "enhanced_mushrooms:brown_mushroom_post",
+    "enhanced_mushrooms:stripped_glowshroom_post",
+    "enhanced_mushrooms:glowshroom_post",
+    "bayou_blues:stripped_cypress_post",
+    "bayou_blues:cypress_post",
+    "habitat:stripped_fairy_ring_mushroom_post",
+    "habitat:fairy_ring_mushroom_post"
   ],
   "values": [
     "#minecraft:fences"

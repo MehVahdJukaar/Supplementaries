@@ -1,0 +1,25 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "minecraft:block/cube_all",
+	"textures": {
+		"0": "supplementaries:blocks/jar_tinted_side",
+		"1": "supplementaries:blocks/jar_tinted_top",
+		"3": "supplementaries:blocks/jar_tinted_bottom",
+		"particle": "supplementaries:blocks/jar_tinted_side"
+	},
+	"elements": [
+		{
+			"from": [3, 0, 3],
+			"to": [13, 14, 13],
+			"rotation": {"angle": 0, "axis": "y", "origin": [11, 8, 11]},
+			"faces": {
+				"north": {"uv": [3, 2, 13, 16], "texture": "#0"},
+				"east": {"uv": [3, 2, 13, 16], "texture": "#0"},
+				"south": {"uv": [3, 2, 13, 16], "texture": "#0"},
+				"west": {"uv": [3, 2, 13, 16], "texture": "#0"},
+				"up": {"uv": [3, 3, 13, 13], "texture": "#1"},
+				"down": {"uv": [3, 3, 13, 13], "texture": "#3"}
+			}
+		}
+	]
+}

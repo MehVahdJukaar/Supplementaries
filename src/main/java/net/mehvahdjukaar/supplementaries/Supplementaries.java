@@ -23,28 +23,39 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 @Mod(Supplementaries.MOD_ID)
-public class Supplementaries{
+public class Supplementaries {
 
     public static final String MOD_ID = "supplementaries";
 
     public static final Logger LOGGER = LogManager.getLogger();
 
-    public static ResourceLocation res(String n){
-        return new ResourceLocation(MOD_ID,n);
+    public static ResourceLocation res(String n) {
+        return new ResourceLocation(MOD_ID, n);
     }
-    public static String str(String n){
-        return MOD_ID+":"+n;
+
+    public static String str(String n) {
+        return MOD_ID + ":" + n;
     }
 
     public Supplementaries() {
 
         //yes this is where I write crap
 
-        //use atlas for flags
+        //todo: fix projectile hitbox being a single point on y = 0
 
-        //TODO: improve finish feather particle & slingshot visuals
+        //add chain knot
+
+        //swaying blocks water friction
+
+        //horizontal shearable ropes
+
+        //slingshot outline
+
+        //TODO: improve feather particle
 
         //zipline mod ropewalk
+
+        //power ench for slingshots
 
         //GLOBE inv model
         //TODO: goblet & jars dynamic baked model
@@ -54,13 +65,15 @@ public class Supplementaries{
 
         //TODO: fireflies deflect arrows
 
+        //firefly glow block
+
         //TODO: fix tint breaking particle like grass block
 
         //TODO: replace soft fluid system with forge caps to itemstacks and register actual forge fluids
 
-        //TODO: reworkd ItemDisplayTile with proper capability usage
+        //TODO: rework ItemDisplayTile with proper capability usage
 
-        //TODO: bugs: bell ropes(add to flywheel instance), brewing starnd colors(?)
+        //TODO: bugs: bell ropes(add to flywheel instance), brewing stand colors(?)
 
         //TODO: notice board pages, rewrite inventory cap
 
@@ -70,13 +83,16 @@ public class Supplementaries{
 
         //TODO: add redstone config for iron gate
 
+        //add shift middle click to swap to correct tool
+
+        //use onNeighborchanged for faucets
+
         //TODO: fix horizontal stick texture
 
         //mod idea: better birch trees
 
         //mod idea: blackboard banners and flags with villager
 
-        //slingshot that places blocks
 
         MinecraftForge.EVENT_BUS.register(ServerEvents.class);
 
@@ -98,8 +114,6 @@ public class Supplementaries{
         bus.addListener(ModSetup::init);
 
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> bus.addListener(ClientSetup::init));
-
-
 
 
     }

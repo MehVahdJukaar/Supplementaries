@@ -24,26 +24,30 @@ public class VillagerTradesHandler {
 
     public static final VillagerTrades.ITrade[] TRADES;
 
-    static{
+    static {
         List<VillagerTrades.ITrade> trades = new ArrayList<>();
 
-        if(RegistryConfigs.reg.ROPE_ENABLED.get()) {
+        if (RegistryConfigs.reg.ROPE_ENABLED.get()) {
             trades.add(itemForEmeraldTrade(ModRegistry.ROPE_ITEM.get(), 4, 1, 10));
         }
         trades.add(itemForEmeraldTrade(Items.GUNPOWDER, 2, 1, 8));
-        if(RegistryConfigs.reg.COPPER_LANTERN_ENABLED.get()) {
+        if (RegistryConfigs.reg.COPPER_LANTERN_ENABLED.get()) {
             trades.add(itemForEmeraldTrade(ModRegistry.COPPER_LANTERN.get(), 1, 1, 12));
         }
-        if(RegistryConfigs.reg.BOMB_ENABLED.get()) {
+        if (RegistryConfigs.reg.BOMB_ENABLED.get()) {
             trades.add(itemForEmeraldTrade(ModRegistry.BOMB_ITEM.get(), 1, 3, 8));
         }
         trades.add(new StarForEmeraldTrade(2, 8));
         trades.add(new RocketForEmeraldTrade(3, 1, 3, 8));
         trades.add(itemForEmeraldTrade(Items.TNT, 1, 4, 8));
-        if(RegistryConfigs.reg.ROPE_ARROW_ENABLED.get()) {
-            trades.add(itemForEmeraldTrade(ModRegistry.ROPE_ARROW_ITEM.get(), 1, 4, 6));
+
+        if (RegistryConfigs.reg.ROPE_ARROW_ENABLED.get()) {
+            Item i = ModRegistry.ROPE_ARROW_ITEM.get();
+            ItemStack stack = new ItemStack(i);
+            stack.setDamageValue(Math.max(0, stack.getMaxDamage() - 16));
+            trades.add(itemForEmeraldTrade(stack, 4, 6));
         }
-        if(RegistryConfigs.reg.BOMB_ENABLED.get()) {
+        if (RegistryConfigs.reg.BOMB_ENABLED.get()) {
             trades.add(itemForEmeraldTrade(ModRegistry.BOMB_BLUE_ITEM.get(), 1, ModRegistry.BOMB_ITEM.get(), 1, 40, 3));
         }
 
@@ -51,7 +55,11 @@ public class VillagerTradesHandler {
     }
 
     static BasicTrade itemForEmeraldTrade(IItemProvider item, int quantity, int price, int maxTrades) {
-        return new BasicTrade(new ItemStack(Items.EMERALD, price), new ItemStack(item, quantity), maxTrades, 1, BUY);
+        return itemForEmeraldTrade(new ItemStack(item, quantity), price, maxTrades);
+    }
+
+    static BasicTrade itemForEmeraldTrade(ItemStack itemStack, int price, int maxTrades) {
+        return new BasicTrade(new ItemStack(Items.EMERALD, price), itemStack, maxTrades, 1, BUY);
     }
 
     static BasicTrade itemForEmeraldTrade(IItemProvider item, int quantity, IItemProvider additional, int addQuantity, int price, int maxTrades) {
@@ -146,7 +154,7 @@ public class VillagerTradesHandler {
 
         if (RegistryConfigs.reg.GLOBE_ENABLED.get()) {
             for (int i = 0; i < ServerConfigs.cached.GLOBE_TRADES; i++) {
-                event.getRareTrades().add(itemForEmeraldTrade(ModRegistry.GLOBE_ITEM.get(),1, 10, 3));
+                event.getRareTrades().add(itemForEmeraldTrade(ModRegistry.GLOBE_ITEM.get(), 1, 10, 3));
             }
         }
         if (RegistryConfigs.reg.FLAX_ENABLED.get()) {

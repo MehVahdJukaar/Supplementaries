@@ -7,6 +7,6 @@
     "east": "supplementaries:blocks/deepslate_lamp",
     "west": "supplementaries:blocks/deepslate_lamp",
     "up": "supplementaries:blocks/deepslate_lamp_top",
-    "down": "supplementaries:blocks/deepslate_lamp_bottom"
+    "down": "supplementaries:blocks/deepslate_lamp_top"
   }
 }

@@ -54,6 +54,7 @@ public class BlockProperties {
     public static final EnumProperty<IBellConnections.BellConnection> BELL_CONNECTION = EnumProperty.create("connection", IBellConnections.BellConnection.class);
     public static final IntegerProperty HONEY_LEVEL_POT = IntegerProperty.create("honey_level", 0, 4);
     public static final IntegerProperty BURNING = IntegerProperty.create("burning", 0, 8);
+    public static final IntegerProperty BOOKS = IntegerProperty.create("books", 1, 4);
 
     //model properties
     public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
@@ -98,18 +99,26 @@ public class BlockProperties {
         }
 
         public boolean isKnot() {return  this==KNOT;}
+
+
     }
 
     public enum PostType implements IStringSerializable{
-        POST("post"), //4x4
-        PALISADE("palisade"), //8x8
-        WALL("wall"), //10x10
-        BEAM("beam"); //12x12
+        POST("post", 4),
+        PALISADE("palisade", 6),
+        WALL("wall", 8),
+        BEAM("beam", 10);
 
         private final String name;
+        private final int width;
 
-        PostType(String name) {
+        PostType(String name, int width) {
             this.name = name;
+            this.width = width;
+        }
+
+        public int getWidth() {
+            return width;
         }
 
         public String toString() {
@@ -241,15 +250,15 @@ public class BlockProperties {
         O("o"),
         P("p"),
         Q("q"),
-        R("s"),
+        R("r"),
+        S("s"),
         T("t"),
         U("u"),
         V("v"),
         W("w"),
         X("x"),
         Y("y"),
-        Z("z"),
-        SUS("sus");
+        Z("z");
 
         private final String name;
 

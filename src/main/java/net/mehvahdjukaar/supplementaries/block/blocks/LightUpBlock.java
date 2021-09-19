@@ -19,12 +19,14 @@ import net.minecraft.potion.Potions;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.Constants;
 
 import java.util.Random;
 
@@ -35,11 +37,11 @@ public abstract class LightUpBlock extends Block implements ILightable {
         super(properties);
     }
 
-    public boolean isLit(BlockState state){
+    public boolean isLit(BlockState state) {
         return state.getValue(LIT);
     }
 
-    public BlockState toggleLitState(BlockState state, boolean lit){
+    public BlockState toggleLitState(BlockState state, boolean lit) {
         return state.setValue(LIT, lit);
     }
 
@@ -49,12 +51,15 @@ public abstract class LightUpBlock extends Block implements ILightable {
     }
 
     //TODO: remove
-    public void onChange(BlockState state, IWorld world, BlockPos pos){};
+    public void onChange(BlockState state, IWorld world, BlockPos pos) {
+    }
+
+    ;
 
     @Override
-    public boolean lightUp(BlockState state, BlockPos pos, IWorld world, ILightable.FireSound sound){
+    public boolean lightUp(BlockState state, BlockPos pos, IWorld world, ILightable.FireSound sound) {
         if (!isLit(state)) {
-            if(!world.isClientSide()) {
+            if (!world.isClientSide()) {
                 world.setBlock(pos, toggleLitState(state, true), 11);
                 sound.play(world, pos);
             }
@@ -82,28 +87,26 @@ public abstract class LightUpBlock extends Block implements ILightable {
 
     @Override
     public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if(!this.isLit(state) && player.abilities.mayBuild) {
+        if (!this.isLit(state) && player.abilities.mayBuild) {
             ItemStack stack = player.getItemInHand(handIn);
             Item item = stack.getItem();
             if (item instanceof FlintAndSteelItem || item.is(ModTags.FIRE_SOURCES)) {
-                if(lightUp(state,pos,worldIn,FireSound.FLINT_AND_STEEL)) {
-                    this.onChange(state,worldIn,pos);
+                if (lightUp(state, pos, worldIn, FireSound.FLINT_AND_STEEL)) {
+                    this.onChange(state, worldIn, pos);
                     stack.hurtAndBreak(1, player, (playerIn) -> playerIn.broadcastBreakEvent(handIn));
                     return ActionResultType.sidedSuccess(worldIn.isClientSide);
                 }
-            }
-            else if(item instanceof FireChargeItem) {
-                if(lightUp(state,pos,worldIn,FireSound.FIRE_CHANGE)) {
-                    this.onChange(state,worldIn,pos);
+            } else if (item instanceof FireChargeItem) {
+                if (lightUp(state, pos, worldIn, FireSound.FIRE_CHANGE)) {
+                    this.onChange(state, worldIn, pos);
                     stack.hurtAndBreak(1, player, (playerIn) -> playerIn.broadcastBreakEvent(handIn));
-                    if(!player.isCreative())stack.shrink(1);
+                    if (!player.isCreative()) stack.shrink(1);
                     return ActionResultType.sidedSuccess(worldIn.isClientSide);
                 }
-            }
-            else if(item instanceof PotionItem && PotionUtils.getPotion(stack)==Potions.WATER){
-                if(extinguish(state,pos,worldIn)) {
-                    this.onChange(state,worldIn,pos);
-                    Utils.swapItem(player,handIn,stack,new ItemStack(Items.GLASS_BOTTLE));
+            } else if (item instanceof PotionItem && PotionUtils.getPotion(stack) == Potions.WATER) {
+                if (extinguish(state, pos, worldIn)) {
+                    this.onChange(state, worldIn, pos);
+                    Utils.swapItem(player, handIn, stack, new ItemStack(Items.GLASS_BOTTLE));
                     return ActionResultType.sidedSuccess(worldIn.isClientSide);
                 }
             }
@@ -115,19 +118,18 @@ public abstract class LightUpBlock extends Block implements ILightable {
     @SuppressWarnings({"StrongCast", "OverlyStrongTypeCast"})
     @Override
     public void entityInside(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
-        if(entityIn instanceof ProjectileEntity) {
-            ProjectileEntity projectile = (ProjectileEntity)entityIn;
+        if (entityIn instanceof ProjectileEntity) {
+            ProjectileEntity projectile = (ProjectileEntity) entityIn;
             if (projectile.isOnFire()) {
                 Entity entity = projectile.getOwner();
-                if(entity == null || entity instanceof PlayerEntity || net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(worldIn, entity)){
-                    if(lightUp(state, pos, worldIn,FireSound.FLAMING_ARROW))this.onChange(state,worldIn,pos);
+                if (entity == null || entity instanceof PlayerEntity || net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(worldIn, entity)) {
+                    if (lightUp(state, pos, worldIn, FireSound.FLAMING_ARROW)) this.onChange(state, worldIn, pos);
                 }
-            }
-            else if (projectile instanceof PotionEntity && PotionUtils.getPotion(((ProjectileItemEntity) projectile).getItem())==Potions.WATER) {
+            } else if (projectile instanceof PotionEntity && PotionUtils.getPotion(((ProjectileItemEntity) projectile).getItem()) == Potions.WATER) {
                 Entity entity = projectile.getOwner();
                 boolean flag = entity == null || entity instanceof PlayerEntity || net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(worldIn, entity);
                 if (flag && extinguish(state, pos, worldIn)) {
-                    this.onChange(state,worldIn,pos);
+                    this.onChange(state, worldIn, pos);
                 }
             }
         }

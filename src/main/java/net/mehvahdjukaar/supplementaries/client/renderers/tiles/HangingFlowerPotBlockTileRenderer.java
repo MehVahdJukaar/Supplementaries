@@ -18,7 +18,9 @@ import net.minecraft.util.math.vector.Vector3f;
 
 
 public class HangingFlowerPotBlockTileRenderer extends TileEntityRenderer<HangingFlowerPotBlockTile> {
+
     protected final BlockRendererDispatcher blockRenderer;
+
     public HangingFlowerPotBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
         blockRenderer = Minecraft.getInstance().getBlockRenderer();

@@ -18,7 +18,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -44,8 +43,7 @@ public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder 
 
 
     public FlowerBoxBlockTile() {
-        super(ModRegistry.FLOWER_BOX_TILE.get());
-        stacks = NonNullList.withSize(3, ItemStack.EMPTY);
+        super(ModRegistry.FLOWER_BOX_TILE.get(), 3);
     }
 
     @Override

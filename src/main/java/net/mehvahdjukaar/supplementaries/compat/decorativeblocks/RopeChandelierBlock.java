@@ -5,6 +5,7 @@ import net.mehvahdjukaar.supplementaries.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.compat.CompatObjects;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootContext;
 import net.minecraft.particles.BasicParticleType;
@@ -12,6 +13,7 @@ import net.minecraft.particles.ParticleType;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
@@ -50,8 +52,8 @@ public class RopeChandelierBlock extends ChandelierBlock {
     }
 
     @Override
-    public ItemStack getCloneItemStack(IBlockReader reader, BlockPos pos, BlockState state) {
-        return mimic.get().getCloneItemStack(reader,pos,defMimic.get());
+    public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
+        return mimic.get().getPickBlock(defMimic.get(), target, world,pos,player);
     }
 
     @Override

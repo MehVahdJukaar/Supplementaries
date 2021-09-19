@@ -65,7 +65,6 @@ public class PulleyBlockTile extends ItemDisplayTile {
         return type;
     }
 
-
     @Override
     public ITextComponent getDefaultName() {
         return new TranslationTextComponent("block.supplementaries.pulley_block");

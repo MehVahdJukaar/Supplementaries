@@ -1,13 +1,24 @@
 {
   "parent": "supplementaries:block/jar",
+  "loader": "forge:multi-layer",
+  "layers": {
+    "solid": {
+      "parent": "supplementaries:block/jar_tinted_cork",
+      "textures": {
+        "2": "supplementaries:blocks/jar_tinted_cork"
+      }
+    },
+    "translucent": {
+      "parent": "supplementaries:block/jar_tinted_glass",
+      "textures": {
+        "0": "supplementaries:blocks/jar_tinted_side",
+        "1": "supplementaries:blocks/jar_tinted_top",
+        "3": "supplementaries:blocks/jar_tinted_bottom",
+        "particle": "supplementaries:blocks/jar_tinted_side"
+      }
+    }
+  },
   "textures": {
-    "all": "supplementaries:blocks/potion_liquid",
-    
-    "0": "supplementaries:blocks/jar_tinted_side",
-    "1": "supplementaries:blocks/jar_tinted_top",
-    "2": "supplementaries:blocks/jar_tinted_cork",
-	"3": "supplementaries:blocks/jar_tinted_bottom",
     "particle": "supplementaries:blocks/jar_tinted_side"
-
   }
 }

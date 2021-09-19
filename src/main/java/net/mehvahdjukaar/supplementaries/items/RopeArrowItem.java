@@ -29,12 +29,17 @@ public class RopeArrowItem extends ArrowItem {
     public AbstractArrowEntity createArrow(World world, ItemStack stack, LivingEntity shooter) {
         CompoundNBT com = stack.getTag();
         int charges = stack.getMaxDamage();
-        if(com!=null) {
+        if (com != null) {
             if (com.contains("Damage")) {
                 charges = charges - com.getInt("Damage");
             }
         }
         return new RopeArrowEntity(world, shooter, charges);
+    }
+
+    @Override
+    public int getMaxDamage(ItemStack stack) {
+        return ServerConfigs.cached.ROPE_ARROW_CAPACITY;
     }
 
     @Override
@@ -75,11 +80,12 @@ public class RopeArrowItem extends ArrowItem {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        if(!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().options.advancedItemTooltips)return;
-        if(worldIn==null)return;
+        tooltip.add(new TranslationTextComponent("message.supplementaries.rope_arrow_tooltip", stack.getMaxDamage() - stack.getDamageValue(), stack.getMaxDamage()));
+        if (!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().options.advancedItemTooltips) return;
+        if (worldIn == null) return;
         String override = ServerConfigs.cached.ROPE_ARROW_BLOCK.getRegistryName().getNamespace();
-        if(!override.equals(Supplementaries.MOD_ID)) {
-            tooltip.add(new TranslationTextComponent("message.supplementaries.rope_arrow",override).withStyle(TextFormatting.ITALIC).withStyle(TextFormatting.GRAY));
+        if (!override.equals(Supplementaries.MOD_ID)) {
+            tooltip.add(new TranslationTextComponent("message.supplementaries.rope_arrow", override).withStyle(TextFormatting.ITALIC).withStyle(TextFormatting.GRAY));
         }
     }
 }

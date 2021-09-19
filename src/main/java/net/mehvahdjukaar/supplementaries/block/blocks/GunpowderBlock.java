@@ -63,11 +63,11 @@ public class GunpowderBlock extends LightUpBlock {
     private final Map<BlockState, VoxelShape> SHAPES_CACHE = Maps.newHashMap();
     private final BlockState crossState;
 
-    private static final int getDelay(){
+    private static int getDelay(){
         return ServerConfigs.cached.GUNPOWDER_BURN_SPEED;
     }
 
-    private static final int getSpreadAge(){
+    private static int getSpreadAge(){
         return ServerConfigs.cached.GUNPOWDER_SPREAD_AGE;
     }
 

@@ -2,14 +2,15 @@ package net.mehvahdjukaar.supplementaries.events;
 
 import net.mehvahdjukaar.selene.map.CustomDecorationHolder;
 import net.mehvahdjukaar.selene.util.Utils;
+import net.mehvahdjukaar.supplementaries.block.blocks.BookPileBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.DirectionalCakeBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.DoubleCakeBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.JarBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.StaticBlockItem;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.items.BlockHolderItem;
 import net.mehvahdjukaar.supplementaries.items.FullJarItem;
 import net.mehvahdjukaar.supplementaries.items.JarItem;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
@@ -37,6 +38,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import javax.annotation.Nullable;
 import java.util.*;
 
+
 public class ItemsOverrideHandler {
 
     private static final Map<Item, ItemInteractionOverride> ON_BLOCK_OVERRIDES = new HashMap<>();
@@ -60,6 +62,8 @@ public class ItemsOverrideHandler {
         blockBehaviors.add(new PlaceableRodsBehavior());
         blockBehaviors.add(new XpBottlingBehavior());
         blockBehaviors.add(new PlaceableGunpowderBehavior());
+        blockBehaviors.add(new BookPileBehavior());
+        blockBehaviors.add(new BookPileHorizontalBehavior());
 
         for (Item i : ForgeRegistries.ITEMS) {
             for (ItemInteractionOverride b : blockBehaviors) {
@@ -308,7 +312,7 @@ public class ItemsOverrideHandler {
                         result = placeDoubleCake(player, stack, pos, world, state, isRanged);
                     }
                     if (!result.consumesAction() && ServerConfigs.cached.DIRECTIONAL_CAKE) {
-                        result = paceBlockOverride(ModRegistry.DIRECTIONAL_CAKE_ITEM.get(), player, hand, stack, world, hit, isRanged);
+                        result = paceBlockOverride(ModRegistry.DIRECTIONAL_CAKE.get(), player, hand, stack, world, hit, isRanged);
                     }
                     return result;
                 }
@@ -341,7 +345,7 @@ public class ItemsOverrideHandler {
         @Override
         public ActionResultType tryPerformingAction(World world, PlayerEntity player, Hand hand, ItemStack stack, BlockRayTraceResult hit, boolean isRanged) {
             if (player.abilities.mayBuild) {
-                return paceBlockOverride(ModRegistry.CEILING_BANNERS_ITEMS.get(((BannerItem) stack.getItem()).getColor()).get(), player, hand, stack, world, hit, isRanged);
+                return paceBlockOverride(ModRegistry.CEILING_BANNERS.get(((BannerItem) stack.getItem()).getColor()).get(), player, hand, stack, world, hit, isRanged);
             }
             return ActionResultType.PASS;
         }
@@ -374,7 +378,7 @@ public class ItemsOverrideHandler {
         @Override
         public ActionResultType tryPerformingAction(World world, PlayerEntity player, Hand hand, ItemStack stack, BlockRayTraceResult hit, boolean isRanged) {
             if (player.abilities.mayBuild) {
-                return paceBlockOverride(ModRegistry.HANGING_FLOWER_POT_ITEM.get(), player, hand, stack, world, hit, isRanged);
+                return paceBlockOverride(ModRegistry.HANGING_FLOWER_POT.get(), player, hand, stack, world, hit, isRanged);
             }
             return ActionResultType.PASS;
         }
@@ -407,7 +411,7 @@ public class ItemsOverrideHandler {
         @Override
         public ActionResultType tryPerformingAction(World world, PlayerEntity player, Hand hand, ItemStack stack, BlockRayTraceResult hit, boolean isRanged) {
             if (player.abilities.mayBuild) {
-                return paceBlockOverride(ModRegistry.STICK_BLOCK_ITEM.get(), player, hand, stack, world, hit, isRanged);
+                return paceBlockOverride(ModRegistry.STICK_BLOCK.get(), player, hand, stack, world, hit, isRanged);
             }
             return ActionResultType.PASS;
         }
@@ -440,7 +444,7 @@ public class ItemsOverrideHandler {
         @Override
         public ActionResultType tryPerformingAction(World world, PlayerEntity player, Hand hand, ItemStack stack, BlockRayTraceResult hit, boolean isRanged) {
             if (player.abilities.mayBuild) {
-                return paceBlockOverride(ModRegistry.BLAZE_ROD_ITEM.get(), player, hand, stack, world, hit, isRanged);
+                return paceBlockOverride(ModRegistry.BLAZE_ROD_BLOCK.get(), player, hand, stack, world, hit, isRanged);
             }
             return ActionResultType.PASS;
         }
@@ -473,7 +477,76 @@ public class ItemsOverrideHandler {
         @Override
         public ActionResultType tryPerformingAction(World world, PlayerEntity player, Hand hand, ItemStack stack, BlockRayTraceResult hit, boolean isRanged) {
             if (player.abilities.mayBuild) {
-                return paceBlockOverride(ModRegistry.GUNPOWDER_BLOCK_ITEM.get(), player, hand, stack, world, hit, isRanged);
+                return paceBlockOverride(ModRegistry.GUNPOWDER_BLOCK.get(), player, hand, stack, world, hit, isRanged);
+            }
+            return ActionResultType.PASS;
+        }
+    }
+
+    private static class BookPileHorizontalBehavior extends ItemInteractionOverride {
+
+        //hax. I'll leave this here and see what happens
+        private static final Item BOOK_PILE_H_ITEM =  new BlockItem(ModRegistry.BOOK_PILE_H.get(), (new Item.Properties()).tab(null));
+
+        @Nullable
+        @Override
+        public TextComponent getTooltip() {
+            return new TranslationTextComponent("message.supplementaries.placeable");
+        }
+
+        @Nullable
+        @Override
+        public Block getBlockOverride(Item i) {
+            return ModRegistry.BOOK_PILE_H.get();
+        }
+
+        @Override
+        public boolean isEnabled() {
+            return ServerConfigs.cached.PLACEABLE_BOOKS;
+        }
+
+        @Override
+        public boolean appliesToItem(Item item) {
+            return ((BookPileBlock)ModRegistry.BOOK_PILE_H.get()).isAcceptedItem(item);
+        }
+
+        @Override
+        public ActionResultType tryPerformingAction(World world, PlayerEntity player, Hand hand, ItemStack stack, BlockRayTraceResult hit, boolean isRanged) {
+            if (player.abilities.mayBuild) {
+                return paceBlockOverride(BOOK_PILE_H_ITEM, player, hand, stack, world, hit, isRanged);
+            }
+            return ActionResultType.PASS;
+        }
+    }
+
+    private static class BookPileBehavior extends ItemInteractionOverride {
+
+        @Nullable
+        @Override
+        public TextComponent getTooltip() {
+            return new TranslationTextComponent("message.supplementaries.placeable");
+        }
+
+        @Nullable
+        @Override
+        public Block getBlockOverride(Item i) {
+            return ModRegistry.BOOK_PILE.get();
+        }
+
+        @Override
+        public boolean isEnabled() {
+            return ServerConfigs.cached.PLACEABLE_BOOKS;
+        }
+
+        @Override
+        public boolean appliesToItem(Item item) {
+            return ((BookPileBlock)ModRegistry.BOOK_PILE.get()).isAcceptedItem(item);
+        }
+
+        @Override
+        public ActionResultType tryPerformingAction(World world, PlayerEntity player, Hand hand, ItemStack stack, BlockRayTraceResult hit, boolean isRanged) {
+            if (player.abilities.mayBuild) {
+                return paceBlockOverride(ModRegistry.BOOK_PILE.get(), player, hand, stack, world, hit, isRanged);
             }
             return ActionResultType.PASS;
         }
@@ -508,15 +581,14 @@ public class ItemsOverrideHandler {
             if (player.abilities.mayBuild) {
                 if (CompatHandler.torchslab) {
                     double y = hit.getLocation().y() % 1;
-                    if (y < 0.5) return ActionResultType.FAIL;
+                    if (y < 0.5) return ActionResultType.PASS;
                 }
-                return paceBlockOverride(ModRegistry.WALL_LANTERN_ITEM.get(), player, hand, stack, world, hit, isRanged);
+                return paceBlockOverride(ModRegistry.WALL_LANTERN.get(), player, hand, stack, world, hit, isRanged);
             }
             return ActionResultType.PASS;
         }
     }
 
-    //TODO: improve
     private static ActionResultType paceBlockOverride(Item itemOverride, PlayerEntity player, Hand hand, ItemStack heldStack,
                                                       World world, BlockRayTraceResult raytrace, boolean isRanged) {
         if (raytrace.getDirection() != null) {
@@ -535,10 +607,9 @@ public class ItemsOverrideHandler {
                 //place block
                 BlockItemUseContext ctx = new BlockItemUseContext(world, player, hand, heldStack, raytrace);
 
-                if (itemOverride instanceof BlockHolderItem && heldStack.getItem() instanceof BlockItem) {
-                    result = ((BlockHolderItem) itemOverride).tryPlace(ctx, ((BlockItem) heldStack.getItem()).getBlock());
-                } else if (itemOverride instanceof BlockItem) {
+                if (itemOverride instanceof BlockItem) {
                     result = ((BlockItem) itemOverride).place(ctx);
+
                 }
             }
             if (result.consumesAction() && player instanceof ServerPlayerEntity && !isRanged) {
@@ -550,5 +621,33 @@ public class ItemsOverrideHandler {
         return ActionResultType.PASS;
     }
 
+    private static ActionResultType paceBlockOverride(Block blockOverride, PlayerEntity player, Hand hand, ItemStack heldStack,
+                                                      World world, BlockRayTraceResult raytrace, boolean isRanged) {
+        if (raytrace.getDirection() != null) {
+            //try interacting with block behind
+            BlockPos pos = raytrace.getBlockPos();
+
+            ActionResultType result = ActionResultType.PASS;
+
+            if (!player.isShiftKeyDown() && !isRanged) {
+                BlockState blockstate = world.getBlockState(pos);
+                result = blockstate.use(world, player, hand, raytrace);
+            }
+
+            if (!result.consumesAction()) {
+
+                //place block
+                BlockItemUseContext ctx = new BlockItemUseContext(world, player, hand, heldStack, raytrace);
+
+                result = StaticBlockItem.place(ctx, blockOverride);
+            }
+            if (result.consumesAction() && player instanceof ServerPlayerEntity && !isRanged) {
+                CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayerEntity) player, pos, heldStack);
+            }
+            if (result == ActionResultType.FAIL) return ActionResultType.PASS;
+            return result;
+        }
+        return ActionResultType.PASS;
+    }
 
 }

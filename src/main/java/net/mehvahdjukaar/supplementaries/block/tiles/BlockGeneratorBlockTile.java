@@ -37,15 +37,19 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.Executors;
 
 public class BlockGeneratorBlockTile extends TileEntity implements ITickableTileEntity {
+
     private boolean firstTick = true;
+    public Pair<List<Pair<Integer, BlockPos>>, Boolean> threadResult = null;
+
     public BlockGeneratorBlockTile() {
         super(ModRegistry.BLOCK_GENERATOR_TILE.get());
     }
 
     private static final BlockState trapdoor = Blocks.SPRUCE_TRAPDOOR.defaultBlockState();
-    private static final BlockState lantern = Blocks.LANTERN.defaultBlockState().setValue(LanternBlock.HANGING,true);
+    private static final BlockState lantern = Blocks.LANTERN.defaultBlockState().setValue(LanternBlock.HANGING, true);
     private static final BlockState lanternDown = Blocks.LANTERN.defaultBlockState();
     private static final BlockState fence = Blocks.SPRUCE_FENCE.defaultBlockState();
     private static final BlockState jar = ModRegistry.FIREFLY_JAR.get().defaultBlockState();
@@ -59,39 +63,71 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
     private static final BlockState path_2 = Blocks.SMOOTH_SANDSTONE.defaultBlockState();
 
 
-    private double averageAngles(float a, float b){
-        a= (float) (a*Math.PI/180);
-        b= (float) (b*Math.PI/180);
+    private double averageAngles(float a, float b) {
+        a = (float) (a * Math.PI / 180);
+        b = (float) (b * Math.PI / 180);
 
-        return (180/Math.PI)*MathHelper.atan2(MathHelper.sin(a)+MathHelper.sin(b),MathHelper.cos(a)+MathHelper.cos(b));
+        return (180 / Math.PI) * MathHelper.atan2(MathHelper.sin(a) + MathHelper.sin(b), MathHelper.cos(a) + MathHelper.cos(b));
     }
+
 
     //TODO: this has to be the worst code I've written here
     @Override
     public void tick() {
         //if you are reading this I'm sorry...
+        if (this.level == null || level.isClientSide) return;
+
+        if (this.firstTick) {
+            this.firstTick = false;
+
+            ServerWorld world = (ServerWorld) this.level;
+            BlockPos pos = this.worldPosition.below(2);
+            final int posX = pos.getX();
+            final int posZ = pos.getZ();
 
 
+            //lets hope world is thread safe
+            try {
+                Executors.newSingleThreadExecutor()
+                        .submit(() -> threadResult = StructureLocator.find(world, posX, posZ, 2));
+            } catch (Exception e) {
+                this.level.removeBlock(this.worldPosition, false);
+                Supplementaries.LOGGER.warn("failed to generate road sign at " + this.worldPosition.toString() + ": " + e);
+            }
 
-        if(!(this.level instanceof ServerWorld))return;
+
+            /*
+            Thread thread = new Thread(() -> {
+                try {
+                    threadResult = StructureLocator.find(world, posX, posZ, 2);
+                } catch (Exception e) {
+                    this.level.removeBlock(this.worldPosition, false);
+                    Supplementaries.LOGGER.warn("failed to generate road sign at " + this.worldPosition.toString() + ": " + e);
+                }
+            });
+            thread.start();
+            */
+
+        }
 
         try {
-            if (this.firstTick) {
-                this.firstTick = false;
+            if (threadResult != null) {
+
                 ServerWorld world = (ServerWorld) this.level;
                 BlockPos pos = this.worldPosition.below(2);
 
                 BlockState topState = trapdoor;
 
-                Pair<List<Pair<Integer,BlockPos>>,Boolean> locateResult = StructureLocator.find(world, pos, 25, 2);
-                List<Pair<Integer,BlockPos>> villages = locateResult.getLeft();
+                Pair<List<Pair<Integer, BlockPos>>, Boolean> locateResult = threadResult;// StructureLocator.find(world, pos, 2);
+
+                List<Pair<Integer, BlockPos>> villages = locateResult.getLeft();
 
                 //if I am in a village
                 boolean inVillage = locateResult.getRight();
 
-                if(inVillage){
+                if (inVillage) {
                     RegistryKey<Biome> b = RegistryKey.create(ForgeRegistries.Keys.BIOMES, world.getBiome(pos).getRegistryName());
-                    BlockState replace = (b== Biomes.DESERT || b == Biomes.DESERT_HILLS || b == Biomes.DESERT_LAKES) ? path_2 : path;
+                    BlockState replace = (b == Biomes.DESERT || b == Biomes.DESERT_HILLS || b == Biomes.DESERT_LAKES) ? path_2 : path;
                     replaceCobbleWithPath(world, pos, replace);
                 }
 
@@ -220,19 +256,18 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
                             }
 
                             //wall lanterns
-                            if(0.32>rand.nextFloat()){
-                                topState = 0.32>rand.nextFloat()?trapdoor:air;
+                            if (0.32 > rand.nextFloat()) {
+                                topState = 0.32 > rand.nextFloat() ? trapdoor : air;
 
                                 EnhancedLanternBlock wl = ((EnhancedLanternBlock) ModRegistry.WALL_LANTERN.get());
-                                wl.placeOn(lanternDown,pos.below(),dir,world);
+                                wl.placeOn(lanternDown, pos.below(), dir, world);
 
                                 //double
                                 if (doubleSided) {
-                                    wl.placeOn(lanternDown,pos.below(),dir.getOpposite(),world);
+                                    wl.placeOn(lanternDown, pos.below(), dir.getOpposite(), world);
                                 }
 
-                            }
-                            else {
+                            } else {
                                 boolean isTrapdoor = 0.4 > rand.nextFloat();
 
                                 if (!isTrapdoor) topState = fence;
@@ -266,52 +301,47 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
 
                     ItemStack book = new ItemStack(Items.WRITABLE_BOOK);
                     CompoundNBT com = new CompoundNBT();
-                    ListNBT listnbt =  new ListNBT();
+                    ListNBT listnbt = new ListNBT();
                     listnbt.add(StringNBT.valueOf("nothing here but monsters\n\n\n"));
-                    com.put("pages",listnbt);
+                    com.put("pages", listnbt);
                     book.setTag(com);
-                    this.level.setBlock(this.worldPosition.below(2), ModRegistry.NOTICE_BOARD.get().defaultBlockState().setValue(NoticeBoardBlock.HAS_BOOK,true)
+                    this.level.setBlock(this.worldPosition.below(2), ModRegistry.NOTICE_BOARD.get().defaultBlockState().setValue(NoticeBoardBlock.HAS_BOOK, true)
                             .setValue(NoticeBoardBlock.FACING, Direction.Plane.HORIZONTAL.getRandomDirection(this.getLevel().random)), 3);
                     TileEntity te = world.getBlockEntity(this.worldPosition.below(2));
-                    if(te instanceof NoticeBoardBlockTile){
+                    if (te instanceof NoticeBoardBlockTile) {
                         ((ItemDisplayTile) te).setDisplayedItem(book);
                         //te.setChanged();
                     }
                 }
 
                 world.setBlock(this.worldPosition, topState, 3);
-
-                return;
             }
 
+        } catch (Exception exception) {
+            this.level.removeBlock(this.worldPosition, false);
+            Supplementaries.LOGGER.warn("failed to generate road sign at " + this.worldPosition.toString() + ": " + exception);
         }
-        catch (Exception exception){
-            Supplementaries.LOGGER.warn("failed to generate road sign at "+this.worldPosition.toString()+": "+exception);
-        }
-
-        this.level.removeBlock(this.worldPosition, false);
-
     }
 
 
-    private static ITextComponent getSignText(int d){
+    private static ITextComponent getSignText(int d) {
         int s;
-        if(d<100)s=10;
-        else if(d<2000)s=100;
+        if (d < 100) s = 10;
+        else if (d < 2000) s = 100;
         else s = 1000;
-        return new TranslationTextComponent("message.supplementaries.road_sign",(((d + (s/2)) / s) * s));
+        return new TranslationTextComponent("message.supplementaries.road_sign", (((d + (s / 2)) / s) * s));
     }
 
-    private static void replaceCobbleWithPath(World world, BlockPos pos, BlockState path){
+    private static void replaceCobbleWithPath(World world, BlockPos pos, BlockState path) {
         //generate cobble path
 
-        for(int i = -2; i <= 2; ++i) {
+        for (int i = -2; i <= 2; ++i) {
             for (int j = -2; j <= 2; ++j) {
-                if(Math.abs(i)==2&&Math.abs(j)==2)continue;
-                if(i==0&&j==0)continue;
+                if (Math.abs(i) == 2 && Math.abs(j) == 2) continue;
+                if (i == 0 && j == 0) continue;
                 BlockPos pathPos = pos.offset(i, -2, j);
                 BlockState state = world.getBlockState(pathPos);
-                if(state.is(Blocks.COBBLESTONE)||state.is(Blocks.MOSSY_COBBLESTONE)){
+                if (state.is(Blocks.COBBLESTONE) || state.is(Blocks.MOSSY_COBBLESTONE)) {
                     world.setBlock(pathPos, path, 2);
                 }
             }

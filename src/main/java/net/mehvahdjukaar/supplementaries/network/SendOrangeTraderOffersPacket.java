@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.network;
 
 
-import net.mehvahdjukaar.supplementaries.inventories.OrangeMerchantContainer;
+import net.mehvahdjukaar.supplementaries.inventories.RedMerchantContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.MerchantOffers;
@@ -49,12 +49,12 @@ public class SendOrangeTraderOffersPacket {
         // client world
         ctx.get().enqueueWork(() -> {
             Container container = Minecraft.getInstance().player.containerMenu;
-            if (message.containerId == container.containerId && container instanceof OrangeMerchantContainer) {
-                ((OrangeMerchantContainer)container).setOffers(new MerchantOffers(message.offers.createTag()));
-                ((OrangeMerchantContainer)container).setXp(message.villagerXp);
-                ((OrangeMerchantContainer)container).setMerchantLevel(message.villagerLevel);
-                ((OrangeMerchantContainer)container).setShowProgressBar(message.showProgress);
-                ((OrangeMerchantContainer)container).setCanRestock(message.canRestock);
+            if (message.containerId == container.containerId && container instanceof RedMerchantContainer) {
+                ((RedMerchantContainer)container).setOffers(new MerchantOffers(message.offers.createTag()));
+                ((RedMerchantContainer)container).setXp(message.villagerXp);
+                ((RedMerchantContainer)container).setMerchantLevel(message.villagerLevel);
+                ((RedMerchantContainer)container).setShowProgressBar(message.showProgress);
+                ((RedMerchantContainer)container).setCanRestock(message.canRestock);
             }
 
         });

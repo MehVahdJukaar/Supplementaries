@@ -1,7 +1,9 @@
 package net.mehvahdjukaar.supplementaries.entities;
 
+import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.blocks.RopeBlock;
-import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.block.blocks.RopeKnotBlock;
+import net.mehvahdjukaar.supplementaries.common.StaticBlockItem;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.Block;
@@ -108,7 +110,27 @@ public class RopeArrowEntity extends AbstractArrowEntity {
                 //Ugly but works
                 //try finding existing ropes
                 BlockPos hitPos = rayTraceResult.getBlockPos();
-                Block hitBlock = this.level.getBlockState(hitPos).getBlock();
+                BlockState hitState = this.level.getBlockState(hitPos);
+                Block hitBlock = hitState.getBlock();
+
+                //knot blocks
+                if(ServerConfigs.cached.ROPE_ARROW_BLOCK.is(ModRegistry.ROPE.get())) {
+                    BlockProperties.PostType knotType = RopeKnotBlock.getPostType(hitState);
+                    if (knotType != null) {
+                        BlockState knotState = RopeKnotBlock.convertToRopeKnot(knotType, hitState, this.level, hitPos);
+                        if (knotState != null) {
+                            if (knotState.getValue(RopeKnotBlock.AXIS).isVertical()) {
+                                this.prevPlacedPos = hitPos.relative(rayTraceResult.getDirection()).above();
+                            } else {
+                                this.prevPlacedPos = hitPos;
+                            }
+                            this.removeCharge();
+                            return;
+                        }
+                    }
+                }
+
+
                 //try adding rope down
                 if (hitBlock == ropeBlock && RopeBlock.addRope(hitPos, level, player, Hand.MAIN_HAND, ropeBlock)) {
                     this.prevPlacedPos = hitPos;
@@ -128,8 +150,8 @@ public class RopeArrowEntity extends AbstractArrowEntity {
                 ItemStack ropes = new ItemStack(ropeBlock);
                 BlockItemUseContext context = new BlockItemUseContext(this.level, (PlayerEntity) entity, Hand.MAIN_HAND, ropes, rayTraceResult);
                 if (context.canPlace()) {
-                    BlockState state = ropeBlock.getStateForPlacement(context);
-                    if (state != null && CommonUtil.canPlace(context, state)) {
+                    BlockState state = StaticBlockItem.getPlacementState(context, ropeBlock);
+                    if (state != null) {
                         this.level.setBlock(context.getClickedPos(), state, 11);
                         this.prevPlacedPos = context.getClickedPos();
                         this.removeCharge();
@@ -153,9 +175,10 @@ public class RopeArrowEntity extends AbstractArrowEntity {
             player = (PlayerEntity) entity;
         }
         BlockPos hitPos = this.prevPlacedPos;
-        Block hitBlock = this.level.getBlockState(hitPos).getBlock();
+        //Block hitBlock = this.level.getBlockState(hitPos).getBlock();
         //try adding rope down
-        if (hitBlock == ropeBlock && RopeBlock.addRope(hitPos.below(), level, player, Hand.MAIN_HAND, ropeBlock)) {
+        //hitBlock == ropeBlock &&
+        if ( RopeBlock.addRope(hitPos.below(), level, player, Hand.MAIN_HAND, ropeBlock)) {
             this.prevPlacedPos = hitPos.below();
             this.removeCharge();
         } else {

@@ -21,8 +21,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
@@ -47,14 +45,6 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
     @Override
     public double getViewDistance() {
         return 128;
-    }
-
-    public VoxelShape getVoxelShape(Direction direction) {
-        if (direction.getAxis() == Direction.Axis.Y) {
-            return VoxelShapes.box(0, 0, -this.height, 1, 1, 1 + this.height);
-        } else {
-            return VoxelShapes.box(0, -this.height, 0, 1, 1 + this.height, 1);
-        }
     }
 
     private AxisAlignedBB getHalfBoundingBox(Direction dir) {

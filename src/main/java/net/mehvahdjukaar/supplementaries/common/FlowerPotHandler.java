@@ -168,6 +168,9 @@ public class FlowerPotHandler {
             toAdd.add("simplefarming:honeydew_block");
             toAdd.add("simplefarming:squash_block");
         }
+        if(CompatHandler.atmospheric){
+            toAdd.add("atmospheric:barrel_cactus");
+        }
 
         //flower box
 

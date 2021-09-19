@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.network;
 
 
-import net.mehvahdjukaar.supplementaries.inventories.OrangeMerchantContainer;
+import net.mehvahdjukaar.supplementaries.inventories.RedMerchantContainer;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -32,8 +32,8 @@ public class SelectOrangeTraderTradePacket implements NetworkHandler.Message {
 
             int i = message.item;
 
-            if (container instanceof OrangeMerchantContainer) {
-                OrangeMerchantContainer merchantcontainer = (OrangeMerchantContainer)container;
+            if (container instanceof RedMerchantContainer) {
+                RedMerchantContainer merchantcontainer = (RedMerchantContainer)container;
                 merchantcontainer.setSelectionHint(i);
                 merchantcontainer.tryMoveItems(i);
             }

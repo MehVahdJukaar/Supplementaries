@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
+import it.unimi.dsi.fastutil.floats.Float2ObjectAVLTreeMap;
 import net.mehvahdjukaar.supplementaries.block.tiles.BellowsBlockTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -26,6 +27,9 @@ import net.minecraft.world.World;
 
 public class BellowsBlock extends Block {
 
+    private static final VoxelShape DEFAULT_SHAPE = VoxelShapes.create(VoxelShapes.block().bounds().inflate(0.1f));
+    private static final Float2ObjectAVLTreeMap<VoxelShape> SHAPES_Y_CACHE = new Float2ObjectAVLTreeMap<>();
+    private static final Float2ObjectAVLTreeMap<VoxelShape> SHAPES_X_Z_CACHE = new Float2ObjectAVLTreeMap<>();
 
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final IntegerProperty POWER = BlockStateProperties.POWER;
@@ -46,12 +50,34 @@ public class BellowsBlock extends Block {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+    public boolean hasDynamicShape() {
+        return true;
+    }
+
+    @Override
+    public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 
         TileEntity te = worldIn.getBlockEntity(pos);
-        return te instanceof BellowsBlockTile ? ((BellowsBlockTile)te).getVoxelShape(state.getValue(FACING)) : VoxelShapes.create(VoxelShapes.block().bounds().inflate(0.1f));
+        if(te instanceof BellowsBlockTile){
+            float height = ((BellowsBlockTile) te).height;
+            //3 digit
+            height = (float)(Math.round(height * 1000.0) / 1000.0);;
+            if(state.getValue(FACING).getAxis() == Direction.Axis.Y){
+                return SHAPES_Y_CACHE.computeIfAbsent(height, BellowsBlock::createVoxelShapeY);
+            }
+            else{
+                return SHAPES_X_Z_CACHE.computeIfAbsent(height, BellowsBlock::createVoxelShapeXZ);
+            }
+        }
+        return VoxelShapes.block();
+    }
 
-        //return te instanceof BellowsBlockTile ? VoxelShapes.create(((BellowsBlockTile)te).getBoundingBox(state.get(FACING))) : VoxelShapes.create(VoxelShapes.fullCube().getBoundingBox().grow(0.1f));
+    public static VoxelShape createVoxelShapeY(float height) {
+        return VoxelShapes.box(0, 0, -height, 1, 1, 1 + height);
+    }
+
+    public static VoxelShape createVoxelShapeXZ(float height) {
+        return VoxelShapes.box(0, -height, 0, 1, 1 + height, 1);
     }
 
     @Override

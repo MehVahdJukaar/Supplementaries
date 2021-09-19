@@ -92,8 +92,10 @@ public class ConfiguredCustomScreen extends ConfigScreen {
         addIcon("iron gate", ModRegistry.IRON_GATE_ITEM.get());
         addIcon("zombie horse", Items.ROTTEN_FLESH);
         addIcon("bomb", ModRegistry.BOMB_ITEM.get());
+        addIcon("blue bomb", ModRegistry.BOMB_BLUE_ITEM.get());
         addIcon("placeable gunpowder", Items.GUNPOWDER);
         addIcon("slingshot", ModRegistry.SLINGSHOT_ITEM.get());
+
     }
 
     public static void openScreen(){

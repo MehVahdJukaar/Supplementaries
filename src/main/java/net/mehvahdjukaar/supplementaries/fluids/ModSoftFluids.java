@@ -109,10 +109,12 @@ public class ModSoftFluids {
         custom.add(makeSF(new SoftFluid.Builder(Textures.SOUP_TEXTURE,Textures.POTION_TEXTURE_FLOW,"pumpkin_soup")
                 .fromMod("farmersdelight")
                 .color(0xE38A1D)
+                .translationKey("item.farmersdelight.pumpkin_soup")
                 .stew("farmersdelight:pumpkin_soup")));
         custom.add(makeSF(new SoftFluid.Builder(Textures.SOUP_TEXTURE,Textures.POTION_TEXTURE_FLOW,"tomato_sauce")
                 .fromMod("farmersdelight")
                 .color(0xC0341F)
+                .translationKey("item.farmersdelight.tomato_sauce")
                 .stew("farmersdelight:tomato_sauce")));
         custom.add(makeSF(new SoftFluid.Builder(Textures.HONEY_TEXTURE,Textures.POTION_TEXTURE_FLOW,"syrup")
                 .fromMod("autumnity")

@@ -8,8 +8,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -28,18 +30,40 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class CeilingBannerBlock extends AbstractBannerBlock {
+    public static final BooleanProperty ATTACHED = BlockStateProperties.ATTACHED;
     public static final DirectionProperty FACING = HorizontalBlock.FACING;
     private static final VoxelShape SHAPE_X = Block.box(7.0D, 0.0D, 0.0D, 9.0D, 16.0D, 16.0D);
     private static final VoxelShape SHAPE_Z = Block.box(0.0D, 0.0D, 7.0D, 16.0D, 16.0D, 9.0D);
 
     public CeilingBannerBlock(DyeColor color, AbstractBlock.Properties properties) {
         super(color, properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(ATTACHED, false));
     }
 
     @Override
     public boolean canSurvive(BlockState state, IWorldReader world, BlockPos pos) {
-        return world.getBlockState(pos.above()).getMaterial().isSolid();
+        BlockState above = world.getBlockState(pos.above());
+        if (state.getValue(ATTACHED)) {
+            return this.canAttach(state, above);
+        }
+        return above.getMaterial().isSolid();
+    }
+
+    private boolean canAttach(BlockState state, BlockState above){
+        Block b = above.getBlock();
+        if (b instanceof RopeBlock) {
+            if (!above.getValue(RopeBlock.DOWN)) {
+                Direction dir = state.getValue(FACING);
+                return above.getValue(RopeBlock.FACING_TO_PROPERTY_MAP.get(dir.getClockWise())) &&
+                        above.getValue(RopeBlock.FACING_TO_PROPERTY_MAP.get(dir.getCounterClockWise()));
+            }
+            return false;
+        }
+        //TODO: maybe add this & sticks
+        //else if (b instanceof ChainBlock) {
+            //return above.getValue(ChainBlock.AXIS) == state.getValue(FACING).getClockWise().getAxis();
+        //}
+        return false;
     }
 
     @Override
@@ -55,10 +79,12 @@ public class CeilingBannerBlock extends AbstractBannerBlock {
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         if (context.getClickedFace() == Direction.DOWN) {
             BlockState blockstate = this.defaultBlockState();
-            IWorldReader iworldreader = context.getLevel();
+            IWorldReader world = context.getLevel();
             BlockPos blockpos = context.getClickedPos();
             blockstate = blockstate.setValue(FACING, context.getHorizontalDirection().getOpposite());
-            if (blockstate.canSurvive(iworldreader, blockpos)) {
+            boolean attached = this.canAttach(blockstate, world.getBlockState(blockpos.above()));
+            blockstate = blockstate.setValue(ATTACHED, attached);
+            if (blockstate.canSurvive(world, blockpos)) {
                 return blockstate;
             }
         }
@@ -74,7 +100,7 @@ public class CeilingBannerBlock extends AbstractBannerBlock {
     }
 
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
+        builder.add(FACING, ATTACHED);
     }
 
     @Override
@@ -86,15 +112,16 @@ public class CeilingBannerBlock extends AbstractBannerBlock {
         if (p_180633_5_.hasCustomHoverName()) {
             TileEntity tileentity = p_180633_1_.getBlockEntity(p_180633_2_);
             if (tileentity instanceof CeilingBannerBlockTile) {
-                ((CeilingBannerBlockTile)tileentity).setCustomName(p_180633_5_.getHoverName());
+                ((CeilingBannerBlockTile) tileentity).setCustomName(p_180633_5_.getHoverName());
             }
         }
 
     }
 
+    @Override
     public ItemStack getCloneItemStack(IBlockReader p_185473_1_, BlockPos p_185473_2_, BlockState p_185473_3_) {
         TileEntity tileentity = p_185473_1_.getBlockEntity(p_185473_2_);
-        return tileentity instanceof CeilingBannerBlockTile ? ((CeilingBannerBlockTile)tileentity).getItem(p_185473_3_) : super.getCloneItemStack(p_185473_1_, p_185473_2_, p_185473_3_);
+        return tileentity instanceof CeilingBannerBlockTile ? ((CeilingBannerBlockTile) tileentity).getItem(p_185473_3_) : super.getCloneItemStack(p_185473_1_, p_185473_2_, p_185473_3_);
     }
 
     @Override

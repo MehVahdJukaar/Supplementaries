@@ -4,16 +4,22 @@ package net.mehvahdjukaar.supplementaries.compat.quark;
 import net.mehvahdjukaar.selene.util.DispenserHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.ChainBlock;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import org.jetbrains.annotations.Nullable;
 import vazkii.quark.base.handler.GeneralConfig;
 import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.automation.module.DispensersPlaceBlocksModule;
+import vazkii.quark.content.building.block.WoodPostBlock;
 
 public class QuarkPlugin {
     private static final ResourceLocation SACK_CAP = new ResourceLocation(Supplementaries.MOD_ID, "sack_drop_in");
@@ -54,9 +60,20 @@ public class QuarkPlugin {
                 break;
             }
         }
-
     }
 
+    //this should have been implemented in the post block updateShape method
+    public static @Nullable BlockState updateWoodPostShape(BlockState post, Direction facing, BlockState facingState){
+        if(post.getBlock() instanceof WoodPostBlock){
+            Direction.Axis axis = post.getValue(WoodPostBlock.AXIS);
+            if(facing.getAxis() != axis){
+                boolean chain = (facingState.getBlock() instanceof ChainBlock &&
+                        facingState.getValue(BlockStateProperties.AXIS) == facing.getAxis());
+                return post.setValue(WoodPostBlock.CHAINED[facing.ordinal()], chain);
+            }
+        }
+        return null;
+    }
 
 
 }

@@ -9,13 +9,34 @@ import net.mehvahdjukaar.supplementaries.block.util.MobHolder;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class JarTab {
+public class JarTab extends ItemGroup {
+
+    public JarTab(String label) {
+        super(label);
+    }
+
+    @Override
+    public ItemStack makeIcon() {
+        ItemStack icon = new ItemStack(ModRegistry.JAR_ITEM.get());
+        SoftFluidHolder fluidHolder = new SoftFluidHolder(12);
+        fluidHolder.fill(SoftFluidRegistry.HONEY);
+        CompoundNBT com = new CompoundNBT();
+        fluidHolder.save(com);
+        icon.addTagElement("BlockEntityTag", com);
+        return icon;
+    }
+
+    @Override
+    public boolean hasSearchBar() {
+        return true;
+    }
 
     public static void tryAdd(NonNullList<ItemStack> items, CompoundNBT com) {
         if (!com.isEmpty()) {
@@ -72,13 +93,5 @@ public class JarTab {
 
     }
 
-    public static ItemStack getIcon() {
-        ItemStack icon = new ItemStack(ModRegistry.JAR_ITEM.get());
-        SoftFluidHolder fluidHolder = new SoftFluidHolder(12);
-        fluidHolder.fill(SoftFluidRegistry.HONEY);
-        CompoundNBT com = new CompoundNBT();
-        fluidHolder.save(com);
-        icon.addTagElement("BlockEntityTag", com);
-        return icon;
-    }
+
 }

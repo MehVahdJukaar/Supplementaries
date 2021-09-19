@@ -2,9 +2,11 @@ package net.mehvahdjukaar.supplementaries.items;
 
 
 import net.mehvahdjukaar.selene.fluids.SoftFluid;
+import net.mehvahdjukaar.selene.fluids.SoftFluidHolder;
 import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.selene.util.PotionNBTHelper;
 import net.mehvahdjukaar.selene.util.Utils;
+import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.block.util.MobHolder;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
@@ -19,14 +21,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.WaterMobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.Rarity;
+import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.*;
 import net.minecraft.util.text.*;
@@ -36,6 +36,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class JarItem extends CageItem {
+
     public JarItem(Block blockIn, Properties properties) {
         super(blockIn, properties, 0.625f, 0.875f);
     }
@@ -176,25 +177,78 @@ public class JarItem extends CageItem {
 
     @Override
     public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items) {
-        if(RegistryConfigs.reg.JAR_TAB.get()) {
+        if (RegistryConfigs.reg.JAR_TAB.get()) {
             if (group == ModRegistry.JAR_TAB) {
                 JarTab.populateTab(items);
             }
-        }
-        else super.fillItemCategory(group, items);
+        } else super.fillItemCategory(group, items);
     }
 
     @Override
     public Rarity getRarity(ItemStack stack) {
-        CompoundNBT compoundnbt = stack.getTagElement("BlockEntityTag");
-        if (compoundnbt != null) {
-            if (compoundnbt.contains("FluidHolder")) {
-                CompoundNBT com = compoundnbt.getCompound("FluidHolder");
+        CompoundNBT tag = stack.getTagElement("BlockEntityTag");
+        if (tag != null) {
+            if (tag.contains("FluidHolder")) {
+                CompoundNBT com = tag.getCompound("FluidHolder");
                 SoftFluid s = SoftFluidRegistry.get(com.getString("Fluid"));
                 if (s == ModSoftFluids.DIRT) return Rarity.RARE;
             }
         }
         return super.getRarity(stack);
+    }
+
+    //nonsense jar drinking here
+
+    @Override
+    public ItemStack finishUsingItem(ItemStack stack, World world, LivingEntity entity) {
+        CompoundNBT tag = stack.getTagElement("BlockEntityTag");
+        if (tag != null && entity instanceof PlayerEntity) {
+            JarBlockTile temp = new JarBlockTile();
+            temp.load(ModRegistry.JAR.get().defaultBlockState(), tag);
+            SoftFluidHolder fh = temp.getSoftFluidHolder();
+            if (fh.containsFood()) {
+                if (fh.tryDrinkUpFluid((PlayerEntity) entity, world)) {
+                    CompoundNBT newTag = new CompoundNBT();
+                    temp.save(newTag);
+                    stack.addTagElement("BlockEntityTag", newTag);
+                    return stack;
+                }
+            }
+        }
+        return stack;
+    }
+
+    @Override
+    public ActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
+        if (this.getUseDuration(playerEntity.getItemInHand(hand)) != 0) {
+            return DrinkHelper.useDrink(world, playerEntity, hand);
+        }
+        return super.use(world, playerEntity, hand);
+    }
+
+    @Override
+    public int getUseDuration(ItemStack stack) {
+        if(ServerConfigs.cached.JAR_ITEM_DRINK) {
+            CompoundNBT tag = stack.getTagElement("BlockEntityTag");
+            if (tag != null) {
+                JarBlockTile temp = new JarBlockTile();
+                temp.load(ModRegistry.JAR.get().defaultBlockState(), tag);
+                SoftFluidHolder fh = temp.getSoftFluidHolder();
+                SoftFluid sf = fh.getFluid();
+                Item food = sf.getFoodItem();
+                return food.getUseDuration(food.getDefaultInstance()) / sf.getFoodDivider();
+
+            }
+        }
+        return 0;
+    }
+
+    @Override
+    public UseAction getUseAnimation(ItemStack stack) {
+        if(ServerConfigs.cached.JAR_ITEM_DRINK) {
+            return UseAction.DRINK;
+        }
+        return UseAction.NONE;
     }
 
 }

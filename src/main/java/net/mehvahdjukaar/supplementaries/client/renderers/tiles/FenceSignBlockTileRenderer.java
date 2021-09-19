@@ -24,17 +24,14 @@ import java.util.List;
 
 public class FenceSignBlockTileRenderer extends TileEntityRenderer<FenceSignBlockTile> {
     private final BlockRendererDispatcher blockRenderer;
-    public static final ModelRenderer signBoard = new ModelRenderer(64, 32, 0, 0);
-   //TODO: make other tiles this way
-    static {
-       signBoard.setPos(0.0F, -4.0F, 0.0F);
-       signBoard.addBox(-12.0F, -14.0F, -1.0F, 24.0F, 12.0F, 2.0F, 0.0F);
-    }
+    public final ModelRenderer signBoard = new ModelRenderer(64, 32, 0, 0);
 
     public FenceSignBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
         blockRenderer = Minecraft.getInstance().getBlockRenderer();
-   }
+        signBoard.setPos(0.0F, -4.0F, 0.0F);
+        signBoard.addBox(-12.0F, -14.0F, -1.0F, 24.0F, 12.0F, 2.0F, 0.0F);
+    }
 
     @Override
     public void render(FenceSignBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,

@@ -156,7 +156,7 @@ public abstract class ImprovedProjectileEntity extends ProjectileItemEntity {
             double posY = newPos.y;
             double posZ = newPos.z;
 
-            float deceleration = 0.99F;
+            float deceleration = this.getDeceleration();
 
             if (this.isInWater()) {
                 if (client) {
@@ -223,15 +223,20 @@ public abstract class ImprovedProjectileEntity extends ProjectileItemEntity {
         }
     }
 
+    protected float getDeceleration(){
+        return 0.99F;
+    }
+
+
     /**
-     * remove condition
+     * do stuff before removing, then call remove. Called when age reaches max age
      */
     public boolean hasReachedEndOfLife(){
         return this.tickCount > this.maxAge || this.groundTime > maxGroundTime;
     }
 
     /**
-     * do stuff before removing, then call remove. Called when age reaches max age
+     * remove condition
      */
     public void reachedEndOfLife(){
         this.remove();

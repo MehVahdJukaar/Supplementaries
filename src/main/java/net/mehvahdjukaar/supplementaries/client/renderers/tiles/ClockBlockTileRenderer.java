@@ -17,7 +17,7 @@ import net.minecraft.util.math.vector.Vector3f;
 
 
 public class ClockBlockTileRenderer extends TileEntityRenderer<ClockBlockTile> {
-    public static final RenderMaterial HAND_TEXTURE = new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, Textures.CLOCK_HAND_TEXTURE);
+    public final RenderMaterial HAND_TEXTURE = new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, Textures.CLOCK_HAND_TEXTURE);
     public final ModelRenderer hourHand = new ModelRenderer(16, 16, 0, 0);
     public final ModelRenderer minuteHand = new ModelRenderer(16, 16, 2, 0);
 

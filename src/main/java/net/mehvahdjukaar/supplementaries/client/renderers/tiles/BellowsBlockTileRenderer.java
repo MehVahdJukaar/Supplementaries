@@ -16,13 +16,12 @@ import net.minecraft.util.math.MathHelper;
 
 
 public class BellowsBlockTileRenderer extends TileEntityRenderer<BellowsBlockTile> {
-    private static final ModelRenderer center = new ModelRenderer(64, 64, 0, 0);
-    private static final ModelRenderer top = new ModelRenderer(64, 64, 0, 0);
-    private static final ModelRenderer leather = new ModelRenderer(64, 64, 0, 0);
+    private final ModelRenderer center = new ModelRenderer(64, 64, 0, 0);
+    private final ModelRenderer top = new ModelRenderer(64, 64, 0, 0);
+    private final ModelRenderer leather = new ModelRenderer(64, 64, 0, 0);
 
-
-    //TODO: make other tiles this way
-    static {
+    public BellowsBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
+        super(rendererDispatcherIn);
         center.setPos(0.0F, 0.0F, 0.0F);
         center.texOffs(0, 0).addBox(-2.0F, -2.0F, -8.0F, 4.0F, 1.0F, 1.0F, 0.0F, false);
         center.texOffs(0, 2).addBox(-2.0F, 1.0F, -8.0F, 4.0F, 1.0F, 1.0F, 0.0F, false);
@@ -37,12 +36,6 @@ public class BellowsBlockTileRenderer extends TileEntityRenderer<BellowsBlockTil
 
     }
 
-
-    public BellowsBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
-        super(rendererDispatcherIn);
-    }
-
-    //TODO: fix shading and maybe add java models for all tile entity blocks
     @Override
     public void render(BellowsBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
@@ -57,7 +50,7 @@ public class BellowsBlockTileRenderer extends TileEntityRenderer<BellowsBlockTil
 
         Direction dir = tile.getDirection();
         matrixStackIn.mulPose(Const.rot(dir.getOpposite()));
-        matrixStackIn.mulPose(Const.XN90) ;
+        matrixStackIn.mulPose(Const.XN90);
         matrixStackIn.mulPose(Const.Z180);
         //TODO: figure out why models are always flipped
 

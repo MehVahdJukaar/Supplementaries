@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -98,8 +99,8 @@ public class CrankBlock extends WaterBlock {
             if(dir.getAxis()!= Direction.Axis.Y) {
                 BlockPos behind = pos.relative(dir);
                 BlockState backState = worldIn.getBlockState(behind);
-                if (backState.getBlock() instanceof PulleyBlock && dir.getAxis() == backState.getValue(PulleyBlock.AXIS)) {
-                    ((PulleyBlock) backState.getBlock()).axisRotate(backState, behind, worldIn, ccw ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90);
+                if (backState.getBlock().is(ModRegistry.PULLEY_BLOCK.get()) && dir.getAxis() == backState.getValue(PulleyBlock.AXIS)) {
+                    ((PulleyBlock) backState.getBlock()).axisRotate(backState, behind, worldIn, ccw ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90, dir);
                 }
             }
             return ActionResultType.CONSUME;

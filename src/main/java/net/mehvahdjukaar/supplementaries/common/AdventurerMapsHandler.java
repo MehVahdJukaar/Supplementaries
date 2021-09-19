@@ -39,26 +39,26 @@ public class AdventurerMapsHandler {
     private static final int SEARCH_RADIUS = 100;
     private static final List<TradeData> customTrades = new ArrayList<>();
 
-    private static final Map<Structure<?>, Pair<CustomDecorationType<?,?>,Integer>> defaultStructureMarkers = new HashMap<>();
+    private static final Map<Structure<?>, Pair<CustomDecorationType<?, ?>, Integer>> defaultStructureMarkers = new HashMap<>();
 
-    private static final List<Structure<?>> randomMapPool = Arrays.asList(Structure.SHIPWRECK,Structure.RUINED_PORTAL,Structure.SWAMP_HUT,
-            Structure.BASTION_REMNANT, Structure.JUNGLE_TEMPLE,Structure.DESERT_PYRAMID,Structure.PILLAGER_OUTPOST,Structure.MINESHAFT,
-            Structure.OCEAN_RUIN,Structure.IGLOO,Structure.END_CITY);
+    private static final List<Structure<?>> randomMapPool = Arrays.asList(Structure.SHIPWRECK, Structure.RUINED_PORTAL, Structure.SWAMP_HUT,
+            Structure.BASTION_REMNANT, Structure.JUNGLE_TEMPLE, Structure.DESERT_PYRAMID, Structure.PILLAGER_OUTPOST, Structure.MINESHAFT,
+            Structure.OCEAN_RUIN, Structure.IGLOO, Structure.END_CITY);
 
     static {
-        defaultStructureMarkers.put(Structure.SHIPWRECK, Pair.of(CMDreg.SHIPWRECK_TYPE,0x34200f));
-        defaultStructureMarkers.put(Structure.IGLOO, Pair.of(CMDreg.IGLOO_TYPE,0x99bdc2));
-        defaultStructureMarkers.put(Structure.RUINED_PORTAL, Pair.of(CMDreg.RUINED_PORTAL_TYPE,0x5f30b5));
-        defaultStructureMarkers.put(Structure.VILLAGE, Pair.of(CMDreg.VILLAGE_TYPE,0xba8755));
-        defaultStructureMarkers.put(Structure.OCEAN_RUIN, Pair.of(CMDreg.OCEAN_RUIN_TYPE,0x3a694d));
-        defaultStructureMarkers.put(Structure.PILLAGER_OUTPOST, Pair.of(CMDreg.PILLAGER_OUTPOST_TYPE,0x1f1100));
-        defaultStructureMarkers.put(Structure.DESERT_PYRAMID, Pair.of(CMDreg.DESERT_PYRAMID_TYPE,0x806d3f));
-        defaultStructureMarkers.put(Structure.JUNGLE_TEMPLE, Pair.of(CMDreg.JUNGLE_TEMPLE_TYPE,0x526638));
-        defaultStructureMarkers.put(Structure.BASTION_REMNANT, Pair.of(CMDreg.BASTION_TYPE,0x2c292f));
-        defaultStructureMarkers.put(Structure.END_CITY, Pair.of(CMDreg.END_CITY_TYPE,0x9c73ab));
-        defaultStructureMarkers.put(Structure.SWAMP_HUT, Pair.of(CMDreg.SWAMP_HUT_TYPE,0x1b411f));
-        defaultStructureMarkers.put(Structure.NETHER_BRIDGE, Pair.of(CMDreg.NETHER_FORTRESS,0x3c080b));
-        defaultStructureMarkers.put(Structure.MINESHAFT, Pair.of(CMDreg.MINESHAFT_TYPE,0x808080));
+        defaultStructureMarkers.put(Structure.SHIPWRECK, Pair.of(CMDreg.SHIPWRECK_TYPE, 0x34200f));
+        defaultStructureMarkers.put(Structure.IGLOO, Pair.of(CMDreg.IGLOO_TYPE, 0x99bdc2));
+        defaultStructureMarkers.put(Structure.RUINED_PORTAL, Pair.of(CMDreg.RUINED_PORTAL_TYPE, 0x5f30b5));
+        defaultStructureMarkers.put(Structure.VILLAGE, Pair.of(CMDreg.VILLAGE_TYPE, 0xba8755));
+        defaultStructureMarkers.put(Structure.OCEAN_RUIN, Pair.of(CMDreg.OCEAN_RUIN_TYPE, 0x3a694d));
+        defaultStructureMarkers.put(Structure.PILLAGER_OUTPOST, Pair.of(CMDreg.PILLAGER_OUTPOST_TYPE, 0x1f1100));
+        defaultStructureMarkers.put(Structure.DESERT_PYRAMID, Pair.of(CMDreg.DESERT_PYRAMID_TYPE, 0x806d3f));
+        defaultStructureMarkers.put(Structure.JUNGLE_TEMPLE, Pair.of(CMDreg.JUNGLE_TEMPLE_TYPE, 0x526638));
+        defaultStructureMarkers.put(Structure.BASTION_REMNANT, Pair.of(CMDreg.BASTION_TYPE, 0x2c292f));
+        defaultStructureMarkers.put(Structure.END_CITY, Pair.of(CMDreg.END_CITY_TYPE, 0x9c73ab));
+        defaultStructureMarkers.put(Structure.SWAMP_HUT, Pair.of(CMDreg.SWAMP_HUT_TYPE, 0x1b411f));
+        defaultStructureMarkers.put(Structure.NETHER_BRIDGE, Pair.of(CMDreg.NETHER_FORTRESS, 0x3c080b));
+        defaultStructureMarkers.put(Structure.MINESHAFT, Pair.of(CMDreg.MINESHAFT_TYPE, 0x808080));
 
         /*
         simpleMapTrade(Structure.SHIPWRECK);
@@ -79,33 +79,33 @@ public class AdventurerMapsHandler {
 
     }
 
-    private static CustomDecorationType<?,?> getVanillaMarker(Structure<?> structure){
-        CustomDecorationType<?,?> type = defaultStructureMarkers.get(structure).getLeft();
-        if(type==null)type = MapDecorationHandler.GENERIC_STRUCTURE_TYPE;
+    private static CustomDecorationType<?, ?> getVanillaMarker(Structure<?> structure) {
+        CustomDecorationType<?, ?> type = defaultStructureMarkers.get(structure).getLeft();
+        if (type == null) type = MapDecorationHandler.GENERIC_STRUCTURE_TYPE;
         return type;
     }
 
-    private static int getVanillaColor(Structure<?> structure){
-        if(defaultStructureMarkers.containsKey(structure))
+    private static int getVanillaColor(Structure<?> structure) {
+        if (defaultStructureMarkers.containsKey(structure))
             return defaultStructureMarkers.get(structure).getRight();
         return -1;
     }
 
 
-
-    public static void loadCustomTrades(){
+    public static void loadCustomTrades() {
         //only called once when server starts
-        if(!customTrades.isEmpty())return;
+        if (!customTrades.isEmpty()) return;
 
         try {
-            List<? extends List<String>> tradeData = ConfigHandler.safeGetListString(ServerConfigs.SERVER_SPEC, ServerConfigs.tweaks.CUSTOM_ADVENTURER_MAPS_TRADES);;
+            List<? extends List<String>> tradeData = ConfigHandler.safeGetListString(ServerConfigs.SERVER_SPEC, ServerConfigs.tweaks.CUSTOM_ADVENTURER_MAPS_TRADES);
+            ;
             for (List<String> l : tradeData) {
                 int s = l.size();
-                if (s > 0){
+                if (s > 0) {
                     try {
 
                         String res = l.get(0);
-                        if(res.isEmpty())continue;
+                        if (res.isEmpty()) continue;
                         ResourceLocation structure = new ResourceLocation(res);
 
                         //default values
@@ -118,29 +118,26 @@ public class AdventurerMapsHandler {
                         ResourceLocation marker = null;
 
 
-
-                        if(s>1)level = Integer.parseInt(l.get(1));
-                        if(level<1||level>5){
-                            Supplementaries.LOGGER.warn("skipping configs 'custom_adventurer_maps' ("+l.toString()+"): invalid level, must be between 1 and 5");
+                        if (s > 1) level = Integer.parseInt(l.get(1));
+                        if (level < 1 || level > 5) {
+                            Supplementaries.LOGGER.warn("skipping configs 'custom_adventurer_maps' (" + l.toString() + "): invalid level, must be between 1 and 5");
                             continue;
                         }
-                        if(s>2)minPrice = Integer.parseInt(l.get(2));
-                        if(s>3)maxPrice = Integer.parseInt(l.get(3));
-                        if(s>4)mapName = l.get(4);
-                        if(s>5)mapColor = Integer.parseInt(l.get(5).replace("0x", ""), 16);
-                        if(s>6)marker = new ResourceLocation(l.get(6));
+                        if (s > 2) minPrice = Integer.parseInt(l.get(2));
+                        if (s > 3) maxPrice = Integer.parseInt(l.get(3));
+                        if (s > 4) mapName = l.get(4);
+                        if (s > 5) mapColor = Integer.parseInt(l.get(5).replace("0x", ""), 16);
+                        if (s > 6) marker = new ResourceLocation(l.get(6));
 
 
-                        customTrades.add(new TradeData(structure,level,minPrice,maxPrice,mapName,mapColor,marker));
-                    }
-                    catch (Exception e){
-                        Supplementaries.LOGGER.warn("wrong formatting for configs 'custom_adventurer_maps'("+l.toString()+"), skipping it :"+e);
+                        customTrades.add(new TradeData(structure, level, minPrice, maxPrice, mapName, mapColor, marker));
+                    } catch (Exception e) {
+                        Supplementaries.LOGGER.warn("wrong formatting for configs 'custom_adventurer_maps'(" + l.toString() + "), skipping it :" + e);
                     }
                 }
 
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             Supplementaries.LOGGER.warn("failed to parse config 'custom_adventurer_maps', skipping them.");
         }
     }
@@ -174,16 +171,16 @@ public class AdventurerMapsHandler {
     public static void addTrades(VillagerTradesEvent event) {
         if (event.getType() == VillagerProfession.CARTOGRAPHER) {
             Int2ObjectMap<List<VillagerTrades.ITrade>> trades = event.getTrades();
-            for(TradeData data : customTrades){
-                if(data!=null)
+            for (TradeData data : customTrades) {
+                if (data != null)
                     try {
                         trades.get(data.level).add(new AdventureMapTrade(data));
-                    }catch (Exception e){
-                        Supplementaries.LOGGER.warn("failed to load custom adventurer map trade map for structure "+data.structure.toString());
+                    } catch (Exception e) {
+                        Supplementaries.LOGGER.warn("failed to load custom adventurer map trade map for structure " + data.structure.toString());
                     }
 
             }
-            if(ServerConfigs.tweaks.RANDOM_ADVENTURER_MAPS.get()){
+            if (ServerConfigs.tweaks.RANDOM_ADVENTURER_MAPS.get()) {
                 trades.get(2).add(new RandomAdventureMapTrade());
             }
         }
@@ -192,7 +189,8 @@ public class AdventurerMapsHandler {
 
     private static class RandomAdventureMapTrade implements VillagerTrades.ITrade {
 
-        private RandomAdventureMapTrade() {}
+        private RandomAdventureMapTrade() {
+        }
 
         @Override
         public MerchantOffer getOffer(@Nonnull Entity entity, @Nonnull Random random) {
@@ -212,13 +210,14 @@ public class AdventurerMapsHandler {
                 return ItemStack.EMPTY;
             } else {
                 ServerWorld serverWorld = ((ServerWorld) world);
-                if(!serverWorld.getServer().getWorldData().worldGenSettings().generateFeatures())return ItemStack.EMPTY;
+                if (!serverWorld.getServer().getWorldData().worldGenSettings().generateFeatures())
+                    return ItemStack.EMPTY;
 
-                List<Structure<?>> pool = randomMapPool.stream().filter(s->serverWorld.getChunkSource().getGenerator()
+                List<Structure<?>> pool = randomMapPool.stream().filter(s -> serverWorld.getChunkSource().getGenerator()
                         .getBiomeSource().canGenerateStructure(s)).collect(Collectors.toList());
 
                 int size = pool.size();
-                if(size>0) {
+                if (size > 0) {
                     Structure<?> structure = pool.get(serverWorld.random.nextInt(size));
                     BlockPos toPos = ((ServerWorld) world).findNearestMapFeature(structure, pos, SEARCH_RADIUS, true);
                     if (toPos != null) {
@@ -246,12 +245,12 @@ public class AdventurerMapsHandler {
         @Override
         public MerchantOffer getOffer(@Nonnull Entity entity, @Nonnull Random random) {
 
-            int i = random.nextInt(Math.max(1,tradeData.maxPrice - tradeData.minPrice + 1) + tradeData.minPrice);
+            int i = random.nextInt(Math.max(1, tradeData.maxPrice - tradeData.minPrice + 1) + tradeData.minPrice);
 
             ItemStack itemstack = createMap(entity.level, entity.blockPosition());
             if (itemstack.isEmpty()) return null;
 
-            return new MerchantOffer(new ItemStack(Items.EMERALD, i), new ItemStack(Items.COMPASS), itemstack, 12,  Math.max(1, 5 *(tradeData.level-1)), 0.2F);
+            return new MerchantOffer(new ItemStack(Items.EMERALD, i), new ItemStack(Items.COMPASS), itemstack, 12, Math.max(1, 5 * (tradeData.level - 1)), 0.2F);
         }
 
         private ItemStack createMap(World world, BlockPos pos) {
@@ -265,30 +264,27 @@ public class AdventurerMapsHandler {
                 if (toPos == null) {
                     return ItemStack.EMPTY;
                 } else {
-                    ItemStack stack = FilledMapItem.create(world, toPos.getX(), toPos.getZ(), (byte)2, true, true);
-                    FilledMapItem.renderBiomePreviewMap((ServerWorld)world, stack);
+                    ItemStack stack = FilledMapItem.create(world, toPos.getX(), toPos.getZ(), (byte) 2, true, true);
+                    FilledMapItem.renderBiomePreviewMap((ServerWorld) world, stack);
 
 
                     //vanilla maps for backwards compat
-                    if(structure instanceof OceanMonumentStructure){
+                    if (structure instanceof OceanMonumentStructure) {
                         MapData.addTargetDecoration(stack, pos, "+", MapDecoration.Type.MONUMENT);
-                    }
-                    else if(structure instanceof WoodlandMansionStructure){
+                    } else if (structure instanceof WoodlandMansionStructure) {
                         MapData.addTargetDecoration(stack, pos, "+", MapDecoration.Type.MANSION);
-                    }
-                    else{
+                    } else {
                         //adds custom decoration
                         int color = tradeData.mapColor == 0xffffff ? getVanillaColor(structure) : tradeData.mapColor;
-                        if(tradeData.marker==null){
+                        if (tradeData.marker == null) {
                             MapDecorationHandler.addTargetDecoration(stack, toPos, getVanillaMarker(structure), color);
-                        }
-                        else{
+                        } else {
                             MapDecorationHandler.addTargetDecoration(stack, toPos, tradeData.marker, color);
                         }
 
                     }
 
-                    ITextComponent name = new TranslationTextComponent(tradeData.mapName==null?
+                    ITextComponent name = new TranslationTextComponent(tradeData.mapName == null ?
                             "filled_map." + structure.getFeatureName().toLowerCase(Locale.ROOT) : tradeData.mapName);
                     stack.setHoverName(name);
                     return stack;

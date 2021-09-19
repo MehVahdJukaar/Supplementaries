@@ -6,11 +6,12 @@ import knightminer.inspirations.library.recipe.cauldron.contents.ICauldronConten
 import knightminer.inspirations.library.recipe.cauldron.special.DyeableCauldronRecipe;
 import knightminer.inspirations.library.recipe.cauldron.util.DisplayCauldronRecipe;
 import net.mehvahdjukaar.supplementaries.compat.jei.SupplementariesJEIPlugin;
-import net.mehvahdjukaar.supplementaries.items.crafting.BlackboardClearRecipe;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.Collections;
@@ -27,7 +28,15 @@ public class CauldronBlackboardRecipe extends DyeableCauldronRecipe {
 
     @Override
     protected boolean matches(ICauldronContents contents, ItemStack stack) {
-        return contents.contains(CauldronContentTypes.FLUID, Fluids.WATER) && BlackboardClearRecipe.isDrawnBlackboard(stack);
+        return contents.contains(CauldronContentTypes.FLUID, Fluids.WATER) && isDrawnBlackboard(stack);
+    }
+
+    public static boolean isDrawnBlackboard(ItemStack stack){
+        if (stack.getItem() == ModRegistry.BLACKBOARD_ITEM.get()) {
+            CompoundNBT compoundnbt = stack.getTagElement("BlockEntityTag");
+            return compoundnbt != null && compoundnbt.contains("Pixels");
+        }
+        return false;
     }
 
     @Override

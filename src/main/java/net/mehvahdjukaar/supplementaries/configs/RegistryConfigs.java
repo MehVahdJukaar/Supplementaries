@@ -69,6 +69,9 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue CANDLE_HOLDER_ENABLED;
         public static ForgeConfigSpec.BooleanValue COG_BLOCK_ENABLED;
         public static ForgeConfigSpec.BooleanValue STONE_LAMP_ENABLED;
+        public static ForgeConfigSpec.BooleanValue END_STONE_LAMP_ENABLED;
+        public static ForgeConfigSpec.BooleanValue BLACKSTONE_LAMP_ENABLED;
+        public static ForgeConfigSpec.BooleanValue DEEPSLATE_LAMP_ENABLED;
         public static ForgeConfigSpec.BooleanValue GLOBE_ENABLED;
         public static ForgeConfigSpec.BooleanValue HOURGLASS_ENABLED;
         public static ForgeConfigSpec.BooleanValue LASER_ENABLED;
@@ -214,6 +217,9 @@ public class RegistryConfigs {
             BAMBOO_SPIKES_ENABLED = builder.define(ModRegistry.BAMBOO_SPIKES_NAME,true);
             TIPPED_SPIKES_ENABLED = builder.define(ModRegistry.TIPPED_SPIKES_NAME,true);
             STONE_LAMP_ENABLED = builder.define(ModRegistry.STONE_LAMP_NAME, true);
+            END_STONE_LAMP_ENABLED = builder.define(ModRegistry.END_STONE_LAMP_NAME, true);
+            BLACKSTONE_LAMP_ENABLED = builder.define(ModRegistry.BLACKSTONE_LAMP_NAME, true);
+            DEEPSLATE_LAMP_ENABLED = builder.define(ModRegistry.DEEPSLATE_LAMP_NAME, true);
             CHECKERBOARD_ENABLED = builder.define(ModRegistry.CHECKER_BLOCK_NAME, true);
             NETHERITE_DOOR_ENABLED = builder.define(ModRegistry.NETHERITE_DOOR_NAME, true);
             NETHERITE_TRAPDOOR_ENABLED = builder.define(ModRegistry.NETHERITE_TRAPDOOR_NAME, true);

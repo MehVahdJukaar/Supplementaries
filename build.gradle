@@ -159,8 +159,8 @@ dependencies {
     //implementation fg.deobf("curse.maven:flywheel-486392:3384004")
 
     implementation fg.deobf("curse.maven:create-328085:3419412")
-    implementation fg.deobf("curse.maven:flywheel-486392:3419392")
-
+    //implementation fg.deobf("curse.maven:flywheel-486392:3419392")
+    implementation fg.deobf("com.jozufozu.flywheel:Flywheel:1.16-0.2.3.49")
     //implementation fg.deobf("vazkii.quark:Quark:r2.4-305.1724")
     implementation fg.deobf("curse.maven:quark-243121:3326040")
     //implementation fg.deobf("curse.maven:quarkoddities-301051:3088871")

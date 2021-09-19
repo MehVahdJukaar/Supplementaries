@@ -1,5 +1,6 @@
 {
 	"credit": "Made with Blockbench",
+	"parent": "minecraft:block/cube_all",
 	"textures": {
 		"0": "supplementaries:blocks/jar_side",
 		"1": "supplementaries:blocks/jar_top",

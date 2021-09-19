@@ -6,6 +6,7 @@
   "refmap": "supplementaries.refmap.json",
   "package": "net.mehvahdjukaar.supplementaries.mixins",
   "mixins": [
+    "AbstractBlockMixin",
     "AbstractVillagerEntityMixin",
     "BellBlockMixin",
     "BellTileEntityMixin",
@@ -46,7 +47,8 @@
     "LoomScreenMixin",
     "ParrotPartingMixin",
     "UndeadHorseRendererMixin",
-    "VillagerModelMixin"
+    "VillagerModelMixin",
+    "WorldRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

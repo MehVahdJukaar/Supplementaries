@@ -38,6 +38,8 @@ public class CompatHandler {
     public static final boolean moreminecarts;
     public static final boolean habitat;
     public static final boolean simplefarming;
+    public static final boolean atmospheric;
+    public static final boolean enchantedbookredesign;
 
     static {
         ModList ml = ModList.get();
@@ -66,6 +68,8 @@ public class CompatHandler {
         moreminecarts = ml.isLoaded("moreminecarts");
         habitat = ml.isLoaded("habitat");
         simplefarming = ml.isLoaded("simplefarming");
+        atmospheric = ml.isLoaded("atmospheric");
+        enchantedbookredesign = ml.isLoaded("enchantedbookredesign");
     }
 
     public static void init(){
@@ -79,6 +83,7 @@ public class CompatHandler {
 
     public static void registerOptionalItems(final RegistryEvent.Register<Item> event){
         if (farmers_delight) FDCompatRegistry.registerItems(event);
+
     }
 
     public static void registerOptionalRecipes(final RegistryEvent.Register<IRecipeSerializer<?>> event){

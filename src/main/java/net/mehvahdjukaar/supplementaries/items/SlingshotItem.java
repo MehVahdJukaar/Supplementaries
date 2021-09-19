@@ -26,7 +26,6 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.world.World;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -137,7 +136,7 @@ public class SlingshotItem extends ShootableItem implements IVanishable, IFirstP
     public static int getChargeDuration(ItemStack stack) {
         int i = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.QUICK_CHARGE, stack);
         int maxCharge = ServerConfigs.cached.SLINGSHOT_CHARGE;
-        return i == 0 ? maxCharge : maxCharge - (maxCharge / 5) * i;
+        return i == 0 ? maxCharge : maxCharge - (maxCharge / 4) * i;
     }
 
     @Override
@@ -238,20 +237,5 @@ public class SlingshotItem extends ShootableItem implements IVanishable, IFirstP
         offHand.xRot = MathHelper.lerp(f2, offHand.xRot, (-(float) Math.PI / 2F));
     }
 
-    private static ItemStack CLIENT_CURRENT_AMMO = ItemStack.EMPTY;
-
-    public static ItemStack getAmmoForPreview(ItemStack cannon, @Nullable World world, PlayerEntity player) {
-        if (world != null) {
-            if (world.getGameTime() % 10 == 0) {
-                CLIENT_CURRENT_AMMO = ItemStack.EMPTY;
-
-                ItemStack findAmmo = player.getProjectile(cannon);
-                if (findAmmo.getItem() != Items.ARROW) {
-                    CLIENT_CURRENT_AMMO = findAmmo;
-                }
-            }
-        }
-        return CLIENT_CURRENT_AMMO;
-    }
 
 }

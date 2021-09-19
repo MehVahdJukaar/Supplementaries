@@ -12,6 +12,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
 import net.mehvahdjukaar.supplementaries.common.FlowerPotHandler;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandlerClient;
+import net.mehvahdjukaar.supplementaries.compat.optifine.OptifineHandler;
 import net.mehvahdjukaar.supplementaries.items.SlingshotItem;
 import net.mehvahdjukaar.supplementaries.world.data.map.client.CMDclient;
 import net.minecraft.block.Block;
@@ -231,6 +232,10 @@ public class ClientSetup {
         ScreenManager.register(ModRegistry.PRESENT_BLOCK_CONTAINER.get(), PresentBlockGui.GUI_FACTORY);
         //gunpowder
         RenderTypeLookup.setRenderLayer(ModRegistry.GUNPOWDER_BLOCK.get(), RenderType.cutout());
+        //rope knot
+        RenderTypeLookup.setRenderLayer(ModRegistry.ROPE_KNOT.get(), RenderType.cutout());
+        //book pile
+        ClientRegistry.bindTileEntityRenderer(ModRegistry.BOOK_PILE_TILE.get(), r->new BookPileBlockTileRenderer(r,false));
 
         ItemModelsProperties.register(Items.CROSSBOW, new ResourceLocation("rope_arrow"),
                 new CrossbowProperty(ModRegistry.ROPE_ARROW_ITEM.get()));
@@ -291,6 +296,7 @@ public class ClientSetup {
         particleManager.register(ModRegistry.BOTTLING_XP_PARTICLE.get(), BottlingXpParticle.Factory::new);
         particleManager.register(ModRegistry.FEATHER_PARTICLE.get(), FeatherParticle.Factory::new);
         particleManager.register(ModRegistry.SLINGSHOT_PARTICLE.get(), SlingshotParticle.Factory::new);
+        particleManager.register(ModRegistry.STASIS_PARTICLE.get(), StasisParticle.Factory::new);
     }
 
     @SubscribeEvent
@@ -316,26 +322,33 @@ public class ClientSetup {
     }
 
 
+
     //textures
     @SubscribeEvent
     public static void onTextureStitch(TextureStitchEvent.Pre event) {
         ResourceLocation loc = event.getMap().location();
-        if(loc.equals(Atlases.SIGN_SHEET)){
-            //TODO: make hanging sign use java model
-            //event.addSprite(HANGING_SIGNS_TEXTURES.get(type));
-            //event.addSprite(Textures.SIGN_POSTS_TEXTURES.get(type));
-            //disabled since they get automatically stitched on the block texture by their items
-        }
+
         if (loc.equals(AtlasTexture.LOCATION_BLOCKS)) {
             for (ResourceLocation r : Textures.getTexturesToStitch()) {
                 event.addSprite(r);
             }
         }
-        if (loc.equals(Atlases.BANNER_SHEET)) {
+        else if (loc.equals(Atlases.BANNER_SHEET)) {
             Textures.FLAG_TEXTURES.values().forEach(event::addSprite);
         }
-    }
+        else if(loc.equals(Atlases.SHULKER_SHEET)){
+            event.addSprite(Textures.ENCHANTED_BOOK_TEXTURES);
+            Textures.BOOK_TEXTURES.values().forEach(event::addSprite);
+        }
+        else if(loc.equals(Atlases.SIGN_SHEET)){
+            //TODO: make hanging sign use java model
+            //event.addSprite(HANGING_SIGNS_TEXTURES.get(type));
+            //event.addSprite(Textures.SIGN_POSTS_TEXTURES.get(type));
+            //disabled since they get automatically stitched on the block texture by their items
+        }
 
+        OptifineHandler.refresh();
+    }
 
     @SubscribeEvent
     public static void onModelRegistry(ModelRegistryEvent event){

@@ -10,7 +10,6 @@ import net.mehvahdjukaar.supplementaries.compat.quark.QuarkTooltipPlugin;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -18,12 +17,17 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+
+import java.util.List;
+import java.util.Optional;
 
 
 @Mod.EventBusSubscriber(modid = Supplementaries.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -40,8 +44,14 @@ public class ClientEvents {
             if (CompatHandler.quark) {
                 QuarkTooltipPlugin.onItemTooltipEvent(event);
             }
-        }
 
+            if(event.getItemStack().getItem() == ModRegistry.ROPE_ARROW_ITEM.get()){
+                List<ITextComponent> tooltip = event.getToolTip();
+                Optional<ITextComponent> r = tooltip.stream().filter(t-> (t instanceof TranslationTextComponent) && ((TranslationTextComponent) t)
+                        .getKey().equals("item.durability")).findFirst();
+                r.ifPresent(tooltip::remove);
+            }
+        }
     }
 
     @SubscribeEvent
@@ -88,17 +98,6 @@ public class ClientEvents {
             }
         }
     }
-
-
-
-
-    @SubscribeEvent
-    public static void renderScreenEvent(GuiScreenEvent event) {
-        Screen s = event.getGui();
-
-
-    }
-
 
 
     //enderman hold block in rain

@@ -35,10 +35,10 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
         itemRenderer = minecraft.getItemRenderer();
     }
 
-    public static void renderFluid(float height, int color, int luminosity, ResourceLocation texture, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int light, int combinedOverlayIn, boolean shading){
+    public static void renderFluid(float height, int color, int luminosity, ResourceLocation texture, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int light, int combinedOverlayIn, boolean shading) {
         matrixStackIn.pushPose();
         float opacity = 1;//tile.liquidType.opacity;
-        if(luminosity!=0) light = light & 15728640 | luminosity << 4;
+        if (luminosity != 0) light = light & 15728640 | luminosity << 4;
         TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(texture);
         // TODO:remove breaking animation
         IVertexBuilder builder = bufferIn.getBuffer(RenderType.translucentMovingBlock());
@@ -54,7 +54,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
         long r = tile.getBlockPos().asLong();
         Random rand = new Random(r);
         //render cookies
-        if(!tile.isEmpty()){
+        if (!tile.isEmpty()) {
             ItemStack stack = tile.getDisplayedItem();
             int height = tile.getDisplayedItem().getCount();
             matrixStackIn.pushPose();
@@ -63,8 +63,8 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
             matrixStackIn.translate(0, 0, -0.5);
             float scale = 8f / 14f;
             matrixStackIn.scale(scale, scale, scale);
-            for (float i = 0; i < height; i ++) {
-                matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(rand.nextInt(16)*22.5f));
+            for (float i = 0; i < height; i++) {
+                matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(rand.nextInt(16) * 22.5f));
                 // matrixStackIn.translate(0, 0, 0.0625);
                 matrixStackIn.translate(0, 0, 1 / (16f * scale));
                 IBakedModel ibakedmodel = itemRenderer.getModel(stack, tile.getLevel(), null);
@@ -74,7 +74,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
             matrixStackIn.popPose();
         }
         //render fish
-        if(!tile.mobHolder.isEmpty()) {
+        if (!tile.mobHolder.isEmpty()) {
             if (tile.mobHolder.capturedMobProperties.isFish()) {
                 matrixStackIn.pushPose();
 
@@ -96,8 +96,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
                 RendererUtil.renderFish(builder, matrixStackIn, wo, ho, fishType, combinedLightIn);
                 matrixStackIn.popPose();
 
-            }
-            else {
+            } else {
                 super.render(tile, partialTicks, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
             }
             if (tile.mobHolder.shouldHaveWater()) {
@@ -115,10 +114,10 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
             }
         }
         //render fluid
-        if(!tile.fluidHolder.isEmpty()){
-            renderFluid(tile.fluidHolder.getHeight(0.75f), tile.fluidHolder.getTintColor(tile.getLevel(),tile.getBlockPos()),
+        if (!tile.fluidHolder.isEmpty()) {
+            renderFluid(tile.fluidHolder.getHeight(0.75f), tile.fluidHolder.getTintColor(tile.getLevel(), tile.getBlockPos()),
                     tile.fluidHolder.getFluid().getLuminosity(), tile.fluidHolder.getFluid().getStillTexture(),
-                    matrixStackIn,bufferIn,combinedLightIn,combinedOverlayIn,true);
+                    matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, true);
         }
     }
 }

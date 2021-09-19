@@ -3,6 +3,8 @@ package net.mehvahdjukaar.supplementaries.client.renderers;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.mehvahdjukaar.supplementaries.common.Textures;
+import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
+import net.mehvahdjukaar.supplementaries.compat.flywheel.FlywheelPlugin;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
@@ -250,13 +252,25 @@ public class RendererUtil {
         }
     }
 
+    private static int formatLength = 8;
+
+    public static void changeVertexFormat(int length){
+        formatLength = length;
+    }
+
+    private static void checkShaders(){
+        if(CompatHandler.flywheel){
+            changeVertexFormat(FlywheelPlugin.areShadersOn() ? 9 : 8);
+        }
+    }
+
     /**
      * moves baked vertices in a direction by amount
      */
     public static int[] moveVertices(int[] v, Direction dir, float amount) {
+        checkShaders();
         int axis = dir.getAxis().ordinal();
         float step = amount * dir.getAxisDirection().getStep();
-        int formatLength = 8;
         for (int i = 0; i < v.length / formatLength; i++) {
             float original = Float.intBitsToFloat(v[i * formatLength + axis]);
             v[i * formatLength + axis] = Float.floatToIntBits(original + step);
@@ -268,7 +282,7 @@ public class RendererUtil {
      * moves baked vertices by amount
      */
     public static int[] moveVertices(int[] v, float x, float y, float z) {
-        int formatLength = 8;
+        checkShaders();
         for (int i = 0; i < v.length / formatLength; i++) {
             float originalX = Float.intBitsToFloat(v[i * formatLength]);
             v[i * formatLength] = Float.floatToIntBits(originalX + x);
@@ -284,11 +298,10 @@ public class RendererUtil {
 
 
     /**
-     * moves baked vertices in a direction by amount
+     * scale baked vertices by amount
      */
     public static int[] scaleVertices(int[] v, float scale) {
-
-        int formatLength = 8;
+        checkShaders();
         for (int i = 0; i < v.length / formatLength; i++) {
             float originalX = Float.intBitsToFloat(v[i * formatLength]);
             v[i * formatLength] = Float.floatToIntBits(originalX * scale);

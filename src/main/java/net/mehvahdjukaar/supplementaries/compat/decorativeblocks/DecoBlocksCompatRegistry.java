@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.compat.decorativeblocks;
 
 import com.lilypuree.decorative_blocks.blocks.BrazierBlock;
+import com.lilypuree.decorative_blocks.blocks.PalisadeBlock;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.CompatObjects;
@@ -81,4 +82,7 @@ public class DecoBlocksCompatRegistry {
                 && !state.getValue(BlockStateProperties.LIT);
     }
 
+    public static boolean isPalisade(BlockState state) {
+        return state.getBlock() instanceof PalisadeBlock;
+    }
 }

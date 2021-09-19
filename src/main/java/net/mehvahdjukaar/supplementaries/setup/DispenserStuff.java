@@ -12,6 +12,7 @@ import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.block.util.ILightable;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
+import net.mehvahdjukaar.supplementaries.common.StaticBlockItem;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.entities.AmethystArrowEntity;
@@ -26,7 +27,10 @@ import net.minecraft.dispenser.IPosition;
 import net.minecraft.dispenser.ProjectileDispenseBehavior;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.item.*;
+import net.minecraft.item.DirectionalPlaceContext;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
@@ -290,7 +294,8 @@ public class DispenserStuff {
             Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
             BlockPos blockpos = source.getPos().relative(direction);
             Direction direction1 = source.getLevel().isEmptyBlock(blockpos.below()) ? direction : Direction.UP;
-            ActionResultType result = ((BlockItem) ModRegistry.GUNPOWDER_BLOCK_ITEM.get()).place(new DirectionalPlaceContext(source.getLevel(), blockpos, direction, stack, direction1));
+            ActionResultType result = StaticBlockItem.place(new DirectionalPlaceContext(source.getLevel(), blockpos, direction, stack, direction1),
+                    ModRegistry.GUNPOWDER_BLOCK.get());
             if (result.consumesAction()) return ActionResult.success(stack);
 
             return ActionResult.fail(stack);

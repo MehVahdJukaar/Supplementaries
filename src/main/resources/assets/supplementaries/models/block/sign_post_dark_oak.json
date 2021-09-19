@@ -1,7 +1,0 @@
-{
-  "parent": "supplementaries:custom/sign_post",
-  "textures": {
-    "particle": "supplementaries:blocks/sing_post_dark_oak",
-    "0": "supplementaries:blocks/sing_post_dark_oak"
-  }
-}

@@ -77,10 +77,6 @@
     },
     "rune=z": {
       "model": "supplementaries:block/end_lamps/end_stone_lamp_z"
-    },
-	"rune=sus": {
-      "model": "supplementaries:block/end_lamps/end_stone_lamp_ඞ"
     }
-	
   }
 }

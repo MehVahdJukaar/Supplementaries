@@ -20,11 +20,14 @@ import net.minecraft.util.math.vector.Vector3f;
 
 public class GlobeBlockTileRenderer extends TileEntityRenderer<GlobeBlockTile> {
 
-    public static final ModelRenderer globe = new ModelRenderer(32, 16, 0, 0);
-    public static final ModelRenderer flat = new ModelRenderer(32, 32, 0, 0);
-    public static final ModelRenderer sheared = new ModelRenderer(32, 32, 0, 0);
-    public static final ModelRenderer snow = new ModelRenderer(32, 32, 0, 0);
-    static {
+    private final ModelRenderer globe = new ModelRenderer(32, 16, 0, 0);
+    private final ModelRenderer flat = new ModelRenderer(32, 32, 0, 0);
+    private final ModelRenderer sheared = new ModelRenderer(32, 32, 0, 0);
+    private final ModelRenderer snow = new ModelRenderer(32, 32, 0, 0);
+
+
+    public GlobeBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
+        super(rendererDispatcherIn);
         globe.addBox(-4.0F, -28.0F, -4.0F, 8.0F, 8.0F, 8.0F, 0.0F, false);
         globe.setPos(0.0F, 24.0F, 0.0F);
 
@@ -63,11 +66,6 @@ public class GlobeBlockTileRenderer extends TileEntityRenderer<GlobeBlockTile> {
         flat_r2.zRot = -0.7854F;
         flat_r2.texOffs(0, 27).addBox(-2.0F, -1.0F, -1.0F, 3.0F, 1.0F, 2.0F, 0.0F, false);
     }
-
-    public GlobeBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
-        super(rendererDispatcherIn);
-    }
-
 
     @Override
     public void render(GlobeBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,

@@ -21,7 +21,7 @@ public class RopeKnotBlockGeometry implements IModelGeometry<RopeKnotBlockGeomet
     @Override
     public IBakedModel bake(IModelConfiguration owner, ModelBakery bakery, Function<RenderMaterial, TextureAtlasSprite> spriteGetter, IModelTransform modelTransform, ItemOverrideList overrides, ResourceLocation modelLocation) {
         IBakedModel bakedOverlay = this.knot.bake(bakery, knot,spriteGetter,modelTransform,modelLocation,true);
-        return new FrameBlockBakedModel(bakedOverlay);
+        return new RopeKnotBlockBakedModel(bakedOverlay);
     }
 
     @Override

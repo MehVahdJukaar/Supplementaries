@@ -43,8 +43,7 @@ public class FlowerBoxBakedModel implements IDynamicBakedModel {
 
         try {
             quads.addAll(box.getQuads(state, side, rand, EmptyModelData.INSTANCE));
-        } catch (Exception ignored) {
-        }
+        } catch (Exception ignored) {}
 
         try {
 
@@ -75,7 +74,7 @@ public class FlowerBoxBakedModel implements IDynamicBakedModel {
                 BlockState flower = flowers[i];
                 if (flower != null && !flower.isAir()) {
                     this.addBlockToModel(i, quads, flower, matrixStack, side, rand);
-                    if (flower.getBlock() instanceof DoublePlantBlock) {
+                    if (flower.hasProperty(DoublePlantBlock.HALF)) {
                         matrixStack.translate(0, 1, 0);
                         this.addBlockToModel(i, quads, flower.setValue(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER), matrixStack, side, rand);
                         matrixStack.translate(0, -1, 0);
@@ -85,8 +84,7 @@ public class FlowerBoxBakedModel implements IDynamicBakedModel {
                 matrixStack.translate(0.5, 0, 0);
             }
 
-        } catch (Exception ignored) {
-        }
+        } catch (Exception ignored) {}
 
         //TODO: do this for hanging flower pot
         return quads;
@@ -110,13 +108,12 @@ public class FlowerBoxBakedModel implements IDynamicBakedModel {
 
         List<BakedQuad> mimicQuads = model.getQuads(state, side, rand, EmptyModelData.INSTANCE);
         for (BakedQuad q : mimicQuads) {
-
             int[] v = Arrays.copyOf(q.getVertices(), q.getVertices().length);
 
             //todo add tint swapping for 3 plants
             if (res == null) {
                 v = RendererUtil.moveVertices(v, -0.5f, -0.5f, -0.5f);
-                v = RendererUtil.scaleVertices(v, 0.625f);
+                v = RendererUtil.scaleVertices(v, 0.6249f);
             } else {
                 v = RendererUtil.moveVertices(v, -0.5f, -0.5f + 3 / 16f, -0.5f);
             }

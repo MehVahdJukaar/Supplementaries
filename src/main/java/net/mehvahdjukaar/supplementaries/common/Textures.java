@@ -27,7 +27,7 @@ public class Textures {
     public static final ResourceLocation BLACKBOARD_TEXTURE = new ResourceLocation(MOD_ID + ":blocks/blackboard");
 
     //blocks (to stitch)
-    public static final ResourceLocation SUGAR_TEXTURE = Supplementaries.res( "blocks/sugar");
+    public static final ResourceLocation SUGAR_TEXTURE = Supplementaries.res("blocks/sugar");
     public static final ResourceLocation MILK_TEXTURE = new ResourceLocation(LIB, "blocks/milk_liquid");
     public static final ResourceLocation POTION_TEXTURE = new ResourceLocation(LIB, "blocks/potion_still");
     public static final ResourceLocation POTION_TEXTURE_FLOW = new ResourceLocation(LIB, "blocks/potion_flow");
@@ -38,78 +38,84 @@ public class Textures {
     public static final ResourceLocation XP_TEXTURE_FLOW = new ResourceLocation(LIB, "blocks/xp_flow");
     public static final ResourceLocation MAGMA_TEXTURE = new ResourceLocation(LIB, "blocks/magma_still");
     public static final ResourceLocation MAGMA_TEXTURE_FLOW = new ResourceLocation(LIB, "blocks/magma_flow");
-    public static final ResourceLocation SOUL_TEXTURE = Supplementaries.res( "blocks/soul");
-    public static final ResourceLocation FISHIES_TEXTURE = Supplementaries.res( "blocks/fishies");
-    public static final ResourceLocation BELLOWS_TEXTURE = Supplementaries.res( "entity/bellows");
-    public static final ResourceLocation LASER_BEAM_TEXTURE = Supplementaries.res( "blocks/laser_beam");
-    public static final ResourceLocation LASER_OVERLAY_TEXTURE = Supplementaries.res( "blocks/laser_overlay");
-    public static final ResourceLocation LASER_BEAM_END_TEXTURE = Supplementaries.res( "blocks/laser_beam_end");
-    public static final ResourceLocation CLOCK_HAND_TEXTURE = Supplementaries.res( "blocks/clock_hand");
-    public static final ResourceLocation CRIMSON_LANTERN_TEXTURE = Supplementaries.res( "blocks/crimson_lantern_front");
-    public static final ResourceLocation HOURGLASS_REDSTONE = Supplementaries.res( "blocks/hourglass_redstone");
-    public static final ResourceLocation HOURGLASS_GLOWSTONE = Supplementaries.res( "blocks/hourglass_glowstone");
-    public static final ResourceLocation HOURGLASS_SUGAR = Supplementaries.res( "blocks/hourglass_sugar");
-    public static final ResourceLocation HOURGLASS_BLAZE = Supplementaries.res( "blocks/hourglass_blaze");
-    public static final ResourceLocation HOURGLASS_GUNPOWDER = Supplementaries.res( "blocks/hourglass_gunpowder");
+    public static final ResourceLocation SOUL_TEXTURE = Supplementaries.res("blocks/soul");
+    public static final ResourceLocation FISHIES_TEXTURE = Supplementaries.res("blocks/fishies");
+    public static final ResourceLocation BELLOWS_TEXTURE = Supplementaries.res("entity/bellows");
+    public static final ResourceLocation LASER_BEAM_TEXTURE = Supplementaries.res("blocks/laser_beam");
+    public static final ResourceLocation LASER_OVERLAY_TEXTURE = Supplementaries.res("blocks/laser_overlay");
+    public static final ResourceLocation LASER_BEAM_END_TEXTURE = Supplementaries.res("blocks/laser_beam_end");
+    public static final ResourceLocation CLOCK_HAND_TEXTURE = Supplementaries.res("blocks/clock_hand");
+    public static final ResourceLocation CRIMSON_LANTERN_TEXTURE = Supplementaries.res("blocks/crimson_lantern_front");
+    public static final ResourceLocation HOURGLASS_REDSTONE = Supplementaries.res("blocks/hourglass_redstone");
+    public static final ResourceLocation HOURGLASS_GLOWSTONE = Supplementaries.res("blocks/hourglass_glowstone");
+    public static final ResourceLocation HOURGLASS_SUGAR = Supplementaries.res("blocks/hourglass_sugar");
+    public static final ResourceLocation HOURGLASS_BLAZE = Supplementaries.res("blocks/hourglass_blaze");
+    public static final ResourceLocation HOURGLASS_GUNPOWDER = Supplementaries.res("blocks/hourglass_gunpowder");
 
-    public static final ResourceLocation TIMBER_FRAME_TEXTURE = Supplementaries.res( "blocks/timber_frame");
-    public static final ResourceLocation TIMBER_BRACE_TEXTURE = Supplementaries.res( "blocks/timber_brace");
-    public static final ResourceLocation TIMBER_BRACE_F_TEXTURE = Supplementaries.res( "blocks/timber_brace_f");
-    public static final ResourceLocation TIMBER_CROSS_BRACE_TEXTURE = Supplementaries.res( "blocks/timber_cross_brace");
+    public static final ResourceLocation TIMBER_FRAME_TEXTURE = Supplementaries.res("blocks/timber_frame");
+    public static final ResourceLocation TIMBER_BRACE_TEXTURE = Supplementaries.res("blocks/timber_brace");
+    public static final ResourceLocation TIMBER_BRACE_F_TEXTURE = Supplementaries.res("blocks/timber_brace_f");
+    public static final ResourceLocation TIMBER_CROSS_BRACE_TEXTURE = Supplementaries.res("blocks/timber_cross_brace");
     //entities
-    public static final ResourceLocation GLOBE_TEXTURE = Supplementaries.res( "textures/entity/globes/globe_the_world.png");
-    public static final ResourceLocation GLOBE_FLAT_TEXTURE = Supplementaries.res( "textures/entity/globes/globe_flat.png");
-    public static final ResourceLocation GLOBE_MOON_TEXTURE = Supplementaries.res( "textures/entity/globes/globe_moon.png");
-    public static final ResourceLocation GLOBE_SUN_TEXTURE = Supplementaries.res( "textures/entity/globes/globe_sun.png");
-    public static final ResourceLocation GLOBE_SHEARED_TEXTURE = Supplementaries.res( "textures/entity/globes/globe_sheared.png");
+    public static final ResourceLocation GLOBE_TEXTURE = Supplementaries.res("textures/entity/globes/globe_the_world.png");
+    public static final ResourceLocation GLOBE_FLAT_TEXTURE = Supplementaries.res("textures/entity/globes/globe_flat.png");
+    public static final ResourceLocation GLOBE_MOON_TEXTURE = Supplementaries.res("textures/entity/globes/globe_moon.png");
+    public static final ResourceLocation GLOBE_SUN_TEXTURE = Supplementaries.res("textures/entity/globes/globe_sun.png");
+    public static final ResourceLocation GLOBE_SHEARED_TEXTURE = Supplementaries.res("textures/entity/globes/globe_sheared.png");
 
 
-    public static final ResourceLocation AMETHYST_ARROW = Supplementaries.res( "textures/entity/amethyst_arrow.png");
-    public static final ResourceLocation ROPE_ARROW = Supplementaries.res( "textures/entity/rope_arrow.png");
-    public static final ResourceLocation RED_MERCHANT = Supplementaries.res( "textures/entity/misc/red_merchant.png");
-    public static final ResourceLocation STATUE = Supplementaries.res( "textures/entity/statue.png");
+    public static final ResourceLocation AMETHYST_ARROW = Supplementaries.res("textures/entity/amethyst_arrow.png");
+    public static final ResourceLocation ROPE_ARROW = Supplementaries.res("textures/entity/rope_arrow.png");
+    public static final ResourceLocation RED_MERCHANT = Supplementaries.res("textures/entity/misc/red_merchant.png");
+    public static final ResourceLocation STATUE = Supplementaries.res("textures/entity/statue.png");
 
-    public static final ResourceLocation FIREFLY_TEXTURE = Supplementaries.res( "textures/entity/firefly.png");
-    public static final ResourceLocation BELL_ROPE_TEXTURE = Supplementaries.res( "textures/entity/bell_rope.png");
-    public static final ResourceLocation BELL_CHAIN_TEXTURE = Supplementaries.res( "textures/entity/bell_chain.png");
-    public static final ResourceLocation THICK_GOLEM = Supplementaries.res( "textures/entity/misc/iron_golem.png");
-    public static final ResourceLocation SEA_PICKLE_RICK = Supplementaries.res( "textures/entity/misc/sea_pickle.png");
-    public static final ResourceLocation JAR_MAN = Supplementaries.res( "textures/entity/misc/jar_man.png");
+    public static final ResourceLocation FIREFLY_TEXTURE = Supplementaries.res("textures/entity/firefly.png");
+    public static final ResourceLocation BELL_ROPE_TEXTURE = Supplementaries.res("textures/entity/bell_rope.png");
+    public static final ResourceLocation BELL_CHAIN_TEXTURE = Supplementaries.res("textures/entity/bell_chain.png");
+    public static final ResourceLocation THICK_GOLEM = Supplementaries.res("textures/entity/misc/iron_golem.png");
+    public static final ResourceLocation SEA_PICKLE_RICK = Supplementaries.res("textures/entity/misc/sea_pickle.png");
+    public static final ResourceLocation JAR_MAN = Supplementaries.res("textures/entity/misc/jar_man.png");
 
 
     //gui
-    public static final ResourceLocation BLACKBOARD_GUI_TEXTURE = Supplementaries.res( "textures/gui/blackboard.png");
-    public static final ResourceLocation CONFIG_BACKGROUND = Supplementaries.res( "textures/gui/config_background.png");
-    public static final ResourceLocation NOTICE_BOARD_GUI_TEXTURE = Supplementaries.res( "textures/gui/notice_board_gui.png");
-    public static final ResourceLocation SACK_GUI_TEXTURE = Supplementaries.res( "textures/gui/sack_gui.png");
-    public static final ResourceLocation SLOT_TEXTURE = Supplementaries.res( "textures/gui/slot.png");
-    public static final ResourceLocation PULLEY_BLOCK_GUI_TEXTURE = Supplementaries.res( "textures/gui/pulley_block_gui.png");
-    public static final ResourceLocation PRESENT_BLOCK_GUI_TEXTURE = Supplementaries.res( "textures/gui/present_block_gui.png");
-    public static final ResourceLocation ORANGE_MERCHANT_GUI_TEXTURE = Supplementaries.res( "textures/gui/orange_trader.png");
+    public static final ResourceLocation BLACKBOARD_GUI_TEXTURE = Supplementaries.res("textures/gui/blackboard.png");
+    public static final ResourceLocation CONFIG_BACKGROUND = Supplementaries.res("textures/gui/config_background.png");
+    public static final ResourceLocation NOTICE_BOARD_GUI_TEXTURE = Supplementaries.res("textures/gui/notice_board_gui.png");
+    public static final ResourceLocation SACK_GUI_TEXTURE = Supplementaries.res("textures/gui/sack_gui.png");
+    public static final ResourceLocation SLOT_TEXTURE = Supplementaries.res("textures/gui/slot.png");
+    public static final ResourceLocation PULLEY_BLOCK_GUI_TEXTURE = Supplementaries.res("textures/gui/pulley_block_gui.png");
+    public static final ResourceLocation PRESENT_BLOCK_GUI_TEXTURE = Supplementaries.res("textures/gui/present_block_gui.png");
+    public static final ResourceLocation ORANGE_MERCHANT_GUI_TEXTURE = Supplementaries.res("textures/gui/orange_trader.png");
     //map markers
-    public static final ResourceLocation SIGN_POST_MARKER_TEXTURE = Supplementaries.res( "textures/map/sign_post.png");
-    public static final ResourceLocation FLAG_MARKER_TEXTURE = Supplementaries.res( "textures/map/flag.png");
-    public static final ResourceLocation BED_MARKER_TEXTURE = Supplementaries.res( "textures/map/bed.png");
-    public static final ResourceLocation RESPAWN_ANCHOR_MARKER_TEXTURE = Supplementaries.res( "textures/map/respawn_anchor.png");
-    public static final ResourceLocation LODESTONE_MARKER_TEXTURE = Supplementaries.res( "textures/map/lodestone.png");
-    public static final ResourceLocation BEACON_MARKER_TEXTURE = Supplementaries.res( "textures/map/beacon.png");
-    public static final ResourceLocation CONDUIT_MARKER_TEXTURE = Supplementaries.res( "textures/map/conduit.png");
-    public static final ResourceLocation NETHER_PORTAL_MARKER_TEXTURE = Supplementaries.res( "textures/map/nether_portal.png");
-    public static final ResourceLocation END_PORTAL_MARKER_TEXTURE = Supplementaries.res( "textures/map/end_portal.png");
-    public static final ResourceLocation END_GATEWAY_MARKER_TEXTURE = Supplementaries.res( "textures/map/end_gateway.png");
+    public static final ResourceLocation SIGN_POST_MARKER_TEXTURE = Supplementaries.res("textures/map/sign_post.png");
+    public static final ResourceLocation FLAG_MARKER_TEXTURE = Supplementaries.res("textures/map/flag.png");
+    public static final ResourceLocation BED_MARKER_TEXTURE = Supplementaries.res("textures/map/bed.png");
+    public static final ResourceLocation RESPAWN_ANCHOR_MARKER_TEXTURE = Supplementaries.res("textures/map/respawn_anchor.png");
+    public static final ResourceLocation LODESTONE_MARKER_TEXTURE = Supplementaries.res("textures/map/lodestone.png");
+    public static final ResourceLocation BEACON_MARKER_TEXTURE = Supplementaries.res("textures/map/beacon.png");
+    public static final ResourceLocation CONDUIT_MARKER_TEXTURE = Supplementaries.res("textures/map/conduit.png");
+    public static final ResourceLocation NETHER_PORTAL_MARKER_TEXTURE = Supplementaries.res("textures/map/nether_portal.png");
+    public static final ResourceLocation END_PORTAL_MARKER_TEXTURE = Supplementaries.res("textures/map/end_portal.png");
+    public static final ResourceLocation END_GATEWAY_MARKER_TEXTURE = Supplementaries.res("textures/map/end_gateway.png");
 
     public static final Map<IWoodType, ResourceLocation> HANGING_SIGNS_TEXTURES = new HashMap<>();
     public static final Map<IWoodType, ResourceLocation> SIGN_POSTS_TEXTURES = new HashMap<>();
     public static final Map<BannerPattern, ResourceLocation> FLAG_TEXTURES = new HashMap<>();
+    public static final Map<BookColor, ResourceLocation> BOOK_TEXTURES = new HashMap<>();
+    public static final ResourceLocation ENCHANTED_BOOK_TEXTURES =Supplementaries.res("entity/books/book_enchanted");
 
     static {
         for (IWoodType type : WoodTypes.TYPES.values()) {
             HANGING_SIGNS_TEXTURES.put(type, Supplementaries.res("entity/hanging_signs/" + type.getLocation() + Variants.getHangingSignName(type)));
-            SIGN_POSTS_TEXTURES.put(type, Supplementaries.res( "entity/sign_posts/" + type.getLocation() + Variants.getSignPostName(type)));
+            SIGN_POSTS_TEXTURES.put(type, Supplementaries.res("entity/sign_posts/" + type.getLocation() + Variants.getSignPostName(type)));
         }
 
         for (BannerPattern pattern : BannerPattern.values()) {
-            FLAG_TEXTURES.put(pattern, Supplementaries.res( "entity/flags/" + pattern.getFilename()));
+            FLAG_TEXTURES.put(pattern, Supplementaries.res("entity/flags/" + pattern.getFilename()));
+        }
+
+        for (BookColor color : BookColor.values()) {
+            BOOK_TEXTURES.put(color, Supplementaries.res("entity/books/book_" + color.name));
         }
     }
 
@@ -121,5 +127,24 @@ public class Textures {
                 CLOCK_HAND_TEXTURE, HOURGLASS_REDSTONE, HOURGLASS_GLOWSTONE, HOURGLASS_SUGAR, HOURGLASS_BLAZE, HOURGLASS_GUNPOWDER));
     }
 
+    public enum BookColor {
+        BROWN("brown"),
+        YELLOW("yellow"),
+        GREEN("green"),
+        TEAL("teal"),
+        BLUE("blue"),
+        PURPLE("purple"),
+        RED("red");
+
+        protected final String name;
+
+        BookColor(String s) {
+            this.name = s;
+        }
+
+        public static BookColor rand(Random r){
+            return values()[r.nextInt(values().length)];
+        }
+    }
 
 }

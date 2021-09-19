@@ -21,6 +21,7 @@ public class FlagMarker extends NamedMapWorldMarker<FlagDecoration> {
     public FlagMarker() {
         super(CMDreg.FLAG_DECORATION_TYPE);
     }
+
     public FlagMarker(BlockPos pos, DyeColor color, @Nullable ITextComponent name) {
         this();
         this.pos = pos;
@@ -35,19 +36,19 @@ public class FlagMarker extends NamedMapWorldMarker<FlagDecoration> {
         return compoundnbt;
     }
 
-    public void loadFromNBT(CompoundNBT compound){
+    public void loadFromNBT(CompoundNBT compound) {
         super.loadFromNBT(compound);
-        DyeColor dyecolor = DyeColor.byName(compound.getString("Color"), DyeColor.WHITE);
+        this.color = DyeColor.byName(compound.getString("Color"), DyeColor.WHITE);
     }
 
     @Nullable
-    public static FlagMarker getFromWorld(IBlockReader world, BlockPos pos){
+    public static FlagMarker getFromWorld(IBlockReader world, BlockPos pos) {
         TileEntity tileentity = world.getBlockEntity(pos);
         if (tileentity instanceof FlagBlockTile) {
             FlagBlockTile flag = ((FlagBlockTile) tileentity);
             DyeColor dyecolor = flag.getBaseColor(flag::getBlockState);
             ITextComponent name = flag.hasCustomName() ? flag.getCustomName() : null;
-            return new FlagMarker(pos,dyecolor,name);
+            return new FlagMarker(pos, dyecolor, name);
         } else {
             return null;
         }
@@ -56,7 +57,7 @@ public class FlagMarker extends NamedMapWorldMarker<FlagDecoration> {
     @Nullable
     @Override
     public FlagDecoration doCreateDecoration(byte mapX, byte mapY, byte rot) {
-        return new FlagDecoration(this.getType(),mapX,mapY,rot,this.name,this.color);
+        return new FlagDecoration(this.getType(), mapX, mapY, rot, this.name, this.color);
     }
 
     @Override
@@ -64,12 +65,13 @@ public class FlagMarker extends NamedMapWorldMarker<FlagDecoration> {
         if (this == other) {
             return true;
         } else if (other != null && this.getClass() == other.getClass()) {
-            FlagMarker marker = (FlagMarker)other;
+            FlagMarker marker = (FlagMarker) other;
             return Objects.equals(this.getPos(), marker.getPos()) && this.color == marker.color;
         } else {
             return false;
         }
     }
+
     @Override
     public int hashCode() {
         return Objects.hash(this.getPos(), this.color);

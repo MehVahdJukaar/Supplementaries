@@ -8,7 +8,6 @@ import com.jozufozu.flywheel.core.materials.ModelData;
 import com.jozufozu.flywheel.core.model.ModelPart;
 import com.jozufozu.flywheel.util.AnimationTickHolder;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
-import com.mojang.blaze3d.matrix.MatrixStack;
 import net.mehvahdjukaar.supplementaries.block.blocks.BellowsBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.BellowsBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
@@ -24,7 +23,7 @@ public class BellowsInstance extends TileEntityInstance<BellowsBlockTile> implem
     private final ModelData top;
     private final ModelData bottom;
     private final ModelData leather;
-    private MatrixTransformStack stack;
+    private final MatrixTransformStack stack;
     private float lastProgress = 0;
 
     public BellowsInstance(MaterialManager<?> materialManager, BellowsBlockTile tile) {
@@ -74,29 +73,12 @@ public class BellowsInstance extends TileEntityInstance<BellowsBlockTile> implem
 
         float j = 3.2f;
 
-        MatrixTransformStack old = this.stack;
-        MatrixStack s = this.stack.unwrap();
-        s.scale(1,1+j*dh,1);
-        this.stack = new MatrixTransformStack(s);
-
-        //this.stack.scale(1+j*dh);
+        this.stack.scale(1,1+j*dh,1);
 
         this.leather.setTransform(this.stack.unwrap());
 
-        this.stack = old;
-
         this.stack.pop();
 
-
-        /*
-        float progress = 2.5f;//this.tile.getProgress(AnimationTickHolder.getPartialTicks());
-        if (progress != this.lastProgress) {
-            this.lastProgress = progress;
-            Quaternion spin = Vector3f.YP.rotationDegrees(270.0F * progress);
-            this.stack.push().centre().multiply(spin).unCentre().translateY(progress * 0.5F);
-            this.lid.setTransform(this.stack.unwrap());
-            this.stack.pop();
-        }*/
     }
 
     @Override

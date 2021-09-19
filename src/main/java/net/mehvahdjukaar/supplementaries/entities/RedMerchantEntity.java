@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.entities;
 
 import net.mehvahdjukaar.supplementaries.entities.goals.EquipAndRangeAttackGoal;
 import net.mehvahdjukaar.supplementaries.entities.goals.ShowWaresGoal;
-import net.mehvahdjukaar.supplementaries.inventories.OrangeMerchantContainer;
+import net.mehvahdjukaar.supplementaries.inventories.RedMerchantContainer;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.SendOrangeTraderOffersPacket;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
@@ -62,7 +62,7 @@ public class RedMerchantEntity extends AbstractVillagerEntity implements IRanged
         this.goalSelector.addGoal(2, new EquipAndRangeAttackGoal(this, 0.35D, 60, 10, 20, 15, new ItemStack(ModRegistry.BOMB_ITEM.get())));
 
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, MobEntity.class, 8, true, false,
-                (mob) -> (mob instanceof AbstractRaiderEntity || mob instanceof ZombieEntity || mob instanceof VexEntity || mob instanceof ZoglinEntity)));
+                (mob) ->  (mob instanceof AbstractRaiderEntity || mob instanceof ZombieEntity || mob instanceof VexEntity || mob instanceof ZoglinEntity)));
 
         this.goalSelector.addGoal(3, new TradeWithPlayerGoal(this));
         this.goalSelector.addGoal(3, new LookAtCustomerGoal(this));
@@ -79,6 +79,11 @@ public class RedMerchantEntity extends AbstractVillagerEntity implements IRanged
         this.goalSelector.addGoal(8, new WaterAvoidingRandomWalkingGoal(this, 0.35D));
         //this.goalSelector.addGoal(9, new LookAtWithoutMovingGoal(this, PlayerEntity.class, 3.0F, 1.0F));
         this.goalSelector.addGoal(10, new LookAtGoal(this, MobEntity.class, 8.0F));
+    }
+
+    @Override
+    public void setLastHurtByMob(@Nullable LivingEntity entity) {
+        super.setLastHurtByMob(entity);
     }
 
     @Nullable
@@ -121,7 +126,7 @@ public class RedMerchantEntity extends AbstractVillagerEntity implements IRanged
 
     @Override
     public void openTradingScreen(PlayerEntity player, ITextComponent name, int level) {
-        OptionalInt optionalint = player.openMenu(new SimpleNamedContainerProvider((i, p, m) -> new OrangeMerchantContainer(i, p, this), name));
+        OptionalInt optionalint = player.openMenu(new SimpleNamedContainerProvider((i, p, m) -> new RedMerchantContainer(i, p, this), name));
         if (optionalint.isPresent() && player instanceof ServerPlayerEntity) {
             MerchantOffers merchantoffers = this.getOffers();
             if (!merchantoffers.isEmpty()) {

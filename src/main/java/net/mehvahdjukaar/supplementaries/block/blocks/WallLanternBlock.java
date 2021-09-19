@@ -2,11 +2,15 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.WallLanternBlockTile;
+import net.mehvahdjukaar.supplementaries.block.util.IBlockHolder;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootContext;
 import net.minecraft.loot.LootParameters;
@@ -25,6 +29,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -42,6 +47,16 @@ public class WallLanternBlock extends EnhancedLanternBlock {
     }
 
     @Override
+    public void setPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
+        TileEntity te = world.getBlockEntity(pos);
+        Item i = stack.getItem();
+        if(te instanceof IBlockHolder && i instanceof BlockItem){
+            BlockState mimic = ((BlockItem) i).getBlock().defaultBlockState();
+            ((IBlockHolder) te).setHeldBlock(mimic);
+        }
+    }
+
+    @Override
     public void appendHoverText(ItemStack stack,  IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         tooltip.add((new StringTextComponent("You shouldn't have this")).withStyle(TextFormatting.GRAY));
@@ -55,7 +70,6 @@ public class WallLanternBlock extends EnhancedLanternBlock {
         return 0;
     }
 
-    //TODO: replace getItem with getPickBlock
     @Override
     public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
         TileEntity te = world.getBlockEntity(pos);

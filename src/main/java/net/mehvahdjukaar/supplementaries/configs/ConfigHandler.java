@@ -118,6 +118,7 @@ public class ConfigHandler {
 
         public CachedConfigValue(C config){
             this.config = config;
+            this.refresh();
         }
 
         public T get(){

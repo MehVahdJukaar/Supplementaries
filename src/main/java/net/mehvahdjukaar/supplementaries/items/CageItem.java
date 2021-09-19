@@ -306,7 +306,7 @@ public class CageItem extends BlockItem {
     @Override
     public ActionResultType place(BlockItemUseContext context) {
         PlayerEntity player = context.getPlayer();
-        if (player != null && (player.isShiftKeyDown() || player.getItemInHand(context.getHand()).getItem() == this)) {
+        if (player != null && player.isShiftKeyDown()) {
             return super.place(context);
         }
         return ActionResultType.PASS;

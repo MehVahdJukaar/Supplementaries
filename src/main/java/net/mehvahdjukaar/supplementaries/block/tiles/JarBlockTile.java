@@ -90,7 +90,7 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
         if(!player.isShiftKeyDown()) {
             //from drink
             if(ServerConfigs.cached.JAR_EAT) {
-                if (this.fluidHolder.tryDrinkUpFluid(player, this.level, hand)) return true;
+                if (this.fluidHolder.tryDrinkUpFluid(player, this.level)) return true;
                 //cookies
                 if (displayedStack.isEdible() && player.canEat(false) && !player.isCreative()) {
                     //eat cookies

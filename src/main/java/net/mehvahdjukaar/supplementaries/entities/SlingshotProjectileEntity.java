@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.entities;
 
-import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.events.ItemsOverrideHandler;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
@@ -27,6 +26,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.FMLPlayMessages;
@@ -36,17 +36,32 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
     private static final DataParameter<Byte> ID_LOYALTY = EntityDataManager.defineId(SlingshotProjectileEntity.class, DataSerializers.BYTE);
     //only client
     public int clientSideReturnTridentTickCount;
-    private final float xRotInc;
-    private final float yRotInc;
+    private float xRotInc;
+    private float yRotInc;
     private float particleCooldown = 0;
+    public Lazy<Integer> light = Lazy.of(()->{
+        Item item = this.getItem().getItem();
+        if(item instanceof BlockItem) {
+            Block b = ((BlockItem) item).getBlock();
+            return b.getBlock().getLightValue(b.defaultBlockState(), this.level, this.blockPosition());
+        }
+        return 0;
+    });
 
     public SlingshotProjectileEntity(LivingEntity thrower, World world, ItemStack item, ItemStack throwerStack) {
         super(ModRegistry.SLINGSHOT_PROJECTILE.get(), thrower, world);
         this.setItem(item);
         this.entityData.set(ID_LOYALTY, (byte) EnchantmentHelper.getLoyalty(throwerStack));
+        this.setNoGravity(EnchantmentHelper.getItemEnchantmentLevel(ModRegistry.STASIS_ENCHANTMENT.get(), throwerStack)!=0);
         this.maxAge = 500;
-        this.xRotInc = 0;
-        this.yRotInc = 0;
+
+
+        this.yRotInc = (this.random.nextBoolean() ? 1 : -1) * (float) (4 * this.random.nextGaussian() + 7);
+        this.xRotInc = (this.random.nextBoolean() ? 1 : -1) * (float) (4 * this.random.nextGaussian() + 7);
+        this.xRot = this.random.nextFloat() * 360;
+        this.yRot = this.random.nextFloat() * 360;
+        this.xRotO = this.xRot;
+        this.yRotO = this.yRot;
     }
 
     public SlingshotProjectileEntity(FMLPlayMessages.SpawnEntity spawnEntity, World world) {
@@ -57,12 +72,6 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
     public SlingshotProjectileEntity(EntityType<SlingshotProjectileEntity> type, World world) {
         super(type, world);
         this.maxAge = 500;
-        this.yRotInc = (this.random.nextBoolean() ? 1 : -1) * (float) (4 * this.random.nextGaussian() + 7);
-        this.xRotInc = (this.random.nextBoolean() ? 1 : -1) * (float) (4 * this.random.nextGaussian() + 7);
-        this.xRot = this.random.nextFloat() * 360;
-        this.yRot = this.random.nextFloat() * 360;
-        this.xRotO = this.xRot;
-        this.yRotO = this.yRot;
     }
 
     @Override
@@ -122,39 +131,24 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
         if (this.touchedGround) return;
         Entity owner = this.getOwner();
         boolean success = false;
-        if (owner == null || owner instanceof PlayerEntity && ((PlayerEntity) owner).abilities.mayBuild) {
+        if (owner instanceof PlayerEntity && ((PlayerEntity) owner).abilities.mayBuild) {
 
-            if (owner == null && level.isClientSide) {
+            ItemStack stack = this.getItem();
+            Item item = stack.getItem();
+            //block override. mimic forge event
+            PlayerInteractEvent.RightClickBlock blockPlaceEvent = new PlayerInteractEvent.RightClickBlock((PlayerEntity) owner, Hand.MAIN_HAND, hit.getBlockPos(), hit);
+            ItemsOverrideHandler.tryPerformOverride(blockPlaceEvent, stack, true);
 
-                //idk why but sound isn't played with null entity. also owner is not synced and idk how to get it from client
-                //TODO: change this. this it will cause issues
-                owner = CommonUtil.getClientPlayer();
-                //this thing really doesn't like null players
-                //why is it not playing a placement sound when called on server side :waaaa:
+            if (blockPlaceEvent.isCanceled() && blockPlaceEvent.getCancellationResult().consumesAction()) {
+                success = true;
             }
-
-            if (owner != null) {
-                ItemStack stack = this.getItem();
-                Item item = stack.getItem();
-                //block override. mimic forge event
-                PlayerInteractEvent.RightClickBlock blockPlaceEvent = new PlayerInteractEvent.RightClickBlock((PlayerEntity) owner, Hand.MAIN_HAND, hit.getBlockPos(), hit);
-                ItemsOverrideHandler.tryPerformOverride(blockPlaceEvent, stack, true);
-
-                if (blockPlaceEvent.isCanceled() && blockPlaceEvent.getCancellationResult().consumesAction()) {
-                    success = true;
-                }
-                if (!success && item instanceof BlockItem) {
-                    BlockItemUseContext ctx = new BlockItemUseContext(this.level, (PlayerEntity) owner, Hand.MAIN_HAND, this.getItem(), hit);
-                    success = ((BlockItem) item).place(ctx).consumesAction();
-                }
-                if (success) this.remove();
+            if (!success && item instanceof BlockItem) {
+                BlockItemUseContext ctx = new BlockItemUseContext(this.level, (PlayerEntity) owner, Hand.MAIN_HAND, this.getItem(), hit);
+                success = ((BlockItem) item).place(ctx).consumesAction();
             }
+            if (success) this.remove();
+
         }
-    }
-
-    @Override
-    public boolean hasReachedEndOfLife() {
-        return super.hasReachedEndOfLife() && !this.isNoPhysics();
     }
 
     @Override
@@ -205,6 +199,12 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
     }
 
     @Override
+    public boolean hasReachedEndOfLife() {
+        if(this.isNoGravity() && this.getDeltaMovement().lengthSqr() < 0.005) return true;
+        return super.hasReachedEndOfLife() && !this.isNoPhysics();
+    }
+
+    @Override
     public void reachedEndOfLife() {
         if (this.entityData.get(ID_LOYALTY) != 0 && this.isAcceptableReturnOwner(this.getOwner())) {
             this.setNoPhysics(true);
@@ -228,24 +228,51 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
         } else {
             super.updateRotation();
         }
-
     }
 
     @Override
     public void spawnTrailParticles(Vector3d currentPos, Vector3d newPos) {
         if (!this.isNoPhysics()) {
             double d = this.getDeltaMovement().length();
-            if (this.tickCount > 2 && d * this.tickCount > 1.8) {
-                double p = 4 / (d * 0.95 + 0.05);
-                if (this.particleCooldown > p) {
-                    this.particleCooldown -= p;
-                    double x = currentPos.x;
-                    double y = currentPos.y + this.getBbHeight() / 2d;
-                    double z = currentPos.z;
-                    this.level.addParticle(ModRegistry.SLINGSHOT_PARTICLE.get(), x, y, z, 0, 0.02, 0);
+            if (this.tickCount > 2 && d * this.tickCount > 1.5) {
+                if(this.isNoGravity()) {
+
+                    Vector3d rot = new Vector3d(0.325,0,0).yRot(this.tickCount * 0.32f);
+
+                    Vector3d movement = this.getDeltaMovement();
+                    Vector3d offset = changeBasis(movement, rot);
+
+                    double px = newPos.x + offset.x;
+                    double py = newPos.y + offset.y; //+ this.getBbHeight() / 2d;
+                    double pz = newPos.z + offset.z;
+
+                    movement = movement.scale(0.25);
+                    this.level.addParticle(ModRegistry.STASIS_PARTICLE.get(), px, py, pz, movement.x, movement.y, movement.z);
+                }
+                else {
+                    double interval = 4 / (d * 0.95 + 0.05);
+                    if (this.particleCooldown > interval) {
+                        this.particleCooldown -= interval;
+                        double x = currentPos.x;
+                        double y = currentPos.y ;//+ this.getBbHeight() / 2d;
+                        double z = currentPos.z;
+                        this.level.addParticle(ModRegistry.SLINGSHOT_PARTICLE.get(), x, y, z, 0, 0.01, 0);
+                    }
                 }
             }
         }
+    }
+
+    private Vector3d changeBasis(Vector3d dir, Vector3d rot){
+        Vector3d y = dir.normalize();
+        Vector3d x = new Vector3d(y.y, y.z, y.x).normalize();
+        Vector3d z = y.cross(x).normalize();
+        return x.scale(rot.x).add(y.scale(rot.y)).add(z.scale(rot.z));
+    }
+
+    @Override
+    protected float getDeceleration() {
+        return this.isNoGravity() ? 0.975f : super.getDeceleration();
     }
 
     @Override
@@ -256,6 +283,10 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
             id = entity.getId();
         }
         buffer.writeInt(id);
+        buffer.writeFloat(this.xRotInc);
+        buffer.writeFloat(this.yRotInc);
+        buffer.writeFloat(this.xRot);
+        buffer.writeFloat(this.yRot);
     }
 
     @Override
@@ -264,5 +295,11 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
         if (id != -1) {
             this.setOwner(this.level.getEntity(id));
         }
+        this.xRotInc = buffer.readFloat();
+        this.yRotInc = buffer.readFloat();
+        this.xRot = buffer.readFloat();
+        this.yRot = buffer.readFloat();
+        this.xRotO = this.xRot;
+        this.yRotO = this.yRot;
     }
 }

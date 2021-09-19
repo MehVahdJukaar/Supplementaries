@@ -67,7 +67,7 @@ public class GobletBlockTile extends TileEntity implements ISoftFluidHolder {
         if(!player.isShiftKeyDown()) {
             //from drink
             if(ServerConfigs.cached.JAR_EAT) {
-                return this.fluidHolder.tryDrinkUpFluid(player, this.level, hand);
+                return this.fluidHolder.tryDrinkUpFluid(player, this.level);
             }
         }
         return false;

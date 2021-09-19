@@ -2,9 +2,11 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.HangingFlowerPotBlockTile;
+import net.mehvahdjukaar.supplementaries.block.util.IBlockHolder;
 import net.mehvahdjukaar.supplementaries.common.FlowerPotHandler;
 import net.minecraft.block.*;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;
@@ -36,13 +38,24 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
-public class HangingFlowerPotBlock extends Block{
+public class HangingFlowerPotBlock extends Block {
 
     protected static final VoxelShape SHAPE = Block.box(5.0D, 0.0D, 5.0D, 11.0D, 6.0D, 11.0D);
     public static final BooleanProperty TILE = BlockProperties.TILE; // is it tile only. used for rendering to store model
+
     public HangingFlowerPotBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(TILE, false));
+    }
+
+    @Override
+    public void setPlacedBy(World world, BlockPos pos, BlockState state, @org.jetbrains.annotations.Nullable LivingEntity entity, ItemStack stack) {
+        TileEntity te = world.getBlockEntity(pos);
+        Item i = stack.getItem();
+        if(te instanceof IBlockHolder && i instanceof BlockItem){
+            BlockState mimic = ((BlockItem) i).getBlock().defaultBlockState();
+            ((IBlockHolder) te).setHeldBlock(mimic);
+        }
     }
 
     @Override
@@ -70,14 +83,14 @@ public class HangingFlowerPotBlock extends Block{
     @Override
     public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         TileEntity tileEntity = worldIn.getBlockEntity(pos);
-        if(tileEntity instanceof HangingFlowerPotBlockTile) {
-            HangingFlowerPotBlockTile te = ((HangingFlowerPotBlockTile)tileEntity);
+        if (tileEntity instanceof HangingFlowerPotBlockTile) {
+            HangingFlowerPotBlockTile te = ((HangingFlowerPotBlockTile) tileEntity);
             Block pot = te.pot.getBlock();
-            if(pot instanceof FlowerPotBlock && FlowerPotHandler.isEmptyPot(((FlowerPotBlock) pot).getEmptyPot())) {
+            if (pot instanceof FlowerPotBlock && FlowerPotHandler.isEmptyPot(((FlowerPotBlock) pot).getEmptyPot())) {
                 ItemStack itemstack = player.getItemInHand(handIn);
                 Item item = itemstack.getItem();
                 //mimics flowerPorBlock behavior
-                Block newPot = item instanceof BlockItem ? FlowerPotHandler.getFullPot((FlowerPotBlock) pot,((BlockItem)item).getBlock()): Blocks.AIR;
+                Block newPot = item instanceof BlockItem ? FlowerPotHandler.getFullPot((FlowerPotBlock) pot, ((BlockItem) item).getBlock()) : Blocks.AIR;
                 /*Block newPot = item instanceof BlockItem ? FlowerPotHelper.FULL_POTS.get(((FlowerPotBlock) pot).getEmptyPot())
                         .getOrDefault(((BlockItem)item).getBlock().getRegistryName(), Blocks.AIR.delegate).get() : Blocks.AIR;*/
 
@@ -114,7 +127,7 @@ public class HangingFlowerPotBlock extends Block{
 
     @Override
     public BlockRenderType getRenderShape(BlockState state) {
-        return state.getValue(TILE)?BlockRenderType.MODEL : BlockRenderType.INVISIBLE;
+        return state.getValue(TILE) ? BlockRenderType.MODEL : BlockRenderType.INVISIBLE;
     }
 
     @Override
@@ -137,9 +150,9 @@ public class HangingFlowerPotBlock extends Block{
         TileEntity te = world.getBlockEntity(pos);
         if (te instanceof HangingFlowerPotBlockTile) {
             Block b = ((HangingFlowerPotBlockTile) te).pot.getBlock();
-            if(b instanceof FlowerPotBlock){
+            if (b instanceof FlowerPotBlock) {
                 Block flower = ((FlowerPotBlock) b).getContent();
-                if(flower==Blocks.AIR)return new ItemStack(((FlowerPotBlock) b).getEmptyPot());
+                if (flower == Blocks.AIR) return new ItemStack(((FlowerPotBlock) b).getEmptyPot());
                 return new ItemStack(flower);
             }
         }
@@ -149,13 +162,13 @@ public class HangingFlowerPotBlock extends Block{
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         TileEntity tileentity = builder.getOptionalParameter(LootParameters.BLOCK_ENTITY);
-        if (tileentity instanceof HangingFlowerPotBlockTile){
+        if (tileentity instanceof HangingFlowerPotBlockTile) {
             Block b = ((HangingFlowerPotBlockTile) tileentity).pot.getBlock();
-            if(b instanceof FlowerPotBlock)
+            if (b instanceof FlowerPotBlock)
                 return Arrays.asList(new ItemStack(((FlowerPotBlock) b).getContent()), new ItemStack(((FlowerPotBlock) b).getEmptyPot()));
         }
 
-        return super.getDrops(state,builder);
+        return super.getDrops(state, builder);
     }
 
     @Override
@@ -174,6 +187,6 @@ public class HangingFlowerPotBlock extends Block{
     }
 
     public boolean canSurvive(BlockState state, IWorldReader worldIn, BlockPos pos) {
-        return RopeBlock.isSupportingCeiling(pos.relative(Direction.UP),worldIn);
+        return RopeBlock.isSupportingCeiling(pos.relative(Direction.UP), worldIn);
     }
 }

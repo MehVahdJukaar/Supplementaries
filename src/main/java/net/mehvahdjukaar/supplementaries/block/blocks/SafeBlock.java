@@ -316,7 +316,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable {
 
     @Override
     public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
-        ItemStack itemstack = super.getCloneItemStack(world, pos, state);
+        ItemStack itemstack = super.getPickBlock(state, target, world, pos, player);
         TileEntity te = world.getBlockEntity(pos);
         if (te instanceof SafeBlockTile){
             return getSafeItem((SafeBlockTile) te);

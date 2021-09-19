@@ -21,11 +21,12 @@ public class BombExplosionParticle extends SpriteTexturedParticle {
         this.setSpriteFromAge(spriteWithAge);
 
     }
-
+    @Override
     public int getLightColor(float partialTick) {
         return 15728880;
     }
 
+    @Override
     public void tick() {
         this.xo = this.x;
         this.yo = this.y;
@@ -37,10 +38,10 @@ public class BombExplosionParticle extends SpriteTexturedParticle {
         }
     }
 
+    @Override
     public IParticleRenderType getRenderType() {
         return IParticleRenderType.PARTICLE_SHEET_LIT;
     }
-
 
 
     public static class Factory implements IParticleFactory<BasicParticleType> {
