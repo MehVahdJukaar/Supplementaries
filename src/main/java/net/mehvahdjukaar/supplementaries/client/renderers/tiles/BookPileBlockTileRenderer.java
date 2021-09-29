@@ -12,11 +12,13 @@ import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.common.Textures.BookColor;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.enchantedbooks.EnchantedBookRedesignRenderer;
+import net.mehvahdjukaar.supplementaries.compat.quark.QuarkPlugin;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraft.client.renderer.model.RenderMaterial;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.item.ItemStack;
@@ -127,23 +129,17 @@ public class BookPileBlockTileRenderer extends TileEntityRenderer<BookPileBlockT
         boolean coloredGlint = CompatHandler.enchantedbookredesign;
 
         IVertexBuilder builder;
-        if(!glint){
-            builder = Materials.ENCHANTED_BOOK_MATERIAL.buffer(buffer, RenderType::entitySolid);
-        }
-        else{
-            builder = this.getBuilderWithFoil(inventory.getItem(0), buffer, coloredGlint);
-        }
+
 
         matrixStack.translate(0, -6 / 16f, 0);
         book.zRot = (float) (Math.PI / 2f);
 
         for (int i = 0; i < books; i++) {
-            book.xRot = (float) (random.nextInt(16) * Math.PI / 8);
+            book.xRot = (float) (random.nextInt(32) * Math.PI / 16);
 
             //gets new builder
-            if(coloredGlint && glint && i != 0){
-                builder = this.getBuilderWithFoil(inventory.getItem(i), buffer, coloredGlint);
-            }
+
+            builder = this.getBuilderWithFoil(inventory.getItem(i), buffer, glint, coloredGlint);
 
             book.render(matrixStack, builder, light, overlay);
 
@@ -155,15 +151,20 @@ public class BookPileBlockTileRenderer extends TileEntityRenderer<BookPileBlockT
     }
 
 
-    private IVertexBuilder getBuilderWithFoil(ItemStack stack, IRenderTypeBuffer buffer, boolean color) {
-        IVertexBuilder foilBuilder = null;
-        if (color) {
-            foilBuilder = EnchantedBookRedesignRenderer.getColoredFoil(stack, buffer);
+    private IVertexBuilder getBuilderWithFoil(ItemStack stack, IRenderTypeBuffer buffer, boolean glint, boolean color) {
+
+        RenderMaterial mat = (CompatHandler.quark && QuarkPlugin.isTome(stack.getItem())) ? Materials.BOOK_TOME_MATERIAL : Materials.BOOK_ENCHANTED_MATERIAL;
+        if(glint) {
+            IVertexBuilder foilBuilder = null;
+            if (color) {
+                foilBuilder = EnchantedBookRedesignRenderer.getColoredFoil(stack, buffer);
+            }
+            if (foilBuilder == null) {
+                foilBuilder = buffer.getBuffer(RenderType.entityGlint());
+            }
+            return VertexBuilderUtils.create(foilBuilder, mat.buffer(buffer, RenderType::entitySolid));
         }
-        if (foilBuilder == null) {
-            foilBuilder = buffer.getBuffer(RenderType.entityGlint());
-        }
-        return VertexBuilderUtils.create(foilBuilder, Materials.ENCHANTED_BOOK_MATERIAL.buffer(buffer, RenderType::entitySolid));
+        else return  mat.buffer(buffer, RenderType::entitySolid);
     }
 
     private void renderBook(MatrixStack matrixStack, IRenderTypeBuffer buffer, int light, int overlay, Random random, List<BookColor> colors) {

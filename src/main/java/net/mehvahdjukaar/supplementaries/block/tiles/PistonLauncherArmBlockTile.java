@@ -2,8 +2,8 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 
 
 import net.mehvahdjukaar.supplementaries.block.blocks.PistonLauncherArmBlock;
-import net.mehvahdjukaar.supplementaries.block.blocks.PistonLauncherBlock;
-import net.mehvahdjukaar.supplementaries.block.blocks.PistonLauncherHeadBlock;
+import net.mehvahdjukaar.supplementaries.block.blocks.SpringLauncherBlock;
+import net.mehvahdjukaar.supplementaries.block.blocks.SpringLauncherHeadBlock;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
@@ -117,14 +117,14 @@ public class PistonLauncherArmBlockTile extends TileEntity implements ITickableT
             this.prevOffset = this.offset;
             if (!this.level.isClientSide()) {
                 if (this.getExtending()) {
-                    BlockState _bs = ModRegistry.PISTON_LAUNCHER_HEAD.get().defaultBlockState();
-                    level.setBlock(worldPosition, _bs.setValue(PistonLauncherHeadBlock.FACING, this.getDirection()), 3);
+                    BlockState _bs = ModRegistry.SPRING_LAUNCHER_HEAD.get().defaultBlockState();
+                    level.setBlock(worldPosition, _bs.setValue(SpringLauncherHeadBlock.FACING, this.getDirection()), 3);
                 } else {
-                    BlockState _bs = ModRegistry.PISTON_LAUNCHER.get().defaultBlockState();
+                    BlockState _bs = ModRegistry.SPRING_LAUNCHER.get().defaultBlockState();
                     BlockPos _bp = worldPosition.relative(this.getDirection().getOpposite());
                     BlockState oldstate = level.getBlockState(_bp);
-                    if (_bs.setValue(PistonLauncherBlock.FACING, this.getDirection()).setValue(PistonLauncherBlock.EXTENDED, true) == oldstate) {
-                        level.setBlock(_bp, oldstate.setValue(PistonLauncherBlock.EXTENDED, false), 3);
+                    if (_bs.setValue(SpringLauncherBlock.FACING, this.getDirection()).setValue(SpringLauncherBlock.EXTENDED, true) == oldstate) {
+                        level.setBlock(_bp, oldstate.setValue(SpringLauncherBlock.EXTENDED, false), 3);
                     }
                     level.setBlock(worldPosition, Blocks.AIR.defaultBlockState(), 3);
                 }

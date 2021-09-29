@@ -105,7 +105,7 @@ public class ShardProjectileEntity extends ImprovedProjectileEntity{
     protected void onHitEntity(EntityRayTraceResult p_213868_1_) {
         //super.onHitEntity(p_213868_1_);
         Entity entity = p_213868_1_.getEntity();
-        int i = 1;
+        int i = 2;
         entity.hurt(DamageSource.thrown(this, this.getOwner()), (float)i);
     }
 

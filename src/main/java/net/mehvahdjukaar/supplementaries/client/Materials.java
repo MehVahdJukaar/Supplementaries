@@ -18,7 +18,9 @@ public class Materials {
     public static final RenderMaterial BELLOWS_MATERIAL = new RenderMaterial(LOCATION_BLOCKS, Textures.BELLOWS_TEXTURE);
 
     public static final Map<BookColor, RenderMaterial> BOOK_MATERIALS = new HashMap<>();
-    public static final RenderMaterial ENCHANTED_BOOK_MATERIAL = new RenderMaterial(Atlases.SHULKER_SHEET, Textures.ENCHANTED_BOOK_TEXTURES);
+    public static final RenderMaterial BOOK_ENCHANTED_MATERIAL = new RenderMaterial(Atlases.SHULKER_SHEET, Textures.BOOK_ENCHANTED_TEXTURES);
+    public static final RenderMaterial BOOK_TOME_MATERIAL = new RenderMaterial(Atlases.SHULKER_SHEET, Textures.BOOK_TOME_TEXTURES);
+
 
     public static final Map<IWoodType, RenderMaterial> HANGING_SIGNS_MATERIALS = new HashMap<>();
     public static final Map<IWoodType, RenderMaterial> SIGN_POSTS_MATERIALS = new HashMap<>();

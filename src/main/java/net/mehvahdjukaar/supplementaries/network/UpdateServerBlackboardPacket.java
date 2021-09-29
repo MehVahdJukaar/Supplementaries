@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.network;
 
 import net.mehvahdjukaar.supplementaries.block.tiles.BlackboardBlockTile;
+import net.minecraft.block.BlockState;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.SoundCategory;
@@ -42,11 +43,15 @@ public class UpdateServerBlackboardPacket {
         World world = Objects.requireNonNull(ctx.get().getSender()).level;
         ctx.get().enqueueWork(() -> {
             if (world != null) {
-                TileEntity tileentity = world.getBlockEntity(message.pos);
+                BlockPos pos = message.pos;
+                TileEntity tileentity = world.getBlockEntity(pos);
                 if (tileentity instanceof BlackboardBlockTile) {
                     BlackboardBlockTile board = (BlackboardBlockTile) tileentity;
                     world.playSound(null,message.pos, SoundEvents.VILLAGER_WORK_CARTOGRAPHER, SoundCategory.BLOCKS,1,0.8f);
                     board.pixels = message.pixels;
+                    //updates client
+                    BlockState state =  world.getBlockState(pos);
+                    world.sendBlockUpdated(pos, state, state, 3);
                     tileentity.setChanged();
                 }
             }

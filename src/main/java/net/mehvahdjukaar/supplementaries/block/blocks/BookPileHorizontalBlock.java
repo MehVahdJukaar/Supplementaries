@@ -18,7 +18,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
 
 public class BookPileHorizontalBlock extends BookPileBlock {
 
@@ -94,10 +93,5 @@ public class BookPileHorizontalBlock extends BookPileBlock {
             case 4:
                 return x ? SHAPE_4_X : SHAPE_4_Z;
         }
-    }
-
-    @Override
-    public float getEnchantPowerBonus(BlockState state, IWorldReader world, BlockPos pos) {
-        return state.getValue(BOOKS)/4f;
     }
 }

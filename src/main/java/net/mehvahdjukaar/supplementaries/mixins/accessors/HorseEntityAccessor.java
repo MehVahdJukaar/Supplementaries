@@ -18,6 +18,7 @@ public interface HorseEntityAccessor {
     static Ingredient getFoodItems(){
         throw new AssertionError();
     }
+
 }
 
 

@@ -9,7 +9,6 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
-import net.minecraftforge.common.util.Constants;
 
 
 public class BlackboardBlockTile extends TileEntity {
@@ -46,15 +45,6 @@ public class BlackboardBlockTile extends TileEntity {
             }
         }
         return !flag;
-    }
-
-
-    //TODO: optimize update packets
-    @Override
-    public void setChanged() {
-        if(this.level==null)return;
-        this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
-        super.setChanged();
     }
 
     //client

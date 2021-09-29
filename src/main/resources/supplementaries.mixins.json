@@ -42,6 +42,7 @@
   ],
   "client": [
     "BellTileEntityRendererMixin",
+    "ClientPlayerEntityMixin",
     "IronGolemRendererMixin",
     "ItemRendererMixin",
     "LoomScreenMixin",

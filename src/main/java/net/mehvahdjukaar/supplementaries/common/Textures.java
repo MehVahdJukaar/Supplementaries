@@ -7,7 +7,9 @@ import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.setup.Variants;
 import net.minecraft.tileentity.BannerPattern;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
+import java.lang.reflect.Field;
 import java.util.*;
 
 public class Textures {
@@ -102,16 +104,23 @@ public class Textures {
     public static final Map<IWoodType, ResourceLocation> SIGN_POSTS_TEXTURES = new HashMap<>();
     public static final Map<BannerPattern, ResourceLocation> FLAG_TEXTURES = new HashMap<>();
     public static final Map<BookColor, ResourceLocation> BOOK_TEXTURES = new HashMap<>();
-    public static final ResourceLocation ENCHANTED_BOOK_TEXTURES =Supplementaries.res("entity/books/book_enchanted");
+    public static final ResourceLocation BOOK_ENCHANTED_TEXTURES =Supplementaries.res("entity/books/book_enchanted");
+    public static final ResourceLocation BOOK_TOME_TEXTURES =Supplementaries.res("entity/books/book_tome");
 
     static {
         for (IWoodType type : WoodTypes.TYPES.values()) {
             HANGING_SIGNS_TEXTURES.put(type, Supplementaries.res("entity/hanging_signs/" + type.getLocation() + Variants.getHangingSignName(type)));
             SIGN_POSTS_TEXTURES.put(type, Supplementaries.res("entity/sign_posts/" + type.getLocation() + Variants.getSignPostName(type)));
         }
-
+        Field f = ObfuscationReflectionHelper.findField(BannerPattern.class, "field_191014_N");
         for (BannerPattern pattern : BannerPattern.values()) {
-            FLAG_TEXTURES.put(pattern, Supplementaries.res("entity/flags/" + pattern.getFilename()));
+            try {
+                //get name isn't server side apparently...
+                f.setAccessible(true);
+                String name = (String) f.get(pattern);
+                FLAG_TEXTURES.put(pattern, Supplementaries.res("entity/flags/" + name));
+            }
+            catch (Exception ignored){}
         }
 
         for (BookColor color : BookColor.values()) {
@@ -136,7 +145,7 @@ public class Textures {
         PURPLE("purple"),
         RED("red");
 
-        protected final String name;
+        private final String name;
 
         BookColor(String s) {
             this.name = s;

@@ -228,6 +228,11 @@
   "message.supplementaries.timber_frame": "Принимает любой полный блок",
   "block.supplementaries.wild_flax": "Дикий лён",
   "item.supplementaries.slingshot": "Рогатка",
+  "block.supplementaries.deepslate_lamp": "Глубинный сланцевый фонарь",
+  "block.supplementaries.end_stone_lamp": "Эндерняковый фонарь",
+  "block.supplementaries.rope_knot": "Узел",
+  "enchantment.supplementaries.stasis": "Равновесие",
+  "message.supplementaries.rope_arrow_tooltip": "Верёвки: %s / %s",
 
 
 

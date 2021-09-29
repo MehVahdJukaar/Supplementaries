@@ -21,7 +21,7 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
-public class PistonLauncherBlock extends Block {
+public class SpringLauncherBlock extends Block {
     protected static final VoxelShape PISTON_BASE_EAST_AABB = Block.box(0.0D, 0.0D, 0.0D, 12.0D, 16.0D, 16.0D);
     protected static final VoxelShape PISTON_BASE_WEST_AABB = Block.box(4.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
     protected static final VoxelShape PISTON_BASE_SOUTH_AABB = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 12.0D);
@@ -31,7 +31,7 @@ public class PistonLauncherBlock extends Block {
 
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final BooleanProperty EXTENDED = BlockStateProperties.EXTENDED; // is base only?
-    public PistonLauncherBlock(Properties properties){
+    public SpringLauncherBlock(Properties properties){
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(EXTENDED, false));
     }
@@ -123,7 +123,7 @@ public class PistonLauncherBlock extends Block {
                  */
                 if (flag2) {
                     world.setBlock(_bp,
-                            ModRegistry.PISTON_LAUNCHER_ARM.get().defaultBlockState().setValue(PistonLauncherArmBlock.EXTENDING, true).setValue(FACING, state.getValue(FACING)),
+                            ModRegistry.SPRING_LAUNCHER_ARM.get().defaultBlockState().setValue(PistonLauncherArmBlock.EXTENDING, true).setValue(FACING, state.getValue(FACING)),
                             3);
                     world.setBlockAndUpdate(pos, state.setValue(EXTENDED, true));
                     world.playSound(null, pos, SoundEvents.PISTON_EXTEND, SoundCategory.BLOCKS, 0.53F,
@@ -131,10 +131,10 @@ public class PistonLauncherBlock extends Block {
                 }
             } else if (!flag && state.getValue(EXTENDED)) {
                 BlockState bs = world.getBlockState(_bp);
-                if (bs.getBlock() instanceof PistonLauncherHeadBlock && state.getValue(FACING) == bs.getValue(FACING)) {
+                if (bs.getBlock() instanceof SpringLauncherHeadBlock && state.getValue(FACING) == bs.getValue(FACING)) {
                     // world.setBlockState(_bp, Blocks.AIR.getDefaultState(), 3);
                     world.setBlock(_bp,
-                            ModRegistry.PISTON_LAUNCHER_ARM.get().defaultBlockState().setValue(PistonLauncherArmBlock.EXTENDING, false).setValue(FACING, state.getValue(FACING)),
+                            ModRegistry.SPRING_LAUNCHER_ARM.get().defaultBlockState().setValue(PistonLauncherArmBlock.EXTENDING, false).setValue(FACING, state.getValue(FACING)),
                             3);
                     world.playSound(null, pos, SoundEvents.PISTON_CONTRACT, SoundCategory.BLOCKS, 0.53F,
                             world.random.nextFloat() * 0.15F + 0.45F);

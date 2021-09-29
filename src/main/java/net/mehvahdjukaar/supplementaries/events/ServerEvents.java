@@ -43,23 +43,39 @@ import net.minecraftforge.fml.network.PacketDistributor;
 
 public class ServerEvents {
 
+    //high priority event to override other wall lanterns
+    @SubscribeEvent(priority = EventPriority.HIGH)
+    public static void onRightClickBlockHigh(PlayerInteractEvent.RightClickBlock event) {
+        if (ServerConfigs.cached.WALL_LANTERN_HIGH_PRIORITY) {
+            PlayerEntity player = event.getPlayer();
+            if (!player.isSpectator()){
+                ItemsOverrideHandler.tryHighPriorityOverride(event, event.getItemStack());
+            }
+        }
+    }
+
     //block placement should stay low in priority to allow other more important mod interaction that use the event
     @SubscribeEvent(priority = EventPriority.LOW)
     public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
         PlayerEntity player = event.getPlayer();
-        if(player.isSpectator())return;
+        if (player.isSpectator()) return;
 
-        Hand hand = event.getHand();
         ItemStack stack = event.getItemStack();
-        Item i = stack.getItem();
-        World world = event.getWorld();
-        BlockPos pos = event.getPos();
-        BlockState blockstate = world.getBlockState(pos);
 
+        //others handled here
+        if (ItemsOverrideHandler.tryPerformOverride(event, stack, false)) {
+            return;
+        }
 
         //empty hand behaviors
         //order matters here
         if (!player.isShiftKeyDown()) {
+
+            Hand hand = event.getHand();
+            Item i = stack.getItem();
+            World world = event.getWorld();
+            BlockPos pos = event.getPos();
+            BlockState blockstate = world.getBlockState(pos);
 
             //directional cake conversion
             if (ServerConfigs.cached.DIRECTIONAL_CAKE && blockstate == Blocks.CAKE.defaultBlockState() &&
@@ -77,18 +93,15 @@ public class ServerEvents {
             //bell chains
             if (stack.isEmpty() && hand == Hand.MAIN_HAND) {
                 if (ServerConfigs.cached.BELL_CHAIN) {
-                    if (RopeBlock.findAndRingBell(world, pos, player, 0, s->s.getBlock() instanceof ChainBlock && s.getValue(ChainBlock.AXIS) == Direction.Axis.Y)) {
+                    if (RopeBlock.findAndRingBell(world, pos, player, 0, s -> s.getBlock() instanceof ChainBlock && s.getValue(ChainBlock.AXIS) == Direction.Axis.Y)) {
 
                         event.setCanceled(true);
                         event.setCancellationResult(ActionResultType.sidedSuccess(world.isClientSide));
                     }
-                    return;
                 }
             }
         }
 
-        //others handled here
-        ItemsOverrideHandler.tryPerformOverride(event, stack, false);
 
     }
 
@@ -100,9 +113,9 @@ public class ServerEvents {
         World worldIn = event.getWorld();
 
         //TODO: improve
-       // ItemInteractionOverrideHandler.tryPerformOverride(event);
+        // ItemInteractionOverrideHandler.tryPerformOverride(event);
 
-        if(ServerConfigs.cached.THROWABLE_BRICKS_ENABLED && CommonUtil.isBrick(i)) {
+        if (ServerConfigs.cached.THROWABLE_BRICKS_ENABLED && CommonUtil.isBrick(i)) {
 
             worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), SoundEvents.SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (playerIn.getRandom().nextFloat() * 0.4F + 0.8F));
             if (!worldIn.isClientSide) {
@@ -123,24 +136,25 @@ public class ServerEvents {
             return;
 
         }
-        if(worldIn.isClientSide && ClientConfigs.cached.CLOCK_CLICK && i == Items.CLOCK) {
-            ClockBlock.displayCurrentHour(worldIn,playerIn);
+        if (worldIn.isClientSide && ClientConfigs.cached.CLOCK_CLICK && i == Items.CLOCK) {
+            ClockBlock.displayCurrentHour(worldIn, playerIn);
             event.setCanceled(true);
             event.setCancellationResult(ActionResultType.sidedSuccess(worldIn.isClientSide));
         }
 
     }
+
     //raked gravel
     @SubscribeEvent
     public static void onHoeUsed(UseHoeEvent event) {
         ItemUseContext context = event.getContext();
         World world = context.getLevel();
         BlockPos pos = context.getClickedPos();
-        if (ServerConfigs.cached.RAKED_GRAVEL){
-            if(world.getBlockState(pos).is(Blocks.GRAVEL)){
+        if (ServerConfigs.cached.RAKED_GRAVEL) {
+            if (world.getBlockState(pos).is(Blocks.GRAVEL)) {
                 BlockState raked = ModRegistry.RAKED_GRAVEL.get().defaultBlockState();
-                if(raked.canSurvive(world,pos)){
-                    world.setBlock(pos, RakedGravelBlock.getConnectedState(raked,world,pos,context.getHorizontalDirection()),11);
+                if (raked.canSurvive(world, pos)) {
+                    world.setBlock(pos, RakedGravelBlock.getConnectedState(raked, world, pos, context.getHorizontalDirection()), 11);
                     world.playSound(context.getPlayer(), pos, SoundEvents.HOE_TILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
                     event.setResult(Event.Result.ALLOW);
                 }
@@ -161,9 +175,8 @@ public class ServerEvents {
         try {
             NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) event.getPlayer()),
                     new SendLoginMessagePacket());
-        }
-        catch (Exception exception){
-            Supplementaries.LOGGER.warn("failed to end login message: "+ exception);
+        } catch (Exception exception) {
+            Supplementaries.LOGGER.warn("failed to end login message: " + exception);
         }
         //send in pickles
         PicklePlayer.PickleData.onPlayerLogin(event.getPlayer());
@@ -174,7 +187,6 @@ public class ServerEvents {
     public static void serverAboutToStart(final FMLServerAboutToStartEvent event) {
         StatueBlockTile.initializeSessionData(event.getServer());
     }
-
 
 
 }

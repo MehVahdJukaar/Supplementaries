@@ -1,26 +1,40 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "000",
-    "010",
-    "000"
-  ],
-  "key": {
-    "0": {
-      "tag": "supplementaries:deepslate"
-    },
-    "1": {
-      "item": "minecraft:shroomlight"
-    }
-  },
-  "result": {
-    "item": "supplementaries:blackstone_lamp",
-    "count": 1
-  },
-  "conditions": [
+  "type": "forge:conditional",
+  "recipes": [
     {
-      "type": "supplementaries:flag",
-      "flag": "deepslate_lamp"
+      "conditions": [
+        {
+          "type": "forge:not",
+          "value": {
+            "type": "forge:tag_empty",
+            "tag": "supplementaries:deepslate"
+          }
+        },
+        {
+          "flag": "deepslate_lamp",
+          "type": "supplementaries:flag"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "pattern": [
+          "000",
+          "010",
+          "000"
+        ],
+        "key": {
+          "0": {
+            "tag": "supplementaries:deepslate"
+          },
+          "1": {
+            "item": "minecraft:shroomlight"
+          }
+        },
+        "result": {
+          "item": "supplementaries:deepslate_lamp",
+          "count": 1
+        }
+      }
     }
   ]
 }

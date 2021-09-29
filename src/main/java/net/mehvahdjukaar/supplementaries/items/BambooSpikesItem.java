@@ -20,5 +20,7 @@ public class BambooSpikesItem extends BlockItem {
     }
 
     @Override
-    public int getBurnTime(ItemStack itemStack) {return 150;}
+    public int getBurnTime(ItemStack itemStack) {
+        return 150;
+    }
 }

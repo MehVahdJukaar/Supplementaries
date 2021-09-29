@@ -245,7 +245,7 @@ public class RopeKnotBlock extends MimicBlock implements IWaterLoggable {
         return newState;
     }
 
-
+//TODO: fix this not updating mimic block
     @Override
     public BlockState rotate(BlockState state, Rotation rotation) {
         switch (rotation) {
@@ -315,7 +315,7 @@ public class RopeKnotBlock extends MimicBlock implements IWaterLoggable {
     public static @Nullable PostType getPostType(BlockState state) {
 
         PostType type = null;
-        if (state.getBlock().hasTileEntity(state)) return type;
+        //if (state.getBlock().hasTileEntity(state)) return type;
         if (state.is(ModTags.POSTS)) {
             type = PostType.POST;
         } else if (state.is(ModTags.PALISADES) || (CompatHandler.deco_blocks && DecoBlocksCompatRegistry.isPalisade(state))) {

@@ -9,8 +9,8 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-public class PlayerlessContext extends BlockItemUseContext {
-    public PlayerlessContext(World worldIn, @Nullable PlayerEntity playerIn, Hand handIn, ItemStack stackIn, BlockRayTraceResult rayTraceResultIn) {
+public class PlayerLessContext extends BlockItemUseContext {
+    public PlayerLessContext(World worldIn, @Nullable PlayerEntity playerIn, Hand handIn, ItemStack stackIn, BlockRayTraceResult rayTraceResultIn) {
         super(worldIn, playerIn, handIn, stackIn, rayTraceResultIn);
     }
 }

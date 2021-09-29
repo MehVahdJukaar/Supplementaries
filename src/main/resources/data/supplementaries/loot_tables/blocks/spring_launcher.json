@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "supplementaries:piston_launcher"
+          "name": "supplementaries:spring_launcher"
         }
       ],
       "conditions": [

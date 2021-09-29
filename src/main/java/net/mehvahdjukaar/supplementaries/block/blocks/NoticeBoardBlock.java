@@ -4,14 +4,11 @@ import net.mehvahdjukaar.supplementaries.block.tiles.NoticeBoardBlockTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
@@ -29,6 +26,7 @@ import net.minecraft.world.World;
 public class NoticeBoardBlock extends Block {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty HAS_BOOK = BlockStateProperties.HAS_BOOK;
+
     public NoticeBoardBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(HAS_BOOK, false));
@@ -56,56 +54,10 @@ public class NoticeBoardBlock extends Block {
 
     @Override
     public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
-                                             BlockRayTraceResult hit) {
+                                BlockRayTraceResult hit) {
         TileEntity tileentity = worldIn.getBlockEntity(pos);
-
-        boolean server = !worldIn.isClientSide();
         if (tileentity instanceof NoticeBoardBlockTile) {
-            ItemStack itemstack = player.getItemInHand(handIn);
-            NoticeBoardBlockTile te = (NoticeBoardBlockTile) tileentity;
-
-
-            //insert Item
-            if (te.isEmpty() && (te.canPlaceItemThroughFace(0, itemstack, null))&& player.abilities.mayBuild) {
-                if(server){
-                    ItemStack it = itemstack.copy();
-                    it.setCount(1);
-                    te.setItems(NonNullList.withSize(1, it));
-                    te.setChanged();
-                    worldIn.playSound(null, pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundCategory.BLOCKS, 1.0F,
-                            worldIn.random.nextFloat() * 0.10F + 0.95F);
-                }
-                if (!player.isCreative()) {
-                    itemstack.shrink(1);
-                }
-            }
-            // change color
-            else if (itemstack.getItem() instanceof DyeItem && player.abilities.mayBuild) {
-                if(te.setTextColor(((DyeItem) itemstack.getItem()).getDyeColor())){
-                    if (!player.isCreative()) {
-                        itemstack.shrink(1);
-                    }
-                    if(server){
-                        te.setChanged();
-                    }
-                }
-            }
-            //pop item
-            else if (player.isShiftKeyDown() && !te.isEmpty()) {
-                if(server){
-                    ItemStack it = te.removeItemNoUpdate(0);
-                    BlockPos newpos = pos.offset(state.getValue(FACING).getNormal());
-                    ItemEntity drop = new ItemEntity(worldIn, newpos.getX() + 0.5, newpos.getY() + 0.5, newpos.getZ() + 0.5, it);
-                    drop.setDefaultPickUpDelay();
-                    worldIn.addFreshEntity(drop);
-                    te.setChanged();
-                }
-            }
-            //open gui
-            else if (player instanceof ServerPlayerEntity) {
-                player.openMenu((INamedContainerProvider)tileentity);
-            }
-            return ActionResultType.sidedSuccess(!server);
+            return ((NoticeBoardBlockTile) tileentity).interact(player, handIn, pos, state);
         }
         return ActionResultType.PASS;
     }
@@ -139,14 +91,14 @@ public class NoticeBoardBlock extends Block {
 
     @Override
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
-        if(facing==stateIn.getValue(FACING)){
+        if (facing == stateIn.getValue(FACING)) {
             //TODO: check if it can be made client side
             TileEntity te = worldIn.getBlockEntity(currentPos);
-            if(te instanceof NoticeBoardBlockTile){
+            if (te instanceof NoticeBoardBlockTile) {
                 //((NoticeBoardBlockTile)te).textVisible = this.skipRendering(stateIn,facingState,facing);
-                boolean culled = facingState.isSolidRender(worldIn,currentPos) &&
+                boolean culled = facingState.isSolidRender(worldIn, currentPos) &&
                         facingState.isFaceSturdy(worldIn, facingPos, facing.getOpposite());
-                ((NoticeBoardBlockTile)te).setTextVisible(!culled);
+                ((NoticeBoardBlockTile) te).setTextVisible(!culled);
             }
         }
         return stateIn;
@@ -177,4 +129,15 @@ public class NoticeBoardBlock extends Block {
         else
             return 0;
     }
+
+    @Override
+    public void neighborChanged(BlockState state, World world, BlockPos pos, Block p_220069_4_, BlockPos p_220069_5_, boolean p_220069_6_) {
+        super.neighborChanged(state, world, pos, p_220069_4_, p_220069_5_, p_220069_6_);
+        boolean powered = world.getBestNeighborSignal(pos) > 0;
+        TileEntity tileentity = world.getBlockEntity(pos);
+        if (tileentity instanceof NoticeBoardBlockTile){
+            ((NoticeBoardBlockTile) tileentity).updatePower(powered);
+        }
+    }
+
 }

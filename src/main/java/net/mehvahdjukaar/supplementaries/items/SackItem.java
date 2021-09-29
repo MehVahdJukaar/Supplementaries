@@ -33,8 +33,8 @@ public class SackItem extends BlockItem {
     @Override
     public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
         super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
-        if(!ServerConfigs.cached.SACK_PENALTY)return;
-        if(entityIn instanceof ServerPlayerEntity && !((PlayerEntity) entityIn).isCreative() && !entityIn.isSpectator() && worldIn.getGameTime() % 20L == 0L){
+        if (!ServerConfigs.cached.SACK_PENALTY) return;
+        if (entityIn instanceof ServerPlayerEntity && !((PlayerEntity) entityIn).isCreative() && !entityIn.isSpectator() && worldIn.getGameTime() % 20L == 0L) {
             ServerPlayerEntity player = (ServerPlayerEntity) entityIn;
             Collection<EffectInstance> effects = player.getActiveEffects();
             for (EffectInstance effect : effects) {
@@ -47,14 +47,14 @@ public class SackItem extends BlockItem {
             entityIn.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent(_iitemhandlerref::set);
             if (_iitemhandlerref.get() != null) {
                 for (int _idx = 0; _idx < _iitemhandlerref.get().getSlots(); _idx++) {
-                    if(_iitemhandlerref.get().getStackInSlot(_idx).getItem() instanceof SackItem){
+                    if (_iitemhandlerref.get().getStackInSlot(_idx).getItem() instanceof SackItem) {
                         i++;
                     }
                 }
             }
             int inc = ServerConfigs.cached.SACK_INCREMENT;
-            if(i>inc){
-                player.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 80,  i/(inc+1)));
+            if (i > inc) {
+                player.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 80, i / (inc + 1)));
             }
         }
     }
@@ -95,7 +95,7 @@ public class SackItem extends BlockItem {
         }
         */
 
-        if(!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().options.advancedItemTooltips)return;
+        if (!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().options.advancedItemTooltips) return;
         tooltip.add(new TranslationTextComponent("message.supplementaries.sack").withStyle(TextFormatting.ITALIC).withStyle(TextFormatting.GRAY));
     }
 }

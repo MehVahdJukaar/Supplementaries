@@ -153,12 +153,13 @@ public class VillagerTradesHandler {
     public static void registerWanderingTraderTrades(WandererTradesEvent event) {
 
         if (RegistryConfigs.reg.GLOBE_ENABLED.get()) {
+            //adding twice cause it's showing up too rarely
             for (int i = 0; i < ServerConfigs.cached.GLOBE_TRADES; i++) {
                 event.getRareTrades().add(itemForEmeraldTrade(ModRegistry.GLOBE_ITEM.get(), 1, 10, 3));
             }
         }
         if (RegistryConfigs.reg.FLAX_ENABLED.get()) {
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < 2; i++) {
                 event.getGenericTrades().add(itemForEmeraldTrade(ModRegistry.FLAX_SEEDS_ITEM.get(), 1, 6, 8));
             }
         }

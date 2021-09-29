@@ -45,7 +45,7 @@ public class FlowerBoxBlock extends WaterBlock {
     public FlowerBoxBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH)
-                .setValue(WATERLOGGED,false).setValue(FLOOR,false));
+                .setValue(WATERLOGGED, false).setValue(FLOOR, false));
     }
 
     @Override
@@ -67,7 +67,7 @@ public class FlowerBoxBlock extends WaterBlock {
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         boolean flag = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;
-        return this.defaultBlockState().setValue(WATERLOGGED, flag).setValue(FLOOR,context.getClickedFace()==Direction.UP)
+        return this.defaultBlockState().setValue(WATERLOGGED, flag).setValue(FLOOR, context.getClickedFace() == Direction.UP)
                 .setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 
@@ -80,19 +80,18 @@ public class FlowerBoxBlock extends WaterBlock {
 
             Direction dir = state.getValue(FACING);
             Vector3d v = hit.getLocation();
-            v = v.add(Math.round(Math.abs(v.x)+1),0,Math.round(Math.abs(v.z)+1));
+            v = v.add(Math.round(Math.abs(v.x) + 1), 0, Math.round(Math.abs(v.z) + 1));
 
-            if(dir.getAxis() == Direction.Axis.X){
+            if (dir.getAxis() == Direction.Axis.X) {
 
-                ind = (int)((v.z%1d)/(1/3d));
-                if(dir.getStepX()<0 ) ind = 2-ind;
+                ind = (int) ((v.z % 1d) / (1 / 3d));
+                if (dir.getStepX() < 0) ind = 2 - ind;
+            } else {
+                ind = (int) ((v.x % 1d) / (1 / 3d));
+                if (dir.getStepZ() > 0) ind = 2 - ind;
+
             }
-            else{
-                ind = (int)((v.x%1d)/(1/3d));
-                if(dir.getStepZ()>0 ) ind = 2-ind;
-
-            }
-            return ((ItemDisplayTile) tileentity).interact(player,handIn,ind);
+            return ((ItemDisplayTile) tileentity).interact(player, handIn, ind);
         }
         return ActionResultType.PASS;
     }
@@ -123,14 +122,14 @@ public class FlowerBoxBlock extends WaterBlock {
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
         boolean wall = !state.getValue(FLOOR);
         switch (state.getValue(FACING)) {
-            case NORTH :
-            default :
+            case NORTH:
+            default:
                 return wall ? SHAPE_NORTH : SHAPE_NORTH_FLOOR;
-            case SOUTH :
+            case SOUTH:
                 return wall ? SHAPE_SOUTH : SHAPE_NORTH_FLOOR;
-            case EAST :
+            case EAST:
                 return wall ? SHAPE_EAST : SHAPE_WEST_FLOOR;
-            case WEST :
+            case WEST:
                 return wall ? SHAPE_WEST : SHAPE_WEST_FLOOR;
         }
     }

@@ -216,7 +216,7 @@ public class ClientConfigs {
                     "Lower value = faster oscillation")
                     .defineInRange("slowness", 100, 0, 10000);
             FLAG_WAVELENGTH = builder.comment("How wavy the animation will be in pixels. (Wavelength)")
-                    .defineInRange("wavyness", 6d, 0.001, 100);
+                    .defineInRange("wavyness", 4d, 0.001, 100);
             FLAG_AMPLITUDE = builder.comment("How tall the wave lobes will be. (Wave amplitude)")
                     .defineInRange("intensity", 1d, 0d, 100d);
             FLAG_AMPLITUDE_INCREMENT = builder.comment("How much the wave amplitude increases each pixel. (Amplitude increment per pixel)")

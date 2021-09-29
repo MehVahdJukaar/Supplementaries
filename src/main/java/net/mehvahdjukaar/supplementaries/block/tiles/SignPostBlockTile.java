@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
 
+import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.util.ITextHolder;
 import net.mehvahdjukaar.supplementaries.block.util.TextHolder;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
@@ -13,10 +14,16 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelProperty;
 
 
 public class SignPostBlockTile extends MimicBlockTile implements ITextHolder {
+
+    //is holding a framed fence (for framed blocks mod compat)
+    public boolean framed = false;
+    public static final ModelProperty<Boolean> FRAMED = BlockProperties.FRAMED;
 
     public TextHolder textHolder;
 
@@ -36,18 +43,20 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolder {
     }
 
     @Override
+    public IModelData getModelData() {
+        //return data;
+        return new ModelDataMap.Builder()
+                .withInitial(FRAMED,this.framed)
+                .withInitial(MIMIC, this.getHeldBlock())
+                .build();
+    }
+
+    @Override
     public TextHolder getTextHolder(){ return this.textHolder; }
 
     @Override
     public double getViewDistance() {
         return 96;
-    }
-
-    @Override
-    public void setChanged() {
-        if(this.level==null)return;
-        this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
-        super.setChanged();
     }
 
     @Override
@@ -80,6 +89,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolder {
     @Override
     public void load(BlockState state, CompoundNBT compound) {
         super.load(state, compound);
+        this.framed = compound.getBoolean("Framed");
 
         this.textHolder.read(compound);
 
@@ -100,6 +110,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolder {
     @Override
     public CompoundNBT save(CompoundNBT compound) {
         super.save(compound);
+        compound.putBoolean("Framed",this.framed);
 
         this.textHolder.write(compound);
 

@@ -234,7 +234,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
     public void spawnTrailParticles(Vector3d currentPos, Vector3d newPos) {
         if (!this.isNoPhysics()) {
             double d = this.getDeltaMovement().length();
-            if (this.tickCount > 2 && d * this.tickCount > 1.5) {
+            if (this.tickCount > 1 && d * this.tickCount > 1.5) {
                 if(this.isNoGravity()) {
 
                     Vector3d rot = new Vector3d(0.325,0,0).yRot(this.tickCount * 0.32f);
@@ -272,7 +272,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
 
     @Override
     protected float getDeceleration() {
-        return this.isNoGravity() ? 0.975f : super.getDeceleration();
+        return this.isNoGravity() ? ServerConfigs.cached.SLINGSHOT_DECELERATION : super.getDeceleration();
     }
 
     @Override

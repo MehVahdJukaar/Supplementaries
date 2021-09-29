@@ -40,33 +40,27 @@ public class HourGlassBlockTile extends ItemDisplayTile implements ITickableTile
     public int power = 0;
     //client
     private TextureAtlasSprite cachedTexture = null;
+
     public HourGlassBlockTile() {
         super(ModRegistry.HOURGLASS_TILE.get());
     }
 
-    //hijacking this method to work with hoppers
     @Override
-    public void setChanged() {
-        if(this.level==null)return;
-        this.updateTile();
-        super.setChanged();
-    }
-
-    public void updateTile(){
+    public void updateTileOnInventoryChanged() {
         this.sandType = HourGlassSandType.getHourGlassSandType(this.getDisplayedItem().getItem());
-        int p = this.getDirection()==Direction.DOWN?1:0;
+        int p = this.getDirection() == Direction.DOWN ? 1 : 0;
         int l = this.sandType.getLight();
-        if(l!=this.getBlockState().getValue(HourGlassBlock.LIGHT_LEVEL)){
-            level.setBlock(this.worldPosition, this.getBlockState().setValue(HourGlassBlock.LIGHT_LEVEL,l),4|16);
+        if (l != this.getBlockState().getValue(HourGlassBlock.LIGHT_LEVEL)) {
+            level.setBlock(this.worldPosition, this.getBlockState().setValue(HourGlassBlock.LIGHT_LEVEL, l), 4 | 16);
         }
-        this.prevProgress=p;
-        this.progress=p;
+        this.prevProgress = p;
+        this.progress = p;
     }
 
     @OnlyIn(Dist.CLIENT)
-    public TextureAtlasSprite getOrCreateSprite(){
-        if(this.cachedTexture==null){
-            this.cachedTexture = this.sandType.getSprite(this.getDisplayedItem(),this.level);
+    public TextureAtlasSprite getOrCreateSprite() {
+        if (this.cachedTexture == null) {
+            this.cachedTexture = this.sandType.getSprite(this.getDisplayedItem(), this.level);
         }
         return this.cachedTexture;
     }
@@ -80,27 +74,25 @@ public class HourGlassBlockTile extends ItemDisplayTile implements ITickableTile
     public void tick() {
 
         Direction dir = this.getDirection();
-        if(!this.sandType.isEmpty()){
+        if (!this.sandType.isEmpty()) {
             this.prevProgress = this.progress;
-            if(dir==Direction.UP && this.progress != 1){
+            if (dir == Direction.UP && this.progress != 1) {
                 this.progress = Math.min(this.progress + this.sandType.increment, 1f);
-            }
-            else if(dir==Direction.DOWN && this.progress != 0){
+            } else if (dir == Direction.DOWN && this.progress != 0) {
                 this.progress = Math.max(this.progress - this.sandType.increment, 0f);
             }
         }
 
-        if(!this.level.isClientSide){
+        if (!this.level.isClientSide) {
             int p;
-            if(dir==Direction.DOWN) {
-                p = (int) ((1-this.progress) * 15f);
-            }
-            else{
+            if (dir == Direction.DOWN) {
+                p = (int) ((1 - this.progress) * 15f);
+            } else {
                 p = (int) ((this.progress) * 15f);
             }
-            if(p!=this.power){
-                this.power=p;
-                this.level.updateNeighbourForOutputSignal(this.worldPosition,this.getBlockState().getBlock());
+            if (p != this.power) {
+                this.power = p;
+                this.level.updateNeighbourForOutputSignal(this.worldPosition, this.getBlockState().getBlock());
             }
         }
     }
@@ -109,10 +101,10 @@ public class HourGlassBlockTile extends ItemDisplayTile implements ITickableTile
     public void load(BlockState state, CompoundNBT compound) {
         super.load(state, compound);
         int i = compound.getInt("SandType");
-        this.sandType = HourGlassSandType.values()[Math.min(i,HourGlassSandType.values().length)];
+        this.sandType = HourGlassSandType.values()[Math.min(i, HourGlassSandType.values().length)];
         this.progress = compound.getFloat("Progress");
         this.prevProgress = compound.getFloat("PrevProgress");
-        this.cachedTexture=null;
+        this.cachedTexture = null;
     }
 
     @Override
@@ -143,8 +135,8 @@ public class HourGlassBlockTile extends ItemDisplayTile implements ITickableTile
 
     @Override
     public boolean canPlaceItemThroughFace(int index, ItemStack stack, @Nullable Direction direction) {
-        if(direction==Direction.UP) {
-            return this.canPlaceItem(0,stack);
+        if (direction == Direction.UP) {
+            return this.canPlaceItem(0, stack);
         }
         return false;
     }
@@ -152,26 +144,26 @@ public class HourGlassBlockTile extends ItemDisplayTile implements ITickableTile
     @Override
     public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
         Direction dir = this.getBlockState().getValue(HourGlassBlock.FACING);
-        return (dir==Direction.UP && this.progress==1)||(dir==Direction.DOWN && this.progress==0);
+        return (dir == Direction.UP && this.progress == 1) || (dir == Direction.DOWN && this.progress == 0);
     }
 
-    public Direction getDirection(){
+    public Direction getDirection() {
         return this.getBlockState().getValue(HourGlassBlock.FACING);
     }
 
 
     public enum HourGlassSandType {
-        DEFAULT(null,null,0),
+        DEFAULT(null, null, 0),
         SAND(SAND_TEXTURE, null, ServerConfigs.block.HOURGLASS_SAND.get()),
-        CONCRETE(WHITE_CONCRETE_TEXTURE,null, ServerConfigs.block.HOURGLASS_CONCRETE.get()),
-        GUNPOWDER(HOURGLASS_GUNPOWDER,Items.GUNPOWDER, ServerConfigs.block.HOURGLASS_DUST.get()),
-        SUGAR(HOURGLASS_SUGAR,Items.SUGAR, ServerConfigs.block.HOURGLASS_SUGAR.get()),
-        GLOWSTONE_DUST(HOURGLASS_GLOWSTONE,Items.GLOWSTONE_DUST, ServerConfigs.block.HOURGLASS_GLOWSTONE.get()),
-        REDSTONE_DUST(HOURGLASS_REDSTONE,Items.REDSTONE, ServerConfigs.block.HOURGLASS_REDSTONE.get()),
-        BLAZE_POWDER(HOURGLASS_BLAZE,Items.BLAZE_POWDER, ServerConfigs.block.HOURGLASS_BLAZE_POWDER.get()),
-        FORGE_DUST(HOURGLASS_GUNPOWDER,null, ServerConfigs.block.HOURGLASS_DUST.get()),
-        HONEY(HONEY_TEXTURE,Items.HONEY_BOTTLE, ServerConfigs.block.HOURGLASS_HONEY.get()),
-        SLIME(SLIME_TEXTURE,Items.SLIME_BALL, ServerConfigs.block.HOURGLASS_SLIME.get());
+        CONCRETE(WHITE_CONCRETE_TEXTURE, null, ServerConfigs.block.HOURGLASS_CONCRETE.get()),
+        GUNPOWDER(HOURGLASS_GUNPOWDER, Items.GUNPOWDER, ServerConfigs.block.HOURGLASS_DUST.get()),
+        SUGAR(HOURGLASS_SUGAR, Items.SUGAR, ServerConfigs.block.HOURGLASS_SUGAR.get()),
+        GLOWSTONE_DUST(HOURGLASS_GLOWSTONE, Items.GLOWSTONE_DUST, ServerConfigs.block.HOURGLASS_GLOWSTONE.get()),
+        REDSTONE_DUST(HOURGLASS_REDSTONE, Items.REDSTONE, ServerConfigs.block.HOURGLASS_REDSTONE.get()),
+        BLAZE_POWDER(HOURGLASS_BLAZE, Items.BLAZE_POWDER, ServerConfigs.block.HOURGLASS_BLAZE_POWDER.get()),
+        FORGE_DUST(HOURGLASS_GUNPOWDER, null, ServerConfigs.block.HOURGLASS_DUST.get()),
+        HONEY(HONEY_TEXTURE, Items.HONEY_BOTTLE, ServerConfigs.block.HOURGLASS_HONEY.get()),
+        SLIME(SLIME_TEXTURE, Items.SLIME_BALL, ServerConfigs.block.HOURGLASS_SLIME.get());
 
         @Nullable
         public final ResourceLocation texture;
@@ -179,22 +171,25 @@ public class HourGlassBlockTile extends ItemDisplayTile implements ITickableTile
         public final Item item;
         public final float increment;
 
-        HourGlassSandType(ResourceLocation texture, Item item, int t){
+        HourGlassSandType(ResourceLocation texture, Item item, int t) {
             this.texture = texture;
             this.item = item;
-            this.increment =1f/(float)t;
+            this.increment = 1f / (float) t;
         }
-        public boolean isEmpty(){return this==DEFAULT;}
 
-        public int getLight(){
-            if(this==GLOWSTONE_DUST)return 9;
-            if(this==BLAZE_POWDER)return 6;
+        public boolean isEmpty() {
+            return this == DEFAULT;
+        }
+
+        public int getLight() {
+            if (this == GLOWSTONE_DUST) return 9;
+            if (this == BLAZE_POWDER) return 6;
             return 0;
         }
 
-        public TextureAtlasSprite getSprite(ItemStack i, World world){
+        public TextureAtlasSprite getSprite(ItemStack i, World world) {
             Minecraft mc = Minecraft.getInstance();
-            if(this == FORGE_DUST || this == SAND || this == CONCRETE){
+            if (this == FORGE_DUST || this == SAND || this == CONCRETE) {
                 ItemRenderer itemRenderer = mc.getItemRenderer();
                 IBakedModel ibakedmodel = itemRenderer.getModel(i, world, null);
                 TextureAtlasSprite sprite = ibakedmodel.getParticleIcon();
@@ -206,16 +201,16 @@ public class HourGlassBlockTile extends ItemDisplayTile implements ITickableTile
             return mc.getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(this.texture);
         }
 
-        public static HourGlassSandType getHourGlassSandType(Item i){
-            if(i instanceof BlockItem){
+        public static HourGlassSandType getHourGlassSandType(Item i) {
+            if (i instanceof BlockItem) {
                 Block b = ((BlockItem) i).getBlock();
-                if(b.is(Tags.Blocks.SAND))return SAND;
-                if(b.is(ModTags.CONCRETE_POWDERS))return CONCRETE;
+                if (b.is(Tags.Blocks.SAND)) return SAND;
+                if (b.is(ModTags.CONCRETE_POWDERS)) return CONCRETE;
             }
-            for (HourGlassSandType n : HourGlassSandType.values()){
-                if(n.item == i)return n;
+            for (HourGlassSandType n : HourGlassSandType.values()) {
+                if (n.item == i) return n;
             }
-            if(i.is(Tags.Items.DUSTS))return FORGE_DUST;
+            if (i.is(Tags.Items.DUSTS)) return FORGE_DUST;
             return DEFAULT;
         }
     }

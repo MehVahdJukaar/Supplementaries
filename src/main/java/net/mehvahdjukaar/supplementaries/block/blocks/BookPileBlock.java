@@ -1,9 +1,10 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
-import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.BookPileBlockTile;
+import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
+import net.mehvahdjukaar.supplementaries.compat.quark.QuarkPlugin;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -55,8 +56,9 @@ public class BookPileBlock extends WaterBlock {
         }
     }
 
+
     public boolean isAcceptedItem(Item i){
-        return i == Items.ENCHANTED_BOOK;
+        return i == Items.ENCHANTED_BOOK || (CompatHandler.quark && QuarkPlugin.isTome(i));
     }
 
     @Override
@@ -96,7 +98,6 @@ public class BookPileBlock extends WaterBlock {
         return new BookPileBlockTile(false);
     }
 
-
     @Override
     public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
@@ -113,7 +114,7 @@ public class BookPileBlock extends WaterBlock {
     public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
         TileEntity tileentity = world.getBlockEntity(pos);
         if (tileentity instanceof BookPileBlockTile) {
-            return ((ItemDisplayTile) tileentity).getDisplayedItem();
+            return ((IInventory) tileentity).getItem(Math.max(0,state.getValue(BOOKS)-1));
         }
         return Items.BOOK.getDefaultInstance();
     }
@@ -140,6 +141,10 @@ public class BookPileBlock extends WaterBlock {
 
     @Override
     public float getEnchantPowerBonus(BlockState state, IWorldReader world, BlockPos pos) {
-        return state.getValue(BOOKS)/3f;
+        TileEntity te = world.getBlockEntity(pos);
+        if(te instanceof BookPileBlockTile){
+            return ((BookPileBlockTile) te).getEnchantPower();
+        }
+        return 0;
     }
 }

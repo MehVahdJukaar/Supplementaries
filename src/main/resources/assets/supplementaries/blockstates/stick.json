@@ -16,8 +16,7 @@
             "model": "supplementaries:block/stick_cross"
         },
         "axis_y=true,axis_x=false,axis_z=true": {
-            "model": "supplementaries:block/stick_cross",
-            "y": 90
+            "model": "supplementaries:block/stick_cross_f"
         },
         "axis_y=false,axis_x=true,axis_z=true": {
             "model": "supplementaries:block/stick_cross",

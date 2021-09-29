@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.network;
 
 import net.mehvahdjukaar.supplementaries.block.tiles.SpeakerBlockTile;
+import net.minecraft.block.BlockState;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -47,19 +48,20 @@ public class UpdateServerSpeakerBlockPacket{
 
         ctx.get().enqueueWork(() -> {
             if (world != null) {
-
-                TileEntity tileentity = world.getBlockEntity(message.pos);
+                BlockPos pos = message.pos;
+                TileEntity tileentity = world.getBlockEntity(pos);
                 if (tileentity instanceof SpeakerBlockTile) {
                     SpeakerBlockTile speaker = (SpeakerBlockTile) tileentity;
                     speaker.message = message.str.getString();
                     speaker.narrator = message.narrator;
                     speaker.volume = message.volume;
+                    //updates client
+                    BlockState state =  world.getBlockState(pos);
+                    world.sendBlockUpdated(pos, state, state, 3);
                     tileentity.setChanged();
-                }
-                /*
-                if(world instanceof ServerWorld)
-                    StructureDebug.doStuff((ServerWorld) world,message.pos,message.str.getString());*/
 
+
+                }
             }
         });
         ctx.get().setPacketHandled(true);

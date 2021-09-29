@@ -3,7 +3,7 @@
 	"ambientocclusion": false,
 	"textures": {
 		"melon": "supplementaries:block/plants/cantaloupe_block",
-		"particle": "minecraft:block/flower_pot",
+		"particle": "minecraft:block/flower_pot"
 	},
 	"elements": [
 		{

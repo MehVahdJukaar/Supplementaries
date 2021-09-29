@@ -8,6 +8,7 @@ import net.mehvahdjukaar.selene.util.TwoHandedAnimation;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.entities.SlingshotProjectileEntity;
 import net.mehvahdjukaar.supplementaries.events.ItemsOverrideHandler;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
@@ -73,8 +74,9 @@ public class SlingshotItem extends ShootableItem implements IVanishable, IFirstP
                         float angle = 10;
                         for (int j = 0; j < count; j++) {
 
+                            boolean stasis = EnchantmentHelper.getItemEnchantmentLevel(ModRegistry.STASIS_ENCHANTMENT.get(), stack) != 0;
                             Hand hand = playerentity.getUsedItemHand();
-                            power *= ServerConfigs.cached.SLINGSHOT_RANGE * 1.1;
+                            power *= (ServerConfigs.cached.SLINGSHOT_RANGE + (stasis ? 0.5 : 0)) * 1.1;
                             shootProjectile(world, entity, hand, stack, projectiles.get(j), count == 1 ? 1 : pitches[j], power, 1, angle * (j - (count - 1) / 2f));
                         }
                     }
@@ -145,11 +147,7 @@ public class SlingshotItem extends ShootableItem implements IVanishable, IFirstP
                 Enchantments.QUICK_CHARGE, Enchantments.MULTISHOT, Enchantments.LOYALTY).contains(enchantment);
     }
 
-    @Override
-    public UseAction getUseAnimation(ItemStack stack) {
-        //needed for custom one
-        return UseAction.NONE;
-    }
+
 
     @Override
     public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
@@ -175,6 +173,50 @@ public class SlingshotItem extends ShootableItem implements IVanishable, IFirstP
     }
 
     @Override
+    public UseAction getUseAnimation(ItemStack stack) {
+        //needed to use NONE for custom one
+        return UseAction.NONE;
+    }
+
+    @Override
+    public <T extends LivingEntity> boolean poseLeftArm(ItemStack stack, BipedModel<T> model, T entity, HandSide mainHand, TwoHandedAnimation twoHanded) {
+        if(entity.getUseItemRemainingTicks() > 0 && entity.getUseItem().getItem() == this) {
+            //twoHanded.setTwoHanded(true);
+            model.leftArm.yRot = 0.1F + model.head.yRot;
+            model.leftArm.xRot = (-(float) Math.PI / 2F) + model.head.xRot;
+            return true;
+        }
+        return false;
+    }
+
+    //TODO: finish this
+    @Override
+    public <T extends LivingEntity> boolean poseRightArm(ItemStack stack, BipedModel<T> model, T entity, HandSide mainHand, TwoHandedAnimation twoHanded) {
+        if(entity.getUseItemRemainingTicks() > 0 && entity.getUseItem().getItem() == this) {
+            //twoHanded.setTwoHanded(true);
+            model.rightArm.yRot = -0.1F + model.head.yRot;
+            //model.leftArm.yRot = 0.1F + model.head.yRot + 0.4F;
+            model.rightArm.xRot = (-(float) Math.PI / 2F) + model.head.xRot;
+            //model.leftArm.xRot = (-(float) Math.PI / 2F) + model.head.xRot;
+
+            /*
+            model.leftArm.xRot = model.rightArm.xRot;
+            float f = (float) SlingshotItem.getChargeDuration(entity.getUseItem());
+            float f1 = MathHelper.clamp((float) entity.getTicksUsingItem(), 0.0F, f);
+            float f2 = f1 / f;
+
+            model.leftArm.yRot = (float) (0.1F + model.head.yRot + MathHelper.lerp(f2, ClientConfigs.general.TEST1.get(), ClientConfigs.general.TEST2.get()) * (float) (true ? 1 : -1));
+            */
+            //if(ClientConfigs.general.TEST3.get()<0)
+            // model.leftArm.xRot = (float) (1f*ClientConfigs.general.TEST3.get());//MathHelper.lerp(f2, model.leftArm.xRot, (-(float) Math.PI / 2F));
+
+            //animateCrossbowCharge(model.leftArm, model.leftArm, entity, mainHand == HandSide.RIGHT);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public void animateItemFirstPerson(LivingEntity entity, ItemStack stack, Hand hand, MatrixStack matrixStack, float partialTicks, float pitch, float attackAnim, float handHeight) {
         //is using item
         if (entity.isUsingItem() && entity.getUseItemRemainingTicks() > 0 && entity.getUsedItemHand() == hand) {
@@ -196,38 +238,12 @@ public class SlingshotItem extends ShootableItem implements IVanishable, IFirstP
         }
     }
 
-    //TODO: finish this
-    @Override
-    public <T extends LivingEntity> boolean poseRightArm(ItemStack stack, BipedModel<T> model, T entity, HandSide mainHand, TwoHandedAnimation twoHanded) {
-        if(entity.getUseItemRemainingTicks() > 0) {
-            //twoHanded.setTwoHanded(true);
-            model.rightArm.yRot = -0.1F + model.head.yRot;
-            //model.leftArm.yRot = 0.1F + model.head.yRot + 0.4F;
-            model.rightArm.xRot = (-(float) Math.PI / 2F) + model.head.xRot;
-            //model.leftArm.xRot = (-(float) Math.PI / 2F) + model.head.xRot;
-            //animateCrossbowCharge(model.rightArm, model.rightArm, entity, mainHand == HandSide.RIGHT);
-            return true;
-        }
-        return false;
-    }
 
-    @Override
-    public <T extends LivingEntity> boolean poseLeftArm(ItemStack stack, BipedModel<T> model, T entity, HandSide mainHand, TwoHandedAnimation twoHanded) {
-        if(entity.getUseItemRemainingTicks() > 0) {
-            //twoHanded.setTwoHanded(true);
-            //model.rightArm.yRot = -0.1F + model.head.yRot - 0.4F;
-            model.leftArm.yRot = 0.1F + model.head.yRot;
-            //model.rightArm.xRot = (-(float) Math.PI / 2F) + model.head.xRot;
-            model.leftArm.xRot = (-(float) Math.PI / 2F) + model.head.xRot;
-            return true;
-        }
-        return false;
-    }
 
-    public static void animateCrossbowCharge(ModelRenderer arm1, ModelRenderer arm2, LivingEntity entity, boolean right) {
-        ModelRenderer mainHand = right ? arm1 : arm2;
-        ModelRenderer offHand = right ? arm2 : arm1;
-        mainHand.yRot = right ? -0.8F : 0.8F;
+
+
+    public static void animateCrossbowCharge(ModelRenderer offHand, ModelRenderer mainHand, LivingEntity entity, boolean right) {
+
         //mainHand.xRot = -0.97079635F;
         offHand.xRot = mainHand.xRot;
         float f = (float) CrossbowItem.getChargeDuration(entity.getUseItem());

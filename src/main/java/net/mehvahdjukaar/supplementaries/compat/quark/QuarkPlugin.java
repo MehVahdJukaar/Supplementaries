@@ -20,6 +20,7 @@ import vazkii.quark.base.module.ModuleCategory;
 import vazkii.quark.base.module.QuarkModule;
 import vazkii.quark.content.automation.module.DispensersPlaceBlocksModule;
 import vazkii.quark.content.building.block.WoodPostBlock;
+import vazkii.quark.content.tools.item.AncientTomeItem;
 
 public class QuarkPlugin {
     private static final ResourceLocation SACK_CAP = new ResourceLocation(Supplementaries.MOD_ID, "sack_drop_in");
@@ -73,6 +74,10 @@ public class QuarkPlugin {
             }
         }
         return null;
+    }
+
+    public static boolean isTome(Item item){
+        return item instanceof AncientTomeItem;
     }
 
 

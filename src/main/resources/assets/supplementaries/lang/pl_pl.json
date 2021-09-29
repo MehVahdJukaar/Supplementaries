@@ -135,12 +135,12 @@
   "item.supplementaries.bomb_blue": "Niebieska bomba",
   "fluid.supplementaries.sap": "Sok drzewny",
   "message.supplementaries.road_sign": "%d bloków",
-  "item.supplementaries.bomb_blue_projectile": "Niebieska bomba",
+  "item.supplementaries.bomb_blue_projectile": "Błękitna bomba",
   "supplementaries.gui.info": "Przekieruj się na stronę Supplementaries na witrynie internetowej CurseForge",
   "block.supplementaries.checker_vertical_slab": "Pionowa płyta szachownicy",
   "block.supplementaries.blaze_rod": "Płomienna różdżka",
   "block.supplementaries.stick": "Patyk",
-  "block.supplementaries.daub": "Kicz",
+  "block.supplementaries.daub": "Utwardzona glina",
   "block.supplementaries.daub_frame": "Szachulec",
   "block.supplementaries.daub_brace": "Szachulec wspornikowy",
   "block.supplementaries.daub_cross_brace": "Szachulec wspornikowy poprzeczny",
@@ -228,6 +228,11 @@
   "message.supplementaries.timber_frame": "Akceptuje każdy pełny blok",
   "block.supplementaries.wild_flax": "Dziki len",
   "item.supplementaries.slingshot": "Proca",
+  "block.supplementaries.deepslate_lamp": "Łupkowa lampa",
+  "block.supplementaries.end_stone_lamp": "Endowa kamienna lampa",
+  "block.supplementaries.rope_knot": "Węzeł",
+  "enchantment.supplementaries.stasis": "Równowaga",
+  "message.supplementaries.rope_arrow_tooltip": "Liny: %s / %s",
 
 
 

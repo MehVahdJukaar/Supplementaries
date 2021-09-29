@@ -98,7 +98,7 @@ public class PresentBlock extends WaterBlock {
 
 
     public ItemStack getPresentItem(PresentBlockTile te) {
-        CompoundNBT compoundnbt = te.saveToTag(new CompoundNBT());
+        CompoundNBT compoundnbt = te.save(new CompoundNBT());
         ItemStack itemstack = new ItemStack(this.getBlock());
         if (!compoundnbt.isEmpty()) {
             itemstack.addTagElement("BlockEntityTag", compoundnbt);

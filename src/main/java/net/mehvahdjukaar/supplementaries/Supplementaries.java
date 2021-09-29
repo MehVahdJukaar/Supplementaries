@@ -39,23 +39,30 @@ public class Supplementaries {
 
     public Supplementaries() {
 
-        //yes this is where I write crap
+
+
+
+        //yes this is where I write crap. deal with it XD
 
         //todo: fix projectile hitbox being a single point on y = 0
 
+        //TODO: fix carry on bug
+
+        //randomium name change
+
         //add chain knot
+
+        //elytra acrobatics mod
 
         //swaying blocks water friction
 
         //horizontal shearable ropes
 
-        //slingshot outline
+        //TODO: more flywheel stuff
 
         //TODO: improve feather particle
 
         //zipline mod ropewalk
-
-        //power ench for slingshots
 
         //GLOBE inv model
         //TODO: goblet & jars dynamic baked model
@@ -75,33 +82,30 @@ public class Supplementaries {
 
         //TODO: bugs: bell ropes(add to flywheel instance), brewing stand colors(?)
 
-        //TODO: notice board pages, rewrite inventory cap
-
         //TODO: mod ideas: particle block, blackboard banners and flags, lantern holding
 
         //TODO: add stick window loggable clipping
 
-        //TODO: add redstone config for iron gate
+        //flute animation
 
         //add shift middle click to swap to correct tool
 
         //use onNeighborchanged for faucets
 
-        //TODO: fix horizontal stick texture
+        //mod idea: status effect jei plugin
 
         //mod idea: better birch trees
 
         //mod idea: blackboard banners and flags with villager
 
+        //wrench, throwable slimeballs
 
         MinecraftForge.EVENT_BUS.register(ServerEvents.class);
-
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ServerConfigs.SERVER_SPEC);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfigs.CLIENT_SPEC);
 
         ConfigHandler.init();
-
 
         CraftingHelper.register(new RecipeCondition.Serializer(RecipeCondition.MY_FLAG));
 

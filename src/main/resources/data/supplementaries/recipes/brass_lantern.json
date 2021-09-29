@@ -9,8 +9,13 @@
             "type": "forge:tag_empty",
             "tag": "forge:ingots/brass"
           }
+        },
+        {
+          "type": "supplementaries:flag",
+          "flag": "copper_lantern"
         }
       ],
+
       "recipe": {
         "type": "minecraft:crafting_shaped",
         "pattern": [

@@ -15,6 +15,7 @@ import net.minecraft.block.BannerBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.material.MaterialColor;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -169,6 +170,11 @@ public class Variants {
                                     .sound(SoundType.WOOL))
             ));
         }
+        map.put(null, ModRegistry.BLOCKS.register(baseName, ()-> new PresentBlock(null,
+                AbstractBlock.Properties.of(Material.WOOL, MaterialColor.WOOD)
+                        .strength(1.0F)
+                        .sound(SoundType.WOOL))
+        ));
         return map;
     }
 
@@ -177,9 +183,14 @@ public class Variants {
     public static Map<DyeColor, RegistryObject<Item>> makePresentsItems(){
         Map<DyeColor, RegistryObject<Item>> map = new HashMap<>();
 
+        /*
         for(DyeColor color : DyeColor.values()){
+            //ModRegistry.getTab(ItemGroup.TAB_DECORATIONS, ModRegistry.PRESENT_NAME)
             map.put(color, ModRegistry.regBlockItem(ModRegistry.PRESENTS.get(color), ModRegistry.getTab(ItemGroup.TAB_DECORATIONS, ModRegistry.PRESENT_NAME)));
         }
+        */
+        map.put(null, ModRegistry.regBlockItem(ModRegistry.PRESENTS.get(null), null));
+
         return map;
     }
 

@@ -5,7 +5,7 @@ import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.selene.util.Utils;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.PulleyBlockTile;
-import net.mehvahdjukaar.supplementaries.block.util.PlayerlessContext;
+import net.mehvahdjukaar.supplementaries.block.util.PlayerLessContext;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.common.StaticBlockItem;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
@@ -445,14 +445,14 @@ public class RopeBlock extends WaterBlock {
     public static boolean tryPlaceAndMove(@Nullable PlayerEntity player, Hand hand, World world, BlockPos pos, Block ropeBlock) {
         ItemStack stack = new ItemStack(ropeBlock);
 
-        BlockItemUseContext context = new PlayerlessContext(world, player, hand, stack, new BlockRayTraceResult(Vector3d.atCenterOf(pos), Direction.UP, pos, false));
+        BlockItemUseContext context = new PlayerLessContext(world, player, hand, stack, new BlockRayTraceResult(Vector3d.atCenterOf(pos), Direction.UP, pos, false));
         if (!context.canPlace()) {
             //checks if block below this is hollow
             BlockPos downPos = pos.below();
             //try move block down
             if (!(world.getBlockState(downPos).getMaterial().isReplaceable()
                     && tryMove(pos, downPos, world))) return false;
-            context = new PlayerlessContext(world, player, hand, stack, new BlockRayTraceResult(Vector3d.atCenterOf(pos), Direction.UP, pos, false));
+            context = new PlayerLessContext(world, player, hand, stack, new BlockRayTraceResult(Vector3d.atCenterOf(pos), Direction.UP, pos, false));
         }
 
         BlockState state = StaticBlockItem.getPlacementState(context, ropeBlock);

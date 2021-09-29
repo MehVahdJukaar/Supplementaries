@@ -64,6 +64,7 @@ public class ServerConfigs {
         public static ForgeConfigSpec.EnumValue<BombEntity.breakingMode> BOMB_BLUE_BREAKS;
         public static ForgeConfigSpec.DoubleValue SLINGSHOT_RANGE;
         public static ForgeConfigSpec.IntValue SLINGSHOT_CHARGE;
+        public static ForgeConfigSpec.DoubleValue SLINGSHOT_DECELERATION;
         public static ForgeConfigSpec.BooleanValue UNRESTRICTED_SLINGSHOT;
 
         private static void init(ForgeConfigSpec.Builder builder){
@@ -103,10 +104,12 @@ public class ServerConfigs {
             builder.pop();
 
             builder.push("slingshot");
-            SLINGSHOT_RANGE = builder.comment("Slingshot range multiplier")
+            SLINGSHOT_RANGE = builder.comment("Slingshot range multiplier. Affect the initial projectile speed")
                     .defineInRange("range_multiplier", 1f, 0, 5);
             SLINGSHOT_CHARGE = builder.comment("Time in ticks to fully charge a slingshot")
                     .defineInRange("charge_time", 20, 0, 100);
+            SLINGSHOT_DECELERATION = builder.comment("Deceleration for the stasis projectile")
+                    .defineInRange("stasis_deceleration", 0.9625f, 0.1, 1);
             UNRESTRICTED_SLINGSHOT = builder.comment("Allow enderman to intercept any slingshot projectile")
                     .define("unrestricted_enderman_intercept", true);
             builder.pop();
@@ -122,6 +125,7 @@ public class ServerConfigs {
         public static ForgeConfigSpec.BooleanValue DOUBLE_CAKE_PLACEMENT;
         public static ForgeConfigSpec.BooleanValue HANGING_POT_PLACEMENT;
         public static ForgeConfigSpec.BooleanValue WALL_LANTERN_PLACEMENT;
+        public static ForgeConfigSpec.BooleanValue WALL_LANTERN_HIGH_PRIORITY;
         public static ForgeConfigSpec.BooleanValue THROWABLE_BRICKS_ENABLED;
         public static ForgeConfigSpec.ConfigValue<List<? extends String>> WALL_LANTERN_BLACKLIST;
         public static ForgeConfigSpec.BooleanValue BELL_CHAIN;
@@ -136,6 +140,8 @@ public class ServerConfigs {
         public static ForgeConfigSpec.BooleanValue MAP_MARKERS;
         public static ForgeConfigSpec.BooleanValue CEILING_BANNERS;
         public static ForgeConfigSpec.BooleanValue PLACEABLE_BOOKS;
+        public static ForgeConfigSpec.DoubleValue BOOK_POWER;
+        public static ForgeConfigSpec.DoubleValue ENCHANTED_BOOK_POWER;
         public static ForgeConfigSpec.BooleanValue ZOMBIE_HORSE;
         public static ForgeConfigSpec.IntValue ZOMBIE_HORSE_COST;
         public static ForgeConfigSpec.BooleanValue ZOMBIE_HORSE_UNDERWATER;
@@ -149,9 +155,9 @@ public class ServerConfigs {
 
             //double cake
             builder.push("cake_tweaks");
-            DOUBLE_CAKE_PLACEMENT = builder.comment("allows you to place a cake ontop of another")
+            DOUBLE_CAKE_PLACEMENT = builder.comment("Allows you to place a cake on top of another")
                     .define("double_cake",true);
-            DIRECTIONAL_CAKE = builder.comment("replaces normal cake placement with a directional one")
+            DIRECTIONAL_CAKE = builder.comment("Replaces normal cake placement with a directional one")
                     .define("directional_cake",true);
             builder.pop();
 
@@ -163,16 +169,19 @@ public class ServerConfigs {
 
             //throwable bricks
             builder.push("throwable_bricks");
-            THROWABLE_BRICKS_ENABLED = builder.comment("throw bricks at your foes! Might break glass blocks")
+            THROWABLE_BRICKS_ENABLED = builder.comment("Throw bricks at your foes! Might break glass blocks")
                     .define("enabled",true);
             builder.pop();
             //wall lantern
             builder.push("wall_lantern");
-            WALL_LANTERN_PLACEMENT = builder.comment("allow wall lanterns placement")
+            WALL_LANTERN_PLACEMENT = builder.comment("Allow wall lanterns placement")
                     .define("enabled",true);
 
+            WALL_LANTERN_HIGH_PRIORITY = builder.comment("Gives high priority to wall lantern placement. Enable to override other wall lanterns placements, disable if it causes issues with other mods that use lower priority block click events")
+                    .define("high_priority", true);
+
             List<String> modBlacklist = Arrays.asList("extlights","betterendforge","tconstruct");
-            WALL_LANTERN_BLACKLIST = builder.comment("mod ids of mods that have lantern block that extend the base lantern class but don't look like one")
+            WALL_LANTERN_BLACKLIST = builder.comment("Mod ids of mods that have lantern block that extend the base lantern class but don't look like one")
                     .defineList("mod_blacklist", modBlacklist,s -> true);
             builder.pop();
             //bells
@@ -243,6 +252,10 @@ public class ServerConfigs {
             builder.push("placeable_books");
             PLACEABLE_BOOKS = builder.comment("Allow books and enchanted books to be placed on the ground")
                     .define("enabled", true);
+            BOOK_POWER = builder.comment("Enchantment power bonus given by normal book piles with 4 books. Piles with less books will have their respective fraction of this total. For reference a vanilla bookshelf provides 1")
+                    .defineInRange("book_power", 1d, 0, 5);
+            ENCHANTED_BOOK_POWER = builder.comment("Enchantment power bonus given by normal book piles with 4 books. Piles with less books will have their respective fraction of this total. For reference a vanilla bookshelf provides 1")
+                    .defineInRange("enchanted_book_power", 1.334d, 0, 5);
             builder.pop();
 
             builder.push("zombie_horse");
@@ -318,6 +331,7 @@ public class ServerConfigs {
         public static ForgeConfigSpec.BooleanValue ITEM_SHELF_LADDER;
 
         public static ForgeConfigSpec.BooleanValue DOUBLE_IRON_GATE;
+        public static ForgeConfigSpec.BooleanValue CONSISTENT_GATE;
 
         public static ForgeConfigSpec.BooleanValue STICK_POLE;
         public static ForgeConfigSpec.IntValue STICK_POLE_LENGTH;
@@ -474,6 +488,8 @@ public class ServerConfigs {
             builder.push("iron_gate");
             DOUBLE_IRON_GATE = builder.comment("Allows two iron gates to be opened simultaneously when on top of the other")
                     .define("double_opening", true);
+            CONSISTENT_GATE = builder.comment("Makes iron (ang gold) gates behave like their door counterpart so for example iron gates will only be openeable by redstone")
+                    .define("door-like_gates", false);
             builder.pop();
 
             builder.push("flag");
@@ -603,6 +619,7 @@ public class ServerConfigs {
         public static BombEntity.breakingMode BOMB_BLUE_BREAKS;
         public static double SLINGSHOT_RANGE;
         public static int SLINGSHOT_CHARGE;
+        public static float SLINGSHOT_DECELERATION;
         public static boolean UNRESTRICTED_SLINGSHOT;
         //tweaks
         public static int ZOMBIE_HORSE_COST;
@@ -613,6 +630,7 @@ public class ServerConfigs {
         public static boolean HANGING_POT_PLACEMENT;
         public static boolean THROWABLE_BRICKS_ENABLED;
         public static boolean WALL_LANTERN_PLACEMENT;
+        public static boolean WALL_LANTERN_HIGH_PRIORITY;
         public static List<? extends String> WALL_LANTERN_BLACKLIST;
         public static boolean BELL_CHAIN;
         public static int BELL_CHAIN_LENGTH;
@@ -624,6 +642,8 @@ public class ServerConfigs {
         public static boolean MAP_MARKERS;
         public static boolean CEILING_BANNERS;
         public static boolean PLACEABLE_BOOKS;
+        public static float ENCHANTED_BOOK_POWER;
+        public static float BOOK_POWER;
         public static boolean PLACEABLE_GUNPOWDER;
         public static int GUNPOWDER_BURN_SPEED;
         public static int GUNPOWDER_SPREAD_AGE;
@@ -669,6 +689,7 @@ public class ServerConfigs {
         public static boolean SWAP_TIMBER_FRAME;
         public static boolean ITEM_SHELF_LADDER;
         public static boolean DOUBLE_IRON_GATE;
+        public static boolean CONSISTENT_GATE;
         public static boolean STICK_POLE;
         public static int STICK_POLE_LENGTH;
 
@@ -689,6 +710,7 @@ public class ServerConfigs {
             DOUBLE_CAKE_PLACEMENT = tweaks.DOUBLE_CAKE_PLACEMENT.get();
             HANGING_POT_PLACEMENT = tweaks.WALL_LANTERN_PLACEMENT.get();
             WALL_LANTERN_PLACEMENT = tweaks.WALL_LANTERN_PLACEMENT.get();
+            WALL_LANTERN_HIGH_PRIORITY = tweaks.WALL_LANTERN_HIGH_PRIORITY.get();
             THROWABLE_BRICKS_ENABLED = tweaks.THROWABLE_BRICKS_ENABLED.get();
             WALL_LANTERN_BLACKLIST = tweaks.WALL_LANTERN_BLACKLIST.get();
             BELL_CHAIN = tweaks.BELL_CHAIN.get();
@@ -696,6 +718,8 @@ public class ServerConfigs {
             MAP_MARKERS = tweaks.MAP_MARKERS.get();
             CEILING_BANNERS = tweaks.CEILING_BANNERS.get();
             PLACEABLE_BOOKS = tweaks.PLACEABLE_BOOKS.get();
+            BOOK_POWER = (float)((double)tweaks.BOOK_POWER.get());
+            ENCHANTED_BOOK_POWER = (float)((double)tweaks.ENCHANTED_BOOK_POWER.get());
             PLACEABLE_GUNPOWDER = tweaks.PLACEABLE_GUNPOWDER.get();
             GUNPOWDER_BURN_SPEED = tweaks.GUNPOWDER_BURN_SPEED.get();
             GUNPOWDER_SPREAD_AGE = tweaks.GUNPOWDER_SPREAD_AGE.get();
@@ -712,6 +736,7 @@ public class ServerConfigs {
             BOMB_BLUE_RADIUS = (float)(item.BOMB_BLUE_RADIUS.get()+0f);
             SLINGSHOT_RANGE = item.SLINGSHOT_RANGE.get();
             SLINGSHOT_CHARGE = item.SLINGSHOT_CHARGE.get();
+            SLINGSHOT_DECELERATION = (float)(0f+item.SLINGSHOT_DECELERATION.get());
             UNRESTRICTED_SLINGSHOT = item.UNRESTRICTED_SLINGSHOT.get();
 
             FIREFLY_MIN = spawn.FIREFLY_MIN.get();
@@ -769,6 +794,7 @@ public class ServerConfigs {
             ITEM_SHELF_LADDER = block.ITEM_SHELF_LADDER.get();
 
             DOUBLE_IRON_GATE = block.DOUBLE_IRON_GATE.get();
+            CONSISTENT_GATE = block.CONSISTENT_GATE.get();
 
             STICK_POLE = block.STICK_POLE.get();
             STICK_POLE_LENGTH = block.STICK_POLE_LENGTH.get();

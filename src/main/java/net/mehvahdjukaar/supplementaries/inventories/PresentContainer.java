@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.inventories;
 
-import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -13,13 +13,13 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;
 
 
-public class PresentContainer extends Container  {
+public class PresentContainer extends Container {
     public final IInventory inventory;
 
     private final BlockPos pos;
 
     public PresentContainer(int id, PlayerInventory playerInventory, PacketBuffer packetBuffer) {
-        this(id,playerInventory, null, packetBuffer.readBlockPos());
+        this(id, playerInventory, null, packetBuffer.readBlockPos());
 
     }
 
@@ -29,23 +29,22 @@ public class PresentContainer extends Container  {
         this.pos = pos;
 
         //tile inventory
-        if(inventory==null){
+        if (inventory == null) {
             this.inventory = new Inventory(1) {
                 public void setChanged() {
                     super.setChanged();
                     PresentContainer.this.slotsChanged(this);
                 }
             };
-        }
-        else this.inventory = inventory;
+        } else this.inventory = inventory;
 
         checkContainerSize(this.inventory, 1);
         this.inventory.startOpen(playerInventory.player);
 
-        this.addSlot(new Slot(this.inventory, 0,  17, 23) {
+        this.addSlot(new Slot(this.inventory, 0, 17, 23) {
             @Override
             public boolean mayPlace(ItemStack stack) {
-                return CommonUtil.isAllowedInShulker(stack);
+                return PresentBlockTile.isAcceptableItem(stack);
             }
         });
 
@@ -64,10 +63,12 @@ public class PresentContainer extends Container  {
     public boolean stillValid(PlayerEntity playerIn) {
         return this.inventory.stillValid(playerIn);
     }
+
     /**
      * Handle when the stack in slot {@code index} is shift-clicked. Normally this moves the stack between the player
      * inventory and the other inventory(s).
      */
+    @Override
     public ItemStack quickMoveStack(PlayerEntity playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
@@ -95,6 +96,7 @@ public class PresentContainer extends Container  {
     /**
      * Called when the container is closed.
      */
+    @Override
     public void removed(PlayerEntity playerIn) {
         super.removed(playerIn);
         this.inventory.stopOpen(playerIn);

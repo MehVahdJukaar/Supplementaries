@@ -19,8 +19,10 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 public class IronGateBlock extends FenceGateBlock {
-    public IronGateBlock(Properties properties) {
+    private final boolean gold;
+    public IronGateBlock(Properties properties, boolean gold) {
         super(properties);
+        this.gold = gold;
     }
 
     @Override
@@ -45,10 +47,13 @@ public class IronGateBlock extends FenceGateBlock {
         if (!world.isClientSide) {
             boolean flag = world.hasNeighborSignal(pos);
             if (state.getValue(POWERED) != flag) {
-                if (state.getValue(OPEN) != flag) {
-                    world.levelEvent(null, flag ? 1036 : 1037, pos, 0);
+                state = state.setValue(POWERED, flag);
+                if(!gold || !ServerConfigs.cached.CONSISTENT_GATE){
+                    if (state.getValue(OPEN) != flag) {
+                        world.levelEvent(null, flag ? 1036 : 1037, pos, 0);
+                    }
+                    state = state.setValue(OPEN, flag);
                 }
-                state = state.setValue(POWERED, flag).setValue(OPEN, flag);
             }
             boolean connect = canConnect(world,pos,state.getValue(FACING));
             world.setBlock(pos,state.setValue(IN_WALL,connect),2);
@@ -80,7 +85,7 @@ public class IronGateBlock extends FenceGateBlock {
     @Override
     public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult result) {
 
-        if(!state.getValue(POWERED)){
+        if(!state.getValue(POWERED) && gold || !ServerConfigs.cached.CONSISTENT_GATE){
             Direction dir = player.getDirection();
 
 
@@ -100,10 +105,6 @@ public class IronGateBlock extends FenceGateBlock {
             world.levelEvent(player, state.getValue(OPEN) ? 1036 : 1037, pos, 0);
             return ActionResultType.sidedSuccess(world.isClientSide);
         }
-
-
-
-
 
         return ActionResultType.PASS;
 

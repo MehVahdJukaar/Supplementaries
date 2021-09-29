@@ -34,10 +34,23 @@ import java.util.List;
 @JeiPlugin
 public class SupplementariesJEIPlugin implements IModPlugin {
 
+    private static final ResourceLocation ID = Supplementaries.res("jei_plugin");
+
     @Override
     public ResourceLocation getPluginUid() {
-        return new ResourceLocation(Supplementaries.MOD_ID, "plugin_" + Supplementaries.MOD_ID);
+        return ID;
     }
+
+
+    @Override
+    public void registerRecipes(IRecipeRegistration registry) {
+        registry.addRecipes(createTippedBambooSpikesRecipes(),VanillaRecipeCategoryUid.CRAFTING);
+        registry.addRecipes(createBlackboardDuplicate(),VanillaRecipeCategoryUid.CRAFTING);
+        registry.addRecipes(createRopeArrowCreateRecipe(),VanillaRecipeCategoryUid.CRAFTING);
+        registry.addRecipes(createRopeArrowAddRecipe(),VanillaRecipeCategoryUid.CRAFTING);
+        registry.addRecipes(createFlagFromBanner(),VanillaRecipeCategoryUid.CRAFTING);
+    }
+
 
     @Override
     public void registerItemSubtypes(ISubtypeRegistration registration) {
@@ -65,16 +78,8 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         }
     }
 
-    @Override
-    public void registerRecipes(IRecipeRegistration registry) {
-        registry.addRecipes(createTippedBambooSpikesRecipes(),VanillaRecipeCategoryUid.CRAFTING);
-        registry.addRecipes(createBlackboardDuplicate(),VanillaRecipeCategoryUid.CRAFTING);
-        //registry.addRecipes(createBlackboardClear(),VanillaRecipeCategoryUid.CRAFTING);
-        registry.addRecipes(createRopeArrowCreateRecipe(),VanillaRecipeCategoryUid.CRAFTING);
-        registry.addRecipes(createRopeArrowAddRecipe(),VanillaRecipeCategoryUid.CRAFTING);
-        registry.addRecipes(createFlagFromBanner(),VanillaRecipeCategoryUid.CRAFTING);
 
-    }
+
 
     //TODO: fix ropes
     public static List<IRecipe<?>> createRopeArrowCreateRecipe() {
@@ -250,5 +255,6 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         return recipes;
 
     }
+
 
 }

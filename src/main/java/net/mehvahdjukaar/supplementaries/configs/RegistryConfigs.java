@@ -110,7 +110,8 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue IRON_GATE_ENABLED;
         public static ForgeConfigSpec.BooleanValue FEATHER_BLOCK_ENABLED;
         public static ForgeConfigSpec.BooleanValue FLINT_BLOCK_ENABLED;
-        public static ForgeConfigSpec.BooleanValue SLINGSHOR_ENABLED;
+        public static ForgeConfigSpec.BooleanValue SLINGSHOT_ENABLED;
+        public static ForgeConfigSpec.BooleanValue SHULKER_HELMET_ENABLED;
 
         public static ForgeConfigSpec.BooleanValue AMETHYST_ARROW_ENABLED;
         public static ForgeConfigSpec.BooleanValue PRESENT_ENABLED;
@@ -191,7 +192,7 @@ public class RegistryConfigs {
             JAR_ENABLED = builder.define(ModRegistry.JAR_NAME, true);
             FAUCET_ENABLED = builder.define(ModRegistry.FAUCET_NAME, true);
             TURN_TABLE_ENABLED = builder.define(ModRegistry.TURN_TABLE_NAME, true);
-            PISTON_LAUNCHER_ENABLED = builder.define(ModRegistry.PISTON_LAUNCHER_NAME, true);
+            PISTON_LAUNCHER_ENABLED = builder.define(ModRegistry.SPRING_LAUNCHER_NAME, true);
             SPEAKER_BLOCK_ENABLED = builder.define(ModRegistry.SPEAKER_BLOCK_NAME, true);
             SIGN_POST_ENABLED = builder.define(ModRegistry.SIGN_POST_NAME, true);
             HANGING_SIGN_ENABLED = builder.define(ModRegistry.HANGING_SIGN_NAME, true);
@@ -246,7 +247,8 @@ public class RegistryConfigs {
             IRON_GATE_ENABLED = builder.define(ModRegistry.IRON_GATE_NAME, true);
             FEATHER_BLOCK_ENABLED = builder.define(ModRegistry.FEATHER_BLOCK_NAME, true);
             FLINT_BLOCK_ENABLED = builder.define(ModRegistry.FLINT_BLOCK_NAME, true);
-            SLINGSHOR_ENABLED = builder.define(ModRegistry.SLINGSHOT_NAME, true);
+            SLINGSHOT_ENABLED = builder.define(ModRegistry.SLINGSHOT_NAME, true);
+            SHULKER_HELMET_ENABLED = builder.define("shulker_shell", true);
 
             AMETHYST_ARROW_ENABLED = builder.comment("WIP").define(ModRegistry.AMETHYST_ARROW_NAME,false);
             PRESENT_ENABLED = builder.comment("WIP").define(ModRegistry.PRESENT_NAME,true);

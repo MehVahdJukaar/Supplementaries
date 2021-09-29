@@ -50,9 +50,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -141,6 +138,13 @@ public class ModRegistry {
     @SubscribeEvent
     public static void registerCompatItems(final RegistryEvent.Register<Item> event) {
         CompatHandler.registerOptionalItems(event);
+        //shulker shell
+
+        if(RegistryConfigs.reg.SHULKER_HELMET_ENABLED.get()) {
+            event.getRegistry().register(new ShulkerShellItem(new Item.Properties()
+                    .tab(ItemGroup.TAB_MATERIALS)).setRegistryName("minecraft:shulker_shell"));
+        }
+
     }
 
     @SubscribeEvent
@@ -279,7 +283,7 @@ public class ModRegistry {
                     .updateInterval(20))
             .build(AMETHYST_ARROW_NAME));
     public static final RegistryObject<Item> AMETHYST_ARROW_ITEM = ITEMS.register(AMETHYST_ARROW_NAME, () -> new AmethystArrowItem(
-            new Item.Properties().tab(null)));
+            new Item.Properties().tab(getTab(ItemGroup.TAB_COMBAT, AMETHYST_ARROW_NAME))));
 
     public static final String AMETHYST_SHARD_NAME = "amethyst_shard";
     public static final RegistryObject<EntityType<ShardProjectileEntity>> AMETHYST_SHARD = ENTITIES.register(AMETHYST_SHARD_NAME, () -> (
@@ -369,24 +373,13 @@ public class ModRegistry {
     //presents
     public static final String PRESENT_NAME = "present";
 
-    public static final RegistryObject<Block> PRESENT = BLOCKS.register(PRESENT_NAME, () -> new PresentBlock(null,
-            AbstractBlock.Properties.of(Material.WOOL, MaterialColor.WOOD)
-                    .strength(1.0F)
-                    .sound(SoundType.WOOL)));
+    public static final Map<DyeColor, RegistryObject<Block>> PRESENTS = Variants.makePresents(PRESENT_NAME);
 
-    public static final Map<DyeColor, RegistryObject<Block>> PRESENTS = new HashMap(); //Variants.makePresents(PRESENT_NAME);
-
-    private static final List<RegistryObject<Block>> presentBlocks = new ArrayList<RegistryObject<Block>>() {{
-        addAll(PRESENTS.values());
-        add(PRESENT);
-    }};
     public static final RegistryObject<TileEntityType<PresentBlockTile>> PRESENT_TILE = TILES
             .register(PRESENT_NAME, () -> TileEntityType.Builder.of(PresentBlockTile::new,
-                    presentBlocks.stream().map(RegistryObject::get).toArray(Block[]::new)).build(null));
+                    PRESENTS.values().stream().map(RegistryObject::get).toArray(Block[]::new)).build(null));
 
-    //public static final RegistryObject<Item> PRESENT_ITEM = regBlockItem(PRESENT,getTab(ItemGroup.TAB_DECORATIONS,PRESENT_NAME));
-
-    // public static final Map<DyeColor, RegistryObject<Item>> PRESENTS_ITEMS = Variants.makePresentsItems();
+    public static final Map<DyeColor, RegistryObject<Item>> PRESENTS_ITEMS = Variants.makePresentsItems();
 
     public static final RegistryObject<ContainerType<PresentContainer>> PRESENT_BLOCK_CONTAINER = CONTAINERS
             .register(PRESENT_NAME, () -> IForgeContainerType.create(PresentContainer::new));
@@ -818,22 +811,22 @@ public class ModRegistry {
     public static final RegistryObject<Item> COG_BLOCK_ITEM = regBlockItem(COG_BLOCK, getTab(ItemGroup.TAB_REDSTONE, COG_BLOCK_NAME));
 
     //piston launcher base
-    public static final String PISTON_LAUNCHER_NAME = "piston_launcher";
-    public static final RegistryObject<Block> PISTON_LAUNCHER = BLOCKS.register(PISTON_LAUNCHER_NAME, () -> new PistonLauncherBlock(
+    public static final String SPRING_LAUNCHER_NAME = "spring_launcher";
+    public static final RegistryObject<Block> SPRING_LAUNCHER = BLOCKS.register(SPRING_LAUNCHER_NAME, () -> new SpringLauncherBlock(
             AbstractBlock.Properties.of(Material.METAL, MaterialColor.METAL)
                     .strength(4f, 5f)
                     .harvestLevel(1)
                     .sound(SoundType.METAL)
                     .harvestTool(ToolType.PICKAXE)
                     .requiresCorrectToolForDrops()
-                    .isRedstoneConductor((state, reader, pos) -> !state.getValue(PistonLauncherBlock.EXTENDED))
-                    .isSuffocating((state, reader, pos) -> !state.getValue(PistonLauncherBlock.EXTENDED))
-                    .isViewBlocking((state, reader, pos) -> !state.getValue(PistonLauncherBlock.EXTENDED))
+                    .isRedstoneConductor((state, reader, pos) -> !state.getValue(SpringLauncherBlock.EXTENDED))
+                    .isSuffocating((state, reader, pos) -> !state.getValue(SpringLauncherBlock.EXTENDED))
+                    .isViewBlocking((state, reader, pos) -> !state.getValue(SpringLauncherBlock.EXTENDED))
     ));
-    public static final RegistryObject<Item> PISTON_LAUNCHER_ITEM = regBlockItem(PISTON_LAUNCHER, getTab(ItemGroup.TAB_REDSTONE, PISTON_LAUNCHER_NAME));
+    public static final RegistryObject<Item> PISTON_LAUNCHER_ITEM = regBlockItem(SPRING_LAUNCHER, getTab(ItemGroup.TAB_REDSTONE, SPRING_LAUNCHER_NAME));
 
-    public static final String PISTON_LAUNCHER_HEAD_NAME = "piston_launcher_head";
-    public static final RegistryObject<Block> PISTON_LAUNCHER_HEAD = BLOCKS.register(PISTON_LAUNCHER_HEAD_NAME, () -> new PistonLauncherHeadBlock(
+    public static final String PISTON_LAUNCHER_HEAD_NAME = "spring_launcher_head";
+    public static final RegistryObject<Block> SPRING_LAUNCHER_HEAD = BLOCKS.register(PISTON_LAUNCHER_HEAD_NAME, () -> new SpringLauncherHeadBlock(
             AbstractBlock.Properties.of(Material.METAL, MaterialColor.METAL)
                     .strength(4f, 5f)
                     .harvestLevel(1)
@@ -842,8 +835,8 @@ public class ModRegistry {
                     .noDrops()
                     .jumpFactor(1.18f)
     ));
-    public static final String PISTON_LAUNCHER_ARM_NAME = "piston_launcher_arm";
-    public static final RegistryObject<Block> PISTON_LAUNCHER_ARM = BLOCKS.register(PISTON_LAUNCHER_ARM_NAME, () -> new PistonLauncherArmBlock(
+    public static final String PISTON_LAUNCHER_ARM_NAME = "spring_launcher_arm";
+    public static final RegistryObject<Block> SPRING_LAUNCHER_ARM = BLOCKS.register(PISTON_LAUNCHER_ARM_NAME, () -> new PistonLauncherArmBlock(
             AbstractBlock.Properties.of(Material.METAL, MaterialColor.METAL)
                     .strength(50f, 50f)
                     .harvestLevel(1)
@@ -853,7 +846,7 @@ public class ModRegistry {
                     .noDrops()
     ));
     public static final RegistryObject<TileEntityType<PistonLauncherArmBlockTile>> PISTON_LAUNCHER_ARM_TILE = TILES.register(PISTON_LAUNCHER_ARM_NAME, () -> TileEntityType.Builder.of(
-            PistonLauncherArmBlockTile::new, PISTON_LAUNCHER_ARM.get()).build(null));
+            PistonLauncherArmBlockTile::new, SPRING_LAUNCHER_ARM.get()).build(null));
 
     //speaker Block
     public static final String SPEAKER_BLOCK_NAME = "speaker_block";
@@ -1035,13 +1028,13 @@ public class ModRegistry {
     //iron gate
     public static final String IRON_GATE_NAME = "iron_gate";
     public static final RegistryObject<Block> IRON_GATE = BLOCKS.register(IRON_GATE_NAME, () -> new IronGateBlock(
-            AbstractBlock.Properties.copy(Blocks.IRON_BARS)));
+            AbstractBlock.Properties.copy(Blocks.IRON_BARS), false));
     public static final RegistryObject<Item> IRON_GATE_ITEM = regBlockItem(IRON_GATE, getTab(ItemGroup.TAB_REDSTONE, IRON_GATE_NAME));
 
     //gold gate
     public static final String GOLD_GATE_NAME = "gold_gate";
     public static final RegistryObject<Block> GOLD_GATE = BLOCKS.register(GOLD_GATE_NAME, () -> new IronGateBlock(
-            AbstractBlock.Properties.copy(Blocks.IRON_BARS)));
+            AbstractBlock.Properties.copy(Blocks.IRON_BARS), true));
     public static final RegistryObject<Item> GOLD_GATE_ITEM = regBlockItem(GOLD_GATE, getTab("quark", ItemGroup.TAB_REDSTONE, GOLD_GATE_NAME));
 
 
@@ -1322,7 +1315,7 @@ public class ModRegistry {
 
     //blackstone lamp
     public static final String BLACKSTONE_LAMP_NAME = "blackstone_lamp";
-    public static final RegistryObject<Block> BLACKSTONE_LAMP = BLOCKS.register(BLACKSTONE_LAMP_NAME, () -> new Block(
+    public static final RegistryObject<Block> BLACKSTONE_LAMP = BLOCKS.register(BLACKSTONE_LAMP_NAME, () -> new RotatedPillarBlock(
             AbstractBlock.Properties.of(Material.STONE, MaterialColor.COLOR_YELLOW)
                     .strength(1.5f, 6f)
                     .lightLevel((s) -> 15)

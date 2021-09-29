@@ -35,21 +35,13 @@ public class PulleyBlockTile extends ItemDisplayTile {
         super(ModRegistry.PULLEY_BLOCK_TILE.get());
     }
 
+    //no need since it doesn't display stuff
     @Override
-    public void updateOnChangedBeforePacket() {
+    public boolean needsToUpdateClientWhenChanged() {
+        return false;
     }
 
-    //hijacking this method to work with hoppers
-    @Override
-    public void setChanged() {
-        if (this.level == null) return;
-        this.updateTile();
-        //this.updateServerAndClient();
-        super.setChanged();
-    }
-
-    public void updateTile() {
-        if (this.level.isClientSide) return;
+    public void updateTileOnInventoryChanged() {
         Winding type = getContentType(this.getDisplayedItem().getItem());
         BlockState state = this.getBlockState();
         if (state.getValue(PulleyBlock.TYPE) != type) {

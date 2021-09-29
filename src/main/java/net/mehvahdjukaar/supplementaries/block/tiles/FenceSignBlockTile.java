@@ -14,7 +14,6 @@ import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraftforge.common.util.Constants;
 
 
 public class FenceSignBlockTile extends TileEntity implements ITextHolder, IBlockHolder {
@@ -45,18 +44,6 @@ public class FenceSignBlockTile extends TileEntity implements ITextHolder, IBloc
 
     @Override
     public TextHolder getTextHolder(){ return this.textHolder; }
-
-    @Override
-    public double getViewDistance() {
-        return 128;
-    }
-
-    @Override
-    public void setChanged() {
-        if(this.level==null)return;
-        this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
-        super.setChanged();
-    }
 
     @Override
     public AxisAlignedBB getRenderBoundingBox(){

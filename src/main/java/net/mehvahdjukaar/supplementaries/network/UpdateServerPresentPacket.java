@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.network;
 
 import net.mehvahdjukaar.supplementaries.block.tiles.PresentBlockTile;
+import net.minecraft.block.BlockState;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.SoundCategory;
@@ -44,11 +45,16 @@ public class UpdateServerPresentPacket {
         World world = Objects.requireNonNull(ctx.get().getSender()).level;
         ctx.get().enqueueWork(() -> {
             if (world != null) {
+                BlockPos pos = message.pos;
                 TileEntity tileentity = world.getBlockEntity(message.pos);
                 if (tileentity instanceof PresentBlockTile) {
                     PresentBlockTile present = (PresentBlockTile) tileentity;
                     world.playSound(null,message.pos, SoundEvents.VILLAGER_WORK_LEATHERWORKER, SoundCategory.BLOCKS,1,1.3f);
                     present.pack(message.recipient, message.sender, message.packed);
+
+                    //updates client
+                    BlockState state = world.getBlockState(pos);
+                    world.sendBlockUpdated(pos, state, state, 3);
                     tileentity.setChanged();
                 }
             }

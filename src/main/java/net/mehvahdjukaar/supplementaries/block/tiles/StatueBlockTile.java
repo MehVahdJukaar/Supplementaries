@@ -7,11 +7,14 @@ import com.mojang.authlib.properties.Property;
 import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.StatueBlock;
+import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.common.SpecialPlayers;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
-import net.minecraft.item.*;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.PlayerProfileCache;
 import net.minecraft.util.Direction;
@@ -36,7 +39,7 @@ public class StatueBlockTile extends ItemDisplayTile {
         super(ModRegistry.STATUE_TILE.get());
     }
 
-    public static void initializeSessionData(MinecraftServer server){
+    public static void initializeSessionData(MinecraftServer server) {
         profileCache = server.getProfileCache();
         sessionService = server.getSessionService();
         //PlayerProfileCache.setOnlineMode(server.isServerInOnlineMode());
@@ -48,29 +51,24 @@ public class StatueBlockTile extends ItemDisplayTile {
     }
 
     @Override
-    public void setChanged() {
-        super.setChanged();
-    }
-
-    @Override
     public void setCustomName(ITextComponent name) {
         super.setCustomName(name);
         this.updateName();
     }
 
-    private void updateName(){
+    private void updateName() {
 
-        if(this.hasCustomName()) {
+        if (this.hasCustomName()) {
 
             String name = this.getCustomName().getString().toLowerCase();
             UUID id = SpecialPlayers.STATUES.get(name);
-            if(id != null) {
+            if (id != null) {
                 this.playerProfile = this.updateGameProfile(new GameProfile(id, name));
             }
             //ClientPlayNetHandler connection = Minecraft.getInstance().getConnection();
             //if(connection!=null)
-                //this.playerInfo = connection.getPlayerInfo(SpecialPlayers.STATUES.get(this.getCustomName().getString().toLowerCase()));
-        }else this.playerProfile = null;
+            //this.playerInfo = connection.getPlayerInfo(SpecialPlayers.STATUES.get(this.getCustomName().getString().toLowerCase()));
+        } else this.playerProfile = null;
 
     }
 
@@ -100,18 +98,15 @@ public class StatueBlockTile extends ItemDisplayTile {
         ItemStack stack = this.getDisplayedItem();
         this.pose = StatuePose.getPose(stack);
         this.isWaving = this.getBlockState().getValue(StatueBlock.POWERED);
-        if(this.pose == StatuePose.CANDLE){
-            this.candle = ((BlockItem)stack.getItem()).getBlock().defaultBlockState();
+        if (this.pose == StatuePose.CANDLE) {
+            this.candle = ((BlockItem) stack.getItem()).getBlock().defaultBlockState();
         }
     }
 
-    @Override
-    public void updateOnChangedBeforePacket() {
-        super.updateOnChangedBeforePacket();
-        //TODO: remove in 1.17
-        boolean flag = (StatuePose.getPose(this.getDisplayedItem())==StatuePose.CANDLE);
-        if(flag!=this.getBlockState().getValue(StatueBlock.LIT)){
-            this.level.setBlockAndUpdate(this.getBlockPos(),this.getBlockState().setValue(StatueBlock.LIT,flag));
+    public void updateTileOnInventoryChanged() {
+        boolean flag = (StatuePose.getPose(this.getDisplayedItem()) == StatuePose.CANDLE);
+        if (flag != this.getBlockState().getValue(StatueBlock.LIT)) {
+            this.level.setBlockAndUpdate(this.getBlockPos(), this.getBlockState().setValue(StatueBlock.LIT, flag));
         }
     }
 
@@ -120,23 +115,23 @@ public class StatueBlockTile extends ItemDisplayTile {
         return new TranslationTextComponent("block.supplementaries.statuette");
     }
 
-    public Direction getDirection(){
+    public Direction getDirection() {
         return this.getBlockState().getValue(NoticeBoardBlock.FACING);
     }
 
-    public enum StatuePose{
+    public enum StatuePose {
         STANDING,
         HOLDING,
         CANDLE,
         SWORD,
         TOOL;
 
-        public static StatuePose getPose(ItemStack stack){
-            if(stack.isEmpty())return StatuePose.STANDING;
+        public static StatuePose getPose(ItemStack stack) {
+            if (stack.isEmpty()) return StatuePose.STANDING;
             Item i = stack.getItem();
-            if(i instanceof SwordItem )return SWORD;
-            if(i instanceof ToolItem || i instanceof TridentItem)return TOOL;
-            return (i.is(ModTags.CANDLES)||i== ModRegistry.CANDLE_HOLDER_ITEM.get())  ? StatuePose.CANDLE : StatuePose.HOLDING;
+            if (CommonUtil.isSword(i)) return SWORD;
+            if (CommonUtil.isTool(i)) return TOOL;
+            return (i.is(ModTags.CANDLES) || i == ModRegistry.CANDLE_HOLDER_ITEM.get()) ? StatuePose.CANDLE : StatuePose.HOLDING;
         }
     }
 }

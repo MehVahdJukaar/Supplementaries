@@ -42,7 +42,7 @@ public class PistonLauncherArmBlock extends Block {
 
     @Override
     public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
-        return new ItemStack(ModRegistry.PISTON_LAUNCHER.get());
+        return new ItemStack(ModRegistry.SPRING_LAUNCHER.get());
     }
 
     @Override

@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.client.gui.*;
 import net.mehvahdjukaar.supplementaries.client.models.*;
 import net.mehvahdjukaar.supplementaries.client.particles.*;
@@ -255,13 +256,11 @@ public class ClientSetup {
                 (stack, world, entity) -> entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1.0F : 0.0F);
 
 
-        //Registry.PRESENTS_ITEMS.values().forEach(i ->
-         //       ItemModelsProperties.register(i.get(), new ResourceLocation("packed"),
-        //                (stack, world, entity) -> PresentBlockTile.isPacked(stack) ? 1.0F : 0.0F));
+        ModRegistry.PRESENTS_ITEMS.values().forEach(i -> ItemModelsProperties.register(i.get(), new ResourceLocation("packed"),
+                        (stack, world, entity) -> PresentBlockTile.isPacked(stack) ? 1.0F : 1.0F));
 
-        //ItemModelsProperties.register(Registry.SPEEDOMETER_ITEM.get(), new ResourceLocation("speed"),
-        //        new SpeedometerItem.SpeedometerItemProperty());
-
+        //ItemModelsProperties.register(ModRegistry.SPEEDOMETER_ITEM.get(), new ResourceLocation("speed"),
+        //       new SpeedometerItem.SpeedometerItemProperty());
     }
 
     public static class CrossbowProperty implements IItemPropertyGetter{
@@ -337,14 +336,9 @@ public class ClientSetup {
             Textures.FLAG_TEXTURES.values().forEach(event::addSprite);
         }
         else if(loc.equals(Atlases.SHULKER_SHEET)){
-            event.addSprite(Textures.ENCHANTED_BOOK_TEXTURES);
+            event.addSprite(Textures.BOOK_ENCHANTED_TEXTURES);
+            event.addSprite(Textures.BOOK_TOME_TEXTURES);
             Textures.BOOK_TEXTURES.values().forEach(event::addSprite);
-        }
-        else if(loc.equals(Atlases.SIGN_SHEET)){
-            //TODO: make hanging sign use java model
-            //event.addSprite(HANGING_SIGNS_TEXTURES.get(type));
-            //event.addSprite(Textures.SIGN_POSTS_TEXTURES.get(type));
-            //disabled since they get automatically stitched on the block texture by their items
         }
 
         OptifineHandler.refresh();
@@ -353,11 +347,11 @@ public class ClientSetup {
     @SubscribeEvent
     public static void onModelRegistry(ModelRegistryEvent event){
         //loaders
-        ModelLoaderRegistry.registerLoader(new ResourceLocation(Supplementaries.MOD_ID, "frame_block_loader"), new FrameBlockLoader());
-        ModelLoaderRegistry.registerLoader(new ResourceLocation(Supplementaries.MOD_ID, "mimic_block_loader"), new SignPostBlockLoader());
-        ModelLoaderRegistry.registerLoader(new ResourceLocation(Supplementaries.MOD_ID, "rope_knot_loader"), new RopeKnotBlockLoader());
-        ModelLoaderRegistry.registerLoader(new ResourceLocation(Supplementaries.MOD_ID, "wall_lantern_loader"), new WallLanternLoader());
-        ModelLoaderRegistry.registerLoader(new ResourceLocation(Supplementaries.MOD_ID, "flower_box_loader"), new FlowerBoxLoader());
+        ModelLoaderRegistry.registerLoader(Supplementaries.res("frame_block_loader"), new FrameBlockLoader());
+        ModelLoaderRegistry.registerLoader(Supplementaries.res("mimic_block_loader"), new SignPostBlockLoader());
+        ModelLoaderRegistry.registerLoader(Supplementaries.res( "rope_knot_loader"), new RopeKnotBlockLoader());
+        ModelLoaderRegistry.registerLoader(Supplementaries.res("wall_lantern_loader"), new WallLanternLoader());
+        ModelLoaderRegistry.registerLoader(Supplementaries.res( "flower_box_loader"), new FlowerBoxLoader());
 
 
 

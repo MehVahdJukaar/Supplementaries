@@ -10,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.network.UpdateServerPresentPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.DialogTexts;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -23,13 +24,12 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import org.jetbrains.annotations.Nullable;
 
 
 public class PresentBlockGui extends ContainerScreen<PresentContainer> implements IContainerListener {
 
-    private TextFieldWidget recipient;
-    private TextFieldWidget sender;
+    protected TextFieldWidget recipient;
+    protected TextFieldWidget sender;
 
     private PackButton packButton;
 
@@ -38,8 +38,8 @@ public class PresentBlockGui extends ContainerScreen<PresentContainer> implement
     public static ScreenManager.IScreenFactory<PresentContainer, PresentBlockGui> GUI_FACTORY =
             (container, inventory, title) -> {
                 TileEntity te = Minecraft.getInstance().level.getBlockEntity(container.getPos());
-                if(te instanceof PresentBlockTile){
-                    return new PresentBlockGui(container,inventory,title, (PresentBlockTile) te);
+                if (te instanceof PresentBlockTile) {
+                    return new PresentBlockGui(container, inventory, title, (PresentBlockTile) te);
                 }
                 return null;
             };
@@ -72,6 +72,8 @@ public class PresentBlockGui extends ContainerScreen<PresentContainer> implement
         this.recipient.setTextColorUneditable(-1);
         this.recipient.setBordered(false);
         this.recipient.setMaxLength(35);
+        String rec = this.tile.getRecipient();
+        if(!rec.isEmpty()) this.recipient.setValue(rec);
         this.children.add(this.recipient);
 
         this.sender = new PresentTextFieldWidget(this.font, i + 53, j + 53,
@@ -81,6 +83,8 @@ public class PresentBlockGui extends ContainerScreen<PresentContainer> implement
         this.sender.setTextColorUneditable(-1);
         this.sender.setBordered(false);
         this.sender.setMaxLength(35);
+        String send = this.tile.getSender();
+        if(!send.isEmpty()) this.sender.setValue(send);
         this.children.add(this.sender);
 
         this.sender.active = false;
@@ -89,14 +93,21 @@ public class PresentBlockGui extends ContainerScreen<PresentContainer> implement
         this.recipient.setEditable(false);
 
         this.menu.addSlotListener(this);
+
+        if(!tile.getDisplayedItem().isEmpty()){
+            this.recipient.setFocus(true);
+        }
+        if(tile.isPacked()) this.setPacked();
+
+
     }
 
     @Override
     public void tick() {
         super.tick();
-        if(this.recipient!=null)
-        this.recipient.tick();
-        if(this.sender!=null)
+        if (this.recipient != null)
+            this.recipient.tick();
+        if (this.sender != null)
             this.sender.tick();
     }
 
@@ -109,17 +120,31 @@ public class PresentBlockGui extends ContainerScreen<PresentContainer> implement
     public void setContainerData(Container p_71112_1_, int p_71112_2_, int p_71112_3_) {
     }
 
+    private void setPacked(){
+        this.packButton.active = false;
+        this.recipient.active = false;
+        this.recipient.setFocus(false);
+        this.recipient.setEditable(false);
+        this.sender.active = false;
+        this.sender.setFocus(false);
+        this.sender.setEditable(false);
+        this.setFocused(null);
+    }
+
+    @Override
     public void slotChanged(Container container, int slot, ItemStack stack) {
         if (slot == 0) {
-            if(stack.isEmpty()){
+            if (stack.isEmpty()) {
                 this.setFocused(null);
                 this.recipient.active = false;
                 this.sender.active = false;
                 this.sender.setEditable(false);
                 this.recipient.setEditable(false);
+                this.packButton.active = true;
+                this.sender.setValue("");
+                this.recipient.setValue("");
 
-            }
-            else {
+            } else {
                 this.setFocused(recipient);
                 this.recipient.active = true;
                 this.sender.active = true;
@@ -130,7 +155,7 @@ public class PresentBlockGui extends ContainerScreen<PresentContainer> implement
     }
 
 
-    private boolean canWrite(){
+    private boolean canWrite() {
         return !tile.isPacked() && this.menu.getSlot(0).hasItem();
     }
 
@@ -178,7 +203,7 @@ public class PresentBlockGui extends ContainerScreen<PresentContainer> implement
             return true;
         }
         // down arrow, enter
-        else if(key == 264 || key == 257 || key == 335) {
+        else if (key == 264 || key == 257 || key == 335) {
             this.switchFocus();
             return true;
         }
@@ -190,12 +215,22 @@ public class PresentBlockGui extends ContainerScreen<PresentContainer> implement
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        if(((int) delta)%2!=0)this.switchFocus();
+        if (((int) delta) % 2 != 0) this.switchFocus();
         return true;
     }
 
-    public void switchFocus(){
-        this.setFocused(this.getFocused() == sender? recipient : sender);
+    public void switchFocus() {
+        IGuiEventListener focus = this.getFocused();
+        if(focus == sender){
+            this.sender.setFocus(false);
+            this.recipient.setFocus(true);
+            this.setFocused(recipient);
+        }
+        else if(focus == recipient){
+            this.recipient.setFocus(false);
+            this.sender.setFocus(true);
+            this.setFocused(sender);
+        }
     }
 
 
@@ -214,6 +249,7 @@ public class PresentBlockGui extends ContainerScreen<PresentContainer> implement
             super(x, y, 22, 22, StringTextComponent.EMPTY);
         }
 
+        @Override
         public void renderButton(MatrixStack p_230431_1_, int p_230431_2_, int p_230431_3_, float p_230431_4_) {
             Minecraft.getInstance().getTextureManager().bind(Textures.PRESENT_BLOCK_GUI_TEXTURE);
             RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -231,7 +267,6 @@ public class PresentBlockGui extends ContainerScreen<PresentContainer> implement
         }
 
 
-
         public boolean isSelected() {
             return this.selected;
         }
@@ -240,42 +275,38 @@ public class PresentBlockGui extends ContainerScreen<PresentContainer> implement
             this.selected = selected;
         }
 
+        @Override
         public void renderToolTip(MatrixStack matrixStack, int x, int y) {
             PresentBlockGui.this.renderTooltip(matrixStack, DialogTexts.GUI_DONE, x, y);
         }
 
+        @Override
         public void onPress() {
-            this.active = false;
-            PresentBlockGui.this.recipient.active = false;
-            PresentBlockGui.this.sender.active = false;
-            PresentBlockGui.this.setFocused(null);
-            PresentBlockGui.this.sender.setEditable(false);
-            PresentBlockGui.this.recipient.setEditable(false);
+            PresentBlockGui.this.setPacked();
+
             //BeaconScreen.this.minecraft.getConnection().send(new CUpdateBeaconPacket(Effect.getId(BeaconScreen.this.primary), Effect.getId(BeaconScreen.this.secondary)));
             //BeaconScreen.this.minecraft.player.connection.send(new CCloseWindowPacket(BeaconScreen.this.minecraft.player.containerMenu.containerId));
             //BeaconScreen.this.minecraft.setScreen((Screen)null);
         }
     }
 
-    private class PresentTextFieldWidget extends TextFieldWidget{
+    private class PresentTextFieldWidget extends TextFieldWidget {
 
-        public PresentTextFieldWidget(FontRenderer p_i232260_1_, int p_i232260_2_, int p_i232260_3_, int p_i232260_4_, int p_i232260_5_, ITextComponent p_i232260_6_) {
-            super(p_i232260_1_, p_i232260_2_, p_i232260_3_, p_i232260_4_, p_i232260_5_, p_i232260_6_);
-        }
-
-        public PresentTextFieldWidget(FontRenderer p_i232259_1_, int p_i232259_2_, int p_i232259_3_, int p_i232259_4_, int p_i232259_5_, @Nullable TextFieldWidget p_i232259_6_, ITextComponent p_i232259_7_) {
-            super(p_i232259_1_, p_i232259_2_, p_i232259_3_, p_i232259_4_, p_i232259_5_, p_i232259_6_, p_i232259_7_);
+        public PresentTextFieldWidget(FontRenderer fontRenderer, int x, int y, int width, int height, ITextComponent text) {
+            super(fontRenderer, x, y, width, height, text);
         }
 
         @Override
         public boolean mouseClicked(double p_231044_1_, double p_231044_3_, int p_231044_5_) {
-            if(this.active) {
+            if (this.active) {
+                PresentBlockGui.this.setFocused(this);
+                PresentBlockGui.this.sender.setFocus(false);
+                PresentBlockGui.this.recipient.setFocus(false);
                 return super.mouseClicked(p_231044_1_, p_231044_3_, p_231044_5_);
             }
             return false;
         }
     }
-
 
 
 }

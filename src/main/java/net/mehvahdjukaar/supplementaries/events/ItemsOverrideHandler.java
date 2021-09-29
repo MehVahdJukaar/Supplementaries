@@ -41,6 +41,8 @@ import java.util.*;
 
 public class ItemsOverrideHandler {
 
+    private static final Map<Item, ItemInteractionOverride> HIGH_PRIORITY_OVERRIDES = new HashMap<>();
+
     private static final Map<Item, ItemInteractionOverride> ON_BLOCK_OVERRIDES = new HashMap<>();
 
     private static final Map<Item, ItemInteractionOverride> ITEM_OVERRIDES = new HashMap<>();
@@ -51,8 +53,10 @@ public class ItemsOverrideHandler {
     }
 
     public static void registerOverrides() {
+        List<ItemInteractionOverride> HPBlockBehaviors = new ArrayList<>();
         List<ItemInteractionOverride> itemBehaviors = new ArrayList<>();
         List<ItemInteractionOverride> blockBehaviors = new ArrayList<>();
+        HPBlockBehaviors.add(new WallLanternBehavior());
         blockBehaviors.add(new WallLanternBehavior());
         blockBehaviors.add(new MapMarkerBehavior());
         blockBehaviors.add(new CeilingBannersBehavior());
@@ -70,7 +74,7 @@ public class ItemsOverrideHandler {
                 if (b.appliesToItem(i)) {
                     //adds item to block item map
                     Block block = b.getBlockOverride(i);
-                    if (b != null) Item.BY_BLOCK.put(block, i);
+                    if (b != null && b.shouldBlockMapToItem(i)) Item.BY_BLOCK.put(block, i);
                     ON_BLOCK_OVERRIDES.put(i, b);
                     break;
                 }
@@ -81,10 +85,32 @@ public class ItemsOverrideHandler {
                     break;
                 }
             }
+            for (ItemInteractionOverride b : HPBlockBehaviors) {
+                if (b.appliesToItem(i)) {
+                    HIGH_PRIORITY_OVERRIDES.put(i, b);
+                    break;
+                }
+            }
+
         }
     }
 
-    public static void tryPerformOverride(PlayerInteractEvent.RightClickBlock event, ItemStack stack, boolean isRanged) {
+    public static void tryHighPriorityOverride(PlayerInteractEvent.RightClickBlock event, ItemStack stack) {
+        Item item = stack.getItem();
+
+        ItemInteractionOverride override = HIGH_PRIORITY_OVERRIDES.get(item);
+        if (override != null && override.isEnabled()) {
+
+            ActionResultType result = override.tryPerformingAction(event.getWorld(), event.getPlayer(), event.getHand(), stack, event.getHitVec(), false);
+            if (result != ActionResultType.PASS) {
+                event.setCanceled(true);
+                event.setCancellationResult(result);
+            }
+        }
+    }
+
+
+    public static boolean tryPerformOverride(PlayerInteractEvent.RightClickBlock event, ItemStack stack, boolean isRanged) {
         Item item = stack.getItem();
 
         ItemInteractionOverride override = ON_BLOCK_OVERRIDES.get(item);
@@ -94,9 +120,11 @@ public class ItemsOverrideHandler {
             if (result != ActionResultType.PASS) {
                 event.setCanceled(true);
                 event.setCancellationResult(result);
+                return true;
             }
 
         }
+        return false;
     }
 
     public static void tryPerformOverride(PlayerInteractEvent.RightClickItem event, ItemStack stack, boolean isRanged) {
@@ -135,6 +163,10 @@ public class ItemsOverrideHandler {
         public abstract boolean isEnabled();
 
         public abstract boolean appliesToItem(Item item);
+
+        public boolean shouldBlockMapToItem(Item item){
+            return appliesToItem(item);
+        }
 
         //if this item can place a block
         @Nullable
@@ -541,6 +573,11 @@ public class ItemsOverrideHandler {
         @Override
         public boolean appliesToItem(Item item) {
             return ((BookPileBlock)ModRegistry.BOOK_PILE.get()).isAcceptedItem(item);
+        }
+
+        @Override
+        public boolean shouldBlockMapToItem(Item item) {
+            return item == Items.ENCHANTED_BOOK;
         }
 
         @Override

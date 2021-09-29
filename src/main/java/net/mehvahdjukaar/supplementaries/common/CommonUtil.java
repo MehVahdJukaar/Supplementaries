@@ -1,14 +1,13 @@
 package net.mehvahdjukaar.supplementaries.common;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.SignPostBlock;
+import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
+import net.mehvahdjukaar.supplementaries.compat.tetra.TetraToolHelper;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.block.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.item.*;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tileentity.ShulkerBoxTileEntity;
@@ -50,7 +49,9 @@ public class CommonUtil {
         APRILS_FOOL,
         CHRISTMAS,
         EARTH_DAY,
-        ST_VALENTINE;
+        ST_VALENTINE,
+        MY_BIRTHDAY,
+        MOD_BIRTHDAY;
 
         public boolean isHalloween() {
             return this == HALLOWEEN;
@@ -74,22 +75,31 @@ public class CommonUtil {
 
         private static Festivity get() {
             Calendar calendar = Calendar.getInstance();
-            if ((calendar.get(Calendar.MONTH) == Calendar.OCTOBER && calendar.get(Calendar.DATE) >= 29) ||
-                    (calendar.get(Calendar.MONTH) == Calendar.NOVEMBER && calendar.get(Calendar.DATE) <= 1))
-                return HALLOWEEN;
-            if (calendar.get(Calendar.MONTH) == Calendar.APRIL && calendar.get(Calendar.DATE) == 1) return APRILS_FOOL;
-            if (calendar.get(Calendar.MONTH) == Calendar.FEBRUARY && calendar.get(Calendar.DATE) == 14)
-                return ST_VALENTINE;
-            if (calendar.get(Calendar.MONTH) == Calendar.APRIL && calendar.get(Calendar.DATE) == 22) return EARTH_DAY;
-            if (calendar.get(Calendar.MONTH) + 1 == 12 && calendar.get(Calendar.DATE) >= 24 && calendar.get(Calendar.DATE) <= 26)
-                return CHRISTMAS;
+            int month = calendar.get(Calendar.MONTH);
+            int date = calendar.get(Calendar.DATE);
+            if ((month == Calendar.OCTOBER && date >= 29) || (month == Calendar.NOVEMBER && date <= 1)) return HALLOWEEN;
+            if (month == Calendar.APRIL && date == 1) return APRILS_FOOL;
+            if (month == Calendar.FEBRUARY && date == 14) return ST_VALENTINE;
+            if (month == Calendar.APRIL && date == 22) return EARTH_DAY;
+            if (month == Calendar.DECEMBER && date >= 24 && date <= 26) return CHRISTMAS;
+            if (month == Calendar.FEBRUARY && date == 7) return MY_BIRTHDAY;
+            if (month == Calendar.OCTOBER && date == 9) return MOD_BIRTHDAY;
             return NONE;
         }
-
     }
 
     public static Festivity FESTIVITY = Festivity.get();
 
+
+    public static boolean isSword(Item i){
+        if(CompatHandler.tetra && TetraToolHelper.isTetraSword(i))return true;
+        return i instanceof SwordItem;
+    }
+
+    public static boolean isTool(Item i){
+        if(CompatHandler.tetra && TetraToolHelper.isTetraTool(i))return true;
+        return i instanceof ToolItem || i instanceof TridentItem;
+    }
 
     //TODO: move to tag
     public static boolean isLantern(Item i) {

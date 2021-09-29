@@ -30,12 +30,12 @@ public class GobletBlockTile extends TileEntity implements ISoftFluidHolder {
 
     @Override
     public void setChanged() {
-        if(this.level==null)return;
+        if (this.level == null) return;
         //TODO: only call after you finished updating your tile so others can react properly (faucets)
-        this.level.updateNeighborsAt(worldPosition,this.getBlockState().getBlock());
+        this.level.updateNeighborsAt(worldPosition, this.getBlockState().getBlock());
         int light = this.fluidHolder.getFluid().getLuminosity();
-        if(light!=this.getBlockState().getValue(BlockProperties.LIGHT_LEVEL_0_15)){
-            this.level.setBlock(this.worldPosition,this.getBlockState().setValue(BlockProperties.LIGHT_LEVEL_0_15,light),2);
+        if (light != this.getBlockState().getValue(BlockProperties.LIGHT_LEVEL_0_15)) {
+            this.level.setBlock(this.worldPosition, this.getBlockState().setValue(BlockProperties.LIGHT_LEVEL_0_15, light), 2);
         }
         this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
         super.setChanged();
@@ -53,7 +53,7 @@ public class GobletBlockTile extends TileEntity implements ISoftFluidHolder {
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.load(this.getBlockState(),pkt.getTag());
+        this.load(this.getBlockState(), pkt.getTag());
     }
 
     // does all the calculation for handling player interaction.
@@ -64,9 +64,9 @@ public class GobletBlockTile extends TileEntity implements ISoftFluidHolder {
             return true;
         }
         //empty hand: eat food
-        if(!player.isShiftKeyDown()) {
+        if (!player.isShiftKeyDown()) {
             //from drink
-            if(ServerConfigs.cached.JAR_EAT) {
+            if (ServerConfigs.cached.JAR_EAT) {
                 return this.fluidHolder.tryDrinkUpFluid(player, this.level);
             }
         }

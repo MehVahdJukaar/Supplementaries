@@ -175,7 +175,7 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
                     } while (maxlines < tempPageLines.size());
 
                     tile.setFontScale(scalingfactor);
-                    tile.setChachedPageLines(tempPageLines);
+                    tile.setCachedPageLines(tempPageLines);
                 } else {
                     tempPageLines = tile.getCachedPageLines();
                     scalingfactor = tile.getFontScale();

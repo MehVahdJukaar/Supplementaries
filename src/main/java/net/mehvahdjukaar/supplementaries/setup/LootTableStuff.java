@@ -32,7 +32,7 @@ public class LootTableStuff {
         if (RegistryConfigs.reg.FLAX_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectFlax);
         if (RegistryConfigs.reg.BOMB_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectBlueBomb);
         if (RegistryConfigs.reg.BOMB_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectBomb);
-        if (RegistryConfigs.reg.SLINGSHOR_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectStasis);
+        if (RegistryConfigs.reg.SLINGSHOT_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectStasis);
         if (RegistryConfigs.reg.BAMBOO_SPIKES_ENABLED.get() &&
                 RegistryConfigs.reg.TIPPED_SPIKES_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectSpikes);
     }

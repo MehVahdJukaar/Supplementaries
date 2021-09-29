@@ -28,7 +28,7 @@ public class ConfigButton extends Button {
 
     @Override
     public int getFGColor() {
-        return this.isHovered? HSLColor.getRainbowColorPost(3) : 0xFFAA00;
+        return this.isHovered ? HSLColor.getRainbowColorPost(3) : 0xFFAA00;
     }
 
     public static void click(Button button) {
@@ -36,18 +36,18 @@ public class ConfigButton extends Button {
 
         mc.setScreen(ModList.get().getModContainerById(Supplementaries.MOD_ID).get()
                 .getCustomExtension(ExtensionPoint.CONFIGGUIFACTORY).get()
-                .apply(mc,mc.screen));
+                .apply(mc, mc.screen));
 
         //ConfiguredCustomScreen.openScreen();
     }
 
-    public static void setupConfigButton(GuiScreenEvent.InitGuiEvent event){
+    public static void setupConfigButton(GuiScreenEvent.InitGuiEvent event) {
         Screen gui = event.getGui();
         if (gui instanceof MainMenuScreen || gui instanceof IngameMenuScreen) {
             boolean isOnRight = true;//!CompatHandler.quark || !QuarkPlugin.hasQButtonOnRight();
             List<String> targets = isOnRight ?
-                    Arrays.asList(new TranslationTextComponent("menu.online").getString(),new TranslationTextComponent("fml.menu.modoptions").getString(),new TranslationTextComponent("menu.shareToLan").getString())
-                    :Arrays.asList(new TranslationTextComponent("menu.options").getString(),new TranslationTextComponent("fml.menu.mods").getString());
+                    Arrays.asList(new TranslationTextComponent("menu.online").getString(), new TranslationTextComponent("fml.menu.modoptions").getString(), new TranslationTextComponent("menu.shareToLan").getString())
+                    : Arrays.asList(new TranslationTextComponent("menu.options").getString(), new TranslationTextComponent("fml.menu.mods").getString());
 
             List<Widget> widgets = event.getWidgetList();
 

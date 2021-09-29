@@ -35,7 +35,7 @@ import net.minecraft.world.World;
 
 import java.util.Arrays;
 
-public class PistonLauncherHeadBlock extends DirectionalBlock {
+public class SpringLauncherHeadBlock extends DirectionalBlock {
     protected static final VoxelShape PISTON_EXTENSION_EAST_AABB = Block.box(12.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
     protected static final VoxelShape PISTON_EXTENSION_WEST_AABB = Block.box(0.0D, 0.0D, 0.0D, 4.0D, 16.0D, 16.0D);
     protected static final VoxelShape PISTON_EXTENSION_SOUTH_AABB = Block.box(0.0D, 0.0D, 12.0D, 16.0D, 16.0D, 16.0D);
@@ -60,7 +60,7 @@ public class PistonLauncherHeadBlock extends DirectionalBlock {
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final BooleanProperty SHORT = BlockStateProperties.SHORT; // is not small? (only used for
     // tile entity, leave true
-    public PistonLauncherHeadBlock(Properties properties) {
+    public SpringLauncherHeadBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(SHORT, false).setValue(FACING, Direction.NORTH));
     }
@@ -105,7 +105,7 @@ public class PistonLauncherHeadBlock extends DirectionalBlock {
             entityIn.causeFallDamage(fallDistance, 0.0F);
             //TODO: add falling block entity support
             if((entityIn instanceof LivingEntity) && !worldIn.isClientSide && fallDistance>(float)ServerConfigs.cached.LAUNCHER_HEIGHT){
-                worldIn.setBlock(pos, ModRegistry.PISTON_LAUNCHER_ARM.get().defaultBlockState()
+                worldIn.setBlock(pos, ModRegistry.SPRING_LAUNCHER_ARM.get().defaultBlockState()
                         .setValue(PistonLauncherArmBlock.EXTENDING, false).setValue(FACING, state.getValue(FACING)), 3);
                 TileEntity te = worldIn.getBlockEntity(pos);
                 if(te instanceof PistonLauncherArmBlockTile){
@@ -167,7 +167,7 @@ public class PistonLauncherHeadBlock extends DirectionalBlock {
 
     @Override
     public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
-        return new ItemStack(ModRegistry.PISTON_LAUNCHER.get());
+        return new ItemStack(ModRegistry.SPRING_LAUNCHER.get());
     }
 
     @Override
@@ -185,7 +185,7 @@ public class PistonLauncherHeadBlock extends DirectionalBlock {
         if (!worldIn.isClientSide && player.abilities.instabuild) {
             BlockPos blockpos = pos.relative(state.getValue(FACING).getOpposite());
             Block block = worldIn.getBlockState(blockpos).getBlock();
-            if (block instanceof PistonLauncherBlock) {
+            if (block instanceof SpringLauncherBlock) {
                 worldIn.removeBlock(blockpos, false);
             }
         }
@@ -194,13 +194,13 @@ public class PistonLauncherHeadBlock extends DirectionalBlock {
 
     @Override
     public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-        BlockState comp = ModRegistry.PISTON_LAUNCHER_ARM.get().defaultBlockState().setValue(PistonLauncherArmBlock.EXTENDING, false).setValue(FACING, state.getValue(FACING));
+        BlockState comp = ModRegistry.SPRING_LAUNCHER_ARM.get().defaultBlockState().setValue(PistonLauncherArmBlock.EXTENDING, false).setValue(FACING, state.getValue(FACING));
         if ((state.getBlock() != newState.getBlock()) && (newState != comp)) {
             super.onRemove(state, worldIn, pos, newState, isMoving);
             Direction direction = state.getValue(FACING).getOpposite();
             pos = pos.relative(direction);
             BlockState blockstate = worldIn.getBlockState(pos);
-            if ((blockstate.getBlock() instanceof PistonLauncherBlock) && blockstate.getValue(BlockStateProperties.EXTENDED)) {
+            if ((blockstate.getBlock() instanceof SpringLauncherBlock) && blockstate.getValue(BlockStateProperties.EXTENDED)) {
                 dropResources(blockstate, worldIn, pos);
                 worldIn.removeBlock(pos, false);
             }
@@ -224,7 +224,7 @@ public class PistonLauncherHeadBlock extends DirectionalBlock {
 
     public boolean canSurvive(BlockState state, IWorldReader worldIn, BlockPos pos) {
         BlockState bs = worldIn.getBlockState(pos.relative(state.getValue(FACING).getOpposite()));
-        return bs == ModRegistry.PISTON_LAUNCHER.get().defaultBlockState().setValue(BlockStateProperties.EXTENDED, true).setValue(FACING, state.getValue(FACING));
+        return bs == ModRegistry.SPRING_LAUNCHER.get().defaultBlockState().setValue(BlockStateProperties.EXTENDED, true).setValue(FACING, state.getValue(FACING));
         // return bs == PistonLauncherBlock.block || block ==
         // PistonLauncherArmTileBlock.block;
     }
