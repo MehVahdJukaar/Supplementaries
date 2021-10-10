@@ -49,9 +49,9 @@ configuredBackground= "supplementaries:textures/blocks/blackstone_tiles.png"
 
 [[dependencies.supplementaries]]
 
-    modId="flywheel"
+modId="flywheel"
     mandatory=false
-    versionRange="[0.2.4,)"
+    versionRange="[1.16-0.2.3,)"
     ordering="NONE"
     side="CLIENT"
 
@@ -67,6 +67,6 @@ configuredBackground= "supplementaries:textures/blocks/blackstone_tiles.png"
 
     modId="selene"
     mandatory=true
-    versionRange="[1.0,]"
+    versionRange="[1.16.5-1.0,]"
     ordering="NONE"
     side="BOTH"

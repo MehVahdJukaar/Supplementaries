@@ -5,7 +5,11 @@ import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.minecraftforge.common.ForgeConfigSpec;
 
+import java.util.Arrays;
 import java.util.List;
+
+import static net.mehvahdjukaar.supplementaries.configs.ConfigHandler.LIST_STRING_CHECK;
+import static net.mehvahdjukaar.supplementaries.configs.ConfigHandler.STRING_CHECK;
 
 public class ClientConfigs {
     public static ForgeConfigSpec CLIENT_SPEC;
@@ -129,6 +133,7 @@ public class ClientConfigs {
         public static ForgeConfigSpec.DoubleValue FLAG_AMPLITUDE;
         public static ForgeConfigSpec.DoubleValue FLAG_AMPLITUDE_INCREMENT;
         public static ForgeConfigSpec.ConfigValue<List<? extends List<String>>> CAPTURED_MOBS_PROPERTIES;
+        public static ForgeConfigSpec.ConfigValue<List<? extends String>> TICKLE_MOBS;
 
         public static ForgeConfigSpec.BooleanValue FAST_LANTERNS;
 
@@ -161,7 +166,7 @@ public class ClientConfigs {
                     " - 10: ice\n"+
                     " - 11: iceberg/island\n"+
                     " - 12: mushroom island")
-                    .defineList("globe_colors", GlobeTextureManager.GlobeColors.getDefaultConfig(), s->true);
+                    .defineList("globe_colors", GlobeTextureManager.GlobeColors.getDefaultConfig(), LIST_STRING_CHECK);
 
             builder.pop();
 
@@ -229,6 +234,9 @@ public class ClientConfigs {
 
             builder.push("captured_mobs");
 
+            TICKLE_MOBS = builder.comment("A list of mobs that can be ticked on client side when inside jars. Mainly used for stuff that has particles. Can cause issues and side effects so use with care")
+                    .defineList("tickable_inside_jars", Arrays.asList("iceandfire:pixie", "druidcraft:dreadfish","druidcraft:lunar_moth","alexsmobs:hummingbird"), STRING_CHECK);
+
             CAPTURED_MOBS_PROPERTIES = builder.comment("Here you can customize how mobs are displayed in jars and cages.\n"+
                     "Following will have to be a list with the format below:\n"+
                     "[[<id>,<height>,<width>,<light_level>,<animation_type>],[<id>,...],...]\n"+
@@ -237,7 +245,7 @@ public class ClientConfigs {
                     " - <height>,<width>: these are the added height and width that will be added to the actual mob hitbox to determine its scale inside a cage or jar \n"+
                     "   You can increase them so this 'adjusted hitbox' will match the actual mob shape\n"+
                     "   In other words increase the to make the mob smaller\n"+
-                    " - <light_level> determines if and how much light should the mob emit\n"+
+                    " - <light_level> determines if and how much light should the mob emit (currently broken)\n"+
                     " - <animation_type> is used to associate each mob an animation.\n"+
                     "It can be set to the following values:\n" +
                     " - 'air' to make it stand in mid air like a flying animal (note that such mobs are set to this value by default)\n" +
@@ -246,7 +254,7 @@ public class ClientConfigs {
                     " - any number > 0 to make it render as a 2d fish whose index matches the 'fishies' texture sheet\n" +
                     " - 0 or any other values will be ignored and treated as default\n"+
                     "Note that only the first 3 parameters are needed, the others are optional")
-                    .defineList("rendering_parameters", CapturedMobsHelper.DEFAULT_CONFIG, s->true);
+                    .defineList("rendering_parameters", CapturedMobsHelper.DEFAULT_CONFIG, LIST_STRING_CHECK);
             builder.pop();
 
             builder.push("wall_lantern");

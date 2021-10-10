@@ -31,7 +31,7 @@ public class FallingLiquidParticle extends SpriteTexturedParticle {
         this.zo = this.z;
         this.ageParticle();
         if (!this.removed) {
-            this.yd -= (double)this.gravity;
+            this.yd -= this.gravity;
             this.move(this.xd, this.yd, this.zd);
             this.updateMotion();
             if (!this.removed) {

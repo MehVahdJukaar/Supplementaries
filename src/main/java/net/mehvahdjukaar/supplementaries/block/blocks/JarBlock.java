@@ -47,22 +47,22 @@ public class JarBlock extends WaterBlock {
 
     public JarBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(LIGHT_LEVEL, 0).setValue(FACING, Direction.NORTH).setValue(WATERLOGGED,false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(LIGHT_LEVEL, 0).setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false));
     }
 
     //check if it only gets called client side
-    public int getJarLiquidColor(BlockPos pos, IWorldReader world){
+    public int getJarLiquidColor(BlockPos pos, IWorldReader world) {
         TileEntity te = world.getBlockEntity(pos);
         if (te instanceof JarBlockTile) {
-            return ((JarBlockTile)te).fluidHolder.getParticleColor(world, pos);
+            return ((JarBlockTile) te).fluidHolder.getParticleColor(world, pos);
         }
         return 0xffffff;
     }
 
     @Override
     public float[] getBeaconColorMultiplier(BlockState state, IWorldReader world, BlockPos pos, BlockPos beaconPos) {
-        int color = getJarLiquidColor(pos,world);
-        if(color==-1)return null;
+        int color = getJarLiquidColor(pos, world);
+        if (color == -1) return null;
         float r = (float) ((color >> 16 & 255)) / 255.0F;
         float g = (float) ((color >> 8 & 255)) / 255.0F;
         float b = (float) ((color & 255)) / 255.0F;
@@ -71,7 +71,7 @@ public class JarBlock extends WaterBlock {
 
     @Override
     public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
-                                             BlockRayTraceResult hit) {
+                                BlockRayTraceResult hit) {
         TileEntity tileentity = worldIn.getBlockEntity(pos);
         if (tileentity instanceof JarBlockTile) {
             // make te do the work
@@ -82,6 +82,7 @@ public class JarBlock extends WaterBlock {
                 }
                 return ActionResultType.sidedSuccess(worldIn.isClientSide);
             }
+            return ((JarBlockTile) tileentity).mobContainer.onInteract(worldIn, pos, player, handIn);
         }
         return ActionResultType.PASS;
     }
@@ -97,16 +98,16 @@ public class JarBlock extends WaterBlock {
     }
 
     //TODO: improve
-    public ItemStack getJarItem(JarBlockTile te){
+    public ItemStack getJarItem(JarBlockTile te) {
         ItemStack returnStack = new ItemStack(this);
 
-        if(te.hasContent()){
+        if (te.hasContent()) {
             CompoundNBT compoundnbt = te.save(new CompoundNBT());
             if (!compoundnbt.isEmpty()) {
                 returnStack.addTagElement("BlockEntityTag", compoundnbt);
             }
         }
-        if(te.hasCustomName()){
+        if (te.hasCustomName()) {
             returnStack.setHoverName(te.getCustomName());
         }
         return returnStack;
@@ -167,7 +168,7 @@ public class JarBlock extends WaterBlock {
     // end shoulker box code
     @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(LIGHT_LEVEL,FACING,WATERLOGGED);
+        builder.add(LIGHT_LEVEL, FACING, WATERLOGGED);
     }
 
     @Override
@@ -215,8 +216,7 @@ public class JarBlock extends WaterBlock {
                 return Container.getRedstoneSignalFromContainer(te);
             else if (!te.fluidHolder.isEmpty()) {
                 return ((JarBlockTile) tileentity).fluidHolder.getComparatorOutput();
-            }
-            else if(!te.mobHolder.isEmpty())return 15;
+            } else if (te.mobContainer != null) return 15;
         }
         return 0;
     }
@@ -234,7 +234,7 @@ public class JarBlock extends WaterBlock {
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite())
-                .setValue(WATERLOGGED,context.getLevel().getFluidState(context.getClickedPos()).getType()==Fluids.WATER);
+                .setValue(WATERLOGGED, context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER);
     }
 
 }

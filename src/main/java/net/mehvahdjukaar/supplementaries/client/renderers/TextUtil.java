@@ -24,7 +24,7 @@ public class TextUtil {
 
     static {
         String c =
-                "\n\n\n\n\n\n\n\n\n\n\n\n\n\n" +
+                "\n\n\n\n\n\n\n\n\n\n\n" +
                         "\u00A76\n" +
                         "\u00A7lSupplementaries" +
                         "\n\n" +
@@ -33,7 +33,8 @@ public class TextUtil {
                         "\n\n\u00A74Artist:\u00A7r\n\n\u00A70" +
                         "Plantkillable" +
                         "\n\n\n\u00A74Donators:\u00A7r\n\n\u00A70" +
-                        "ThugPug43" +
+                        "AdaraChristine" +
+                        "\nThugPug43" +
                         "\nMetalBox47" +
                         "\nStonkManHanz" +
                         "\nSylveticHearts" +
@@ -91,7 +92,7 @@ public class TextUtil {
                         "\nmy grades. rip" +
                         "\nJoe Mama" +
                         "\nand You <3" +
-                        "\n\n\n\n";
+                        "\n\n";
 
         float lx = 1 - (2 * 0.125f);
         CREDITS.addAll(Minecraft.getInstance().font.split(iGetPageText(c), MathHelper.floor(lx * SCALINGFACTOR)));

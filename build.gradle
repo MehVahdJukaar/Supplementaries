@@ -134,7 +134,7 @@ dependencies {
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     //minecraft 'net.minecraftforge:forge:1.16.4-35.0.1'
-    minecraft 'net.minecraftforge:forge:1.16.5-36.2.2'
+    minecraft 'net.minecraftforge:forge:1.16.5-36.2.8'
     //1.16.3-34.1.0   1.16.4-35.0.1
 
     // You may put jars on which you depend on in ./libs or you may define them like so..
@@ -158,12 +158,29 @@ dependencies {
     //implementation fg.deobf("curse.maven:create-328085:3384090")
     //implementation fg.deobf("curse.maven:flywheel-486392:3384004")
 
+    //curse.maven:[project name]-[project id]:[file id]
     implementation fg.deobf("curse.maven:create-328085:3419412")
     //implementation fg.deobf("curse.maven:flywheel-486392:3419392")
     implementation fg.deobf("com.jozufozu.flywheel:Flywheel:1.16-0.2.3.49")
     //implementation fg.deobf("vazkii.quark:Quark:r2.4-305.1724")
     implementation fg.deobf("curse.maven:quark-243121:3326040")
     //implementation fg.deobf("curse.maven:quarkoddities-301051:3088871")
+
+    implementation fg.deobf("curse.maven:configured-457570:3434071")
+    implementation fg.deobf("curse.maven:curios-309927:3343065")
+    implementation fg.deobf("curse.maven:decorativeblocks-362528:3166283")
+    implementation fg.deobf("curse.maven:farmersdelight-398521:3418719")
+    implementation fg.deobf("curse.maven:framedblocks-441647:3412173")
+    implementation fg.deobf("curse.maven:inspirations-284007:3414517")
+    implementation fg.deobf("curse.maven:mantle-74924:3439180")
+    implementation fg.deobf("curse.maven:mantle-250363:3326041")
+    implementation fg.deobf("curse.maven:dynamictrees-252818:3480621")
+    implementation fg.deobf("curse.maven:enchanted-book-redesign-348076:3239927")
+
+    implementation fg.deobf("mezz.jei:jei-1.16.5:7.7.1.116")
+
+    implementation fg.deobf("curse.maven:tetra-289712:3371803")
+    implementation fg.deobf("curse.maven:mgui-351914:3291267")
 
     //mixin stuff fore gradle 5+
     annotationProcessor 'org.spongepowered:mixin:0.8:processor'

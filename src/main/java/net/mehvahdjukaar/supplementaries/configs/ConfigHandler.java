@@ -19,6 +19,9 @@ import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collection;
+import java.util.List;
+import java.util.function.Predicate;
 
 public class ConfigHandler {
 
@@ -36,6 +39,7 @@ public class ConfigHandler {
         value.set((T) valueSpec.getDefault());
     }
 
+    //maybe not needed anymore now with predicated below
     public static <T> T safeGetListString(ForgeConfigSpec spec, ForgeConfigSpec.ConfigValue<T> value){
         Object o = value.get();
         //resets failed config value
@@ -49,6 +53,9 @@ public class ConfigHandler {
         return value.get();
     }
 
+    public static Predicate<Object> STRING_CHECK = o -> o instanceof String;
+
+    public static Predicate<Object> LIST_STRING_CHECK = o -> o instanceof List<?> && ((Collection<?>) o).stream().allMatch(s -> s instanceof String);
 
     public static void reloadConfigsEvent(ModConfig.ModConfigEvent event) {
         //TODO: common aren't working..

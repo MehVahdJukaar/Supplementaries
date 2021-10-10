@@ -18,7 +18,8 @@ public abstract class AbstractBlockMixin {
             ordinal = 1),
             cancellable = true)
     public void getOffset(IBlockReader world, BlockPos pos, CallbackInfoReturnable<Vector3d> cir) {
-        if(cir.getReturnValue() != Vector3d.ZERO && world.getBlockState(pos.below()).is(ModRegistry.PLANTER.get())){
+        //null check for world since some mods like to throw a null world here...
+        if (cir.getReturnValue() != Vector3d.ZERO && world != null && world.getBlockState(pos.below()).is(ModRegistry.PLANTER.get())) {
             cir.setReturnValue(Vector3d.ZERO);
         }
     }

@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 
 public class BlackboardTextureManager {
 
-    public static final ResourceLocation BLACKBOARD_ATLAS = new ResourceLocation(Supplementaries.MOD_ID,"textures/atlas/blackboards.png");
+    public static final ResourceLocation BLACKBOARD_ATLAS = new ResourceLocation(Supplementaries.MOD_ID, "textures/atlas/blackboards.png");
 
     public static BlackboardTextureManager INSTANCE = null;
     //private final AtlasTexture textureAtlas;
@@ -27,7 +27,7 @@ public class BlackboardTextureManager {
     private long lastID = 0;
 
     //will roll over at some point overriding possible textures. Not really a problem since it's ver unlikely somebody will generate 2^64 blackboards in a session
-    public long bindNextID(){
+    public long bindNextID() {
         return ++lastID;
     }
 
@@ -41,7 +41,7 @@ public class BlackboardTextureManager {
                 }
             });
 
-    public static void init(TextureManager textureManager){
+    public static void init(TextureManager textureManager) {
         INSTANCE = new BlackboardTextureManager(textureManager);
     }
 
@@ -52,44 +52,44 @@ public class BlackboardTextureManager {
     }
 
 
-    public RenderType getRenderType(BlackboardBlockTile tile){
+    public RenderType getRenderType(BlackboardBlockTile tile) {
         return this.getTextureInstance(tile).renderType;
     }
 
-    public RenderType getRenderType(long[] packed){
+    public RenderType getRenderType(long[] packed) {
         return this.getTextureInstance(packed).renderType;
     }
 
-    public ResourceLocation getResourceLocation(long[] packed){
+    public ResourceLocation getResourceLocation(long[] packed) {
         return getTextureInstance(packed).resourceLocation;
     }
 
-    public ResourceLocation getResourceLocation(BlackboardBlockTile tile){
+    public ResourceLocation getResourceLocation(BlackboardBlockTile tile) {
         return this.getTextureInstance(tile).resourceLocation;
     }
 
-    public ResourceLocation getResourceLocation(BlackboardKey key){
+    public ResourceLocation getResourceLocation(BlackboardKey key) {
         return this.getTextureInstance(key).resourceLocation;
     }
 
-    public RenderType getRenderType(BlackboardKey key){
+    public RenderType getRenderType(BlackboardKey key) {
         return this.getTextureInstance(key).renderType;
     }
 
-    public TextureInstance getTextureInstance(BlackboardKey key){
+    public TextureInstance getTextureInstance(BlackboardKey key) {
         TextureInstance textureInstance = this.blackboardTextures.getIfPresent(key);
         if (textureInstance == null) {
-            textureInstance = new TextureInstance(BlackboardBlockTile.unpackPixels(key.values),bindNextID());
+            textureInstance = new TextureInstance(BlackboardBlockTile.unpackPixels(key.values), bindNextID());
             this.blackboardTextures.put(key, textureInstance);
         }
         return textureInstance;
     }
 
-    public TextureInstance getTextureInstance(long[] packed){
+    public TextureInstance getTextureInstance(long[] packed) {
         BlackboardKey key = new BlackboardKey(packed);
         TextureInstance textureInstance = this.blackboardTextures.getIfPresent(key);
         if (textureInstance == null) {
-            textureInstance = new TextureInstance(BlackboardBlockTile.unpackPixels(packed),bindNextID());
+            textureInstance = new TextureInstance(BlackboardBlockTile.unpackPixels(packed), bindNextID());
             this.blackboardTextures.put(key, textureInstance);
         }
         return textureInstance;
@@ -99,37 +99,38 @@ public class BlackboardTextureManager {
         BlackboardKey key = getOrCreateTextureKey(tile);
         TextureInstance textureInstance = this.blackboardTextures.getIfPresent(key);
         if (textureInstance == null) {
-            textureInstance = new TextureInstance(tile.pixels,bindNextID());
+            textureInstance = new TextureInstance(tile.pixels, bindNextID());
             this.blackboardTextures.put(key, textureInstance);
         }
         return textureInstance;
     }
 
-    private BlackboardKey getOrCreateTextureKey(BlackboardBlockTile tile){
-        if(tile.textureKey==null){
+    private BlackboardKey getOrCreateTextureKey(BlackboardBlockTile tile) {
+        if (tile.textureKey == null) {
             tile.textureKey = new BlackboardKey(tile.pixels);
         }
         return tile.textureKey;
     }
 
 
-    public BlackboardKey getUpdatedKey(BlackboardBlockTile tile){
+    public BlackboardKey getUpdatedKey(BlackboardBlockTile tile) {
         BlackboardKey key = new BlackboardKey(tile.pixels);
-        if(this.blackboardTextures.getIfPresent(key)==null){
-            this.blackboardTextures.put(key, new TextureInstance(tile.pixels,bindNextID()));
+        if (this.blackboardTextures.getIfPresent(key) == null) {
+            this.blackboardTextures.put(key, new TextureInstance(tile.pixels, bindNextID()));
         }
         return key;
     }
 
-    public static class BlackboardKey{
+    public static class BlackboardKey {
         private final long[] values;
 
-        public BlackboardKey(long[] packed){
+        public BlackboardKey(long[] packed) {
             values = packed;
         }
 
-        public BlackboardKey(byte[][] pixels){
-            values = BlackboardBlockTile.packPixels(pixels);;
+        public BlackboardKey(byte[][] pixels) {
+            values = BlackboardBlockTile.packPixels(pixels);
+            ;
         }
 
         @Override
@@ -169,9 +170,9 @@ public class BlackboardTextureManager {
         }
 
         private void updateTexture(byte[][] pixels) {
-            for(int y = 0; y< pixels.length; y++) {
-                for(int x = 0; x< pixels[y].length; x++) { //getColoredPixel(BlackboardBlock.colorFromByte(pixels[x][y]),x,y)
-                    this.texture.getPixels().setPixelRGBA(x, y , getColoredPixel(pixels[x][y],x,y) );
+            for (int y = 0; y < pixels.length; y++) {
+                for (int x = 0; x < pixels[y].length; x++) { //getColoredPixel(BlackboardBlock.colorFromByte(pixels[x][y]),x,y)
+                    this.texture.getPixels().setPixelRGBA(x, y, getColoredPixel(pixels[x][y], x, y));
                 }
             }
             this.texture.upload();
@@ -184,12 +185,12 @@ public class BlackboardTextureManager {
         }
     }
 
-    private static int getColoredPixel(byte i, int x, int y){
-        int offset = i > 0?16:0;
+    private static int getColoredPixel(byte i, int x, int y) {
+        int offset = i > 0 ? 16 : 0;
         int tint = BlackboardBlock.colorFromByte(i);
         AtlasTexture textureMap = Minecraft.getInstance().getModelManager().getAtlas(AtlasTexture.LOCATION_BLOCKS);
         TextureAtlasSprite sprite = textureMap.getSprite(Textures.BLACKBOARD_TEXTURE);
-        return getTintedColor(sprite,x,y,offset,tint);
+        return getTintedColor(sprite, x, y, offset, tint);
     }
 
 
@@ -199,13 +200,13 @@ public class BlackboardTextureManager {
         int tintG = tint >> 8 & 255;
         int tintB = tint & 255;
 
-        int pixel = sprite.getPixelRGBA(0, x+offset, y);
+        int pixel = sprite.getPixelRGBA(0, x + offset, y);
 
         // this is in 0xAABBGGRR format, not the usual 0xAARRGGBB.
         int totalB = pixel >> 16 & 255;
         int totalG = pixel >> 8 & 255;
         int totalR = pixel & 255;
-        return NativeImage.combine(255,totalB * tintB / 255 , totalG * tintG / 255, totalR * tintR / 255);
+        return NativeImage.combine(255, totalB * tintB / 255, totalG * tintG / 255, totalR * tintR / 255);
     }
 
 

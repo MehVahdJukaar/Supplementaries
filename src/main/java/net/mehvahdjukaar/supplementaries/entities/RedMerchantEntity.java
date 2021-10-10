@@ -62,7 +62,7 @@ public class RedMerchantEntity extends AbstractVillagerEntity implements IRanged
         this.goalSelector.addGoal(2, new EquipAndRangeAttackGoal(this, 0.35D, 60, 10, 20, 15, new ItemStack(ModRegistry.BOMB_ITEM.get())));
 
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, MobEntity.class, 8, true, false,
-                (mob) ->  (mob instanceof AbstractRaiderEntity || mob instanceof ZombieEntity || mob instanceof VexEntity || mob instanceof ZoglinEntity)));
+                (mob) ->  (mob instanceof AbstractRaiderEntity || mob instanceof ZombieEntity || mob instanceof ZoglinEntity)));
 
         this.goalSelector.addGoal(3, new TradeWithPlayerGoal(this));
         this.goalSelector.addGoal(3, new LookAtCustomerGoal(this));

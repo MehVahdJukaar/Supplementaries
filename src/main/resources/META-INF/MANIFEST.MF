@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Specification-Title: supplementaries
+Specification-Vendor: examplemodsareus
+Specification-Version: 1
+Implementation-Title: Supplementaries
+Implementation-Version: 1.16.5-0.17.4
+Implementation-Vendor: examplemodsareus
+MixinConfigs: supplementaries.mixins.json
+

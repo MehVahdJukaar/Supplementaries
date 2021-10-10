@@ -28,8 +28,8 @@ public class Textures {
     public static final ResourceLocation SLIME_TEXTURE = new ResourceLocation("minecraft:block/slime_block");
     public static final ResourceLocation BLACKBOARD_TEXTURE = new ResourceLocation(MOD_ID + ":blocks/blackboard");
 
-    //blocks (to stitch)
-    public static final ResourceLocation SUGAR_TEXTURE = Supplementaries.res("blocks/sugar");
+    //fluids
+
     public static final ResourceLocation MILK_TEXTURE = new ResourceLocation(LIB, "blocks/milk_liquid");
     public static final ResourceLocation POTION_TEXTURE = new ResourceLocation(LIB, "blocks/potion_still");
     public static final ResourceLocation POTION_TEXTURE_FLOW = new ResourceLocation(LIB, "blocks/potion_flow");
@@ -40,6 +40,8 @@ public class Textures {
     public static final ResourceLocation XP_TEXTURE_FLOW = new ResourceLocation(LIB, "blocks/xp_flow");
     public static final ResourceLocation MAGMA_TEXTURE = new ResourceLocation(LIB, "blocks/magma_still");
     public static final ResourceLocation MAGMA_TEXTURE_FLOW = new ResourceLocation(LIB, "blocks/magma_flow");
+    //blocks (to stitch)
+    public static final ResourceLocation SUGAR_TEXTURE = Supplementaries.res("blocks/sugar");
     public static final ResourceLocation SOUL_TEXTURE = Supplementaries.res("blocks/soul");
     public static final ResourceLocation FISHIES_TEXTURE = Supplementaries.res("blocks/fishies");
     public static final ResourceLocation BELLOWS_TEXTURE = Supplementaries.res("entity/bellows");
@@ -53,6 +55,7 @@ public class Textures {
     public static final ResourceLocation HOURGLASS_SUGAR = Supplementaries.res("blocks/hourglass_sugar");
     public static final ResourceLocation HOURGLASS_BLAZE = Supplementaries.res("blocks/hourglass_blaze");
     public static final ResourceLocation HOURGLASS_GUNPOWDER = Supplementaries.res("blocks/hourglass_gunpowder");
+    public static final ResourceLocation BLACKBOARD_GRID = Supplementaries.res("blocks/blackboard_grid");
 
     public static final ResourceLocation TIMBER_FRAME_TEXTURE = Supplementaries.res("blocks/timber_frame");
     public static final ResourceLocation TIMBER_BRACE_TEXTURE = Supplementaries.res("blocks/timber_brace");
@@ -115,7 +118,7 @@ public class Textures {
         Field f = ObfuscationReflectionHelper.findField(BannerPattern.class, "field_191014_N");
         for (BannerPattern pattern : BannerPattern.values()) {
             try {
-                //get name isn't server side apparently...
+                //get name isn't server side, apparently...
                 f.setAccessible(true);
                 String name = (String) f.get(pattern);
                 FLAG_TEXTURES.put(pattern, Supplementaries.res("entity/flags/" + name));
@@ -132,8 +135,9 @@ public class Textures {
     //TODO: rethink this
     public static List<ResourceLocation> getTexturesToStitch() {
         return new ArrayList<>(Arrays.asList(
-                FISHIES_TEXTURE, BELLOWS_TEXTURE, LASER_BEAM_TEXTURE, LASER_BEAM_END_TEXTURE, LASER_OVERLAY_TEXTURE, SUGAR_TEXTURE,
-                CLOCK_HAND_TEXTURE, HOURGLASS_REDSTONE, HOURGLASS_GLOWSTONE, HOURGLASS_SUGAR, HOURGLASS_BLAZE, HOURGLASS_GUNPOWDER));
+                FISHIES_TEXTURE, BELLOWS_TEXTURE, LASER_BEAM_TEXTURE, LASER_BEAM_END_TEXTURE, LASER_OVERLAY_TEXTURE,
+                SUGAR_TEXTURE, CLOCK_HAND_TEXTURE, HOURGLASS_REDSTONE, HOURGLASS_GLOWSTONE, HOURGLASS_SUGAR, HOURGLASS_BLAZE,
+                HOURGLASS_GUNPOWDER, BLACKBOARD_GRID));
     }
 
     public enum BookColor {

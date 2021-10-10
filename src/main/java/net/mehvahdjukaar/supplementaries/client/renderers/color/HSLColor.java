@@ -3,12 +3,20 @@ package net.mehvahdjukaar.supplementaries.client.renderers.color;
 import net.minecraft.util.ColorHelper;
 import net.minecraft.util.math.MathHelper;
 
+import java.util.Random;
+
 public class HSLColor {
 
     public static int getRainbowColorPost(float division) {
         float scale = 3600f / division;
         float h = (((int) ((System.currentTimeMillis()) % (int) scale) / scale));
         float[] hsl = postProcess(new float[]{h, 0.6f, 0.5f});
+        return hslToRgb(hsl[0], hsl[1], hsl[2]);
+    }
+
+    public static int getRandomBrightColor(Random random){
+        float h = random.nextFloat();
+        float[] hsl = postProcess(new float[]{h, 0.62f+random.nextFloat()*0.3f, 0.43f + random.nextFloat()*0.15f});
         return hslToRgb(hsl[0], hsl[1], hsl[2]);
     }
 

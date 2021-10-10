@@ -2,7 +2,6 @@
 	"credit": "Made with Blockbench",
 	"ambientocclusion": false,
 	"textures": {
-		"particle": "supplementaries:block/flower_pot",
 		"cactus": "habitat:block/growing_ball_cactus",
 		"petal": "texture"
 	},

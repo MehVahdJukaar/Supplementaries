@@ -19,11 +19,9 @@ import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Rotation;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -35,14 +33,14 @@ import java.util.List;
 
 public class CageBlock extends WaterBlock {
     private static final ResourceLocation CONTENTS = new ResourceLocation("contents");
-    protected static final VoxelShape SHAPE = Block.box(1D,0D,1D,15.0D,16.0D,15.0D);
+    protected static final VoxelShape SHAPE = Block.box(1D, 0D, 1D, 15.0D, 16.0D, 15.0D);
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final IntegerProperty LIGHT_LEVEL = BlockProperties.LIGHT_LEVEL_0_15;
 
     public CageBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(LIGHT_LEVEL, 0).setValue(FACING, Direction.NORTH).setValue(WATERLOGGED,false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(LIGHT_LEVEL, 0).setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false));
     }
 
     @Override
@@ -54,7 +52,7 @@ public class CageBlock extends WaterBlock {
     public int getAnalogOutputSignal(BlockState blockState, World worldIn, BlockPos pos) {
         TileEntity tileentity = worldIn.getBlockEntity(pos);
         if (tileentity instanceof CageBlockTile) {
-            return ((CageBlockTile) tileentity).mobHolder.isEmpty()?0:15;
+            return ((CageBlockTile) tileentity).mobContainer == null ? 0 : 15;
         }
         return 0;
     }
@@ -65,9 +63,9 @@ public class CageBlock extends WaterBlock {
     }
 
     // shulker box code
-    public ItemStack getCageItem(CageBlockTile te){
+    public ItemStack getCageItem(CageBlockTile te) {
         ItemStack returnStack = new ItemStack(this);
-        if(!te.mobHolder.isEmpty()){
+        if (te.mobContainer != null) {
             te.saveToNbt(returnStack);
         }
         return returnStack;
@@ -104,7 +102,7 @@ public class CageBlock extends WaterBlock {
     // end shulker box code
     @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(LIGHT_LEVEL,FACING,WATERLOGGED);
+        builder.add(LIGHT_LEVEL, FACING, WATERLOGGED);
     }
 
     @Override
@@ -151,6 +149,18 @@ public class CageBlock extends WaterBlock {
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite())
-                .setValue(WATERLOGGED,context.getLevel().getFluidState(context.getClickedPos()).getType()==Fluids.WATER);
+                .setValue(WATERLOGGED, context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER);
+    }
+
+    @Override
+    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        TileEntity tileEntity = world.getBlockEntity(pos);
+        if (tileEntity instanceof CageBlockTile) {
+            CageBlockTile cage = (CageBlockTile) tileEntity;
+            if(cage.mobContainer != null){
+                return cage.mobContainer.onInteract(world, pos, player, hand);
+            }
+        }
+        return ActionResultType.PASS;
     }
 }

@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.events;
 
 import net.mehvahdjukaar.selene.map.CustomDecorationHolder;
 import net.mehvahdjukaar.selene.util.Utils;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.blocks.BookPileBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.DirectionalCakeBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.DoubleCakeBlock;
@@ -53,10 +54,13 @@ public class ItemsOverrideHandler {
     }
 
     public static void registerOverrides() {
+
         List<ItemInteractionOverride> HPBlockBehaviors = new ArrayList<>();
         List<ItemInteractionOverride> itemBehaviors = new ArrayList<>();
         List<ItemInteractionOverride> blockBehaviors = new ArrayList<>();
+
         HPBlockBehaviors.add(new WallLanternBehavior());
+
         blockBehaviors.add(new WallLanternBehavior());
         blockBehaviors.add(new MapMarkerBehavior());
         blockBehaviors.add(new CeilingBannersBehavior());
@@ -71,12 +75,16 @@ public class ItemsOverrideHandler {
 
         for (Item i : ForgeRegistries.ITEMS) {
             for (ItemInteractionOverride b : blockBehaviors) {
-                if (b.appliesToItem(i)) {
-                    //adds item to block item map
-                    Block block = b.getBlockOverride(i);
-                    if (b != null && b.shouldBlockMapToItem(i)) Item.BY_BLOCK.put(block, i);
-                    ON_BLOCK_OVERRIDES.put(i, b);
-                    break;
+                try {
+                    if (b.appliesToItem(i)) {
+                        //adds item to block item map
+                        Block block = b.getBlockOverride(i);
+                        if (b != null && b.shouldBlockMapToItem(i)) Item.BY_BLOCK.put(block, i);
+                        ON_BLOCK_OVERRIDES.put(i, b);
+                        break;
+                    }
+                }catch (Exception e){
+                    Supplementaries.LOGGER.error("failed to register for override "+ b.getClass().getSimpleName() +" for "+ i.getRegistryName()+" with exception: "+e);
                 }
             }
             for (ItemInteractionOverride b : itemBehaviors) {
@@ -84,14 +92,18 @@ public class ItemsOverrideHandler {
                     ITEM_OVERRIDES.put(i, b);
                     break;
                 }
+
             }
             for (ItemInteractionOverride b : HPBlockBehaviors) {
+                try{
                 if (b.appliesToItem(i)) {
                     HIGH_PRIORITY_OVERRIDES.put(i, b);
                     break;
                 }
+                }catch (Exception e){
+                    Supplementaries.LOGGER.error("failed to register for override " + b.getClass().getSimpleName() +" for "+ i.getRegistryName()+" with exception: "+e);
+                }
             }
-
         }
     }
 
@@ -164,7 +176,7 @@ public class ItemsOverrideHandler {
 
         public abstract boolean appliesToItem(Item item);
 
-        public boolean shouldBlockMapToItem(Item item){
+        public boolean shouldBlockMapToItem(Item item) {
             return appliesToItem(item);
         }
 
@@ -518,7 +530,7 @@ public class ItemsOverrideHandler {
     private static class BookPileHorizontalBehavior extends ItemInteractionOverride {
 
         //hax. I'll leave this here and see what happens
-        private static final Item BOOK_PILE_H_ITEM =  new BlockItem(ModRegistry.BOOK_PILE_H.get(), (new Item.Properties()).tab(null));
+        private static final Item BOOK_PILE_H_ITEM = new BlockItem(ModRegistry.BOOK_PILE_H.get(), (new Item.Properties()).tab(null));
 
         @Nullable
         @Override
@@ -539,7 +551,7 @@ public class ItemsOverrideHandler {
 
         @Override
         public boolean appliesToItem(Item item) {
-            return ((BookPileBlock)ModRegistry.BOOK_PILE_H.get()).isAcceptedItem(item);
+            return ((BookPileBlock) ModRegistry.BOOK_PILE_H.get()).isAcceptedItem(item);
         }
 
         @Override
@@ -572,7 +584,7 @@ public class ItemsOverrideHandler {
 
         @Override
         public boolean appliesToItem(Item item) {
-            return ((BookPileBlock)ModRegistry.BOOK_PILE.get()).isAcceptedItem(item);
+            return ((BookPileBlock) ModRegistry.BOOK_PILE.get()).isAcceptedItem(item);
         }
 
         @Override

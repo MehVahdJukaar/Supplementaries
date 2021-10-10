@@ -40,6 +40,7 @@ public class ModTags {
     public static final Tags.IOptionalNamedTag<Item> CHOCOLATE_BARS = itemTag("chocolate_bars");
     public static final Tags.IOptionalNamedTag<Item> FIRE_SOURCES = itemTag("fire_sources");
     public static final Tags.IOptionalNamedTag<Item> FLOWER_BOX_PLANTABLE = itemTag("flower_box_plantable");
+    public static final Tags.IOptionalNamedTag<Item> CHALK = itemTag("chalk");
     //entity tags
     public static final Tags.IOptionalNamedTag<EntityType<?>> JAR_CATCHABLE = entityTag("jar_catchable");
     public static final Tags.IOptionalNamedTag<EntityType<?>> TINTED_JAR_CATCHABLE = entityTag("jar_tinted_catchable");

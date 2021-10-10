@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.entities;
 
+import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.world.explosion.BombExplosion;
@@ -15,6 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.DamageSource;
@@ -129,17 +131,19 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
                 break;
             case 10:
                 spawnBreakParticles();
-                level.addParticle(ModRegistry.BOMB_EXPLOSION_PARTICLE_EMITTER.get(), this.getX(), this.getY() + 1, this.getZ(),
-                        this.blue ? ServerConfigs.cached.BOMB_BLUE_RADIUS : ServerConfigs.cached.BOMB_RADIUS, 0, 0);
-                if (blue) {
-                    for (float d22 = 0; d22 < (Math.PI * 2D); d22 += 0.15707963267948966F) {
-                        Vector3d v = new Vector3d(0.55, 0, 0);
-                        v = v.yRot(d22 + random.nextFloat() * 0.3f);
-                        v = v.zRot((float) ((random.nextFloat()) * Math.PI));
-                        this.level.addParticle(ParticleTypes.FLAME, this.getX(), this.getY() + 1, this.getZ(), v.x, v.y, v.z);
-                        //this.level.addParticle(ParticleTypes.SPIT, x, y, z, Math.cos(d22) * -10.0D, 0.0D, Math.sin(d22) * -10.0D);
-                    }
+
+                if(CommonUtil.FESTIVITY.isBirthday()){
+                    this.spawnParticleInASphere(ModRegistry.CONFETTI_PARTICLE.get(), 55, 0.3f);
                 }
+                else {
+                    level.addParticle(ModRegistry.BOMB_EXPLOSION_PARTICLE_EMITTER.get(), this.getX(), this.getY() + 1, this.getZ(),
+                            this.blue ? ServerConfigs.cached.BOMB_BLUE_RADIUS : ServerConfigs.cached.BOMB_RADIUS, 0, 0);
+                }
+                if (blue) {
+                    this.spawnParticleInASphere(ParticleTypes.FLAME, 40,0.55f);
+                }
+
+
 
                 break;
             case 68:
@@ -156,7 +160,18 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
         }
     }
 
-    public double r() {
+    private void spawnParticleInASphere(IParticleData type, int amount, float speed){
+        double d = (Math.PI * 2) / amount;
+        for (float d22 = 0; d22 < (Math.PI * 2D); d22 += d) {
+            Vector3d v = new Vector3d(speed, 0, 0);
+            v = v.yRot(d22 + random.nextFloat() * 0.3f);
+            v = v.zRot((float) ((random.nextFloat()) * Math.PI));
+            this.level.addParticle(type, this.getX(), this.getY() + 1, this.getZ(), v.x, v.y, v.z);
+            //this.level.addParticle(ParticleTypes.SPIT, x, y, z, Math.cos(d22) * -10.0D, 0.0D, Math.sin(d22) * -10.0D);
+        }
+    }
+
+    private double r() {
         return (random.nextGaussian()) * 0.05;
     }
 

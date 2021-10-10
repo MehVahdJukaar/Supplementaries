@@ -5,7 +5,7 @@ import net.mehvahdjukaar.selene.fluids.SoftFluidHolder;
 import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper;
-import net.mehvahdjukaar.supplementaries.block.util.MobHolder;
+import net.mehvahdjukaar.supplementaries.common.mobholder.MobContainer;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
@@ -57,8 +57,8 @@ public class JarTab extends ItemGroup {
 
         for (Item i : CapturedMobsHelper.VALID_BUCKETS.keySet()) {
             CompoundNBT com = new CompoundNBT();
-            MobHolder.saveBucketToNBT(com, new ItemStack(i), CapturedMobsHelper.getDefaultNameFromBucket(i),
-                    CapturedMobsHelper.getTypeFromBucket(i).getFishTexture());
+            MobContainer.MobData data = new MobContainer.MobData(new ItemStack(i));
+            data.saveToTag(com);
             tryAdd(items, com);
         }
 

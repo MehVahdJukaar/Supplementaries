@@ -74,8 +74,10 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
             matrixStackIn.popPose();
         }
         //render fish
-        if (!tile.mobHolder.isEmpty()) {
-            if (tile.mobHolder.capturedMobProperties.isFish()) {
+        if (!tile.mobContainer.isEmpty()) {
+            boolean needsWater = false;
+            if (tile.mobContainer.getData().isAquarium) {
+                needsWater = true;
                 matrixStackIn.pushPose();
 
                 long time = System.currentTimeMillis() + r;
@@ -90,7 +92,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
                 matrixStackIn.mulPose(rotation);
                 matrixStackIn.scale(0.625f, 0.625f, 0.625f);
                 matrixStackIn.translate(0, -0.2, -0.335);
-                int fishType = tile.mobHolder.capturedMobProperties.getFishTexture();
+                int fishType = tile.mobContainer.getData().getFishIndex();
 
                 //overlay
                 RendererUtil.renderFish(builder, matrixStackIn, wo, ho, fishType, combinedLightIn);
@@ -99,7 +101,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
             } else {
                 super.render(tile, partialTicks, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
             }
-            if (tile.mobHolder.shouldHaveWater()) {
+            if (needsWater || tile.mobContainer.shouldHaveWater()) {
                 matrixStackIn.pushPose();
                 matrixStackIn.translate(0.5, 0.0635, 0.5);
                 IVertexBuilder builder = bufferIn.getBuffer(RenderType.cutout());

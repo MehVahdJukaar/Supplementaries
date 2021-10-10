@@ -15,6 +15,10 @@
     "minecraft:ocelot"
   ],
   "optional": [
+    "feywild:spring_pixie",
+    "feywild:autumn_pixie",
+    "feywild:summer_pixie",
+    "feywild:winter_pixie",
     "eanimod:enhanced_chicken",
     "eanimod:enhanced_rabbit",
     "quark:foxhound",

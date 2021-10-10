@@ -140,8 +140,9 @@ public class ModRegistry {
         CompatHandler.registerOptionalItems(event);
         //shulker shell
 
-        if(RegistryConfigs.reg.SHULKER_HELMET_ENABLED.get()) {
+        if (RegistryConfigs.reg.SHULKER_HELMET_ENABLED.get()) {
             event.getRegistry().register(new ShulkerShellItem(new Item.Properties()
+                    .stacksTo(64)
                     .tab(ItemGroup.TAB_MATERIALS)).setRegistryName("minecraft:shulker_shell"));
         }
 
@@ -179,6 +180,7 @@ public class ModRegistry {
     public static final RegistryObject<BasicParticleType> FEATHER_PARTICLE = regParticle("feather");
     public static final RegistryObject<BasicParticleType> SLINGSHOT_PARTICLE = regParticle("air_burst");
     public static final RegistryObject<BasicParticleType> STASIS_PARTICLE = regParticle("stasis");
+    public static final RegistryObject<BasicParticleType> CONFETTI_PARTICLE = regParticle("confetti");
 
 
     //recipes
@@ -394,7 +396,10 @@ public class ModRegistry {
     public static final RegistryObject<Item> FLUTE_ITEM = regItem(FLUTE_NAME, () -> new Flute((new Item.Properties())
             .tab(getTab(ItemGroup.TAB_TOOLS, FLUTE_NAME)).stacksTo(1).durability(32)));
 
-
+    //candy
+    public static final String CANDY_NAME = "candy";
+    public static final RegistryObject<Item> CANDY_ITEM = regItem(CANDY_NAME, () -> new CandyItem((new Item.Properties())
+            .tab(getTab(ItemGroup.TAB_FOOD, CANDY_NAME))));
     //speedometer
     /*
     public static final String SPEEDOMETER_NAME = "speedometer";
@@ -1189,6 +1194,8 @@ public class ModRegistry {
     public static final String JAR_BOAT_NAME = "jar_boat";
     public static final RegistryObject<Block> JAR_BOAT = BLOCKS.register(JAR_BOAT_NAME, () -> new JarBoatBlock(
             AbstractBlock.Properties.copy(ModRegistry.JAR.get())));
+    public static final RegistryObject<TileEntityType<JarBoatTile>> JAR_BOAT_TILE = TILES.register(JAR_BOAT_NAME, () -> TileEntityType.Builder.of(
+            JarBoatTile::new, JAR_BOAT.get()).build(null));
     public static final RegistryObject<Item> JAR_BOAT_ITEM = ITEMS.register(JAR_BOAT_NAME, () -> new BlockItem(JAR_BOAT.get(),
             (new Item.Properties()).tab(null)));
 

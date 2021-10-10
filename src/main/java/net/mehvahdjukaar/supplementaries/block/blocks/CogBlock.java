@@ -41,7 +41,7 @@ public class CogBlock extends Block {
     public void updatePower(BlockState state, World world, BlockPos pos) {
         if (!world.isClientSide) {
             int pow = world.getBestNeighborSignal(pos);
-            world.setBlock(pos, state.setValue(POWER, MathHelper.clamp(pow, 0, 15)), 1|2|4);
+            world.setBlock(pos, state.setValue(POWER, MathHelper.clamp(pow, 0, 15)), 1 | 2 | 4);
         }
     }
 
@@ -52,7 +52,6 @@ public class CogBlock extends Block {
 
     @Override
     public int getSignal(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
-        return Math.max(0,blockState.getValue(POWER)-1);
+        return Math.max(0, blockState.getValue(POWER) - 1);
     }
-
 }

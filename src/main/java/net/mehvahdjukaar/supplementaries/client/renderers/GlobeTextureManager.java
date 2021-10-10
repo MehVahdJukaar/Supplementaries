@@ -142,6 +142,8 @@ public class GlobeTextureManager implements AutoCloseable{
                     if (l.size() >= 13) {
                         String id = l.get(0);
                         List<Integer> col = new ArrayList<>();
+                        //idk why this need to be here. can probably remove and access with -1
+                        col.add(0);
                         for (int i = 1; i < 13; i++) {
                             int hex;
                             try {
@@ -150,7 +152,7 @@ public class GlobeTextureManager implements AutoCloseable{
                                 Supplementaries.LOGGER.warn("failed to parse config 'globe_colors' (at dimension" + id + "). Try deleting them");
                                 continue;
                             }
-                            col.add((byte) i, hex);
+                            col.add(hex);
                         }
                         dimensionColorMap.put(id, col);
                     }

@@ -1,7 +1,10 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.block.util.IMobHolder;
+import net.mehvahdjukaar.supplementaries.common.mobholder.IMobContainerProvider;
+import net.mehvahdjukaar.supplementaries.common.mobholder.MobContainer;
 import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -22,8 +25,13 @@ public abstract class ParrotPartingMixin {
             for (int y = pos.getY() - r; y < pos.getY() + r; y++) {
                 for (int z = pos.getZ() - r; z < pos.getZ() + r; z++) {
                     TileEntity te = worldIn.getBlockEntity(mut.set(x, y, z));
-                    if (te instanceof IMobHolder) {
-                        ((IMobHolder) te).getMobHolder().setPartying(pos, isPartying);
+                    if (te instanceof IMobContainerProvider) {
+                        MobContainer container = ((IMobContainerProvider) te).getMobContainer();
+
+                        Entity e = container.getDisplayedMob();
+                        if (e instanceof LivingEntity)
+                            ((LivingEntity) e).setRecordPlayingNearby(pos, isPartying);
+
                     }
                 }
             }

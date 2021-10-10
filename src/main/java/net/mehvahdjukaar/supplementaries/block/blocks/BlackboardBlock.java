@@ -1,8 +1,11 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
+import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
+import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.client.gui.BlackBoardGui;
+import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -12,6 +15,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -30,25 +34,29 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
 public class BlackboardBlock extends WaterBlock {
-    public static final VoxelShape SHAPE_SOUTH = Block.box(0.0D,0.0D,0.0D,16.0D,16.0D,5.0D);
-    public static final VoxelShape SHAPE_NORTH= Block.box(0.0D,0.0D,11.0D,16.0D,16.0D,16.0D);
-    public static final VoxelShape SHAPE_EAST = Block.box(0.0D,0.0D,0.0D,5.0D,16.0D,16.0D);
-    public static final VoxelShape SHAPE_WEST = Block.box(11.0D,0.0D,0.0D,16.0D,16.0D,16.0D);
+    public static final VoxelShape SHAPE_SOUTH = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 5.0D);
+    public static final VoxelShape SHAPE_NORTH = Block.box(0.0D, 0.0D, 11.0D, 16.0D, 16.0D, 16.0D);
+    public static final VoxelShape SHAPE_EAST = Block.box(0.0D, 0.0D, 0.0D, 5.0D, 16.0D, 16.0D);
+    public static final VoxelShape SHAPE_WEST = Block.box(11.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final BooleanProperty WRITTEN = BlockProperties.WRITTEN;
+
     public BlackboardBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED,false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH)
+                .setValue(WATERLOGGED, false).setValue(WRITTEN, true));
     }
 
     @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(FACING, WATERLOGGED);
+        builder.add(FACING, WATERLOGGED, WRITTEN);
     }
 
     @Override
@@ -58,7 +66,7 @@ public class BlackboardBlock extends WaterBlock {
         CompoundNBT compoundnbt = stack.getTagElement("BlockEntityTag");
         if (compoundnbt != null) {
             TileEntity te = world.getBlockEntity(pos);
-            if(te instanceof BlackboardBlockTile) {
+            if (te instanceof BlackboardBlockTile) {
                 if (compoundnbt.contains("pixels_0")) {
                     for (int i = 0; i < 16; i++) {
                         byte[] b = compoundnbt.getByteArray("pixels_" + i);
@@ -66,6 +74,10 @@ public class BlackboardBlock extends WaterBlock {
                     }
                 }
             }
+        }
+        TileEntity tileentity = world.getBlockEntity(pos);
+        if (tileentity instanceof BlackboardBlockTile) {
+            ((BlackboardBlockTile) tileentity).setCorrectBlockState(state, pos, world);
         }
     }
 
@@ -81,7 +93,7 @@ public class BlackboardBlock extends WaterBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
-        switch (state.getValue(FACING)){
+        switch (state.getValue(FACING)) {
             default:
             case NORTH:
                 return SHAPE_NORTH;
@@ -94,63 +106,86 @@ public class BlackboardBlock extends WaterBlock {
         }
     }
 
-    //I started using this convention so I have to keep it for backwards compat
-    private static byte colorToByte(DyeColor color){
-        switch (color){
-            case BLACK:return 0;
-            case WHITE:return 1;
-            case ORANGE:return 15;
-            default:return (byte) color.getId();
+    //I started using this convention, so I have to keep it for backwards compat
+    private static byte colorToByte(DyeColor color) {
+        switch (color) {
+            case BLACK:
+                return 0;
+            case WHITE:
+                return 1;
+            case ORANGE:
+                return 15;
+            default:
+                return (byte) color.getId();
         }
     }
 
-    public static int colorFromByte(byte b){
-        switch (b){
+    public static int colorFromByte(byte b) {
+        switch (b) {
             case 0:
             case 1:
                 return 0xffffff;
-            case 15:return DyeColor.ORANGE.getColorValue();
-            default:return DyeColor.byId(b).getColorValue();
+            case 15:
+                return DyeColor.ORANGE.getColorValue();
+            default:
+                return DyeColor.byId(b).getColorValue();
         }
+    }
+
+    public static Pair<Integer, Integer> getHitSubPixel(BlockRayTraceResult hit){
+        Vector3d v2 = hit.getLocation();
+        Vector3d v = v2.yRot((float) ((hit.getDirection().toYRot()) * Math.PI / 180f));
+        double fx = ((v.x % 1) * 16);
+        if (fx < 0) fx += 16;
+        int x = MathHelper.clamp((int) fx, -15, 15);
+
+        int y = 15 - (int) MathHelper.clamp(Math.abs((v.y % 1) * 16), 0, 15);
+        return new Pair<>(x,y);
+    }
+
+    @Nullable
+    public static DyeColor getStackChalkColor(ItemStack stack){
+        Item item = stack.getItem();
+        DyeColor color = null;
+        if (ServerConfigs.cached.BLACKBOARD_COLOR) {
+            color = DyeColor.getColor(stack);
+        }
+        if(color == null) {
+            if (item.is(ModTags.CHALK) || item.is(Tags.Items.DYES_WHITE)) {
+                color = DyeColor.WHITE;
+            } else if (item == Items.COAL || item == Items.CHARCOAL || item.is(Tags.Items.DYES_BLACK)) {
+                color = DyeColor.BLACK;
+            }
+        }
+        return color;
     }
 
     @Override
     public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
-                                             BlockRayTraceResult hit) {
+                                BlockRayTraceResult hit) {
+        //create tile
+        if (!state.getValue(WRITTEN)) {
+            worldIn.setBlock(pos, state.setValue(WRITTEN, true), Constants.BlockFlags.NO_RERENDER | Constants.BlockFlags.BLOCK_UPDATE);
+        }
         TileEntity tileentity = worldIn.getBlockEntity(pos);
         if (tileentity instanceof BlackboardBlockTile) {
             BlackboardBlockTile te = (BlackboardBlockTile) tileentity;
 
-            if(hit.getDirection()==state.getValue(FACING)) {
+            if (hit.getDirection() == state.getValue(FACING)) {
                 ItemStack stack = player.getItemInHand(handIn);
                 Item item = stack.getItem();
-                Vector3d v2 = hit.getLocation();
-                Vector3d v = v2.yRot((float) ((hit.getDirection().toYRot()) * Math.PI / 180f));
-                double fx = ((v.x % 1) * 16);
-                if (fx < 0) fx += 16;
-                int x = MathHelper.clamp((int) fx, -15, 15);
 
-                int y = 15 - (int) MathHelper.clamp(Math.abs((v.y % 1) * 16), 0, 15);
+                Pair<Integer, Integer> pair = getHitSubPixel(hit);
+                int x = pair.getFirst();
+                int y = pair.getSecond();
 
-                if(ServerConfigs.cached.BLACKBOARD_COLOR) {
-                    DyeColor col = DyeColor.getColor(stack);
-                    if (col != null) {
-                        te.pixels[x][y] = colorToByte(col);
-                        te.setChanged();
-                        return ActionResultType.sidedSuccess(worldIn.isClientSide);
-                    }
-                }
-                if (item == Items.QUARTZ || item.is(Tags.Items.DYES_WHITE)) {
-                    te.pixels[x][y] = 1;
+                DyeColor color = getStackChalkColor(stack);
+                if (color != null) {
+                    te.pixels[x][y] = colorToByte(color);
                     te.setChanged();
                     return ActionResultType.sidedSuccess(worldIn.isClientSide);
                 }
-                else if (item == Items.COAL || item == Items.CHARCOAL || item.is(Tags.Items.DYES_BLACK)) {
-                    te.pixels[x][y] = 0;
-                    te.setChanged();
-                    return ActionResultType.sidedSuccess(worldIn.isClientSide);
-                }
-                else if (item==Items.SPONGE || item==Items.WET_SPONGE){
+                else if (item == Items.SPONGE || item == Items.WET_SPONGE) {
                     te.pixels = new byte[16][16];
                     te.setChanged();
                     return ActionResultType.sidedSuccess(worldIn.isClientSide);
@@ -158,23 +193,25 @@ public class BlackboardBlock extends WaterBlock {
                 }
             }
 
-            if(worldIn.isClientSide()) BlackBoardGui.open(te);
-
-            return ActionResultType.sidedSuccess(worldIn.isClientSide);
+            if (worldIn.isClientSide()) BlackBoardGui.open(te);
         }
-        return ActionResultType.PASS;
+        return ActionResultType.sidedSuccess(worldIn.isClientSide);
     }
 
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         boolean flag = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;
-        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite()).setValue(WATERLOGGED,flag);
+        BlockState state = this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite()).setValue(WATERLOGGED, flag);
+        if (context.getItemInHand().getTagElement("BlockEntityTag") != null) {
+            state.setValue(WRITTEN, true);
+        }
+        return state;
     }
 
     @Override
     public boolean hasTileEntity(BlockState state) {
-        return true;
+        return state.getValue(WRITTEN);
     }
 
     @Override
@@ -193,7 +230,7 @@ public class BlackboardBlock extends WaterBlock {
 
     public ItemStack getBlackboardItem(BlackboardBlockTile te) {
         ItemStack itemstack = new ItemStack(this);
-        if(!te.isEmpty()) {
+        if (!te.isEmpty()) {
             CompoundNBT compoundnbt = te.saveToTag(new CompoundNBT());
             if (!compoundnbt.isEmpty()) {
                 itemstack.addTagElement("BlockEntityTag", compoundnbt);
@@ -219,16 +256,11 @@ public class BlackboardBlock extends WaterBlock {
     @Override
     public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
         TileEntity te = world.getBlockEntity(pos);
-        if (te instanceof BlackboardBlockTile){
+        if (te instanceof BlackboardBlockTile) {
             return this.getBlackboardItem((BlackboardBlockTile) te);
         }
-        return super.getPickBlock(state,target,world,pos,player);
+        return super.getPickBlock(state, target, world, pos, player);
     }
-
-
-
-
-
 
 
 }

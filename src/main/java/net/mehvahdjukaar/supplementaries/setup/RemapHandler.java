@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.block.Block;
+import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.tileentity.TileEntityType;
@@ -17,11 +18,14 @@ import java.util.Map;
 
 @Mod.EventBusSubscriber
 public class RemapHandler {
+
     private static final Map<String, ResourceLocation> itemReMap = new HashMap<>();
 
     private static final Map<String, ResourceLocation> fullReMap = new HashMap<>();
 
     static {
+
+        fullReMap.put("orange_trader", ModRegistry.RED_MERCHANT_TYPE.getId());
 
         fullReMap.put("piston_launcher", ModRegistry.SPRING_LAUNCHER.getId());
         fullReMap.put("piston_launcher_arm", ModRegistry.SPRING_LAUNCHER_ARM.getId());
@@ -87,6 +91,21 @@ public class RemapHandler {
                 } catch (Throwable t) {
                     Supplementaries.LOGGER.warn("Remapping item '{}' to '{}' failed: {}", mapping.key,
                             itemReMap.get(mapping.key.getPath()), t);
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onRemapEntityTypes(RegistryEvent.MissingMappings<EntityType<?>> event) {
+        for (RegistryEvent.MissingMappings.Mapping<EntityType<?>> mapping : event.getMappings(Supplementaries.MOD_ID)) {
+            if (fullReMap.containsKey(mapping.key.getPath())) {
+                try {
+                    Supplementaries.LOGGER.warn("Remapping entity '{}' to '{}'", mapping.key, fullReMap.get(mapping.key.getPath()));
+                    mapping.remap(ForgeRegistries.ENTITIES.getValue(fullReMap.get(mapping.key.getPath())));
+                } catch (Throwable t) {
+                    Supplementaries.LOGGER.warn("Remapping entity '{}' to '{}' failed: {}", mapping.key,
+                            fullReMap.get(mapping.key.getPath()), t);
                 }
             }
         }

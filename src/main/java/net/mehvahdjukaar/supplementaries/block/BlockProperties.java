@@ -47,6 +47,7 @@ public class BlockProperties {
     public static final IntegerProperty HONEY_LEVEL_POT = IntegerProperty.create("honey_level", 0, 4);
     public static final IntegerProperty BURNING = IntegerProperty.create("burning", 0, 8);
     public static final IntegerProperty BOOKS = IntegerProperty.create("books", 1, 4);
+    public static final BooleanProperty WRITTEN = BooleanProperty.create("written");
 
     //model properties
     public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();

@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.block.util;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.api.ICatchableMob.AnimationCategory;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
 import net.minecraft.entity.Entity;
@@ -14,53 +13,67 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.util.*;
 
 //to whoever is reading I'm sorry :/
+//TODO: I tried but this is still horrible
 public class CapturedMobsHelper {
 
     public static final List<String> COMMAND_MOBS = new ArrayList<>();
 
     public static final List<List<String>> DEFAULT_CONFIG = new ArrayList<>();
     public static final List<String> CATCHABLE_FISHES = new ArrayList<>();
-    public static final Map<String, CapturedMobProperties> TYPES = new HashMap<>();
-    //bucket item mob id,
-    public static final Map<Item,String> VALID_BUCKETS = new HashMap<>();
+    public static final Map<String, CapturedMobConfigProperties> TYPES = new HashMap<>();
+    //bucket item mob id. Many mods don't extend the base BucketItem class
+    public static final Map<Item, String> VALID_BUCKETS = new HashMap<>();
 
-    public static final CapturedMobProperties DEFAULT = new CapturedMobProperties("69",0,0,0,0,AnimationCategory.DEFAULT);
-    public static final CapturedMobProperties MODDED_FISH = new CapturedMobProperties("420",0,0,0,1,AnimationCategory.DEFAULT);
+    //random ids that don't map to any actual mobs
+    public static final CapturedMobConfigProperties DEFAULT = new CapturedMobConfigProperties("69", 0, 0, 0, 0, AnimationCategory.DEFAULT);
+    public static final CapturedMobConfigProperties MODDED_FISH = new CapturedMobConfigProperties("420", 0, 0, 0, 1, AnimationCategory.DEFAULT);
 
 
-    private static List<String> addFish(String id){
-        return addDef(id,0,0.125f, 0, ++fishIndex);
+    private static List<String> addFish(String id) {
+        return addDef(id, 0, 0.125f, 0, ++fishIndex);
     }
-    private static List<String> addFish(String id, int fishIndex){
-        return addDef(id,0,0.125f, 0, fishIndex);
+
+    private static List<String> addFish(String id, int fishIndex) {
+        return addDef(id, 0, 0.125f, 0, fishIndex);
     }
-    private static List<String> addDef(String id, float h, float w, int l, int f){
-        return Arrays.asList(id,""+h,""+w,""+l,""+f);
+
+    private static List<String> addDef(String id, float h, float w, int l, int f) {
+        return Arrays.asList(id, "" + h, "" + w, "" + l, "" + f);
     }
-    private static List<String> addDef(String id, float h, float w, int l, AnimationCategory c){
-        return Arrays.asList(id,""+h,""+w,""+l,c.toString());
+
+    private static List<String> addDef(String id, float h, float w, int l, AnimationCategory c) {
+        return Arrays.asList(id, "" + h, "" + w, "" + l, c.toString());
     }
-    private static List<String> addDef(String id, float h, float w, int l){
-        return Arrays.asList(id,""+h,""+w,""+l);
+
+    private static List<String> addDef(String id, float h, float w, int l) {
+        return Arrays.asList(id, "" + h, "" + w, "" + l);
     }
-    private static List<String> addDef(String id, float h, float w){
-        return Arrays.asList(id,""+h,""+w);
+
+    private static List<String> addDef(String id, float h, float w) {
+        return Arrays.asList(id, "" + h, "" + w);
     }
 
     private static int fishIndex = 0;
 
     static {
         //1=default fish
-        int fishIndex = 0;
-        DEFAULT_CONFIG.add(addDef("minecraft:bee", 0.3125f, 0));
-        DEFAULT_CONFIG.add(addDef("minecraft:vex", 0, 0.125f,0,AnimationCategory.FLOATING));
+
+        DEFAULT_CONFIG.add(addDef("minecraft:bee", 0.3125f, 0.5f));
+        DEFAULT_CONFIG.add(addDef("minecraft:vex", 0, 0.125f, 0, AnimationCategory.FLOATING));
         DEFAULT_CONFIG.add(addDef("minecraft:silverfish", 0, 0.25f));
         DEFAULT_CONFIG.add(addDef("minecraft:chicken", 0.25f, 0.3125f));
-        DEFAULT_CONFIG.add(addDef("minecraft:endermite",0,0,5));
-        DEFAULT_CONFIG.add(addDef("minecraft:fox",0,0.2f));
-        DEFAULT_CONFIG.add(addDef("supplementaries:firefly",0,0,9,AnimationCategory.FLOATING));
-        DEFAULT_CONFIG.add(addDef("druidcraft:lunar_moth", 0.375f, 0.1375f,10,AnimationCategory.FLOATING));
-        DEFAULT_CONFIG.add(addDef("iceandfire:pixie", 0, 0,10));
+        DEFAULT_CONFIG.add(addDef("minecraft:endermite", 0, 0, 5));
+        DEFAULT_CONFIG.add(addDef("minecraft:fox", 0, 0.2f));
+        DEFAULT_CONFIG.add(addDef("supplementaries:firefly", 0, 0, 9, AnimationCategory.FLOATING));
+
+        DEFAULT_CONFIG.add(addDef("druidcraft:lunar_moth", 0.375f, 0.1375f, 10, AnimationCategory.FLOATING));
+        DEFAULT_CONFIG.add(addDef("iceandfire:pixie", 0, 0, 10));
+
+        DEFAULT_CONFIG.add(addDef("feywild:winter_pixie", 0.125f, 0f, 8, AnimationCategory.FLOATING));
+        DEFAULT_CONFIG.add(addDef("feywild:summer_pixie", 0.125f, 0f, 8, AnimationCategory.FLOATING));
+        DEFAULT_CONFIG.add(addDef("feywild:spring_pixie", 0.125f, 0f, 8, AnimationCategory.FLOATING));
+        DEFAULT_CONFIG.add(addDef("feywild:autumn_pixie", 0.25f, 0f, 8, AnimationCategory.FLOATING));
+
         DEFAULT_CONFIG.add(addFish("minecraft:fish"));
         DEFAULT_CONFIG.add(addFish("minecraft:tropical_fish"));
         DEFAULT_CONFIG.add(addFish("minecraft:salmon"));
@@ -107,74 +120,74 @@ public class CapturedMobsHelper {
         //DEFAULT_VALUES.add(addDef("----"));
 
 
-        for (List<String> d : DEFAULT_CONFIG){
-            if(d.size()==5){
+        for (List<String> d : DEFAULT_CONFIG) {
+            if (d.size() == 5) {
                 int f = strToInt(d.get(4));
-                if(f>0 && !d.get(0).equals(""))CATCHABLE_FISHES.add(d.get(0));
+                if (f > 0 && !d.get(0).equals("")) CATCHABLE_FISHES.add(d.get(0));
             }
         }
 
     }
 
 
-    public static String getDefaultNameFromBucket(Item bucket){
+    public static String getDefaultNameFromBucket(Item bucket) {
         String def = "Mob";
-        String mobId = VALID_BUCKETS.getOrDefault(bucket,def);
-        if(mobId.equals(def))return def;
+        String mobId = VALID_BUCKETS.getOrDefault(bucket, def);
+        if (mobId.equals(def)) return def;
         EntityType<?> en = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(mobId));
-        if(en==null)return def;
+        if (en == null) return def;
         return en.getDescription().getString();
     }
 
-    public static CapturedMobProperties getTypeFromBucket(Item bucket){
-        return getType(VALID_BUCKETS.getOrDefault(bucket,"minecraft:fish"));
+    public static CapturedMobConfigProperties getTypeFromBucket(Item bucket) {
+        return getType(VALID_BUCKETS.getOrDefault(bucket, "minecraft:fish"));
     }
 
-    public static CapturedMobProperties getType(Entity mob){
+    public static CapturedMobConfigProperties getType(Entity mob) {
         return getType(mob.getType().getRegistryName().toString());
     }
-    public static CapturedMobProperties getType(String mobId){
+
+    public static CapturedMobConfigProperties getType(String mobId) {
         return TYPES.getOrDefault(mobId, DEFAULT);
     }
 
-    public static List<String> getFishes(){
+    public static List<String> getFishes() {
         List<String> l = new ArrayList<>();
-        for (List<String> d : DEFAULT_CONFIG){
-            if(d.size()==5){
+        for (List<String> d : DEFAULT_CONFIG) {
+            if (d.size() == 5) {
                 int f = strToInt(d.get(4));
-                if(f>0 && !d.get(0).equals(""))l.add(d.get(0));
+                if (f > 0 && !d.get(0).equals("")) l.add(d.get(0));
             }
         }
         return l;
     }
 
 
-
-    public static boolean isFishBucket(Item item){
+    public static boolean isFishBucket(Item item) {
         return VALID_BUCKETS.containsKey(item);
     }
 
 
-    private static float strToFloat(String s){
-        if(s != null && s.matches("[0-9.]+")){
+    private static float strToFloat(String s) {
+        if (s != null && s.matches("[0-9.]+")) {
             return Float.parseFloat(s);
         }
         return 0;
     }
-    private static int strToInt(String s){
-        if(s != null && s.matches("[0-9.]+")){
+
+    private static int strToInt(String s) {
+        if (s != null && s.matches("[0-9.]+")) {
             return Integer.parseInt(s);
         }
         return 0;
     }
 
 
-
-    public static void refresh(){
+    public static void refresh() {
         TYPES.clear();
 
         List<? extends List<String>> config = ConfigHandler.safeGetListString(ClientConfigs.CLIENT_SPEC, ClientConfigs.block.CAPTURED_MOBS_PROPERTIES);
-        for (List<String> l : config){
+        for (List<String> l : config) {
             try {
                 int size = l.size();
                 if (size < 2) continue;
@@ -210,35 +223,33 @@ public class CapturedMobsHelper {
             }else{
                 tryAddingValidBucket(id);
             }*/
-                CapturedMobProperties type = new CapturedMobProperties(id, h, w, light, fish, cat);
+                CapturedMobConfigProperties type = new CapturedMobConfigProperties(id, h, w, light, fish, cat);
                 TYPES.put(id, type);
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 Supplementaries.LOGGER.warn("failed to load captured mob configs");
             }
         }
 
         //TODO: redo this
 
-        for (String id : CATCHABLE_FISHES){
+        for (String id : CATCHABLE_FISHES) {
             tryAddingValidBucket(id);
         }
     }
 
-    public static void tryAddingValidBucket(String mobId){
+    //hacky. needed cause many mods don't extend the base bucket class
+    public static void tryAddingValidBucket(String mobId) {
         ResourceLocation res = new ResourceLocation(mobId);
-        Item bucket = ForgeRegistries.ITEMS.getValue(new ResourceLocation(res.getNamespace(),res.getPath()+"_bucket"));
-        if(bucket!=null && bucket!=Items.AIR){
+        Item bucket = ForgeRegistries.ITEMS.getValue(new ResourceLocation(res.getNamespace(), res.getPath() + "_bucket"));
+        if (bucket != null && bucket != Items.AIR) {
             VALID_BUCKETS.put(bucket, mobId);
-        }
-        else{
-            bucket = ForgeRegistries.ITEMS.getValue(new ResourceLocation(res.getNamespace(),"bucket_"+res.getPath()));
-            if(bucket!=null && bucket!=Items.AIR){
+        } else {
+            bucket = ForgeRegistries.ITEMS.getValue(new ResourceLocation(res.getNamespace(), "bucket_" + res.getPath()));
+            if (bucket != null && bucket != Items.AIR) {
                 VALID_BUCKETS.put(bucket, mobId);
-            }
-            else{
-                bucket = ForgeRegistries.ITEMS.getValue(new ResourceLocation(res.getNamespace(),"bucket_of_"+res.getPath()));
-                if(bucket!=null && bucket!=Items.AIR){
+            } else {
+                bucket = ForgeRegistries.ITEMS.getValue(new ResourceLocation(res.getNamespace(), "bucket_of_" + res.getPath()));
+                if (bucket != null && bucket != Items.AIR) {
                     VALID_BUCKETS.put(bucket, mobId);
                 }
             }
@@ -246,7 +257,7 @@ public class CapturedMobsHelper {
     }
 
 
-    public static class CapturedMobProperties {
+    public static class CapturedMobConfigProperties {
         private final String id;
         private final float extraWidth;
         private final float extraHeight;
@@ -254,12 +265,12 @@ public class CapturedMobsHelper {
         private final int fishTexture;
         private final AnimationCategory category;
 
-        private CapturedMobProperties(String id, float h, float w, int light, int fish, AnimationCategory c){
+        private CapturedMobConfigProperties(String id, float h, float w, int light, int fish, AnimationCategory c) {
             this.id = id;
             this.extraWidth = w;
             this.extraHeight = h;
             this.lightLevel = light;
-            this.fishTexture = fish-1;
+            this.fishTexture = fish - 1;
             this.category = c;
         }
 
@@ -268,39 +279,73 @@ public class CapturedMobsHelper {
         }
 
         public boolean canHaveWater() {
-            return this.isFlying()||this.isFish();
+            return this.isFlying() || this.isFish();
         }
+
         public String getId() {
             return id;
         }
+
         public float getHeight() {
             return extraHeight;
         }
+
         public float getWidth() {
             return extraWidth;
         }
+
         public int getFishTexture() {
             return fishTexture;
         }
+
         public int getLightLevel() {
             return lightLevel;
         }
+
         public boolean isFish() {
             return this.category.isFish();
         }
+
         public boolean isFlying() {
             return this.category.isFlying();
         }
+
         public boolean isLand() {
             return this.category.isLand();
         }
-        public boolean isFloating(){
+
+        public boolean isFloating() {
             return this.category.isFloating();
         }
 
         @Override
         public String toString() {
             return super.toString().toLowerCase();
+        }
+
+    }
+
+    public enum AnimationCategory {
+        DEFAULT,
+        FISH,
+        LAND,
+        AIR,
+        FLOATING;
+
+        public boolean isFlying() {
+            return this == AIR || this == FLOATING;
+        }
+
+        public boolean isLand() {
+            return this == LAND;
+        }
+
+        public boolean isFloating() {
+            return this == FLOATING;
+        }
+
+        public boolean isFish() {
+            return this == FISH;
         }
     }
 

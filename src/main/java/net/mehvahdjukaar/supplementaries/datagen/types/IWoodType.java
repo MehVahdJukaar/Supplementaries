@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.datagen.types;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
+import net.minecraftforge.fml.ModList;
 
 public interface IWoodType {
 
@@ -32,11 +33,11 @@ public interface IWoodType {
     }
 
     default String getPlankRegName() {
-        return this.getNamespace()+":"+this.toString()+"_planks";
+        return this.getNamespace()+":"+ this +"_planks";
     }
 
     default String getSignRegName(){
-        return this.getNamespace()+":"+this.toString()+"_sign";
+        return this.getNamespace()+":"+ this +"_sign";
     }
 
     default String getTranslationName(){
@@ -44,5 +45,8 @@ public interface IWoodType {
 
     }
 
+    default boolean isModActive(){
+        return ModList.get().isLoaded(this.getNamespace());
+    }
 
 }

@@ -253,7 +253,6 @@ public class DispenserStuff {
         }
     }
 
-
     private static class FishBucketJarDispenserBehavior extends AdditionalDispenserBehavior {
 
         protected FishBucketJarDispenserBehavior(Item item) {
@@ -270,7 +269,7 @@ public class DispenserStuff {
                 //TODO: add fish buckets
                 JarBlockTile tile = ((JarBlockTile) te);
                 if (tile.fluidHolder.isEmpty() && tile.isEmpty()) {
-                    if (tile.mobHolder.interactWithBucketItem(stack, null, null)) {
+                    if (tile.mobContainer.interactWithBucket(stack, world, blockpos, null, null)) {
                         tile.setChanged();
                         return ActionResult.success(new ItemStack(Items.BUCKET));
                     }
@@ -279,7 +278,6 @@ public class DispenserStuff {
             }
             return ActionResult.pass(stack);
         }
-
     }
 
     public static class GunpowderBehavior extends AdditionalDispenserBehavior {

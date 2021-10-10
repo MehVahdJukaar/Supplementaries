@@ -144,5 +144,4 @@ public class ClientEvents {
         ConfigButton.setupConfigButton(event);
 
     }
-
 }

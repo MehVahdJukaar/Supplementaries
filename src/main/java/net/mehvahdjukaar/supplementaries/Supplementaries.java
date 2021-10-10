@@ -40,13 +40,15 @@ public class Supplementaries {
     public Supplementaries() {
 
 
-
+        //TODO: fix candelabra duping?
 
         //yes this is where I write crap. deal with it XD
 
+        //TODO: add server protections for signs
+
         //todo: fix projectile hitbox being a single point on y = 0
 
-        //TODO: fix carry on bug
+        //TODO: rewrite mob holder fixing tickable particles
 
         //randomium name change
 
@@ -97,8 +99,16 @@ public class Supplementaries {
         //mod idea: better birch trees
 
         //mod idea: blackboard banners and flags with villager
+        //weed mod
 
         //wrench, throwable slimeballs
+
+        //TODO: make dummy not show numbers at a distance
+
+        //baby villagers trick or treat
+
+        //simple mode for doors and trapdoors
+
 
         MinecraftForge.EVENT_BUS.register(ServerEvents.class);
 

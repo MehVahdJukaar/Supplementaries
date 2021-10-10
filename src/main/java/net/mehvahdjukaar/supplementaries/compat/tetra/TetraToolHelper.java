@@ -8,7 +8,6 @@ import se.mickelus.tetra.items.modular.impl.ModularSingleHeadedItem;
 import javax.annotation.Nullable;
 
 public class TetraToolHelper {
-    @Nullable
     public static boolean isTetraSword(Item i) {
         return i instanceof ModularBladedItem;
     }

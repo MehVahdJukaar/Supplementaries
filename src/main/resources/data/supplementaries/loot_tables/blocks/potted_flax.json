@@ -6,11 +6,21 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "supplementaries:flax_seeds"
-        },
+          "name": "minecraft:flower_pot"
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:flower_pot"
+          "name": "supplementaries:flax_seeds"
         }
       ],
       "conditions": [

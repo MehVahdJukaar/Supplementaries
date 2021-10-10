@@ -1,0 +1,260 @@
+{
+  "mappings": {
+    "net/mehvahdjukaar/supplementaries/mixins/CatSitOnBlockMixin": {
+      "isValidTarget": "Lnet/minecraft/entity/ai/goal/CatSitOnBlockGoal;func_179488_a(Lnet/minecraft/world/IWorldReader;Lnet/minecraft/util/math/BlockPos;)Z"
+    },
+    "net/mehvahdjukaar/supplementaries/mixins/ShulkerBoxTileEntityMixin": {
+      "canPlaceItemThroughFace": "Lnet/minecraft/tileentity/ShulkerBoxTileEntity;func_180462_a(ILnet/minecraft/item/ItemStack;Lnet/minecraft/util/Direction;)Z"
+    },
+    "net/mehvahdjukaar/supplementaries/mixins/StrongholdCrossingMixin": {
+      "postProcess": "Lnet/minecraft/world/gen/feature/structure/StrongholdPieces$Crossing;func_230383_a_(Lnet/minecraft/world/ISeedReader;Lnet/minecraft/world/gen/feature/structure/StructureManager;Lnet/minecraft/world/gen/ChunkGenerator;Ljava/util/Random;Lnet/minecraft/util/math/MutableBoundingBox;Lnet/minecraft/util/math/ChunkPos;Lnet/minecraft/util/math/BlockPos;)Z"
+    },
+    "net/mehvahdjukaar/supplementaries/mixins/LoomScreenMixin": {
+      "Lnet/minecraft/item/ItemStack;getItem()Lnet/minecraft/item/Item;": "Lnet/minecraft/item/ItemStack;func_77973_b()Lnet/minecraft/item/Item;",
+      "renderBg": "Lnet/minecraft/client/gui/screen/LoomScreen;func_230450_a_(Lcom/mojang/blaze3d/matrix/MatrixStack;FII)V",
+      "containerChanged": "Lnet/minecraft/client/gui/screen/LoomScreen;func_214111_b()V"
+    },
+    "net/mehvahdjukaar/supplementaries/mixins/VillagerModelMixin": {
+      "\u003cinit\u003e(FII)V": "Lnet/minecraft/client/renderer/entity/model/VillagerModel;\u003cinit\u003e(FII)V",
+      "setupAnim": "Lnet/minecraft/client/renderer/entity/model/VillagerModel;func_225597_a_(Lnet/minecraft/entity/Entity;FFFFF)V",
+      "Lnet/minecraft/entity/merchant/villager/AbstractVillagerEntity;getUnhappyCounter()I": "Lnet/minecraft/entity/merchant/villager/AbstractVillagerEntity;func_213719_ec()I"
+    },
+    "net/mehvahdjukaar/supplementaries/mixins/WorldRendererMixin": {
+      "renderLevel": "Lnet/minecraft/client/renderer/WorldRenderer;func_228426_a_(Lcom/mojang/blaze3d/matrix/MatrixStack;FJZLnet/minecraft/client/renderer/ActiveRenderInfo;Lnet/minecraft/client/renderer/GameRenderer;Lnet/minecraft/client/renderer/LightTexture;Lnet/minecraft/util/math/vector/Matrix4f;)V",
+      "Lnet/minecraft/client/Minecraft;hitResult:Lnet/minecraft/util/math/RayTraceResult;": "Lnet/minecraft/client/Minecraft;field_71476_x:Lnet/minecraft/util/math/RayTraceResult;"
+    },
+    "net/mehvahdjukaar/supplementaries/mixins/accessors/MineshaftAccessor": {
+      "isSupportingBox": "func_189918_a(Lnet/minecraft/world/IBlockReader;Lnet/minecraft/util/math/MutableBoundingBox;IIII)Z",
+      "net.minecraft.world.gen.feature.structure.MineshaftPieces$Piece": "net/minecraft/world/gen/feature/structure/MineshaftPieces$Piece",
+      "getPlanksBlock": "func_189917_F_()Lnet/minecraft/block/BlockState;",
+      "getFenceBlock": "func_189919_b()Lnet/minecraft/block/BlockState;"
+    },
+    "net/mehvahdjukaar/supplementaries/mixins/CreateBabyVillagerTaskMixin": {
+      "stop": "Lnet/minecraft/entity/ai/brain/task/CreateBabyVillagerTask;func_212835_f_(Lnet/minecraft/world/server/ServerWorld;Lnet/minecraft/entity/merchant/villager/VillagerEntity;J)V",
+      "Lnet/minecraft/entity/merchant/villager/VillagerEntity;distanceToSqr(Lnet/minecraft/entity/Entity;)D": "Lnet/minecraft/entity/merchant/villager/VillagerEntity;func_70068_e(Lnet/minecraft/entity/Entity;)D",
+      "Lnet/minecraft/entity/ai/brain/BrainUtil;lockGazeAndWalkToEachOther(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/entity/LivingEntity;F)V": "Lnet/minecraft/entity/ai/brain/BrainUtil;func_220618_a(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/entity/LivingEntity;F)V",
+      "tick": "Lnet/minecraft/entity/ai/brain/task/CreateBabyVillagerTask;func_212833_d_(Lnet/minecraft/world/server/ServerWorld;Lnet/minecraft/entity/merchant/villager/VillagerEntity;J)V"
+    },
+    "net/mehvahdjukaar/supplementaries/mixins/LivingEntityMixin": {
+      "handleOnClimbable": "Lnet/minecraft/entity/LivingEntity;func_213362_f(Lnet/minecraft/util/math/vector/Vector3d;)Lnet/minecraft/util/math/vector/Vector3d;"
+    },
+    "net/mehvahdjukaar/supplementaries/mixins/VineBlockMixin": {
+      "isAcceptableNeighbour": "Lnet/minecraft/block/VineBlock;func_196542_b(Lnet/minecraft/world/IBlockReader;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/Direction;)Z"
+    },
+    "net/mehvahdjukaar/supplementaries/mixins/GrindstoneTestSlotMixin": {
+      "getExperienceFromItem(Lnet/minecraft/item/ItemStack;)I": "Lnet/minecraft/inventory/container/GrindstoneContainer$4;func_216943_e(Lnet/minecraft/item/ItemStack;)I",
+      "net.minecraft.inventory.container.GrindstoneContainer$4": "net/minecraft/inventory/container/GrindstoneContainer$4"
+    },
+    "net/mehvahdjukaar/supplementaries/mixins/BellBlockMixin": {
+      "updateShape": "Lnet/minecraft/block/BellBlock;func_196271_a(Lnet/minecraft/block/BlockState;Lnet/minecraft/util/Direction;Lnet/minecraft/block/BlockState;Lnet/minecraft/world/IWorld;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/block/BlockState;"
+    },
+    "net/mehvahdjukaar/supplementaries/mixins/SpawnRedMerchantMixin": {
+      "spawn": "Lnet/minecraft/world/spawner/WanderingTraderSpawner;func_234562_a_(Lnet/minecraft/world/server/ServerWorld;)Z",
+      "tick": "Lnet/minecraft/world/spawner/WanderingTraderSpawner;func_230253_a_(Lnet/minecraft/world/server/ServerWorld;ZZ)I"
+    },
+    "net/mehvahdjukaar/supplementaries/mixins/GrindstoneContainerMixin": {
+      "createResult": "Lnet/minecraft/inventory/container/GrindstoneContainer;func_217010_e()V"
+    },
+    "net/mehvahdjukaar/supplementaries/mixins/BellTileEntityRendererMixin": {
+      "render": "Lnet/minecraft/client/renderer/tileentity/BellTileEntityRenderer;func_225616_a_(Lnet/minecraft/tileentity/BellTileEntity;FLcom/mojang/blaze3d/matrix/MatrixStack;Lnet/minecraft/client/renderer/IRenderTypeBuffer;II)V"
+    },
+    "net/mehvahdjukaar/supplementaries/mixins/LoomInputSlotMixin": {
+      "net.minecraft.inventory.container.LoomContainer$3": "net/minecraft/inventory/container/LoomContainer$3",
+      "mayPlace(Lnet/minecraft/item/ItemStack;)Z": "Lnet/minecraft/inventory/container/LoomContainer$3;func_75214_a(Lnet/minecraft/item/ItemStack;)Z"
+    },
+    "net/mehvahdjukaar/supplementaries/mixins/CrossbowItemMixin": {
+      "tryLoadProjectiles": "Lnet/minecraft/item/CrossbowItem;func_220021_a(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;)Z"
+    },
+    "net/mehvahdjukaar/supplementaries/mixins/accessors/ChickenEntityAccessor": {
+      "FOOD_ITEMS": "field_184761_bD:Lnet/minecraft/item/crafting/Ingredient;"
+    },
+    "net/mehvahdjukaar/supplementaries/mixins/ParrotPartingMixin": {
+      "notifyNearbyEntities": "Lnet/minecraft/client/renderer/WorldRenderer;func_193054_a(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Z)V"
+    },
+    "net/mehvahdjukaar/supplementaries/mixins/IronGolemRendererMixin": {
+      "getTextureLocation": "Lnet/minecraft/client/renderer/entity/IronGolemRenderer;func_110775_a(Lnet/minecraft/entity/passive/IronGolemEntity;)Lnet/minecraft/util/ResourceLocation;"
+    },
+    "net/mehvahdjukaar/supplementaries/mixins/StrongholdRoomMixin": {
+      "postProcess": "Lnet/minecraft/world/gen/feature/structure/StrongholdPieces$RoomCrossing;func_230383_a_(Lnet/minecraft/world/ISeedReader;Lnet/minecraft/world/gen/feature/structure/StructureManager;Lnet/minecraft/world/gen/ChunkGenerator;Ljava/util/Random;Lnet/minecraft/util/math/MutableBoundingBox;Lnet/minecraft/util/math/ChunkPos;Lnet/minecraft/util/math/BlockPos;)Z"
+    },
+    "net/mehvahdjukaar/supplementaries/mixins/LakeMixin": {
+      "Lnet/minecraft/util/math/BlockPos;below(I)Lnet/minecraft/util/math/BlockPos;": "Lnet/minecraft/util/math/BlockPos;func_177979_c(I)Lnet/minecraft/util/math/BlockPos;",
+      "place": "Lnet/minecraft/world/gen/feature/LakesFeature;func_241855_a(Lnet/minecraft/world/ISeedReader;Lnet/minecraft/world/gen/ChunkGenerator;Ljava/util/Random;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/gen/feature/BlockStateFeatureConfig;)Z"
+    },
+    "net/mehvahdjukaar/supplementaries/mixins/LanternBlockMixin": {
+      "canSurvive": "Lnet/minecraft/block/LanternBlock;func_196260_a(Lnet/minecraft/block/BlockState;Lnet/minecraft/world/IWorldReader;Lnet/minecraft/util/math/BlockPos;)Z"
+    },
+    "net/mehvahdjukaar/supplementaries/mixins/EatGrassGoalMixin": {
+      "tick": "Lnet/minecraft/entity/ai/goal/EatGrassGoal;func_75246_d()V",
+      "canUse": "Lnet/minecraft/entity/ai/goal/EatGrassGoal;func_75250_a()Z"
+    },
+    "net/mehvahdjukaar/supplementaries/mixins/CauldronBlockMixin": {
+      "use": "Lnet/minecraft/block/CauldronBlock;func_225533_a_(Lnet/minecraft/block/BlockState;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/Hand;Lnet/minecraft/util/math/BlockRayTraceResult;)Lnet/minecraft/util/ActionResultType;"
+    },
+    "net/mehvahdjukaar/supplementaries/mixins/ShulkerBoxSlotMixin": {
+      "mayPlace": "Lnet/minecraft/inventory/container/ShulkerBoxSlot;func_75214_a(Lnet/minecraft/item/ItemStack;)Z"
+    },
+    "net/mehvahdjukaar/supplementaries/mixins/accessors/HorseEntityAccessor": {
+      "FOOD_ITEMS": "field_234235_bE_:Lnet/minecraft/item/crafting/Ingredient;"
+    },
+    "net/mehvahdjukaar/supplementaries/mixins/AbstractBlockMixin": {
+      "getOffset": "Lnet/minecraft/block/AbstractBlock$AbstractBlockState;func_191059_e(Lnet/minecraft/world/IBlockReader;Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/util/math/vector/Vector3d;"
+    },
+    "net/mehvahdjukaar/supplementaries/mixins/CampfireMixin": {
+      "isSmokeSource": "Lnet/minecraft/block/CampfireBlock;func_220099_j(Lnet/minecraft/block/BlockState;)Z"
+    },
+    "net/mehvahdjukaar/supplementaries/mixins/PistonTileEntityMixin": {
+      "tick": "Lnet/minecraft/tileentity/PistonTileEntity;func_73660_a()V"
+    },
+    "net/mehvahdjukaar/supplementaries/mixins/LoomContainerMixin": {
+      "Lnet/minecraft/item/ItemStack;getItem()Lnet/minecraft/item/Item;": "Lnet/minecraft/item/ItemStack;func_77973_b()Lnet/minecraft/item/Item;",
+      "quickMoveStack": "Lnet/minecraft/inventory/container/LoomContainer;func_82846_b(Lnet/minecraft/entity/player/PlayerEntity;I)Lnet/minecraft/item/ItemStack;"
+    },
+    "net/mehvahdjukaar/supplementaries/mixins/ItemRendererMixin": {
+      "renderGuiItem(Lnet/minecraft/item/ItemStack;IILnet/minecraft/client/renderer/model/IBakedModel;)V": "Lnet/minecraft/client/renderer/ItemRenderer;func_191962_a(Lnet/minecraft/item/ItemStack;IILnet/minecraft/client/renderer/model/IBakedModel;)V"
+    },
+    "net/mehvahdjukaar/supplementaries/mixins/PaneBlockMixin": {
+      "attachsTo": "Lnet/minecraft/block/PaneBlock;func_220112_a(Lnet/minecraft/block/BlockState;Z)Z"
+    },
+    "net/mehvahdjukaar/supplementaries/mixins/SkeletonHorseMixin": {
+      "addAdditionalSaveData": "Lnet/minecraft/entity/passive/horse/SkeletonHorseEntity;func_213281_b(Lnet/minecraft/nbt/CompoundNBT;)V",
+      "mobInteract": "Lnet/minecraft/entity/passive/horse/SkeletonHorseEntity;func_230254_b_(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/Hand;)Lnet/minecraft/util/ActionResultType;",
+      "readAdditionalSaveData": "Lnet/minecraft/entity/passive/horse/SkeletonHorseEntity;func_70037_a(Lnet/minecraft/nbt/CompoundNBT;)V"
+    },
+    "net/mehvahdjukaar/supplementaries/mixins/GrindstoneInputSlotMixin": {
+      "net.minecraft.inventory.container.GrindstoneContainer$2": "net/minecraft/inventory/container/GrindstoneContainer$2",
+      "mayPlace(Lnet/minecraft/item/ItemStack;)Z": "func_75214_a(Lnet/minecraft/item/ItemStack;)Z",
+      "net.minecraft.inventory.container.GrindstoneContainer$3": "net/minecraft/inventory/container/GrindstoneContainer$3"
+    }
+  },
+  "data": {
+    "searge": {
+      "net/mehvahdjukaar/supplementaries/mixins/CatSitOnBlockMixin": {
+        "isValidTarget": "Lnet/minecraft/entity/ai/goal/CatSitOnBlockGoal;func_179488_a(Lnet/minecraft/world/IWorldReader;Lnet/minecraft/util/math/BlockPos;)Z"
+      },
+      "net/mehvahdjukaar/supplementaries/mixins/ShulkerBoxTileEntityMixin": {
+        "canPlaceItemThroughFace": "Lnet/minecraft/tileentity/ShulkerBoxTileEntity;func_180462_a(ILnet/minecraft/item/ItemStack;Lnet/minecraft/util/Direction;)Z"
+      },
+      "net/mehvahdjukaar/supplementaries/mixins/StrongholdCrossingMixin": {
+        "postProcess": "Lnet/minecraft/world/gen/feature/structure/StrongholdPieces$Crossing;func_230383_a_(Lnet/minecraft/world/ISeedReader;Lnet/minecraft/world/gen/feature/structure/StructureManager;Lnet/minecraft/world/gen/ChunkGenerator;Ljava/util/Random;Lnet/minecraft/util/math/MutableBoundingBox;Lnet/minecraft/util/math/ChunkPos;Lnet/minecraft/util/math/BlockPos;)Z"
+      },
+      "net/mehvahdjukaar/supplementaries/mixins/LoomScreenMixin": {
+        "Lnet/minecraft/item/ItemStack;getItem()Lnet/minecraft/item/Item;": "Lnet/minecraft/item/ItemStack;func_77973_b()Lnet/minecraft/item/Item;",
+        "renderBg": "Lnet/minecraft/client/gui/screen/LoomScreen;func_230450_a_(Lcom/mojang/blaze3d/matrix/MatrixStack;FII)V",
+        "containerChanged": "Lnet/minecraft/client/gui/screen/LoomScreen;func_214111_b()V"
+      },
+      "net/mehvahdjukaar/supplementaries/mixins/VillagerModelMixin": {
+        "\u003cinit\u003e(FII)V": "Lnet/minecraft/client/renderer/entity/model/VillagerModel;\u003cinit\u003e(FII)V",
+        "setupAnim": "Lnet/minecraft/client/renderer/entity/model/VillagerModel;func_225597_a_(Lnet/minecraft/entity/Entity;FFFFF)V",
+        "Lnet/minecraft/entity/merchant/villager/AbstractVillagerEntity;getUnhappyCounter()I": "Lnet/minecraft/entity/merchant/villager/AbstractVillagerEntity;func_213719_ec()I"
+      },
+      "net/mehvahdjukaar/supplementaries/mixins/WorldRendererMixin": {
+        "renderLevel": "Lnet/minecraft/client/renderer/WorldRenderer;func_228426_a_(Lcom/mojang/blaze3d/matrix/MatrixStack;FJZLnet/minecraft/client/renderer/ActiveRenderInfo;Lnet/minecraft/client/renderer/GameRenderer;Lnet/minecraft/client/renderer/LightTexture;Lnet/minecraft/util/math/vector/Matrix4f;)V",
+        "Lnet/minecraft/client/Minecraft;hitResult:Lnet/minecraft/util/math/RayTraceResult;": "Lnet/minecraft/client/Minecraft;field_71476_x:Lnet/minecraft/util/math/RayTraceResult;"
+      },
+      "net/mehvahdjukaar/supplementaries/mixins/accessors/MineshaftAccessor": {
+        "isSupportingBox": "func_189918_a(Lnet/minecraft/world/IBlockReader;Lnet/minecraft/util/math/MutableBoundingBox;IIII)Z",
+        "net.minecraft.world.gen.feature.structure.MineshaftPieces$Piece": "net/minecraft/world/gen/feature/structure/MineshaftPieces$Piece",
+        "getPlanksBlock": "func_189917_F_()Lnet/minecraft/block/BlockState;",
+        "getFenceBlock": "func_189919_b()Lnet/minecraft/block/BlockState;"
+      },
+      "net/mehvahdjukaar/supplementaries/mixins/CreateBabyVillagerTaskMixin": {
+        "stop": "Lnet/minecraft/entity/ai/brain/task/CreateBabyVillagerTask;func_212835_f_(Lnet/minecraft/world/server/ServerWorld;Lnet/minecraft/entity/merchant/villager/VillagerEntity;J)V",
+        "Lnet/minecraft/entity/merchant/villager/VillagerEntity;distanceToSqr(Lnet/minecraft/entity/Entity;)D": "Lnet/minecraft/entity/merchant/villager/VillagerEntity;func_70068_e(Lnet/minecraft/entity/Entity;)D",
+        "Lnet/minecraft/entity/ai/brain/BrainUtil;lockGazeAndWalkToEachOther(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/entity/LivingEntity;F)V": "Lnet/minecraft/entity/ai/brain/BrainUtil;func_220618_a(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/entity/LivingEntity;F)V",
+        "tick": "Lnet/minecraft/entity/ai/brain/task/CreateBabyVillagerTask;func_212833_d_(Lnet/minecraft/world/server/ServerWorld;Lnet/minecraft/entity/merchant/villager/VillagerEntity;J)V"
+      },
+      "net/mehvahdjukaar/supplementaries/mixins/LivingEntityMixin": {
+        "handleOnClimbable": "Lnet/minecraft/entity/LivingEntity;func_213362_f(Lnet/minecraft/util/math/vector/Vector3d;)Lnet/minecraft/util/math/vector/Vector3d;"
+      },
+      "net/mehvahdjukaar/supplementaries/mixins/VineBlockMixin": {
+        "isAcceptableNeighbour": "Lnet/minecraft/block/VineBlock;func_196542_b(Lnet/minecraft/world/IBlockReader;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/Direction;)Z"
+      },
+      "net/mehvahdjukaar/supplementaries/mixins/GrindstoneTestSlotMixin": {
+        "getExperienceFromItem(Lnet/minecraft/item/ItemStack;)I": "Lnet/minecraft/inventory/container/GrindstoneContainer$4;func_216943_e(Lnet/minecraft/item/ItemStack;)I",
+        "net.minecraft.inventory.container.GrindstoneContainer$4": "net/minecraft/inventory/container/GrindstoneContainer$4"
+      },
+      "net/mehvahdjukaar/supplementaries/mixins/BellBlockMixin": {
+        "updateShape": "Lnet/minecraft/block/BellBlock;func_196271_a(Lnet/minecraft/block/BlockState;Lnet/minecraft/util/Direction;Lnet/minecraft/block/BlockState;Lnet/minecraft/world/IWorld;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/block/BlockState;"
+      },
+      "net/mehvahdjukaar/supplementaries/mixins/SpawnRedMerchantMixin": {
+        "spawn": "Lnet/minecraft/world/spawner/WanderingTraderSpawner;func_234562_a_(Lnet/minecraft/world/server/ServerWorld;)Z",
+        "tick": "Lnet/minecraft/world/spawner/WanderingTraderSpawner;func_230253_a_(Lnet/minecraft/world/server/ServerWorld;ZZ)I"
+      },
+      "net/mehvahdjukaar/supplementaries/mixins/GrindstoneContainerMixin": {
+        "createResult": "Lnet/minecraft/inventory/container/GrindstoneContainer;func_217010_e()V"
+      },
+      "net/mehvahdjukaar/supplementaries/mixins/BellTileEntityRendererMixin": {
+        "render": "Lnet/minecraft/client/renderer/tileentity/BellTileEntityRenderer;func_225616_a_(Lnet/minecraft/tileentity/BellTileEntity;FLcom/mojang/blaze3d/matrix/MatrixStack;Lnet/minecraft/client/renderer/IRenderTypeBuffer;II)V"
+      },
+      "net/mehvahdjukaar/supplementaries/mixins/LoomInputSlotMixin": {
+        "net.minecraft.inventory.container.LoomContainer$3": "net/minecraft/inventory/container/LoomContainer$3",
+        "mayPlace(Lnet/minecraft/item/ItemStack;)Z": "Lnet/minecraft/inventory/container/LoomContainer$3;func_75214_a(Lnet/minecraft/item/ItemStack;)Z"
+      },
+      "net/mehvahdjukaar/supplementaries/mixins/CrossbowItemMixin": {
+        "tryLoadProjectiles": "Lnet/minecraft/item/CrossbowItem;func_220021_a(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;)Z"
+      },
+      "net/mehvahdjukaar/supplementaries/mixins/accessors/ChickenEntityAccessor": {
+        "FOOD_ITEMS": "field_184761_bD:Lnet/minecraft/item/crafting/Ingredient;"
+      },
+      "net/mehvahdjukaar/supplementaries/mixins/ParrotPartingMixin": {
+        "notifyNearbyEntities": "Lnet/minecraft/client/renderer/WorldRenderer;func_193054_a(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Z)V"
+      },
+      "net/mehvahdjukaar/supplementaries/mixins/IronGolemRendererMixin": {
+        "getTextureLocation": "Lnet/minecraft/client/renderer/entity/IronGolemRenderer;func_110775_a(Lnet/minecraft/entity/passive/IronGolemEntity;)Lnet/minecraft/util/ResourceLocation;"
+      },
+      "net/mehvahdjukaar/supplementaries/mixins/StrongholdRoomMixin": {
+        "postProcess": "Lnet/minecraft/world/gen/feature/structure/StrongholdPieces$RoomCrossing;func_230383_a_(Lnet/minecraft/world/ISeedReader;Lnet/minecraft/world/gen/feature/structure/StructureManager;Lnet/minecraft/world/gen/ChunkGenerator;Ljava/util/Random;Lnet/minecraft/util/math/MutableBoundingBox;Lnet/minecraft/util/math/ChunkPos;Lnet/minecraft/util/math/BlockPos;)Z"
+      },
+      "net/mehvahdjukaar/supplementaries/mixins/LakeMixin": {
+        "Lnet/minecraft/util/math/BlockPos;below(I)Lnet/minecraft/util/math/BlockPos;": "Lnet/minecraft/util/math/BlockPos;func_177979_c(I)Lnet/minecraft/util/math/BlockPos;",
+        "place": "Lnet/minecraft/world/gen/feature/LakesFeature;func_241855_a(Lnet/minecraft/world/ISeedReader;Lnet/minecraft/world/gen/ChunkGenerator;Ljava/util/Random;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/gen/feature/BlockStateFeatureConfig;)Z"
+      },
+      "net/mehvahdjukaar/supplementaries/mixins/LanternBlockMixin": {
+        "canSurvive": "Lnet/minecraft/block/LanternBlock;func_196260_a(Lnet/minecraft/block/BlockState;Lnet/minecraft/world/IWorldReader;Lnet/minecraft/util/math/BlockPos;)Z"
+      },
+      "net/mehvahdjukaar/supplementaries/mixins/EatGrassGoalMixin": {
+        "tick": "Lnet/minecraft/entity/ai/goal/EatGrassGoal;func_75246_d()V",
+        "canUse": "Lnet/minecraft/entity/ai/goal/EatGrassGoal;func_75250_a()Z"
+      },
+      "net/mehvahdjukaar/supplementaries/mixins/CauldronBlockMixin": {
+        "use": "Lnet/minecraft/block/CauldronBlock;func_225533_a_(Lnet/minecraft/block/BlockState;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/Hand;Lnet/minecraft/util/math/BlockRayTraceResult;)Lnet/minecraft/util/ActionResultType;"
+      },
+      "net/mehvahdjukaar/supplementaries/mixins/ShulkerBoxSlotMixin": {
+        "mayPlace": "Lnet/minecraft/inventory/container/ShulkerBoxSlot;func_75214_a(Lnet/minecraft/item/ItemStack;)Z"
+      },
+      "net/mehvahdjukaar/supplementaries/mixins/accessors/HorseEntityAccessor": {
+        "FOOD_ITEMS": "field_234235_bE_:Lnet/minecraft/item/crafting/Ingredient;"
+      },
+      "net/mehvahdjukaar/supplementaries/mixins/AbstractBlockMixin": {
+        "getOffset": "Lnet/minecraft/block/AbstractBlock$AbstractBlockState;func_191059_e(Lnet/minecraft/world/IBlockReader;Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/util/math/vector/Vector3d;"
+      },
+      "net/mehvahdjukaar/supplementaries/mixins/CampfireMixin": {
+        "isSmokeSource": "Lnet/minecraft/block/CampfireBlock;func_220099_j(Lnet/minecraft/block/BlockState;)Z"
+      },
+      "net/mehvahdjukaar/supplementaries/mixins/PistonTileEntityMixin": {
+        "tick": "Lnet/minecraft/tileentity/PistonTileEntity;func_73660_a()V"
+      },
+      "net/mehvahdjukaar/supplementaries/mixins/LoomContainerMixin": {
+        "Lnet/minecraft/item/ItemStack;getItem()Lnet/minecraft/item/Item;": "Lnet/minecraft/item/ItemStack;func_77973_b()Lnet/minecraft/item/Item;",
+        "quickMoveStack": "Lnet/minecraft/inventory/container/LoomContainer;func_82846_b(Lnet/minecraft/entity/player/PlayerEntity;I)Lnet/minecraft/item/ItemStack;"
+      },
+      "net/mehvahdjukaar/supplementaries/mixins/ItemRendererMixin": {
+        "renderGuiItem(Lnet/minecraft/item/ItemStack;IILnet/minecraft/client/renderer/model/IBakedModel;)V": "Lnet/minecraft/client/renderer/ItemRenderer;func_191962_a(Lnet/minecraft/item/ItemStack;IILnet/minecraft/client/renderer/model/IBakedModel;)V"
+      },
+      "net/mehvahdjukaar/supplementaries/mixins/PaneBlockMixin": {
+        "attachsTo": "Lnet/minecraft/block/PaneBlock;func_220112_a(Lnet/minecraft/block/BlockState;Z)Z"
+      },
+      "net/mehvahdjukaar/supplementaries/mixins/SkeletonHorseMixin": {
+        "addAdditionalSaveData": "Lnet/minecraft/entity/passive/horse/SkeletonHorseEntity;func_213281_b(Lnet/minecraft/nbt/CompoundNBT;)V",
+        "mobInteract": "Lnet/minecraft/entity/passive/horse/SkeletonHorseEntity;func_230254_b_(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/Hand;)Lnet/minecraft/util/ActionResultType;",
+        "readAdditionalSaveData": "Lnet/minecraft/entity/passive/horse/SkeletonHorseEntity;func_70037_a(Lnet/minecraft/nbt/CompoundNBT;)V"
+      },
+      "net/mehvahdjukaar/supplementaries/mixins/GrindstoneInputSlotMixin": {
+        "net.minecraft.inventory.container.GrindstoneContainer$2": "net/minecraft/inventory/container/GrindstoneContainer$2",
+        "mayPlace(Lnet/minecraft/item/ItemStack;)Z": "func_75214_a(Lnet/minecraft/item/ItemStack;)Z",
+        "net.minecraft.inventory.container.GrindstoneContainer$3": "net/minecraft/inventory/container/GrindstoneContainer$3"
+      }
+    }
+  }
+}

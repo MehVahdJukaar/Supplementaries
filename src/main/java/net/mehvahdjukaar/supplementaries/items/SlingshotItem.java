@@ -174,7 +174,7 @@ public class SlingshotItem extends ShootableItem implements IVanishable, IFirstP
 
     @Override
     public UseAction getUseAnimation(ItemStack stack) {
-        //needed to use NONE for custom one
+        //need to use NONE for custom one
         return UseAction.NONE;
     }
 

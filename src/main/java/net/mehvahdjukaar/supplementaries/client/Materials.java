@@ -15,6 +15,8 @@ import static net.minecraft.client.renderer.texture.AtlasTexture.LOCATION_BLOCKS
 
 public class Materials {
 
+    public static final RenderMaterial BLACKBOARD_GRID = new RenderMaterial(LOCATION_BLOCKS, Textures.BLACKBOARD_GRID);
+
     public static final RenderMaterial BELLOWS_MATERIAL = new RenderMaterial(LOCATION_BLOCKS, Textures.BELLOWS_TEXTURE);
 
     public static final Map<BookColor, RenderMaterial> BOOK_MATERIALS = new HashMap<>();

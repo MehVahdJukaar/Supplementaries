@@ -173,8 +173,8 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, 
         }
     }
 
-    public boolean isTextVisible() {
-        return textVisible;
+    public boolean shouldSkipTileRenderer() {
+        return !textVisible || !getBlockState().getValue(NoticeBoardBlock.HAS_BOOK);
     }
 
     public void setTextVisible(boolean textVisible) {

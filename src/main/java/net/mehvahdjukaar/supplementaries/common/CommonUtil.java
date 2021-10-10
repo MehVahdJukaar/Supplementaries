@@ -73,11 +73,28 @@ public class CommonUtil {
             return this == EARTH_DAY;
         }
 
+        public boolean isBirthday(){
+            return this == MOD_BIRTHDAY || this == MY_BIRTHDAY;
+        }
+
+        public int getCandyWrappingIndex() {
+            switch (this) {
+                default:
+                case NONE:
+                    return 0;
+                case HALLOWEEN:
+                    return 1;
+                case CHRISTMAS:
+                    return 2;
+            }
+        }
+
         private static Festivity get() {
             Calendar calendar = Calendar.getInstance();
             int month = calendar.get(Calendar.MONTH);
             int date = calendar.get(Calendar.DATE);
-            if ((month == Calendar.OCTOBER && date >= 29) || (month == Calendar.NOVEMBER && date <= 1)) return HALLOWEEN;
+            if ((month == Calendar.OCTOBER && date >= 29) || (month == Calendar.NOVEMBER && date <= 1))
+                return HALLOWEEN;
             if (month == Calendar.APRIL && date == 1) return APRILS_FOOL;
             if (month == Calendar.FEBRUARY && date == 14) return ST_VALENTINE;
             if (month == Calendar.APRIL && date == 22) return EARTH_DAY;
@@ -91,13 +108,13 @@ public class CommonUtil {
     public static Festivity FESTIVITY = Festivity.get();
 
 
-    public static boolean isSword(Item i){
-        if(CompatHandler.tetra && TetraToolHelper.isTetraSword(i))return true;
+    public static boolean isSword(Item i) {
+        if (CompatHandler.tetra && TetraToolHelper.isTetraSword(i)) return true;
         return i instanceof SwordItem;
     }
 
-    public static boolean isTool(Item i){
-        if(CompatHandler.tetra && TetraToolHelper.isTetraTool(i))return true;
+    public static boolean isTool(Item i) {
+        if (CompatHandler.tetra && TetraToolHelper.isTetraTool(i)) return true;
         return i instanceof ToolItem || i instanceof TridentItem;
     }
 
@@ -105,10 +122,11 @@ public class CommonUtil {
     public static boolean isLantern(Item i) {
         if (i instanceof BlockItem) {
             Block b = ((BlockItem) i).getBlock();
-            if (b.hasTileEntity(b.defaultBlockState())) return false;
             String namespace = b.getRegistryName().getNamespace();
             if (namespace.equals("skinnedlanterns")) return true;
-            return (b instanceof LanternBlock && !ServerConfigs.cached.WALL_LANTERN_BLACKLIST.contains(namespace));
+            if (b instanceof LanternBlock && !ServerConfigs.cached.WALL_LANTERN_BLACKLIST.contains(namespace)) {
+                return !b.hasTileEntity(b.defaultBlockState());
+            }
         }
         return false;
     }

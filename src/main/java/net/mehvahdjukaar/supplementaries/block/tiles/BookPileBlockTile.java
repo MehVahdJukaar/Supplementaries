@@ -17,6 +17,8 @@ public class BookPileBlockTile extends ItemDisplayTile {
     public final boolean horizontal;
     private float enchantPower = 0;
 
+    //TODO: add color
+
     public BookPileBlockTile() {
         this(false);
     }
@@ -26,6 +28,7 @@ public class BookPileBlockTile extends ItemDisplayTile {
         this.horizontal = horizontal;
     }
 
+    @Override
     public void updateTileOnInventoryChanged() {
         int b = (int) this.getItems().stream().filter(i -> !i.isEmpty()).count();
         if (b != this.getBlockState().getValue(BookPileBlock.BOOKS)) {

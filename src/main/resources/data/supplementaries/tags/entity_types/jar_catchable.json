@@ -6,6 +6,10 @@
     "minecraft:magma_cube"
   ],
   "optional": [
+    "feywild:spring_pixie",
+    "feywild:autumn_pixie",
+    "feywild:summer_pixie",
+    "feywild:winter_pixie",
     "bettermushroom:mushrooms_spores",
     "untamedwilds:tarantula",
     "wyrmroost:coin_dragon",

@@ -13,6 +13,7 @@ import net.mehvahdjukaar.supplementaries.compat.quark.QuarkPlugin;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.entities.ThrowableBrickEntity;
+import net.mehvahdjukaar.supplementaries.items.CandyItem;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.SendLoginMessagePacket;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
@@ -31,12 +32,14 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
 
@@ -167,7 +170,13 @@ public class ServerEvents {
         if (CompatHandler.quark) {
             QuarkPlugin.attachCapabilities(event);
         }
+    }
 
+    @SubscribeEvent
+    public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
+        if(event.side == LogicalSide.SERVER) {
+            CandyItem.checkSweetTooth(event.player);
+        }
     }
 
     @SubscribeEvent

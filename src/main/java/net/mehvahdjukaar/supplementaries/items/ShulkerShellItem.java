@@ -14,6 +14,11 @@ public class ShulkerShellItem extends ArmorItem {
     }
 
     @Override
+    public int getItemStackLimit(ItemStack stack) {
+        return 64;
+    }
+
+    @Override
     public boolean isEnchantable(ItemStack stack) {
         return false;
     }
@@ -47,7 +52,7 @@ public class ShulkerShellItem extends ArmorItem {
 
         @Override
         public Ingredient getRepairIngredient() {
-            return null;
+            return Ingredient.EMPTY;
         }
 
         @Override

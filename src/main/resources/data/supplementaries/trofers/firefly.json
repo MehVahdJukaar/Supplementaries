@@ -1,0 +1,41 @@
+{
+  "name": {
+    "color": "#b4ff12",
+    "translate": "trophy.trofers.composed",
+    "with": [
+      {
+        "translate": "entity.supplementaries.firefly"
+      }
+    ]
+  },
+  "display": {
+    "offset": {
+      "y": 5.0
+    },
+    "rotation": {
+      "y": 90.0
+    },
+    "scale": 0.15
+  },
+  "entity": {
+    "type": "supplementaries:firefly",
+    "animated": true
+  },
+  "colors": {
+    "base": "#606060",
+    "accent": "#b4ff12"
+  },
+  "effects": {
+    "sound": {
+      "soundEvent": "minecraft:entity.bat.ambient"
+    },
+    "rewards": {
+      "lootTable": "minecraft:blocks/glowstone",
+      "cooldown": 9600,
+      "statusEffect": {
+        "effect": "minecraft:glowing",
+        "duration": 400
+      }
+    }
+  }
+}

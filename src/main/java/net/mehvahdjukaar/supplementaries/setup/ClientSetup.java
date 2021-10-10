@@ -10,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
+import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.FlowerPotHandler;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandlerClient;
@@ -32,6 +33,7 @@ import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.client.renderer.entity.SpriteRenderer;
 import net.minecraft.client.renderer.model.ModelBakery;
 import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.renderer.texture.MissingTextureSprite;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.*;
@@ -236,7 +238,11 @@ public class ClientSetup {
         //rope knot
         RenderTypeLookup.setRenderLayer(ModRegistry.ROPE_KNOT.get(), RenderType.cutout());
         //book pile
-        ClientRegistry.bindTileEntityRenderer(ModRegistry.BOOK_PILE_TILE.get(), r->new BookPileBlockTileRenderer(r,false));
+        ClientRegistry.bindTileEntityRenderer(ModRegistry.BOOK_PILE_TILE.get(), r -> new BookPileBlockTileRenderer(r, false));
+
+        //jar boat
+        ClientRegistry.bindTileEntityRenderer(ModRegistry.JAR_BOAT_TILE.get(), JarBoatTileRenderer::new);
+
 
         ItemModelsProperties.register(Items.CROSSBOW, new ResourceLocation("rope_arrow"),
                 new CrossbowProperty(ModRegistry.ROPE_ARROW_ITEM.get()));
@@ -245,25 +251,28 @@ public class ClientSetup {
                 new CrossbowProperty(ModRegistry.ROPE_ARROW_ITEM.get()));
 
         ItemModelsProperties.register(ModRegistry.SLINGSHOT_ITEM.get(), new ResourceLocation("pull"),
-            (stack, world, entity) -> {
-            if (entity == null || entity.getUseItem() != stack) {
-                return 0.0F;
-            } else {
-                return  (float)(stack.getUseDuration() - entity.getUseItemRemainingTicks()) / SlingshotItem.getChargeDuration(stack);
-            }
-        });
+                (stack, world, entity) -> {
+                    if (entity == null || entity.getUseItem() != stack) {
+                        return 0.0F;
+                    } else {
+                        return (float) (stack.getUseDuration() - entity.getUseItemRemainingTicks()) / SlingshotItem.getChargeDuration(stack);
+                    }
+                });
         ItemModelsProperties.register(ModRegistry.SLINGSHOT_ITEM.get(), new ResourceLocation("pulling"),
                 (stack, world, entity) -> entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1.0F : 0.0F);
 
 
         ModRegistry.PRESENTS_ITEMS.values().forEach(i -> ItemModelsProperties.register(i.get(), new ResourceLocation("packed"),
-                        (stack, world, entity) -> PresentBlockTile.isPacked(stack) ? 1.0F : 1.0F));
+                (stack, world, entity) -> PresentBlockTile.isPacked(stack) ? 1.0F : 1.0F));
+
+        ItemModelsProperties.register(ModRegistry.CANDY_ITEM.get(), new ResourceLocation("wrapping"),
+                (stack, world, entity) -> CommonUtil.FESTIVITY.getCandyWrappingIndex());
 
         //ItemModelsProperties.register(ModRegistry.SPEEDOMETER_ITEM.get(), new ResourceLocation("speed"),
         //       new SpeedometerItem.SpeedometerItemProperty());
     }
 
-    public static class CrossbowProperty implements IItemPropertyGetter{
+    public static class CrossbowProperty implements IItemPropertyGetter {
 
         private final Item projectile;
 
@@ -296,10 +305,11 @@ public class ClientSetup {
         particleManager.register(ModRegistry.FEATHER_PARTICLE.get(), FeatherParticle.Factory::new);
         particleManager.register(ModRegistry.SLINGSHOT_PARTICLE.get(), SlingshotParticle.Factory::new);
         particleManager.register(ModRegistry.STASIS_PARTICLE.get(), StasisParticle.Factory::new);
+        particleManager.register(ModRegistry.CONFETTI_PARTICLE.get(), ConfettiParticle.Factory::new);
     }
 
     @SubscribeEvent
-    public static void registerBlockColors(ColorHandlerEvent.Block event){
+    public static void registerBlockColors(ColorHandlerEvent.Block event) {
         BlockColors colors = event.getBlockColors();
         colors.register(new TippedSpikesColor(), ModRegistry.BAMBOO_SPIKES.get());
         colors.register(new DefaultWaterColor(), ModRegistry.JAR_BOAT.get());
@@ -313,13 +323,12 @@ public class ClientSetup {
     }
 
     @SubscribeEvent
-    public static void registerItemColors(ColorHandlerEvent.Item event){
+    public static void registerItemColors(ColorHandlerEvent.Item event) {
         ItemColors colors = event.getItemColors();
         colors.register(new TippedSpikesColor(), ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get());
         colors.register(new DefaultWaterColor(), ModRegistry.JAR_BOAT_ITEM.get());
         colors.register(new CrossbowColor(), Items.CROSSBOW);
     }
-
 
 
     //textures
@@ -331,11 +340,13 @@ public class ClientSetup {
             for (ResourceLocation r : Textures.getTexturesToStitch()) {
                 event.addSprite(r);
             }
-        }
-        else if (loc.equals(Atlases.BANNER_SHEET)) {
-            Textures.FLAG_TEXTURES.values().forEach(event::addSprite);
-        }
-        else if(loc.equals(Atlases.SHULKER_SHEET)){
+        } else if (loc.equals(Atlases.BANNER_SHEET)) {
+            try {
+                Textures.FLAG_TEXTURES.values().stream().filter(r -> !MissingTextureSprite.getLocation().equals(r))
+                        .forEach(event::addSprite);
+            } catch (Exception ignored) {
+            }
+        } else if (loc.equals(Atlases.SHULKER_SHEET)) {
             event.addSprite(Textures.BOOK_ENCHANTED_TEXTURES);
             event.addSprite(Textures.BOOK_TOME_TEXTURES);
             Textures.BOOK_TEXTURES.values().forEach(event::addSprite);
@@ -345,14 +356,13 @@ public class ClientSetup {
     }
 
     @SubscribeEvent
-    public static void onModelRegistry(ModelRegistryEvent event){
+    public static void onModelRegistry(ModelRegistryEvent event) {
         //loaders
         ModelLoaderRegistry.registerLoader(Supplementaries.res("frame_block_loader"), new FrameBlockLoader());
         ModelLoaderRegistry.registerLoader(Supplementaries.res("mimic_block_loader"), new SignPostBlockLoader());
-        ModelLoaderRegistry.registerLoader(Supplementaries.res( "rope_knot_loader"), new RopeKnotBlockLoader());
+        ModelLoaderRegistry.registerLoader(Supplementaries.res("rope_knot_loader"), new RopeKnotBlockLoader());
         ModelLoaderRegistry.registerLoader(Supplementaries.res("wall_lantern_loader"), new WallLanternLoader());
-        ModelLoaderRegistry.registerLoader(Supplementaries.res( "flower_box_loader"), new FlowerBoxLoader());
-
+        ModelLoaderRegistry.registerLoader(Supplementaries.res("flower_box_loader"), new FlowerBoxLoader());
 
 
         //ModelLoaderRegistry.registerLoader(new ResourceLocation(Supplementaries.MOD_ID, "blackboard_loader"), new BlackboardBlockLoader());
@@ -360,15 +370,17 @@ public class ClientSetup {
         //fake models & blockstates
         registerStaticBlockState(ModRegistry.LABEL.get().getRegistryName(), Blocks.AIR, "jar");
 
+        registerStaticBlockState(Supplementaries.res("jar_boat_ship"), Blocks.AIR);
+
         FlowerPotHandler.registerCustomModels(n -> registerStaticBlockState(new ResourceLocation(n), Blocks.AIR));
     }
 
-    private static void registerStaticBlockState(ResourceLocation name, Block parent, String... booleanProperties){
+    private static void registerStaticBlockState(ResourceLocation name, Block parent, String... booleanProperties) {
         Map<ResourceLocation, StateContainer<Block, BlockState>> mapCopy = new HashMap<>(ModelBakery.STATIC_DEFINITIONS);
 
         StateContainer.Builder<Block, BlockState> builder = (new StateContainer.Builder<>(parent));
 
-        for(String p : booleanProperties) builder.add(BooleanProperty.create(p));
+        for (String p : booleanProperties) builder.add(BooleanProperty.create(p));
 
         mapCopy.put(name, builder.create(Block::defaultBlockState, BlockState::new));
 

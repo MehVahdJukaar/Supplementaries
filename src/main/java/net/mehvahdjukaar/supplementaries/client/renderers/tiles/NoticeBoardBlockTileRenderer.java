@@ -62,7 +62,7 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
                        int combinedOverlayIn) {
 
         //TODO: rewrite
-        if(tile.isTextVisible()){
+        if(!tile.shouldSkipTileRenderer()){
 
             ItemStack stack = tile.getDisplayedItem();
 

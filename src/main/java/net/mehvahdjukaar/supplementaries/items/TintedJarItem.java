@@ -39,6 +39,11 @@ public class TintedJarItem extends JarItem {
         return false;
     }
 
+    @Override
+    public boolean isBoat(Entity e) {
+        return false;
+    }
+
     //soul catching
     @Override
     public ActionResultType useOn(ItemUseContext context) {

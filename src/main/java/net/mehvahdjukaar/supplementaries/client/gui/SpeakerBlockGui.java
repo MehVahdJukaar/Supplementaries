@@ -91,10 +91,9 @@ public class SpeakerBlockGui extends Screen {
     @Override
     public void removed() {
         this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
-        //update client tile (done with packet instead)
-        //this.tileSpeaker.message = this.commandTextField.getValue();
-        //this.tileSpeaker.narrator = this.narrator;
-        //this.tileSpeaker.volume = this.volume.getValue()/this.volume.maxValue;
+        this.tileSpeaker.message = this.commandTextField.getValue();
+        this.tileSpeaker.narrator = this.narrator;
+        this.tileSpeaker.volume = this.volume.getValue()/this.volume.maxValue;
         //update server tile
         NetworkHandler.INSTANCE.sendToServer(new UpdateServerSpeakerBlockPacket(this.tileSpeaker.getBlockPos(), this.tileSpeaker.message, this.tileSpeaker.narrator, this.tileSpeaker.volume));
 

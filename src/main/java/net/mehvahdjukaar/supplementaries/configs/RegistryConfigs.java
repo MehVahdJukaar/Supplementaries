@@ -112,6 +112,7 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue FLINT_BLOCK_ENABLED;
         public static ForgeConfigSpec.BooleanValue SLINGSHOT_ENABLED;
         public static ForgeConfigSpec.BooleanValue SHULKER_HELMET_ENABLED;
+        public static ForgeConfigSpec.BooleanValue CANDY_ENABLED;
 
         public static ForgeConfigSpec.BooleanValue AMETHYST_ARROW_ENABLED;
         public static ForgeConfigSpec.BooleanValue PRESENT_ENABLED;
@@ -239,7 +240,7 @@ public class RegistryConfigs {
             DAUB_ENABLED = builder.define(ModRegistry.DAUB_NAME,true);
             WATTLE_AND_DAUB_ENABLED = builder.define("wattle_and_daub",true);
             TIMBER_FRAME_ENABLED = builder.define(ModRegistry.TIMBER_FRAME_NAME,true);
-            FLAG_ENABLED = builder.define(ModRegistry.FLAG_NAME+"s", true);
+            FLAG_ENABLED = builder.define(ModRegistry.FLAG_NAME, true);
             TILE_ENABLED = builder.define(ModRegistry.STONE_TILE_NAME,true);
             GOBLET_ENABLED = builder.define(ModRegistry.GOBLET_NAME,true);
             RAKED_GRAVEL_ENABLED = builder.define(ModRegistry.RAKED_GRAVEL_NAME,true);
@@ -249,6 +250,7 @@ public class RegistryConfigs {
             FLINT_BLOCK_ENABLED = builder.define(ModRegistry.FLINT_BLOCK_NAME, true);
             SLINGSHOT_ENABLED = builder.define(ModRegistry.SLINGSHOT_NAME, true);
             SHULKER_HELMET_ENABLED = builder.define("shulker_shell", true);
+            CANDY_ENABLED = builder.define(ModRegistry.CANDY_NAME,true);
 
             AMETHYST_ARROW_ENABLED = builder.comment("WIP").define(ModRegistry.AMETHYST_ARROW_NAME,false);
             PRESENT_ENABLED = builder.comment("WIP").define(ModRegistry.PRESENT_NAME,true);

@@ -6,14 +6,13 @@ import net.mehvahdjukaar.selene.fluids.SoftFluidHolder;
 import net.mehvahdjukaar.selene.util.Utils;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.blocks.ClockBlock;
-import net.mehvahdjukaar.supplementaries.block.util.IMobHolder;
-import net.mehvahdjukaar.supplementaries.block.util.MobHolder;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.mobholder.IMobContainerProvider;
+import net.mehvahdjukaar.supplementaries.common.mobholder.MobContainer;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.FishBucketItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -25,32 +24,32 @@ import net.minecraft.util.*;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity, IMobHolder, ISoftFluidHolder {
+//most complicated block ever
+public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity, IMobContainerProvider, ISoftFluidHolder {
     private final int CAPACITY = ServerConfigs.cached.JAR_CAPACITY;
 
-    public MobHolder mobHolder;
+    @Nonnull
+    public MobContainer mobContainer;
     public SoftFluidHolder fluidHolder;
 
     public JarBlockTile() {
         super(ModRegistry.JAR_TILE.get());
-        this.mobHolder = new MobHolder(this.level, this.worldPosition);
         this.fluidHolder = new SoftFluidHolder(CAPACITY);
+        this.mobContainer = new MobContainer(level, worldPosition);
     }
 
-    public MobHolder getMobHolder() {
-        return this.mobHolder;
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        this.mobContainer.setWorldAndPos(level, worldPosition);
     }
 
     @Override
     public double getViewDistance() {
         return 80;
-    }
-
-    @Override
-    public void onLoad() {
-        this.mobHolder.setWorldAndPos(this.level, this.worldPosition);
     }
 
     @Override
@@ -75,12 +74,12 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
         //empty hand: eat food
 
         // can I insert this item? For cookies and fish buckets
-        else if (this.mobHolder.isEmpty() && this.canPlaceItem(0, handStack)) {
+        else if (this.mobContainer.isEmpty() && this.canPlaceItem(0, handStack)) {
             this.handleAddItem(handStack, player, hand);
             return true;
         }
         //fish buckets
-        else if (this.isEmpty() && this.fluidHolder.isEmpty() && this.mobHolder.interactWithBucketItem(handStack, player, hand)) {
+        else if (this.isEmpty() && this.fluidHolder.isEmpty() && this.mobContainer.interactWithBucket(handStack, player.level, player.blockPosition(), player, hand)) {
             return true;
         }
 
@@ -153,7 +152,7 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
 
     public void resetHolders() {
         this.fluidHolder.clear();
-        this.mobHolder.clear();
+        this.mobContainer = null;
         this.setDisplayedItem(ItemStack.EMPTY);
     }
 
@@ -169,7 +168,7 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
     //can this item be added?
     @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
-        if (this.fluidHolder.isEmpty() && this.mobHolder.isEmpty()) {
+        if (this.fluidHolder.isEmpty() && this.mobContainer.isEmpty()) {
             Item i = stack.getItem();
             if (!this.isFull()) {
                 //might add other accepted items here
@@ -181,51 +180,29 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
         return false;
     }
 
-    //TODO: remove
-    public boolean convertOldJars(CompoundNBT compound) {
-        if (compound == null) return false;
-        NonNullList<ItemStack> oldStacks = NonNullList.withSize(1, ItemStack.EMPTY);
-        ItemStackHelper.loadAllItems(compound, oldStacks);
-        ItemStack oldStack = oldStacks.get(0);
-        if (!oldStacks.isEmpty() && !oldStack.isEmpty()) {
-            this.fluidHolder.clear();
-            ItemStack r = this.fluidHolder.interactWithItem(oldStack, null, null, false);
-            if (r != null && !r.isEmpty()) {
-                if (compound.contains("LiquidHolder")) {
-                    this.fluidHolder.setCount((int) (compound.getCompound("LiquidHolder").getFloat("Level") * 16));
-                } else {
-                    this.fluidHolder.lossyAdd(oldStack.getCount());
-                }
-                this.stacks = NonNullList.withSize(1, ItemStack.EMPTY);
-                return true;
-            }
-        }
-        return false;
-    }
+
 
     @Override
     public void load(BlockState state, CompoundNBT compound) {
         super.load(state, compound);
-        //todo: remove in future
-        if (!(compound.contains("LiquidHolder") && this.convertOldJars(compound))) {
-            this.fluidHolder.load(compound);
+        this.fluidHolder.load(compound);
+        this.mobContainer.load(compound);
+        if(this.level != null){
+            //onLoad();
         }
-        this.mobHolder.read(compound);
-
-        this.onLoad();
     }
 
     @Override
     public CompoundNBT save(CompoundNBT compound) {
         //stacks are done by itemDisplayTile
         super.save(compound);
-        this.mobHolder.write(compound);
         this.fluidHolder.save(compound);
+        this.mobContainer.save(compound);
         return compound;
     }
 
     public boolean hasContent() {
-        return !(this.isEmpty() && this.mobHolder.isEmpty() && this.fluidHolder.isEmpty());
+        return !(this.isEmpty() && this.mobContainer.isEmpty() && this.fluidHolder.isEmpty());
     }
 
     public boolean isFull() {
@@ -253,13 +230,18 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
         return true;
     }
 
+    @Override
+    public MobContainer getMobContainer() {
+        return this.mobContainer;
+    }
+
     public Direction getDirection() {
         return this.getBlockState().getValue(ClockBlock.FACING);
     }
 
     @Override
     public void tick() {
-        this.mobHolder.tick();
+        this.mobContainer.tick();
     }
 
     @Override
@@ -269,6 +251,6 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
 
     @Override
     public boolean canInteractWithFluidHolder() {
-        return this.isEmpty() && (this.mobHolder.isEmpty() || isPonyJar());
+        return this.isEmpty() && (this.mobContainer.isEmpty() || isPonyJar());
     }
 }
