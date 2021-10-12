@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
+import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.supplementaries.block.util.IMapDisplay;
 import net.mehvahdjukaar.supplementaries.block.util.ITextHolder;
 import net.mehvahdjukaar.supplementaries.block.util.TextHolder;
@@ -10,10 +11,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.util.Constants;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.UUID;
 
 
-public class HangingSignBlockTile extends SwayingBlockTile implements IMapDisplay, ITextHolder {
+//TODO: make swaying tile an interface
+public class HangingSignBlockTile extends SwayingBlockTile implements IMapDisplay, ITextHolder, IOwnerProtected {
     public static final int MAXLINES = 7;
+
+    private UUID owner = null;
 
     public TextHolder textHolder;
     private NonNullList<ItemStack> stacks = NonNullList.withSize(1, ItemStack.EMPTY);
@@ -29,6 +36,17 @@ public class HangingSignBlockTile extends SwayingBlockTile implements IMapDispla
     public HangingSignBlockTile() {
         super(ModRegistry.HANGING_SIGN_TILE.get());
         this.textHolder = new TextHolder(MAXLINES);
+    }
+
+    @Nullable
+    @Override
+    public UUID getOwner() {
+        return owner;
+    }
+
+    @Override
+    public void setOwner(UUID owner) {
+        this.owner = owner;
     }
 
     @Override
@@ -54,6 +72,7 @@ public class HangingSignBlockTile extends SwayingBlockTile implements IMapDispla
         ItemStackHelper.loadAllItems(compound, this.stacks);
 
         this.textHolder.read(compound);
+        this.loadOwner(compound);
     }
 
     @Override
@@ -62,6 +81,7 @@ public class HangingSignBlockTile extends SwayingBlockTile implements IMapDispla
         ItemStackHelper.saveAllItems(compound, this.stacks);
 
         this.textHolder.write(compound);
+        this.saveOwner(compound);
         return compound;
     }
 

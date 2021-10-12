@@ -1,8 +1,11 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 
+import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.selene.map.CustomDecorationHolder;
 import net.mehvahdjukaar.supplementaries.block.tiles.SignPostBlockTile;
+import net.mehvahdjukaar.supplementaries.block.tiles.SpeakerBlockTile;
+import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.client.gui.SignPostGui;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.framedblocks.FramedSignPost;
@@ -11,6 +14,7 @@ import net.mehvahdjukaar.supplementaries.items.SignPostItem;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.loot.LootContext;
@@ -51,7 +55,7 @@ public class SignPostBlock extends FenceMimicBlock{
         if(hit.getDirection().getAxis() == Direction.Axis.Y) return ActionResultType.PASS;
 
         TileEntity tileentity = worldIn.getBlockEntity(pos);
-        if (tileentity instanceof SignPostBlockTile) {
+        if (tileentity instanceof SignPostBlockTile && ((IOwnerProtected) tileentity).isAccessibleBy(player)) {
             SignPostBlockTile te = (SignPostBlockTile) tileentity;
             ItemStack itemstack = player.getItemInHand(handIn);
             Item item = itemstack.getItem();
@@ -96,6 +100,7 @@ public class SignPostBlock extends FenceMimicBlock{
                     te.leftDown = !te.leftDown;
                 }
                 if(server)te.setChanged();
+                worldIn.playSound(null, pos, SoundEvents.ITEM_FRAME_ROTATE_ITEM, SoundCategory.BLOCKS, 1.0F, 0.6F);
                 return ActionResultType.sidedSuccess(worldIn.isClientSide);
             }
             //change direction with compass
@@ -222,4 +227,8 @@ public class SignPostBlock extends FenceMimicBlock{
         return new SignPostBlockTile();
     }
 
+    @Override
+    public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+        BlockUtils.addOptionalOwnership(placer, worldIn, pos);
+    }
 }

@@ -1,16 +1,20 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
+import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.FlowerBoxBlockTile;
+import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
@@ -24,6 +28,7 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 public class FlowerBoxBlock extends WaterBlock {
 
@@ -75,7 +80,7 @@ public class FlowerBoxBlock extends WaterBlock {
     public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
                                 BlockRayTraceResult hit) {
         TileEntity tileentity = worldIn.getBlockEntity(pos);
-        if (tileentity instanceof FlowerBoxBlockTile) {
+        if (tileentity instanceof FlowerBoxBlockTile && ((IOwnerProtected) tileentity).isAccessibleBy(player)) {
             int ind;
 
             Direction dir = state.getValue(FACING);
@@ -134,4 +139,8 @@ public class FlowerBoxBlock extends WaterBlock {
         }
     }
 
+    @Override
+    public void setPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        BlockUtils.addOptionalOwnership(placer, world, pos);
+    }
 }

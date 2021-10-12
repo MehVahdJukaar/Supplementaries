@@ -1,6 +1,9 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
+import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.supplementaries.block.tiles.NoticeBoardBlockTile;
+import net.mehvahdjukaar.supplementaries.block.tiles.StatueBlockTile;
+import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
@@ -56,7 +59,7 @@ public class NoticeBoardBlock extends Block {
     public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
                                 BlockRayTraceResult hit) {
         TileEntity tileentity = worldIn.getBlockEntity(pos);
-        if (tileentity instanceof NoticeBoardBlockTile) {
+        if (tileentity instanceof NoticeBoardBlockTile && ((IOwnerProtected) tileentity).isAccessibleBy(player)) {
             return ((NoticeBoardBlockTile) tileentity).interact(player, handIn, pos, state);
         }
         return ActionResultType.PASS;
@@ -80,12 +83,13 @@ public class NoticeBoardBlock extends Block {
 
     @Override
     public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        //only needed if you are not using block entity tag
-        if (stack.hasCustomHoverName()) {
-            TileEntity tileentity = worldIn.getBlockEntity(pos);
-            if (tileentity instanceof NoticeBoardBlockTile) {
-                ((LockableTileEntity) tileentity).setCustomName(stack.getHoverName());
+        TileEntity tileentity = worldIn.getBlockEntity(pos);
+        if (tileentity instanceof NoticeBoardBlockTile) {
+            //only needed if you are not using block entity tag
+            if (stack.hasCustomHoverName()) {
+                ((NoticeBoardBlockTile) tileentity).setCustomName(stack.getHoverName());
             }
+            BlockUtils.addOptionalOwnership(placer, tileentity);
         }
     }
 
@@ -139,5 +143,6 @@ public class NoticeBoardBlock extends Block {
             ((NoticeBoardBlockTile) tileentity).updatePower(powered);
         }
     }
+
 
 }

@@ -1,7 +1,9 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
+import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.HangingFlowerPotBlockTile;
+import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.block.util.IBlockHolder;
 import net.mehvahdjukaar.supplementaries.common.FlowerPotHandler;
 import net.minecraft.block.*;
@@ -49,12 +51,15 @@ public class HangingFlowerPotBlock extends Block {
     }
 
     @Override
-    public void setPlacedBy(World world, BlockPos pos, BlockState state, @org.jetbrains.annotations.Nullable LivingEntity entity, ItemStack stack) {
+    public void setPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
         TileEntity te = world.getBlockEntity(pos);
         Item i = stack.getItem();
         if(te instanceof IBlockHolder && i instanceof BlockItem){
             BlockState mimic = ((BlockItem) i).getBlock().defaultBlockState();
             ((IBlockHolder) te).setHeldBlock(mimic);
+        }
+        if(te instanceof IOwnerProtected){
+            BlockUtils.addOptionalOwnership(entity, te);
         }
     }
 
@@ -83,9 +88,9 @@ public class HangingFlowerPotBlock extends Block {
     @Override
     public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         TileEntity tileEntity = worldIn.getBlockEntity(pos);
-        if (tileEntity instanceof HangingFlowerPotBlockTile) {
+        if (tileEntity instanceof HangingFlowerPotBlockTile && ((HangingFlowerPotBlockTile) tileEntity).isAccessibleBy(player)) {
             HangingFlowerPotBlockTile te = ((HangingFlowerPotBlockTile) tileEntity);
-            Block pot = te.pot.getBlock();
+            Block pot = te.getHeldBlock().getBlock();
             if (pot instanceof FlowerPotBlock && FlowerPotHandler.isEmptyPot(((FlowerPotBlock) pot).getEmptyPot())) {
                 ItemStack itemstack = player.getItemInHand(handIn);
                 Item item = itemstack.getItem();
@@ -149,7 +154,7 @@ public class HangingFlowerPotBlock extends Block {
     public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
         TileEntity te = world.getBlockEntity(pos);
         if (te instanceof HangingFlowerPotBlockTile) {
-            Block b = ((HangingFlowerPotBlockTile) te).pot.getBlock();
+            Block b = ((HangingFlowerPotBlockTile) te).getHeldBlock().getBlock();
             if (b instanceof FlowerPotBlock) {
                 Block flower = ((FlowerPotBlock) b).getContent();
                 if (flower == Blocks.AIR) return new ItemStack(((FlowerPotBlock) b).getEmptyPot());
@@ -163,7 +168,7 @@ public class HangingFlowerPotBlock extends Block {
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         TileEntity tileentity = builder.getOptionalParameter(LootParameters.BLOCK_ENTITY);
         if (tileentity instanceof HangingFlowerPotBlockTile) {
-            Block b = ((HangingFlowerPotBlockTile) tileentity).pot.getBlock();
+            Block b = ((HangingFlowerPotBlockTile) tileentity).getHeldBlock().getBlock();
             if (b instanceof FlowerPotBlock)
                 return Arrays.asList(new ItemStack(((FlowerPotBlock) b).getContent()), new ItemStack(((FlowerPotBlock) b).getEmptyPot()));
         }

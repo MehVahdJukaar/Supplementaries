@@ -13,6 +13,7 @@ import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.datagen.types.VanillaWoodTypes;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
@@ -95,6 +96,7 @@ public class ConfiguredCustomScreen extends ConfigScreen {
         addIcon("blue bomb", ModRegistry.BOMB_BLUE_ITEM.get());
         addIcon("placeable gunpowder", Items.GUNPOWDER);
         addIcon("slingshot", ModRegistry.SLINGSHOT_ITEM.get());
+        addIcon("server protection", Items.COMMAND_BLOCK);
 
     }
 

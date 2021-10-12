@@ -30,6 +30,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 public class ItemShelfBlock extends WaterBlock {
     protected static final VoxelShape SHAPE_NORTH = Block.box(0D, 1.0D, 13.0D, 16.0D, 4.0D, 16.0D);
@@ -76,12 +77,10 @@ public class ItemShelfBlock extends WaterBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        World world = context.getLevel();
-        BlockPos pos = context.getClickedPos();
-        boolean flag = world.getFluidState(pos).getType() == Fluids.WATER;
+        BlockState state = super.getStateForPlacement(context);
         if (context.getClickedFace() == Direction.UP || context.getClickedFace() == Direction.DOWN)
-            return this.defaultBlockState().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, flag);
-        return this.defaultBlockState().setValue(FACING, context.getClickedFace()).setValue(WATERLOGGED, flag);
+            return state.setValue(FACING, Direction.NORTH);
+        return state.setValue(FACING, context.getClickedFace());
     }
 
     //called when a neighbor is placed
@@ -178,5 +177,16 @@ public class ItemShelfBlock extends WaterBlock {
             return ((IInventory) tileentity).isEmpty() ? 0 : 15;
         else
             return 0;
+    }
+
+    @Override
+    public void setPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
+        super.setPlacedBy(world, pos, state, entity, stack);
+        if(ServerConfigs.cached.SERVER_PROTECTION && entity instanceof PlayerEntity){
+            TileEntity tileentity = world.getBlockEntity(pos);
+            if (tileentity instanceof ItemDisplayTile){
+                ((ItemDisplayTile) tileentity).setOwner(entity.getUUID());
+            }
+        }
     }
 }

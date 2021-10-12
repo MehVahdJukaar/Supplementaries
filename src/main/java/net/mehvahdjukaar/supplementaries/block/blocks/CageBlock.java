@@ -3,11 +3,14 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.CageBlockTile;
+import net.mehvahdjukaar.supplementaries.block.util.ILavaAndWaterLoggable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
@@ -26,6 +29,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import java.util.Collections;
@@ -52,7 +56,7 @@ public class CageBlock extends WaterBlock {
     public int getAnalogOutputSignal(BlockState blockState, World worldIn, BlockPos pos) {
         TileEntity tileentity = worldIn.getBlockEntity(pos);
         if (tileentity instanceof CageBlockTile) {
-            return ((CageBlockTile) tileentity).mobContainer == null ? 0 : 15;
+            return ((CageBlockTile) tileentity).mobContainer.isEmpty() ? 0 : 15;
         }
         return 0;
     }
@@ -65,9 +69,7 @@ public class CageBlock extends WaterBlock {
     // shulker box code
     public ItemStack getCageItem(CageBlockTile te) {
         ItemStack returnStack = new ItemStack(this);
-        if (te.mobContainer != null) {
-            te.saveToNbt(returnStack);
-        }
+        te.saveToNbt(returnStack);
         return returnStack;
     }
 
@@ -157,9 +159,7 @@ public class CageBlock extends WaterBlock {
         TileEntity tileEntity = world.getBlockEntity(pos);
         if (tileEntity instanceof CageBlockTile) {
             CageBlockTile cage = (CageBlockTile) tileEntity;
-            if(cage.mobContainer != null){
-                return cage.mobContainer.onInteract(world, pos, player, hand);
-            }
+            return cage.mobContainer.onInteract(world, pos, player, hand);
         }
         return ActionResultType.PASS;
     }

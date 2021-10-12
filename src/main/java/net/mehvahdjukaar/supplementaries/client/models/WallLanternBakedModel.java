@@ -46,18 +46,21 @@ public class WallLanternBakedModel implements IDynamicBakedModel {
 
         List<BakedQuad> quads = new ArrayList<>();
 
+        //support
         try {
             quads.addAll(support.getQuads(state, side, rand, EmptyModelData.INSTANCE));
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
 
-        try{
-            boolean fancy = extraData.getData(BlockProperties.FANCY);
+        //mimic
+        try {
+            boolean fancy = Boolean.TRUE.equals(extraData.getData(BlockProperties.FANCY));
 
-            if(!fancy) {
+            if (!fancy) {
 
                 BlockState mimic = extraData.getData(BlockProperties.MIMIC);
 
-                if (!(mimic.getBlock() instanceof MimicBlock) && mimic != null && !mimic.isAir()) {
+                if (mimic != null && !(mimic.getBlock() instanceof MimicBlock) && !mimic.isAir() && state != null) {
                     Direction dir = state.getValue(WallLanternBlock.FACING);
                     if (mimic.hasProperty(BlockStateProperties.FACING)) {
                         mimic = mimic.setValue(BlockStateProperties.FACING, dir);
@@ -68,16 +71,18 @@ public class WallLanternBakedModel implements IDynamicBakedModel {
 
                     List<BakedQuad> mimicQuads = model.getQuads(mimic, side, rand, EmptyModelData.INSTANCE);
 
+                    TextureAtlasSprite texture = this.getParticleIcon();
                     for (BakedQuad q : mimicQuads) {
                         int[] v = Arrays.copyOf(q.getVertices(), q.getVertices().length);
-                        v = RendererUtil.moveVertices(v, Direction.UP, 2 / 16f);
-                        v = RendererUtil.moveVertices(v, dir, -2 / 16f);
+                        RendererUtil.moveVertices(v, Direction.UP, 2 / 16f, texture);
+                        RendererUtil.moveVertices(v, dir, -2 / 16f, texture);
 
                         quads.add(new BakedQuad(v, q.getTintIndex(), q.getDirection(), q.getSprite(), q.isShade()));
                     }
                 }
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
 
 
         return quads;
@@ -111,13 +116,14 @@ public class WallLanternBakedModel implements IDynamicBakedModel {
 
     @Override
     public TextureAtlasSprite getParticleTexture(@NotNull IModelData data) {
-        BlockState mimic = data.getData(MimicBlockTile.MIMIC);
+        BlockState mimic = data.getData(BlockProperties.MIMIC);
         if (mimic != null && !mimic.isAir()) {
 
             IBakedModel model = blockModelShaper.getBlockModel(mimic);
             try {
                 return model.getParticleIcon();
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
 
         }
         return getParticleIcon();
@@ -138,7 +144,7 @@ public class WallLanternBakedModel implements IDynamicBakedModel {
                            double x, double y, double z, float u, float v, TextureAtlasSprite sprite, float r, float g, float b) {
 
         ImmutableList<VertexFormatElement> elements = builder.getVertexFormat().getElements().asList();
-        for (int j = 0 ; j < elements.size() ; j++) {
+        for (int j = 0; j < elements.size(); j++) {
             VertexFormatElement e = elements.get(j);
             switch (e.getUsage()) {
                 case POSITION:
@@ -189,7 +195,6 @@ public class WallLanternBakedModel implements IDynamicBakedModel {
     private static Vector3d v(double x, double y, double z) {
         return new Vector3d(x, y, z);
     }
-
 
 
 }

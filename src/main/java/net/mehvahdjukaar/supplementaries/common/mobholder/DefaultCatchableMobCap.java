@@ -16,6 +16,7 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Random;
 
@@ -56,7 +57,7 @@ public class DefaultCatchableMobCap<T extends Entity> extends BaseCatchableMobCa
         if (mob instanceof SlimeEntity && ((SlimeEntity) mob).getSize() > 1) {
             return false;
         }
-        //hardcoding bees to work with resourceful bees
+        //hard coding bees to work with resourceful bees
         if (mob instanceof BeeEntity) {
             return true;
         }
@@ -83,9 +84,19 @@ public class DefaultCatchableMobCap<T extends Entity> extends BaseCatchableMobCa
     }
 
     @Override
+    public void onContainerWaterlogged(boolean waterlogged) {
+        if (this.mob instanceof WaterMobEntity && this.mob.isInWater() != waterlogged) {
+            this.mob.wasTouchingWater = waterlogged;
+            Pair<Float, Float> dim = MobContainer.calculateMobDimensionsForContainer(this, this.containerWidth, this.containerHeight, waterlogged);
+            double py = dim.getRight() + 0.0001;
+            mob.setPos(this.mob.getX(), py, this.mob.getZ());
+            mob.yOld = py;
+        }
+    }
+
+    @Override
     public void tickInsideContainer(World world, BlockPos pos, float mobScale, CompoundNBT tag) {
         if(world.isClientSide) {
-            //common
             if (this.properties.isFloating()) {
                 this.jumpY = 0.04f * MathHelper.sin(mob.tickCount / 10f) - 0.03f;
             }
@@ -99,12 +110,12 @@ public class DefaultCatchableMobCap<T extends Entity> extends BaseCatchableMobCa
     }
 
     //cat.setInSittingPose(true);
-
+    //TODO: finish this so they get lowered when not in water
     @Override
-    public boolean isFlyingMob() {
+    public boolean isFlyingMob(boolean waterlogged) {
         CapturedMobsHelper.AnimationCategory cat = this.getAnimationCategory();
         return !cat.isLand() && (cat.isFlying() || mob.isNoGravity() || mob instanceof IFlyingAnimal ||
-                mob.isIgnoringBlockTriggers() || mob instanceof WaterMobEntity);
+                mob.isIgnoringBlockTriggers() || (mob instanceof WaterMobEntity && waterlogged));
     }
 
     public CapturedMobsHelper.AnimationCategory getAnimationCategory() {

@@ -5,10 +5,10 @@
       "item": "minecraft:sugar"
     },
     {
-      "tag": "minecraft:paper"
+      "item": "minecraft:paper"
     },
     {
-      "tag": "minecraft:honey_bottle"
+      "item": "minecraft:honey_bottle"
     }
   ],
   "result": {

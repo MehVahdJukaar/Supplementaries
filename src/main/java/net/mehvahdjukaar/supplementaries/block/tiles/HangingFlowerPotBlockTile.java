@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
+import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.supplementaries.block.util.IBlockHolder;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
@@ -9,9 +10,15 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.common.util.Constants;
+import org.jetbrains.annotations.Nullable;
 
-public class HangingFlowerPotBlockTile extends SwayingBlockTile implements IBlockHolder {
-    public BlockState pot = Blocks.FLOWER_POT.defaultBlockState();
+import java.util.UUID;
+
+public class HangingFlowerPotBlockTile extends SwayingBlockTile implements IBlockHolder, IOwnerProtected {
+    private UUID owner = null;
+
+    private BlockState pot = Blocks.FLOWER_POT.defaultBlockState();
+
     public HangingFlowerPotBlockTile() {
         super(ModRegistry.HANGING_FLOWER_POT_TILE.get());
     }
@@ -22,6 +29,17 @@ public class HangingFlowerPotBlockTile extends SwayingBlockTile implements IBloc
         maxPeriod = 35f;
         angleDamping = 80f;
         periodDamping = 70f;
+    }
+
+    @Nullable
+    @Override
+    public UUID getOwner() {
+        return owner;
+    }
+
+    @Override
+    public void setOwner(UUID owner) {
+        this.owner = owner;
     }
 
     @Override
@@ -47,6 +65,7 @@ public class HangingFlowerPotBlockTile extends SwayingBlockTile implements IBloc
         super.save(compound);
         //if(pot != Blocks.AIR.getDefaultState())
         compound.put("Pot", NBTUtil.writeBlockState(pot));
+        this.saveOwner(compound);
         return compound;
     }
 
@@ -54,6 +73,7 @@ public class HangingFlowerPotBlockTile extends SwayingBlockTile implements IBloc
     public void load(BlockState state, CompoundNBT compound) {
         super.load(state, compound);
         pot = NBTUtil.readBlockState(compound.getCompound("Pot"));
+        this.loadOwner(compound);
     }
 
     @Override

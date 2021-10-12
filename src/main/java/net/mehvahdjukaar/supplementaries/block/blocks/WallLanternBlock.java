@@ -43,28 +43,28 @@ public class WallLanternBlock extends EnhancedLanternBlock {
     public WallLanternBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH)
-                .setValue(LIGHT_LEVEL, 0).setValue(WATERLOGGED,false).setValue(LIT,true));
+                .setValue(LIGHT_LEVEL, 0).setValue(WATERLOGGED, false).setValue(LIT, true));
     }
 
     @Override
     public void setPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
         TileEntity te = world.getBlockEntity(pos);
         Item i = stack.getItem();
-        if(te instanceof IBlockHolder && i instanceof BlockItem){
+        if (te instanceof IBlockHolder && i instanceof BlockItem) {
             BlockState mimic = ((BlockItem) i).getBlock().defaultBlockState();
             ((IBlockHolder) te).setHeldBlock(mimic);
         }
     }
 
     @Override
-    public void appendHoverText(ItemStack stack,  IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         tooltip.add((new StringTextComponent("You shouldn't have this")).withStyle(TextFormatting.GRAY));
     }
 
     @Override
     public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
-        if(state.getValue(LIT)) {
+        if (state.getValue(LIT)) {
             return state.getValue(LIGHT_LEVEL);
         }
         return 0;
@@ -87,7 +87,7 @@ public class WallLanternBlock extends EnhancedLanternBlock {
     @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(LIGHT_LEVEL,LIT);
+        builder.add(LIGHT_LEVEL, LIT);
     }
 
     @Override
@@ -97,7 +97,7 @@ public class WallLanternBlock extends EnhancedLanternBlock {
         if (te instanceof WallLanternBlockTile && ((WallLanternBlockTile) te).isRedstoneLantern) {
             if (state.getValue(LIT) && !worldIn.hasNeighborSignal(pos)) {
                 worldIn.setBlock(pos, state.cycle(LIT), 2);
-                if(((WallLanternBlockTile) te).mimic.hasProperty(LIT))
+                if (((WallLanternBlockTile) te).mimic.hasProperty(LIT))
                     ((WallLanternBlockTile) te).mimic = ((WallLanternBlockTile) te).mimic.cycle(LIT);
             }
         }
@@ -115,8 +115,8 @@ public class WallLanternBlock extends EnhancedLanternBlock {
                         world.getBlockTicks().scheduleTick(pos, this, 4);
                     } else {
                         world.setBlock(pos, state.cycle(LIT), 2);
-                        if(((WallLanternBlockTile) te).mimic.hasProperty(LIT))
-                            ((WallLanternBlockTile) te).mimic =((WallLanternBlockTile) te).mimic.cycle(LIT);
+                        if (((WallLanternBlockTile) te).mimic.hasProperty(LIT))
+                            ((WallLanternBlockTile) te).mimic = ((WallLanternBlockTile) te).mimic.cycle(LIT);
                     }
                 }
             }
@@ -126,10 +126,10 @@ public class WallLanternBlock extends EnhancedLanternBlock {
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         TileEntity tileentity = builder.getOptionalParameter(LootParameters.BLOCK_ENTITY);
-        if (tileentity instanceof WallLanternBlockTile){
+        if (tileentity instanceof WallLanternBlockTile) {
             return Collections.singletonList(new ItemStack(((WallLanternBlockTile) tileentity).mimic.getBlock()));
         }
-        return super.getDrops(state,builder);
+        return super.getDrops(state, builder);
     }
 
     @Override

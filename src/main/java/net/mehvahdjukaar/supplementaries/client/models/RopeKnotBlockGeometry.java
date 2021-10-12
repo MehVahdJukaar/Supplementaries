@@ -14,18 +14,19 @@ import java.util.function.Function;
 public class RopeKnotBlockGeometry implements IModelGeometry<RopeKnotBlockGeometry> {
 
     private final BlockModel knot;
+
     protected RopeKnotBlockGeometry(BlockModel overlay) {
         this.knot = overlay;
     }
 
     @Override
     public IBakedModel bake(IModelConfiguration owner, ModelBakery bakery, Function<RenderMaterial, TextureAtlasSprite> spriteGetter, IModelTransform modelTransform, ItemOverrideList overrides, ResourceLocation modelLocation) {
-        IBakedModel bakedOverlay = this.knot.bake(bakery, knot,spriteGetter,modelTransform,modelLocation,true);
+        IBakedModel bakedOverlay = this.knot.bake(bakery, knot, spriteGetter, modelTransform, modelLocation, true);
         return new RopeKnotBlockBakedModel(bakedOverlay);
     }
 
     @Override
     public Collection<RenderMaterial> getTextures(IModelConfiguration owner, Function<ResourceLocation, IUnbakedModel> modelGetter, Set<Pair<String, String>> missingTextureErrors) {
-        return knot.getMaterials(modelGetter,missingTextureErrors);
+        return knot.getMaterials(modelGetter, missingTextureErrors);
     }
 }

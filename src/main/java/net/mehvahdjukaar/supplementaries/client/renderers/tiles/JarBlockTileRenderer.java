@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.Textures;
+import net.mehvahdjukaar.supplementaries.common.mobholder.MobContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
@@ -75,9 +76,8 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
         }
         //render fish
         if (!tile.mobContainer.isEmpty()) {
-            boolean needsWater = false;
-            if (tile.mobContainer.getData().isAquarium) {
-                needsWater = true;
+            MobContainer.MobData data = tile.mobContainer.getData();
+            if (data.isAquarium) {
                 matrixStackIn.pushPose();
 
                 long time = System.currentTimeMillis() + r;
@@ -92,7 +92,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
                 matrixStackIn.mulPose(rotation);
                 matrixStackIn.scale(0.625f, 0.625f, 0.625f);
                 matrixStackIn.translate(0, -0.2, -0.335);
-                int fishType = tile.mobContainer.getData().getFishIndex();
+                int fishType = data.getFishIndex();
 
                 //overlay
                 RendererUtil.renderFish(builder, matrixStackIn, wo, ho, fishType, combinedLightIn);
@@ -101,7 +101,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
             } else {
                 super.render(tile, partialTicks, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
             }
-            if (needsWater || tile.mobContainer.shouldHaveWater()) {
+            if (tile.mobContainer.shouldHaveWater()) {
                 matrixStackIn.pushPose();
                 matrixStackIn.translate(0.5, 0.0635, 0.5);
                 IVertexBuilder builder = bufferIn.getBuffer(RenderType.cutout());

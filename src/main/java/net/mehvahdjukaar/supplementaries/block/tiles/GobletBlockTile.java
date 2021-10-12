@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
+import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.selene.fluids.ISoftFluidHolder;
 import net.mehvahdjukaar.selene.fluids.SoftFluidHolder;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
@@ -13,8 +14,13 @@ import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Hand;
 import net.minecraftforge.common.util.Constants;
+import org.jetbrains.annotations.Nullable;
 
-public class GobletBlockTile extends TileEntity implements ISoftFluidHolder {
+import java.util.UUID;
+
+public class GobletBlockTile extends TileEntity implements ISoftFluidHolder, IOwnerProtected {
+
+    private UUID owner = null;
 
     public SoftFluidHolder fluidHolder;
 
@@ -24,8 +30,15 @@ public class GobletBlockTile extends TileEntity implements ISoftFluidHolder {
         this.fluidHolder = new SoftFluidHolder(CAPACITY);
     }
 
+    @Nullable
     @Override
-    public void onLoad() {
+    public UUID getOwner() {
+        return owner;
+    }
+
+    @Override
+    public void setOwner(UUID owner) {
+        this.owner = owner;
     }
 
     @Override
@@ -77,13 +90,14 @@ public class GobletBlockTile extends TileEntity implements ISoftFluidHolder {
     public void load(BlockState state, CompoundNBT compound) {
         super.load(state, compound);
         this.fluidHolder.load(compound);
-        this.onLoad();
+        this.loadOwner(compound);
     }
 
     @Override
     public CompoundNBT save(CompoundNBT compound) {
         super.save(compound);
         this.fluidHolder.save(compound);
+        this.saveOwner(compound);
         return compound;
     }
 

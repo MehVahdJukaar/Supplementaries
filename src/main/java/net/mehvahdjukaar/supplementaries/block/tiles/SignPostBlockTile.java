@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
 
+import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.util.ITextHolder;
 import net.mehvahdjukaar.supplementaries.block.util.TextHolder;
@@ -17,14 +18,19 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.UUID;
 
 
-public class SignPostBlockTile extends MimicBlockTile implements ITextHolder {
+public class SignPostBlockTile extends MimicBlockTile implements ITextHolder, IOwnerProtected {
+    private UUID owner = null;
 
     //is holding a framed fence (for framed blocks mod compat)
     public boolean framed = false;
     public static final ModelProperty<Boolean> FRAMED = BlockProperties.FRAMED;
 
+    //TODO: make sing class and clean this up
     public TextHolder textHolder;
 
     public float yawUp = 0;
@@ -105,6 +111,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolder {
         this.down = compound.getBoolean("Down");
         this.woodTypeUp = WoodTypes.fromNBT(compound.getString("TypeUp"));
         this.woodTypeDown = WoodTypes.fromNBT(compound.getString("TypeDown"));
+        this.loadOwner(compound);
     }
 
     @Override
@@ -122,7 +129,18 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolder {
         compound.putBoolean("Down", this.down);
         compound.putString("TypeUp", this.woodTypeUp.toNBT());
         compound.putString("TypeDown", this.woodTypeDown.toNBT());
-
+        this.saveOwner(compound);
         return compound;
+    }
+
+    @Nullable
+    @Override
+    public UUID getOwner() {
+        return owner;
+    }
+
+    @Override
+    public void setOwner(UUID owner) {
+        this.owner = owner;
     }
 }

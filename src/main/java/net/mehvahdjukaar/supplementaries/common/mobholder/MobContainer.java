@@ -16,6 +16,8 @@ import net.minecraft.entity.monster.EndermanEntity;
 import net.minecraft.entity.passive.*;
 import net.minecraft.entity.passive.fish.AbstractFishEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -43,6 +45,9 @@ import java.util.UUID;
 //TODO: maybe remove type here since I'm not using it anymore
 public class MobContainer {
 
+    private final float width;
+    private final float height;
+
     @Nullable
     private World world;
     private BlockPos pos;
@@ -56,7 +61,9 @@ public class MobContainer {
     private ICatchableMob mobDisplayCapInstance;
 
     //TODO: maybe make this not null so it can use non static save and load
-    public MobContainer(World world, BlockPos pos) {
+    public MobContainer(float width, float height, @Nullable World world, BlockPos pos) {
+        this.width = width;
+        this.height = height;
         this.world = world;
         this.pos = pos;
     }
@@ -120,6 +127,8 @@ public class MobContainer {
 
             //visual entity stored in capability
             this.mobDisplayCapInstance = getCap(entity);
+            this.mobDisplayCapInstance.setContainerDimensions(this.width, this.height);
+            this.mobDisplayCapInstance.onContainerWaterlogged(world.getFluidState(pos).getType() != Fluids.EMPTY);
 
             this.updateLightLevel();
         }
@@ -265,15 +274,7 @@ public class MobContainer {
         return ActionResultType.PASS;
     }
 
-    //TODO: react to fluid change
-    /*
-    public void setWaterMobInWater(boolean inWater) {
-        if (this.mob instanceof WaterMobEntity && this.mob.isInWater() != inWater) {
-            this.mob.wasTouchingWater = inWater;
-        }
-    }*/
-
-    public MobData getData() {
+    public @Nullable MobData getData() {
         return data;
     }
 
@@ -286,7 +287,7 @@ public class MobContainer {
     }
 
     public boolean shouldHaveWater() {
-        return this.data.isAquarium || (this.hasDisplayMob() && this.mobDisplayCapInstance.shouldHaveWater());
+        return this.data != null && this.data.isAquarium || (this.hasDisplayMob() && this.mobDisplayCapInstance.shouldHaveWater());
     }
 
     //item stuff
@@ -309,7 +310,7 @@ public class MobContainer {
         if (isAquarium && CapturedMobsHelper.getType(mob).isFish()) {
             data = new MobData(name, bucketStack);
         } else {
-            Pair<Float, Float> dimensions = calculateMobDimensionsForContainer(mob, blockW, blockH);
+            Pair<Float, Float> dimensions = calculateMobDimensionsForContainer(getCap(mob), blockW, blockH, false);
 
             float scale = dimensions.getLeft();
             float yOffset = dimensions.getRight();
@@ -402,14 +403,14 @@ public class MobContainer {
     /**
      * get mob scale and vertical offset for a certain container
      *
-     * @param mob    entity
+     * @param cap mob capability    entity
      * @param blockW container width
      * @param blockH container height
      * @return scale and y offset
      */
-    private static <E extends Entity> Pair<Float, Float> calculateMobDimensionsForContainer(E mob, float blockW, float blockH) {
+    public static Pair<Float, Float> calculateMobDimensionsForContainer(ICatchableMob cap, float blockW, float blockH, boolean waterlogged) {
 
-        //TODO: improve for aquatic entities to react and not fly when not in water
+        Entity mob = cap.getEntity();
 
         float babyScale = 1;
 
@@ -424,10 +425,9 @@ public class MobContainer {
         float w = mob.getBbWidth() * babyScale;
         float h = mob.getBbHeight() * babyScale;
 
-        ICatchableMob cap = getCap(mob);
         cap.getHitBoxHeightIncrement();
 
-        boolean isAir = cap.isFlyingMob();
+        boolean isAir = cap.isFlyingMob(waterlogged);
 
 
         float addWidth = cap.getHitBoxWidthIncrement();
@@ -474,7 +474,7 @@ public class MobContainer {
         private final int fishIndex;
 
 
-        public MobData(String name, CompoundNBT mobTag, float scale, UUID id, ItemStack filledBucket) {
+        public MobData(String name, CompoundNBT mobTag, float scale, @Nullable UUID id, ItemStack filledBucket) {
             this.isAquarium = false;
             this.name = name;
             this.mobTag = mobTag;

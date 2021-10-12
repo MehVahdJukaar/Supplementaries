@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.renderers;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.mehvahdjukaar.supplementaries.common.Textures;
@@ -11,13 +12,17 @@ import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector4f;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
+import net.minecraftforge.common.util.Lazy;
 
 import java.util.Random;
+import java.util.function.Supplier;
 
 public class RendererUtil {
     //centered on x,z. aligned on y=0
@@ -193,16 +198,16 @@ public class RendererUtil {
 
     public static void addVert(IVertexBuilder builder, MatrixStack matrixStackIn, float x, float y, float z, float u, float v, float r, float g,
                                float b, float a, int lu, int lv, float nx, float ny, float nz, TextureAtlasSprite sprite) {
-        builder.vertex(matrixStackIn.last().pose(), x, y, z).color(r, g, b, a).uv(getRelativeU(sprite,u), getRelativeV(sprite,v))
+        builder.vertex(matrixStackIn.last().pose(), x, y, z).color(r, g, b, a).uv(getRelativeU(sprite, u), getRelativeV(sprite, v))
                 .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lu, lv).normal(matrixStackIn.last().normal(), nx, ny, nz).endVertex();
     }
 
-    public static float getRelativeU(TextureAtlasSprite sprite, float u){
+    public static float getRelativeU(TextureAtlasSprite sprite, float u) {
         float f = sprite.getU1() - sprite.getU0();
         return sprite.getU0() + f * u;
     }
 
-    public static float getRelativeV(TextureAtlasSprite sprite, float v){
+    public static float getRelativeV(TextureAtlasSprite sprite, float v) {
         float f = sprite.getV1() - sprite.getV0();
         return sprite.getV0() + f * v;
     }
@@ -252,37 +257,32 @@ public class RendererUtil {
         }
     }
 
-    private static int formatLength = 8;
-
-    public static void changeVertexFormat(int length){
-        formatLength = length;
-    }
-
-    private static void checkShaders(){
-        if(CompatHandler.flywheel){
-            changeVertexFormat(FlywheelPlugin.areShadersOn() ? 9 : 8);
-        }
+    private static int getFormatLength(TextureAtlasSprite sprite) {
+        BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
+        return builder.getVertexFormat().getIntegerSize();
     }
 
     /**
      * moves baked vertices in a direction by amount
      */
-    public static int[] moveVertices(int[] v, Direction dir, float amount) {
-        checkShaders();
+    public static void moveVertices(int[] v, Direction dir, float amount, TextureAtlasSprite sprite) {
+
+        int formatLength = getFormatLength(sprite);
+
+        //checkShaders();
         int axis = dir.getAxis().ordinal();
         float step = amount * dir.getAxisDirection().getStep();
         for (int i = 0; i < v.length / formatLength; i++) {
             float original = Float.intBitsToFloat(v[i * formatLength + axis]);
             v[i * formatLength + axis] = Float.floatToIntBits(original + step);
         }
-        return v;
     }
 
     /**
      * moves baked vertices by amount
      */
-    public static int[] moveVertices(int[] v, float x, float y, float z) {
-        checkShaders();
+    public static void moveVertices(int[] v, float x, float y, float z, TextureAtlasSprite sprite) {
+        int formatLength = getFormatLength(sprite);
         for (int i = 0; i < v.length / formatLength; i++) {
             float originalX = Float.intBitsToFloat(v[i * formatLength]);
             v[i * formatLength] = Float.floatToIntBits(originalX + x);
@@ -293,15 +293,14 @@ public class RendererUtil {
             float originalZ = Float.intBitsToFloat(v[i * formatLength + 2]);
             v[i * formatLength + 2] = Float.floatToIntBits(originalZ + z);
         }
-        return v;
     }
 
 
     /**
      * scale baked vertices by amount
      */
-    public static int[] scaleVertices(int[] v, float scale) {
-        checkShaders();
+    public static void scaleVertices(int[] v, float scale, TextureAtlasSprite sprite) {
+        int formatLength = getFormatLength(sprite);
         for (int i = 0; i < v.length / formatLength; i++) {
             float originalX = Float.intBitsToFloat(v[i * formatLength]);
             v[i * formatLength] = Float.floatToIntBits(originalX * scale);
@@ -312,14 +311,12 @@ public class RendererUtil {
             float originalZ = Float.intBitsToFloat(v[i * formatLength + 2]);
             v[i * formatLength + 2] = Float.floatToIntBits(originalZ * scale);
         }
-        return v;
     }
 
-    public static int[] transformVertices(int[] v, MatrixStack stack) {
+    public static void transformVertices(int[] v, MatrixStack stack, TextureAtlasSprite sprite) {
         Vector4f vector4f = new Vector4f(0, 0, 0, 1.0F);
         vector4f.transform(stack.last().pose());
-        v = moveVertices(v, vector4f.x(), vector4f.y(), vector4f.z());
-        return v;
+        moveVertices(v, vector4f.x(), vector4f.y(), vector4f.z(), sprite);
     }
 
 

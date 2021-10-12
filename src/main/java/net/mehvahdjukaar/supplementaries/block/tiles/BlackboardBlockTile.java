@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
+import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.supplementaries.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager.BlackboardKey;
@@ -13,9 +14,14 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.UUID;
 
 
-public class BlackboardBlockTile extends TileEntity {
+public class BlackboardBlockTile extends TileEntity implements IOwnerProtected {
+
+    private UUID owner = null;
 
     public byte[][] pixels = new byte[16][16];
 
@@ -44,13 +50,14 @@ public class BlackboardBlockTile extends TileEntity {
         super.setChanged();
     }
 
-    public void setCorrectBlockState(BlockState state, BlockPos pos, World world){
+    public void setCorrectBlockState(BlockState state, BlockPos pos, World world) {
         if (!world.isClientSide) {
-            world.setBlock(pos, state.setValue(BlackboardBlock.WRITTEN, !this.isEmpty()), 2);
+            boolean written = !this.isEmpty();
+            if (state.getValue(BlackboardBlock.WRITTEN) != written) {
+                world.setBlock(pos, state.setValue(BlackboardBlock.WRITTEN, written), 2);
+            }
         }
     }
-
-
 
 
     //public IModelData getModelData() return this.data;
@@ -81,7 +88,8 @@ public class BlackboardBlockTile extends TileEntity {
     public void load(BlockState state, CompoundNBT compound) {
         super.load(state, compound);
         loadFromTag(compound);
-        if(this.level != null  && !this.level.isClientSide){
+        this.loadOwner(compound);
+        if (this.level != null && !this.level.isClientSide) {
             this.setCorrectBlockState(this.getBlockState(), this.worldPosition, this.level);
         }
     }
@@ -90,6 +98,7 @@ public class BlackboardBlockTile extends TileEntity {
     public CompoundNBT save(CompoundNBT compound) {
         super.save(compound);
         this.saveToTag(compound);
+        this.saveOwner(compound);
         return compound;
     }
 
@@ -161,5 +170,16 @@ public class BlackboardBlockTile extends TileEntity {
     @Override
     public double getViewDistance() {
         return 96;
+    }
+
+    @Nullable
+    @Override
+    public UUID getOwner() {
+        return owner;
+    }
+
+    @Override
+    public void setOwner(UUID owner) {
+        this.owner = owner;
     }
 }

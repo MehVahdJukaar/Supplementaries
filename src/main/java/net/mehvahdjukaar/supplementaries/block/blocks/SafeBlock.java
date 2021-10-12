@@ -54,7 +54,7 @@ import java.util.Random;
 import java.util.UUID;
 
 public class SafeBlock extends Block implements ILavaAndWaterLoggable {
-    public static final VoxelShape SHAPE = Block.box(1,0,1,15,16,15);
+    public static final VoxelShape SHAPE = Block.box(1, 0, 1, 15, 16, 15);
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
@@ -64,12 +64,12 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable {
     public SafeBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(OPEN, false)
-                .setValue(FACING, Direction.NORTH).setValue(WATERLOGGED,false).setValue(LAVALOGGED,false));
+                .setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false).setValue(LAVALOGGED, false));
     }
 
     @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(OPEN,FACING,WATERLOGGED,LAVALOGGED);
+        builder.add(OPEN, FACING, WATERLOGGED, LAVALOGGED);
     }
 
     //schedule block tick
@@ -77,7 +77,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable {
     public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
         TileEntity tileentity = worldIn.getBlockEntity(pos);
         if (tileentity instanceof SafeBlockTile) {
-            ((SafeBlockTile)tileentity).barrelTick();
+            ((SafeBlockTile) tileentity).barrelTick();
         }
     }
 
@@ -95,8 +95,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable {
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
         if (stateIn.getValue(LAVALOGGED)) {
             worldIn.getLiquidTicks().scheduleTick(currentPos, Fluids.LAVA, Fluids.LAVA.getTickDelay(worldIn));
-        }
-        else if (stateIn.getValue(WATERLOGGED)) {
+        } else if (stateIn.getValue(WATERLOGGED)) {
             worldIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
         }
         return super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
@@ -144,30 +143,29 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable {
 
                 //clear ownership with tripwire
                 boolean cleared = false;
-                if(ServerConfigs.cached.SAFE_SIMPLE){
-                    if((item == Items.TRIPWIRE_HOOK || item instanceof KeyItem) &&
-                            (safe.isOwnedBy(player)||(safe.isNotOwnedBy(player)&&player.isCreative()))){
+                if (ServerConfigs.cached.SAFE_SIMPLE) {
+                    if ((item == Items.TRIPWIRE_HOOK || item instanceof KeyItem) &&
+                            (safe.isOwnedBy(player) || (safe.isNotOwnedBy(player) && player.isCreative()))) {
                         cleared = true;
                     }
-                }
-                else{
-                    if(player.isShiftKeyDown() && item instanceof KeyItem && (player.isCreative() ||
-                            KeyLockableTile.isCorrectKey(stack, safe.password))){
+                } else {
+                    if (player.isShiftKeyDown() && item instanceof KeyItem && (player.isCreative() ||
+                            KeyLockableTile.isCorrectKey(stack, safe.password))) {
                         cleared = true;
                     }
                 }
 
-                if(cleared){
+                if (cleared) {
                     safe.clearOwner();
-                    player.displayClientMessage(new TranslationTextComponent("message.supplementaries.safe.cleared"),true);
+                    player.displayClientMessage(new TranslationTextComponent("message.supplementaries.safe.cleared"), true);
                     worldIn.playSound(null, pos,
                             SoundEvents.IRON_TRAPDOOR_OPEN, SoundCategory.BLOCKS, 0.5F, 1.5F);
                     return ActionResultType.CONSUME;
                 }
 
                 BlockPos p = pos.relative(state.getValue(FACING));
-                if (!worldIn.getBlockState(p).isRedstoneConductor(worldIn, p)){
-                    if(ServerConfigs.cached.SAFE_SIMPLE) {
+                if (!worldIn.getBlockState(p).isRedstoneConductor(worldIn, p)) {
+                    if (ServerConfigs.cached.SAFE_SIMPLE) {
                         UUID owner = safe.owner;
                         if (owner == null) {
                             owner = player.getUUID();
@@ -177,19 +175,17 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable {
                             player.displayClientMessage(new TranslationTextComponent("message.supplementaries.safe.owner", safe.ownerName), true);
                             if (!player.isCreative()) return ActionResultType.CONSUME;
                         }
-                    }
-                    else{
+                    } else {
                         String key = safe.password;
-                        if(key==null){
-                            if(item instanceof KeyItem){
-                                safe.password=stack.getHoverName().getString();
-                                player.displayClientMessage(new TranslationTextComponent("message.supplementaries.safe.assigned_key",safe.password), true);
-                                worldIn.playSound(null, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5,
+                        if (key == null) {
+                            if (item instanceof KeyItem) {
+                                safe.password = stack.getHoverName().getString();
+                                player.displayClientMessage(new TranslationTextComponent("message.supplementaries.safe.assigned_key", safe.password), true);
+                                worldIn.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
                                         SoundEvents.IRON_TRAPDOOR_OPEN, SoundCategory.BLOCKS, 0.5F, 1.5F);
                                 return ActionResultType.CONSUME;
                             }
-                        }
-                        else if(!safe.canPlayerOpen(player,true)&&!player.isCreative()){
+                        } else if (!safe.canPlayerOpen(player, true) && !player.isCreative()) {
                             return ActionResultType.CONSUME;
                         }
                     }
@@ -209,7 +205,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable {
 
         CompoundNBT compoundnbt = stack.getTagElement("BlockEntityTag");
         if (compoundnbt != null) {
-            if(ServerConfigs.cached.SAFE_SIMPLE) {
+            if (ServerConfigs.cached.SAFE_SIMPLE) {
                 if (compoundnbt.contains("Owner")) {
                     UUID id = compoundnbt.getUUID("Owner");
                     if (!id.equals(Minecraft.getInstance().player.getUUID())) {
@@ -244,8 +240,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable {
                     }
                 }
                 return;
-            }
-            else{
+            } else {
                 if (compoundnbt.contains("Password")) {
                     tooltip.add((new TranslationTextComponent("message.supplementaries.safe.bound")).withStyle(TextFormatting.GRAY));
                     return;
@@ -273,13 +268,13 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable {
     //break protection
     @Override
     public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, FluidState fluid) {
-        if(ServerConfigs.cached.SAFE_UNBREAKABLE) {
+        if (ServerConfigs.cached.SAFE_UNBREAKABLE) {
             TileEntity tileentity = world.getBlockEntity(pos);
             if (tileentity instanceof SafeBlockTile) {
-                if (!((SafeBlockTile) tileentity).canPlayerOpen(player,true)) return false;
+                if (!((SafeBlockTile) tileentity).canPlayerOpen(player, true)) return false;
             }
         }
-        return super.removedByPlayer(state,world,pos,player,willHarvest,fluid);
+        return super.removedByPlayer(state, world, pos, player, willHarvest, fluid);
     }
 
     //overrides creative drop
@@ -287,13 +282,13 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable {
     public void playerWillDestroy(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
         TileEntity tileentity = worldIn.getBlockEntity(pos);
         if (tileentity instanceof SafeBlockTile) {
-            SafeBlockTile te = (SafeBlockTile)tileentity;
+            SafeBlockTile te = (SafeBlockTile) tileentity;
             if (!worldIn.isClientSide && player.isCreative() && !te.isEmpty()) {
-                    ItemStack itemstack = this.getSafeItem(te);
+                ItemStack itemstack = this.getSafeItem(te);
 
-                    ItemEntity itementity = new ItemEntity(worldIn, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, itemstack);
-                    itementity.setDefaultPickUpDelay();
-                    worldIn.addFreshEntity(itementity);
+                ItemEntity itementity = new ItemEntity(worldIn, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, itemstack);
+                itementity.setDefaultPickUpDelay();
+                worldIn.addFreshEntity(itementity);
             } else {
                 te.unpackLootTable(player);
             }
@@ -306,7 +301,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable {
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         TileEntity tileentity = builder.getOptionalParameter(LootParameters.BLOCK_ENTITY);
         if (tileentity instanceof SafeBlockTile) {
-            SafeBlockTile te = (SafeBlockTile)tileentity;
+            SafeBlockTile te = (SafeBlockTile) tileentity;
             ItemStack itemstack = this.getSafeItem(te);
 
             return Collections.singletonList(itemstack);
@@ -318,12 +313,11 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable {
     public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
         ItemStack itemstack = super.getPickBlock(state, target, world, pos, player);
         TileEntity te = world.getBlockEntity(pos);
-        if (te instanceof SafeBlockTile){
+        if (te instanceof SafeBlockTile) {
             return getSafeItem((SafeBlockTile) te);
         }
         return itemstack;
     }
-
 
 
     @Override
@@ -334,8 +328,8 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable {
                 ((LockableTileEntity) tileentity).setCustomName(stack.getHoverName());
             }
             if (placer instanceof PlayerEntity) {
-                if(((SafeBlockTile) tileentity).owner==null)
-                   ((SafeBlockTile) tileentity).setOwner(placer.getUUID());
+                if (((SafeBlockTile) tileentity).owner == null)
+                    ((SafeBlockTile) tileentity).setOwner(placer.getUUID());
             }
         }
     }
@@ -375,14 +369,14 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable {
     @Override
     public INamedContainerProvider getMenuProvider(BlockState state, World worldIn, BlockPos pos) {
         TileEntity tileentity = worldIn.getBlockEntity(pos);
-        return tileentity instanceof INamedContainerProvider ? (INamedContainerProvider)tileentity : null;
+        return tileentity instanceof INamedContainerProvider ? (INamedContainerProvider) tileentity : null;
     }
 
 
     @Override
     public FluidState getFluidState(BlockState state) {
-        if(state.getValue(LAVALOGGED))return Fluids.LAVA.getSource(false);
-        else if(state.getValue(WATERLOGGED))return Fluids.WATER.getSource(false);
+        if (state.getValue(LAVALOGGED)) return Fluids.LAVA.getSource(false);
+        else if (state.getValue(WATERLOGGED)) return Fluids.WATER.getSource(false);
         return super.getFluidState(state);
     }
 

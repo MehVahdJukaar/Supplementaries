@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.mobholder;
 
+import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.minecraft.entity.Entity;
 
@@ -11,6 +12,9 @@ public abstract class BaseCatchableMobCap<T extends Entity> implements ICatchabl
 
     protected final T mob;
 
+    protected float containerWidth = 1;
+    protected float containerHeight = 1;
+
     public BaseCatchableMobCap(T entity) {
         this.mob = entity;
     }
@@ -18,5 +22,19 @@ public abstract class BaseCatchableMobCap<T extends Entity> implements ICatchabl
     @Override
     public Entity getEntity() {
         return this.mob;
+    }
+
+    @Override
+    public void setContainerDimensions(float width, float height) {
+        this.containerWidth = width;
+        this.containerHeight = height;
+    }
+
+    public float getContainerWidth() {
+        return containerWidth;
+    }
+
+    public float getContainerHeight() {
+        return containerHeight;
     }
 }

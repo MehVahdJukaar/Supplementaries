@@ -4,6 +4,6 @@
     "minecraft:quartz"
   ],
   "optional": [
-    "chalk:chalk"
+    "chalk:white_chalk"
   ]
 }

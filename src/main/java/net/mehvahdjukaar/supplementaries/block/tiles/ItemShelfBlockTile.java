@@ -3,9 +3,14 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.block.blocks.ItemShelfBlock;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.minecraft.block.BlockState;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.UUID;
 
 public class ItemShelfBlockTile extends ItemDisplayTile {
 

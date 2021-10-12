@@ -1,17 +1,21 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
+import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties.Winding;
 import net.mehvahdjukaar.supplementaries.block.tiles.PulleyBlockTile;
+import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.RotatedPillarBlock;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
@@ -66,7 +70,7 @@ public class PulleyBlock extends RotatedPillarBlock {
     public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
                                 BlockRayTraceResult hit) {
         TileEntity tileentity = worldIn.getBlockEntity(pos);
-        if (tileentity instanceof PulleyBlockTile) {
+        if (tileentity instanceof PulleyBlockTile && ((IOwnerProtected) tileentity).isAccessibleBy(player)) {
             if (player instanceof ServerPlayerEntity) {
                 if (!(player.isShiftKeyDown() && this.axisRotate(state, pos, worldIn, Rotation.COUNTERCLOCKWISE_90, null)))
                     player.openMenu((INamedContainerProvider) tileentity);
@@ -112,5 +116,10 @@ public class PulleyBlock extends RotatedPillarBlock {
     @Override
     public int getAnalogOutputSignal(BlockState blockState, World world, BlockPos pos) {
         return Container.getRedstoneSignalFromBlockEntity(world.getBlockEntity(pos));
+    }
+
+    @Override
+    public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+        BlockUtils.addOptionalOwnership(placer, worldIn, pos);
     }
 }

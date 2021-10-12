@@ -103,9 +103,14 @@ public interface ICatchableMob {
     }
 
     /**
+     * @param waterlogged if the container is waterlogged. return true for fish it waterlogged
      * @return true if this mob should not touch the ground when in a container
      */
-    default boolean isFlyingMob() {
+    default boolean isFlyingMob(boolean waterlogged) {
+        return isFlyingMob();
+    }
+
+    default boolean isFlyingMob(){
         Entity entity = getEntity();
         return entity.isNoGravity() || entity instanceof IFlyingAnimal ||
                 entity.isIgnoringBlockTriggers() || entity instanceof WaterMobEntity;
@@ -130,9 +135,15 @@ public interface ICatchableMob {
      *
      * @param waterlogged new block waterlogged state
      */
-    //NYI
     default void onContainerWaterlogged(boolean waterlogged) {
 
     }
+
+    /**
+     * this is called every time a container block is created. Store these in your cap
+     * @param width container width
+     * @param height container height
+     */
+    default void setContainerDimensions(float width, float height){}
 
 }

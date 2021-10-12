@@ -10,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.mobholder.IMobContainerProvider;
 import net.mehvahdjukaar.supplementaries.common.mobholder.MobContainer;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.items.AbstractMobContainerItem;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -38,7 +39,8 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
     public JarBlockTile() {
         super(ModRegistry.JAR_TILE.get());
         this.fluidHolder = new SoftFluidHolder(CAPACITY);
-        this.mobContainer = new MobContainer(level, worldPosition);
+        AbstractMobContainerItem item = ((AbstractMobContainerItem) ModRegistry.JAR_ITEM.get());
+        this.mobContainer = new MobContainer(item.getMobContainerWidth(), item.getMobContainerHeight(), this.level, this.worldPosition);
     }
 
     @Override

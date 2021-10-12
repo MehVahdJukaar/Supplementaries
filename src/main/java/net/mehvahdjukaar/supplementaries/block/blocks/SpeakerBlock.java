@@ -1,6 +1,9 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
+import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
+import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.block.tiles.SpeakerBlockTile;
+import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.client.gui.SpeakerBlockGui;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
@@ -60,11 +63,12 @@ public class SpeakerBlock extends Block {
     @Override
     public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         this.updatePower(state, worldIn, pos);
-        if (stack.hasCustomHoverName()) {
-            TileEntity tileentity = worldIn.getBlockEntity(pos);
-            if (tileentity instanceof SpeakerBlockTile) {
+        TileEntity tileentity = worldIn.getBlockEntity(pos);
+        if (tileentity instanceof SpeakerBlockTile) {
+            if (stack.hasCustomHoverName()) {
                 ((SpeakerBlockTile) tileentity).setCustomName(stack.getHoverName());
             }
+            BlockUtils.addOptionalOwnership(placer, tileentity);
         }
     }
 
@@ -110,7 +114,7 @@ public class SpeakerBlock extends Block {
     public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity entity, Hand hand,
                                 BlockRayTraceResult hit) {
         TileEntity tileentity = world.getBlockEntity(pos);
-        if (tileentity instanceof SpeakerBlockTile) {
+        if (tileentity instanceof SpeakerBlockTile && ((IOwnerProtected) tileentity).isAccessibleBy(entity)) {
             // client
             if (world.isClientSide) {
                 SpeakerBlockGui.open((SpeakerBlockTile) tileentity);
@@ -142,4 +146,5 @@ public class SpeakerBlock extends Block {
         }
         return super.triggerEvent(state, world, pos, eventID, eventParam);
     }
+
 }

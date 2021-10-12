@@ -14,18 +14,19 @@ import java.util.function.Function;
 public class FlowerBoxGeometry implements IModelGeometry<FlowerBoxGeometry> {
 
     private final BlockModel box;
+
     protected FlowerBoxGeometry(BlockModel box) {
         this.box = box;
     }
 
     @Override
     public IBakedModel bake(IModelConfiguration owner, ModelBakery bakery, Function<RenderMaterial, TextureAtlasSprite> spriteGetter, IModelTransform modelTransform, ItemOverrideList overrides, ResourceLocation modelLocation) {
-        IBakedModel bakedOverlay = this.box.bake(bakery,box,spriteGetter,modelTransform,modelLocation,true);
+        IBakedModel bakedOverlay = this.box.bake(bakery, box, spriteGetter, modelTransform, modelLocation, true);
         return new FlowerBoxBakedModel(bakedOverlay);
     }
 
     @Override
     public Collection<RenderMaterial> getTextures(IModelConfiguration owner, Function<ResourceLocation, IUnbakedModel> modelGetter, Set<Pair<String, String>> missingTextureErrors) {
-        return box.getMaterials(modelGetter,missingTextureErrors);
+        return box.getMaterials(modelGetter, missingTextureErrors);
     }
 }

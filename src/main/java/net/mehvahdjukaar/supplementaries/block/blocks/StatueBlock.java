@@ -2,7 +2,10 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
+import net.mehvahdjukaar.supplementaries.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.block.tiles.StatueBlockTile;
+import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
@@ -35,6 +38,7 @@ public class StatueBlock extends WaterBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
+
     public StatueBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(POWERED,false)
@@ -79,11 +83,12 @@ public class StatueBlock extends WaterBlock {
 
     @Override
     public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        if (stack.hasCustomHoverName()) {
-            TileEntity tileentity = worldIn.getBlockEntity(pos);
-            if (tileentity instanceof StatueBlockTile) {
-                ((LockableTileEntity) tileentity).setCustomName(stack.getHoverName());
+        TileEntity tileentity = worldIn.getBlockEntity(pos);
+        if (tileentity instanceof StatueBlockTile) {
+            if (stack.hasCustomHoverName()) {
+                ((StatueBlockTile) tileentity).setCustomName(stack.getHoverName());
             }
+            BlockUtils.addOptionalOwnership(placer, tileentity);
         }
     }
 

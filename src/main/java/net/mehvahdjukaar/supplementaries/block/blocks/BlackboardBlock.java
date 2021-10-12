@@ -4,6 +4,7 @@ import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.BlackboardBlockTile;
+import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.client.gui.BlackBoardGui;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
@@ -78,6 +79,7 @@ public class BlackboardBlock extends WaterBlock {
         TileEntity tileentity = world.getBlockEntity(pos);
         if (tileentity instanceof BlackboardBlockTile) {
             ((BlackboardBlockTile) tileentity).setCorrectBlockState(state, pos, world);
+            BlockUtils.addOptionalOwnership(placer, tileentity);
         }
     }
 
@@ -262,5 +264,14 @@ public class BlackboardBlock extends WaterBlock {
         return super.getPickBlock(state, target, world, pos, player);
     }
 
+
+    @Override
+    public void neighborChanged(BlockState state, World world, BlockPos pos, Block p_220069_4_, BlockPos p_220069_5_, boolean p_220069_6_) {
+        super.neighborChanged(state, world, pos, p_220069_4_, p_220069_5_, p_220069_6_);
+        TileEntity te = world.getBlockEntity(pos);
+        if (te instanceof BlackboardBlockTile) {
+            ((BlackboardBlockTile) te).setCorrectBlockState(state, pos, world);
+        }
+    }
 
 }

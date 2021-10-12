@@ -30,13 +30,13 @@ public class HangingFlowerPotBlockTileRenderer extends TileEntityRenderer<Hangin
     public void render(HangingFlowerPotBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
 
-        BlockState state = CommonUtil.FESTIVITY.isAprilsFool()? FlowerPotHandler.getAprilPot() : tile.pot;
-        BlockState state2 = tile.getBlockState().setValue(HangingFlowerPotBlock.TILE,true);
+        BlockState state = CommonUtil.FESTIVITY.isAprilsFool() ? FlowerPotHandler.getAprilPot() : tile.getHeldBlock();
+        BlockState state2 = tile.getBlockState().setValue(HangingFlowerPotBlock.TILE, true);
 
         matrixStackIn.pushPose();
         matrixStackIn.translate(0.5, 0.5, 0.5);
 
-        matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(MathHelper.lerp(partialTicks, tile.prevAngle*1.5f, tile.angle*1.5f)));
+        matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(MathHelper.lerp(partialTicks, tile.prevAngle * 1.5f, tile.angle * 1.5f)));
         matrixStackIn.translate(-0.5, -0.5, -0.5);
 
         // render block
@@ -46,8 +46,6 @@ public class HangingFlowerPotBlockTileRenderer extends TileEntityRenderer<Hangin
         RendererUtil.renderBlockModel(state2, matrixStackIn, bufferIn, blockRenderer, tile.getLevel(), tile.getBlockPos(), RenderType.cutout());
 
         matrixStackIn.popPose();
-
-
 
 
     }

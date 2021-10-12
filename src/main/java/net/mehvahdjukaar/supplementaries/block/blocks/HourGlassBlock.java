@@ -1,15 +1,18 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
+import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.HourGlassBlockTile;
+import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
@@ -81,19 +84,21 @@ public class HourGlassBlock extends WaterBlock implements IForgeBlock {
 
     @Override
     public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
-                                             BlockRayTraceResult hit) {
-        if(player.isShiftKeyDown()&&player.getItemInHand(handIn).isEmpty()&&state.getValue(FACING).getAxis() == Direction.Axis.Y){
-            if(!worldIn.isClientSide) {
-                worldIn.setBlock(pos, state.setValue(FACING, state.getValue(FACING).getOpposite()), 3);
-                worldIn.playSound(null,pos, SoundEvents.ITEM_FRAME_ROTATE_ITEM, SoundCategory.BLOCKS,1,1);
-                return ActionResultType.CONSUME;
-            }
-            return ActionResultType.SUCCESS;
-        }
+                                BlockRayTraceResult hit) {
 
         TileEntity tileentity = worldIn.getBlockEntity(pos);
-        if (tileentity instanceof ItemDisplayTile) {
-            return ((ItemDisplayTile) tileentity).interact(player,handIn);
+        if (tileentity instanceof ItemDisplayTile && ((IOwnerProtected) tileentity).isAccessibleBy(player)) {
+
+            if (player.isShiftKeyDown() && player.getItemInHand(handIn).isEmpty() && state.getValue(FACING).getAxis() == Direction.Axis.Y) {
+                if (!worldIn.isClientSide) {
+                    worldIn.setBlock(pos, state.setValue(FACING, state.getValue(FACING).getOpposite()), 3);
+                    worldIn.playSound(null, pos, SoundEvents.ITEM_FRAME_ROTATE_ITEM, SoundCategory.BLOCKS, 1, 1);
+                    return ActionResultType.CONSUME;
+                }
+                return ActionResultType.SUCCESS;
+            }
+
+            return ((ItemDisplayTile) tileentity).interact(player, handIn);
         }
         return ActionResultType.PASS;
     }
@@ -156,8 +161,12 @@ public class HourGlassBlock extends WaterBlock implements IForgeBlock {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        if(!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().options.advancedItemTooltips)return;
-        tooltip.add((new TranslationTextComponent(  "message.supplementaries.hourglass")).withStyle(TextFormatting.GRAY).withStyle(TextFormatting.ITALIC));
+        if (!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().options.advancedItemTooltips) return;
+        tooltip.add((new TranslationTextComponent("message.supplementaries.hourglass")).withStyle(TextFormatting.GRAY).withStyle(TextFormatting.ITALIC));
     }
 
+    @Override
+    public void setPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        BlockUtils.addOptionalOwnership(placer, world, pos);
+    }
 }

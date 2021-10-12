@@ -1,9 +1,12 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 
+import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
+import net.mehvahdjukaar.supplementaries.block.tiles.StatueBlockTile;
+import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -73,7 +76,7 @@ public class JarBlock extends WaterBlock {
     public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
                                 BlockRayTraceResult hit) {
         TileEntity tileentity = worldIn.getBlockEntity(pos);
-        if (tileentity instanceof JarBlockTile) {
+        if (tileentity instanceof JarBlockTile && ((IOwnerProtected) tileentity).isAccessibleBy(player)) {
             // make te do the work
             JarBlockTile te = (JarBlockTile) tileentity;
             if (te.handleInteraction(player, handIn)) {
@@ -89,11 +92,12 @@ public class JarBlock extends WaterBlock {
 
     @Override
     public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        if (stack.hasCustomHoverName()) {
-            TileEntity tileentity = worldIn.getBlockEntity(pos);
-            if (tileentity instanceof JarBlockTile) {
-                ((LockableTileEntity) tileentity).setCustomName(stack.getHoverName());
+        TileEntity tileentity = worldIn.getBlockEntity(pos);
+        if (tileentity instanceof JarBlockTile) {
+            if (stack.hasCustomHoverName()) {
+                ((JarBlockTile) tileentity).setCustomName(stack.getHoverName());
             }
+            BlockUtils.addOptionalOwnership(placer, tileentity);
         }
     }
 
@@ -103,6 +107,8 @@ public class JarBlock extends WaterBlock {
 
         if (te.hasContent()) {
             CompoundNBT compoundnbt = te.save(new CompoundNBT());
+            //hax
+            if(compoundnbt.contains("Owner"))compoundnbt.remove("Owner");
             if (!compoundnbt.isEmpty()) {
                 returnStack.addTagElement("BlockEntityTag", compoundnbt);
             }
@@ -216,7 +222,7 @@ public class JarBlock extends WaterBlock {
                 return Container.getRedstoneSignalFromContainer(te);
             else if (!te.fluidHolder.isEmpty()) {
                 return ((JarBlockTile) tileentity).fluidHolder.getComparatorOutput();
-            } else if (te.mobContainer != null) return 15;
+            } else if (!te.mobContainer.isEmpty()) return 15;
         }
         return 0;
     }

@@ -39,6 +39,7 @@ public class ServerConfigs {
         entity.init(builder);
         tweaks.init(builder);
         item.init(builder);
+        general.init(builder);
 
         SERVER_SPEC = builder.build();
     }
@@ -275,6 +276,20 @@ public class ServerConfigs {
 
     }
 
+    public static class general {
+        public static ForgeConfigSpec.BooleanValue SERVER_PROTECTION;
+
+        private static void init(ForgeConfigSpec.Builder builder) {
+            builder.comment("General settings")
+                    .push("general");
+            SERVER_PROTECTION = builder.comment("Turn this on to disable any interaction on blocks placed by other players. This affects item shelves, signs, flower pots, and boards. " +
+                            "Useful for protected servers. Note that it will affect only blocks placed after this is turned on and such blocks will keep being protected after this option is disabled")
+                    .define("server_protection", false);
+
+            builder.pop();
+        }
+    }
+
     public static class block {
         public static ForgeConfigSpec.IntValue GLOBE_TRADES;
         public static ForgeConfigSpec.DoubleValue GLOBE_TREASURE_CHANCHE;
@@ -337,6 +352,8 @@ public class ServerConfigs {
 
         public static ForgeConfigSpec.BooleanValue STICK_POLE;
         public static ForgeConfigSpec.IntValue STICK_POLE_LENGTH;
+
+
 
         private static void init(ForgeConfigSpec.Builder builder) {
 
@@ -695,6 +712,8 @@ public class ServerConfigs {
         public static boolean STICK_POLE;
         public static int STICK_POLE_LENGTH;
 
+        public static boolean SERVER_PROTECTION;
+
         //entity
         public static int FIREFLY_PERIOD;
         public static double FIREFLY_SPEED;
@@ -805,6 +824,7 @@ public class ServerConfigs {
             FIREFLY_SPEED = entity.FIREFLY_SPEED.get();
             FIREFLY_DESPAWN = entity.FIREFLY_DESPAWN.get();
 
+            SERVER_PROTECTION = general.SERVER_PROTECTION.get();
         }
     }
 }

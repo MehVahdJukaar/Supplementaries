@@ -34,10 +34,11 @@ public class TurnTableBlock extends Block {
     public static final IntegerProperty POWER = BlockStateProperties.POWER;
     public static final BooleanProperty INVERTED = BlockStateProperties.INVERTED;
     public static final BooleanProperty ROTATING = BlockProperties.ROTATING;
+
     public TurnTableBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.UP)
-                .setValue(POWER, 0).setValue(INVERTED, false).setValue(ROTATING,false));
+                .setValue(POWER, 0).setValue(INVERTED, false).setValue(ROTATING, false));
     }
 
     @Override
@@ -62,7 +63,7 @@ public class TurnTableBlock extends Block {
 
     @Override
     public void setPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        if(this.updatePower(state, world, pos) && world.getBlockState(pos).getValue(POWER)!=0){
+        if (this.updatePower(state, world, pos) && world.getBlockState(pos).getValue(POWER) != 0) {
             this.tryRotate(world, pos);
         }
         // if power changed and is powered or facing block changed
@@ -70,7 +71,7 @@ public class TurnTableBlock extends Block {
 
     @Override
     public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
-                                             BlockRayTraceResult hit) {
+                                BlockRayTraceResult hit) {
         Direction face = hit.getDirection();
         Direction mydir = state.getValue(FACING);
         if (face != mydir && face != mydir.getOpposite()) {
@@ -92,12 +93,7 @@ public class TurnTableBlock extends Block {
         int currentpower = state.getValue(POWER);
         // on-off
         if (blockpower != currentpower) {
-            TileEntity te = world.getBlockEntity(pos);
-            if(te instanceof TurnTableBlockTile) {
-                TurnTableBlockTile table = ((TurnTableBlockTile) te);
-
-            }
-            if(blockpower!=0)state = state.setValue(ROTATING,true);
+            if (blockpower != 0) state = state.setValue(ROTATING, true);
             world.setBlock(pos, state.setValue(POWER, blockpower), 2 | 4);
             return true;
             //returns if state changed
@@ -117,7 +113,7 @@ public class TurnTableBlock extends Block {
         super.neighborChanged(state, world, pos, neighborBlock, fromPos, moving);
         boolean powerchanged = this.updatePower(state, world, pos);
         // if power changed and is powered or facing block changed
-        if (world.getBlockState(pos).getValue(POWER)!=0 && (powerchanged || fromPos.equals(pos.relative(state.getValue(FACING)))))
+        if (world.getBlockState(pos).getValue(POWER) != 0 && (powerchanged || fromPos.equals(pos.relative(state.getValue(FACING)))))
             this.tryRotate(world, pos);
     }
 
@@ -135,19 +131,19 @@ public class TurnTableBlock extends Block {
         return new Vector3d(x * c + z * s, y, z * c - x * s);
     }
 
-    public static int getPeriod(BlockState state){
-        return (60-state.getValue(POWER)*4)+5;
+    public static int getPeriod(BlockState state) {
+        return (60 - state.getValue(POWER) * 4) + 5;
     }
 
     // rotate entities
     @Override
     public void stepOn(World world, BlockPos pos, Entity e) {
         super.stepOn(world, pos, e);
-        if(!ServerConfigs.cached.TURN_TABLE_ROTATE_ENTITIES)return;
-        if(!e.isOnGround())return;
+        if (!ServerConfigs.cached.TURN_TABLE_ROTATE_ENTITIES) return;
+        if (!e.isOnGround()) return;
         BlockState state = world.getBlockState(pos);
-        if (state.getValue(POWER)!=0 && state.getValue(FACING) == Direction.UP) {
-            float period = getPeriod(state)+1;
+        if (state.getValue(POWER) != 0 && state.getValue(FACING) == Direction.UP) {
+            float period = getPeriod(state) + 1;
             float ANGLE_INCREMENT = 90f / period;
 
             float increment = state.getValue(INVERTED) ? ANGLE_INCREMENT : -1 * ANGLE_INCREMENT;
@@ -168,16 +164,16 @@ public class TurnTableBlock extends Block {
                 float diff = e.getYHeadRot() - increment;
                 e.setYBodyRot(diff);
                 e.setYHeadRot(diff);
-                ((LivingEntity) e).yHeadRotO=((LivingEntity) e).yHeadRot;
+                ((LivingEntity) e).yHeadRotO = ((LivingEntity) e).yHeadRot;
                 ((LivingEntity) e).setNoActionTime(20);
                 //e.velocityChanged = true;
 
-                if(e instanceof CatEntity &&((TameableEntity) e).isOrderedToSit()&&!world.isClientSide){
+                if (e instanceof CatEntity && ((TameableEntity) e).isOrderedToSit() && !world.isClientSide) {
                     TileEntity te = world.getBlockEntity(pos);
-                    if(te instanceof TurnTableBlockTile) {
+                    if (te instanceof TurnTableBlockTile) {
                         TurnTableBlockTile table = ((TurnTableBlockTile) te);
-                        if(table.cat==0) {
-                            ((TurnTableBlockTile) te).cat = 20*20;
+                        if (table.cat == 0) {
+                            ((TurnTableBlockTile) te).cat = 20 * 20;
                             world.playSound(null, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, ModRegistry.TOM_SOUND.get(), SoundCategory.BLOCKS, 0.85f, 1);
                         }
                     }
@@ -188,11 +184,6 @@ public class TurnTableBlock extends Block {
 
             e.yRot -= increment;
             e.yRotO = e.yRot;
-
-
-
-
-
 
 
             //e.rotateTowards(e.rotationYaw - increment, e.rotationPitch);

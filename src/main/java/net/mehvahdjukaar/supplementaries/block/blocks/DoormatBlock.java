@@ -1,12 +1,15 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
+import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.DoormatBlockTile;
+import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.client.gui.DoormatGui;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.HorizontalBlock;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
@@ -28,6 +31,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 public class DoormatBlock extends WaterBlock {
     protected static final VoxelShape SHAPE_NORTH = Block.box(0.0D, 0.0D, 2.0D, 16.0D, 1.0D, 14.0D);
@@ -37,30 +41,29 @@ public class DoormatBlock extends WaterBlock {
 
     public DoormatBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED,false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false));
     }
 
     @Override
     public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
-                                             BlockRayTraceResult hit) {
+                                BlockRayTraceResult hit) {
         TileEntity tileentity = worldIn.getBlockEntity(pos);
-        if (tileentity instanceof DoormatBlockTile) {
+        if (tileentity instanceof DoormatBlockTile && ((IOwnerProtected) tileentity).isAccessibleBy(player)) {
             DoormatBlockTile te = (DoormatBlockTile) tileentity;
             ItemStack itemstack = player.getItemInHand(handIn);
             boolean server = !worldIn.isClientSide();
             boolean flag = itemstack.getItem() instanceof DyeItem && player.abilities.mayBuild;
-            boolean sideHit = hit.getDirection()!=Direction.UP;
-            boolean canExtract = itemstack.isEmpty() && (player.isShiftKeyDown()||sideHit);
+            boolean sideHit = hit.getDirection() != Direction.UP;
+            boolean canExtract = itemstack.isEmpty() && (player.isShiftKeyDown() || sideHit);
             boolean canInsert = te.isEmpty() && sideHit;
-            if(canExtract ^ canInsert){
-                if(!server)return ActionResultType.SUCCESS;
-                if(canExtract) {
+            if (canExtract ^ canInsert) {
+                if (!server) return ActionResultType.SUCCESS;
+                if (canExtract) {
                     ItemStack dropStack = te.removeItemNoUpdate(0);
                     ItemEntity drop = new ItemEntity(worldIn, pos.getX() + 0.5, pos.getY() + 0.125, pos.getZ() + 0.5, dropStack);
                     drop.setDefaultPickUpDelay();
                     worldIn.addFreshEntity(drop);
-                }
-                else{
+                } else {
                     ItemStack newStack = itemstack.copy();
                     newStack.setCount(1);
                     te.setItems(NonNullList.withSize(1, newStack));
@@ -75,12 +78,12 @@ public class DoormatBlock extends WaterBlock {
 
             }
             //color
-            if (flag){
-                if(te.textHolder.setTextColor(((DyeItem) itemstack.getItem()).getDyeColor())){
+            if (flag) {
+                if (te.textHolder.setTextColor(((DyeItem) itemstack.getItem()).getDyeColor())) {
                     if (!player.isCreative()) {
                         itemstack.shrink(1);
                     }
-                    if(server)te.setChanged();
+                    if (server) te.setChanged();
                 }
             }
             // open gui (edit sign with empty hand)
@@ -111,19 +114,19 @@ public class DoormatBlock extends WaterBlock {
             default:
             case Z:
                 return SHAPE_NORTH;
-            case X :
+            case X:
                 return SHAPE_WEST;
         }
     }
 
     @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(FACING,WATERLOGGED);
+        builder.add(FACING, WATERLOGGED);
     }
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return super.getStateForPlacement(context).setValue(FACING,context.getHorizontalDirection());
+        return super.getStateForPlacement(context).setValue(FACING, context.getHorizontalDirection());
     }
 
     //for player bed spawn
@@ -172,6 +175,11 @@ public class DoormatBlock extends WaterBlock {
             }
             super.onRemove(state, world, pos, newState, isMoving);
         }
+    }
+
+    @Override
+    public void setPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        BlockUtils.addOptionalOwnership(placer, world, pos);
     }
 
 }

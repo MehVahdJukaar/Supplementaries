@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
+import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
@@ -9,8 +10,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.INameable;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import org.jetbrains.annotations.Nullable;
 
-public class SpeakerBlockTile extends TileEntity implements INameable {
+import java.util.UUID;
+
+public class SpeakerBlockTile extends TileEntity implements INameable, IOwnerProtected {
+    private UUID owner = null;
+
     public String message = "";
     public boolean narrator = false;
     public double volume = 1;
@@ -45,6 +51,7 @@ public class SpeakerBlockTile extends TileEntity implements INameable {
         this.message = compound.getString("Message");
         this.narrator = compound.getBoolean("Narrator");
         this.volume = compound.getDouble("Volume");
+        this.loadOwner(compound);
     }
 
     @Override
@@ -56,6 +63,7 @@ public class SpeakerBlockTile extends TileEntity implements INameable {
         compound.putString("Message", this.message);
         compound.putBoolean("Narrator", this.narrator);
         compound.putDouble("Volume", this.volume);
+        this.saveOwner(compound);
         return compound;
     }
 
@@ -72,5 +80,16 @@ public class SpeakerBlockTile extends TileEntity implements INameable {
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         this.load(this.getBlockState(), pkt.getTag());
+    }
+
+    @Nullable
+    @Override
+    public UUID getOwner() {
+        return owner;
+    }
+
+    @Override
+    public void setOwner(UUID owner) {
+        this.owner = owner;
     }
 }

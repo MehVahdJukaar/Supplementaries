@@ -1,12 +1,15 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
+import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.PedestalBlockTile;
+import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.items.SackItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.IInventory;
@@ -31,6 +34,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
+import org.jetbrains.annotations.Nullable;
 
 public class PedestalBlock extends WaterBlock {
     protected static final VoxelShape SHAPE = VoxelShapes.or(VoxelShapes.box(0.1875D, 0.125D, 0.1875D, 0.815D, 0.885D, 0.815D),
@@ -124,7 +128,7 @@ public class PedestalBlock extends WaterBlock {
         }
         TileEntity tileentity = worldIn.getBlockEntity(pos);
         ActionResultType resultType = ActionResultType.PASS;
-        if (tileentity instanceof PedestalBlockTile) {
+        if (tileentity instanceof PedestalBlockTile && ((IOwnerProtected) tileentity).isAccessibleBy(player)) {
             PedestalBlockTile te = (PedestalBlockTile) tileentity;
 
             ItemStack handItem = player.getItemInHand(handIn);
@@ -243,5 +247,10 @@ public class PedestalBlock extends WaterBlock {
             default:
                 return state;
         }
+    }
+
+    @Override
+    public void setPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        BlockUtils.addOptionalOwnership(placer, world, pos);
     }
 }

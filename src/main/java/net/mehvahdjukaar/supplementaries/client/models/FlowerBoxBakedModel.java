@@ -41,50 +41,56 @@ public class FlowerBoxBakedModel implements IDynamicBakedModel {
 
         List<BakedQuad> quads = new ArrayList<>();
 
+        //box
         try {
             quads.addAll(box.getQuads(state, side, rand, EmptyModelData.INSTANCE));
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
 
+        //mimic
         try {
 
-            BlockState[] flowers = new BlockState[]{
-                    extraData.getData(FlowerBoxBlockTile.FLOWER_0),
-                    extraData.getData(FlowerBoxBlockTile.FLOWER_1),
-                    extraData.getData(FlowerBoxBlockTile.FLOWER_2)
-            };
+            if(state != null) {
+                BlockState[] flowers = new BlockState[]{
+                        extraData.getData(FlowerBoxBlockTile.FLOWER_0),
+                        extraData.getData(FlowerBoxBlockTile.FLOWER_1),
+                        extraData.getData(FlowerBoxBlockTile.FLOWER_2)
+                };
 
-            MatrixStack matrixStack = new MatrixStack();
+                MatrixStack matrixStack = new MatrixStack();
 
-            matrixStack.translate(0.5, 0.5, 0.5);
+                matrixStack.translate(0.5, 0.5, 0.5);
 
-            float yaw = -state.getValue(FlowerBoxBlock.FACING).getOpposite().toYRot();
-            matrixStack.mulPose(Vector3f.YP.rotationDegrees(yaw));
-            matrixStack.translate(-0.3125, -3 / 16f, 0);
+                float yaw = -state.getValue(FlowerBoxBlock.FACING).getOpposite().toYRot();
+                matrixStack.mulPose(Vector3f.YP.rotationDegrees(yaw));
+                matrixStack.translate(-0.3125, -3 / 16f, 0);
 
-            if (state.getValue(FlowerBoxBlock.FLOOR)) {
-                matrixStack.translate(0, 0, -0.3125);
-            }
-            matrixStack.scale(0.625f, 0.625f, 0.625f);
-
-            matrixStack.translate(0.5, 0.5, 0.5);
-
-            matrixStack.translate(-0.5, 0, 0);
-
-            for (int i = 0; i < 3; i++) {
-                BlockState flower = flowers[i];
-                if (flower != null && !flower.isAir()) {
-                    this.addBlockToModel(i, quads, flower, matrixStack, side, rand);
-                    if (flower.hasProperty(DoublePlantBlock.HALF)) {
-                        matrixStack.translate(0, 1, 0);
-                        this.addBlockToModel(i, quads, flower.setValue(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER), matrixStack, side, rand);
-                        matrixStack.translate(0, -1, 0);
-                    }
+                if (state.getValue(FlowerBoxBlock.FLOOR)) {
+                    matrixStack.translate(0, 0, -0.3125);
                 }
+                matrixStack.scale(0.625f, 0.625f, 0.625f);
 
-                matrixStack.translate(0.5, 0, 0);
+                matrixStack.translate(0.5, 0.5, 0.5);
+
+                matrixStack.translate(-0.5, 0, 0);
+
+                for (int i = 0; i < 3; i++) {
+                    BlockState flower = flowers[i];
+                    if (flower != null && !flower.isAir()) {
+                        this.addBlockToModel(i, quads, flower, matrixStack, side, rand);
+                        if (flower.hasProperty(DoublePlantBlock.HALF)) {
+                            matrixStack.translate(0, 1, 0);
+                            this.addBlockToModel(i, quads, flower.setValue(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER), matrixStack, side, rand);
+                            matrixStack.translate(0, -1, 0);
+                        }
+                    }
+
+                    matrixStack.translate(0.5, 0, 0);
+                }
             }
 
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
 
         //TODO: do this for hanging flower pot
         return quads;
@@ -111,14 +117,15 @@ public class FlowerBoxBakedModel implements IDynamicBakedModel {
             int[] v = Arrays.copyOf(q.getVertices(), q.getVertices().length);
 
             //todo add tint swapping for 3 plants
+            TextureAtlasSprite texture = this.getParticleIcon();
             if (res == null) {
-                v = RendererUtil.moveVertices(v, -0.5f, -0.5f, -0.5f);
-                v = RendererUtil.scaleVertices(v, 0.6249f);
+                RendererUtil.moveVertices(v, -0.5f, -0.5f, -0.5f, texture);
+                RendererUtil.scaleVertices(v, 0.6249f, texture);
             } else {
-                v = RendererUtil.moveVertices(v, -0.5f, -0.5f + 3 / 16f, -0.5f);
+                RendererUtil.moveVertices(v, -0.5f, -0.5f + 3 / 16f, -0.5f, texture);
             }
 
-            v = RendererUtil.transformVertices(v, matrixStack);
+            RendererUtil.transformVertices(v, matrixStack, texture);
 
             quads.add(new BakedQuad(v, q.getTintIndex() >= 0 ? index : q.getTintIndex(), q.getDirection(), q.getSprite(), q.isShade()));
         }

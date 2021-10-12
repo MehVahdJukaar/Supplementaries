@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 
 import com.google.common.collect.ImmutableMap;
+import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties.PostType;
 import net.mehvahdjukaar.supplementaries.block.tiles.RopeKnotBlockTile;
@@ -22,6 +23,7 @@ import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -69,6 +71,18 @@ public class RopeKnotBlock extends MimicBlock implements IWaterLoggable {
                 .setValue(EAST, false).setValue(UP, false).setValue(DOWN, false));
     }
 
+    @Override
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+        builder.add(WATERLOGGED, POST_TYPE, AXIS, NORTH, SOUTH, WEST, EAST, UP, DOWN);
+    }
+
+    @Nullable
+    @Override
+    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+        return new RopeKnotBlockTile();
+    }
+
+
 
     /*
     @Override
@@ -80,6 +94,17 @@ public class RopeKnotBlock extends MimicBlock implements IWaterLoggable {
     public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
         return COLLISION_SHAPES_MAP.getOrDefault(state.setValue(WATERLOGGED, false), VoxelShapes.block());
     }*/
+
+
+
+    //this is madness
+
+    /*
+    @Override
+    public VoxelShape getVisualShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext context) {
+        return SHAPES_MAP.getOrDefault(state.setValue(WATERLOGGED, false), VoxelShapes.block());
+    }*/
+
 
     @Override
     public boolean hasDynamicShape() {
@@ -100,11 +125,6 @@ public class RopeKnotBlock extends MimicBlock implements IWaterLoggable {
         return SHAPES_MAP.getOrDefault(state.setValue(WATERLOGGED, false), VoxelShapes.block());
     }
 
-    /*
-    @Override
-    public VoxelShape getVisualShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext context) {
-        return SHAPES_MAP.getOrDefault(state.setValue(WATERLOGGED, false), VoxelShapes.block());
-    }*/
 
     @Override
     public VoxelShape getBlockSupportShape(BlockState state, IBlockReader reader, BlockPos pos) {
@@ -245,6 +265,7 @@ public class RopeKnotBlock extends MimicBlock implements IWaterLoggable {
         return newState;
     }
 
+
 //TODO: fix this not updating mimic block
     @Override
     public BlockState rotate(BlockState state, Rotation rotation) {
@@ -271,7 +292,8 @@ public class RopeKnotBlock extends MimicBlock implements IWaterLoggable {
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        boolean flag = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;
+        FluidState fluidstate = context.getLevel().getFluidState(context.getClickedPos());
+        boolean flag = fluidstate.is(FluidTags.WATER) && fluidstate.getAmount() == 8;
         return this.defaultBlockState().setValue(WATERLOGGED, flag);
     }
 
@@ -282,7 +304,7 @@ public class RopeKnotBlock extends MimicBlock implements IWaterLoggable {
                 TileEntity te = world.getBlockEntity(pos);
                 if (te instanceof RopeKnotBlockTile) {
                     popResource(world, pos, new ItemStack(ModRegistry.ROPE_ITEM.get()));
-                    world.playSound(null, pos, SoundEvents.SNOW_GOLEM_SHEAR, player == null ? SoundCategory.BLOCKS : SoundCategory.PLAYERS, 0.8F, 1.3F);
+                    world.playSound(null, pos, SoundEvents.SNOW_GOLEM_SHEAR, SoundCategory.PLAYERS, 0.8F, 1.3F);
                     world.setBlock(pos, ((IBlockHolder) te).getHeldBlock(), 3);
                 }
             }
@@ -291,16 +313,6 @@ public class RopeKnotBlock extends MimicBlock implements IWaterLoggable {
         return ActionResultType.PASS;
     }
 
-    @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(WATERLOGGED, POST_TYPE, AXIS, NORTH, SOUTH, WEST, EAST, UP, DOWN);
-    }
-
-    @Nullable
-    @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new RopeKnotBlockTile();
-    }
 
     @Override
     public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {

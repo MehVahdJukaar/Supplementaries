@@ -1,12 +1,16 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
+import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.HangingSignBlockTile;
+import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
+import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.client.gui.HangingSignGui;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -18,6 +22,7 @@ import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.tileentity.LockableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -29,6 +34,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 public class HangingSignBlock extends SwayingBlock {
     protected static final VoxelShape SHAPE_NORTH = VoxelShapes.box(0.4375D, 0D, 0D, 0.5625D, 1D, 1D);
@@ -47,7 +53,7 @@ public class HangingSignBlock extends SwayingBlock {
     public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
                                              BlockRayTraceResult hit) {
         TileEntity tileentity = worldIn.getBlockEntity(pos);
-        if (tileentity instanceof HangingSignBlockTile) {
+        if (tileentity instanceof HangingSignBlockTile && ((IOwnerProtected) tileentity).isAccessibleBy(player)) {
             HangingSignBlockTile te = (HangingSignBlockTile) tileentity;
             ItemStack handItem = player.getItemInHand(handIn);
             boolean server = !worldIn.isClientSide();
@@ -200,6 +206,10 @@ public class HangingSignBlock extends SwayingBlock {
         return new HangingSignBlockTile();
     }
 
+    @Override
+    public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+        BlockUtils.addOptionalOwnership(placer, worldIn, pos);
+    }
 
 }
 

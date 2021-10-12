@@ -44,7 +44,7 @@ public class OptifineHandler {
                         });
             } catch (FileNotFoundException ignored) {}
         }
-        RendererUtil.changeVertexFormat(shadersOff ? 8 : 9);
+        //RendererUtil.changeVertexFormat(shadersOff ? 8 : 9);
     }
 
 }
