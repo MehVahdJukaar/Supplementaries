@@ -161,11 +161,11 @@ public class ItemsOverrideHandler {
         if (override != null && override.isEnabled()) {
             List<ITextComponent> tooltip = event.getToolTip();
             TextComponent t = override.getTooltip();
-            if (t != null) tooltip.add(t.withStyle(TextFormatting.GRAY).withStyle(TextFormatting.ITALIC));
+            if (t != null) tooltip.add(t.withStyle(TextFormatting.DARK_GRAY).withStyle(TextFormatting.ITALIC));
         }
         //TODO: add these
         else if (ServerConfigs.cached.THROWABLE_BRICKS_ENABLED && CommonUtil.isBrick(item)) {
-            event.getToolTip().add(new TranslationTextComponent("message.supplementaries.throwable_brick").withStyle(TextFormatting.GRAY).withStyle(TextFormatting.ITALIC));
+            event.getToolTip().add(new TranslationTextComponent("message.supplementaries.throwable_brick").withStyle(TextFormatting.DARK_GRAY).withStyle(TextFormatting.ITALIC));
         }
     }
 

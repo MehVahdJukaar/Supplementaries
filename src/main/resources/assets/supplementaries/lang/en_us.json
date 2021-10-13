@@ -52,7 +52,7 @@
   "block.supplementaries.soul_jar": "Soul Jar",
   "item.supplementaries.flute": "Flute",
   "message.supplementaries.throwable_brick": "Can be thrown",
-  "message.supplementaries.wall_lantern": "Can be placed on walls",
+  "message.supplementaries.wall_lantern": "Placeable on walls",
   "message.supplementaries.command.configs_reloaded": "Configs reloaded",
   "block.supplementaries.copper_lantern": "Copper Lantern",
 
@@ -212,7 +212,7 @@
   "subtitle.supplementaries.music.pancake": "Pancake Music",
   "item.supplementaries.pancake_disc.desc": "STiiX - Pancake Music",
   "message.supplementaries.key.lockable": "Key Lockable",
-  "message.supplementaries.placeable": "Can be placed",
+  "message.supplementaries.placeable": "Placeable",
   "subtitle.supplementaries.gunpowder.ignite": "Gunpowder fizzles",
   "item.supplementaries.red_merchant_spawn_egg": "Red Merchant Spawn Egg",
   "block.supplementaries.feather_block": "Feather Block",

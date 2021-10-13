@@ -125,6 +125,7 @@ public class ClientConfigs {
         public static ForgeConfigSpec.DoubleValue WIND_VANE_PERIOD_2;
         public static ForgeConfigSpec.BooleanValue CLOCK_24H;
         public static ForgeConfigSpec.BooleanValue GLOBE_RANDOM;
+        public static ForgeConfigSpec.BooleanValue TIPPED_BAMBOO_SPIKES_TAB;
         public static ForgeConfigSpec.ConfigValue<List<? extends List<String>>> GLOBE_COLORS;
 
         public static ForgeConfigSpec.EnumValue<GraphicsFanciness> FLAG_FANCINESS;
@@ -260,6 +261,11 @@ public class ClientConfigs {
             builder.push("wall_lantern");
             FAST_LANTERNS = builder.comment("Makes wall lantern use a simple block model instead of the animated tile entity renderer. This will make them render much faster but will also remove the animation. Needs texture pack reload")
                             .define("fast_lanterns", false);
+            builder.pop();
+
+            builder.push("bamboo_spikes");
+                TIPPED_BAMBOO_SPIKES_TAB = builder.comment("Populate the creative inventory with all tipped spikes variations")
+                        .define("populate_creative_tab", true);
             builder.pop();
 
             builder.pop();

@@ -134,9 +134,11 @@ public class ClockBlock extends WaterBlock {
 
     @Override
     public int getAnalogOutputSignal(BlockState blockState, World world, BlockPos pos) {
-        TileEntity te = world.getBlockEntity(pos);
-        if(te instanceof ClockBlockTile){
-            return ((ClockBlockTile) te).power;
+        if(world.dimensionType().natural()) {
+            TileEntity te = world.getBlockEntity(pos);
+            if (te instanceof ClockBlockTile) {
+                return ((ClockBlockTile) te).power;
+            }
         }
         return 0;
     }

@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.items;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.SignPostBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.SignPostBlockTile;
+import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.framedblocks.FramedSignPost;
@@ -82,6 +83,7 @@ public class SignPostItem extends Item {
             if (tileentity instanceof SignPostBlockTile) {
                 SignPostBlockTile signtile = ((SignPostBlockTile) tileentity);
 
+                BlockUtils.addOptionalOwnership(playerentity, signtile);
 
                 int r = MathHelper.floor((double) ((180.0F + context.getRotation()) * 16.0F / 360.0F) + 0.5D) & 15;
 

@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.items;
 
 import net.mehvahdjukaar.supplementaries.block.tiles.BambooSpikesBlockTile;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.IWaterLoggable;
@@ -28,12 +29,14 @@ public class BambooSpikesTippedItem extends BlockItem implements IWaterLoggable 
     }
 
     @Override
-    public int getBurnTime(ItemStack itemStack) {return 150;}
+    public int getBurnTime(ItemStack itemStack) {
+        return 150;
+    }
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        PotionUtils.addPotionTooltip(stack,tooltip,BambooSpikesBlockTile.POTION_MULTIPLIER);
+        PotionUtils.addPotionTooltip(stack, tooltip, BambooSpikesBlockTile.POTION_MULTIPLIER);
     }
 
     @Override
@@ -69,22 +72,25 @@ public class BambooSpikesTippedItem extends BlockItem implements IWaterLoggable 
 
     @Override
     public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items) {
-        if (this.allowdedIn(group)) {
-            items.add(makeSpikeItem(Potions.POISON));
-            items.add(makeSpikeItem(Potions.LONG_POISON));
-            items.add(makeSpikeItem(Potions.STRONG_POISON));
-            for(Potion potion : net.minecraft.util.registry.Registry.POTION) {
-                if(potion==Potions.POISON || potion==Potions.LONG_POISON || potion==Potions.STRONG_POISON)continue;
-                if (!potion.getEffects().isEmpty()&&potion!=Potions.EMPTY) {
-                    items.add(makeSpikeItem(potion));
+        if(ClientConfigs.block.TIPPED_BAMBOO_SPIKES_TAB.get()) {
+            if (this.allowdedIn(group)) {
+                items.add(makeSpikeItem(Potions.POISON));
+                items.add(makeSpikeItem(Potions.LONG_POISON));
+                items.add(makeSpikeItem(Potions.STRONG_POISON));
+                for (Potion potion : net.minecraft.util.registry.Registry.POTION) {
+                    if (potion == Potions.POISON || potion == Potions.LONG_POISON || potion == Potions.STRONG_POISON)
+                        continue;
+                    if (!potion.getEffects().isEmpty() && potion != Potions.EMPTY) {
+                        items.add(makeSpikeItem(potion));
+                    }
                 }
             }
         }
     }
 
-    public static ItemStack makeSpikeItem(Potion potion){
+    public static ItemStack makeSpikeItem(Potion potion) {
         ItemStack stack = new ItemStack(ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get());
-        PotionUtils.setPotion(stack,potion);
+        PotionUtils.setPotion(stack, potion);
         return stack;
     }
 
@@ -99,9 +105,9 @@ public class BambooSpikesTippedItem extends BlockItem implements IWaterLoggable 
         Potion p = PotionUtils.getPotion(stack);
         TextComponent arrowName = new TranslationTextComponent(p.getName("item.minecraft.tipped_arrow.effect."));
         String s = arrowName.getString();
-        if(s.contains("Arrow of ")){
+        if (s.contains("Arrow of ")) {
             return new TranslationTextComponent("item.supplementaries.bamboo_spikes_tipped_effect",
-                    s.replace("Arrow of ",""));
+                    s.replace("Arrow of ", ""));
         }
         return new TranslationTextComponent(this.getDescriptionId(stack));
         //String effectName = new TranslationTextComponent(p.getNamePrefixed("effect.minecraft.")).getString();

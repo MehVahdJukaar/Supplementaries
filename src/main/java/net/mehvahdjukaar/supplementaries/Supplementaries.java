@@ -40,15 +40,11 @@ public class Supplementaries {
     public Supplementaries() {
 
 
-        //TODO: fix candelabra duping?
+        //TODO: fish bucket on cages
 
         //yes this is where I write crap. deal with it XD
 
-        //TODO: add server protections for signs
-
         //todo: fix projectile hitbox being a single point on y = 0
-
-        //TODO: rewrite mob holder fixing tickable particles
 
         //randomium name change
 
@@ -63,6 +59,12 @@ public class Supplementaries {
         //TODO: more flywheel stuff
 
         //TODO: improve feather particle
+
+        //use feather particle on spriggans
+
+        //flute 3d model and more uses
+
+        //TODO: fix JER loot tables percentages
 
         //zipline mod ropewalk
 
