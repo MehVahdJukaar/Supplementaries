@@ -80,10 +80,14 @@ public class SafeBlockTile extends LockableLootTileEntity implements ISidedInven
 
     @Override
     public void setOwner(UUID owner) {
-        this.ownerName = level.getPlayerByUUID(owner).getName().getString();
         this.owner = owner;
-        this.setChanged();
-        this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
+        if (this.level != null) {
+            if (owner != null) {
+                this.ownerName = level.getPlayerByUUID(owner).getName().getString();
+            }
+            this.setChanged();
+            this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
+        }
     }
 
     public void clearOwner() {
@@ -193,7 +197,8 @@ public class SafeBlockTile extends LockableLootTileEntity implements ISidedInven
         if (!this.tryLoadLootTable(compound) && compound.contains("Items", 9)) {
             ItemStackHelper.loadAllItems(compound, this.items);
         }
-        this.loadOwner(compound);
+        if (compound.contains("Owner"))
+            this.owner = compound.getUUID("Owner");
         if (compound.contains("OwnerName"))
             this.ownerName = compound.getString("OwnerName");
         if (compound.contains("Password"))

@@ -90,7 +90,9 @@ public class Supplementaries {
 
         //TODO: add stick window loggable clipping
 
-        //flute animation
+        //dummy headshot compat mrcrayfish mod
+
+        //flute animation & 3d model
 
         //add shift middle click to swap to correct tool
 

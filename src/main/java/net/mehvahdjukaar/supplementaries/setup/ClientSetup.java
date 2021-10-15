@@ -121,7 +121,7 @@ public class ClientSetup {
         RenderTypeLookup.setRenderLayer(ModRegistry.CRANK.get(), RenderType.cutout());
         //jar
         RenderTypeLookup.setRenderLayer(ModRegistry.JAR.get(), RenderType.cutout());
-        RenderTypeLookup.setRenderLayer(ModRegistry.JAR_TINTED.get(), RenderType.translucent());
+        RenderTypeLookup.setRenderLayer(ModRegistry.JAR_TINTED.get(), r -> r == RenderType.translucent() || r == RenderType.solid());
         ClientRegistry.bindTileEntityRenderer(ModRegistry.JAR_TILE.get(), JarBlockTileRenderer::new);
         //faucet
         RenderTypeLookup.setRenderLayer(ModRegistry.FAUCET.get(), RenderType.cutout());
