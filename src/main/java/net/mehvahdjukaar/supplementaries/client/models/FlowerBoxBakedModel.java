@@ -1,20 +1,20 @@
 package net.mehvahdjukaar.supplementaries.client.models;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.block.blocks.FlowerBoxBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.FlowerBoxBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.FlowerPotHandler;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.DoublePlantBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockModelShapes;
+import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.renderer.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.state.properties.DoubleBlockHalf;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import com.mojang.math.Vector3f;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
@@ -26,11 +26,17 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-public class FlowerBoxBakedModel implements IDynamicBakedModel {
-    private final IBakedModel box;
-    private final BlockModelShapes blockModelShaper;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 
-    public FlowerBoxBakedModel(IBakedModel box) {
+public class FlowerBoxBakedModel implements IDynamicBakedModel {
+    private final BakedModel box;
+    private final BlockModelShaper blockModelShaper;
+
+    public FlowerBoxBakedModel(BakedModel box) {
         this.box = box;
         this.blockModelShaper = Minecraft.getInstance().getBlockRenderer().getBlockModelShaper();
     }
@@ -57,7 +63,7 @@ public class FlowerBoxBakedModel implements IDynamicBakedModel {
                         extraData.getData(FlowerBoxBlockTile.FLOWER_2)
                 };
 
-                MatrixStack matrixStack = new MatrixStack();
+                PoseStack matrixStack = new PoseStack();
 
                 matrixStack.translate(0.5, 0.5, 0.5);
 
@@ -96,9 +102,9 @@ public class FlowerBoxBakedModel implements IDynamicBakedModel {
         return quads;
     }
 
-    private void addBlockToModel(int index, final List<BakedQuad> quads, BlockState state, MatrixStack matrixStack, @Nullable Direction side, @Nonnull Random rand) {
+    private void addBlockToModel(int index, final List<BakedQuad> quads, BlockState state, PoseStack matrixStack, @Nullable Direction side, @Nonnull Random rand) {
 
-        IBakedModel model;
+        BakedModel model;
         //for special flowers
         //TODO: automatically scan and load models from blockstate flower folder
         ResourceLocation res = FlowerPotHandler.getSpecialFlowerModel(state.getBlock().asItem());
@@ -157,13 +163,13 @@ public class FlowerBoxBakedModel implements IDynamicBakedModel {
     }
 
     @Override
-    public ItemOverrideList getOverrides() {
-        return ItemOverrideList.EMPTY;
+    public ItemOverrides getOverrides() {
+        return ItemOverrides.EMPTY;
     }
 
     @Override
-    public ItemCameraTransforms getTransforms() {
-        return ItemCameraTransforms.NO_TRANSFORMS;
+    public ItemTransforms getTransforms() {
+        return ItemTransforms.NO_TRANSFORMS;
     }
 
 

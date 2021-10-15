@@ -2,18 +2,18 @@ package net.mehvahdjukaar.supplementaries.client.particles;
 
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.client.particle.*;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.particles.BasicParticleType;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.BlockPos;
 
 
-public class FallingLiquidParticle extends SpriteTexturedParticle {
+public class FallingLiquidParticle extends TextureSheetParticle {
     private final Fluid fluid;
 
-    private FallingLiquidParticle(ClientWorld world, double x, double y, double z, Fluid fluid) {
+    private FallingLiquidParticle(ClientLevel world, double x, double y, double z, Fluid fluid) {
         super(world, x, y, z);
         this.setSize(0.01F, 0.01F);
         this.gravity = 0.06F;
@@ -21,8 +21,8 @@ public class FallingLiquidParticle extends SpriteTexturedParticle {
         this.lifetime = (int)(64.0D / (Math.random() * 0.8D + 0.2D));
     }
 
-    public IParticleRenderType getRenderType() {
-        return IParticleRenderType.PARTICLE_SHEET_OPAQUE;
+    public ParticleRenderType getRenderType() {
+        return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
     }
 
     public void tick() {
@@ -62,15 +62,15 @@ public class FallingLiquidParticle extends SpriteTexturedParticle {
 
 
 
-    public static class Factory implements IParticleFactory<BasicParticleType> {
-        protected final IAnimatedSprite spriteSet;
+    public static class Factory implements ParticleProvider<SimpleParticleType> {
+        protected final SpriteSet spriteSet;
 
-        public Factory(IAnimatedSprite spriteSet) {
+        public Factory(SpriteSet spriteSet) {
             this.spriteSet = spriteSet;
         }
 
         @Override
-        public Particle createParticle(BasicParticleType typeIn, ClientWorld worldIn, double x, double y, double z, double r, double g, double b) {
+        public Particle createParticle(SimpleParticleType typeIn, ClientLevel worldIn, double x, double y, double z, double r, double g, double b) {
             FallingLiquidParticle fallingparticle = new FallingLiquidParticle(worldIn, x, y, z, Fluids.WATER);
             fallingparticle.setColor((float)r, (float)g, (float)b);
             fallingparticle.pickSprite(this.spriteSet);

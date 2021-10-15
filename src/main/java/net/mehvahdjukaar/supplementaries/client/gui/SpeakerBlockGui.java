@@ -1,38 +1,40 @@
 package net.mehvahdjukaar.supplementaries.client.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.UpdateServerSpeakerBlockPacket;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.DialogTexts;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.fml.client.gui.widget.Slider;
 
 
 
+import Slider;
+
 public class SpeakerBlockGui extends Screen {
-    private static final ITextComponent NARRATOR_TEXT = new TranslationTextComponent("gui.supplementaries.speaker_block.chat_message");
-    private static final ITextComponent CHAT_TEXT = new TranslationTextComponent("gui.supplementaries.speaker_block.narrator_message");
+    private static final Component NARRATOR_TEXT = new TranslatableComponent("gui.supplementaries.speaker_block.chat_message");
+    private static final Component CHAT_TEXT = new TranslatableComponent("gui.supplementaries.speaker_block.narrator_message");
 
-    private static final ITextComponent DISTANCE_BLOCKS = new TranslationTextComponent("gui.supplementaries.speaker_block.blocks");
+    private static final Component DISTANCE_BLOCKS = new TranslatableComponent("gui.supplementaries.speaker_block.blocks");
 
-    private static final ITextComponent VOLUME_TEXT = new TranslationTextComponent("gui.supplementaries.speaker_block.volume");
+    private static final Component VOLUME_TEXT = new TranslatableComponent("gui.supplementaries.speaker_block.volume");
 
-    private TextFieldWidget commandTextField;
+    private EditBox commandTextField;
     private final SpeakerBlockTile tileSpeaker;
     private boolean narrator;
     private final String message;
     private Button modeBtn;
     private Slider volume;
     public SpeakerBlockGui(SpeakerBlockTile te) {
-        super(new TranslationTextComponent("gui.supplementaries.speaker_block.edit"));
+        super(new TranslatableComponent("gui.supplementaries.speaker_block.edit"));
         this.tileSpeaker = te;
         this.narrator = tileSpeaker.narrator;
         this.message = tileSpeaker.message;
@@ -70,14 +72,14 @@ public class SpeakerBlockGui extends Screen {
 
         this.addWidget(this.volume);
 
-        this.addButton(new Button(this.width / 2 - 100, this.height / 4 + 120, 200, 20, DialogTexts.GUI_DONE, (p_214266_1_) -> this.close()));
+        this.addButton(new Button(this.width / 2 - 100, this.height / 4 + 120, 200, 20, CommonComponents.GUI_DONE, (p_214266_1_) -> this.close()));
         this.modeBtn = this.addButton(new Button(this.width / 2 - 75, this.height / 4 + 50, 150, 20, CHAT_TEXT, (p_214186_1_) -> {
             this.toggleMode();
             this.updateMode();
         }));
         this.updateMode();
-        this.commandTextField = new TextFieldWidget(this.font, this.width / 2 - 100, this.height / 4 + 10, 200, 20, this.title) {
-            protected IFormattableTextComponent createNarrationMessage() {
+        this.commandTextField = new EditBox(this.font, this.width / 2 - 100, this.height / 4 + 10, 200, 20, this.title) {
+            protected MutableComponent createNarrationMessage() {
                 return super.createNarrationMessage();
             }
         };
@@ -127,7 +129,7 @@ public class SpeakerBlockGui extends Screen {
     }
 
     @Override
-    public void render(MatrixStack matrixStack,  int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack matrixStack,  int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(matrixStack);
         drawCenteredString(matrixStack, this.font, this.title, this.width / 2, 40, 16777215);
         this.volume.render(matrixStack, mouseX, mouseY, partialTicks);

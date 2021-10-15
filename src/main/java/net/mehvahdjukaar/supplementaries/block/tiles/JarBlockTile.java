@@ -12,24 +12,30 @@ import net.mehvahdjukaar.supplementaries.common.mobholder.MobContainer;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.items.AbstractMobContainerItem;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.FishBucketItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.FishBucketItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.stats.Stats;
-import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import net.minecraft.util.*;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 //most complicated block ever
-public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity, IMobContainerProvider, ISoftFluidHolder {
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+
+public class JarBlockTile extends ItemDisplayTile implements TickableBlockEntity, IMobContainerProvider, ISoftFluidHolder {
     private final int CAPACITY = ServerConfigs.cached.JAR_CAPACITY;
 
     @Nonnull
@@ -64,7 +70,7 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
     }
 
     // does all the calculation for handling player interaction.
-    public boolean handleInteraction(PlayerEntity player, Hand hand) {
+    public boolean handleInteraction(Player player, InteractionHand hand) {
 
         ItemStack handStack = player.getItemInHand(hand);
         ItemStack displayedStack = this.getDisplayedItem();
@@ -111,10 +117,10 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
     }
 
     // removes item from te and gives it to player
-    public boolean handleExtractItem(PlayerEntity player, Hand hand) {
+    public boolean handleExtractItem(Player player, InteractionHand hand) {
         if (this.getDisplayedItem().getItem() instanceof FishBucketItem) {
             if (player.getItemInHand(hand).getItem() != Items.BUCKET) return false;
-            this.level.playSound(null, player.blockPosition(), SoundEvents.BUCKET_FILL_FISH, SoundCategory.BLOCKS, 1.0F, 1.0F);
+            this.level.playSound(null, player.blockPosition(), SoundEvents.BUCKET_FILL_FISH, SoundSource.BLOCKS, 1.0F, 1.0F);
         } else if (!player.getItemInHand(hand).isEmpty()) return false;
         ItemStack extracted = this.extractItem();
         if (!extracted.isEmpty()) {
@@ -125,7 +131,7 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
     }
 
     // adds item to te, removes from player
-    public void handleAddItem(ItemStack stack, @Nullable PlayerEntity player, Hand handIn) {
+    public void handleAddItem(ItemStack stack, @Nullable Player player, InteractionHand handIn) {
         ItemStack handStack = stack.copy();
         handStack.setCount(1);
         Item item = handStack.getItem();
@@ -161,7 +167,7 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
     public boolean isPonyJar() {
         //hahaha, funy pony jar meme
         if (this.hasCustomName()) {
-            ITextComponent c = this.getCustomName();
+            Component c = this.getCustomName();
             return (c != null && c.getString().contains("cum"));
         }
         return false;
@@ -185,7 +191,7 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
 
 
     @Override
-    public void load(BlockState state, CompoundNBT compound) {
+    public void load(BlockState state, CompoundTag compound) {
         super.load(state, compound);
         this.fluidHolder.load(compound);
         this.mobContainer.load(compound);
@@ -195,7 +201,7 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
+    public CompoundTag save(CompoundTag compound) {
         //stacks are done by itemDisplayTile
         super.save(compound);
         this.fluidHolder.save(compound);
@@ -217,8 +223,8 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
     }
 
     @Override
-    public ITextComponent getDefaultName() {
-        return new TranslationTextComponent("block.supplementaries.jar");
+    public Component getDefaultName() {
+        return new TranslatableComponent("block.supplementaries.jar");
     }
 
     @Override

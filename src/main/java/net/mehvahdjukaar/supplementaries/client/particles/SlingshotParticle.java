@@ -1,15 +1,15 @@
 package net.mehvahdjukaar.supplementaries.client.particles;
 
 import net.minecraft.client.particle.*;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.particles.BasicParticleType;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.util.Mth;
 
-public class SlingshotParticle extends SpriteTexturedParticle {
+public class SlingshotParticle extends TextureSheetParticle {
 
-    private final IAnimatedSprite sprites;
+    private final SpriteSet sprites;
 
-    private SlingshotParticle(ClientWorld world, double x, double y, double z, double motionX, double motionY, double motionZ, IAnimatedSprite sprites) {
+    private SlingshotParticle(ClientLevel world, double x, double y, double z, double motionX, double motionY, double motionZ, SpriteSet sprites) {
         super(world, x, y, z);
         this.sprites = sprites;
 
@@ -30,24 +30,24 @@ public class SlingshotParticle extends SpriteTexturedParticle {
         super.tick();
         this.setSpriteFromAge(this.sprites);
         float x = this.age / (float) this.lifetime;
-        final float a = 1 + (MathHelper.sqrt(5f) - 1f) / 2f;
+        final float a = 1 + (Mth.sqrt(5f) - 1f) / 2f;
         this.alpha = a + 1 / (x - a);
     }
 
     @Override
-    public IParticleRenderType getRenderType() {
-        return IParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+    public ParticleRenderType getRenderType() {
+        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
     }
 
-    public static class Factory implements IParticleFactory<BasicParticleType> {
-        private final IAnimatedSprite sprite;
+    public static class Factory implements ParticleProvider<SimpleParticleType> {
+        private final SpriteSet sprite;
 
-        public Factory(IAnimatedSprite spriteSet) {
+        public Factory(SpriteSet spriteSet) {
             this.sprite = spriteSet;
         }
 
         @Override
-        public Particle createParticle(BasicParticleType typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+        public Particle createParticle(SimpleParticleType typeIn, ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
             SlingshotParticle particle = new SlingshotParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, sprite);
             return particle;
         }

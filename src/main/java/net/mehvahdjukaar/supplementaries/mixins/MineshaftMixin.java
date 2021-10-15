@@ -6,31 +6,37 @@ import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.mixins.accessors.MineshaftAccessor;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.*;
-import net.minecraft.state.properties.AttachFace;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.ISeedReader;
-import net.minecraft.world.gen.feature.structure.IStructurePieceType;
-import net.minecraft.world.gen.feature.structure.MineshaftPieces;
-import net.minecraft.world.gen.feature.structure.StructurePiece;
+import net.minecraft.world.level.block.state.properties.AttachFace;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.levelgen.feature.StructurePieceType;
+import net.minecraft.world.level.levelgen.structure.MineShaftPieces;
+import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
 import java.util.Random;
 
-@Mixin(MineshaftPieces.Corridor.class)
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
+import net.minecraft.world.level.block.FenceBlock;
+import net.minecraft.world.level.block.WallTorchBlock;
+import net.minecraft.world.level.block.state.BlockState;
+
+@Mixin(MineShaftPieces.MineShaftCorridor.class)
 public abstract class MineshaftMixin extends StructurePiece {
 
 
-    protected MineshaftMixin(IStructurePieceType p_i51342_1_, int p_i51342_2_) {
+    protected MineshaftMixin(StructurePieceType p_i51342_1_, int p_i51342_2_) {
         super(p_i51342_1_, p_i51342_2_);
     }
 
     private static final BlockState lantern = ModRegistry.COPPER_LANTERN.get().defaultBlockState().setValue(CopperLanternBlock.FACE, AttachFace.CEILING);
     private static final BlockState torch = Blocks.WALL_TORCH.defaultBlockState();
 
-    protected boolean isSupportingBox(IBlockReader p_189918_1_, MutableBoundingBox p_189918_2_, int p_189918_3_, int p_189918_4_, int p_189918_5_, int p_189918_6_) {
+    protected boolean isSupportingBox(BlockGetter p_189918_1_, BoundingBox p_189918_2_, int p_189918_3_, int p_189918_4_, int p_189918_5_, int p_189918_6_) {
         for(int i = p_189918_3_; i <= p_189918_4_; ++i) {
             if (this.getBlock(p_189918_1_, i, p_189918_5_ + 1, p_189918_6_, p_189918_2_).isAir()) {
                 return false;
@@ -46,7 +52,7 @@ public abstract class MineshaftMixin extends StructurePiece {
      */
 
     @Overwrite
-    private void placeSupport(ISeedReader reader, MutableBoundingBox boundingBox, int minX, int minY, int z, int y, int maxX, Random random) {
+    private void placeSupport(WorldGenLevel reader, BoundingBox boundingBox, int minX, int minY, int z, int y, int maxX, Random random) {
         if (this.isSupportingBox(reader, boundingBox, minX, maxX, y, z)) {
             BlockState plank = ((MineshaftAccessor) this).callGetPlanksBlock();
             BlockState fence = ((MineshaftAccessor) this).callGetFenceBlock();
@@ -66,10 +72,10 @@ public abstract class MineshaftMixin extends StructurePiece {
 
                     //if(!this.getBlock(reader, minX+1, y + 1, z-1, boundingBox).isAir())
                     this.maybeGenerateBlock(reader, boundingBox, random, 0.06F, minX + 1, y, z - 1, lantern.setValue(WallLanternBlock.FACING, Direction.SOUTH)
-                            .setValue(HorizontalFaceBlock.FACE,AttachFace.WALL).setValue(CopperLanternBlock.LIT,on));
+                            .setValue(FaceAttachedHorizontalDirectionalBlock.FACE,AttachFace.WALL).setValue(CopperLanternBlock.LIT,on));
                     //if(!this.getBlock(reader, minX+1, y + 1, z-1, boundingBox).isAir())
                     this.maybeGenerateBlock(reader, boundingBox, random, 0.06F, minX + 1, y, z + 1, lantern.setValue(WallLanternBlock.FACING, Direction.NORTH)
-                            .setValue(HorizontalFaceBlock.FACE,AttachFace.WALL).setValue(CopperLanternBlock.LIT,on));
+                            .setValue(FaceAttachedHorizontalDirectionalBlock.FACE,AttachFace.WALL).setValue(CopperLanternBlock.LIT,on));
 
 
                 }

@@ -6,31 +6,31 @@ import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.common.capabilities.SupplementariesCapabilities;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.AgeableEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.merchant.villager.VillagerEntity;
-import net.minecraft.entity.monster.EndermanEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.AgableMob;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.entity.passive.*;
-import net.minecraft.entity.passive.fish.AbstractFishEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.animal.AbstractFish;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.DoubleNBT;
-import net.minecraft.nbt.ListNBT;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.DoubleTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.stats.Stats;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.LazyOptional;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -43,13 +43,19 @@ import java.util.UUID;
 //edit: third time the charm?
 //edit forth?
 //TODO: maybe remove type here since I'm not using it anymore
+import net.minecraft.world.entity.ambient.Bat;
+import net.minecraft.world.entity.animal.Bee;
+import net.minecraft.world.entity.animal.Fox;
+import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.entity.animal.Wolf;
+
 public class MobContainer {
 
     private final float width;
     private final float height;
 
     @Nullable
-    private World world;
+    private Level world;
     private BlockPos pos;
 
     //stuff that actually gets saved
@@ -61,7 +67,7 @@ public class MobContainer {
     private ICatchableMob mobDisplayCapInstance;
 
     //TODO: maybe make this not null so it can use non static save and load
-    public MobContainer(float width, float height, @Nullable World world, BlockPos pos) {
+    public MobContainer(float width, float height, @Nullable Level world, BlockPos pos) {
         this.width = width;
         this.height = height;
         this.world = world;
@@ -69,7 +75,7 @@ public class MobContainer {
     }
 
     //call on load
-    public void setWorldAndPos(World world, BlockPos pos){
+    public void setWorldAndPos(Level world, BlockPos pos){
         this.pos = pos;
         this.world = world;
     }
@@ -101,14 +107,14 @@ public class MobContainer {
         return cap;
     }
 
-    public CompoundNBT save(CompoundNBT tag) {
+    public CompoundTag save(CompoundTag tag) {
         if(!this.isEmpty()) {
             this.data.saveToTag(tag);
         }
         return tag;
     }
 
-    public void load(CompoundNBT tag) {
+    public void load(CompoundTag tag) {
         MobData data = MobData.loadFromTag(tag);
         this.setData(data);
     }
@@ -141,7 +147,7 @@ public class MobContainer {
      */
     //TODO: make this holder store an actual mob so one can modify it when inside the container. in other words save this entity to this mob data when done
     @Nullable
-    public static Entity createStaticMob(MobData data, @Nonnull World world, BlockPos pos) {
+    public static Entity createStaticMob(MobData data, @Nonnull Level world, BlockPos pos) {
         Entity entity = null;
         if (data != null) {
 
@@ -177,23 +183,23 @@ public class MobContainer {
     }
 
     @Nullable
-    public static Entity createEntityFromNBT(CompoundNBT com, @Nullable UUID id, World world) {
+    public static Entity createEntityFromNBT(CompoundTag com, @Nullable UUID id, Level world) {
         if (com != null && com.contains("id")) {
             Entity entity;
             //TODO: remove in 1.17
             String name = com.get("id").getAsString();
             switch (name) {
                 case "minecraft:bee":
-                    entity = new BeeEntity(EntityType.BEE, world);
+                    entity = new Bee(EntityType.BEE, world);
                     break;
                 case "minecraft:iron_golem":
-                    entity = new IronGolemEntity(EntityType.IRON_GOLEM, world);
+                    entity = new IronGolem(EntityType.IRON_GOLEM, world);
                     break;
                 case "minecraft:enderman":
-                    entity = new EndermanEntity(EntityType.ENDERMAN, world);
+                    entity = new EnderMan(EntityType.ENDERMAN, world);
                     break;
                 case "minecraft:wolf":
-                    entity = new WolfEntity(EntityType.WOLF, world);
+                    entity = new Wolf(EntityType.WOLF, world);
                     break;
                 default:
                     entity = EntityType.loadEntityRecursive(com, world, o -> o);
@@ -212,7 +218,7 @@ public class MobContainer {
 
     //TODO: dispensers
     //only called from jar. move to mob container
-    public boolean interactWithBucket(ItemStack stack, World world, BlockPos pos, @Nullable PlayerEntity player, Hand hand) {
+    public boolean interactWithBucket(ItemStack stack, Level world, BlockPos pos, @Nullable Player player, InteractionHand hand) {
         Item item = stack.getItem();
 
         ItemStack returnStack = ItemStack.EMPTY;
@@ -220,7 +226,7 @@ public class MobContainer {
         if (this.isEmpty()) {
             if (CapturedMobsHelper.isFishBucket(item)) {
 
-                world.playSound(null, pos, SoundEvents.BUCKET_EMPTY_FISH, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                world.playSound(null, pos, SoundEvents.BUCKET_EMPTY_FISH, SoundSource.BLOCKS, 1.0F, 1.0F);
                 returnStack = new ItemStack(Items.BUCKET);
 
                 MobData data = new MobData(stack.copy());
@@ -230,7 +236,7 @@ public class MobContainer {
 
             //empty
             if (!this.data.filledBucket.isEmpty() && item == Items.BUCKET) {
-                world.playSound(null, pos, SoundEvents.BUCKET_FILL_FISH, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                world.playSound(null, pos, SoundEvents.BUCKET_FILL_FISH, SoundSource.BLOCKS, 1.0F, 1.0F);
                 returnStack = this.data.filledBucket.copy();
 
                 this.setData(null);
@@ -267,11 +273,11 @@ public class MobContainer {
         }
     }
 
-    public ActionResultType onInteract(World world, BlockPos pos, PlayerEntity player, Hand hand) {
+    public InteractionResult onInteract(Level world, BlockPos pos, Player player, InteractionHand hand) {
         if (this.hasDisplayMob()) {
             return mobDisplayCapInstance.onPlayerInteract(world, pos, player, hand, this.data.mobTag);
         }
-        return ActionResultType.PASS;
+        return InteractionResult.PASS;
     }
 
     public @Nullable MobData getData() {
@@ -303,7 +309,7 @@ public class MobContainer {
      * @return item Tag
      */
     @Nullable
-    public static CompoundNBT createMobHolderItemTag(@Nonnull Entity mob, float blockW, float blockH, ItemStack bucketStack, boolean isAquarium) {
+    public static CompoundTag createMobHolderItemTag(@Nonnull Entity mob, float blockW, float blockH, ItemStack bucketStack, boolean isAquarium) {
 
         MobData data;
         String name = mob.getName().getString();
@@ -325,7 +331,7 @@ public class MobContainer {
             mob.yOld = py;
             mob.zOld = pz;
 
-            CompoundNBT mobTag = prepareMobTagForContainer(mob);
+            CompoundTag mobTag = prepareMobTagForContainer(mob);
             if (mobTag == null) return null;
 
 
@@ -334,7 +340,7 @@ public class MobContainer {
             data = new MobData(name, mobTag, scale, id, bucketStack);
         }
 
-        CompoundNBT cmp = new CompoundNBT();
+        CompoundTag cmp = new CompoundTag();
         data.saveToTag(cmp);
 
         return cmp;
@@ -347,7 +353,7 @@ public class MobContainer {
      * @return mob tag
      */
     @Nullable
-    private static CompoundNBT prepareMobTagForContainer(Entity mob) {
+    private static CompoundTag prepareMobTagForContainer(Entity mob) {
 
         if (mob.isPassenger()) {
             mob.getVehicle().ejectPassengers();
@@ -372,17 +378,17 @@ public class MobContainer {
         mob.clearFire();
         mob.invulnerableTime = 0;
 
-        if (mob instanceof BatEntity) {
-            ((BatEntity) mob).setResting(true);
+        if (mob instanceof Bat) {
+            ((Bat) mob).setResting(true);
         }
-        if (mob instanceof FoxEntity) {
-            ((FoxEntity) mob).setSleeping(true);
+        if (mob instanceof Fox) {
+            ((Fox) mob).setSleeping(true);
         }
-        if (mob instanceof AbstractFishEntity) {
-            ((AbstractFishEntity) mob).setFromBucket(true);
+        if (mob instanceof AbstractFish) {
+            ((AbstractFish) mob).setFromBucket(true);
         }
 
-        CompoundNBT mobTag = new CompoundNBT();
+        CompoundTag mobTag = new CompoundTag();
         mob.save(mobTag);
 
         if (mobTag.isEmpty()) {
@@ -415,8 +421,8 @@ public class MobContainer {
         float babyScale = 1;
 
         if (mob instanceof LivingEntity && ((LivingEntity) mob).isBaby()) {
-            if ((mob instanceof VillagerEntity)) babyScale = 1.125f;
-            else if (mob instanceof AgeableEntity) babyScale = 2f;
+            if ((mob instanceof Villager)) babyScale = 1.125f;
+            else if (mob instanceof AgableMob) babyScale = 2f;
             else babyScale = 1.125f;
         }
 
@@ -454,7 +460,7 @@ public class MobContainer {
 
         float yOffset = isAir ? (blockH / 2f) - h * scale / 2f : yMargin;
 
-        if (mob instanceof BatEntity) {
+        if (mob instanceof Bat) {
             yOffset *= 1.5f;
         }
 
@@ -466,7 +472,7 @@ public class MobContainer {
         public final boolean isAquarium;
         private final ItemStack filledBucket;
 
-        public final CompoundNBT mobTag;
+        public final CompoundTag mobTag;
         private final float scale;
         @Nullable
         private final UUID uuid;
@@ -474,7 +480,7 @@ public class MobContainer {
         private final int fishIndex;
 
 
-        public MobData(String name, CompoundNBT mobTag, float scale, @Nullable UUID id, ItemStack filledBucket) {
+        public MobData(String name, CompoundTag mobTag, float scale, @Nullable UUID id, ItemStack filledBucket) {
             this.isAquarium = false;
             this.name = name;
             this.mobTag = mobTag;
@@ -506,10 +512,10 @@ public class MobContainer {
         }
 
         @Nullable
-        public static MobData loadFromTag(CompoundNBT tag) {
+        public static MobData loadFromTag(CompoundTag tag) {
             if (tag.contains("MobHolder")) {
-                CompoundNBT cmp = tag.getCompound("MobHolder");
-                CompoundNBT entityData = cmp.getCompound("EntityData");
+                CompoundTag cmp = tag.getCompound("MobHolder");
+                CompoundTag entityData = cmp.getCompound("EntityData");
                 float scale = cmp.getFloat("Scale");
                 UUID uuid = cmp.contains("UUID") ? cmp.getUUID("UUID") : null;
                 ItemStack bucket = cmp.contains("Bucket") ? ItemStack.of(cmp.getCompound("Bucket")) : ItemStack.EMPTY;
@@ -518,10 +524,10 @@ public class MobContainer {
                 //backwards compat
                 if(cmp.contains("YOffset")){
                     float y = cmp.getFloat("YOffset");
-                    ListNBT listnbt = new ListNBT();
-                    listnbt.add(DoubleNBT.valueOf(0.5));
-                    listnbt.add(DoubleNBT.valueOf(y));
-                    listnbt.add(DoubleNBT.valueOf(0.5));
+                    ListTag listnbt = new ListTag();
+                    listnbt.add(DoubleTag.valueOf(0.5));
+                    listnbt.add(DoubleTag.valueOf(y));
+                    listnbt.add(DoubleTag.valueOf(0.5));
 
                     if(entityData.contains("Pos")) entityData.remove("Pos");
                     entityData.put("Pos", listnbt);
@@ -530,7 +536,7 @@ public class MobContainer {
                 return new MobData(name, entityData, scale, uuid, bucket);
             }
             if (tag.contains("BucketHolder")) {
-                CompoundNBT cmp = tag.getCompound("BucketHolder");
+                CompoundTag cmp = tag.getCompound("BucketHolder");
                 ItemStack bucket = ItemStack.of(cmp.getCompound("Bucket"));
                 //TODO: backwards compat, remove
                 if (bucket.isEmpty()) bucket = ItemStack.of(cmp.getCompound("BucketHolder"));
@@ -542,11 +548,11 @@ public class MobContainer {
             return null;
         }
 
-        public void saveToTag(CompoundNBT tag) {
-            CompoundNBT cmp = new CompoundNBT();
+        public void saveToTag(CompoundTag tag) {
+            CompoundTag cmp = new CompoundTag();
             cmp.putString("Name", name);
             if (!filledBucket.isEmpty() || this.isAquarium) {
-                CompoundNBT bucketTag = new CompoundNBT();
+                CompoundTag bucketTag = new CompoundTag();
                 filledBucket.save(bucketTag);
                 cmp.put("Bucket", bucketTag);
             }

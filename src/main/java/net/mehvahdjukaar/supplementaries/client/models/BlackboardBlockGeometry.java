@@ -3,13 +3,21 @@ package net.mehvahdjukaar.supplementaries.client.models;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.renderer.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.model.IModelConfiguration;
 import net.minecraftforge.client.model.geometry.IModelGeometry;
 
 import java.util.Collection;
 import java.util.Set;
 import java.util.function.Function;
+import net.minecraft.client.renderer.block.model.BlockModel;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.UnbakedModel;
+
 public class BlackboardBlockGeometry implements IModelGeometry<BlackboardBlockGeometry> {
 
     /*
@@ -41,8 +49,8 @@ public class BlackboardBlockGeometry implements IModelGeometry<BlackboardBlockGe
     }
 
     @Override
-    public Collection<RenderMaterial> getTextures(IModelConfiguration owner, Function<ResourceLocation,IUnbakedModel> modelGetter, Set<Pair<String,String>> missingTextureErrors) {
-        Collection<RenderMaterial> mat = model.getMaterials(modelGetter,missingTextureErrors);
+    public Collection<Material> getTextures(IModelConfiguration owner, Function<ResourceLocation,UnbakedModel> modelGetter, Set<Pair<String,String>> missingTextureErrors) {
+        Collection<Material> mat = model.getMaterials(modelGetter,missingTextureErrors);
 return mat;
         //mat.add(new RenderMaterial(new RenderMaterial(AtlasTexture.LOCATION_BLOCKS,mat)));
     }
@@ -50,7 +58,7 @@ return mat;
 
 
     @Override
-    public IBakedModel bake(IModelConfiguration owner, ModelBakery bakery, Function<RenderMaterial,TextureAtlasSprite> spriteGetter, IModelTransform modelTransform, ItemOverrideList overrides, ResourceLocation modelLocation) {
+    public BakedModel bake(IModelConfiguration owner, ModelBakery bakery, Function<Material,TextureAtlasSprite> spriteGetter, ModelState modelTransform, ItemOverrides overrides, ResourceLocation modelLocation) {
         // fetch textures before rebaking
 
         return new BlackboardBakedModel(this.model,owner,bakery,spriteGetter,modelTransform,overrides,modelLocation,this.toRetextureName);

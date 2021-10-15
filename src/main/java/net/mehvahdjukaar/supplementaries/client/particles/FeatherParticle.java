@@ -1,18 +1,18 @@
 package net.mehvahdjukaar.supplementaries.client.particles;
 
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.particle.*;
-import net.minecraft.client.renderer.ActiveRenderInfo;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.particles.BasicParticleType;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.Camera;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.util.Mth;
+import com.mojang.math.Quaternion;
+import net.minecraft.world.phys.Vec3;
+import com.mojang.math.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class FeatherParticle extends SpriteTexturedParticle {
+public class FeatherParticle extends TextureSheetParticle {
     private float rotSpeed;
 
     private boolean fallingAnim = false;
@@ -20,7 +20,7 @@ public class FeatherParticle extends SpriteTexturedParticle {
     private float rotOffset = 0;
     private int groundTime = 0;
 
-    private FeatherParticle(ClientWorld worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double speedX, double speedY, double speedZ) {
+    private FeatherParticle(ClientLevel worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double speedX, double speedY, double speedZ) {
         super(worldIn, xCoordIn, yCoordIn, zCoordIn);
         this.quadSize *= 1.3125F + this.random.nextFloat() * 0.15;
         this.lifetime = 120 + this.random.nextInt(20);
@@ -39,8 +39,8 @@ public class FeatherParticle extends SpriteTexturedParticle {
     }
 
     @Override
-    public IParticleRenderType getRenderType() {
-        return IParticleRenderType.PARTICLE_SHEET_OPAQUE;
+    public ParticleRenderType getRenderType() {
+        return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
     }
 
     @Override
@@ -101,7 +101,7 @@ public class FeatherParticle extends SpriteTexturedParticle {
                     float w = (float) (this.rotSpeed / (freq));
 
                     this.oRoll = this.roll;
-                    this.roll = MathHelper.sin(t * w) * amp; //(float) Math.PI * this.rotSpeed * 1.6F;
+                    this.roll = Mth.sin(t * w) * amp; //(float) Math.PI * this.rotSpeed * 1.6F;
                     /*
                     float amp = 0.5f;
                     if(ageWithOffset < 30){
@@ -120,18 +120,18 @@ public class FeatherParticle extends SpriteTexturedParticle {
     }
 
 
-    public void render(IVertexBuilder builder, ActiveRenderInfo info, float partialTicks) {
-        Vector3d vector3d = info.getPosition();
-        float f = (float) (MathHelper.lerp(partialTicks, this.xo, this.x) - vector3d.x());
-        float f1 = (float) (MathHelper.lerp(partialTicks, this.yo, this.y) - vector3d.y());
-        float f2 = (float) (MathHelper.lerp(partialTicks, this.zo, this.z) - vector3d.z());
+    public void render(VertexConsumer builder, Camera info, float partialTicks) {
+        Vec3 vector3d = info.getPosition();
+        float f = (float) (Mth.lerp(partialTicks, this.xo, this.x) - vector3d.x());
+        float f1 = (float) (Mth.lerp(partialTicks, this.yo, this.y) - vector3d.y());
+        float f2 = (float) (Mth.lerp(partialTicks, this.zo, this.z) - vector3d.z());
         Quaternion quaternion;
         if (this.roll == 0.0F) {
             quaternion = info.rotation();
         } else {
             quaternion = new Quaternion(info.rotation());
             float p = (float) (180 / Math.PI);
-            float f3 = MathHelper.rotLerp(partialTicks, (this.rotOffset + this.oRoll) * p,
+            float f3 = Mth.rotLerp(partialTicks, (this.rotOffset + this.oRoll) * p,
                     (this.rotOffset + this.roll) * p);
             quaternion.mul(Vector3f.ZP.rotation(f3 / p));
         }
@@ -162,15 +162,15 @@ public class FeatherParticle extends SpriteTexturedParticle {
 
 
     @OnlyIn(Dist.CLIENT)
-    public static class Factory implements IParticleFactory<BasicParticleType> {
-        private final IAnimatedSprite spriteSet;
+    public static class Factory implements ParticleProvider<SimpleParticleType> {
+        private final SpriteSet spriteSet;
 
-        public Factory(IAnimatedSprite sprite) {
+        public Factory(SpriteSet sprite) {
             this.spriteSet = sprite;
         }
 
         @Override
-        public Particle createParticle(BasicParticleType typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+        public Particle createParticle(SimpleParticleType typeIn, ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
             FeatherParticle particle = new FeatherParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed);
             particle.setColor(1, 1, 1);
             int i = particle.random.nextInt(3); //hard coding sprite set size. ugly

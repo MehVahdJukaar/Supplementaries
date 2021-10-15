@@ -1,19 +1,19 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.color;
 
 import net.mehvahdjukaar.supplementaries.block.util.IBlockHolder;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.color.BlockColors;
-import net.minecraft.client.renderer.color.IBlockColor;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockDisplayReader;
+import net.minecraft.client.color.block.BlockColors;
+import net.minecraft.client.color.block.BlockColor;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Method;
 
-public class MimicBlockColor implements IBlockColor {
+public class MimicBlockColor implements BlockColor {
 
     private static final Method sodiumColors;
 
@@ -28,15 +28,15 @@ public class MimicBlockColor implements IBlockColor {
     }
 
     @Override
-    public int getColor(BlockState state, @Nullable IBlockDisplayReader world, @Nullable BlockPos pos, int tint) {
+    public int getColor(BlockState state, @Nullable BlockAndTintGetter world, @Nullable BlockPos pos, int tint) {
         if (world != null && pos != null) {
-            TileEntity te = world.getBlockEntity(pos);
+            BlockEntity te = world.getBlockEntity(pos);
             if (te instanceof IBlockHolder) {
                 BlockState mimic = ((IBlockHolder) te).getHeldBlock();
                 if (mimic != null && !mimic.hasTileEntity()) {
                     if (sodiumColors != null){
                         try {
-                            ((IBlockColor)sodiumColors.invoke(Minecraft.getInstance().getBlockColors(), mimic))
+                            ((BlockColor)sodiumColors.invoke(Minecraft.getInstance().getBlockColors(), mimic))
                                     .getColor(mimic, world, pos, tint);
                         } catch (Exception ignored) {}
                     }

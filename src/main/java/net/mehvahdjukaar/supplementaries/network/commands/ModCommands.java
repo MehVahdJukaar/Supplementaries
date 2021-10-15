@@ -3,12 +3,12 @@ package net.mehvahdjukaar.supplementaries.network.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
 
 public class ModCommands {
-    public static void register(CommandDispatcher<CommandSource> dispatcher) {
-        LiteralCommandNode<CommandSource> mymod = dispatcher.register(
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+        LiteralCommandNode<CommandSourceStack> mymod = dispatcher.register(
                 Commands.literal(Supplementaries.MOD_ID)
                         .then(Commands.literal("globe")
                                 .requires((p) -> p.hasPermission(2))

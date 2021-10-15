@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.supplementaries.block.blocks.HangingSignBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.HangingSignBlockTile;
 import net.mehvahdjukaar.supplementaries.client.Materials;
@@ -10,37 +10,43 @@ import net.mehvahdjukaar.supplementaries.client.renderers.LOD;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.RequestMapDataFromServerPacket;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.MapItemRenderer;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.MapRenderer;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.model.RenderMaterial;
-import net.minecraft.client.renderer.texture.NativeImage;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.resources.model.Material;
+import com.mojang.blaze3d.platform.NativeImage;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.item.*;
-import net.minecraft.util.IReorderingProcessor;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.world.storage.MapData;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.util.Mth;
+import com.mojang.math.Vector3f;
+import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraftforge.client.model.data.EmptyModelData;
 
 import java.util.List;
 
 
-public class HangingSignBlockTileRenderer extends TileEntityRenderer<HangingSignBlockTile> {
-    protected final BlockRendererDispatcher blockRenderer;
-    protected final ItemRenderer itemRenderer;
-    protected final MapItemRenderer mapRenderer;
+import net.minecraft.world.item.BannerPatternItem;
+import net.minecraft.world.item.ComplexItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.MapItem;
 
-    public HangingSignBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
+public class HangingSignBlockTileRenderer extends BlockEntityRenderer<HangingSignBlockTile> {
+    protected final BlockRenderDispatcher blockRenderer;
+    protected final ItemRenderer itemRenderer;
+    protected final MapRenderer mapRenderer;
+
+    public HangingSignBlockTileRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
         Minecraft minecraft = Minecraft.getInstance();
         blockRenderer = minecraft.getBlockRenderer();
@@ -50,7 +56,7 @@ public class HangingSignBlockTileRenderer extends TileEntityRenderer<HangingSign
 
 
     @Override
-    public void render(HangingSignBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
+    public void render(HangingSignBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
 
         matrixStackIn.pushPose();
@@ -65,7 +71,7 @@ public class HangingSignBlockTileRenderer extends TileEntityRenderer<HangingSign
 
         //animation
         if (lod.isNear()) {
-            matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(MathHelper.lerp(partialTicks, tile.prevAngle, tile.angle)));
+            matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(Mth.lerp(partialTicks, tile.prevAngle, tile.angle)));
         }
         matrixStackIn.translate(-0.5, -0.875, -0.5);
         //render block
@@ -83,8 +89,8 @@ public class HangingSignBlockTileRenderer extends TileEntityRenderer<HangingSign
                 Item item = stack.getItem();
 
                 //render map
-                if (item instanceof AbstractMapItem) {
-                    MapData mapdata = FilledMapItem.getOrCreateSavedData(stack, tile.getLevel());
+                if (item instanceof ComplexItem) {
+                    MapItemSavedData mapdata = MapItem.getOrCreateSavedData(stack, tile.getLevel());
                     if (mapdata != null) {
                         for (int v = 0; v < 2; v++) {
                             matrixStackIn.pushPose();
@@ -99,15 +105,15 @@ public class HangingSignBlockTileRenderer extends TileEntityRenderer<HangingSign
                         }
                     } else {
                         //request map data from server
-                        PlayerEntity player = Minecraft.getInstance().player;
+                        Player player = Minecraft.getInstance().player;
                         NetworkHandler.INSTANCE.sendToServer(new RequestMapDataFromServerPacket(tile.getBlockPos(), player.getUUID()));
                     }
                 } else if (item instanceof BannerPatternItem) {
 
                     //TODO: cache or not like notice board
-                    RenderMaterial rendermaterial = Materials.FLAG_MATERIALS.get(((BannerPatternItem) item).getBannerPattern());
+                    Material rendermaterial = Materials.FLAG_MATERIALS.get(((BannerPatternItem) item).getBannerPattern());
 
-                    IVertexBuilder builder = rendermaterial.buffer(bufferIn, RenderType::entityNoOutline);
+                    VertexConsumer builder = rendermaterial.buffer(bufferIn, RenderType::entityNoOutline);
 
                     //IVertexBuilder builder = bufferIn.getBuffer(RenderType.itemEntityTranslucentCull(FlagBlockTile.getFlagLocation(((BannerPatternItem) item).getBannerPattern())));
 
@@ -126,13 +132,13 @@ public class HangingSignBlockTileRenderer extends TileEntityRenderer<HangingSign
                 }
                 //render item
                 else {
-                    IBakedModel ibakedmodel = itemRenderer.getModel(stack, tile.getLevel(), null);
+                    BakedModel ibakedmodel = itemRenderer.getModel(stack, tile.getLevel(), null);
                     for (int v = 0; v < 2; v++) {
                         matrixStackIn.pushPose();
                         matrixStackIn.translate(0, 0, -0.0705);
                         matrixStackIn.scale(0.5f, 0.5f, 0.5f);
                         //matrixStackIn.mulPose(Const.Y180);
-                        itemRenderer.render(stack, ItemCameraTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
+                        itemRenderer.render(stack, ItemTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
                                 combinedOverlayIn, ibakedmodel);
                         matrixStackIn.popPose();
 
@@ -145,7 +151,7 @@ public class HangingSignBlockTileRenderer extends TileEntityRenderer<HangingSign
             // render text
             else if (lod.isNearMed()) {
                 // sign code
-                FontRenderer fontrenderer = this.renderer.getFont();
+                Font fontrenderer = this.renderer.getFont();
                 int i = tile.textHolder.textColor.getTextColor();
                 int j = (int) ((double) NativeImage.getR(i) * 0.4D);
                 int k = (int) ((double) NativeImage.getG(i) * 0.4D);
@@ -156,9 +162,9 @@ public class HangingSignBlockTileRenderer extends TileEntityRenderer<HangingSign
                 matrixStackIn.scale(0.010416667F, -0.010416667F, 0.010416667F);
 
                 for (int k1 = 0; k1 < HangingSignBlockTile.MAXLINES; ++k1) {
-                    IReorderingProcessor ireorderingprocessor = tile.textHolder.getRenderText(k1, (ss) -> {
-                        List<IReorderingProcessor> list = fontrenderer.split(ss, 75);
-                        return list.isEmpty() ? IReorderingProcessor.EMPTY : list.get(0);
+                    FormattedCharSequence ireorderingprocessor = tile.textHolder.getRenderText(k1, (ss) -> {
+                        List<FormattedCharSequence> list = fontrenderer.split(ss, 75);
+                        return list.isEmpty() ? FormattedCharSequence.EMPTY : list.get(0);
                     });
                     if (ireorderingprocessor != null) {
 

@@ -10,28 +10,30 @@ import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.GobletBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.PushReaction;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class GobletBlock extends WaterBlock {
     protected static final VoxelShape SHAPE = Block.box(5, 0, 5, 11, 9, 11);
@@ -44,34 +46,34 @@ public class GobletBlock extends WaterBlock {
     }
 
     @Override
-    public BlockRenderType getRenderShape(BlockState state) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
     @Override
-    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
-                                BlockRayTraceResult hit) {
-        TileEntity tileentity = worldIn.getBlockEntity(pos);
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
+                                BlockHitResult hit) {
+        BlockEntity tileentity = worldIn.getBlockEntity(pos);
         if (tileentity instanceof GobletBlockTile && ((IOwnerProtected) tileentity).isAccessibleBy(player)) {
             // make te do the work
             GobletBlockTile te = (GobletBlockTile) tileentity;
             if (te.handleInteraction(player, handIn)) {
                 if (!worldIn.isClientSide())
                     te.setChanged();
-                return ActionResultType.sidedSuccess(worldIn.isClientSide);
+                return InteractionResult.sidedSuccess(worldIn.isClientSide);
             }
         }
-        return ActionResultType.PASS;
+        return InteractionResult.PASS;
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(LIGHT_LEVEL);
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
 
@@ -86,12 +88,12 @@ public class GobletBlock extends WaterBlock {
     }
 
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
         return new GobletBlockTile();
     }
 
     @Override
-    public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
+    public int getLightValue(BlockState state, BlockGetter world, BlockPos pos) {
         return state.getValue(LIGHT_LEVEL);
     }
 
@@ -101,8 +103,8 @@ public class GobletBlock extends WaterBlock {
     }
 
     @Override
-    public int getAnalogOutputSignal(BlockState blockState, World world, BlockPos pos) {
-        TileEntity tileentity = world.getBlockEntity(pos);
+    public int getAnalogOutputSignal(BlockState blockState, Level world, BlockPos pos) {
+        BlockEntity tileentity = world.getBlockEntity(pos);
         if (tileentity instanceof GobletBlockTile) {
             return ((GobletBlockTile) tileentity).fluidHolder.isEmpty() ? 0 : 15;
         }
@@ -111,9 +113,9 @@ public class GobletBlock extends WaterBlock {
 
 
     @Override
-    public void animateTick(BlockState state, World world, BlockPos pos, Random random) {
+    public void animateTick(BlockState state, Level world, BlockPos pos, Random random) {
         if (0.05 > random.nextFloat()) {
-            TileEntity te = world.getBlockEntity(pos);
+            BlockEntity te = world.getBlockEntity(pos);
             if (te instanceof GobletBlockTile) {
                 SoftFluidHolder holder = ((ISoftFluidHolder) te).getSoftFluidHolder();
                 SoftFluid fluid = holder.getFluid();
@@ -130,7 +132,7 @@ public class GobletBlock extends WaterBlock {
     }
 
     @Override
-    public void setPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+    public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         BlockUtils.addOptionalOwnership(placer, world, pos);
     }
 }

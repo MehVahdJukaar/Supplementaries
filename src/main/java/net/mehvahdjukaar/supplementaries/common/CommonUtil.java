@@ -6,24 +6,38 @@ import net.mehvahdjukaar.supplementaries.compat.tetra.TetraToolHelper;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.block.*;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.item.*;
-import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tileentity.ShulkerBoxTileEntity;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.IWorldReader;
+import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.LevelReader;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.Tags;
 
 import java.util.Calendar;
+
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.DiggerItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.SwordItem;
+import net.minecraft.world.item.TridentItem;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.FenceBlock;
+import net.minecraft.world.level.block.FlowerPotBlock;
+import net.minecraft.world.level.block.Lantern;
+import net.minecraft.world.level.block.WallBlock;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class CommonUtil {
 
@@ -115,7 +129,7 @@ public class CommonUtil {
 
     public static boolean isTool(Item i) {
         if (CompatHandler.tetra && TetraToolHelper.isTetraTool(i)) return true;
-        return i instanceof ToolItem || i instanceof TridentItem;
+        return i instanceof DiggerItem || i instanceof TridentItem;
     }
 
     //TODO: move to tag
@@ -124,7 +138,7 @@ public class CommonUtil {
             Block b = ((BlockItem) i).getBlock();
             String namespace = b.getRegistryName().getNamespace();
             if (namespace.equals("skinnedlanterns")) return true;
-            if (b instanceof LanternBlock && !ServerConfigs.cached.WALL_LANTERN_BLACKLIST.contains(namespace)) {
+            if (b instanceof Lantern && !ServerConfigs.cached.WALL_LANTERN_BLACKLIST.contains(namespace)) {
                 return !b.hasTileEntity(b.defaultBlockState());
             }
         }
@@ -152,7 +166,7 @@ public class CommonUtil {
     }
 
     //bounding box
-    public static AxisAlignedBB getDirectionBB(BlockPos pos, Direction facing, int offset) {
+    public static AABB getDirectionBB(BlockPos pos, Direction facing, int offset) {
         BlockPos endPos = pos.relative(facing, offset);
         switch (facing) {
             default:
@@ -178,26 +192,26 @@ public class CommonUtil {
                 endPos = endPos.offset(1, 0, 1);
                 break;
         }
-        return new AxisAlignedBB(pos, endPos);
+        return new AABB(pos, endPos);
     }
 
 
     //equals is not working...
-    public static boolean isShapeEqual(AxisAlignedBB s1, AxisAlignedBB s2) {
+    public static boolean isShapeEqual(AABB s1, AABB s2) {
         return s1.minX == s2.minX && s1.minY == s2.minY && s1.minZ == s2.minZ && s1.maxX == s2.maxX && s1.maxY == s2.maxY && s1.maxZ == s2.maxZ;
     }
 
-    public static final AxisAlignedBB FENCE_SHAPE = Block.box(6, 0, 6, 10, 16, 10).bounds();
-    public static final AxisAlignedBB POST_SHAPE = Block.box(5, 0, 5, 11, 16, 11).bounds();
-    public static final AxisAlignedBB WALL_SHAPE = Block.box(7, 0, 7, 12, 16, 12).bounds();
+    public static final AABB FENCE_SHAPE = Block.box(6, 0, 6, 10, 16, 10).bounds();
+    public static final AABB POST_SHAPE = Block.box(5, 0, 5, 11, 16, 11).bounds();
+    public static final AABB WALL_SHAPE = Block.box(7, 0, 7, 12, 16, 12).bounds();
 
     //0 normal, 1 fence, 2 walls TODO: change 1 with 2
-    public static int getPostSize(BlockState state, BlockPos pos, IWorldReader world) {
+    public static int getPostSize(BlockState state, BlockPos pos, LevelReader world) {
         Block block = state.getBlock();
 
         VoxelShape shape = state.getShape(world, pos);
-        if (shape != VoxelShapes.empty()) {
-            AxisAlignedBB s = shape.bounds();
+        if (shape != Shapes.empty()) {
+            AABB s = shape.bounds();
             if (block instanceof FenceBlock || block instanceof SignPostBlock || block.is(Tags.Blocks.FENCES) || isShapeEqual(FENCE_SHAPE, s))
                 return 1;
             if (block instanceof WallBlock || block.is(BlockTags.WALLS) ||
@@ -222,7 +236,7 @@ public class CommonUtil {
     }
 
     //this is how you do it :D
-    private static final ShulkerBoxTileEntity SHULKER_TILE = new ShulkerBoxTileEntity();
+    private static final ShulkerBoxBlockEntity SHULKER_TILE = new ShulkerBoxBlockEntity();
 
 
     public static boolean isAllowedInShulker(ItemStack stack) {
@@ -231,7 +245,7 @@ public class CommonUtil {
 
 
     //cylinder distance
-    public static boolean withinDistanceDown(BlockPos pos, Vector3d vector, double distW, double distDown) {
+    public static boolean withinDistanceDown(BlockPos pos, Vec3 vector, double distW, double distDown) {
         double dx = vector.x() - ((double) pos.getX() + 0.5);
         double dy = vector.y() - ((double) pos.getY() + 0.5);
         double dz = vector.z() - ((double) pos.getZ() + 0.5);
@@ -241,7 +255,7 @@ public class CommonUtil {
 
 
     @OnlyIn(Dist.CLIENT)
-    public static PlayerEntity getClientPlayer() {
+    public static Player getClientPlayer() {
         return Minecraft.getInstance().player;
     }
 

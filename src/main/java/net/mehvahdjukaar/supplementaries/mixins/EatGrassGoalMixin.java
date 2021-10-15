@@ -2,13 +2,13 @@ package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.FodderBlock;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.goal.EatGrassGoal;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.EatBlockGoal;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -19,12 +19,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.function.Predicate;
 
-@Mixin(EatGrassGoal.class)
+@Mixin(EatBlockGoal.class)
 public abstract class EatGrassGoalMixin extends Goal {
 
     @Final
     @Shadow
-    private MobEntity mob;
+    private Mob mob;
 
     @Shadow
     private int eatAnimationTick;
@@ -35,7 +35,7 @@ public abstract class EatGrassGoalMixin extends Goal {
 
     @Final
     @Shadow
-    private World level;
+    private Level level;
 
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
     public void tick(CallbackInfo info) {

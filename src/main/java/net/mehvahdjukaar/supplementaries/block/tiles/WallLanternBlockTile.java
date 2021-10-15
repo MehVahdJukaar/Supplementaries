@@ -4,13 +4,13 @@ import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.blocks.WallLanternBlock;
 import net.mehvahdjukaar.supplementaries.block.util.IBlockHolder;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import net.minecraftforge.client.model.ModelDataManager;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
@@ -20,7 +20,7 @@ import net.minecraftforge.common.util.Constants;
 import java.util.Objects;
 
 
-public class WallLanternBlockTile extends EnhancedLanternBlockTile implements ITickableTileEntity, IBlockHolder {
+public class WallLanternBlockTile extends EnhancedLanternBlockTile implements TickableBlockEntity, IBlockHolder {
 
     public BlockState mimic = Blocks.LANTERN.defaultBlockState();
     public static final ModelProperty<BlockState> MIMIC = BlockProperties.MIMIC;
@@ -56,9 +56,9 @@ public class WallLanternBlockTile extends EnhancedLanternBlockTile implements IT
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         BlockState oldMimic = this.mimic;
-        CompoundNBT tag = pkt.getTag();
+        CompoundTag tag = pkt.getTag();
         //this calls load
         handleUpdateTag(this.getBlockState(), tag);
         if (!Objects.equals(oldMimic, this.mimic)) {
@@ -70,16 +70,16 @@ public class WallLanternBlockTile extends EnhancedLanternBlockTile implements IT
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT compound) {
+    public void load(BlockState state, CompoundTag compound) {
         super.load(state, compound);
-        this.mimic = NBTUtil.readBlockState(compound.getCompound("Lantern"));
+        this.mimic = NbtUtils.readBlockState(compound.getCompound("Lantern"));
         this.isRedstoneLantern = compound.getBoolean("IsRedstone");
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
+    public CompoundTag save(CompoundTag compound) {
         super.save(compound);
-        compound.put("Lantern", NBTUtil.writeBlockState(mimic));
+        compound.put("Lantern", NbtUtils.writeBlockState(mimic));
         compound.putBoolean("IsRedstone",this.isRedstoneLantern);
         return compound;
     }

@@ -3,27 +3,29 @@ package net.mehvahdjukaar.supplementaries.items;
 import net.mehvahdjukaar.supplementaries.block.tiles.FrameBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.List;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class TimberFrameItem extends BlockItem {
 
@@ -33,26 +35,26 @@ public class TimberFrameItem extends BlockItem {
     }
 
     @Override
-    public ActionResultType useOn(ItemUseContext context) {
-        PlayerEntity player = context.getPlayer();
+    public InteractionResult useOn(UseOnContext context) {
+        Player player = context.getPlayer();
         if (ServerConfigs.cached.SWAP_TIMBER_FRAME && player.isShiftKeyDown() && player.abilities.mayBuild) {
-            World world = context.getLevel();
+            Level world = context.getLevel();
             BlockPos pos = context.getClickedPos();
             BlockState clicked = world.getBlockState(pos);
             if (FrameBlockTile.isValidBlock(clicked, pos, world)) {
-                BlockState frame = this.getBlock().getStateForPlacement(new BlockItemUseContext(context));
+                BlockState frame = this.getBlock().getStateForPlacement(new BlockPlaceContext(context));
                 world.setBlockAndUpdate(pos, frame);
-                TileEntity tile = world.getBlockEntity(pos);
+                BlockEntity tile = world.getBlockEntity(pos);
                 if (tile instanceof FrameBlockTile) {
                     SoundType s = frame.getSoundType(world, pos, player);
                     ((FrameBlockTile) tile).acceptBlock(clicked);
-                    world.playSound(player, pos, s.getPlaceSound(), SoundCategory.BLOCKS, (s.getVolume() + 1.0F) / 2.0F, s.getPitch() * 0.8F);
+                    world.playSound(player, pos, s.getPlaceSound(), SoundSource.BLOCKS, (s.getVolume() + 1.0F) / 2.0F, s.getPitch() * 0.8F);
                     if (!player.isCreative() && !world.isClientSide()) {
                         context.getItemInHand().shrink(1);
                     }
-                    return ActionResultType.sidedSuccess(world.isClientSide);
+                    return InteractionResult.sidedSuccess(world.isClientSide);
                 }
-                return ActionResultType.FAIL;
+                return InteractionResult.FAIL;
             }
 
         }
@@ -65,9 +67,9 @@ public class TimberFrameItem extends BlockItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         if (!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().options.advancedItemTooltips) return;
-        tooltip.add((new TranslationTextComponent("message.supplementaries.timber_frame")).withStyle(TextFormatting.GRAY).withStyle(TextFormatting.ITALIC));
+        tooltip.add((new TranslatableComponent("message.supplementaries.timber_frame")).withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.ITALIC));
     }
 }

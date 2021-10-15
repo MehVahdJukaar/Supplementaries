@@ -3,15 +3,15 @@ package net.mehvahdjukaar.supplementaries.client.models;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
-import net.minecraft.client.renderer.model.BlockModel;
-import net.minecraft.resources.IResourceManager;
+import net.minecraft.client.renderer.block.model.BlockModel;
+import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraftforge.client.model.IModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 
 public class WallLanternLoader implements IModelLoader<WallLanternGeometry> {
 
     @Override
-    public void onResourceManagerReload(IResourceManager resourceManager) {
+    public void onResourceManagerReload(ResourceManager resourceManager) {
 
     }
 

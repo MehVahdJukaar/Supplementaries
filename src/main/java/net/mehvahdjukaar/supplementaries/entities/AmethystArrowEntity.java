@@ -2,24 +2,24 @@ package net.mehvahdjukaar.supplementaries.entities;
 
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.particles.ItemParticleData;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.Direction;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.math.*;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.network.FMLPlayMessages;
 import net.minecraftforge.fml.network.NetworkHooks;
 
@@ -28,41 +28,49 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class AmethystArrowEntity extends AbstractArrowEntity {
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+
+public class AmethystArrowEntity extends AbstractArrow {
 
     private final int maxSplashDamage = 6;
 
-    public AmethystArrowEntity(EntityType<? extends AmethystArrowEntity> type, World world) {
+    public AmethystArrowEntity(EntityType<? extends AmethystArrowEntity> type, Level world) {
         super(type, world);
     }
 
-    public AmethystArrowEntity(World worldIn, LivingEntity throwerIn) {
+    public AmethystArrowEntity(Level worldIn, LivingEntity throwerIn) {
         super(ModRegistry.AMETHYST_ARROW.get(), throwerIn, worldIn);
         setBaseDamage(1);
     }
 
-    public AmethystArrowEntity(World worldIn, double x, double y, double z) {
+    public AmethystArrowEntity(Level worldIn, double x, double y, double z) {
         super(ModRegistry.AMETHYST_ARROW.get(), x, y, z, worldIn);
         setBaseDamage(1);
     }
 
-    public AmethystArrowEntity(FMLPlayMessages.SpawnEntity packet, World world) {
+    public AmethystArrowEntity(FMLPlayMessages.SpawnEntity packet, Level world) {
         super(ModRegistry.AMETHYST_ARROW.get(), world);
         setBaseDamage(1);
     }
 
     @Override
-    public IPacket<?> getAddEntityPacket() {
+    public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundNBT compound) {
+    public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT compound) {
+    public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
     }
 
@@ -92,17 +100,17 @@ public class AmethystArrowEntity extends AbstractArrowEntity {
 
         //fixed vanilla arrow code. You're welcome
         boolean flag = this.isNoPhysics();
-        Vector3d movement = this.getDeltaMovement();
+        Vec3 movement = this.getDeltaMovement();
 
         double velX = movement.x;
         double velY = movement.y;
         double velZ = movement.z;
 
-        float horizontalVel = MathHelper.sqrt(getHorizontalDistanceSqr(movement));
+        float horizontalVel = Mth.sqrt(getHorizontalDistanceSqr(movement));
 
         if (this.xRotO == 0.0F && this.yRotO == 0.0F) {
-            this.yRot = (float)(MathHelper.atan2(velX, velZ) * (double)(180F / (float)Math.PI));
-            this.xRot = (float)(MathHelper.atan2(velY, horizontalVel) * (double)(180F / (float)Math.PI));
+            this.yRot = (float)(Mth.atan2(velX, velZ) * (double)(180F / (float)Math.PI));
+            this.xRot = (float)(Mth.atan2(velY, horizontalVel) * (double)(180F / (float)Math.PI));
             this.yRotO = this.yRot;
             this.xRotO = this.xRot;
         }
@@ -112,9 +120,9 @@ public class AmethystArrowEntity extends AbstractArrowEntity {
         if (!blockstate.isAir(this.level, blockpos) && !flag) {
             VoxelShape voxelshape = blockstate.getCollisionShape(this.level, blockpos);
             if (!voxelshape.isEmpty()) {
-                Vector3d vector3d1 = this.position();
+                Vec3 vector3d1 = this.position();
 
-                for(AxisAlignedBB axisalignedbb : voxelshape.toAabbs()) {
+                for(AABB axisalignedbb : voxelshape.toAabbs()) {
                     if (axisalignedbb.move(blockpos).contains(vector3d1)) {
                         this.inGround = true;
                         break;
@@ -140,10 +148,10 @@ public class AmethystArrowEntity extends AbstractArrowEntity {
             ++this.inGroundTime;
         } else {
             this.inGroundTime = 0;
-            Vector3d pos = this.position();
-            Vector3d newPos = pos.add(movement);
-            RayTraceResult raytraceresult = this.level.clip(new RayTraceContext(pos, newPos, RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, this));
-            if (raytraceresult.getType() != RayTraceResult.Type.MISS) {
+            Vec3 pos = this.position();
+            Vec3 newPos = pos.add(movement);
+            HitResult raytraceresult = this.level.clip(new ClipContext(pos, newPos, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
+            if (raytraceresult.getType() != HitResult.Type.MISS) {
                 newPos = raytraceresult.getLocation();
             }
 
@@ -158,12 +166,12 @@ public class AmethystArrowEntity extends AbstractArrowEntity {
             double posZ =  newPos.z;
 
             if (flag) {
-                this.yRot = (float)(MathHelper.atan2(-velX, -velZ) * (double)(180F / (float)Math.PI));
+                this.yRot = (float)(Mth.atan2(-velX, -velZ) * (double)(180F / (float)Math.PI));
             } else {
-                this.yRot = (float)(MathHelper.atan2(velX, velZ) * (double)(180F / (float)Math.PI));
+                this.yRot = (float)(Mth.atan2(velX, velZ) * (double)(180F / (float)Math.PI));
             }
 
-            this.xRot = (float)(MathHelper.atan2(velY, horizontalVel) * (double)(180F / (float)Math.PI));
+            this.xRot = (float)(Mth.atan2(velY, horizontalVel) * (double)(180F / (float)Math.PI));
             this.xRot = lerpRotation(this.xRotO, this.xRot);
             this.yRot = lerpRotation(this.yRotO, this.yRot);
 
@@ -188,21 +196,21 @@ public class AmethystArrowEntity extends AbstractArrowEntity {
             this.checkInsideBlocks();
 
             while(!this.removed) {
-                EntityRayTraceResult entityraytraceresult = this.findHitEntity(pos, newPos);
+                EntityHitResult entityraytraceresult = this.findHitEntity(pos, newPos);
                 if (entityraytraceresult != null) {
                     raytraceresult = entityraytraceresult;
                 }
 
-                if (raytraceresult != null && raytraceresult.getType() == RayTraceResult.Type.ENTITY) {
-                    Entity entity = ((EntityRayTraceResult)raytraceresult).getEntity();
+                if (raytraceresult != null && raytraceresult.getType() == HitResult.Type.ENTITY) {
+                    Entity entity = ((EntityHitResult)raytraceresult).getEntity();
                     Entity entity1 = this.getOwner();
-                    if (entity instanceof PlayerEntity && entity1 instanceof PlayerEntity && !((PlayerEntity)entity1).canHarmPlayer((PlayerEntity)entity)) {
+                    if (entity instanceof Player && entity1 instanceof Player && !((Player)entity1).canHarmPlayer((Player)entity)) {
                         raytraceresult = null;
                         entityraytraceresult = null;
                     }
                 }
 
-                if (raytraceresult != null && raytraceresult.getType() != RayTraceResult.Type.MISS && !flag && !net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, raytraceresult)) {
+                if (raytraceresult != null && raytraceresult.getType() != HitResult.Type.MISS && !flag && !net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, raytraceresult)) {
                     this.onHit(raytraceresult);
                     this.hasImpulse = true;
                 }
@@ -217,25 +225,25 @@ public class AmethystArrowEntity extends AbstractArrowEntity {
     }
 
     @Override
-    protected void onHit(RayTraceResult hit) {
+    protected void onHit(HitResult hit) {
         super.onHit(hit);
         double x = this.getX();
         double y = this.getY();
         double z = this.getZ();
         if (this.level.isClientSide){
             for (int l2 = 0; l2 < 8; ++l2) {
-                this.level.addParticle(new ItemParticleData(ParticleTypes.ITEM, new ItemStack(ModRegistry.AMETHYST_ARROW_ITEM.get())), x, y, z, random.nextGaussian() * 0.1D, random.nextDouble() * 0.15D, random.nextGaussian() * 0.1D);
+                this.level.addParticle(new ItemParticleOption(ParticleTypes.ITEM, new ItemStack(ModRegistry.AMETHYST_ARROW_ITEM.get())), x, y, z, random.nextGaussian() * 0.1D, random.nextDouble() * 0.15D, random.nextGaussian() * 0.1D);
             }
         }
         else {
-            List<Vector3d> directions = getShootVectors(this.random,0);
-            for (Vector3d vec : directions) {
+            List<Vec3> directions = getShootVectors(this.random,0);
+            for (Vec3 vec : directions) {
                 Entity target = null;
                 Direction dir = Direction.UP;
-                if (hit.getType() == RayTraceResult.Type.ENTITY) {
-                    target = ((EntityRayTraceResult) hit).getEntity();
-                } else if (hit.getType() == RayTraceResult.Type.BLOCK) {
-                    dir = ((BlockRayTraceResult)hit).getDirection();
+                if (hit.getType() == HitResult.Type.ENTITY) {
+                    target = ((EntityHitResult) hit).getEntity();
+                } else if (hit.getType() == HitResult.Type.BLOCK) {
+                    dir = ((BlockHitResult)hit).getDirection();
                 }
                 vec = vec.scale(0.35f);
                 vec = this.rotateVector(vec,dir);
@@ -270,9 +278,9 @@ public class AmethystArrowEntity extends AbstractArrowEntity {
         this.remove();
     }
 
-    public List<Vector3d> getShootVectors(Random random, float uncertainty){
-        List<Vector3d> vectors = new ArrayList<>();
-        float turnFraction = (1 + MathHelper.sqrt(5))/2;
+    public List<Vec3> getShootVectors(Random random, float uncertainty){
+        List<Vec3> vectors = new ArrayList<>();
+        float turnFraction = (1 + Mth.sqrt(5))/2;
         int numPoints = 17;
         double fullness = 0.8;
         for (int i = 1; i <= numPoints; i++){
@@ -287,7 +295,7 @@ public class AmethystArrowEntity extends AbstractArrowEntity {
             double z = Math.sin(inclination) * Math.sin(azimuth);
             double y = Math.cos(inclination);
 
-            Vector3d vec = new Vector3d(x, y, z);
+            Vec3 vec = new Vec3(x, y, z);
 
             if(i==1){
                 vec = vec.add(0, 1,0);
@@ -299,7 +307,7 @@ public class AmethystArrowEntity extends AbstractArrowEntity {
         return vectors;
     }
 
-    private Vector3d rotateVector(Vector3d v, Direction dir){
+    private Vec3 rotateVector(Vec3 v, Direction dir){
         switch (dir){
             default:
             case UP:
@@ -307,20 +315,20 @@ public class AmethystArrowEntity extends AbstractArrowEntity {
             case DOWN:
                 return v.multiply(0d,-1d,0d);
             case NORTH:
-                return new Vector3d(v.z,v.x,-v.y);
+                return new Vec3(v.z,v.x,-v.y);
             case SOUTH:
-                return new Vector3d(v.z,v.x,v.y);
+                return new Vec3(v.z,v.x,v.y);
             case WEST:
-                return new Vector3d(-v.y,v.z,v.x);
+                return new Vec3(-v.y,v.z,v.x);
             case EAST:
-                return new Vector3d(v.y,v.z,v.x);
+                return new Vec3(v.y,v.z,v.x);
 
         }
     }
 
 
     private void applySplash(@Nullable Entity target) {
-        AxisAlignedBB axisalignedbb = this.getBoundingBox().inflate(4.0D, 2.0D, 4.0D);
+        AABB axisalignedbb = this.getBoundingBox().inflate(4.0D, 2.0D, 4.0D);
         List<LivingEntity> list = this.level.getEntitiesOfClass(LivingEntity.class, axisalignedbb);
         if (!list.isEmpty()) {
             for(LivingEntity livingentity : list) {

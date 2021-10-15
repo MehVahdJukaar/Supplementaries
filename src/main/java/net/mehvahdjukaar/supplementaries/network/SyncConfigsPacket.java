@@ -4,7 +4,7 @@ package net.mehvahdjukaar.supplementaries.network;
 import com.electronwill.nightconfig.toml.TomlFormat;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkEvent;
 
@@ -15,7 +15,7 @@ public class SyncConfigsPacket {
 
     private final byte[] configData;
 
-    public SyncConfigsPacket(PacketBuffer buf) {
+    public SyncConfigsPacket(FriendlyByteBuf buf) {
         this.configData = buf.readByteArray();
     }
 
@@ -23,7 +23,7 @@ public class SyncConfigsPacket {
         this.configData = configFileData;
     }
 
-    public static void buffer(SyncConfigsPacket message, PacketBuffer buf) {
+    public static void buffer(SyncConfigsPacket message, FriendlyByteBuf buf) {
         buf.writeByteArray(message.configData);
     }
     //client

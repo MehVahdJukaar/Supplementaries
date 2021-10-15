@@ -8,21 +8,21 @@ import net.mehvahdjukaar.supplementaries.client.Materials;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.inventories.NoticeBoardContainer;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.model.RenderMaterial;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.item.*;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -30,15 +30,30 @@ import java.util.List;
 import java.util.UUID;
 
 
-public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, IMapDisplay {
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.Nameable;
+import net.minecraft.world.item.BannerPatternItem;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.DyeItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.MapItem;
+import net.minecraft.world.item.WritableBookItem;
+import net.minecraft.world.item.WrittenBookItem;
+
+public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, IMapDisplay {
     private UUID owner = null;
     //client stuff
     private String text = null;
     private int fontScale = 1;
-    private List<IReorderingProcessor> cachedPageLines = Collections.emptyList();
+    private List<FormattedCharSequence> cachedPageLines = Collections.emptyList();
     //used to tell renderer when it has to slit new line(have to do it there cause i need fontrenderer function)
     private boolean needsVisualRefresh = true;
-    private RenderMaterial cachedPattern = null;
+    private Material cachedPattern = null;
 
     private boolean powered = false;
     private int pageNumber = 0;
@@ -52,8 +67,8 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, 
     }
 
     @Override
-    public ITextComponent getDefaultName() {
-        return new TranslationTextComponent("block.supplementaries.notice_board");
+    public Component getDefaultName() {
+        return new TranslatableComponent("block.supplementaries.notice_board");
     }
 
     //update blockState and plays sound. server side
@@ -66,11 +81,11 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, 
         if (state.getValue(BlockStateProperties.HAS_BOOK) != shouldHaveBook) {
             this.level.setBlock(this.worldPosition, state.setValue(BlockStateProperties.HAS_BOOK, shouldHaveBook), 2);
             if (shouldHaveBook) {
-                this.level.playSound(null, worldPosition, SoundEvents.BOOK_PAGE_TURN, SoundCategory.BLOCKS, 1F,
+                this.level.playSound(null, worldPosition, SoundEvents.BOOK_PAGE_TURN, SoundSource.BLOCKS, 1F,
                         this.level.random.nextFloat() * 0.10F + 0.85F);
             } else {
                 this.pageNumber = 0;
-                this.level.playSound(null, worldPosition, SoundEvents.BOOK_PAGE_TURN, SoundCategory.BLOCKS, 1F,
+                this.level.playSound(null, worldPosition, SoundEvents.BOOK_PAGE_TURN, SoundSource.BLOCKS, 1F,
                         this.level.random.nextFloat() * 0.10F + 0.50F);
             }
         }
@@ -96,20 +111,20 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, 
         this.text = null;
 
         if (item instanceof WrittenBookItem) {
-            CompoundNBT com = itemstack.getTag();
+            CompoundTag com = itemstack.getTag();
             if (WrittenBookItem.makeSureTagIsValid(com)) {
 
-                ListNBT listnbt = com.getList("pages", 8).copy();
+                ListTag listnbt = com.getList("pages", 8).copy();
                 if (this.pageNumber >= listnbt.size()) {
                     this.pageNumber = this.pageNumber % listnbt.size();
                 }
                 this.text = listnbt.getString(this.pageNumber);
             }
         } else if (item instanceof WritableBookItem) {
-            CompoundNBT com = itemstack.getTag();
+            CompoundTag com = itemstack.getTag();
             if (WritableBookItem.makeSureTagIsValid(com)) {
 
-                ListNBT listnbt = com.getList("pages", 8).copy();
+                ListTag listnbt = com.getList("pages", 8).copy();
                 if (this.pageNumber >= listnbt.size()) {
                     this.pageNumber = this.pageNumber % listnbt.size();
                 }
@@ -120,7 +135,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, 
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT compound) {
+    public void load(BlockState state, CompoundTag compound) {
         this.textColor = DyeColor.byName(compound.getString("Color"), DyeColor.BLACK);
         this.textVisible = compound.getBoolean("TextVisible");
         this.pageNumber = compound.getInt("PageNumber");
@@ -128,7 +143,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, 
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
+    public CompoundTag save(CompoundTag compound) {
         super.save(compound);
         compound.putString("Color", this.textColor.getName());
         compound.putBoolean("TextVisible", this.textVisible);
@@ -137,7 +152,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, 
     }
 
     @Override
-    public Container createMenu(int id, PlayerInventory player) {
+    public AbstractContainerMenu createMenu(int id, Inventory player) {
         return new NoticeBoardContainer(id, player, this);
     }
 
@@ -148,7 +163,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, 
 
     public static boolean isPageItem(Item item) {
         return (ItemTags.LECTERN_BOOKS != null && item.is(ItemTags.LECTERN_BOOKS))
-                || item instanceof FilledMapItem || item instanceof BannerPatternItem;
+                || item instanceof MapItem || item instanceof BannerPatternItem;
     }
 
     @Override
@@ -183,7 +198,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, 
         this.textVisible = textVisible;
     }
 
-    public RenderMaterial getCachedPattern() {
+    public Material getCachedPattern() {
         return cachedPattern;
     }
 
@@ -199,11 +214,11 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, 
         this.fontScale = s;
     }
 
-    public void setCachedPageLines(List<IReorderingProcessor> l) {
+    public void setCachedPageLines(List<FormattedCharSequence> l) {
         this.cachedPageLines = l;
     }
 
-    public List<IReorderingProcessor> getCachedPageLines() {
+    public List<FormattedCharSequence> getCachedPageLines() {
         return this.cachedPageLines;
     }
 
@@ -223,7 +238,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, 
     public void updatePower(boolean powered) {
         if (powered != this.powered && powered) {
             this.pageNumber++;
-            this.level.playSound(null, worldPosition, SoundEvents.BOOK_PAGE_TURN, SoundCategory.BLOCKS, 1F,
+            this.level.playSound(null, worldPosition, SoundEvents.BOOK_PAGE_TURN, SoundSource.BLOCKS, 1F,
                     this.level.random.nextFloat() * 0.10F + 1.45F);
             this.setChanged();
         }
@@ -231,7 +246,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, 
     }
 
 
-    public ActionResultType interact(PlayerEntity player, Hand handIn, BlockPos pos, BlockState state) {
+    public InteractionResult interact(Player player, InteractionHand handIn, BlockPos pos, BlockState state) {
         ItemStack itemStack = player.getItemInHand(handIn);
         Item item = itemStack.getItem();
         boolean server = !this.level.isClientSide;
@@ -260,6 +275,6 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, 
                 player.openMenu(this);
             }
         }
-        return ActionResultType.sidedSuccess(!server);
+        return InteractionResult.sidedSuccess(!server);
     }
 }

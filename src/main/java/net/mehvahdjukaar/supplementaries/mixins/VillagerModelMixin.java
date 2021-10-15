@@ -1,11 +1,11 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.block.util.ICustomDataHolder;
-import net.minecraft.client.renderer.entity.model.SegmentedModel;
-import net.minecraft.client.renderer.entity.model.VillagerModel;
-import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.model.ListModel;
+import net.minecraft.client.model.VillagerModel;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.util.Mth;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -14,18 +14,18 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin({VillagerModel.class})
-public abstract class VillagerModelMixin<T extends Entity> extends SegmentedModel<T> {
+public abstract class VillagerModelMixin<T extends Entity> extends ListModel<T> {
 
     @Final
     @Shadow
-    protected ModelRenderer nose;
+    protected ModelPart nose;
 
-    @Shadow protected ModelRenderer head;
-    protected ModelRenderer nose2;
+    @Shadow protected ModelPart head;
+    protected ModelPart nose2;
 
     @Inject(method = {"<init>(FII)V"}, at = {@At(value = "TAIL")}, cancellable = true)
     private void init(float p_i51059_1_, int p_i51059_2_, int p_i51059_3_, CallbackInfo ci) {
-        this.nose2 = (new ModelRenderer(this)).setTexSize(p_i51059_2_, p_i51059_3_);
+        this.nose2 = (new ModelPart(this)).setTexSize(p_i51059_2_, p_i51059_3_);
         nose2.setPos(0.0F, -2.0F, -5.0F);
         nose2.texOffs(24, 0)
                 .addBox(-1.0F, -1.0F, -1.0F, 2.0F, 4.0F, 2.0F, p_i51059_1_);
@@ -43,8 +43,8 @@ public abstract class VillagerModelMixin<T extends Entity> extends SegmentedMode
             this.nose2.visible = true;
             this.nose.visible = false;
             if (((ICustomDataHolder) villager).getVariable()) {
-                this.nose2.xRot = -0.40F + (0.415F * MathHelper.sin(0.13F * p_225597_4_));
-                this.nose2.zRot =  + (0.03F * MathHelper.sin(0.03F * (p_225597_4_ +0.3f)));
+                this.nose2.xRot = -0.40F + (0.415F * Mth.sin(0.13F * p_225597_4_));
+                this.nose2.zRot =  + (0.03F * Mth.sin(0.03F * (p_225597_4_ +0.3f)));
             }else{
 
                 this.nose2.xRot = 0;

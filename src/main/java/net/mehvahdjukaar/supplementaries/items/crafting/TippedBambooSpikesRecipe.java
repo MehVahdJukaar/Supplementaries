@@ -2,34 +2,34 @@ package net.mehvahdjukaar.supplementaries.items.crafting;
 
 import net.mehvahdjukaar.supplementaries.items.BambooSpikesTippedItem;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.SpecialRecipe;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionUtils;
-import net.minecraft.potion.Potions;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.CustomRecipe;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 
-public class TippedBambooSpikesRecipe extends SpecialRecipe {
+public class TippedBambooSpikesRecipe extends CustomRecipe {
     public TippedBambooSpikesRecipe(ResourceLocation idIn) {
         super(idIn);
     }
 
     private boolean isEmptySpike(ItemStack stack){
         if (stack.getItem() == ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get()) {
-            CompoundNBT compoundnbt = stack.getTag();
+            CompoundTag compoundnbt = stack.getTag();
             return compoundnbt != null && compoundnbt.getInt("Damage")!=0;
         }
         else return stack.getItem() == ModRegistry.BAMBOO_SPIKES_ITEM.get();
     }
 
     @Override
-    public boolean matches(CraftingInventory inv, World worldIn) {
+    public boolean matches(CraftingContainer inv, Level worldIn) {
 
         ItemStack itemstack = null;
         ItemStack itemstack1 = null;
@@ -57,7 +57,7 @@ public class TippedBambooSpikesRecipe extends SpecialRecipe {
 
 
     @Override
-    public ItemStack assemble(CraftingInventory inv) {
+    public ItemStack assemble(CraftingContainer inv) {
         Potion potion = Potions.EMPTY;
         for(int i = 0; i < inv.getContainerSize(); ++i) {
             Potion p = PotionUtils.getPotion(inv.getItem(i));
@@ -71,7 +71,7 @@ public class TippedBambooSpikesRecipe extends SpecialRecipe {
     }
 
     @Override
-    public NonNullList<ItemStack> getRemainingItems(CraftingInventory inv) {
+    public NonNullList<ItemStack> getRemainingItems(CraftingContainer inv) {
         return NonNullList.withSize(inv.getContainerSize(), ItemStack.EMPTY);
     }
 
@@ -81,7 +81,7 @@ public class TippedBambooSpikesRecipe extends SpecialRecipe {
     }
 
     @Override
-    public IRecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<?> getSerializer() {
         return ModRegistry.BAMBOO_SPIKES_TIPPED_RECIPE.get();
     }
 

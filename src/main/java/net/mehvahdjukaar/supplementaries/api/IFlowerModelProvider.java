@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.api;
 
-import net.minecraft.client.renderer.model.ModelResourceLocation;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 
 /**
  * implement this in your item class if it can provide a custom model to be displayed in flower boxes

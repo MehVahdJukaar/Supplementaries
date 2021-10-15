@@ -2,28 +2,28 @@ package net.mehvahdjukaar.supplementaries.inventories;
 
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
 
 
-public class SackContainer extends Container  {
-    public final IInventory inventory;
+public class SackContainer extends AbstractContainerMenu  {
+    public final Container inventory;
 
-    public SackContainer(int id, PlayerInventory playerInventory, PacketBuffer packetBuffer) {
+    public SackContainer(int id, Inventory playerInventory, FriendlyByteBuf packetBuffer) {
         this(id,playerInventory);
     }
 
-    public SackContainer(int id, PlayerInventory playerInventory) {
-        this(id, playerInventory, new Inventory(27));
+    public SackContainer(int id, Inventory playerInventory) {
+        this(id, playerInventory, new SimpleContainer(27));
     }
 
-    public SackContainer(int id, PlayerInventory playerInventory, IInventory inventory) {
+    public SackContainer(int id, Inventory playerInventory, Container inventory) {
 
         super(ModRegistry.SACK_CONTAINER.get(), id);
         //tile inventory
@@ -62,14 +62,14 @@ public class SackContainer extends Container  {
 
 
     @Override
-    public boolean stillValid(PlayerEntity playerIn) {
+    public boolean stillValid(Player playerIn) {
         return this.inventory.stillValid(playerIn);
     }
     /**
      * Handle when the stack in slot {@code index} is shift-clicked. Normally this moves the stack between the player
      * inventory and the other inventory(s).
      */
-    public ItemStack quickMoveStack(PlayerEntity playerIn, int index) {
+    public ItemStack quickMoveStack(Player playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
         if (slot != null && slot.hasItem()) {
@@ -98,7 +98,7 @@ public class SackContainer extends Container  {
     /**
      * Called when the container is closed.
      */
-    public void removed(PlayerEntity playerIn) {
+    public void removed(Player playerIn) {
         super.removed(playerIn);
         this.inventory.stopOpen(playerIn);
     }

@@ -1,22 +1,22 @@
 package net.mehvahdjukaar.supplementaries.client.particles;
 
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.client.particle.IParticleFactory;
-import net.minecraft.client.particle.MetaParticle;
+import net.minecraft.client.particle.ParticleProvider;
+import net.minecraft.client.particle.NoRenderParticle;
 import net.minecraft.client.particle.Particle;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.particles.BasicParticleType;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 
-public class BombExplosionEmitterParticle extends MetaParticle {
+public class BombExplosionEmitterParticle extends NoRenderParticle {
     private int timeSinceStart;
     private final int maximumTime = 8;
 
     private double radius;
 
-    private BombExplosionEmitterParticle(ClientWorld world, double x, double y, double z, double radius) {
+    private BombExplosionEmitterParticle(ClientLevel world, double x, double y, double z, double radius) {
         super(world, x, y, z, 0.0D, 0.0D, 0.0D);
         this.radius = radius;
     }
@@ -37,8 +37,8 @@ public class BombExplosionEmitterParticle extends MetaParticle {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public static class Factory implements IParticleFactory<BasicParticleType> {
-        public Particle createParticle(BasicParticleType typeIn, ClientWorld worldIn, double x, double y, double z, double radius, double ySpeed, double zSpeed) {
+    public static class Factory implements ParticleProvider<SimpleParticleType> {
+        public Particle createParticle(SimpleParticleType typeIn, ClientLevel worldIn, double x, double y, double z, double radius, double ySpeed, double zSpeed) {
             return new BombExplosionEmitterParticle(worldIn, x, y, z, radius);
         }
     }

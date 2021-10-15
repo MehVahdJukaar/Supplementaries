@@ -3,12 +3,12 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.supplementaries.block.util.IBlockHolder;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.FlowerPotBlock;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FlowerPotBlock;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.util.Constants;
 import org.jetbrains.annotations.Nullable;
 
@@ -61,24 +61,24 @@ public class HangingFlowerPotBlockTile extends SwayingBlockTile implements IBloc
 
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
+    public CompoundTag save(CompoundTag compound) {
         super.save(compound);
         //if(pot != Blocks.AIR.getDefaultState())
-        compound.put("Pot", NBTUtil.writeBlockState(pot));
+        compound.put("Pot", NbtUtils.writeBlockState(pot));
         this.saveOwner(compound);
         return compound;
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT compound) {
+    public void load(BlockState state, CompoundTag compound) {
         super.load(state, compound);
-        pot = NBTUtil.readBlockState(compound.getCompound("Pot"));
+        pot = NbtUtils.readBlockState(compound.getCompound("Pot"));
         this.loadOwner(compound);
     }
 
     @Override
-    public AxisAlignedBB getRenderBoundingBox() {
-        return new AxisAlignedBB(this.worldPosition);
+    public AABB getRenderBoundingBox() {
+        return new AABB(this.worldPosition);
     }
 
     @Override

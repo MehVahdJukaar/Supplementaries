@@ -10,15 +10,15 @@ import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.items.BurnableBlockItem;
 import net.mehvahdjukaar.supplementaries.items.FlagItem;
 import net.mehvahdjukaar.supplementaries.items.SignPostItem;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.BannerBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.material.MaterialColor;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.BannerBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.RegistryObject;
@@ -52,7 +52,7 @@ public class Variants {
         for(IWoodType wood : WoodTypes.TYPES.values()){
             String name = getHangingSignName(wood);
             map.put(wood, ModRegistry.BLOCKS.register(name, ()-> new HangingSignBlock(
-                    AbstractBlock.Properties.of(wood.getMaterial(), wood.getColor())
+                    BlockBehaviour.Properties.of(wood.getMaterial(), wood.getColor())
                             .strength(2f, 3f)
                             .sound(SoundType.WOOD)
                             .harvestTool(ToolType.AXE)
@@ -70,7 +70,7 @@ public class Variants {
             String name = getHangingSignName(wood);
             map.put(wood, ModRegistry.ITEMS.register(name, ()-> new BurnableBlockItem(ModRegistry.HANGING_SIGNS.get(wood).get(),
                     new Item.Properties().tab(!hasWoodInstalled(wood)?null:
-                            ModRegistry.getTab(ItemGroup.TAB_DECORATIONS, ModRegistry.HANGING_SIGN_NAME)),200
+                            ModRegistry.getTab(CreativeModeTab.TAB_DECORATIONS, ModRegistry.HANGING_SIGN_NAME)),200
             )));
         }
         return map;
@@ -88,7 +88,7 @@ public class Variants {
             String name = getSignPostName(wood);
             map.put(wood, ModRegistry.ITEMS.register(name, ()-> new SignPostItem(
                     new Item.Properties().tab(!hasWoodInstalled(wood)?null:
-                            ModRegistry.getTab(ItemGroup.TAB_DECORATIONS, ModRegistry.SIGN_POST_NAME)),wood
+                            ModRegistry.getTab(CreativeModeTab.TAB_DECORATIONS, ModRegistry.SIGN_POST_NAME)),wood
             )));
         }
         return map;
@@ -105,7 +105,7 @@ public class Variants {
         for(DyeColor color : DyeColor.values()){
             String name = baseName+"_"+color.getName();
             map.put(color, ModRegistry.BLOCKS.register(name, ()-> new FlagBlock(color,
-                    AbstractBlock.Properties.of(Material.WOOD, color.getMaterialColor())
+                    BlockBehaviour.Properties.of(Material.WOOD, color.getMaterialColor())
                             .strength(1.0F)
                             .noOcclusion()
                             .sound(SoundType.WOOD))
@@ -123,7 +123,7 @@ public class Variants {
                     new Item.Properties()
                             .stacksTo(16)
                             .setISTER(()-> FlagItemRenderer::new)
-                            .tab(ModRegistry.getTab(ItemGroup.TAB_DECORATIONS, ModRegistry.FLAG_NAME))
+                            .tab(ModRegistry.getTab(CreativeModeTab.TAB_DECORATIONS, ModRegistry.FLAG_NAME))
             )));
         }
         return map;
@@ -136,7 +136,7 @@ public class Variants {
         for(DyeColor color : DyeColor.values()){
             String name = baseName+"_"+color.getName();
             map.put(color, ModRegistry.BLOCKS.register(name, ()-> new CeilingBannerBlock(color,
-                    AbstractBlock.Properties.of(Material.WOOD, color.getMaterialColor())
+                    BlockBehaviour.Properties.of(Material.WOOD, color.getMaterialColor())
                             .strength(1.0F)
                             .noCollission()
                             .sound(SoundType.WOOD)
@@ -165,13 +165,13 @@ public class Variants {
         for(DyeColor color : DyeColor.values()){
             String name = baseName+"_"+color.getName();
             map.put(color, ModRegistry.BLOCKS.register(name, ()-> new PresentBlock(color,
-                            AbstractBlock.Properties.of(Material.WOOL, color.getMaterialColor())
+                            BlockBehaviour.Properties.of(Material.WOOL, color.getMaterialColor())
                                     .strength(1.0F)
                                     .sound(SoundType.WOOL))
             ));
         }
         map.put(null, ModRegistry.BLOCKS.register(baseName, ()-> new PresentBlock(null,
-                AbstractBlock.Properties.of(Material.WOOL, MaterialColor.WOOD)
+                BlockBehaviour.Properties.of(Material.WOOL, MaterialColor.WOOD)
                         .strength(1.0F)
                         .sound(SoundType.WOOL))
         ));

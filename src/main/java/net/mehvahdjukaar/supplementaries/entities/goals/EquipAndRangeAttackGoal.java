@@ -1,11 +1,11 @@
 package net.mehvahdjukaar.supplementaries.entities.goals;
 
 import net.mehvahdjukaar.supplementaries.entities.RedMerchantEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.util.Mth;
 
 import java.util.EnumSet;
 
@@ -60,7 +60,7 @@ public class EquipAndRangeAttackGoal extends Goal {
 
     @Override
     public void stop() {
-        this.mob.setItemSlot(EquipmentSlotType.MAINHAND, ItemStack.EMPTY);
+        this.mob.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
         this.target = null;
         this.seeTime = 0;
         this.attackTime = -1;
@@ -68,7 +68,7 @@ public class EquipAndRangeAttackGoal extends Goal {
 
     @Override
     public void start() {
-        this.mob.setItemSlot(EquipmentSlotType.MAINHAND, this.item.copy());
+        this.mob.setItemSlot(EquipmentSlot.MAINHAND, this.item.copy());
         super.start();
     }
 
@@ -95,14 +95,14 @@ public class EquipAndRangeAttackGoal extends Goal {
                 return;
             }
 
-            float f = MathHelper.sqrt(d0) / this.attackRadius;
-            float lvt_5_1_ = MathHelper.clamp(f, 0.1F, 1.0F);
+            float f = Mth.sqrt(d0) / this.attackRadius;
+            float lvt_5_1_ = Mth.clamp(f, 0.1F, 1.0F);
             this.mob.performRangedAttack(this.target, lvt_5_1_);
-            this.attackTime = MathHelper.floor(f * (float) (this.attackIntervalMax - this.attackIntervalMin) + (float) this.attackIntervalMin);
+            this.attackTime = Mth.floor(f * (float) (this.attackIntervalMax - this.attackIntervalMin) + (float) this.attackIntervalMin);
             this.mob.attackCooldown = cooldown + mob.getRandom().nextInt(20);
         } else if (this.attackTime < 0) {
-            float f2 = MathHelper.sqrt(d0) / this.attackRadius;
-            this.attackTime = MathHelper.floor(f2 * (float) (this.attackIntervalMax - this.attackIntervalMin) + (float) this.attackIntervalMin);
+            float f2 = Mth.sqrt(d0) / this.attackRadius;
+            this.attackTime = Mth.floor(f2 * (float) (this.attackIntervalMax - this.attackIntervalMin) + (float) this.attackIntervalMin);
         }
 
 

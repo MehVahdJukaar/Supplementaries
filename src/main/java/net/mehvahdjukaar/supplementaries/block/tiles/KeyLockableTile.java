@@ -4,25 +4,25 @@ import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.curios.SupplementariesCuriosPlugin;
 import net.mehvahdjukaar.supplementaries.items.KeyItem;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class KeyLockableTile extends TileEntity {
+public class KeyLockableTile extends BlockEntity {
 
     public String password = null;
 
@@ -55,7 +55,7 @@ public class KeyLockableTile extends TileEntity {
         NO_KEY
     }
 
-    public static KeyStatus hasKeyInInventory(PlayerEntity player, String key){
+    public static KeyStatus hasKeyInInventory(Player player, String key){
         KeyStatus found = KeyStatus.INCORRECT_KEY;
         if(CompatHandler.curios){
             found = SupplementariesCuriosPlugin.isKeyInCurio(player, key);
@@ -76,22 +76,22 @@ public class KeyLockableTile extends TileEntity {
         return found;
     }
 
-    public static boolean doesPlayerHaveKeyToOpen(PlayerEntity player, String lockPassword, boolean feedbackMessage, @Nullable String translName){
+    public static boolean doesPlayerHaveKeyToOpen(Player player, String lockPassword, boolean feedbackMessage, @Nullable String translName){
         KeyStatus key = hasKeyInInventory(player,lockPassword);
         if(key == KeyStatus.INCORRECT_KEY){
             if(feedbackMessage)
-                player.displayClientMessage(new TranslationTextComponent("message.supplementaries.safe.incorrect_key"), true);
+                player.displayClientMessage(new TranslatableComponent("message.supplementaries.safe.incorrect_key"), true);
             return false;
         }
         else if(key == KeyStatus.CORRECT_KEY)return true;
         if(feedbackMessage)
-            player.displayClientMessage(new TranslationTextComponent("message.supplementaries."+translName+".locked"), true);
+            player.displayClientMessage(new TranslatableComponent("message.supplementaries."+translName+".locked"), true);
         return false;
     }
 
 
     //returns true if door has to open
-    public boolean handleAction(PlayerEntity player, Hand handIn, String translName) {
+    public boolean handleAction(Player player, InteractionHand handIn, String translName) {
         if (player.isSpectator()) return false;
 
         ItemStack stack = player.getItemInHand(handIn);
@@ -101,18 +101,18 @@ public class KeyLockableTile extends TileEntity {
         //clear ownership
         if(player.isShiftKeyDown() && isKey && (player.isCreative() || this.isCorrectKey(stack))){
             this.clearOwner();
-            player.displayClientMessage(new TranslationTextComponent("message.supplementaries.safe.cleared"),true);
+            player.displayClientMessage(new TranslatableComponent("message.supplementaries.safe.cleared"),true);
             this.level.playSound(null, worldPosition.getX()+0.5, worldPosition.getY()+0.5, worldPosition.getZ()+0.5,
-                    SoundEvents.IRON_TRAPDOOR_OPEN, SoundCategory.BLOCKS, 0.5F, 1.5F);
+                    SoundEvents.IRON_TRAPDOOR_OPEN, SoundSource.BLOCKS, 0.5F, 1.5F);
             return false;
         }
         //set key
         else if(this.password==null){
             if(isKey) {
                 this.setPassword(stack);
-                player.displayClientMessage(new TranslationTextComponent("message.supplementaries.safe.assigned_key", this.password), true);
+                player.displayClientMessage(new TranslatableComponent("message.supplementaries.safe.assigned_key", this.password), true);
                 this.level.playSound(null, worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5,
-                        SoundEvents.IRON_TRAPDOOR_OPEN, SoundCategory.BLOCKS, 0.5F, 1.5F);
+                        SoundEvents.IRON_TRAPDOOR_OPEN, SoundSource.BLOCKS, 0.5F, 1.5F);
                 return false;
             }
             return true;
@@ -122,14 +122,14 @@ public class KeyLockableTile extends TileEntity {
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT compound) {
+    public void load(BlockState state, CompoundTag compound) {
         super.load(state, compound);
         if(compound.contains("Password"))
             this.password=compound.getString("Password");;
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
+    public CompoundTag save(CompoundTag compound) {
         super.save(compound);
         if(this.password!=null)
             compound.putString("Password",this.password);
@@ -137,17 +137,17 @@ public class KeyLockableTile extends TileEntity {
     }
 
     @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.worldPosition, 0, this.getUpdateTag());
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return new ClientboundBlockEntityDataPacket(this.worldPosition, 0, this.getUpdateTag());
     }
 
     @Override
-    public CompoundNBT getUpdateTag() {
-        return this.save(new CompoundNBT());
+    public CompoundTag getUpdateTag() {
+        return this.save(new CompoundTag());
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         this.load(this.getBlockState(), pkt.getTag());
     }
 }

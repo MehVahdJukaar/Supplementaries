@@ -5,30 +5,32 @@ import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.quark.QuarkPlugin;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.Container;
+import net.minecraft.world.Containers;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class BookPileBlock extends WaterBlock {
 
@@ -46,13 +48,13 @@ public class BookPileBlock extends WaterBlock {
     }
 
     @Override
-    public void setPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
-        TileEntity te = world.getBlockEntity(pos);
+    public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
+        BlockEntity te = world.getBlockEntity(pos);
 
         if (te instanceof BookPileBlockTile) {
             ItemStack copy = stack.copy();
             copy.setCount(1);
-            ((IInventory) te).setItem(state.getValue(BOOKS) - 1, copy);
+            ((Container) te).setItem(state.getValue(BOOKS) - 1, copy);
         }
     }
 
@@ -62,7 +64,7 @@ public class BookPileBlock extends WaterBlock {
     }
 
     @Override
-    public boolean canBeReplaced(BlockState state, BlockItemUseContext context) {
+    public boolean canBeReplaced(BlockState state, BlockPlaceContext context) {
         if (state.getValue(BOOKS) < 4) {
             Item item = context.getItemInHand().getItem();
             if (isAcceptedItem(item)) {
@@ -73,13 +75,13 @@ public class BookPileBlock extends WaterBlock {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(BOOKS);
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockState blockstate = context.getLevel().getBlockState(context.getClickedPos());
         if (blockstate.is(this)) {
             return blockstate.setValue(BOOKS, blockstate.getValue(BOOKS) + 1);
@@ -94,16 +96,16 @@ public class BookPileBlock extends WaterBlock {
     }
 
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
         return new BookPileBlockTile(false);
     }
 
     @Override
-    public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
-            TileEntity tileentity = world.getBlockEntity(pos);
+            BlockEntity tileentity = world.getBlockEntity(pos);
             if (tileentity instanceof BookPileBlockTile) {
-                InventoryHelper.dropContents(world, pos, (IInventory) tileentity);
+                Containers.dropContents(world, pos, (Container) tileentity);
                 world.updateNeighbourForOutputSignal(pos, this);
             }
             super.onRemove(state, world, pos, newState, isMoving);
@@ -111,21 +113,21 @@ public class BookPileBlock extends WaterBlock {
     }
 
     @Override
-    public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
-        TileEntity tileentity = world.getBlockEntity(pos);
+    public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+        BlockEntity tileentity = world.getBlockEntity(pos);
         if (tileentity instanceof BookPileBlockTile) {
-            return ((IInventory) tileentity).getItem(Math.max(0,state.getValue(BOOKS)-1));
+            return ((Container) tileentity).getItem(Math.max(0,state.getValue(BOOKS)-1));
         }
         return Items.BOOK.getDefaultInstance();
     }
 
     @Override
-    public BlockRenderType getRenderShape(BlockState state) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         switch (state.getValue(BOOKS)){
             default:
             case 1:
@@ -140,8 +142,8 @@ public class BookPileBlock extends WaterBlock {
     }
 
     @Override
-    public float getEnchantPowerBonus(BlockState state, IWorldReader world, BlockPos pos) {
-        TileEntity te = world.getBlockEntity(pos);
+    public float getEnchantPowerBonus(BlockState state, LevelReader world, BlockPos pos) {
+        BlockEntity te = world.getBlockEntity(pos);
         if(te instanceof BookPileBlockTile){
             return ((BookPileBlockTile) te).getEnchantPower();
         }

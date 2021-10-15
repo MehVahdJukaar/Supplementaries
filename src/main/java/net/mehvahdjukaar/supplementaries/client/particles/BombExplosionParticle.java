@@ -1,15 +1,15 @@
 package net.mehvahdjukaar.supplementaries.client.particles;
 
 import net.minecraft.client.particle.*;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.particles.BasicParticleType;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.particles.SimpleParticleType;
 
 
 
-public class BombExplosionParticle extends SpriteTexturedParticle {
-    private final IAnimatedSprite spriteWithAge;
+public class BombExplosionParticle extends TextureSheetParticle {
+    private final SpriteSet spriteWithAge;
 
-    private BombExplosionParticle(ClientWorld world, double x, double y, double z, double scale, IAnimatedSprite spriteWithAge) {
+    private BombExplosionParticle(ClientLevel world, double x, double y, double z, double scale, SpriteSet spriteWithAge) {
         super(world, x, y, z, 0.0D, 0.0D, 0.0D);
         this.lifetime = 5 + this.random.nextInt(4);
         float f = this.random.nextFloat() * 0.6F + 0.4F;
@@ -39,19 +39,19 @@ public class BombExplosionParticle extends SpriteTexturedParticle {
     }
 
     @Override
-    public IParticleRenderType getRenderType() {
-        return IParticleRenderType.PARTICLE_SHEET_LIT;
+    public ParticleRenderType getRenderType() {
+        return ParticleRenderType.PARTICLE_SHEET_LIT;
     }
 
 
-    public static class Factory implements IParticleFactory<BasicParticleType> {
-        private final IAnimatedSprite spriteSet;
-        public Factory(IAnimatedSprite sprite) {
+    public static class Factory implements ParticleProvider<SimpleParticleType> {
+        private final SpriteSet spriteSet;
+        public Factory(SpriteSet sprite) {
             this.spriteSet = sprite;
         }
 
         @Override
-        public Particle createParticle(BasicParticleType typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed,
+        public Particle createParticle(SimpleParticleType typeIn, ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed,
                                      double zSpeed) {
             return new BombExplosionParticle(worldIn, x, y, z, xSpeed, this.spriteSet);
         }

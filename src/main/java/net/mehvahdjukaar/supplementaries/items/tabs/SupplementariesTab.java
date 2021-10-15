@@ -1,10 +1,10 @@
 package net.mehvahdjukaar.supplementaries.items.tabs;
 
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 
-public class SupplementariesTab extends ItemGroup {
+public class SupplementariesTab extends CreativeModeTab {
 
     public SupplementariesTab(String label) {
         super(label);

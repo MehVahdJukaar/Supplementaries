@@ -5,25 +5,25 @@ import net.mehvahdjukaar.supplementaries.block.blocks.HourGlassBlock;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.texture.AtlasTexture;
-import net.minecraft.client.renderer.texture.MissingTextureSprite;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.Tags;
@@ -33,7 +33,7 @@ import java.util.stream.IntStream;
 
 import static net.mehvahdjukaar.supplementaries.common.Textures.*;
 
-public class HourGlassBlockTile extends ItemDisplayTile implements ITickableTileEntity {
+public class HourGlassBlockTile extends ItemDisplayTile implements TickableBlockEntity {
     public HourGlassSandType sandType = HourGlassSandType.DEFAULT;
     public float progress = 0; //0-1 percentage of progress
     public float prevProgress = 0;
@@ -98,7 +98,7 @@ public class HourGlassBlockTile extends ItemDisplayTile implements ITickableTile
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT compound) {
+    public void load(BlockState state, CompoundTag compound) {
         super.load(state, compound);
         int i = compound.getInt("SandType");
         this.sandType = HourGlassSandType.values()[Math.min(i, HourGlassSandType.values().length)];
@@ -108,7 +108,7 @@ public class HourGlassBlockTile extends ItemDisplayTile implements ITickableTile
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
+    public CompoundTag save(CompoundTag compound) {
         super.save(compound);
         compound.putInt("SandType", this.sandType.ordinal());
         compound.putFloat("Progress", this.progress);
@@ -117,8 +117,8 @@ public class HourGlassBlockTile extends ItemDisplayTile implements ITickableTile
     }
 
     @Override
-    public ITextComponent getDefaultName() {
-        return new TranslationTextComponent("block.supplementaries.hourglass");
+    public Component getDefaultName() {
+        return new TranslatableComponent("block.supplementaries.hourglass");
     }
 
 
@@ -187,18 +187,18 @@ public class HourGlassBlockTile extends ItemDisplayTile implements ITickableTile
             return 0;
         }
 
-        public TextureAtlasSprite getSprite(ItemStack i, World world) {
+        public TextureAtlasSprite getSprite(ItemStack i, Level world) {
             Minecraft mc = Minecraft.getInstance();
             if (this == FORGE_DUST || this == SAND || this == CONCRETE) {
                 ItemRenderer itemRenderer = mc.getItemRenderer();
-                IBakedModel ibakedmodel = itemRenderer.getModel(i, world, null);
+                BakedModel ibakedmodel = itemRenderer.getModel(i, world, null);
                 TextureAtlasSprite sprite = ibakedmodel.getParticleIcon();
-                if (sprite instanceof MissingTextureSprite)
-                    sprite = mc.getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(this.texture);
+                if (sprite instanceof MissingTextureAtlasSprite)
+                    sprite = mc.getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(this.texture);
                 return sprite;
 
             }
-            return mc.getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(this.texture);
+            return mc.getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(this.texture);
         }
 
         public static HourGlassSandType getHourGlassSandType(Item i) {

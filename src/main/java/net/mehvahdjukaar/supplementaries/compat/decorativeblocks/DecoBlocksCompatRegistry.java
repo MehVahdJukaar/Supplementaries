@@ -5,12 +5,12 @@ import com.lilypuree.decorative_blocks.blocks.PalisadeBlock;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.CompatObjects;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.particles.ParticleTypes;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -38,7 +38,7 @@ public class DecoBlocksCompatRegistry {
 
     public static void registerBlocks(RegistryEvent.Register<Block> event){
         IForgeRegistry<Block> reg = event.getRegistry();
-        reg.register(new RopeChandelierBlock(AbstractBlock.Properties.of(Material.DECORATION)
+        reg.register(new RopeChandelierBlock(BlockBehaviour.Properties.of(Material.DECORATION)
                 .strength(0.3F)
                 .sound(SoundType.WOOD)
                 .noOcclusion()

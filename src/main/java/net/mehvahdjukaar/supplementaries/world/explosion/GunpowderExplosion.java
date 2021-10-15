@@ -8,27 +8,35 @@ import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.decorativeblocks.DecoBlocksCompatRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.*;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootParameters;
-import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.Explosion;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import net.minecraft.world.level.Explosion.BlockInteraction;
+import net.minecraft.world.level.block.BaseFireBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CampfireBlock;
+import net.minecraft.world.level.block.TntBlock;
+import net.minecraft.world.level.block.state.BlockState;
 
 ;
 
@@ -41,15 +49,15 @@ import java.util.List;
  */
 public class GunpowderExplosion extends Explosion {
 
-	private final World level;
+	private final Level level;
 	private final double x;
 	private final double y;
 	private final double z;
 	private float radius;
 	private final List<BlockPos> toBlow = new ArrayList<>();
 
-	public GunpowderExplosion(World world, Entity entity, double x, double y, double z, float size) {
-		super(world, entity, null, null, x, y, z, size, false, Mode.DESTROY);
+	public GunpowderExplosion(Level world, Entity entity, double x, double y, double z, float size) {
+		super(world, entity, null, null, x, y, z, size, false, BlockInteraction.DESTROY);
 		this.level = world;
 		this.radius = size;
 		this.x = x;
@@ -63,9 +71,9 @@ public class GunpowderExplosion extends Explosion {
 	 */
 	@Override
 	public void explode() {
-		int x = MathHelper.floor(this.x);
-		int y = MathHelper.floor(this.y);
-		int z = MathHelper.floor(this.z);
+		int x = Mth.floor(this.x);
+		int y = Mth.floor(this.y);
+		int z = Mth.floor(this.z);
 
 		this.radius *= 2.0F;
 
@@ -79,7 +87,7 @@ public class GunpowderExplosion extends Explosion {
 		explodeBlock(x, y, z - 1);
 
 		BlockPos pos = new BlockPos(x,y,z);
-		BlockState newFire = AbstractFireBlock.getState(this.level, pos);
+		BlockState newFire = BaseFireBlock.getState(this.level, pos);
 		if (this.hasFlammableNeighbours(pos) || this.level.getBlockState(pos.below()).isFireSource(level, pos, Direction.UP)
 				|| newFire.getBlock() != Blocks.FIRE) {
 			this.level.setBlockAndUpdate(pos, newFire);
@@ -109,7 +117,7 @@ public class GunpowderExplosion extends Explosion {
 
 
 			if (block.getExplosionResistance(state, this.level, pos, this) == 0) {
-				if (!block.isAir(state, level, pos) && block != Blocks.FIRE && block instanceof TNTBlock) {
+				if (!block.isAir(state, level, pos) && block != Blocks.FIRE && block instanceof TntBlock) {
 					this.toBlow.add(pos);
 				}
 			}
@@ -138,13 +146,13 @@ public class GunpowderExplosion extends Explosion {
 
 			BlockPos immutable = blockpos.immutable();
 			this.level.getProfiler().push("explosion_blocks");
-			if (blockstate.canDropFromExplosion(this.level, blockpos, this) && this.level instanceof ServerWorld) {
-				TileEntity tileentity = blockstate.hasTileEntity() ? this.level.getBlockEntity(blockpos) : null;
-				LootContext.Builder builder = (new LootContext.Builder((ServerWorld)this.level)).withRandom(this.level.random)
-						.withParameter(LootParameters.ORIGIN, Vector3d.atCenterOf(blockpos)).withParameter(LootParameters.TOOL, ItemStack.EMPTY)
-						.withOptionalParameter(LootParameters.BLOCK_ENTITY, tileentity).withOptionalParameter(LootParameters.THIS_ENTITY, null);
+			if (blockstate.canDropFromExplosion(this.level, blockpos, this) && this.level instanceof ServerLevel) {
+				BlockEntity tileentity = blockstate.hasTileEntity() ? this.level.getBlockEntity(blockpos) : null;
+				LootContext.Builder builder = (new LootContext.Builder((ServerLevel)this.level)).withRandom(this.level.random)
+						.withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(blockpos)).withParameter(LootContextParams.TOOL, ItemStack.EMPTY)
+						.withOptionalParameter(LootContextParams.BLOCK_ENTITY, tileentity).withOptionalParameter(LootContextParams.THIS_ENTITY, null);
 
-				builder.withParameter(LootParameters.EXPLOSION_RADIUS, this.radius);
+				builder.withParameter(LootContextParams.EXPLOSION_RADIUS, this.radius);
 
 				blockstate.getDrops(builder).forEach((d) -> addBlockDrops(drops, d, immutable));
 			}

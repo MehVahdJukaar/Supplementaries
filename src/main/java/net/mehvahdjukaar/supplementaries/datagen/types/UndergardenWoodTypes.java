@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.datagen.types;
 
-import net.minecraft.block.material.Material;
-import net.minecraft.block.material.MaterialColor;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
 
 public enum UndergardenWoodTypes implements IWoodType {
     GRONGLE("grongle", MaterialColor.CRIMSON_STEM, Material.NETHER_WOOD),

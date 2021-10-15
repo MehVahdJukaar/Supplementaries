@@ -3,10 +3,10 @@ package net.mehvahdjukaar.supplementaries.configs;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.SyncConfigsPacket;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.management.PlayerList;
+import net.minecraft.server.players.PlayerList;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -98,7 +98,7 @@ public class ConfigHandler {
         if (currentServer != null) {
             final PlayerList playerList = currentServer.getPlayerList();
             if (playerList != null) {
-                for (ServerPlayerEntity player : playerList.getPlayers()) {
+                for (ServerPlayer player : playerList.getPlayers()) {
                     syncServerConfigs(player);
                 }
             }
@@ -106,10 +106,10 @@ public class ConfigHandler {
 
     }
 
-    public static void syncServerConfigs(PlayerEntity player) {
+    public static void syncServerConfigs(Player player) {
         try {
             final byte[] configData = Files.readAllBytes(getServerConfigPath());
-            NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player),
+            NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
                     new SyncConfigsPacket(configData));
         } catch (IOException e) {
             Supplementaries.LOGGER.error(Supplementaries.MOD_ID+ ": Failed to sync common configs", e);

@@ -1,24 +1,24 @@
 package net.mehvahdjukaar.supplementaries.items.crafting;
 
 import net.mehvahdjukaar.supplementaries.items.FlagItem;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.item.BannerItem;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.SpecialRecipe;
-import net.minecraft.tileentity.BannerTileEntity;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.BannerItem;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.CustomRecipe;
+import net.minecraft.world.level.block.entity.BannerBlockEntity;
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 
-public class FlagFromBannerRecipe extends SpecialRecipe {
+public class FlagFromBannerRecipe extends CustomRecipe {
     public FlagFromBannerRecipe(ResourceLocation idIn) {
         super(idIn);
     }
 
-    public boolean matches(CraftingInventory inv, World world) {
+    public boolean matches(CraftingContainer inv, Level world) {
         DyeColor dyecolor = null;
         ItemStack withPatterns = null;
         ItemStack empty = null;
@@ -34,7 +34,7 @@ public class FlagFromBannerRecipe extends SpecialRecipe {
                     return false;
                 }
 
-                int j = BannerTileEntity.getPatternCount(itemstack2);
+                int j = BannerBlockEntity.getPatternCount(itemstack2);
                 if (j > 6) {
                     return false;
                 }
@@ -63,7 +63,7 @@ public class FlagFromBannerRecipe extends SpecialRecipe {
                     return false;
                 }
 
-                int j = BannerTileEntity.getPatternCount(itemstack2);
+                int j = BannerBlockEntity.getPatternCount(itemstack2);
                 if (j > 6) {
                     return false;
                 }
@@ -87,11 +87,11 @@ public class FlagFromBannerRecipe extends SpecialRecipe {
         return withPatterns != null && empty != null;
     }
 
-    public ItemStack assemble(CraftingInventory inv) {
+    public ItemStack assemble(CraftingContainer inv) {
         for(int i = 0; i < inv.getContainerSize(); ++i) {
             ItemStack withPatterns = inv.getItem(i);
             if (!withPatterns.isEmpty()) {
-                int j = BannerTileEntity.getPatternCount(withPatterns);
+                int j = BannerBlockEntity.getPatternCount(withPatterns);
                 //find item with patterns
                 if (j > 0 && j <= 6) {
                     for(int k = 0; k < inv.getContainerSize(); ++k) {
@@ -117,7 +117,7 @@ public class FlagFromBannerRecipe extends SpecialRecipe {
         return ItemStack.EMPTY;
     }
 
-    public NonNullList<ItemStack> getRemainingItems(CraftingInventory inv) {
+    public NonNullList<ItemStack> getRemainingItems(CraftingContainer inv) {
         NonNullList<ItemStack> nonnulllist = NonNullList.withSize(inv.getContainerSize(), ItemStack.EMPTY);
 
         for(int i = 0; i < nonnulllist.size(); ++i) {
@@ -125,7 +125,7 @@ public class FlagFromBannerRecipe extends SpecialRecipe {
             if (!itemstack.isEmpty()) {
                 if (itemstack.hasContainerItem()) {
                     nonnulllist.set(i, itemstack.getContainerItem());
-                } else if (itemstack.hasTag() && BannerTileEntity.getPatternCount(itemstack) > 0) {
+                } else if (itemstack.hasTag() && BannerBlockEntity.getPatternCount(itemstack) > 0) {
                     ItemStack itemstack1 = itemstack.copy();
                     itemstack1.setCount(1);
                     nonnulllist.set(i, itemstack1);
@@ -136,8 +136,8 @@ public class FlagFromBannerRecipe extends SpecialRecipe {
         return nonnulllist;
     }
 
-    public IRecipeSerializer<?> getSerializer() {
-        return IRecipeSerializer.BANNER_DUPLICATE;
+    public RecipeSerializer<?> getSerializer() {
+        return RecipeSerializer.BANNER_DUPLICATE;
     }
 
     public boolean canCraftInDimensions(int width, int height) {

@@ -20,7 +20,30 @@
     "ilikewood:stripped_crimson_post",
     "ilikewood:stripped_warped_post",
     "#ilikewood:stripped_posts",
-    "simplefarming:fruit_log"
+    "simplefarming:fruit_log",
+
+    "mysticalworld:amethyst_wide_post",
+    "mysticalworld:blackened_stone_wide_post",
+    "mysticalworld:brown_mushroom_wide_post",
+    "mysticalworld:charred_wide_post",
+    "mysticalworld:copper_wide_post",
+    "mysticalworld:cracked_stone_wide_post",
+    "mysticalworld:iron_brick_wide_post",
+    "mysticalworld:lead_wide_post",
+    "mysticalworld:mud_block_wide_post",
+    "mysticalworld:mud_brick_wide_post",
+    "mysticalworld:mushroom_inside_wide_post",
+    "mysticalworld:mushroom_stem_wide_post",
+    "mysticalworld:pearl_wide_post",
+    "mysticalworld:quicksilver_wide_post",
+    "mysticalworld:red_mushroom_wide_post",
+    "mysticalworld:silver_wide_post",
+    "mysticalworld:soft_obsidian_wide_post",
+    "mysticalworld:soft_stone_wide_post",
+    "mysticalworld:terracotta_brick_wide_post",
+    "mysticalworld:thatch_wide_post",
+    "mysticalworld:tin_wide_post",
+    "mysticalworld:uncanny_mushroom_wide_post"
   ],
   "values": [
     "#minecraft:walls"

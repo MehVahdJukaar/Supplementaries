@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.*;
 
@@ -41,7 +41,7 @@ public class SpecialPlayers {
         }
         if (isDev) {
             if (onlineId != null) DEVS.add(onlineId);
-            DEVS.add(PlayerEntity.createPlayerUUID(name));
+            DEVS.add(Player.createPlayerUUID(name));
 
         }
         if (hasGlobe) {

@@ -1,15 +1,15 @@
 package net.mehvahdjukaar.supplementaries.client.particles;
 
 import net.minecraft.client.particle.*;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.particles.BasicParticleType;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.particles.SimpleParticleType;
 
-public class BottlingXpParticle extends SpriteTexturedParticle {
+public class BottlingXpParticle extends TextureSheetParticle {
     private final double xStart;
     private final double yStart;
     private final double zStart;
 
-    protected BottlingXpParticle(ClientWorld world, double x, double y, double z, double xd, double yd, double zd) {
+    protected BottlingXpParticle(ClientLevel world, double x, double y, double z, double xd, double yd, double zd) {
         super(world, x, y, z);
         this.xd = xd;
         this.yd = yd;
@@ -30,8 +30,8 @@ public class BottlingXpParticle extends SpriteTexturedParticle {
         this.lifetime = (int)(Math.random() * 8.0D) + 5;
     }
 
-    public IParticleRenderType getRenderType() {
-        return IParticleRenderType.PARTICLE_SHEET_OPAQUE;
+    public ParticleRenderType getRenderType() {
+        return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
     }
 
     public void move(double p_187110_1_, double p_187110_3_, double p_187110_5_) {
@@ -79,15 +79,15 @@ public class BottlingXpParticle extends SpriteTexturedParticle {
         }
     }
 
-    public static class Factory implements IParticleFactory<BasicParticleType> {
-        private final IAnimatedSprite sprite;
+    public static class Factory implements ParticleProvider<SimpleParticleType> {
+        private final SpriteSet sprite;
 
-        public Factory(IAnimatedSprite spriteSet) {
+        public Factory(SpriteSet spriteSet) {
             this.sprite = spriteSet;
         }
 
         @Override
-        public Particle createParticle(BasicParticleType typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+        public Particle createParticle(SimpleParticleType typeIn, ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
             BottlingXpParticle particle = new BottlingXpParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed);
             particle.pickSprite(this.sprite);
             return particle;

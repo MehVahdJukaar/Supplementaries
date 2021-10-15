@@ -18,12 +18,12 @@ import net.mehvahdjukaar.supplementaries.network.commands.ModCommands;
 import net.mehvahdjukaar.supplementaries.world.data.map.CMDreg;
 import net.mehvahdjukaar.supplementaries.world.structures.StructureLocator;
 import net.mehvahdjukaar.supplementaries.world.structures.StructureRegistry;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.ComposterBlock;
-import net.minecraft.block.FlowerPotBlock;
-import net.minecraft.entity.merchant.villager.VillagerProfession;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ComposterBlock;
+import net.minecraft.world.level.block.FlowerPotBlock;
+import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.BasicTrade;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -138,7 +138,7 @@ public class ModSetup {
     public static void villagerTradesEvent(VillagerTradesEvent ev) {
         if (RegistryConfigs.reg.FLAX_ENABLED.get()) {
             if (ev.getType().equals(VillagerProfession.FARMER)) {
-                ev.getTrades().get(3).add(new BasicTrade(new ItemStack(ModRegistry.FLAX_SEEDS_ITEM.get(), 15), new ItemStack(net.minecraft.item.Items.EMERALD), 16, 2, 0.05f));
+                ev.getTrades().get(3).add(new BasicTrade(new ItemStack(ModRegistry.FLAX_SEEDS_ITEM.get(), 15), new ItemStack(net.minecraft.world.item.Items.EMERALD), 16, 2, 0.05f));
             }
         }
         AdventurerMapsHandler.loadCustomTrades();

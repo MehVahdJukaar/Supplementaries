@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.datagen.types;
 
-import net.minecraft.block.material.MaterialColor;
+import net.minecraft.world.level.material.MaterialColor;
 
 public enum MowzieMobsWoodTypes implements IWoodType {
     PAINTED_ACACIA("painted_acacia", MaterialColor.COLOR_ORANGE);

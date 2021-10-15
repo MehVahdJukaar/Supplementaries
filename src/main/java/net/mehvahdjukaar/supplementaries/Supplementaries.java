@@ -9,7 +9,7 @@ import net.mehvahdjukaar.supplementaries.setup.ClientSetup;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModSetup;
 import net.mehvahdjukaar.supplementaries.world.structures.StructureRegistry;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
@@ -39,16 +39,11 @@ public class Supplementaries {
 
     public Supplementaries() {
 
-
-        //TODO: fix candelabra duping?
+        //TODO: fish bucket on cages a
 
         //yes this is where I write crap. deal with it XD
 
-        //TODO: add server protections for signs
-
         //todo: fix projectile hitbox being a single point on y = 0
-
-        //TODO: rewrite mob holder fixing tickable particles
 
         //randomium name change
 
@@ -63,6 +58,12 @@ public class Supplementaries {
         //TODO: more flywheel stuff
 
         //TODO: improve feather particle
+
+        //use feather particle on spriggans
+
+        //flute 3d model and more uses
+
+        //TODO: fix JER loot tables percentages
 
         //zipline mod ropewalk
 

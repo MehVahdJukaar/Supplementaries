@@ -5,11 +5,11 @@ import net.mehvahdjukaar.supplementaries.block.util.IMapDisplay;
 import net.mehvahdjukaar.supplementaries.block.util.ITextHolder;
 import net.mehvahdjukaar.supplementaries.block.util.TextHolder;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.NonNullList;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.NonNullList;
 import net.minecraftforge.common.util.Constants;
 import org.jetbrains.annotations.Nullable;
 
@@ -65,20 +65,20 @@ public class HangingSignBlockTile extends SwayingBlockTile implements IMapDispla
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT compound) {
+    public void load(BlockState state, CompoundTag compound) {
         super.load(state, compound);
 
         this.stacks = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
-        ItemStackHelper.loadAllItems(compound, this.stacks);
+        ContainerHelper.loadAllItems(compound, this.stacks);
 
         this.textHolder.read(compound);
         this.loadOwner(compound);
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
+    public CompoundTag save(CompoundTag compound) {
         super.save(compound);
-        ItemStackHelper.saveAllItems(compound, this.stacks);
+        ContainerHelper.saveAllItems(compound, this.stacks);
 
         this.textHolder.write(compound);
         this.saveOwner(compound);
@@ -106,7 +106,7 @@ public class HangingSignBlockTile extends SwayingBlockTile implements IMapDispla
     }
 
     public ItemStack removeStackFromSlot(int index) {
-        return ItemStackHelper.takeItem(this.getItems(), index);
+        return ContainerHelper.takeItem(this.getItems(), index);
     }
 
     public ItemStack getStackInSlot(int index) {

@@ -3,23 +3,29 @@ package net.mehvahdjukaar.supplementaries.setup;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.minecraft.enchantment.EnchantmentData;
-import net.minecraft.item.EnchantedBookItem;
-import net.minecraft.item.Items;
+import net.minecraft.world.item.enchantment.EnchantmentInstance;
+import net.minecraft.world.item.EnchantedBookItem;
+import net.minecraft.world.item.Items;
 import net.minecraft.loot.*;
-import net.minecraft.loot.conditions.RandomChance;
-import net.minecraft.loot.functions.SetCount;
-import net.minecraft.loot.functions.SetDamage;
-import net.minecraft.loot.functions.SetNBT;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Util;
+import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
+import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
+import net.minecraft.world.level.storage.loot.functions.SetItemDamageFunction;
+import net.minecraft.world.level.storage.loot.functions.SetNbtFunction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.Util;
 import net.minecraftforge.event.LootTableLoadEvent;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.regex.Pattern;
+
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.world.level.storage.loot.ConstantIntValue;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.RandomValueBounds;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
 
 public class LootTableStuff {
 
@@ -88,49 +94,49 @@ public class LootTableStuff {
         private static final Pattern RS_SHIPWRECK = Pattern.compile("repurposed_structures:chests/shipwreck/\\w*/treasure_chest");
 
         private static boolean isShipwreck(String s) {
-            return s.equals(LootTables.SHIPWRECK_TREASURE.toString()) || RS && RS_SHIPWRECK.matcher(s).matches();
+            return s.equals(BuiltInLootTables.SHIPWRECK_TREASURE.toString()) || RS && RS_SHIPWRECK.matcher(s).matches();
         }
 
         private static final Pattern RS_SHIPWRECK_STORAGE = Pattern.compile("repurposed_structures:chests/shipwreck/\\w*/supply_chest");
 
         private static boolean isShipwreckStorage(String s) {
-            return s.equals(LootTables.SHIPWRECK_SUPPLY.toString()) || RS && RS_SHIPWRECK_STORAGE.matcher(s).matches();
+            return s.equals(BuiltInLootTables.SHIPWRECK_SUPPLY.toString()) || RS && RS_SHIPWRECK_STORAGE.matcher(s).matches();
         }
 
         private static boolean isMineshaft(String s) {
-            return s.equals(LootTables.ABANDONED_MINESHAFT.toString()) || RS && s.contains("repurposed_structures:chests/mineshaft");
+            return s.equals(BuiltInLootTables.ABANDONED_MINESHAFT.toString()) || RS && s.contains("repurposed_structures:chests/mineshaft");
         }
 
         private static boolean isOutpost(String s) {
-            return s.equals(LootTables.PILLAGER_OUTPOST.toString()) || RS && s.contains("repurposed_structures:chests/outpost");
+            return s.equals(BuiltInLootTables.PILLAGER_OUTPOST.toString()) || RS && s.contains("repurposed_structures:chests/outpost");
         }
 
         private static boolean isDungeon(String s) {
-            return s.equals(LootTables.SIMPLE_DUNGEON.toString()) || RS && s.contains("repurposed_structures:chests/dungeon");
+            return s.equals(BuiltInLootTables.SIMPLE_DUNGEON.toString()) || RS && s.contains("repurposed_structures:chests/dungeon");
         }
 
         private static final Pattern RS_TEMPLE = Pattern.compile("repurposed_structures:chests/temple/\\w*_chest");
 
         private static boolean isTemple(String s) {
-            return s.equals(LootTables.JUNGLE_TEMPLE.toString()) || RS && RS_TEMPLE.matcher(s).matches();
+            return s.equals(BuiltInLootTables.JUNGLE_TEMPLE.toString()) || RS && RS_TEMPLE.matcher(s).matches();
         }
 
         private static final Pattern RS_TEMPLE_DISPENSER = Pattern.compile("repurposed_structures:chests/temple/\\w*_dispenser");
 
         private static boolean isTempleDispenser(String s) {
-            return s.equals(LootTables.JUNGLE_TEMPLE.toString()) || RS && RS_TEMPLE_DISPENSER.matcher(s).matches();
+            return s.equals(BuiltInLootTables.JUNGLE_TEMPLE.toString()) || RS && RS_TEMPLE_DISPENSER.matcher(s).matches();
         }
 
         private static boolean isStronghold(String s) {
-            return s.equals(LootTables.STRONGHOLD_CROSSING.toString()) || RS && s.contains("repurposed_structures:chests/stronghold/nether_storage_room");
+            return s.equals(BuiltInLootTables.STRONGHOLD_CROSSING.toString()) || RS && s.contains("repurposed_structures:chests/stronghold/nether_storage_room");
         }
 
         private static boolean isFortress(String s) {
-            return s.equals(LootTables.NETHER_BRIDGE.toString()) || RS && s.contains("repurposed_structures:chests/fortress");
+            return s.equals(BuiltInLootTables.NETHER_BRIDGE.toString()) || RS && s.contains("repurposed_structures:chests/fortress");
         }
 
         private static boolean isEndCity(String s) {
-            return s.equals(LootTables.END_CITY_TREASURE.toString());
+            return s.equals(BuiltInLootTables.END_CITY_TREASURE.toString());
         }
     }
 
@@ -140,9 +146,9 @@ public class LootTableStuff {
             float chance = (float) ServerConfigs.cached.GLOBE_TREASURE_CHANCE;
             LootPool pool = LootPool.lootPool()
                     .name("supplementaries_injected_globe")
-                    .setRolls(ConstantRange.exactly(1))
-                    .when(RandomChance.randomChance(chance))
-                    .add(ItemLootEntry.lootTableItem(ModRegistry.GLOBE_ITEM.get()).setWeight(1))
+                    .setRolls(ConstantIntValue.exactly(1))
+                    .when(LootItemRandomChanceCondition.randomChance(chance))
+                    .add(LootItem.lootTableItem(ModRegistry.GLOBE_ITEM.get()).setWeight(1))
                     .build();
             e.getTable().addPool(pool);
         }
@@ -154,10 +160,10 @@ public class LootTableStuff {
             float chance = 0.35f;
             LootPool pool = LootPool.lootPool()
                     .name("supplementaries_injected_rope")
-                    .apply(SetCount.setCount(RandomValueRange.between(5.0F, 17.0F)))
-                    .setRolls(ConstantRange.exactly(1))
-                    .when(RandomChance.randomChance(chance))
-                    .add(ItemLootEntry.lootTableItem(ModRegistry.ROPE_ITEM.get()).setWeight(1))
+                    .apply(SetItemCountFunction.setCount(RandomValueBounds.between(5.0F, 17.0F)))
+                    .setRolls(ConstantIntValue.exactly(1))
+                    .when(LootItemRandomChanceCondition.randomChance(chance))
+                    .add(LootItem.lootTableItem(ModRegistry.ROPE_ITEM.get()).setWeight(1))
                     .build();
             e.getTable().addPool(pool);
         }
@@ -181,10 +187,10 @@ public class LootTableStuff {
 
         LootPool pool = LootPool.lootPool()
                 .name("supplementaries_injected_flax")
-                .apply(SetCount.setCount(RandomValueRange.between(min, max)))
-                .setRolls(ConstantRange.exactly(1))
-                .when(RandomChance.randomChance(chance))
-                .add(ItemLootEntry.lootTableItem(ModRegistry.FLAX_SEEDS_ITEM.get()).setWeight(1))
+                .apply(SetItemCountFunction.setCount(RandomValueBounds.between(min, max)))
+                .setRolls(ConstantIntValue.exactly(1))
+                .when(LootItemRandomChanceCondition.randomChance(chance))
+                .add(LootItem.lootTableItem(ModRegistry.FLAX_SEEDS_ITEM.get()).setWeight(1))
                 .build();
         e.getTable().addPool(pool);
     }
@@ -205,9 +211,9 @@ public class LootTableStuff {
 
         LootPool pool = LootPool.lootPool()
                 .name("supplementaries_injected_blue_bomb")
-                .setRolls(ConstantRange.exactly(1))
-                .when(RandomChance.randomChance(chance))
-                .add(ItemLootEntry.lootTableItem(ModRegistry.BOMB_BLUE_ITEM.get()).setWeight(1))
+                .setRolls(ConstantIntValue.exactly(1))
+                .when(LootItemRandomChanceCondition.randomChance(chance))
+                .add(LootItem.lootTableItem(ModRegistry.BOMB_BLUE_ITEM.get()).setWeight(1))
                 .build();
         e.getTable().addPool(pool);
 
@@ -226,9 +232,9 @@ public class LootTableStuff {
         } else return;
         LootPool pool = LootPool.lootPool()
                 .name("supplementaries_injected_bomb")
-                .apply(SetCount.setCount(RandomValueRange.between(1F, 3.0F)))
-                .when(RandomChance.randomChance(chance))
-                .add(ItemLootEntry.lootTableItem(ModRegistry.BOMB_ITEM.get()).setWeight(1))
+                .apply(SetItemCountFunction.setCount(RandomValueBounds.between(1F, 3.0F)))
+                .when(LootItemRandomChanceCondition.randomChance(chance))
+                .add(LootItem.lootTableItem(ModRegistry.BOMB_ITEM.get()).setWeight(1))
                 .build();
         e.getTable().addPool(pool);
     }
@@ -239,14 +245,14 @@ public class LootTableStuff {
             float chance = 0.38f;
             LootPool pool = LootPool.lootPool()
                     .name("supplementaries_injected_spikes")
-                    .setRolls(ConstantRange.exactly(1))
-                    .when(RandomChance.randomChance(chance))
-                    .add(ItemLootEntry.lootTableItem(ModRegistry.BAMBOO_SPIKES_ITEM.get()).setWeight(4))
-                    .add(ItemLootEntry.lootTableItem(ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get()).setWeight(3)
-                            .apply(SetNBT.setTag(
-                                    Util.make(new CompoundNBT(), (c) -> c.putString("Potion", "minecraft:poison"))
+                    .setRolls(ConstantIntValue.exactly(1))
+                    .when(LootItemRandomChanceCondition.randomChance(chance))
+                    .add(LootItem.lootTableItem(ModRegistry.BAMBOO_SPIKES_ITEM.get()).setWeight(4))
+                    .add(LootItem.lootTableItem(ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get()).setWeight(3)
+                            .apply(SetNbtFunction.setTag(
+                                    Util.make(new CompoundTag(), (c) -> c.putString("Potion", "minecraft:poison"))
                             ))
-                            .apply(SetDamage.setDamage(RandomValueRange.between(0.2F, 0.9F)))
+                            .apply(SetItemDamageFunction.setDamage(RandomValueBounds.between(0.2F, 0.9F)))
                     )
                     .build();
             e.getTable().addPool(pool);
@@ -260,11 +266,11 @@ public class LootTableStuff {
 
             LootPool pool = LootPool.lootPool()
                     .name("supplementaries_injected_stasis")
-                    .setRolls(ConstantRange.exactly(1))
-                    .when(RandomChance.randomChance(chance))
-                    .add(ItemLootEntry.lootTableItem(Items.ENCHANTED_BOOK)
-                            .apply(SetNBT.setTag(
-                                    (EnchantedBookItem.createForEnchantment(new EnchantmentData(ModRegistry.STASIS_ENCHANTMENT.get(), 1)))
+                    .setRolls(ConstantIntValue.exactly(1))
+                    .when(LootItemRandomChanceCondition.randomChance(chance))
+                    .add(LootItem.lootTableItem(Items.ENCHANTED_BOOK)
+                            .apply(SetNbtFunction.setTag(
+                                    (EnchantedBookItem.createForEnchantment(new EnchantmentInstance(ModRegistry.STASIS_ENCHANTMENT.get(), 1)))
                                     .getOrCreateTag()
                             ))
                             .setWeight(1))

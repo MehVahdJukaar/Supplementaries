@@ -7,16 +7,16 @@ import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.common.mobholder.MobContainer;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class JarTab extends ItemGroup {
+public class JarTab extends CreativeModeTab {
 
     public JarTab(String label) {
         super(label);
@@ -27,7 +27,7 @@ public class JarTab extends ItemGroup {
         ItemStack icon = new ItemStack(ModRegistry.JAR_ITEM.get());
         SoftFluidHolder fluidHolder = new SoftFluidHolder(12);
         fluidHolder.fill(SoftFluidRegistry.HONEY);
-        CompoundNBT com = new CompoundNBT();
+        CompoundTag com = new CompoundTag();
         fluidHolder.save(com);
         icon.addTagElement("BlockEntityTag", com);
         return icon;
@@ -38,7 +38,7 @@ public class JarTab extends ItemGroup {
         return true;
     }
 
-    public static void tryAdd(NonNullList<ItemStack> items, CompoundNBT com) {
+    public static void tryAdd(NonNullList<ItemStack> items, CompoundTag com) {
         if (!com.isEmpty()) {
             ItemStack returnStack = new ItemStack(ModRegistry.JAR_ITEM.get());
             returnStack.addTagElement("BlockEntityTag", com);
@@ -56,7 +56,7 @@ public class JarTab extends ItemGroup {
 
 
         for (Item i : CapturedMobsHelper.VALID_BUCKETS.keySet()) {
-            CompoundNBT com = new CompoundNBT();
+            CompoundTag com = new CompoundTag();
             MobContainer.MobData data = new MobContainer.MobData(new ItemStack(i));
             data.saveToTag(com);
             tryAdd(items, com);
@@ -65,27 +65,27 @@ public class JarTab extends ItemGroup {
 
         for (Item i : ForgeRegistries.ITEMS) {
             ItemStack regItem = new ItemStack(i);
-            CompoundNBT com = new CompoundNBT();
+            CompoundTag com = new CompoundTag();
             if (tempTile.canPlaceItem(0, regItem)) {
                 regItem.setCount(tempTile.getMaxStackSize());
-                ItemStackHelper.saveAllItems(com, NonNullList.withSize(1, regItem));
+                ContainerHelper.saveAllItems(com, NonNullList.withSize(1, regItem));
                 tryAdd(items, com);
             }
         }
         for (SoftFluid s : SoftFluidRegistry.getFluids()) {
             if (s == SoftFluidRegistry.POTION || s.isEmpty()) continue;
-            CompoundNBT com = new CompoundNBT();
+            CompoundTag com = new CompoundTag();
             fluidHolder.clear();
             fluidHolder.fill(s);
             fluidHolder.save(com);
             tryAdd(items, com);
         }
 
-        for (ResourceLocation potion : net.minecraft.util.registry.Registry.POTION.keySet()) {
-            CompoundNBT com = new CompoundNBT();
+        for (ResourceLocation potion : net.minecraft.core.Registry.POTION.keySet()) {
+            CompoundTag com = new CompoundTag();
             com.putString("Potion", potion.toString());
             fluidHolder.fill(SoftFluidRegistry.POTION, com);
-            CompoundNBT com2 = new CompoundNBT();
+            CompoundTag com2 = new CompoundTag();
             fluidHolder.save(com2);
             tryAdd(items, com2);
         }

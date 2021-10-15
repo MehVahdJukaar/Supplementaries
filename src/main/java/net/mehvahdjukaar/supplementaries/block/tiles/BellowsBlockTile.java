@@ -5,28 +5,28 @@ import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.FireBlock;
-import net.minecraft.block.material.PushReaction;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.MoverType;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.FireBlock;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-public class BellowsBlockTile extends TileEntity implements ITickableTileEntity {
+public class BellowsBlockTile extends BlockEntity implements TickableBlockEntity {
 
     public float height = 0;
     public float prevHeight = 0;
@@ -38,8 +38,8 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
     }
 
     @Override
-    public AxisAlignedBB getRenderBoundingBox() {
-        return new AxisAlignedBB(this.worldPosition);
+    public AABB getRenderBoundingBox() {
+        return new AABB(this.worldPosition);
     }
 
     @Override
@@ -47,20 +47,20 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
         return 128;
     }
 
-    private AxisAlignedBB getHalfBoundingBox(Direction dir) {
-        return new AxisAlignedBB(this.worldPosition)
+    private AABB getHalfBoundingBox(Direction dir) {
+        return new AABB(this.worldPosition)
                 .contract(-0.5 * dir.getStepX(), -0.5 * dir.getStepY(), -0.5 * dir.getStepZ());
     }
 
     private void moveCollidedEntities() {
         Direction dir = this.getDirection().getAxis() == Direction.Axis.Y ? Direction.SOUTH : Direction.UP;
         for (int j = 0; j < 2; j++) {
-            AxisAlignedBB axisalignedbb = this.getHalfBoundingBox(dir);
+            AABB axisalignedbb = this.getHalfBoundingBox(dir);
             List<Entity> list = this.level.getEntities(null, axisalignedbb);
             if (!list.isEmpty()) {
                 for (Entity entity : list) {
                     if (entity.getPistonPushReaction() != PushReaction.IGNORE) {
-                        AxisAlignedBB entityBB = entity.getBoundingBox();
+                        AABB entityBB = entity.getBoundingBox();
                         double dy = 0.0D;
                         double dz = 0.0D;
                         float f = this.height + 0.01f;
@@ -83,7 +83,7 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
                                 if (dy > 0) continue;
                                 break;
                         }
-                        entity.move(MoverType.SHULKER_BOX, new Vector3d(0, dy, dz));
+                        entity.move(MoverType.SHULKER_BOX, new Vec3(0, dy, dz));
                     }
                 }
             }
@@ -96,14 +96,14 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
         double velocity = ServerConfigs.cached.BELLOWS_BASE_VEL_SCALING / period; // Affects acceleration
         double maxVelocity = ServerConfigs.cached.BELLOWS_MAX_VEL; // Affects max speed
 
-        AxisAlignedBB facingBox = CommonUtil.getDirectionBB(this.worldPosition, facing, (int) range);
+        AABB facingBox = CommonUtil.getDirectionBB(this.worldPosition, facing, (int) range);
         List<Entity> list = this.level.getEntitiesOfClass(Entity.class, facingBox);
 
         for (Entity entity : list) {
 
             if (!this.inLineOfSight(entity, facing)) continue;
             if (facing == Direction.UP) maxVelocity *= 0.5D;
-            AxisAlignedBB entityBB = entity.getBoundingBox();
+            AABB entityBB = entity.getBoundingBox();
             double dist;
             double b;
             switch (facing) {
@@ -157,11 +157,11 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
     }
 
     private void tickFurnaces(BlockPos frontPos) {
-        TileEntity te = level.getBlockEntity(frontPos);
+        BlockEntity te = level.getBlockEntity(frontPos);
         Block b = level.getBlockState(frontPos).getBlock();
-        if (te instanceof ITickableTileEntity &&
+        if (te instanceof TickableBlockEntity &&
                 b.is(ModTags.BELLOWS_TICKABLE_TAG)) {
-            ((ITickableTileEntity) te).tick();
+            ((TickableBlockEntity) te).tick();
         }
     }
 
@@ -172,7 +172,7 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
                 int age = fb.getValue(FireBlock.AGE);
                 if (age != 0) {
                     level.setBlock(frontPos, fb.setValue(FireBlock.AGE,
-                            MathHelper.clamp(age - 7, 0, 15)), 4);
+                            Mth.clamp(age - 7, 0, 15)), 4);
                 }
             }
             frontPos = frontPos.relative(facing);
@@ -197,8 +197,8 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
 
             //slope of animation. for particles and pushing entities
             float arg = (float) Math.PI * 2 * (((time - offset) / period) % 1);
-            float sin = MathHelper.sin(arg);
-            float cos = MathHelper.cos(arg);
+            float sin = Mth.sin(arg);
+            float cos = Mth.cos(arg);
             final float dh = 1 / 16f;//0.09375f;
             this.height = dh * cos - dh;
 
@@ -272,9 +272,9 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
     }
 
     public boolean inLineOfSight(Entity entity, Direction facing) {
-        int x = facing.getStepX() * (MathHelper.floor(entity.getX()) - this.worldPosition.getX());
-        int y = facing.getStepY() * (MathHelper.floor(entity.getY()) - this.worldPosition.getY());
-        int z = facing.getStepZ() * (MathHelper.floor(entity.getZ()) - this.worldPosition.getZ());
+        int x = facing.getStepX() * (Mth.floor(entity.getX()) - this.worldPosition.getX());
+        int y = facing.getStepY() * (Mth.floor(entity.getY()) - this.worldPosition.getY());
+        int z = facing.getStepZ() * (Mth.floor(entity.getZ()) - this.worldPosition.getZ());
         boolean flag = true;
 
         for (int i = 1; i < Math.abs(x + y + z); i++) {
@@ -286,7 +286,7 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
         return flag;
     }
 
-    public void spawnParticle(World world, BlockPos pos) {
+    public void spawnParticle(Level world, BlockPos pos) {
         Direction dir = this.getDirection();
         double xo = dir.getStepX();
         double yo = dir.getStepY();
@@ -309,30 +309,30 @@ public class BellowsBlockTile extends TileEntity implements ITickableTileEntity 
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT compound) {
+    public void load(BlockState state, CompoundTag compound) {
         super.load(state, compound);
         this.offset = compound.getLong("Offset");
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
+    public CompoundTag save(CompoundTag compound) {
         super.save(compound);
         compound.putLong("Offset", this.offset);
         return compound;
     }
 
     @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.worldPosition, 0, this.getUpdateTag());
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return new ClientboundBlockEntityDataPacket(this.worldPosition, 0, this.getUpdateTag());
     }
 
     @Override
-    public CompoundNBT getUpdateTag() {
-        return this.save(new CompoundNBT());
+    public CompoundTag getUpdateTag() {
+        return this.save(new CompoundTag());
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         this.load(this.getBlockState(), pkt.getTag());
     }
 

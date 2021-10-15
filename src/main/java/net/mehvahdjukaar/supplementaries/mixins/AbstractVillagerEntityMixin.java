@@ -1,21 +1,21 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.block.util.ICustomDataHolder;
-import net.minecraft.entity.AgeableEntity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.AgableMob;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.npc.AbstractVillager;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.spongepowered.asm.mixin.Mixin;
 
-@Mixin(AbstractVillagerEntity.class)
-public abstract class AbstractVillagerEntityMixin extends AgeableEntity implements ICustomDataHolder {
+@Mixin(AbstractVillager.class)
+public abstract class AbstractVillagerEntityMixin extends AgableMob implements ICustomDataHolder {
 
 
     public boolean breeding = false;
 
-    protected AbstractVillagerEntityMixin(EntityType<? extends AgeableEntity> p_i48581_1_, World p_i48581_2_) {
+    protected AbstractVillagerEntityMixin(EntityType<? extends AgableMob> p_i48581_1_, Level p_i48581_2_) {
         super(p_i48581_1_, p_i48581_2_);
     }
 

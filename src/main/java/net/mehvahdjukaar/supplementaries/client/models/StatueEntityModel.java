@@ -1,38 +1,38 @@
 package net.mehvahdjukaar.supplementaries.client.models;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.supplementaries.block.tiles.StatueBlockTile;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.model.Model;
-import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.model.Model;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
 
 public class StatueEntityModel extends Model {
     //biped
-    public ModelRenderer head;
-    public ModelRenderer hat;
-    public ModelRenderer body;
-    public ModelRenderer rightArm;
-    public ModelRenderer leftArm;
-    public ModelRenderer rightLeg;
-    public ModelRenderer leftLeg;
+    public ModelPart head;
+    public ModelPart hat;
+    public ModelPart body;
+    public ModelPart rightArm;
+    public ModelPart leftArm;
+    public ModelPart rightLeg;
+    public ModelPart leftLeg;
     //player
-    public final ModelRenderer leftSleeve;
-    public final ModelRenderer rightSleeve;
-    public final ModelRenderer leftPants;
-    public final ModelRenderer rightPants;
-    public final ModelRenderer jacket;
-    private final ModelRenderer cloak;
-    private final ModelRenderer ear;
+    public final ModelPart leftSleeve;
+    public final ModelPart rightSleeve;
+    public final ModelPart leftPants;
+    public final ModelPart rightPants;
+    public final ModelPart jacket;
+    private final ModelPart cloak;
+    private final ModelPart ear;
 
     //slim
-    public ModelRenderer rightArmS;
-    public ModelRenderer leftArmS;
-    public final ModelRenderer leftSleeveS;
-    public final ModelRenderer rightSleeveS;
+    public ModelPart rightArmS;
+    public ModelPart leftArmS;
+    public final ModelPart leftSleeveS;
+    public final ModelPart rightSleeveS;
 
     public StatueEntityModel(float offset) {
 
@@ -41,62 +41,62 @@ public class StatueEntityModel extends Model {
         //biped
         this.texWidth = 64;
         this.texHeight = 64;
-        this.head = new ModelRenderer(this, 0, 0);
+        this.head = new ModelPart(this, 0, 0);
         this.head.addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, offset);
         this.head.setPos(0.0F, 0.0F, 0.0F);
-        this.hat = new ModelRenderer(this, 32, 0);
+        this.hat = new ModelPart(this, 32, 0);
         this.hat.addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, offset + 0.5F);
         this.hat.setPos(0.0F, 0.0F, 0.0F);
-        this.body = new ModelRenderer(this, 16, 16);
+        this.body = new ModelPart(this, 16, 16);
         this.body.addBox(-4.0F, 0.0F, -2.0F, 8.0F, 12.0F, 4.0F, offset);
         this.body.setPos(0.0F, 0.0F, 0.0F);
         //player
-        this.ear = new ModelRenderer(this, 24, 0);
+        this.ear = new ModelPart(this, 24, 0);
         this.ear.addBox(-3.0F, -6.0F, -1.0F, 6.0F, 6.0F, 1.0F, offset);
-        this.cloak = new ModelRenderer(this, 0, 0);
+        this.cloak = new ModelPart(this, 0, 0);
         this.cloak.setTexSize(64, 32);
         this.cloak.addBox(-5.0F, 0.0F, -1.0F, 10.0F, 16.0F, 1.0F, offset);
 
-        this.leftArmS = new ModelRenderer(this, 32, 48);
+        this.leftArmS = new ModelPart(this, 32, 48);
         this.leftArmS.addBox(-2.0F, -2.0F, -2.0F, 3.0F, 12.0F, 4.0F, offset);
         this.leftArmS.setPos(6.0F, 2.5F, 0.0F);
-        this.rightArmS = new ModelRenderer(this, 40, 16);
+        this.rightArmS = new ModelPart(this, 40, 16);
         this.rightArmS.addBox(-1.0F, -2.0F, -2.0F, 3.0F, 12.0F, 4.0F, offset);
         this.rightArmS.setPos(-6.0F, 2.5F, 0.0F);
-        this.leftSleeveS = new ModelRenderer(this, 48, 48);
+        this.leftSleeveS = new ModelPart(this, 48, 48);
         this.leftSleeveS.addBox(-1.0F, -2.0F, -2.0F, 3.0F, 12.0F, 4.0F, offset + 0.25F);
         this.leftSleeveS.setPos(6.0F, 2.5F, 0.0F);
-        this.rightSleeveS = new ModelRenderer(this, 40, 32);
+        this.rightSleeveS = new ModelPart(this, 40, 32);
         this.rightSleeveS.addBox(-2.0F, -2.0F, -2.0F, 3.0F, 12.0F, 4.0F, offset + 0.25F);
         this.rightSleeveS.setPos(-6.0F, 2.5F, 10.0F);
 
 
-        this.leftArm = new ModelRenderer(this, 32, 48);
+        this.leftArm = new ModelPart(this, 32, 48);
         this.leftArm.addBox(-2.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, offset);
         this.leftArm.setPos(6.0F, 2.0F, 0.0F);
-        this.leftSleeve = new ModelRenderer(this, 48, 48);
+        this.leftSleeve = new ModelPart(this, 48, 48);
         this.leftSleeve.addBox(-2.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, offset + 0.25F);
         this.leftSleeve.setPos(6.0F, 2.0F, 0.0F);
-        this.rightSleeve = new ModelRenderer(this, 40, 32);
+        this.rightSleeve = new ModelPart(this, 40, 32);
         this.rightSleeve.addBox(-2.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, offset + 0.25F);
         this.rightSleeve.setPos(-6.0F, 2.0F, 10.0F);
-        this.rightArm = new ModelRenderer(this, 40, 16);
+        this.rightArm = new ModelPart(this, 40, 16);
         this.rightArm.addBox(-2.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, offset);
         this.rightArm.setPos(-6.0F, 2.0F, 0.0F);
 
-        this.rightLeg = new ModelRenderer(this, 0, 16);
+        this.rightLeg = new ModelPart(this, 0, 16);
         this.rightLeg.addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, offset);
         this.rightLeg.setPos(-1.9F, 12.0F , 0.0F);
-        this.leftLeg = new ModelRenderer(this, 16, 48);
+        this.leftLeg = new ModelPart(this, 16, 48);
         this.leftLeg.addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, offset);
         this.leftLeg.setPos(1.9F, 12.0F, 0.0F);
-        this.leftPants = new ModelRenderer(this, 0, 48);
+        this.leftPants = new ModelPart(this, 0, 48);
         this.leftPants.addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, offset + 0.25F);
         this.leftPants.setPos(1.9F, 12.0F, 0.0F);
-        this.rightPants = new ModelRenderer(this, 0, 32);
+        this.rightPants = new ModelPart(this, 0, 32);
         this.rightPants.addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, offset + 0.25F);
         this.rightPants.setPos(-1.9F, 12.0F, 0.0F);
-        this.jacket = new ModelRenderer(this, 16, 32);
+        this.jacket = new ModelPart(this, 16, 32);
         this.jacket.addBox(-4.0F, 0.0F, -2.0F, 8.0F, 12.0F, 4.0F, offset + 0.25F);
         this.jacket.setPos(0.0F, 0.0F, 0.0F);
     }
@@ -104,14 +104,14 @@ public class StatueEntityModel extends Model {
 
 
 
-    public void renderEars(MatrixStack p_228287_1_, IVertexBuilder p_228287_2_, int p_228287_3_, int p_228287_4_) {
+    public void renderEars(PoseStack p_228287_1_, VertexConsumer p_228287_2_, int p_228287_3_, int p_228287_4_) {
         this.ear.copyFrom(this.head);
         this.ear.x = 0.0F;
         this.ear.y = 0.0F;
         this.ear.render(p_228287_1_, p_228287_2_, p_228287_3_, p_228287_4_);
     }
 
-    public void renderCloak(MatrixStack p_228289_1_, IVertexBuilder p_228289_2_, int p_228289_3_, int p_228289_4_) {
+    public void renderCloak(PoseStack p_228289_1_, VertexConsumer p_228289_2_, int p_228289_3_, int p_228289_4_) {
         this.cloak.render(p_228289_1_, p_228289_2_, p_228289_3_, p_228289_4_);
     }
 
@@ -188,7 +188,7 @@ public class StatueEntityModel extends Model {
             this.rightArm.yRot = 0;
             this.rightArm.xRot = (float) (Math.PI);
             float f2 = ((float)Math.floorMod(ticks, 15L) + partialTricks) / 15.0F;
-            this.rightArm.zRot = -0.5f-0.5f* MathHelper.sin(((float)Math.PI * 2F)*f2);
+            this.rightArm.zRot = -0.5f-0.5f* Mth.sin(((float)Math.PI * 2F)*f2);
         }
         else{
             this.rightArm.zRot = 0;
@@ -207,17 +207,17 @@ public class StatueEntityModel extends Model {
         this.rightSleeveS.copyFrom(this.rightArm);
     }
 
-    protected Iterable<ModelRenderer> headParts() {
+    protected Iterable<ModelPart> headParts() {
         return ImmutableList.of(this.head);
     }
 
-    protected Iterable<ModelRenderer> bodyParts() {
+    protected Iterable<ModelPart> bodyParts() {
         return ImmutableList.of(this.body, this.rightArm, this.leftArm, this.rightLeg, this.leftLeg, this.hat,
                 this.leftPants, this.rightPants, this.leftSleeve, this.rightSleeve, this.jacket);
     }
 
     @Override
-    public void renderToBuffer(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn,
+    public void renderToBuffer(PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn,
                                float red, float green, float blue, float alpha) {
         boolean slim = false;
         head.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);

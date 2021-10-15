@@ -2,8 +2,8 @@ package net.mehvahdjukaar.supplementaries.network;
 
 
 import net.mehvahdjukaar.supplementaries.inventories.RedMerchantContainer;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -11,7 +11,7 @@ import java.util.function.Supplier;
 public class SelectOrangeTraderTradePacket implements NetworkHandler.Message {
     private int item;
 
-    public SelectOrangeTraderTradePacket(PacketBuffer buf) {
+    public SelectOrangeTraderTradePacket(FriendlyByteBuf buf) {
         this.item = buf.readVarInt();
     }
 
@@ -19,7 +19,7 @@ public class SelectOrangeTraderTradePacket implements NetworkHandler.Message {
         this.item = slot;
     }
 
-    public static void buffer(SelectOrangeTraderTradePacket message, PacketBuffer buf) {
+    public static void buffer(SelectOrangeTraderTradePacket message, FriendlyByteBuf buf) {
         buf.writeVarInt(message.item);
 
     }
@@ -28,7 +28,7 @@ public class SelectOrangeTraderTradePacket implements NetworkHandler.Message {
         // server world
         //ctx.get().getDirection() == NetworkDirection.PLAY_TO_SERVER
         ctx.get().enqueueWork(() -> {
-            Container container = ctx.get().getSender().containerMenu;
+            AbstractContainerMenu container = ctx.get().getSender().containerMenu;
 
             int i = message.item;
 

@@ -11,8 +11,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 
 import java.util.*;
 
@@ -31,15 +31,15 @@ public class GlobeTextureManager implements AutoCloseable{
     }
 
     public void update() {
-        World world = Minecraft.getInstance().level;
+        Level world = Minecraft.getInstance().level;
         if(world!=null) this.getTextureInstance(world).updateTexture(world);
     }
 
-    public RenderType getRenderType(World world){
+    public RenderType getRenderType(Level world){
         return this.getTextureInstance(world).renderType;
     }
 
-    private TextureInstance getTextureInstance(World world) {
+    private TextureInstance getTextureInstance(Level world) {
         String id = world.dimension().location().getPath();
         TextureInstance textureInstance = this.globeTextures.get(id);
         if (textureInstance == null) {
@@ -62,7 +62,7 @@ public class GlobeTextureManager implements AutoCloseable{
         private final RenderType renderType;
         private final String id;
 
-        private TextureInstance(World world) {
+        private TextureInstance(Level world) {
             this.id = world.dimension().location().toString();
             this.texture = new DynamicTexture(32, 16, false);
             this.updateTexture(world);
@@ -71,7 +71,7 @@ public class GlobeTextureManager implements AutoCloseable{
 
         }
 
-        private void updateTexture(World world) {
+        private void updateTexture(Level world) {
             byte[][] pixels = GlobeData.get(world).globePixels;
 
             for(int i = 0; i < 16; ++i) {

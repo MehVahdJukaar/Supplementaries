@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.block.util;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nullable;
 

@@ -2,52 +2,52 @@ package net.mehvahdjukaar.supplementaries.entities;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.JarBlock;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.network.IPacket;
-import net.minecraft.particles.IParticleData;
-import net.minecraft.particles.ItemParticleData;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.fml.network.FMLPlayMessages;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 public class ThrowableBrickEntity extends ImprovedProjectileEntity{
-    public ThrowableBrickEntity(EntityType<? extends ThrowableBrickEntity> type, World world) {
+    public ThrowableBrickEntity(EntityType<? extends ThrowableBrickEntity> type, Level world) {
         super(type, world);
     }
 
-    public ThrowableBrickEntity(World worldIn, LivingEntity throwerIn) {
+    public ThrowableBrickEntity(Level worldIn, LivingEntity throwerIn) {
         super(ModRegistry.THROWABLE_BRICK.get(), throwerIn, worldIn);
     }
 
-    public ThrowableBrickEntity(World worldIn, double x, double y, double z) {
+    public ThrowableBrickEntity(Level worldIn, double x, double y, double z) {
         super(ModRegistry.THROWABLE_BRICK.get(), x, y, z, worldIn);
     }
 
-    public ThrowableBrickEntity(FMLPlayMessages.SpawnEntity packet, World world) {
+    public ThrowableBrickEntity(FMLPlayMessages.SpawnEntity packet, Level world) {
         super(ModRegistry.THROWABLE_BRICK.get(), world);
     }
 
     @Override
-    public IPacket<?> getAddEntityPacket() {
+    public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
@@ -58,15 +58,15 @@ public class ThrowableBrickEntity extends ImprovedProjectileEntity{
     }
 
 
-    private IParticleData makeParticle() {
+    private ParticleOptions makeParticle() {
         ItemStack itemstack = this.getItemRaw();
-        return itemstack.isEmpty() ? new ItemParticleData(ParticleTypes.ITEM, new ItemStack(this.getDefaultItem())) : new ItemParticleData(ParticleTypes.ITEM, itemstack);
+        return itemstack.isEmpty() ? new ItemParticleOption(ParticleTypes.ITEM, new ItemStack(this.getDefaultItem())) : new ItemParticleOption(ParticleTypes.ITEM, itemstack);
     }
 
     @Override
     public void handleEntityEvent(byte id) {
         if (id == 3) {
-            IParticleData iparticledata = this.makeParticle();
+            ParticleOptions iparticledata = this.makeParticle();
 
             for(int i = 0; i < 8; ++i) {
                 this.level.addParticle(iparticledata, this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
@@ -76,12 +76,12 @@ public class ThrowableBrickEntity extends ImprovedProjectileEntity{
     }
 
     @Override
-    protected void onHitBlock(BlockRayTraceResult rayTraceResult) {
+    protected void onHitBlock(BlockHitResult rayTraceResult) {
         super.onHitBlock(rayTraceResult);
         if (!this.level.isClientSide) {
             Entity entity = this.getOwner();
-            if(entity instanceof PlayerEntity && !((PlayerEntity) entity).mayBuild())return;
-            if (!(entity instanceof MobEntity) || this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) || net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level, this.getEntity())) {
+            if(entity instanceof Player && !((Player) entity).mayBuild())return;
+            if (!(entity instanceof Mob) || this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) || net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level, this.getEntity())) {
 
                 BlockPos pos = rayTraceResult.getBlockPos();
                 if(level.getBlockState(pos).getBlock() instanceof JarBlock){
@@ -122,7 +122,7 @@ public class ThrowableBrickEntity extends ImprovedProjectileEntity{
 
 
     @Override
-    protected void onHitEntity(EntityRayTraceResult p_213868_1_) {
+    protected void onHitEntity(EntityHitResult p_213868_1_) {
         super.onHitEntity(p_213868_1_);
         Entity entity = p_213868_1_.getEntity();
         int i = 1;
@@ -131,11 +131,11 @@ public class ThrowableBrickEntity extends ImprovedProjectileEntity{
 
 
     @Override
-    protected void onHit(RayTraceResult result) {
+    protected void onHit(HitResult result) {
         super.onHit(result);
         if (!this.level.isClientSide) {
-            Vector3d v = result.getLocation();
-            this.level.playSound(null, v.x,v.y,v.z, SoundEvents.NETHER_BRICKS_BREAK, SoundCategory.NEUTRAL, 0.75F, 1 );
+            Vec3 v = result.getLocation();
+            this.level.playSound(null, v.x,v.y,v.z, SoundEvents.NETHER_BRICKS_BREAK, SoundSource.NEUTRAL, 0.75F, 1 );
             this.level.broadcastEntityEvent(this, (byte)3);
             this.remove();
         }

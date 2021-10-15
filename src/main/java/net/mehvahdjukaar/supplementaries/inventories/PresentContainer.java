@@ -2,35 +2,35 @@ package net.mehvahdjukaar.supplementaries.inventories;
 
 import net.mehvahdjukaar.supplementaries.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.BlockPos;
 
 
-public class PresentContainer extends Container {
-    public final IInventory inventory;
+public class PresentContainer extends AbstractContainerMenu {
+    public final Container inventory;
 
     private final BlockPos pos;
 
-    public PresentContainer(int id, PlayerInventory playerInventory, PacketBuffer packetBuffer) {
+    public PresentContainer(int id, Inventory playerInventory, FriendlyByteBuf packetBuffer) {
         this(id, playerInventory, null, packetBuffer.readBlockPos());
 
     }
 
-    public PresentContainer(int id, PlayerInventory playerInventory, IInventory inventory, BlockPos pos) {
+    public PresentContainer(int id, Inventory playerInventory, Container inventory, BlockPos pos) {
         super(ModRegistry.PRESENT_BLOCK_CONTAINER.get(), id);
 
         this.pos = pos;
 
         //tile inventory
         if (inventory == null) {
-            this.inventory = new Inventory(1) {
+            this.inventory = new SimpleContainer(1) {
                 public void setChanged() {
                     super.setChanged();
                     PresentContainer.this.slotsChanged(this);
@@ -60,7 +60,7 @@ public class PresentContainer extends Container {
     }
 
     @Override
-    public boolean stillValid(PlayerEntity playerIn) {
+    public boolean stillValid(Player playerIn) {
         return this.inventory.stillValid(playerIn);
     }
 
@@ -69,7 +69,7 @@ public class PresentContainer extends Container {
      * inventory and the other inventory(s).
      */
     @Override
-    public ItemStack quickMoveStack(PlayerEntity playerIn, int index) {
+    public ItemStack quickMoveStack(Player playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
         if (slot != null && slot.hasItem()) {
@@ -97,7 +97,7 @@ public class PresentContainer extends Container {
      * Called when the container is closed.
      */
     @Override
-    public void removed(PlayerEntity playerIn) {
+    public void removed(Player playerIn) {
         super.removed(playerIn);
         this.inventory.stopOpen(playerIn);
     }

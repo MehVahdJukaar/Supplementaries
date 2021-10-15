@@ -1,39 +1,39 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.supplementaries.block.tiles.FireflyJarBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderState;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.model.RenderMaterial;
-import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.client.settings.GraphicsFanciness;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.math.vector.Quaternion;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.GraphicsStatus;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.Util;
+import com.mojang.math.Matrix4f;
+import com.mojang.math.Quaternion;
 
 import java.util.List;
 import java.util.Random;
 import java.util.stream.IntStream;
 
 
-public class SoulJarBlockTileRenderer extends TileEntityRenderer<FireflyJarBlockTile> {
+public class SoulJarBlockTileRenderer extends BlockEntityRenderer<FireflyJarBlockTile> {
     private final Minecraft minecraft = Minecraft.getInstance();
-    public static final RenderMaterial SOUL_MATERIAL = new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, Textures.SOUL_TEXTURE);
+    public static final Material SOUL_MATERIAL = new Material(TextureAtlas.LOCATION_BLOCKS, Textures.SOUL_TEXTURE);
 
 
-    public SoulJarBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
+    public SoulJarBlockTileRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
     }
 
@@ -65,7 +65,7 @@ public class SoulJarBlockTileRenderer extends TileEntityRenderer<FireflyJarBlock
 
 
 
-    private void renderCube(float p_228883_2_, float p_228883_3_, Matrix4f p_228883_4_, IVertexBuilder p_228883_5_) {
+    private void renderCube(float p_228883_2_, float p_228883_3_, Matrix4f p_228883_4_, VertexConsumer p_228883_5_) {
         float f = 0.0001f;//(RANDOM.nextFloat() * 0.5F + 0.1F) * p_228883_3_;
         float f1 = 0.005f;//(RANDOM.nextFloat() * 0.5F + 0.4F) * p_228883_3_;
         float f2 = 0.5f;//(RANDOM.nextFloat() * 0.5F + 0.5F) * p_228883_3_;
@@ -77,7 +77,7 @@ public class SoulJarBlockTileRenderer extends TileEntityRenderer<FireflyJarBlock
         //this.renderFace( p_228883_4_, p_228883_5_, 0.0F, 1.0F, p_228883_2_, p_228883_2_, 1.0F, 1.0F, 0.0F, 0.0F, f, f1, f2, Direction.UP);
     }
 
-    private void renderFace(Matrix4f matrix4f, IVertexBuilder builder, float p_228884_4_, float p_228884_5_, float p_228884_6_, float p_228884_7_, float p_228884_8_, float p_228884_9_, float p_228884_10_, float p_228884_11_, float r, float g, float b, Direction p_228884_15_) {
+    private void renderFace(Matrix4f matrix4f, VertexConsumer builder, float p_228884_4_, float p_228884_5_, float p_228884_6_, float p_228884_7_, float p_228884_8_, float p_228884_9_, float p_228884_10_, float p_228884_11_, float r, float g, float b, Direction p_228884_15_) {
 
         builder.vertex(matrix4f, p_228884_4_, p_228884_6_, p_228884_8_).color(r, g, b, 1.0F).endVertex();
         builder.vertex(matrix4f, p_228884_5_, p_228884_6_, p_228884_9_).color(r, g, b, 1.0F).endVertex();
@@ -88,7 +88,7 @@ public class SoulJarBlockTileRenderer extends TileEntityRenderer<FireflyJarBlock
     }
 
     @Override
-    public void render(FireflyJarBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
+    public void render(FireflyJarBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
 
         /*
@@ -131,7 +131,7 @@ public class SoulJarBlockTileRenderer extends TileEntityRenderer<FireflyJarBlock
 
 
 
-        if(!tile.soul || minecraft.options.graphicsMode== GraphicsFanciness.FABULOUS)return;
+        if(!tile.soul || minecraft.options.graphicsMode== GraphicsStatus.FABULOUS)return;
         matrixStackIn.pushPose();
         int lu = combinedLightIn & '\uffff';
         int lv = combinedLightIn >> 16 & '\uffff'; // ok
@@ -139,8 +139,8 @@ public class SoulJarBlockTileRenderer extends TileEntityRenderer<FireflyJarBlock
         matrixStackIn.translate(0.5, 0.5-0.125, 0.5);
         matrixStackIn.scale(0.5f, 0.5f, 0.5f);
 
-        TextureAtlasSprite sprite = minecraft.getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(Textures.SOUL_TEXTURE);
-        IVertexBuilder builder = bufferIn.getBuffer(RenderType.cutout());
+        TextureAtlasSprite sprite = minecraft.getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(Textures.SOUL_TEXTURE);
+        VertexConsumer builder = bufferIn.getBuffer(RenderType.cutout());
         //IVertexBuilder builder = SOUL_MATERIAL.buffer(bufferIn, RenderType::entityCutout);
 
         Quaternion rotation = minecraft.getEntityRenderDispatcher().cameraOrientation();
@@ -158,7 +158,7 @@ public class SoulJarBlockTileRenderer extends TileEntityRenderer<FireflyJarBlock
     }
 
 
-    public static final class PortalTexturingState extends RenderState.TexturingState {
+    public static final class PortalTexturingState extends RenderStateShard.TexturingStateShard {
         private final int iteration;
 
         public PortalTexturingState(int it) {

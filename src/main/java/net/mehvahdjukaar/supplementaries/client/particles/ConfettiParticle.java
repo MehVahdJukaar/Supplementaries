@@ -2,13 +2,13 @@ package net.mehvahdjukaar.supplementaries.client.particles;
 
 import net.mehvahdjukaar.supplementaries.client.renderers.color.HSLColor;
 import net.minecraft.client.particle.*;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.particles.BasicParticleType;
-import net.minecraft.util.ColorHelper;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.util.FastColor;
 
-public class ConfettiParticle extends SpriteTexturedParticle {
+public class ConfettiParticle extends TextureSheetParticle {
 
-    private ConfettiParticle(ClientWorld world, double x, double y, double z, double motionX, double motionY, double motionZ, IAnimatedSprite sprites) {
+    private ConfettiParticle(ClientLevel world, double x, double y, double z, double motionX, double motionY, double motionZ, SpriteSet sprites) {
         super(world, x, y, z);
 
         this.pickSprite(sprites);
@@ -30,9 +30,9 @@ public class ConfettiParticle extends SpriteTexturedParticle {
         this.bCol = Math.max(0.0F, MathHelper.sin((i + 0.6666667F) * ((float)Math.PI * 2F)) * 0.65F + 0.35F);
         */
 
-        this.rCol = ColorHelper.PackedColor.red(col)/255f;
-        this.gCol = ColorHelper.PackedColor.green(col)/255f;
-        this.bCol = ColorHelper.PackedColor.blue(col)/255f;
+        this.rCol = FastColor.ARGB32.red(col)/255f;
+        this.gCol = FastColor.ARGB32.green(col)/255f;
+        this.bCol = FastColor.ARGB32.blue(col)/255f;
     }
 
     @Override
@@ -41,19 +41,19 @@ public class ConfettiParticle extends SpriteTexturedParticle {
     }
 
     @Override
-    public IParticleRenderType getRenderType() {
-        return IParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+    public ParticleRenderType getRenderType() {
+        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
     }
 
-    public static class Factory implements IParticleFactory<BasicParticleType> {
-        private final IAnimatedSprite sprite;
+    public static class Factory implements ParticleProvider<SimpleParticleType> {
+        private final SpriteSet sprite;
 
-        public Factory(IAnimatedSprite spriteSet) {
+        public Factory(SpriteSet spriteSet) {
             this.sprite = spriteSet;
         }
 
         @Override
-        public Particle createParticle(BasicParticleType typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+        public Particle createParticle(SimpleParticleType typeIn, ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
 
             return new ConfettiParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, sprite);
         }

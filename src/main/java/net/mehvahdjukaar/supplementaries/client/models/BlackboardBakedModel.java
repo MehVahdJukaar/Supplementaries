@@ -5,11 +5,11 @@ import com.google.common.collect.Sets;
 import com.mojang.datafixers.util.Either;
 import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager.BlackboardKey;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.renderer.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.model.IModelConfiguration;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
@@ -20,21 +20,30 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.function.Function;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.BlockModel;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.client.resources.model.ModelState;
+
 public class BlackboardBakedModel implements IDynamicBakedModel {
     //model cache used when switching frequently between models
     // data needed to rebake
 
     private final IModelConfiguration owner;
     private final ModelBakery bakery;
-    private final Function<RenderMaterial, TextureAtlasSprite> spriteGetter;
-    private final IModelTransform modelTransform;
-    private final ItemOverrideList overrides;
+    private final Function<Material, TextureAtlasSprite> spriteGetter;
+    private final ModelState modelTransform;
+    private final ItemOverrides overrides;
     private final ResourceLocation modelLocation;
 
     private final BlockModel unbaked;
     private final String toRetextureName;
 
-    public BlackboardBakedModel(BlockModel unbaked, IModelConfiguration owner, ModelBakery bakery, Function<RenderMaterial, TextureAtlasSprite> spriteGetter, IModelTransform modelTransform, ItemOverrideList overrides, ResourceLocation modelLocation, String toRetextureName) {
+    public BlackboardBakedModel(BlockModel unbaked, IModelConfiguration owner, ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform, ItemOverrides overrides, ResourceLocation modelLocation, String toRetextureName) {
         this.unbaked = unbaked;
         this.owner = owner;
         this.bakery = bakery;
@@ -45,7 +54,7 @@ public class BlackboardBakedModel implements IDynamicBakedModel {
         this.toRetextureName = toRetextureName;
     }
 
-    private IBakedModel rebake(ResourceLocation replacement) {
+    private BakedModel rebake(ResourceLocation replacement) {
 
         return null;
 
@@ -87,13 +96,13 @@ public class BlackboardBakedModel implements IDynamicBakedModel {
     }
 
     @Override
-    public ItemOverrideList getOverrides() {
+    public ItemOverrides getOverrides() {
         return overrides;
     }
 
     @Override
-    public ItemCameraTransforms getTransforms() {
-        return ItemCameraTransforms.NO_TRANSFORMS;
+    public ItemTransforms getTransforms() {
+        return ItemTransforms.NO_TRANSFORMS;
     }
 
 
@@ -153,7 +162,7 @@ public class BlackboardBakedModel implements IDynamicBakedModel {
                 this.unbaked.textureMap.replace(this.toRetextureName, Either.right(texture.toString()));
             }
         }
-        IBakedModel baked = this.unbaked.bake(bakery,unbaked,spriteGetter,modelTransform,modelLocation,true);
+        BakedModel baked = this.unbaked.bake(bakery,unbaked,spriteGetter,modelTransform,modelLocation,true);
         return baked.getQuads(state,direction,random,data);
         /*
         ResourceLocation texture;

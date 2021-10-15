@@ -1,11 +1,13 @@
 package net.mehvahdjukaar.supplementaries.client.gui;
 
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.fml.client.gui.widget.Slider;
+
+import net.minecraft.client.gui.components.Button.OnPress;
 
 public class SliderStep extends Slider {
     public final double step;
-    public SliderStep(int xPos, int yPos, int width, int height, ITextComponent prefix, ITextComponent suf, double minVal, double maxVal, double currentVal, boolean showDec, boolean drawStr, IPressable handler, Slider.ISlider par) {
+    public SliderStep(int xPos, int yPos, int width, int height, Component prefix, Component suf, double minVal, double maxVal, double currentVal, boolean showDec, boolean drawStr, OnPress handler, Slider.ISlider par) {
         super(xPos, yPos, width, height, prefix, suf, minVal, maxVal, currentVal, showDec, drawStr, handler, par);
         this.step=1f/maxVal;
     }

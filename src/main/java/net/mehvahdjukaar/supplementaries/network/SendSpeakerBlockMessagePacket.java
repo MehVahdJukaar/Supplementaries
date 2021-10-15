@@ -3,27 +3,27 @@ package net.mehvahdjukaar.supplementaries.network;
 
 import com.mojang.text2speech.Narrator;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.Util;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.Util;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
 public class SendSpeakerBlockMessagePacket {
-    private final ITextComponent str;
+    private final Component str;
     private final boolean narrator;
-    public SendSpeakerBlockMessagePacket(PacketBuffer buf) {
+    public SendSpeakerBlockMessagePacket(FriendlyByteBuf buf) {
         this.str = buf.readComponent();
         this.narrator = buf.readBoolean();
     }
 
-    public SendSpeakerBlockMessagePacket(ITextComponent str, boolean narrator) {
+    public SendSpeakerBlockMessagePacket(Component str, boolean narrator) {
         this.str = str;
         this.narrator = narrator;
     }
 
-    public static void buffer(SendSpeakerBlockMessagePacket message, PacketBuffer buf) {
+    public static void buffer(SendSpeakerBlockMessagePacket message, FriendlyByteBuf buf) {
         buf.writeComponent(message.str);
         buf.writeBoolean(message.narrator);
     }

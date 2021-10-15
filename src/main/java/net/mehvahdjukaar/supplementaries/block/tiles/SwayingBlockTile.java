@@ -3,19 +3,19 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 import net.mehvahdjukaar.supplementaries.block.blocks.SwayingBlock;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
 import net.minecraftforge.common.util.Constants;
 
 import java.util.Random;
 
-public abstract class SwayingBlockTile extends TileEntity implements ITickableTileEntity {
+public abstract class SwayingBlockTile extends BlockEntity implements TickableBlockEntity {
     public float angle = 0;
     public float prevAngle = 0;
     // lower counter is used by hitting animation
@@ -33,7 +33,7 @@ public abstract class SwayingBlockTile extends TileEntity implements ITickableTi
     public boolean fancyRenderer = false;
     protected boolean oldRendererState = false;
 
-    public SwayingBlockTile(TileEntityType<?> tileEntityTypeIn) {
+    public SwayingBlockTile(BlockEntityType<?> tileEntityTypeIn) {
         super(tileEntityTypeIn);
 
     }
@@ -44,17 +44,17 @@ public abstract class SwayingBlockTile extends TileEntity implements ITickableTi
     }
 
     @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.worldPosition, 9, this.getUpdateTag());
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return new ClientboundBlockEntityDataPacket(this.worldPosition, 9, this.getUpdateTag());
     }
 
     @Override
-    public CompoundNBT getUpdateTag() {
-        return this.save(new CompoundNBT());
+    public CompoundTag getUpdateTag() {
+        return this.save(new CompoundTag());
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         this.load(this.getBlockState(), pkt.getTag());
     }
 
@@ -106,7 +106,7 @@ public abstract class SwayingBlockTile extends TileEntity implements ITickableTi
                 k = (float) Math.max(Math.PI * 2 * (float) Math.pow(Math.E, -(counter / periodDamping)), 0.01f);
             }
 
-            this.angle = a * MathHelper.cos((counter / maxPeriod) - k);
+            this.angle = a * Mth.cos((counter / maxPeriod) - k);
             this.angle *= this.inv ? -1 : 1;
             // this.angle = 90*(float)
             // Math.cos((float)counter/40f)/((float)this.counter/20f);;

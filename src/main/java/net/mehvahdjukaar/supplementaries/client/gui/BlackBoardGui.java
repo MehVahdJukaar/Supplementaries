@@ -1,16 +1,16 @@
 package net.mehvahdjukaar.supplementaries.client.gui;
 
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.UpdateServerBlackboardPacket;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.DialogTexts;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.components.Button;
+import com.mojang.blaze3d.platform.Lighting;
+import net.minecraft.network.chat.TranslatableComponent;
 
 
 public class BlackBoardGui extends Screen {
@@ -20,7 +20,7 @@ public class BlackBoardGui extends Screen {
 
 
     public BlackBoardGui(BlackboardBlockTile teBoard) {
-        super(new TranslationTextComponent("gui.supplementaries.blackboard.edit"));
+        super(new TranslatableComponent("gui.supplementaries.blackboard.edit"));
         this.tileBoard = teBoard;
 
     }
@@ -97,13 +97,13 @@ public class BlackBoardGui extends Screen {
         }
 
         this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
-        this.addButton(new Button(this.width / 2 - 100, this.height / 4 + 120, 100-4, 20, new TranslationTextComponent("gui.supplementaries.blackboard.clear"), (b) -> this.clear()));
-        this.addButton(new Button(this.width / 2 + 4, this.height / 4 + 120, 100-4, 20, DialogTexts.GUI_DONE, (p_238847_1_) -> this.close()));
+        this.addButton(new Button(this.width / 2 - 100, this.height / 4 + 120, 100-4, 20, new TranslatableComponent("gui.supplementaries.blackboard.clear"), (b) -> this.clear()));
+        this.addButton(new Button(this.width / 2 + 4, this.height / 4 + 120, 100-4, 20, CommonComponents.GUI_DONE, (p_238847_1_) -> this.close()));
     }
 
     @Override
-    public void render(MatrixStack matrixstack, int  mouseX, int mouseY, float partialTicks) {
-        RenderHelper.setupForFlatItems();
+    public void render(PoseStack matrixstack, int  mouseX, int mouseY, float partialTicks) {
+        Lighting.setupForFlatItems();
         this.renderBackground(matrixstack);
         drawCenteredString(matrixstack, this.font, this.title, this.width / 2, 40, 16777215);
 
@@ -126,7 +126,7 @@ public class BlackBoardGui extends Screen {
         matrixstack.popPose();
 
         //TODO: could be optimized a lot. too bad
-        RenderHelper.setupFor3DItems();
+        Lighting.setupFor3DItems();
         super.render(matrixstack, mouseX, mouseY, partialTicks);
     }
 }

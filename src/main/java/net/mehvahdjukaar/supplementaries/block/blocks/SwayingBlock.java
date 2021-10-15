@@ -4,26 +4,28 @@ import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.SwayingBlockTile;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.material.PushReaction;
-import net.minecraft.entity.Entity;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3i;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.core.Vec3i;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.Level;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public abstract class SwayingBlock extends WaterBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
@@ -34,7 +36,7 @@ public abstract class SwayingBlock extends WaterBlock {
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos,
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos,
                                           BlockPos facingPos) {
         if (stateIn.getValue(WATERLOGGED)) {
             worldIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
@@ -59,23 +61,23 @@ public abstract class SwayingBlock extends WaterBlock {
         return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
 
-    public static BlockState getConnectedState(BlockState state, BlockState facingState, IWorld world, BlockPos pos){
+    public static BlockState getConnectedState(BlockState state, BlockState facingState, LevelAccessor world, BlockPos pos){
         int ext = CommonUtil.getPostSize(facingState,pos,world);
         return state.setValue(EXTENSION, ext);
     }
 
     @Override
-    public void entityInside(BlockState state, World world, BlockPos pos, Entity entity) {
+    public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
         super.entityInside(state, world, pos, entity);
 
-        TileEntity tileentity = world.getBlockEntity(pos);
+        BlockEntity tileentity = world.getBlockEntity(pos);
         if (tileentity instanceof SwayingBlockTile) {
             SwayingBlockTile te = ((SwayingBlockTile) tileentity);
-            Vector3d mot = entity.getDeltaMovement();
+            Vec3 mot = entity.getDeltaMovement();
             if(mot.length()>0.05){
-                Vector3d norm = new Vector3d(mot.x,0,mot.z).normalize();
-                Vector3i dv = te.getDirection().getClockWise().getNormal();
-                Vector3d vec = new Vector3d(dv.getX(),0,dv.getZ()).normalize();
+                Vec3 norm = new Vec3(mot.x,0,mot.z).normalize();
+                Vec3i dv = te.getDirection().getClockWise().getNormal();
+                Vec3 vec = new Vec3(dv.getX(),0,dv.getZ()).normalize();
                 double dot = norm.dot(vec);
                 if(dot!=0){
                     te.inv=dot<0;
@@ -88,12 +90,12 @@ public abstract class SwayingBlock extends WaterBlock {
     }
 
     @Override
-    public BlockRenderType getRenderShape(BlockState state) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING, EXTENSION, WATERLOGGED);
     }
 

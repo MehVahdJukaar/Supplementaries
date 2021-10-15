@@ -5,8 +5,8 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.setup.Variants;
-import net.minecraft.tileentity.BannerPattern;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.level.block.entity.BannerPattern;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import java.lang.reflect.Field;

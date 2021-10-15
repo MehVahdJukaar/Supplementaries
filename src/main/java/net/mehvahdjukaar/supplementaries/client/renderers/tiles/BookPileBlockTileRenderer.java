@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import com.mojang.blaze3d.vertex.VertexBuilderUtils;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.vertex.VertexMultiConsumer;
 import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.block.blocks.BookPileBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.BookPileHorizontalBlock;
@@ -14,32 +14,32 @@ import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.enchantedbooks.EnchantedBookRedesignRenderer;
 import net.mehvahdjukaar.supplementaries.compat.quark.QuarkPlugin;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.client.renderer.model.RenderMaterial;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-public class BookPileBlockTileRenderer extends TileEntityRenderer<BookPileBlockTile> {
+public class BookPileBlockTileRenderer extends BlockEntityRenderer<BookPileBlockTile> {
 
-    private final ModelRenderer book = new ModelRenderer(32, 32, 0, 0);
-    private final ModelRenderer lock = new ModelRenderer(32, 32, 0, 0);
+    private final ModelPart book = new ModelPart(32, 32, 0, 0);
+    private final ModelPart lock = new ModelPart(32, 32, 0, 0);
     private final boolean vertical;
 
-    public BookPileBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
+    public BookPileBlockTileRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
         this(rendererDispatcherIn, false);
     }
 
-    public BookPileBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn, boolean vertical) {
+    public BookPileBlockTileRenderer(BlockEntityRenderDispatcher rendererDispatcherIn, boolean vertical) {
         super(rendererDispatcherIn);
         this.vertical = vertical;
 
@@ -53,7 +53,7 @@ public class BookPileBlockTileRenderer extends TileEntityRenderer<BookPileBlockT
     }
 
     @Override
-    public void render(BookPileBlockTile tile, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer bufferIn, int light,
+    public void render(BookPileBlockTile tile, float partialTicks, PoseStack matrixStack, MultiBufferSource bufferIn, int light,
                        int overlay) {
         long r = tile.getBlockPos().asLong();
         Random rand = new Random(r);
@@ -70,7 +70,7 @@ public class BookPileBlockTileRenderer extends TileEntityRenderer<BookPileBlockT
 
     }
 
-    private void renderHorizontal(BlockState state, MatrixStack matrixStack, IRenderTypeBuffer buffer, int light, int overlay, Random random) {
+    private void renderHorizontal(BlockState state, PoseStack matrixStack, MultiBufferSource buffer, int light, int overlay, Random random) {
         int books = state.getValue(BookPileBlock.BOOKS);
 
         Direction dir = state.getValue(BookPileHorizontalBlock.FACING);
@@ -119,7 +119,7 @@ public class BookPileBlockTileRenderer extends TileEntityRenderer<BookPileBlockT
         lock.visible = true;
     }
 
-    private void renderVertical(ItemDisplayTile inventory, BlockState state, MatrixStack matrixStack, IRenderTypeBuffer buffer, int light, int overlay, Random random) {
+    private void renderVertical(ItemDisplayTile inventory, BlockState state, PoseStack matrixStack, MultiBufferSource buffer, int light, int overlay, Random random) {
 
         int books = state.getValue(BookPileBlock.BOOKS);
 
@@ -128,7 +128,7 @@ public class BookPileBlockTileRenderer extends TileEntityRenderer<BookPileBlockT
         boolean glint = ClientConfigs.cached.BOOK_GLINT;
         boolean coloredGlint = CompatHandler.enchantedbookredesign;
 
-        IVertexBuilder builder;
+        VertexConsumer builder;
 
 
         matrixStack.translate(0, -6 / 16f, 0);
@@ -151,26 +151,26 @@ public class BookPileBlockTileRenderer extends TileEntityRenderer<BookPileBlockT
     }
 
 
-    private IVertexBuilder getBuilderWithFoil(ItemStack stack, IRenderTypeBuffer buffer, boolean glint, boolean color) {
+    private VertexConsumer getBuilderWithFoil(ItemStack stack, MultiBufferSource buffer, boolean glint, boolean color) {
 
-        RenderMaterial mat = (CompatHandler.quark && QuarkPlugin.isTome(stack.getItem())) ? Materials.BOOK_TOME_MATERIAL : Materials.BOOK_ENCHANTED_MATERIAL;
+        Material mat = (CompatHandler.quark && QuarkPlugin.isTome(stack.getItem())) ? Materials.BOOK_TOME_MATERIAL : Materials.BOOK_ENCHANTED_MATERIAL;
         if(glint) {
-            IVertexBuilder foilBuilder = null;
+            VertexConsumer foilBuilder = null;
             if (color) {
                 foilBuilder = EnchantedBookRedesignRenderer.getColoredFoil(stack, buffer);
             }
             if (foilBuilder == null) {
                 foilBuilder = buffer.getBuffer(RenderType.entityGlint());
             }
-            return VertexBuilderUtils.create(foilBuilder, mat.buffer(buffer, RenderType::entitySolid));
+            return VertexMultiConsumer.create(foilBuilder, mat.buffer(buffer, RenderType::entitySolid));
         }
         else return  mat.buffer(buffer, RenderType::entitySolid);
     }
 
-    private void renderBook(MatrixStack matrixStack, IRenderTypeBuffer buffer, int light, int overlay, Random random, List<BookColor> colors) {
+    private void renderBook(PoseStack matrixStack, MultiBufferSource buffer, int light, int overlay, Random random, List<BookColor> colors) {
         int ind = random.nextInt(colors.size());
         BookColor color = colors.remove(ind);
-        IVertexBuilder builder = Materials.BOOK_MATERIALS.get(color).buffer(buffer, RenderType::entitySolid);
+        VertexConsumer builder = Materials.BOOK_MATERIALS.get(color).buffer(buffer, RenderType::entitySolid);
 
         book.render(matrixStack, builder, light, overlay);
     }

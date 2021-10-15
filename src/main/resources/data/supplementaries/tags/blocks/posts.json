@@ -3,6 +3,8 @@
   "optional": [
     "#adorn:posts",
 
+    "mysticalworld:pearl_small_post",
+    "mysticalworld:uncanny_mushroom_small_post",
     "quark:oak_post",
     "quark:birch_post",
     "quark:spruce_post",

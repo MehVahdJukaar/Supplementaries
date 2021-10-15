@@ -3,41 +3,43 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.PresentBlockTile;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.PushReaction;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.monster.piglin.PiglinTasks;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootParameters;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.pathfinding.PathType;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.LockableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.piglin.PiglinAi;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import java.util.Collections;
 import java.util.List;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class PresentBlock extends WaterBlock {
 
@@ -46,7 +48,7 @@ public class PresentBlock extends WaterBlock {
     private final DyeColor color;
 
     public static final VoxelShape SHAPE_OPEN = Block.box(2,0,2,14,10,14);
-    public static final VoxelShape SHAPE_CLOSED = VoxelShapes.or(SHAPE_OPEN, Block.box(1,10,1,15,14,15));
+    public static final VoxelShape SHAPE_CLOSED = Shapes.or(SHAPE_OPEN, Block.box(1,10,1,15,14,15));
 
     public PresentBlock(DyeColor color, Properties properties) {
         super(properties);
@@ -55,12 +57,12 @@ public class PresentBlock extends WaterBlock {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(OPEN,WATERLOGGED);
     }
 
     @Override
-    public boolean isPathfindable(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
+    public boolean isPathfindable(BlockState state, BlockGetter worldIn, BlockPos pos, PathComputationType type) {
         return false;
     }
 
@@ -70,35 +72,35 @@ public class PresentBlock extends WaterBlock {
     }
 
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
         return new PresentBlockTile();
     }
 
     @Override
-    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (worldIn.isClientSide) {
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
         } else if (player.isSpectator()) {
-            return ActionResultType.CONSUME;
+            return InteractionResult.CONSUME;
         } else {
-            TileEntity tileentity = worldIn.getBlockEntity(pos);
+            BlockEntity tileentity = worldIn.getBlockEntity(pos);
             if (tileentity instanceof PresentBlockTile) {
 
                 if (((PresentBlockTile) tileentity).isUnused()) {
-                    NetworkHooks.openGui((ServerPlayerEntity) player, (INamedContainerProvider) tileentity, tileentity.getBlockPos());
+                    NetworkHooks.openGui((ServerPlayer) player, (MenuProvider) tileentity, tileentity.getBlockPos());
                     //player.openMenu((INamedContainerProvider) tileentity);
-                    PiglinTasks.angerNearbyPiglins(player, true);
+                    PiglinAi.angerNearbyPiglins(player, true);
 
-                    return ActionResultType.CONSUME;
+                    return InteractionResult.CONSUME;
                 }
             }
         }
-        return ActionResultType.PASS;
+        return InteractionResult.PASS;
     }
 
 
     public ItemStack getPresentItem(PresentBlockTile te) {
-        CompoundNBT compoundnbt = te.save(new CompoundNBT());
+        CompoundTag compoundnbt = te.save(new CompoundTag());
         ItemStack itemstack = new ItemStack(this.getBlock());
         if (!compoundnbt.isEmpty()) {
             itemstack.addTagElement("BlockEntityTag", compoundnbt);
@@ -112,8 +114,8 @@ public class PresentBlock extends WaterBlock {
 
     //overrides creative drop
     @Override
-    public void playerWillDestroy(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
-        TileEntity tileentity = worldIn.getBlockEntity(pos);
+    public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
+        BlockEntity tileentity = worldIn.getBlockEntity(pos);
         if (tileentity instanceof PresentBlockTile) {
             PresentBlockTile te = (PresentBlockTile)tileentity;
             if (!worldIn.isClientSide && player.isCreative() && !te.isEmpty()) {
@@ -132,7 +134,7 @@ public class PresentBlock extends WaterBlock {
     //normal drop
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
-        TileEntity tileentity = builder.getOptionalParameter(LootParameters.BLOCK_ENTITY);
+        BlockEntity tileentity = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
         if (tileentity instanceof PresentBlockTile) {
             PresentBlockTile te = (PresentBlockTile)tileentity;
             ItemStack itemstack = this.getPresentItem(te);
@@ -144,9 +146,9 @@ public class PresentBlock extends WaterBlock {
 
 
     @Override
-    public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
+    public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
         ItemStack itemstack = super.getPickBlock(state, target, world, pos, player);
-        TileEntity te = world.getBlockEntity(pos);
+        BlockEntity te = world.getBlockEntity(pos);
         if (te instanceof PresentBlockTile){
             return getPresentItem((PresentBlockTile) te);
         }
@@ -154,11 +156,11 @@ public class PresentBlock extends WaterBlock {
     }
 
     @Override
-    public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+    public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         if (stack.hasCustomHoverName()) {
-            TileEntity tileentity = worldIn.getBlockEntity(pos);
+            BlockEntity tileentity = worldIn.getBlockEntity(pos);
             if (tileentity instanceof PresentBlockTile) {
-                ((LockableTileEntity) tileentity).setCustomName(stack.getHoverName());
+                ((BaseContainerBlockEntity) tileentity).setCustomName(stack.getHoverName());
             }
         }
     }
@@ -169,16 +171,16 @@ public class PresentBlock extends WaterBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         if(state.getValue(OPEN))
             return SHAPE_OPEN;
         return SHAPE_CLOSED;
     }
 
     @Override
-    public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!state.is(newState.getBlock())) {
-            TileEntity tileentity = worldIn.getBlockEntity(pos);
+            BlockEntity tileentity = worldIn.getBlockEntity(pos);
             if (tileentity instanceof PresentBlockTile) {
                 worldIn.updateNeighbourForOutputSignal(pos, state.getBlock());
             }
@@ -193,13 +195,13 @@ public class PresentBlock extends WaterBlock {
     }
 
     @Override
-    public int getAnalogOutputSignal(BlockState blockState, World worldIn, BlockPos pos) {
-        return Container.getRedstoneSignalFromBlockEntity(worldIn.getBlockEntity(pos));
+    public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
+        return AbstractContainerMenu.getRedstoneSignalFromBlockEntity(worldIn.getBlockEntity(pos));
     }
 
     @Override
-    public INamedContainerProvider getMenuProvider(BlockState state, World worldIn, BlockPos pos) {
-        TileEntity tileentity = worldIn.getBlockEntity(pos);
-        return tileentity instanceof INamedContainerProvider ? (INamedContainerProvider)tileentity : null;
+    public MenuProvider getMenuProvider(BlockState state, Level worldIn, BlockPos pos) {
+        BlockEntity tileentity = worldIn.getBlockEntity(pos);
+        return tileentity instanceof MenuProvider ? (MenuProvider)tileentity : null;
     }
 }

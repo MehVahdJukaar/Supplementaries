@@ -1,14 +1,14 @@
 package net.mehvahdjukaar.supplementaries.datagen;
 
 
-import net.minecraft.data.loot.BlockLootTables;
-import net.minecraft.loot.LootTable;
-import net.minecraft.util.IItemProvider;
+import net.minecraft.data.loot.BlockLoot;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.ItemLike;
 
-public class BlockLootTableAccessor extends BlockLootTables {
+public class BlockLootTableAccessor extends BlockLoot {
 
-    public static LootTable.Builder dropping(IItemProvider item) {
-        return BlockLootTables.createSingleItemTable(item);
+    public static LootTable.Builder dropping(ItemLike item) {
+        return BlockLoot.createSingleItemTable(item);
     }
 
 }

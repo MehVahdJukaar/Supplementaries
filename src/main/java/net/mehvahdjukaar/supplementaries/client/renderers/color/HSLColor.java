@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.color;
 
-import net.minecraft.util.ColorHelper;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.FastColor;
+import net.minecraft.util.Mth;
 
 import java.util.Random;
 
@@ -80,8 +80,8 @@ public class HSLColor {
             g = hueToRgb(p, q, h);
             b = hueToRgb(p, q, h - 1f / 3f);
         }
-        return ColorHelper.PackedColor.color(
-                MathHelper.floor(255), MathHelper.floor(r * 255), MathHelper.floor(g * 255), MathHelper.floor(b * 255));
+        return FastColor.ARGB32.color(
+                Mth.floor(255), Mth.floor(r * 255), Mth.floor(g * 255), Mth.floor(b * 255));
     }
 
     public static int to255(float v) {
@@ -106,9 +106,9 @@ public class HSLColor {
     }
 
     public static float[] rgbToHsl(int rgb) {
-        int r = ColorHelper.PackedColor.red(rgb);
-        int g = ColorHelper.PackedColor.green(rgb);
-        int b = ColorHelper.PackedColor.blue(rgb);
+        int r = FastColor.ARGB32.red(rgb);
+        int g = FastColor.ARGB32.green(rgb);
+        int b = FastColor.ARGB32.blue(rgb);
         return rgbToHsl(r, g, b);
     }
 
@@ -164,9 +164,9 @@ public class HSLColor {
      * @return an array containing the 3 HSL values.
      */
     public static float[] fromRGB(int rgb) {
-        float r = ColorHelper.PackedColor.red(rgb) / 255f;
-        float g = ColorHelper.PackedColor.green(rgb) / 255f;
-        float b = ColorHelper.PackedColor.blue(rgb) / 255f;
+        float r = FastColor.ARGB32.red(rgb) / 255f;
+        float g = FastColor.ARGB32.green(rgb) / 255f;
+        float b = FastColor.ARGB32.blue(rgb) / 255f;
         return fromRGB(r, g, b);
     }
 
@@ -213,8 +213,8 @@ public class HSLColor {
     }
 
     public static int toRGB(float h, float s, float l, float alpha) {
-        s = MathHelper.clamp(s, 0, 100);
-        l = MathHelper.clamp(l, 0, 100);
+        s = Mth.clamp(s, 0, 100);
+        l = Mth.clamp(l, 0, 100);
 
         //  Formula needs all values between 0 - 1.
 
@@ -240,8 +240,8 @@ public class HSLColor {
         g = Math.min(g, 1.0f);
         b = Math.min(b, 1.0f);
 
-        return ColorHelper.PackedColor.color(
-                MathHelper.floor(alpha * 255), MathHelper.floor(r * 255), MathHelper.floor(g * 255), MathHelper.floor(b * 255));
+        return FastColor.ARGB32.color(
+                Mth.floor(alpha * 255), Mth.floor(r * 255), Mth.floor(g * 255), Mth.floor(b * 255));
     }
 
     private static float HueToRGB(float p, float q, float h) {

@@ -14,25 +14,44 @@ import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.fluids.ModSoftFluids;
 import net.mehvahdjukaar.supplementaries.items.tabs.JarTab;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.Block;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.BoatEntity;
-import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.ItemStackHelper;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.vehicle.Boat;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.ContainerHelper;
 import net.minecraft.item.*;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.*;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.util.text.*;
-import net.minecraft.world.World;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Item.Properties;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemUtils;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.UseAnim;
 
 public class JarItem extends AbstractMobContainerItem {
 
@@ -43,20 +62,20 @@ public class JarItem extends AbstractMobContainerItem {
     @Override
     public boolean canItemCatch(Entity e) {
         EntityType<?> type = e.getType();
-        if (e instanceof MonsterEntity) return false;
+        if (e instanceof Monster) return false;
         if (ServerConfigs.cached.JAR_AUTO_DETECT && this.canFitEntity(e)) return true;
         return this.isFirefly(e) || type.is(ModTags.JAR_CATCHABLE) || this.isBoat(e) ||
                 CapturedMobsHelper.CATCHABLE_FISHES.contains(type.getRegistryName().toString());
     }
 
     @Override
-    public void playReleaseSound(World world, Vector3d v) {
-        world.playSound(null, v.x(), v.y(), v.z(), SoundEvents.CHICKEN_EGG, SoundCategory.PLAYERS, 1, 0.05f);
+    public void playReleaseSound(Level world, Vec3 v) {
+        world.playSound(null, v.x(), v.y(), v.z(), SoundEvents.CHICKEN_EGG, SoundSource.PLAYERS, 1, 0.05f);
     }
 
     @Override
-    public void playCatchSound(PlayerEntity player) {
-        player.level.playSound(null, player.blockPosition(), SoundEvents.ARMOR_EQUIP_GENERIC, SoundCategory.BLOCKS, 1, 1);
+    public void playCatchSound(Player player) {
+        player.level.playSound(null, player.blockPosition(), SoundEvents.ARMOR_EQUIP_GENERIC, SoundSource.BLOCKS, 1, 1);
     }
 
     @Override
@@ -75,35 +94,35 @@ public class JarItem extends AbstractMobContainerItem {
     }
 
     public boolean isBoat(Entity e) {
-        return e instanceof BoatEntity;
+        return e instanceof Boat;
     }
 
     @Override
-    public ActionResultType doInteract(ItemStack stack, PlayerEntity player, Entity entity, Hand hand) {
+    public InteractionResult doInteract(ItemStack stack, Player player, Entity entity, InteractionHand hand) {
         //capture mob
         return super.doInteract(stack, player, entity, hand);
     }
 
     //full jar stuff
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        CompoundNBT compoundnbt = stack.getTagElement("BlockEntityTag");
+        CompoundTag compoundnbt = stack.getTagElement("BlockEntityTag");
         if (compoundnbt == null) {
             if (!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().options.advancedItemTooltips) return;
-            tooltip.add(new TranslationTextComponent("message.supplementaries.jar").withStyle(TextFormatting.ITALIC).withStyle(TextFormatting.GRAY));
+            tooltip.add(new TranslatableComponent("message.supplementaries.jar").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
         } else {
             if (compoundnbt.contains("LootTable", 8)) {
-                tooltip.add(new StringTextComponent("???????").withStyle(TextFormatting.GRAY));
+                tooltip.add(new TextComponent("???????").withStyle(ChatFormatting.GRAY));
             }
 
             if (compoundnbt.contains("FluidHolder")) {
-                CompoundNBT com = compoundnbt.getCompound("FluidHolder");
+                CompoundTag com = compoundnbt.getCompound("FluidHolder");
                 SoftFluid s = SoftFluidRegistry.get(com.getString("Fluid"));
                 int count = com.getInt("Count");
                 if (!s.isEmpty() && count > 0) {
 
-                    CompoundNBT nbt = null;
+                    CompoundTag nbt = null;
                     String add = "";
                     if (com.contains("NBT")) {
                         nbt = com.getCompound("NBT");
@@ -113,8 +132,8 @@ public class JarItem extends AbstractMobContainerItem {
                         }
                     }
 
-                    tooltip.add(new TranslationTextComponent("message.supplementaries.fluid_tooltip",
-                            new TranslationTextComponent(s.getTranslationKey() + add), count).withStyle(TextFormatting.GRAY));
+                    tooltip.add(new TranslatableComponent("message.supplementaries.fluid_tooltip",
+                            new TranslatableComponent(s.getTranslationKey() + add), count).withStyle(ChatFormatting.GRAY));
                     if (nbt != null) {
                         PotionNBTHelper.addPotionTooltip(nbt, tooltip, 1);
                         return;
@@ -124,7 +143,7 @@ public class JarItem extends AbstractMobContainerItem {
 
             if (compoundnbt.contains("Items", 9)) {
                 NonNullList<ItemStack> nonnulllist = NonNullList.withSize(27, ItemStack.EMPTY);
-                ItemStackHelper.loadAllItems(compoundnbt, nonnulllist);
+                ContainerHelper.loadAllItems(compoundnbt, nonnulllist);
                 int i = 0;
                 int j = 0;
 
@@ -133,28 +152,28 @@ public class JarItem extends AbstractMobContainerItem {
                         ++j;
                         if (i <= 4) {
                             ++i;
-                            IFormattableTextComponent iformattabletextcomponent = itemstack.getHoverName().copy();
+                            MutableComponent iformattabletextcomponent = itemstack.getHoverName().copy();
 
                             String s = iformattabletextcomponent.getString();
                             s = s.replace(" Bucket", "");
                             s = s.replace(" Bottle", "");
                             s = s.replace("Bucket of ", "");
-                            IFormattableTextComponent str = new StringTextComponent(s);
+                            MutableComponent str = new TextComponent(s);
 
                             str.append(" x").append(String.valueOf(itemstack.getCount()));
-                            tooltip.add(str.withStyle(TextFormatting.GRAY));
+                            tooltip.add(str.withStyle(ChatFormatting.GRAY));
                         }
                     }
                 }
                 if (j - i > 0) {
-                    tooltip.add((new TranslationTextComponent("container.shulkerBox.more", j - i)).withStyle(TextFormatting.ITALIC).withStyle(TextFormatting.GRAY));
+                    tooltip.add((new TranslatableComponent("container.shulkerBox.more", j - i)).withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
                 }
             }
         }
     }
 
     @Override
-    public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items) {
+    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
         if (RegistryConfigs.reg.JAR_TAB.get()) {
             if (group == ModRegistry.JAR_TAB) {
                 JarTab.populateTab(items);
@@ -164,10 +183,10 @@ public class JarItem extends AbstractMobContainerItem {
 
     @Override
     public Rarity getRarity(ItemStack stack) {
-        CompoundNBT tag = stack.getTagElement("BlockEntityTag");
+        CompoundTag tag = stack.getTagElement("BlockEntityTag");
         if (tag != null) {
             if (tag.contains("FluidHolder")) {
-                CompoundNBT com = tag.getCompound("FluidHolder");
+                CompoundTag com = tag.getCompound("FluidHolder");
                 SoftFluid s = SoftFluidRegistry.get(com.getString("Fluid"));
                 if (s == ModSoftFluids.DIRT) return Rarity.RARE;
             }
@@ -178,15 +197,15 @@ public class JarItem extends AbstractMobContainerItem {
     //nonsense jar drinking here
 
     @Override
-    public ItemStack finishUsingItem(ItemStack stack, World world, LivingEntity entity) {
-        CompoundNBT tag = stack.getTagElement("BlockEntityTag");
-        if (tag != null && entity instanceof PlayerEntity) {
+    public ItemStack finishUsingItem(ItemStack stack, Level world, LivingEntity entity) {
+        CompoundTag tag = stack.getTagElement("BlockEntityTag");
+        if (tag != null && entity instanceof Player) {
             JarBlockTile temp = new JarBlockTile();
             temp.load(ModRegistry.JAR.get().defaultBlockState(), tag);
             SoftFluidHolder fh = temp.getSoftFluidHolder();
             if (fh.containsFood()) {
-                if (fh.tryDrinkUpFluid((PlayerEntity) entity, world)) {
-                    CompoundNBT newTag = new CompoundNBT();
+                if (fh.tryDrinkUpFluid((Player) entity, world)) {
+                    CompoundTag newTag = new CompoundTag();
                     temp.save(newTag);
                     stack.addTagElement("BlockEntityTag", newTag);
                     return stack;
@@ -197,9 +216,9 @@ public class JarItem extends AbstractMobContainerItem {
     }
 
     @Override
-    public ActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
+    public InteractionResultHolder<ItemStack> use(Level world, Player playerEntity, InteractionHand hand) {
         if (this.getUseDuration(playerEntity.getItemInHand(hand)) != 0) {
-            return DrinkHelper.useDrink(world, playerEntity, hand);
+            return ItemUtils.useDrink(world, playerEntity, hand);
         }
         return super.use(world, playerEntity, hand);
     }
@@ -207,7 +226,7 @@ public class JarItem extends AbstractMobContainerItem {
     @Override
     public int getUseDuration(ItemStack stack) {
         if(ServerConfigs.cached.JAR_ITEM_DRINK) {
-            CompoundNBT tag = stack.getTagElement("BlockEntityTag");
+            CompoundTag tag = stack.getTagElement("BlockEntityTag");
             if (tag != null) {
                 JarBlockTile temp = new JarBlockTile();
                 temp.load(ModRegistry.JAR.get().defaultBlockState(), tag);
@@ -222,11 +241,11 @@ public class JarItem extends AbstractMobContainerItem {
     }
 
     @Override
-    public UseAction getUseAnimation(ItemStack stack) {
+    public UseAnim getUseAnimation(ItemStack stack) {
         if(ServerConfigs.cached.JAR_ITEM_DRINK) {
-            return UseAction.DRINK;
+            return UseAnim.DRINK;
         }
-        return UseAction.NONE;
+        return UseAnim.NONE;
     }
 
 }

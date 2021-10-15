@@ -3,20 +3,22 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.particles.BasicParticleType;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 
 import java.util.Map;
 import java.util.Random;
 import java.util.function.Supplier;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class CandleHolderBlock extends SconceWallBlock {
 
@@ -26,24 +28,24 @@ public class CandleHolderBlock extends SconceWallBlock {
             Direction.WEST, Block.box(11D, 2.0D, 6D, 16.0D, 13.0D, 10D),
             Direction.EAST, Block.box(0.0D, 2.0D, 6D, 5D, 13.0D, 10D)));
 
-    public CandleHolderBlock(Properties properties, Supplier<BasicParticleType> particleData) {
+    public CandleHolderBlock(Properties properties, Supplier<SimpleParticleType> particleData) {
         super(properties, particleData);
         this.registerDefaultState(this.stateDefinition.any()
                 .setValue(FACING, Direction.NORTH).setValue(LIT, true));
     }
 
     @Override
-    public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
+    public int getLightValue(BlockState state, BlockGetter world, BlockPos pos) {
         return ServerConfigs.cached.CANDLE_HOLDER_LIGHT;
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         return SHAPES.get(state.getValue(FACING));
     }
 
     @Override
-    public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
+    public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
         if(stateIn.getValue(LIT)){
             Direction direction = stateIn.getValue(FACING);
             double d0 = (double) pos.getX() + 0.5D;

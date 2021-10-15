@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.selene.fluids.SoftFluid;
 import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
@@ -10,19 +10,19 @@ import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.common.mobholder.MobContainer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 
 import java.util.Random;
 
@@ -31,18 +31,18 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
     private final ItemRenderer itemRenderer;
     private final Minecraft minecraft = Minecraft.getInstance();
 
-    public JarBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
+    public JarBlockTileRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
         itemRenderer = minecraft.getItemRenderer();
     }
 
-    public static void renderFluid(float height, int color, int luminosity, ResourceLocation texture, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int light, int combinedOverlayIn, boolean shading) {
+    public static void renderFluid(float height, int color, int luminosity, ResourceLocation texture, PoseStack matrixStackIn, MultiBufferSource bufferIn, int light, int combinedOverlayIn, boolean shading) {
         matrixStackIn.pushPose();
         float opacity = 1;//tile.liquidType.opacity;
         if (luminosity != 0) light = light & 15728640 | luminosity << 4;
-        TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(texture);
+        TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(texture);
         // TODO:remove breaking animation
-        IVertexBuilder builder = bufferIn.getBuffer(RenderType.translucentMovingBlock());
+        VertexConsumer builder = bufferIn.getBuffer(RenderType.translucentMovingBlock());
         matrixStackIn.translate(0.5, 0.0625, 0.5);
         RendererUtil.addCube(builder, matrixStackIn, 0.5f, height, sprite, light, color, opacity, combinedOverlayIn, true, true, shading, true);
         matrixStackIn.popPose();
@@ -50,7 +50,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
 
 
     @Override
-    public void render(JarBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
+    public void render(JarBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
 
         long r = tile.getBlockPos().asLong();
         Random rand = new Random(r);
@@ -68,8 +68,8 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
                 matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(rand.nextInt(16) * 22.5f));
                 // matrixStackIn.translate(0, 0, 0.0625);
                 matrixStackIn.translate(0, 0, 1 / (16f * scale));
-                IBakedModel ibakedmodel = itemRenderer.getModel(stack, tile.getLevel(), null);
-                itemRenderer.render(stack, ItemCameraTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
+                BakedModel ibakedmodel = itemRenderer.getModel(stack, tile.getLevel(), null);
+                itemRenderer.render(stack, ItemTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
                         combinedOverlayIn, ibakedmodel);
             }
             matrixStackIn.popPose();
@@ -84,9 +84,9 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
                 float angle = (time % (360 * 80)) / 80f;
                 float angle2 = (time % (360 * 3)) / 3f;
                 float angle3 = (time % (360 * 350)) / 350f;
-                float wo = 0.015f * MathHelper.sin((float) (2 * Math.PI * angle2 / 360));
-                float ho = 0.1f * MathHelper.sin((float) (2 * Math.PI * angle3 / 360));
-                IVertexBuilder builder = bufferIn.getBuffer(RenderType.cutout());
+                float wo = 0.015f * Mth.sin((float) (2 * Math.PI * angle2 / 360));
+                float ho = 0.1f * Mth.sin((float) (2 * Math.PI * angle3 / 360));
+                VertexConsumer builder = bufferIn.getBuffer(RenderType.cutout());
                 matrixStackIn.translate(0.5, 0.5, 0.5);
                 Quaternion rotation = Vector3f.YP.rotationDegrees(-angle);
                 matrixStackIn.mulPose(rotation);
@@ -104,8 +104,8 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
             if (tile.mobContainer.shouldHaveWater()) {
                 matrixStackIn.pushPose();
                 matrixStackIn.translate(0.5, 0.0635, 0.5);
-                IVertexBuilder builder = bufferIn.getBuffer(RenderType.cutout());
-                TextureAtlasSprite sprite_s = minecraft.getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(Textures.SAND_TEXTURE);
+                VertexConsumer builder = bufferIn.getBuffer(RenderType.cutout());
+                TextureAtlasSprite sprite_s = minecraft.getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(Textures.SAND_TEXTURE);
                 RendererUtil.addCube(builder, matrixStackIn, 0.499f, 0.0625f, sprite_s, combinedLightIn, 16777215, 1f, combinedOverlayIn, true, true, true, true);
                 matrixStackIn.popPose();
                 matrixStackIn.pushPose();

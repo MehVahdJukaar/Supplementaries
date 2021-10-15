@@ -1,13 +1,13 @@
 package net.mehvahdjukaar.supplementaries.network;
 
 import net.mehvahdjukaar.supplementaries.block.tiles.PresentBlockTile;
-import net.minecraft.block.BlockState;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.Objects;
@@ -19,7 +19,7 @@ public class UpdateServerPresentPacket {
     private final String sender;
     private final String recipient;
 
-    public UpdateServerPresentPacket(PacketBuffer buf) {
+    public UpdateServerPresentPacket(FriendlyByteBuf buf) {
         this.pos = buf.readBlockPos();
         this.packed = buf.readBoolean();
         this.recipient = buf.readUtf();
@@ -33,7 +33,7 @@ public class UpdateServerPresentPacket {
         this.sender = sender;
     }
 
-    public static void buffer(UpdateServerPresentPacket message, PacketBuffer buf) {
+    public static void buffer(UpdateServerPresentPacket message, FriendlyByteBuf buf) {
         buf.writeBlockPos(message.pos);
         buf.writeBoolean(message.packed);
         buf.writeUtf(message.recipient);
@@ -42,14 +42,14 @@ public class UpdateServerPresentPacket {
 
     public static void handler(UpdateServerPresentPacket message, Supplier<NetworkEvent.Context> ctx) {
         // server world
-        World world = Objects.requireNonNull(ctx.get().getSender()).level;
+        Level world = Objects.requireNonNull(ctx.get().getSender()).level;
         ctx.get().enqueueWork(() -> {
             if (world != null) {
                 BlockPos pos = message.pos;
-                TileEntity tileentity = world.getBlockEntity(message.pos);
+                BlockEntity tileentity = world.getBlockEntity(message.pos);
                 if (tileentity instanceof PresentBlockTile) {
                     PresentBlockTile present = (PresentBlockTile) tileentity;
-                    world.playSound(null,message.pos, SoundEvents.VILLAGER_WORK_LEATHERWORKER, SoundCategory.BLOCKS,1,1.3f);
+                    world.playSound(null,message.pos, SoundEvents.VILLAGER_WORK_LEATHERWORKER, SoundSource.BLOCKS,1,1.3f);
                     present.pack(message.recipient, message.sender, message.packed);
 
                     //updates client

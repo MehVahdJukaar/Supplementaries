@@ -6,11 +6,11 @@ import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.quark.QuarkPlugin;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.item.BookItem;
-import net.minecraft.item.EnchantedBookItem;
-import net.minecraft.item.Item;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.item.BookItem;
+import net.minecraft.world.item.EnchantedBookItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 
 public class BookPileBlockTile extends ItemDisplayTile {
 
@@ -48,7 +48,7 @@ public class BookPileBlockTile extends ItemDisplayTile {
     }
 
     @Override
-    protected ITextComponent getDefaultName() {
-        return new StringTextComponent("block.supplementaries.book_pile");
+    protected Component getDefaultName() {
+        return new TextComponent("block.supplementaries.book_pile");
     }
 }

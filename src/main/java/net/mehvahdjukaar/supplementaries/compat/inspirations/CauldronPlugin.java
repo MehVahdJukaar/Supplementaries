@@ -14,7 +14,7 @@ import net.minecraft.item.DyeColor;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionUtils;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.List;
@@ -22,7 +22,7 @@ import java.util.function.Supplier;
 
 public class CauldronPlugin {
 
-    public static boolean doStuff(TileEntity cauldronTile, SoftFluidHolder faucetFluidHolder, boolean doTransfer, Supplier<Boolean> transferBelow) {
+    public static boolean doStuff(BlockEntity cauldronTile, SoftFluidHolder faucetFluidHolder, boolean doTransfer, Supplier<Boolean> transferBelow) {
         if (cauldronTile instanceof CauldronTileEntity) {
             CauldronTileEntity te = (CauldronTileEntity) cauldronTile;
 

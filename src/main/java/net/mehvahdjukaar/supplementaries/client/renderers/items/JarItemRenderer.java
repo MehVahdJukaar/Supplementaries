@@ -1,21 +1,21 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.items;
 
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.selene.fluids.SoftFluid;
 import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import com.mojang.math.Vector3f;
 
 import java.util.Random;
 
@@ -27,18 +27,18 @@ public class JarItemRenderer extends CageItemRenderer {
     private static final Random RAND = new Random(420);
 
     @Override
-    public void renderTileStuff(CompoundNBT tag, ItemCameraTransforms.TransformType transformType, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
+    public void renderTileStuff(CompoundTag tag, ItemTransforms.TransformType transformType, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
 
         super.renderTileStuff(tag, transformType, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
 
         if (tag.contains("MobHolder") || tag.contains("BucketHolder")) {
-            CompoundNBT com = tag.getCompound("BucketHolder");
+            CompoundTag com = tag.getCompound("BucketHolder");
             if (com.isEmpty()) com = tag.getCompound("MobHolder");
             if (com.contains("FishTexture")) {
                 int fishTexture = com.getInt("FishTexture");
                 if (fishTexture >= 0) {
                     matrixStackIn.pushPose();
-                    IVertexBuilder builder1 = bufferIn.getBuffer(RenderType.cutout());
+                    VertexConsumer builder1 = bufferIn.getBuffer(RenderType.cutout());
                     matrixStackIn.translate(0.5, 0.3125, 0.5);
                     matrixStackIn.mulPose(Const.YN45);
                     matrixStackIn.scale(1.5f, 1.5f, 1.5f);
@@ -51,7 +51,7 @@ public class JarItemRenderer extends CageItemRenderer {
             }
         }
         if (tag.contains("FluidHolder")) {
-            CompoundNBT com = tag.getCompound("FluidHolder");
+            CompoundTag com = tag.getCompound("FluidHolder");
             int height = com.getInt("Count");
             if (height != 0) {
                 int color = com.getInt("CachedColor");
@@ -77,8 +77,8 @@ public class JarItemRenderer extends CageItemRenderer {
                     // matrixStackIn.translate(0, 0, 0.0625);
                     matrixStackIn.translate(0, 0, 1 / (16f * scale));
                     ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-                    IBakedModel ibakedmodel = itemRenderer.getModel(cookieStack, null, null);
-                    itemRenderer.render(cookieStack, ItemCameraTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
+                    BakedModel ibakedmodel = itemRenderer.getModel(cookieStack, null, null);
+                    itemRenderer.render(cookieStack, ItemTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
                             combinedOverlayIn, ibakedmodel);
                 }
                 matrixStackIn.popPose();

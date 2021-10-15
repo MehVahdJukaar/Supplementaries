@@ -2,22 +2,22 @@ package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.block.util.ICustomDataHolder;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.passive.horse.AbstractHorseEntity;
-import net.minecraft.entity.passive.horse.SkeletonHorseEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.world.World;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.horse.AbstractHorse;
+import net.minecraft.world.entity.animal.horse.SkeletonHorse;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
@@ -30,8 +30,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import javax.annotation.Nullable;
 import java.lang.reflect.Method;
 
-@Mixin(SkeletonHorseEntity.class)
-public abstract class SkeletonHorseMixin extends AbstractHorseEntity implements ICustomDataHolder {
+@Mixin(SkeletonHorse.class)
+public abstract class SkeletonHorseMixin extends AbstractHorse implements ICustomDataHolder {
 
     private static final int FLESH_NEEDED = 64;
 
@@ -43,30 +43,30 @@ public abstract class SkeletonHorseMixin extends AbstractHorseEntity implements 
     private int fleshCount = 0;
     private int conversionTime = -1;
 
-    protected SkeletonHorseMixin(EntityType<? extends AbstractHorseEntity> p_i48563_1_, World p_i48563_2_) {
+    protected SkeletonHorseMixin(EntityType<? extends AbstractHorse> p_i48563_1_, Level p_i48563_2_) {
         super(p_i48563_1_, p_i48563_2_);
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("TAIL"), cancellable = true)
-    public void addAdditionalSaveData(CompoundNBT compoundNBT, CallbackInfo ci) {
+    public void addAdditionalSaveData(CompoundTag compoundNBT, CallbackInfo ci) {
         compoundNBT.putInt("FleshCount",this.fleshCount);
         compoundNBT.putInt("ConversionTile",this.conversionTime);
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"), cancellable = true)
-    public void readAdditionalSaveData(CompoundNBT compoundNBT, CallbackInfo ci) {
+    public void readAdditionalSaveData(CompoundTag compoundNBT, CallbackInfo ci) {
         this.fleshCount = compoundNBT.getInt("FleshCount");
         this.conversionTime = compoundNBT.getInt("ConversionTile");
     }
 
     @Inject(method = "mobInteract", at = @At(value = "HEAD"), cancellable = true)
-    public void mobInteract(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResultType> cir) {
+    public void mobInteract(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
         if(ServerConfigs.cached.ZOMBIE_HORSE && this.isTamed() && !this.isBaby()) {
             ItemStack stack = player.getItemInHand(hand);
             if (stack.getItem() == Items.ROTTEN_FLESH && fleshCount < ServerConfigs.cached.ZOMBIE_HORSE_COST) {
                 this.feedRottenFlesh(player, hand, stack);
                 cir.cancel();
-                cir.setReturnValue(ActionResultType.sidedSuccess(player.level.isClientSide));
+                cir.setReturnValue(InteractionResult.sidedSuccess(player.level.isClientSide));
             }
         }
     }
@@ -94,13 +94,13 @@ public abstract class SkeletonHorseMixin extends AbstractHorseEntity implements 
 
     public void setEating(){
         try {
-            Method m = ObfuscationReflectionHelper.findMethod(AbstractHorseEntity.class, "func_110266_cB");
+            Method m = ObfuscationReflectionHelper.findMethod(AbstractHorse.class, "func_110266_cB");
             m.setAccessible(true);
             m.invoke(this);
         }catch (Exception ignored){}
     }
 
-    public void feedRottenFlesh(PlayerEntity player, Hand hand,ItemStack stack){
+    public void feedRottenFlesh(Player player, InteractionHand hand,ItemStack stack){
         float heal = 0.5f;
         if (this.getHealth() < this.getMaxHealth()) {
             this.heal(heal);
@@ -129,7 +129,7 @@ public abstract class SkeletonHorseMixin extends AbstractHorseEntity implements 
         float yHeadRot = this.yHeadRot;
         float yBodyRotO = this.yBodyRotO;
         float yHeadRotO = this.yHeadRotO;
-        AbstractHorseEntity newHorse = this.convertTo(EntityType.ZOMBIE_HORSE, true);
+        AbstractHorse newHorse = this.convertTo(EntityType.ZOMBIE_HORSE, true);
         if (newHorse != null) {
 
             newHorse.yBodyRot = yBodyRot;
@@ -140,12 +140,12 @@ public abstract class SkeletonHorseMixin extends AbstractHorseEntity implements 
             newHorse.setOwnerUUID(this.getOwnerUUID());
             newHorse.setTamed(this.isTamed());
 
-            newHorse.addEffect(new EffectInstance(Effects.CONFUSION, 200, 0));
+            newHorse.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 200, 0));
 
             if(this.isSaddled()){
                 newHorse.equipSaddle(null);
             }
-            for(EquipmentSlotType equipmentslottype : EquipmentSlotType.values()) {
+            for(EquipmentSlot equipmentslottype : EquipmentSlot.values()) {
                 ItemStack itemstack = this.getItemBySlot(equipmentslottype);
                 if (!itemstack.isEmpty()) {
                     if (EnchantmentHelper.hasBindingCurse(itemstack)) {

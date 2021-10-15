@@ -97,6 +97,7 @@ public class ConfiguredCustomScreen extends ConfigScreen {
         addIcon("placeable gunpowder", Items.GUNPOWDER);
         addIcon("slingshot", ModRegistry.SLINGSHOT_ITEM.get());
         addIcon("server protection", Items.COMMAND_BLOCK);
+        addIcon("bamboo_spikes", ModRegistry.BAMBOO_SPIKES_ITEM.get());
 
     }
 

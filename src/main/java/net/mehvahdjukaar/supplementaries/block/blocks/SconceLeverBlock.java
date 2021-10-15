@@ -1,26 +1,33 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.particles.BasicParticleType;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.Level;
 
 import java.util.Random;
 import java.util.function.Supplier;
 
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
 public class SconceLeverBlock extends SconceWallBlock{
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
-    public SconceLeverBlock(Properties properties, Supplier<BasicParticleType> particleData) {
+    public SconceLeverBlock(Properties properties, Supplier<SimpleParticleType> particleData) {
         super(properties, particleData);
         this.registerDefaultState(this.stateDefinition.any().setValue(POWERED,false)
                 .setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false).setValue(LIT, true));
@@ -29,29 +36,29 @@ public class SconceLeverBlock extends SconceWallBlock{
     //need to update neighbours too
     //TODO: remove by replacing proper update for block change 11->3
     @Override
-    public void onChange(BlockState state, IWorld world, BlockPos pos) {
-        if(world instanceof World)
-            this.updateNeighbors(state, (World) world, pos);
+    public void onChange(BlockState state, LevelAccessor world, BlockPos pos) {
+        if(world instanceof Level)
+            this.updateNeighbors(state, (Level) world, pos);
     }
 
     @Override
-    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        ActionResultType result = super.use(state,worldIn,pos,player,handIn,hit);
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+        InteractionResult result = super.use(state,worldIn,pos,player,handIn,hit);
         if(result.consumesAction()) {
             this.updateNeighbors(state, worldIn, pos);
             return result;
         }
         if (worldIn.isClientSide) {
             state.cycle(POWERED);
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
         } else {
             BlockState blockstate = this.setPowered(state, worldIn, pos);
             float f = blockstate.getValue(POWERED) ? 0.6F : 0.5F;
-            worldIn.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundCategory.BLOCKS, 0.3F, f);
-            return ActionResultType.CONSUME;
+            worldIn.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.3F, f);
+            return InteractionResult.CONSUME;
         }
     }
-    public BlockState setPowered(BlockState state, World world, BlockPos pos) {
+    public BlockState setPowered(BlockState state, Level world, BlockPos pos) {
         state = state.cycle(POWERED);
         world.setBlock(pos, state, 3);
         this.updateNeighbors(state, world, pos);
@@ -59,7 +66,7 @@ public class SconceLeverBlock extends SconceWallBlock{
     }
 
     @Override
-    public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!isMoving && !state.is(newState.getBlock())) {
             if (state.getValue(POWERED)) {
                 this.updateNeighbors(state, worldIn, pos);
@@ -70,12 +77,12 @@ public class SconceLeverBlock extends SconceWallBlock{
     }
 
     @Override
-    public int getSignal(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+    public int getSignal(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
         return blockState.getValue(POWERED)^!blockState.getValue(LIT) ? 15 : 0;
     }
 
     @Override
-    public int getDirectSignal(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+    public int getDirectSignal(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
         return blockState.getValue(POWERED)^!blockState.getValue(LIT)  && getFacing(blockState) == side ? 15 : 0;
     }
     @Override
@@ -83,13 +90,13 @@ public class SconceLeverBlock extends SconceWallBlock{
         return true;
     }
 
-    private void updateNeighbors(BlockState state, World world, BlockPos pos) {
+    private void updateNeighbors(BlockState state, Level world, BlockPos pos) {
         world.updateNeighborsAt(pos, this);
         world.updateNeighborsAt(pos.relative(getFacing(state).getOpposite()), this);
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(POWERED);
     }
@@ -99,7 +106,7 @@ public class SconceLeverBlock extends SconceWallBlock{
     }
 
     @Override
-    public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
+    public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
         if(!stateIn.getValue(POWERED)) {
             super.animateTick(stateIn, worldIn, pos, rand);
         }

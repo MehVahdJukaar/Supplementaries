@@ -1,31 +1,31 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.block.tiles.CrackedBellBlockTile;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
+import com.mojang.math.Vector3f;
 import net.minecraftforge.client.model.data.EmptyModelData;
 
-public class CrackedBellTileEntityRenderer extends TileEntityRenderer<CrackedBellBlockTile> {
-    private final BlockRendererDispatcher blockRenderer;
+public class CrackedBellTileEntityRenderer extends BlockEntityRenderer<CrackedBellBlockTile> {
+    private final BlockRenderDispatcher blockRenderer;
     private final BlockState floorBell;
 
 
-    public CrackedBellTileEntityRenderer(TileEntityRendererDispatcher dispatcher) {
+    public CrackedBellTileEntityRenderer(BlockEntityRenderDispatcher dispatcher) {
         super(dispatcher);
         blockRenderer = Minecraft.getInstance().getBlockRenderer();
         floorBell = ModRegistry.CRACKED_BELL.get().defaultBlockState();
     }
 
-    public void render(CrackedBellBlockTile tile, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
+    public void render(CrackedBellBlockTile tile, float partialTicks, PoseStack matrixStack, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
 
         if(tile.isOnFloor())return;
 
@@ -35,7 +35,7 @@ public class CrackedBellTileEntityRenderer extends TileEntityRenderer<CrackedBel
             matrixStack.translate(0.5, 1-0.1875, 0.5);
             float f = (float)tile.ticks + partialTicks;
 
-            float f3 = MathHelper.sin(f / (float)Math.PI) / (4.0F + f / 3.0F);
+            float f3 = Mth.sin(f / (float)Math.PI) / (4.0F + f / 3.0F);
             if (tile.clickDirection == Direction.NORTH) {
                 matrixStack.mulPose(Vector3f.XP.rotation(-f3));
             } else if (tile.clickDirection == Direction.SOUTH) {

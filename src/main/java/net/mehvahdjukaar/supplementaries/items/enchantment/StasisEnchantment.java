@@ -1,15 +1,17 @@
 package net.mehvahdjukaar.supplementaries.items.enchantment;
 
 import net.mehvahdjukaar.supplementaries.items.SlingshotItem;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentType;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentCategory;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemStack;
+
+import net.minecraft.world.item.enchantment.Enchantment.Rarity;
 
 public class StasisEnchantment extends Enchantment {
 
-    public StasisEnchantment(Rarity rarity, EnchantmentType type, EquipmentSlotType... slotTypes) {
+    public StasisEnchantment(Rarity rarity, EnchantmentCategory type, EquipmentSlot... slotTypes) {
         super(rarity, type, slotTypes);
     }
 

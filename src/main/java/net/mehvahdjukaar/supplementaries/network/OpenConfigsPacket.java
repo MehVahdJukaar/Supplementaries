@@ -4,7 +4,7 @@ package net.mehvahdjukaar.supplementaries.network;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.ExtensionPoint;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -12,10 +12,10 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class OpenConfigsPacket {
-    public OpenConfigsPacket(PacketBuffer buffer) {}
+    public OpenConfigsPacket(FriendlyByteBuf buffer) {}
     public OpenConfigsPacket() {}
 
-    public static void buffer(OpenConfigsPacket message, PacketBuffer buf) {}
+    public static void buffer(OpenConfigsPacket message, FriendlyByteBuf buf) {}
 
     public static void handler(OpenConfigsPacket message, Supplier<NetworkEvent.Context> ctx) {
         // client world

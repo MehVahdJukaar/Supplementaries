@@ -6,17 +6,17 @@ import net.mehvahdjukaar.supplementaries.block.blocks.FrameBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.MimicBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.FrameBlockTile;
 import net.mehvahdjukaar.supplementaries.common.Textures;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockModelShapes;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.model.ItemOverrideList;
-import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.renderer.block.BlockModelShaper;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
@@ -30,10 +30,10 @@ import java.util.List;
 import java.util.Random;
 
 public class FrameBlockBakedModel implements IDynamicBakedModel {
-    private final IBakedModel overlay;
-    private final BlockModelShapes blockModelShaper;
+    private final BakedModel overlay;
+    private final BlockModelShaper blockModelShaper;
 
-    public FrameBlockBakedModel(IBakedModel overlay) {
+    public FrameBlockBakedModel(BakedModel overlay) {
         this.overlay = overlay;
         this.blockModelShaper = Minecraft.getInstance().getBlockRenderer().getBlockModelShaper();
     }
@@ -50,13 +50,13 @@ public class FrameBlockBakedModel implements IDynamicBakedModel {
             try {
                 BlockState mimic = extraData.getData(BlockProperties.MIMIC);
                 if (mimic == null || (mimic.isAir())) {
-                    IBakedModel model = blockModelShaper.getBlockModel(state.setValue(FrameBlock.HAS_BLOCK, false));
+                    BakedModel model = blockModelShaper.getBlockModel(state.setValue(FrameBlock.HAS_BLOCK, false));
                     quads.addAll(model.getQuads(mimic, side, rand, EmptyModelData.INSTANCE));
                     return quads;
                 }
 
                 if (!(mimic.getBlock() instanceof MimicBlock)) {
-                    IBakedModel model = blockModelShaper.getBlockModel(mimic);
+                    BakedModel model = blockModelShaper.getBlockModel(mimic);
 
                     quads.addAll(model.getQuads(mimic, side, rand, EmptyModelData.INSTANCE));
                 }
@@ -95,17 +95,17 @@ public class FrameBlockBakedModel implements IDynamicBakedModel {
 
     @Override
     public TextureAtlasSprite getParticleIcon() {
-        return Minecraft.getInstance().getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(Textures.TIMBER_CROSS_BRACE_TEXTURE);
+        return Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(Textures.TIMBER_CROSS_BRACE_TEXTURE);
     }
 
     @Override
-    public ItemOverrideList getOverrides() {
-        return ItemOverrideList.EMPTY;
+    public ItemOverrides getOverrides() {
+        return ItemOverrides.EMPTY;
     }
 
     @Override
-    public ItemCameraTransforms getTransforms() {
-        return ItemCameraTransforms.NO_TRANSFORMS;
+    public ItemTransforms getTransforms() {
+        return ItemTransforms.NO_TRANSFORMS;
     }
 
 

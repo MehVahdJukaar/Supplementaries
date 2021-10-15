@@ -1,13 +1,13 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.color;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.GunpowderBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.color.IBlockColor;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.IBlockDisplayReader;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.color.block.BlockColor;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.BlockAndTintGetter;
 
-public class GunpowderBlockColor implements  IBlockColor {
+public class GunpowderBlockColor implements  BlockColor {
 
     private static final int[] COLORS = new int[9];
 
@@ -27,19 +27,19 @@ public class GunpowderBlockColor implements  IBlockColor {
                 blue = 0.0F;
             }
 
-            int redInt = MathHelper.clamp(MathHelper.floor(red * 255), 0, 255);
-            int greenInt = MathHelper.clamp(MathHelper.floor(green * 255), 0, 255);
-            int blueInt = MathHelper.clamp(MathHelper.floor(blue * 255), 0, 255);
+            int redInt = Mth.clamp(Mth.floor(red * 255), 0, 255);
+            int greenInt = Mth.clamp(Mth.floor(green * 255), 0, 255);
+            int blueInt = Mth.clamp(Mth.floor(blue * 255), 0, 255);
 
 
-            COLORS[i] = MathHelper.color(redInt, greenInt, blueInt);
+            COLORS[i] = Mth.color(redInt, greenInt, blueInt);
             //if(i==0) COLORS[i] = 0xffffff;
             // return 6579300;
         }
     }
 
     @Override
-    public int getColor(BlockState state, IBlockDisplayReader reader, BlockPos pos, int color) {
+    public int getColor(BlockState state, BlockAndTintGetter reader, BlockPos pos, int color) {
         return COLORS[state.getValue(GunpowderBlock.BURNING)];
     }
 }

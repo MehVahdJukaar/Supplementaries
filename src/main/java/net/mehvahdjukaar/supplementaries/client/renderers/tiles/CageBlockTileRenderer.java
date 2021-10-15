@@ -1,29 +1,29 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.common.mobholder.IMobContainerProvider;
 import net.mehvahdjukaar.supplementaries.common.mobholder.MobContainer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.entity.Entity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
 
 
-public class CageBlockTileRenderer<T extends TileEntity & IMobContainerProvider> extends TileEntityRenderer<T> {
-    private final EntityRendererManager entityRenderer;
+public class CageBlockTileRenderer<T extends BlockEntity & IMobContainerProvider> extends BlockEntityRenderer<T> {
+    private final EntityRenderDispatcher entityRenderer;
 
-    public CageBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
+    public CageBlockTileRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
         entityRenderer = Minecraft.getInstance().getEntityRenderDispatcher();
     }
 
-    public void renderMob(MobContainer mobHolder, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer bufferIn, int combinedLightIn, Direction dir) {
+    public void renderMob(MobContainer mobHolder, float partialTicks, PoseStack matrixStack, MultiBufferSource bufferIn, int combinedLightIn, Direction dir) {
         Entity mob = mobHolder.getDisplayedMob();
         if (mob != null) {
             matrixStack.pushPose();
@@ -36,9 +36,9 @@ public class CageBlockTileRenderer<T extends TileEntity & IMobContainerProvider>
         }
     }
 
-    public static void renderMobStatic(Entity mob, float scale, EntityRendererManager renderer, MatrixStack matrixStack, float partialTicks,  IRenderTypeBuffer bufferIn, int combinedLightIn, float rot){
+    public static void renderMobStatic(Entity mob, float scale, EntityRenderDispatcher renderer, PoseStack matrixStack, float partialTicks,  MultiBufferSource bufferIn, int combinedLightIn, float rot){
 
-        double y = MathHelper.lerp(partialTicks, mob.yOld, mob.getY());//0;//mobHolder.getYOffset(partialTicks);
+        double y = Mth.lerp(partialTicks, mob.yOld, mob.getY());//0;//mobHolder.getYOffset(partialTicks);
         double x = mob.getX();
         double z = mob.getZ();
 
@@ -64,7 +64,7 @@ public class CageBlockTileRenderer<T extends TileEntity & IMobContainerProvider>
     }
 
     @Override
-    public void render(T tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
+    public void render(T tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
         this.renderMob(tile.getMobContainer(), partialTicks, matrixStackIn, bufferIn, combinedLightIn, tile.getDirection());
 

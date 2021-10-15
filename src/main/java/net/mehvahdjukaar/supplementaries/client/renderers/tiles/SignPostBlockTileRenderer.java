@@ -1,30 +1,30 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.supplementaries.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.client.Materials;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.client.renderers.LOD;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.client.renderer.model.RenderMaterial;
-import net.minecraft.client.renderer.texture.NativeImage;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.util.IReorderingProcessor;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.resources.model.Material;
+import com.mojang.blaze3d.platform.NativeImage;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import com.mojang.math.Vector3f;
 
 import java.util.List;
 
 
-public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockTile> {
+public class SignPostBlockTileRenderer extends BlockEntityRenderer<SignPostBlockTile> {
 
-    public static final ModelRenderer signModel = new ModelRenderer(64, 16, 0, 0);
+    public static final ModelPart signModel = new ModelPart(64, 16, 0, 0);
    //TODO: make other tiles this way
     static {
         signModel.setPos(0.0F, 0.0F, 0.0F);
@@ -33,17 +33,17 @@ public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockT
         signModel.texOffs(0, 6).addBox(-10.0F, -6.0F, -3.0F, 2.0F, 3.0F, 1.0F, 0.0F, false);
     }
 
-    public SignPostBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
+    public SignPostBlockTileRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
 
    }
 
     @Override
-    public void render(SignPostBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
+    public void render(SignPostBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
 
         BlockPos pos = tile.getBlockPos();
-        Vector3d cameraPos = this.renderer.camera.getPosition();
+        Vec3 cameraPos = this.renderer.camera.getPosition();
 
         //don't render signs from far away
 
@@ -57,7 +57,7 @@ public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockT
             float relAngle = LOD.getRelativeAngle(cameraPos, pos);
 
             // sign code
-            FontRenderer fontrenderer = this.renderer.getFont();
+            Font fontrenderer = this.renderer.getFont();
             int i = tile.textHolder.textColor.getTextColor();
             int j = (int) ((double) NativeImage.getR(i) * 0.4D);
             int k = (int) ((double) NativeImage.getG(i) * 0.4D);
@@ -86,8 +86,8 @@ public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockT
                 }
 
                 matrixStackIn.scale(1,-1,-1);
-                RenderMaterial material = Materials.SIGN_POSTS_MATERIALS.get(tile.woodTypeUp);
-                IVertexBuilder builder =  material.buffer(bufferIn, RenderType::entitySolid);
+                Material material = Materials.SIGN_POSTS_MATERIALS.get(tile.woodTypeUp);
+                VertexConsumer builder =  material.buffer(bufferIn, RenderType::entitySolid);
                 signModel.render(matrixStackIn, builder, combinedLightIn, combinedOverlayIn);
 
                 matrixStackIn.popPose();
@@ -101,9 +101,9 @@ public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockT
                     matrixStackIn.translate(0, 1, 0);
 
 
-                    IReorderingProcessor ireorderingprocessor = tile.textHolder.getRenderText(0, (t) -> {
-                        List<IReorderingProcessor> list = fontrenderer.split(t, 90);
-                        return list.isEmpty() ? IReorderingProcessor.EMPTY : list.get(0);
+                    FormattedCharSequence ireorderingprocessor = tile.textHolder.getRenderText(0, (t) -> {
+                        List<FormattedCharSequence> list = fontrenderer.split(t, 90);
+                        return list.isEmpty() ? FormattedCharSequence.EMPTY : list.get(0);
                     });
                     if (ireorderingprocessor != null) {
                         float f3 = (float) (-fontrenderer.width(ireorderingprocessor) / 2);
@@ -132,8 +132,8 @@ public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockT
                 }
 
                 matrixStackIn.scale(1,-1,-1);
-                RenderMaterial material = Materials.SIGN_POSTS_MATERIALS.get(tile.woodTypeDown);
-                IVertexBuilder builder =  material.buffer(bufferIn, RenderType::entitySolid);
+                Material material = Materials.SIGN_POSTS_MATERIALS.get(tile.woodTypeDown);
+                VertexConsumer builder =  material.buffer(bufferIn, RenderType::entitySolid);
                 signModel.render(matrixStackIn, builder, combinedLightIn, combinedOverlayIn);
 
                 matrixStackIn.popPose();
@@ -145,9 +145,9 @@ public class SignPostBlockTileRenderer extends TileEntityRenderer<SignPostBlockT
                     matrixStackIn.scale(0.010416667F, -0.010416667F, 0.010416667F);
                     matrixStackIn.translate(0, 1, 0);
 
-                    IReorderingProcessor ireorderingprocessor = tile.textHolder.getRenderText(1, (p_243502_1_) -> {
-                        List<IReorderingProcessor> list = fontrenderer.split(p_243502_1_, 90);
-                        return list.isEmpty() ? IReorderingProcessor.EMPTY : list.get(0);
+                    FormattedCharSequence ireorderingprocessor = tile.textHolder.getRenderText(1, (p_243502_1_) -> {
+                        List<FormattedCharSequence> list = fontrenderer.split(p_243502_1_, 90);
+                        return list.isEmpty() ? FormattedCharSequence.EMPTY : list.get(0);
                     });
                     if (ireorderingprocessor != null) {
                         float f3 = (float) (-fontrenderer.width(ireorderingprocessor) / 2);

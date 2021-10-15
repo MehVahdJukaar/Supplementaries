@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.supplementaries.block.blocks.HourGlassBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.HourGlassBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
@@ -10,33 +10,33 @@ import net.mehvahdjukaar.supplementaries.client.renderers.color.HSLColor;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Quaternion;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
+import com.mojang.math.Quaternion;
 
 
-public class HourGlassBlockTileRenderer extends TileEntityRenderer<HourGlassBlockTile> {
+public class HourGlassBlockTileRenderer extends BlockEntityRenderer<HourGlassBlockTile> {
 
-    public HourGlassBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
+    public HourGlassBlockTileRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
     }
 
 
-    public static void renderSand(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
+    public static void renderSand(PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
                                   int combinedOverlayIn, TextureAtlasSprite sprite, float height, Direction dir) {
 
-        IVertexBuilder builder = bufferIn.getBuffer(RenderType.translucent());
+        VertexConsumer builder = bufferIn.getBuffer(RenderType.translucent());
 
         int color = 0xffffff;
         if (CommonUtil.FESTIVITY.isAprilsFool()) {
             color = HSLColor.getRainbowColor(1);
-            sprite = Minecraft.getInstance().getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(Textures.WHITE_CONCRETE_TEXTURE);
+            sprite = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(Textures.WHITE_CONCRETE_TEXTURE);
         }
 
 
@@ -82,12 +82,12 @@ public class HourGlassBlockTileRenderer extends TileEntityRenderer<HourGlassBloc
     }
 
     @Override
-    public void render(HourGlassBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
+    public void render(HourGlassBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
         if (tile.sandType.isEmpty()) return;
         TextureAtlasSprite sprite = tile.getOrCreateSprite();
 
-        float h = MathHelper.lerp(partialTicks, tile.prevProgress, tile.progress);
+        float h = Mth.lerp(partialTicks, tile.prevProgress, tile.progress);
         Direction dir = tile.getBlockState().getValue(HourGlassBlock.FACING);
 
         renderSand(matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, sprite, h, dir);

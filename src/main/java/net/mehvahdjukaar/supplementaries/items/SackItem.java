@@ -3,20 +3,20 @@ package net.mehvahdjukaar.supplementaries.items;
 
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.minecraft.block.Block;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
@@ -25,20 +25,22 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
+import net.minecraft.world.item.Item.Properties;
+
 public class SackItem extends BlockItem {
     public SackItem(Block blockIn, Properties builder) {
         super(blockIn, builder);
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
+    public void inventoryTick(ItemStack stack, Level worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
         super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
         if (!ServerConfigs.cached.SACK_PENALTY) return;
-        if (entityIn instanceof ServerPlayerEntity && !((PlayerEntity) entityIn).isCreative() && !entityIn.isSpectator() && worldIn.getGameTime() % 20L == 0L) {
-            ServerPlayerEntity player = (ServerPlayerEntity) entityIn;
-            Collection<EffectInstance> effects = player.getActiveEffects();
-            for (EffectInstance effect : effects) {
-                if (effect.getEffect() == Effects.MOVEMENT_SLOWDOWN)
+        if (entityIn instanceof ServerPlayer && !((Player) entityIn).isCreative() && !entityIn.isSpectator() && worldIn.getGameTime() % 20L == 0L) {
+            ServerPlayer player = (ServerPlayer) entityIn;
+            Collection<MobEffectInstance> effects = player.getActiveEffects();
+            for (MobEffectInstance effect : effects) {
+                if (effect.getEffect() == MobEffects.MOVEMENT_SLOWDOWN)
                     return;
             }
 
@@ -54,13 +56,13 @@ public class SackItem extends BlockItem {
             }
             int inc = ServerConfigs.cached.SACK_INCREMENT;
             if (i > inc) {
-                player.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 80, i / (inc + 1)));
+                player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 80, i / (inc + 1)));
             }
         }
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         /*
         if(!CompatHandler.quark || !QuarkTooltipPlugin.canRenderTooltip()) {
@@ -96,6 +98,6 @@ public class SackItem extends BlockItem {
         */
 
         if (!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().options.advancedItemTooltips) return;
-        tooltip.add(new TranslationTextComponent("message.supplementaries.sack").withStyle(TextFormatting.ITALIC).withStyle(TextFormatting.GRAY));
+        tooltip.add(new TranslatableComponent("message.supplementaries.sack").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
     }
 }

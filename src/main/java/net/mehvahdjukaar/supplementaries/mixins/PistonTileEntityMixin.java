@@ -3,21 +3,21 @@ package net.mehvahdjukaar.supplementaries.mixins;
 import net.mehvahdjukaar.supplementaries.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.block.util.IBlockHolder;
 import net.mehvahdjukaar.supplementaries.compat.quark.BambooSpikesPistonMovement;
-import net.minecraft.block.BlockState;
-import net.minecraft.tileentity.PistonTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.piston.PistonMovingBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.shapes.Shapes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin({PistonTileEntity.class})
-public abstract class PistonTileEntityMixin extends TileEntity implements IBlockHolder {
+@Mixin({PistonMovingBlockEntity.class})
+public abstract class PistonTileEntityMixin extends BlockEntity implements IBlockHolder {
 
     public BlockState getHeldBlock(){
         return this.movedState;
@@ -37,7 +37,7 @@ public abstract class PistonTileEntityMixin extends TileEntity implements IBlock
     @Shadow
     private float progressO;
 
-    public PistonTileEntityMixin(TileEntityType<?> tileEntityTypeIn) {
+    public PistonTileEntityMixin(BlockEntityType<?> tileEntityTypeIn) {
         super(tileEntityTypeIn);
     }
 
@@ -45,13 +45,13 @@ public abstract class PistonTileEntityMixin extends TileEntity implements IBlock
     public void tick(CallbackInfo info) {
         if (this.progressO < 1.0F && movedState.getBlock() instanceof BambooSpikesBlock) {
             boolean sameDir = (movedState.getValue(BambooSpikesBlock.FACING).equals(this.getMovementDirection()));
-            AxisAlignedBB axisalignedbb = this.moveByPositionAndProgress(VoxelShapes.block().bounds());
+            AABB axisalignedbb = this.moveByPositionAndProgress(Shapes.block().bounds());
             BambooSpikesPistonMovement.tick(this.level,this.worldPosition,axisalignedbb,sameDir, this);
         }
     }
 
     @Shadow
-    protected abstract AxisAlignedBB moveByPositionAndProgress(AxisAlignedBB bb);
+    protected abstract AABB moveByPositionAndProgress(AABB bb);
 
     @Shadow
     public abstract Direction getMovementDirection();

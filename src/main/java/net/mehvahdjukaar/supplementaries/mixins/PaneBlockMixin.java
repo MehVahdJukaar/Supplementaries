@@ -1,14 +1,14 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.common.ModTags;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.PaneBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.IronBarsBlock;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin({PaneBlock.class})
+@Mixin({IronBarsBlock.class})
 public abstract class PaneBlockMixin {
 
 

@@ -5,9 +5,9 @@ import net.mehvahdjukaar.supplementaries.compat.create.SupplementariesCreatePlug
 import net.mehvahdjukaar.supplementaries.compat.decorativeblocks.DecoBlocksCompatRegistry;
 import net.mehvahdjukaar.supplementaries.compat.farmersdelight.FDCompatRegistry;
 import net.mehvahdjukaar.supplementaries.compat.inspirations.CauldronRecipes;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.ModList;
 
@@ -86,7 +86,7 @@ public class CompatHandler {
 
     }
 
-    public static void registerOptionalRecipes(final RegistryEvent.Register<IRecipeSerializer<?>> event){
+    public static void registerOptionalRecipes(final RegistryEvent.Register<RecipeSerializer<?>> event){
         if (inspirations) CauldronRecipes.registerRecipes(event);
     }
 

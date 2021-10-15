@@ -1,30 +1,37 @@
 package net.mehvahdjukaar.supplementaries.entities;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileHelper;
-import net.minecraft.entity.projectile.ProjectileItemEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.tileentity.EndGatewayTileEntity;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.level.block.entity.TheEndGatewayBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.util.math.*;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.event.ForgeEventFactory;
 
 import javax.annotation.Nullable;
 
-public abstract class ImprovedProjectileEntity extends ProjectileItemEntity {
-    private static final DataParameter<Byte> ID_FLAGS = EntityDataManager.defineId(ImprovedProjectileEntity.class, DataSerializers.BYTE);
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+
+public abstract class ImprovedProjectileEntity extends ThrowableItemProjectile {
+    private static final EntityDataAccessor<Byte> ID_FLAGS = SynchedEntityData.defineId(ImprovedProjectileEntity.class, EntityDataSerializers.BYTE);
 
     public boolean touchedGround = false;
     public int groundTime = 0;
@@ -33,16 +40,16 @@ public abstract class ImprovedProjectileEntity extends ProjectileItemEntity {
     protected int maxGroundTime = 20;
     protected float waterDeceleration = 0.8f;
 
-    protected ImprovedProjectileEntity(EntityType<? extends ProjectileItemEntity> type, World world) {
+    protected ImprovedProjectileEntity(EntityType<? extends ThrowableItemProjectile> type, Level world) {
         super(type, world);
     }
 
-    protected ImprovedProjectileEntity(EntityType<? extends ProjectileItemEntity> type, double x, double y, double z, World world) {
+    protected ImprovedProjectileEntity(EntityType<? extends ThrowableItemProjectile> type, double x, double y, double z, Level world) {
         this(type, world);
         this.setPos(x, y, z);
     }
 
-    protected ImprovedProjectileEntity(EntityType<? extends ProjectileItemEntity> type, LivingEntity thrower, World world) {
+    protected ImprovedProjectileEntity(EntityType<? extends ThrowableItemProjectile> type, LivingEntity thrower, Level world) {
         this(type, thrower.getX(), thrower.getEyeY() - (double) 0.1F, thrower.getZ(), world);
         this.setOwner(thrower);
     }
@@ -84,7 +91,7 @@ public abstract class ImprovedProjectileEntity extends ProjectileItemEntity {
 
 
         //fixed vanilla arrow code. You're welcome
-        Vector3d movement = this.getDeltaMovement();
+        Vec3 movement = this.getDeltaMovement();
 
         double velX = movement.x;
         double velY = movement.y;
@@ -108,9 +115,9 @@ public abstract class ImprovedProjectileEntity extends ProjectileItemEntity {
         if (!blockstate.isAir(this.level, blockpos) && !noPhysics) {
             VoxelShape voxelshape = blockstate.getCollisionShape(this.level, blockpos);
             if (!voxelshape.isEmpty()) {
-                Vector3d vector3d1 = this.position();
+                Vec3 vector3d1 = this.position();
 
-                for (AxisAlignedBB axisalignedbb : voxelshape.toAabbs()) {
+                for (AABB axisalignedbb : voxelshape.toAabbs()) {
                     if (axisalignedbb.move(blockpos).contains(vector3d1)) {
                         this.touchedGround = true;
                         break;
@@ -133,13 +140,13 @@ public abstract class ImprovedProjectileEntity extends ProjectileItemEntity {
 
             this.updateRotation();
 
-            Vector3d pos = this.position();
+            Vec3 pos = this.position();
             boolean client = this.level.isClientSide;
 
-            Vector3d newPos = pos.add(movement);
+            Vec3 newPos = pos.add(movement);
 
-            RayTraceResult raytraceresult = this.level.clip(new RayTraceContext(pos, newPos, RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, this));
-            if (raytraceresult.getType() != RayTraceResult.Type.MISS) {
+            HitResult raytraceresult = this.level.clip(new ClipContext(pos, newPos, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
+            if (raytraceresult.getType() != HitResult.Type.MISS) {
                 //get correct land pos
                 if(!noPhysics){
                     newPos = raytraceresult.getLocation();
@@ -180,38 +187,38 @@ public abstract class ImprovedProjectileEntity extends ProjectileItemEntity {
             //calls on hit
             if (!this.removed) {
                 //try hit entity
-                EntityRayTraceResult entityraytraceresult = this.findHitEntity(pos, newPos);
+                EntityHitResult entityraytraceresult = this.findHitEntity(pos, newPos);
                 if (entityraytraceresult != null) {
                     raytraceresult = entityraytraceresult;
                 }
 
                 if (raytraceresult != null) {
-                    RayTraceResult.Type type = raytraceresult.getType();
+                    HitResult.Type type = raytraceresult.getType();
                     boolean portalHit = false;
-                    if (type == RayTraceResult.Type.ENTITY) {
-                        Entity entity = ((EntityRayTraceResult) raytraceresult).getEntity();
+                    if (type == HitResult.Type.ENTITY) {
+                        Entity entity = ((EntityHitResult) raytraceresult).getEntity();
                         Entity entity1 = this.getOwner();
-                        if (entity instanceof PlayerEntity && entity1 instanceof PlayerEntity && !((PlayerEntity) entity1).canHarmPlayer((PlayerEntity) entity)) {
+                        if (entity instanceof Player && entity1 instanceof Player && !((Player) entity1).canHarmPlayer((Player) entity)) {
                             raytraceresult = null;
                         }
-                    } else if (type == RayTraceResult.Type.BLOCK) {
+                    } else if (type == HitResult.Type.BLOCK) {
                         //portals. done here and not in onBlockHit to prevent any further calls
-                        BlockPos hitPos = ((BlockRayTraceResult) raytraceresult).getBlockPos();
+                        BlockPos hitPos = ((BlockHitResult) raytraceresult).getBlockPos();
                         BlockState hitState = this.level.getBlockState(hitPos);
 
                         if (hitState.is(Blocks.NETHER_PORTAL)) {
                             this.handleInsidePortal(hitPos);
                             portalHit = true;
                         } else if (hitState.is(Blocks.END_GATEWAY)) {
-                            TileEntity tileentity = this.level.getBlockEntity(hitPos);
-                            if (tileentity instanceof EndGatewayTileEntity && EndGatewayTileEntity.canEntityTeleport(this)) {
-                                ((EndGatewayTileEntity) tileentity).teleportEntity(this);
+                            BlockEntity tileentity = this.level.getBlockEntity(hitPos);
+                            if (tileentity instanceof TheEndGatewayBlockEntity && TheEndGatewayBlockEntity.canEntityTeleport(this)) {
+                                ((TheEndGatewayBlockEntity) tileentity).teleportEntity(this);
                             }
                             portalHit = true;
                         }
                     }
 
-                    if (!portalHit && type != RayTraceResult.Type.MISS && !noPhysics && !ForgeEventFactory.onProjectileImpact(this, raytraceresult)) {
+                    if (!portalHit && type != HitResult.Type.MISS && !noPhysics && !ForgeEventFactory.onProjectileImpact(this, raytraceresult)) {
                         this.onHit(raytraceresult);
                         this.hasImpulse = true;
                     }
@@ -243,20 +250,20 @@ public abstract class ImprovedProjectileEntity extends ProjectileItemEntity {
     }
 
     @Nullable
-    protected EntityRayTraceResult findHitEntity(Vector3d oPos, Vector3d pos) {
-        return ProjectileHelper.getEntityHitResult(this.level, this, oPos, pos, this.getBoundingBox().expandTowards(this.getDeltaMovement()).inflate(1.0D), this::canHitEntity);
+    protected EntityHitResult findHitEntity(Vec3 oPos, Vec3 pos) {
+        return ProjectileUtil.getEntityHitResult(this.level, this, oPos, pos, this.getBoundingBox().expandTowards(this.getDeltaMovement()).inflate(1.0D), this::canHitEntity);
     }
 
-    public void spawnTrailParticles(Vector3d currentPos, Vector3d newPos){}
+    public void spawnTrailParticles(Vec3 currentPos, Vec3 newPos){}
 
     @Override
-    public void addAdditionalSaveData(CompoundNBT tag) {
+    public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         tag.putBoolean("touchedGround", this.touchedGround);
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT tag) {
+    public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         this.touchedGround = tag.getBoolean("touchedGround");
     }

@@ -4,27 +4,29 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.FrameBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.IBlockHolder;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.IBooleanFunction;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.Level;
 
 import java.util.function.Supplier;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class FrameBlock extends MimicBlock {
 
@@ -44,9 +46,9 @@ public class FrameBlock extends MimicBlock {
 
     private static final VoxelShape INSIDE_Z = box(1.0D, 1.0D, 0.0D, 15.0D, 15.0D, 16.0D);
     private static final VoxelShape INSIDE_X = box(0.0D, 1.0D, 1.0D, 16.0D, 15.0D, 15.0D);
-    protected static final VoxelShape SHAPE = VoxelShapes.join(VoxelShapes.block(), VoxelShapes.or(
+    protected static final VoxelShape SHAPE = Shapes.join(Shapes.block(), Shapes.or(
             INSIDE_Z, INSIDE_X),
-            IBooleanFunction.ONLY_FIRST);
+            BooleanOp.ONLY_FIRST);
 
     @Override
     public boolean skipRendering(BlockState state, BlockState adjacentBlockState, Direction side) {
@@ -58,28 +60,28 @@ public class FrameBlock extends MimicBlock {
 
 
     @Override
-    public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
+    public int getLightValue(BlockState state, BlockGetter world, BlockPos pos) {
         return state.getValue(LIGHT_LEVEL);
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(LIGHT_LEVEL, HAS_BLOCK);
     }
 
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
         return new FrameBlockTile(daub);
     }
 
 
     @Override
-    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
-        TileEntity te = world.getBlockEntity(pos);
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult trace) {
+        BlockEntity te = world.getBlockEntity(pos);
         if (te instanceof FrameBlockTile) {
             return ((FrameBlockTile) te).handleInteraction(player, hand, trace);
         }
-        return ActionResultType.PASS;
+        return InteractionResult.PASS;
     }
 
 
@@ -93,11 +95,11 @@ public class FrameBlock extends MimicBlock {
     //TODO: fix face disappearing
     //handles dynamic culling
     @Override
-    public VoxelShape getOcclusionShape(BlockState state, IBlockReader reader, BlockPos pos) {
+    public VoxelShape getOcclusionShape(BlockState state, BlockGetter reader, BlockPos pos) {
         if (state.getValue(HAS_BLOCK)) {
-            TileEntity te = reader.getBlockEntity(pos);
+            BlockEntity te = reader.getBlockEntity(pos);
             if (te instanceof FrameBlockTile && !((IBlockHolder) te).getHeldBlock().isAir()) {
-                return VoxelShapes.block();
+                return Shapes.block();
             }
         }
         return OCCLUSION_SHAPE;
@@ -107,8 +109,8 @@ public class FrameBlock extends MimicBlock {
 
 
     @Override
-    public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
-        return VoxelShapes.block();
+    public VoxelShape getShape(BlockState p_220053_1_, BlockGetter p_220053_2_, BlockPos p_220053_3_, CollisionContext p_220053_4_) {
+        return Shapes.block();
     }
 
     /*
@@ -133,9 +135,9 @@ public class FrameBlock extends MimicBlock {
     //needed for isnide black edges
 
     @Override
-    public VoxelShape getCollisionShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext p_220071_4_) {
+    public VoxelShape getCollisionShape(BlockState state, BlockGetter reader, BlockPos pos, CollisionContext p_220071_4_) {
         if (state.getValue(HAS_BLOCK)) {
-            return VoxelShapes.block();
+            return Shapes.block();
         }
         return OCCLUSION_SHAPE_2;
     }
@@ -146,13 +148,13 @@ public class FrameBlock extends MimicBlock {
     }*/
 
     //occlusion shading
-    public float getShadeBrightness(BlockState state, IBlockReader reader, BlockPos pos) {
+    public float getShadeBrightness(BlockState state, BlockGetter reader, BlockPos pos) {
         return state.getValue(HAS_BLOCK) ? 0.2f : 1;
     }
 
     //let light through
     @Override
-    public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
+    public boolean propagatesSkylightDown(BlockState state, BlockGetter reader, BlockPos pos) {
         return !state.getValue(HAS_BLOCK) || super.propagatesSkylightDown(state, reader, pos);
     }
 
@@ -162,8 +164,8 @@ public class FrameBlock extends MimicBlock {
     }
 
     @Override
-    public int getAnalogOutputSignal(BlockState state, World world, BlockPos pos) {
-        TileEntity te = world.getBlockEntity(pos);
+    public int getAnalogOutputSignal(BlockState state, Level world, BlockPos pos) {
+        BlockEntity te = world.getBlockEntity(pos);
         if (te instanceof FrameBlockTile) {
             ((IBlockHolder) te).getHeldBlock().getAnalogOutputSignal(world, pos);
         }
@@ -171,8 +173,8 @@ public class FrameBlock extends MimicBlock {
     }
 
     @Override
-    public float getEnchantPowerBonus(BlockState state, IWorldReader world, BlockPos pos) {
-        TileEntity te = world.getBlockEntity(pos);
+    public float getEnchantPowerBonus(BlockState state, LevelReader world, BlockPos pos) {
+        BlockEntity te = world.getBlockEntity(pos);
         if (te instanceof FrameBlockTile) {
             ((IBlockHolder) te).getHeldBlock().getEnchantPowerBonus(world, pos);
         }

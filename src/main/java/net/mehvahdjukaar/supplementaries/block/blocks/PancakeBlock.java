@@ -8,28 +8,40 @@ import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties.Topping;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.Fluids;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.item.*;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.StateContainer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.Level;
+
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.HoneyBottleItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class PancakeBlock extends WaterBlock implements ISoftFluidConsumer {
     protected static final VoxelShape SHAPE_1 = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 2.0D, 14.0D);
@@ -60,7 +72,7 @@ public class PancakeBlock extends WaterBlock implements ISoftFluidConsumer {
     }
 
     @Override
-    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         ItemStack stack = player.getItemInHand(handIn);
         Item item = stack.getItem();
         Topping t = getTopping(item);
@@ -68,16 +80,16 @@ public class PancakeBlock extends WaterBlock implements ISoftFluidConsumer {
             if(state.getValue(TOPPING) == Topping.NONE) {
                 if (!worldIn.isClientSide) {
                     worldIn.setBlock(pos, state.setValue(TOPPING, t), 3);
-                    worldIn.playSound(null,pos, SoundEvents.HONEY_BLOCK_PLACE, SoundCategory.BLOCKS,1,1.2f);
+                    worldIn.playSound(null,pos, SoundEvents.HONEY_BLOCK_PLACE, SoundSource.BLOCKS,1,1.2f);
                 }
                 ItemStack returnItem = t==Topping.CHOCOLATE? ItemStack.EMPTY : new ItemStack(Items.GLASS_BOTTLE);
                 if(!player.isCreative()) Utils.swapItem(player,handIn,returnItem);
                 //player.setHeldItem(handIn, DrinkHelper.fill(stack.copy(), player, new ItemStack(Items.GLASS_BOTTLE), false));
-                return ActionResultType.sidedSuccess(worldIn.isClientSide);
+                return InteractionResult.sidedSuccess(worldIn.isClientSide);
             }
         }
         else if(item == ModRegistry.PANCAKE_ITEM.get()){
-            return ActionResultType.PASS;
+            return InteractionResult.PASS;
         }
         else if (player.canEat(false)) {
             //player.addStat(Stats.EAT_CAKE_SLICE);
@@ -86,19 +98,19 @@ public class PancakeBlock extends WaterBlock implements ISoftFluidConsumer {
 
 
                 removeLayer(state,pos,worldIn,player);
-                player.playNotifySound(SoundEvents.GENERIC_EAT,SoundCategory.PLAYERS,1,1);
-                return ActionResultType.CONSUME;
+                player.playNotifySound(SoundEvents.GENERIC_EAT,SoundSource.PLAYERS,1,1);
+                return InteractionResult.CONSUME;
             }
             else{
                 Minecraft.getInstance().particleEngine.destroy(player.blockPosition().above(1), state);
-                return ActionResultType.SUCCESS;
+                return InteractionResult.SUCCESS;
             }
         }
-        return ActionResultType.PASS;
+        return InteractionResult.PASS;
     }
 
 
-    public static void removeLayer(BlockState state, BlockPos pos, World world, PlayerEntity player){
+    public static void removeLayer(BlockState state, BlockPos pos, Level world, Player player){
         int i = state.getValue(PANCAKES);
         if(i==8){
             BlockPos up = pos.above();
@@ -114,13 +126,13 @@ public class PancakeBlock extends WaterBlock implements ISoftFluidConsumer {
             world.removeBlock(pos, false);
         }
         if(state.getValue(TOPPING)!= Topping.NONE){
-            player.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED,8*20));
+            player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED,8*20));
         }
     }
 
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockState blockstate = context.getLevel().getBlockState(context.getClickedPos());
         if (blockstate.is(this)) {
             return blockstate.setValue(PANCAKES, Math.min(8, blockstate.getValue(PANCAKES) + 1));
@@ -129,18 +141,18 @@ public class PancakeBlock extends WaterBlock implements ISoftFluidConsumer {
         return this.defaultBlockState().setValue(WATERLOGGED,flag);
     }
 
-    protected boolean isValidGround(BlockState state, IBlockReader worldIn, BlockPos pos) {
+    protected boolean isValidGround(BlockState state, BlockGetter worldIn, BlockPos pos) {
         return !state.getCollisionShape(worldIn, pos).getFaceShape(Direction.UP).isEmpty() || state.isFaceSturdy(worldIn, pos, Direction.UP);
     }
 
     @Override
-    public boolean canSurvive(BlockState state, IWorldReader worldIn, BlockPos pos) {
+    public boolean canSurvive(BlockState state, LevelReader worldIn, BlockPos pos) {
         BlockPos blockpos = pos.below();
         return this.isValidGround(worldIn.getBlockState(blockpos), worldIn, blockpos);
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
         if (stateIn.getValue(WATERLOGGED)) {
             worldIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
         }
@@ -151,12 +163,12 @@ public class PancakeBlock extends WaterBlock implements ISoftFluidConsumer {
     }
 
     @Override
-    public boolean canBeReplaced(BlockState state, BlockItemUseContext useContext) {
+    public boolean canBeReplaced(BlockState state, BlockPlaceContext useContext) {
         return useContext.getItemInHand().getItem() == this.asItem() && state.getValue(PANCAKES) < 8 || super.canBeReplaced(state, useContext);
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         switch(state.getValue(PANCAKES)) {
             case 1:
             default:
@@ -179,16 +191,16 @@ public class PancakeBlock extends WaterBlock implements ISoftFluidConsumer {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(PANCAKES,TOPPING,WATERLOGGED);
     }
 
     @Override
-    public boolean tryAcceptingFluid(World world, BlockState state, BlockPos pos, SoftFluid f, CompoundNBT nbt, int amount) {
+    public boolean tryAcceptingFluid(Level world, BlockState state, BlockPos pos, SoftFluid f, CompoundTag nbt, int amount) {
         Topping topping = Topping.fromFluid(f);
         if(state.getValue(TOPPING) == Topping.NONE && topping != Topping.NONE){
             world.setBlock(pos,state.setValue(TOPPING,topping),2);
-            world.playSound(null,pos, SoundEvents.HONEY_BLOCK_PLACE, SoundCategory.BLOCKS,1,1.2f);
+            world.playSound(null,pos, SoundEvents.HONEY_BLOCK_PLACE, SoundSource.BLOCKS,1,1.2f);
             return true;
         }
         return false;

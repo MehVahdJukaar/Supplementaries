@@ -5,20 +5,22 @@ import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.entities.RopeArrowEntity;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity;
-import net.minecraft.item.ArrowItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.ArrowItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.List;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class RopeArrowItem extends ArrowItem {
     public RopeArrowItem(Properties builder) {
@@ -26,8 +28,8 @@ public class RopeArrowItem extends ArrowItem {
     }
 
     @Override
-    public AbstractArrowEntity createArrow(World world, ItemStack stack, LivingEntity shooter) {
-        CompoundNBT com = stack.getTag();
+    public AbstractArrow createArrow(Level world, ItemStack stack, LivingEntity shooter) {
+        CompoundTag com = stack.getTag();
         int charges = stack.getMaxDamage();
         if (com != null) {
             if (com.contains("Damage")) {
@@ -43,7 +45,7 @@ public class RopeArrowItem extends ArrowItem {
     }
 
     @Override
-    public boolean isInfinite(ItemStack stack, ItemStack bow, PlayerEntity player) {
+    public boolean isInfinite(ItemStack stack, ItemStack bow, Player player) {
         return false;
     }
 
@@ -78,14 +80,14 @@ public class RopeArrowItem extends ArrowItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        tooltip.add(new TranslationTextComponent("message.supplementaries.rope_arrow_tooltip", stack.getMaxDamage() - stack.getDamageValue(), stack.getMaxDamage()));
+        tooltip.add(new TranslatableComponent("message.supplementaries.rope_arrow_tooltip", stack.getMaxDamage() - stack.getDamageValue(), stack.getMaxDamage()));
         if (!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().options.advancedItemTooltips) return;
         if (worldIn == null) return;
         String override = ServerConfigs.cached.ROPE_ARROW_BLOCK.getRegistryName().getNamespace();
         if (!override.equals(Supplementaries.MOD_ID)) {
-            tooltip.add(new TranslationTextComponent("message.supplementaries.rope_arrow", override).withStyle(TextFormatting.ITALIC).withStyle(TextFormatting.GRAY));
+            tooltip.add(new TranslatableComponent("message.supplementaries.rope_arrow", override).withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
         }
     }
 }

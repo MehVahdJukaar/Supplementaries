@@ -4,12 +4,12 @@ import com.google.common.collect.Lists;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.merchant.villager.VillagerTrades;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.item.*;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.IItemProvider;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.BasicTrade;
 import net.minecraftforge.event.village.WandererTradesEvent;
 
@@ -17,15 +17,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.FireworkRocketItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.trading.MerchantOffer;
+
 public class VillagerTradesHandler {
 
     private static final float BUY = 0.05f;
     private static final float SELL = 0.2f;
 
-    public static final VillagerTrades.ITrade[] TRADES;
+    public static final VillagerTrades.ItemListing[] TRADES;
 
     static {
-        List<VillagerTrades.ITrade> trades = new ArrayList<>();
+        List<VillagerTrades.ItemListing> trades = new ArrayList<>();
 
         if (RegistryConfigs.reg.ROPE_ENABLED.get()) {
             trades.add(itemForEmeraldTrade(ModRegistry.ROPE_ITEM.get(), 4, 1, 10));
@@ -51,10 +58,10 @@ public class VillagerTradesHandler {
             trades.add(itemForEmeraldTrade(ModRegistry.BOMB_BLUE_ITEM.get(), 1, ModRegistry.BOMB_ITEM.get(), 1, 40, 3));
         }
 
-        TRADES = trades.toArray(new VillagerTrades.ITrade[0]);
+        TRADES = trades.toArray(new VillagerTrades.ItemListing[0]);
     }
 
-    static BasicTrade itemForEmeraldTrade(IItemProvider item, int quantity, int price, int maxTrades) {
+    static BasicTrade itemForEmeraldTrade(ItemLike item, int quantity, int price, int maxTrades) {
         return itemForEmeraldTrade(new ItemStack(item, quantity), price, maxTrades);
     }
 
@@ -62,11 +69,11 @@ public class VillagerTradesHandler {
         return new BasicTrade(new ItemStack(Items.EMERALD, price), itemStack, maxTrades, 1, BUY);
     }
 
-    static BasicTrade itemForEmeraldTrade(IItemProvider item, int quantity, IItemProvider additional, int addQuantity, int price, int maxTrades) {
+    static BasicTrade itemForEmeraldTrade(ItemLike item, int quantity, ItemLike additional, int addQuantity, int price, int maxTrades) {
         return new BasicTrade(new ItemStack(Items.EMERALD, price), new ItemStack(additional, addQuantity), new ItemStack(item, quantity), maxTrades, 1, BUY);
     }
 
-    static class RocketForEmeraldTrade implements VillagerTrades.ITrade {
+    static class RocketForEmeraldTrade implements VillagerTrades.ItemListing {
         private final int maxTrades;
         private final int price;
         private final int paper;
@@ -83,8 +90,8 @@ public class VillagerTradesHandler {
         public MerchantOffer getOffer(Entity entity, Random random) {
 
             ItemStack itemstack = new ItemStack(Items.FIREWORK_ROCKET, rockets);
-            CompoundNBT compoundnbt = itemstack.getOrCreateTagElement("Fireworks");
-            ListNBT listnbt = new ListNBT();
+            CompoundTag compoundnbt = itemstack.getOrCreateTagElement("Fireworks");
+            ListTag listnbt = new ListTag();
 
             int stars = 0;
             do {
@@ -102,7 +109,7 @@ public class VillagerTradesHandler {
 
     }
 
-    static class StarForEmeraldTrade implements VillagerTrades.ITrade {
+    static class StarForEmeraldTrade implements VillagerTrades.ItemListing {
         private final int maxTrades;
         private final int price;
 
@@ -122,8 +129,8 @@ public class VillagerTradesHandler {
     }
 
 
-    public static CompoundNBT createRandomFireworkStar(Random random) {
-        CompoundNBT tag = new CompoundNBT();
+    public static CompoundTag createRandomFireworkStar(Random random) {
+        CompoundTag tag = new CompoundTag();
         tag.putByte("Type", (byte) FireworkRocketItem.Shape.values()
                 [random.nextInt(FireworkRocketItem.Shape.values().length)].getId());
         tag.putBoolean("Flicker", random.nextFloat() < 0.42f);

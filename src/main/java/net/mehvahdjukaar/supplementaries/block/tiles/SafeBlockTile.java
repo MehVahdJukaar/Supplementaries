@@ -6,28 +6,28 @@ import net.mehvahdjukaar.supplementaries.block.blocks.SafeBlock;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ShulkerBoxContainer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.LockableLootTileEntity;
-import net.minecraft.tileentity.LockableTileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.Container;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ShulkerBoxMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
+import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.LazyOptional;
@@ -40,7 +40,7 @@ import java.lang.reflect.Field;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
-public class SafeBlockTile extends LockableLootTileEntity implements ISidedInventory, IOwnerProtected {
+public class SafeBlockTile extends RandomizableContainerBlockEntity implements WorldlyContainer, IOwnerProtected {
 
     private NonNullList<ItemStack> items = NonNullList.withSize(27, ItemStack.EMPTY);
     private int numPlayersUsing;
@@ -58,12 +58,12 @@ public class SafeBlockTile extends LockableLootTileEntity implements ISidedInven
         return this.items.size();
     }
 
-    public boolean canPlayerOpen(PlayerEntity player, boolean feedbackMessage) {
+    public boolean canPlayerOpen(Player player, boolean feedbackMessage) {
         if (player.isCreative()) return true;
         if (ServerConfigs.cached.SAFE_SIMPLE) {
             if (this.isNotOwnedBy(player)) {
                 if (feedbackMessage)
-                    player.displayClientMessage(new TranslationTextComponent("message.supplementaries.safe.owner", this.ownerName), true);
+                    player.displayClientMessage(new TranslatableComponent("message.supplementaries.safe.owner", this.ownerName), true);
                 return false;
             }
         } else {
@@ -93,24 +93,24 @@ public class SafeBlockTile extends LockableLootTileEntity implements ISidedInven
     }
 
     @Override
-    public ITextComponent getDisplayName() {
+    public Component getDisplayName() {
         if (ServerConfigs.cached.SAFE_SIMPLE) {
             if (this.ownerName != null) {
-                return (new TranslationTextComponent("gui.supplementaries.safe.name", this.ownerName, super.getDisplayName()));
+                return (new TranslatableComponent("gui.supplementaries.safe.name", this.ownerName, super.getDisplayName()));
             }
         } else if (this.password != null) {
-            return (new TranslationTextComponent("gui.supplementaries.safe.password", this.password, super.getDisplayName()));
+            return (new TranslatableComponent("gui.supplementaries.safe.password", this.password, super.getDisplayName()));
         }
         return super.getDisplayName();
     }
 
     @Override
-    protected ITextComponent getDefaultName() {
-        return new TranslationTextComponent("block.supplementaries.safe");
+    protected Component getDefaultName() {
+        return new TranslatableComponent("block.supplementaries.safe");
     }
 
     @Override
-    public void startOpen(PlayerEntity player) {
+    public void startOpen(Player player) {
         if (!player.isSpectator()) {
             if (this.numPlayersUsing < 0) {
                 this.numPlayersUsing = 0;
@@ -122,21 +122,21 @@ public class SafeBlockTile extends LockableLootTileEntity implements ISidedInven
             if (!flag) {
                 //this.playSound(blockstate, SoundEvents.BLOCK_BARREL_OPEN);
                 this.level.playSound(null, this.worldPosition.getX() + 0.5, this.worldPosition.getY() + 0.5, this.worldPosition.getZ() + 0.5,
-                        SoundEvents.IRON_TRAPDOOR_OPEN, SoundCategory.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.65F);
+                        SoundEvents.IRON_TRAPDOOR_OPEN, SoundSource.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.65F);
                 this.level.setBlock(this.getBlockPos(), blockstate.setValue(SafeBlock.OPEN, true), 3);
             }
             this.level.getBlockTicks().scheduleTick(this.getBlockPos(), this.getBlockState().getBlock(), 5);
         }
     }
 
-    public static int calculatePlayersUsing(World world, LockableTileEntity tile, int x, int y, int z) {
+    public static int calculatePlayersUsing(Level world, BaseContainerBlockEntity tile, int x, int y, int z) {
         int i = 0;
-        for (PlayerEntity playerentity : world.getEntitiesOfClass(PlayerEntity.class, new AxisAlignedBB((float) x - 5.0F, (float) y - 5.0F, (float) z - 5.0F, (float) (x + 1) + 5.0F, (float) (y + 1) + 5.0F, (float) (z + 1) + 5.0F))) {
-            if (playerentity.containerMenu instanceof ShulkerBoxContainer) {
+        for (Player playerentity : world.getEntitiesOfClass(Player.class, new AABB((float) x - 5.0F, (float) y - 5.0F, (float) z - 5.0F, (float) (x + 1) + 5.0F, (float) (y + 1) + 5.0F, (float) (z + 1) + 5.0F))) {
+            if (playerentity.containerMenu instanceof ShulkerBoxMenu) {
                 //TODO: maybe make my own container instead of this hacky stuff?
                 try {
-                    for (Field f : ShulkerBoxContainer.class.getDeclaredFields())
-                        if (IInventory.class.isAssignableFrom(f.getType())) {
+                    for (Field f : ShulkerBoxMenu.class.getDeclaredFields())
+                        if (Container.class.isAssignableFrom(f.getType())) {
                             f.setAccessible(true);
                             if (f.get(playerentity.containerMenu) == tile) {
                                 ++i;
@@ -162,7 +162,7 @@ public class SafeBlockTile extends LockableLootTileEntity implements ISidedInven
             boolean flag = blockstate.getValue(SackBlock.OPEN);
             if (flag) {
                 this.level.playSound(null, this.worldPosition,
-                        SoundEvents.IRON_TRAPDOOR_CLOSE, SoundCategory.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.65F);
+                        SoundEvents.IRON_TRAPDOOR_CLOSE, SoundSource.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.65F);
                 this.level.setBlock(this.getBlockPos(), blockstate.setValue(SackBlock.OPEN, false), 3);
             }
         }
@@ -170,28 +170,28 @@ public class SafeBlockTile extends LockableLootTileEntity implements ISidedInven
     }
 
     @Override
-    public void stopOpen(PlayerEntity player) {
+    public void stopOpen(Player player) {
         if (!player.isSpectator()) {
             --this.numPlayersUsing;
         }
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT nbt) {
+    public void load(BlockState state, CompoundTag nbt) {
         super.load(state, nbt);
         this.loadFromNbt(nbt);
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
+    public CompoundTag save(CompoundTag compound) {
         super.save(compound);
         return this.saveToNbt(compound);
     }
 
-    public void loadFromNbt(CompoundNBT compound) {
+    public void loadFromNbt(CompoundTag compound) {
         this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
         if (!this.tryLoadLootTable(compound) && compound.contains("Items", 9)) {
-            ItemStackHelper.loadAllItems(compound, this.items);
+            ContainerHelper.loadAllItems(compound, this.items);
         }
         this.loadOwner(compound);
         if (compound.contains("OwnerName"))
@@ -200,9 +200,9 @@ public class SafeBlockTile extends LockableLootTileEntity implements ISidedInven
             this.password = compound.getString("Password");
     }
 
-    public CompoundNBT saveToNbt(CompoundNBT compound) {
+    public CompoundTag saveToNbt(CompoundTag compound) {
         if (!this.trySaveLootTable(compound)) {
-            ItemStackHelper.saveAllItems(compound, this.items, false);
+            ContainerHelper.saveAllItems(compound, this.items, false);
         }
         this.saveOwner(compound);
         if (this.ownerName != null)
@@ -223,23 +223,23 @@ public class SafeBlockTile extends LockableLootTileEntity implements ISidedInven
     }
 
     @Override
-    public Container createMenu(int id, PlayerInventory player) {
-        return new ShulkerBoxContainer(id, player, this);
+    public AbstractContainerMenu createMenu(int id, Inventory player) {
+        return new ShulkerBoxMenu(id, player, this);
     }
 
     @Override
-    public CompoundNBT getUpdateTag() {
-        return this.saveToNbt(new CompoundNBT());
+    public CompoundTag getUpdateTag() {
+        return this.saveToNbt(new CompoundTag());
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         this.loadFromNbt(pkt.getTag());
     }
 
     @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.worldPosition, 0, this.getUpdateTag());
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return new ClientboundBlockEntityDataPacket(this.worldPosition, 0, this.getUpdateTag());
     }
 
     @Override

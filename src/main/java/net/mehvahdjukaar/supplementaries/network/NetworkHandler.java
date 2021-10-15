@@ -2,13 +2,15 @@ package net.mehvahdjukaar.supplementaries.network;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 
+
+import SimpleChannel;
 
 public class NetworkHandler {
     public static SimpleChannel INSTANCE;
@@ -75,7 +77,7 @@ public class NetworkHandler {
 
     }
 
-    public static void sendToAllTrackingClient(Entity entity, ServerWorld world, Message message) {
+    public static void sendToAllTrackingClient(Entity entity, ServerLevel world, Message message) {
         world.getChunkSource().broadcast(entity, INSTANCE.toVanillaPacket(message, NetworkDirection.PLAY_TO_CLIENT));
     }
 

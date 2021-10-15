@@ -3,19 +3,26 @@ package net.mehvahdjukaar.supplementaries.world.structures;
 import com.google.common.collect.ImmutableSet;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.Blocks;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.WorldGenRegistries;
-import net.minecraft.world.gen.FlatGenerationSettings;
-import net.minecraft.world.gen.blockplacer.SimpleBlockPlacer;
-import net.minecraft.world.gen.blockstateprovider.SimpleBlockStateProvider;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Registry;
+import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.world.level.levelgen.flat.FlatLevelGeneratorSettings;
+import net.minecraft.world.level.levelgen.feature.blockplacers.SimpleBlockPlacer;
+import net.minecraft.world.level.levelgen.feature.stateproviders.SimpleStateProvider;
 import net.minecraft.world.gen.feature.*;
+
+import net.minecraft.data.worldgen.Features;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
 
 public class ConfiguredFeatures {
 
-    public static final BlockClusterFeatureConfig WILD_FLAX_CONFIG = (new BlockClusterFeatureConfig.Builder(
-            new SimpleBlockStateProvider(ModRegistry.FLAX_WILD.get().defaultBlockState()),
+    public static final RandomPatchConfiguration WILD_FLAX_CONFIG = (new RandomPatchConfiguration.GrassConfigurationBuilder(
+            new SimpleStateProvider(ModRegistry.FLAX_WILD.get().defaultBlockState()),
             new SimpleBlockPlacer()))
             .tries(35).xspread(4).yspread(0).zspread(4).noProjection()
             .needWater().whitelist(ImmutableSet.of(Blocks.SAND,Blocks.RED_SAND)).build();
@@ -23,10 +30,10 @@ public class ConfiguredFeatures {
     /**
      * Static instance of our structure so we can reference it and add it to biomes easily.
      */
-    public static final StructureFeature<?, ?> CONFIGURED_WAY_SIGN = StructureRegistry.WAY_SIGN.get().configured(IFeatureConfig.NONE);
+    public static final ConfiguredStructureFeature<?, ?> CONFIGURED_WAY_SIGN = StructureRegistry.WAY_SIGN.get().configured(FeatureConfiguration.NONE);
 
     public static final ConfiguredFeature<?, ?> CONFIGURED_WILD_FLAX = Feature.RANDOM_PATCH.configured(WILD_FLAX_CONFIG)
-            .decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE).count(20);
+            .decorated(Features.Decorators.HEIGHTMAP_DOUBLE_SQUARE).count(20);
 
     /**
      * Registers the configured structure which is what gets added to the biomes.
@@ -38,10 +45,10 @@ public class ConfiguredFeatures {
     public static void register() {
 
 
-        Registry.register(WorldGenRegistries.CONFIGURED_STRUCTURE_FEATURE,
+        Registry.register(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE,
                 new ResourceLocation(Supplementaries.MOD_ID, "configured_way_sign"), CONFIGURED_WAY_SIGN);
 
-        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE,
+        Registry.register(BuiltinRegistries.CONFIGURED_FEATURE,
                 new ResourceLocation(Supplementaries.MOD_ID, "configured_wild_flax"), CONFIGURED_WILD_FLAX);
 
 
@@ -58,6 +65,6 @@ public class ConfiguredFeatures {
          * and re-enter it and your structures will be spawning. I could not figure out why it needs
          * the restart but honestly, superflat is really buggy and shouldn't be your main focus in my opinion.
          */
-        FlatGenerationSettings.STRUCTURE_FEATURES.put(StructureRegistry.WAY_SIGN.get(), CONFIGURED_WAY_SIGN);
+        FlatLevelGeneratorSettings.STRUCTURE_FEATURES.put(StructureRegistry.WAY_SIGN.get(), CONFIGURED_WAY_SIGN);
     }
 }

@@ -3,9 +3,9 @@ package net.mehvahdjukaar.supplementaries.network;
 
 import net.mehvahdjukaar.supplementaries.inventories.RedMerchantContainer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.MerchantOffers;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.trading.MerchantOffers;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -17,7 +17,7 @@ public class SendOrangeTraderOffersPacket {
     private int villagerXp;
     private boolean showProgress;
     private boolean canRestock;
-    public SendOrangeTraderOffersPacket(PacketBuffer buf) {
+    public SendOrangeTraderOffersPacket(FriendlyByteBuf buf) {
         this.containerId = buf.readVarInt();
         this.offers = MerchantOffers.createFromStream(buf);
         this.villagerLevel = buf.readVarInt();
@@ -35,7 +35,7 @@ public class SendOrangeTraderOffersPacket {
         this.canRestock = canRestock;
     }
 
-    public static void buffer(SendOrangeTraderOffersPacket message, PacketBuffer buf) {
+    public static void buffer(SendOrangeTraderOffersPacket message, FriendlyByteBuf buf) {
         buf.writeVarInt(message.containerId);
         message.offers.writeToStream(buf);
         buf.writeVarInt(message.villagerLevel);
@@ -48,7 +48,7 @@ public class SendOrangeTraderOffersPacket {
     public static void handler(SendOrangeTraderOffersPacket message, Supplier<NetworkEvent.Context> ctx) {
         // client world
         ctx.get().enqueueWork(() -> {
-            Container container = Minecraft.getInstance().player.containerMenu;
+            AbstractContainerMenu container = Minecraft.getInstance().player.containerMenu;
             if (message.containerId == container.containerId && container instanceof RedMerchantContainer) {
                 ((RedMerchantContainer)container).setOffers(new MerchantOffers(message.offers.createTag()));
                 ((RedMerchantContainer)container).setXp(message.villagerXp);

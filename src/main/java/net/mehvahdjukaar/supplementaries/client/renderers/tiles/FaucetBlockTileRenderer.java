@@ -1,33 +1,33 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.supplementaries.block.tiles.FaucetBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.resources.ResourceLocation;
 
 
-public class FaucetBlockTileRenderer extends TileEntityRenderer<FaucetBlockTile> {
+public class FaucetBlockTileRenderer extends BlockEntityRenderer<FaucetBlockTile> {
     private final Minecraft minecraft = Minecraft.getInstance();
 
-    public FaucetBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
+    public FaucetBlockTileRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
     }
 
     @Override
-    public void render(FaucetBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int light, int ov) {
+    public void render(FaucetBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int light, int ov) {
         if (tile.hasWater() && tile.isOpen() && !tile.isConnectedBelow() && !CommonUtil.FESTIVITY.isEarthDay()) {
             ResourceLocation texture = tile.fluidHolder.getFluid().getFlowingTexture();
-            TextureAtlasSprite sprite = minecraft.getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(texture);
-            IVertexBuilder builder = bufferIn.getBuffer(RenderType.translucentMovingBlock());
+            TextureAtlasSprite sprite = minecraft.getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(texture);
+            VertexConsumer builder = bufferIn.getBuffer(RenderType.translucentMovingBlock());
             int color = tile.fluidHolder.getFlowingTint(tile.getLevel(), tile.getBlockPos());
             int luminosity = tile.fluidHolder.getFluid().getLuminosity();
             if (luminosity != 0) light = light & 15728640 | luminosity << 4;

@@ -1,16 +1,16 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.minecraft.block.Block;
-import net.minecraft.entity.EntityType;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.HashMap;
@@ -67,12 +67,12 @@ public class RemapHandler {
     }
 
     @SubscribeEvent
-    public static void onRemapTiles(RegistryEvent.MissingMappings<TileEntityType<?>> event) {
-        for (RegistryEvent.MissingMappings.Mapping<TileEntityType<?>> mapping : event.getMappings(Supplementaries.MOD_ID)) {
+    public static void onRemapTiles(RegistryEvent.MissingMappings<BlockEntityType<?>> event) {
+        for (RegistryEvent.MissingMappings.Mapping<BlockEntityType<?>> mapping : event.getMappings(Supplementaries.MOD_ID)) {
             if (fullReMap.containsKey(mapping.key.getPath())) {
                 try {
                     Supplementaries.LOGGER.warn("Remapping tile entity '{}' to '{}'", mapping.key, fullReMap.get(mapping.key.getPath()));
-                    mapping.remap(ForgeRegistries.TILE_ENTITIES.getValue(fullReMap.get(mapping.key.getPath())));
+                    mapping.remap(ForgeRegistries.BLOCK_ENTITIES.getValue(fullReMap.get(mapping.key.getPath())));
                 } catch (Throwable t) {
                     Supplementaries.LOGGER.warn("Remapping  tile entity '{}' to '{}' failed: {}", mapping.key,
                             fullReMap.get(mapping.key.getPath()), t);

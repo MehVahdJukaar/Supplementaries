@@ -10,33 +10,54 @@ import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.world.explosion.GunpowderExplosion;
 import net.minecraft.block.*;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.state.properties.RedstoneSide;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.RedstoneSide;
 import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.*;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
 
 import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Random;
+
+import net.mehvahdjukaar.supplementaries.block.util.ILightable.FireSound;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CampfireBlock;
+import net.minecraft.world.level.block.FireBlock;
+import net.minecraft.world.level.block.MagmaBlock;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.RedstoneTorchBlock;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.TntBlock;
+import net.minecraft.world.level.block.TorchBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * The main gunpowder block. Very similar to the {@link net.minecraft.block.RedstoneWireBlock}
@@ -58,7 +79,7 @@ public class GunpowderBlock extends LightUpBlock {
     public static final Map<Direction, EnumProperty<RedstoneSide>> PROPERTY_BY_DIRECTION = Maps.newEnumMap(ImmutableMap.of(Direction.NORTH, NORTH, Direction.EAST, EAST, Direction.SOUTH, SOUTH, Direction.WEST, WEST));
     private static final VoxelShape SHAPE_DOT = Block.box(3.0D, 0.0D, 3.0D, 13.0D, 1.0D, 13.0D);
     private static final Map<Direction, VoxelShape> SHAPES_FLOOR = Maps.newEnumMap(ImmutableMap.of(Direction.NORTH, Block.box(3.0D, 0.0D, 0.0D, 13.0D, 1.0D, 13.0D), Direction.SOUTH, Block.box(3.0D, 0.0D, 3.0D, 13.0D, 1.0D, 16.0D), Direction.EAST, Block.box(3.0D, 0.0D, 3.0D, 16.0D, 1.0D, 13.0D), Direction.WEST, Block.box(0.0D, 0.0D, 3.0D, 13.0D, 1.0D, 13.0D)));
-    private static final Map<Direction, VoxelShape> SHAPES_UP = Maps.newEnumMap(ImmutableMap.of(Direction.NORTH, VoxelShapes.or(SHAPES_FLOOR.get(Direction.NORTH), Block.box(3.0D, 0.0D, 0.0D, 13.0D, 16.0D, 1.0D)), Direction.SOUTH, VoxelShapes.or(SHAPES_FLOOR.get(Direction.SOUTH), Block.box(3.0D, 0.0D, 15.0D, 13.0D, 16.0D, 16.0D)), Direction.EAST, VoxelShapes.or(SHAPES_FLOOR.get(Direction.EAST), Block.box(15.0D, 0.0D, 3.0D, 16.0D, 16.0D, 13.0D)), Direction.WEST, VoxelShapes.or(SHAPES_FLOOR.get(Direction.WEST), Block.box(0.0D, 0.0D, 3.0D, 1.0D, 16.0D, 13.0D))));
+    private static final Map<Direction, VoxelShape> SHAPES_UP = Maps.newEnumMap(ImmutableMap.of(Direction.NORTH, Shapes.or(SHAPES_FLOOR.get(Direction.NORTH), Block.box(3.0D, 0.0D, 0.0D, 13.0D, 16.0D, 1.0D)), Direction.SOUTH, Shapes.or(SHAPES_FLOOR.get(Direction.SOUTH), Block.box(3.0D, 0.0D, 15.0D, 13.0D, 16.0D, 16.0D)), Direction.EAST, Shapes.or(SHAPES_FLOOR.get(Direction.EAST), Block.box(15.0D, 0.0D, 3.0D, 16.0D, 16.0D, 13.0D)), Direction.WEST, Shapes.or(SHAPES_FLOOR.get(Direction.WEST), Block.box(0.0D, 0.0D, 3.0D, 1.0D, 16.0D, 13.0D))));
 
     private final Map<BlockState, VoxelShape> SHAPES_CACHE = Maps.newHashMap();
     private final BlockState crossState;
@@ -88,7 +109,7 @@ public class GunpowderBlock extends LightUpBlock {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(NORTH, EAST, SOUTH, WEST, BURNING);
     }
 
@@ -98,21 +119,21 @@ public class GunpowderBlock extends LightUpBlock {
         for (Direction direction : Direction.Plane.HORIZONTAL) {
             RedstoneSide redstoneside = state.getValue(PROPERTY_BY_DIRECTION.get(direction));
             if (redstoneside == RedstoneSide.SIDE) {
-                voxelshape = VoxelShapes.or(voxelshape, SHAPES_FLOOR.get(direction));
+                voxelshape = Shapes.or(voxelshape, SHAPES_FLOOR.get(direction));
             } else if (redstoneside == RedstoneSide.UP) {
-                voxelshape = VoxelShapes.or(voxelshape, SHAPES_UP.get(direction));
+                voxelshape = Shapes.or(voxelshape, SHAPES_UP.get(direction));
             }
         }
         return voxelshape;
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return this.SHAPES_CACHE.get(state.setValue(BURNING, 0));
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
         return this.getConnectionState(context.getLevel(), this.crossState, context.getClickedPos());
     }
 
@@ -123,7 +144,7 @@ public class GunpowderBlock extends LightUpBlock {
 
     //-----connection logic------
 
-    private BlockState getConnectionState(IBlockReader world, BlockState state, BlockPos pos) {
+    private BlockState getConnectionState(BlockGetter world, BlockState state, BlockPos pos) {
         boolean flag = isDot(state);
         state = this.getMissingConnections(world, this.defaultBlockState().setValue(BURNING, state.getValue(BURNING)), pos);
         if (!flag || !isDot(state)) {
@@ -152,7 +173,7 @@ public class GunpowderBlock extends LightUpBlock {
         return state;
     }
 
-    private BlockState getMissingConnections(IBlockReader world, BlockState state, BlockPos pos) {
+    private BlockState getMissingConnections(BlockGetter world, BlockState state, BlockPos pos) {
         boolean flag = !world.getBlockState(pos.above()).isRedstoneConductor(world, pos);
 
         for (Direction direction : Direction.Plane.HORIZONTAL) {
@@ -165,7 +186,7 @@ public class GunpowderBlock extends LightUpBlock {
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState otherState, IWorld world, BlockPos pos, BlockPos otherPos) {
+    public BlockState updateShape(BlockState state, Direction direction, BlockState otherState, LevelAccessor world, BlockPos pos, BlockPos otherPos) {
         //should be server only
         BlockState newState;
         if (direction == Direction.DOWN) {
@@ -191,8 +212,8 @@ public class GunpowderBlock extends LightUpBlock {
 
     //used to connect diagonally
     @Override
-    public void updateIndirectNeighbourShapes(BlockState state, IWorld world, BlockPos pos, int var1, int var2) {
-        BlockPos.Mutable mutable = new BlockPos.Mutable();
+    public void updateIndirectNeighbourShapes(BlockState state, LevelAccessor world, BlockPos pos, int var1, int var2) {
+        BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
 
         for (Direction direction : Direction.Plane.HORIZONTAL) {
             RedstoneSide redstoneside = state.getValue(PROPERTY_BY_DIRECTION.get(direction));
@@ -218,11 +239,11 @@ public class GunpowderBlock extends LightUpBlock {
     }
 
     //gets connection to blocks diagonally above
-    private RedstoneSide getConnectingSide(IBlockReader world, BlockPos pos, Direction dir) {
+    private RedstoneSide getConnectingSide(BlockGetter world, BlockPos pos, Direction dir) {
         return this.getConnectingSide(world, pos, dir, !world.getBlockState(pos.above()).isRedstoneConductor(world, pos));
     }
 
-    private RedstoneSide getConnectingSide(IBlockReader world, BlockPos pos, Direction dir, boolean canClimbUp) {
+    private RedstoneSide getConnectingSide(BlockGetter world, BlockPos pos, Direction dir, boolean canClimbUp) {
         BlockPos blockpos = pos.relative(dir);
         BlockState blockstate = world.getBlockState(blockpos);
         if (canClimbUp) {
@@ -238,20 +259,20 @@ public class GunpowderBlock extends LightUpBlock {
     }
 
     @Override
-    public boolean canSurvive(BlockState state, IWorldReader world, BlockPos pos) {
+    public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
         BlockPos blockpos = pos.below();
         BlockState blockstate = world.getBlockState(blockpos);
         return this.canSurviveOn(world, blockpos, blockstate);
     }
 
-    private boolean canSurviveOn(IBlockReader world, BlockPos pos, BlockState state) {
+    private boolean canSurviveOn(BlockGetter world, BlockPos pos, BlockState state) {
         return state.isFaceSturdy(world, pos, Direction.UP) || state.is(Blocks.HOPPER);
     }
 
     //TODO: add more cases
-    protected boolean canConnectTo(BlockState state, IBlockReader world, BlockPos pos, @Nullable Direction dir) {
+    protected boolean canConnectTo(BlockState state, BlockGetter world, BlockPos pos, @Nullable Direction dir) {
         Block b = state.getBlock();
-        return b instanceof ILightable || b instanceof TNTBlock || b instanceof CampfireBlock ||
+        return b instanceof ILightable || b instanceof TntBlock || b instanceof CampfireBlock ||
                 (CompatHandler.deco_blocks && DecoBlocksCompatRegistry.isBrazier(b));
     }
 
@@ -285,7 +306,7 @@ public class GunpowderBlock extends LightUpBlock {
     //-----redstone------
 
     @Override
-    public void onPlace(BlockState state, World world, BlockPos pos, BlockState oldState, boolean moving) {
+    public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean moving) {
         if (!oldState.is(state.getBlock()) && !world.isClientSide) {
             //doesn't ignite immediately
             world.getBlockTicks().scheduleTick(pos, this, getDelay());
@@ -299,7 +320,7 @@ public class GunpowderBlock extends LightUpBlock {
     }
 
     @Override
-    public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!isMoving && !state.is(newState.getBlock())) {
             super.onRemove(state, world, pos, newState, isMoving);
             if (!world.isClientSide) {
@@ -317,14 +338,14 @@ public class GunpowderBlock extends LightUpBlock {
      * neighbor Block
      */
     @Override
-    public void neighborChanged(BlockState state, World world, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean moving) {
+    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean moving) {
         super.neighborChanged(state, world, pos, neighborBlock, neighborPos, moving);
         if (!world.isClientSide) {
             world.getBlockTicks().scheduleTick(pos, this, getDelay());
         }
     }
 
-    private void updateNeighborsOfNeighboringWires(World world, BlockPos pos) {
+    private void updateNeighborsOfNeighboringWires(Level world, BlockPos pos) {
         for (Direction direction : Direction.Plane.HORIZONTAL) {
             this.checkCornerChangeAt(world, pos.relative(direction));
         }
@@ -339,7 +360,7 @@ public class GunpowderBlock extends LightUpBlock {
         }
     }
 
-    private void checkCornerChangeAt(World world, BlockPos pos) {
+    private void checkCornerChangeAt(Level world, BlockPos pos) {
         if (world.getBlockState(pos).is(this)) {
             world.updateNeighborsAt(pos, this);
 
@@ -350,8 +371,8 @@ public class GunpowderBlock extends LightUpBlock {
     }
 
     @Override
-    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-        ActionResultType lightUp = super.use(state, world, pos, player, hand, hit);
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        InteractionResult lightUp = super.use(state, world, pos, player, hand, hit);
         if (lightUp.consumesAction()) return lightUp;
         if (player.abilities.mayBuild) {
             if (isCross(state) || isDot(state)) {
@@ -361,14 +382,14 @@ public class GunpowderBlock extends LightUpBlock {
                 if (blockstate != state) {
                     world.setBlock(pos, blockstate, 3);
                     this.updatesOnShapeChange(world, pos, state, blockstate);
-                    return ActionResultType.SUCCESS;
+                    return InteractionResult.SUCCESS;
                 }
             }
         }
-        return ActionResultType.PASS;
+        return InteractionResult.PASS;
     }
 
-    private void updatesOnShapeChange(World world, BlockPos pos, BlockState state, BlockState newState) {
+    private void updatesOnShapeChange(Level world, BlockPos pos, BlockState state, BlockState newState) {
         for (Direction direction : Direction.Plane.HORIZONTAL) {
             BlockPos blockpos = pos.relative(direction);
             if (state.getValue(PROPERTY_BY_DIRECTION.get(direction)).isConnected() != newState.getValue(PROPERTY_BY_DIRECTION.get(direction)).isConnected() && world.getBlockState(blockpos).isRedstoneConductor(world, blockpos)) {
@@ -382,7 +403,7 @@ public class GunpowderBlock extends LightUpBlock {
     //-----explosion-stuff------
 
     @Override
-    public void tick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+    public void tick(BlockState state, ServerLevel world, BlockPos pos, Random random) {
         int burning = state.getValue(BURNING);
 
         if (!world.isClientSide) {
@@ -412,7 +433,7 @@ public class GunpowderBlock extends LightUpBlock {
     }
 
 
-    public void explode(World world, BlockPos pos) {
+    public void explode(Level world, BlockPos pos) {
         GunpowderExplosion explosion = new GunpowderExplosion(world, null, pos.getX(), pos.getY(), pos.getZ(), 0.5f);
         if (net.minecraftforge.event.ForgeEventFactory.onExplosionStart(world, explosion)) return;
         explosion.explode();
@@ -420,12 +441,12 @@ public class GunpowderBlock extends LightUpBlock {
     }
 
     @Override
-    public boolean lightUp(BlockState state, BlockPos pos, IWorld world, FireSound sound) {
+    public boolean lightUp(BlockState state, BlockPos pos, LevelAccessor world, FireSound sound) {
         boolean ret = super.lightUp(state, pos, world, sound);
         if (ret) {
             //spawn particles when first lit
             if (!world.isClientSide()) {
-                ((World) world).blockEvent(pos, this, 0, 0);
+                ((Level) world).blockEvent(pos, this, 0, 0);
             }
             world.getBlockTicks().scheduleTick(pos, this, getDelay());
         }
@@ -433,19 +454,19 @@ public class GunpowderBlock extends LightUpBlock {
     }
 
     //for gunpowder -> gunpowder
-    private void lightUpByWire(BlockState state, BlockPos pos, IWorld world) {
+    private void lightUpByWire(BlockState state, BlockPos pos, LevelAccessor world) {
         if (!isLit(state)) {
             //spawn particles when first lit
             if (!world.isClientSide()) {
-                ((World) world).blockEvent(pos, this, 0, 0);
+                ((Level) world).blockEvent(pos, this, 0, 0);
             }
             world.setBlock(pos, toggleLitState(state, true), 11);
-            world.playSound(null, pos, ModRegistry.GUNPOWDER_IGNITE.get(), SoundCategory.BLOCKS, 2.0f,
+            world.playSound(null, pos, ModRegistry.GUNPOWDER_IGNITE.get(), SoundSource.BLOCKS, 2.0f,
                     1.9f + world.getRandom().nextFloat() * 0.1f);
         }
     }
 
-    protected void lightUpNeighbouringWires(BlockPos pos, BlockState state, World world) {
+    protected void lightUpNeighbouringWires(BlockPos pos, BlockState state, Level world) {
         for (Direction dir : Direction.Plane.HORIZONTAL) {
             RedstoneSide side = state.getValue(PROPERTY_BY_DIRECTION.get(dir));
             BlockState neighbourState;
@@ -469,7 +490,7 @@ public class GunpowderBlock extends LightUpBlock {
         }
     }
 
-    private boolean isFireSource(IWorld world, BlockPos pos) {
+    private boolean isFireSource(LevelAccessor world, BlockPos pos) {
         //wires handled separately
         BlockState state = world.getBlockState(pos);
         Block b = state.getBlock();
@@ -487,7 +508,7 @@ public class GunpowderBlock extends LightUpBlock {
      * Called upon the block being destroyed by an explosion
      */
     @Override
-    public void onBlockExploded(BlockState state, World world, BlockPos pos, Explosion explosion) {
+    public void onBlockExploded(BlockState state, Level world, BlockPos pos, Explosion explosion) {
         if (!world.isClientSide && this.canSurvive(state, world, pos)) {
             this.lightUp(state, pos, world, FireSound.FLAMING_ARROW);
         }
@@ -497,13 +518,13 @@ public class GunpowderBlock extends LightUpBlock {
     }
 
     @Override
-    public void stepOn(World p_176199_1_, BlockPos p_176199_2_, Entity p_176199_3_) {
+    public void stepOn(Level p_176199_1_, BlockPos p_176199_2_, Entity p_176199_3_) {
         super.stepOn(p_176199_1_, p_176199_2_, p_176199_3_);
     }
 
     //TODO: this is not working
     @Override
-    public void fallOn(World world, BlockPos pos, Entity entity, float height) {
+    public void fallOn(Level world, BlockPos pos, Entity entity, float height) {
         super.fallOn(world, pos, entity, height);
         if(height > 1){
             this.extinguish(world.getBlockState(pos), pos, world);
@@ -514,17 +535,17 @@ public class GunpowderBlock extends LightUpBlock {
 
 
     @Override
-    public int getFireSpreadSpeed(BlockState state, IBlockReader world, BlockPos pos, Direction face) {
+    public int getFireSpreadSpeed(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
         return 60;
     }
 
     @Override
-    public int getFlammability(BlockState state, IBlockReader world, BlockPos pos, Direction face) {
+    public int getFlammability(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
         return 300;
     }
 
     @Override
-    public void catchFire(BlockState state, World world, BlockPos pos, @Nullable Direction face, @Nullable LivingEntity igniter) {
+    public void catchFire(BlockState state, Level world, BlockPos pos, @Nullable Direction face, @Nullable LivingEntity igniter) {
 
     }
 
@@ -542,7 +563,7 @@ public class GunpowderBlock extends LightUpBlock {
      * Gets an item for the block being called on. Args: world, x, y, z
      */
     @Override
-    public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
+    public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
         return new ItemStack(Items.GUNPOWDER);
     }
 
@@ -551,7 +572,7 @@ public class GunpowderBlock extends LightUpBlock {
 
     //called when first lit
     @Override
-    public boolean triggerEvent(BlockState state, World world, BlockPos pos, int eventID, int eventParam) {
+    public boolean triggerEvent(BlockState state, Level world, BlockPos pos, int eventID, int eventParam) {
         if (eventID == 0) {
             this.animateTick(state.setValue(BURNING, 1), world, pos, world.random);
             return true;
@@ -564,7 +585,7 @@ public class GunpowderBlock extends LightUpBlock {
      * items for display
      */
     @Override
-    public void animateTick(BlockState state, World world, BlockPos pos, Random random) {
+    public void animateTick(BlockState state, Level world, BlockPos pos, Random random) {
         int i = state.getValue(BURNING);
         if (i != 0) {
             for (Direction direction : Direction.Plane.HORIZONTAL) {
@@ -583,7 +604,7 @@ public class GunpowderBlock extends LightUpBlock {
         }
     }
 
-    private void spawnParticlesAlongLine(World world, Random rand, BlockPos pos, int burning, Direction dir1, Direction dir2, float from, float to) {
+    private void spawnParticlesAlongLine(Level world, Random rand, BlockPos pos, int burning, Direction dir1, Direction dir2, float from, float to) {
         float f = to - from;
         float in = (7.5f - (burning - 1)) / 7.5f;
         if ((rand.nextFloat() < 1 * f * in)) {

@@ -2,8 +2,8 @@ package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.minecraft.client.renderer.entity.IronGolemRenderer;
-import net.minecraft.entity.passive.IronGolemEntity;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -15,7 +15,7 @@ import javax.annotation.Nonnull;
 public abstract class IronGolemRendererMixin {
 
     @Inject(method = "getTextureLocation", at = @At("HEAD"), cancellable = true)
-    public void getEntityTexture(@Nonnull IronGolemEntity entity, CallbackInfoReturnable<ResourceLocation> info) {
+    public void getEntityTexture(@Nonnull IronGolem entity, CallbackInfoReturnable<ResourceLocation> info) {
         if(entity.getUUID().getLeastSignificantBits()%420==0)
             info.setReturnValue(Textures.THICK_GOLEM);
     }

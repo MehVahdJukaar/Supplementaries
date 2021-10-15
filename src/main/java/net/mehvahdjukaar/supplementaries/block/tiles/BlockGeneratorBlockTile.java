@@ -9,27 +9,27 @@ import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.world.structures.RoadSignFeature;
 import net.mehvahdjukaar.supplementaries.world.structures.StructureLocator;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.LanternBlock;
-import net.minecraft.block.StairsBlock;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.nbt.StringNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.Biomes;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.Lantern;
+import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.tuple.Pair;
@@ -39,7 +39,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Executors;
 
-public class BlockGeneratorBlockTile extends TileEntity implements ITickableTileEntity {
+public class BlockGeneratorBlockTile extends BlockEntity implements TickableBlockEntity {
 
     private boolean firstTick = true;
     public Pair<List<Pair<Integer, BlockPos>>, Boolean> threadResult = null;
@@ -49,7 +49,7 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
     }
 
     private static final BlockState trapdoor = Blocks.SPRUCE_TRAPDOOR.defaultBlockState();
-    private static final BlockState lantern = Blocks.LANTERN.defaultBlockState().setValue(LanternBlock.HANGING, true);
+    private static final BlockState lantern = Blocks.LANTERN.defaultBlockState().setValue(Lantern.HANGING, true);
     private static final BlockState lanternDown = Blocks.LANTERN.defaultBlockState();
     private static final BlockState fence = Blocks.SPRUCE_FENCE.defaultBlockState();
     private static final BlockState jar = ModRegistry.FIREFLY_JAR.get().defaultBlockState();
@@ -67,7 +67,7 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
         a = (float) (a * Math.PI / 180);
         b = (float) (b * Math.PI / 180);
 
-        return (180 / Math.PI) * MathHelper.atan2(MathHelper.sin(a) + MathHelper.sin(b), MathHelper.cos(a) + MathHelper.cos(b));
+        return (180 / Math.PI) * Mth.atan2(Mth.sin(a) + Mth.sin(b), Mth.cos(a) + Mth.cos(b));
     }
 
 
@@ -80,7 +80,7 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
         if (this.firstTick) {
             this.firstTick = false;
 
-            ServerWorld world = (ServerWorld) this.level;
+            ServerLevel world = (ServerLevel) this.level;
             BlockPos pos = this.worldPosition.below(2);
             final int posX = pos.getX();
             final int posZ = pos.getZ();
@@ -113,7 +113,7 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
         try {
             if (threadResult != null) {
 
-                ServerWorld world = (ServerWorld) this.level;
+                ServerLevel world = (ServerLevel) this.level;
                 BlockPos pos = this.worldPosition.below(2);
 
                 BlockState topState = trapdoor;
@@ -126,7 +126,7 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
                 boolean inVillage = locateResult.getRight();
 
                 if (inVillage) {
-                    RegistryKey<Biome> b = RegistryKey.create(ForgeRegistries.Keys.BIOMES, world.getBiome(pos).getRegistryName());
+                    ResourceKey<Biome> b = ResourceKey.create(ForgeRegistries.Keys.BIOMES, world.getBiome(pos).getRegistryName());
                     BlockState replace = (b == Biomes.DESERT || b == Biomes.DESERT_HILLS || b == Biomes.DESERT_LAKES) ? path_2 : path;
                     replaceCobbleWithPath(world, pos, replace);
                 }
@@ -162,7 +162,7 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
 
 
                     this.level.setBlock(pos, ModRegistry.SIGN_POST.get().defaultBlockState(), 3);
-                    TileEntity te = this.level.getBlockEntity(pos);
+                    BlockEntity te = this.level.getBlockEntity(pos);
                     if (te instanceof SignPostBlockTile) {
                         SignPostBlockTile sign = ((SignPostBlockTile) te);
                         sign.setHeldBlock(Blocks.SPRUCE_FENCE.defaultBlockState());
@@ -191,10 +191,10 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
                         }
 
 
-                        float yaw = MathHelper.wrapDegrees(90 + (float) this.averageAngles(-sign.yawUp + 180, -sign.yawDown + 180));
+                        float yaw = Mth.wrapDegrees(90 + (float) this.averageAngles(-sign.yawUp + 180, -sign.yawDown + 180));
                         Direction backDir = Direction.fromYRot(yaw);
 
-                        float diff = MathHelper.degreesDifference(yaw, backDir.toYRot());
+                        float diff = Mth.degreesDifference(yaw, backDir.toYRot());
 
                         Direction sideDir = (diff < 0 ? backDir.getClockWise() : backDir.getCounterClockWise());
 
@@ -209,19 +209,19 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
 
                         boolean hasGroundLantern = false;
 
-                        RegistryKey<Biome> biome = RegistryKey.create(ForgeRegistries.Keys.BIOMES, world.getBiome(pos).getRegistryName());
+                        ResourceKey<Biome> biome = ResourceKey.create(ForgeRegistries.Keys.BIOMES, world.getBiome(pos).getRegistryName());
                         boolean hasFirefly = (BiomeDictionary.hasType(biome, BiomeDictionary.Type.MAGICAL) ||
                                 BiomeDictionary.hasType(biome, BiomeDictionary.Type.SWAMP) ||
                                 BiomeDictionary.hasType(biome, BiomeDictionary.Type.SPOOKY) ? 0.2f : 0.01f) > rand.nextFloat();
 
 
                         //stone
-                        if (0.3 > rand.nextFloat() && MathHelper.degreesDifferenceAbs(sign.getPointingYaw(true) + 180, yaw) > 70) {
+                        if (0.3 > rand.nextFloat() && Mth.degreesDifferenceAbs(sign.getPointingYaw(true) + 180, yaw) > 70) {
                             BlockPos stonePos = pos.below().offset(backDir.getNormal());
                             if (rand.nextBoolean()) {
                                 world.setBlock(stonePos, stoneSlab, 2);
                             } else {
-                                world.setBlock(stonePos, stair.setValue(StairsBlock.FACING, sideDir), 2);
+                                world.setBlock(stonePos, stair.setValue(StairBlock.FACING, sideDir), 2);
                             }
                             stonePos = stonePos.offset(sideDir.getNormal());
                             world.setBlock(stonePos, stone, 2);
@@ -234,7 +234,7 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
                                 if (rand.nextBoolean()) {
                                     world.setBlock(stonePos, stoneSlab, 2);
                                 } else {
-                                    world.setBlock(stonePos, stair.setValue(StairsBlock.FACING, sideDir.getOpposite()), 2);
+                                    world.setBlock(stonePos, stair.setValue(StairBlock.FACING, sideDir.getOpposite()), 2);
                                 }
                             }
 
@@ -300,14 +300,14 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
                 } else {
 
                     ItemStack book = new ItemStack(Items.WRITABLE_BOOK);
-                    CompoundNBT com = new CompoundNBT();
-                    ListNBT listnbt = new ListNBT();
-                    listnbt.add(StringNBT.valueOf("nothing here but monsters\n\n\n"));
+                    CompoundTag com = new CompoundTag();
+                    ListTag listnbt = new ListTag();
+                    listnbt.add(StringTag.valueOf("nothing here but monsters\n\n\n"));
                     com.put("pages", listnbt);
                     book.setTag(com);
                     this.level.setBlock(this.worldPosition.below(2), ModRegistry.NOTICE_BOARD.get().defaultBlockState().setValue(NoticeBoardBlock.HAS_BOOK, true)
                             .setValue(NoticeBoardBlock.FACING, Direction.Plane.HORIZONTAL.getRandomDirection(this.getLevel().random)), 3);
-                    TileEntity te = world.getBlockEntity(this.worldPosition.below(2));
+                    BlockEntity te = world.getBlockEntity(this.worldPosition.below(2));
                     if (te instanceof NoticeBoardBlockTile) {
                         ((ItemDisplayTile) te).setDisplayedItem(book);
                         //te.setChanged();
@@ -324,15 +324,15 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
     }
 
 
-    private static ITextComponent getSignText(int d) {
+    private static Component getSignText(int d) {
         int s;
         if (d < 100) s = 10;
         else if (d < 2000) s = 100;
         else s = 1000;
-        return new TranslationTextComponent("message.supplementaries.road_sign", (((d + (s / 2)) / s) * s));
+        return new TranslatableComponent("message.supplementaries.road_sign", (((d + (s / 2)) / s) * s));
     }
 
-    private static void replaceCobbleWithPath(World world, BlockPos pos, BlockState path) {
+    private static void replaceCobbleWithPath(Level world, BlockPos pos, BlockState path) {
         //generate cobble path
 
         for (int i = -2; i <= 2; ++i) {

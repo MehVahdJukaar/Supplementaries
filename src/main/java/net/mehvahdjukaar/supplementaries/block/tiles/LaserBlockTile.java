@@ -2,22 +2,22 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.LaserBlock;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
 import net.minecraftforge.common.util.Constants;
 
 import java.util.Random;
 
 
-public class LaserBlockTile extends TileEntity implements ITickableTileEntity {
+public class LaserBlockTile extends BlockEntity implements TickableBlockEntity {
     public BlockPos endpos = null; // block that the laser is touching
     public int lenght = 0;
     public float offset = -1;
@@ -64,9 +64,9 @@ public class LaserBlockTile extends TileEntity implements ITickableTileEntity {
         if (endpos != null) {
             BlockState state = this.level.getBlockState(this.endpos);
             if (state.getBlock() instanceof LaserBlock
-                    && state.getValue(LaserBlock.RECEIVING) != MathHelper.clamp(MAXLENGHT + 1 - this.lenght, 0, 15)
+                    && state.getValue(LaserBlock.RECEIVING) != Mth.clamp(MAXLENGHT + 1 - this.lenght, 0, 15)
                     && state.getValue(LaserBlock.FACING) == this.getBlockState().getValue(LaserBlock.FACING).getOpposite()) {
-                this.level.setBlock(this.endpos, state.setValue(LaserBlock.RECEIVING, MathHelper.clamp(MAXLENGHT + 1 - this.lenght, 0, 15)), 3);
+                this.level.setBlock(this.endpos, state.setValue(LaserBlock.RECEIVING, Mth.clamp(MAXLENGHT + 1 - this.lenght, 0, 15)), 3);
             }
         }
     }// TODO:o check if null
@@ -94,7 +94,7 @@ public class LaserBlockTile extends TileEntity implements ITickableTileEntity {
     }
 
     @Override
-    public AxisAlignedBB getRenderBoundingBox() {
+    public AABB getRenderBoundingBox() {
         return INFINITE_EXTENT_AABB;
         //return new AxisAlignedBB(this.pos.add(-20,-20,-20), this.pos.add(20,20,20));
         //return CommonUtil.getDirectionBB(this.pos, this.getDirection(), this.lenght);
@@ -112,37 +112,37 @@ public class LaserBlockTile extends TileEntity implements ITickableTileEntity {
                 this.offset = (new Random(this.getBlockPos().asLong())).nextFloat() * (float) Math.PI * 2f;
             this.prevWidth = this.width;
             float angle = this.offset + (this.getLevel().getGameTime()%24000) / 50f;
-            this.width = MathHelper.sin(angle % (float) Math.PI * 2f);
+            this.width = Mth.sin(angle % (float) Math.PI * 2f);
         } else if (this.level != null && this.level.getGameTime() % 20L == 0L) {
             this.updateBeam();
         }
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT compound) {
+    public void load(BlockState state, CompoundTag compound) {
         super.load(state, compound);
         this.lenght = compound.getInt("Length");
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
+    public CompoundTag save(CompoundTag compound) {
         super.save(compound);
         compound.putInt("Length", this.lenght);
         return compound;
     }
 
     @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.worldPosition, 0, this.getUpdateTag());
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return new ClientboundBlockEntityDataPacket(this.worldPosition, 0, this.getUpdateTag());
     }
 
     @Override
-    public CompoundNBT getUpdateTag() {
-        return this.save(new CompoundNBT());
+    public CompoundTag getUpdateTag() {
+        return this.save(new CompoundTag());
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         this.load(this.getBlockState(), pkt.getTag());
         this.updateBeam();
     }

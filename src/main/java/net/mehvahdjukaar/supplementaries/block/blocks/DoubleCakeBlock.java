@@ -3,81 +3,83 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.Level;
 
 import java.util.Random;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class DoubleCakeBlock extends DirectionalCakeBlock {
 
     protected static final VoxelShape[] SHAPES_WEST = new VoxelShape[]{
-            VoxelShapes.or(box(2, 8, 2, 14, 15, 14),
+            Shapes.or(box(2, 8, 2, 14, 15, 14),
                     box(1, 0, 1, 15, 8, 15)),
-            VoxelShapes.or(box(3, 8, 2, 14, 15, 14),
+            Shapes.or(box(3, 8, 2, 14, 15, 14),
                     box(1, 0, 1, 15, 8, 15)),
-            VoxelShapes.or(box(5, 8, 2, 14, 15, 14),
+            Shapes.or(box(5, 8, 2, 14, 15, 14),
                     box(1, 0, 1, 15, 8, 15)),
-            VoxelShapes.or( box(7, 8, 2, 14, 15, 14),
+            Shapes.or( box(7, 8, 2, 14, 15, 14),
                     box(1, 0, 1, 15, 8, 15)),
-            VoxelShapes.or( box(9, 8, 2, 14, 15, 14),
+            Shapes.or( box(9, 8, 2, 14, 15, 14),
                     box(1, 0, 1, 15, 8, 15)),
-            VoxelShapes.or( box(11, 8, 2, 14, 15, 14),
+            Shapes.or( box(11, 8, 2, 14, 15, 14),
                     box(1, 0, 1, 15, 8, 15)),
-            VoxelShapes.or( box(13, 8, 2, 14, 15, 14),
+            Shapes.or( box(13, 8, 2, 14, 15, 14),
                     box(1, 0, 1, 15, 8, 15))};
     protected static final VoxelShape[] SHAPES_EAST = new VoxelShape[]{
-            VoxelShapes.or(box(2, 8, 2, 14, 15, 14),
+            Shapes.or(box(2, 8, 2, 14, 15, 14),
                     box(1, 0, 1, 15, 8, 15)),
-            VoxelShapes.or(box(2, 8, 2, 13, 15, 14),
+            Shapes.or(box(2, 8, 2, 13, 15, 14),
                     box(1, 0, 1, 15, 8, 15)),
-            VoxelShapes.or(box(2, 8, 2, 11, 15, 14),
+            Shapes.or(box(2, 8, 2, 11, 15, 14),
                     box(1, 0, 1, 15, 8, 15)),
-            VoxelShapes.or( box(2, 8, 2, 9, 15, 14),
+            Shapes.or( box(2, 8, 2, 9, 15, 14),
                     box(1, 0, 1, 15, 8, 15)),
-            VoxelShapes.or( box(2, 8, 2, 7, 15, 14),
+            Shapes.or( box(2, 8, 2, 7, 15, 14),
                     box(1, 0, 1, 15, 8, 15)),
-            VoxelShapes.or( box(2, 8, 2, 5, 15, 14),
+            Shapes.or( box(2, 8, 2, 5, 15, 14),
                     box(1, 0, 1, 15, 8, 15)),
-            VoxelShapes.or( box(2, 8, 2, 3, 15, 14),
+            Shapes.or( box(2, 8, 2, 3, 15, 14),
                     box(1, 0, 1, 15, 8, 15))};
     protected static final VoxelShape[] SHAPES_SOUTH = new VoxelShape[]{
-            VoxelShapes.or(box(2, 8, 2, 14, 15, 14),
+            Shapes.or(box(2, 8, 2, 14, 15, 14),
                     box(1, 0, 1, 15, 8, 15)),
-            VoxelShapes.or(box(2, 8, 2, 14, 15, 13),
+            Shapes.or(box(2, 8, 2, 14, 15, 13),
                     box(1, 0, 1, 15, 8, 15)),
-            VoxelShapes.or(box(2, 8, 2, 14, 15, 11),
+            Shapes.or(box(2, 8, 2, 14, 15, 11),
                     box(1, 0, 1, 15, 8, 15)),
-            VoxelShapes.or( box(2, 8, 2, 14, 15, 9),
+            Shapes.or( box(2, 8, 2, 14, 15, 9),
                     box(1, 0, 1, 15, 8, 15)),
-            VoxelShapes.or( box(2, 8, 2, 14, 15, 7),
+            Shapes.or( box(2, 8, 2, 14, 15, 7),
                     box(1, 0, 1, 15, 8, 15)),
-            VoxelShapes.or( box(2, 8, 2, 14, 15, 5),
+            Shapes.or( box(2, 8, 2, 14, 15, 5),
                     box(1, 0, 1, 15, 8, 15)),
-            VoxelShapes.or( box(2, 8, 2, 14, 15, 3),
+            Shapes.or( box(2, 8, 2, 14, 15, 3),
                     box(1, 0, 1, 15, 8, 15))};
     protected static final VoxelShape[] SHAPES_NORTH= new VoxelShape[]{
-            VoxelShapes.or(box(2, 8, 2, 14, 15, 14),
+            Shapes.or(box(2, 8, 2, 14, 15, 14),
                     box(1, 0, 1, 15, 8, 15)),
-            VoxelShapes.or(box(2, 8, 3, 14, 15, 14),
+            Shapes.or(box(2, 8, 3, 14, 15, 14),
                     box(1, 0, 1, 15, 8, 15)),
-            VoxelShapes.or(box(2, 8, 5, 14, 15, 14),
+            Shapes.or(box(2, 8, 5, 14, 15, 14),
                     box(1, 0, 1, 15, 8, 15)),
-            VoxelShapes.or( box(2, 8, 7, 14, 15, 14),
+            Shapes.or( box(2, 8, 7, 14, 15, 14),
                     box(1, 0, 1, 15, 8, 15)),
-            VoxelShapes.or( box(2, 8, 9, 14, 15, 14),
+            Shapes.or( box(2, 8, 9, 14, 15, 14),
                     box(1, 0, 1, 15, 8, 15)),
-            VoxelShapes.or( box(2, 8, 11, 14, 15, 14),
+            Shapes.or( box(2, 8, 11, 14, 15, 14),
                     box(1, 0, 1, 15, 8, 15)),
-            VoxelShapes.or( box(2, 8, 13, 14, 15, 14),
+            Shapes.or( box(2, 8, 13, 14, 15, 14),
                     box(1, 0, 1, 15, 8, 15))};
 
     public DoubleCakeBlock(Properties properties) {
@@ -85,7 +87,7 @@ public class DoubleCakeBlock extends DirectionalCakeBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         switch (state.getValue(FACING)){
             default:
             case WEST:
@@ -101,7 +103,7 @@ public class DoubleCakeBlock extends DirectionalCakeBlock {
     //TODO: maybe merge this block with directional cake
 
     @Override
-    public void removeSlice(BlockState state, BlockPos pos, IWorld world, Direction dir){
+    public void removeSlice(BlockState state, BlockPos pos, LevelAccessor world, Direction dir){
         int i = state.getValue(BITES);
         if (i < 6) {
             if (i == 0 && ServerConfigs.cached.DIRECTIONAL_CAKE) state = state.setValue(FACING, dir);
@@ -118,7 +120,7 @@ public class DoubleCakeBlock extends DirectionalCakeBlock {
     }
 
     @Override
-    public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
+    public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
         if(CommonUtil.FESTIVITY.isStValentine()){
             if(rand.nextFloat()>0.8) {
                 double d0 = (pos.getX() + 0.5 + (rand.nextFloat() - 0.5));

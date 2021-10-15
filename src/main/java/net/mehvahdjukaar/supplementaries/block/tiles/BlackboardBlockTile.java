@@ -5,21 +5,21 @@ import net.mehvahdjukaar.supplementaries.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager.BlackboardKey;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.Constants;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
 
-public class BlackboardBlockTile extends TileEntity implements IOwnerProtected {
+public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected {
 
     private UUID owner = null;
 
@@ -50,7 +50,7 @@ public class BlackboardBlockTile extends TileEntity implements IOwnerProtected {
         super.setChanged();
     }
 
-    public void setCorrectBlockState(BlockState state, BlockPos pos, World world) {
+    public void setCorrectBlockState(BlockState state, BlockPos pos, Level world) {
         if (!world.isClientSide) {
             boolean written = !this.isEmpty();
             if (state.getValue(BlackboardBlock.WRITTEN) != written) {
@@ -85,7 +85,7 @@ public class BlackboardBlockTile extends TileEntity implements IOwnerProtected {
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT compound) {
+    public void load(BlockState state, CompoundTag compound) {
         super.load(state, compound);
         loadFromTag(compound);
         this.loadOwner(compound);
@@ -95,19 +95,19 @@ public class BlackboardBlockTile extends TileEntity implements IOwnerProtected {
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
+    public CompoundTag save(CompoundTag compound) {
         super.save(compound);
         this.saveToTag(compound);
         this.saveOwner(compound);
         return compound;
     }
 
-    public CompoundNBT saveToTag(CompoundNBT compound) {
+    public CompoundTag saveToTag(CompoundTag compound) {
         compound.putLongArray("Pixels", packPixels(pixels));
         return compound;
     }
 
-    public void loadFromTag(CompoundNBT compound) {
+    public void loadFromTag(CompoundTag compound) {
         this.pixels = new byte[16][16];
         if (compound.contains("Pixels")) {
             this.pixels = unpackPixels(compound.getLongArray("Pixels"));
@@ -144,17 +144,17 @@ public class BlackboardBlockTile extends TileEntity implements IOwnerProtected {
     }
 
     @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.worldPosition, 0, this.getUpdateTag());
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return new ClientboundBlockEntityDataPacket(this.worldPosition, 0, this.getUpdateTag());
     }
 
     @Override
-    public CompoundNBT getUpdateTag() {
-        return this.save(new CompoundNBT());
+    public CompoundTag getUpdateTag() {
+        return this.save(new CompoundTag());
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         this.load(this.getBlockState(), pkt.getTag());
         this.updateModelData();
     }

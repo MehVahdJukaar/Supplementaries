@@ -12,30 +12,44 @@ import net.mehvahdjukaar.supplementaries.compat.framedblocks.FramedSignPost;
 import net.mehvahdjukaar.supplementaries.datagen.types.VanillaWoodTypes;
 import net.mehvahdjukaar.supplementaries.items.SignPostItem;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.item.*;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootParameters;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
-import net.minecraft.world.storage.MapData;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.CompassItem;
+import net.minecraft.world.item.DyeItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.MapItem;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class SignPostBlock extends FenceMimicBlock{
 
@@ -44,31 +58,31 @@ public class SignPostBlock extends FenceMimicBlock{
     }
 
     @Override
-    public BlockRenderType getRenderShape(BlockState state) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
     //TODO: add flip sound here
     @Override
-    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
-                                             BlockRayTraceResult hit) {
-        if(hit.getDirection().getAxis() == Direction.Axis.Y) return ActionResultType.PASS;
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
+                                             BlockHitResult hit) {
+        if(hit.getDirection().getAxis() == Direction.Axis.Y) return InteractionResult.PASS;
 
-        TileEntity tileentity = worldIn.getBlockEntity(pos);
+        BlockEntity tileentity = worldIn.getBlockEntity(pos);
         if (tileentity instanceof SignPostBlockTile && ((IOwnerProtected) tileentity).isAccessibleBy(player)) {
             SignPostBlockTile te = (SignPostBlockTile) tileentity;
             ItemStack itemstack = player.getItemInHand(handIn);
             Item item = itemstack.getItem();
 
             //put post on map
-            if(item instanceof FilledMapItem){
+            if(item instanceof MapItem){
                 if(!worldIn.isClientSide){
-                    MapData data = FilledMapItem.getOrCreateSavedData(itemstack,worldIn);
+                    MapItemSavedData data = MapItem.getOrCreateSavedData(itemstack,worldIn);
                     if(data instanceof CustomDecorationHolder) {
                         ((CustomDecorationHolder) data).toggleCustomDecoration(worldIn, pos);
                     }
                 }
-                return ActionResultType.sidedSuccess(worldIn.isClientSide);
+                return InteractionResult.sidedSuccess(worldIn.isClientSide);
             }
 
 
@@ -85,9 +99,9 @@ public class SignPostBlock extends FenceMimicBlock{
                         itemstack.shrink(1);
                     }
                     if(server)te.setChanged();
-                    return ActionResultType.sidedSuccess(worldIn.isClientSide);
+                    return InteractionResult.sidedSuccess(worldIn.isClientSide);
                 }
-                return ActionResultType.FAIL;
+                return InteractionResult.FAIL;
             }
             //sneak right click rotates the sign on z axis
             else if (isSneaking){
@@ -100,8 +114,8 @@ public class SignPostBlock extends FenceMimicBlock{
                     te.leftDown = !te.leftDown;
                 }
                 if(server)te.setChanged();
-                worldIn.playSound(null, pos, SoundEvents.ITEM_FRAME_ROTATE_ITEM, SoundCategory.BLOCKS, 1.0F, 0.6F);
-                return ActionResultType.sidedSuccess(worldIn.isClientSide);
+                worldIn.playSound(null, pos, SoundEvents.ITEM_FRAME_ROTATE_ITEM, SoundSource.BLOCKS, 1.0F, 0.6F);
+                return InteractionResult.sidedSuccess(worldIn.isClientSide);
             }
             //change direction with compass
             else if (isCompass){
@@ -118,50 +132,50 @@ public class SignPostBlock extends FenceMimicBlock{
                         te.pointToward(pointingPos,false);
                     }
                     if(server)te.setChanged();
-                    return ActionResultType.sidedSuccess(worldIn.isClientSide);
+                    return InteractionResult.sidedSuccess(worldIn.isClientSide);
                 }
-                return ActionResultType.FAIL;
+                return InteractionResult.FAIL;
             }
             else if (CompatHandler.framedblocks && te.framed){
                 boolean success = FramedSignPost.handleInteraction(te, player, handIn, itemstack, worldIn, pos);
-                if(success)return ActionResultType.sidedSuccess(worldIn.isClientSide);
+                if(success)return InteractionResult.sidedSuccess(worldIn.isClientSide);
             }
             else if (isSignPost){
                 //let sign item handle this one
-                return ActionResultType.PASS;
+                return InteractionResult.PASS;
             }
             // open gui (edit sign with empty hand)
             if (!server) {
                 SignPostGui.open(te);
             }
-            return ActionResultType.sidedSuccess(worldIn.isClientSide);
+            return InteractionResult.sidedSuccess(worldIn.isClientSide);
         }
-        return ActionResultType.PASS;
+        return InteractionResult.PASS;
     }
 
 
     @Nullable
-    private BlockPos getLodestonePos(World world, CompoundNBT cmp) {
+    private BlockPos getLodestonePos(Level world, CompoundTag cmp) {
         boolean flag = cmp.contains("LodestonePos");
         boolean flag1 = cmp.contains("LodestoneDimension");
         if (flag && flag1) {
-            Optional<RegistryKey<World>> optional = CompassItem.getLodestoneDimension(cmp);
+            Optional<ResourceKey<Level>> optional = CompassItem.getLodestoneDimension(cmp);
             if ( optional.isPresent() && world.dimension() == optional.get() ) {
-                return NBTUtil.readBlockPos(cmp.getCompound("LodestonePos"));
+                return NbtUtils.readBlockPos(cmp.getCompound("LodestonePos"));
             }
         }
         return null;
     }
 
     @Nullable
-    private BlockPos getWorldSpawnPos(World world) {
+    private BlockPos getWorldSpawnPos(Level world) {
         return world.dimensionType().natural() ? new BlockPos(world.getLevelData().getXSpawn(),
                 world.getLevelData().getYSpawn(),world.getLevelData().getZSpawn()) : null;
     }
 
     @Override
-    public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
-        TileEntity te = world.getBlockEntity(pos);
+    public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+        BlockEntity te = world.getBlockEntity(pos);
         if(te instanceof SignPostBlockTile){
             SignPostBlockTile tile = ((SignPostBlockTile)te);
             double y = target.getLocation().y;
@@ -179,7 +193,7 @@ public class SignPostBlock extends FenceMimicBlock{
 
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
-        TileEntity tileentity = builder.getOptionalParameter(LootParameters.BLOCK_ENTITY);
+        BlockEntity tileentity = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
         if (tileentity instanceof SignPostBlockTile){
             SignPostBlockTile tile = ((SignPostBlockTile) tileentity);
             List<ItemStack> list = new ArrayList<>();
@@ -199,18 +213,18 @@ public class SignPostBlock extends FenceMimicBlock{
     }
 
     @Override
-    public BlockState rotate(BlockState state, IWorld world, BlockPos pos, Rotation rot) {
+    public BlockState rotate(BlockState state, LevelAccessor world, BlockPos pos, Rotation rot) {
         float angle = rot.equals(Rotation.CLOCKWISE_90)? 90 : -90;
-        TileEntity te = world.getBlockEntity(pos);
+        BlockEntity te = world.getBlockEntity(pos);
         if (te instanceof SignPostBlockTile) {
             SignPostBlockTile tile = (SignPostBlockTile) te;
             boolean success = false;
             if(tile.up){
-                tile.yawUp= MathHelper.wrapDegrees(tile.yawUp+angle);
+                tile.yawUp= Mth.wrapDegrees(tile.yawUp+angle);
                 success=true;
             }
             if(tile.down){
-                tile.yawDown= MathHelper.wrapDegrees(tile.yawDown+angle);
+                tile.yawDown= Mth.wrapDegrees(tile.yawDown+angle);
                 success=true;
             }
 
@@ -223,12 +237,12 @@ public class SignPostBlock extends FenceMimicBlock{
     }
 
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
         return new SignPostBlockTile();
     }
 
     @Override
-    public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+    public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         BlockUtils.addOptionalOwnership(placer, worldIn, pos);
     }
 }

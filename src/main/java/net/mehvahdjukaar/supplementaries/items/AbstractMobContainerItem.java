@@ -6,31 +6,44 @@ import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.common.mobholder.MobContainer;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.minecraft.block.Block;
-import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.monster.piglin.PiglinEntity;
-import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.entity.passive.WaterMobEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.monster.piglin.Piglin;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.animal.WaterAnimal;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.item.*;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
+
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.NeutralMob;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.Item.Properties;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.context.UseOnContext;
 
 public abstract class AbstractMobContainerItem extends BlockItem {
 
@@ -61,13 +74,13 @@ public abstract class AbstractMobContainerItem extends BlockItem {
         return w < this.mobContainerWidth && h < mobContainerHeight;
     }
 
-    public void playCatchSound(PlayerEntity player) {
+    public void playCatchSound(Player player) {
     }
 
-    public void playFailSound(PlayerEntity player) {
+    public void playFailSound(Player player) {
     }
 
-    public void playReleaseSound(World world, Vector3d v) {
+    public void playReleaseSound(Level world, Vec3 v) {
     }
 
     @Override
@@ -76,21 +89,21 @@ public abstract class AbstractMobContainerItem extends BlockItem {
     }
 
     public boolean isFull(ItemStack stack) {
-        CompoundNBT tag = stack.getTag();
+        CompoundTag tag = stack.getTag();
         return tag != null && tag.contains("BlockEntityTag");
     }
 
     @Override
-    public ActionResultType interactLivingEntity(ItemStack stack, PlayerEntity player, LivingEntity entity, Hand hand) {
-        if (this.isFull(stack)) return ActionResultType.PASS;
+    public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity entity, InteractionHand hand) {
+        if (this.isFull(stack)) return InteractionResult.PASS;
         return this.doInteract(stack, player, entity, hand);
     }
 
     @Override
-    public boolean onLeftClickEntity(ItemStack stack, PlayerEntity player, Entity entity) {
+    public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
         if (this.isFull(stack)) return false;
-        Hand hand = player.getUsedItemHand();
-        if (hand == null || hand == Hand.OFF_HAND) return false;
+        InteractionHand hand = player.getUsedItemHand();
+        if (hand == null || hand == InteractionHand.OFF_HAND) return false;
 
         return this.doInteract(stack, player, entity, player.getUsedItemHand()).consumesAction();
     }
@@ -98,11 +111,11 @@ public abstract class AbstractMobContainerItem extends BlockItem {
 
     //TODO: merge
     //immediately discards pets and not alive entities
-    protected final boolean isEntityValid(Entity e, PlayerEntity player) {
+    protected final boolean isEntityValid(Entity e, Player player) {
         if (!e.isAlive() || (e instanceof LivingEntity && ((LivingEntity) e).isDeadOrDying())) return false;
 
-        if (e instanceof TameableEntity) {
-            TameableEntity pet = ((TameableEntity) e);
+        if (e instanceof TamableAnimal) {
+            TamableAnimal pet = ((TamableAnimal) e);
             return !pet.isTame() || pet.isOwnedBy(player);
         }
         return true;
@@ -137,7 +150,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
         ItemStack returnStack = new ItemStack(this);
         if (currentStack.hasCustomHoverName()) returnStack.setHoverName(currentStack.getHoverName());
 
-        CompoundNBT cmp = MobContainer.createMobHolderItemTag(entity, this.getMobContainerWidth(), this.getMobContainerHeight(),
+        CompoundTag cmp = MobContainer.createMobHolderItemTag(entity, this.getMobContainerWidth(), this.getMobContainerHeight(),
                 bucketStack, this.isAquarium);
         if (cmp != null) returnStack.addTagElement("BlockEntityTag", cmp);
         return returnStack;
@@ -146,15 +159,15 @@ public abstract class AbstractMobContainerItem extends BlockItem {
     //TODO: delegate to mobHolder
     //free mob
     @Override
-    public ActionResultType useOn(ItemUseContext context) {
+    public InteractionResult useOn(UseOnContext context) {
         ItemStack stack = context.getItemInHand();
-        CompoundNBT com = stack.getTagElement("BlockEntityTag");
-        PlayerEntity player = context.getPlayer();
+        CompoundTag com = stack.getTagElement("BlockEntityTag");
+        Player player = context.getPlayer();
         if (!context.getPlayer().isShiftKeyDown() && com != null) {
             //TODO: add other case
             boolean success = false;
-            World world = context.getLevel();
-            Vector3d v = context.getClickLocation();
+            Level world = context.getLevel();
+            Vec3 v = context.getClickLocation();
             if (com.contains("BucketHolder")) {
                 ItemStack bucketStack = ItemStack.of(com.getCompound("BucketHolder").getCompound("Bucket"));
                 if (bucketStack.getItem() instanceof BucketItem) {
@@ -162,15 +175,15 @@ public abstract class AbstractMobContainerItem extends BlockItem {
                     success = true;
                 }
             } else if (com.contains("MobHolder")) {
-                CompoundNBT nbt = com.getCompound("MobHolder");
+                CompoundTag nbt = com.getCompound("MobHolder");
                 Entity entity = EntityType.loadEntityRecursive(nbt.getCompound("EntityData"), world, o -> o);
                 if (entity != null) {
 
                     success = true;
                     if (!world.isClientSide) {
                         //anger entity
-                        if (!player.isCreative() && entity instanceof IAngerable) {
-                            IAngerable ang = (IAngerable) entity;
+                        if (!player.isCreative() && entity instanceof NeutralMob) {
+                            NeutralMob ang = (NeutralMob) entity;
                             ang.forgetCurrentTargetAndRefreshUniversalAnger();
                             ang.setPersistentAngerTarget(player.getUUID());
                             ang.setLastHurtByMob(player);
@@ -193,7 +206,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
                     //create new uuid for creative itemstack
                     if (player.isCreative()) {
                         if (nbt.contains("UUID")) {
-                            nbt.putUUID("UUID", MathHelper.createInsecureUUID(random));
+                            nbt.putUUID("UUID", Mth.createInsecureUUID(random));
                         }
                     }
                 }
@@ -207,64 +220,64 @@ public abstract class AbstractMobContainerItem extends BlockItem {
                         Utils.swapItemNBT(player, context.getHand(), stack, returnItem);
                     }
                 }
-                return ActionResultType.sidedSuccess(world.isClientSide);
+                return InteractionResult.sidedSuccess(world.isClientSide);
             }
         }
         return super.useOn(context);
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        CompoundNBT compoundnbt = stack.getTagElement("BlockEntityTag");
+        CompoundTag compoundnbt = stack.getTagElement("BlockEntityTag");
         if (compoundnbt != null) {
-            CompoundNBT com = compoundnbt.getCompound("MobHolder");
+            CompoundTag com = compoundnbt.getCompound("MobHolder");
             if (com == null || com.isEmpty()) com = compoundnbt.getCompound("BucketHolder");
             if (com != null) {
                 if (com.contains("Name")) {
-                    tooltip.add(new StringTextComponent(com.getString("Name")).withStyle(TextFormatting.GRAY));
+                    tooltip.add(new TextComponent(com.getString("Name")).withStyle(ChatFormatting.GRAY));
                 }
             }
         }
-        tooltip.add(new TranslationTextComponent("message.supplementaries.cage").withStyle(TextFormatting.ITALIC).withStyle(TextFormatting.GRAY));
+        tooltip.add(new TranslatableComponent("message.supplementaries.cage").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
     }
 
-    private void angerNearbyEntities(Entity entity, PlayerEntity player) {
+    private void angerNearbyEntities(Entity entity, Player player) {
         //anger entities
-        if (entity instanceof IAngerable && entity instanceof MobEntity) {
-            getEntitiesInRange((MobEntity) entity).stream()
+        if (entity instanceof NeutralMob && entity instanceof Mob) {
+            getEntitiesInRange((Mob) entity).stream()
                     .filter((mob) -> mob != entity).map(
-                            (mob) -> (IAngerable) mob).forEach((mob) -> {
+                            (mob) -> (NeutralMob) mob).forEach((mob) -> {
                         mob.forgetCurrentTargetAndRefreshUniversalAnger();
                         mob.setPersistentAngerTarget(player.getUUID());
                         mob.setLastHurtByMob(player);
                     });
         }
         //piglin workaround. don't know why they are IAngerable
-        if (entity instanceof PiglinEntity) {
+        if (entity instanceof Piglin) {
             entity.hurt(DamageSource.playerAttack(player), 0);
         }
     }
 
-    private static List<MobEntity> getEntitiesInRange(MobEntity e) {
+    private static List<Mob> getEntitiesInRange(Mob e) {
         double d0 = e.getAttributeValue(Attributes.FOLLOW_RANGE);
-        AxisAlignedBB axisalignedbb = AxisAlignedBB.unitCubeFromLowerCorner(e.position()).inflate(d0, 10.0D, d0);
+        AABB axisalignedbb = AABB.unitCubeFromLowerCorner(e.position()).inflate(d0, 10.0D, d0);
         return e.level.getLoadedEntitiesOfClass(e.getClass(), axisalignedbb);
     }
 
     //1
-    public ActionResultType doInteract(ItemStack stack, PlayerEntity player, Entity entity, Hand hand) {
+    public InteractionResult doInteract(ItemStack stack, Player player, Entity entity, InteractionHand hand) {
 
         if (this.isEntityValid(entity, player)) {
             ItemStack bucket = ItemStack.EMPTY;
             //try getting a filled bucket for any water mobs for aquariums and only catchable for others
-            if (entity instanceof WaterMobEntity && (this.isAquarium || this.canCatch(entity))) {
+            if (entity instanceof WaterAnimal && (this.isAquarium || this.canCatch(entity))) {
                 bucket = this.tryGettingFishBucket(player, entity, hand);
             }
             if (!bucket.isEmpty() || this.canCatch(entity)) {
                 entity.revive();
                 //return for client
-                if (player.level.isClientSide) return ActionResultType.SUCCESS;
+                if (player.level.isClientSide) return InteractionResult.SUCCESS;
 
                 this.playCatchSound(player);
                 this.angerNearbyEntities(entity, player);
@@ -272,11 +285,11 @@ public abstract class AbstractMobContainerItem extends BlockItem {
                 Utils.swapItemNBT(player, hand, stack, this.captureEntityInItem(entity, stack, bucket));
 
                 entity.remove();
-                return ActionResultType.CONSUME;
+                return InteractionResult.CONSUME;
             }
         }
         this.playFailSound(player);
-        return ActionResultType.PASS;
+        return InteractionResult.PASS;
     }
 
     /**
@@ -284,13 +297,13 @@ public abstract class AbstractMobContainerItem extends BlockItem {
      *
      * @return filled bucket stack or empty stack
      */
-    private ItemStack tryGettingFishBucket(PlayerEntity player, Entity entity, Hand hand) {
+    private ItemStack tryGettingFishBucket(Player player, Entity entity, InteractionHand hand) {
         ItemStack heldItem = player.getItemInHand(hand).copy();
 
         ItemStack bucket = ItemStack.EMPTY;
         //hax incoming
         player.setItemInHand(hand, new ItemStack(Items.WATER_BUCKET));
-        ActionResultType result = entity.interact(player, hand);
+        InteractionResult result = entity.interact(player, hand);
         if (!result.consumesAction()) {
             player.setItemInHand(hand, new ItemStack(Items.BUCKET));
             result = entity.interact(player, hand);
@@ -311,12 +324,12 @@ public abstract class AbstractMobContainerItem extends BlockItem {
 
     //cancel block placement when not shifting
     @Override
-    public ActionResultType place(BlockItemUseContext context) {
-        PlayerEntity player = context.getPlayer();
+    public InteractionResult place(BlockPlaceContext context) {
+        Player player = context.getPlayer();
         if (player != null && player.isShiftKeyDown()) {
             return super.place(context);
         }
-        return ActionResultType.PASS;
+        return InteractionResult.PASS;
     }
 
 

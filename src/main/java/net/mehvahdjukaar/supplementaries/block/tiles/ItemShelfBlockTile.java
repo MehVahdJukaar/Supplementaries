@@ -5,9 +5,9 @@ import net.mehvahdjukaar.supplementaries.block.blocks.ItemShelfBlock;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -19,8 +19,8 @@ public class ItemShelfBlockTile extends ItemDisplayTile {
     }
 
     @Override
-    public ITextComponent getDefaultName() {
-        return new TranslationTextComponent("block.supplementaries.item_shelf");
+    public Component getDefaultName() {
+        return new TranslatableComponent("block.supplementaries.item_shelf");
     }
 
     public float getYaw() {

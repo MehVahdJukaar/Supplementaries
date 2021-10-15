@@ -2,24 +2,31 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.tiles.PistonLauncherArmBlockTile;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.PushReaction;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class SpringLauncherBlock extends Block {
     protected static final VoxelShape PISTON_BASE_EAST_AABB = Block.box(0.0D, 0.0D, 0.0D, 12.0D, 16.0D, 16.0D);
@@ -42,7 +49,7 @@ public class SpringLauncherBlock extends Block {
     }
 
     @Override
-    public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
+    public boolean propagatesSkylightDown(BlockState state, BlockGetter reader, BlockPos pos) {
         return state.getValue(EXTENDED);
     }
 
@@ -53,7 +60,7 @@ public class SpringLauncherBlock extends Block {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING, EXTENDED);
     }
 
@@ -68,12 +75,12 @@ public class SpringLauncherBlock extends Block {
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
         return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         if (state.getValue(EXTENDED)) {
             switch(state.getValue(FACING)) {
                 case DOWN:
@@ -91,16 +98,16 @@ public class SpringLauncherBlock extends Block {
                     return PISTON_BASE_EAST_AABB;
             }
         } else {
-            return VoxelShapes.block();
+            return Shapes.block();
         }
     }
 
     @Override
-    public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+    public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         this.checkForMove(state, worldIn, pos);
     }
 
-    public void checkForMove(BlockState state, World world, BlockPos pos) {
+    public void checkForMove(BlockState state, Level world, BlockPos pos) {
         if (!world.isClientSide()) {
             boolean flag = this.shouldBeExtended(world, pos, state.getValue(FACING));
             BlockPos _bp = pos.offset(state.getValue(FACING).getNormal());
@@ -108,7 +115,7 @@ public class SpringLauncherBlock extends Block {
                 boolean flag2 = false;
                 BlockState targetblock = world.getBlockState(_bp);
                 if (targetblock.getPistonPushReaction() == PushReaction.DESTROY || targetblock.isAir()) {
-                    TileEntity tileentity = targetblock.hasTileEntity() ? world.getBlockEntity(_bp) : null;
+                    BlockEntity tileentity = targetblock.hasTileEntity() ? world.getBlockEntity(_bp) : null;
                     dropResources(targetblock, world, _bp, tileentity);
                     flag2 = true;
                 }
@@ -126,7 +133,7 @@ public class SpringLauncherBlock extends Block {
                             ModRegistry.SPRING_LAUNCHER_ARM.get().defaultBlockState().setValue(PistonLauncherArmBlock.EXTENDING, true).setValue(FACING, state.getValue(FACING)),
                             3);
                     world.setBlockAndUpdate(pos, state.setValue(EXTENDED, true));
-                    world.playSound(null, pos, SoundEvents.PISTON_EXTEND, SoundCategory.BLOCKS, 0.53F,
+                    world.playSound(null, pos, SoundEvents.PISTON_EXTEND, SoundSource.BLOCKS, 0.53F,
                             world.random.nextFloat() * 0.25F + 0.45F);
                 }
             } else if (!flag && state.getValue(EXTENDED)) {
@@ -136,7 +143,7 @@ public class SpringLauncherBlock extends Block {
                     world.setBlock(_bp,
                             ModRegistry.SPRING_LAUNCHER_ARM.get().defaultBlockState().setValue(PistonLauncherArmBlock.EXTENDING, false).setValue(FACING, state.getValue(FACING)),
                             3);
-                    world.playSound(null, pos, SoundEvents.PISTON_CONTRACT, SoundCategory.BLOCKS, 0.53F,
+                    world.playSound(null, pos, SoundEvents.PISTON_CONTRACT, SoundSource.BLOCKS, 0.53F,
                             world.random.nextFloat() * 0.15F + 0.45F);
                 } else if (bs.getBlock() instanceof  PistonLauncherArmBlock
                         && state.getValue(FACING) == bs.getValue(FACING)) {
@@ -149,7 +156,7 @@ public class SpringLauncherBlock extends Block {
     }
 
     // piston code
-    private boolean shouldBeExtended(World worldIn, BlockPos pos, Direction facing) {
+    private boolean shouldBeExtended(Level worldIn, BlockPos pos, Direction facing) {
         for (Direction direction : Direction.values()) {
             if (direction != facing && worldIn.hasSignal(pos.relative(direction), direction)) {
                 return true;
@@ -169,7 +176,7 @@ public class SpringLauncherBlock extends Block {
     }
 
     @Override
-    public void neighborChanged(BlockState state, World world, BlockPos pos, Block neighborBlock, BlockPos fromPos, boolean moving) {
+    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block neighborBlock, BlockPos fromPos, boolean moving) {
         super.neighborChanged(state, world, pos, neighborBlock, fromPos, moving);
         this.checkForMove(state, world, pos);
     }

@@ -1,34 +1,34 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.entities;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.entities.SlingshotProjectileEntity;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.entity.IRendersAsItem;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.world.entity.projectile.ItemSupplier;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
+import com.mojang.math.Vector3f;
 
-public class SlingshotProjectileRenderer<T extends SlingshotProjectileEntity & IRendersAsItem> extends EntityRenderer<T> {
+public class SlingshotProjectileRenderer<T extends SlingshotProjectileEntity & ItemSupplier> extends EntityRenderer<T> {
     private final ItemRenderer itemRenderer;
 
 
-    public SlingshotProjectileRenderer(EntityRendererManager manager) {
+    public SlingshotProjectileRenderer(EntityRenderDispatcher manager) {
         super(manager);
         this.itemRenderer = Minecraft.getInstance().getItemRenderer();
     }
 
     @Override
-    public Vector3d getRenderOffset(T p_225627_1_, float p_225627_2_) {
+    public Vec3 getRenderOffset(T p_225627_1_, float p_225627_2_) {
         return super.getRenderOffset(p_225627_1_, p_225627_2_);
     }
 
@@ -38,20 +38,20 @@ public class SlingshotProjectileRenderer<T extends SlingshotProjectileEntity & I
     }
 
     @Override
-    public void render(T entity, float p_225623_2_, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int light) {
+    public void render(T entity, float p_225623_2_, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int light) {
         //centers everything to hitbox y = 0 (rendered hitbox will be lowered)
         matrixStack.translate(0,-entity.getBbHeight()/2f, 0);
         if (entity.tickCount >= 3 || !(this.entityRenderDispatcher.camera.getEntity().distanceToSqr(entity) < 12.25D)) {
             matrixStack.pushPose();
             matrixStack.translate(0,0.25,0);
 
-            matrixStack.mulPose(Vector3f.YN.rotationDegrees(180 - MathHelper.rotLerp(partialTicks, entity.yRotO, entity.yRot)));
-            matrixStack.mulPose(Vector3f.ZN.rotationDegrees(MathHelper.rotLerp(partialTicks, entity.xRotO, entity.xRot)));
+            matrixStack.mulPose(Vector3f.YN.rotationDegrees(180 - Mth.rotLerp(partialTicks, entity.yRotO, entity.yRot)));
+            matrixStack.mulPose(Vector3f.ZN.rotationDegrees(Mth.rotLerp(partialTicks, entity.xRotO, entity.xRot)));
 
             float scale = ClientConfigs.cached.SLINGSHOT_PROJECTILE_SCALE;
             matrixStack.scale(scale, scale, scale);
 
-            this.itemRenderer.renderStatic(entity.getItem(), ItemCameraTransforms.TransformType.NONE, light, OverlayTexture.NO_OVERLAY, matrixStack, buffer);
+            this.itemRenderer.renderStatic(entity.getItem(), ItemTransforms.TransformType.NONE, light, OverlayTexture.NO_OVERLAY, matrixStack, buffer);
             matrixStack.popPose();
             super.render(entity, p_225623_2_, partialTicks, matrixStack, buffer, light);
         }
@@ -59,7 +59,7 @@ public class SlingshotProjectileRenderer<T extends SlingshotProjectileEntity & I
 
     @Override
     public ResourceLocation getTextureLocation(SlingshotProjectileEntity entity) {
-        return AtlasTexture.LOCATION_BLOCKS;
+        return TextureAtlas.LOCATION_BLOCKS;
     }
 }
 

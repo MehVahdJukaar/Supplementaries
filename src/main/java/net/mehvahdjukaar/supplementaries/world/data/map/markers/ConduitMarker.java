@@ -4,9 +4,9 @@ package net.mehvahdjukaar.supplementaries.world.data.map.markers;
 import net.mehvahdjukaar.selene.map.CustomDecoration;
 import net.mehvahdjukaar.selene.map.markers.MapWorldMarker;
 import net.mehvahdjukaar.supplementaries.world.data.map.CMDreg;
-import net.minecraft.block.ConduitBlock;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.world.level.block.ConduitBlock;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
 
 import javax.annotation.Nullable;
 
@@ -22,7 +22,7 @@ public class ConduitMarker extends MapWorldMarker<CustomDecoration> {
     }
 
     @Nullable
-    public static ConduitMarker getFromWorld(IBlockReader world, BlockPos pos){
+    public static ConduitMarker getFromWorld(BlockGetter world, BlockPos pos){
         if(world.getBlockState(pos).getBlock() instanceof ConduitBlock){
             return new ConduitMarker(pos);
         } else {

@@ -3,16 +3,16 @@ package net.mehvahdjukaar.supplementaries.client.particles;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.particle.*;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.particles.BasicParticleType;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.util.Mth;
 
 import java.util.Random;
 
 
 
-public class FireflyGlowParticle extends SpriteTexturedParticle {
-    protected FireflyGlowParticle(ClientWorld worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn) {
+public class FireflyGlowParticle extends TextureSheetParticle {
+    protected FireflyGlowParticle(ClientLevel worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn) {
         super(worldIn, xCoordIn, yCoordIn, zCoordIn, xSpeedIn, ySpeedIn, zSpeedIn);
         //this.particleRed = 1;
         //this.particleBlue = 1;
@@ -42,8 +42,8 @@ public class FireflyGlowParticle extends SpriteTexturedParticle {
 
 
     @Override
-    public IParticleRenderType getRenderType() {
-        return IParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+    public ParticleRenderType getRenderType() {
+        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
     }
 
     @Override
@@ -59,7 +59,7 @@ public class FireflyGlowParticle extends SpriteTexturedParticle {
 
     public int getLightColor(float partialTick) {
         float f = this.getQuadSize(partialTick) / this.quadSize;
-        f = MathHelper.clamp(f, 0.0F, 1.0F);
+        f = Mth.clamp(f, 0.0F, 1.0F);
         this.alpha = f;
         int i = super.getLightColor(partialTick);
         int j = (int) (f * 240);
@@ -68,14 +68,14 @@ public class FireflyGlowParticle extends SpriteTexturedParticle {
         return j | k << 16;
     }
 
-    public static class Factory implements IParticleFactory<BasicParticleType> {
-        private final IAnimatedSprite spriteSet;
-        public Factory(IAnimatedSprite sprite) {
+    public static class Factory implements ParticleProvider<SimpleParticleType> {
+        private final SpriteSet spriteSet;
+        public Factory(SpriteSet sprite) {
             this.spriteSet = sprite;
         }
 
         @Override
-        public Particle createParticle(BasicParticleType typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed,
+        public Particle createParticle(SimpleParticleType typeIn, ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed,
                                      double zSpeed) {
             FireflyGlowParticle op = new FireflyGlowParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed);
             op.pickSprite(this.spriteSet);

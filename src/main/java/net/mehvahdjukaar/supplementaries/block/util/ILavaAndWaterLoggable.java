@@ -1,25 +1,25 @@
 package net.mehvahdjukaar.supplementaries.block.util;
 
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.IBucketPickupHandler;
-import net.minecraft.block.ILiquidContainer;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.BucketPickup;
+import net.minecraft.world.level.block.LiquidBlockContainer;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
 
-public interface ILavaAndWaterLoggable extends IBucketPickupHandler, ILiquidContainer {
+public interface ILavaAndWaterLoggable extends BucketPickup, LiquidBlockContainer {
 
-    default boolean canPlaceLiquid(IBlockReader reader, BlockPos pos, BlockState state, Fluid fluid) {
+    default boolean canPlaceLiquid(BlockGetter reader, BlockPos pos, BlockState state, Fluid fluid) {
         return (!state.getValue(BlockProperties.LAVALOGGED) && fluid == Fluids.LAVA)
                 ||(!state.getValue(BlockStateProperties.WATERLOGGED) && fluid == Fluids.WATER);
     }
 
-    default boolean placeLiquid(IWorld world, BlockPos pos, BlockState state, FluidState fluidState) {
+    default boolean placeLiquid(LevelAccessor world, BlockPos pos, BlockState state, FluidState fluidState) {
         if (!state.getValue(BlockProperties.LAVALOGGED) && fluidState.getType() == Fluids.LAVA) {
             if (!world.isClientSide()) {
                 world.setBlock(pos, state.setValue(BlockProperties.LAVALOGGED, Boolean.TRUE), 3);
@@ -39,7 +39,7 @@ public interface ILavaAndWaterLoggable extends IBucketPickupHandler, ILiquidCont
         return false;
     }
 
-    default Fluid takeLiquid(IWorld world, BlockPos pos, BlockState state) {
+    default Fluid takeLiquid(LevelAccessor world, BlockPos pos, BlockState state) {
         if (state.getValue(BlockProperties.LAVALOGGED)) {
             world.setBlock(pos, state.setValue(BlockProperties.LAVALOGGED, Boolean.FALSE), 3);
             return Fluids.LAVA;

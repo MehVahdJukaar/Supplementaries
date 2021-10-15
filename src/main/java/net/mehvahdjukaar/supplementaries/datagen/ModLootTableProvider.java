@@ -5,16 +5,16 @@ import com.google.gson.GsonBuilder;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.Block;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.DirectoryCache;
-import net.minecraft.data.IDataProvider;
-import net.minecraft.data.LootTableProvider;
-import net.minecraft.item.DyeColor;
-import net.minecraft.loot.LootParameterSets;
-import net.minecraft.loot.LootTable;
-import net.minecraft.loot.LootTableManager;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.data.HashCache;
+import net.minecraft.data.DataProvider;
+import net.minecraft.data.loot.LootTableProvider;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.LootTables;
+import net.minecraft.resources.ResourceLocation;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -32,7 +32,7 @@ public class ModLootTableProvider extends LootTableProvider {
     }
 
     @Override
-    public void run(DirectoryCache cache) {
+    public void run(HashCache cache) {
 
         for(DyeColor color : DyeColor.values()){
             //addBlockLoot(Registry.FLAGS.get(color).get());
@@ -51,18 +51,18 @@ public class ModLootTableProvider extends LootTableProvider {
         saveTables(cache, tables);
     }
 
-    public void saveTables(DirectoryCache cache, Map<ResourceLocation, LootTable> tables) {
+    public void saveTables(HashCache cache, Map<ResourceLocation, LootTable> tables) {
         Path outputFolder = this.generator.getOutputFolder();
         tables.forEach((key, lootTable) -> {
             Path path = outputFolder.resolve("data/" + key.getNamespace() + "/loot_tables/" + key.getPath() + ".json");
             try {
-                IDataProvider.save(GSON, cache, LootTableManager.serialize(lootTable), path);
+                DataProvider.save(GSON, cache, LootTables.serialize(lootTable), path);
             } catch (IOException ignored) {}
         });
     }
 
 
     public void addBlockLoot(Block block) {
-        tables.put(block.getLootTable(), BlockLootTableAccessor.dropping(block).setParamSet(LootParameterSets.BLOCK).build());
+        tables.put(block.getLootTable(), BlockLootTableAccessor.dropping(block).setParamSet(LootContextParamSets.BLOCK).build());
     }
 }

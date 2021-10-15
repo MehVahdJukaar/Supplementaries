@@ -3,13 +3,21 @@ package net.mehvahdjukaar.supplementaries.client.models;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.renderer.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.model.IModelConfiguration;
 import net.minecraftforge.client.model.geometry.IModelGeometry;
 
 import java.util.Collection;
 import java.util.Set;
 import java.util.function.Function;
+
+import net.minecraft.client.renderer.block.model.BlockModel;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.UnbakedModel;
 
 public class FlowerBoxGeometry implements IModelGeometry<FlowerBoxGeometry> {
 
@@ -20,13 +28,13 @@ public class FlowerBoxGeometry implements IModelGeometry<FlowerBoxGeometry> {
     }
 
     @Override
-    public IBakedModel bake(IModelConfiguration owner, ModelBakery bakery, Function<RenderMaterial, TextureAtlasSprite> spriteGetter, IModelTransform modelTransform, ItemOverrideList overrides, ResourceLocation modelLocation) {
-        IBakedModel bakedOverlay = this.box.bake(bakery, box, spriteGetter, modelTransform, modelLocation, true);
+    public BakedModel bake(IModelConfiguration owner, ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform, ItemOverrides overrides, ResourceLocation modelLocation) {
+        BakedModel bakedOverlay = this.box.bake(bakery, box, spriteGetter, modelTransform, modelLocation, true);
         return new FlowerBoxBakedModel(bakedOverlay);
     }
 
     @Override
-    public Collection<RenderMaterial> getTextures(IModelConfiguration owner, Function<ResourceLocation, IUnbakedModel> modelGetter, Set<Pair<String, String>> missingTextureErrors) {
+    public Collection<Material> getTextures(IModelConfiguration owner, Function<ResourceLocation, UnbakedModel> modelGetter, Set<Pair<String, String>> missingTextureErrors) {
         return box.getMaterials(modelGetter, missingTextureErrors);
     }
 }

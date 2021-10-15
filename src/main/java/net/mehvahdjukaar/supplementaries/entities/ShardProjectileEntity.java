@@ -1,20 +1,20 @@
 package net.mehvahdjukaar.supplementaries.entities;
 
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.Item;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.network.IPacket;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Item;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.network.FMLPlayMessages;
 import net.minecraftforge.fml.network.NetworkHooks;
 
@@ -27,40 +27,40 @@ public class ShardProjectileEntity extends ImprovedProjectileEntity{
 
     private Entity ignoreEntity = null;
 
-    public ShardProjectileEntity(EntityType<? extends ShardProjectileEntity> type, World world) {
+    public ShardProjectileEntity(EntityType<? extends ShardProjectileEntity> type, Level world) {
         super(type, world);
     }
 
-    public ShardProjectileEntity(World worldIn, LivingEntity throwerIn, double x, double y, double z, Vector3d movement, @Nullable Entity ignore) {
+    public ShardProjectileEntity(Level worldIn, LivingEntity throwerIn, double x, double y, double z, Vec3 movement, @Nullable Entity ignore) {
         super(ModRegistry.AMETHYST_SHARD.get(), x, y, z, worldIn);
         this.setOwner(throwerIn);
         this.setDeltaMovement(movement);
         this.ignoreEntity = ignore;
     }
 
-    public ShardProjectileEntity(FMLPlayMessages.SpawnEntity packet, World world) {
+    public ShardProjectileEntity(FMLPlayMessages.SpawnEntity packet, Level world) {
         super(ModRegistry.AMETHYST_SHARD.get(), world);
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundNBT tag) {
+    public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         if (this.lastState != null) {
-            tag.put("inBlockState", NBTUtil.writeBlockState(this.lastState));
+            tag.put("inBlockState", NbtUtils.writeBlockState(this.lastState));
         }
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT tag) {
+    public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         if (tag.contains("inBlockState", 10)) {
-            this.lastState = NBTUtil.readBlockState(tag.getCompound("inBlockState"));
+            this.lastState = NbtUtils.readBlockState(tag.getCompound("inBlockState"));
         }
     }
 
 
     @Override
-    public void spawnTrailParticles(Vector3d currentPos, Vector3d newPos) {
+    public void spawnTrailParticles(Vec3 currentPos, Vec3 newPos) {
 
         double x = currentPos.x;
         double y = currentPos.y;
@@ -76,7 +76,7 @@ public class ShardProjectileEntity extends ImprovedProjectileEntity{
     }
 
     @Override
-    public IPacket<?> getAddEntityPacket() {
+    public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
@@ -91,18 +91,18 @@ public class ShardProjectileEntity extends ImprovedProjectileEntity{
 
 
     @Override
-    protected void onHitBlock(BlockRayTraceResult hit) {
+    protected void onHitBlock(BlockHitResult hit) {
         this.lastState = this.level.getBlockState(hit.getBlockPos());
         super.onHitBlock(hit);
-        Vector3d vector3d = hit.getLocation().subtract(this.getX(), this.getY(), this.getZ());
+        Vec3 vector3d = hit.getLocation().subtract(this.getX(), this.getY(), this.getZ());
         this.setDeltaMovement(vector3d);
-        Vector3d vector3d1 = vector3d.normalize().scale(getGravity());
+        Vec3 vector3d1 = vector3d.normalize().scale(getGravity());
         this.setPosRaw(this.getX() - vector3d1.x, this.getY() - vector3d1.y, this.getZ() - vector3d1.z);
         this.touchedGround = true;
     }
 
     @Override
-    protected void onHitEntity(EntityRayTraceResult p_213868_1_) {
+    protected void onHitEntity(EntityHitResult p_213868_1_) {
         //super.onHitEntity(p_213868_1_);
         Entity entity = p_213868_1_.getEntity();
         int i = 2;

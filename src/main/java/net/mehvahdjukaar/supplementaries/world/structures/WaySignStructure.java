@@ -2,34 +2,36 @@ package net.mehvahdjukaar.supplementaries.world.structures;
 
 import com.mojang.serialization.Codec;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SharedSeedRandom;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.util.registry.DynamicRegistries;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.provider.BiomeProvider;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.GenerationStage;
-import net.minecraft.world.gen.Heightmap;
-import net.minecraft.world.gen.feature.NoFeatureConfig;
-import net.minecraft.world.gen.feature.jigsaw.JigsawManager;
-import net.minecraft.world.gen.feature.structure.AbstractVillagePiece;
-import net.minecraft.world.gen.feature.structure.Structure;
-import net.minecraft.world.gen.feature.structure.StructureStart;
-import net.minecraft.world.gen.feature.structure.VillageConfig;
-import net.minecraft.world.gen.feature.template.TemplateManager;
-import net.minecraft.world.gen.settings.StructureSeparationSettings;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.levelgen.WorldgenRandom;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.Registry;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeSource;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
+import net.minecraft.world.level.levelgen.feature.structures.JigsawPlacement;
+import net.minecraft.world.level.levelgen.structure.PoolElementStructurePiece;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.structure.StructureStart;
+import net.minecraft.world.level.levelgen.feature.configurations.JigsawConfiguration;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
+import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatureConfiguration;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Set;
 import java.util.TreeSet;
 
-public class WaySignStructure extends Structure<NoFeatureConfig> {
-    public WaySignStructure(Codec<NoFeatureConfig> codec) {
+import net.minecraft.world.level.levelgen.feature.StructureFeature.StructureStartFactory;
+
+public class WaySignStructure extends StructureFeature<NoneFeatureConfiguration> {
+    public WaySignStructure(Codec<NoneFeatureConfiguration> codec) {
         super(codec);
     }
 
@@ -38,7 +40,7 @@ public class WaySignStructure extends Structure<NoFeatureConfig> {
      * is time to create the pieces of the structure for generation.
      */
     @Override
-    public  IStartFactory<NoFeatureConfig> getStartFactory() {
+    public  StructureStartFactory<NoneFeatureConfiguration> getStartFactory() {
         return WaySignStructure.Start::new;
     }
 
@@ -49,8 +51,8 @@ public class WaySignStructure extends Structure<NoFeatureConfig> {
      */
     //getDecorationStage
     @Override
-    public GenerationStage.Decoration step() {
-        return GenerationStage.Decoration.SURFACE_STRUCTURES;
+    public GenerationStep.Decoration step() {
+        return GenerationStep.Decoration.SURFACE_STRUCTURES;
     }
 
 
@@ -85,8 +87,8 @@ public class WaySignStructure extends Structure<NoFeatureConfig> {
 
 
     private boolean isValidPos(ChunkGenerator gen, int x, int z, Set<Integer> heightMap){
-        int y = gen.getFirstOccupiedHeight(x,z, Heightmap.Type.WORLD_SURFACE_WG);
-        IBlockReader reader = gen.getBaseColumn(x,z);
+        int y = gen.getFirstOccupiedHeight(x,z, Heightmap.Types.WORLD_SURFACE_WG);
+        BlockGetter reader = gen.getBaseColumn(x,z);
         try {
             if (!reader.getFluidState(new BlockPos(x, y, z)).isEmpty()) return false;
         }
@@ -98,12 +100,12 @@ public class WaySignStructure extends Structure<NoFeatureConfig> {
     }
 
 
-    private boolean isNearOutpost(ChunkGenerator generator, long seed, SharedSeedRandom sharedSeedRandom, int chunkX, int chunkZ) {
-        StructureSeparationSettings structureseparationsettings = generator.getSettings().getConfig(Structure.PILLAGER_OUTPOST);
+    private boolean isNearOutpost(ChunkGenerator generator, long seed, WorldgenRandom sharedSeedRandom, int chunkX, int chunkZ) {
+        StructureFeatureConfiguration structureseparationsettings = generator.getSettings().getConfig(StructureFeature.PILLAGER_OUTPOST);
         if (structureseparationsettings != null) {
             for (int i = chunkX - 8; i <= chunkX + 8; ++i) {
                 for (int j = chunkZ - 8; j <= chunkZ + 8; ++j) {
-                    ChunkPos chunkpos = Structure.PILLAGER_OUTPOST.getPotentialFeatureChunk(structureseparationsettings, seed, sharedSeedRandom, i, j);
+                    ChunkPos chunkpos = StructureFeature.PILLAGER_OUTPOST.getPotentialFeatureChunk(structureseparationsettings, seed, sharedSeedRandom, i, j);
                     if (i == chunkpos.x && j == chunkpos.z) {
                         return true;
                     }
@@ -114,11 +116,11 @@ public class WaySignStructure extends Structure<NoFeatureConfig> {
     }
 
     @Override
-    protected boolean isFeatureChunk(ChunkGenerator chunkGenerator, BiomeProvider biomeSource, long seed, SharedSeedRandom chunkRandom, int chunkX, int chunkZ, Biome biome, ChunkPos chunkPos, NoFeatureConfig featureConfig) {
+    protected boolean isFeatureChunk(ChunkGenerator chunkGenerator, BiomeSource biomeSource, long seed, WorldgenRandom chunkRandom, int chunkX, int chunkZ, Biome biome, ChunkPos chunkPos, NoneFeatureConfiguration featureConfig) {
         int x = (chunkX << 4) + 7;
         int z = (chunkZ << 4) + 7;
 
-        int y = chunkGenerator.getFirstOccupiedHeight(x,z, Heightmap.Type.WORLD_SURFACE_WG);
+        int y = chunkGenerator.getFirstOccupiedHeight(x,z, Heightmap.Types.WORLD_SURFACE_WG);
 
         if(y>105||y<chunkGenerator.getSeaLevel()-1)return false;
 
@@ -154,25 +156,25 @@ public class WaySignStructure extends Structure<NoFeatureConfig> {
      * Handles calling up the structure's pieces class and height that structure will spawn at.
      */
     //
-    public static class Start extends StructureStart<NoFeatureConfig>  {
+    public static class Start extends StructureStart<NoneFeatureConfiguration>  {
 
-        public Start(Structure<NoFeatureConfig> structureIn, int chunkX, int chunkZ, MutableBoundingBox mutableBoundingBox, int referenceIn, long seedIn) {
+        public Start(StructureFeature<NoneFeatureConfiguration> structureIn, int chunkX, int chunkZ, BoundingBox mutableBoundingBox, int referenceIn, long seedIn) {
             super(structureIn, chunkX, chunkZ, mutableBoundingBox, referenceIn, seedIn);
         }
 
         @Override
-        public void generatePieces(DynamicRegistries dynamicRegistryManager, ChunkGenerator chunkGenerator, TemplateManager templateManagerIn, int chunkX, int chunkZ, Biome biomeIn, NoFeatureConfig config) {
+        public void generatePieces(RegistryAccess dynamicRegistryManager, ChunkGenerator chunkGenerator, StructureManager templateManagerIn, int chunkX, int chunkZ, Biome biomeIn, NoneFeatureConfiguration config) {
             // Turns the chunk coordinates into actual coordinates we can use. (Gets center of that chunk)
             int x = (chunkX << 4) + 7;
             int z = (chunkZ << 4) + 7;
 
             //I could remove this but it makes for nicer generation
             int sum = 0;
-            sum+=chunkGenerator.getFirstOccupiedHeight(x,z, Heightmap.Type.WORLD_SURFACE_WG);
-            sum+=chunkGenerator.getFirstOccupiedHeight(x+2,z+2, Heightmap.Type.WORLD_SURFACE_WG);
-            sum+=chunkGenerator.getFirstOccupiedHeight(x+2,z-2, Heightmap.Type.WORLD_SURFACE_WG);
-            sum+=chunkGenerator.getFirstOccupiedHeight(x-2,z+2, Heightmap.Type.WORLD_SURFACE_WG);
-            sum+=chunkGenerator.getFirstOccupiedHeight(x-2,z-2, Heightmap.Type.WORLD_SURFACE_WG);
+            sum+=chunkGenerator.getFirstOccupiedHeight(x,z, Heightmap.Types.WORLD_SURFACE_WG);
+            sum+=chunkGenerator.getFirstOccupiedHeight(x+2,z+2, Heightmap.Types.WORLD_SURFACE_WG);
+            sum+=chunkGenerator.getFirstOccupiedHeight(x+2,z-2, Heightmap.Types.WORLD_SURFACE_WG);
+            sum+=chunkGenerator.getFirstOccupiedHeight(x-2,z+2, Heightmap.Types.WORLD_SURFACE_WG);
+            sum+=chunkGenerator.getFirstOccupiedHeight(x-2,z-2, Heightmap.Types.WORLD_SURFACE_WG);
 
             int y = Math.round(sum/5f);
 
@@ -194,9 +196,9 @@ public class WaySignStructure extends Structure<NoFeatureConfig> {
             //IBlockReader blockReader = chunkGenerator.getBaseColumn(blockpos.getX(), blockpos.getZ());
 
             // All a structure has to do is call this method to turn it into a jigsaw based structure!
-            JigsawManager.addPieces(
+            JigsawPlacement.addPieces(
                     dynamicRegistryManager,
-                    new VillageConfig(() -> dynamicRegistryManager.registry(Registry.TEMPLATE_POOL_REGISTRY)
+                    new JigsawConfiguration(() -> dynamicRegistryManager.registry(Registry.TEMPLATE_POOL_REGISTRY)
                             // The path to the starting Template Pool JSON file to read.
                             //
                             // Note, this is "structure_tutorial:run_down_house/start_pool" which means
@@ -211,7 +213,7 @@ public class WaySignStructure extends Structure<NoFeatureConfig> {
                             // However, I recommend you keep this a decent value like 10 so people can use datapacks to add additional pieces to your structure easily.
                             // But don't make it too large for recursive structures like villages or you'll crash server due to hundreds of pieces attempting to generate!
                             5),
-                    AbstractVillagePiece::new,
+                    PoolElementStructurePiece::new,
                     chunkGenerator,
                     templateManagerIn,
                     blockpos, // Position of the structure. Y value is ignored if last parameter is set to true.
@@ -261,7 +263,7 @@ public class WaySignStructure extends Structure<NoFeatureConfig> {
 
         //todo: bb is getting defaulted to a 1 block bb for no reason at all, making advancement not unlockable.. wtf
         @Override
-        public MutableBoundingBox getBoundingBox() {
+        public BoundingBox getBoundingBox() {
             return super.getBoundingBox();
         }
 

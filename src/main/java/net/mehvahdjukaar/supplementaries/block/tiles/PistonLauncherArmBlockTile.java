@@ -6,27 +6,27 @@ import net.mehvahdjukaar.supplementaries.block.blocks.SpringLauncherBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.SpringLauncherHeadBlock;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.material.PushReaction;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.MoverType;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3i;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.core.Vec3i;
 
 import java.util.List;
 import java.util.Random;
 
-public class PistonLauncherArmBlockTile extends TileEntity implements ITickableTileEntity {
+public class PistonLauncherArmBlockTile extends BlockEntity implements TickableBlockEntity {
     public int age = 0;
     //maybe replace this with boolean?
     private double increment = 0;
@@ -46,7 +46,7 @@ public class PistonLauncherArmBlockTile extends TileEntity implements ITickableT
         this();
         this.setParameters(extending,dir);
         if(true)return;
-        Vector3i v = dir.getNormal();
+        Vec3i v = dir.getNormal();
         this.dx = v.getX();
         this.dy = v.getY();
         this.dz = v.getZ();
@@ -76,7 +76,7 @@ public class PistonLauncherArmBlockTile extends TileEntity implements ITickableT
             this.offset = 0;
             this.prevOffset = 0;
         }
-        Vector3i v = dir.getNormal();
+        Vec3i v = dir.getNormal();
         this.dx = v.getX();
         this.dy = v.getY();
         this.dz = v.getZ();
@@ -88,8 +88,8 @@ public class PistonLauncherArmBlockTile extends TileEntity implements ITickableT
     }
 
     //TODO: rewrite some of this old code
-    public AxisAlignedBB getAdjustedBoundingBox() {
-        return new AxisAlignedBB(worldPosition).move(this.dx * this.offset, this.dy * this.offset, this.dz * this.offset);
+    public AABB getAdjustedBoundingBox() {
+        return new AABB(worldPosition).move(this.dx * this.offset, this.dy * this.offset, this.dz * this.offset);
     }
 
     public void tick() {
@@ -134,12 +134,12 @@ public class PistonLauncherArmBlockTile extends TileEntity implements ITickableT
             this.prevOffset = this.offset;
             this.offset += this.increment;
             if (this.getExtending()) {
-                AxisAlignedBB p_bb = this.getAdjustedBoundingBox();
+                AABB p_bb = this.getAdjustedBoundingBox();
                 List<Entity> list1 = this.level.getEntities(null, p_bb);
                 if (!list1.isEmpty()) {
                     for (Entity entity : list1) {
                         if (entity.getPistonPushReaction() != PushReaction.IGNORE) {
-                            Vector3d vec3d = entity.getDeltaMovement();
+                            Vec3 vec3d = entity.getDeltaMovement();
                             double d1 = vec3d.x;
                             double d2 = vec3d.y;
                             double d3 = vec3d.z;
@@ -163,8 +163,8 @@ public class PistonLauncherArmBlockTile extends TileEntity implements ITickableT
         }
     }
 
-    private void moveCollidedEntity(Entity entity, AxisAlignedBB p_bb) {
-        AxisAlignedBB e_bb = entity.getBoundingBox();
+    private void moveCollidedEntity(Entity entity, AABB p_bb) {
+        AABB e_bb = entity.getBoundingBox();
         double dx = 0;
         double dy = 0;
         double dz = 0;
@@ -191,7 +191,7 @@ public class PistonLauncherArmBlockTile extends TileEntity implements ITickableT
                 dx = p_bb.maxX - e_bb.minX;
                 break;
         }
-        entity.move(MoverType.PISTON, new Vector3d(dx, dy, dz));
+        entity.move(MoverType.PISTON, new Vec3(dx, dy, dz));
     }
 
     public Direction getDirection() {
@@ -203,7 +203,7 @@ public class PistonLauncherArmBlockTile extends TileEntity implements ITickableT
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT compound) {
+    public void load(BlockState state, CompoundTag compound) {
         super.load(state, compound);
         this.age = compound.getInt("Age");
         this.offset = compound.getDouble("Offset");
@@ -215,7 +215,7 @@ public class PistonLauncherArmBlockTile extends TileEntity implements ITickableT
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
+    public CompoundTag save(CompoundTag compound) {
         super.save(compound);
         compound.putInt("Age", this.age);
         compound.putDouble("Offset", this.offset);
@@ -228,17 +228,17 @@ public class PistonLauncherArmBlockTile extends TileEntity implements ITickableT
     }
 
     @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.worldPosition, 0, this.getUpdateTag());
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return new ClientboundBlockEntityDataPacket(this.worldPosition, 0, this.getUpdateTag());
     }
 
     @Override
-    public CompoundNBT getUpdateTag() {
-        return this.save(new CompoundNBT());
+    public CompoundTag getUpdateTag() {
+        return this.save(new CompoundTag());
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         this.load(this.getBlockState(), pkt.getTag());
     }
 }

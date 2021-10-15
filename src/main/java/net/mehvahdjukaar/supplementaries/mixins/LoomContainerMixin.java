@@ -1,14 +1,14 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.items.FlagItem;
-import net.minecraft.block.BannerBlock;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.LoomContainer;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.level.block.BannerBlock;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.LoomMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,17 +16,17 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(LoomContainer.class)
-public abstract class LoomContainerMixin extends Container {
+@Mixin(LoomMenu.class)
+public abstract class LoomContainerMixin extends AbstractContainerMenu {
 
     @Shadow
     public Slot bannerSlot;
 
     @Final
     @Shadow
-    private IInventory inputContainer;
+    private Container inputContainer;
 
-    protected LoomContainerMixin(@Nullable ContainerType<?> p_i50105_1_, int p_i50105_2_) {
+    protected LoomContainerMixin(@Nullable MenuType<?> p_i50105_1_, int p_i50105_2_) {
         super(p_i50105_1_, p_i50105_2_);
     }
     /*

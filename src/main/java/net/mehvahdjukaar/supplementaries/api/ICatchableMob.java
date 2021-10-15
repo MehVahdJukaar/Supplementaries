@@ -1,15 +1,15 @@
 package net.mehvahdjukaar.supplementaries.api;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.passive.IFlyingAnimal;
-import net.minecraft.entity.passive.WaterMobEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.animal.FlyingAnimal;
+import net.minecraft.world.entity.animal.WaterAnimal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 /**
  * Author: MehVahdJukaar
@@ -30,15 +30,12 @@ public interface ICatchableMob {
      * @return can be caught
      */
     default boolean canBeCaughtWithItem(Item item) {
-        switch (item.getRegistryName().toString()) {
-            case "supplementaries:jar":
-                return canBeCaughtWithJar();
-            case "supplementaries:tinted_jar":
-                return canBeCaughtWithTintedJar();
-            case "supplementaries:cage":
-                return canBeCaughtWithCage();
-        }
-        return false;
+        return switch (item.getRegistryName().toString()) {
+            case "supplementaries:jar" -> canBeCaughtWithJar();
+            case "supplementaries:tinted_jar" -> canBeCaughtWithTintedJar();
+            case "supplementaries:cage" -> canBeCaughtWithCage();
+            default -> false;
+        };
     }
 
     boolean canBeCaughtWithJar();
@@ -85,7 +82,7 @@ public interface ICatchableMob {
      * @param entityScale scale that the mob being rendered is at. useful for particles so they can be rendered accordingly
      * @param entityData  actual mob nbt that is stored in the container. Use this only if you want to store permanent data in your entity which will be kept when it will be released from the container.
      */
-    default void tickInsideContainer(World world, BlockPos pos, float entityScale, CompoundNBT entityData) {
+    default void tickInsideContainer(Level world, BlockPos pos, float entityScale, CompoundTag entityData) {
     }
 
     /**
@@ -98,8 +95,8 @@ public interface ICatchableMob {
      * @param entityData actual mob nbt that is stored in the container. Use this only if you want to store permanent data in your entity which will be kept when it will be released from the container.
      * @return Pass to do nothing. Success or Consume to prevent any further action
      */
-    default ActionResultType onPlayerInteract(World world, BlockPos pos, PlayerEntity player, Hand hand, CompoundNBT entityData) {
-        return ActionResultType.PASS;
+    default InteractionResult onPlayerInteract(Level world, BlockPos pos, Player player, InteractionHand hand, CompoundTag entityData) {
+        return InteractionResult.PASS;
     }
 
     /**
@@ -112,8 +109,8 @@ public interface ICatchableMob {
 
     default boolean isFlyingMob(){
         Entity entity = getEntity();
-        return entity.isNoGravity() || entity instanceof IFlyingAnimal ||
-                entity.isIgnoringBlockTriggers() || entity instanceof WaterMobEntity;
+        return entity.isNoGravity() || entity instanceof FlyingAnimal ||
+                entity.isIgnoringBlockTriggers() || entity instanceof WaterAnimal;
     }
 
     /**

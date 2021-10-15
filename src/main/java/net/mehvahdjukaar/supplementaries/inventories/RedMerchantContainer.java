@@ -1,27 +1,27 @@
 package net.mehvahdjukaar.supplementaries.inventories;
 
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.NPCMerchant;
-import net.minecraft.entity.merchant.IMerchant;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.MerchantInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.MerchantResultSlot;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.MerchantOffers;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.npc.ClientSideMerchant;
+import net.minecraft.world.item.trading.Merchant;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.MerchantContainer;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MerchantResultSlot;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.trading.MerchantOffers;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.sounds.SoundSource;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class RedMerchantContainer extends Container {
-    private final IMerchant trader;
-    private final MerchantInventory tradeContainer;
+public class RedMerchantContainer extends AbstractContainerMenu {
+    private final Merchant trader;
+    private final MerchantContainer tradeContainer;
     @OnlyIn(Dist.CLIENT)
     private int merchantLevel;
     @OnlyIn(Dist.CLIENT)
@@ -29,14 +29,14 @@ public class RedMerchantContainer extends Container {
     @OnlyIn(Dist.CLIENT)
     private boolean canRestock;
 
-    public RedMerchantContainer(int p_i50068_1_, PlayerInventory p_i50068_2_) {
-        this(p_i50068_1_, p_i50068_2_, new NPCMerchant(p_i50068_2_.player));
+    public RedMerchantContainer(int p_i50068_1_, Inventory p_i50068_2_) {
+        this(p_i50068_1_, p_i50068_2_, new ClientSideMerchant(p_i50068_2_.player));
     }
 
-    public RedMerchantContainer(int p_i50069_1_, PlayerInventory p_i50069_2_, IMerchant p_i50069_3_) {
+    public RedMerchantContainer(int p_i50069_1_, Inventory p_i50069_2_, Merchant p_i50069_3_) {
         super(ModRegistry.RED_MERCHANT_CONTAINER.get(), p_i50069_1_);
         this.trader = p_i50069_3_;
-        this.tradeContainer = new MerchantInventory(p_i50069_3_);
+        this.tradeContainer = new MerchantContainer(p_i50069_3_);
         this.addSlot(new Slot(this.tradeContainer, 0, 136, 37));
         this.addSlot(new Slot(this.tradeContainer, 1, 162, 37));
         this.addSlot(new MerchantResultSlot(p_i50069_2_.player, p_i50069_3_, this.tradeContainer, 2, 220, 37));
@@ -53,7 +53,7 @@ public class RedMerchantContainer extends Container {
 
     }
 
-    public RedMerchantContainer(int i, PlayerInventory playerInventory, PacketBuffer buffer) {
+    public RedMerchantContainer(int i, Inventory playerInventory, FriendlyByteBuf buffer) {
         this(i,playerInventory);
     }
 
@@ -62,7 +62,7 @@ public class RedMerchantContainer extends Container {
         this.showProgressBar = p_217045_1_;
     }
 
-    public void slotsChanged(IInventory p_75130_1_) {
+    public void slotsChanged(Container p_75130_1_) {
         this.tradeContainer.updateSellItem();
         super.slotsChanged(p_75130_1_);
     }
@@ -71,7 +71,7 @@ public class RedMerchantContainer extends Container {
         this.tradeContainer.setSelectionHint(p_75175_1_);
     }
 
-    public boolean stillValid(PlayerEntity p_75145_1_) {
+    public boolean stillValid(Player p_75145_1_) {
         return this.trader.getTradingPlayer() == p_75145_1_;
     }
 
@@ -114,7 +114,7 @@ public class RedMerchantContainer extends Container {
         return false;
     }
 
-    public ItemStack quickMoveStack(PlayerEntity p_82846_1_, int p_82846_2_) {
+    public ItemStack quickMoveStack(Player p_82846_1_, int p_82846_2_) {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.slots.get(p_82846_2_);
         if (slot != null && slot.hasItem()) {
@@ -158,16 +158,16 @@ public class RedMerchantContainer extends Container {
     private void playTradeSound() {
         if (!this.trader.getLevel().isClientSide) {
             Entity entity = (Entity)this.trader;
-            this.trader.getLevel().playLocalSound(entity.getX(), entity.getY(), entity.getZ(), this.trader.getNotifyTradeSound(), SoundCategory.NEUTRAL, 1.0F, 1.0F, false);
+            this.trader.getLevel().playLocalSound(entity.getX(), entity.getY(), entity.getZ(), this.trader.getNotifyTradeSound(), SoundSource.NEUTRAL, 1.0F, 1.0F, false);
         }
 
     }
 
-    public void removed(PlayerEntity p_75134_1_) {
+    public void removed(Player p_75134_1_) {
         super.removed(p_75134_1_);
-        this.trader.setTradingPlayer((PlayerEntity)null);
+        this.trader.setTradingPlayer((Player)null);
         if (!this.trader.getLevel().isClientSide) {
-            if (!p_75134_1_.isAlive() || p_75134_1_ instanceof ServerPlayerEntity && ((ServerPlayerEntity)p_75134_1_).hasDisconnected()) {
+            if (!p_75134_1_.isAlive() || p_75134_1_ instanceof ServerPlayer && ((ServerPlayer)p_75134_1_).hasDisconnected()) {
                 ItemStack itemstack = this.tradeContainer.removeItemNoUpdate(0);
                 if (!itemstack.isEmpty()) {
                     p_75134_1_.drop(itemstack, false);

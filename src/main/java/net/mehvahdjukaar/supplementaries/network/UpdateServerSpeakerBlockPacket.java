@@ -1,13 +1,13 @@
 package net.mehvahdjukaar.supplementaries.network;
 
 import net.mehvahdjukaar.supplementaries.block.tiles.SpeakerBlockTile;
-import net.minecraft.block.BlockState;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.Objects;
@@ -15,11 +15,11 @@ import java.util.function.Supplier;
 
 public class UpdateServerSpeakerBlockPacket{
     private final BlockPos pos;
-    private final ITextComponent str;
+    private final Component str;
     private final boolean narrator;
     private final double volume;
 
-    public UpdateServerSpeakerBlockPacket(PacketBuffer buf) {
+    public UpdateServerSpeakerBlockPacket(FriendlyByteBuf buf) {
 
         this.pos = buf.readBlockPos();
         this.str = buf.readComponent();
@@ -29,12 +29,12 @@ public class UpdateServerSpeakerBlockPacket{
 
     public UpdateServerSpeakerBlockPacket(BlockPos pos, String str, boolean narrator, double volume) {
         this.pos = pos;
-        this.str = new StringTextComponent(str);
+        this.str = new TextComponent(str);
         this.narrator = narrator;
         this.volume = volume;
     }
 
-    public static void buffer(UpdateServerSpeakerBlockPacket message, PacketBuffer buf) {
+    public static void buffer(UpdateServerSpeakerBlockPacket message, FriendlyByteBuf buf) {
 
         buf.writeBlockPos(message.pos);
         buf.writeComponent(message.str);
@@ -44,12 +44,12 @@ public class UpdateServerSpeakerBlockPacket{
 
     public static void handler(UpdateServerSpeakerBlockPacket message, Supplier<NetworkEvent.Context> ctx) {
         // server world
-        World world = Objects.requireNonNull(ctx.get().getSender()).level;
+        Level world = Objects.requireNonNull(ctx.get().getSender()).level;
 
         ctx.get().enqueueWork(() -> {
             if (world != null) {
                 BlockPos pos = message.pos;
-                TileEntity tileentity = world.getBlockEntity(pos);
+                BlockEntity tileentity = world.getBlockEntity(pos);
                 if (tileentity instanceof SpeakerBlockTile) {
                     SpeakerBlockTile speaker = (SpeakerBlockTile) tileentity;
                     speaker.message = message.str.getString();

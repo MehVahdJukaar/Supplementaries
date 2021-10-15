@@ -2,23 +2,25 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 
 import net.mehvahdjukaar.supplementaries.block.util.IBlockHolder;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootParameters;
-import net.minecraft.pathfinding.PathType;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Explosion;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
 import net.minecraftforge.common.extensions.IForgeBlock;
 
 import java.util.List;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public abstract class MimicBlock extends Block implements IForgeBlock{
     public MimicBlock(Properties properties) {
@@ -27,8 +29,8 @@ public abstract class MimicBlock extends Block implements IForgeBlock{
 
     //THIS IS DANGEROUS
     @Override
-    public float getDestroyProgress(BlockState state, PlayerEntity player, IBlockReader worldIn, BlockPos pos) {
-        TileEntity te = worldIn.getBlockEntity(pos);
+    public float getDestroyProgress(BlockState state, Player player, BlockGetter worldIn, BlockPos pos) {
+        BlockEntity te = worldIn.getBlockEntity(pos);
         if(te instanceof IBlockHolder){
             BlockState mimicState = ((IBlockHolder) te).getHeldBlock();
             //prevent infinite recursion
@@ -40,8 +42,8 @@ public abstract class MimicBlock extends Block implements IForgeBlock{
 
     //might cause lag when breaking?
     @Override
-    public SoundType getSoundType(BlockState state, IWorldReader world, BlockPos pos, Entity entity) {
-        TileEntity te = world.getBlockEntity(pos);
+    public SoundType getSoundType(BlockState state, LevelReader world, BlockPos pos, Entity entity) {
+        BlockEntity te = world.getBlockEntity(pos);
         if(te instanceof IBlockHolder){
             BlockState mimicState = ((IBlockHolder) te).getHeldBlock();
             if(!mimicState.isAir())return mimicState.getSoundType(world,pos,entity);
@@ -52,7 +54,7 @@ public abstract class MimicBlock extends Block implements IForgeBlock{
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         List<ItemStack> drops = super.getDrops(state, builder);
-        TileEntity te = builder.getParameter(LootParameters.BLOCK_ENTITY);
+        BlockEntity te = builder.getParameter(LootContextParams.BLOCK_ENTITY);
         if (te instanceof IBlockHolder) {
             ItemStack camo = new ItemStack(((IBlockHolder) te).getHeldBlock().getBlock());
             if (!camo.isEmpty()) {
@@ -63,8 +65,8 @@ public abstract class MimicBlock extends Block implements IForgeBlock{
     }
 
     @Override
-    public float getExplosionResistance(BlockState state, IBlockReader world, BlockPos pos, Explosion explosion) {
-        TileEntity te = world.getBlockEntity(pos);
+    public float getExplosionResistance(BlockState state, BlockGetter world, BlockPos pos, Explosion explosion) {
+        BlockEntity te = world.getBlockEntity(pos);
         if (te instanceof IBlockHolder) {
             BlockState mimicState = ((IBlockHolder) te).getHeldBlock();
             if (!mimicState.isAir()) {
@@ -88,7 +90,7 @@ public abstract class MimicBlock extends Block implements IForgeBlock{
     }*/
 
     @Override
-    public boolean isPathfindable(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
+    public boolean isPathfindable(BlockState state, BlockGetter worldIn, BlockPos pos, PathComputationType type) {
         return false;
     }
 

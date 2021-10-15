@@ -2,8 +2,8 @@ package net.mehvahdjukaar.supplementaries.network;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.world.data.GlobeData;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -11,7 +11,7 @@ import java.util.function.Supplier;
 
 public class SyncGlobeDataPacket {
     public GlobeData data;
-    public SyncGlobeDataPacket(PacketBuffer buffer) {
+    public SyncGlobeDataPacket(FriendlyByteBuf buffer) {
         this.data = new GlobeData() ;
         this.data.load(buffer.readNbt());
     }
@@ -20,8 +20,8 @@ public class SyncGlobeDataPacket {
         this.data = data;
     }
 
-    public static void buffer(SyncGlobeDataPacket message, PacketBuffer buffer) {
-        buffer.writeNbt(message.data.save(new CompoundNBT()));
+    public static void buffer(SyncGlobeDataPacket message, FriendlyByteBuf buffer) {
+        buffer.writeNbt(message.data.save(new CompoundTag()));
     }
 
     public static void handler(SyncGlobeDataPacket message, Supplier<NetworkEvent.Context> contextSupplier) {

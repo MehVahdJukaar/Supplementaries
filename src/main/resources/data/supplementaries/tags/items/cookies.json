@@ -1,7 +1,8 @@
 {
   "replace": false,
   "values": [
-    "minecraft:cookie"
+    "minecraft:cookie",
+    "supplementaries:candy"
   ],
   "optional": [
     "farmersdelight:honey_cookie",

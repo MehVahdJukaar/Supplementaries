@@ -2,19 +2,19 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.ClockBlock;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.GameRules;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.GameRules;
 
 import javax.annotation.Nonnull;
 
-public class ClockBlockTile extends TileEntity implements ITickableTileEntity {
+public class ClockBlockTile extends BlockEntity implements TickableBlockEntity {
     public float roll = 0;
     public float prevRoll = 0;
     public float targetRoll = 0;
@@ -33,7 +33,7 @@ public class ClockBlockTile extends TileEntity implements ITickableTileEntity {
     }
 
     @Override
-    public void load(@Nonnull BlockState state,@Nonnull CompoundNBT compound) {
+    public void load(@Nonnull BlockState state,@Nonnull CompoundTag compound) {
         super.load(state, compound);
         this.roll = compound.getFloat("MinRoll");
         this.prevRoll = this.roll;
@@ -46,7 +46,7 @@ public class ClockBlockTile extends TileEntity implements ITickableTileEntity {
     }
 
     @Override
-    public CompoundNBT save(@Nonnull CompoundNBT compound) {
+    public CompoundTag save(@Nonnull CompoundTag compound) {
         super.save(compound);
         compound.putFloat("MinRoll", this.targetRoll);
         compound.putFloat("SecRoll", this.sTargetRoll);
@@ -55,17 +55,17 @@ public class ClockBlockTile extends TileEntity implements ITickableTileEntity {
     }
 
     @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.worldPosition, 0, this.getUpdateTag());
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return new ClientboundBlockEntityDataPacket(this.worldPosition, 0, this.getUpdateTag());
     }
 
     @Override
-    public CompoundNBT getUpdateTag() {
-        return this.save(new CompoundNBT());
+    public CompoundTag getUpdateTag() {
+        return this.save(new CompoundTag());
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         this.load(this.getBlockState(), pkt.getTag());
     }
 
@@ -84,8 +84,8 @@ public class ClockBlockTile extends TileEntity implements ITickableTileEntity {
         if(this.level.dimensionType().natural()) {
 
             //minute here are 1 rl second -> 50m in a minecraft hour
-            int minute = MathHelper.clamp((time % 1000) / 20, 0, 50);
-            int hour = MathHelper.clamp(time / 1000, 0, 24);
+            int minute = Mth.clamp((time % 1000) / 20, 0, 50);
+            int hour = Mth.clamp(time / 1000, 0, 24);
 
             //server
             if (!this.level.isClientSide) {
@@ -94,7 +94,7 @@ public class ClockBlockTile extends TileEntity implements ITickableTileEntity {
                     //if they are sent to the client the animation gets broken. Side effect is that you can't see hour with f3
                     level.setBlock(this.worldPosition, state.setValue(ClockBlock.HOUR, hour), 3);
                 }
-                int p = MathHelper.clamp(time / 1500, 0, 15);
+                int p = Mth.clamp(time / 1500, 0, 15);
                 if (p != this.power) {
                     this.power = p;
                     this.level.updateNeighbourForOutputSignal(this.worldPosition, this.getBlockState().getBlock());

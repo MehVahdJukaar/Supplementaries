@@ -2,8 +2,8 @@ package net.mehvahdjukaar.supplementaries.network;
 
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkEvent;
 
@@ -15,20 +15,20 @@ public class BombExplosionKnockbackPacket implements NetworkHandler.Message {
     private double knockbackY;
     private double knockbackZ;
 
-    public BombExplosionKnockbackPacket(Vector3d knockback) {
+    public BombExplosionKnockbackPacket(Vec3 knockback) {
         this.knockbackX = knockback.x;
         this.knockbackY = knockback.y;
         this.knockbackZ = knockback.z;
     }
 
-    public static void buffer(BombExplosionKnockbackPacket pkt, PacketBuffer buf) {
+    public static void buffer(BombExplosionKnockbackPacket pkt, FriendlyByteBuf buf) {
         buf.writeDouble(pkt.knockbackX);
         buf.writeDouble(pkt.knockbackY);
         buf.writeDouble(pkt.knockbackZ);
 
     }
 
-    public BombExplosionKnockbackPacket(PacketBuffer buf) {
+    public BombExplosionKnockbackPacket(FriendlyByteBuf buf) {
         this.knockbackX = buf.readDouble();
         this.knockbackY = buf.readDouble();
         this.knockbackZ = buf.readDouble();

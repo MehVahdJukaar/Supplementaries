@@ -3,11 +3,11 @@ package net.mehvahdjukaar.supplementaries.client.renderers.entities;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.entities.RopeArrowEntity;
 import net.minecraft.client.renderer.entity.ArrowRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.resources.ResourceLocation;
 
 public class RopeArrowRenderer extends ArrowRenderer<RopeArrowEntity> {
-    public RopeArrowRenderer(EntityRendererManager renderManager) {
+    public RopeArrowRenderer(EntityRenderDispatcher renderManager) {
         super(renderManager);
     }
 

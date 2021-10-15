@@ -2,9 +2,9 @@ package net.mehvahdjukaar.supplementaries.network;
 
 
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.PicklePlayer;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
@@ -22,14 +22,14 @@ public class PicklePacket {
         this.on = on;
     }
 
-    public static void buffer(PicklePacket pkt, PacketBuffer buf) {
+    public static void buffer(PicklePacket pkt, FriendlyByteBuf buf) {
         buf.writeBoolean(pkt.on);
         if (pkt.playerID != null) {
             buf.writeUUID(pkt.playerID);
         }
     }
 
-    public PicklePacket(PacketBuffer buf) {
+    public PicklePacket(FriendlyByteBuf buf) {
         this.on = buf.readBoolean();
         if (buf.isReadable()) {
             this.playerID = buf.readUUID();
@@ -45,7 +45,7 @@ public class PicklePacket {
         else if (ctx.get().getDirection() == NetworkDirection.PLAY_TO_SERVER) {
             ctx.get().enqueueWork(() -> {
                 //gets id from server just to be sure
-                PlayerEntity player = ctx.get().getSender();
+                Player player = ctx.get().getSender();
                 UUID id = player.getGameProfile().getId();
                 if (PicklePlayer.PickleData.isDev(id)) {
 
@@ -53,7 +53,7 @@ public class PicklePacket {
                     PicklePlayer.PickleData.set(id, msg.on);
                     msg.playerID = id;
                     //broadcast to all players
-                    for (ServerPlayerEntity p : player.getServer().getPlayerList().getPlayers()) {
+                    for (ServerPlayer p : player.getServer().getPlayerList().getPlayers()) {
                         if (p != player) {
                             NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> p), msg);
                         }

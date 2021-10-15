@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.mehvahdjukaar.supplementaries.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.Textures;
@@ -8,43 +8,43 @@ import net.mehvahdjukaar.supplementaries.inventories.PresentContainer;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.UpdateServerPresentPacket;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.DialogTexts;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.IGuiEventListener;
-import net.minecraft.client.gui.ScreenManager;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.gui.widget.button.AbstractButton;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.IContainerListener;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.AbstractButton;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerListener;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 
 
-public class PresentBlockGui extends ContainerScreen<PresentContainer> implements IContainerListener {
+public class PresentBlockGui extends AbstractContainerScreen<PresentContainer> implements ContainerListener {
 
-    protected TextFieldWidget recipient;
-    protected TextFieldWidget sender;
+    protected EditBox recipient;
+    protected EditBox sender;
 
     private PackButton packButton;
 
     private final PresentBlockTile tile;
 
-    public static ScreenManager.IScreenFactory<PresentContainer, PresentBlockGui> GUI_FACTORY =
+    public static MenuScreens.ScreenConstructor<PresentContainer, PresentBlockGui> GUI_FACTORY =
             (container, inventory, title) -> {
-                TileEntity te = Minecraft.getInstance().level.getBlockEntity(container.getPos());
+                BlockEntity te = Minecraft.getInstance().level.getBlockEntity(container.getPos());
                 if (te instanceof PresentBlockTile) {
                     return new PresentBlockGui(container, inventory, title, (PresentBlockTile) te);
                 }
                 return null;
             };
 
-    public PresentBlockGui(PresentContainer container, PlayerInventory inventory, ITextComponent text, PresentBlockTile tile) {
+    public PresentBlockGui(PresentContainer container, Inventory inventory, Component text, PresentBlockTile tile) {
         super(container, inventory, text);
         this.imageWidth = 176;
         this.imageHeight = 166;
@@ -66,7 +66,7 @@ public class PresentBlockGui extends ContainerScreen<PresentContainer> implement
         this.packButton = this.addButton(new PackButton(i + 14, j + 46));
 
         this.recipient = new PresentTextFieldWidget(this.font, i + 53, j + 27,
-                99, 12, new TranslationTextComponent("container.repair"));
+                99, 12, new TranslatableComponent("container.repair"));
         this.recipient.setCanLoseFocus(true);
         this.recipient.setTextColor(-1);
         this.recipient.setTextColorUneditable(-1);
@@ -77,7 +77,7 @@ public class PresentBlockGui extends ContainerScreen<PresentContainer> implement
         this.children.add(this.recipient);
 
         this.sender = new PresentTextFieldWidget(this.font, i + 53, j + 53,
-                99, 12, new TranslationTextComponent("container.repair"));
+                99, 12, new TranslatableComponent("container.repair"));
         this.sender.setCanLoseFocus(true);
         this.sender.setTextColor(-1);
         this.sender.setTextColorUneditable(-1);
@@ -112,12 +112,12 @@ public class PresentBlockGui extends ContainerScreen<PresentContainer> implement
     }
 
     @Override
-    public void refreshContainer(Container container, NonNullList<ItemStack> itemStacks) {
+    public void refreshContainer(AbstractContainerMenu container, NonNullList<ItemStack> itemStacks) {
         this.slotChanged(container, 0, container.getSlot(0).getItem());
     }
 
     @Override
-    public void setContainerData(Container p_71112_1_, int p_71112_2_, int p_71112_3_) {
+    public void setContainerData(AbstractContainerMenu p_71112_1_, int p_71112_2_, int p_71112_3_) {
     }
 
     private void setPacked(){
@@ -132,7 +132,7 @@ public class PresentBlockGui extends ContainerScreen<PresentContainer> implement
     }
 
     @Override
-    public void slotChanged(Container container, int slot, ItemStack stack) {
+    public void slotChanged(AbstractContainerMenu container, int slot, ItemStack stack) {
         if (slot == 0) {
             if (stack.isEmpty()) {
                 this.setFocused(null);
@@ -160,7 +160,7 @@ public class PresentBlockGui extends ContainerScreen<PresentContainer> implement
     }
 
     @Override
-    protected void renderBg(MatrixStack matrixStack, float partialTicks, int x, int y) {
+    protected void renderBg(PoseStack matrixStack, float partialTicks, int x, int y) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         Minecraft.getInstance().getTextureManager().bind(Textures.PRESENT_BLOCK_GUI_TEXTURE);
         int k = (this.width - this.imageWidth) / 2;
@@ -174,7 +174,7 @@ public class PresentBlockGui extends ContainerScreen<PresentContainer> implement
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(matrixStack);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
         this.sender.render(matrixStack, mouseX, mouseY, partialTicks);
@@ -183,7 +183,7 @@ public class PresentBlockGui extends ContainerScreen<PresentContainer> implement
     }
 
     @Override
-    protected void renderLabels(MatrixStack p_230451_1_, int p_230451_2_, int p_230451_3_) {
+    protected void renderLabels(PoseStack p_230451_1_, int p_230451_2_, int p_230451_3_) {
         super.renderLabels(p_230451_1_, p_230451_2_, p_230451_3_);
 
         if (packButton.isHovered()) {
@@ -220,7 +220,7 @@ public class PresentBlockGui extends ContainerScreen<PresentContainer> implement
     }
 
     public void switchFocus() {
-        IGuiEventListener focus = this.getFocused();
+        GuiEventListener focus = this.getFocused();
         if(focus == sender){
             this.sender.setFocus(false);
             this.recipient.setFocus(true);
@@ -246,11 +246,11 @@ public class PresentBlockGui extends ContainerScreen<PresentContainer> implement
         private boolean selected;
 
         protected PackButton(int x, int y) {
-            super(x, y, 22, 22, StringTextComponent.EMPTY);
+            super(x, y, 22, 22, TextComponent.EMPTY);
         }
 
         @Override
-        public void renderButton(MatrixStack p_230431_1_, int p_230431_2_, int p_230431_3_, float p_230431_4_) {
+        public void renderButton(PoseStack p_230431_1_, int p_230431_2_, int p_230431_3_, float p_230431_4_) {
             Minecraft.getInstance().getTextureManager().bind(Textures.PRESENT_BLOCK_GUI_TEXTURE);
             RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
             int i = 198;
@@ -276,8 +276,8 @@ public class PresentBlockGui extends ContainerScreen<PresentContainer> implement
         }
 
         @Override
-        public void renderToolTip(MatrixStack matrixStack, int x, int y) {
-            PresentBlockGui.this.renderTooltip(matrixStack, DialogTexts.GUI_DONE, x, y);
+        public void renderToolTip(PoseStack matrixStack, int x, int y) {
+            PresentBlockGui.this.renderTooltip(matrixStack, CommonComponents.GUI_DONE, x, y);
         }
 
         @Override
@@ -290,9 +290,9 @@ public class PresentBlockGui extends ContainerScreen<PresentContainer> implement
         }
     }
 
-    private class PresentTextFieldWidget extends TextFieldWidget {
+    private class PresentTextFieldWidget extends EditBox {
 
-        public PresentTextFieldWidget(FontRenderer fontRenderer, int x, int y, int width, int height, ITextComponent text) {
+        public PresentTextFieldWidget(Font fontRenderer, int x, int y, int width, int height, Component text) {
             super(fontRenderer, x, y, width, height, text);
         }
 

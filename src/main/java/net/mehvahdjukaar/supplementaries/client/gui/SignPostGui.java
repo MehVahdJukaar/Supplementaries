@@ -1,9 +1,9 @@
 package net.mehvahdjukaar.supplementaries.client.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.supplementaries.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.client.Materials;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
@@ -12,27 +12,33 @@ import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.framedblocks.FramedSignPost;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.UpdateServerTextHolderPacket;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.DialogTexts;
-import net.minecraft.client.gui.fonts.TextInputUtil;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.client.gui.font.TextFieldHelper;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.model.RenderMaterial;
+import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.math.Matrix4f;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.client.model.data.EmptyModelData;
 
 import java.util.stream.IntStream;
 
 
+import com.mojang.blaze3d.platform.Lighting;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.BufferUploader;
+import com.mojang.blaze3d.vertex.Tesselator;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+
 public class SignPostGui extends Screen {
-    private TextInputUtil textInputUtil;
+    private TextFieldHelper textInputUtil;
     /** The index of the line that is being edited. */
     private int editLine;
     //for ticking cursor
@@ -41,9 +47,9 @@ public class SignPostGui extends Screen {
     private static final int MAXLINES = 2;
     private final String[] cachedLines;
     public SignPostGui(SignPostBlockTile teSign) {
-        super(new TranslationTextComponent("sign.edit"));
+        super(new TranslatableComponent("sign.edit"));
         this.tileSign = teSign;
-        this.cachedLines = IntStream.range(0, MAXLINES).mapToObj(teSign.textHolder::getText).map(ITextComponent::getString).toArray(String[]::new);
+        this.cachedLines = IntStream.range(0, MAXLINES).mapToObj(teSign.textHolder::getText).map(Component::getString).toArray(String[]::new);
 
         editLine = !this.tileSign.up ? 1 : 0;
     }
@@ -119,23 +125,23 @@ public class SignPostGui extends Screen {
     @Override
     protected void init() {
         this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
-        this.addButton(new Button(this.width / 2 - 100, this.height / 4 + 120, 200, 20, DialogTexts.GUI_DONE, (p_238847_1_) -> this.close()));
+        this.addButton(new Button(this.width / 2 - 100, this.height / 4 + 120, 200, 20, CommonComponents.GUI_DONE, (p_238847_1_) -> this.close()));
         //this.tileSign.textHolder.setEditable(false);
-        this.textInputUtil = new TextInputUtil(() -> this.cachedLines[this.editLine], (p_238850_1_) -> {
+        this.textInputUtil = new TextFieldHelper(() -> this.cachedLines[this.editLine], (p_238850_1_) -> {
             this.cachedLines[this.editLine] = p_238850_1_;
-            this.tileSign.textHolder.setText(this.editLine, new StringTextComponent(p_238850_1_));
-        }, TextInputUtil.createClipboardGetter(this.minecraft), TextInputUtil.createClipboardSetter(this.minecraft), (p_238848_1_) -> this.minecraft.font.width(p_238848_1_) <= 90);
+            this.tileSign.textHolder.setText(this.editLine, new TextComponent(p_238850_1_));
+        }, TextFieldHelper.createClipboardGetter(this.minecraft), TextFieldHelper.createClipboardSetter(this.minecraft), (p_238848_1_) -> this.minecraft.font.width(p_238848_1_) <= 90);
     }
 
 
     @Override
 
-    public void render(MatrixStack matrixstack, int mouseX, int mouseY, float partialTicks) {
-        RenderHelper.setupForFlatItems();
+    public void render(PoseStack matrixstack, int mouseX, int mouseY, float partialTicks) {
+        Lighting.setupForFlatItems();
         this.renderBackground(matrixstack);
         drawCenteredString(matrixstack, this.font, this.title, this.width / 2, 40, 16777215);
 
-        IRenderTypeBuffer.Impl irendertypebuffer$impl = this.minecraft.renderBuffers().bufferSource();
+        MultiBufferSource.BufferSource irendertypebuffer$impl = this.minecraft.renderBuffers().bufferSource();
         matrixstack.pushPose();
         matrixstack.translate(this.width / 2d, 0.0D, 50.0D);
 
@@ -146,7 +152,7 @@ public class SignPostGui extends Screen {
         //matrixstack.scale(0.6666667F, 0.6666667F, 0.6666667F);
         //matrixstack.rotate(Const.Y90);
 
-        BlockRendererDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
+        BlockRenderDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
 
         boolean leftup = tileSign.leftUp;
         boolean leftdown = tileSign.leftDown;
@@ -165,8 +171,8 @@ public class SignPostGui extends Screen {
                 matrixstack.translate(0, 0, -0.3125);
             }
             matrixstack.scale(1,-1,-1);
-            RenderMaterial material = Materials.SIGN_POSTS_MATERIALS.get(this.tileSign.woodTypeUp);
-            IVertexBuilder builder =  material.buffer(irendertypebuffer$impl, RenderType::entitySolid);
+            Material material = Materials.SIGN_POSTS_MATERIALS.get(this.tileSign.woodTypeUp);
+            VertexConsumer builder =  material.buffer(irendertypebuffer$impl, RenderType::entitySolid);
             SignPostBlockTileRenderer.signModel.render(matrixstack, builder, 15728880, OverlayTexture.NO_OVERLAY);
 
 
@@ -181,8 +187,8 @@ public class SignPostGui extends Screen {
             }
             matrixstack.translate(0, -0.5, 0);
             matrixstack.scale(1,-1,-1);
-            RenderMaterial material = Materials.SIGN_POSTS_MATERIALS.get(this.tileSign.woodTypeDown);
-            IVertexBuilder builder =  material.buffer(irendertypebuffer$impl, RenderType::entitySolid);
+            Material material = Materials.SIGN_POSTS_MATERIALS.get(this.tileSign.woodTypeDown);
+            VertexConsumer builder =  material.buffer(irendertypebuffer$impl, RenderType::entitySolid);
             SignPostBlockTileRenderer.signModel.render(matrixstack, builder, 15728880, OverlayTexture.NO_OVERLAY);
              matrixstack.popPose();
         }
@@ -252,18 +258,18 @@ public class SignPostGui extends Screen {
                     int j2 = this.minecraft.font.width(s1.substring(0, l1)) - this.minecraft.font.width(s1) / 2;
                     int k2 = -3*o[i3] + Math.min(i2, j2);
                     int l2 = -3*o[i3] + Math.max(i2, j2);
-                    Tessellator tessellator = Tessellator.getInstance();
+                    Tesselator tessellator = Tesselator.getInstance();
                     BufferBuilder bufferbuilder = tessellator.getBuilder();
                     RenderSystem.disableTexture();
                     RenderSystem.enableColorLogicOp();
                     RenderSystem.logicOp(GlStateManager.LogicOp.OR_REVERSE);
-                    bufferbuilder.begin(7, DefaultVertexFormats.POSITION_COLOR);
+                    bufferbuilder.begin(7, DefaultVertexFormat.POSITION_COLOR);
                     bufferbuilder.vertex(matrix4f, (float)k2, (float)(l + 9), 0.0F).color(0, 0, 255, 255).endVertex();
                     bufferbuilder.vertex(matrix4f, (float)l2, (float)(l + 9), 0.0F).color(0, 0, 255, 255).endVertex();
                     bufferbuilder.vertex(matrix4f, (float)l2, (float)l, 0.0F).color(0, 0, 255, 255).endVertex();
                     bufferbuilder.vertex(matrix4f, (float)k2, (float)l, 0.0F).color(0, 0, 255, 255).endVertex();
                     bufferbuilder.end();
-                    WorldVertexBufferUploader.end(bufferbuilder);
+                    BufferUploader.end(bufferbuilder);
                     RenderSystem.disableColorLogicOp();
                     RenderSystem.enableTexture();
                 }
@@ -271,7 +277,7 @@ public class SignPostGui extends Screen {
         }
 
         matrixstack.popPose();
-        RenderHelper.setupFor3DItems();
+        Lighting.setupFor3DItems();
         super.render(matrixstack, mouseX, mouseY, partialTicks);
     }
 }

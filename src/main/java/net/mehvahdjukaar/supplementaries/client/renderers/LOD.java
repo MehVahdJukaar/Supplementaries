@@ -1,11 +1,11 @@
 package net.mehvahdjukaar.supplementaries.client.renderers;
 
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
 
 public class LOD {
     private final double distSq;
@@ -14,15 +14,15 @@ public class LOD {
         this.distSq = distance;
     }
 
-    public LOD(TileEntityRendererDispatcher renderer, BlockPos pos) {
+    public LOD(BlockEntityRenderDispatcher renderer, BlockPos pos) {
         this(renderer.camera.getPosition(), pos);
     }
 
-    public LOD(Vector3d cameraPos, BlockPos pos) {
-        this(Vector3d.atCenterOf(pos).distanceToSqr(cameraPos));
+    public LOD(Vec3 cameraPos, BlockPos pos) {
+        this(Vec3.atCenterOf(pos).distanceToSqr(cameraPos));
     }
 
-    public boolean isOnEdge(TileEntity te) {
+    public boolean isOnEdge(BlockEntity te) {
         return this.distSq > (te.getViewDistance() * te.getViewDistance()) - BUFFER;
     }
 
@@ -50,25 +50,25 @@ public class LOD {
     public static final int MEDIUM_DIST = 64 * 64;
     public static final int FAR_DIST = 96 * 96;
 
-    public static boolean isOutOfFocus(Vector3d cameraPos, BlockPos pos, float blockYaw) {
+    public static boolean isOutOfFocus(Vec3 cameraPos, BlockPos pos, float blockYaw) {
         return isOutOfFocus(cameraPos, pos, blockYaw, 0, Direction.UP, 0);
     }
 
-    public static boolean isOutOfFocus(Vector3d cameraPos, BlockPos pos, float blockYaw, float degMargin, Direction dir, float offset) {
+    public static boolean isOutOfFocus(Vec3 cameraPos, BlockPos pos, float blockYaw, float degMargin, Direction dir, float offset) {
         float relAngle = getRelativeAngle(cameraPos, pos, dir, offset);
         return isOutOfFocus(relAngle, blockYaw, degMargin);
     }
 
     public static boolean isOutOfFocus(float relativeAngle, float blockYaw, float degMargin){
-        return (MathHelper.degreesDifference(relativeAngle, blockYaw - 90) > -degMargin);
+        return (Mth.degreesDifference(relativeAngle, blockYaw - 90) > -degMargin);
     }
 
-    public static float getRelativeAngle(Vector3d cameraPos, BlockPos pos) {
+    public static float getRelativeAngle(Vec3 cameraPos, BlockPos pos) {
         return getRelativeAngle(cameraPos, pos, Direction.UP, 0);
     }
 
-    public static float getRelativeAngle(Vector3d cameraPos, BlockPos pos, Direction dir, float offset) {
-        return (float) (MathHelper.atan2(
+    public static float getRelativeAngle(Vec3 cameraPos, BlockPos pos, Direction dir, float offset) {
+        return (float) (Mth.atan2(
                 offset * dir.getStepX() + cameraPos.x - (pos.getX() + 0.5f),
                 offset * dir.getStepZ() + cameraPos.z - (pos.getZ() + 0.5f)) * 180 / Math.PI);
     }

@@ -2,20 +2,20 @@ package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.entities.RedMerchantEntity;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.village.PointOfInterestManager;
-import net.minecraft.village.PointOfInterestType;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.ai.village.poi.PoiManager;
+import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.biome.Biomes;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.spawner.WanderingTraderSpawner;
-import net.minecraft.world.storage.IServerWorldInfo;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.npc.WanderingTraderSpawner;
+import net.minecraft.world.level.storage.ServerLevelData;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -38,13 +38,13 @@ public abstract class SpawnRedMerchantMixin {
     private Random random;
     @Final
     @Shadow
-    private IServerWorldInfo serverLevelData;
+    private ServerLevelData serverLevelData;
 
     private int redSpawnDelay = 0;
 
     //remove
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
-    public void tick(ServerWorld p_230253_1_, boolean p_230253_2_, boolean p_230253_3_, CallbackInfoReturnable<Integer> cir) {
+    public void tick(ServerLevel p_230253_1_, boolean p_230253_2_, boolean p_230253_3_, CallbackInfoReturnable<Integer> cir) {
         if (this.redSpawnDelay > 0) {
             this.redSpawnDelay--;
         }
@@ -52,10 +52,10 @@ public abstract class SpawnRedMerchantMixin {
 
 
     @Inject(method = "spawn", at = @At("RETURN"), cancellable = true)
-    public void spawn(ServerWorld world, CallbackInfoReturnable<Boolean> cir) {
+    public void spawn(ServerLevel world, CallbackInfoReturnable<Boolean> cir) {
         if (!cir.getReturnValue() && redSpawnDelay == 0) {
             //doesn't set cir to true, so it doesn't interfere with wandering trader spawn
-            PlayerEntity playerentity = world.getRandomPlayer();
+            Player playerentity = world.getRandomPlayer();
             //1/10 chance here already. raised it a bit since when normal one spawns it prevents this
             if (playerentity != null && this.random.nextInt(9) == 0) {
 
@@ -64,14 +64,14 @@ public abstract class SpawnRedMerchantMixin {
                 //17.5 % max on hard ->1.75% (wandering trader maxes at 7.5%)
                 if (this.calculateNormalizeDifficulty(world, blockpos) > random.nextFloat() * 90) {
 
-                    PointOfInterestManager pointofinterestmanager = world.getPoiManager();
-                    Optional<BlockPos> optional = pointofinterestmanager.find(PointOfInterestType.MEETING.getPredicate(), (p_221241_0_) -> true, blockpos, 48, PointOfInterestManager.Status.ANY);
+                    PoiManager pointofinterestmanager = world.getPoiManager();
+                    Optional<BlockPos> optional = pointofinterestmanager.find(PoiType.MEETING.getPredicate(), (p_221241_0_) -> true, blockpos, 48, PoiManager.Occupancy.ANY);
                     BlockPos targetPos = optional.orElse(blockpos);
                     BlockPos spawnPos = this.findSpawnPositionNear(world, targetPos, 48);
                     if (spawnPos != null && this.hasEnoughSpace(world, spawnPos)) {
                         if (!world.getBiomeName(spawnPos).equals(Optional.of(Biomes.THE_VOID))) {
 
-                            RedMerchantEntity trader = ModRegistry.RED_MERCHANT_TYPE.get().spawn(world, null, null, null, spawnPos, SpawnReason.EVENT, false, false);
+                            RedMerchantEntity trader = ModRegistry.RED_MERCHANT_TYPE.get().spawn(world, null, null, null, spawnPos, MobSpawnType.EVENT, false, false);
                             if (trader != null) {
                                 this.serverLevelData.setWanderingTraderId(trader.getUUID());
                                 int lifetime = 25000;
@@ -88,9 +88,9 @@ public abstract class SpawnRedMerchantMixin {
 
     }
 
-    private float calculateNormalizeDifficulty(ServerWorld world, BlockPos pos) {
+    private float calculateNormalizeDifficulty(ServerLevel world, BlockPos pos) {
         float dragon = 1;
-        CompoundNBT tag = world.getServer().getWorldData().endDragonFightData();
+        CompoundTag tag = world.getServer().getWorldData().endDragonFightData();
 
         if (tag.contains("DragonKilled", 99)) {
 
@@ -135,8 +135,8 @@ public abstract class SpawnRedMerchantMixin {
     }
 
     @Shadow
-    protected abstract boolean hasEnoughSpace(IBlockReader reader, BlockPos pos);
+    protected abstract boolean hasEnoughSpace(BlockGetter reader, BlockPos pos);
 
     @Shadow
-    protected abstract BlockPos findSpawnPositionNear(IWorldReader world, BlockPos blockpos1, int i);
+    protected abstract BlockPos findSpawnPositionNear(LevelReader world, BlockPos blockpos1, int i);
 }

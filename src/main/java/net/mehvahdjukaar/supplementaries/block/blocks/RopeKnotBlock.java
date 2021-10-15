@@ -13,35 +13,50 @@ import net.mehvahdjukaar.supplementaries.compat.decorativeblocks.DecoBlocksCompa
 import net.mehvahdjukaar.supplementaries.compat.quark.QuarkPlugin;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.*;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ShearsItem;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ShearsItem;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.Constants;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class RopeKnotBlock extends MimicBlock implements IWaterLoggable {
+import net.minecraft.Util;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.PipeBlock;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.WallBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.WallSide;
+
+public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock {
 
     private final Map<BlockState, VoxelShape> SHAPES_MAP = new HashMap<>();
     private final Map<BlockState, VoxelShape> COLLISION_SHAPES_MAP = new HashMap<>();
@@ -58,8 +73,8 @@ public class RopeKnotBlock extends MimicBlock implements IWaterLoggable {
     public static final BooleanProperty EAST = BlockStateProperties.EAST;
 
 
-    protected static final Map<Direction, BooleanProperty> FENCE_PROPERTY = SixWayBlock.PROPERTY_BY_DIRECTION.entrySet().stream().filter((d) -> d.getKey().getAxis().isHorizontal()).collect(Util.toMap());
-    protected static final Map<Direction, EnumProperty<WallHeight>> WALL_PROPERTY = ImmutableMap.of(Direction.NORTH, WallBlock.NORTH_WALL, Direction.SOUTH, WallBlock.SOUTH_WALL, Direction.WEST, WallBlock.WEST_WALL, Direction.EAST, WallBlock.EAST_WALL);
+    protected static final Map<Direction, BooleanProperty> FENCE_PROPERTY = PipeBlock.PROPERTY_BY_DIRECTION.entrySet().stream().filter((d) -> d.getKey().getAxis().isHorizontal()).collect(Util.toMap());
+    protected static final Map<Direction, EnumProperty<WallSide>> WALL_PROPERTY = ImmutableMap.of(Direction.NORTH, WallBlock.NORTH_WALL, Direction.SOUTH, WallBlock.SOUTH_WALL, Direction.WEST, WallBlock.WEST_WALL, Direction.EAST, WallBlock.EAST_WALL);
 
     public RopeKnotBlock(Properties properties) {
         super(properties);
@@ -72,13 +87,13 @@ public class RopeKnotBlock extends MimicBlock implements IWaterLoggable {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(WATERLOGGED, POST_TYPE, AXIS, NORTH, SOUTH, WEST, EAST, UP, DOWN);
     }
 
     @Nullable
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
         return new RopeKnotBlockTile();
     }
 
@@ -112,8 +127,8 @@ public class RopeKnotBlock extends MimicBlock implements IWaterLoggable {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
-        TileEntity te = world.getBlockEntity(pos);
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        BlockEntity te = world.getBlockEntity(pos);
         if (te instanceof RopeKnotBlockTile) {
             return ((RopeKnotBlockTile) te).getShape();
         }
@@ -121,19 +136,19 @@ public class RopeKnotBlock extends MimicBlock implements IWaterLoggable {
     }
 
     @Override
-    public VoxelShape getOcclusionShape(BlockState state, IBlockReader reader, BlockPos pos) {
-        return SHAPES_MAP.getOrDefault(state.setValue(WATERLOGGED, false), VoxelShapes.block());
+    public VoxelShape getOcclusionShape(BlockState state, BlockGetter reader, BlockPos pos) {
+        return SHAPES_MAP.getOrDefault(state.setValue(WATERLOGGED, false), Shapes.block());
     }
 
 
     @Override
-    public VoxelShape getBlockSupportShape(BlockState state, IBlockReader reader, BlockPos pos) {
-        return SHAPES_MAP.getOrDefault(state.setValue(WATERLOGGED, false), VoxelShapes.block());
+    public VoxelShape getBlockSupportShape(BlockState state, BlockGetter reader, BlockPos pos) {
+        return SHAPES_MAP.getOrDefault(state.setValue(WATERLOGGED, false), Shapes.block());
     }
 
     @Override
-    public VoxelShape getCollisionShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
-        TileEntity te = world.getBlockEntity(pos);
+    public VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        BlockEntity te = world.getBlockEntity(pos);
         if (te instanceof RopeKnotBlockTile) {
             return ((RopeKnotBlockTile) te).getCollisionShape();
         }
@@ -171,13 +186,13 @@ public class RopeKnotBlock extends MimicBlock implements IWaterLoggable {
                     c = v;
                     break;
             }
-            if (state.getValue(DOWN)) v = VoxelShapes.or(v, down);
-            if (state.getValue(UP)) v = VoxelShapes.or(v, up);
-            if (state.getValue(NORTH)) v = VoxelShapes.or(v, north);
-            if (state.getValue(SOUTH)) v = VoxelShapes.or(v, south);
-            if (state.getValue(WEST)) v = VoxelShapes.or(v, west);
-            if (state.getValue(EAST)) v = VoxelShapes.or(v, east);
-            c = VoxelShapes.or(c, v);
+            if (state.getValue(DOWN)) v = Shapes.or(v, down);
+            if (state.getValue(UP)) v = Shapes.or(v, up);
+            if (state.getValue(NORTH)) v = Shapes.or(v, north);
+            if (state.getValue(SOUTH)) v = Shapes.or(v, south);
+            if (state.getValue(WEST)) v = Shapes.or(v, west);
+            if (state.getValue(EAST)) v = Shapes.or(v, east);
+            c = Shapes.or(c, v);
             c = c.optimize();
             v = v.optimize();
             boolean flag = true;
@@ -203,20 +218,20 @@ public class RopeKnotBlock extends MimicBlock implements IWaterLoggable {
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, IWorld world, BlockPos currentPos,
+    public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor world, BlockPos currentPos,
                                   BlockPos facingPos) {
         if (state.getValue(WATERLOGGED)) {
             world.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
         }
         BlockState newState = state.setValue(RopeBlock.FACING_TO_PROPERTY_MAP.get(facing), RopeBlock.shouldConnectToFace(state, facingState, facingPos, facing, world));
-        TileEntity te = world.getBlockEntity(currentPos);
+        BlockEntity te = world.getBlockEntity(currentPos);
         if (te instanceof RopeKnotBlockTile) {
             IBlockHolder tile = ((IBlockHolder) te);
             BlockState oldHeld = tile.getHeldBlock();
 
             RopeKnotBlockTile otherTile = null;
             if (facingState.getBlock().is(ModRegistry.ROPE_KNOT.get())) {
-                TileEntity te2 = world.getBlockEntity(facingPos);
+                BlockEntity te2 = world.getBlockEntity(facingPos);
                 if (te2 instanceof RopeKnotBlockTile) {
                     otherTile = ((RopeKnotBlockTile) te2);
                     facingState = otherTile.getHeldBlock();
@@ -291,32 +306,32 @@ public class RopeKnotBlock extends MimicBlock implements IWaterLoggable {
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
         FluidState fluidstate = context.getLevel().getFluidState(context.getClickedPos());
         boolean flag = fluidstate.is(FluidTags.WATER) && fluidstate.getAmount() == 8;
         return this.defaultBlockState().setValue(WATERLOGGED, flag);
     }
 
     @Override
-    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult p_225533_6_) {
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult p_225533_6_) {
         if (player.getItemInHand(hand).getItem() instanceof ShearsItem) {
             if (!world.isClientSide) {
-                TileEntity te = world.getBlockEntity(pos);
+                BlockEntity te = world.getBlockEntity(pos);
                 if (te instanceof RopeKnotBlockTile) {
                     popResource(world, pos, new ItemStack(ModRegistry.ROPE_ITEM.get()));
-                    world.playSound(null, pos, SoundEvents.SNOW_GOLEM_SHEAR, SoundCategory.PLAYERS, 0.8F, 1.3F);
+                    world.playSound(null, pos, SoundEvents.SNOW_GOLEM_SHEAR, SoundSource.PLAYERS, 0.8F, 1.3F);
                     world.setBlock(pos, ((IBlockHolder) te).getHeldBlock(), 3);
                 }
             }
-            return ActionResultType.sidedSuccess(world.isClientSide);
+            return InteractionResult.sidedSuccess(world.isClientSide);
         }
-        return ActionResultType.PASS;
+        return InteractionResult.PASS;
     }
 
 
     @Override
-    public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
-        TileEntity te = world.getBlockEntity(pos);
+    public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+        BlockEntity te = world.getBlockEntity(pos);
         if (te instanceof RopeKnotBlockTile) {
             BlockState mimic = ((IBlockHolder) te).getHeldBlock();
             return mimic.getBlock().getPickBlock(state, target, world, pos, player);
@@ -349,7 +364,7 @@ public class RopeKnotBlock extends MimicBlock implements IWaterLoggable {
         return type;
     }
 
-    public static @Nullable BlockState convertToRopeKnot(BlockProperties.PostType type, BlockState state, World world, BlockPos pos) {
+    public static @Nullable BlockState convertToRopeKnot(BlockProperties.PostType type, BlockState state, Level world, BlockPos pos) {
         Direction.Axis axis = Direction.Axis.Y;
         if (state.hasProperty(BlockStateProperties.AXIS)) {
             axis = state.getValue(BlockStateProperties.AXIS);
@@ -363,7 +378,7 @@ public class RopeKnotBlock extends MimicBlock implements IWaterLoggable {
             return null;
         }
 
-        TileEntity te = world.getBlockEntity(pos);
+        BlockEntity te = world.getBlockEntity(pos);
         if (te instanceof RopeKnotBlockTile) {
             ((IBlockHolder) te).setHeldBlock(state);
             te.setChanged();

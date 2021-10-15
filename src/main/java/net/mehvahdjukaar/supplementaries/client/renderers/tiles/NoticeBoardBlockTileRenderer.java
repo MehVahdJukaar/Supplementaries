@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.supplementaries.block.tiles.NoticeBoardBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.client.renderers.LOD;
@@ -11,46 +11,46 @@ import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.RequestMapDataFromServerPacket;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.MapItemRenderer;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.MapRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.model.RenderMaterial;
-import net.minecraft.client.renderer.texture.NativeImage;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.AbstractMapItem;
-import net.minecraft.item.FilledMapItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.util.IReorderingProcessor;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextProperties;
-import net.minecraft.world.World;
-import net.minecraft.world.storage.MapData;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.resources.model.Material;
+import com.mojang.blaze3d.platform.NativeImage;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ComplexItem;
+import net.minecraft.world.item.MapItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.network.chat.FormattedText;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 
 import java.util.List;
 
 
-public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoardBlockTile> {
+public class NoticeBoardBlockTileRenderer extends BlockEntityRenderer<NoticeBoardBlockTile> {
     protected final ItemRenderer itemRenderer;
-    protected final MapItemRenderer mapRenderer;
-    public NoticeBoardBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
+    protected final MapRenderer mapRenderer;
+    public NoticeBoardBlockTileRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
         Minecraft minecraft = Minecraft.getInstance();
         itemRenderer = minecraft.getItemRenderer();
         mapRenderer = minecraft.gameRenderer.getMapRenderer();
     }
 
-    public int getFrontLight(World world, BlockPos pos, Direction dir) {
-        return WorldRenderer.getLightColor(world, pos.relative(dir));
+    public int getFrontLight(Level world, BlockPos pos, Direction dir) {
+        return LevelRenderer.getLightColor(world, pos.relative(dir));
     }
 
     public boolean getAxis(Direction dir) {
@@ -58,7 +58,7 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
     }
 
     @Override
-    public void render(NoticeBoardBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
+    public void render(NoticeBoardBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
 
         //TODO: rewrite
@@ -68,11 +68,11 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
 
             if(stack.isEmpty())return;
 
-            World world = tile.getLevel();
+            Level world = tile.getLevel();
             Direction dir = tile.getDirection();
 
             float yaw = -dir.toYRot();
-            Vector3d cameraPos = this.renderer.camera.getPosition();
+            Vec3 cameraPos = this.renderer.camera.getPosition();
             BlockPos pos = tile.getBlockPos();
             if(LOD.isOutOfFocus(cameraPos, pos, yaw))return;
 
@@ -85,8 +85,8 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
             matrixStackIn.translate(0, 0, 0.5);
 
             //render map
-            MapData mapdata = FilledMapItem.getOrCreateSavedData(stack, world);
-            if(stack.getItem() instanceof AbstractMapItem) {
+            MapItemSavedData mapdata = MapItem.getOrCreateSavedData(stack, world);
+            if(stack.getItem() instanceof ComplexItem) {
                 if (mapdata != null) {
                     matrixStackIn.pushPose();
                     matrixStackIn.translate(0, 0, 0.008);
@@ -98,7 +98,7 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
                 }
                 else{
                     //request map data from server
-                    PlayerEntity player = Minecraft.getInstance().player;
+                    Player player = Minecraft.getInstance().player;
                     NetworkHandler.INSTANCE.sendToServer(new RequestMapDataFromServerPacket(tile.getBlockPos(),player.getUUID()));
                 }
                 matrixStackIn.popPose();
@@ -115,7 +115,7 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
                     return;
                 }
 
-                FontRenderer fontrenderer = this.renderer.getFont();
+                Font fontrenderer = this.renderer.getFont();
 
                 matrixStackIn.pushPose();
                 matrixStackIn.translate(0,0.5,0.008);
@@ -152,10 +152,10 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
 
                 int scalingfactor;
 
-                List<IReorderingProcessor> tempPageLines;
+                List<FormattedCharSequence> tempPageLines;
 
                 if (tile.getFlag()) {
-                    ITextProperties txt = TextUtil.iGetPageText(page);
+                    FormattedText txt = TextUtil.iGetPageText(page);
                     int width = fontrenderer.width(txt);
                     float bordery = 0.125f;
                     float borderx = 0.1875f;
@@ -163,9 +163,9 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
                     float ly = 1 - (2 * bordery);
                     float maxlines;
                     do {
-                        scalingfactor = MathHelper.floor(MathHelper.sqrt((width * 8f) / (lx * ly)));
+                        scalingfactor = Mth.floor(Mth.sqrt((width * 8f) / (lx * ly)));
 
-                        tempPageLines = fontrenderer.split(txt, MathHelper.floor(lx * scalingfactor));
+                        tempPageLines = fontrenderer.split(txt, Mth.floor(lx * scalingfactor));
                         //tempPageLines = RenderComponentsUtil.splitText(txt, MathHelper.floor(lx * scalingfactor), fontrenderer, true, true);
 
                         maxlines = ly * scalingfactor / 8f;
@@ -187,7 +187,7 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
 
                 for (int lin = 0; lin < numberoflin; ++lin) {
                     //String str = tempPageLines.get(lin).getFormattedText();
-                    IReorderingProcessor str = tempPageLines.get(lin);
+                    FormattedCharSequence str = tempPageLines.get(lin);
 
                     //border offsets. always add 0.5 to center properly
                     //float dx = (float) (-fontrenderer.getStringWidth(str) / 2f) + 0.5f;
@@ -211,10 +211,10 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
             //render item
             if(!stack.isEmpty()) {
 
-                RenderMaterial rendermaterial = tile.getCachedPattern();
+                Material rendermaterial = tile.getCachedPattern();
                 if (rendermaterial != null) {
 
-                    IVertexBuilder builder = rendermaterial.buffer(bufferIn, RenderType::entityNoOutline);
+                    VertexConsumer builder = rendermaterial.buffer(bufferIn, RenderType::entityNoOutline);
 
                     int i = tile.getTextColor().getTextColor();
                     float b = (NativeImage.getR(i) )/255f;
@@ -227,11 +227,11 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
 
                 }
                 else{
-                    IBakedModel ibakedmodel = itemRenderer.getModel(stack, world, null);
+                    BakedModel ibakedmodel = itemRenderer.getModel(stack, world, null);
 
                     matrixStackIn.translate(0, 0, 0.015625 + 0.00005);
                     matrixStackIn.scale(-0.5f, 0.5f, -0.5f);
-                    itemRenderer.render(stack, ItemCameraTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, frontLight,
+                    itemRenderer.render(stack, ItemTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, frontLight,
                             combinedOverlayIn, ibakedmodel);
                     //itemRenderer.renderItem(stack, ItemCameraTransforms.TransformType.FIXED, newl, OverlayTexture.NO_OVERLAY, matrixStackIn, bufferIn);
                 }

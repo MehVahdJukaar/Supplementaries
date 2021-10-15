@@ -2,28 +2,31 @@ package net.mehvahdjukaar.supplementaries.items;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.SignPostBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.SignPostBlockTile;
+import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.framedblocks.FramedSignPost;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.SoundType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class SignPostItem extends Item {
     public final IWoodType type;
@@ -45,13 +48,13 @@ public class SignPostItem extends Item {
     }
 
     @Override
-    public ActionResultType useOn(ItemUseContext context) {
+    public InteractionResult useOn(UseOnContext context) {
         //if (!context.canPlace()) return ActionResultType.FAIL;
 
-        PlayerEntity playerentity = context.getPlayer();
-        if (playerentity == null) return ActionResultType.PASS;
+        Player playerentity = context.getPlayer();
+        if (playerentity == null) return InteractionResult.PASS;
         BlockPos blockpos = context.getClickedPos();
-        World world = context.getLevel();
+        Level world = context.getLevel();
         ItemStack itemstack = context.getItemInHand();
 
         Block targetblock = world.getBlockState(blockpos).getBlock();
@@ -74,16 +77,17 @@ public class SignPostItem extends Item {
 
             boolean waterlogged = world.getFluidState(blockpos).getType() == Fluids.WATER;
             world.setBlock(blockpos, ModRegistry.SIGN_POST.get()
-                    .getStateForPlacement(new BlockItemUseContext(context)).setValue(SignPostBlock.WATERLOGGED, waterlogged), 3);
+                    .getStateForPlacement(new BlockPlaceContext(context)).setValue(SignPostBlock.WATERLOGGED, waterlogged), 3);
 
             boolean flag = false;
 
-            TileEntity tileentity = world.getBlockEntity(blockpos);
+            BlockEntity tileentity = world.getBlockEntity(blockpos);
             if (tileentity instanceof SignPostBlockTile) {
                 SignPostBlockTile signtile = ((SignPostBlockTile) tileentity);
 
+                BlockUtils.addOptionalOwnership(playerentity, signtile);
 
-                int r = MathHelper.floor((double) ((180.0F + context.getRotation()) * 16.0F / 360.0F) + 0.5D) & 15;
+                int r = Mth.floor((double) ((180.0F + context.getRotation()) * 16.0F / 360.0F) + 0.5D) & 15;
 
                 double y = context.getClickLocation().y;
 
@@ -112,14 +116,14 @@ public class SignPostItem extends Item {
             if (flag) {
                 if (world.isClientSide()) {
                     SoundType soundtype = SoundType.WOOD;
-                    world.playSound(playerentity, blockpos, SoundEvents.WOOD_PLACE, SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+                    world.playSound(playerentity, blockpos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
                 }
                 if (!context.getPlayer().isCreative()) itemstack.shrink(1);
-                return ActionResultType.SUCCESS;
+                return InteractionResult.SUCCESS;
             }
 
 
         }
-        return ActionResultType.PASS;
+        return InteractionResult.PASS;
     }
 }

@@ -3,24 +3,29 @@ package net.mehvahdjukaar.supplementaries.datagen;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.advancements.criterion.InventoryChangeTrigger;
+import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.data.*;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.crafting.ConditionalRecipe;
 import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.function.Consumer;
 
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+
 public class ModRecipeProvider extends RecipeProvider {
     public ModRecipeProvider(DataGenerator generatorIn) {
         super(generatorIn);
     }
     @Override
-    protected void buildShapelessRecipes(Consumer<IFinishedRecipe> consumerIn) {
+    protected void buildShapelessRecipes(Consumer<FinishedRecipe> consumerIn) {
 
         for(DyeColor color : DyeColor.values()){
             //makeFlagRecipe(color,consumerIn);
@@ -35,7 +40,7 @@ public class ModRecipeProvider extends RecipeProvider {
     }
 
 
-    public static void makeConditionalRec(IFinishedRecipe r, Consumer<IFinishedRecipe> consumer, String name){
+    public static void makeConditionalRec(FinishedRecipe r, Consumer<FinishedRecipe> consumer, String name){
 
 
         ConditionalRecipe.builder()
@@ -45,7 +50,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .build(consumer,"supplementaries",name);
     }
 
-    public static void makeConditionalWoodRec(IFinishedRecipe r, IWoodType wood, Consumer<IFinishedRecipe> consumer, String name){
+    public static void makeConditionalWoodRec(FinishedRecipe r, IWoodType wood, Consumer<FinishedRecipe> consumer, String name){
 
 
         ConditionalRecipe.builder().addCondition(new RecipeCondition(name, RecipeCondition.MY_FLAG))
@@ -55,7 +60,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .build(consumer,"supplementaries",name+"_"+wood.getRegName());
     }
 
-    private static void makeSignPostRecipe(IWoodType wood, Consumer<IFinishedRecipe> consumer) {
+    private static void makeSignPostRecipe(IWoodType wood, Consumer<FinishedRecipe> consumer) {
         try{
             Item plank = ForgeRegistries.ITEMS.getValue(new ResourceLocation(wood.getPlankRegName()));
             Item sign = ForgeRegistries.ITEMS.getValue(new ResourceLocation(wood.getSignRegName()));
@@ -64,7 +69,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 ShapelessRecipeBuilder.shapeless(ModRegistry.SIGN_POST_ITEMS.get(wood).get(), 2)
                         .requires(sign)
                         .group(ModRegistry.SIGN_POST_NAME)
-                        .unlockedBy("has_plank", InventoryChangeTrigger.Instance.hasItems(plank))
+                        .unlockedBy("has_plank", InventoryChangeTrigger.TriggerInstance.hasItems(plank))
                         //.build(consumer);
                         .save((s) -> makeConditionalWoodRec(s, wood, consumer, ModRegistry.SIGN_POST_NAME)); //
             }
@@ -76,7 +81,7 @@ public class ModRecipeProvider extends RecipeProvider {
                         .define('1', Items.STICK)
                         .define('2', plank)
                         .group(ModRegistry.SIGN_POST_NAME)
-                        .unlockedBy("has_plank", InventoryChangeTrigger.Instance.hasItems(plank))
+                        .unlockedBy("has_plank", InventoryChangeTrigger.TriggerInstance.hasItems(plank))
                         //.build(consumer);
                         .save((s) -> makeConditionalWoodRec(s, wood, consumer, ModRegistry.SIGN_POST_NAME)); //
             }
@@ -85,7 +90,7 @@ public class ModRecipeProvider extends RecipeProvider {
     }
 
 
-    private static void makeHangingSignRecipe(IWoodType wood, Consumer<IFinishedRecipe> consumer) {
+    private static void makeHangingSignRecipe(IWoodType wood, Consumer<FinishedRecipe> consumer) {
 
             Item plank = ForgeRegistries.ITEMS.getValue(new ResourceLocation(wood.getPlankRegName()));
             if (plank == null || plank == Items.AIR){
@@ -99,14 +104,14 @@ public class ModRecipeProvider extends RecipeProvider {
                     .define('1', Items.STICK)
                     .define('2', plank)
                     .group(ModRegistry.HANGING_SIGN_NAME)
-                    .unlockedBy("has_plank", InventoryChangeTrigger.Instance.hasItems(plank))
+                    .unlockedBy("has_plank", InventoryChangeTrigger.TriggerInstance.hasItems(plank))
                     //.build(consumer);
                     .save((s) -> makeConditionalWoodRec(s, wood, consumer, ModRegistry.HANGING_SIGN_NAME)); //
 
 
     }
 
-    private static void makeFlagRecipe(DyeColor color, Consumer<IFinishedRecipe> consumer) {
+    private static void makeFlagRecipe(DyeColor color, Consumer<FinishedRecipe> consumer) {
 
         Item wool = ForgeRegistries.ITEMS.getValue(new ResourceLocation("minecraft", color.name().toLowerCase()+"_wool"));
         if (wool == null || wool == Items.AIR){
@@ -119,7 +124,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('1', Items.STICK)
                 .define('2', wool)
                 .group(ModRegistry.FLAG_NAME)
-                .unlockedBy("has_wool", InventoryChangeTrigger.Instance.hasItems(wool))
+                .unlockedBy("has_wool", InventoryChangeTrigger.TriggerInstance.hasItems(wool))
                 //.build(consumer);
                 .save((s) -> makeConditionalRec(s, consumer, ModRegistry.HANGING_SIGN_NAME+"_"+color.getName())); //
 

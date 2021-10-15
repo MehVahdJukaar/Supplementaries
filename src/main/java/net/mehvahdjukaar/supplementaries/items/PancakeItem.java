@@ -1,19 +1,21 @@
 package net.mehvahdjukaar.supplementaries.items;
 
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.JukeboxBlock;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.JukeboxBlock;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.stats.Stats;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class PancakeItem extends BlockItem {
     public PancakeItem(Block block, Properties properties) {
@@ -21,9 +23,9 @@ public class PancakeItem extends BlockItem {
     }
 
     @Override
-    public ActionResultType useOn(ItemUseContext context) {
+    public InteractionResult useOn(UseOnContext context) {
         if(!context.getPlayer().isShiftKeyDown()) {
-            World world = context.getLevel();
+            Level world = context.getLevel();
             BlockPos blockpos = context.getClickedPos();
             BlockState blockstate = world.getBlockState(blockpos);
             if (blockstate.is(Blocks.JUKEBOX) && !blockstate.getValue(JukeboxBlock.HAS_RECORD)) {
@@ -31,12 +33,12 @@ public class PancakeItem extends BlockItem {
                 if (!world.isClientSide) {
                     ((JukeboxBlock) Blocks.JUKEBOX).setRecord(world, blockpos, blockstate, itemstack.split(1));
                     world.levelEvent(null, 1010, blockpos, Item.getId(ModRegistry.PANCAKE_DISC.get()));
-                    PlayerEntity playerentity = context.getPlayer();
+                    Player playerentity = context.getPlayer();
                     if (playerentity != null) {
                         playerentity.awardStat(Stats.PLAY_RECORD);
                     }
                 }
-                return ActionResultType.sidedSuccess(world.isClientSide);
+                return InteractionResult.sidedSuccess(world.isClientSide);
             }
         }
         return super.useOn(context);

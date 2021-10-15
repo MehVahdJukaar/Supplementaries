@@ -8,56 +8,58 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.mehvahdjukaar.supplementaries.network.BombExplosionKnockbackPacket;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.enchantment.ProtectionEnchantment;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.item.TNTEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootParameters;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.EntityExplosionContext;
-import net.minecraft.world.Explosion;
-import net.minecraft.world.ExplosionContext;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.enchantment.ProtectionEnchantment;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.item.PrimedTnt;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.EntityBasedExplosionDamageCalculator;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.ExplosionDamageCalculator;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.fml.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+
+import net.minecraft.world.level.Explosion.BlockInteraction;
 
 public class BombExplosion extends Explosion {
 
     private final Entity source;
     private final float radius;
 
-    private final World level;
+    private final Level level;
     private final double x;
     private final double y;
     private final double z;
     private final boolean blue;
 
-    private final ExplosionContext damageCalculator;
+    private final ExplosionDamageCalculator damageCalculator;
     private final List<BlockPos> toBlow = Lists.newArrayList();
-    private final Map<PlayerEntity, Vector3d> hitPlayers = Maps.newHashMap();
-    private final Mode mode;
+    private final Map<Player, Vec3> hitPlayers = Maps.newHashMap();
+    private final BlockInteraction mode;
 
 
-    public BombExplosion(World world, @Nullable Entity entity, @Nullable DamageSource damageSource, @Nullable ExplosionContext context, double x, double y, double z, float radius, boolean blue, Mode interaction) {
+    public BombExplosion(Level world, @Nullable Entity entity, @Nullable DamageSource damageSource, @Nullable ExplosionDamageCalculator context, double x, double y, double z, float radius, boolean blue, BlockInteraction interaction) {
         super(world, entity, damageSource, context, x, y, z, radius, blue, interaction);
         this.level = world;
         this.source = entity;
@@ -70,15 +72,15 @@ public class BombExplosion extends Explosion {
         this.damageCalculator = context == null ? this.makeDamageCalculator(entity) : context;
     }
 
-    private static final ExplosionContext EXPLOSION_DAMAGE_CALCULATOR = new ExplosionContext();
-    private ExplosionContext makeDamageCalculator(@Nullable Entity p_234894_1_) {
-        return p_234894_1_ == null ? EXPLOSION_DAMAGE_CALCULATOR : new EntityExplosionContext(p_234894_1_);
+    private static final ExplosionDamageCalculator EXPLOSION_DAMAGE_CALCULATOR = new ExplosionDamageCalculator();
+    private ExplosionDamageCalculator makeDamageCalculator(@Nullable Entity p_234894_1_) {
+        return p_234894_1_ == null ? EXPLOSION_DAMAGE_CALCULATOR : new EntityBasedExplosionDamageCalculator(p_234894_1_);
     }
 
 
     public void doFinalizeExplosion() {
 
-        this.level.playSound(null, this.x, this.y, this.z, ModRegistry.BOMB_SOUND.get(), SoundCategory.NEUTRAL, blue ? 5F : 3f, (1.2F + (this.level.random.nextFloat() - this.level.random.nextFloat()) * 0.2F));
+        this.level.playSound(null, this.x, this.y, this.z, ModRegistry.BOMB_SOUND.get(), SoundSource.NEUTRAL, blue ? 5F : 3f, (1.2F + (this.level.random.nextFloat() - this.level.random.nextFloat()) * 0.2F));
 
         ObjectArrayList<Pair<ItemStack, BlockPos>> drops = new ObjectArrayList<>();
         Collections.shuffle(this.toBlow, this.level.random);
@@ -89,12 +91,12 @@ public class BombExplosion extends Explosion {
             if (!blockstate.isAir(this.level, blockpos)) {
                 BlockPos blockpos1 = blockpos.immutable();
                 this.level.getProfiler().push("explosion_blocks");
-                if (blockstate.canDropFromExplosion(this.level, blockpos, this) && this.level instanceof ServerWorld) {
-                    TileEntity tileentity = blockstate.hasTileEntity() ? this.level.getBlockEntity(blockpos) : null;
-                    LootContext.Builder builder = (new LootContext.Builder((ServerWorld)this.level)).withRandom(this.level.random).withParameter(LootParameters.ORIGIN, Vector3d.atCenterOf(blockpos)).withParameter(LootParameters.TOOL, ItemStack.EMPTY).withOptionalParameter(LootParameters.BLOCK_ENTITY, tileentity).withOptionalParameter(LootParameters.THIS_ENTITY, this.source);
+                if (blockstate.canDropFromExplosion(this.level, blockpos, this) && this.level instanceof ServerLevel) {
+                    BlockEntity tileentity = blockstate.hasTileEntity() ? this.level.getBlockEntity(blockpos) : null;
+                    LootContext.Builder builder = (new LootContext.Builder((ServerLevel)this.level)).withRandom(this.level.random).withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(blockpos)).withParameter(LootContextParams.TOOL, ItemStack.EMPTY).withOptionalParameter(LootContextParams.BLOCK_ENTITY, tileentity).withOptionalParameter(LootContextParams.THIS_ENTITY, this.source);
 
-                    if (this.mode == Mode.DESTROY) {
-                        builder.withParameter(LootParameters.EXPLOSION_RADIUS, this.radius);
+                    if (this.mode == BlockInteraction.DESTROY) {
+                        builder.withParameter(LootContextParams.EXPLOSION_RADIUS, this.radius);
                     }
 
                     blockstate.getDrops(builder).forEach((p_229977_2_) -> {
@@ -135,7 +137,7 @@ public class BombExplosion extends Explosion {
         Set<BlockPos> set = Sets.newHashSet();
         int i = 16;
 
-        if(mode!=Mode.NONE) {
+        if(mode!=BlockInteraction.NONE) {
             for (int j = 0; j < 16; ++j) {
                 for (int k = 0; k < 16; ++k) {
                     for (int l = 0; l < 16; ++l) {
@@ -177,24 +179,24 @@ public class BombExplosion extends Explosion {
 
         this.toBlow.addAll(set);
         float f2 = this.radius * 2.0F;
-        int k1 = MathHelper.floor(this.x - (double)f2 - 1.0D);
-        int l1 = MathHelper.floor(this.x + (double)f2 + 1.0D);
-        int i2 = MathHelper.floor(this.y - (double)f2 - 1.0D);
-        int i1 = MathHelper.floor(this.y + (double)f2 + 1.0D);
-        int j2 = MathHelper.floor(this.z - (double)f2 - 1.0D);
-        int j1 = MathHelper.floor(this.z + (double)f2 + 1.0D);
-        List<Entity> list = this.level.getEntities(this.source, new AxisAlignedBB((double)k1, (double)i2, (double)j2, (double)l1, (double)i1, (double)j1));
+        int k1 = Mth.floor(this.x - (double)f2 - 1.0D);
+        int l1 = Mth.floor(this.x + (double)f2 + 1.0D);
+        int i2 = Mth.floor(this.y - (double)f2 - 1.0D);
+        int i1 = Mth.floor(this.y + (double)f2 + 1.0D);
+        int j2 = Mth.floor(this.z - (double)f2 - 1.0D);
+        int j1 = Mth.floor(this.z + (double)f2 + 1.0D);
+        List<Entity> list = this.level.getEntities(this.source, new AABB((double)k1, (double)i2, (double)j2, (double)l1, (double)i1, (double)j1));
         net.minecraftforge.event.ForgeEventFactory.onExplosionDetonate(this.level, this, list, f2);
-        Vector3d vector3d = new Vector3d(this.x, this.y, this.z);
+        Vec3 vector3d = new Vec3(this.x, this.y, this.z);
 
         for (Entity entity : list) {
             if (!entity.ignoreExplosion()) {
-                double d12 = MathHelper.sqrt(entity.distanceToSqr(vector3d)) / f2;
+                double d12 = Mth.sqrt(entity.distanceToSqr(vector3d)) / f2;
                 if (d12 <= 1.0D) {
                     double d5 = entity.getX() - this.x;
-                    double d7 = (entity instanceof TNTEntity ? entity.getY() : entity.getEyeY()) - this.y;
+                    double d7 = (entity instanceof PrimedTnt ? entity.getY() : entity.getEyeY()) - this.y;
                     double d9 = entity.getZ() - this.z;
-                    double d13 = MathHelper.sqrt(d5 * d5 + d7 * d7 + d9 * d9);
+                    double d13 = Mth.sqrt(d5 * d5 + d7 * d7 + d9 * d9);
                     if (d13 != 0.0D) {
                         d5 = d5 / d13;
                         d7 = d7 / d13;
@@ -203,20 +205,20 @@ public class BombExplosion extends Explosion {
                         double d10 = (1.0D - d12) * d14;
                         entity.hurt(this.getDamageSource(), (float) ((int) ((d10 * d10 + d10) / 2.0D * 7.0D * (double) f2 + 1.0D)));
                         double d11 = d10;
-                        boolean isPlayer = entity instanceof PlayerEntity;
-                        PlayerEntity playerentity = null;
+                        boolean isPlayer = entity instanceof Player;
+                        Player playerentity = null;
 
                         if (isPlayer) {
-                            playerentity = (PlayerEntity) entity;
+                            playerentity = (Player) entity;
                             if (!playerentity.isSpectator() && (!playerentity.isCreative() || !playerentity.abilities.flying)) {
-                                this.hitPlayers.put(playerentity, new Vector3d(d5 * d10, d7 * d10, d9 * d10));
+                                this.hitPlayers.put(playerentity, new Vec3(d5 * d10, d7 * d10, d9 * d10));
                             }
                         }
 
                         if (entity instanceof LivingEntity) {
                             if(blue) {
                                 if (!isPlayer || (!playerentity.isSpectator() && !playerentity.isCreative())){
-                                    ((LivingEntity) entity).addEffect(new EffectInstance(Effects.WEAKNESS, 20 * 30));
+                                    ((LivingEntity) entity).addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 20 * 30));
                                     entity.setSecondsOnFire(10);
                                 }
                             }
@@ -233,8 +235,8 @@ public class BombExplosion extends Explosion {
         //send knockback packet to players
 
         if(!level.isClientSide) {
-            for (PlayerEntity player : this.hitPlayers.keySet()) {
-                NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player),
+            for (Player player : this.hitPlayers.keySet()) {
+                NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
                         new BombExplosionKnockbackPacket(this.hitPlayers.get(player)));
             }
         }

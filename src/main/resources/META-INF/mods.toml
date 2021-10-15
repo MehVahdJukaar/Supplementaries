@@ -35,7 +35,7 @@ configuredBackground= "supplementaries:textures/blocks/blackstone_tiles.png"
 
     modId="forge" #mandatory
     mandatory=true #mandatory
-    versionRange="[36.1.0,)" #mandatory
+    versionRange="[37.0.0,)" #mandatory
     ordering="NONE"
     side="BOTH"
 
@@ -43,7 +43,7 @@ configuredBackground= "supplementaries:textures/blocks/blackstone_tiles.png"
 
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16,1.17]"
+    versionRange="[1.17,1.18]"
     ordering="NONE"
     side="BOTH"
 
@@ -67,6 +67,6 @@ modId="flywheel"
 
     modId="selene"
     mandatory=true
-    versionRange="[1.16.5-1.0,]"
+    versionRange="[1.17.1-1.0,]"
     ordering="NONE"
     side="BOTH"

@@ -3,8 +3,8 @@ package net.mehvahdjukaar.supplementaries.network;
 
 import net.mehvahdjukaar.supplementaries.block.util.ICustomDataHolder;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkEvent;
 
@@ -20,12 +20,12 @@ public class NosePacket implements NetworkHandler.Message {
         this.on = on;
     }
 
-    public static void buffer(NosePacket pkt, PacketBuffer buf) {
+    public static void buffer(NosePacket pkt, FriendlyByteBuf buf) {
         buf.writeBoolean(pkt.on);
         buf.writeInt(pkt.id);
     }
 
-    public NosePacket(PacketBuffer buf) {
+    public NosePacket(FriendlyByteBuf buf) {
         this.on = buf.readBoolean();
         this.id = buf.readInt();
     }

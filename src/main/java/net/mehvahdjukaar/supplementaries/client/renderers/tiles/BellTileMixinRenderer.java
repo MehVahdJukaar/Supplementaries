@@ -1,24 +1,24 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.supplementaries.block.util.IBellConnections;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.tileentity.BellTileEntity;
+import net.minecraft.world.level.block.entity.BellBlockEntity;
 
 public class BellTileMixinRenderer {
 
-    public static final ModelRenderer chain = new ModelRenderer(16, 16, 0, 0);
-    public static final ModelRenderer link = new ModelRenderer(16, 16, 0, 0);
-    public static final ModelRenderer rope = new ModelRenderer(16, 16, 0, 0);
+    public static final ModelPart chain = new ModelPart(16, 16, 0, 0);
+    public static final ModelPart link = new ModelPart(16, 16, 0, 0);
+    public static final ModelPart rope = new ModelPart(16, 16, 0, 0);
 
         static {
             rope.texOffs(0, 0).addBox(-1.0F, -6.0F, -1.0F, 2.0F, 6.0F, 2.0F, 0.0F, false);
@@ -33,8 +33,8 @@ public class BellTileMixinRenderer {
         }
 
 
-    public static void render(BellTileEntity tile, float partialTicks, MatrixStack matrixStackIn,
-                              IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
+    public static void render(BellBlockEntity tile, float partialTicks, PoseStack matrixStackIn,
+                              MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
         if(tile instanceof IBellConnections){
 
             IBellConnections.BellConnection connection = ((IBellConnections) tile).getConnected();
@@ -45,7 +45,7 @@ public class BellTileMixinRenderer {
 
             if(connection.isRope()) {
                 //TODO: fix lighting since none of these methods are shaded properly
-                IVertexBuilder builder2 = bufferIn.getBuffer(RenderType.entityCutout(Textures.BELL_ROPE_TEXTURE));
+                VertexConsumer builder2 = bufferIn.getBuffer(RenderType.entityCutout(Textures.BELL_ROPE_TEXTURE));
 
                 rope.render(matrixStackIn, builder2, combinedLightIn, combinedOverlayIn, 1, 1, 1, 1);
             }
@@ -55,8 +55,8 @@ public class BellTileMixinRenderer {
                 int lu = combinedLightIn & '\uffff';
                 int lv = combinedLightIn >> 16 & '\uffff'; // ok
 
-                TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(Textures.CHAIN_TEXTURE);
-                IVertexBuilder builder = bufferIn.getBuffer(RenderType.cutout());
+                TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(Textures.CHAIN_TEXTURE);
+                VertexConsumer builder = bufferIn.getBuffer(RenderType.cutout());
 
                 float sMinU = sprite.getU0();
                 float sMinV = sprite.getV0();

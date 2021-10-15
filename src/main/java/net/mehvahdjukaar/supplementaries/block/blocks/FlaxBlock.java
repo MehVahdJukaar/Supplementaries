@@ -2,31 +2,39 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.block.*;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.state.properties.DoubleBlockHalf;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.ForgeHooks;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
-public class FlaxBlock extends CropsBlock {
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockBehaviour.OffsetType;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.level.block.state.BlockState;
+
+public class FlaxBlock extends CropBlock {
     private static final int DOUBLE_AGE = 4; //age at which it grows in block above
     private static final VoxelShape FULL_BOTTOM = Block.box(1, 0, 1, 15, 16, 15);
     private static final VoxelShape[] SHAPES_BOTTOM = new VoxelShape[]{
@@ -56,7 +64,7 @@ public class FlaxBlock extends CropsBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         if(state.getValue(HALF)==DoubleBlockHalf.LOWER){
             return SHAPES_BOTTOM[state.getValue(AGE)];
         }
@@ -64,20 +72,20 @@ public class FlaxBlock extends CropsBlock {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         if(!ClientConfigs.cached.TOOLTIP_HINTS)return;
         //tooltip.add(new TranslationTextComponent("message.supplementaries.flax").mergeStyle(TextFormatting.GRAY).mergeStyle(TextFormatting.ITALIC));
     }
 
     @Override
-    public AbstractBlock.OffsetType getOffsetType() {
+    public BlockBehaviour.OffsetType getOffsetType() {
         return OffsetType.NONE;
     }
 
     //double plant code
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
         DoubleBlockHalf half = stateIn.getValue(HALF);
 
         if (facing.getAxis() != Direction.Axis.Y || (half == DoubleBlockHalf.LOWER != (facing == Direction.UP) || !this.isDouble(stateIn)) || (facingState.is(this) && facingState.getValue(HALF) != half )) {
@@ -93,7 +101,7 @@ public class FlaxBlock extends CropsBlock {
     }
 
     @Override
-    public boolean canSurvive(BlockState state, IWorldReader worldIn, BlockPos pos) {
+    public boolean canSurvive(BlockState state, LevelReader worldIn, BlockPos pos) {
         if (state.getValue(HALF) == DoubleBlockHalf.LOWER) {
             return super.canSurvive(state, worldIn, pos);
         } else {
@@ -105,7 +113,7 @@ public class FlaxBlock extends CropsBlock {
     }
 
     @Override
-    public void playerWillDestroy(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
+    public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
         if (!worldIn.isClientSide) {
             if (player.isCreative()) {
                 removeBottomHalf(worldIn, pos, state, player);
@@ -117,11 +125,11 @@ public class FlaxBlock extends CropsBlock {
     }
 
     @Override
-    public void playerDestroy(World worldIn, PlayerEntity player, BlockPos pos, BlockState state, @Nullable TileEntity te, ItemStack stack) {
+    public void playerDestroy(Level worldIn, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity te, ItemStack stack) {
         super.playerDestroy(worldIn, player, pos, Blocks.AIR.defaultBlockState(), te, stack);
     }
 
-    protected static void removeBottomHalf(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+    protected static void removeBottomHalf(Level world, BlockPos pos, BlockState state, Player player) {
         DoubleBlockHalf doubleblockhalf = state.getValue(HALF);
         if (doubleblockhalf == DoubleBlockHalf.UPPER) {
             BlockPos blockpos = pos.below();
@@ -134,19 +142,19 @@ public class FlaxBlock extends CropsBlock {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(HALF);
     }
 
-    public void placeAt(IWorld worldIn, BlockPos pos, int flags) {
+    public void placeAt(LevelAccessor worldIn, BlockPos pos, int flags) {
         worldIn.setBlock(pos, this.defaultBlockState().setValue(HALF, DoubleBlockHalf.LOWER), flags);
         worldIn.setBlock(pos.above(), this.defaultBlockState().setValue(HALF, DoubleBlockHalf.UPPER), flags);
     }
 
     // Tick function
     @Override
-    public void randomTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
+    public void randomTick(BlockState state, ServerLevel worldIn, BlockPos pos, Random random) {
         if (!worldIn.isAreaLoaded(pos, 1)) return; // Forge: prevent loading unloaded chunks when checking neighbor's light
         if (state.getValue(HALF)==DoubleBlockHalf.UPPER)return; //only bottom one handles ticking
         if (worldIn.getRawBrightness(pos, 0) >= 9) {
@@ -164,7 +172,7 @@ public class FlaxBlock extends CropsBlock {
         }
     }
 
-    public boolean canGrowUp(IBlockReader worldIn, BlockPos downPos){
+    public boolean canGrowUp(BlockGetter worldIn, BlockPos downPos){
         BlockState state = worldIn.getBlockState(downPos.above());
         return state.getBlock() instanceof FlaxBlock || state.getMaterial().isReplaceable();
     }
@@ -172,13 +180,13 @@ public class FlaxBlock extends CropsBlock {
 
     //for bonemeal
     @Override
-    public boolean isValidBonemealTarget(IBlockReader worldIn, BlockPos pos, BlockState state, boolean isClient) {
+    public boolean isValidBonemealTarget(BlockGetter worldIn, BlockPos pos, BlockState state, boolean isClient) {
         return state.getValue(HALF)==DoubleBlockHalf.LOWER&&(!this.isMaxAge(state) && (this.canGrowUp(worldIn,pos)||this.getAge(state)<DOUBLE_AGE-1));
     }
 
     //here I'm assuming canGrow has already been called
     @Override
-    public void growCrops(World worldIn, BlockPos pos, BlockState state) {
+    public void growCrops(Level worldIn, BlockPos pos, BlockState state) {
         int newAge = this.getAge(state) + this.getBonemealAgeIncrease(worldIn);
         newAge = Math.min(newAge, this.getMaxAge());
         if (newAge >= DOUBLE_AGE) {
@@ -189,7 +197,7 @@ public class FlaxBlock extends CropsBlock {
     }
 
     @Override
-    public ItemStack getCloneItemStack(IBlockReader worldIn, BlockPos pos, BlockState state) {
+    public ItemStack getCloneItemStack(BlockGetter worldIn, BlockPos pos, BlockState state) {
         return new ItemStack(this.asItem());
     }
 }

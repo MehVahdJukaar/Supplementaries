@@ -1,12 +1,14 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class FlintBlock extends Block {
     public FlintBlock(Properties properties) {
@@ -14,7 +16,7 @@ public class FlintBlock extends Block {
     }
 
     @Override
-    public void stepOn(World world, BlockPos pos, Entity entity) {
+    public void stepOn(Level world, BlockPos pos, Entity entity) {
 
         //TODO: add this functionality
         /*
@@ -35,7 +37,7 @@ public class FlintBlock extends Block {
 
     //TODO: figure out piston fire interaction
 
-    public void onMagnetMoved(World world, BlockPos blockPos, Direction direction, BlockState blockState, TileEntity tileEntity) {
+    public void onMagnetMoved(Level world, BlockPos blockPos, Direction direction, BlockState blockState, BlockEntity tileEntity) {
         int a = 1;
     }
 

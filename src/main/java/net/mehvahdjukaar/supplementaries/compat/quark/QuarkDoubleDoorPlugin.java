@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.compat.quark;
 
 import net.mehvahdjukaar.supplementaries.block.tiles.KeyLockableTile;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.block.DoorBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.state.properties.DoorHingeSide;
@@ -9,13 +9,13 @@ import net.minecraft.state.properties.DoubleBlockHalf;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.content.tweaks.module.DoubleDoorOpeningModule;
 
 public class QuarkDoubleDoorPlugin {
-    public static void openDoor(World world, BlockState state, BlockPos pos) {
+    public static void openDoor(Level world, BlockState state, BlockPos pos) {
 
         if (ModuleLoader.INSTANCE.isModuleEnabled(DoubleDoorOpeningModule.class)) {
             Direction direction = state.getValue(DoorBlock.FACING);

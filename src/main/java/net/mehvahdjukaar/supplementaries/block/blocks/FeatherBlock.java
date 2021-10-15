@@ -1,21 +1,28 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
 import net.minecraft.util.math.shapes.*;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 
 import java.util.Random;
 import java.util.TreeMap;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.EntityCollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class FeatherBlock extends Block {
 
@@ -26,15 +33,15 @@ public class FeatherBlock extends Block {
 
         float i = 0.0015f;
         //adds an extra lower one for lower key access
-        put(y - i, VoxelShapes.box(0, 0, 0, 1, y, 1));
+        put(y - i, Shapes.box(0, 0, 0, 1, y, 1));
 
         while (y < 1) {
-            put(y, VoxelShapes.box(0, 0, 0, 1, y, 1));
+            put(y, Shapes.box(0, 0, 0, 1, y, 1));
             i *= 1.131;
             y += i;
         }
-        put(1f, VoxelShapes.block());
-        put(0f, VoxelShapes.block());
+        put(1f, Shapes.block());
+        put(0f, Shapes.block());
 
     }};
 
@@ -45,17 +52,17 @@ public class FeatherBlock extends Block {
 
 
     @Override
-    public void fallOn(World world, BlockPos pos, Entity entity, float height) {
+    public void fallOn(Level world, BlockPos pos, Entity entity, float height) {
         if (!world.isClientSide) {
             if (height > 2) {
                 //TODO: sound here
-                world.playSound(null, pos, SoundEvents.WOOL_FALL, SoundCategory.BLOCKS, 1F, 0.9F);
+                world.playSound(null, pos, SoundEvents.WOOL_FALL, SoundSource.BLOCKS, 1F, 0.9F);
 
             }
         } else {
             for (int i = 0; i < Math.min(6, height * 0.8); i++) {
                 Random random = world.getRandom();
-                double dy = MathHelper.clamp((0.03 * height / 7f), 0.03, 0.055);
+                double dy = Mth.clamp((0.03 * height / 7f), 0.03, 0.055);
                 world.addParticle(ModRegistry.FEATHER_PARTICLE.get(), entity.getX() + r(random, 0.35),
                         entity.getY(), entity.getZ() + r(random, 0.35), r(random, 0.007), dy, r(random, 0.007));
             }
@@ -63,7 +70,7 @@ public class FeatherBlock extends Block {
     }
 
     @Override
-    public void updateEntityAfterFallOn(IBlockReader reader, Entity entity) {
+    public void updateEntityAfterFallOn(BlockGetter reader, Entity entity) {
     }
 
 
@@ -72,11 +79,11 @@ public class FeatherBlock extends Block {
     private boolean isColliding(Entity e, BlockPos pos) {
         if (e == null) return false;
         VoxelShape voxelshape = COLLISION_CHECK_SHAPE.move(pos.getX(), pos.getY(), pos.getZ());
-        return VoxelShapes.joinIsNotEmpty(voxelshape, VoxelShapes.create(e.getBoundingBox()), IBooleanFunction.AND);
+        return Shapes.joinIsNotEmpty(voxelshape, Shapes.create(e.getBoundingBox()), BooleanOp.AND);
     }
 
     @Override
-    public void entityInside(BlockState state, World level, BlockPos blockPos, Entity entity) {
+    public void entityInside(BlockState state, Level level, BlockPos blockPos, Entity entity) {
         if (level.isClientSide) {
             if (!(entity instanceof LivingEntity) || ((LivingEntity) entity).getFeetBlockState().is(this)) {
 
@@ -101,9 +108,9 @@ public class FeatherBlock extends Block {
     }
 
     @Override
-    public VoxelShape getCollisionShape(BlockState blockState, IBlockReader blockGetter, BlockPos blockPos, ISelectionContext collisionContext) {
-        if (collisionContext instanceof EntitySelectionContext) {
-            EntitySelectionContext entityCollisionContext = (EntitySelectionContext) collisionContext;
+    public VoxelShape getCollisionShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
+        if (collisionContext instanceof EntityCollisionContext) {
+            EntityCollisionContext entityCollisionContext = (EntityCollisionContext) collisionContext;
             Entity entity = entityCollisionContext.getEntity();
             if (entity instanceof LivingEntity) {
 
@@ -118,7 +125,7 @@ public class FeatherBlock extends Block {
             }
         }
 
-        return VoxelShapes.block();
+        return Shapes.block();
     }
 
 

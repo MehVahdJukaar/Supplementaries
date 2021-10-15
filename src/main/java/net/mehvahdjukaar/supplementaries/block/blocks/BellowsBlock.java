@@ -2,32 +2,34 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import it.unimi.dsi.fastutil.floats.Float2ObjectAVLTreeMap;
 import net.mehvahdjukaar.supplementaries.block.tiles.BellowsBlockTile;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.pathfinding.PathType;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 
-public class BellowsBlock extends Block {
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import org.jetbrains.annotations.Nullable;
 
-    private static final VoxelShape DEFAULT_SHAPE = VoxelShapes.create(VoxelShapes.block().bounds().inflate(0.1f));
+public class BellowsBlock extends Block implements EntityBlock {
+
+    private static final VoxelShape DEFAULT_SHAPE = Shapes.create(Shapes.block().bounds().inflate(0.1f));
     private static final Float2ObjectAVLTreeMap<VoxelShape> SHAPES_Y_CACHE = new Float2ObjectAVLTreeMap<>();
     private static final Float2ObjectAVLTreeMap<VoxelShape> SHAPES_X_Z_CACHE = new Float2ObjectAVLTreeMap<>();
 
@@ -40,13 +42,13 @@ public class BellowsBlock extends Block {
     }
 
     @Override
-    public boolean isPathfindable(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
+    public boolean isPathfindable(BlockState state, BlockGetter worldIn, BlockPos pos, PathComputationType type) {
         return false;
     }
 
     @Override
-    public BlockRenderType getRenderShape(BlockState state) {
-        return BlockRenderType.ENTITYBLOCK_ANIMATED;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.ENTITYBLOCK_ANIMATED;
     }
 
     @Override
@@ -55,9 +57,9 @@ public class BellowsBlock extends Block {
     }
 
     @Override
-    public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 
-        TileEntity te = worldIn.getBlockEntity(pos);
+        BlockEntity te = worldIn.getBlockEntity(pos);
         if(te instanceof BellowsBlockTile){
             float height = ((BellowsBlockTile) te).height;
             //3 digit
@@ -69,29 +71,29 @@ public class BellowsBlock extends Block {
                 return SHAPES_X_Z_CACHE.computeIfAbsent(height, BellowsBlock::createVoxelShapeXZ);
             }
         }
-        return VoxelShapes.block();
+        return Shapes.block();
     }
 
     public static VoxelShape createVoxelShapeY(float height) {
-        return VoxelShapes.box(0, 0, -height, 1, 1, 1 + height);
+        return Shapes.box(0, 0, -height, 1, 1, 1 + height);
     }
 
     public static VoxelShape createVoxelShapeXZ(float height) {
-        return VoxelShapes.box(0, -height, 0, 1, 1 + height, 1);
+        return Shapes.box(0, -height, 0, 1, 1 + height, 1);
     }
 
     @Override
-    public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
+    public boolean propagatesSkylightDown(BlockState state, BlockGetter reader, BlockPos pos) {
         return true;
     }
 
     @Override
-    public VoxelShape getOcclusionShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
-        return VoxelShapes.block();
+    public VoxelShape getOcclusionShape(BlockState state, BlockGetter worldIn, BlockPos pos) {
+        return Shapes.block();
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING, POWER);
     }
 
@@ -106,16 +108,16 @@ public class BellowsBlock extends Block {
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
         return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
     }
 
     @Override
-    public void setPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+    public void setPlacedBy(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         this.updatePower(state, world, pos);
     }
 
-    public void updatePower(BlockState state, World world, BlockPos pos) {
+    public void updatePower(BlockState state, Level world, BlockPos pos) {
         int newpower = world.getBestNeighborSignal(pos);
         int currentpower = state.getValue(POWER);
         // on-off
@@ -126,32 +128,33 @@ public class BellowsBlock extends Block {
     }
 
     @Override
-    public void neighborChanged(BlockState state, World world, BlockPos pos, Block neighborBlock, BlockPos fromPos, boolean moving) {
+    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block neighborBlock, BlockPos fromPos, boolean moving) {
         super.neighborChanged(state, world, pos, neighborBlock, fromPos, moving);
         this.updatePower(state, world, pos);
     }
 
-
+    @Nullable
     @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
-
-    @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return new BellowsBlockTile();
     }
 
+    @Nullable
     @Override
-    public void entityInside(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
+        return EntityBlock.super.getTicker(pLevel, pState, pBlockEntityType);
+    }
+
+    @Override
+    public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
         super.entityInside(state, worldIn, pos, entityIn);
-        TileEntity te = worldIn.getBlockEntity(pos);
+        BlockEntity te = worldIn.getBlockEntity(pos);
         if(te instanceof BellowsBlockTile)((BellowsBlockTile) te).onSteppedOn(entityIn);
     }
 
     @Override
-    public void stepOn(World worldIn, BlockPos pos, Entity entityIn) {
-        TileEntity te = worldIn.getBlockEntity(pos);
+    public void stepOn(Level worldIn, BlockPos pos, Entity entityIn) {
+        BlockEntity te = worldIn.getBlockEntity(pos);
         if(te instanceof BellowsBlockTile)((BellowsBlockTile) te).onSteppedOn(entityIn);
     }
 }

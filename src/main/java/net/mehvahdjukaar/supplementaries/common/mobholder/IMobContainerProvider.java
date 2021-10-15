@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.mobholder;
 
 
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
 
 public interface IMobContainerProvider {
     MobContainer getMobContainer();

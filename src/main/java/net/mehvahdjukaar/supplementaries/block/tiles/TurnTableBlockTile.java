@@ -6,28 +6,28 @@ import net.mehvahdjukaar.supplementaries.block.blocks.SignPostBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.TurnTableBlock;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.BedBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.state.properties.ChestType;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.Rotation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.BedBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.ChestType;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 
 
 //TODO: improve this
-public class TurnTableBlockTile extends TileEntity implements ITickableTileEntity {
+public class TurnTableBlockTile extends BlockEntity implements TickableBlockEntity {
     private int cooldown = 5;
     private boolean canRotate = false;
     // private long tickedGameTime;
@@ -93,7 +93,7 @@ public class TurnTableBlockTile extends TileEntity implements ITickableTileEntit
                 BlockState updatedState = Block.updateFromNeighbourShapes(newState, level, pos);
                 level.setBlock(pos, updatedState, 3);
                 level.updateNeighborsAtExceptFromFacing(pos, newState.getBlock(), mydir.getOpposite());
-                this.level.playSound(null, this.getBlockPos(), SoundEvents.ITEM_FRAME_ROTATE_ITEM, SoundCategory.BLOCKS, 1.0F, 0.6F);
+                this.level.playSound(null, this.getBlockPos(), SoundEvents.ITEM_FRAME_ROTATE_ITEM, SoundSource.BLOCKS, 1.0F, 0.6F);
             }
             return true;
             //TODO: this makes block instantly rotate when condition becomes true
@@ -101,8 +101,8 @@ public class TurnTableBlockTile extends TileEntity implements ITickableTileEntit
         return false;
     }
 
-    public Vector3d toVector3d(Direction dir) {
-        return new Vector3d((float) dir.getStepX(), (float) dir.getStepY(), (float) dir.getStepZ());
+    public Vec3 toVector3d(Direction dir) {
+        return new Vec3((float) dir.getStepX(), (float) dir.getStepY(), (float) dir.getStepZ());
     }
 
 
@@ -110,7 +110,7 @@ public class TurnTableBlockTile extends TileEntity implements ITickableTileEntit
     public boolean handleRotation() {
         BlockState state = this.getBlockState();
 
-        World world = this.level;
+        Level world = this.level;
         BlockPos mypos = this.worldPosition;
         Direction mydir = state.getValue(BlockStateProperties.FACING);
         BlockPos targetpos = mypos.relative(mydir);
@@ -133,13 +133,13 @@ public class TurnTableBlockTile extends TileEntity implements ITickableTileEntit
             }
             // 6 dir blocks blocks
             else if (targetState.hasProperty(BlockStateProperties.FACING)) {
-                Vector3d targetvec = toVector3d(targetState.getValue(BlockStateProperties.FACING));
-                Vector3d myvec = toVector3d(mydir);
+                Vec3 targetvec = toVector3d(targetState.getValue(BlockStateProperties.FACING));
+                Vec3 myvec = toVector3d(mydir);
                 if (!ccw)
                     targetvec.multiply(-1, -1, -1);
                 // hacky I know..
                 myvec = myvec.cross(targetvec);
-                if (myvec.equals(new Vector3d(0, 0, 0))) {
+                if (myvec.equals(new Vec3(0, 0, 0))) {
                     // same axis, can't rotate
                     return false;
                 }
@@ -172,14 +172,14 @@ public class TurnTableBlockTile extends TileEntity implements ITickableTileEntit
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT compound) {
+    public void load(BlockState state, CompoundTag compound) {
         super.load(state, compound);
         this.cooldown = compound.getInt("Cooldown");
         this.canRotate = compound.getBoolean("CanRotate");
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
+    public CompoundTag save(CompoundTag compound) {
         super.save(compound);
         compound.putInt("Cooldown", this.cooldown);
         compound.putBoolean("CanRotate", this.canRotate);
@@ -187,17 +187,17 @@ public class TurnTableBlockTile extends TileEntity implements ITickableTileEntit
     }
 
     @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.worldPosition, 0, this.getUpdateTag());
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return new ClientboundBlockEntityDataPacket(this.worldPosition, 0, this.getUpdateTag());
     }
 
     @Override
-    public CompoundNBT getUpdateTag() {
-        return this.save(new CompoundNBT());
+    public CompoundTag getUpdateTag() {
+        return this.save(new CompoundTag());
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         this.load(this.getBlockState(), pkt.getTag());
     }
 }

@@ -1,13 +1,13 @@
 package net.mehvahdjukaar.supplementaries.network;
 
 import net.mehvahdjukaar.supplementaries.block.tiles.BlackboardBlockTile;
-import net.minecraft.block.BlockState;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.Objects;
@@ -17,7 +17,7 @@ public class UpdateServerBlackboardPacket {
     private final BlockPos pos;
     private final byte[][] pixels;
 
-    public UpdateServerBlackboardPacket(PacketBuffer buf) {
+    public UpdateServerBlackboardPacket(FriendlyByteBuf buf) {
         this.pos = buf.readBlockPos();
         this.pixels = new byte[16][16];
         for(int i = 0; i<this.pixels.length; i++) {
@@ -31,7 +31,7 @@ public class UpdateServerBlackboardPacket {
         this.pixels = pixels;
     }
 
-    public static void buffer(UpdateServerBlackboardPacket message, PacketBuffer buf) {
+    public static void buffer(UpdateServerBlackboardPacket message, FriendlyByteBuf buf) {
         buf.writeBlockPos(message.pos);
         for(int i = 0; i<message.pixels.length; i++) {
             buf.writeByteArray(message.pixels[i]);
@@ -40,14 +40,14 @@ public class UpdateServerBlackboardPacket {
 
     public static void handler(UpdateServerBlackboardPacket message, Supplier<NetworkEvent.Context> ctx) {
         // server world
-        World world = Objects.requireNonNull(ctx.get().getSender()).level;
+        Level world = Objects.requireNonNull(ctx.get().getSender()).level;
         ctx.get().enqueueWork(() -> {
             if (world != null) {
                 BlockPos pos = message.pos;
-                TileEntity tileentity = world.getBlockEntity(pos);
+                BlockEntity tileentity = world.getBlockEntity(pos);
                 if (tileentity instanceof BlackboardBlockTile) {
                     BlackboardBlockTile board = (BlackboardBlockTile) tileentity;
-                    world.playSound(null,message.pos, SoundEvents.VILLAGER_WORK_CARTOGRAPHER, SoundCategory.BLOCKS,1,0.8f);
+                    world.playSound(null,message.pos, SoundEvents.VILLAGER_WORK_CARTOGRAPHER, SoundSource.BLOCKS,1,0.8f);
                     board.pixels = message.pixels;
                     //updates client
                     BlockState state =  world.getBlockState(pos);

@@ -1,15 +1,15 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.common.ModTags;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.ShulkerBoxTileEntity;
-import net.minecraft.util.Direction;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
+import net.minecraft.core.Direction;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(ShulkerBoxTileEntity.class)
+@Mixin(ShulkerBoxBlockEntity.class)
 public abstract class ShulkerBoxTileEntityMixin {
 
 

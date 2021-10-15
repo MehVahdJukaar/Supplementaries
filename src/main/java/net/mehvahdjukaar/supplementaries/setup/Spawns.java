@@ -4,12 +4,12 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.entities.FireflyEntity;
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntitySpawnPlacementRegistry;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.MobSpawnInfo;
-import net.minecraft.world.gen.Heightmap;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.MobSpawnSettings;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -35,7 +35,7 @@ public class Spawns {
                         int min = ServerConfigs.spawn.FIREFLY_MIN.get();
                         int max = Math.max(min,ServerConfigs.spawn.FIREFLY_MAX.get());
 
-                        event.getSpawns().getSpawner(EntityClassification.AMBIENT).add(new MobSpawnInfo.Spawners(
+                        event.getSpawns().getSpawner(MobCategory.AMBIENT).add(new MobSpawnSettings.SpawnerData(
                                 ModRegistry.FIREFLY_TYPE.get(), ServerConfigs.spawn.FIREFLY_WEIGHT.get(),
                                 min,max));
                     }
@@ -48,8 +48,8 @@ public class Spawns {
     public static void registerSpawningStuff(){
 
         if(RegistryConfigs.reg.FIREFLY_ENABLED.get()) {
-            EntitySpawnPlacementRegistry.register(ModRegistry.FIREFLY_TYPE.get(), EntitySpawnPlacementRegistry.PlacementType.NO_RESTRICTIONS,
-                    Heightmap.Type.MOTION_BLOCKING, FireflyEntity::canSpawnOn);
+            SpawnPlacements.register(ModRegistry.FIREFLY_TYPE.get(), SpawnPlacements.Type.NO_RESTRICTIONS,
+                    Heightmap.Types.MOTION_BLOCKING, FireflyEntity::canSpawnOn);
         }
     }
 

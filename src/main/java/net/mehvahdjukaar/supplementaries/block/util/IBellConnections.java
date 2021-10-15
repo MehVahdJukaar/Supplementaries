@@ -1,13 +1,13 @@
 package net.mehvahdjukaar.supplementaries.block.util;
 
-import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.StringRepresentable;
 
 public interface IBellConnections {
 
     BellConnection getConnected();
     void setConnected(BellConnection connected);
 
-    enum BellConnection implements IStringSerializable {
+    enum BellConnection implements StringRepresentable {
         NONE,CHAIN,ROPE;
         public boolean isRope(){
             return this==ROPE;

@@ -3,9 +3,9 @@ package net.mehvahdjukaar.supplementaries.world.data.map.markers;
 import net.mehvahdjukaar.selene.map.CustomDecoration;
 import net.mehvahdjukaar.selene.map.markers.MapWorldMarker;
 import net.mehvahdjukaar.supplementaries.world.data.map.CMDreg;
-import net.minecraft.block.Blocks;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
 
 import javax.annotation.Nullable;
 
@@ -21,7 +21,7 @@ public class LodestoneMarker extends MapWorldMarker<CustomDecoration> {
     }
 
     @Nullable
-    public static LodestoneMarker getFromWorld(IBlockReader world, BlockPos pos){
+    public static LodestoneMarker getFromWorld(BlockGetter world, BlockPos pos){
         if(world.getBlockState(pos).is(Blocks.LODESTONE)){
             return new LodestoneMarker(pos);
         } else {

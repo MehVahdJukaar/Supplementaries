@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.block.blocks.PedestalBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.PedestalBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
@@ -8,28 +8,28 @@ import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.core.Direction;
+import com.mojang.math.Matrix4f;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
+import net.minecraft.network.chat.Component;
 
 
-public class PedestalBlockTileRenderer extends TileEntityRenderer<PedestalBlockTile> {
+public class PedestalBlockTileRenderer extends BlockEntityRenderer<PedestalBlockTile> {
     private final Minecraft minecraft = Minecraft.getInstance();
     private final ItemRenderer itemRenderer;
-    private final EntityRendererManager entityRenderer;
+    private final EntityRenderDispatcher entityRenderer;
 
-    public PedestalBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
+    public PedestalBlockTileRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
         ;
         itemRenderer = minecraft.getItemRenderer();
@@ -44,12 +44,12 @@ public class PedestalBlockTileRenderer extends TileEntityRenderer<PedestalBlockT
         return false;
     }
 
-    protected void renderName(ITextComponent displayNameIn, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
+    protected void renderName(Component displayNameIn, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
 
         double f = 0.875; //height
         int i = 0;
 
-        FontRenderer fontrenderer = this.renderer.getFont();
+        Font fontrenderer = this.renderer.getFont();
 
         matrixStackIn.pushPose();
 
@@ -69,7 +69,7 @@ public class PedestalBlockTileRenderer extends TileEntityRenderer<PedestalBlockT
 
 
     @Override
-    public void render(PedestalBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
+    public void render(PedestalBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
 
         if (!tile.isEmpty()) {
@@ -78,7 +78,7 @@ public class PedestalBlockTileRenderer extends TileEntityRenderer<PedestalBlockT
             matrixStackIn.translate(0.5, 1.125, 0.5);
 
             if (this.canRenderName(tile)) {
-                ITextComponent name = tile.getItem(0).getHoverName();
+                Component name = tile.getItem(0).getHoverName();
                 int i = "Dinnerbone".equals(name.getString()) ? -1 : 1;
                 matrixStackIn.scale(i, i, 1);
                 this.renderName(name, matrixStackIn, bufferIn, combinedLightIn);
@@ -91,7 +91,7 @@ public class PedestalBlockTileRenderer extends TileEntityRenderer<PedestalBlockT
             }
 
 
-            ItemCameraTransforms.TransformType transform = ItemCameraTransforms.TransformType.FIXED;
+            ItemTransforms.TransformType transform = ItemTransforms.TransformType.FIXED;
             boolean fancy = ClientConfigs.cached.PEDESTAL_SPECIAL;
             if (tile.type == PedestalBlockTile.DisplayType.SWORD && fancy) {
                 //sword

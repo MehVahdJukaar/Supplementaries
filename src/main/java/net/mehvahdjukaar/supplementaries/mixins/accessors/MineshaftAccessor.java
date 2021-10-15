@@ -1,9 +1,9 @@
 package net.mehvahdjukaar.supplementaries.mixins.accessors;
 
 
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.BlockGetter;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
@@ -17,6 +17,6 @@ public interface MineshaftAccessor {
     BlockState callGetFenceBlock();
 
     @Invoker("isSupportingBox")
-    boolean callIsSupportingBox(IBlockReader reader, MutableBoundingBox boundingBox, int minX, int maxX, int y, int z);
+    boolean callIsSupportingBox(BlockGetter reader, BoundingBox boundingBox, int minX, int maxX, int y, int z);
 }
 

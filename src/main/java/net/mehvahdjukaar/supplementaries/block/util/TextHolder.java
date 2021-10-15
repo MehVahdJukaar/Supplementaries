@@ -1,10 +1,10 @@
 package net.mehvahdjukaar.supplementaries.block.util;
 
-import net.minecraft.item.DyeColor;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.IReorderingProcessor;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 
 import javax.annotation.Nullable;
 import java.util.function.Function;
@@ -13,29 +13,29 @@ public class TextHolder {
 
     public final int size;
     //text
-    public final ITextComponent[] signText;
+    public final Component[] signText;
     //text that gets rendered
-    private final IReorderingProcessor[] renderText;
+    private final FormattedCharSequence[] renderText;
     public DyeColor textColor = DyeColor.BLACK;
 
 
     public TextHolder(int size){
         this.size = size;
-        this.renderText = new IReorderingProcessor[size];
-        this.signText = new ITextComponent[size];
+        this.renderText = new FormattedCharSequence[size];
+        this.signText = new Component[size];
         for(int i = 0; i< size; i++){
-            this.signText[i]= new StringTextComponent("");
+            this.signText[i]= new TextComponent("");
         }
     }
 
     //removing command source crap
-    public void read(CompoundNBT compound) {
+    public void read(CompoundTag compound) {
         if(compound.contains("TextHolder")) {
-            CompoundNBT com = compound.getCompound("TextHolder");
+            CompoundTag com = compound.getCompound("TextHolder");
             this.textColor = DyeColor.byName(com.getString("Color"), DyeColor.BLACK);
             for (int i = 0; i < this.size; ++i) {
                 String s = com.getString("Text" + (i + 1));
-                ITextComponent itextcomponent = ITextComponent.Serializer.fromJson(s.isEmpty() ? "\"\"" : s);
+                Component itextcomponent = Component.Serializer.fromJson(s.isEmpty() ? "\"\"" : s);
                 this.signText[i] = itextcomponent;
                 this.renderText[i] = null;
             }
@@ -48,18 +48,18 @@ public class TextHolder {
         for(int i = 0; i < 2; ++i) {
             if(compound.contains("Text" + (i + 1))) {
                 String s = compound.getString("Text" + (i + 1));
-                ITextComponent itextcomponent = ITextComponent.Serializer.fromJson(s.isEmpty() ? "\"\"" : s);
+                Component itextcomponent = Component.Serializer.fromJson(s.isEmpty() ? "\"\"" : s);
                 this.signText[i] = itextcomponent;
             }
         }
 
     }
 
-    public CompoundNBT write(CompoundNBT compound) {
-        CompoundNBT com = new CompoundNBT();
+    public CompoundTag write(CompoundTag compound) {
+        CompoundTag com = new CompoundTag();
         com.putString("Color", this.textColor.getName());
         for (int i = 0; i < this.size; ++i) {
-            String s = ITextComponent.Serializer.toJson(this.signText[i]);
+            String s = Component.Serializer.toJson(this.signText[i]);
             com.putString("Text" + (i + 1), s);
         }
         compound.put("TextHolder", com);
@@ -68,17 +68,17 @@ public class TextHolder {
 
     //remove these for direct access?
 
-    public ITextComponent getText(int line) {
+    public Component getText(int line) {
         return this.signText[line];
     }
 
-    public void setText(int line, ITextComponent text) {
+    public void setText(int line, Component text) {
         this.signText[line] = text;
         this.renderText[line] = null;
     }
 
     @Nullable
-    public IReorderingProcessor getRenderText(int line, Function<ITextComponent, IReorderingProcessor> f) {
+    public FormattedCharSequence getRenderText(int line, Function<Component, FormattedCharSequence> f) {
         if (this.renderText[line] == null && this.signText[line] != null) {
             this.renderText[line] = f.apply(this.signText[line]);
         }

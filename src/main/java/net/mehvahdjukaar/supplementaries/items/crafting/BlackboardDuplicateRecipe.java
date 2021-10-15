@@ -1,29 +1,29 @@
 package net.mehvahdjukaar.supplementaries.items.crafting;
 
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.SpecialRecipe;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.CustomRecipe;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 
-public class BlackboardDuplicateRecipe extends SpecialRecipe {
+public class BlackboardDuplicateRecipe extends CustomRecipe {
     public BlackboardDuplicateRecipe(ResourceLocation idIn) {
         super(idIn);
     }
 
     private boolean isDrawnBlackboard(ItemStack stack){
-        CompoundNBT compoundnbt = stack.getTagElement("BlockEntityTag");
+        CompoundTag compoundnbt = stack.getTagElement("BlockEntityTag");
         return compoundnbt != null && compoundnbt.contains("Pixels");
 
     }
 
     @Override
-    public boolean matches(CraftingInventory inv, World worldIn) {
+    public boolean matches(CraftingContainer inv, Level worldIn) {
 
         ItemStack itemstack = null;
         ItemStack itemstack1 = null;
@@ -53,7 +53,7 @@ public class BlackboardDuplicateRecipe extends SpecialRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingInventory inv) {
+    public ItemStack assemble(CraftingContainer inv) {
         for(int i = 0; i < inv.getContainerSize(); ++i) {
             ItemStack stack = inv.getItem(i);
             if(isDrawnBlackboard(stack)){
@@ -66,7 +66,7 @@ public class BlackboardDuplicateRecipe extends SpecialRecipe {
     }
 
     @Override
-    public NonNullList<ItemStack> getRemainingItems(CraftingInventory inv) {
+    public NonNullList<ItemStack> getRemainingItems(CraftingContainer inv) {
         NonNullList<ItemStack> nonnulllist = NonNullList.withSize(inv.getContainerSize(), ItemStack.EMPTY);
 
         for(int i = 0; i < nonnulllist.size(); ++i) {
@@ -90,7 +90,7 @@ public class BlackboardDuplicateRecipe extends SpecialRecipe {
     }
 
     @Override
-    public IRecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<?> getSerializer() {
         return ModRegistry.BLACKBOARD_DUPLICATE_RECIPE.get();
     }
 

@@ -5,18 +5,18 @@ import net.mehvahdjukaar.supplementaries.block.util.IBlockHolder;
 import net.mehvahdjukaar.supplementaries.block.util.ITextHolder;
 import net.mehvahdjukaar.supplementaries.block.util.TextHolder;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.AABB;
 
 
-public class FenceSignBlockTile extends TileEntity implements ITextHolder, IBlockHolder {
+public class FenceSignBlockTile extends BlockEntity implements ITextHolder, IBlockHolder {
 
     public TextHolder textHolder;
 
@@ -46,45 +46,45 @@ public class FenceSignBlockTile extends TileEntity implements ITextHolder, IBloc
     public TextHolder getTextHolder(){ return this.textHolder; }
 
     @Override
-    public AxisAlignedBB getRenderBoundingBox(){
-        return new AxisAlignedBB(this.getBlockPos().offset(-0.25,0,-0.25), this.getBlockPos().offset(1.25,1,1.25));
+    public AABB getRenderBoundingBox(){
+        return new AABB(this.getBlockPos().offset(-0.25,0,-0.25), this.getBlockPos().offset(1.25,1,1.25));
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT compound) {
+    public void load(BlockState state, CompoundTag compound) {
         super.load(state, compound);
 
         this.textHolder.read(compound);
-        this.fenceBlock = NBTUtil.readBlockState(compound.getCompound("Fence"));
-        this.signBlock = NBTUtil.readBlockState(compound.getCompound("Sign"));
+        this.fenceBlock = NbtUtils.readBlockState(compound.getCompound("Fence"));
+        this.signBlock = NbtUtils.readBlockState(compound.getCompound("Sign"));
         this.signFacing = Direction.from3DDataValue(compound.getInt("Facing"));
 
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
+    public CompoundTag save(CompoundTag compound) {
         super.save(compound);
 
         this.textHolder.write(compound);
-        compound.put("Fence", NBTUtil.writeBlockState(fenceBlock));
-        compound.put("Sign", NBTUtil.writeBlockState(signBlock));
+        compound.put("Fence", NbtUtils.writeBlockState(fenceBlock));
+        compound.put("Sign", NbtUtils.writeBlockState(signBlock));
         compound.putInt("Facing", this.signFacing.get3DDataValue());
 
         return compound;
     }
 
     @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.worldPosition, 0, this.getUpdateTag());
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return new ClientboundBlockEntityDataPacket(this.worldPosition, 0, this.getUpdateTag());
     }
 
     @Override
-    public CompoundNBT getUpdateTag() {
-        return this.save(new CompoundNBT());
+    public CompoundTag getUpdateTag() {
+        return this.save(new CompoundTag());
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         this.load(this.getBlockState(), pkt.getTag());
     }
 }

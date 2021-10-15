@@ -6,19 +6,21 @@ import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class TintedJarItem extends JarItem {
     public TintedJarItem(Block blockIn, Properties properties) {
@@ -46,11 +48,11 @@ public class TintedJarItem extends JarItem {
 
     //soul catching
     @Override
-    public ActionResultType useOn(ItemUseContext context) {
-        World world = context.getLevel();
+    public InteractionResult useOn(UseOnContext context) {
+        Level world = context.getLevel();
 
         BlockPos pos = context.getClickedPos();
-        PlayerEntity player = context.getPlayer();
+        Player player = context.getPlayer();
         if (player.isOnGround() && EnchantmentHelper.hasSoulSpeed(player) && world.getBlockState(pos).is(BlockTags.SOUL_SPEED_BLOCKS)) {
 
             BlockPos p = new BlockPos(player.getX(), player.getBoundingBox().minY - 0.5000001D, player.getZ());
@@ -60,12 +62,12 @@ public class TintedJarItem extends JarItem {
                 if (!world.isClientSide) {
                     Utils.swapItem(player, context.getHand(), context.getItemInHand(), new ItemStack(ModRegistry.SOUL_JAR_ITEM.get()));
                     //TODO: sound here
-                    player.level.playSound(null, player.blockPosition(), SoundEvents.BOTTLE_FILL_DRAGONBREATH, SoundCategory.BLOCKS, 1, 1);
-                    player.level.playSound(null, player.blockPosition(), SoundEvents.SOUL_SAND_BREAK, SoundCategory.BLOCKS, 1f, 1.3f);
-                    player.level.playSound(null, player.blockPosition(), SoundEvents.SOUL_ESCAPE, SoundCategory.BLOCKS, 0.8f, 1.5f);
-                    return ActionResultType.CONSUME;
+                    player.level.playSound(null, player.blockPosition(), SoundEvents.BOTTLE_FILL_DRAGONBREATH, SoundSource.BLOCKS, 1, 1);
+                    player.level.playSound(null, player.blockPosition(), SoundEvents.SOUL_SAND_BREAK, SoundSource.BLOCKS, 1f, 1.3f);
+                    player.level.playSound(null, player.blockPosition(), SoundEvents.SOUL_ESCAPE, SoundSource.BLOCKS, 0.8f, 1.5f);
+                    return InteractionResult.CONSUME;
                 }
-                return ActionResultType.SUCCESS;
+                return InteractionResult.SUCCESS;
             }
         }
         return super.useOn(context);

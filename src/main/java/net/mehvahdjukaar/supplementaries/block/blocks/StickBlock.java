@@ -6,48 +6,55 @@ import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.FlagBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.pathfinding.PathType;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import vazkii.quark.api.IRotationLockable;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
 public class StickBlock extends WaterBlock implements IRotationLockable{
     protected static final VoxelShape Y_AXIS_AABB = Block.box(7D, 0.0D, 7D, 9D, 16.0D, 9D);
     protected static final VoxelShape Z_AXIS_AABB = Block.box(7D, 7D, 0.0D, 9D, 9D, 16.0D);
     protected static final VoxelShape X_AXIS_AABB = Block.box(0.0D, 7D, 7D, 16.0D, 9D, 9D);
-    protected static final VoxelShape Y_Z_AXIS_AABB = VoxelShapes.or(Block.box(7D, 0.0D, 7D, 9D, 16.0D, 9D),
+    protected static final VoxelShape Y_Z_AXIS_AABB = Shapes.or(Block.box(7D, 0.0D, 7D, 9D, 16.0D, 9D),
             Block.box(7D, 7D, 0.0D, 9D, 9D, 16.0D));
-    protected static final VoxelShape Y_X_AXIS_AABB = VoxelShapes.or(Block.box(7D, 0.0D, 7D, 9D, 16.0D, 9D),
+    protected static final VoxelShape Y_X_AXIS_AABB = Shapes.or(Block.box(7D, 0.0D, 7D, 9D, 16.0D, 9D),
             Block.box(0.0D, 7D, 7D, 16.0D, 9D, 9D));
-    protected static final VoxelShape X_Z_AXIS_AABB = VoxelShapes.or(Block.box(7D, 7D, 0.0D, 9D, 9D, 16.0D),
+    protected static final VoxelShape X_Z_AXIS_AABB = Shapes.or(Block.box(7D, 7D, 0.0D, 9D, 9D, 16.0D),
             Block.box(0.0D, 7D, 7D, 16.0D, 9D, 9D));
-    protected static final VoxelShape X_Y_Z_AXIS_AABB = VoxelShapes.or(Block.box(7D, 7D, 0.0D, 9D, 9D, 16.0D),
+    protected static final VoxelShape X_Y_Z_AXIS_AABB = Shapes.or(Block.box(7D, 7D, 0.0D, 9D, 9D, 16.0D),
             Block.box(0.0D, 7D, 7D, 16.0D, 9D, 9D),
             Block.box(7D, 0.0D, 7D, 9D, 16.0D, 9D));
 
@@ -64,30 +71,30 @@ public class StickBlock extends WaterBlock implements IRotationLockable{
     }
 
     @Override
-    public int getFlammability(BlockState state, IBlockReader world, BlockPos pos, Direction face) {
+    public int getFlammability(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
         return 60;
     }
 
     @Override
-    public int getFireSpreadSpeed(BlockState state, IBlockReader world, BlockPos pos, Direction face) {
+    public int getFireSpreadSpeed(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
         return 60;
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        tooltip.add((new StringTextComponent("You shouldn't have this")).withStyle(TextFormatting.GRAY));
+        tooltip.add((new TextComponent("You shouldn't have this")).withStyle(ChatFormatting.GRAY));
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(AXIS_X,AXIS_Y,AXIS_Z);
     }
 
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter reader, BlockPos pos, CollisionContext context) {
         boolean x = state.getValue(AXIS_X);
         boolean y = state.getValue(AXIS_Y);
         boolean z = state.getValue(AXIS_Z);
@@ -107,7 +114,7 @@ public class StickBlock extends WaterBlock implements IRotationLockable{
     }
 
     @Nullable
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockState blockstate = context.getLevel().getBlockState(context.getClickedPos());
         BooleanProperty axis = AXIS2PROPERTY.get(context.getClickedFace().getAxis());
         if (blockstate.is(this)) {
@@ -118,7 +125,7 @@ public class StickBlock extends WaterBlock implements IRotationLockable{
     }
 
     @Override
-    public boolean canBeReplaced(BlockState state, BlockItemUseContext context) {
+    public boolean canBeReplaced(BlockState state, BlockPlaceContext context) {
         Item item = context.getItemInHand().getItem();
         if(item == Items.STICK || item == this.asItem()){
             BooleanProperty axis = AXIS2PROPERTY.get(context.getClickedFace().getAxis());
@@ -128,37 +135,37 @@ public class StickBlock extends WaterBlock implements IRotationLockable{
     }
 
     @Override
-    public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
+    public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
         return new ItemStack(Items.STICK);
     }
 
     @Override
-    public boolean isPathfindable(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
+    public boolean isPathfindable(BlockState state, BlockGetter worldIn, BlockPos pos, PathComputationType type) {
         return false;
     }
 
     @Override
-    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 
-        if (player.getItemInHand(hand).isEmpty() && hand == Hand.MAIN_HAND) {
+        if (player.getItemInHand(hand).isEmpty() && hand == InteractionHand.MAIN_HAND) {
             if (ServerConfigs.cached.STICK_POLE) {
-                if(world.isClientSide)return ActionResultType.SUCCESS;
+                if(world.isClientSide)return InteractionResult.SUCCESS;
                 else{
                     Direction moveDir = player.isShiftKeyDown()?Direction.DOWN:Direction.UP;
                     findConnectedFlag(world,pos,Direction.UP,moveDir,0);
                     findConnectedFlag(world,pos,Direction.DOWN,moveDir,0);
                 }
-                return ActionResultType.CONSUME;
+                return InteractionResult.CONSUME;
             }
         }
-        return ActionResultType.PASS;
+        return InteractionResult.PASS;
     }
 
     private static boolean isVertical(BlockState state){
         return state.getValue(AXIS_Y) && ! state.getValue(AXIS_X) && ! state.getValue(AXIS_Z);
     }
 
-    public static boolean findConnectedFlag(World world, BlockPos pos, Direction searchDir, Direction moveDir, int it){
+    public static boolean findConnectedFlag(Level world, BlockPos pos, Direction searchDir, Direction moveDir, int it){
         if(it > ServerConfigs.cached.STICK_POLE_LENGTH)return false;
         BlockState state = world.getBlockState(pos);
         Block b = state.getBlock();
@@ -169,7 +176,7 @@ public class StickBlock extends WaterBlock implements IRotationLockable{
             BlockPos toPos = pos.relative(moveDir);
             BlockState stick = world.getBlockState(toPos);
 
-            TileEntity tile = world.getBlockEntity(pos);
+            BlockEntity tile = world.getBlockEntity(pos);
             if(tile instanceof FlagBlockTile && stick.getBlock() == ModRegistry.STICK_BLOCK.get() && isVertical(stick)) {
 
                 world.setBlockAndUpdate(pos, stick);
@@ -178,13 +185,13 @@ public class StickBlock extends WaterBlock implements IRotationLockable{
                 tile.setRemoved();
                 if (tile != null) {
                     tile.setPosition(toPos);
-                    TileEntity target = TileEntity.loadStatic(state, tile.save(new CompoundNBT()));
+                    BlockEntity target = BlockEntity.loadStatic(state, tile.save(new CompoundTag()));
                     if (target != null) {
                         world.setBlockEntity(toPos, target);
                         target.clearCache();
                     }
                 }
-                world.playSound(null,toPos, SoundEvents.WOOL_PLACE,SoundCategory.BLOCKS, 1F, 1.4F);
+                world.playSound(null,toPos, SoundEvents.WOOL_PLACE,SoundSource.BLOCKS, 1F, 1.4F);
                 return true;
             }
         }
@@ -194,7 +201,7 @@ public class StickBlock extends WaterBlock implements IRotationLockable{
     //quark
     //TODO: improve for multiple sticks
     @Override
-    public BlockState applyRotationLock(World world, BlockPos blockPos, BlockState state, Direction dir, int half) {
+    public BlockState applyRotationLock(Level world, BlockPos blockPos, BlockState state, Direction dir, int half) {
         int i = 0;
         if(state.getValue(AXIS_X)) i++;
         if(state.getValue(AXIS_Y)) i++;

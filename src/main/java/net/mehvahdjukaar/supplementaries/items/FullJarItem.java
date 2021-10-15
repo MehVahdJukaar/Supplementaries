@@ -3,40 +3,47 @@ package net.mehvahdjukaar.supplementaries.items;
 import net.mehvahdjukaar.selene.fluids.SoftFluid;
 import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.selene.util.PotionNBTHelper;
-import net.minecraft.block.Block;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.NonNullList;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.NonNullList;
 import net.minecraft.util.text.*;
-import net.minecraft.world.World;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Supplier;
+
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.Item.Properties;
 
 public class FullJarItem extends FullCageItem {
     public FullJarItem(Block blockIn, Properties properties, Supplier<Item> empty) {
         super(blockIn, properties,empty);
     }
 
-    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        CompoundNBT compoundnbt = stack.getTagElement("BlockEntityTag");
+        CompoundTag compoundnbt = stack.getTagElement("BlockEntityTag");
         if (compoundnbt != null) {
             if (compoundnbt.contains("LootTable", 8)) {
-                tooltip.add(new StringTextComponent("???????").withStyle(TextFormatting.GRAY));
+                tooltip.add(new TextComponent("???????").withStyle(ChatFormatting.GRAY));
             }
 
             if(compoundnbt.contains("FluidHolder")) {
-                CompoundNBT com = compoundnbt.getCompound("FluidHolder");
+                CompoundTag com = compoundnbt.getCompound("FluidHolder");
                 SoftFluid s = SoftFluidRegistry.get(com.getString("Fluid"));
                 int count = com.getInt("Count");
                 if (!s.isEmpty() && count > 0) {
 
-                    CompoundNBT nbt = null;
+                    CompoundTag nbt = null;
                     String add = "";
                     if (com.contains("NBT")){
                         nbt = com.getCompound("NBT");
@@ -46,8 +53,8 @@ public class FullJarItem extends FullCageItem {
                         }
                     }
 
-                    tooltip.add(new TranslationTextComponent("message.supplementaries.fluid_tooltip",
-                            new TranslationTextComponent(s.getTranslationKey()+add), count).withStyle(TextFormatting.GRAY));
+                    tooltip.add(new TranslatableComponent("message.supplementaries.fluid_tooltip",
+                            new TranslatableComponent(s.getTranslationKey()+add), count).withStyle(ChatFormatting.GRAY));
                     if(nbt != null) {
                         PotionNBTHelper.addPotionTooltip(nbt, tooltip, 1);
                         return;
@@ -57,7 +64,7 @@ public class FullJarItem extends FullCageItem {
 
             if (compoundnbt.contains("Items", 9)) {
                 NonNullList<ItemStack> nonnulllist = NonNullList.withSize(27, ItemStack.EMPTY);
-                ItemStackHelper.loadAllItems(compoundnbt, nonnulllist);
+                ContainerHelper.loadAllItems(compoundnbt, nonnulllist);
                 int i = 0;
                 int j = 0;
 
@@ -66,21 +73,21 @@ public class FullJarItem extends FullCageItem {
                         ++j;
                         if (i <= 4) {
                             ++i;
-                            IFormattableTextComponent iformattabletextcomponent = itemstack.getHoverName().copy();
+                            MutableComponent iformattabletextcomponent = itemstack.getHoverName().copy();
 
                             String s = iformattabletextcomponent.getString();
                             s = s.replace(" Bucket", "");
                             s = s.replace(" Bottle", "");
                             s = s.replace("Bucket of ", "");
-                            IFormattableTextComponent str = new StringTextComponent(s);
+                            MutableComponent str = new TextComponent(s);
 
                             str.append(" x").append(String.valueOf(itemstack.getCount()));
-                            tooltip.add(str.withStyle(TextFormatting.GRAY));
+                            tooltip.add(str.withStyle(ChatFormatting.GRAY));
                         }
                     }
                 }
                 if (j - i > 0) {
-                    tooltip.add((new TranslationTextComponent("container.shulkerBox.more", j - i)).withStyle(TextFormatting.ITALIC).withStyle(TextFormatting.GRAY));
+                    tooltip.add((new TranslatableComponent("container.shulkerBox.more", j - i)).withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
                 }
             }
         }

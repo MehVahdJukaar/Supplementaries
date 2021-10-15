@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.datagen.types;
 
-import net.minecraft.block.material.MaterialColor;
+import net.minecraft.world.level.material.MaterialColor;
 
 public enum HabitatWoodType implements IWoodType {
     FAIRY_RING_MUSHROOM("fairy_ring_mushroom");

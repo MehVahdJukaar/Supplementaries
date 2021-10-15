@@ -2,10 +2,10 @@ package net.mehvahdjukaar.supplementaries.compat.farmersdelight;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.PlanterBlock;
 import net.minecraft.block.*;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootContext;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.ForgeHooks;
 import vectorwing.farmersdelight.blocks.MushroomColonyBlock;
 import vectorwing.farmersdelight.registry.ModBlocks;
@@ -16,6 +16,10 @@ import vectorwing.farmersdelight.utils.tags.ModTags;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class PlanterRichBlock extends PlanterBlock {
 
@@ -31,7 +35,7 @@ public class PlanterRichBlock extends PlanterBlock {
     }
 
     //fd stuff
-    public void randomTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
+    public void randomTick(BlockState state, ServerLevel worldIn, BlockPos pos, Random rand) {
         if (!worldIn.isClientSide) {
             BlockPos abovePos = pos.above();
             BlockState aboveState = worldIn.getBlockState(abovePos);

@@ -1,17 +1,17 @@
 package net.mehvahdjukaar.supplementaries.items;
 
 import net.mehvahdjukaar.supplementaries.entities.BombEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Rarity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.stats.Stats;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.level.Level;
 
 public class BombItem extends Item {
     private final boolean blue;
@@ -37,15 +37,15 @@ public class BombItem extends Item {
     }
 
     @Override
-    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
 
         ItemStack itemstack = playerIn.getItemInHand(handIn);
 
         if(false){
-            playerIn.displayClientMessage(new StringTextComponent("You wished..."),true);
-            return ActionResult.pass(itemstack);
+            playerIn.displayClientMessage(new TextComponent("You wished..."),true);
+            return InteractionResultHolder.pass(itemstack);
         }
-        worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), SoundEvents.SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
+        worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), SoundEvents.SNOWBALL_THROW, SoundSource.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
         playerIn.getCooldowns().addCooldown(this, 30);
         if (!worldIn.isClientSide) {
             BombEntity bombEntity = new BombEntity(worldIn, playerIn, blue);
@@ -60,7 +60,7 @@ public class BombItem extends Item {
 
         }
 
-        return ActionResult.sidedSuccess(itemstack, worldIn.isClientSide());
+        return InteractionResultHolder.sidedSuccess(itemstack, worldIn.isClientSide());
     }
 }
 

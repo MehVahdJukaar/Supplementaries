@@ -7,7 +7,7 @@ import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.PulleyBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.PlayerLessContext;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
-import net.mehvahdjukaar.supplementaries.common.StaticBlockItem;
+import net.mehvahdjukaar.supplementaries.common.BlockItemUtils;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.decorativeblocks.RopeChandelierBlock;
 import net.mehvahdjukaar.supplementaries.compat.quark.QuarkPistonPlugin;
@@ -15,44 +15,59 @@ import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.*;
-import net.minecraft.block.material.PushReaction;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.entity.projectile.ArrowEntity;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ShearsItem;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.AttachFace;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.projectile.Arrow;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ShearsItem;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.AttachFace;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.function.Predicate;
+
+import net.minecraft.Util;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.level.block.BellBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CauldronBlock;
+import net.minecraft.world.level.block.ChainBlock;
+import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class RopeBlock extends WaterBlock {
     private final Map<BlockState, VoxelShape> SHAPES_MAP = new HashMap<>();
@@ -89,8 +104,8 @@ public class RopeBlock extends WaterBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return SHAPES_MAP.getOrDefault(state.setValue(DISTANCE, 0).setValue(WATERLOGGED, false), VoxelShapes.block());
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+        return SHAPES_MAP.getOrDefault(state.setValue(DISTANCE, 0).setValue(WATERLOGGED, false), Shapes.block());
     }
 
     //oh boy 32k shapes. 2k by removing water and distance lol
@@ -105,14 +120,14 @@ public class RopeBlock extends WaterBlock {
 
         for (BlockState state : this.stateDefinition.getPossibleStates()) {
             if (state.getValue(WATERLOGGED) || state.getValue(DISTANCE) != 0) continue;
-            VoxelShape v = VoxelShapes.empty();
-            if (state.getValue(KNOT)) v = VoxelShapes.or(knot);
-            if (state.getValue(DOWN)) v = VoxelShapes.or(v, down);
-            if (state.getValue(UP)) v = VoxelShapes.or(v, up);
-            if (state.getValue(NORTH)) v = VoxelShapes.or(v, north);
-            if (state.getValue(SOUTH)) v = VoxelShapes.or(v, south);
-            if (state.getValue(WEST)) v = VoxelShapes.or(v, west);
-            if (state.getValue(EAST)) v = VoxelShapes.or(v, east);
+            VoxelShape v = Shapes.empty();
+            if (state.getValue(KNOT)) v = Shapes.or(knot);
+            if (state.getValue(DOWN)) v = Shapes.or(v, down);
+            if (state.getValue(UP)) v = Shapes.or(v, up);
+            if (state.getValue(NORTH)) v = Shapes.or(v, north);
+            if (state.getValue(SOUTH)) v = Shapes.or(v, south);
+            if (state.getValue(WEST)) v = Shapes.or(v, west);
+            if (state.getValue(EAST)) v = Shapes.or(v, east);
             v = v.optimize();
             boolean flag = true;
             for (VoxelShape existing : this.SHAPES_MAP.values()) {
@@ -127,12 +142,12 @@ public class RopeBlock extends WaterBlock {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(NORTH, SOUTH, EAST, WEST, UP, DOWN, WATERLOGGED, DISTANCE, KNOT);
     }
 
     @Override
-    public boolean isLadder(BlockState state, IWorldReader world, BlockPos pos, LivingEntity entity) {
+    public boolean isLadder(BlockState state, LevelReader world, BlockPos pos, LivingEntity entity) {
         return state.getValue(DOWN) && (state.getValue(UP) || entity.position().y() - pos.getY() < (13 / 16f));
     }
 
@@ -140,19 +155,19 @@ public class RopeBlock extends WaterBlock {
     private static final VoxelShape COLLISION_SHAPE = Block.box(0, 0, 0, 16, 13, 16);
 
     @Override
-    public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         return ((!state.getValue(UP) && (context.isAbove(COLLISION_SHAPE, pos, true) || !state.getValue(DOWN)))
                 || !(context.getEntity() instanceof LivingEntity)) ?
-                getShape(state, worldIn, pos, context) : VoxelShapes.empty();
+                getShape(state, worldIn, pos, context) : Shapes.empty();
 
     }
 
-    public static boolean shouldConnectToDir(BlockState thisState, BlockPos currentPos, IWorldReader world, Direction dir) {
+    public static boolean shouldConnectToDir(BlockState thisState, BlockPos currentPos, LevelReader world, Direction dir) {
         BlockPos facingPos = currentPos.relative(dir);
         return shouldConnectToFace(thisState, world.getBlockState(facingPos), facingPos, dir, world);
     }
 
-    public static boolean shouldConnectToFace(BlockState thisState, BlockState facingState, BlockPos facingPos, Direction dir, IWorldReader world) {
+    public static boolean shouldConnectToFace(BlockState thisState, BlockState facingState, BlockPos facingPos, Direction dir, LevelReader world) {
         Block thisBlock = thisState.getBlock();
         Block b = facingState.getBlock();
         boolean isKnot = thisBlock == ModRegistry.ROPE_KNOT.get();
@@ -177,7 +192,7 @@ public class RopeBlock extends WaterBlock {
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
         if (stateIn.getValue(WATERLOGGED)) {
             worldIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
         }
@@ -199,8 +214,8 @@ public class RopeBlock extends WaterBlock {
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
-        World world = context.getLevel();
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        Level world = context.getLevel();
         BlockPos pos = context.getClickedPos();
         boolean hasWater = context.getLevel().getFluidState(pos).getType() == Fluids.WATER;
         BlockState state = this.defaultBlockState();
@@ -214,7 +229,7 @@ public class RopeBlock extends WaterBlock {
     }
 
     @Override
-    public void onPlace(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+    public void onPlace(BlockState state, Level worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
         if (!worldIn.isClientSide) {
             worldIn.getBlockTicks().scheduleTick(pos, this, 1);
             if (CompatHandler.deco_blocks) {
@@ -239,22 +254,22 @@ public class RopeBlock extends WaterBlock {
     }
 
     @Override
-    public boolean canSurvive(BlockState state, IWorldReader worldIn, BlockPos pos) {
+    public boolean canSurvive(BlockState state, LevelReader worldIn, BlockPos pos) {
         return (this.getDistance(worldIn, pos) < 7);
         //return!(!state.get(UP)&&state.get(NORTH).isNone()&&state.get(SOUTH).isNone()&&state.get(EAST).isNone()&&state.get(WEST).isNone());
     }
 
-    public static boolean isSupportingCeiling(BlockState facingState, BlockPos pos, IWorldReader world) {
+    public static boolean isSupportingCeiling(BlockState facingState, BlockPos pos, LevelReader world) {
         Block b = facingState.getBlock();
         return canSupportCenter(world, pos, Direction.DOWN) || b.is(ModTags.ROPE_SUPPORT_TAG) ||
                 (b.is(ModRegistry.ROPE_KNOT.get()) && facingState.getValue(RopeKnotBlock.AXIS) != Direction.Axis.Y);
     }
 
-    public static boolean isSupportingCeiling(BlockPos pos, IWorldReader world) {
+    public static boolean isSupportingCeiling(BlockPos pos, LevelReader world) {
         return isSupportingCeiling(world.getBlockState(pos), pos, world);
     }
 
-    public static boolean canConnectDown(BlockPos currentPos, IWorldReader world) {
+    public static boolean canConnectDown(BlockPos currentPos, LevelReader world) {
         BlockState state = world.getBlockState(currentPos.below());
         return canConnectDown(state);
     }
@@ -263,13 +278,13 @@ public class RopeBlock extends WaterBlock {
         Block b = downState.getBlock();
         return (b.is(ModRegistry.ROPE.get()) || b.is(ModTags.ROPE_HANG_TAG)
                 || (downState.is(ModRegistry.ROPE_KNOT.get()) && downState.getValue(RopeKnotBlock.AXIS) != Direction.Axis.Y)
-                || (downState.hasProperty(HorizontalFaceBlock.FACE) && downState.getValue(HorizontalFaceBlock.FACE) == AttachFace.CEILING)
+                || (downState.hasProperty(FaceAttachedHorizontalDirectionalBlock.FACE) && downState.getValue(FaceAttachedHorizontalDirectionalBlock.FACE) == AttachFace.CEILING)
                 || (b instanceof ChainBlock && downState.getValue(BlockStateProperties.AXIS) == Direction.Axis.Y)
                 || (downState.hasProperty(BlockStateProperties.HANGING) && downState.getValue(BlockStateProperties.HANGING)));
     }
 
-    public int getDistance(IWorldReader world, BlockPos pos) {
-        BlockPos.Mutable mutable = pos.mutable().move(Direction.UP);
+    public int getDistance(LevelReader world, BlockPos pos) {
+        BlockPos.MutableBlockPos mutable = pos.mutable().move(Direction.UP);
         BlockState blockstate = world.getBlockState(mutable);
         int i = 7;
         if (blockstate.is(this)) {
@@ -296,7 +311,7 @@ public class RopeBlock extends WaterBlock {
     }
 
     @Override
-    public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
+    public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random rand) {
         int i = this.getDistance(worldIn, pos);
         BlockState blockstate = state.setValue(DISTANCE, i);
         if (i == 7) {
@@ -307,16 +322,16 @@ public class RopeBlock extends WaterBlock {
     }
 
     @Override
-    public int getFireSpreadSpeed(BlockState state, IBlockReader world, BlockPos pos, Direction face) {
+    public int getFireSpreadSpeed(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
         return 60;
     }
 
     @Override
-    public int getFlammability(BlockState state, IBlockReader world, BlockPos pos, Direction face) {
+    public int getFlammability(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
         return 60;
     }
 
-    public static boolean findAndRingBell(World world, BlockPos pos, PlayerEntity player, int it, Predicate<BlockState> predicate) {
+    public static boolean findAndRingBell(Level world, BlockPos pos, Player player, int it, Predicate<BlockState> predicate) {
 
         if (it > ServerConfigs.cached.BELL_CHAIN_LENGTH) return false;
         BlockState state = world.getBlockState(pos);
@@ -325,7 +340,7 @@ public class RopeBlock extends WaterBlock {
             return findAndRingBell(world, pos.above(), player, it + 1, predicate);
         } else if (b instanceof BellBlock && it != 0) {
             //boolean success = CommonUtil.tryRingBell(Block b, world, pos, state.getValue(BellBlock.FACING).getClockWise());
-            BlockRayTraceResult hit = new BlockRayTraceResult(new Vector3d(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5),
+            BlockHitResult hit = new BlockHitResult(new Vec3(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5),
                     state.getValue(BellBlock.FACING).getClockWise(), pos, true);
             //if (success && player != null) {//player.awardStat(Stats.BELL_RING);}
             return ((BellBlock) b).onHit(world, state, hit, player, true);
@@ -333,14 +348,14 @@ public class RopeBlock extends WaterBlock {
         return false;
     }
 
-    private static boolean findConnectedPulley(World world, BlockPos pos, PlayerEntity player, int it, Rotation rot) {
+    private static boolean findConnectedPulley(Level world, BlockPos pos, Player player, int it, Rotation rot) {
         if (it > 64) return false;
         BlockState state = world.getBlockState(pos);
         Block b = state.getBlock();
         if (b instanceof RopeBlock) {
             return findConnectedPulley(world, pos.above(), player, it + 1, rot);
         } else if (b instanceof PulleyBlock && it != 0) {
-            TileEntity te = world.getBlockEntity(pos);
+            BlockEntity te = world.getBlockEntity(pos);
             if (te instanceof PulleyBlockTile) {
                 PulleyBlockTile tile = ((PulleyBlockTile) te);
                 if (tile.isEmpty() && !player.isShiftKeyDown()) {
@@ -357,7 +372,7 @@ public class RopeBlock extends WaterBlock {
     }
 
     @Override
-    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         ItemStack stack = player.getItemInHand(handIn);
         Item i = stack.getItem();
 
@@ -370,30 +385,30 @@ public class RopeBlock extends WaterBlock {
                 }
                 if (addRope(pos.below(), world, player, handIn, this)) {
                     SoundType soundtype = state.getSoundType(world, pos, player);
-                    world.playSound(player, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+                    world.playSound(player, pos, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
                     if (player == null || !player.abilities.instabuild) {
                         stack.shrink(1);
                     }
-                    return ActionResultType.sidedSuccess(world.isClientSide);
+                    return InteractionResult.sidedSuccess(world.isClientSide);
                 }
             }
-            return ActionResultType.PASS;
+            return InteractionResult.PASS;
         } else if (stack.isEmpty()) {
             if (state.getValue(UP)) {
                 if (ServerConfigs.cached.BELL_CHAIN && findAndRingBell(world, pos, player, 0, s -> s.getBlock() == this))
-                    return ActionResultType.sidedSuccess(world.isClientSide);
+                    return InteractionResult.sidedSuccess(world.isClientSide);
                 else if (findConnectedPulley(world, pos, player, 0, player.isShiftKeyDown() ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90)) {
-                    return ActionResultType.sidedSuccess(world.isClientSide);
+                    return InteractionResult.sidedSuccess(world.isClientSide);
                 }
             }
-            if (!player.isShiftKeyDown() && handIn == Hand.MAIN_HAND) {
+            if (!player.isShiftKeyDown() && handIn == InteractionHand.MAIN_HAND) {
                 if (world.getBlockState(pos.below()).getBlock() == this) {
                     if (removeRope(pos.below(), world, this)) {
-                        world.playSound(player, pos, SoundEvents.LEASH_KNOT_PLACE, SoundCategory.BLOCKS, 1, 0.6f);
+                        world.playSound(player, pos, SoundEvents.LEASH_KNOT_PLACE, SoundSource.BLOCKS, 1, 0.6f);
                         if (player == null || !player.abilities.instabuild) {
                             Utils.swapItem(player, handIn, stack, new ItemStack(this.asItem()));
                         }
-                        return ActionResultType.sidedSuccess(world.isClientSide);
+                        return InteractionResult.sidedSuccess(world.isClientSide);
                     }
                 }
             }
@@ -401,21 +416,21 @@ public class RopeBlock extends WaterBlock {
             if (state.getValue(DOWN)) {
                 if (!world.isClientSide) {
                     //TODO: proper sound event here
-                    world.playSound(null, pos, SoundEvents.SNOW_GOLEM_SHEAR, player == null ? SoundCategory.BLOCKS : SoundCategory.PLAYERS, 0.8F, 1.3F);
+                    world.playSound(null, pos, SoundEvents.SNOW_GOLEM_SHEAR, player == null ? SoundSource.BLOCKS : SoundSource.PLAYERS, 0.8F, 1.3F);
                     BlockState newState = state.setValue(DOWN, false).setValue(KNOT, true);
                     world.setBlock(pos, newState, 3);
                     //update below
                     //world.updateNeighborsAt(pos, newState.getBlock());
                 }
-                return ActionResultType.sidedSuccess(world.isClientSide);
+                return InteractionResult.sidedSuccess(world.isClientSide);
             }
-            return ActionResultType.PASS;
+            return InteractionResult.PASS;
         }
-        return ActionResultType.PASS;
+        return InteractionResult.PASS;
     }
 
 
-    public static boolean removeRope(BlockPos pos, World world, Block ropeBlock) {
+    public static boolean removeRope(BlockPos pos, Level world, Block ropeBlock) {
         BlockState state = world.getBlockState(pos);
         if (ropeBlock == state.getBlock()) {
             return removeRope(pos.below(), world, ropeBlock);
@@ -432,7 +447,7 @@ public class RopeBlock extends WaterBlock {
     }
 
 
-    public static boolean addRope(BlockPos pos, World world, @Nullable PlayerEntity player, Hand hand, Block ropeBlock) {
+    public static boolean addRope(BlockPos pos, Level world, @Nullable Player player, InteractionHand hand, Block ropeBlock) {
         BlockState state = world.getBlockState(pos);
         if (ropeBlock == state.getBlock()) {
             return addRope(pos.below(), world, player, hand, ropeBlock);
@@ -442,20 +457,20 @@ public class RopeBlock extends WaterBlock {
     }
 
 
-    public static boolean tryPlaceAndMove(@Nullable PlayerEntity player, Hand hand, World world, BlockPos pos, Block ropeBlock) {
+    public static boolean tryPlaceAndMove(@Nullable Player player, InteractionHand hand, Level world, BlockPos pos, Block ropeBlock) {
         ItemStack stack = new ItemStack(ropeBlock);
 
-        BlockItemUseContext context = new PlayerLessContext(world, player, hand, stack, new BlockRayTraceResult(Vector3d.atCenterOf(pos), Direction.UP, pos, false));
+        BlockPlaceContext context = new PlayerLessContext(world, player, hand, stack, new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, false));
         if (!context.canPlace()) {
             //checks if block below this is hollow
             BlockPos downPos = pos.below();
             //try move block down
             if (!(world.getBlockState(downPos).getMaterial().isReplaceable()
                     && tryMove(pos, downPos, world))) return false;
-            context = new PlayerLessContext(world, player, hand, stack, new BlockRayTraceResult(Vector3d.atCenterOf(pos), Direction.UP, pos, false));
+            context = new PlayerLessContext(world, player, hand, stack, new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, false));
         }
 
-        BlockState state = StaticBlockItem.getPlacementState(context, ropeBlock);
+        BlockState state = BlockItemUtils.getPlacementState(context, ropeBlock);
         if (state == null) return false;
         if (state == world.getBlockState(context.getClickedPos())) return false;
         if (world.setBlock(context.getClickedPos(), state, 11)) {
@@ -464,8 +479,8 @@ public class RopeBlock extends WaterBlock {
                 Block block = placedState.getBlock();
                 if (block == state.getBlock()) {
                     block.setPlacedBy(world, context.getClickedPos(), placedState, player, stack);
-                    if (player instanceof ServerPlayerEntity) {
-                        CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayerEntity) player, context.getClickedPos(), stack);
+                    if (player instanceof ServerPlayer) {
+                        CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayer) player, context.getClickedPos(), stack);
                     }
                 }
             }
@@ -479,7 +494,7 @@ public class RopeBlock extends WaterBlock {
     }
 
     //TODO: fix order of operations to allow pulling down lanterns
-    private static boolean tryMove(BlockPos fromPos, BlockPos toPos, World world) {
+    private static boolean tryMove(BlockPos fromPos, BlockPos toPos, Level world) {
         if (toPos.getY() < 0 || toPos.getY() > 255) return false;
         BlockState state = world.getBlockState(fromPos);
         Block block = state.getBlock();
@@ -488,7 +503,7 @@ public class RopeBlock extends WaterBlock {
         if ((push == PushReaction.NORMAL || (toPos.getY() < fromPos.getY() && push == PushReaction.PUSH_ONLY) || block.is(ModTags.ROPE_HANG_TAG)) && state.getDestroySpeed(world, fromPos) != -1
                 && state.canSurvive(world, toPos) && !block.isAir(state, world, fromPos) && !isObsidian(state)) {
 
-            TileEntity tile = world.getBlockEntity(fromPos);
+            BlockEntity tile = world.getBlockEntity(fromPos);
             if (tile != null) {
                 //moves everything if quark is not enabled. bad :/ install quark guys
                 if (CompatHandler.quark && !QuarkPistonPlugin.canMoveTile(state)) {
@@ -518,7 +533,7 @@ public class RopeBlock extends WaterBlock {
             world.setBlockAndUpdate(toPos, newState);
             if (tile != null) {
                 tile.setPosition(toPos);
-                TileEntity target = TileEntity.loadStatic(newState, tile.save(new CompoundNBT()));
+                BlockEntity target = BlockEntity.loadStatic(newState, tile.save(new CompoundTag()));
                 if (target != null) {
                     world.setBlockEntity(toPos, target);
                     target.clearCache();
@@ -532,11 +547,11 @@ public class RopeBlock extends WaterBlock {
     }
 
     @Override
-    public void entityInside(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
+    public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
         super.entityInside(state, worldIn, pos, entityIn);
-        if (entityIn instanceof ArrowEntity && !worldIn.isClientSide) {
+        if (entityIn instanceof Arrow && !worldIn.isClientSide) {
             worldIn.destroyBlock(pos, true, entityIn);
-            worldIn.playSound(null, pos, SoundEvents.LEASH_KNOT_BREAK, SoundCategory.BLOCKS, 1, 1);
+            worldIn.playSound(null, pos, SoundEvents.LEASH_KNOT_BREAK, SoundSource.BLOCKS, 1, 1);
         }
     }
 

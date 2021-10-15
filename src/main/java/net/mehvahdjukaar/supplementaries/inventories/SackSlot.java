@@ -1,12 +1,12 @@
 package net.mehvahdjukaar.supplementaries.inventories;
 
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 
 public class SackSlot extends Slot {
-    public SackSlot(IInventory inventory, int index, int xPosition, int yPosition) {
+    public SackSlot(Container inventory, int index, int xPosition, int yPosition) {
         super(inventory, index, xPosition, yPosition);
     }
 

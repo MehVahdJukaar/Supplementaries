@@ -4,25 +4,32 @@ import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties.RakeDirection;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.*;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.pathfinding.PathType;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FenceGateBlock;
+import net.minecraft.world.level.block.GravelBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class RakedGravelBlock extends GravelBlock {
 
@@ -36,15 +43,15 @@ public class RakedGravelBlock extends GravelBlock {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(RAKE_DIRECTION);
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockState blockstate = super.defaultBlockState();
         BlockPos pos = context.getClickedPos();
-        World world = context.getLevel();
+        Level world = context.getLevel();
         if(!blockstate.canSurvive(world, pos)){
             return Block.pushEntitiesUp(blockstate, Blocks.GRAVEL.defaultBlockState(), world, pos);
         }
@@ -60,7 +67,7 @@ public class RakedGravelBlock extends GravelBlock {
         return false;
     }
 
-    public static BlockState getConnectedState(BlockState blockstate, World world, BlockPos pos, Direction front){
+    public static BlockState getConnectedState(BlockState blockstate, Level world, BlockPos pos, Direction front){
         List<Direction> directionList = new ArrayList<>();
 
         Direction back = front.getOpposite();
@@ -172,17 +179,17 @@ public class RakedGravelBlock extends GravelBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter reader, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
 
     @Override
-    public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType pathType) {
+    public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType pathType) {
         return false;
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState fromState, IWorld world, BlockPos pos, BlockPos fromPos) {
+    public BlockState updateShape(BlockState state, Direction direction, BlockState fromState, LevelAccessor world, BlockPos pos, BlockPos fromPos) {
         if (direction == Direction.UP && !state.canSurvive(world, pos)) {
             world.getBlockTicks().scheduleTick(pos, this, 1);
         }
@@ -190,17 +197,17 @@ public class RakedGravelBlock extends GravelBlock {
     }
 
     @Override
-    public void tick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+    public void tick(BlockState state, ServerLevel world, BlockPos pos, Random random) {
         if(!state.canSurvive(world, pos)) turnToGravel(state, world, pos);
         super.tick(state,world,pos,random);
     }
 
-    public static void turnToGravel(BlockState state, World world, BlockPos pos) {
+    public static void turnToGravel(BlockState state, Level world, BlockPos pos) {
         world.setBlockAndUpdate(pos, pushEntitiesUp(state, Blocks.GRAVEL.defaultBlockState(), world, pos));
     }
 
     @Override
-    public boolean canSurvive(BlockState p_196260_1_, IWorldReader p_196260_2_, BlockPos p_196260_3_) {
+    public boolean canSurvive(BlockState p_196260_1_, LevelReader p_196260_2_, BlockPos p_196260_3_) {
         BlockState blockstate = p_196260_2_.getBlockState(p_196260_3_.above());
         return !blockstate.getMaterial().isSolid() || blockstate.getBlock() instanceof FenceGateBlock;
     }

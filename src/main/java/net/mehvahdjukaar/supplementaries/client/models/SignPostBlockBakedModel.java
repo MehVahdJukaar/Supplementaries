@@ -5,16 +5,16 @@ import net.mehvahdjukaar.supplementaries.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.framedblocks.FramedSignPost;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockModelShapes;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.model.ItemOverrideList;
-import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.renderer.block.BlockModelShaper;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Random;
 
 public class SignPostBlockBakedModel implements IDynamicBakedModel {
-    private final BlockModelShapes blockModelShaper;
+    private final BlockModelShaper blockModelShaper;
 
     public SignPostBlockBakedModel() {
         this.blockModelShaper = Minecraft.getInstance().getBlockRenderer().getBlockModelShaper();
@@ -56,7 +56,7 @@ public class SignPostBlockBakedModel implements IDynamicBakedModel {
                 } else {
                     data = EmptyModelData.INSTANCE;
                 }
-                IBakedModel model = blockModelShaper.getBlockModel(mimic);
+                BakedModel model = blockModelShaper.getBlockModel(mimic);
 
                 return model.getQuads(mimic, side, rand, data);
 
@@ -92,7 +92,7 @@ public class SignPostBlockBakedModel implements IDynamicBakedModel {
 
     @Override
     public TextureAtlasSprite getParticleIcon() {
-        return Minecraft.getInstance().getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(Textures.TIMBER_CROSS_BRACE_TEXTURE);
+        return Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(Textures.TIMBER_CROSS_BRACE_TEXTURE);
     }
 
     @Override
@@ -100,7 +100,7 @@ public class SignPostBlockBakedModel implements IDynamicBakedModel {
         BlockState mimic = data.getData(SignPostBlockTile.MIMIC);
         if (mimic != null && !mimic.isAir()) {
 
-            IBakedModel model = blockModelShaper.getBlockModel(mimic);
+            BakedModel model = blockModelShaper.getBlockModel(mimic);
             try {
                 return model.getParticleIcon();
             } catch (Exception ignored) {}
@@ -110,12 +110,12 @@ public class SignPostBlockBakedModel implements IDynamicBakedModel {
     }
 
     @Override
-    public ItemOverrideList getOverrides() {
-        return ItemOverrideList.EMPTY;
+    public ItemOverrides getOverrides() {
+        return ItemOverrides.EMPTY;
     }
 
     @Override
-    public ItemCameraTransforms getTransforms() {
-        return ItemCameraTransforms.NO_TRANSFORMS;
+    public ItemTransforms getTransforms() {
+        return ItemTransforms.NO_TRANSFORMS;
     }
 }

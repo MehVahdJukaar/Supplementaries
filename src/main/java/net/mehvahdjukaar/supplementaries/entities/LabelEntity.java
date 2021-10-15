@@ -1,41 +1,41 @@
 package net.mehvahdjukaar.supplementaries.entities;
 
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntitySize;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.Pose;
-import net.minecraft.entity.item.HangingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.Direction;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.decoration.HangingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.network.FMLPlayMessages;
 import net.minecraftforge.fml.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
 public class LabelEntity extends HangingEntity {
-    private static final DataParameter<ItemStack> DATA_ITEM = EntityDataManager.defineId(LabelEntity.class, DataSerializers.ITEM_STACK);
-    public LabelEntity(EntityType<? extends HangingEntity> entityType, World world) {
+    private static final EntityDataAccessor<ItemStack> DATA_ITEM = SynchedEntityData.defineId(LabelEntity.class, EntityDataSerializers.ITEM_STACK);
+    public LabelEntity(EntityType<? extends HangingEntity> entityType, Level world) {
         super(entityType, world);
     }
-    public LabelEntity(World world) {
+    public LabelEntity(Level world) {
         this(ModRegistry.LABEL.get(), world);
     }
 
-    public LabelEntity(FMLPlayMessages.SpawnEntity spawnEntity, World world) {
+    public LabelEntity(FMLPlayMessages.SpawnEntity spawnEntity, Level world) {
         this(world);
     }
 
 
     @Override
-    protected float getEyeHeight(Pose pose, EntitySize size) {
+    protected float getEyeHeight(Pose pose, EntityDimensions size) {
         return 0.0F;
     }
 
@@ -65,7 +65,7 @@ public class LabelEntity extends HangingEntity {
     }
 
     @Override
-    public IPacket<?> getAddEntityPacket() {
+    public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
@@ -96,7 +96,7 @@ public class LabelEntity extends HangingEntity {
     }
 
     @Override
-    public void onSyncedDataUpdated(DataParameter<?> dataParameter) {
+    public void onSyncedDataUpdated(EntityDataAccessor<?> dataParameter) {
         if (dataParameter.equals(DATA_ITEM)) {
             ItemStack itemstack = this.getItem();
             if (!itemstack.isEmpty() && itemstack.getEntityRepresentation() != this) {
@@ -107,19 +107,19 @@ public class LabelEntity extends HangingEntity {
 
 
     @Override
-    public void addAdditionalSaveData(CompoundNBT com) {
+    public void addAdditionalSaveData(CompoundTag com) {
         super.addAdditionalSaveData(com);
         if (!this.getItem().isEmpty()) {
-            com.put("Item", this.getItem().save(new CompoundNBT()));
+            com.put("Item", this.getItem().save(new CompoundTag()));
         }
 
         com.putByte("Facing", (byte)this.direction.get3DDataValue());
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT p_70037_1_) {
+    public void readAdditionalSaveData(CompoundTag p_70037_1_) {
         super.readAdditionalSaveData(p_70037_1_);
-        CompoundNBT compoundnbt = p_70037_1_.getCompound("Item");
+        CompoundTag compoundnbt = p_70037_1_.getCompound("Item");
         if (compoundnbt != null && !compoundnbt.isEmpty()) {
             ItemStack itemstack = ItemStack.of(compoundnbt);
             if (itemstack.isEmpty()) {
@@ -160,7 +160,7 @@ public class LabelEntity extends HangingEntity {
             d6 = d6 / 32.0D;
             d7 = d7 / 32.0D;
             d8 = d8 / 32.0D;
-            this.setBoundingBox(new AxisAlignedBB(d0 - d6, d1 - d7, d2 - d8, d0 + d6, d1 + d7, d2 + d8));
+            this.setBoundingBox(new AABB(d0 - d6, d1 - d7, d2 - d8, d0 + d6, d1 + d7, d2 + d8));
         }
     }
     private double offs(int o) {

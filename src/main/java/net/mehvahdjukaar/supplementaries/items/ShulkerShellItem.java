@@ -1,16 +1,18 @@
 package net.mehvahdjukaar.supplementaries.items;
 
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.IArmorMaterial;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class ShulkerShellItem extends ArmorItem {
     public ShulkerShellItem(Properties properties) {
-        super(new SkulkerShellArmorMaterial(), EquipmentSlotType.HEAD, properties);
+        super(new SkulkerShellArmorMaterial(), EquipmentSlot.HEAD, properties);
     }
 
     @Override
@@ -28,15 +30,15 @@ public class ShulkerShellItem extends ArmorItem {
         return false;
     }
 
-    private static class SkulkerShellArmorMaterial implements IArmorMaterial {
+    private static class SkulkerShellArmorMaterial implements ArmorMaterial {
         private static final int[] HEALTH_PER_SLOT = new int[]{13, 15, 16, 11};
         @Override
-        public int getDurabilityForSlot(EquipmentSlotType slotType) {
+        public int getDurabilityForSlot(EquipmentSlot slotType) {
             return HEALTH_PER_SLOT[slotType.getIndex()] * 10;
         }
 
         @Override
-        public int getDefenseForSlot(EquipmentSlotType p_200902_1_) {
+        public int getDefenseForSlot(EquipmentSlot p_200902_1_) {
             return 0;
         }
 

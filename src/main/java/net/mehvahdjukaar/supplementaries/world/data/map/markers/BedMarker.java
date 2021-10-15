@@ -3,13 +3,13 @@ package net.mehvahdjukaar.supplementaries.world.data.map.markers;
 import net.mehvahdjukaar.selene.map.CustomDecoration;
 import net.mehvahdjukaar.selene.map.markers.MapWorldMarker;
 import net.mehvahdjukaar.supplementaries.world.data.map.CMDreg;
-import net.minecraft.block.BedBlock;
-import net.minecraft.item.DyeColor;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.BedTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.world.level.block.BedBlock;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BedBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
@@ -27,21 +27,21 @@ public class BedMarker extends MapWorldMarker<CustomDecoration> {
     }
 
     @Override
-    public CompoundNBT saveToNBT(CompoundNBT compoundnbt) {
+    public CompoundTag saveToNBT(CompoundTag compoundnbt) {
         super.saveToNBT(compoundnbt);
         compoundnbt.putString("Color", this.color.getName());
         return compoundnbt;
     }
 
-    public void loadFromNBT(CompoundNBT compound){
+    public void loadFromNBT(CompoundTag compound){
         super.loadFromNBT(compound);
         this.color = DyeColor.byName(compound.getString("Color"), DyeColor.WHITE);
     }
 
     @Nullable
-    public static BedMarker getFromWorld(IBlockReader world, BlockPos pos){
-        TileEntity tileentity = world.getBlockEntity(pos);
-        if (tileentity instanceof BedTileEntity) {
+    public static BedMarker getFromWorld(BlockGetter world, BlockPos pos){
+        BlockEntity tileentity = world.getBlockEntity(pos);
+        if (tileentity instanceof BedBlockEntity) {
             DyeColor dyecolor = ((BedBlock)tileentity.getBlockState().getBlock()).getColor();
             return new BedMarker(pos,dyecolor);
         } else {

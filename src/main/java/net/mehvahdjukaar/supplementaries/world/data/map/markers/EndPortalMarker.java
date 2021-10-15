@@ -3,9 +3,9 @@ package net.mehvahdjukaar.supplementaries.world.data.map.markers;
 import net.mehvahdjukaar.selene.map.CustomDecoration;
 import net.mehvahdjukaar.selene.map.markers.MapWorldMarker;
 import net.mehvahdjukaar.supplementaries.world.data.map.CMDreg;
-import net.minecraft.block.EndPortalBlock;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.world.level.block.EndPortalBlock;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
 
 import javax.annotation.Nullable;
 
@@ -21,7 +21,7 @@ public class EndPortalMarker extends MapWorldMarker<CustomDecoration> {
     }
 
     @Nullable
-    public static EndPortalMarker getFromWorld(IBlockReader world, BlockPos pos){
+    public static EndPortalMarker getFromWorld(BlockGetter world, BlockPos pos){
         if(world.getBlockState(pos).getBlock() instanceof EndPortalBlock){
             return new EndPortalMarker(pos);
         } else {

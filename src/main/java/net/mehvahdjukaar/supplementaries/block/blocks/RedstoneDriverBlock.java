@@ -1,20 +1,22 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.RedstoneDiodeBlock;
-import net.minecraft.state.StateContainer;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.DiodeBlock;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.Level;
 
-public class RedstoneDriverBlock extends RedstoneDiodeBlock {
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
+public class RedstoneDriverBlock extends DiodeBlock {
     public RedstoneDriverBlock(Properties properties) {
         super(properties);
     }
 
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> stateBuilder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateBuilder) {
         stateBuilder.add(FACING, POWERED);
     }
 
@@ -24,12 +26,12 @@ public class RedstoneDriverBlock extends RedstoneDiodeBlock {
     }
 
     @Override
-    protected int getInputSignal(World world, BlockPos pos, BlockState state) {
+    protected int getInputSignal(Level world, BlockPos pos, BlockState state) {
         return super.getInputSignal(world, pos, state);
     }
 
     @Override
-    protected int getAlternateSignal(IWorldReader world, BlockPos pos, BlockState state) {
+    protected int getAlternateSignal(LevelReader world, BlockPos pos, BlockState state) {
         Direction direction = state.getValue(FACING);
         Direction direction1 = direction.getClockWise();
         Direction direction2 = direction.getCounterClockWise();

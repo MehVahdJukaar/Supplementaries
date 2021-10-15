@@ -1,22 +1,24 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.FenceGateBlock;
-import net.minecraft.block.PaneBlock;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.FenceGateBlock;
+import net.minecraft.world.level.block.IronBarsBlock;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.Level;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class IronGateBlock extends FenceGateBlock {
     private final boolean gold;
@@ -26,8 +28,8 @@ public class IronGateBlock extends FenceGateBlock {
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
-        World world = context.getLevel();
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        Level world = context.getLevel();
         BlockPos blockpos = context.getClickedPos();
         boolean flag = world.hasNeighborSignal(blockpos);
         Direction direction = context.getHorizontalDirection();
@@ -37,13 +39,13 @@ public class IronGateBlock extends FenceGateBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
+    public VoxelShape getShape(BlockState state, BlockGetter p_220053_2_, BlockPos p_220053_3_, CollisionContext p_220053_4_) {
         return state.getValue(FACING).getAxis() == Direction.Axis.X ? X_SHAPE : Z_SHAPE;
     }
 
     //better done here cause of side + up
     @Override
-    public void neighborChanged(BlockState state, World world, BlockPos pos, Block neighborBlock, BlockPos fromPos, boolean moving) {
+    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block neighborBlock, BlockPos fromPos, boolean moving) {
         if (!world.isClientSide) {
             boolean flag = world.hasNeighborSignal(pos);
             if (state.getValue(POWERED) != flag) {
@@ -64,26 +66,26 @@ public class IronGateBlock extends FenceGateBlock {
 
 
     @Override
-    public BlockState updateShape(BlockState state, Direction dir, BlockState other, IWorld world, BlockPos pos, BlockPos otherPos) {
+    public BlockState updateShape(BlockState state, Direction dir, BlockState other, LevelAccessor world, BlockPos pos, BlockPos otherPos) {
         return state;
     }
 
-    private boolean canConnect(IWorld world, BlockPos pos, Direction dir){
+    private boolean canConnect(LevelAccessor world, BlockPos pos, Direction dir){
         return canConnectUp(world.getBlockState(pos.above()),world,pos.above()) ||
                 canConnectSide(world.getBlockState(pos.relative(dir.getClockWise()))) ||
                 canConnectSide(world.getBlockState(pos.relative(dir.getCounterClockWise())));
     }
 
     private boolean canConnectSide(BlockState state){
-        return state.getBlock() instanceof PaneBlock;
+        return state.getBlock() instanceof IronBarsBlock;
     }
 
-    private boolean canConnectUp(BlockState state, IWorld world, BlockPos pos){
-        return state.isFaceSturdy(world,pos,Direction.DOWN) || state.is(this) || state.getBlock() instanceof PaneBlock;
+    private boolean canConnectUp(BlockState state, LevelAccessor world, BlockPos pos){
+        return state.isFaceSturdy(world,pos,Direction.DOWN) || state.is(this) || state.getBlock() instanceof IronBarsBlock;
     }
 
     @Override
-    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult result) {
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
 
         if(!state.getValue(POWERED) && gold || !ServerConfigs.cached.CONSISTENT_GATE){
             Direction dir = player.getDirection();
@@ -103,14 +105,14 @@ public class IronGateBlock extends FenceGateBlock {
             openGate(state,world,pos,dir);
 
             world.levelEvent(player, state.getValue(OPEN) ? 1036 : 1037, pos, 0);
-            return ActionResultType.sidedSuccess(world.isClientSide);
+            return InteractionResult.sidedSuccess(world.isClientSide);
         }
 
-        return ActionResultType.PASS;
+        return InteractionResult.PASS;
 
     }
 
-    private void openGate(BlockState state, World world, BlockPos pos, Direction dir){
+    private void openGate(BlockState state, Level world, BlockPos pos, Direction dir){
         if (state.getValue(OPEN)) {
             state = state.setValue(OPEN, Boolean.FALSE);
         } else {

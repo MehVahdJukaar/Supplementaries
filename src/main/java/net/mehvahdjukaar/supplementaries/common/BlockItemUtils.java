@@ -1,47 +1,48 @@
 package net.mehvahdjukaar.supplementaries.common;
 
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.state.Property;
-import net.minecraft.state.StateContainer;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 
+//TODO: rewrite using new 1.17 code
 //utility class that contains block item place functions
-public class StaticBlockItem {
+public class BlockItemUtils {
 
     @Nullable
-    public static BlockState getPlacementState(BlockItemUseContext context, Block block) {
+    public static BlockState getPlacementState(BlockPlaceContext context, Block block) {
         BlockState blockstate = block.getStateForPlacement(context);
         return blockstate != null && canPlace(context, blockstate) ? blockstate : null;
     }
 
-    public static boolean canPlace(BlockItemUseContext context, BlockState state) {
-        PlayerEntity playerentity = context.getPlayer();
-        ISelectionContext iselectioncontext = playerentity == null ? ISelectionContext.empty() : ISelectionContext.of(playerentity);
+    public static boolean canPlace(BlockPlaceContext context, BlockState state) {
+        Player playerentity = context.getPlayer();
+        CollisionContext iselectioncontext = playerentity == null ? CollisionContext.empty() : CollisionContext.of(playerentity);
         return (state.canSurvive(context.getLevel(), context.getClickedPos())) && context.getLevel().isUnobstructed(state, context.getClickedPos(), iselectioncontext);
     }
 
-    private static BlockState updateBlockStateFromTag(BlockPos pos, World world, ItemStack stack, BlockState state) {
+    private static BlockState updateBlockStateFromTag(BlockPos pos, Level world, ItemStack stack, BlockState state) {
         BlockState blockstate = state;
-        CompoundNBT compoundnbt = stack.getTag();
+        CompoundTag compoundnbt = stack.getTag();
         if (compoundnbt != null) {
-            CompoundNBT compoundnbt1 = compoundnbt.getCompound("BlockStateTag");
-            StateContainer<Block, BlockState> statecontainer = state.getBlock().getStateDefinition();
+            CompoundTag compoundnbt1 = compoundnbt.getCompound("BlockStateTag");
+            StateDefinition<Block, BlockState> statecontainer = state.getBlock().getStateDefinition();
 
             for(String s : compoundnbt1.getAllKeys()) {
                 Property<?> property = statecontainer.getProperty(s);
@@ -63,23 +64,23 @@ public class StaticBlockItem {
         return tProperty.getValue(name).map((p) -> state.setValue(tProperty, p)).orElse(state);
     }
 
-    private static SoundEvent getPlaceSound(BlockState state, World world, BlockPos pos, PlayerEntity entity) {
+    private static SoundEvent getPlaceSound(BlockState state, Level world, BlockPos pos, Player entity) {
         return state.getSoundType(world, pos, entity).getPlaceSound();
     }
 
-    public static ActionResultType place(BlockItemUseContext context, Block blockToPlace) {
+    public static InteractionResult place(BlockPlaceContext context, Block blockToPlace) {
         if (!context.canPlace() || context == null) {
-            return ActionResultType.FAIL;
+            return InteractionResult.FAIL;
         } else {
             BlockState blockstate = getPlacementState(context, blockToPlace);
             if (blockstate == null) {
-                return ActionResultType.FAIL;
+                return InteractionResult.FAIL;
             } else if (!context.getLevel().setBlock(context.getClickedPos(), blockstate, 11)) {
-                return ActionResultType.FAIL;
+                return InteractionResult.FAIL;
             } else {
                 BlockPos blockpos = context.getClickedPos();
-                World world = context.getLevel();
-                PlayerEntity playerentity = context.getPlayer();
+                Level world = context.getLevel();
+                Player playerentity = context.getPlayer();
                 ItemStack itemstack = context.getItemInHand();
                 BlockState placedState = world.getBlockState(blockpos);
                 Block block = placedState.getBlock();
@@ -87,18 +88,18 @@ public class StaticBlockItem {
                     placedState = updateBlockStateFromTag(blockpos, world, itemstack, placedState);
                     BlockItem.updateCustomBlockEntityTag(world, playerentity, blockpos, itemstack);
                     block.setPlacedBy(world, blockpos, placedState, playerentity, itemstack);
-                    if (playerentity instanceof ServerPlayerEntity) {
-                        CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayerEntity) playerentity, blockpos, itemstack);
+                    if (playerentity instanceof ServerPlayer) {
+                        CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayer) playerentity, blockpos, itemstack);
                     }
                 }
 
                 SoundType soundtype = placedState.getSoundType(world, blockpos, context.getPlayer());
-                world.playSound(playerentity, blockpos, getPlaceSound(placedState, world, blockpos, context.getPlayer()), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+                world.playSound(playerentity, blockpos, getPlaceSound(placedState, world, blockpos, context.getPlayer()), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
                 if (playerentity == null || !playerentity.abilities.instabuild) {
                     itemstack.shrink(1);
                 }
 
-                return ActionResultType.sidedSuccess(world.isClientSide);
+                return InteractionResult.sidedSuccess(world.isClientSide);
             }
 
         }

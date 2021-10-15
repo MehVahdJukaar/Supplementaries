@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.datagen.types;
 
-import net.minecraft.block.material.MaterialColor;
+import net.minecraft.world.level.material.MaterialColor;
 
 public enum LotrWoodTypes implements IWoodType {
     PINE("pine",MaterialColor.SAND),

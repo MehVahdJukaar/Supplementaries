@@ -3,12 +3,12 @@ package net.mehvahdjukaar.supplementaries.block;
 import net.mehvahdjukaar.selene.fluids.SoftFluid;
 import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.supplementaries.block.util.IBellConnections;
-import net.minecraft.block.BlockState;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.util.Direction;
-import net.minecraft.util.IStringSerializable;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.core.Direction;
+import net.minecraft.util.StringRepresentable;
 import net.minecraftforge.client.model.data.ModelProperty;
 
 import java.util.Arrays;
@@ -56,7 +56,7 @@ public class BlockProperties {
 
     public static final EnumProperty<Rune> RUNE = EnumProperty.create("rune", Rune.class);
 
-    public enum PostType implements IStringSerializable {
+    public enum PostType implements StringRepresentable {
         POST("post", 4),
         PALISADE("palisade", 6),
         WALL("wall", 8),
@@ -88,7 +88,7 @@ public class BlockProperties {
         }
     }
 
-    public enum Attachment implements IStringSerializable {
+    public enum Attachment implements StringRepresentable {
         BLOCK("block"),
         BEAM("beam"),
         WALL("wall"),
@@ -116,7 +116,7 @@ public class BlockProperties {
     }
 
 
-    public enum Topping implements IStringSerializable {
+    public enum Topping implements StringRepresentable {
         NONE("none"),
         HONEY("honey"),
         SYRUP("syrup"),
@@ -142,7 +142,7 @@ public class BlockProperties {
         }
     }
 
-    public enum Winding implements IStringSerializable {
+    public enum Winding implements StringRepresentable {
         NONE("none"),
         CHAIN("chain"),
         ROPE("rope");
@@ -159,7 +159,7 @@ public class BlockProperties {
         }
     }
 
-    public enum RakeDirection implements IStringSerializable {
+    public enum RakeDirection implements StringRepresentable {
         NORTH_SOUTH("north_south", Direction.NORTH, Direction.SOUTH),
         EAST_WEST("east_west", Direction.EAST, Direction.WEST),
         SOUTH_EAST("south_east", Direction.SOUTH, Direction.EAST),
@@ -197,7 +197,7 @@ public class BlockProperties {
     }
 
 
-    public enum BellAttachment implements IStringSerializable {
+    public enum BellAttachment implements StringRepresentable {
         CEILING("ceiling"),
         SINGLE_WALL("single_block"),
         DOUBLE_WALL("double_block");
@@ -214,7 +214,7 @@ public class BlockProperties {
         }
     }
 
-    public enum Rune implements IStringSerializable {
+    public enum Rune implements StringRepresentable {
         A("a"),
         B("b"),
         C("c"),

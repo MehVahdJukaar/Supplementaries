@@ -5,16 +5,22 @@ import net.mehvahdjukaar.supplementaries.block.blocks.PedestalBlock;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.item.*;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 
-public class PedestalBlockTile extends ItemDisplayTile implements ITickableTileEntity {
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.EndCrystalItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TridentItem;
+
+public class PedestalBlockTile extends ItemDisplayTile implements TickableBlockEntity {
     public DisplayType type = DisplayType.ITEM;
     public int counter = 0;
 
@@ -23,8 +29,8 @@ public class PedestalBlockTile extends ItemDisplayTile implements ITickableTileE
     }
 
     @Override
-    public AxisAlignedBB getRenderBoundingBox() {
-        return new AxisAlignedBB(worldPosition, worldPosition.offset(1, 2, 1));
+    public AABB getRenderBoundingBox() {
+        return new AABB(worldPosition, worldPosition.offset(1, 2, 1));
     }
 
     @Override
@@ -51,7 +57,7 @@ public class PedestalBlockTile extends ItemDisplayTile implements ITickableTileE
             this.type = DisplayType.SWORD;
         } else if (it instanceof TridentItem || it.is(ModTags.PEDESTAL_UPRIGHT)) {
             this.type = DisplayType.TRIDENT;
-        } else if (it instanceof EnderCrystalItem) {
+        } else if (it instanceof EndCrystalItem) {
             this.type = DisplayType.CRYSTAL;
         } else {
             this.type = DisplayType.ITEM;
@@ -59,21 +65,21 @@ public class PedestalBlockTile extends ItemDisplayTile implements ITickableTileE
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT compound) {
+    public void load(BlockState state, CompoundTag compound) {
         super.load(state, compound);
         this.type = DisplayType.values()[compound.getInt("Type")];
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
+    public CompoundTag save(CompoundTag compound) {
         super.save(compound);
         compound.putInt("Type", this.type.ordinal());
         return compound;
     }
 
     @Override
-    public ITextComponent getDefaultName() {
-        return new TranslationTextComponent("block.supplementaries.pedestal");
+    public Component getDefaultName() {
+        return new TranslatableComponent("block.supplementaries.pedestal");
     }
 
     @Override

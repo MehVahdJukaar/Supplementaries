@@ -1,28 +1,28 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.block.tiles.ItemShelfBlockTile;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import com.mojang.math.Matrix4f;
+import com.mojang.math.Vector3f;
+import net.minecraft.network.chat.Component;
 
 
-public class ItemShelfBlockTileRenderer extends TileEntityRenderer<ItemShelfBlockTile> {
+public class ItemShelfBlockTileRenderer extends BlockEntityRenderer<ItemShelfBlockTile> {
     protected final ItemRenderer itemRenderer;
-    public ItemShelfBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
+    public ItemShelfBlockTileRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
         itemRenderer = Minecraft.getInstance().getItemRenderer();
     }
@@ -35,13 +35,13 @@ public class ItemShelfBlockTileRenderer extends TileEntityRenderer<ItemShelfBloc
         return false;
     }
 
-    protected void renderName(ITextComponent displayNameIn, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
+    protected void renderName(Component displayNameIn, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
 
         double f = 0.625; //height
         int i = 0;
 
-        FontRenderer fontrenderer = this.renderer.getFont();
-        EntityRendererManager renderManager = Minecraft.getInstance().getEntityRenderDispatcher();
+        Font fontrenderer = this.renderer.getFont();
+        EntityRenderDispatcher renderManager = Minecraft.getInstance().getEntityRenderDispatcher();
 
         matrixStackIn.pushPose();
 
@@ -61,7 +61,7 @@ public class ItemShelfBlockTileRenderer extends TileEntityRenderer<ItemShelfBloc
 
 
     @Override
-    public void render(ItemShelfBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
+    public void render(ItemShelfBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
 
         if(!tile.isEmpty()){
@@ -76,7 +76,7 @@ public class ItemShelfBlockTileRenderer extends TileEntityRenderer<ItemShelfBloc
             if(this.canRenderName(tile)){
                 matrixStackIn.pushPose();
                 matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-yaw));
-                ITextComponent name = tile.getItem(0).getHoverName();
+                Component name = tile.getItem(0).getHoverName();
                 int i = "Dinnerbone".equals(name.getString())? -1 : 1;
                 matrixStackIn.scale(i, i, 1);
                 this.renderName(name, matrixStackIn, bufferIn, combinedLightIn);
@@ -85,11 +85,11 @@ public class ItemShelfBlockTileRenderer extends TileEntityRenderer<ItemShelfBloc
 
             ItemStack stack = tile.getDisplayedItem();
             if(CommonUtil.FESTIVITY.isAprilsFool())stack = new ItemStack(Items.SALMON);
-            IBakedModel ibakedmodel = itemRenderer.getModel(stack, tile.getLevel(), null);
+            BakedModel ibakedmodel = itemRenderer.getModel(stack, tile.getLevel(), null);
             if(ibakedmodel.isGui3d()&&ClientConfigs.cached.SHELF_TRANSLATE)matrixStackIn.translate(0,-0.25,0);
 
 
-            itemRenderer.render(stack, ItemCameraTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
+            itemRenderer.render(stack, ItemTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
                     combinedOverlayIn, ibakedmodel);
 
             matrixStackIn.popPose();

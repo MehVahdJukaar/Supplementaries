@@ -1,19 +1,19 @@
 package net.mehvahdjukaar.supplementaries.entities.goals;
 
 import com.google.common.collect.Lists;
-import net.minecraft.entity.ai.goal.LookAtGoal;
-import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.MerchantOffer;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.npc.AbstractVillager;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.trading.MerchantOffer;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class ShowWaresGoal extends LookAtGoal {
-    protected final AbstractVillagerEntity villager;
-    private PlayerEntity player;
+public class ShowWaresGoal extends LookAtPlayerGoal {
+    protected final AbstractVillager villager;
+    private Player player;
     private final int minDuration;
     private final int maxDuration;
     private final List<ItemStack> displayItems = Lists.newArrayList();
@@ -25,8 +25,8 @@ public class ShowWaresGoal extends LookAtGoal {
 
     private int lookTime;
 
-    public ShowWaresGoal(AbstractVillagerEntity mob, int minDuration, int maxDuration) {
-        super(mob, PlayerEntity.class, 8.0F);
+    public ShowWaresGoal(AbstractVillager mob, int minDuration, int maxDuration) {
+        super(mob, Player.class, 8.0F);
         this.villager = mob;
         this.minDuration = minDuration;
         this.maxDuration = maxDuration;
@@ -59,7 +59,7 @@ public class ShowWaresGoal extends LookAtGoal {
         this.lookTime = 40;
         this.cycleCounter = 0;
         this.displayIndex = 0;
-        this.player = (PlayerEntity) this.lookAt;
+        this.player = (Player) this.lookAt;
     }
 
     @Override
@@ -69,7 +69,7 @@ public class ShowWaresGoal extends LookAtGoal {
         if (!this.displayItems.isEmpty()) {
             this.displayCyclingItems();
         } else {
-            this.villager.setItemSlot(EquipmentSlotType.MAINHAND, ItemStack.EMPTY);
+            this.villager.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
             //this.lookTime = Math.min(this.lookTime, 40);
         }
         --this.lookTime;
@@ -79,7 +79,7 @@ public class ShowWaresGoal extends LookAtGoal {
     @Override
     public void stop() {
         super.stop();
-        villager.setItemSlot(EquipmentSlotType.MAINHAND, ItemStack.EMPTY);
+        villager.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
         this.playerItemStack = null;
     }
 
@@ -103,7 +103,7 @@ public class ShowWaresGoal extends LookAtGoal {
     }
 
     private void displayFirstItem() {
-        this.villager.setItemSlot(EquipmentSlotType.MAINHAND, this.displayItems.get(0));
+        this.villager.setItemSlot(EquipmentSlot.MAINHAND, this.displayItems.get(0));
     }
 
     private void updateDisplayItems() {
@@ -127,7 +127,7 @@ public class ShowWaresGoal extends LookAtGoal {
                 this.displayIndex = 0;
             }
 
-            mob.setItemSlot(EquipmentSlotType.MAINHAND, this.displayItems.get(this.displayIndex));
+            mob.setItemSlot(EquipmentSlot.MAINHAND, this.displayItems.get(this.displayIndex));
         }
 
     }

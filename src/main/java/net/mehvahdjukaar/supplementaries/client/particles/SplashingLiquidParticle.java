@@ -1,16 +1,16 @@
 package net.mehvahdjukaar.supplementaries.client.particles;
 
 
-import net.minecraft.client.particle.IAnimatedSprite;
-import net.minecraft.client.particle.IParticleFactory;
+import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.Particle;
-import net.minecraft.client.particle.RainParticle;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.particles.BasicParticleType;
+import net.minecraft.client.particle.WaterDropParticle;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.particles.SimpleParticleType;
 
 
-public class SplashingLiquidParticle extends RainParticle {
-    private SplashingLiquidParticle(ClientWorld world, double x, double y, double z, double motionX, double motionY, double motionZ) {
+public class SplashingLiquidParticle extends WaterDropParticle {
+    private SplashingLiquidParticle(ClientLevel world, double x, double y, double z, double motionX, double motionY, double motionZ) {
         super(world, x, y, z);
         this.gravity = 0.04F;
         if (motionY == 0.0D && (motionX != 0.0D || motionZ != 0.0D)) {
@@ -20,15 +20,15 @@ public class SplashingLiquidParticle extends RainParticle {
         }
     }
 
-    public static class Factory implements IParticleFactory<BasicParticleType> {
-        private final IAnimatedSprite spriteSet;
+    public static class Factory implements ParticleProvider<SimpleParticleType> {
+        private final SpriteSet spriteSet;
 
-        public Factory(IAnimatedSprite spriteSet) {
+        public Factory(SpriteSet spriteSet) {
             this.spriteSet = spriteSet;
         }
 
         @Override
-        public Particle createParticle(BasicParticleType typeIn, ClientWorld worldIn, double x, double y, double z, double r, double g, double b) {
+        public Particle createParticle(SimpleParticleType typeIn, ClientLevel worldIn, double x, double y, double z, double r, double g, double b) {
             SplashingLiquidParticle splashparticle = new SplashingLiquidParticle(worldIn, x, y, z, 0, 0, 0);
             splashparticle.setColor((float)r, (float)g, (float)b);
             splashparticle.pickSprite(this.spriteSet);

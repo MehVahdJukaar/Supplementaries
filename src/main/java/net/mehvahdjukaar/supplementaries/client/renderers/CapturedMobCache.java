@@ -4,10 +4,10 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.item.EnderCrystalEntity;
-import net.minecraft.entity.passive.PigEntity;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
+import net.minecraft.world.entity.animal.Pig;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.event.TickEvent;
@@ -35,13 +35,13 @@ public class CapturedMobCache {
         cachedMobs.put(e.getUUID(), e);
     }
 
-    public static final Lazy<EnderCrystalEntity> pedestalCrystal = Lazy.of(() -> {
-        EnderCrystalEntity entity = new EnderCrystalEntity(EntityType.END_CRYSTAL, Minecraft.getInstance().level);
+    public static final Lazy<EndCrystal> pedestalCrystal = Lazy.of(() -> {
+        EndCrystal entity = new EndCrystal(EntityType.END_CRYSTAL, Minecraft.getInstance().level);
         entity.setShowBottom(false);
         return entity;
     });
 
-    private static final Lazy<Entity> defaultPig = Lazy.of(() -> new PigEntity(EntityType.PIG, Minecraft.getInstance().level));
+    private static final Lazy<Entity> defaultPig = Lazy.of(() -> new Pig(EntityType.PIG, Minecraft.getInstance().level));
 
     @Nullable
     public static Entity getCachedMob(UUID id) {

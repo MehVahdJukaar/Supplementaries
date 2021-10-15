@@ -8,39 +8,51 @@ import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.client.gui.BlackBoardGui;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.*;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class BlackboardBlock extends WaterBlock {
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
+public class BlackboardBlock extends WaterBlock implements EntityBlock {
     public static final VoxelShape SHAPE_SOUTH = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 5.0D);
     public static final VoxelShape SHAPE_NORTH = Block.box(0.0D, 0.0D, 11.0D, 16.0D, 16.0D, 16.0D);
     public static final VoxelShape SHAPE_EAST = Block.box(0.0D, 0.0D, 0.0D, 5.0D, 16.0D, 16.0D);
@@ -56,17 +68,17 @@ public class BlackboardBlock extends WaterBlock {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING, WATERLOGGED, WRITTEN);
     }
 
     @Override
-    public void setPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+    public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(world, pos, state, placer, stack);
         //TODO: backwards compat. remove
-        CompoundNBT compoundnbt = stack.getTagElement("BlockEntityTag");
+        CompoundTag compoundnbt = stack.getTagElement("BlockEntityTag");
         if (compoundnbt != null) {
-            TileEntity te = world.getBlockEntity(pos);
+            BlockEntity te = world.getBlockEntity(pos);
             if (te instanceof BlackboardBlockTile) {
                 if (compoundnbt.contains("pixels_0")) {
                     for (int i = 0; i < 16; i++) {
@@ -76,7 +88,7 @@ public class BlackboardBlock extends WaterBlock {
                 }
             }
         }
-        TileEntity tileentity = world.getBlockEntity(pos);
+        BlockEntity tileentity = world.getBlockEntity(pos);
         if (tileentity instanceof BlackboardBlockTile) {
             ((BlackboardBlockTile) tileentity).setCorrectBlockState(state, pos, world);
             BlockUtils.addOptionalOwnership(placer, tileentity);
@@ -94,7 +106,7 @@ public class BlackboardBlock extends WaterBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         switch (state.getValue(FACING)) {
             default:
             case NORTH:
@@ -123,36 +135,32 @@ public class BlackboardBlock extends WaterBlock {
     }
 
     public static int colorFromByte(byte b) {
-        switch (b) {
-            case 0:
-            case 1:
-                return 0xffffff;
-            case 15:
-                return DyeColor.ORANGE.getColorValue();
-            default:
-                return DyeColor.byId(b).getColorValue();
-        }
+        return switch (b) {
+            case 0, 1 -> 0xffffff;
+            case 15 -> DyeColor.ORANGE.getMaterialColor().col;
+            default -> DyeColor.byId(b).getMaterialColor().col;
+        };
     }
 
-    public static Pair<Integer, Integer> getHitSubPixel(BlockRayTraceResult hit){
-        Vector3d v2 = hit.getLocation();
-        Vector3d v = v2.yRot((float) ((hit.getDirection().toYRot()) * Math.PI / 180f));
+    public static Pair<Integer, Integer> getHitSubPixel(BlockHitResult hit) {
+        Vec3 v2 = hit.getLocation();
+        Vec3 v = v2.yRot((float) ((hit.getDirection().toYRot()) * Math.PI / 180f));
         double fx = ((v.x % 1) * 16);
         if (fx < 0) fx += 16;
-        int x = MathHelper.clamp((int) fx, -15, 15);
+        int x = Mth.clamp((int) fx, -15, 15);
 
-        int y = 15 - (int) MathHelper.clamp(Math.abs((v.y % 1) * 16), 0, 15);
-        return new Pair<>(x,y);
+        int y = 15 - (int) Mth.clamp(Math.abs((v.y % 1) * 16), 0, 15);
+        return new Pair<>(x, y);
     }
 
     @Nullable
-    public static DyeColor getStackChalkColor(ItemStack stack){
+    public static DyeColor getStackChalkColor(ItemStack stack) {
         Item item = stack.getItem();
         DyeColor color = null;
         if (ServerConfigs.cached.BLACKBOARD_COLOR) {
             color = DyeColor.getColor(stack);
         }
-        if(color == null) {
+        if (color == null) {
             if (item.is(ModTags.CHALK) || item.is(Tags.Items.DYES_WHITE)) {
                 color = DyeColor.WHITE;
             } else if (item == Items.COAL || item == Items.CHARCOAL || item.is(Tags.Items.DYES_BLACK)) {
@@ -163,13 +171,13 @@ public class BlackboardBlock extends WaterBlock {
     }
 
     @Override
-    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
-                                BlockRayTraceResult hit) {
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
+                                 BlockHitResult hit) {
         //create tile
         if (!state.getValue(WRITTEN)) {
             worldIn.setBlock(pos, state.setValue(WRITTEN, true), Constants.BlockFlags.NO_RERENDER | Constants.BlockFlags.BLOCK_UPDATE);
         }
-        TileEntity tileentity = worldIn.getBlockEntity(pos);
+        BlockEntity tileentity = worldIn.getBlockEntity(pos);
         if (tileentity instanceof BlackboardBlockTile) {
             BlackboardBlockTile te = (BlackboardBlockTile) tileentity;
 
@@ -185,24 +193,23 @@ public class BlackboardBlock extends WaterBlock {
                 if (color != null) {
                     te.pixels[x][y] = colorToByte(color);
                     te.setChanged();
-                    return ActionResultType.sidedSuccess(worldIn.isClientSide);
-                }
-                else if (item == Items.SPONGE || item == Items.WET_SPONGE) {
+                    return InteractionResult.sidedSuccess(worldIn.isClientSide);
+                } else if (item == Items.SPONGE || item == Items.WET_SPONGE) {
                     te.pixels = new byte[16][16];
                     te.setChanged();
-                    return ActionResultType.sidedSuccess(worldIn.isClientSide);
+                    return InteractionResult.sidedSuccess(worldIn.isClientSide);
                     //TODO: check if it's synced works in myltiplayer (might need mark dirty)
                 }
             }
 
             if (worldIn.isClientSide()) BlackBoardGui.open(te);
         }
-        return ActionResultType.sidedSuccess(worldIn.isClientSide);
+        return InteractionResult.sidedSuccess(worldIn.isClientSide);
     }
 
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
         boolean flag = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;
         BlockState state = this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite()).setValue(WATERLOGGED, flag);
         if (context.getItemInHand().getTagElement("BlockEntityTag") != null) {
@@ -211,29 +218,25 @@ public class BlackboardBlock extends WaterBlock {
         return state;
     }
 
+    @Nullable
     @Override
-    public boolean hasTileEntity(BlockState state) {
-        return state.getValue(WRITTEN);
+    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
+        return pState.getValue(WRITTEN) ? new BlackboardBlockTile() : null;
     }
 
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new BlackboardBlockTile();
-    }
-
-    @Override
-    public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        CompoundNBT compoundnbt = stack.getTagElement("BlockEntityTag");
+        CompoundTag compoundnbt = stack.getTagElement("BlockEntityTag");
         if (compoundnbt != null) {
-            tooltip.add((new TranslationTextComponent("message.supplementaries.blackboard")).withStyle(TextFormatting.GRAY));
+            tooltip.add((new TranslatableComponent("message.supplementaries.blackboard")).withStyle(ChatFormatting.GRAY));
         }
     }
 
     public ItemStack getBlackboardItem(BlackboardBlockTile te) {
         ItemStack itemstack = new ItemStack(this);
         if (!te.isEmpty()) {
-            CompoundNBT compoundnbt = te.saveToTag(new CompoundNBT());
+            CompoundTag compoundnbt = te.saveToTag(new CompoundTag());
             if (!compoundnbt.isEmpty()) {
                 itemstack.addTagElement("BlockEntityTag", compoundnbt);
             }
@@ -256,8 +259,8 @@ public class BlackboardBlock extends WaterBlock {
 
 
     @Override
-    public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
-        TileEntity te = world.getBlockEntity(pos);
+    public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+        BlockEntity te = world.getBlockEntity(pos);
         if (te instanceof BlackboardBlockTile) {
             return this.getBlackboardItem((BlackboardBlockTile) te);
         }
@@ -266,9 +269,9 @@ public class BlackboardBlock extends WaterBlock {
 
 
     @Override
-    public void neighborChanged(BlockState state, World world, BlockPos pos, Block p_220069_4_, BlockPos p_220069_5_, boolean p_220069_6_) {
+    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block p_220069_4_, BlockPos p_220069_5_, boolean p_220069_6_) {
         super.neighborChanged(state, world, pos, p_220069_4_, p_220069_5_, p_220069_6_);
-        TileEntity te = world.getBlockEntity(pos);
+        BlockEntity te = world.getBlockEntity(pos);
         if (te instanceof BlackboardBlockTile) {
             ((BlackboardBlockTile) te).setCorrectBlockState(state, pos, world);
         }

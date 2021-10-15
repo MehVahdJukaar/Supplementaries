@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.supplementaries.block.tiles.FlagBlockTile;
 import net.mehvahdjukaar.supplementaries.client.Materials;
@@ -10,33 +10,33 @@ import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.SpriteAwareVertexBuilder;
-import net.minecraft.client.renderer.model.RenderMaterial;
-import net.minecraft.client.renderer.texture.NativeImage;
+import net.minecraft.client.renderer.SpriteCoordinateExpander;
+import net.minecraft.client.resources.model.Material;
+import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.item.DyeColor;
-import net.minecraft.tileentity.BannerPattern;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.block.entity.BannerPattern;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 
 import java.util.List;
 
-public class FlagBlockTileRenderer extends TileEntityRenderer<FlagBlockTile> {
+public class FlagBlockTileRenderer extends BlockEntityRenderer<FlagBlockTile> {
     private final Minecraft minecraft = Minecraft.getInstance();
 
-    public FlagBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
+    public FlagBlockTileRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
     }
 
 
     @Override
-    public void render(FlagBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
+    public void render(FlagBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
 
         List<Pair<BannerPattern, DyeColor>> list = tile.getPatterns();
@@ -69,7 +69,7 @@ public class FlagBlockTileRenderer extends TileEntityRenderer<FlagBlockTile> {
             int segmentLen = (minecraft.options.graphicsMode.getId() >= ClientConfigs.cached.FLAG_FANCINESS.ordinal()) ? 1 : w;
             for (int dX = 0; dX < w; dX += segmentLen) {
 
-                float ang = (float) ((wavyness + invdamping * dX) * MathHelper.sin((float) ((((dX / l) - t * 2 * (float) Math.PI)))));
+                float ang = (float) ((wavyness + invdamping * dX) * Mth.sin((float) ((((dX / l) - t * 2 * (float) Math.PI)))));
 
                 renderPatterns(bufferIn, matrixStackIn, list, lu, lv, dX, w, h, segmentLen, ang);
                 matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(ang));
@@ -82,18 +82,18 @@ public class FlagBlockTileRenderer extends TileEntityRenderer<FlagBlockTile> {
 
     }
 
-    public static void renderPatterns(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, List<Pair<BannerPattern, DyeColor>> list, int combinedLightIn) {
+    public static void renderPatterns(PoseStack matrixStackIn, MultiBufferSource bufferIn, List<Pair<BannerPattern, DyeColor>> list, int combinedLightIn) {
         int lu = combinedLightIn & '\uffff';
         int lv = combinedLightIn >> 16 & '\uffff';
         renderPatterns(bufferIn, matrixStackIn, list, lu, lv, 0, 24, 16, 24, 0);
     }
 
-    private static void renderPatterns(IRenderTypeBuffer bufferIn, MatrixStack matrixStackIn, List<Pair<BannerPattern, DyeColor>> list, int lu, int lv, int dX, int w, int h, int segmentlen, float ang) {
+    private static void renderPatterns(MultiBufferSource bufferIn, PoseStack matrixStackIn, List<Pair<BannerPattern, DyeColor>> list, int lu, int lv, int dX, int w, int h, int segmentlen, float ang) {
 
         for (int p = 0; p < list.size(); p++) {
 
-            RenderMaterial rendermaterial = Materials.FLAG_MATERIALS.get(list.get(p).getFirst());
-            SpriteAwareVertexBuilder builder = (SpriteAwareVertexBuilder) rendermaterial.buffer(bufferIn, p == 0 ? RenderType::entitySolid : RenderType::entityNoOutline);
+            Material rendermaterial = Materials.FLAG_MATERIALS.get(list.get(p).getFirst());
+            SpriteCoordinateExpander builder = (SpriteCoordinateExpander) rendermaterial.buffer(bufferIn, p == 0 ? RenderType::entitySolid : RenderType::entityNoOutline);
 
             matrixStackIn.pushPose();
 
@@ -109,7 +109,7 @@ public class FlagBlockTileRenderer extends TileEntityRenderer<FlagBlockTile> {
     }
 
 
-    private static void renderCurvedSegment(IVertexBuilder builder, TextureAtlasSprite sprite, MatrixStack matrixStack, float angle, int dX,
+    private static void renderCurvedSegment(VertexConsumer builder, TextureAtlasSprite sprite, PoseStack matrixStack, float angle, int dX,
                                             int length, int height, int lu, int lv, boolean end, float r, float g, float b) {
 
         float textW = 32f;

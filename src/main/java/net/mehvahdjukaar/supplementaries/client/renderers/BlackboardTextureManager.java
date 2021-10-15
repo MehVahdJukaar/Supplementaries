@@ -11,10 +11,12 @@ import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.*;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
+
+import com.mojang.blaze3d.platform.NativeImage;
 
 public class BlackboardTextureManager {
 
@@ -188,7 +190,7 @@ public class BlackboardTextureManager {
     private static int getColoredPixel(byte i, int x, int y) {
         int offset = i > 0 ? 16 : 0;
         int tint = BlackboardBlock.colorFromByte(i);
-        AtlasTexture textureMap = Minecraft.getInstance().getModelManager().getAtlas(AtlasTexture.LOCATION_BLOCKS);
+        TextureAtlas textureMap = Minecraft.getInstance().getModelManager().getAtlas(TextureAtlas.LOCATION_BLOCKS);
         TextureAtlasSprite sprite = textureMap.getSprite(Textures.BLACKBOARD_TEXTURE);
         return getTintedColor(sprite, x, y, offset, tint);
     }

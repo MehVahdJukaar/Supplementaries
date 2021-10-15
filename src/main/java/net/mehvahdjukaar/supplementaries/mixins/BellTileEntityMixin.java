@@ -1,22 +1,24 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.block.util.IBellConnections;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.BellTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.entity.BellBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.phys.AABB;
 import org.spongepowered.asm.mixin.Mixin;
 
-@Mixin(BellTileEntity.class)
-public abstract class BellTileEntityMixin extends TileEntity  implements IBellConnections {
+import net.mehvahdjukaar.supplementaries.block.util.IBellConnections.BellConnection;
+
+@Mixin(BellBlockEntity.class)
+public abstract class BellTileEntityMixin extends BlockEntity  implements IBellConnections {
     public BellConnection connection = BellConnection.NONE;
 
 
-    public BellTileEntityMixin(TileEntityType<?> tileEntityTypeIn) {
+    public BellTileEntityMixin(BlockEntityType<?> tileEntityTypeIn) {
         super(tileEntityTypeIn);
     }
 
@@ -32,7 +34,7 @@ public abstract class BellTileEntityMixin extends TileEntity  implements IBellCo
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
+    public CompoundTag save(CompoundTag compound) {
         super.save(compound);
         //not needed but since I keep getting reports lets do this
         try {
@@ -43,7 +45,7 @@ public abstract class BellTileEntityMixin extends TileEntity  implements IBellCo
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT compound) {
+    public void load(BlockState state, CompoundTag compound) {
         super.load(state, compound);
         try {
             if(compound.contains("Connection"))
@@ -54,22 +56,22 @@ public abstract class BellTileEntityMixin extends TileEntity  implements IBellCo
     }
 
     @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.worldPosition, 0, this.getUpdateTag());
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return new ClientboundBlockEntityDataPacket(this.worldPosition, 0, this.getUpdateTag());
     }
 
     @Override
-    public CompoundNBT getUpdateTag() {
-        return this.save(new CompoundNBT());
+    public CompoundTag getUpdateTag() {
+        return this.save(new CompoundTag());
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         this.load(this.getBlockState(), pkt.getTag());
     }
 
     @Override
-    public AxisAlignedBB getRenderBoundingBox() {
-        return new AxisAlignedBB(this.worldPosition);
+    public AABB getRenderBoundingBox() {
+        return new AABB(this.worldPosition);
     }
 }

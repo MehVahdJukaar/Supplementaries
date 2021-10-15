@@ -1,21 +1,21 @@
 package net.mehvahdjukaar.supplementaries.world.structures;
 
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SharedSeedRandom;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.SectionPos;
-import net.minecraft.world.biome.provider.BiomeProvider;
-import net.minecraft.world.chunk.ChunkStatus;
-import net.minecraft.world.chunk.IChunk;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.feature.structure.Structure;
-import net.minecraft.world.gen.feature.structure.StructureManager;
-import net.minecraft.world.gen.feature.structure.StructureStart;
-import net.minecraft.world.gen.settings.StructureSeparationSettings;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.levelgen.WorldgenRandom;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.util.Mth;
+import net.minecraft.core.SectionPos;
+import net.minecraft.world.level.biome.BiomeSource;
+import net.minecraft.world.level.chunk.ChunkStatus;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.StructureFeatureManager;
+import net.minecraft.world.level.levelgen.structure.StructureStart;
+import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatureConfiguration;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -29,7 +29,7 @@ public class StructureLocator {
 
     private static final TreeMap<Float, Pair<Integer, Integer>> CHUNK_POSITIONS = new TreeMap<>();
 
-    private static final List<Structure<?>> TARGETS = new ArrayList<>();
+    private static final List<StructureFeature<?>> TARGETS = new ArrayList<>();
 
     public static void init() {
         for (String name : ServerConfigs.spawn.SIGNS_VILLAGES.get()) {
@@ -45,7 +45,7 @@ public class StructureLocator {
                 for (int y = -r; y <= r; ++y) {
                     boolean edgeY = y == -r || y == r;
                     if (edgeX || edgeY) {
-                        CHUNK_POSITIONS.put(MathHelper.sqrt(x * x + y * y), new ImmutablePair<>(x, y));
+                        CHUNK_POSITIONS.put(Mth.sqrt(x * x + y * y), new ImmutablePair<>(x, y));
                     }
                 }
             }
@@ -57,17 +57,17 @@ public class StructureLocator {
     private static int dist(BlockPos pos1, BlockPos pos2) {
         int i = pos2.getX() - pos1.getX();
         int j = pos2.getZ() - pos1.getZ();
-        return (int) (MathHelper.sqrt((float) (i * i + j * j)));
+        return (int) (Mth.sqrt((float) (i * i + j * j)));
     }
 
     private static float distance(BlockPos pos1, BlockPos pos2) {
         int i = pos2.getX() - pos1.getX();
         int j = pos2.getZ() - pos1.getZ();
-        return MathHelper.sqrt((float) (i * i + j * j));
+        return Mth.sqrt((float) (i * i + j * j));
     }
 
     //doesn't work. not precise and slower in cases
-    public static Pair<TreeMap<Float, BlockPos>, Boolean> findFast(ServerWorld world, BlockPos pos, int count) {
+    public static Pair<TreeMap<Float, BlockPos>, Boolean> findFast(ServerLevel world, BlockPos pos, int count) {
         TreeMap<Float, BlockPos> found = new TreeMap<>();
         //List<Pair<Integer,BlockPos>> found = new ArrayList<>();
 
@@ -76,14 +76,14 @@ public class StructureLocator {
         if (world.getServer().getWorldData().worldGenSettings().generateFeatures()) {
 
             ChunkGenerator gen = world.getChunkSource().getGenerator();
-            BiomeProvider biomeSource = gen.getBiomeSource();
+            BiomeSource biomeSource = gen.getBiomeSource();
 
-            List<Structure<?>> possibleTargets = new ArrayList<>();
-            List<StructureSeparationSettings> sepSettings = new ArrayList<>();
+            List<StructureFeature<?>> possibleTargets = new ArrayList<>();
+            List<StructureFeatureConfiguration> sepSettings = new ArrayList<>();
 
-            for (Structure<?> str : TARGETS) {
+            for (StructureFeature<?> str : TARGETS) {
                 if (biomeSource.canGenerateStructure(str)) {
-                    StructureSeparationSettings sep = gen.getSettings().getConfig(str);
+                    StructureFeatureConfiguration sep = gen.getSettings().getConfig(str);
                     if (sep != null) {
                         possibleTargets.add(str);
                         sepSettings.add(sep);
@@ -95,13 +95,13 @@ public class StructureLocator {
 
                 long seed = world.getSeed();
 
-                StructureManager manager = world.structureFeatureManager();
+                StructureFeatureManager manager = world.structureFeatureManager();
 
                 int chunkX = pos.getX() >> 4;
                 int chunkY = pos.getZ() >> 4;
 
                 //checks in ever growing circles by increasing radius r
-                SharedSeedRandom sharedseedrandom = new SharedSeedRandom();
+                WorldgenRandom sharedseedrandom = new WorldgenRandom();
                 float lastDist = 0;
                 for (float key : CHUNK_POSITIONS.keySet()) {
                     Pair<Integer, Integer> pair = CHUNK_POSITIONS.get(key);
@@ -110,15 +110,15 @@ public class StructureLocator {
 
                     for (int ind = 0; ind < possibleTargets.size(); ind++) {
 
-                        StructureSeparationSettings settings = sepSettings.get(ind);
-                        Structure<?> s = possibleTargets.get(ind);
+                        StructureFeatureConfiguration settings = sepSettings.get(ind);
+                        StructureFeature<?> s = possibleTargets.get(ind);
 
                         int spacing = settings.spacing();
 
                         int k1 = chunkX + spacing * x;
                         int l1 = chunkY + spacing * y;
                         ChunkPos chunkpos = s.getPotentialFeatureChunk(settings, seed, sharedseedrandom, k1, l1);
-                        IChunk ichunk = world.getChunk(chunkpos.x, chunkpos.z, ChunkStatus.STRUCTURE_STARTS);
+                        ChunkAccess ichunk = world.getChunk(chunkpos.x, chunkpos.z, ChunkStatus.STRUCTURE_STARTS);
                         StructureStart<?> structureStart = manager.getStartForFeature(SectionPos.of(ichunk.getPos(), 0), s, ichunk);
                         if (structureStart != null && structureStart.isValid()) {
                             BlockPos p = structureStart.getLocatePos();
@@ -144,7 +144,7 @@ public class StructureLocator {
     }
 
 
-    public static Pair<List<Pair<Integer, BlockPos>>, Boolean> find(ServerWorld world, int posX, int posZ, int count) {
+    public static Pair<List<Pair<Integer, BlockPos>>, Boolean> find(ServerLevel world, int posX, int posZ, int count) {
         //TreeMap<Integer,BlockPos> found = new TreeMap<>();
         List<Pair<Integer, BlockPos>> found = new ArrayList<>();
 
@@ -153,16 +153,16 @@ public class StructureLocator {
         if (world.getServer().getWorldData().worldGenSettings().generateFeatures()) {
 
             ChunkGenerator gen = world.getChunkSource().getGenerator();
-            BiomeProvider biomeSource = gen.getBiomeSource();
+            BiomeSource biomeSource = gen.getBiomeSource();
 
-            List<Structure<?>> possibleTargets = new ArrayList<>();
-            List<StructureSeparationSettings> sepSettings = new ArrayList<>();
+            List<StructureFeature<?>> possibleTargets = new ArrayList<>();
+            List<StructureFeatureConfiguration> sepSettings = new ArrayList<>();
 
 
             //TODO: cache some of this
-            for (Structure<?> str : TARGETS) {
+            for (StructureFeature<?> str : TARGETS) {
                 if (biomeSource.canGenerateStructure(str)) {
-                    StructureSeparationSettings sep = gen.getSettings().getConfig(str);
+                    StructureFeatureConfiguration sep = gen.getSettings().getConfig(str);
                     if (sep != null) {
                         possibleTargets.add(str);
                         sepSettings.add(sep);
@@ -175,7 +175,7 @@ public class StructureLocator {
 
                 long seed = world.getSeed();
 
-                StructureManager manager = world.structureFeatureManager();
+                StructureFeatureManager manager = world.structureFeatureManager();
 
 
                 int chunkX = posX >> 4;
@@ -185,7 +185,7 @@ public class StructureLocator {
                 int range = 25;
 
                 //checks in ever growing circles by increasing radius r
-                for (SharedSeedRandom sharedseedrandom = new SharedSeedRandom(); r <= range; ++r) {
+                for (WorldgenRandom sharedseedrandom = new WorldgenRandom(); r <= range; ++r) {
 
                     for (int ind = 0; ind < possibleTargets.size(); ind++) {
 
@@ -196,15 +196,15 @@ public class StructureLocator {
                                 boolean edgeY = y == -r || y == r;
                                 if (edgeX || edgeY) {
 
-                                    StructureSeparationSettings settings = sepSettings.get(ind);
-                                    Structure<?> s = possibleTargets.get(ind);
+                                    StructureFeatureConfiguration settings = sepSettings.get(ind);
+                                    StructureFeature<?> s = possibleTargets.get(ind);
 
                                     int spacing = settings.spacing();
 
                                     int k1 = chunkX + spacing * x;
                                     int l1 = chunkY + spacing * y;
                                     ChunkPos chunkpos = s.getPotentialFeatureChunk(settings, seed, sharedseedrandom, k1, l1);
-                                    IChunk ichunk = world.getChunk(chunkpos.x, chunkpos.z, ChunkStatus.STRUCTURE_STARTS);
+                                    ChunkAccess ichunk = world.getChunk(chunkpos.x, chunkpos.z, ChunkStatus.STRUCTURE_STARTS);
                                     StructureStart<?> structureStart = manager.getStartForFeature(SectionPos.of(ichunk.getPos(), 0), s, ichunk);
                                     if (structureStart != null && structureStart.isValid()) {
                                         BlockPos p = structureStart.getLocatePos();

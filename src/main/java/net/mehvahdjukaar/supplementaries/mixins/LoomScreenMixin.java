@@ -1,21 +1,21 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.FlagBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.items.FlagItem;
-import net.minecraft.block.BannerBlock;
-import net.minecraft.client.gui.screen.LoomScreen;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.LoomContainer;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.BannerPattern;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.level.block.BannerBlock;
+import net.minecraft.client.gui.screens.inventory.LoomScreen;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.LoomMenu;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BannerPattern;
+import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -26,7 +26,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.List;
 
 @Mixin(LoomScreen.class)
-public abstract class LoomScreenMixin extends ContainerScreen<LoomContainer> {
+public abstract class LoomScreenMixin extends AbstractContainerScreen<LoomMenu> {
 
     @Shadow
     private List<Pair<BannerPattern, DyeColor>> resultBannerPatterns;
@@ -35,7 +35,7 @@ public abstract class LoomScreenMixin extends ContainerScreen<LoomContainer> {
     @Shadow
     private ItemStack bannerStack;
 
-    public LoomScreenMixin(LoomContainer p_i51105_1_, PlayerInventory p_i51105_2_, ITextComponent p_i51105_3_) {
+    public LoomScreenMixin(LoomMenu p_i51105_1_, Inventory p_i51105_2_, Component p_i51105_3_) {
         super(p_i51105_1_, p_i51105_2_, p_i51105_3_);
     }
 
@@ -53,11 +53,11 @@ public abstract class LoomScreenMixin extends ContainerScreen<LoomContainer> {
 
 
     @Inject(method = "renderBg", at = @At("TAIL"), cancellable = true)
-    public void renderBg(MatrixStack matrixStack, float ticks, int mouseX, int mouseY, CallbackInfo ci){
+    public void renderBg(PoseStack matrixStack, float ticks, int mouseX, int mouseY, CallbackInfo ci){
         if (this.resultBannerPatterns != null && !this.hasMaxPatterns && this.bannerStack.getItem() instanceof FlagItem) {
             int i = this.leftPos;
             int j = this.topPos;
-            IRenderTypeBuffer.Impl renderTypeBuffer = this.minecraft.renderBuffers().bufferSource();
+            MultiBufferSource.BufferSource renderTypeBuffer = this.minecraft.renderBuffers().bufferSource();
             matrixStack.pushPose();
 
             matrixStack.translate(i + 139, j + 52, 0.0D);

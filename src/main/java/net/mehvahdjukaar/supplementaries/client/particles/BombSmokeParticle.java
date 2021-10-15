@@ -1,12 +1,12 @@
 package net.mehvahdjukaar.supplementaries.client.particles;
 
 import net.minecraft.client.particle.*;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.particles.BasicParticleType;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.particles.SimpleParticleType;
 
 
-public class BombSmokeParticle extends SpriteTexturedParticle {
-    private BombSmokeParticle(ClientWorld world, double x, double y, double z, double motionX, double motionY, double motionZ) {
+public class BombSmokeParticle extends TextureSheetParticle {
+    private BombSmokeParticle(ClientLevel world, double x, double y, double z, double motionX, double motionY, double motionZ) {
         super(world, x, y, z);
         this.scale(3.0F);
         this.setSize(0.35F, 0.35F);
@@ -37,19 +37,19 @@ public class BombSmokeParticle extends SpriteTexturedParticle {
         }
     }
 
-    public IParticleRenderType getRenderType() {
-        return IParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+    public ParticleRenderType getRenderType() {
+        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
     }
 
-    public static class Factory implements IParticleFactory<BasicParticleType> {
-        private final IAnimatedSprite spriteSet;
+    public static class Factory implements ParticleProvider<SimpleParticleType> {
+        private final SpriteSet spriteSet;
 
-        public Factory(IAnimatedSprite spriteSet) {
+        public Factory(SpriteSet spriteSet) {
             this.spriteSet = spriteSet;
         }
 
         @Override
-        public Particle createParticle(BasicParticleType typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+        public Particle createParticle(SimpleParticleType typeIn, ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
             BombSmokeParticle particle = new BombSmokeParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed);
             particle.setAlpha(0.9F);
             particle.pickSprite(this.spriteSet);

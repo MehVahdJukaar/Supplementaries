@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.compat.framedblocks;
 
 import net.mehvahdjukaar.supplementaries.block.tiles.SignPostBlockTile;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;

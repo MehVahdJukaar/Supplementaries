@@ -8,19 +8,19 @@ import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.dynamictrees.DynamicTreesCompat;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.client.model.ModelDataManager;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
@@ -70,12 +70,12 @@ public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder 
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         //this.load(this.getBlockState(), pkt.getTag());
         BlockState oldMimic0 = this.flowerStates[0];
         BlockState oldMimic1 = this.flowerStates[1];
         BlockState oldMimic2 = this.flowerStates[2];
-        CompoundNBT tag = pkt.getTag();
+        CompoundTag tag = pkt.getTag();
         handleUpdateTag(this.getBlockState(), tag);
         if (!Objects.equals(oldMimic0, this.flowerStates[0]) || !Objects.equals(oldMimic1, this.flowerStates[1]) ||
                 !Objects.equals(oldMimic2, this.flowerStates[2])) {
@@ -85,8 +85,8 @@ public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder 
     }
 
     @Override
-    public AxisAlignedBB getRenderBoundingBox() {
-        return new AxisAlignedBB(this.worldPosition).move(0, 0.25, 0);
+    public AABB getRenderBoundingBox() {
+        return new AABB(this.worldPosition).move(0, 0.25, 0);
     }
 
     @Override
@@ -109,8 +109,8 @@ public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder 
     }
 
     @Override
-    public ITextComponent getDefaultName() {
-        return new TranslationTextComponent("block.supplementaries.flower_box");
+    public Component getDefaultName() {
+        return new TranslatableComponent("block.supplementaries.flower_box");
     }
 
     public float getYaw() {

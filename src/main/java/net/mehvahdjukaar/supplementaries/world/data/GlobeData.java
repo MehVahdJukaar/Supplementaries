@@ -3,13 +3,13 @@ package net.mehvahdjukaar.supplementaries.world.data;
 import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.SyncGlobeDataPacket;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.world.ISeedReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.storage.WorldSavedData;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -17,7 +17,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.FORGE)
-public class GlobeData extends WorldSavedData {
+public class GlobeData extends SavedData {
     public static final String DATA_NAME = "supplementariesGlobeData";
     public byte[][] globePixels;
     public long seed;
@@ -40,7 +40,7 @@ public class GlobeData extends WorldSavedData {
     }
 
     @Override
-    public void load(CompoundNBT nbt) {
+    public void load(CompoundTag nbt) {
         for(int i = 0; i< globePixels.length; i++) {
             this.globePixels[i] = nbt.getByteArray("colors_"+i);
         }
@@ -48,7 +48,7 @@ public class GlobeData extends WorldSavedData {
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT nbt) {
+    public CompoundTag save(CompoundTag nbt) {
         for(int i = 0; i< globePixels.length; i++) {
             nbt.putByteArray("colors_"+i, this.globePixels[i]);
         }
@@ -57,17 +57,17 @@ public class GlobeData extends WorldSavedData {
     }
 
     //call after you modify the data value
-    public void syncData(World world) {
+    public void syncData(Level world) {
         this.setDirty();
         if (!world.isClientSide)
             NetworkHandler.INSTANCE.send(PacketDistributor.ALL.noArg(), new SyncGlobeDataPacket(this));
     }
     //data received from network is stored here
     private static GlobeData clientSide = new GlobeData();
-    public static GlobeData get(World world) {
-        if (world instanceof ServerWorld) {
-            return world.getServer().getLevel(World.OVERWORLD).getDataStorage().computeIfAbsent(
-                    ()->new GlobeData(((ISeedReader) world).getSeed()), DATA_NAME);
+    public static GlobeData get(Level world) {
+        if (world instanceof ServerLevel) {
+            return world.getServer().getLevel(Level.OVERWORLD).getDataStorage().computeIfAbsent(
+                    ()->new GlobeData(((WorldGenLevel) world).getSeed()), DATA_NAME);
         } else {
             return clientSide;
         }
@@ -82,10 +82,10 @@ public class GlobeData extends WorldSavedData {
 
     @SubscribeEvent
     public static void onWorldLoad(WorldEvent.Load event) {
-        IWorld world = event.getWorld();
+        LevelAccessor world = event.getWorld();
         //TODO: might remove this on final release
-        if(world instanceof ServerWorld && ((World) world).dimension()==World.OVERWORLD){
-            GlobeData.get((World) world).updateData();
+        if(world instanceof ServerLevel && ((Level) world).dimension()==Level.OVERWORLD){
+            GlobeData.get((Level) world).updateData();
         }
     }
 
@@ -94,7 +94,7 @@ public class GlobeData extends WorldSavedData {
         if (!event.getPlayer().level.isClientSide) {
             GlobeData data = GlobeData.get(event.getPlayer().level);
             if (data != null)
-                NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) event.getPlayer()),
+                NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) event.getPlayer()),
                         new SyncGlobeDataPacket(data));
         }
     }

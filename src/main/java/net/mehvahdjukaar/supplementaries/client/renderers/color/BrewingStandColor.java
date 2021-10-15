@@ -1,25 +1,25 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.color;
 
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.color.IBlockColor;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.PotionUtils;
-import net.minecraft.tileentity.BrewingStandTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockDisplayReader;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.color.block.BlockColor;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.level.block.entity.BrewingStandBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockAndTintGetter;
 import org.jetbrains.annotations.Nullable;
 
-public class BrewingStandColor implements IBlockColor {
+public class BrewingStandColor implements BlockColor {
 
     @Override
-    public int getColor(BlockState state, @Nullable IBlockDisplayReader world, @Nullable BlockPos pos, int tint) {
+    public int getColor(BlockState state, @Nullable BlockAndTintGetter world, @Nullable BlockPos pos, int tint) {
         if(world!=null&&pos!=null) {
-            TileEntity te = world.getBlockEntity(pos);
-            if (te instanceof BrewingStandTileEntity) {
-                ItemStack item = ((IInventory) te).getItem(tint);
+            BlockEntity te = world.getBlockEntity(pos);
+            if (te instanceof BrewingStandBlockEntity) {
+                ItemStack item = ((Container) te).getItem(tint);
                 if(!item.isEmpty()){
                     if(!ClientConfigs.cached.COLORED_BWERING_STAND)return 0xff3434;
                     return PotionUtils.getColor(item);

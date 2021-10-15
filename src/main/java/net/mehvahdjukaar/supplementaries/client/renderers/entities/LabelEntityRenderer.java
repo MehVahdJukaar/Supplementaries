@@ -1,29 +1,33 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.entities;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.entities.LabelEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.model.ModelManager;
-import net.minecraft.client.renderer.model.ModelResourceLocation;
-import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.resources.model.ModelManager;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Matrix3f;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import com.mojang.math.Matrix3f;
+import net.minecraft.world.phys.Vec3;
+import com.mojang.math.Vector3f;
 
 import javax.annotation.Nonnull;
 import java.util.function.Consumer;
 
+
+import com.mojang.blaze3d.platform.Lighting;
+import net.minecraft.client.renderer.block.ModelBlockRenderer;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 
 public class LabelEntityRenderer extends EntityRenderer<LabelEntity> {
     //public static final StateContainer<Block, BlockState> LABEL_FAKE_DEFINITION = (new StateContainer.Builder<Block, BlockState>(Blocks.AIR)).add(BooleanProperty.create("jar")).create(Block::defaultBlockState, BlockState::new);
@@ -31,10 +35,10 @@ public class LabelEntityRenderer extends EntityRenderer<LabelEntity> {
     public static final ModelResourceLocation LABEL_LOCATION = new ModelResourceLocation(Supplementaries.MOD_ID+":label", "jar=false");
     private static final ModelResourceLocation JAR_LABEL_LOCATION = new ModelResourceLocation(Supplementaries.MOD_ID+":label", "jar=true");
     private final ItemRenderer itemRenderer;
-    private final BlockModelRenderer modelRenderer;
+    private final ModelBlockRenderer modelRenderer;
     private final ModelManager modelManager;
 
-    public LabelEntityRenderer(EntityRendererManager manager, ItemRenderer itemRenderer) {
+    public LabelEntityRenderer(EntityRenderDispatcher manager, ItemRenderer itemRenderer) {
         super(manager);
         this.itemRenderer = itemRenderer;
         Minecraft minecraft = Minecraft.getInstance();
@@ -42,11 +46,11 @@ public class LabelEntityRenderer extends EntityRenderer<LabelEntity> {
         this.modelManager = minecraft.getBlockRenderer().getBlockModelShaper().getModelManager();
     }
 
-    public void render(LabelEntity entity, float entityYaw, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int light) {
+    public void render(LabelEntity entity, float entityYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int light) {
         super.render(entity, entityYaw, partialTicks, matrixStack, buffer, light);
         matrixStack.pushPose();
         Direction direction = entity.getDirection();
-        Vector3d vector3d = this.getRenderOffset(entity, partialTicks);
+        Vec3 vector3d = this.getRenderOffset(entity, partialTicks);
         matrixStack.translate(-vector3d.x(), -vector3d.y(), -vector3d.z());
 
         double d0 = 0.46875D;
@@ -56,7 +60,7 @@ public class LabelEntityRenderer extends EntityRenderer<LabelEntity> {
 
         matrixStack.pushPose();
         matrixStack.translate(-0.5D, -0.5D, -0.5D);
-        modelRenderer.renderModel(matrixStack.last(), buffer.getBuffer(Atlases.solidBlockSheet()), null, modelManager.getModel(LABEL_LOCATION), 1.0F, 1.0F, 1.0F, light, OverlayTexture.NO_OVERLAY);
+        modelRenderer.renderModel(matrixStack.last(), buffer.getBuffer(Sheets.solidBlockSheet()), null, modelManager.getModel(LABEL_LOCATION), 1.0F, 1.0F, 1.0F, light, OverlayTexture.NO_OVERLAY);
         matrixStack.popPose();
 
         ItemStack itemstack = new ItemStack(Items.OAK_LOG);//entity.getItem();
@@ -72,32 +76,32 @@ public class LabelEntityRenderer extends EntityRenderer<LabelEntity> {
 
         //hax
         matrixStack.popPose();
-        RenderHelper.setupLevel(matrixStack.last().pose());
+        Lighting.setupLevel(matrixStack.last().pose());
         matrixStack.pushPose();
     }
 
 
-    private void renderFlatItem(@Nonnull ItemStack itemStack, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
+    private void renderFlatItem(@Nonnull ItemStack itemStack, PoseStack matrix, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
 
         matrix.pushPose();
         //matrix.translate(0.5D, 0.5, 1);
         matrix.scale(-1, 1, 0.0008F);
 
-        Consumer<IRenderTypeBuffer> finish = (buf) -> {
-            if (buf instanceof IRenderTypeBuffer.Impl) {
-                ((IRenderTypeBuffer.Impl)buf).endBatch();
+        Consumer<MultiBufferSource> finish = (buf) -> {
+            if (buf instanceof MultiBufferSource.BufferSource) {
+                ((MultiBufferSource.BufferSource)buf).endBatch();
             }
         };
         try {
-            IBakedModel itemModel = itemRenderer.getModel(itemStack, null, null);
+            BakedModel itemModel = itemRenderer.getModel(itemStack, null, null);
             finish.accept(buffer);
             if (itemModel.isGui3d()) {
-                RenderHelper.setupFor3DItems();
+                Lighting.setupFor3DItems();
             } else {
-                RenderHelper.setupForFlatItems();
+                Lighting.setupForFlatItems();
             }
             matrix.last().normal().load(Matrix3f.createScaleMatrix(1.0F, -1.0F, 1.0F));
-            itemRenderer.render(itemStack, ItemCameraTransforms.TransformType.GUI, false, matrix, buffer, combinedLight, combinedOverlay, itemModel);
+            itemRenderer.render(itemStack, ItemTransforms.TransformType.GUI, false, matrix, buffer, combinedLight, combinedOverlay, itemModel);
             finish.accept(buffer);
         } catch (Exception ignored) {}
 
@@ -105,12 +109,12 @@ public class LabelEntityRenderer extends EntityRenderer<LabelEntity> {
 
     }
 
-    public Vector3d getRenderOffset(LabelEntity entity, float partialTicks) {
-        return new Vector3d((float)entity.getDirection().getStepX() * 0.3F, -0.25D, (float)entity.getDirection().getStepZ() * 0.3F);
+    public Vec3 getRenderOffset(LabelEntity entity, float partialTicks) {
+        return new Vec3((float)entity.getDirection().getStepX() * 0.3F, -0.25D, (float)entity.getDirection().getStepZ() * 0.3F);
     }
 
     public ResourceLocation getTextureLocation(LabelEntity p_110775_1_) {
-        return AtlasTexture.LOCATION_BLOCKS;
+        return TextureAtlas.LOCATION_BLOCKS;
     }
 
     protected boolean shouldShowName(LabelEntity p_177070_1_) {

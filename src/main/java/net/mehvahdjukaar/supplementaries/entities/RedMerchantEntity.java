@@ -8,24 +8,24 @@ import net.mehvahdjukaar.supplementaries.network.SendOrangeTraderOffersPacket;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.item.ExperienceOrbEntity;
-import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
+import net.minecraft.world.entity.ExperienceOrb;
+import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.entity.monster.*;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.SimpleNamedContainerProvider;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.item.*;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.network.IPacket;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.network.protocol.Packet;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.fml.network.PacketDistributor;
 
@@ -34,51 +34,81 @@ import java.util.EnumSet;
 import java.util.OptionalInt;
 
 //pretty much wantering trader class
-public class RedMerchantEntity extends AbstractVillagerEntity implements IRangedAttackMob {
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.AgableMob;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.LookAtTradingPlayerGoal;
+import net.minecraft.world.entity.ai.goal.MoveTowardsRestrictionGoal;
+import net.minecraft.world.entity.ai.goal.TradeWithPlayerGoal;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.entity.monster.RangedAttackMob;
+import net.minecraft.world.entity.monster.Vex;
+import net.minecraft.world.entity.monster.Zoglin;
+import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.world.entity.raid.Raider;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.trading.MerchantOffer;
+import net.minecraft.world.item.trading.MerchantOffers;
+
+public class RedMerchantEntity extends AbstractVillager implements RangedAttackMob {
     @Nullable
     private BlockPos wanderTarget;
     private int despawnDelay;
 
     public int attackCooldown = 0;
 
-    public RedMerchantEntity(EntityType<? extends RedMerchantEntity> type, World world) {
+    public RedMerchantEntity(EntityType<? extends RedMerchantEntity> type, Level world) {
         super(type, world);
         this.forcedLoading = true;
     }
 
-    public RedMerchantEntity(World world) {
+    public RedMerchantEntity(Level world) {
         this(ModRegistry.RED_MERCHANT_TYPE.get(), world);
     }
 
     @Override
-    public IPacket<?> getAddEntityPacket() {
+    public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @Override
     protected void registerGoals() {
 
-        this.goalSelector.addGoal(0, new SwimGoal(this));
+        this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(2, new EquipAndRangeAttackGoal(this, 0.35D, 60, 10, 20, 15, new ItemStack(ModRegistry.BOMB_ITEM.get())));
 
-        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, MobEntity.class, 8, true, false,
-                (mob) ->  (mob instanceof AbstractRaiderEntity || mob instanceof ZombieEntity || mob instanceof ZoglinEntity)));
+        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Mob.class, 8, true, false,
+                (mob) ->  (mob instanceof Raider || mob instanceof Zombie || mob instanceof Zoglin)));
 
         this.goalSelector.addGoal(3, new TradeWithPlayerGoal(this));
-        this.goalSelector.addGoal(3, new LookAtCustomerGoal(this));
+        this.goalSelector.addGoal(3, new LookAtTradingPlayerGoal(this));
 
-        this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, ZombieEntity.class, 6.0F, 0.5D, 0.5D));
-        this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, VexEntity.class, 8.0F, 0.5D, 0.5D));
-        this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, CreeperEntity.class, 8.0F, 0.5D, 0.5D));
-        this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, AbstractRaiderEntity.class, 11.0F, 0.5D, 0.5D));
-        this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, ZoglinEntity.class, 8.0F, 0.5D, 0.5D));
+        this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, Zombie.class, 6.0F, 0.5D, 0.5D));
+        this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, Vex.class, 8.0F, 0.5D, 0.5D));
+        this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, Creeper.class, 8.0F, 0.5D, 0.5D));
+        this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, Raider.class, 11.0F, 0.5D, 0.5D));
+        this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, Zoglin.class, 8.0F, 0.5D, 0.5D));
 
         this.goalSelector.addGoal(4, new ShowWaresGoal(this,400, 1600));
         this.goalSelector.addGoal(4, new RedMerchantEntity.MoveToGoal(this, 2.0D, 0.35D));
         this.goalSelector.addGoal(5, new MoveTowardsRestrictionGoal(this, 0.35D));
-        this.goalSelector.addGoal(8, new WaterAvoidingRandomWalkingGoal(this, 0.35D));
+        this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 0.35D));
         //this.goalSelector.addGoal(9, new LookAtWithoutMovingGoal(this, PlayerEntity.class, 3.0F, 1.0F));
-        this.goalSelector.addGoal(10, new LookAtGoal(this, MobEntity.class, 8.0F));
+        this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Mob.class, 8.0F));
     }
 
     @Override
@@ -87,7 +117,7 @@ public class RedMerchantEntity extends AbstractVillagerEntity implements IRanged
     }
 
     @Nullable
-    public AgeableEntity getBreedOffspring(ServerWorld world, AgeableEntity entity) {
+    public AgableMob getBreedOffspring(ServerLevel world, AgableMob entity) {
         return null;
     }
 
@@ -97,10 +127,10 @@ public class RedMerchantEntity extends AbstractVillagerEntity implements IRanged
     }
 
     @Override
-    public ActionResultType mobInteract(PlayerEntity player, Hand hand) {
+    public InteractionResult mobInteract(Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         if (itemstack.getItem() != Items.VILLAGER_SPAWN_EGG && this.isAlive() && !this.isTrading() && !this.isBaby()) {
-            if (hand == Hand.MAIN_HAND) {
+            if (hand == InteractionHand.MAIN_HAND) {
                 player.awardStat(Stats.TALKED_TO_VILLAGER);
             }
 
@@ -111,7 +141,7 @@ public class RedMerchantEntity extends AbstractVillagerEntity implements IRanged
                 }
 
             }
-            return ActionResultType.sidedSuccess(this.level.isClientSide);
+            return InteractionResult.sidedSuccess(this.level.isClientSide);
         } else {
             return super.mobInteract(player, hand);
         }
@@ -125,12 +155,12 @@ public class RedMerchantEntity extends AbstractVillagerEntity implements IRanged
     }
 
     @Override
-    public void openTradingScreen(PlayerEntity player, ITextComponent name, int level) {
-        OptionalInt optionalint = player.openMenu(new SimpleNamedContainerProvider((i, p, m) -> new RedMerchantContainer(i, p, this), name));
-        if (optionalint.isPresent() && player instanceof ServerPlayerEntity) {
+    public void openTradingScreen(Player player, Component name, int level) {
+        OptionalInt optionalint = player.openMenu(new SimpleMenuProvider((i, p, m) -> new RedMerchantContainer(i, p, this), name));
+        if (optionalint.isPresent() && player instanceof ServerPlayer) {
             MerchantOffers merchantoffers = this.getOffers();
             if (!merchantoffers.isEmpty()) {
-                NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player),
+                NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
                         new SendOrangeTraderOffersPacket(optionalint.getAsInt(), merchantoffers, level, this.getVillagerXp(), this.showProgressBar(), this.canRestock())
                 );
             }
@@ -138,23 +168,23 @@ public class RedMerchantEntity extends AbstractVillagerEntity implements IRanged
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundNBT p_213281_1_) {
+    public void addAdditionalSaveData(CompoundTag p_213281_1_) {
         super.addAdditionalSaveData(p_213281_1_);
         p_213281_1_.putInt("DespawnDelay", this.despawnDelay);
         if (this.wanderTarget != null) {
-            p_213281_1_.put("WanderTarget", NBTUtil.writeBlockPos(this.wanderTarget));
+            p_213281_1_.put("WanderTarget", NbtUtils.writeBlockPos(this.wanderTarget));
         }
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT p_70037_1_) {
+    public void readAdditionalSaveData(CompoundTag p_70037_1_) {
         super.readAdditionalSaveData(p_70037_1_);
         if (p_70037_1_.contains("DespawnDelay", 99)) {
             this.despawnDelay = p_70037_1_.getInt("DespawnDelay");
         }
 
         if (p_70037_1_.contains("WanderTarget")) {
-            this.wanderTarget = NBTUtil.readBlockPos(p_70037_1_.getCompound("WanderTarget"));
+            this.wanderTarget = NbtUtils.readBlockPos(p_70037_1_.getCompound("WanderTarget"));
         }
 
         this.setAge(Math.max(0, this.getAge()));
@@ -169,7 +199,7 @@ public class RedMerchantEntity extends AbstractVillagerEntity implements IRanged
     protected void rewardTradeXp(MerchantOffer p_213713_1_) {
         if (p_213713_1_.shouldRewardExp()) {
             int i = 3 + this.random.nextInt(4);
-            this.level.addFreshEntity(new ExperienceOrbEntity(this.level, this.getX(), this.getY() + 0.5D, this.getZ(), i));
+            this.level.addFreshEntity(new ExperienceOrb(this.level, this.getX(), this.getY() + 0.5D, this.getZ(), i));
         }
     }
 
@@ -239,11 +269,11 @@ public class RedMerchantEntity extends AbstractVillagerEntity implements IRanged
     @Override
     public void performRangedAttack(LivingEntity target, float power) {
 
-        Vector3d vector3d = target.getDeltaMovement();
+        Vec3 vector3d = target.getDeltaMovement();
         double d0 = target.getX() + vector3d.x - this.getX();
         double d1 = target.getEyeY() - (double) 3.5F - this.getY();
         double d2 = target.getZ() + vector3d.z - this.getZ();
-        float f = MathHelper.sqrt(d0 * d0 + d2 * d2);
+        float f = Mth.sqrt(d0 * d0 + d2 * d2);
 
         BombEntity bomb = new BombEntity(this.level, this, false);
         //bomb.xRot -= -90F;
@@ -300,8 +330,8 @@ public class RedMerchantEntity extends AbstractVillagerEntity implements IRanged
             BlockPos blockpos = this.trader.getWanderTarget();
             if (blockpos != null && RedMerchantEntity.this.navigation.isDone()) {
                 if (this.isTooFarAway(blockpos, 10.0D)) {
-                    Vector3d vector3d = (new Vector3d((double) blockpos.getX() - this.trader.getX(), (double) blockpos.getY() - this.trader.getY(), (double) blockpos.getZ() - this.trader.getZ())).normalize();
-                    Vector3d vector3d1 = vector3d.scale(10.0D).add(this.trader.getX(), this.trader.getY(), this.trader.getZ());
+                    Vec3 vector3d = (new Vec3((double) blockpos.getX() - this.trader.getX(), (double) blockpos.getY() - this.trader.getY(), (double) blockpos.getZ() - this.trader.getZ())).normalize();
+                    Vec3 vector3d1 = vector3d.scale(10.0D).add(this.trader.getX(), this.trader.getY(), this.trader.getZ());
                     RedMerchantEntity.this.navigation.moveTo(vector3d1.x, vector3d1.y, vector3d1.z, this.speedModifier);
                 } else {
                     RedMerchantEntity.this.navigation.moveTo((double) blockpos.getX(), (double) blockpos.getY(), (double) blockpos.getZ(), this.speedModifier);

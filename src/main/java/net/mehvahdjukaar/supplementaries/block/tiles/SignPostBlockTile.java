@@ -9,12 +9,12 @@ import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.VanillaWoodTypes;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
@@ -66,8 +66,8 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolder, IO
     }
 
     @Override
-    public AxisAlignedBB getRenderBoundingBox(){
-        return new AxisAlignedBB(this.getBlockPos().offset(-0.25,0,-0.25), this.getBlockPos().offset(1.25,1,1.25));
+    public AABB getRenderBoundingBox(){
+        return new AABB(this.getBlockPos().offset(-0.25,0,-0.25), this.getBlockPos().offset(1.25,1,1.25));
     }
 
     //TODO: maybe add constraints to this so it snaps to 22.5deg
@@ -76,24 +76,24 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolder, IO
         // r*-22.5f;
         float yaw = (float)(Math.atan2(targetPos.getX() - worldPosition.getX(), targetPos.getZ() - worldPosition.getZ()) * 180d / Math.PI);
         if(up){
-            this.yawUp = MathHelper.wrapDegrees(yaw - (this.leftUp ? 180 : 0));
+            this.yawUp = Mth.wrapDegrees(yaw - (this.leftUp ? 180 : 0));
         }
         else {
-            this.yawDown = MathHelper.wrapDegrees(yaw - (this.leftDown ? 180 : 0));
+            this.yawDown = Mth.wrapDegrees(yaw - (this.leftDown ? 180 : 0));
         }
     }
 
     public float getPointingYaw(boolean up){
         if(up){
-            return MathHelper.wrapDegrees(-this.yawUp - (this.leftUp ? 180 : 0));
+            return Mth.wrapDegrees(-this.yawUp - (this.leftUp ? 180 : 0));
         }
         else {
-            return MathHelper.wrapDegrees(-this.yawDown - (this.leftDown ? 180 : 0));
+            return Mth.wrapDegrees(-this.yawDown - (this.leftDown ? 180 : 0));
         }
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT compound) {
+    public void load(BlockState state, CompoundTag compound) {
         super.load(state, compound);
         this.framed = compound.getBoolean("Framed");
 
@@ -101,7 +101,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolder, IO
 
         //TODO: remove in the future
         if(compound.contains("Fence"))
-            this.mimic = NBTUtil.readBlockState(compound.getCompound("Fence"));
+            this.mimic = NbtUtils.readBlockState(compound.getCompound("Fence"));
 
         this.yawUp = compound.getFloat("YawUp");
         this.yawDown = compound.getFloat("YawDown");
@@ -115,7 +115,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolder, IO
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
+    public CompoundTag save(CompoundTag compound) {
         super.save(compound);
         compound.putBoolean("Framed",this.framed);
 

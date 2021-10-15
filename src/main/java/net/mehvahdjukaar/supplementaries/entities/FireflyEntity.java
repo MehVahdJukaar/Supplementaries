@@ -2,38 +2,38 @@ package net.mehvahdjukaar.supplementaries.entities;
 
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.RandomPositionGenerator;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.controller.FlyingMovementController;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.ai.goal.LookRandomlyGoal;
-import net.minecraft.entity.passive.IFlyingAnimal;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ArrowEntity;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.pathfinding.FlyingPathNavigator;
-import net.minecraft.pathfinding.PathNavigator;
+import net.minecraft.world.entity.ai.util.RandomPos;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.control.FlyingMoveControl;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.animal.FlyingAnimal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Arrow;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ITag;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.tags.Tag;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.IServerWorld;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -42,23 +42,33 @@ import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.Random;
 
-public class FireflyEntity extends CreatureEntity implements IFlyingAnimal, IEntityAdditionalSpawnData {
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.MobType;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.SpawnGroupData;
+
+public class FireflyEntity extends PathfinderMob implements FlyingAnimal, IEntityAdditionalSpawnData {
     public float alpha = 0f;
     public float prevAlpha = 0.01f;
     private int flickerPeriod;//+ new Random().nextInt(10) ; //40
     private int offset;//new Random().nextInt(Math.abs(this.flickerPeriod));
 
-    public FireflyEntity(EntityType<? extends CreatureEntity> type, World world) {
+    public FireflyEntity(EntityType<? extends PathfinderMob> type, Level world) {
         super(type, world);
         xpReward = 1;
         setNoAi(false);
-        this.moveControl = new FlyingMovementController(this, 10, true);
+        this.moveControl = new FlyingMoveControl(this, 10, true);
         //this.navigator = new FlyingPathNavigator(this, this.world);
 
     }
 
     @Nullable
-    public ILivingEntityData finalizeSpawn(IServerWorld world, DifficultyInstance difficulty, SpawnReason spawnReason, @Nullable ILivingEntityData data, @Nullable CompoundNBT compound) {
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType spawnReason, @Nullable SpawnGroupData data, @Nullable CompoundTag compound) {
         data = super.finalizeSpawn(world, difficulty, spawnReason, data, compound);
 
         //this.setItemSlot(EquipmentSlotType.HEAD, new ItemStack(Items.REDSTONE_TORCH));
@@ -68,8 +78,8 @@ public class FireflyEntity extends CreatureEntity implements IFlyingAnimal, IEnt
 
 
     @Override
-    protected PathNavigator createNavigation(World worldIn) {
-        FlyingPathNavigator flyingpathnavigator = new FlyingPathNavigator(this, worldIn) {
+    protected PathNavigation createNavigation(Level worldIn) {
+        FlyingPathNavigation flyingpathnavigator = new FlyingPathNavigation(this, worldIn) {
             public boolean isStableDestination(BlockPos pos) {
                 return !this.level.getBlockState(pos.below()).isAir();
             }
@@ -81,14 +91,14 @@ public class FireflyEntity extends CreatureEntity implements IFlyingAnimal, IEnt
     }
 
 
-    public static boolean canSpawnOn(EntityType<? extends MobEntity> firefly, IWorld worldIn, SpawnReason reason, BlockPos pos, Random random) {
+    public static boolean canSpawnOn(EntityType<? extends Mob> firefly, LevelAccessor worldIn, MobSpawnType reason, BlockPos pos, Random random) {
         BlockState blockstate = worldIn.getBlockState(pos.below());
         if (pos.getY() <= worldIn.getSeaLevel()) {return false;}
         return (blockstate.is(BlockTags.LEAVES) || blockstate.is(Blocks.GRASS_BLOCK) || blockstate.is(BlockTags.LOGS) || blockstate.is(Blocks.AIR)) && worldIn.getRawBrightness(pos, 0) > 8;
     }
 
     @Override
-    public boolean checkSpawnRules(IWorld world, SpawnReason spawnReasonIn)
+    public boolean checkSpawnRules(LevelAccessor world, MobSpawnType spawnReasonIn)
     {
         return !this.level.isDay() && !this.level.isThundering();
     }
@@ -108,13 +118,13 @@ public class FireflyEntity extends CreatureEntity implements IFlyingAnimal, IEnt
     }
 
     @Override
-    public void readSpawnData(PacketBuffer buffer) {
+    public void readSpawnData(FriendlyByteBuf buffer) {
         this.offset = buffer.readInt();
         this.flickerPeriod = buffer.readInt();
     }
 
     @Override
-    public void writeSpawnData(PacketBuffer buffer) {
+    public void writeSpawnData(FriendlyByteBuf buffer) {
         this.flickerPeriod = ServerConfigs.cached.FIREFLY_PERIOD + this.random.nextInt(10);
         this.offset = this.random.nextInt(this.flickerPeriod/2);
         buffer.writeInt(this.offset);
@@ -127,12 +137,12 @@ public class FireflyEntity extends CreatureEntity implements IFlyingAnimal, IEnt
     }
 
     @Override
-    protected float getStandingEyeHeight(Pose poseIn, EntitySize sizeIn) {
+    protected float getStandingEyeHeight(Pose poseIn, EntityDimensions sizeIn) {
         return sizeIn.height / 2.0F;
     }
 
     @Override
-    public boolean canBeLeashed(PlayerEntity player) {
+    public boolean canBeLeashed(Player player) {
         return false;
     }
 
@@ -160,14 +170,14 @@ public class FireflyEntity extends CreatureEntity implements IFlyingAnimal, IEnt
     }
 
     @Override
-    public IPacket<?> getAddEntityPacket() {
+    public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(0, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(0, new RandomLookAroundGoal(this));
         // this.goalSelector.addGoal(1, new SwimGoal(this));
         this.goalSelector.addGoal(1, new FireflyEntity.WanderGoal());
     }
@@ -177,8 +187,8 @@ public class FireflyEntity extends CreatureEntity implements IFlyingAnimal, IEnt
     }
 
     @Override
-    public CreatureAttribute getMobType() {
-        return CreatureAttribute.UNDEFINED;
+    public MobType getMobType() {
+        return MobType.UNDEFINED;
     }
 
     protected void dropCustomDeathLoot(DamageSource source, int looting, boolean recentlyHitIn) {
@@ -186,17 +196,17 @@ public class FireflyEntity extends CreatureEntity implements IFlyingAnimal, IEnt
     }
 
     @Override
-    public net.minecraft.util.SoundEvent getHurtSound(DamageSource ds) {
+    public net.minecraft.sounds.SoundEvent getHurtSound(DamageSource ds) {
         return ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("entity.bat.hurt"));
     }
 
     @Override
-    public net.minecraft.util.SoundEvent getDeathSound() {
+    public net.minecraft.sounds.SoundEvent getDeathSound() {
         return ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("entity.bat.death"));
     }
 
     //TODO: test this
-    protected void jumpInLiquid(ITag<Fluid> fluidTag) {
+    protected void jumpInLiquid(Tag<Fluid> fluidTag) {
         this.setDeltaMovement(this.getDeltaMovement().add(0.0D, 0.01D, 0.0D));
     }
 
@@ -207,7 +217,7 @@ public class FireflyEntity extends CreatureEntity implements IFlyingAnimal, IEnt
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        if (source.getDirectEntity() instanceof ArrowEntity)
+        if (source.getDirectEntity() instanceof Arrow)
             return false;
         if (source == DamageSource.FALL)
             return false;
@@ -216,8 +226,8 @@ public class FireflyEntity extends CreatureEntity implements IFlyingAnimal, IEnt
         return super.hurt(source, amount);
     }
 
-    public static AttributeModifierMap.MutableAttribute setCustomAttributes() {
-        return MobEntity.createMobAttributes()
+    public static AttributeSupplier.Builder setCustomAttributes() {
+        return Mob.createMobAttributes()
                 .add(Attributes.FOLLOW_RANGE, 48.0D)
                 .add(Attributes.MOVEMENT_SPEED, ServerConfigs.entity.FIREFLY_SPEED.get())
                 .add(Attributes.MAX_HEALTH, 1)
@@ -262,7 +272,7 @@ public class FireflyEntity extends CreatureEntity implements IFlyingAnimal, IEnt
         float time = this.tickCount+this.offset;
         boolean w = this.level.isClientSide;
 
-        this.alpha = Math.max(((1-a)*MathHelper.sin(time * ((float)Math.PI*2 / this.flickerPeriod))+a),0);
+        this.alpha = Math.max(((1-a)*Mth.sin(time * ((float)Math.PI*2 / this.flickerPeriod))+a),0);
         if (this.alpha!=0)this.alpha= (float) Math.pow(this.alpha,p);
         //this.alpha =  Math.max( ( (1-p)*MathHelper.sin(this.ticksExisted * ((float) Math.PI / this.flickerPeriod))+p), 0);
 
@@ -277,8 +287,8 @@ public class FireflyEntity extends CreatureEntity implements IFlyingAnimal, IEnt
     }
 
     private void switchLight(boolean on){
-        if(on)this.setItemSlot(EquipmentSlotType.HEAD, new ItemStack(Items.MAGMA_BLOCK));
-        else this.setItemSlot(EquipmentSlotType.HEAD, ItemStack.EMPTY);
+        if(on)this.setItemSlot(EquipmentSlot.HEAD, new ItemStack(Items.MAGMA_BLOCK));
+        else this.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
     }
 
 
@@ -309,21 +319,21 @@ public class FireflyEntity extends CreatureEntity implements IFlyingAnimal, IEnt
 
         //TODO: seems to lag servers->getPathToPos
         public void start() {
-            Vector3d vec3d = this.getRandomLocation();
+            Vec3 vec3d = this.getRandomLocation();
             if (vec3d != null) {
                 FireflyEntity.this.navigation.moveTo(FireflyEntity.this.navigation.createPath(new BlockPos(vec3d), 1), 1.0D);
             }
         }
 
         @Nullable
-        private Vector3d getRandomLocation() {
-            Vector3d vec3d;
+        private Vec3 getRandomLocation() {
+            Vec3 vec3d;
             vec3d = FireflyEntity.this.getViewVector(0.0F);
             int i = 8;
-            Vector3d vec3d2 = RandomPositionGenerator.getAboveLandPos(FireflyEntity.this, 8, 7, vec3d, ((float) Math.PI / 2F), 2, 1);
+            Vec3 vec3d2 = RandomPos.getAboveLandPos(FireflyEntity.this, 8, 7, vec3d, ((float) Math.PI / 2F), 2, 1);
             return vec3d2 != null
                     ? vec3d2
-                    : RandomPositionGenerator.getAirPos(FireflyEntity.this, 8, 4, -2, vec3d, (float) Math.PI / 2F);
+                    : RandomPos.getAirPos(FireflyEntity.this, 8, 4, -2, vec3d, (float) Math.PI / 2F);
         }
     }
 }

@@ -2,28 +2,28 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.CrackedBellBlock;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.brain.memory.MemoryModuleType;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.state.properties.BellAttachment;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.level.block.state.properties.BellAttachType;
 import net.minecraft.tags.EntityTypeTags;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ColorHelper;
-import net.minecraft.util.Direction;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.util.FastColor;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import java.util.List;
 
-public class CrackedBellBlockTile extends TileEntity implements ITickableTileEntity {
+public class CrackedBellBlockTile extends BlockEntity implements TickableBlockEntity {
     public CrackedBellBlockTile() {
         super(ModRegistry.CRACKED_BELL_TILE.get());
     }
@@ -36,7 +36,7 @@ public class CrackedBellBlockTile extends TileEntity implements ITickableTileEnt
     private int resonationTicks;
 
     public boolean isOnFloor(){
-        return this.getBlockState().getValue(CrackedBellBlock.ATTACHMENT)==BellAttachment.FLOOR;
+        return this.getBlockState().getValue(CrackedBellBlock.ATTACHMENT)==BellAttachType.FLOOR;
     }
 
     @Override
@@ -82,7 +82,7 @@ public class CrackedBellBlockTile extends TileEntity implements ITickableTileEnt
     }
 
     private void playResonateSound() {
-        this.level.playSound(null, this.getBlockPos(), SoundEvents.BELL_RESONATE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+        this.level.playSound(null, this.getBlockPos(), SoundEvents.BELL_RESONATE, SoundSource.BLOCKS, 1.0F, 1.0F);
     }
 
     public void onHit(Direction direction) {
@@ -101,7 +101,7 @@ public class CrackedBellBlockTile extends TileEntity implements ITickableTileEnt
         BlockPos blockpos = this.getBlockPos();
         if (this.level.getGameTime() > this.lastRingTimestamp + 60L || this.nearbyEntities == null) {
             this.lastRingTimestamp = this.level.getGameTime();
-            AxisAlignedBB axisalignedbb = (new AxisAlignedBB(blockpos)).inflate(48.0D);
+            AABB axisalignedbb = (new AABB(blockpos)).inflate(48.0D);
             this.nearbyEntities = this.level.getEntitiesOfClass(LivingEntity.class, axisalignedbb);
         }
 
@@ -127,29 +127,29 @@ public class CrackedBellBlockTile extends TileEntity implements ITickableTileEnt
         return false;
     }
 
-    private void makeRaidersGlow(World p_222828_1_) {
+    private void makeRaidersGlow(Level p_222828_1_) {
         if (!p_222828_1_.isClientSide) {
             this.nearbyEntities.stream().filter(this::isRaiderWithinRange).forEach(this::glow);
         }
     }
 
-    private void showBellParticles(World p_222826_1_) {
+    private void showBellParticles(Level p_222826_1_) {
         if (p_222826_1_.isClientSide) {
             BlockPos blockpos = this.getBlockPos();
             MutableInt mutableint = new MutableInt(16700985);
             int i = (int)this.nearbyEntities.stream().filter((e) -> blockpos.closerThan(e.position(), 48.0D)).count();
             this.nearbyEntities.stream().filter(this::isRaiderWithinRange).forEach((e) -> {
                 float f = 1.0F;
-                float f1 = MathHelper.sqrt((e.getX() - (double)blockpos.getX()) * (e.getX() - (double)blockpos.getX()) + (e.getZ() - (double)blockpos.getZ()) * (e.getZ() - (double)blockpos.getZ()));
+                float f1 = Mth.sqrt((e.getX() - (double)blockpos.getX()) * (e.getX() - (double)blockpos.getX()) + (e.getZ() - (double)blockpos.getZ()) * (e.getZ() - (double)blockpos.getZ()));
                 double d0 = (double)((float)blockpos.getX() + 0.5F) + (double)(1.0F / f1) * (e.getX() - (double)blockpos.getX());
                 double d1 = (double)((float)blockpos.getZ() + 0.5F) + (double)(1.0F / f1) * (e.getZ() - (double)blockpos.getZ());
-                int j = MathHelper.clamp((i - 21) / -2, 3, 15);
+                int j = Mth.clamp((i - 21) / -2, 3, 15);
 
                 for(int k = 0; k < j; ++k) {
                     int l = mutableint.addAndGet(5);
-                    double d2 = (double) ColorHelper.PackedColor.red(l) / 255.0D;
-                    double d3 = (double)ColorHelper.PackedColor.green(l) / 255.0D;
-                    double d4 = (double)ColorHelper.PackedColor.blue(l) / 255.0D;
+                    double d2 = (double) FastColor.ARGB32.red(l) / 255.0D;
+                    double d3 = (double)FastColor.ARGB32.green(l) / 255.0D;
+                    double d4 = (double)FastColor.ARGB32.blue(l) / 255.0D;
                     p_222826_1_.addParticle(ParticleTypes.ENTITY_EFFECT, d0, (float)blockpos.getY() + 0.5F, d1, d2, d3, d4);
                 }
 
@@ -162,6 +162,6 @@ public class CrackedBellBlockTile extends TileEntity implements ITickableTileEnt
     }
 
     private void glow(LivingEntity entity) {
-        entity.addEffect(new EffectInstance(Effects.GLOWING, 60));
+        entity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 60));
     }
 }

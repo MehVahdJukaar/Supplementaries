@@ -5,25 +5,25 @@ import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.inventories.SackContainer;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.LockableLootTileEntity;
-import net.minecraft.tileentity.LockableTileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.Container;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
+import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
@@ -35,7 +35,7 @@ import vazkii.quark.api.ITransferManager;
 import javax.annotation.Nullable;
 import java.util.stream.IntStream;
 
-public class SackBlockTile extends LockableLootTileEntity implements ISidedInventory, ICapabilityProvider, ITransferManager {
+public class SackBlockTile extends RandomizableContainerBlockEntity implements WorldlyContainer, ICapabilityProvider, ITransferManager {
 
     private NonNullList<ItemStack> items = NonNullList.withSize(27, ItemStack.EMPTY);
     private int numPlayersUsing;
@@ -51,12 +51,12 @@ public class SackBlockTile extends LockableLootTileEntity implements ISidedInven
 
 
     @Override
-    public ITextComponent getDefaultName() {
-        return new TranslationTextComponent("block.supplementaries.sack");
+    public Component getDefaultName() {
+        return new TranslatableComponent("block.supplementaries.sack");
     }
 
     @Override
-    public void startOpen(PlayerEntity player) {
+    public void startOpen(Player player) {
         if (!player.isSpectator()) {
             if (this.numPlayersUsing < 0) {
                 this.numPlayersUsing = 0;
@@ -67,19 +67,19 @@ public class SackBlockTile extends LockableLootTileEntity implements ISidedInven
             boolean flag = blockstate.getValue(SackBlock.OPEN);
             if (!flag) {
                 this.level.playSound(null, this.worldPosition,
-                        SoundEvents.WOOL_BREAK, SoundCategory.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.55F);
+                        SoundEvents.WOOL_BREAK, SoundSource.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.55F);
                 this.level.playSound(null, this.worldPosition,
-                        SoundEvents.LEASH_KNOT_PLACE, SoundCategory.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.7F);
+                        SoundEvents.LEASH_KNOT_PLACE, SoundSource.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.7F);
                 this.level.setBlock(this.getBlockPos(), blockstate.setValue(SackBlock.OPEN, true), 3);
             }
             this.level.getBlockTicks().scheduleTick(this.getBlockPos(), this.getBlockState().getBlock(), 5);
         }
     }
-    public static int calculatePlayersUsing(World world, LockableTileEntity tile, int x, int y, int z) {
+    public static int calculatePlayersUsing(Level world, BaseContainerBlockEntity tile, int x, int y, int z) {
         int i = 0;
-        for(PlayerEntity playerentity : world.getEntitiesOfClass(PlayerEntity.class, new AxisAlignedBB((float)x - 5.0F, (float)y - 5.0F, (float)z - 5.0F, (float)(x + 1) + 5.0F, (float)(y + 1) + 5.0F, (float)(z + 1) + 5.0F))) {
+        for(Player playerentity : world.getEntitiesOfClass(Player.class, new AABB((float)x - 5.0F, (float)y - 5.0F, (float)z - 5.0F, (float)(x + 1) + 5.0F, (float)(y + 1) + 5.0F, (float)(z + 1) + 5.0F))) {
             if (playerentity.containerMenu instanceof SackContainer) {
-                IInventory iinventory = ((SackContainer)playerentity.containerMenu).inventory;
+                Container iinventory = ((SackContainer)playerentity.containerMenu).inventory;
                 if (iinventory == tile) {
                     ++i;
                 }
@@ -106,10 +106,10 @@ public class SackBlockTile extends LockableLootTileEntity implements ISidedInven
             boolean flag = blockstate.getValue(SackBlock.OPEN);
             if (flag) {
                 //this.playSound(blockstate, SoundEvents.BLOCK_BARREL_CLOSE);
-                this.level.playSound((PlayerEntity)null, this.worldPosition.getX()+0.5, this.worldPosition.getY()+0.5, this.worldPosition.getZ()+0.5,
-                        SoundEvents.WOOL_BREAK, SoundCategory.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.5F);
+                this.level.playSound((Player)null, this.worldPosition.getX()+0.5, this.worldPosition.getY()+0.5, this.worldPosition.getZ()+0.5,
+                        SoundEvents.WOOL_BREAK, SoundSource.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.5F);
                 this.level.playSound(null, this.worldPosition.getX()+0.5, this.worldPosition.getY()+0.5, this.worldPosition.getZ()+0.5,
-                        SoundEvents.LEASH_KNOT_PLACE, SoundCategory.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.6F);
+                        SoundEvents.LEASH_KNOT_PLACE, SoundSource.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.6F);
                 this.level.setBlock(this.getBlockPos(), blockstate.setValue(SackBlock.OPEN, false), 3);
             }
         }
@@ -117,35 +117,35 @@ public class SackBlockTile extends LockableLootTileEntity implements ISidedInven
     }
 
     @Override
-    public void stopOpen(PlayerEntity player) {
+    public void stopOpen(Player player) {
         if (!player.isSpectator()) {
             --this.numPlayersUsing;
         }
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT nbt) {
+    public void load(BlockState state, CompoundTag nbt) {
         super.load(state, nbt);
         this.loadFromTag(nbt);
     }
 
     //TODO: separate save to nbt from write so you don't write data you don't need. it update packet too
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
+    public CompoundTag save(CompoundTag compound) {
         super.save(compound);
         return this.saveToTag(compound);
     }
 
-    public void loadFromTag(CompoundNBT compoundNBT) {
+    public void loadFromTag(CompoundTag compoundNBT) {
         this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
         if (!this.tryLoadLootTable(compoundNBT) && compoundNBT.contains("Items", 9)) {
-            ItemStackHelper.loadAllItems(compoundNBT, this.items);
+            ContainerHelper.loadAllItems(compoundNBT, this.items);
         }
     }
 
-    public CompoundNBT saveToTag(CompoundNBT compoundNBT) {
+    public CompoundTag saveToTag(CompoundTag compoundNBT) {
         if (!this.trySaveLootTable(compoundNBT)) {
-            ItemStackHelper.saveAllItems(compoundNBT, this.items, false);
+            ContainerHelper.saveAllItems(compoundNBT, this.items, false);
         }
 
         return compoundNBT;
@@ -162,7 +162,7 @@ public class SackBlockTile extends LockableLootTileEntity implements ISidedInven
     }
 
     @Override
-    public Container createMenu(int id, PlayerInventory player) {
+    public AbstractContainerMenu createMenu(int id, Inventory player) {
         return new SackContainer(id, player, this);
     }
 
@@ -211,7 +211,7 @@ public class SackBlockTile extends LockableLootTileEntity implements ISidedInven
     }
 
     @Override
-    public boolean acceptsTransfer(PlayerEntity player) {
+    public boolean acceptsTransfer(Player player) {
         return true;
     }
 }

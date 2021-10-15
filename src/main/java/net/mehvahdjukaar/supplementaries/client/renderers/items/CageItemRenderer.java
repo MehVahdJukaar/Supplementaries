@@ -1,42 +1,42 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.items;
 
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.CageBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.mobholder.MobContainer;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
-import net.minecraft.entity.Entity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.world.World;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.client.model.data.EmptyModelData;
 
 import java.util.UUID;
 
 
-public class CageItemRenderer extends ItemStackTileEntityRenderer {
+public class CageItemRenderer extends BlockEntityWithoutLevelRenderer {
 
-    public void renderTileStuff(CompoundNBT tag, ItemCameraTransforms.TransformType transformType, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
+    public void renderTileStuff(CompoundTag tag, ItemTransforms.TransformType transformType, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
 
         //render mob
         if (tag.contains("MobHolder")) {
-            CompoundNBT cmp2 = tag.getCompound("MobHolder");
+            CompoundTag cmp2 = tag.getCompound("MobHolder");
             if (cmp2.contains("FishTexture")) return;
             if (cmp2.contains("UUID")) {
                 UUID id = cmp2.getUUID("UUID");
                 Entity e = CapturedMobCache.getCachedMob(id);
 
                 if (e == null) {
-                    World world = Minecraft.getInstance().level;
+                    Level world = Minecraft.getInstance().level;
                     if (world != null) {
-                        CompoundNBT mobData = cmp2.getCompound("EntityData");
+                        CompoundTag mobData = cmp2.getCompound("EntityData");
 
                         //TODO: remove in 1.17 after spawner fix
                         e = MobContainer.createEntityFromNBT(mobData, id, world);
@@ -48,7 +48,7 @@ public class CageItemRenderer extends ItemStackTileEntityRenderer {
                     float s = cmp2.getFloat("Scale");
                     matrixStackIn.pushPose();
 
-                    EntityRendererManager entityRenderer = Minecraft.getInstance().getEntityRenderDispatcher();
+                    EntityRenderDispatcher entityRenderer = Minecraft.getInstance().getEntityRenderDispatcher();
 
                     //TODO: remove
                     if(cmp2.contains("YOffset")){
@@ -71,14 +71,14 @@ public class CageItemRenderer extends ItemStackTileEntityRenderer {
     }
 
     @Override
-    public void renderByItem(ItemStack stack, ItemCameraTransforms.TransformType transformType, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
+    public void renderByItem(ItemStack stack, ItemTransforms.TransformType transformType, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
         //render block
         matrixStackIn.pushPose();
         BlockState state = ((BlockItem) stack.getItem()).getBlock().defaultBlockState();
         Minecraft.getInstance().getBlockRenderer().renderBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
         matrixStackIn.popPose();
 
-        CompoundNBT tag = stack.getTagElement("BlockEntityTag");
+        CompoundTag tag = stack.getTagElement("BlockEntityTag");
         if (tag != null) {
             this.renderTileStuff(tag, transformType, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
         }

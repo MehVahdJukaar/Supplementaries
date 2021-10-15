@@ -1,33 +1,33 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.block.blocks.HangingFlowerPotBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.HangingFlowerPotBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.FlowerPotHandler;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.util.Mth;
+import com.mojang.math.Vector3f;
 
 
-public class HangingFlowerPotBlockTileRenderer extends TileEntityRenderer<HangingFlowerPotBlockTile> {
+public class HangingFlowerPotBlockTileRenderer extends BlockEntityRenderer<HangingFlowerPotBlockTile> {
 
-    protected final BlockRendererDispatcher blockRenderer;
+    protected final BlockRenderDispatcher blockRenderer;
 
-    public HangingFlowerPotBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
+    public HangingFlowerPotBlockTileRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
         blockRenderer = Minecraft.getInstance().getBlockRenderer();
     }
 
     @Override
-    public void render(HangingFlowerPotBlockTile tile, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn,
+    public void render(HangingFlowerPotBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
 
         BlockState state = CommonUtil.FESTIVITY.isAprilsFool() ? FlowerPotHandler.getAprilPot() : tile.getHeldBlock();
@@ -36,7 +36,7 @@ public class HangingFlowerPotBlockTileRenderer extends TileEntityRenderer<Hangin
         matrixStackIn.pushPose();
         matrixStackIn.translate(0.5, 0.5, 0.5);
 
-        matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(MathHelper.lerp(partialTicks, tile.prevAngle * 1.5f, tile.angle * 1.5f)));
+        matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(Mth.lerp(partialTicks, tile.prevAngle * 1.5f, tile.angle * 1.5f)));
         matrixStackIn.translate(-0.5, -0.5, -0.5);
 
         // render block

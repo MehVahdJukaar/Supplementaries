@@ -2,35 +2,37 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.BreakableBlock;
-import net.minecraft.block.DirectionalBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.HalfTransparentBlock;
+import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import vazkii.quark.api.IConditionalSticky;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class MagmaCreamBlock extends BreakableBlock implements IConditionalSticky {
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
+public class MagmaCreamBlock extends HalfTransparentBlock implements IConditionalSticky {
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
     public MagmaCreamBlock(Properties properties) {
         super(properties);
@@ -39,7 +41,7 @@ public class MagmaCreamBlock extends BreakableBlock implements IConditionalStick
 
 
     @Override
-    public void fallOn(World world, BlockPos pos, Entity entity, float height) {
+    public void fallOn(Level world, BlockPos pos, Entity entity, float height) {
         if (entity.isSuppressingBounce()) {
             super.fallOn(world, pos, entity, height);
         } else {
@@ -49,14 +51,14 @@ public class MagmaCreamBlock extends BreakableBlock implements IConditionalStick
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         if(CompatHandler.quark)return;
         if(!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().options.advancedItemTooltips)return;
-        tooltip.add(new TranslationTextComponent("message.supplementaries.magma_cream_block").withStyle(TextFormatting.ITALIC).withStyle(TextFormatting.GRAY));
+        tooltip.add(new TranslatableComponent("message.supplementaries.magma_cream_block").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
         if(context.getPlayer().isShiftKeyDown()) {
             return this.defaultBlockState().setValue(FACING, context.getClickedFace().getOpposite());
         }
@@ -64,7 +66,7 @@ public class MagmaCreamBlock extends BreakableBlock implements IConditionalStick
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING);
     }
 
@@ -112,7 +114,7 @@ public class MagmaCreamBlock extends BreakableBlock implements IConditionalStick
     }
 
     @Override
-    public void stepOn(World worldIn, BlockPos pos, Entity entityIn) {
+    public void stepOn(Level worldIn, BlockPos pos, Entity entityIn) {
         if (!entityIn.fireImmune() && entityIn instanceof LivingEntity && !EnchantmentHelper.hasFrostWalker((LivingEntity)entityIn)) {
             entityIn.hurt(DamageSource.HOT_FLOOR, 1.0F);
         }
@@ -125,7 +127,7 @@ public class MagmaCreamBlock extends BreakableBlock implements IConditionalStick
     }
 
     @Override
-    public boolean canStickToBlock(World world, BlockPos pistonPos, BlockPos fromPos, BlockPos toPos, BlockState fromState, BlockState toState, Direction moveDir) {
+    public boolean canStickToBlock(Level world, BlockPos pistonPos, BlockPos fromPos, BlockPos toPos, BlockState fromState, BlockState toState, Direction moveDir) {
         if(fromState.getBlock()==this) {
             Direction stickDir = fromState.getValue(FACING);
             if(fromPos.relative(stickDir).equals(toPos))return true;

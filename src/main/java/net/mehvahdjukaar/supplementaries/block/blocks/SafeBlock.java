@@ -6,52 +6,67 @@ import net.mehvahdjukaar.supplementaries.block.tiles.SafeBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.ILavaAndWaterLoggable;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.items.KeyItem;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.PushReaction;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.monster.piglin.PiglinTasks;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootParameters;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.pathfinding.PathType;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.LockableTileEntity;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.piglin.PiglinAi;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.util.text.*;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class SafeBlock extends Block implements ILavaAndWaterLoggable {
     public static final VoxelShape SHAPE = Block.box(1, 0, 1, 15, 16, 15);
@@ -68,14 +83,14 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(OPEN, FACING, WATERLOGGED, LAVALOGGED);
     }
 
     //schedule block tick
     @Override
-    public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
-        TileEntity tileentity = worldIn.getBlockEntity(pos);
+    public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random rand) {
+        BlockEntity tileentity = worldIn.getBlockEntity(pos);
         if (tileentity instanceof SafeBlockTile) {
             ((SafeBlockTile) tileentity).barrelTick();
         }
@@ -92,7 +107,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable {
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
         if (stateIn.getValue(LAVALOGGED)) {
             worldIn.getLiquidTicks().scheduleTick(currentPos, Fluids.LAVA, Fluids.LAVA.getTickDelay(worldIn));
         } else if (stateIn.getValue(WATERLOGGED)) {
@@ -102,19 +117,19 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable {
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
         Fluid fluid = context.getLevel().getFluidState(context.getClickedPos()).getType();
         return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite())
                 .setValue(WATERLOGGED, fluid == Fluids.WATER).setValue(LAVALOGGED, fluid == Fluids.LAVA);
     }
 
     @Override
-    public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
+    public boolean propagatesSkylightDown(BlockState state, BlockGetter reader, BlockPos pos) {
         return true;
     }
 
     @Override
-    public boolean isPathfindable(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
+    public boolean isPathfindable(BlockState state, BlockGetter worldIn, BlockPos pos, PathComputationType type) {
         return false;
     }
 
@@ -124,18 +139,18 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable {
     }
 
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
         return new SafeBlockTile();
     }
 
     @Override
-    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (worldIn.isClientSide) {
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
         } else if (player.isSpectator()) {
-            return ActionResultType.CONSUME;
+            return InteractionResult.CONSUME;
         } else {
-            TileEntity tileentity = worldIn.getBlockEntity(pos);
+            BlockEntity tileentity = worldIn.getBlockEntity(pos);
             if (tileentity instanceof SafeBlockTile) {
                 SafeBlockTile safe = ((SafeBlockTile) tileentity);
                 ItemStack stack = player.getItemInHand(handIn);
@@ -157,10 +172,10 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable {
 
                 if (cleared) {
                     safe.clearOwner();
-                    player.displayClientMessage(new TranslationTextComponent("message.supplementaries.safe.cleared"), true);
+                    player.displayClientMessage(new TranslatableComponent("message.supplementaries.safe.cleared"), true);
                     worldIn.playSound(null, pos,
-                            SoundEvents.IRON_TRAPDOOR_OPEN, SoundCategory.BLOCKS, 0.5F, 1.5F);
-                    return ActionResultType.CONSUME;
+                            SoundEvents.IRON_TRAPDOOR_OPEN, SoundSource.BLOCKS, 0.5F, 1.5F);
+                    return InteractionResult.CONSUME;
                 }
 
                 BlockPos p = pos.relative(state.getValue(FACING));
@@ -172,54 +187,54 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable {
                             safe.setOwner(owner);
                         }
                         if (!owner.equals(player.getUUID())) {
-                            player.displayClientMessage(new TranslationTextComponent("message.supplementaries.safe.owner", safe.ownerName), true);
-                            if (!player.isCreative()) return ActionResultType.CONSUME;
+                            player.displayClientMessage(new TranslatableComponent("message.supplementaries.safe.owner", safe.ownerName), true);
+                            if (!player.isCreative()) return InteractionResult.CONSUME;
                         }
                     } else {
                         String key = safe.password;
                         if (key == null) {
                             if (item instanceof KeyItem) {
                                 safe.password = stack.getHoverName().getString();
-                                player.displayClientMessage(new TranslationTextComponent("message.supplementaries.safe.assigned_key", safe.password), true);
+                                player.displayClientMessage(new TranslatableComponent("message.supplementaries.safe.assigned_key", safe.password), true);
                                 worldIn.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
-                                        SoundEvents.IRON_TRAPDOOR_OPEN, SoundCategory.BLOCKS, 0.5F, 1.5F);
-                                return ActionResultType.CONSUME;
+                                        SoundEvents.IRON_TRAPDOOR_OPEN, SoundSource.BLOCKS, 0.5F, 1.5F);
+                                return InteractionResult.CONSUME;
                             }
                         } else if (!safe.canPlayerOpen(player, true) && !player.isCreative()) {
-                            return ActionResultType.CONSUME;
+                            return InteractionResult.CONSUME;
                         }
                     }
-                    player.openMenu((INamedContainerProvider) tileentity);
-                    PiglinTasks.angerNearbyPiglins(player, true);
+                    player.openMenu((MenuProvider) tileentity);
+                    PiglinAi.angerNearbyPiglins(player, true);
                 }
 
-                return ActionResultType.CONSUME;
+                return InteractionResult.CONSUME;
             }
-            return ActionResultType.PASS;
+            return InteractionResult.PASS;
         }
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
 
-        CompoundNBT compoundnbt = stack.getTagElement("BlockEntityTag");
+        CompoundTag compoundnbt = stack.getTagElement("BlockEntityTag");
         if (compoundnbt != null) {
             if (ServerConfigs.cached.SAFE_SIMPLE) {
                 if (compoundnbt.contains("Owner")) {
                     UUID id = compoundnbt.getUUID("Owner");
                     if (!id.equals(Minecraft.getInstance().player.getUUID())) {
                         String name = compoundnbt.getString("OwnerName");
-                        tooltip.add((new TranslationTextComponent("container.supplementaries.safe.owner", name)).withStyle(TextFormatting.GRAY));
+                        tooltip.add((new TranslatableComponent("container.supplementaries.safe.owner", name)).withStyle(ChatFormatting.GRAY));
                         return;
                     }
                 }
                 if (compoundnbt.contains("LootTable", 8)) {
-                    tooltip.add(new StringTextComponent("???????").withStyle(TextFormatting.GRAY));
+                    tooltip.add(new TextComponent("???????").withStyle(ChatFormatting.GRAY));
                 }
                 if (compoundnbt.contains("Items", 9)) {
                     NonNullList<ItemStack> nonnulllist = NonNullList.withSize(27, ItemStack.EMPTY);
-                    ItemStackHelper.loadAllItems(compoundnbt, nonnulllist);
+                    ContainerHelper.loadAllItems(compoundnbt, nonnulllist);
                     int i = 0;
                     int j = 0;
 
@@ -228,31 +243,31 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable {
                             ++j;
                             if (i <= 4) {
                                 ++i;
-                                IFormattableTextComponent iformattabletextcomponent = itemstack.getHoverName().copy();
+                                MutableComponent iformattabletextcomponent = itemstack.getHoverName().copy();
                                 iformattabletextcomponent.append(" x").append(String.valueOf(itemstack.getCount()));
-                                tooltip.add(iformattabletextcomponent.withStyle(TextFormatting.GRAY));
+                                tooltip.add(iformattabletextcomponent.withStyle(ChatFormatting.GRAY));
                             }
                         }
                     }
 
                     if (j - i > 0) {
-                        tooltip.add((new TranslationTextComponent("container.shulkerBox.more", j - i)).withStyle(TextFormatting.ITALIC).withStyle(TextFormatting.GRAY));
+                        tooltip.add((new TranslatableComponent("container.shulkerBox.more", j - i)).withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
                     }
                 }
                 return;
             } else {
                 if (compoundnbt.contains("Password")) {
-                    tooltip.add((new TranslationTextComponent("message.supplementaries.safe.bound")).withStyle(TextFormatting.GRAY));
+                    tooltip.add((new TranslatableComponent("message.supplementaries.safe.bound")).withStyle(ChatFormatting.GRAY));
                     return;
                 }
             }
         }
-        tooltip.add((new TranslationTextComponent("message.supplementaries.safe.unbound")).withStyle(TextFormatting.GRAY));
+        tooltip.add((new TranslatableComponent("message.supplementaries.safe.unbound")).withStyle(ChatFormatting.GRAY));
 
     }
 
     public ItemStack getSafeItem(SafeBlockTile te) {
-        CompoundNBT compoundnbt = te.saveToNbt(new CompoundNBT());
+        CompoundTag compoundnbt = te.saveToNbt(new CompoundTag());
         ItemStack itemstack = new ItemStack(this.getBlock());
         if (!compoundnbt.isEmpty()) {
             itemstack.addTagElement("BlockEntityTag", compoundnbt);
@@ -267,9 +282,9 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable {
 
     //break protection
     @Override
-    public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, FluidState fluid) {
+    public boolean removedByPlayer(BlockState state, Level world, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
         if (ServerConfigs.cached.SAFE_UNBREAKABLE) {
-            TileEntity tileentity = world.getBlockEntity(pos);
+            BlockEntity tileentity = world.getBlockEntity(pos);
             if (tileentity instanceof SafeBlockTile) {
                 if (!((SafeBlockTile) tileentity).canPlayerOpen(player, true)) return false;
             }
@@ -279,8 +294,8 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable {
 
     //overrides creative drop
     @Override
-    public void playerWillDestroy(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
-        TileEntity tileentity = worldIn.getBlockEntity(pos);
+    public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
+        BlockEntity tileentity = worldIn.getBlockEntity(pos);
         if (tileentity instanceof SafeBlockTile) {
             SafeBlockTile te = (SafeBlockTile) tileentity;
             if (!worldIn.isClientSide && player.isCreative() && !te.isEmpty()) {
@@ -299,7 +314,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable {
     //TODO: use loot table instead
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
-        TileEntity tileentity = builder.getOptionalParameter(LootParameters.BLOCK_ENTITY);
+        BlockEntity tileentity = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
         if (tileentity instanceof SafeBlockTile) {
             SafeBlockTile te = (SafeBlockTile) tileentity;
             ItemStack itemstack = this.getSafeItem(te);
@@ -310,9 +325,9 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable {
     }
 
     @Override
-    public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
+    public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
         ItemStack itemstack = super.getPickBlock(state, target, world, pos, player);
-        TileEntity te = world.getBlockEntity(pos);
+        BlockEntity te = world.getBlockEntity(pos);
         if (te instanceof SafeBlockTile) {
             return getSafeItem((SafeBlockTile) te);
         }
@@ -321,13 +336,13 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable {
 
 
     @Override
-    public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        TileEntity tileentity = worldIn.getBlockEntity(pos);
+    public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+        BlockEntity tileentity = worldIn.getBlockEntity(pos);
         if (tileentity instanceof SafeBlockTile) {
             if (stack.hasCustomHoverName()) {
-                ((LockableTileEntity) tileentity).setCustomName(stack.getHoverName());
+                ((BaseContainerBlockEntity) tileentity).setCustomName(stack.getHoverName());
             }
-            if (placer instanceof PlayerEntity) {
+            if (placer instanceof Player) {
                 if (((SafeBlockTile) tileentity).owner == null)
                     ((SafeBlockTile) tileentity).setOwner(placer.getUUID());
             }
@@ -340,14 +355,14 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
 
     @Override
-    public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!state.is(newState.getBlock())) {
-            TileEntity tileentity = worldIn.getBlockEntity(pos);
+            BlockEntity tileentity = worldIn.getBlockEntity(pos);
             if (tileentity instanceof SafeBlockTile) {
                 worldIn.updateNeighbourForOutputSignal(pos, state.getBlock());
             }
@@ -362,14 +377,14 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable {
     }
 
     @Override
-    public int getAnalogOutputSignal(BlockState blockState, World worldIn, BlockPos pos) {
-        return Container.getRedstoneSignalFromBlockEntity(worldIn.getBlockEntity(pos));
+    public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
+        return AbstractContainerMenu.getRedstoneSignalFromBlockEntity(worldIn.getBlockEntity(pos));
     }
 
     @Override
-    public INamedContainerProvider getMenuProvider(BlockState state, World worldIn, BlockPos pos) {
-        TileEntity tileentity = worldIn.getBlockEntity(pos);
-        return tileentity instanceof INamedContainerProvider ? (INamedContainerProvider) tileentity : null;
+    public MenuProvider getMenuProvider(BlockState state, Level worldIn, BlockPos pos) {
+        BlockEntity tileentity = worldIn.getBlockEntity(pos);
+        return tileentity instanceof MenuProvider ? (MenuProvider) tileentity : null;
     }
 
 
@@ -381,7 +396,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable {
     }
 
     @Override
-    public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
+    public int getLightValue(BlockState state, BlockGetter world, BlockPos pos) {
         return state.getValue(LAVALOGGED) ? 15 : 0;
     }
 

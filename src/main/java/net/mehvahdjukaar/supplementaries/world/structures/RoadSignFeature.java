@@ -3,22 +3,22 @@ package net.mehvahdjukaar.supplementaries.world.structures;
 import com.mojang.serialization.Codec;
 import net.mehvahdjukaar.supplementaries.block.blocks.StructureTempBlock;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.material.Material;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ISeedReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.NoFeatureConfig;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
 import java.util.Random;
 
 
-public class RoadSignFeature extends Feature<NoFeatureConfig> {
+public class RoadSignFeature extends Feature<NoneFeatureConfiguration> {
 
-    public RoadSignFeature(Codec<NoFeatureConfig> codec) {
+    public RoadSignFeature(Codec<NoneFeatureConfiguration> codec) {
         super(codec);
     }
 
@@ -30,7 +30,7 @@ public class RoadSignFeature extends Feature<NoFeatureConfig> {
     private final BlockState wall = Blocks.COBBLESTONE_WALL.defaultBlockState();
     private final BlockState mossyWall = Blocks.MOSSY_COBBLESTONE_WALL.defaultBlockState();
 
-    private static boolean canGoThrough(IWorld world, BlockPos pos) {
+    private static boolean canGoThrough(LevelAccessor world, BlockPos pos) {
         if (!world.getFluidState(pos).isEmpty()) return false;
 
         return world.isStateAtPosition(pos, (state) ->{
@@ -39,7 +39,7 @@ public class RoadSignFeature extends Feature<NoFeatureConfig> {
     }
 
 
-    public static boolean isReplaceable(IWorld world, BlockPos pos) {
+    public static boolean isReplaceable(LevelAccessor world, BlockPos pos) {
 
         return world.isStateAtPosition(pos, (state) ->{
                 if(state.getBlock() instanceof StructureTempBlock)return true;
@@ -47,7 +47,7 @@ public class RoadSignFeature extends Feature<NoFeatureConfig> {
                 return material.isReplaceable() && material!=Material.LEAVES;});
     }
 
-    public static boolean isNotSolid(IWorld world, BlockPos pos){
+    public static boolean isNotSolid(LevelAccessor world, BlockPos pos){
         return !world.isStateAtPosition(pos, (state) -> state.isRedstoneConductor(world, pos));
     }
 
@@ -55,7 +55,7 @@ public class RoadSignFeature extends Feature<NoFeatureConfig> {
 
 
     @Override
-    public boolean place(ISeedReader reader, ChunkGenerator generator, Random rand, BlockPos pos, NoFeatureConfig config) {
+    public boolean place(WorldGenLevel reader, ChunkGenerator generator, Random rand, BlockPos pos, NoneFeatureConfiguration config) {
 
         /*
         if(!reader.getLevel().dimension().equals(World.OVERWORLD))return false;

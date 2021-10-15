@@ -3,16 +3,16 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 import net.mehvahdjukaar.supplementaries.block.blocks.WindVaneBlock;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.util.Mth;
 
-public class WindVaneBlockTile extends TileEntity implements ITickableTileEntity {
+public class WindVaneBlockTile extends BlockEntity implements TickableBlockEntity {
     public float yaw = 0;
     public float prevYaw = 0;
     private float offset = 0;
@@ -28,31 +28,31 @@ public class WindVaneBlockTile extends TileEntity implements ITickableTileEntity
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT compound) {
+    public void load(BlockState state, CompoundTag compound) {
         super.load(state, compound);
         float tp = (float) (Math.PI*2);
-        this.offset=400*(MathHelper.sin((0.005f*this.worldPosition.getX())%tp) + MathHelper.sin((0.005f*this.worldPosition.getZ())%tp) + MathHelper.sin((0.005f*this.worldPosition.getY())%tp));
+        this.offset=400*(Mth.sin((0.005f*this.worldPosition.getX())%tp) + Mth.sin((0.005f*this.worldPosition.getZ())%tp) + Mth.sin((0.005f*this.worldPosition.getY())%tp));
 
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
+    public CompoundTag save(CompoundTag compound) {
         super.save(compound);
         return compound;
     }
 
     @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.worldPosition, 0, this.getUpdateTag());
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return new ClientboundBlockEntityDataPacket(this.worldPosition, 0, this.getUpdateTag());
     }
 
     @Override
-    public CompoundNBT getUpdateTag() {
-        return this.save(new CompoundNBT());
+    public CompoundTag getUpdateTag() {
+        return this.save(new CompoundTag());
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         this.load(this.getBlockState(), pkt.getTag());
     }
 
@@ -81,9 +81,9 @@ public class WindVaneBlockTile extends TileEntity implements ITickableTileEntity
             float max_angle_2 = (float) ClientConfigs.cached.WIND_VANE_ANGLE_2;
             float period_1 = (float) ClientConfigs.cached.WIND_VANE_PERIOD_1;
             float period_2 = (float) ClientConfigs.cached.WIND_VANE_PERIOD_2;
-            float newyaw = max_angle_1 * MathHelper.sin(tp * ((t * b / period_1)%360))
-                    + max_angle_2 * MathHelper.sin(tp * ((t * b / period_2)%360));
-            this.yaw = MathHelper.clamp(newyaw, currentyaw - 8, currentyaw + 8);
+            float newyaw = max_angle_1 * Mth.sin(tp * ((t * b / period_1)%360))
+                    + max_angle_2 * Mth.sin(tp * ((t * b / period_2)%360));
+            this.yaw = Mth.clamp(newyaw, currentyaw - 8, currentyaw + 8);
         }
     }
 }

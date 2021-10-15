@@ -2,21 +2,21 @@ package net.mehvahdjukaar.supplementaries.client.renderers.color;
 
 import net.mehvahdjukaar.supplementaries.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.color.IBlockColor;
-import net.minecraft.client.renderer.color.IItemColor;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.PotionUtils;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockDisplayReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.color.block.BlockColor;
+import net.minecraft.client.color.item.ItemColor;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TippedSpikesColor implements IBlockColor, IItemColor {
+public class TippedSpikesColor implements BlockColor, ItemColor {
     public static Map<Integer, Integer> cachedColors0 = new HashMap<>();
     public static Map<Integer, Integer> cachedColors1 = new HashMap<>();
 
@@ -43,8 +43,8 @@ public class TippedSpikesColor implements IBlockColor, IItemColor {
 
 
     @Override
-    public int getColor(BlockState state, @Nullable IBlockDisplayReader world, @Nullable BlockPos pos, int tint) {
-        TileEntity te = world.getBlockEntity(pos);
+    public int getColor(BlockState state, @Nullable BlockAndTintGetter world, @Nullable BlockPos pos, int tint) {
+        BlockEntity te = world.getBlockEntity(pos);
 
         if (te instanceof BambooSpikesBlockTile) {
             int color = ((BambooSpikesBlockTile) te).getColor();
@@ -53,7 +53,7 @@ public class TippedSpikesColor implements IBlockColor, IItemColor {
         }
         //not actually sure why I need this since quark seems to handle moving tiles pretty well
         else if (CompatHandler.quark) {
-            if (world instanceof World) {
+            if (world instanceof Level) {
                 //te = QuarkPistonPlugin.getMovingTile(pos, (World) world);
                 if (te instanceof BambooSpikesBlockTile) {
                     int color = ((BambooSpikesBlockTile) te).getColor();

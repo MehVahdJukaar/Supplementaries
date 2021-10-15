@@ -4,12 +4,12 @@ import net.mehvahdjukaar.selene.map.markers.NamedMapWorldMarker;
 import net.mehvahdjukaar.supplementaries.block.tiles.FlagBlockTile;
 import net.mehvahdjukaar.supplementaries.world.data.map.CMDreg;
 import net.mehvahdjukaar.supplementaries.world.data.map.FlagDecoration;
-import net.minecraft.item.DyeColor;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.BlockGetter;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
@@ -22,7 +22,7 @@ public class FlagMarker extends NamedMapWorldMarker<FlagDecoration> {
         super(CMDreg.FLAG_DECORATION_TYPE);
     }
 
-    public FlagMarker(BlockPos pos, DyeColor color, @Nullable ITextComponent name) {
+    public FlagMarker(BlockPos pos, DyeColor color, @Nullable Component name) {
         this();
         this.pos = pos;
         this.color = color;
@@ -30,24 +30,24 @@ public class FlagMarker extends NamedMapWorldMarker<FlagDecoration> {
     }
 
     @Override
-    public CompoundNBT saveToNBT(CompoundNBT compoundnbt) {
+    public CompoundTag saveToNBT(CompoundTag compoundnbt) {
         super.saveToNBT(compoundnbt);
         compoundnbt.putString("Color", this.color.getName());
         return compoundnbt;
     }
 
-    public void loadFromNBT(CompoundNBT compound) {
+    public void loadFromNBT(CompoundTag compound) {
         super.loadFromNBT(compound);
         this.color = DyeColor.byName(compound.getString("Color"), DyeColor.WHITE);
     }
 
     @Nullable
-    public static FlagMarker getFromWorld(IBlockReader world, BlockPos pos) {
-        TileEntity tileentity = world.getBlockEntity(pos);
+    public static FlagMarker getFromWorld(BlockGetter world, BlockPos pos) {
+        BlockEntity tileentity = world.getBlockEntity(pos);
         if (tileentity instanceof FlagBlockTile) {
             FlagBlockTile flag = ((FlagBlockTile) tileentity);
             DyeColor dyecolor = flag.getBaseColor(flag::getBlockState);
-            ITextComponent name = flag.hasCustomName() ? flag.getCustomName() : null;
+            Component name = flag.hasCustomName() ? flag.getCustomName() : null;
             return new FlagMarker(pos, dyecolor, name);
         } else {
             return null;

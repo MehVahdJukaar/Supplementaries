@@ -1,13 +1,13 @@
 package net.mehvahdjukaar.supplementaries.common;
 
-import net.minecraft.block.ComposterBlock;
-import net.minecraft.util.IItemProvider;
+import net.minecraft.world.level.block.ComposterBlock;
+import net.minecraft.world.level.ItemLike;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class ComposterHelper {
-    private static final Map<IItemProvider, Float> COMPOSTER_ADDITIONS = new HashMap<>();
+    private static final Map<ItemLike, Float> COMPOSTER_ADDITIONS = new HashMap<>();
     public static final float LEAVES = 0.3F;
     public static final float SAPLING = 0.3F;
     public static final float SEEDS = 0.3F;
@@ -32,7 +32,7 @@ public class ComposterHelper {
     public static final float BREAD = 0.85F;
     public static final float CAKE = 1.0F;
 
-    public static void addCompostable(IItemProvider item, float chance) {
+    public static void addCompostable(ItemLike item, float chance) {
         COMPOSTER_ADDITIONS.put(item, chance);
     }
 

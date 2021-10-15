@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.world.data;
 
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.Mth;
 
 import java.util.Random;
 
@@ -162,7 +162,7 @@ public class GlobeDataGenerator {
     }
 
     public static double dist(double x, double y, double x1, double y1){
-        return  MathHelper.sqrt(Math.pow((x-x1),2)+Math.pow((y-y1),2));
+        return  Mth.sqrt(Math.pow((x-x1),2)+Math.pow((y-y1),2));
     }
 
     public static byte[][] generate(long seed){

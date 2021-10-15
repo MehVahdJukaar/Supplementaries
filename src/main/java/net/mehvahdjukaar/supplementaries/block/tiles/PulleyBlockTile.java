@@ -7,24 +7,24 @@ import net.mehvahdjukaar.supplementaries.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.inventories.PulleyBlockContainer;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ChainBlock;
-import net.minecraft.block.SoundType;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Rotation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.ChainBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 
@@ -58,12 +58,12 @@ public class PulleyBlockTile extends ItemDisplayTile {
     }
 
     @Override
-    public ITextComponent getDefaultName() {
-        return new TranslationTextComponent("block.supplementaries.pulley_block");
+    public Component getDefaultName() {
+        return new TranslatableComponent("block.supplementaries.pulley_block");
     }
 
     @Override
-    public Container createMenu(int id, PlayerInventory player) {
+    public AbstractContainerMenu createMenu(int id, Inventory player) {
         return new PulleyBlockContainer(id, player, this);
     }
 
@@ -93,9 +93,9 @@ public class PulleyBlockTile extends ItemDisplayTile {
         else return this.pullDown(this.worldPosition, this.level, 1);
     }
 
-    public boolean pullUp(BlockPos pos, IWorld world, int rot) {
+    public boolean pullUp(BlockPos pos, LevelAccessor world, int rot) {
 
-        if (!(world instanceof World)) return false;
+        if (!(world instanceof Level)) return false;
         ItemStack stack = this.getDisplayedItem();
         boolean addNewItem = false;
         if (stack.isEmpty()) {
@@ -106,10 +106,10 @@ public class PulleyBlockTile extends ItemDisplayTile {
         }
         if (stack.getCount() + rot > stack.getMaxStackSize() || !(stack.getItem() instanceof BlockItem)) return false;
         Block ropeBlock = ((BlockItem) stack.getItem()).getBlock();
-        boolean success = RopeBlock.removeRope(pos.below(), (World) world, ropeBlock);
+        boolean success = RopeBlock.removeRope(pos.below(), (Level) world, ropeBlock);
         if (success) {
             SoundType soundtype = ropeBlock.defaultBlockState().getSoundType(world, pos, null);
-            world.playSound(null, pos, soundtype.getBreakSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+            world.playSound(null, pos, soundtype.getBreakSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
             if (addNewItem) this.setDisplayedItem(stack);
             else stack.grow(1);
             this.setChanged();
@@ -117,16 +117,16 @@ public class PulleyBlockTile extends ItemDisplayTile {
         return success;
     }
 
-    public boolean pullDown(BlockPos pos, IWorld world, int rot) {
+    public boolean pullDown(BlockPos pos, LevelAccessor world, int rot) {
 
-        if (!(world instanceof World)) return false;
+        if (!(world instanceof Level)) return false;
         ItemStack stack = this.getDisplayedItem();
         if (stack.getCount() < rot || !(stack.getItem() instanceof BlockItem)) return false;
         Block ropeBlock = ((BlockItem) stack.getItem()).getBlock();
-        boolean success = RopeBlock.addRope(pos.below(), (World) world, null, Hand.MAIN_HAND, ropeBlock);
+        boolean success = RopeBlock.addRope(pos.below(), (Level) world, null, InteractionHand.MAIN_HAND, ropeBlock);
         if (success) {
             SoundType soundtype = ropeBlock.defaultBlockState().getSoundType(world, pos, null);
-            world.playSound(null, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+            world.playSound(null, pos, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
             stack.shrink(1);
             this.setChanged();
         }

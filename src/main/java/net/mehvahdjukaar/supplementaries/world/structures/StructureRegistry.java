@@ -6,20 +6,20 @@ import com.mojang.serialization.Codec;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.world.structures.processors.SignDataProcessor;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.WorldGenRegistries;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.provider.BiomeProvider;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.FlatChunkGenerator;
-import net.minecraft.world.gen.feature.NoFeatureConfig;
-import net.minecraft.world.gen.feature.structure.Structure;
-import net.minecraft.world.gen.settings.DimensionStructuresSettings;
-import net.minecraft.world.gen.settings.StructureSeparationSettings;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Registry;
+import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeSource;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.FlatLevelSource;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.StructureSettings;
+import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatureConfiguration;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
@@ -36,14 +36,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import RegistryObject;
+
 public class StructureRegistry {
 
 
-    public static final DeferredRegister<Structure<?>> STRUCTURES = DeferredRegister.create(ForgeRegistries.STRUCTURE_FEATURES, Supplementaries.MOD_ID);
+    public static final DeferredRegister<StructureFeature<?>> STRUCTURES = DeferredRegister.create(ForgeRegistries.STRUCTURE_FEATURES, Supplementaries.MOD_ID);
 
     //do NOT change this
-    public static final RegistryObject<Structure<NoFeatureConfig>> WAY_SIGN = STRUCTURES.register("way_sign",
-            () -> (new WaySignStructure(NoFeatureConfig.CODEC)));
+    public static final RegistryObject<StructureFeature<NoneFeatureConfiguration>> WAY_SIGN = STRUCTURES.register("way_sign",
+            () -> (new WaySignStructure(NoneFeatureConfiguration.CODEC)));
 
 
     //mod init. registers events
@@ -80,7 +82,7 @@ public class StructureRegistry {
          * RegistryKey.getOrCreateKey(Registry.BIOME_KEY, event.getName()) to get the biome's
          * registrykey. Then that can be fed into the dictionary to get the biome's types.
          */
-        if (BiomeDictionary.hasType(RegistryKey.create(Registry.BIOME_REGISTRY, event.getName()), BiomeDictionary.Type.OCEAN)
+        if (BiomeDictionary.hasType(ResourceKey.create(Registry.BIOME_REGISTRY, event.getName()), BiomeDictionary.Type.OCEAN)
                 || ServerConfigs.spawn.ROAD_SIGN_DISTANCE_MIN.get() == 1001) return;
 
         event.getGeneration().getStructures().add(() -> ConfiguredFeatures.CONFIGURED_WAY_SIGN);
@@ -99,8 +101,8 @@ public class StructureRegistry {
     private static Method GETCODEC_METHOD;
 
     public static void addDimensionalSpacing(final WorldEvent.Load event) {
-        if (event.getWorld() instanceof ServerWorld) {
-            ServerWorld serverWorld = (ServerWorld) event.getWorld();
+        if (event.getWorld() instanceof ServerLevel) {
+            ServerLevel serverWorld = (ServerLevel) event.getWorld();
 
             /*
              * Skip Terraforged's chunk generator as they are a special case of a mod locking down their chunkgenerator.
@@ -122,8 +124,8 @@ public class StructureRegistry {
              * people seem to want their superflat worlds free of modded structures.
              * Also that vanilla superflat is really tricky and buggy to work with in my experience.
              */
-            if (serverWorld.getChunkSource().generator instanceof FlatChunkGenerator &&
-                    serverWorld.dimension().equals(World.OVERWORLD)) {
+            if (serverWorld.getChunkSource().generator instanceof FlatLevelSource &&
+                    serverWorld.dimension().equals(Level.OVERWORLD)) {
                 return;
             }
             //serverWorld.getChunkSource().generator.getBiomeSource().possibleBiomes().stream().forEach(b->b.cange);
@@ -136,13 +138,13 @@ public class StructureRegistry {
 
             //TODO: might be a bug here with .canGenerateStructure
             try{
-                BiomeProvider provider = serverWorld.getChunkSource().generator.getBiomeSource();
+                BiomeSource provider = serverWorld.getChunkSource().generator.getBiomeSource();
                 List<Biome> biomes = provider.possibleBiomes();
                 if(biomes.contains(null)){
                     Supplementaries.LOGGER.throwing(new Exception("something went wrong: found a null biome in the biome provider"));
                 }
 
-                isVillageDimension = provider.canGenerateStructure(Structure.VILLAGE);
+                isVillageDimension = provider.canGenerateStructure(StructureFeature.VILLAGE);
             }catch (Exception ignored){
                 Supplementaries.LOGGER.throwing(new Exception("failed to add structure to biomes: something went wrong, might be some other mod bug"));
             }
@@ -156,12 +158,12 @@ public class StructureRegistry {
                  * already added your default structure spacing to some dimensions. You would need to override the spacing with .put(...)
                  * And if you want to do dimension blacklisting, you need to remove the spacing entry entirely from the map below to prevent generation safely.
                  */
-                Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(serverWorld.getChunkSource().generator.getSettings().structureConfig());
-                tempMap.putIfAbsent(WAY_SIGN.get(), DimensionStructuresSettings.DEFAULTS.get(WAY_SIGN.get()));
+                Map<StructureFeature<?>, StructureFeatureConfiguration> tempMap = new HashMap<>(serverWorld.getChunkSource().generator.getSettings().structureConfig());
+                tempMap.putIfAbsent(WAY_SIGN.get(), StructureSettings.DEFAULTS.get(WAY_SIGN.get()));
                 serverWorld.getChunkSource().generator.getSettings().structureConfig = tempMap;
             } else {
                 //removing it from the map if it's there already for some damn reason
-                Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(serverWorld.getChunkSource().generator.getSettings().structureConfig());
+                Map<StructureFeature<?>, StructureFeatureConfiguration> tempMap = new HashMap<>(serverWorld.getChunkSource().generator.getSettings().structureConfig());
                 tempMap.remove(WAY_SIGN.get());
                 serverWorld.getChunkSource().generator.getSettings().structureConfig = tempMap;
             }
@@ -176,7 +178,7 @@ public class StructureRegistry {
     private static void setupStructures() {
         setupMapSpacingAndLand(
                 WAY_SIGN.get(), /* The instance of the structure */
-                new StructureSeparationSettings(ServerConfigs.spawn.ROAD_SIGN_DISTANCE_AVR.get() /* average distance apart in chunks between spawn attempts */,
+                new StructureFeatureConfiguration(ServerConfigs.spawn.ROAD_SIGN_DISTANCE_AVR.get() /* average distance apart in chunks between spawn attempts */,
                         ServerConfigs.spawn.ROAD_SIGN_DISTANCE_MIN.get() /* minimum distance apart in chunks between spawn attempts */,
                         431041527 /* this modifies the seed of the structure so no two structures always spawn over each-other. Make this large and unique. */),
                 true);
@@ -190,9 +192,9 @@ public class StructureRegistry {
      * The rarity of the structure is determined based on the values passed into
      * this method in the structureSeparationSettings argument. Called by registerFeatures.
      */
-    private static <F extends Structure<?>> void setupMapSpacingAndLand(
+    private static <F extends StructureFeature<?>> void setupMapSpacingAndLand(
             F structure,
-            StructureSeparationSettings structureSeparationSettings,
+            StructureFeatureConfiguration structureSeparationSettings,
             boolean transformSurroundingLand) {
         /*
          * We need to add our structures into the map in Structure alongside vanilla
@@ -202,8 +204,8 @@ public class StructureRegistry {
          * getRegistryName() should never return null.
          */
         try {
-            Structure.STRUCTURES_REGISTRY.put(structure.getRegistryName().toString(), structure);
-            Structure.STRUCTURES_REGISTRY.get(structure.getRegistryName().toString()).getRegistryName();
+            StructureFeature.STRUCTURES_REGISTRY.put(structure.getRegistryName().toString(), structure);
+            StructureFeature.STRUCTURES_REGISTRY.get(structure.getRegistryName().toString()).getRegistryName();
         } catch (Exception e) {
             Supplementaries.LOGGER.throwing(new Exception("failed to register way sign structure: " + e + ". this is a bug"));
         }
@@ -217,9 +219,9 @@ public class StructureRegistry {
          * This means this is best for structure above sealevel so keep that in mind.
          */
         if (transformSurroundingLand) {
-            Structure.NOISE_AFFECTING_FEATURES =
-                    ImmutableList.<Structure<?>>builder()
-                            .addAll(Structure.NOISE_AFFECTING_FEATURES)
+            StructureFeature.NOISE_AFFECTING_FEATURES =
+                    ImmutableList.<StructureFeature<?>>builder()
+                            .addAll(StructureFeature.NOISE_AFFECTING_FEATURES)
                             .add(structure)
                             .build();
         }
@@ -234,9 +236,9 @@ public class StructureRegistry {
          * spacing from this list into that dimension or do dimension blacklisting properly. We also use
          * our entry in DimensionStructuresSettings.field_236191_b_ in WorldEvent.Load as well.
          */
-        DimensionStructuresSettings.DEFAULTS =
-                ImmutableMap.<Structure<?>, StructureSeparationSettings>builder()
-                        .putAll(DimensionStructuresSettings.DEFAULTS)
+        StructureSettings.DEFAULTS =
+                ImmutableMap.<StructureFeature<?>, StructureFeatureConfiguration>builder()
+                        .putAll(StructureSettings.DEFAULTS)
                         .put(structure, structureSeparationSettings)
                         .build();
 
@@ -249,15 +251,15 @@ public class StructureRegistry {
          * that field only applies for the default overworld and won't add to other worldtypes or dimensions (like amplified or Nether).
          * So yeah, don't do DimensionSettings.field_242740_q. Use the NOISE_SETTINGS loop below instead.
          */
-        WorldGenRegistries.NOISE_GENERATOR_SETTINGS.entrySet().forEach(settings -> {
-            Map<Structure<?>, StructureSeparationSettings> structureMap = settings.getValue().structureSettings().structureConfig;
+        BuiltinRegistries.NOISE_GENERATOR_SETTINGS.entrySet().forEach(settings -> {
+            Map<StructureFeature<?>, StructureFeatureConfiguration> structureMap = settings.getValue().structureSettings().structureConfig;
 
             /*
              * Pre-caution in case a mod makes the structure map immutable like datapacks do.
              * I take no chances myself. You never know what another mods does...
              */
             if (structureMap instanceof ImmutableMap) {
-                Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(structureMap);
+                Map<StructureFeature<?>, StructureFeatureConfiguration> tempMap = new HashMap<>(structureMap);
                 tempMap.put(structure, structureSeparationSettings);
                 settings.getValue().structureSettings().structureConfig = tempMap;
             } else {

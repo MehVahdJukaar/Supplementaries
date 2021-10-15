@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.mobholder;
 
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
-import net.minecraft.entity.Entity;
+import net.minecraft.world.entity.Entity;
 
 /**
  * based typed implementation

@@ -1,38 +1,40 @@
 package net.mehvahdjukaar.supplementaries.client.renderers;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.flywheel.FlywheelPlugin;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector4f;
-import net.minecraft.world.World;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import com.mojang.math.Vector4f;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
 import net.minecraftforge.common.util.Lazy;
 
 import java.util.Random;
 import java.util.function.Supplier;
 
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+
 public class RendererUtil {
     //centered on x,z. aligned on y=0
 
     //stuff that falling sand uses. for some reason renderBlock doesn't use correct light level
-    public static void renderBlockModel(BlockState state, MatrixStack matrixStack, IRenderTypeBuffer buffer,
-                                        BlockRendererDispatcher blockRenderer, World world, BlockPos pos) {
+    public static void renderBlockModel(BlockState state, PoseStack matrixStack, MultiBufferSource buffer,
+                                        BlockRenderDispatcher blockRenderer, Level world, BlockPos pos) {
         try {
             for (RenderType type : RenderType.chunkBufferLayers()) {
-                if (RenderTypeLookup.canRenderInLayer(state, type)) {
+                if (ItemBlockRenderTypes.canRenderInLayer(state, type)) {
                     renderBlockModel(state, matrixStack, buffer, blockRenderer, world, pos, type);
                 }
             }
@@ -40,8 +42,8 @@ public class RendererUtil {
         }
     }
 
-    public static void renderBlockModel(BlockState state, MatrixStack matrixStack, IRenderTypeBuffer buffer,
-                                        BlockRendererDispatcher blockRenderer, World world, BlockPos pos, RenderType type) {
+    public static void renderBlockModel(BlockState state, PoseStack matrixStack, MultiBufferSource buffer,
+                                        BlockRenderDispatcher blockRenderer, Level world, BlockPos pos, RenderType type) {
 
         net.minecraftforge.client.ForgeHooksClient.setRenderLayer(type);
         blockRenderer.getModelRenderer().tesselateBlock(world,
@@ -51,11 +53,11 @@ public class RendererUtil {
         net.minecraftforge.client.ForgeHooksClient.setRenderLayer(null);
     }
 
-    public static void renderBlockModel(ResourceLocation modelLocation, MatrixStack matrixStack, IRenderTypeBuffer buffer,
-                                        BlockRendererDispatcher blockRenderer, int light, int overlay, boolean cutout) {
+    public static void renderBlockModel(ResourceLocation modelLocation, PoseStack matrixStack, MultiBufferSource buffer,
+                                        BlockRenderDispatcher blockRenderer, int light, int overlay, boolean cutout) {
 
         blockRenderer.getModelRenderer().renderModel(matrixStack.last(),
-                buffer.getBuffer(cutout ? Atlases.cutoutBlockSheet() : Atlases.solidBlockSheet()),
+                buffer.getBuffer(cutout ? Sheets.cutoutBlockSheet() : Sheets.solidBlockSheet()),
                 null,
                 blockRenderer.getBlockModelShaper().getModelManager().getModel(modelLocation),
                 1.0F, 1.0F, 1.0F,
@@ -63,18 +65,18 @@ public class RendererUtil {
     }
 
 
-    public static void addCube(IVertexBuilder builder, MatrixStack matrixStackIn, float w, float h, TextureAtlasSprite sprite, int combinedLightIn,
+    public static void addCube(VertexConsumer builder, PoseStack matrixStackIn, float w, float h, TextureAtlasSprite sprite, int combinedLightIn,
                                int color, float a, int combinedOverlayIn, boolean up, boolean down, boolean fakeshading, boolean flippedY) {
         addCube(builder, matrixStackIn, 0, 0, w, h, sprite, combinedLightIn, color, a, up, down, fakeshading, flippedY, false);
     }
 
-    public static void addCube(IVertexBuilder builder, MatrixStack matrixStackIn, float uOff, float vOff, float w, float h, TextureAtlasSprite sprite, int combinedLightIn,
+    public static void addCube(VertexConsumer builder, PoseStack matrixStackIn, float uOff, float vOff, float w, float h, TextureAtlasSprite sprite, int combinedLightIn,
                                int color, float a, int combinedOverlayIn, boolean up, boolean down, boolean fakeshading, boolean flippedY) {
         addCube(builder, matrixStackIn, uOff, vOff, w, h, sprite, combinedLightIn, color, a, up, down, fakeshading, flippedY, false);
     }
 
 
-    public static void addCube(IVertexBuilder builder, MatrixStack matrixStackIn, float uOff, float vOff, float w, float h, TextureAtlasSprite sprite, int combinedLightIn,
+    public static void addCube(VertexConsumer builder, PoseStack matrixStackIn, float uOff, float vOff, float w, float h, TextureAtlasSprite sprite, int combinedLightIn,
                                int color, float a, boolean up, boolean down, boolean fakeshading, boolean flippedY, boolean wrap) {
         int lu = combinedLightIn & '\uffff';
         int lv = combinedLightIn >> 16 & '\uffff'; // ok
@@ -159,7 +161,7 @@ public class RendererUtil {
         }
     */
 
-    public static void addQuadSide(IVertexBuilder builder, MatrixStack matrixStackIn, float x0, float y0, float z0, float x1, float y1, float z1, float u0, float v0, float u1, float v1, float r, float g,
+    public static void addQuadSide(VertexConsumer builder, PoseStack matrixStackIn, float x0, float y0, float z0, float x1, float y1, float z1, float u0, float v0, float u1, float v1, float r, float g,
                                    float b, float a, int lu, int lv, float nx, float ny, float nz) {
         addVert(builder, matrixStackIn, x0, y0, z0, u0, v1, r, g, b, a, lu, lv, nx, ny, nz);
         addVert(builder, matrixStackIn, x1, y0, z1, u1, v1, r, g, b, a, lu, lv, nx, ny, nz);
@@ -167,7 +169,7 @@ public class RendererUtil {
         addVert(builder, matrixStackIn, x0, y1, z0, u0, v0, r, g, b, a, lu, lv, nx, ny, nz);
     }
 
-    public static void addQuadSide(IVertexBuilder builder, MatrixStack matrixStackIn, float x0, float y0, float z0, float x1, float y1, float z1, float u0, float v0, float u1, float v1, float r, float g,
+    public static void addQuadSide(VertexConsumer builder, PoseStack matrixStackIn, float x0, float y0, float z0, float x1, float y1, float z1, float u0, float v0, float u1, float v1, float r, float g,
                                    float b, float a, int lu, int lv, float nx, float ny, float nz, TextureAtlasSprite sprite) {
 
         u0 = getRelativeU(sprite, u0);
@@ -181,7 +183,7 @@ public class RendererUtil {
         addVert(builder, matrixStackIn, x0, y1, z0, u0, v0, r, g, b, a, lu, lv, nx, ny, nz);
     }
 
-    public static void addQuadTop(IVertexBuilder builder, MatrixStack matrixStackIn, float x0, float y0, float z0, float x1, float y1, float z1, float u0, float v0, float u1, float v1, float r, float g,
+    public static void addQuadTop(VertexConsumer builder, PoseStack matrixStackIn, float x0, float y0, float z0, float x1, float y1, float z1, float u0, float v0, float u1, float v1, float r, float g,
                                   float b, float a, int lu, int lv, float nx, float ny, float nz) {
         addVert(builder, matrixStackIn, x0, y0, z0, u0, v1, r, g, b, a, lu, lv, nx, ny, nz);
         addVert(builder, matrixStackIn, x1, y0, z0, u1, v1, r, g, b, a, lu, lv, nx, ny, nz);
@@ -190,13 +192,13 @@ public class RendererUtil {
     }
 
 
-    public static void addVert(IVertexBuilder builder, MatrixStack matrixStackIn, float x, float y, float z, float u, float v, float r, float g,
+    public static void addVert(VertexConsumer builder, PoseStack matrixStackIn, float x, float y, float z, float u, float v, float r, float g,
                                float b, float a, int lu, int lv, float nx, float ny, float nz) {
         builder.vertex(matrixStackIn.last().pose(), x, y, z).color(r, g, b, a).uv(u, v).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lu, lv)
                 .normal(matrixStackIn.last().normal(), nx, ny, nz).endVertex();
     }
 
-    public static void addVert(IVertexBuilder builder, MatrixStack matrixStackIn, float x, float y, float z, float u, float v, float r, float g,
+    public static void addVert(VertexConsumer builder, PoseStack matrixStackIn, float x, float y, float z, float u, float v, float r, float g,
                                float b, float a, int lu, int lv, float nx, float ny, float nz, TextureAtlasSprite sprite) {
         builder.vertex(matrixStackIn.last().pose(), x, y, z).color(r, g, b, a).uv(getRelativeU(sprite, u), getRelativeV(sprite, v))
                 .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lu, lv).normal(matrixStackIn.last().normal(), nx, ny, nz).endVertex();
@@ -215,7 +217,7 @@ public class RendererUtil {
 
     //RendererUtil.renderFish(builder, matrixStackIn, wo, ho, fishType,240 , combinedOverlayIn);
 
-    public static void renderFish(IVertexBuilder builder, MatrixStack matrixStackIn, float wo, float ho, int fishType, int combinedLightIn) {
+    public static void renderFish(VertexConsumer builder, PoseStack matrixStackIn, float wo, float ho, int fishType, int combinedLightIn) {
         int textW = 64;
         int textH = 32;
         int fishW = 5;
@@ -224,7 +226,7 @@ public class RendererUtil {
         int fishv = fishType % (textH / fishH);
         int fishu = fishType / (textH / fishH);
 
-        TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(Textures.FISHIES_TEXTURE);
+        TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(Textures.FISHIES_TEXTURE);
         float w = fishW / (float) textW;
         float h = fishH / (float) textH;
         float hw = 4 * w / 2f;
@@ -313,7 +315,7 @@ public class RendererUtil {
         }
     }
 
-    public static void transformVertices(int[] v, MatrixStack stack, TextureAtlasSprite sprite) {
+    public static void transformVertices(int[] v, PoseStack stack, TextureAtlasSprite sprite) {
         Vector4f vector4f = new Vector4f(0, 0, 0, 1.0F);
         vector4f.transform(stack.last().pose());
         moveVertices(v, vector4f.x(), vector4f.y(), vector4f.z(), sprite);

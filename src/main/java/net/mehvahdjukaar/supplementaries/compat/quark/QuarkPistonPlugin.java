@@ -3,9 +3,9 @@ package net.mehvahdjukaar.supplementaries.compat.quark;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import vazkii.quark.content.automation.module.PistonsMoveTileEntitiesModule;
 
@@ -17,7 +17,7 @@ import java.util.WeakHashMap;
 public class QuarkPistonPlugin {
     //not really a plugin
     @Nullable
-    public static TileEntity getMovingTile(BlockPos pos, World world){
+    public static BlockEntity getMovingTile(BlockPos pos, Level world){
         return PistonsMoveTileEntitiesModule.getMovement(world,pos);
     }
 

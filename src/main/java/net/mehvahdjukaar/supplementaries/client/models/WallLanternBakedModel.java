@@ -6,18 +6,18 @@ import net.mehvahdjukaar.supplementaries.block.blocks.MimicBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.WallLanternBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.MimicBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockModelShapes;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.model.ItemOverrideList;
+import net.minecraft.client.renderer.block.BlockModelShaper;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.vertex.VertexFormatElement;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Vector3d;
+import com.mojang.blaze3d.vertex.VertexFormatElement;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
@@ -32,10 +32,10 @@ import java.util.List;
 import java.util.Random;
 
 public class WallLanternBakedModel implements IDynamicBakedModel {
-    private final IBakedModel support;
-    private final BlockModelShapes blockModelShaper;
+    private final BakedModel support;
+    private final BlockModelShaper blockModelShaper;
 
-    public WallLanternBakedModel(IBakedModel support) {
+    public WallLanternBakedModel(BakedModel support) {
         this.support = support;
         this.blockModelShaper = Minecraft.getInstance().getBlockRenderer().getBlockModelShaper();
     }
@@ -67,7 +67,7 @@ public class WallLanternBakedModel implements IDynamicBakedModel {
                     } else if (mimic.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
                         mimic = mimic.setValue(BlockStateProperties.HORIZONTAL_FACING, dir);
                     }
-                    IBakedModel model = blockModelShaper.getBlockModel(mimic);
+                    BakedModel model = blockModelShaper.getBlockModel(mimic);
 
                     List<BakedQuad> mimicQuads = model.getQuads(mimic, side, rand, EmptyModelData.INSTANCE);
 
@@ -119,7 +119,7 @@ public class WallLanternBakedModel implements IDynamicBakedModel {
         BlockState mimic = data.getData(BlockProperties.MIMIC);
         if (mimic != null && !mimic.isAir()) {
 
-            IBakedModel model = blockModelShaper.getBlockModel(mimic);
+            BakedModel model = blockModelShaper.getBlockModel(mimic);
             try {
                 return model.getParticleIcon();
             } catch (Exception ignored) {
@@ -130,17 +130,17 @@ public class WallLanternBakedModel implements IDynamicBakedModel {
     }
 
     @Override
-    public ItemOverrideList getOverrides() {
-        return ItemOverrideList.EMPTY;
+    public ItemOverrides getOverrides() {
+        return ItemOverrides.EMPTY;
     }
 
     @Override
-    public ItemCameraTransforms getTransforms() {
-        return ItemCameraTransforms.NO_TRANSFORMS;
+    public ItemTransforms getTransforms() {
+        return ItemTransforms.NO_TRANSFORMS;
     }
 
 
-    private void putVertex(BakedQuadBuilder builder, Vector3d normal,
+    private void putVertex(BakedQuadBuilder builder, Vec3 normal,
                            double x, double y, double z, float u, float v, TextureAtlasSprite sprite, float r, float g, float b) {
 
         ImmutableList<VertexFormatElement> elements = builder.getVertexFormat().getElements().asList();
@@ -178,8 +178,8 @@ public class WallLanternBakedModel implements IDynamicBakedModel {
         }
     }
 
-    private BakedQuad createQuad(Vector3d v1, Vector3d v2, Vector3d v3, Vector3d v4, TextureAtlasSprite sprite) {
-        Vector3d normal = v3.subtract(v2).cross(v1.subtract(v2)).normalize();
+    private BakedQuad createQuad(Vec3 v1, Vec3 v2, Vec3 v3, Vec3 v4, TextureAtlasSprite sprite) {
+        Vec3 normal = v3.subtract(v2).cross(v1.subtract(v2)).normalize();
         int tw = sprite.getWidth();
         int th = sprite.getHeight();
 
@@ -192,8 +192,8 @@ public class WallLanternBakedModel implements IDynamicBakedModel {
         return builder.build();
     }
 
-    private static Vector3d v(double x, double y, double z) {
-        return new Vector3d(x, y, z);
+    private static Vec3 v(double x, double y, double z) {
+        return new Vec3(x, y, z);
     }
 
 

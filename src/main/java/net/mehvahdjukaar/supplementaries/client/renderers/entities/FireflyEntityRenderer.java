@@ -1,26 +1,26 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.entities;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.entities.FireflyEntity;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 
 public class FireflyEntityRenderer extends EntityRenderer<FireflyEntity> {
-    public FireflyEntityRenderer(EntityRendererManager renderManager) {
+    public FireflyEntityRenderer(EntityRenderDispatcher renderManager) {
         super(renderManager);
     }
 
     @Override
-    public void render(FireflyEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn,
+    public void render(FireflyEntity entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn,
                        int packedLightIn) {
 
         matrixStackIn.pushPose();
@@ -28,14 +28,14 @@ public class FireflyEntityRenderer extends EntityRenderer<FireflyEntity> {
         float r = CommonUtil.FESTIVITY.isHalloween()?0.3f:1;
         float g = CommonUtil.FESTIVITY.isHalloween()?0:1;
         float b = 1;
-        float a = MathHelper.lerp(partialTicks, entityIn.prevAlpha, entityIn.alpha);
+        float a = Mth.lerp(partialTicks, entityIn.prevAlpha, entityIn.alpha);
 
         matrixStackIn.translate(0.0D, 0.5, 0.0D);
         matrixStackIn.mulPose(this.entityRenderDispatcher.cameraOrientation());
         matrixStackIn.mulPose(Const.Y180);
         float scale = 0.15f;
         matrixStackIn.scale(a*scale, a*scale, a*scale);
-        IVertexBuilder builder = bufferIn.getBuffer(RenderType.beaconBeam(Textures.FIREFLY_TEXTURE,true));
+        VertexConsumer builder = bufferIn.getBuffer(RenderType.beaconBeam(Textures.FIREFLY_TEXTURE,true));
 
         RendererUtil.addQuadSide(builder, matrixStackIn, -0.5f, -0.5f, 0f, 0.5f, 0.5f, 0f, 0, 0, 1, 1, r, g,b, a, 240, 0, 0, 1, 0);
 

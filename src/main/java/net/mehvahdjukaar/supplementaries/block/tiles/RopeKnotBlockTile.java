@@ -4,12 +4,12 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraftforge.common.util.Constants;
 
 import static net.mehvahdjukaar.supplementaries.block.blocks.RopeKnotBlock.*;
@@ -60,8 +60,8 @@ public class RopeKnotBlockTile extends MimicBlockTile {
             }
             VoxelShape c = mimic.getCollisionShape(this.level, this.worldPosition);
             VoxelShape s = mimic.getShape(this.level, this.worldPosition);
-            c = VoxelShapes.or(c, r);
-            s = VoxelShapes.or(s, r);
+            c = Shapes.or(c, r);
+            s = Shapes.or(s, r);
             this.collisionShape = c.optimize();
             this.shape = s.optimize();
         }catch (Exception e){
@@ -82,7 +82,7 @@ public class RopeKnotBlockTile extends MimicBlockTile {
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT compound) {
+    public void load(BlockState state, CompoundTag compound) {
         super.load(state, compound);
         this.collisionShape = null;
         this.shape = null;

@@ -3,26 +3,26 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 import net.mehvahdjukaar.supplementaries.block.blocks.GlobeBlock;
 import net.mehvahdjukaar.supplementaries.common.SpecialPlayers;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.INameable;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.world.Nameable;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import static net.mehvahdjukaar.supplementaries.common.Textures.*;
 
-public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, INameable {
+public class GlobeBlockTile extends BlockEntity implements TickableBlockEntity, Nameable {
     public float yaw = 0;
     public float prevYaw = 0;
     public int face = 0;
 
-    private ITextComponent customName;
+    private Component customName;
 
     public boolean sheared = false;
 
@@ -36,7 +36,7 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, I
     }
 
 
-    public void setCustomName(ITextComponent name) {
+    public void setCustomName(Component name) {
         this.customName = name;
         this.updateTexture();
     }
@@ -49,17 +49,17 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, I
     }
 
     @Override
-    public ITextComponent getName() {
+    public Component getName() {
         return this.customName != null ? this.customName : this.getDefaultName();
     }
 
     @Override
-    public ITextComponent getCustomName() {
+    public Component getCustomName() {
         return this.customName;
     }
 
-    public ITextComponent getDefaultName() {
-        return new TranslationTextComponent("block.supplementaries.globe");
+    public Component getDefaultName() {
+        return new TranslatableComponent("block.supplementaries.globe");
     }
 
     @Override
@@ -68,9 +68,9 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, I
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT compound) {
+    public void load(BlockState state, CompoundTag compound) {
         if (compound.contains("CustomName", 8)) {
-            this.setCustomName(ITextComponent.Serializer.fromJson(compound.getString("CustomName")));
+            this.setCustomName(Component.Serializer.fromJson(compound.getString("CustomName")));
         }
         this.face = compound.getInt("Face");
         this.yaw = compound.getFloat("Yaw");
@@ -80,10 +80,10 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, I
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
+    public CompoundTag save(CompoundTag compound) {
         super.save(compound);
         if (this.customName != null) {
-            compound.putString("CustomName", ITextComponent.Serializer.toJson(this.customName));
+            compound.putString("CustomName", Component.Serializer.toJson(this.customName));
         }
         compound.putInt("Face",this.face);
         compound.putFloat("Yaw",this.yaw);
@@ -111,17 +111,17 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, I
     }
 
     @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.worldPosition, 0, this.getUpdateTag());
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return new ClientboundBlockEntityDataPacket(this.worldPosition, 0, this.getUpdateTag());
     }
 
     @Override
-    public CompoundNBT getUpdateTag() {
-        return this.save(new CompoundNBT());
+    public CompoundTag getUpdateTag() {
+        return this.save(new CompoundTag());
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         this.load(this.getBlockState(), pkt.getTag());
     }
 
@@ -146,22 +146,22 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, I
 
     //TODO: improve
     public enum GlobeType {
-        FLAT(new String[]{"flat","flat earth"}, new TranslationTextComponent("globe.supplementaries.flat"), GLOBE_FLAT_TEXTURE),
+        FLAT(new String[]{"flat","flat earth"}, new TranslatableComponent("globe.supplementaries.flat"), GLOBE_FLAT_TEXTURE),
         MOON(new String[]{"moon","luna","selene","cynthia"},
-                new TranslationTextComponent("globe.supplementaries.moon"),GLOBE_MOON_TEXTURE),
+                new TranslatableComponent("globe.supplementaries.moon"),GLOBE_MOON_TEXTURE),
         EARTH(new String[]{"earth","terra","gaia","gaea","tierra","tellus","terre"},
-                new TranslationTextComponent("globe.supplementaries.earth"),GLOBE_TEXTURE),
+                new TranslatableComponent("globe.supplementaries.earth"),GLOBE_TEXTURE),
         SUN(new String[]{"sun","sol","helios"},
-                new TranslationTextComponent("globe.supplementaries.sun"),GLOBE_SUN_TEXTURE);
+                new TranslatableComponent("globe.supplementaries.sun"),GLOBE_SUN_TEXTURE);
 
-        GlobeType(String[] key, TranslationTextComponent tr, ResourceLocation res){
+        GlobeType(String[] key, TranslatableComponent tr, ResourceLocation res){
             this.keyWords = key;
             this.transKeyWord = tr;
             this.texture = res;
         }
 
         public final String[] keyWords;
-        public final TranslationTextComponent transKeyWord;
+        public final TranslatableComponent transKeyWord;
         public final ResourceLocation texture;
 
         public static ResourceLocation getGlobeTexture(String text, GlobeBlockTile tile){

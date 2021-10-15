@@ -6,16 +6,16 @@ import net.mehvahdjukaar.supplementaries.block.blocks.PresentBlock;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.inventories.PresentContainer;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 
 public class PresentBlockTile extends ItemDisplayTile {
 
@@ -37,9 +37,9 @@ public class PresentBlockTile extends ItemDisplayTile {
     }
 
     public static boolean isPacked(ItemStack stack) {
-        CompoundNBT com = stack.getTag();
+        CompoundTag com = stack.getTag();
         if (com != null) {
-            CompoundNBT nbt = com.getCompound("BlockEntityTag");
+            CompoundTag nbt = com.getCompound("BlockEntityTag");
             if (nbt != null) {
                 return nbt.getBoolean("Packed");
             }
@@ -72,12 +72,12 @@ public class PresentBlockTile extends ItemDisplayTile {
     }
 
     @Override
-    public ITextComponent getDefaultName() {
-        return new TranslationTextComponent("block.supplementaries.present");
+    public Component getDefaultName() {
+        return new TranslatableComponent("block.supplementaries.present");
     }
 
     @Override
-    public void startOpen(PlayerEntity player) {
+    public void startOpen(Player player) {
         if (!player.isSpectator()) {
             if (this.numPlayersUsing < 0) {
                 this.numPlayersUsing = 0;
@@ -88,14 +88,14 @@ public class PresentBlockTile extends ItemDisplayTile {
     }
 
     @Override
-    public void stopOpen(PlayerEntity player) {
+    public void stopOpen(Player player) {
         if (!player.isSpectator()) {
             --this.numPlayersUsing;
         }
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT tag) {
+    public void load(BlockState state, CompoundTag tag) {
         super.load(state, tag);
         if (tag.contains("Recipient"))
             this.recipient = tag.getString("Recipient");
@@ -105,7 +105,7 @@ public class PresentBlockTile extends ItemDisplayTile {
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT tag) {
+    public CompoundTag save(CompoundTag tag) {
         super.save(tag);
         if (!this.recipient.isEmpty())
             tag.putString("Recipient", this.recipient);
@@ -117,7 +117,7 @@ public class PresentBlockTile extends ItemDisplayTile {
     }
 
     @Override
-    public Container createMenu(int id, PlayerInventory player) {
+    public AbstractContainerMenu createMenu(int id, Inventory player) {
         return new PresentContainer(id, player, this, this.worldPosition);
     }
 

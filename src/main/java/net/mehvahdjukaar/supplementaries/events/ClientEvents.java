@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.events;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.gui.ConfigButton;
@@ -10,15 +10,15 @@ import net.mehvahdjukaar.supplementaries.compat.quark.QuarkTooltipPlugin;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import com.mojang.math.Matrix4f;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderTooltipEvent;
@@ -46,8 +46,8 @@ public class ClientEvents {
             }
 
             if(event.getItemStack().getItem() == ModRegistry.ROPE_ARROW_ITEM.get()){
-                List<ITextComponent> tooltip = event.getToolTip();
-                Optional<ITextComponent> r = tooltip.stream().filter(t-> (t instanceof TranslationTextComponent) && ((TranslationTextComponent) t)
+                List<Component> tooltip = event.getToolTip();
+                Optional<Component> r = tooltip.stream().filter(t-> (t instanceof TranslatableComponent) && ((TranslatableComponent) t)
                         .getKey().equals("item.durability")).findFirst();
                 r.ifPresent(tooltip::remove);
             }
@@ -66,7 +66,7 @@ public class ClientEvents {
             }
         }
         if (i == ModRegistry.BLACKBOARD_ITEM.get()) {
-            CompoundNBT cmp = stack.getTagElement("BlockEntityTag");
+            CompoundTag cmp = stack.getTagElement("BlockEntityTag");
             if (cmp != null && cmp.contains("Pixels")) {
                 long[] packed = cmp.getLongArray("Pixels");
 
@@ -77,10 +77,10 @@ public class ClientEvents {
                 float size = 135.0F;
                 float scale = 0.5F;
 
-                MatrixStack matrixStack = event.getMatrixStack();
+                PoseStack matrixStack = event.getMatrixStack();
                 RenderSystem.color3f(1.0F, 1.0F, 1.0F);
                 mc.getTextureManager().bind(BlackboardTextureManager.INSTANCE.getResourceLocation(packed));
-                Tessellator tessellator = Tessellator.getInstance();
+                Tesselator tessellator = Tesselator.getInstance();
                 BufferBuilder buffer = tessellator.getBuilder();
 
                 matrixStack.translate(event.getX(), (float) event.getY() - size * scale - 5.0F, 500.0D);
@@ -89,7 +89,7 @@ public class ClientEvents {
                 Matrix4f mat = matrixStack.last().pose();
 
                 //AbstractGui.blit(matrix, x, y, 0.0F, 0.0F, 1*width, 1*width, 16*width, 16*width);
-                buffer.begin(7, DefaultVertexFormats.POSITION_TEX);
+                buffer.begin(7, DefaultVertexFormat.POSITION_TEX);
                 buffer.vertex(mat, (float) (-pad), size, 0.0F).uv(0.0F, 1.0F).endVertex();
                 buffer.vertex(mat, size, size, 0.0F).uv(1.0F, 1.0F).endVertex();
                 buffer.vertex(mat, size, (float) (-pad), 0.0F).uv(1.0F, 0.0F).endVertex();

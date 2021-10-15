@@ -2,18 +2,18 @@ package net.mehvahdjukaar.supplementaries.client.particles;
 
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.client.particle.*;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.particles.BasicParticleType;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class DrippingLiquidParticle extends SpriteTexturedParticle{
+public class DrippingLiquidParticle extends TextureSheetParticle{
     private final Fluid fluid;
-    private DrippingLiquidParticle(ClientWorld world, double x, double y, double z, Fluid fluid) {
+    private DrippingLiquidParticle(ClientLevel world, double x, double y, double z, Fluid fluid) {
         super(world, x, y, z);
         this.setSize(0.01F, 0.01F);
         this.gravity = 0.06F;
@@ -52,8 +52,8 @@ public class DrippingLiquidParticle extends SpriteTexturedParticle{
         }
 
     }
-    public IParticleRenderType getRenderType() {
-        return IParticleRenderType.PARTICLE_SHEET_OPAQUE;
+    public ParticleRenderType getRenderType() {
+        return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
     }
 
     protected void updateMotion() {
@@ -65,14 +65,14 @@ public class DrippingLiquidParticle extends SpriteTexturedParticle{
 
 
     @OnlyIn(Dist.CLIENT)
-    public static class Factory implements IParticleFactory<BasicParticleType> {
-        protected final IAnimatedSprite spriteSet;
+    public static class Factory implements ParticleProvider<SimpleParticleType> {
+        protected final SpriteSet spriteSet;
 
-        public Factory(IAnimatedSprite spriteSet) {
+        public Factory(SpriteSet spriteSet) {
             this.spriteSet = spriteSet;
         }
 
-        public Particle createParticle(BasicParticleType typeIn, ClientWorld worldIn, double x, double y, double z, double r, double g, double b) {
+        public Particle createParticle(SimpleParticleType typeIn, ClientLevel worldIn, double x, double y, double z, double r, double g, double b) {
             DrippingLiquidParticle dripparticle = new DrippingLiquidParticle(worldIn, x, y, z, Fluids.WATER);
             dripparticle.setColor((float)r, (float)g, (float)b);
             dripparticle.pickSprite(this.spriteSet);

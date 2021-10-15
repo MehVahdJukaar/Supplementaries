@@ -1,20 +1,22 @@
 package net.mehvahdjukaar.supplementaries.items;
 
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.IItemPropertyGetter;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.client.renderer.item.ItemPropertyFunction;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class SpeedometerItem extends Item {
 
@@ -37,40 +39,40 @@ public class SpeedometerItem extends Item {
 
 
     @Override
-    public ActionResultType interactLivingEntity(ItemStack stack, PlayerEntity player, LivingEntity entity, Hand hand) {
+    public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity entity, InteractionHand hand) {
         if(player.level.isClientSide){
             calculateSpeed(player,entity);
         }
-        return ActionResultType.sidedSuccess(player.level.isClientSide);
+        return InteractionResult.sidedSuccess(player.level.isClientSide);
     }
 
-    private void calculateSpeed(PlayerEntity player, Entity entity){
+    private void calculateSpeed(Player player, Entity entity){
         double speed = getBPS(entity);
         double s = roundToSignificantFigures(speed,3);
-        player.displayClientMessage(new TranslationTextComponent("message.supplementaries.speedometer",s), true);
+        player.displayClientMessage(new TranslatableComponent("message.supplementaries.speedometer",s), true);
     }
 
     private static double getBPS(Entity entity){
         Entity mount = entity.getVehicle();
         Entity e = entity;
         if(mount!=null)e = mount;
-        Vector3d v = e.getDeltaMovement();
+        Vec3 v = e.getDeltaMovement();
         if(e.isOnGround()) v = v.subtract(0,v.y,0);
         return v.length()*20;
     }
 
 
     @Override
-    public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         if(world.isClientSide){
             calculateSpeed(player,player);
         }
-        return ActionResult.success(player.getItemInHand(hand));
+        return InteractionResultHolder.success(player.getItemInHand(hand));
     }
 
-    public static class SpeedometerItemProperty implements IItemPropertyGetter{
+    public static class SpeedometerItemProperty implements ItemPropertyFunction{
         @Override
-        public float call(ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity player) {
+        public float call(ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity player) {
             Entity entity = player != null ? player : stack.getEntityRepresentation();
             if (entity == null) {
                 return 0.0F;

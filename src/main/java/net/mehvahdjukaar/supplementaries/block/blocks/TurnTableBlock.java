@@ -5,28 +5,37 @@ import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.TurnTableBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MoverType;
-import net.minecraft.entity.passive.CatEntity;
-import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.animal.Cat;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class TurnTableBlock extends Block {
 
@@ -42,7 +51,7 @@ public class TurnTableBlock extends Block {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING, POWER, INVERTED, ROTATING);
     }
 
@@ -57,12 +66,12 @@ public class TurnTableBlock extends Block {
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
         return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
     }
 
     @Override
-    public void setPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+    public void setPlacedBy(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         if (this.updatePower(state, world, pos) && world.getBlockState(pos).getValue(POWER) != 0) {
             this.tryRotate(world, pos);
         }
@@ -70,25 +79,25 @@ public class TurnTableBlock extends Block {
     }
 
     @Override
-    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
-                                BlockRayTraceResult hit) {
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
+                                BlockHitResult hit) {
         Direction face = hit.getDirection();
         Direction mydir = state.getValue(FACING);
         if (face != mydir && face != mydir.getOpposite()) {
             if (!player.abilities.mayBuild) {
-                return ActionResultType.PASS;
+                return InteractionResult.PASS;
             } else {
                 state = state.cycle(INVERTED);
                 float f = state.getValue(INVERTED) ? 0.55F : 0.5F;
-                worldIn.playSound(player, pos, SoundEvents.COMPARATOR_CLICK, SoundCategory.BLOCKS, 0.3F, f);
+                worldIn.playSound(player, pos, SoundEvents.COMPARATOR_CLICK, SoundSource.BLOCKS, 0.3F, f);
                 worldIn.setBlock(pos, state, 2 | 4);
-                return ActionResultType.sidedSuccess(worldIn.isClientSide);
+                return InteractionResult.sidedSuccess(worldIn.isClientSide);
             }
         }
-        return ActionResultType.PASS;
+        return InteractionResult.PASS;
     }
 
-    public boolean updatePower(BlockState state, World world, BlockPos pos) {
+    public boolean updatePower(BlockState state, Level world, BlockPos pos) {
         int blockpower = world.getBestNeighborSignal(pos);
         int currentpower = state.getValue(POWER);
         // on-off
@@ -101,15 +110,15 @@ public class TurnTableBlock extends Block {
         return false;
     }
 
-    private void tryRotate(World world, BlockPos pos) {
-        TileEntity te = world.getBlockEntity(pos);
+    private void tryRotate(Level world, BlockPos pos) {
+        BlockEntity te = world.getBlockEntity(pos);
         if (te instanceof TurnTableBlockTile) {
             ((TurnTableBlockTile) te).tryRotate();
         }
     }
 
     @Override
-    public void neighborChanged(BlockState state, World world, BlockPos pos, Block neighborBlock, BlockPos fromPos, boolean moving) {
+    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block neighborBlock, BlockPos fromPos, boolean moving) {
         super.neighborChanged(state, world, pos, neighborBlock, fromPos, moving);
         boolean powerchanged = this.updatePower(state, world, pos);
         // if power changed and is powered or facing block changed
@@ -117,10 +126,10 @@ public class TurnTableBlock extends Block {
             this.tryRotate(world, pos);
     }
 
-    private static Vector3d rotateY(Vector3d vec, double deg) {
+    private static Vec3 rotateY(Vec3 vec, double deg) {
         if (deg == 0)
             return vec;
-        if (vec == Vector3d.ZERO)
+        if (vec == Vec3.ZERO)
             return vec;
         double x = vec.x;
         double y = vec.y;
@@ -128,7 +137,7 @@ public class TurnTableBlock extends Block {
         float angle = (float) ((deg / 180f) * Math.PI);
         double s = Math.sin(angle);
         double c = Math.cos(angle);
-        return new Vector3d(x * c + z * s, y, z * c - x * s);
+        return new Vec3(x * c + z * s, y, z * c - x * s);
     }
 
     public static int getPeriod(BlockState state) {
@@ -137,7 +146,7 @@ public class TurnTableBlock extends Block {
 
     // rotate entities
     @Override
-    public void stepOn(World world, BlockPos pos, Entity e) {
+    public void stepOn(Level world, BlockPos pos, Entity e) {
         super.stepOn(world, pos, e);
         if (!ServerConfigs.cached.TURN_TABLE_ROTATE_ENTITIES) return;
         if (!e.isOnGround()) return;
@@ -147,11 +156,11 @@ public class TurnTableBlock extends Block {
             float ANGLE_INCREMENT = 90f / period;
 
             float increment = state.getValue(INVERTED) ? ANGLE_INCREMENT : -1 * ANGLE_INCREMENT;
-            Vector3d origin = new Vector3d(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
-            Vector3d oldpos = e.position();
-            Vector3d oldoffset = oldpos.subtract(origin);
-            Vector3d newoffset = rotateY(oldoffset, increment);
-            Vector3d posdiff = origin.add(newoffset).subtract(oldpos);
+            Vec3 origin = new Vec3(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+            Vec3 oldpos = e.position();
+            Vec3 oldoffset = oldpos.subtract(origin);
+            Vec3 newoffset = rotateY(oldoffset, increment);
+            Vec3 posdiff = origin.add(newoffset).subtract(oldpos);
 
             e.move(MoverType.SHULKER_BOX, posdiff);
             // e.setMotion(e.getMotion().add(adjustedposdiff));
@@ -168,13 +177,13 @@ public class TurnTableBlock extends Block {
                 ((LivingEntity) e).setNoActionTime(20);
                 //e.velocityChanged = true;
 
-                if (e instanceof CatEntity && ((TameableEntity) e).isOrderedToSit() && !world.isClientSide) {
-                    TileEntity te = world.getBlockEntity(pos);
+                if (e instanceof Cat && ((TamableAnimal) e).isOrderedToSit() && !world.isClientSide) {
+                    BlockEntity te = world.getBlockEntity(pos);
                     if (te instanceof TurnTableBlockTile) {
                         TurnTableBlockTile table = ((TurnTableBlockTile) te);
                         if (table.cat == 0) {
                             ((TurnTableBlockTile) te).cat = 20 * 20;
-                            world.playSound(null, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, ModRegistry.TOM_SOUND.get(), SoundCategory.BLOCKS, 0.85f, 1);
+                            world.playSound(null, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, ModRegistry.TOM_SOUND.get(), SoundSource.BLOCKS, 0.85f, 1);
                         }
                     }
                 }
@@ -196,7 +205,7 @@ public class TurnTableBlock extends Block {
     }
 
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
         return new TurnTableBlockTile();
     }
 

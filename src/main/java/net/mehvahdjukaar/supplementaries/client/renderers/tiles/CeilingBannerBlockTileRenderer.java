@@ -1,42 +1,42 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.supplementaries.block.blocks.CeilingBannerBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.CeilingBannerBlockTile;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.model.ModelBakery;
-import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.client.renderer.tileentity.BannerTileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.item.DyeColor;
-import net.minecraft.tileentity.BannerPattern;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.renderer.blockentity.BannerRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.block.entity.BannerPattern;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import com.mojang.math.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.List;
 
 @OnlyIn(Dist.CLIENT)
-public class CeilingBannerBlockTileRenderer extends TileEntityRenderer<CeilingBannerBlockTile> {
-    private final ModelRenderer flag = BannerTileEntityRenderer.makeFlag();
-    private final ModelRenderer bar;
+public class CeilingBannerBlockTileRenderer extends BlockEntityRenderer<CeilingBannerBlockTile> {
+    private final ModelPart flag = BannerRenderer.makeFlag();
+    private final ModelPart bar;
 
-    public CeilingBannerBlockTileRenderer(TileEntityRendererDispatcher p_i226002_1_) {
+    public CeilingBannerBlockTileRenderer(BlockEntityRenderDispatcher p_i226002_1_) {
         super(p_i226002_1_);
-        this.bar = new ModelRenderer(64, 64, 0, 42);
+        this.bar = new ModelPart(64, 64, 0, 42);
         this.bar.addBox(-10.0F, -32.0F, -1.0F, 20.0F, 2.0F, 2.0F, 0.0F);
     }
 
 
-    public void render(CeilingBannerBlockTile tile, float p_225616_2_, MatrixStack matrixStack, IRenderTypeBuffer p_225616_4_, int p_225616_5_, int p_225616_6_) {
+    public void render(CeilingBannerBlockTile tile, float p_225616_2_, PoseStack matrixStack, MultiBufferSource p_225616_4_, int p_225616_5_, int p_225616_6_) {
         List<Pair<BannerPattern, DyeColor>> list = tile.getPatterns();
         if (list != null) {
             float f = 0.6666667F;
@@ -60,14 +60,14 @@ public class CeilingBannerBlockTileRenderer extends TileEntityRenderer<CeilingBa
 
             matrixStack.pushPose();
             matrixStack.scale(0.6666667F, -0.6666667F, -0.6666667F);
-            IVertexBuilder ivertexbuilder = ModelBakery.BANNER_BASE.buffer(p_225616_4_, RenderType::entitySolid);
+            VertexConsumer ivertexbuilder = ModelBakery.BANNER_BASE.buffer(p_225616_4_, RenderType::entitySolid);
 
             this.bar.render(matrixStack, ivertexbuilder, p_225616_5_, p_225616_6_);
             BlockPos blockpos = tile.getBlockPos();
             float f2 = ((float) Math.floorMod((long) (blockpos.getX() * 7 + blockpos.getY() * 9 + blockpos.getZ() * 13) + i, 100L) + p_225616_2_) / 100.0F;
-            this.flag.xRot = (-0.0125F + 0.01F * MathHelper.cos(((float) Math.PI * 2F) * f2)) * (float) Math.PI;
+            this.flag.xRot = (-0.0125F + 0.01F * Mth.cos(((float) Math.PI * 2F) * f2)) * (float) Math.PI;
             this.flag.y = -32.0F;
-            BannerTileEntityRenderer.renderPatterns(matrixStack, p_225616_4_, p_225616_5_, p_225616_6_, this.flag, ModelBakery.BANNER_BASE, true, list);
+            BannerRenderer.renderPatterns(matrixStack, p_225616_4_, p_225616_5_, p_225616_6_, this.flag, ModelBakery.BANNER_BASE, true, list);
             matrixStack.popPose();
             matrixStack.popPose();
         }

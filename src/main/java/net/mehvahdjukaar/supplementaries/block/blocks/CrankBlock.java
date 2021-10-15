@@ -3,43 +3,52 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.material.PushReaction;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.particles.RedstoneParticleData;
-import net.minecraft.pathfinding.PathNodeType;
-import net.minecraft.pathfinding.PathType;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.Random;
 
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
 public class CrankBlock extends WaterBlock {
-    protected static final VoxelShape SHAPE_DOWN = VoxelShapes.box(0.125D, 0.6875D, 0.875D, 0.875D, 1D, 0.125D);
-    protected static final VoxelShape SHAPE_UP = VoxelShapes.box(0.125D, 0.3125D, 0.125D, 0.875D, 0D, 0.875D);
-    protected static final VoxelShape SHAPE_NORTH = VoxelShapes.box(0.125D, 0.125D, 0.6875D, 0.875D, 0.875D, 1D);
-    protected static final VoxelShape SHAPE_SOUTH = VoxelShapes.box(0.875D, 0.125D, 0.3125D, 0.125D, 0.875D, 0D);
-    protected static final VoxelShape SHAPE_EAST = VoxelShapes.box(0.3125D, 0.125D, 0.125D, 0D, 0.875D, 0.875D);
-    protected static final VoxelShape SHAPE_WEST = VoxelShapes.box(0.6875D, 0.125D, 0.875D, 1D, 0.875D, 0.125D);
+    protected static final VoxelShape SHAPE_DOWN = Shapes.box(0.125D, 0.6875D, 0.875D, 0.875D, 1D, 0.125D);
+    protected static final VoxelShape SHAPE_UP = Shapes.box(0.125D, 0.3125D, 0.125D, 0.875D, 0D, 0.875D);
+    protected static final VoxelShape SHAPE_NORTH = Shapes.box(0.125D, 0.125D, 0.6875D, 0.875D, 0.875D, 1D);
+    protected static final VoxelShape SHAPE_SOUTH = Shapes.box(0.875D, 0.125D, 0.3125D, 0.125D, 0.875D, 0D);
+    protected static final VoxelShape SHAPE_EAST = Shapes.box(0.3125D, 0.125D, 0.125D, 0D, 0.875D, 0.875D);
+    protected static final VoxelShape SHAPE_WEST = Shapes.box(0.6875D, 0.125D, 0.875D, 1D, 0.875D, 0.125D);
 
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final IntegerProperty POWER = BlockStateProperties.POWER;
@@ -55,7 +64,7 @@ public class CrankBlock extends WaterBlock {
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos,
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos,
                                           BlockPos facingPos) {
         if (stateIn.getValue(WATERLOGGED)) {
             worldIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
@@ -66,7 +75,7 @@ public class CrankBlock extends WaterBlock {
     }
 
     @Override
-    public boolean canSurvive(BlockState state, IWorldReader worldIn, BlockPos pos) {
+    public boolean canSurvive(BlockState state, LevelReader worldIn, BlockPos pos) {
         Direction direction = state.getValue(FACING);
         BlockPos blockpos = pos.relative(direction.getOpposite());
         BlockState blockstate = worldIn.getBlockState(blockpos);
@@ -78,8 +87,8 @@ public class CrankBlock extends WaterBlock {
     }
 
     @Override
-    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
-                                             BlockRayTraceResult hit) {
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
+                                             BlockHitResult hit) {
         if (worldIn.isClientSide) {
             Direction direction = state.getValue(FACING).getOpposite();
             // Direction direction1 = getFacing(state).getOpposite();
@@ -87,12 +96,12 @@ public class CrankBlock extends WaterBlock {
             double d1 = (double) pos.getY() + 0.5D + 0.1D * (double) direction.getStepY() + 0.2D * (double) direction.getStepY();
             double d2 = (double) pos.getZ() + 0.5D + 0.1D * (double) direction.getStepZ() + 0.2D * (double) direction.getStepZ();
             worldIn.addParticle(ParticleTypes.SMOKE, d0, d1, d2, 0, 0, 0);
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
         } else {
             boolean ccw = player.isShiftKeyDown();
             this.activate(state, worldIn, pos, ccw);
             float f = 0.4f;
-            worldIn.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundCategory.BLOCKS, 0.3F, f);
+            worldIn.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.3F, f);
 
 
             Direction dir = state.getValue(FACING).getOpposite();
@@ -103,11 +112,11 @@ public class CrankBlock extends WaterBlock {
                     ((PulleyBlock) backState.getBlock()).axisRotate(backState, behind, worldIn, ccw ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90, dir);
                 }
             }
-            return ActionResultType.CONSUME;
+            return InteractionResult.CONSUME;
         }
     }
 
-    public void activate(BlockState state, World world, BlockPos pos, boolean ccw) {
+    public void activate(BlockState state, Level world, BlockPos pos, boolean ccw) {
         //cycle == cycle
         state = state.setValue(POWER, (16+state.getValue(POWER)+(ccw?-1:1))%16);
         world.setBlock(pos, state, 3);
@@ -115,12 +124,12 @@ public class CrankBlock extends WaterBlock {
     }
 
     @Override
-    public int getSignal(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+    public int getSignal(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
         return blockState.getValue(POWER);
     }
 
     @Override
-    public int getDirectSignal(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+    public int getDirectSignal(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
         return blockState.getValue(FACING) == side ? blockState.getValue(POWER) : 0;
     }
 
@@ -129,13 +138,13 @@ public class CrankBlock extends WaterBlock {
         return true;
     }
 
-    private void updateNeighbors(BlockState state, World world, BlockPos pos) {
+    private void updateNeighbors(BlockState state, Level world, BlockPos pos) {
         world.updateNeighborsAt(pos, this);
         world.updateNeighborsAt(pos.relative(state.getValue(FACING).getOpposite()), this);
     }
 
     @Override
-    public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!isMoving && state.getBlock() != newState.getBlock()) {
             if (state.getValue(POWER) != 0) {
                 this.updateNeighbors(state, worldIn, pos);
@@ -150,14 +159,14 @@ public class CrankBlock extends WaterBlock {
     }
 
 
-    public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
+    public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
         if (stateIn.getValue(POWER)>0 && rand.nextFloat() < 0.25F) {
             Direction direction = stateIn.getValue(FACING).getOpposite();
             // Direction direction1 = getFacing(state).getOpposite();
             double d0 = (double) pos.getX() + 0.5D + 0.1D * (double) direction.getStepX() + 0.2D * (double) direction.getStepX();
             double d1 = (double) pos.getY() + 0.5D + 0.1D * (double) direction.getStepY() + 0.2D * (double) direction.getStepY();
             double d2 = (double) pos.getZ() + 0.5D + 0.1D * (double) direction.getStepZ() + 0.2D * (double) direction.getStepZ();
-            worldIn.addParticle(new RedstoneParticleData(1.0F, 0.0F, 0.0F, 0.5f), d0, d1, d2, 0.0D, 0.0D, 0.0D);
+            worldIn.addParticle(new DustParticleOptions(1.0F, 0.0F, 0.0F, 0.5f), d0, d1, d2, 0.0D, 0.0D, 0.0D);
         }
     }
 
@@ -167,17 +176,17 @@ public class CrankBlock extends WaterBlock {
     }
 
     @Override
-    public PathNodeType getAiPathNodeType(BlockState state, IBlockReader world, BlockPos pos, MobEntity entity) {
-        return PathNodeType.OPEN;
+    public BlockPathTypes getAiPathNodeType(BlockState state, BlockGetter world, BlockPos pos, Mob entity) {
+        return BlockPathTypes.OPEN;
     }
 
     @Override
-    public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
+    public boolean propagatesSkylightDown(BlockState state, BlockGetter reader, BlockPos pos) {
         return true;
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         switch (state.getValue(FACING)) {
             case SOUTH :
             default :
@@ -196,12 +205,12 @@ public class CrankBlock extends WaterBlock {
     }
 
     @Override
-    public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType pathType) {
+    public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType pathType) {
         return true;
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING, POWER, WATERLOGGED);
     }
 
@@ -216,10 +225,10 @@ public class CrankBlock extends WaterBlock {
     }
 
     @Nullable
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
         boolean flag = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;
         BlockState blockstate = this.defaultBlockState();
-        IWorldReader iworldreader = context.getLevel();
+        LevelReader iworldreader = context.getLevel();
         BlockPos blockpos = context.getClickedPos();
         Direction[] adirection = context.getNearestLookingDirections();
 

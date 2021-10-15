@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.compat;
 
-import net.minecraft.block.Block;
-import net.minecraft.particles.ParticleType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -10,6 +10,8 @@ import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import javax.annotation.Nullable;
 import java.util.function.Supplier;
+
+import RegistryObject;
 
 public class CompatObjects {
     //object holders

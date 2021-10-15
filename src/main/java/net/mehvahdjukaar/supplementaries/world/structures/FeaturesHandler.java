@@ -2,12 +2,12 @@ package net.mehvahdjukaar.supplementaries.world.structures;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.GenerationStage;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.NoFeatureConfig;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -20,13 +20,15 @@ import java.util.Set;
 
 import static net.minecraftforge.common.BiomeDictionary.Type.*;
 
+import RegistryObject;
+
 @Mod.EventBusSubscriber(modid = Supplementaries.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class FeaturesHandler {
 
     public static final DeferredRegister<Feature<?>> FEATURES = DeferredRegister.create(ForgeRegistries.FEATURES, Supplementaries.MOD_ID);
 
-    public static final RegistryObject<Feature<NoFeatureConfig>> ROAD_SIGN = FEATURES.register("road_sign_feature",
-            () -> new RoadSignFeature(NoFeatureConfig.CODEC));
+    public static final RegistryObject<Feature<NoneFeatureConfiguration>> ROAD_SIGN = FEATURES.register("road_sign_feature",
+            () -> new RoadSignFeature(NoneFeatureConfiguration.CODEC));
 
 
     @SubscribeEvent
@@ -36,10 +38,10 @@ public class FeaturesHandler {
             ResourceLocation res = event.getName();
             if (res != null) {
 
-                RegistryKey<Biome> key = RegistryKey.create(ForgeRegistries.Keys.BIOMES, res);
+                ResourceKey<Biome> key = ResourceKey.create(ForgeRegistries.Keys.BIOMES, res);
                 Set<BiomeDictionary.Type> types = BiomeDictionary.getTypes(key);
                 if (types.contains(SANDY) && (types.contains(HOT) || types.contains(DRY))) {
-                    event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION)
+                    event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION)
                             .add(() -> ConfiguredFeatures.CONFIGURED_WILD_FLAX);
                 }
 
