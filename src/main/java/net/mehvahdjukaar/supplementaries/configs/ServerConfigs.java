@@ -143,6 +143,7 @@ public class ServerConfigs {
         public static ForgeConfigSpec.BooleanValue MAP_MARKERS;
         public static ForgeConfigSpec.BooleanValue CEILING_BANNERS;
         public static ForgeConfigSpec.BooleanValue PLACEABLE_BOOKS;
+        public static ForgeConfigSpec.BooleanValue MIXED_BOOKS;
         public static ForgeConfigSpec.DoubleValue BOOK_POWER;
         public static ForgeConfigSpec.DoubleValue ENCHANTED_BOOK_POWER;
         public static ForgeConfigSpec.BooleanValue ZOMBIE_HORSE;
@@ -255,6 +256,8 @@ public class ServerConfigs {
             builder.push("placeable_books");
             PLACEABLE_BOOKS = builder.comment("Allow books and enchanted books to be placed on the ground")
                     .define("enabled", true);
+            MIXED_BOOKS = builder.comment("Allow all books to be placed both vertically and horizontally")
+                    .define("mixed_books", false);
             BOOK_POWER = builder.comment("Enchantment power bonus given by normal book piles with 4 books. Piles with less books will have their respective fraction of this total. For reference a vanilla bookshelf provides 1")
                     .defineInRange("book_power", 1d, 0, 5);
             ENCHANTED_BOOK_POWER = builder.comment("Enchantment power bonus given by normal book piles with 4 books. Piles with less books will have their respective fraction of this total. For reference a vanilla bookshelf provides 1")
@@ -661,6 +664,7 @@ public class ServerConfigs {
         public static boolean MAP_MARKERS;
         public static boolean CEILING_BANNERS;
         public static boolean PLACEABLE_BOOKS;
+        public static boolean MIXED_BOOKS;
         public static float ENCHANTED_BOOK_POWER;
         public static float BOOK_POWER;
         public static boolean PLACEABLE_GUNPOWDER;
@@ -739,6 +743,7 @@ public class ServerConfigs {
             MAP_MARKERS = tweaks.MAP_MARKERS.get();
             CEILING_BANNERS = tweaks.CEILING_BANNERS.get();
             PLACEABLE_BOOKS = tweaks.PLACEABLE_BOOKS.get();
+            MIXED_BOOKS = tweaks.MIXED_BOOKS.get();
             BOOK_POWER = (float) ((double) tweaks.BOOK_POWER.get());
             ENCHANTED_BOOK_POWER = (float) ((double) tweaks.ENCHANTED_BOOK_POWER.get());
             PLACEABLE_GUNPOWDER = tweaks.PLACEABLE_GUNPOWDER.get();

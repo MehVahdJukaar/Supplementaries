@@ -238,7 +238,7 @@ public class ClientSetup {
         //rope knot
         RenderTypeLookup.setRenderLayer(ModRegistry.ROPE_KNOT.get(), RenderType.cutout());
         //book pile
-        ClientRegistry.bindTileEntityRenderer(ModRegistry.BOOK_PILE_TILE.get(), r -> new BookPileBlockTileRenderer(r, false));
+        ClientRegistry.bindTileEntityRenderer(ModRegistry.BOOK_PILE_TILE.get(), BookPileBlockTileRenderer::new);
 
         //jar boat
         ClientRegistry.bindTileEntityRenderer(ModRegistry.JAR_BOAT_TILE.get(), JarBoatTileRenderer::new);

@@ -50,10 +50,11 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.function.Supplier;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "ConstantConditions"})
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModRegistry {
 
@@ -88,6 +89,7 @@ public class ModRegistry {
     public static final ItemGroup MOD_TAB = !tab ? null : new SupplementariesTab("supplementaries");
     public static final ItemGroup JAR_TAB = !RegistryConfigs.reg.JAR_TAB.get() ? null : new JarTab("jars");
 
+    @Nullable
     public static ItemGroup getTab(ItemGroup g, String regName) {
         if (RegistryConfigs.reg.isEnabled(regName)) {
             return tab ? MOD_TAB : g;
@@ -129,7 +131,7 @@ public class ModRegistry {
 
 
     //dynamic registration so I can use their classes
-    //TODO: use deferred regiries
+    //TODO: use deferred registries
     @SubscribeEvent
     public static void registerCompatBlocks(final RegistryEvent.Register<Block> event) {
         CompatHandler.registerOptionalBlocks(event);
@@ -1040,7 +1042,7 @@ public class ModRegistry {
     public static final String GOLD_GATE_NAME = "gold_gate";
     public static final RegistryObject<Block> GOLD_GATE = BLOCKS.register(GOLD_GATE_NAME, () -> new IronGateBlock(
             AbstractBlock.Properties.copy(Blocks.IRON_BARS), true));
-    public static final RegistryObject<Item> GOLD_GATE_ITEM = regBlockItem(GOLD_GATE, getTab("quark", ItemGroup.TAB_REDSTONE, GOLD_GATE_NAME));
+    public static final RegistryObject<Item> GOLD_GATE_ITEM = regBlockItem(GOLD_GATE, getTab("quark", ItemGroup.TAB_REDSTONE, IRON_GATE_NAME));
 
 
     //technical blocks
@@ -1131,7 +1133,7 @@ public class ModRegistry {
             AbstractBlock.Properties.copy(CHECKER_BLOCK.get()))
     );
     public static final RegistryObject<Item> CHECKER_VERTICAL_SLAB_ITEM = ITEMS.register(CHECKER_VERTICAL_SLAB_NAME, () -> new BlockItem(CHECKER_VERTICAL_SLAB.get(),
-            (new Item.Properties()).tab(getTab("quark", ItemGroup.TAB_BUILDING_BLOCKS, CHECKER_VERTICAL_SLAB_NAME))
+            (new Item.Properties()).tab(getTab("quark", ItemGroup.TAB_BUILDING_BLOCKS, CHECKER_BLOCK_NAME))
     ));
 
     //pancakes

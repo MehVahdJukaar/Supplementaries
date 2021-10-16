@@ -122,15 +122,17 @@ public class MobContainer {
 
     private void initializeEntity(){
         this.needsInitialization = false;
-        if (data != null && this.world != null && this.pos != null) {
+        if (data != null && this.world != null && this.pos != null && !data.isAquarium) {
             Entity entity = createStaticMob(data, world, pos);
 
-            //visual entity stored in capability
-            this.mobDisplayCapInstance = getCap(entity);
-            this.mobDisplayCapInstance.setContainerDimensions(this.width, this.height);
-            this.mobDisplayCapInstance.onContainerWaterlogged(world.getFluidState(pos).getType() != Fluids.EMPTY);
+            if(entity != null) {
+                //visual entity stored in capability
+                this.mobDisplayCapInstance = getCap(entity);
+                this.mobDisplayCapInstance.setContainerDimensions(this.width, this.height);
+                this.mobDisplayCapInstance.onContainerWaterlogged(world.getFluidState(pos).getType() != Fluids.EMPTY);
 
-            this.updateLightLevel();
+                this.updateLightLevel();
+            }
         }
     }
 

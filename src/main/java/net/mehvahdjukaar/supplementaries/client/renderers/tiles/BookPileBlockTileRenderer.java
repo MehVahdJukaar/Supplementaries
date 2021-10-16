@@ -2,46 +2,27 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import com.mojang.blaze3d.vertex.VertexBuilderUtils;
-import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.block.blocks.BookPileBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.BookPileHorizontalBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.BookPileBlockTile;
-import net.mehvahdjukaar.supplementaries.client.Materials;
+import net.mehvahdjukaar.supplementaries.block.tiles.BookPileBlockTile.VisualBook;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
-import net.mehvahdjukaar.supplementaries.common.Textures.BookColor;
-import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
-import net.mehvahdjukaar.supplementaries.compat.enchantedbooks.EnchantedBookRedesignRenderer;
-import net.mehvahdjukaar.supplementaries.compat.quark.QuarkPlugin;
-import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.client.renderer.model.RenderMaterial;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 public class BookPileBlockTileRenderer extends TileEntityRenderer<BookPileBlockTile> {
 
     private final ModelRenderer book = new ModelRenderer(32, 32, 0, 0);
     private final ModelRenderer lock = new ModelRenderer(32, 32, 0, 0);
-    private final boolean vertical;
 
     public BookPileBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
-        this(rendererDispatcherIn, false);
-    }
-
-    public BookPileBlockTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn, boolean vertical) {
         super(rendererDispatcherIn);
-        this.vertical = vertical;
 
         book.texOffs(0, 0).addBox(-2.0F, -5.0F, -4.0F, 4.0F, 10.0F, 7.0F, 0.0F, false);
         book.texOffs(28, 6).addBox(1.0F, -5.0F, 3.0F, 1.0F, 10.0F, 1.0F, 0.0F, false);
@@ -55,23 +36,21 @@ public class BookPileBlockTileRenderer extends TileEntityRenderer<BookPileBlockT
     @Override
     public void render(BookPileBlockTile tile, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer bufferIn, int light,
                        int overlay) {
-        long r = tile.getBlockPos().asLong();
-        Random rand = new Random(r);
 
         BlockState state = tile.getBlockState();
 
         matrixStack.translate(0.5, 0.5, 0.5);
 
         if (tile.horizontal) {
-            this.renderHorizontal(state, matrixStack, bufferIn, light, overlay, rand);
+            this.renderHorizontal(tile.books, state, matrixStack, bufferIn, light, overlay);
         } else {
-            this.renderVertical(tile, state, matrixStack, bufferIn, light, overlay, rand);
+            this.renderVertical(tile, state, matrixStack, bufferIn, light, overlay);
         }
 
     }
 
-    private void renderHorizontal(BlockState state, MatrixStack matrixStack, IRenderTypeBuffer buffer, int light, int overlay, Random random) {
-        int books = state.getValue(BookPileBlock.BOOKS);
+    private void renderHorizontal(List<VisualBook> visualBooks, BlockState state, MatrixStack matrixStack, IRenderTypeBuffer buffer, int light, int overlay) {
+        int books = Math.min(state.getValue(BookPileBlock.BOOKS), visualBooks.size());
 
         Direction dir = state.getValue(BookPileHorizontalBlock.FACING);
         matrixStack.mulPose(Const.rot(dir));
@@ -79,100 +58,67 @@ public class BookPileBlockTileRenderer extends TileEntityRenderer<BookPileBlockT
 
         matrixStack.translate(0, 3 / 16f, 0);
 
-        List<BookColor> colors = new ArrayList<>(Arrays.asList(BookColor.values()));
-        lock.visible = false;
         float angle = (float) ((-11.25f) * Math.PI / 180f);
         switch (books) {
             default:
+                break;
             case 4:
                 matrixStack.translate(-6 / 16f, 0, 0);
-                this.renderBook(matrixStack, buffer, light, overlay, random, colors);
+                this.renderBook(matrixStack, buffer, light, overlay, visualBooks.get(0));
                 matrixStack.translate(4 / 16f, 0, -1 / 16f);
-                this.renderBook(matrixStack, buffer, light, overlay, random, colors);
+                this.renderBook(matrixStack, buffer, light, overlay, visualBooks.get(1));
                 matrixStack.translate(4 / 16f, 0, 1 / 16f);
-                this.renderBook(matrixStack, buffer, light, overlay, random, colors);
+                this.renderBook(matrixStack, buffer, light, overlay, visualBooks.get(2));
                 matrixStack.translate(4 / 16f, 0, -1 / 16f);
-                this.renderBook(matrixStack, buffer, light, overlay, random, colors);
+                this.renderBook(matrixStack, buffer, light, overlay, visualBooks.get(3));
                 break;
             case 3:
                 matrixStack.translate(-5 / 16f, 0, 0);
-                this.renderBook(matrixStack, buffer, light, overlay, random, colors);
+                this.renderBook(matrixStack, buffer, light, overlay, visualBooks.get(0));
                 matrixStack.translate(4 / 16f, 0, -1 / 16f);
-                this.renderBook(matrixStack, buffer, light, overlay, random, colors);
+                this.renderBook(matrixStack, buffer, light, overlay, visualBooks.get(1));
                 matrixStack.translate(5 / 16f, 0, 1 / 16f);
                 book.zRot = angle;
-                this.renderBook(matrixStack, buffer, light, overlay, random, colors);
+                this.renderBook(matrixStack, buffer, light, overlay, visualBooks.get(2));
                 book.zRot = 0;
                 break;
             case 2:
                 matrixStack.translate(-3 / 16f, 0, 0);
-                this.renderBook(matrixStack, buffer, light, overlay, random, colors);
+                this.renderBook(matrixStack, buffer, light, overlay, visualBooks.get(0));
                 matrixStack.translate(5 / 16f, 0, 1 / 16f);
                 book.zRot = angle;
-                this.renderBook(matrixStack, buffer, light, overlay, random, colors);
+                this.renderBook(matrixStack, buffer, light, overlay, visualBooks.get(1));
                 book.zRot = 0;
                 break;
             case 1:
-                this.renderBook(matrixStack, buffer, light, overlay, random, colors);
+                this.renderBook(matrixStack, buffer, light, overlay, visualBooks.get(0));
                 break;
         }
-        lock.visible = true;
     }
 
-    private void renderVertical(ItemDisplayTile inventory, BlockState state, MatrixStack matrixStack, IRenderTypeBuffer buffer, int light, int overlay, Random random) {
+    private void renderVertical(BookPileBlockTile tile, BlockState state, MatrixStack matrixStack, IRenderTypeBuffer buffer, int light, int overlay) {
 
-        int books = state.getValue(BookPileBlock.BOOKS);
-
-        //TODO: add support for quark
-
-        boolean glint = ClientConfigs.cached.BOOK_GLINT;
-        boolean coloredGlint = CompatHandler.enchantedbookredesign;
-
-        IVertexBuilder builder;
-
+        int books = Math.min(state.getValue(BookPileBlock.BOOKS), tile.books.size());
 
         matrixStack.translate(0, -6 / 16f, 0);
         book.zRot = (float) (Math.PI / 2f);
 
         for (int i = 0; i < books; i++) {
-            book.xRot = (float) (random.nextInt(32) * Math.PI / 16);
+            VisualBook b = tile.books.get(i);
+            book.xRot = b.getAngle();
 
-            //gets new builder
-
-            builder = this.getBuilderWithFoil(inventory.getItem(i), buffer, glint, coloredGlint);
-
-            book.render(matrixStack, builder, light, overlay);
+            this.renderBook(matrixStack, buffer, light, overlay, b);
 
             matrixStack.translate(0, 4 / 16f, 0);
-
         }
         book.xRot = 0;
         book.zRot = 0;
     }
 
-
-    private IVertexBuilder getBuilderWithFoil(ItemStack stack, IRenderTypeBuffer buffer, boolean glint, boolean color) {
-
-        RenderMaterial mat = (CompatHandler.quark && QuarkPlugin.isTome(stack.getItem())) ? Materials.BOOK_TOME_MATERIAL : Materials.BOOK_ENCHANTED_MATERIAL;
-        if(glint) {
-            IVertexBuilder foilBuilder = null;
-            if (color) {
-                foilBuilder = EnchantedBookRedesignRenderer.getColoredFoil(stack, buffer);
-            }
-            if (foilBuilder == null) {
-                foilBuilder = buffer.getBuffer(RenderType.entityGlint());
-            }
-            return VertexBuilderUtils.create(foilBuilder, mat.buffer(buffer, RenderType::entitySolid));
-        }
-        else return  mat.buffer(buffer, RenderType::entitySolid);
-    }
-
-    private void renderBook(MatrixStack matrixStack, IRenderTypeBuffer buffer, int light, int overlay, Random random, List<BookColor> colors) {
-        int ind = random.nextInt(colors.size());
-        BookColor color = colors.remove(ind);
-        IVertexBuilder builder = Materials.BOOK_MATERIALS.get(color).buffer(buffer, RenderType::entitySolid);
-
-        book.render(matrixStack, builder, light, overlay);
+    private void renderBook(MatrixStack matrixStack, IRenderTypeBuffer buffer, int light, int overlay, VisualBook b) {
+        IVertexBuilder builder = b.getBuilder(buffer);
+        this.lock.visible = b.isEnchanted();
+        this.book.render(matrixStack, builder, light, overlay);
     }
 
 }

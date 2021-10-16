@@ -72,8 +72,6 @@ public class ModSetup {
 
                 NetworkHandler.registerMessages();
 
-                ItemsOverrideHandler.registerOverrides();
-
                 LootTableStuff.init();
 
                 registerMobFoods();
@@ -123,9 +121,12 @@ public class ModSetup {
             terminateWhenSetupFails();
         }
 
+        //stuff that needs to be loaded after tags
         if (!firstTagLoad) {
             firstTagLoad = true;
             DispenserStuff.registerBehaviors();
+            ItemsOverrideHandler.registerOverrides();
+
         }
     }
 

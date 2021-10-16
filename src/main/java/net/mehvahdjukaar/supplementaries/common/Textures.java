@@ -2,6 +2,8 @@ package net.mehvahdjukaar.supplementaries.common;
 
 import net.mehvahdjukaar.selene.Selene;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.block.blocks.BookPileBlock;
+import net.mehvahdjukaar.supplementaries.block.tiles.BookPileBlockTile.BookColor;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.setup.Variants;
@@ -127,7 +129,7 @@ public class Textures {
         }
 
         for (BookColor color : BookColor.values()) {
-            BOOK_TEXTURES.put(color, Supplementaries.res("entity/books/book_" + color.name));
+            BOOK_TEXTURES.put(color, Supplementaries.res("entity/books/book_" + color.getName()));
         }
     }
 
@@ -140,24 +142,6 @@ public class Textures {
                 HOURGLASS_GUNPOWDER, BLACKBOARD_GRID));
     }
 
-    public enum BookColor {
-        BROWN("brown"),
-        YELLOW("yellow"),
-        GREEN("green"),
-        TEAL("teal"),
-        BLUE("blue"),
-        PURPLE("purple"),
-        RED("red");
 
-        private final String name;
-
-        BookColor(String s) {
-            this.name = s;
-        }
-
-        public static BookColor rand(Random r){
-            return values()[r.nextInt(values().length)];
-        }
-    }
 
 }

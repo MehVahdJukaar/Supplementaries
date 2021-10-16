@@ -79,7 +79,7 @@ public class ItemsOverrideHandler {
                     if (b.appliesToItem(i)) {
                         //adds item to block item map
                         Block block = b.getBlockOverride(i);
-                        if (b != null && b.shouldBlockMapToItem(i)) Item.BY_BLOCK.put(block, i);
+                        if (block != null && b.shouldBlockMapToItem(i)) Item.BY_BLOCK.put(block, i);
                         ON_BLOCK_OVERRIDES.put(i, b);
                         break;
                     }
@@ -551,7 +551,7 @@ public class ItemsOverrideHandler {
 
         @Override
         public boolean appliesToItem(Item item) {
-            return ((BookPileBlock) ModRegistry.BOOK_PILE_H.get()).isAcceptedItem(item);
+            return BookPileBlock.isNormalBook(item);
         }
 
         @Override
@@ -584,7 +584,7 @@ public class ItemsOverrideHandler {
 
         @Override
         public boolean appliesToItem(Item item) {
-            return ((BookPileBlock) ModRegistry.BOOK_PILE.get()).isAcceptedItem(item);
+            return BookPileBlock.isEnchantedBook(item);
         }
 
         @Override
