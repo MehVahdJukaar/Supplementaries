@@ -22,7 +22,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 
 import javax.annotation.Nullable;
-import java.awt.print.Book;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -86,8 +85,7 @@ public class BookPileBlockTile extends ItemDisplayTile {
 
     public static class VisualBook {
         private final float angle;
-        private final @Nullable
-        BookColor color;
+        private final @Nullable BookColor color;
         private final RenderMaterial material;
         private final ItemStack stack;
         private final boolean isEnchanted;
@@ -153,12 +151,15 @@ public class BookPileBlockTile extends ItemDisplayTile {
 
     public enum BookColor {
         BROWN(DyeColor.BROWN,1),
+        WHITE(DyeColor.WHITE,1),
+        BLACK(DyeColor.BLACK,1),
+        LIGHT_GRAY(DyeColor.LIGHT_GRAY),
+        GRAY(DyeColor.GRAY),
         ORANGE(DyeColor.ORANGE),
         YELLOW(DyeColor.YELLOW),
         LIME(DyeColor.LIME),
-        //GREEN(DyeColor.GREEN),
-        DARK_GREEN("green", 0x2fc137, -1),
-        TEAL(DyeColor.CYAN),
+        DARK_GREEN("green", 0x2fc137),
+        TEAL("cyan", 0x16ecbf),
         LIGHT_BLUE(DyeColor.LIGHT_BLUE),
         BLUE(DyeColor.BLUE),
         PURPLE(DyeColor.PURPLE),
@@ -180,6 +181,10 @@ public class BookPileBlockTile extends ItemDisplayTile {
 
         BookColor(DyeColor color, int angle) {
             this(color.getName(), color.getColorValue(), angle);
+        }
+
+        BookColor(String name, int color) {
+            this(name, color, -1);
         }
 
         BookColor(DyeColor color) {

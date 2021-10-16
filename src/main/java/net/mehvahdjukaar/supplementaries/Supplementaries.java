@@ -94,6 +94,8 @@ public class Supplementaries {
 
         //flute animation & 3d model
 
+        //correct pick block for books
+
         //add shift middle click to swap to correct tool
 
         //use onNeighborchanged for faucets
