@@ -60,10 +60,10 @@ public abstract class CauldronBlockMixin extends Block {
                 }
                 info.setReturnValue(ActionResultType.sidedSuccess(world.isClientSide));
             }
-            if(item instanceof FilledMapItem){
-                if(!world.isClientSide){
-                    MapData data = FilledMapItem.getOrCreateSavedData(itemstack,world);
-                    if(data instanceof CustomDecorationHolder) {
+            if (item instanceof FilledMapItem) {
+                if (!world.isClientSide) {
+                    MapData data = FilledMapItem.getOrCreateSavedData(itemstack, world);
+                    if (data instanceof CustomDecorationHolder) {
                         ((CustomDecorationHolder) data).resetCustomDecoration();
                     }
                 }

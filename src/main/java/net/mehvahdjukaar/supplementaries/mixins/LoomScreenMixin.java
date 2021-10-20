@@ -39,21 +39,21 @@ public abstract class LoomScreenMixin extends ContainerScreen<LoomContainer> {
         super(p_i51105_1_, p_i51105_2_, p_i51105_3_);
     }
 
-    @Redirect(method ="containerChanged",
+    @Redirect(method = "containerChanged",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/item/ItemStack;getItem()Lnet/minecraft/item/Item;",
                     ordinal = 0))
     public Item containerChanged(ItemStack stack) {
         Item i = stack.getItem();
-        if(i instanceof FlagItem){
+        if (i instanceof FlagItem) {
             i = BannerBlock.byColor(((FlagItem) i).getColor()).asItem();
         }
         return i;
     }
 
 
-    @Inject(method = "renderBg", at = @At("TAIL"), cancellable = true)
-    public void renderBg(MatrixStack matrixStack, float ticks, int mouseX, int mouseY, CallbackInfo ci){
+    @Inject(method = "renderBg", at = @At("TAIL"))
+    public void renderBg(MatrixStack matrixStack, float ticks, int mouseX, int mouseY, CallbackInfo ci) {
         if (this.resultBannerPatterns != null && !this.hasMaxPatterns && this.bannerStack.getItem() instanceof FlagItem) {
             int i = this.leftPos;
             int j = this.topPos;
@@ -70,7 +70,7 @@ public abstract class LoomScreenMixin extends ContainerScreen<LoomContainer> {
 
             //matrixStack.translate(ClientConfigs.general.TEST1.get(),ClientConfigs.general.TEST2.get(),ClientConfigs.general.TEST3.get());
 
-            FlagBlockTileRenderer.renderPatterns(matrixStack, renderTypeBuffer,this.resultBannerPatterns,15728880);
+            FlagBlockTileRenderer.renderPatterns(matrixStack, renderTypeBuffer, this.resultBannerPatterns, 15728880);
 
             matrixStack.popPose();
             renderTypeBuffer.endBatch();

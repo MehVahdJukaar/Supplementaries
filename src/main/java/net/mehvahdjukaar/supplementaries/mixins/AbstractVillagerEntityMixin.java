@@ -12,7 +12,6 @@ import org.spongepowered.asm.mixin.Mixin;
 @Mixin(AbstractVillagerEntity.class)
 public abstract class AbstractVillagerEntityMixin extends AgeableEntity implements ICustomDataHolder {
 
-
     public boolean breeding = false;
 
     protected AbstractVillagerEntityMixin(EntityType<? extends AgeableEntity> p_i48581_1_, World p_i48581_2_) {
@@ -39,6 +38,5 @@ public abstract class AbstractVillagerEntityMixin extends AgeableEntity implemen
         } else {
             super.handleEntityEvent(b);
         }
-
     }
 }

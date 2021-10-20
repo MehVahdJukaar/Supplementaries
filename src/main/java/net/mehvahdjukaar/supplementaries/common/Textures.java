@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.common;
 
 import net.mehvahdjukaar.selene.Selene;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.block.blocks.BookPileBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.BookPileBlockTile.BookColor;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
@@ -109,8 +108,10 @@ public class Textures {
     public static final Map<IWoodType, ResourceLocation> SIGN_POSTS_TEXTURES = new HashMap<>();
     public static final Map<BannerPattern, ResourceLocation> FLAG_TEXTURES = new HashMap<>();
     public static final Map<BookColor, ResourceLocation> BOOK_TEXTURES = new HashMap<>();
-    public static final ResourceLocation BOOK_ENCHANTED_TEXTURES =Supplementaries.res("entity/books/book_enchanted");
-    public static final ResourceLocation BOOK_TOME_TEXTURES =Supplementaries.res("entity/books/book_tome");
+    public static final ResourceLocation BOOK_ENCHANTED_TEXTURES = Supplementaries.res("entity/books/book_enchanted");
+    public static final ResourceLocation BOOK_TOME_TEXTURES = Supplementaries.res("entity/books/book_tome");
+
+    public static final ResourceLocation ANTIQUE_FONT = Supplementaries.res("antique");
 
     static {
         for (IWoodType type : WoodTypes.TYPES.values()) {
@@ -124,8 +125,8 @@ public class Textures {
                 f.setAccessible(true);
                 String name = (String) f.get(pattern);
                 FLAG_TEXTURES.put(pattern, Supplementaries.res("entity/flags/" + name));
+            } catch (Exception ignored) {
             }
-            catch (Exception ignored){}
         }
 
         for (BookColor color : BookColor.values()) {
@@ -141,7 +142,6 @@ public class Textures {
                 SUGAR_TEXTURE, CLOCK_HAND_TEXTURE, HOURGLASS_REDSTONE, HOURGLASS_GLOWSTONE, HOURGLASS_SUGAR, HOURGLASS_BLAZE,
                 HOURGLASS_GUNPOWDER, BLACKBOARD_GRID));
     }
-
 
 
 }

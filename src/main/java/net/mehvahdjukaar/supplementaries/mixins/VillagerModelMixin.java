@@ -20,10 +20,11 @@ public abstract class VillagerModelMixin<T extends Entity> extends SegmentedMode
     @Shadow
     protected ModelRenderer nose;
 
-    @Shadow protected ModelRenderer head;
+    @Shadow
+    protected ModelRenderer head;
     protected ModelRenderer nose2;
 
-    @Inject(method = {"<init>(FII)V"}, at = {@At(value = "TAIL")}, cancellable = true)
+    @Inject(method = {"<init>(FII)V"}, at = {@At(value = "TAIL")})
     private void init(float p_i51059_1_, int p_i51059_2_, int p_i51059_3_, CallbackInfo ci) {
         this.nose2 = (new ModelRenderer(this)).setTexSize(p_i51059_2_, p_i51059_3_);
         nose2.setPos(0.0F, -2.0F, -5.0F);
@@ -37,15 +38,15 @@ public abstract class VillagerModelMixin<T extends Entity> extends SegmentedMode
     @Inject(method = {"setupAnim"},
             at = {@At(value = "INVOKE",
                     target = "Lnet/minecraft/entity/merchant/villager/AbstractVillagerEntity;getUnhappyCounter()I"
-            )}, cancellable = true)
+            )})
     private void setupAnim(T villager, float p_225597_2_, float p_225597_3_, float p_225597_4_, float p_225597_5_, float p_225597_6_, CallbackInfo ci) {
-        if(villager instanceof ICustomDataHolder) {
+        if (villager instanceof ICustomDataHolder) {
             this.nose2.visible = true;
             this.nose.visible = false;
             if (((ICustomDataHolder) villager).getVariable()) {
                 this.nose2.xRot = -0.40F + (0.415F * MathHelper.sin(0.13F * p_225597_4_));
-                this.nose2.zRot =  + (0.03F * MathHelper.sin(0.03F * (p_225597_4_ +0.3f)));
-            }else{
+                this.nose2.zRot = +(0.03F * MathHelper.sin(0.03F * (p_225597_4_ + 0.3f)));
+            } else {
 
                 this.nose2.xRot = 0;
                 this.nose2.zRot = 0;

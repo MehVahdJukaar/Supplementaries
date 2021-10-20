@@ -33,12 +33,14 @@ import java.lang.reflect.Method;
 @Mixin(SkeletonHorseEntity.class)
 public abstract class SkeletonHorseMixin extends AbstractHorseEntity implements ICustomDataHolder {
 
-    private static final int FLESH_NEEDED = 64;
-
-    public boolean getVariable(){
+    public boolean getVariable() {
         return this.isConverting();
-    };
-    public void setVariable(boolean val){};
+    }
+
+
+    public void setVariable(boolean val) {
+    }
+
 
     private int fleshCount = 0;
     private int conversionTime = -1;
@@ -47,13 +49,13 @@ public abstract class SkeletonHorseMixin extends AbstractHorseEntity implements 
         super(p_i48563_1_, p_i48563_2_);
     }
 
-    @Inject(method = "addAdditionalSaveData", at = @At("TAIL"), cancellable = true)
+    @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
     public void addAdditionalSaveData(CompoundNBT compoundNBT, CallbackInfo ci) {
-        compoundNBT.putInt("FleshCount",this.fleshCount);
-        compoundNBT.putInt("ConversionTile",this.conversionTime);
+        compoundNBT.putInt("FleshCount", this.fleshCount);
+        compoundNBT.putInt("ConversionTile", this.conversionTime);
     }
 
-    @Inject(method = "readAdditionalSaveData", at = @At("TAIL"), cancellable = true)
+    @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
     public void readAdditionalSaveData(CompoundNBT compoundNBT, CallbackInfo ci) {
         this.fleshCount = compoundNBT.getInt("FleshCount");
         this.conversionTime = compoundNBT.getInt("ConversionTile");
@@ -61,11 +63,10 @@ public abstract class SkeletonHorseMixin extends AbstractHorseEntity implements 
 
     @Inject(method = "mobInteract", at = @At(value = "HEAD"), cancellable = true)
     public void mobInteract(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResultType> cir) {
-        if(ServerConfigs.cached.ZOMBIE_HORSE && this.isTamed() && !this.isBaby()) {
+        if (ServerConfigs.cached.ZOMBIE_HORSE && this.isTamed() && !this.isBaby()) {
             ItemStack stack = player.getItemInHand(hand);
             if (stack.getItem() == Items.ROTTEN_FLESH && fleshCount < ServerConfigs.cached.ZOMBIE_HORSE_COST) {
                 this.feedRottenFlesh(player, hand, stack);
-                cir.cancel();
                 cir.setReturnValue(ActionResultType.sidedSuccess(player.level.isClientSide));
             }
         }
@@ -92,15 +93,16 @@ public abstract class SkeletonHorseMixin extends AbstractHorseEntity implements 
         return SoundEvents.HORSE_EAT;
     }
 
-    public void setEating(){
+    public void setEating() {
         try {
             Method m = ObfuscationReflectionHelper.findMethod(AbstractHorseEntity.class, "func_110266_cB");
             m.setAccessible(true);
             m.invoke(this);
-        }catch (Exception ignored){}
+        } catch (Exception ignored) {
+        }
     }
 
-    public void feedRottenFlesh(PlayerEntity player, Hand hand,ItemStack stack){
+    public void feedRottenFlesh(PlayerEntity player, Hand hand, ItemStack stack) {
         float heal = 0.5f;
         if (this.getHealth() < this.getMaxHealth()) {
             this.heal(heal);
@@ -109,25 +111,24 @@ public abstract class SkeletonHorseMixin extends AbstractHorseEntity implements 
         this.setEating();
         this.fleshCount++;
 
-        if(this.fleshCount>=ServerConfigs.cached.ZOMBIE_HORSE_COST){
-            this.conversionTime=200;
-            this.level.broadcastEntityEvent(this, (byte)16);
+        if (this.fleshCount >= ServerConfigs.cached.ZOMBIE_HORSE_COST) {
+            this.conversionTime = 200;
+            this.level.broadcastEntityEvent(this, (byte) 16);
         }
 
-        if(!player.isCreative()){
+        if (!player.isCreative()) {
             stack.shrink(1);
         }
     }
 
-    private boolean isConverting(){
-        return this.conversionTime >0;
+    private boolean isConverting() {
+        return this.conversionTime > 0;
     }
 
-    private void doZombieConversion(){
+    private void doZombieConversion() {
 
         float yBodyRot = this.yBodyRot;
         float yHeadRot = this.yHeadRot;
-        float yBodyRotO = this.yBodyRotO;
         float yHeadRotO = this.yHeadRotO;
         AbstractHorseEntity newHorse = this.convertTo(EntityType.ZOMBIE_HORSE, true);
         if (newHorse != null) {
@@ -142,10 +143,10 @@ public abstract class SkeletonHorseMixin extends AbstractHorseEntity implements 
 
             newHorse.addEffect(new EffectInstance(Effects.CONFUSION, 200, 0));
 
-            if(this.isSaddled()){
+            if (this.isSaddled()) {
                 newHorse.equipSaddle(null);
             }
-            for(EquipmentSlotType equipmentslottype : EquipmentSlotType.values()) {
+            for (EquipmentSlotType equipmentslottype : EquipmentSlotType.values()) {
                 ItemStack itemstack = this.getItemBySlot(equipmentslottype);
                 if (!itemstack.isEmpty()) {
                     if (EnchantmentHelper.hasBindingCurse(itemstack)) {
@@ -165,7 +166,6 @@ public abstract class SkeletonHorseMixin extends AbstractHorseEntity implements 
             this.level.levelEvent(null, 1027, this.blockPosition(), 0);
         }
     }
-
 
 
     @OnlyIn(Dist.CLIENT)
@@ -193,8 +193,6 @@ public abstract class SkeletonHorseMixin extends AbstractHorseEntity implements 
             }
         }
     }
-
-
 
 
 }

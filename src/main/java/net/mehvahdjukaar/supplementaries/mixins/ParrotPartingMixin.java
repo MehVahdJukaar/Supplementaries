@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(WorldRenderer.class)
 public abstract class ParrotPartingMixin {
 
-    @Inject(method = "notifyNearbyEntities", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "notifyNearbyEntities", at = @At("HEAD"))
     private void setPartying(World worldIn, BlockPos pos, boolean isPartying, CallbackInfo info) {
 
         int r = 3;

@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.UndeadHorseRenderer;
 import net.minecraft.client.renderer.entity.model.HorseModel;
 import net.minecraft.entity.passive.horse.AbstractHorseEntity;
+import net.minecraft.util.math.MathHelper;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(UndeadHorseRenderer.class)
@@ -27,7 +28,7 @@ public abstract class UndeadHorseRendererMixin extends AbstractHorseRenderer<Abs
     @Override
     public void setupRotations(AbstractHorseEntity p_225621_1_, MatrixStack p_225621_2_, float p_225621_3_, float p_225621_4_, float p_225621_5_) {
         if (this.isShaking(p_225621_1_)) {
-            p_225621_4_ += (float)(Math.cos((double)p_225621_1_.tickCount * 3.25D) * Math.PI * (double)0.4F);
+            p_225621_4_ += (MathHelper.cos((float) p_225621_1_.tickCount * 3.25f) * Math.PI * (double) 0.4F);
         }
         super.setupRotations(p_225621_1_, p_225621_2_, p_225621_3_, p_225621_4_, p_225621_5_);
 

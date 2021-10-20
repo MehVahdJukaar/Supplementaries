@@ -18,7 +18,7 @@ public abstract class CreateBabyVillagerTaskMixin {
     @Inject(method = {"tick"},
             at = {@At(value = "INVOKE",
                     target = "Lnet/minecraft/entity/ai/brain/BrainUtil;lockGazeAndWalkToEachOther(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/entity/LivingEntity;F)V"
-            )}, cancellable = true)
+            )})
     private void tick1(ServerWorld p_212833_1_, VillagerEntity villager, long p_212833_3_, CallbackInfo ci) {
         if(!isNear){
             isNear = true;
@@ -43,7 +43,7 @@ public abstract class CreateBabyVillagerTaskMixin {
 
 
     @Inject(method = {"stop"},
-            at = {@At(value = "TAIL")}, cancellable = true)
+            at = {@At(value = "TAIL")})
     private void stop(ServerWorld p_212833_1_, VillagerEntity villager, long p_212833_3_, CallbackInfo ci) {
         villager.level.broadcastEntityEvent(villager, (byte)16);
         //NetworkHandler.sendToAllTracking(villager, (ServerWorld) villager.level,new NosePacket(villager.getId(),false));

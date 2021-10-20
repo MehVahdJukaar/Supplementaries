@@ -19,11 +19,12 @@ public class MixinConfig implements IMixinConfigPlugin {
 
     public static List<String> getMixinClassesNames() {
         try {
+            //Reflection.getCallerClass();
             String className = MixinConfig.class.getName();
             String packageName = MixinConfig.class.getPackage().getName();
             return getClassesInPackage(packageName).stream()
-                    .filter(s->!s.equals(className) && !s.contains("$"))
-                    .map(s->s.substring(packageName.length() + 1))
+                    .filter(s -> !s.equals(className) && !s.contains("$"))
+                    .map(s -> s.substring(packageName.length() + 1))
                     .collect(Collectors.toList());
         } catch (Exception e) {
             throw new IllegalStateException("Could not fetch mixin classes, giving up: " + e.getMessage());
@@ -33,9 +34,9 @@ public class MixinConfig implements IMixinConfigPlugin {
     /**
      * Scans all classes accessible from the context class loader which belong to the given package and subpackages.
      *
-     * @see <a href="https://stackoverflow.com/a/520344">Source</a>
      * @param packageName The base package
      * @return fully qualified class name strings
+     * @see <a href="https://stackoverflow.com/a/520344">Source</a>
      */
     private static List<String> getClassesInPackage(String packageName) throws IOException {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
@@ -57,10 +58,10 @@ public class MixinConfig implements IMixinConfigPlugin {
     /**
      * Recursive method used to find all classes in a given directory and subdirs.
      *
-     * @see <a href="https://stackoverflow.com/a/520344">Source</a>
      * @param directory   The base directory
      * @param packageName The package name for classes found inside the base directory
      * @return fully qualified class name strings
+     * @see <a href="https://stackoverflow.com/a/520344">Source</a>
      */
     private static List<String> findClasses(File directory, String packageName) {
         List<String> classes = new ArrayList<>();
@@ -84,13 +85,13 @@ public class MixinConfig implements IMixinConfigPlugin {
     public void onLoad(String mixinPackage) {
         try {
             RegistryConfigs.createSpec();
-        }catch (Exception exception){
-            throw new RuntimeException("Failed to create registry configs: "+ exception);
+        } catch (Exception exception) {
+            throw new RuntimeException("Failed to create registry configs: " + exception);
         }
 
         try {
             RegistryConfigs.load();
-        }catch (Exception exception){
+        } catch (Exception exception) {
             throw new RuntimeException("Failed to load config supplementaries-registry.toml. Try deleting it");
         }
     }

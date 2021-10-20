@@ -118,7 +118,7 @@ public class HangingSignBlockTileRenderer extends TileEntityRenderer<HangingSign
                     int lu = combinedLightIn & '\uffff';
                     int lv = combinedLightIn >> 16 & '\uffff';
                     for (int v = 0; v < 2; v++) {
-                        RendererUtil.addQuadSide(builder, matrixStackIn, -0.4375F, -0.4375F, 0.07f, 0.4375F, 0.4375F, 0.07f,
+                        RendererUtil.addQuadSide(builder, matrixStackIn, -0.4375F, -0.4375F, 0.0725f, 0.4375F, 0.4375F, 0.0725f,
                                 0.15625f, 0.0625f, 0.5f + 0.09375f, 1 - 0.0625f, r, g, b, 1, lu, lv, 0, 0, 1, rendermaterial.sprite());
 
                         matrixStackIn.mulPose(Const.Y180);

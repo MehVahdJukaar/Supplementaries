@@ -13,7 +13,8 @@ public abstract class ShulkerBoxSlotMixin {
 
     @Inject(method = "mayPlace", at = @At("HEAD"), cancellable = true)
     public void isItemValid(ItemStack itemStackIn, CallbackInfoReturnable<Boolean> info ) {
-        if(itemStackIn.getItem().is(ModTags.SHULKER_BLACKLIST_TAG))
+        if(itemStackIn.getItem().is(ModTags.SHULKER_BLACKLIST_TAG)) {
             info.setReturnValue(false);
+        }
     }
 }

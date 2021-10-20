@@ -2,9 +2,9 @@ package net.mehvahdjukaar.supplementaries.common.mobholder;
 
 import net.mehvahdjukaar.selene.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper;
-import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.common.capabilities.SupplementariesCapabilities;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.AgeableEntity;
@@ -16,7 +16,6 @@ import net.minecraft.entity.monster.EndermanEntity;
 import net.minecraft.entity.passive.*;
 import net.minecraft.entity.passive.fish.AbstractFishEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -461,6 +460,11 @@ public class MobContainer {
         }
 
         return new ImmutablePair<>(scale, yOffset);
+    }
+
+    public void clear() {
+        this.data = null;
+        this.mobDisplayCapInstance = null;
     }
 
     public static class MobData {

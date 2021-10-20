@@ -154,7 +154,7 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
 
     public void resetHolders() {
         this.fluidHolder.clear();
-        this.mobContainer = null;
+        this.mobContainer.clear();
         this.setDisplayedItem(ItemStack.EMPTY);
     }
 
@@ -162,6 +162,7 @@ public class JarBlockTile extends ItemDisplayTile implements ITickableTileEntity
         //hahaha, funy pony jar meme
         if (this.hasCustomName()) {
             ITextComponent c = this.getCustomName();
+            //when in latin, obviously
             return (c != null && c.getString().contains("cum"));
         }
         return false;

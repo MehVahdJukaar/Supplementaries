@@ -24,11 +24,11 @@ public abstract class LakeMixin {
             cancellable = true
     )
     private void checkForRoadSigns(ISeedReader reader, ChunkGenerator chunkGenerator, Random random, BlockPos blockPos, BlockStateFeatureConfig singleStateFeatureConfig, CallbackInfoReturnable<Boolean> cir) {
-        if (reader.startsForFeature(SectionPos.of(blockPos), StructureRegistry.WAY_SIGN.get()).findAny().isPresent()||
-                reader.startsForFeature(SectionPos.of(blockPos.offset(16,0,0)), StructureRegistry.WAY_SIGN.get()).findAny().isPresent()||
-                reader.startsForFeature(SectionPos.of(blockPos.offset(-16,0,0)), StructureRegistry.WAY_SIGN.get()).findAny().isPresent()||
-                reader.startsForFeature(SectionPos.of(blockPos.offset(0,0,16)), StructureRegistry.WAY_SIGN.get()).findAny().isPresent()||
-                reader.startsForFeature(SectionPos.of(blockPos.offset(0,0,-16)), StructureRegistry.WAY_SIGN.get()).findAny().isPresent()) {
+        if (reader.startsForFeature(SectionPos.of(blockPos), StructureRegistry.WAY_SIGN.get()).findAny().isPresent() ||
+                reader.startsForFeature(SectionPos.of(blockPos.offset(16, 0, 0)), StructureRegistry.WAY_SIGN.get()).findAny().isPresent() ||
+                reader.startsForFeature(SectionPos.of(blockPos.offset(-16, 0, 0)), StructureRegistry.WAY_SIGN.get()).findAny().isPresent() ||
+                reader.startsForFeature(SectionPos.of(blockPos.offset(0, 0, 16)), StructureRegistry.WAY_SIGN.get()).findAny().isPresent() ||
+                reader.startsForFeature(SectionPos.of(blockPos.offset(0, 0, -16)), StructureRegistry.WAY_SIGN.get()).findAny().isPresent()) {
             cir.setReturnValue(false);
         }
     }

@@ -19,19 +19,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin({PistonTileEntity.class})
 public abstract class PistonTileEntityMixin extends TileEntity implements IBlockHolder {
 
-    public BlockState getHeldBlock(){
+    public BlockState getHeldBlock() {
         return this.movedState;
     }
-    public boolean setHeldBlock(BlockState state){
+
+    public boolean setHeldBlock(BlockState state) {
         this.movedState = state;
         return true;
     }
 
     @Shadow
     private BlockState movedState;
-
-    @Shadow
-    private boolean extending;
 
     //lastProgress
     @Shadow
@@ -41,12 +39,12 @@ public abstract class PistonTileEntityMixin extends TileEntity implements IBlock
         super(tileEntityTypeIn);
     }
 
-    @Inject(method = "tick", at = @At("TAIL"), cancellable = true)
+    @Inject(method = "tick", at = @At("TAIL"))
     public void tick(CallbackInfo info) {
         if (this.progressO < 1.0F && movedState.getBlock() instanceof BambooSpikesBlock) {
             boolean sameDir = (movedState.getValue(BambooSpikesBlock.FACING).equals(this.getMovementDirection()));
             AxisAlignedBB axisalignedbb = this.moveByPositionAndProgress(VoxelShapes.block().bounds());
-            BambooSpikesPistonMovement.tick(this.level,this.worldPosition,axisalignedbb,sameDir, this);
+            BambooSpikesPistonMovement.tick(this.level, this.worldPosition, axisalignedbb, sameDir, this);
         }
     }
 

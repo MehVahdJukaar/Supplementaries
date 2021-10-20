@@ -32,7 +32,7 @@ public abstract class StrongholdCrossingMixin extends StructurePiece {
 
     @Inject(method = "postProcess", at = @At("TAIL"), cancellable = true)
     public void postProcess(ISeedReader reader, StructureManager manager, ChunkGenerator generator, Random random, MutableBoundingBox bb, ChunkPos chunkPos, BlockPos blockPos, CallbackInfoReturnable<Boolean> cir) {
-        if(RegistryConfigs.reg.HAS_STRONGHOLD_SCONCE)
-        this.placeBlock(reader, sconce.setValue(WallTorchBlock.FACING, Direction.SOUTH), 6, 5, 6, bb);
+        if (RegistryConfigs.reg.HAS_STRONGHOLD_SCONCE)
+            this.placeBlock(reader, sconce.setValue(WallTorchBlock.FACING, Direction.SOUTH), 6, 5, 6, bb);
     }
 }

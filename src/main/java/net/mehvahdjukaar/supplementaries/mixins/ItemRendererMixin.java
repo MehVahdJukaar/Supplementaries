@@ -47,19 +47,18 @@ public abstract class ItemRendererMixin {
 
     @Inject(
             method = "renderGuiItem(Lnet/minecraft/item/ItemStack;IILnet/minecraft/client/renderer/model/IBakedModel;)V",
-            at = @At(value = "RETURN"),
-            cancellable = true
+            at = @At(value = "RETURN")
     )
     private void renderInGui(ItemStack stack, int x, int y, IBakedModel model, CallbackInfo ci) {
-        if (!stack.isEmpty() && stack.getItem() == ModRegistry.SLINGSHOT_ITEM.get()){
+        if (!stack.isEmpty() && stack.getItem() == ModRegistry.SLINGSHOT_ITEM.get()) {
             boolean overlay = ClientConfigs.cached.SLINGSHOT_OVERLAY;
             boolean outline = ClientConfigs.cached.SLINGSHOT_OUTLINE;
-            if(overlay || outline){
+            if (overlay || outline) {
                 ClientPlayerEntity player = Minecraft.getInstance().player;
 
                 if (player != null && (player.getMainHandItem() == stack || player.getOffhandItem() == stack)) {
 
-                    if(overlay) {
+                    if (overlay) {
                         ItemStack ammo = SlingshotRendererHelper.getAmmoForPreview(stack, Minecraft.getInstance().level, player);
 
                         if (!ammo.isEmpty()) {
@@ -67,7 +66,7 @@ public abstract class ItemRendererMixin {
                             this.renderSlingshotOverlay(ammo, x, y);
                         }
                     }
-                    if(outline){
+                    if (outline) {
                         if (EnchantmentHelper.getItemEnchantmentLevel(ModRegistry.STASIS_ENCHANTMENT.get(), stack) != 0) {
                             SlingshotRendererHelper.grabNewLookPos(player);
                         }

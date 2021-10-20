@@ -12,14 +12,12 @@ import net.minecraft.util.math.AxisAlignedBB;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(BellTileEntity.class)
-public abstract class BellTileEntityMixin extends TileEntity  implements IBellConnections {
+public abstract class BellTileEntityMixin extends TileEntity implements IBellConnections {
     public BellConnection connection = BellConnection.NONE;
-
 
     public BellTileEntityMixin(TileEntityType<?> tileEntityTypeIn) {
         super(tileEntityTypeIn);
     }
-
 
     @Override
     public BellConnection getConnected() {
@@ -28,7 +26,7 @@ public abstract class BellTileEntityMixin extends TileEntity  implements IBellCo
 
     @Override
     public void setConnected(BellConnection con) {
-        this.connection=con;
+        this.connection = con;
     }
 
     @Override
@@ -38,7 +36,8 @@ public abstract class BellTileEntityMixin extends TileEntity  implements IBellCo
         try {
             if (this.connection != null)
                 compound.putInt("Connection", this.connection.ordinal());
-        }catch (Exception ignored){}
+        } catch (Exception ignored) {
+        }
         return compound;
     }
 
@@ -46,9 +45,9 @@ public abstract class BellTileEntityMixin extends TileEntity  implements IBellCo
     public void load(BlockState state, CompoundNBT compound) {
         super.load(state, compound);
         try {
-            if(compound.contains("Connection"))
+            if (compound.contains("Connection"))
                 this.connection = BellConnection.values()[compound.getInt("Connection")];
-        }catch (Exception ignored){
+        } catch (Exception ignored) {
             this.connection = BellConnection.NONE;
         }
     }

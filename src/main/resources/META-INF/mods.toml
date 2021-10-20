@@ -35,7 +35,7 @@ configuredBackground= "supplementaries:textures/blocks/blackstone_tiles.png"
 
     modId="forge" #mandatory
     mandatory=true #mandatory
-    versionRange="[36.1.0,)" #mandatory
+    versionRange="[35.0.0,)" #mandatory
     ordering="NONE"
     side="BOTH"
 

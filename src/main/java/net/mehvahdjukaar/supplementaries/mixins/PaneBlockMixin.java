@@ -15,7 +15,7 @@ public abstract class PaneBlockMixin {
     @Inject(method = "attachsTo", at = @At("TAIL"), cancellable = true)
     private void isAcceptableNeighbour(BlockState state, boolean p_220112_2_, CallbackInfoReturnable<Boolean> cir) {
         boolean r = cir.getReturnValue();
-        if(!r && state.is(ModTags.PANE_CONNECTION)){
+        if (!r && state.is(ModTags.PANE_CONNECTION)) {
             //TODO: fix connection
             //state.getBlock() instanceof IronGateBlock && FenceGateBlock.connectsToDirection(state,di)
             cir.setReturnValue(true);

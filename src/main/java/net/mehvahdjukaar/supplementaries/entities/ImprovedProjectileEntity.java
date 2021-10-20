@@ -185,36 +185,34 @@ public abstract class ImprovedProjectileEntity extends ProjectileItemEntity {
                     raytraceresult = entityraytraceresult;
                 }
 
-                if (raytraceresult != null) {
-                    RayTraceResult.Type type = raytraceresult.getType();
-                    boolean portalHit = false;
-                    if (type == RayTraceResult.Type.ENTITY) {
-                        Entity entity = ((EntityRayTraceResult) raytraceresult).getEntity();
-                        Entity entity1 = this.getOwner();
-                        if (entity instanceof PlayerEntity && entity1 instanceof PlayerEntity && !((PlayerEntity) entity1).canHarmPlayer((PlayerEntity) entity)) {
-                            raytraceresult = null;
-                        }
-                    } else if (type == RayTraceResult.Type.BLOCK) {
-                        //portals. done here and not in onBlockHit to prevent any further calls
-                        BlockPos hitPos = ((BlockRayTraceResult) raytraceresult).getBlockPos();
-                        BlockState hitState = this.level.getBlockState(hitPos);
-
-                        if (hitState.is(Blocks.NETHER_PORTAL)) {
-                            this.handleInsidePortal(hitPos);
-                            portalHit = true;
-                        } else if (hitState.is(Blocks.END_GATEWAY)) {
-                            TileEntity tileentity = this.level.getBlockEntity(hitPos);
-                            if (tileentity instanceof EndGatewayTileEntity && EndGatewayTileEntity.canEntityTeleport(this)) {
-                                ((EndGatewayTileEntity) tileentity).teleportEntity(this);
-                            }
-                            portalHit = true;
-                        }
+                RayTraceResult.Type type = raytraceresult.getType();
+                boolean portalHit = false;
+                if (type == RayTraceResult.Type.ENTITY) {
+                    Entity entity = ((EntityRayTraceResult) raytraceresult).getEntity();
+                    Entity entity1 = this.getOwner();
+                    if (entity instanceof PlayerEntity && entity1 instanceof PlayerEntity && !((PlayerEntity) entity1).canHarmPlayer((PlayerEntity) entity)) {
+                        raytraceresult = null;
                     }
+                } else if (type == RayTraceResult.Type.BLOCK) {
+                    //portals. done here and not in onBlockHit to prevent any further calls
+                    BlockPos hitPos = ((BlockRayTraceResult) raytraceresult).getBlockPos();
+                    BlockState hitState = this.level.getBlockState(hitPos);
 
-                    if (!portalHit && type != RayTraceResult.Type.MISS && !noPhysics && !ForgeEventFactory.onProjectileImpact(this, raytraceresult)) {
-                        this.onHit(raytraceresult);
-                        this.hasImpulse = true;
+                    if (hitState.is(Blocks.NETHER_PORTAL)) {
+                        this.handleInsidePortal(hitPos);
+                        portalHit = true;
+                    } else if (hitState.is(Blocks.END_GATEWAY)) {
+                        TileEntity tileentity = this.level.getBlockEntity(hitPos);
+                        if (tileentity instanceof EndGatewayTileEntity && EndGatewayTileEntity.canEntityTeleport(this)) {
+                            ((EndGatewayTileEntity) tileentity).teleportEntity(this);
+                        }
+                        portalHit = true;
                     }
+                }
+
+                if (!portalHit && type != RayTraceResult.Type.MISS && !noPhysics && !ForgeEventFactory.onProjectileImpact(this, raytraceresult)) {
+                    this.onHit(raytraceresult);
+                    this.hasImpulse = true;
                 }
             }
         }

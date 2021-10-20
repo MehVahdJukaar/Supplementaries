@@ -134,7 +134,7 @@ public class BlackboardBlock extends WaterBlock {
         }
     }
 
-    public static Pair<Integer, Integer> getHitSubPixel(BlockRayTraceResult hit){
+    public static Pair<Integer, Integer> getHitSubPixel(BlockRayTraceResult hit) {
         Vector3d v2 = hit.getLocation();
         Vector3d v = v2.yRot((float) ((hit.getDirection().toYRot()) * Math.PI / 180f));
         double fx = ((v.x % 1) * 16);
@@ -142,17 +142,20 @@ public class BlackboardBlock extends WaterBlock {
         int x = MathHelper.clamp((int) fx, -15, 15);
 
         int y = 15 - (int) MathHelper.clamp(Math.abs((v.y % 1) * 16), 0, 15);
-        return new Pair<>(x,y);
+        return new Pair<>(x, y);
     }
 
     @Nullable
-    public static DyeColor getStackChalkColor(ItemStack stack){
+    public static DyeColor getStackChalkColor(ItemStack stack) {
         Item item = stack.getItem();
         DyeColor color = null;
         if (ServerConfigs.cached.BLACKBOARD_COLOR) {
-            color = DyeColor.getColor(stack);
+            if (item.getRegistryName().getNamespace().equals("chalk")) {
+                color = DyeColor.byName(item.getRegistryName().getPath().replace("_chalk", ""), DyeColor.WHITE);
+            } else color = DyeColor.getColor(stack);
         }
-        if(color == null) {
+        //TODO: add proper tags for this for each color
+        if (color == null) {
             if (item.is(ModTags.CHALK) || item.is(Tags.Items.DYES_WHITE)) {
                 color = DyeColor.WHITE;
             } else if (item == Items.COAL || item == Items.CHARCOAL || item.is(Tags.Items.DYES_BLACK)) {
@@ -186,8 +189,7 @@ public class BlackboardBlock extends WaterBlock {
                     te.pixels[x][y] = colorToByte(color);
                     te.setChanged();
                     return ActionResultType.sidedSuccess(worldIn.isClientSide);
-                }
-                else if (item == Items.SPONGE || item == Items.WET_SPONGE) {
+                } else if (item == Items.SPONGE || item == Items.WET_SPONGE) {
                     te.pixels = new byte[16][16];
                     te.setChanged();
                     return ActionResultType.sidedSuccess(worldIn.isClientSide);

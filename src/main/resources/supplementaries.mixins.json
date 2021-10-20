@@ -43,10 +43,12 @@
   "client": [
     "BellTileEntityRendererMixin",
     "ClientPlayerEntityMixin",
+    "FontRendererMixin",
     "IronGolemRendererMixin",
     "ItemRendererMixin",
     "LoomScreenMixin",
     "ParrotPartingMixin",
+    "TileEntityRendererDispatcherMixin",
     "UndeadHorseRendererMixin",
     "VillagerModelMixin",
     "WorldRendererMixin"

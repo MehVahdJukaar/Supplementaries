@@ -14,9 +14,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class LanternBlockMixin {
 
     @Inject(method = {"canSurvive"}, at = {@At("HEAD")}, cancellable = true)
-    private void isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos, CallbackInfoReturnable<Boolean> callbackInfoReturnable) {
+    private void isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos, CallbackInfoReturnable<Boolean> info) {
         if(state.getValue(LanternBlock.HANGING) && RopeBlock.isSupportingCeiling(pos.above(),worldIn))
-            callbackInfoReturnable.setReturnValue(true);
+            info.setReturnValue(true);
     }
 
 }

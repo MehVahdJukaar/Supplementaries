@@ -30,9 +30,9 @@ public abstract class MineshaftMixin extends StructurePiece {
     private static final BlockState lantern = ModRegistry.COPPER_LANTERN.get().defaultBlockState().setValue(CopperLanternBlock.FACE, AttachFace.CEILING);
     private static final BlockState torch = Blocks.WALL_TORCH.defaultBlockState();
 
-    protected boolean isSupportingBox(IBlockReader p_189918_1_, MutableBoundingBox p_189918_2_, int p_189918_3_, int p_189918_4_, int p_189918_5_, int p_189918_6_) {
-        for(int i = p_189918_3_; i <= p_189918_4_; ++i) {
-            if (this.getBlock(p_189918_1_, i, p_189918_5_ + 1, p_189918_6_, p_189918_2_).isAir()) {
+    protected boolean isSupportingBox(IBlockReader world, MutableBoundingBox p_189918_2_, int p_189918_3_, int p_189918_4_, int p_189918_5_, int p_189918_6_) {
+        for (int i = p_189918_3_; i <= p_189918_4_; ++i) {
+            if (this.getBlock(world, i, p_189918_5_ + 1, p_189918_6_, p_189918_2_).isAir()) {
                 return false;
             }
         }
@@ -58,22 +58,21 @@ public abstract class MineshaftMixin extends StructurePiece {
             } else {
                 this.generateBox(reader, boundingBox, minX, y, z, maxX, y, z, plank, CAVE_AIR, false);
 
-                if(RegistryConfigs.reg.HAS_MINESHAFT_LANTERN && 0.3>random.nextFloat()) {
+                if (RegistryConfigs.reg.HAS_MINESHAFT_LANTERN && 0.3 > random.nextFloat()) {
 
                     //todo: add to SHAPE_CHECK_BLOCKS. finish this
 
-                    boolean on = random.nextFloat()>0.2;
+                    boolean on = random.nextFloat() > 0.2;
 
                     //if(!this.getBlock(reader, minX+1, y + 1, z-1, boundingBox).isAir())
                     this.maybeGenerateBlock(reader, boundingBox, random, 0.06F, minX + 1, y, z - 1, lantern.setValue(WallLanternBlock.FACING, Direction.SOUTH)
-                            .setValue(HorizontalFaceBlock.FACE,AttachFace.WALL).setValue(CopperLanternBlock.LIT,on));
+                            .setValue(HorizontalFaceBlock.FACE, AttachFace.WALL).setValue(CopperLanternBlock.LIT, on));
                     //if(!this.getBlock(reader, minX+1, y + 1, z-1, boundingBox).isAir())
                     this.maybeGenerateBlock(reader, boundingBox, random, 0.06F, minX + 1, y, z + 1, lantern.setValue(WallLanternBlock.FACING, Direction.NORTH)
-                            .setValue(HorizontalFaceBlock.FACE,AttachFace.WALL).setValue(CopperLanternBlock.LIT,on));
+                            .setValue(HorizontalFaceBlock.FACE, AttachFace.WALL).setValue(CopperLanternBlock.LIT, on));
 
 
-                }
-                else{
+                } else {
                     this.maybeGenerateBlock(reader, boundingBox, random, 0.05F, minX + 1, y, z - 1, torch.setValue(WallTorchBlock.FACING, Direction.SOUTH));
                     this.maybeGenerateBlock(reader, boundingBox, random, 0.05F, minX + 1, y, z + 1, torch.setValue(WallTorchBlock.FACING, Direction.NORTH));
                 }
@@ -81,8 +80,6 @@ public abstract class MineshaftMixin extends StructurePiece {
 
         }
     }
-
-
 
 
 }

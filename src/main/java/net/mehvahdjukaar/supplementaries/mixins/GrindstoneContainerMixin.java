@@ -31,7 +31,6 @@ public abstract class GrindstoneContainerMixin extends Container {
         super(p_i50105_1_, p_i50105_2_);
     }
 
-
     @Inject(method = "createResult", at = @At("HEAD"), cancellable = true)
     private void updateGoldenAppleResult(CallbackInfo ci) {
         ItemStack stack1 = this.repairSlots.getItem(0);
@@ -40,7 +39,7 @@ public abstract class GrindstoneContainerMixin extends Container {
         boolean apple1 = stack1.getItem() == Items.ENCHANTED_GOLDEN_APPLE;
         boolean apple2 = stack2.getItem() == Items.ENCHANTED_GOLDEN_APPLE;
 
-        if((apple1 && stack2.isEmpty()) || (apple2 && stack1.isEmpty()) || (apple1 && apple2)) {
+        if ((apple1 && stack2.isEmpty()) || (apple2 && stack1.isEmpty()) || (apple1 && apple2)) {
             int count = stack1.getCount() + stack2.getCount();
             if (count <= Items.GOLDEN_APPLE.getMaxStackSize()) {
                 this.resultSlots.setItem(0, new ItemStack(Items.GOLDEN_APPLE, count));
@@ -52,7 +51,7 @@ public abstract class GrindstoneContainerMixin extends Container {
         boolean bomb1 = stack1.getItem() == ModRegistry.BOMB_BLUE_ITEM.get();
         boolean bomb2 = stack2.getItem() == ModRegistry.BOMB_BLUE_ITEM.get();
 
-        if((bomb1 && stack2.isEmpty()) || (bomb2 && stack1.isEmpty()) || (bomb1 && bomb2)) {
+        if ((bomb1 && stack2.isEmpty()) || (bomb2 && stack1.isEmpty()) || (bomb1 && bomb2)) {
             int count = stack1.getCount() + stack2.getCount();
             if (count <= ModRegistry.BOMB_BLUE_ITEM.get().getMaxStackSize()) {
                 this.resultSlots.setItem(0, new ItemStack(ModRegistry.BOMB_ITEM.get(), count));

@@ -20,45 +20,45 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(BellBlock.class)
-public abstract class BellBlockMixin extends Block{
+public abstract class BellBlockMixin extends Block {
 
     public BellBlockMixin(Properties properties) {
         super(properties);
     }
 
-
     //for bells
-    public boolean tryConnect(BlockPos pos, BlockState facingState, IWorld world){
+    public boolean tryConnect(BlockPos pos, BlockState facingState, IWorld world) {
         TileEntity te = world.getBlockEntity(pos);
-        if(te instanceof IBellConnections){
+        if (te instanceof IBellConnections) {
             IBellConnections.BellConnection connection = IBellConnections.BellConnection.NONE;
-            if(facingState.getBlock() instanceof ChainBlock && facingState.getValue(ChainBlock.AXIS)== Direction.Axis.Y)
+            if (facingState.getBlock() instanceof ChainBlock && facingState.getValue(ChainBlock.AXIS) == Direction.Axis.Y)
                 connection = IBellConnections.BellConnection.CHAIN;
-            else if(facingState.getBlock() instanceof RopeBlock)
+            else if (facingState.getBlock() instanceof RopeBlock)
                 connection = IBellConnections.BellConnection.ROPE;
             ((IBellConnections) te).setConnected(connection);
             te.setChanged();
             return true;
-       }
+        }
         return false;
     }
 
     @Inject(method = "updateShape", at = @At("HEAD"), cancellable = true)
     public void updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn,
-                                    BlockPos currentPos, BlockPos facingPos, CallbackInfoReturnable<BlockState> info) {
-        try{
+                            BlockPos currentPos, BlockPos facingPos, CallbackInfoReturnable<BlockState> info) {
+        try {
             if (facing == Direction.DOWN) {
                 if (this.tryConnect(currentPos, facingState, worldIn)) {
                     if (worldIn instanceof World)
                         ((World) worldIn).sendBlockUpdated(currentPos, stateIn, stateIn, Constants.BlockFlags.BLOCK_UPDATE);
                 }
             }
-        }catch (Exception ignored){}
+        } catch (Exception ignored) {
+        }
     }
 
     @Override
     public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(worldIn, pos, state, placer, stack);
-        this.tryConnect(pos,worldIn.getBlockState(pos.below()),worldIn);
+        this.tryConnect(pos, worldIn.getBlockState(pos.below()), worldIn);
     }
 }

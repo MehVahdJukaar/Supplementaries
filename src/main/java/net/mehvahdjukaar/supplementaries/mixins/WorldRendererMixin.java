@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(WorldRenderer.class)
-public class WorldRendererMixin {
+public abstract class WorldRendererMixin {
 
     @Shadow @Final private Minecraft minecraft;
 
@@ -25,8 +25,7 @@ public class WorldRendererMixin {
             at = @At(value = "FIELD",
                     target = "Lnet/minecraft/client/Minecraft;hitResult:Lnet/minecraft/util/math/RayTraceResult;",
                     ordinal = 1
-            ),
-            cancellable = true
+            )
     )
     private void renderOutline(MatrixStack matrixStack, float p_228426_2_, long p_228426_3_, boolean blockOutlines, ActiveRenderInfo camera, GameRenderer renderer, LightTexture p_228426_8_, Matrix4f p_228426_9_, CallbackInfo ci) {
         if(blockOutlines) SlingshotRendererHelper.renderBlockOutline(matrixStack, camera, this.minecraft);

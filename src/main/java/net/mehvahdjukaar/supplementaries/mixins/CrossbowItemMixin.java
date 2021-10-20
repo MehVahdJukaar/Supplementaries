@@ -11,10 +11,9 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 @Mixin({CrossbowItem.class})
 public abstract class CrossbowItemMixin {
 
-
     @ModifyVariable(method = "tryLoadProjectiles", at = @At("STORE"), ordinal = 1)
     private static int tryLoadProjectiles(int original, LivingEntity entity, ItemStack stack) {
-        if(original>1 && entity.getProjectile(stack).getItem() instanceof RopeArrowItem) return 1;
+        if (original > 1 && entity.getProjectile(stack).getItem() instanceof RopeArrowItem) return 1;
         return original;
     }
 }

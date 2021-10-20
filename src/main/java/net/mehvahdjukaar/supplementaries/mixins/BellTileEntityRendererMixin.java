@@ -13,9 +13,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(BellTileEntityRenderer.class)
 public abstract class BellTileEntityRendererMixin {
 
-    @Inject(method = "render", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "render", at = @At("HEAD"))
     public void render(BellTileEntity tile, float partialTicks, MatrixStack matrixStackIn,
                        IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn, CallbackInfo info) {
-        BellTileMixinRenderer.render(tile,partialTicks,matrixStackIn,bufferIn,combinedLightIn,combinedOverlayIn);
+        BellTileMixinRenderer.render(tile, partialTicks, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
     }
 }
