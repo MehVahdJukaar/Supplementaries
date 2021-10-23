@@ -5,14 +5,14 @@ import net.mehvahdjukaar.supplementaries.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager.BlackboardKey;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.core.Direction;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.Constants;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,8 +30,8 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected 
     //public static final ModelProperty<BlackboardKey> TEXTURE = new ModelProperty<>();
     //private final IModelData data;
 
-    public BlackboardBlockTile() {
-        super(ModRegistry.BLACKBOARD_TILE.get());
+    public BlackboardBlockTile(BlockPos pos, BlockState state) {
+        super(ModRegistry.BLACKBOARD_TILE.get(), pos, state);
         //Arrays.fill(pixels, Arrays.fill(new boolean[], false));
         for (int x = 0; x < pixels.length; x++) {
             for (int y = 0; y < pixels[x].length; y++) {
@@ -85,8 +85,8 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected 
     }
 
     @Override
-    public void load(BlockState state, CompoundTag compound) {
-        super.load(state, compound);
+    public void load(CompoundTag compound) {
+        super.load(compound);
         loadFromTag(compound);
         this.loadOwner(compound);
         if (this.level != null && !this.level.isClientSide) {
@@ -111,13 +111,6 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected 
         this.pixels = new byte[16][16];
         if (compound.contains("Pixels")) {
             this.pixels = unpackPixels(compound.getLongArray("Pixels"));
-        }
-        //TODO: backwards compat. remove
-        if (compound.contains("pixels_0")) {
-            for (int i = 0; i < 16; i++) {
-                byte[] b = compound.getByteArray("pixels_" + i);
-                if (b.length == 16) this.pixels[i] = b;
-            }
         }
     }
 
@@ -155,7 +148,7 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected 
 
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        this.load(this.getBlockState(), pkt.getTag());
+        this.load(pkt.getTag());
         this.updateModelData();
     }
 

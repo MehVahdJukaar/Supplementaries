@@ -11,6 +11,8 @@ import net.minecraftforge.fml.network.simple.SimpleChannel;
 
 
 import SimpleChannel;
+import net.minecraftforge.fmllegacy.network.NetworkRegistry;
+import net.minecraftforge.fmllegacy.network.simple.SimpleChannel;
 
 public class NetworkHandler {
     public static SimpleChannel INSTANCE;

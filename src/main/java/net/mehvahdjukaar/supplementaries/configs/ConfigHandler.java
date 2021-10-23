@@ -15,6 +15,8 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
+import net.minecraftforge.fmllegacy.network.PacketDistributor;
+import net.minecraftforge.fmllegacy.server.ServerLifecycleHooks;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -97,10 +99,8 @@ public class ConfigHandler {
         final MinecraftServer currentServer = ServerLifecycleHooks.getCurrentServer();
         if (currentServer != null) {
             final PlayerList playerList = currentServer.getPlayerList();
-            if (playerList != null) {
-                for (ServerPlayer player : playerList.getPlayers()) {
-                    syncServerConfigs(player);
-                }
+            for (ServerPlayer player : playerList.getPlayers()) {
+                syncServerConfigs(player);
             }
         }
 

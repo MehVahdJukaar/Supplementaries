@@ -93,7 +93,7 @@ public class DoormatGui extends Screen {
     @Override
     public void tick() {
         ++this.updateCounter;
-        if (!this.tileSign.getType().isValid(this.tileSign.getBlockState().getBlock())) {
+        if (!this.tileSign.getType().isValid(this.tileSign.getBlockState())) {
             this.close();
         }
     }

@@ -24,16 +24,22 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 
-public class BlackboardBlockTileRenderer extends BlockEntityRenderer<BlackboardBlockTile> {
+public class BlackboardBlockTileRenderer implements BlockEntityRenderer<BlackboardBlockTile> {
 
     private final Minecraft MC;
+    public final int WIDTH = 6;
 
     public BlackboardBlockTileRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
         this.MC = Minecraft.getInstance();
     }
 
-    public final int WIDTH = 6;
+    //TODO: use this for culling
+    @Override
+    public boolean shouldRender(BlackboardBlockTile p_173568_, Vec3 p_173569_) {
+        return BlockEntityRenderer.super.shouldRender(p_173568_, p_173569_);
+    }
+
     @Override
     public void render(BlackboardBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {

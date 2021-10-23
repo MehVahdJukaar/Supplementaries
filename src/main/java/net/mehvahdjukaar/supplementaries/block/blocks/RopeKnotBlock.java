@@ -215,9 +215,8 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
 
             RopeKnotBlockTile otherTile = null;
             if (facingState.is(ModRegistry.ROPE_KNOT.get())) {
-                BlockEntity te2 = world.getBlockEntity(facingPos);
-                if (te2 instanceof RopeKnotBlockTile) {
-                    otherTile = ((RopeKnotBlockTile) te2);
+                if (world.getBlockEntity(facingPos) instanceof RopeKnotBlockTile te2) {
+                    otherTile = te2;
                     facingState = otherTile.getHeldBlock();
                 }
             }
@@ -251,10 +250,10 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
 
             if (newHeld != oldHeld) {
                 tile.setHeldBlock(newHeld);
-                te.setChanged();
+                tile.setChanged();
             }
             if (newState != state) {
-                ((RopeKnotBlockTile) te).recalculateShapes(newState);
+                tile.recalculateShapes(newState);
             }
             if (type != null) {
                 newState = newState.setValue(POST_TYPE, type);
@@ -264,23 +263,18 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
         return newState;
     }
 
-
     //TODO: fix this not updating mimic block
     @Override
     public BlockState rotate(BlockState state, Rotation rotation) {
-        switch (rotation) {
-            case COUNTERCLOCKWISE_90:
-            case CLOCKWISE_90:
-                switch (state.getValue(AXIS)) {
-                    case X:
-                        return state.setValue(AXIS, Direction.Axis.Z);
-                    case Z:
-                        return state.setValue(AXIS, Direction.Axis.X);
-                    default:
-                        return state;
-                }
-            default:
-                return state;
+        if(rotation == Rotation.CLOCKWISE_180){
+            return state;
+        }
+        else{
+            return switch (state.getValue(AXIS)) {
+                case X -> state.setValue(AXIS, Direction.Axis.Z);
+                case Z -> state.setValue(AXIS, Direction.Axis.X);
+                default -> state;
+            };
         }
     }
 
@@ -300,11 +294,10 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult p_225533_6_) {
         if (player.getItemInHand(hand).getItem() instanceof ShearsItem) {
             if (!world.isClientSide) {
-                BlockEntity te = world.getBlockEntity(pos);
-                if (te instanceof RopeKnotBlockTile) {
+                if (world.getBlockEntity(pos) instanceof RopeKnotBlockTile tile) {
                     popResource(world, pos, new ItemStack(ModRegistry.ROPE_ITEM.get()));
                     world.playSound(null, pos, SoundEvents.SNOW_GOLEM_SHEAR, SoundSource.PLAYERS, 0.8F, 1.3F);
-                    world.setBlock(pos, ((IBlockHolder) te).getHeldBlock(), 3);
+                    world.setBlock(pos, tile.getHeldBlock(), 3);
                 }
             }
             return InteractionResult.sidedSuccess(world.isClientSide);
@@ -315,9 +308,8 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
 
     @Override
     public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
-        BlockEntity te = world.getBlockEntity(pos);
-        if (te instanceof RopeKnotBlockTile) {
-            BlockState mimic = ((IBlockHolder) te).getHeldBlock();
+        if (world.getBlockEntity(pos) instanceof RopeKnotBlockTile tile) {
+            BlockState mimic = tile.getHeldBlock();
             return mimic.getBlock().getPickBlock(state, target, world, pos, player);
         }
         return super.getPickBlock(state, target, world, pos, player);
@@ -362,14 +354,11 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
             return null;
         }
 
-        BlockEntity te = world.getBlockEntity(pos);
-        if (te instanceof RopeKnotBlockTile) {
-            ((IBlockHolder) te).setHeldBlock(state);
-            te.setChanged();
+        if (world.getBlockEntity(pos) instanceof RopeKnotBlockTile tile) {
+            tile.setHeldBlock(state);
+            tile.setChanged();
         }
         newState.updateNeighbourShapes(world, pos, 2 | Constants.BlockFlags.RERENDER_MAIN_THREAD);
         return newState;
     }
-
-
 }

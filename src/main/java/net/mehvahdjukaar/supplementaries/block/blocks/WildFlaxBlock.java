@@ -1,25 +1,23 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
-import net.minecraft.block.*;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.server.level.ServerLevel;
-
-import java.util.Random;
-
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.BushBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class WildFlaxBlock extends BushBlock implements BonemealableBlock{
+import java.util.Random;
+
+public class WildFlaxBlock extends BushBlock implements BonemealableBlock {
     protected static final VoxelShape SHAPE = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 13.0D, 14.0D);
 
     public WildFlaxBlock(BlockBehaviour.Properties properties) {
@@ -33,7 +31,7 @@ public class WildFlaxBlock extends BushBlock implements BonemealableBlock{
 
     @Override
     protected boolean mayPlaceOn(BlockState state, BlockGetter worldIn, BlockPos pos) {
-        return state.getBlock().is(BlockTags.SAND);
+        return state.is(BlockTags.SAND);
     }
 
     @Override
@@ -55,10 +53,12 @@ public class WildFlaxBlock extends BushBlock implements BonemealableBlock{
         return true;
     }
 
+    @Override
     public boolean isBonemealSuccess(Level worldIn, Random rand, BlockPos pos, BlockState state) {
-        return (double)rand.nextFloat() < 0.800000011920929D;
+        return (double) rand.nextFloat() < 0.800000011920929D;
     }
 
+    @Override
     public void performBonemeal(ServerLevel worldIn, Random random, BlockPos pos, BlockState state) {
         int wildCropLimit = 10;
 
@@ -71,18 +71,18 @@ public class WildFlaxBlock extends BushBlock implements BonemealableBlock{
             }
         }
 
-        BlockPos blockpos1 = pos.offset(random.nextInt(3) - 1, random.nextInt(2) - random.nextInt(2), random.nextInt(3) - 1);
+        BlockPos blockPos = pos.offset(random.nextInt(3) - 1, random.nextInt(2) - random.nextInt(2), random.nextInt(3) - 1);
 
-        for(int k = 0; k < 4; ++k) {
-            if (worldIn.isEmptyBlock(blockpos1) && state.canSurvive(worldIn, blockpos1)) {
-                pos = blockpos1;
+        for (int k = 0; k < 4; ++k) {
+            if (worldIn.isEmptyBlock(blockPos) && state.canSurvive(worldIn, blockPos)) {
+                pos = blockPos;
             }
 
-            blockpos1 = pos.offset(random.nextInt(3) - 1, random.nextInt(2) - random.nextInt(2), random.nextInt(3) - 1);
+            blockPos = pos.offset(random.nextInt(3) - 1, random.nextInt(2) - random.nextInt(2), random.nextInt(3) - 1);
         }
 
-        if (worldIn.isEmptyBlock(blockpos1) && state.canSurvive(worldIn, blockpos1)) {
-            worldIn.setBlock(blockpos1, state, 2);
+        if (worldIn.isEmptyBlock(blockPos) && state.canSurvive(worldIn, blockPos)) {
+            worldIn.setBlock(blockPos, state, 2);
         }
 
     }

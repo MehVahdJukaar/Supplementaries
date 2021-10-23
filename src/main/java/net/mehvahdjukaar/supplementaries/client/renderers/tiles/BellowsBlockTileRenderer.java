@@ -15,7 +15,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 
 
-public class BellowsBlockTileRenderer extends BlockEntityRenderer<BellowsBlockTile> {
+public class BellowsBlockTileRenderer implements BlockEntityRenderer<BellowsBlockTile> {
     private final ModelPart center = new ModelPart(64, 64, 0, 0);
     private final ModelPart top = new ModelPart(64, 64, 0, 0);
     private final ModelPart leather = new ModelPart(64, 64, 0, 0);
@@ -34,6 +34,11 @@ public class BellowsBlockTileRenderer extends BlockEntityRenderer<BellowsBlockTi
         leather.setPos(0.0F, 0.0F, 0.0F);
         leather.texOffs(0, 37).addBox(-7.0F, -5.0F, -7.0F, 14.0F, 10.0F, 14.0F, 0.0F, false);
 
+    }
+
+    @Override
+    public int getViewDistance() {
+        return 128;
     }
 
     @Override

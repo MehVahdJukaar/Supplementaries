@@ -1,28 +1,30 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.BellowsBlock;
+import net.mehvahdjukaar.supplementaries.client.renderers.tiles.BellowsBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.FireBlock;
-import net.minecraft.world.level.material.PushReaction;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.MoverType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.core.Direction;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.FireBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 
@@ -33,18 +35,13 @@ public class BellowsBlockTile extends BlockEntity implements TickableBlockEntity
     private long offset = 0;
     public boolean isPressed = false;
 
-    public BellowsBlockTile() {
-        super(ModRegistry.BELLOWS_TILE.get());
+    public BellowsBlockTile(BlockPos pos, BlockState state) {
+        super(ModRegistry.BELLOWS_TILE.get(), pos, state);
     }
 
     @Override
     public AABB getRenderBoundingBox() {
         return new AABB(this.worldPosition);
-    }
-
-    @Override
-    public double getViewDistance() {
-        return 128;
     }
 
     private AABB getHalfBoundingBox(Direction dir) {
@@ -65,23 +62,22 @@ public class BellowsBlockTile extends BlockEntity implements TickableBlockEntity
                         double dz = 0.0D;
                         float f = this.height + 0.01f;
                         switch (dir) {
-                            case SOUTH:
+                            case SOUTH -> {
                                 dz = axisalignedbb.maxZ + f - entityBB.minZ;
                                 if (dz < 0) continue;
-                                break;
-                            case NORTH:
+                            }
+                            case NORTH -> {
                                 dz = axisalignedbb.minZ - f - entityBB.maxZ;
                                 if (dz > 0) continue;
-                                break;
-                            default:
-                            case UP:
+                            }
+                            case UP -> {
                                 dy = axisalignedbb.maxY + f - entityBB.minY;
                                 if (dy < 0) continue;
-                                break;
-                            case DOWN:
+                            }
+                            case DOWN -> {
                                 dy = axisalignedbb.minY - f - entityBB.maxY;
                                 if (dy > 0) continue;
-                                break;
+                            }
                         }
                         entity.move(MoverType.SHULKER_BOX, new Vec3(0, dy, dz));
                     }
@@ -107,37 +103,36 @@ public class BellowsBlockTile extends BlockEntity implements TickableBlockEntity
             double dist;
             double b;
             switch (facing) {
-                default:
-                case SOUTH:
+                default -> {
                     b = worldPosition.getZ() + 1;
                     if (entityBB.minZ < b) continue;
                     dist = entity.getZ() - b;
-                    break;
-                case NORTH:
+                }
+                case NORTH -> {
                     b = worldPosition.getZ();
                     if (entityBB.maxZ > b) continue;
                     dist = b - entity.getZ();
-                    break;
-                case EAST:
+                }
+                case EAST -> {
                     b = worldPosition.getX() + 1;
                     if (entityBB.minX < b) continue;
                     dist = entity.getX() - b;
-                    break;
-                case WEST:
+                }
+                case WEST -> {
                     b = worldPosition.getX();
                     if (entityBB.maxX > b) continue;
                     dist = b - entity.getX();
-                    break;
-                case UP:
+                }
+                case UP -> {
                     b = worldPosition.getY() + 1;
                     if (entityBB.minY < b) continue;
                     dist = entity.getY() - b;
-                    break;
-                case DOWN:
+                }
+                case DOWN -> {
                     b = worldPosition.getY();
                     if (entityBB.maxY > b) continue;
                     dist = b - entity.getY();
-                    break;
+                }
             }
             //dist, vel>0
             velocity *= (range - dist) / range;
@@ -309,8 +304,8 @@ public class BellowsBlockTile extends BlockEntity implements TickableBlockEntity
     }
 
     @Override
-    public void load(BlockState state, CompoundTag compound) {
-        super.load(state, compound);
+    public void load(CompoundTag compound) {
+        super.load(compound);
         this.offset = compound.getLong("Offset");
     }
 
@@ -333,7 +328,7 @@ public class BellowsBlockTile extends BlockEntity implements TickableBlockEntity
 
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        this.load(this.getBlockState(), pkt.getTag());
+        this.load(pkt.getTag());
     }
 
     public void onSteppedOn(Entity entityIn) {

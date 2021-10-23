@@ -6,25 +6,21 @@ import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.quark.QuarkPlugin;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.BookItem;
 import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class BookPileBlockTile extends ItemDisplayTile {
 
     public final boolean horizontal;
     private float enchantPower = 0;
 
-    //TODO: add color
-
-    public BookPileBlockTile() {
-        this(false);
-    }
-
-    public BookPileBlockTile(boolean horizontal) {
-        super(ModRegistry.BOOK_PILE_TILE.get(), 4);
+    public BookPileBlockTile(BlockPos pos, BlockState state, boolean horizontal) {
+        super(ModRegistry.BOOK_PILE_TILE.get(), pos, state, 4);
         this.horizontal = horizontal;
     }
 

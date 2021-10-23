@@ -1,35 +1,33 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.util.*;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.Level;
-
-import java.util.Random;
-import java.util.function.Supplier;
-
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.phys.BlockHitResult;
 
-public class SconceLeverBlock extends SconceWallBlock{
+import java.util.Random;
+import java.util.function.Supplier;
+
+public class SconceLeverBlock extends SconceWallBlock {
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
+
     public SconceLeverBlock(Properties properties, Supplier<SimpleParticleType> particleData) {
         super(properties, particleData);
-        this.registerDefaultState(this.stateDefinition.any().setValue(POWERED,false)
+        this.registerDefaultState(this.stateDefinition.any().setValue(POWERED, false)
                 .setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false).setValue(LIT, true));
     }
 
@@ -37,14 +35,14 @@ public class SconceLeverBlock extends SconceWallBlock{
     //TODO: remove by replacing proper update for block change 11->3
     @Override
     public void onChange(BlockState state, LevelAccessor world, BlockPos pos) {
-        if(world instanceof Level)
+        if (world instanceof Level)
             this.updateNeighbors(state, (Level) world, pos);
     }
 
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        InteractionResult result = super.use(state,worldIn,pos,player,handIn,hit);
-        if(result.consumesAction()) {
+        InteractionResult result = super.use(state, worldIn, pos, player, handIn, hit);
+        if (result.consumesAction()) {
             this.updateNeighbors(state, worldIn, pos);
             return result;
         }
@@ -58,6 +56,7 @@ public class SconceLeverBlock extends SconceWallBlock{
             return InteractionResult.CONSUME;
         }
     }
+
     public BlockState setPowered(BlockState state, Level world, BlockPos pos) {
         state = state.cycle(POWERED);
         world.setBlock(pos, state, 3);
@@ -71,20 +70,20 @@ public class SconceLeverBlock extends SconceWallBlock{
             if (state.getValue(POWERED)) {
                 this.updateNeighbors(state, worldIn, pos);
             }
-
-            super.onRemove(state, worldIn, pos, newState, isMoving);
         }
+        super.onRemove(state, worldIn, pos, newState, isMoving);
     }
 
     @Override
     public int getSignal(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
-        return blockState.getValue(POWERED)^!blockState.getValue(LIT) ? 15 : 0;
+        return blockState.getValue(POWERED) ^ !blockState.getValue(LIT) ? 15 : 0;
     }
 
     @Override
     public int getDirectSignal(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
-        return blockState.getValue(POWERED)^!blockState.getValue(LIT)  && getFacing(blockState) == side ? 15 : 0;
+        return blockState.getValue(POWERED) ^ !blockState.getValue(LIT) && getFacing(blockState) == side ? 15 : 0;
     }
+
     @Override
     public boolean isSignalSource(BlockState state) {
         return true;
@@ -107,10 +106,9 @@ public class SconceLeverBlock extends SconceWallBlock{
 
     @Override
     public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
-        if(!stateIn.getValue(POWERED)) {
+        if (!stateIn.getValue(POWERED)) {
             super.animateTick(stateIn, worldIn, pos, rand);
-        }
-        else if(stateIn.getValue(LIT)){
+        } else if (stateIn.getValue(LIT)) {
             Direction direction = stateIn.getValue(FACING);
             double d0 = (double) pos.getX() + 0.5D;
             double d1 = (double) pos.getY() + 0.65D;

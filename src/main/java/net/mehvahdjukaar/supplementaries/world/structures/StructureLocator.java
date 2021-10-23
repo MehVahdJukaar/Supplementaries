@@ -91,51 +91,48 @@ public class StructureLocator {
                 }
             }
 
-            if (sepSettings != null) {
+            long seed = world.getSeed();
 
-                long seed = world.getSeed();
+            StructureFeatureManager manager = world.structureFeatureManager();
 
-                StructureFeatureManager manager = world.structureFeatureManager();
+            int chunkX = pos.getX() >> 4;
+            int chunkY = pos.getZ() >> 4;
 
-                int chunkX = pos.getX() >> 4;
-                int chunkY = pos.getZ() >> 4;
+            //checks in ever growing circles by increasing radius r
+            WorldgenRandom sharedseedrandom = new WorldgenRandom();
+            float lastDist = 0;
+            for (float key : CHUNK_POSITIONS.keySet()) {
+                Pair<Integer, Integer> pair = CHUNK_POSITIONS.get(key);
+                int x = pair.getLeft();
+                int y = pair.getRight();
 
-                //checks in ever growing circles by increasing radius r
-                WorldgenRandom sharedseedrandom = new WorldgenRandom();
-                float lastDist = 0;
-                for (float key : CHUNK_POSITIONS.keySet()) {
-                    Pair<Integer, Integer> pair = CHUNK_POSITIONS.get(key);
-                    int x = pair.getLeft();
-                    int y = pair.getRight();
+                for (int ind = 0; ind < possibleTargets.size(); ind++) {
 
-                    for (int ind = 0; ind < possibleTargets.size(); ind++) {
+                    StructureFeatureConfiguration settings = sepSettings.get(ind);
+                    StructureFeature<?> s = possibleTargets.get(ind);
 
-                        StructureFeatureConfiguration settings = sepSettings.get(ind);
-                        StructureFeature<?> s = possibleTargets.get(ind);
+                    int spacing = settings.spacing();
 
-                        int spacing = settings.spacing();
+                    int k1 = chunkX + spacing * x;
+                    int l1 = chunkY + spacing * y;
+                    ChunkPos chunkpos = s.getPotentialFeatureChunk(settings, seed, sharedseedrandom, k1, l1);
+                    ChunkAccess ichunk = world.getChunk(chunkpos.x, chunkpos.z, ChunkStatus.STRUCTURE_STARTS);
+                    StructureStart<?> structureStart = manager.getStartForFeature(SectionPos.of(ichunk.getPos(), 0), s, ichunk);
+                    if (structureStart != null && structureStart.isValid()) {
+                        BlockPos p = structureStart.getLocatePos();
+                        float distance = distance(pos, p);
+                        //discard one spawning in a village
+                        if (distance > 90) found.put(distance, p);
+                        else inVillage = true;
 
-                        int k1 = chunkX + spacing * x;
-                        int l1 = chunkY + spacing * y;
-                        ChunkPos chunkpos = s.getPotentialFeatureChunk(settings, seed, sharedseedrandom, k1, l1);
-                        ChunkAccess ichunk = world.getChunk(chunkpos.x, chunkpos.z, ChunkStatus.STRUCTURE_STARTS);
-                        StructureStart<?> structureStart = manager.getStartForFeature(SectionPos.of(ichunk.getPos(), 0), s, ichunk);
-                        if (structureStart != null && structureStart.isValid()) {
-                            BlockPos p = structureStart.getLocatePos();
-                            float distance = distance(pos, p);
-                            //discard one spawning in a village
-                            if (distance > 90) found.put(distance, p);
-                            else inVillage = true;
-
-                            if (found.size() == count){
-                                lastDist = key;
-                            }
-                            //checking all nearby villages to find the closest
+                        if (found.size() == count){
+                            lastDist = key;
                         }
+                        //checking all nearby villages to find the closest
                     }
-                    //exit loop
-                    if (found.size() >= count && key > lastDist + 0.5) break;
                 }
+                //exit loop
+                if (found.size() >= count && key > lastDist + 0.5) break;
             }
         }
 
@@ -171,68 +168,65 @@ public class StructureLocator {
             }
 
 
-            if (sepSettings != null) {
+            long seed = world.getSeed();
 
-                long seed = world.getSeed();
-
-                StructureFeatureManager manager = world.structureFeatureManager();
+            StructureFeatureManager manager = world.structureFeatureManager();
 
 
-                int chunkX = posX >> 4;
-                int chunkY = posZ >> 4;
-                int r = 0;
+            int chunkX = posX >> 4;
+            int chunkY = posZ >> 4;
+            int r = 0;
 
-                int range = 25;
+            int range = 25;
 
-                //checks in ever growing circles by increasing radius r
-                for (WorldgenRandom sharedseedrandom = new WorldgenRandom(); r <= range; ++r) {
+            //checks in ever growing circles by increasing radius r
+            for (WorldgenRandom sharedseedrandom = new WorldgenRandom(); r <= range; ++r) {
 
-                    for (int ind = 0; ind < possibleTargets.size(); ind++) {
+                for (int ind = 0; ind < possibleTargets.size(); ind++) {
 
-                        for (int x = -r; x <= r; ++x) {
-                            boolean edgeX = x == -r || x == r;
+                    for (int x = -r; x <= r; ++x) {
+                        boolean edgeX = x == -r || x == r;
 
-                            for (int y = -r; y <= r; ++y) {
-                                boolean edgeY = y == -r || y == r;
-                                if (edgeX || edgeY) {
+                        for (int y = -r; y <= r; ++y) {
+                            boolean edgeY = y == -r || y == r;
+                            if (edgeX || edgeY) {
 
-                                    StructureFeatureConfiguration settings = sepSettings.get(ind);
-                                    StructureFeature<?> s = possibleTargets.get(ind);
+                                StructureFeatureConfiguration settings = sepSettings.get(ind);
+                                StructureFeature<?> s = possibleTargets.get(ind);
 
-                                    int spacing = settings.spacing();
+                                int spacing = settings.spacing();
 
-                                    int k1 = chunkX + spacing * x;
-                                    int l1 = chunkY + spacing * y;
-                                    ChunkPos chunkpos = s.getPotentialFeatureChunk(settings, seed, sharedseedrandom, k1, l1);
-                                    ChunkAccess ichunk = world.getChunk(chunkpos.x, chunkpos.z, ChunkStatus.STRUCTURE_STARTS);
-                                    StructureStart<?> structureStart = manager.getStartForFeature(SectionPos.of(ichunk.getPos(), 0), s, ichunk);
-                                    if (structureStart != null && structureStart.isValid()) {
-                                        BlockPos p = structureStart.getLocatePos();
-                                        int distance = dist(new BlockPos(posX,0,posZ), p);
-                                        //discard one spawning in a village
-                                        if (distance > 90) found.add(new ImmutablePair<>(distance, p));
-                                        else inVillage = true;
-                                        //checking all nearby villages to find the closest
-                                    }
-
-                                    if (r == 0) {
-                                        break;
-                                    }
-                                    //less precision at long distances for performance
-                                    if (r > 5 && found.size() >= count) break;
+                                int k1 = chunkX + spacing * x;
+                                int l1 = chunkY + spacing * y;
+                                ChunkPos chunkpos = s.getPotentialFeatureChunk(settings, seed, sharedseedrandom, k1, l1);
+                                ChunkAccess ichunk = world.getChunk(chunkpos.x, chunkpos.z, ChunkStatus.STRUCTURE_STARTS);
+                                StructureStart<?> structureStart = manager.getStartForFeature(SectionPos.of(ichunk.getPos(), 0), s, ichunk);
+                                if (structureStart != null && structureStart.isValid()) {
+                                    BlockPos p = structureStart.getLocatePos();
+                                    int distance = dist(new BlockPos(posX,0,posZ), p);
+                                    //discard one spawning in a village
+                                    if (distance > 90) found.add(new ImmutablePair<>(distance, p));
+                                    else inVillage = true;
+                                    //checking all nearby villages to find the closest
                                 }
-                            }
 
-                            if (r == 0) {
-                                break;
+                                if (r == 0) {
+                                    break;
+                                }
+                                //less precision at long distances for performance
+                                if (r > 5 && found.size() >= count) break;
                             }
-                            if (r > 8 && found.size() >= count) break;
-
                         }
+
+                        if (r == 0) {
+                            break;
+                        }
+                        if (r > 8 && found.size() >= count) break;
+
                     }
-                    //exit loop
-                    if (found.size() >= count) break;
                 }
+                //exit loop
+                if (found.size() >= count) break;
             }
         }
 

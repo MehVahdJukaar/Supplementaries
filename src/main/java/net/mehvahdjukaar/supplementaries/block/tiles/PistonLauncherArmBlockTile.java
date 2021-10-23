@@ -1,27 +1,29 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
 
+import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.blocks.SpringLauncherArmBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.SpringLauncherBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.SpringLauncherHeadBlock;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.material.PushReaction;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.MoverType;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.core.Vec3i;
 
 import java.util.List;
 import java.util.Random;
@@ -36,36 +38,12 @@ public class PistonLauncherArmBlockTile extends BlockEntity implements TickableB
     private int dy = 0;
     private int dz = 0;
     protected final Random rand = new Random();
-    public PistonLauncherArmBlockTile() {
-        super(ModRegistry.PISTON_LAUNCHER_ARM_TILE.get());
-        //this.setParameters();
-    }
 
-    //TODO rewrite this old code
-    public PistonLauncherArmBlockTile(boolean extending, Direction dir) {
-        this();
-        this.setParameters(extending,dir);
-        if(true)return;
-        Vec3i v = dir.getNormal();
-        this.dx = v.getX();
-        this.dy = v.getY();
-        this.dz = v.getZ();
-        if (extending) {
-            this.increment = 0.5;
-            this.offset = -1;
-            this.prevOffset = -1;
-        } else {
-            this.increment = -0.5;
-            this.offset = 0;
-            this.prevOffset = 0;
-        }
-    }
+    public PistonLauncherArmBlockTile(BlockPos pos, BlockState state) {
+        super(ModRegistry.PISTON_LAUNCHER_ARM_TILE.get(), pos, state);
+        boolean extending = state.getValue(BlockProperties.EXTENDING);
+        Direction dir = state.getValue(BlockStateProperties.FACING);
 
-
-
-    private void setParameters(boolean extending, Direction dir){
-        // boolean extending = this.getExtending();
-        //Direction dir = this.getDirection();
         this.age = 0;
         if (extending) {
             this.increment = 0.5;
@@ -169,27 +147,13 @@ public class PistonLauncherArmBlockTile extends BlockEntity implements TickableB
         double dy = 0;
         double dz = 0;
         switch (this.getDirection()) {
-            default :
-                dy = 0;
-                break;
-            case UP :
-                dy = p_bb.maxY - e_bb.minY;
-                break;
-            case DOWN :
-                dy = p_bb.minY - e_bb.maxY;
-                break;
-            case NORTH :
-                dz = p_bb.minZ - e_bb.maxZ;
-                break;
-            case SOUTH :
-                dz = p_bb.maxZ - e_bb.minZ;
-                break;
-            case WEST :
-                dx = p_bb.minX - e_bb.maxX;
-                break;
-            case EAST :
-                dx = p_bb.maxX - e_bb.minX;
-                break;
+            default -> dy = 0;
+            case UP -> dy = p_bb.maxY - e_bb.minY;
+            case DOWN -> dy = p_bb.minY - e_bb.maxY;
+            case NORTH -> dz = p_bb.minZ - e_bb.maxZ;
+            case SOUTH -> dz = p_bb.maxZ - e_bb.minZ;
+            case WEST -> dx = p_bb.minX - e_bb.maxX;
+            case EAST -> dx = p_bb.maxX - e_bb.minX;
         }
         entity.move(MoverType.PISTON, new Vec3(dx, dy, dz));
     }
@@ -203,8 +167,8 @@ public class PistonLauncherArmBlockTile extends BlockEntity implements TickableB
     }
 
     @Override
-    public void load(BlockState state, CompoundTag compound) {
-        super.load(state, compound);
+    public void load(CompoundTag compound) {
+        super.load(compound);
         this.age = compound.getInt("Age");
         this.offset = compound.getDouble("Offset");
         this.prevOffset = compound.getDouble("PrevOffset");
@@ -239,6 +203,6 @@ public class PistonLauncherArmBlockTile extends BlockEntity implements TickableB
 
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        this.load(this.getBlockState(), pkt.getTag());
+        this.load(pkt.getTag());
     }
 }

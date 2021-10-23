@@ -6,13 +6,14 @@ import net.mehvahdjukaar.selene.fluids.SoftFluidHolder;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.Constants;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,8 +25,8 @@ public class GobletBlockTile extends BlockEntity implements ISoftFluidHolder, IO
 
     public SoftFluidHolder fluidHolder;
 
-    public GobletBlockTile() {
-        super(ModRegistry.GOBLET_TILE.get());
+    public GobletBlockTile(BlockPos pos, BlockState state) {
+        super(ModRegistry.GOBLET_TILE.get(), pos, state);
         int CAPACITY = 1;
         this.fluidHolder = new SoftFluidHolder(CAPACITY);
     }
@@ -66,7 +67,7 @@ public class GobletBlockTile extends BlockEntity implements ISoftFluidHolder, IO
 
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        this.load(this.getBlockState(), pkt.getTag());
+        this.load(pkt.getTag());
     }
 
     // does all the calculation for handling player interaction.
@@ -87,8 +88,8 @@ public class GobletBlockTile extends BlockEntity implements ISoftFluidHolder, IO
     }
 
     @Override
-    public void load(BlockState state, CompoundTag compound) {
-        super.load(state, compound);
+    public void load(CompoundTag compound) {
+        super.load(compound);
         this.fluidHolder.load(compound);
         this.loadOwner(compound);
     }

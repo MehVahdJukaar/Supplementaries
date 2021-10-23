@@ -1,40 +1,38 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.level.material.Fluids;
-import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
-import net.minecraft.core.Direction;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.util.Lazy;
 
 import java.util.Random;
 import java.util.function.Supplier;
 
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-
-public class SconceBlock extends LightUpWaterBlock{
+public class SconceBlock extends LightUpWaterBlock {
     protected static final VoxelShape SHAPE = box(6.0D, 0.0D, 6.0D, 10.0D, 11.0D, 10.0D);
     protected final Lazy<SimpleParticleType> particleData;
 
     public <T extends ParticleType<?>> SconceBlock(Properties properties, Supplier<T> particleData) {
         super(properties);
-        this.particleData = Lazy.of(()->{
+        this.particleData = Lazy.of(() -> {
             SimpleParticleType data = (SimpleParticleType) particleData.get();
-            if(data==null)data = ParticleTypes.FLAME;
+            if (data == null) data = ParticleTypes.FLAME;
             return data;
         });
-        this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED,false).setValue(LIT,true));
+        this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false).setValue(LIT, true));
     }
 
     @Override
@@ -56,7 +54,7 @@ public class SconceBlock extends LightUpWaterBlock{
 
 
     public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
-        if(stateIn.getValue(LIT)) {
+        if (stateIn.getValue(LIT)) {
             double d0 = (double) pos.getX() + 0.5D;
             double d1 = (double) pos.getY() + 0.75D;
             double d2 = (double) pos.getZ() + 0.5D;

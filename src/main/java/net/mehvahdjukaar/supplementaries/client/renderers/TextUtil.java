@@ -1,14 +1,14 @@
 package net.mehvahdjukaar.supplementaries.client.renderers;
 
+import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
-import com.mojang.blaze3d.platform.NativeImage;
-import net.minecraft.util.FormattedCharSequence;
-import net.minecraft.util.Mth;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.util.Mth;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,75 +24,102 @@ public class TextUtil {
 
     static {
         String c =
-                "\n\n\n\n\n\n\n\n\n\n\n" +
-                        "\u00A76\n" +
-                        "\u00A7lSupplementaries" +
-                        "\n\n" +
-                        "\n\n\u00A74Author:\u00A7r\n\n\u00A70" +
-                        "MehVahdJukaar" +
-                        "\n\n\u00A74Artist:\u00A7r\n\n\u00A70" +
-                        "Plantkillable" +
-                        "\n\n\n\u00A74Donators:\u00A7r\n\n\u00A70" +
-                        "AdaraChristine" +
-                        "\nThugPug43" +
-                        "\nMetalBox47" +
-                        "\nStonkManHanz" +
-                        "\nSylveticHearts" +
-                        "\nE_Y_E_" +
-                        "\nWais" +
-                        "\nMattew M" +
-                        "\nLyon M" +
-                        "\nDrPineapple" +
-                        "\nAstralis" +
-                        "\nToffanelly" +
-                        "\n\n\n\u00A74Credits:" +
-                        "\n\n\u00A75Other Textures:\u00A7r\n\n\u00A70" +
-                        "\nYaBoiCinn" +
-                        "\nNary" +
-                        "\nEvo" +
-                        "\nVladimirLemon" +
-                        "\n\n\u00A75Mod Compat.:\u00A7r\n\n\u00A70" +
-                        "Agrona" +
-                        "\nWenXin2" +
-                        "\nFrogbirdd" +
-                        "\nMightyGoat" +
-                        "\nAlleCraft" +
-                        "\nFr_z_n" +
-                        "\nBrun333rp" +
-                        "\n\n\u00A75Music and Sound:\u00A7r\n\n\u00A70" +
-                        "STiiX" +
-                        "\nCydian" +
-                        "\n\n\u00A75Translations:\u00A7r\n\n\u00A70" +
-                        "Bart_Riot23" +
-                        "\nMikeliro" +
-                        "\nmayonaka8478" +
-                        "\neZio" +
-                        "\nOthuntgithub" +
-                        "\nYe Weiguo" +
-                        "\nTenebris_AK" +
-                        "\nBaliocraft" +
-                        "\nAnton Bidenko" +
-                        "\nsarlix" +
-                        "\nNick Defrunct" +
-                        "\nKevinl2000" +
-                        "\nfixmes" +
-                        "\nDoiqotaq" +
-                        "\nstupid" +
-                        "\nHatchbackGuy'doscht" +
-                        "\n\n\u00A75Others:\u00A7r\n\n\u00A70" +
-                        "Guys on Discord" +
-                        "\nTmTravlr" +
-                        "\nUmaroth" +
-                        "\nHowester84" +
-                        "\nspiritwolf_twitch" +
-                        "\nax3el" +
-                        "\nGermanCheeseMan" +
-                        "\nMcreator" +
-                        "\nYoutube tutorials" +
-                        "\nmy grades. rip" +
-                        "\nJoe Mama" +
-                        "\nand You <3" +
-                        "\n\n";
+                """
+                        \u00A76
+                        \u00A7lSupplementaries
+
+
+
+                        \u00A74Author:\u00A7r
+
+                        \u00A70MehVahdJukaar
+
+                        \u00A74Artist:\u00A7r
+
+                        \u00A70Plantkillable
+
+
+                        \u00A74Donators:\u00A7r
+
+                        \u00A70AdaraChristine
+                        ThugPug43
+                        MetalBox47
+                        StonkManHanz
+                        SylveticHearts
+                        E_Y_E_
+                        Wais
+                        Mattew M
+                        Lyon M
+                        DrPineapple
+                        Astralis
+                        Toffanelly
+
+
+                        \u00A74Credits:
+
+                        \u00A75Other Textures:\u00A7r
+
+                        \u00A70
+                        YaBoiCinn
+                        Nary
+                        Evo
+                        VladimirLemon
+
+                        \u00A75Mod Compat.:\u00A7r
+
+                        \u00A70Agrona
+                        WenXin2
+                        Frogbirdd
+                        MightyGoat
+                        AlleCraft
+                        Fr_z_n
+                        Brun333rp
+
+                        \u00A75Music and Sound:\u00A7r
+
+                        \u00A70STiiX
+                        Cydian
+
+                        \u00A75Translations:\u00A7r
+
+                        \u00A70Bart_Riot23
+                        Mikeliro
+                        mayonaka8478
+                        eZio
+                        Othuntgithub
+                        Ye Weiguo
+                        Tenebris_AK
+                        Baliocraft
+                        Anton Bidenko
+                        sarlix
+                        Nick Defrunct
+                        Kevinl2000
+                        fixmes
+                        Doiqotaq
+                        stupid
+                        HatchbackGuy'doscht
+
+                        \u00A75Others:\u00A7r
+
+                        \u00A70Guys on Discord
+                        TmTravlr
+                        Umaroth
+                        Howester84
+                        spiritwolf_twitch
+                        ax3el
+                        GermanCheeseMan
+                        Mcreator
+                        Youtube tutorials
+                        my grades. rip
+                        Joe Mama
+                        and You <3
+
+
+
+
+
+
+                        """;
 
         float lx = 1 - (2 * 0.125f);
         CREDITS.addAll(Minecraft.getInstance().font.split(iGetPageText(c), Mth.floor(lx * SCALINGFACTOR)));

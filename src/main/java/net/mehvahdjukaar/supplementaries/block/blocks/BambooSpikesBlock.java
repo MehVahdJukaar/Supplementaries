@@ -211,7 +211,7 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new BambooSpikesBlockTile();
+        return new BambooSpikesBlockTile(pPos, pState);
     }
 
     @Override

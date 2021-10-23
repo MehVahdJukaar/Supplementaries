@@ -32,7 +32,7 @@ public class BlackBoardGui extends Screen {
 
     @Override
     public void tick() {
-        if (!this.tileBoard.getType().isValid(this.tileBoard.getBlockState().getBlock())) {
+        if (!this.tileBoard.getType().isValid(this.tileBoard.getBlockState())) {
             this.close();
         }
     }

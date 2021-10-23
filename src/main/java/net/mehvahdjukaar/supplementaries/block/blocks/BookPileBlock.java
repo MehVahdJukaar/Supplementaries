@@ -6,7 +6,6 @@ import net.mehvahdjukaar.supplementaries.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.quark.QuarkPlugin;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -90,7 +89,7 @@ public class BookPileBlock extends WaterBlock implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new BookPileBlockTile(false);
+        return new BookPileBlockTile(pPos, pState, false);
     }
 
     @Override

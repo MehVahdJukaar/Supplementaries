@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.supplementaries.block.util.IBlockHolder;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerPotBlock;
@@ -19,8 +20,8 @@ public class HangingFlowerPotBlockTile extends SwayingBlockTile implements IBloc
 
     private BlockState pot = Blocks.FLOWER_POT.defaultBlockState();
 
-    public HangingFlowerPotBlockTile() {
-        super(ModRegistry.HANGING_FLOWER_POT_TILE.get());
+    public HangingFlowerPotBlockTile(BlockPos pos, BlockState state) {
+        super(ModRegistry.HANGING_FLOWER_POT_TILE.get(), pos, state);
     }
 
     static {
@@ -70,8 +71,8 @@ public class HangingFlowerPotBlockTile extends SwayingBlockTile implements IBloc
     }
 
     @Override
-    public void load(BlockState state, CompoundTag compound) {
-        super.load(state, compound);
+    public void load(CompoundTag compound) {
+        super.load(compound);
         pot = NbtUtils.readBlockState(compound.getCompound("Pot"));
         this.loadOwner(compound);
     }

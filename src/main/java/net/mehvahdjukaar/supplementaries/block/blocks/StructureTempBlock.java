@@ -24,11 +24,6 @@ public class StructureTempBlock extends Block {
     }
 
     @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
-
-    @Override
     public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
         return new StructureTempBlockTile();
     }

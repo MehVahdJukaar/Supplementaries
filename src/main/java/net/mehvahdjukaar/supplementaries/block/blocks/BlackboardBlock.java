@@ -205,7 +205,7 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return pState.getValue(WRITTEN) ? new BlackboardBlockTile() : null;
+        return pState.getValue(WRITTEN) ? new BlackboardBlockTile(pPos, pState) : null;
     }
 
     @Override

@@ -117,7 +117,7 @@ public class CageBlock extends WaterBlock implements EntityBlock {
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         //TODO: maybe make empty one have no tile
-        return new CageBlockTile();
+        return new CageBlockTile(pPos, pState);
     }
 
     @Override

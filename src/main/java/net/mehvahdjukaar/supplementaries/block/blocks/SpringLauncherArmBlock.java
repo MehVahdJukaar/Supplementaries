@@ -75,6 +75,6 @@ public class SpringLauncherArmBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new PistonLauncherArmBlockTile(pState.getValue(EXTENDING), pState.getValue(FACING));
+        return new PistonLauncherArmBlockTile(pPos, pState);
     }
 }

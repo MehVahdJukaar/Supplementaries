@@ -3,14 +3,16 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 import net.mehvahdjukaar.supplementaries.block.blocks.SwayingBlock;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.core.Direction;
-import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.Constants;
 
 import java.util.Random;
@@ -33,14 +35,8 @@ public abstract class SwayingBlockTile extends BlockEntity implements TickableBl
     public boolean fancyRenderer = false;
     protected boolean oldRendererState = false;
 
-    public SwayingBlockTile(BlockEntityType<?> tileEntityTypeIn) {
-        super(tileEntityTypeIn);
-
-    }
-
-    @Override
-    public double getViewDistance() {
-        return 64;
+    public SwayingBlockTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
+        super(tileEntityTypeIn, pos, state);
     }
 
     @Override
@@ -55,7 +51,7 @@ public abstract class SwayingBlockTile extends BlockEntity implements TickableBl
 
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        this.load(this.getBlockState(), pkt.getTag());
+        this.load(pkt.getTag());
     }
 
     public Direction getDirection() {
@@ -68,12 +64,13 @@ public abstract class SwayingBlockTile extends BlockEntity implements TickableBl
             this.oldRendererState = this.fancyRenderer;
             this.fancyRenderer = fancy;
             //model data doesn't like other levels. linked to crashes with other mods
-            if(this.level == Minecraft.getInstance().level) {
+            if (this.level == Minecraft.getInstance().level) {
                 this.requestModelDataUpdate();
                 //TODO: replace hardcoded int with const.blockFlags
                 this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.RERENDER_MAIN_THREAD);
 
-            }}
+            }
+        }
     }
 
     public boolean shouldRenderFancy() {

@@ -4,8 +4,8 @@ package net.mehvahdjukaar.supplementaries.network;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fml.network.NetworkDirection;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fmllegacy.network.NetworkDirection;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -37,12 +37,8 @@ public class BombExplosionKnockbackPacket implements NetworkHandler.Message {
 
     public static void handler(BombExplosionKnockbackPacket msg, Supplier<NetworkEvent.Context> ctx) {
         if (ctx.get().getDirection() == NetworkDirection.PLAY_TO_CLIENT) {
-            ctx.get().enqueueWork(() -> {
-
-                Minecraft.getInstance().player.setDeltaMovement(
-                        Minecraft.getInstance().player.getDeltaMovement().add(msg.knockbackX, msg.knockbackY, msg.knockbackZ));
-
-            });
+            ctx.get().enqueueWork(() -> Minecraft.getInstance().player.setDeltaMovement(
+                    Minecraft.getInstance().player.getDeltaMovement().add(msg.knockbackX, msg.knockbackY, msg.knockbackZ)));
         }
 
         ctx.get().setPacketHandled(true);

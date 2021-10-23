@@ -5,6 +5,7 @@ import net.mehvahdjukaar.supplementaries.common.mobholder.IMobContainerProvider;
 import net.mehvahdjukaar.supplementaries.common.mobholder.MobContainer;
 import net.mehvahdjukaar.supplementaries.items.AbstractMobContainerItem;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
@@ -21,8 +22,8 @@ public class CageBlockTile extends BlockEntity implements TickableBlockEntity, I
     @Nonnull
     public MobContainer mobContainer;
 
-    public CageBlockTile() {
-        super(ModRegistry.CAGE_TILE.get());
+    public CageBlockTile(BlockPos pos, BlockState state) {
+        super(ModRegistry.CAGE_TILE.get(), pos, state);
         AbstractMobContainerItem item = ((AbstractMobContainerItem) ModRegistry.CAGE_ITEM.get());
         this.mobContainer = new MobContainer(item.getMobContainerWidth(), item.getMobContainerHeight(), this.level, this.worldPosition);
     }
