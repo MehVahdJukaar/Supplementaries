@@ -12,6 +12,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.core.BlockPos;
 
+import java.util.Objects;
+
 
 public class PresentContainer extends AbstractContainerMenu {
     public final Container inventory;
@@ -29,14 +31,12 @@ public class PresentContainer extends AbstractContainerMenu {
         this.pos = pos;
 
         //tile inventory
-        if (inventory == null) {
-            this.inventory = new SimpleContainer(1) {
-                public void setChanged() {
-                    super.setChanged();
-                    PresentContainer.this.slotsChanged(this);
-                }
-            };
-        } else this.inventory = inventory;
+        this.inventory = Objects.requireNonNullElseGet(inventory, () -> new SimpleContainer(1) {
+            public void setChanged() {
+                super.setChanged();
+                PresentContainer.this.slotsChanged(this);
+            }
+        });
 
         checkContainerSize(this.inventory, 1);
         this.inventory.startOpen(playerInventory.player);
@@ -72,7 +72,7 @@ public class PresentContainer extends AbstractContainerMenu {
     public ItemStack quickMoveStack(Player playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
-        if (slot != null && slot.hasItem()) {
+        if (slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
             if (index < this.inventory.getContainerSize()) {

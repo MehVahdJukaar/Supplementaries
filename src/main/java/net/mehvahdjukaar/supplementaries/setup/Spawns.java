@@ -26,12 +26,12 @@ public class Spawns {
             Biome biome = ForgeRegistries.BIOMES.getValue(event.getName());
             if (biome != null) {
                 //RegistryKey<Biome> biomeKey = RegistryKey.getOrCreateKey(ForgeRegistries.Keys.BIOMES, event.getName());
-                ResourceLocation biomeres = biome.getRegistryName();//ForgeRegistries.BIOMES.getKey(biome);
+                ResourceLocation biomeRegistryName = biome.getRegistryName();//ForgeRegistries.BIOMES.getKey(biome);
 
-                if (biomeres != null) {
-                    String modbiomes = biomeres.getNamespace();
-                    if (ServerConfigs.spawn.FIREFLY_MOD_WHITELIST.get().contains(modbiomes) ||
-                            ServerConfigs.spawn.FIREFLY_BIOMES.get().contains(biomeres.toString())) {
+                if (biomeRegistryName != null) {
+                    String biomeNamespace = biomeRegistryName.getNamespace();
+                    if (ServerConfigs.spawn.FIREFLY_MOD_WHITELIST.get().contains(biomeNamespace) ||
+                            ServerConfigs.spawn.FIREFLY_BIOMES.get().contains(biomeRegistryName.toString())) {
                         int min = ServerConfigs.spawn.FIREFLY_MIN.get();
                         int max = Math.max(min,ServerConfigs.spawn.FIREFLY_MAX.get());
 

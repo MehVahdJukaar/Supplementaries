@@ -1,14 +1,13 @@
 package net.mehvahdjukaar.supplementaries.network;
 
 import net.mehvahdjukaar.supplementaries.block.tiles.PresentBlockTile;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.Objects;
 import java.util.function.Supplier;
@@ -44,19 +43,15 @@ public class UpdateServerPresentPacket {
         // server world
         Level world = Objects.requireNonNull(ctx.get().getSender()).level;
         ctx.get().enqueueWork(() -> {
-            if (world != null) {
-                BlockPos pos = message.pos;
-                BlockEntity tileentity = world.getBlockEntity(message.pos);
-                if (tileentity instanceof PresentBlockTile) {
-                    PresentBlockTile present = (PresentBlockTile) tileentity;
-                    world.playSound(null,message.pos, SoundEvents.VILLAGER_WORK_LEATHERWORKER, SoundSource.BLOCKS,1,1.3f);
-                    present.pack(message.recipient, message.sender, message.packed);
+            BlockPos pos = message.pos;
+            if (world.getBlockEntity(message.pos) instanceof PresentBlockTile present) {
+                world.playSound(null, message.pos, SoundEvents.VILLAGER_WORK_LEATHERWORKER, SoundSource.BLOCKS, 1, 1.3f);
+                present.pack(message.recipient, message.sender, message.packed);
 
-                    //updates client
-                    BlockState state = world.getBlockState(pos);
-                    world.sendBlockUpdated(pos, state, state, 3);
-                    tileentity.setChanged();
-                }
+                //updates client
+                BlockState state = world.getBlockState(pos);
+                world.sendBlockUpdated(pos, state, state, 3);
+                present.setChanged();
             }
         });
         ctx.get().setPacketHandled(true);

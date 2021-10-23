@@ -4,32 +4,29 @@ import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.blocks.RopeKnotBlock;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-
-import net.minecraft.world.item.Item.Properties;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class RopeItem extends BlockItem {
     public RopeItem(Block block, Properties properties) {
         super(block, properties);
     }
 
-
     @Override
     public InteractionResult place(BlockPlaceContext context) {
 
         Player player = context.getPlayer();
-        if (player.abilities.mayBuild || player==null) {
+        if (player == null || player.getAbilities().mayBuild) {
             Level world = context.getLevel();
             BlockPos pos = context.getClickedPos().relative(context.getClickedFace().getOpposite());
             BlockState state = world.getBlockState(pos);
@@ -37,7 +34,7 @@ public class RopeItem extends BlockItem {
 
             if (type != null) {
 
-                if(RopeKnotBlock.convertToRopeKnot(type, state, world, pos) == null) {
+                if (RopeKnotBlock.convertToRopeKnot(type, state, world, pos) == null) {
                     return InteractionResult.FAIL;
                 }
 
@@ -46,9 +43,9 @@ public class RopeItem extends BlockItem {
                     CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayer) player, pos, stack);
                 }
 
-                SoundType soundtype =  ModRegistry.ROPE.get().defaultBlockState().getSoundType(world, pos, player);
+                SoundType soundtype = ModRegistry.ROPE.get().defaultBlockState().getSoundType(world, pos, player);
                 world.playSound(player, pos, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
-                if (player == null || !player.abilities.instabuild) {
+                if (player == null || !player.getAbilities().instabuild) {
                     stack.shrink(1);
                 }
                 if (player instanceof ServerPlayer) {

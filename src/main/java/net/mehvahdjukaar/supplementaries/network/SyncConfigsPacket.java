@@ -5,8 +5,8 @@ import com.electronwill.nightconfig.toml.TomlFormat;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.fml.network.NetworkDirection;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fmllegacy.network.NetworkDirection;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.io.ByteArrayInputStream;
 import java.util.function.Supplier;
@@ -26,6 +26,7 @@ public class SyncConfigsPacket {
     public static void buffer(SyncConfigsPacket message, FriendlyByteBuf buf) {
         buf.writeByteArray(message.configData);
     }
+
     //client
     public static void handler(SyncConfigsPacket message, Supplier<NetworkEvent.Context> contextSupplier) {
         NetworkEvent.Context context = contextSupplier.get();

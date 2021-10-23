@@ -95,7 +95,7 @@ public class BlockItemUtils {
 
                 SoundType soundtype = placedState.getSoundType(world, blockpos, context.getPlayer());
                 world.playSound(playerentity, blockpos, getPlaceSound(placedState, world, blockpos, context.getPlayer()), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
-                if (playerentity == null || !playerentity.abilities.instabuild) {
+                if (playerentity == null || !playerentity.getAbilities().instabuild) {
                     itemstack.shrink(1);
                 }
 

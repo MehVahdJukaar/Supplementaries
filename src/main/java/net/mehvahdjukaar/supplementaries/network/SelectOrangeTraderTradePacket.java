@@ -5,11 +5,12 @@ import net.mehvahdjukaar.supplementaries.inventories.RedMerchantContainer;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
 public class SelectOrangeTraderTradePacket implements NetworkHandler.Message {
-    private int item;
+    private final int item;
 
     public SelectOrangeTraderTradePacket(FriendlyByteBuf buf) {
         this.item = buf.readVarInt();
@@ -32,10 +33,9 @@ public class SelectOrangeTraderTradePacket implements NetworkHandler.Message {
 
             int i = message.item;
 
-            if (container instanceof RedMerchantContainer) {
-                RedMerchantContainer merchantcontainer = (RedMerchantContainer)container;
-                merchantcontainer.setSelectionHint(i);
-                merchantcontainer.tryMoveItems(i);
+            if (container instanceof RedMerchantContainer redMerchantContainer) {
+                redMerchantContainer.setSelectionHint(i);
+                redMerchantContainer.tryMoveItems(i);
             }
 
         });

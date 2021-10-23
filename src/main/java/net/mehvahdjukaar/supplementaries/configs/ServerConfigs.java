@@ -5,9 +5,9 @@ import com.electronwill.nightconfig.core.io.WritingMode;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -224,20 +224,21 @@ public class ServerConfigs {
             builder.pop();
 
             builder.push("map_tweaks");
-            CUSTOM_ADVENTURER_MAPS_TRADES = builder.comment("In this section you can add custom structure maps to cartographers\n" +
-                            "The format required is as follows:\n" +
-                            "[[<structure>,<level>,<min_price>,<max_price>,<map_name>,<map_color>,<map_marker>],[<structure>,...,<map_marker>],...]\n" +
-                            "With the following parameters:\n" +
-                            " - <structure> structure id to be located (ie: minecraft:igloo)\n" +
-                            " - <level> villager trading level at which the map will be sold. Must be between 1 and 5\n" +
-                            " - <min_price> minimum emerald price\n" +
-                            " - <max_price> maximum emerald price\n" +
-                            " - <map_name> map item name\n" +
-                            " - <map_color> hex color of the map item overlay texture\n" +
-                            " - <map_marker> id of the map marker to be used (ie: supplementaries:igloo). \n" +
-                            "See texture folder for all the names. Leave empty for default ones\n" +
-                            "Note that ony the first parameter is required, each of the others others can me removed and will be defaulted to reasonable values\n" +
-                            "example: ['minecraft:swamp_hut','2','5','7','witch hut map','0x00ff33']")
+            CUSTOM_ADVENTURER_MAPS_TRADES = builder.comment("""
+                            In this section you can add custom structure maps to cartographers
+                            The format required is as follows:
+                            [[<structure>,<level>,<min_price>,<max_price>,<map_name>,<map_color>,<map_marker>],[<structure>,...,<map_marker>],...]
+                            With the following parameters:
+                             - <structure> structure id to be located (ie: minecraft:igloo)
+                             - <level> villager trading level at which the map will be sold. Must be between 1 and 5
+                             - <min_price> minimum emerald price
+                             - <max_price> maximum emerald price
+                             - <map_name> map item name
+                             - <map_color> hex color of the map item overlay texture
+                             - <map_marker> id of the map marker to be used (ie: supplementaries:igloo).\s
+                            See texture folder for all the names. Leave empty for default ones
+                            Note that ony the first parameter is required, each of the others others can me removed and will be defaulted to reasonable values
+                            example: ['minecraft:swamp_hut','2','5','7','witch hut map','0x00ff33']""")
 
                     .defineList("custom_adventurer_maps", Collections.singletonList(Collections.singletonList("")), LIST_STRING_CHECK);
             RANDOM_ADVENTURER_MAPS = builder.comment("Cartographers will sell 'adventurer maps' that will lead to a random vanilla structure (choosen from a thought out preset list).\n" +
@@ -306,7 +307,6 @@ public class ServerConfigs {
         public static ForgeConfigSpec.DoubleValue LAUNCHER_VEL;
         public static ForgeConfigSpec.IntValue LAUNCHER_HEIGHT;
 
-        public static ForgeConfigSpec.IntValue TURN_TABLE_PERIOD;
         public static ForgeConfigSpec.BooleanValue TURN_TABLE_ROTATE_ENTITIES;
         public static ForgeConfigSpec.ConfigValue<List<? extends String>> TURN_TABLE_BLACKLIST;
 
@@ -354,7 +354,6 @@ public class ServerConfigs {
         public static ForgeConfigSpec.IntValue STICK_POLE_LENGTH;
 
 
-
         private static void init(ForgeConfigSpec.Builder builder) {
 
             builder.comment("Server side blocks configs")
@@ -375,17 +374,19 @@ public class ServerConfigs {
             builder.pop();
             //bellows
             builder.push("bellows");
-            BELLOWS_PERIOD = builder.comment("bellows pushes air following this equation: \n" +
-                            "air=(sin(2PI*ticks/period)<0), with period = base_period-(redstone_power-1)*power_scaling \n" +
-                            "represents base period at 1 power")
+            BELLOWS_PERIOD = builder.comment("""
+                            bellows pushes air following this equation:\s
+                            air=(sin(2PI*ticks/period)<0), with period = base_period-(redstone_power-1)*power_scaling\s
+                            represents base period at 1 power""")
                     .defineInRange("base_period", 78, 1, 512);
             BELLOWS_POWER_SCALING = builder.comment("how much the period changes in relation to the block redstone power")
                     .defineInRange("power_scaling", 3, 0, 128);
-            BELLOWS_BASE_VEL_SCALING = builder.comment("velocity increase uses this equation: \n" +
-                            "vel = base_vel*((range-entity_distance)/range) with base_vel = base_velocity_scaling/period \n" +
-                            "note that the block will push further the faster it's pulsing")
+            BELLOWS_BASE_VEL_SCALING = builder.comment("""
+                            velocity increase uses this equation:\s
+                            vel = base_vel*((range-entity_distance)/range) with base_vel = base_velocity_scaling/period\s
+                            note that the block will push further the faster it's pulsing""")
                     .defineInRange("base_velocity_scaling", 5.0, 0.0, 64);
-            BELLOWS_MAX_VEL = builder.comment("entities with velocity greated than this won't be pushed")
+            BELLOWS_MAX_VEL = builder.comment("entities with velocity greater than this won't be pushed")
                     .defineInRange("power_scaling", 2.0, 0.0, 16);
             BELLOWS_FLAG = builder.comment("sets velocity changed flag when pushing entities +\n" +
                             "causes pushing animation to be smooth client side but also restricts player movement when being pushed")
@@ -407,7 +408,7 @@ public class ServerConfigs {
             //        .defineInRange("period", 20, 1, 256);
             TURN_TABLE_ROTATE_ENTITIES = builder.comment("can rotate entities standing on it?")
                     .define("rotate_entities", true);
-            List<String> turnTableBlacklist = Arrays.asList("minecraft:end_portal_frame");
+            List<String> turnTableBlacklist = List.of("minecraft:end_portal_frame");
             TURN_TABLE_BLACKLIST = builder.comment("blocks that can't be rotated. Some special ones like chests, beds and pistons are already hardcoded")
                     .defineList("blacklist", turnTableBlacklist, STRING_CHECK);
             builder.pop();
@@ -550,7 +551,7 @@ public class ServerConfigs {
                     "byg:seasonal_deciduous_forest", "byg:seasonal_forest", "biomesoplenty:flower_meadow", "biomesoplenty:fir_clearing",
                     "biomesoplenty:grove_lakes", "biomesoplenty:grove", "biomesoplenty:highland_moor", "biomesoplenty:wetland_marsh",
                     "biomesoplenty:deep_bayou", "biomesoplenty:wetland");
-            List<String> fireflyModWhitelist = Arrays.asList();
+            List<String> fireflyModWhitelist = List.of();
             //TODO add validation for biomes
             FIREFLY_BIOMES = builder.comment("Spawnable biomes")
                     .defineList("biomes", defaultBiomes, STRING_CHECK);
@@ -608,10 +609,11 @@ public class ServerConfigs {
             builder.comment("entities parameters")
                     .push("entities");
             builder.push("firefly");
-            FIREFLY_PERIOD = builder.comment("firefly animation period\n" +
-                            "note that actual period will be this + a random number between 0 and 10\n" +
-                            "this needs to be here to allow correct despawning of the entity when it's not glowing\n" +
-                            "check client configs come more animation settings")
+            FIREFLY_PERIOD = builder.comment("""
+                            firefly animation period
+                            note that actual period will be this + a random number between 0 and 10
+                            this needs to be here to allow correct despawning of the entity when it's not glowing
+                            check client configs come more animation settings""")
                     .defineInRange("period", 65, 1, 200);
             FIREFLY_SPEED = builder.comment("firefly flying speed")
                     .defineInRange("speed", 0.3, 0, 10);
@@ -684,7 +686,6 @@ public class ServerConfigs {
         public static int BELLOWS_RANGE;
         public static double LAUNCHER_VEL;
         public static int LAUNCHER_HEIGHT;
-        public static int TURN_TABLE_PERIOD;
         public static boolean TURN_TABLE_ROTATE_ENTITIES;
         public static List<? extends String> TURN_TABLE_BLACKLIST;
         public static int JAR_CAPACITY;

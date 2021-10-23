@@ -12,16 +12,13 @@ import net.mehvahdjukaar.supplementaries.common.BlockItemUtils;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.items.FullJarItem;
 import net.mehvahdjukaar.supplementaries.items.JarItem;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.block.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.BaseComponent;
 import net.minecraft.network.chat.Component;
@@ -245,7 +242,7 @@ public class ItemsOverrideHandler {
 
         @Override
         public boolean appliesToItem(Item item) {
-            return item == Items.GLASS_BOTTLE || item instanceof FullJarItem || item instanceof JarItem || item == Items.EXPERIENCE_BOTTLE;
+            return item == Items.GLASS_BOTTLE || item instanceof JarItem || item == Items.EXPERIENCE_BOTTLE;
         }
 
         @Override
@@ -264,11 +261,11 @@ public class ItemsOverrideHandler {
                 if (player.experienceLevel > 0 || player.isCreative()) {
                     if (i == Items.GLASS_BOTTLE) {
                         returnStack = new ItemStack(Items.EXPERIENCE_BOTTLE);
-                    } else if (i instanceof JarItem || i instanceof FullJarItem) {
+                    } else if (i instanceof JarItem) {
                         DUMMY_JAR_TILE.resetHolders();
-                        CompoundTag compoundnbt = stack.getTagElement("BlockEntityTag");
-                        if (compoundnbt != null) {
-                            DUMMY_JAR_TILE.load(((BlockItem) i).getBlock().defaultBlockState(), compoundnbt);
+                        CompoundTag tag = stack.getTagElement("BlockEntityTag");
+                        if (tag != null) {
+                            DUMMY_JAR_TILE.load(((BlockItem) i).getBlock().defaultBlockState(), tag);
                         }
 
                         if (DUMMY_JAR_TILE.canInteractWithFluidHolder()) {
@@ -339,7 +336,7 @@ public class ItemsOverrideHandler {
                 }
                 SoundType soundtype = newState.getSoundType(world, pos, player);
                 world.playSound(player, pos, newState.getSoundType(world, pos, player).getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
-                if (player == null || !player.abilities.instabuild) {
+                if (player == null || !player.getAbilities().instabuild) {
                     stack.shrink(1);
                 }
                 if (player instanceof ServerPlayer && !isRanged) {
@@ -352,7 +349,7 @@ public class ItemsOverrideHandler {
 
         @Override
         public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand, ItemStack stack, BlockHitResult hit, boolean isRanged) {
-            if (player.abilities.mayBuild) {
+            if (player.getAbilities().mayBuild) {
                 BlockPos pos = hit.getBlockPos();
                 BlockState state = world.getBlockState(pos);
                 Block b = state.getBlock();
@@ -395,7 +392,7 @@ public class ItemsOverrideHandler {
 
         @Override
         public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand, ItemStack stack, BlockHitResult hit, boolean isRanged) {
-            if (player.abilities.mayBuild) {
+            if (player.getAbilities().mayBuild) {
                 return paceBlockOverride(ModRegistry.CEILING_BANNERS.get(((BannerItem) stack.getItem()).getColor()).get(), player, hand, stack, world, hit, isRanged);
             }
             return InteractionResult.PASS;
@@ -428,7 +425,7 @@ public class ItemsOverrideHandler {
 
         @Override
         public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand, ItemStack stack, BlockHitResult hit, boolean isRanged) {
-            if (player.abilities.mayBuild) {
+            if (player.getAbilities().mayBuild) {
                 return paceBlockOverride(ModRegistry.HANGING_FLOWER_POT.get(), player, hand, stack, world, hit, isRanged);
             }
             return InteractionResult.PASS;
@@ -461,7 +458,7 @@ public class ItemsOverrideHandler {
 
         @Override
         public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand, ItemStack stack, BlockHitResult hit, boolean isRanged) {
-            if (player.abilities.mayBuild) {
+            if (player.getAbilities().mayBuild) {
                 return paceBlockOverride(ModRegistry.STICK_BLOCK.get(), player, hand, stack, world, hit, isRanged);
             }
             return InteractionResult.PASS;
@@ -494,7 +491,7 @@ public class ItemsOverrideHandler {
 
         @Override
         public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand, ItemStack stack, BlockHitResult hit, boolean isRanged) {
-            if (player.abilities.mayBuild) {
+            if (player.getAbilities().mayBuild) {
                 return paceBlockOverride(ModRegistry.BLAZE_ROD_BLOCK.get(), player, hand, stack, world, hit, isRanged);
             }
             return InteractionResult.PASS;
@@ -527,7 +524,7 @@ public class ItemsOverrideHandler {
 
         @Override
         public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand, ItemStack stack, BlockHitResult hit, boolean isRanged) {
-            if (player.abilities.mayBuild) {
+            if (player.getAbilities().mayBuild) {
                 return paceBlockOverride(ModRegistry.GUNPOWDER_BLOCK.get(), player, hand, stack, world, hit, isRanged);
             }
             return InteractionResult.PASS;
@@ -563,7 +560,7 @@ public class ItemsOverrideHandler {
 
         @Override
         public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand, ItemStack stack, BlockHitResult hit, boolean isRanged) {
-            if (player.abilities.mayBuild) {
+            if (player.getAbilities().mayBuild) {
                 return paceBlockOverride(BOOK_PILE_H_ITEM, player, hand, stack, world, hit, isRanged);
             }
             return InteractionResult.PASS;
@@ -601,7 +598,7 @@ public class ItemsOverrideHandler {
 
         @Override
         public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand, ItemStack stack, BlockHitResult hit, boolean isRanged) {
-            if (player.abilities.mayBuild) {
+            if (player.getAbilities().mayBuild) {
                 return paceBlockOverride(ModRegistry.BOOK_PILE.get(), player, hand, stack, world, hit, isRanged);
             }
             return InteractionResult.PASS;
@@ -634,7 +631,7 @@ public class ItemsOverrideHandler {
 
         @Override
         public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand, ItemStack stack, BlockHitResult hit, boolean isRanged) {
-            if (player.abilities.mayBuild) {
+            if (player.getAbilities().mayBuild) {
                 if (CompatHandler.torchslab) {
                     double y = hit.getLocation().y() % 1;
                     if (y < 0.5) return InteractionResult.PASS;
@@ -647,63 +644,57 @@ public class ItemsOverrideHandler {
 
     private static InteractionResult paceBlockOverride(Item itemOverride, Player player, InteractionHand hand, ItemStack heldStack,
                                                        Level world, BlockHitResult raytrace, boolean isRanged) {
-        if (raytrace.getDirection() != null) {
-            //try interacting with block behind
-            BlockPos pos = raytrace.getBlockPos();
+        //try interacting with block behind
+        BlockPos pos = raytrace.getBlockPos();
 
-            InteractionResult result = InteractionResult.PASS;
+        InteractionResult result = InteractionResult.PASS;
 
-            if (!player.isShiftKeyDown() && !isRanged) {
-                BlockState blockstate = world.getBlockState(pos);
-                result = blockstate.use(world, player, hand, raytrace);
-            }
-
-            if (!result.consumesAction()) {
-
-                //place block
-                BlockPlaceContext ctx = new BlockPlaceContext(world, player, hand, heldStack, raytrace);
-
-                if (itemOverride instanceof BlockItem) {
-                    result = ((BlockItem) itemOverride).place(ctx);
-
-                }
-            }
-            if (result.consumesAction() && player instanceof ServerPlayer && !isRanged) {
-                CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayer) player, pos, heldStack);
-            }
-            if (result == InteractionResult.FAIL) return InteractionResult.PASS;
-            return result;
+        if (!player.isShiftKeyDown() && !isRanged) {
+            BlockState blockstate = world.getBlockState(pos);
+            result = blockstate.use(world, player, hand, raytrace);
         }
-        return InteractionResult.PASS;
+
+        if (!result.consumesAction()) {
+
+            //place block
+            BlockPlaceContext ctx = new BlockPlaceContext(world, player, hand, heldStack, raytrace);
+
+            if (itemOverride instanceof BlockItem) {
+                result = ((BlockItem) itemOverride).place(ctx);
+
+            }
+        }
+        if (result.consumesAction() && player instanceof ServerPlayer && !isRanged) {
+            CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayer) player, pos, heldStack);
+        }
+        if (result == InteractionResult.FAIL) return InteractionResult.PASS;
+        return result;
     }
 
     private static InteractionResult paceBlockOverride(Block blockOverride, Player player, InteractionHand hand, ItemStack heldStack,
                                                        Level world, BlockHitResult raytrace, boolean isRanged) {
-        if (raytrace.getDirection() != null) {
-            //try interacting with block behind
-            BlockPos pos = raytrace.getBlockPos();
+        //try interacting with block behind
+        BlockPos pos = raytrace.getBlockPos();
 
-            InteractionResult result = InteractionResult.PASS;
+        InteractionResult result = InteractionResult.PASS;
 
-            if (!player.isShiftKeyDown() && !isRanged) {
-                BlockState blockstate = world.getBlockState(pos);
-                result = blockstate.use(world, player, hand, raytrace);
-            }
-
-            if (!result.consumesAction()) {
-
-                //place block
-                BlockPlaceContext ctx = new BlockPlaceContext(world, player, hand, heldStack, raytrace);
-
-                result = BlockItemUtils.place(ctx, blockOverride);
-            }
-            if (result.consumesAction() && player instanceof ServerPlayer && !isRanged) {
-                CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayer) player, pos, heldStack);
-            }
-            if (result == InteractionResult.FAIL) return InteractionResult.PASS;
-            return result;
+        if (!player.isShiftKeyDown() && !isRanged) {
+            BlockState blockstate = world.getBlockState(pos);
+            result = blockstate.use(world, player, hand, raytrace);
         }
-        return InteractionResult.PASS;
+
+        if (!result.consumesAction()) {
+
+            //place block
+            BlockPlaceContext ctx = new BlockPlaceContext(world, player, hand, heldStack, raytrace);
+
+            result = BlockItemUtils.place(ctx, blockOverride);
+        }
+        if (result.consumesAction() && player instanceof ServerPlayer && !isRanged) {
+            CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayer) player, pos, heldStack);
+        }
+        if (result == InteractionResult.FAIL) return InteractionResult.PASS;
+        return result;
     }
 
 }

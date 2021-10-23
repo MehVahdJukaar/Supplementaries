@@ -11,7 +11,6 @@ import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.util.math.*;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import com.mojang.math.Matrix4f;
@@ -58,8 +57,7 @@ public class SlingshotRendererHelper {
         Vec3 range = player.getLookAngle().scale(blockRange);
         BlockHitResult raytrace = world
                 .clip(new ClipContext(start, start.add(range), ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player));
-        if (raytrace != null && raytrace.getType() == HitResult.Type.BLOCK &&
-                start.distanceToSqr(raytrace.getLocation()) > Mth.square(Minecraft.getInstance().gameMode.getPickRange())) {
+        if (raytrace.getType() == HitResult.Type.BLOCK && start.distanceToSqr(raytrace.getLocation()) > Mth.square(Minecraft.getInstance().gameMode.getPickRange())) {
             LOOK_POS = raytrace.getBlockPos().relative(raytrace.getDirection(),(int) ((double)ClientConfigs.general.TEST1.get()));
         }
     }

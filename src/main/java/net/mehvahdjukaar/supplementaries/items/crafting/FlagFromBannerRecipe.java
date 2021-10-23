@@ -26,11 +26,10 @@ public class FlagFromBannerRecipe extends CustomRecipe {
         for(int i = 0; i < inv.getContainerSize(); ++i) {
             ItemStack itemstack2 = inv.getItem(i);
             Item item = itemstack2.getItem();
-            if (item instanceof FlagItem) {
-                FlagItem banneritem = (FlagItem)item;
+            if (item instanceof FlagItem bannerItem) {
                 if (dyecolor == null) {
-                    dyecolor = banneritem.getColor();
-                } else if (dyecolor != banneritem.getColor()) {
+                    dyecolor = bannerItem.getColor();
+                } else if (dyecolor != bannerItem.getColor()) {
                     return false;
                 }
 
@@ -55,8 +54,7 @@ public class FlagFromBannerRecipe extends CustomRecipe {
                 }
 
             }
-            if (item instanceof BannerItem) {
-                BannerItem banneritem = (BannerItem)item;
+            if (item instanceof BannerItem banneritem) {
                 if (dyecolor == null) {
                     dyecolor = banneritem.getColor();
                 } else if (dyecolor != banneritem.getColor()) {
@@ -118,22 +116,22 @@ public class FlagFromBannerRecipe extends CustomRecipe {
     }
 
     public NonNullList<ItemStack> getRemainingItems(CraftingContainer inv) {
-        NonNullList<ItemStack> nonnulllist = NonNullList.withSize(inv.getContainerSize(), ItemStack.EMPTY);
+        NonNullList<ItemStack> stacks = NonNullList.withSize(inv.getContainerSize(), ItemStack.EMPTY);
 
-        for(int i = 0; i < nonnulllist.size(); ++i) {
+        for(int i = 0; i < stacks.size(); ++i) {
             ItemStack itemstack = inv.getItem(i);
             if (!itemstack.isEmpty()) {
                 if (itemstack.hasContainerItem()) {
-                    nonnulllist.set(i, itemstack.getContainerItem());
+                    stacks.set(i, itemstack.getContainerItem());
                 } else if (itemstack.hasTag() && BannerBlockEntity.getPatternCount(itemstack) > 0) {
                     ItemStack itemstack1 = itemstack.copy();
                     itemstack1.setCount(1);
-                    nonnulllist.set(i, itemstack1);
+                    stacks.set(i, itemstack1);
                 }
             }
         }
 
-        return nonnulllist;
+        return stacks;
     }
 
     public RecipeSerializer<?> getSerializer() {

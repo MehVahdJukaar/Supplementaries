@@ -36,8 +36,7 @@ public class SackItem extends BlockItem {
     public void inventoryTick(ItemStack stack, Level worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
         super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
         if (!ServerConfigs.cached.SACK_PENALTY) return;
-        if (entityIn instanceof ServerPlayer && !((Player) entityIn).isCreative() && !entityIn.isSpectator() && worldIn.getGameTime() % 20L == 0L) {
-            ServerPlayer player = (ServerPlayer) entityIn;
+        if (entityIn instanceof ServerPlayer player && !player.isCreative() && !entityIn.isSpectator() && worldIn.getGameTime() % 20L == 0L) {
             Collection<MobEffectInstance> effects = player.getActiveEffects();
             for (MobEffectInstance effect : effects) {
                 if (effect.getEffect() == MobEffects.MOVEMENT_SLOWDOWN)
@@ -45,11 +44,11 @@ public class SackItem extends BlockItem {
             }
 
             int i = 0;
-            AtomicReference<IItemHandler> _iitemhandlerref = new AtomicReference<>();
-            entityIn.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent(_iitemhandlerref::set);
-            if (_iitemhandlerref.get() != null) {
-                for (int _idx = 0; _idx < _iitemhandlerref.get().getSlots(); _idx++) {
-                    if (_iitemhandlerref.get().getStackInSlot(_idx).getItem() instanceof SackItem) {
+            AtomicReference<IItemHandler> reference = new AtomicReference<>();
+            entityIn.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent(reference::set);
+            if (reference.get() != null) {
+                for (int _idx = 0; _idx < reference.get().getSlots(); _idx++) {
+                    if (reference.get().getStackInSlot(_idx).getItem() instanceof SackItem) {
                         i++;
                     }
                 }

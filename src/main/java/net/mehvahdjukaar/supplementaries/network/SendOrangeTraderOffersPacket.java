@@ -3,20 +3,21 @@ package net.mehvahdjukaar.supplementaries.network;
 
 import net.mehvahdjukaar.supplementaries.inventories.RedMerchantContainer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.trading.MerchantOffers;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
 public class SendOrangeTraderOffersPacket {
-    private int containerId;
-    public MerchantOffers offers;
-    private int villagerLevel;
-    private int villagerXp;
-    private boolean showProgress;
-    private boolean canRestock;
+    private final int containerId;
+    public final MerchantOffers offers;
+    private final int villagerLevel;
+    private final int villagerXp;
+    private final boolean showProgress;
+    private final boolean canRestock;
+
     public SendOrangeTraderOffersPacket(FriendlyByteBuf buf) {
         this.containerId = buf.readVarInt();
         this.offers = MerchantOffers.createFromStream(buf);
@@ -50,11 +51,11 @@ public class SendOrangeTraderOffersPacket {
         ctx.get().enqueueWork(() -> {
             AbstractContainerMenu container = Minecraft.getInstance().player.containerMenu;
             if (message.containerId == container.containerId && container instanceof RedMerchantContainer) {
-                ((RedMerchantContainer)container).setOffers(new MerchantOffers(message.offers.createTag()));
-                ((RedMerchantContainer)container).setXp(message.villagerXp);
-                ((RedMerchantContainer)container).setMerchantLevel(message.villagerLevel);
-                ((RedMerchantContainer)container).setShowProgressBar(message.showProgress);
-                ((RedMerchantContainer)container).setCanRestock(message.canRestock);
+                ((RedMerchantContainer) container).setOffers(new MerchantOffers(message.offers.createTag()));
+                ((RedMerchantContainer) container).setXp(message.villagerXp);
+                ((RedMerchantContainer) container).setMerchantLevel(message.villagerLevel);
+                ((RedMerchantContainer) container).setShowProgressBar(message.showProgress);
+                ((RedMerchantContainer) container).setCanRestock(message.canRestock);
             }
 
         });

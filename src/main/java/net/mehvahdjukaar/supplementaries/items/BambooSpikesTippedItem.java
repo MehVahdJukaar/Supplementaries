@@ -23,16 +23,11 @@ import java.util.List;
 
 import net.minecraft.world.item.Item.Properties;
 
-public class BambooSpikesTippedItem extends BlockItem implements SimpleWaterloggedBlock {
+public class BambooSpikesTippedItem extends BurnableBlockItem implements SimpleWaterloggedBlock {
 
 
     public BambooSpikesTippedItem(Block blockIn, Properties builder) {
-        super(blockIn, builder);
-    }
-
-    @Override
-    public int getBurnTime(ItemStack itemStack) {
-        return 150;
+        super(blockIn, builder, 150);
     }
 
     @Override

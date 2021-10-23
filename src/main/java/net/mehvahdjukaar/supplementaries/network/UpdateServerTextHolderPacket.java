@@ -1,13 +1,13 @@
 package net.mehvahdjukaar.supplementaries.network;
 
 import net.mehvahdjukaar.supplementaries.block.util.ITextHolder;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.Objects;
 import java.util.function.Supplier;
@@ -45,21 +45,18 @@ public class UpdateServerTextHolderPacket {
         // server world
         Level world = Objects.requireNonNull(ctx.get().getSender()).level;
         ctx.get().enqueueWork(() -> {
-            if (world != null) {
-                BlockPos pos = message.pos;
-                BlockEntity tileentity = world.getBlockEntity(pos);
-                if (tileentity instanceof ITextHolder) {
-                    ITextHolder te = (ITextHolder) tileentity;
-                    if(te.getTextHolder().size == message.lines){
-                        for (int i = 0; i < message.lines; ++i) {
-                            te.getTextHolder().setText(i,message.signText[i]);
-                        }
+            BlockPos pos = message.pos;
+            BlockEntity tile = world.getBlockEntity(pos);
+            if (tile instanceof ITextHolder te) {
+                if (te.getTextHolder().size == message.lines) {
+                    for (int i = 0; i < message.lines; ++i) {
+                        te.getTextHolder().setText(i, message.signText[i]);
                     }
-                    //updates client
-                    BlockState state =  world.getBlockState(pos);
-                    world.sendBlockUpdated(pos, state, state, 3);
-                    tileentity.setChanged();
                 }
+                //updates client
+                BlockState state = world.getBlockState(pos);
+                world.sendBlockUpdated(pos, state, state, 3);
+                tile.setChanged();
             }
         });
         ctx.get().setPacketHandled(true);

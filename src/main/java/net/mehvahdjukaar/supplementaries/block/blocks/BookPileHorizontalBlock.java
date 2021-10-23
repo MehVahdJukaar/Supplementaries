@@ -73,7 +73,7 @@ public class BookPileHorizontalBlock extends BookPileBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return  new BookPileBlockTile(true);
+        return  new BookPileBlockTile(pPos, pState, true);
     }
 
     public boolean isAcceptedItem(Item i) {

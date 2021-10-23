@@ -3,20 +3,24 @@ package net.mehvahdjukaar.supplementaries.network;
 import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
 public class RequestConfigReloadPacket {
-    public RequestConfigReloadPacket(FriendlyByteBuf buffer) {}
-    public RequestConfigReloadPacket() {}
+    public RequestConfigReloadPacket(FriendlyByteBuf buffer) {
+    }
 
-    public static void buffer(RequestConfigReloadPacket message, FriendlyByteBuf buf) {}
+    public RequestConfigReloadPacket() {
+    }
+
+    public static void buffer(RequestConfigReloadPacket message, FriendlyByteBuf buf) {
+    }
 
     public static void handler(RequestConfigReloadPacket message, Supplier<NetworkEvent.Context> ctx) {
         //server
         ctx.get().enqueueWork(() -> {
-            //TODO: fix confis synginc
+            //TODO: fix configs sinking
             ServerConfigs.loadLocal();
             ConfigHandler.syncServerConfigs(ctx.get().getSender());
             ServerConfigs.cached.refresh();

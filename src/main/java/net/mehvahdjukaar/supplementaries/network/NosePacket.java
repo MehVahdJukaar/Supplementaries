@@ -3,10 +3,8 @@ package net.mehvahdjukaar.supplementaries.network;
 
 import net.mehvahdjukaar.supplementaries.block.util.ICustomDataHolder;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.fml.network.NetworkDirection;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.world.entity.Entity;
 import net.minecraftforge.fmllegacy.network.NetworkDirection;
 import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
@@ -14,8 +12,8 @@ import java.util.function.Supplier;
 
 public class NosePacket implements NetworkHandler.Message {
 
-    private int id;
-    private boolean on;
+    private final int id;
+    private final boolean on;
 
     public NosePacket(int id, boolean on) {
         this.id = id;
@@ -38,7 +36,7 @@ public class NosePacket implements NetworkHandler.Message {
             ctx.get().enqueueWork(() -> {
 
                 Entity entity = Minecraft.getInstance().level.getEntity(msg.id);
-                if(entity instanceof ICustomDataHolder){
+                if (entity instanceof ICustomDataHolder) {
                     ((ICustomDataHolder) entity).setVariable(msg.on);
                 }
 

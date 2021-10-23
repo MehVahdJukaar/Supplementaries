@@ -21,7 +21,6 @@ public class ModSoftFluids {
         return new SoftFluid(builder);
     }
 
-
     public static final SoftFluid DIRT;
     public static final SoftFluid SAP;
     public static final SoftFluid SUGAR;
@@ -365,7 +364,6 @@ public class ModSoftFluids {
                     .fromMod("inspirations")
                     .copyTexturesFrom("inspirations:potato_soup")
             );
-            if (s == null) continue;
             custom.add(s);
         }
 

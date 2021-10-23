@@ -4,37 +4,34 @@ import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.world.explosion.BombExplosion;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.TntBlock;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.LargeFireball;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ItemParticleOption;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.ExplosionDamageCalculator;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.TntBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.level.Explosion;
-import net.minecraft.world.level.ExplosionDamageCalculator;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
-import net.minecraftforge.fml.network.FMLPlayMessages;
-import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.fmllegacy.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fmllegacy.network.FMLPlayMessages;
 import net.minecraftforge.fmllegacy.network.NetworkHooks;
@@ -126,44 +123,32 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
     @Override
     public void handleEntityEvent(byte id) {
         switch (id) {
-            default:
-                super.handleEntityEvent(id);
-                break;
-            case 3:
+            default -> super.handleEntityEvent(id);
+            case 3 -> spawnBreakParticles();
+            case 10 -> {
                 spawnBreakParticles();
-                break;
-            case 10:
-                spawnBreakParticles();
-
-                if(CommonUtil.FESTIVITY.isBirthday()){
+                if (CommonUtil.FESTIVITY.isBirthday()) {
                     this.spawnParticleInASphere(ModRegistry.CONFETTI_PARTICLE.get(), 55, 0.3f);
-                }
-                else {
+                } else {
                     level.addParticle(ModRegistry.BOMB_EXPLOSION_PARTICLE_EMITTER.get(), this.getX(), this.getY() + 1, this.getZ(),
                             this.blue ? ServerConfigs.cached.BOMB_BLUE_RADIUS : ServerConfigs.cached.BOMB_RADIUS, 0, 0);
                 }
                 if (blue) {
-                    this.spawnParticleInASphere(ParticleTypes.FLAME, 40,0.55f);
+                    this.spawnParticleInASphere(ParticleTypes.FLAME, 40, 0.55f);
                 }
-
-
-
-                break;
-            case 68:
-                level.addParticle(ParticleTypes.FLASH, this.getX(), this.getY() + 1, this.getZ(), 0, 0, 0);
-                break;
-            case 67:
+            }
+            case 68 -> level.addParticle(ParticleTypes.FLASH, this.getX(), this.getY() + 1, this.getZ(), 0, 0, 0);
+            case 67 -> {
                 Random random = level.getRandom();
                 for (int i = 0; i < 10; ++i) {
                     level.addParticle(ParticleTypes.SMOKE, this.getX() + 0.25f - random.nextFloat() * 0.5f, this.getY() + 0.45f - random.nextFloat() * 0.5f, this.getZ() + 0.25f - random.nextFloat() * 0.5f, 0, 0.005, 0);
                 }
                 this.active = false;
-                break;
-
+            }
         }
     }
 
-    private void spawnParticleInASphere(ParticleOptions type, int amount, float speed){
+    private void spawnParticleInASphere(ParticleOptions type, int amount, float speed) {
         double d = (Math.PI * 2) / amount;
         for (float d22 = 0; d22 < (Math.PI * 2D); d22 += d) {
             Vec3 v = new Vec3(speed, 0, 0);
@@ -250,7 +235,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
     @Override
     public void playerTouch(Player entityIn) {
         if (!this.level.isClientSide) {
-            if (!this.active && entityIn.inventory.add(this.getItemStack())) {
+            if (!this.active && entityIn.getInventory().add(this.getItemStack())) {
                 entityIn.take(this, 1);
                 this.remove();
             }

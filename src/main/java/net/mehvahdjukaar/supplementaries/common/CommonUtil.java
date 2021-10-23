@@ -8,6 +8,7 @@ import net.minecraft.block.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.item.*;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
@@ -32,11 +33,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.TridentItem;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.FenceBlock;
-import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.level.block.Lantern;
-import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class CommonUtil {
@@ -92,15 +89,11 @@ public class CommonUtil {
         }
 
         public int getCandyWrappingIndex() {
-            switch (this) {
-                default:
-                case NONE:
-                    return 0;
-                case HALLOWEEN:
-                    return 1;
-                case CHRISTMAS:
-                    return 2;
-            }
+            return switch (this) {
+                default -> 0;
+                case HALLOWEEN -> 1;
+                case CHRISTMAS -> 2;
+            };
         }
 
         private static Festivity get() {
@@ -138,19 +131,19 @@ public class CommonUtil {
             Block b = ((BlockItem) i).getBlock();
             String namespace = b.getRegistryName().getNamespace();
             if (namespace.equals("skinnedlanterns")) return true;
-            if (b instanceof Lantern && !ServerConfigs.cached.WALL_LANTERN_BLACKLIST.contains(namespace)) {
-                return !b.hasTileEntity(b.defaultBlockState());
+            if (b instanceof LanternBlock && !ServerConfigs.cached.WALL_LANTERN_BLACKLIST.contains(namespace)) {
+                return !b.defaultBlockState().hasBlockEntity();
             }
         }
         return false;
     }
 
     public static boolean isCookie(Item i) {
-        return (i.is(ModTags.COOKIES));
+        return (ModTags.COOKIES.contains(i));
     }
 
     public static boolean isBrick(Item i) {
-        return (i.is(ModTags.BRICKS));
+        return (ModTags.BRICKS.contains(i));
     }
 
     public static boolean isCake(Item i) {
@@ -169,28 +162,21 @@ public class CommonUtil {
     public static AABB getDirectionBB(BlockPos pos, Direction facing, int offset) {
         BlockPos endPos = pos.relative(facing, offset);
         switch (facing) {
-            default:
-            case NORTH:
-                endPos = endPos.offset(1, 1, 0);
-                break;
-            case SOUTH:
+            case NORTH -> endPos = endPos.offset(1, 1, 0);
+            case SOUTH -> {
                 endPos = endPos.offset(1, 1, 1);
                 pos = pos.offset(0, 0, 1);
-                break;
-            case UP:
+            }
+            case UP -> {
                 endPos = endPos.offset(1, 1, 1);
                 pos = pos.offset(0, 1, 0);
-                break;
-            case EAST:
+            }
+            case EAST -> {
                 endPos = endPos.offset(1, 1, 1);
                 pos = pos.offset(1, 0, 0);
-                break;
-            case WEST:
-                endPos = endPos.offset(0, 1, 1);
-                break;
-            case DOWN:
-                endPos = endPos.offset(1, 0, 1);
-                break;
+            }
+            case WEST -> endPos = endPos.offset(0, 1, 1);
+            case DOWN -> endPos = endPos.offset(1, 0, 1);
         }
         return new AABB(pos, endPos);
     }
@@ -212,9 +198,9 @@ public class CommonUtil {
         VoxelShape shape = state.getShape(world, pos);
         if (shape != Shapes.empty()) {
             AABB s = shape.bounds();
-            if (block instanceof FenceBlock || block instanceof SignPostBlock || block.is(Tags.Blocks.FENCES) || isShapeEqual(FENCE_SHAPE, s))
+            if (block instanceof FenceBlock || block instanceof SignPostBlock || state.is(Tags.Blocks.FENCES) || isShapeEqual(FENCE_SHAPE, s))
                 return 1;
-            if (block instanceof WallBlock || block.is(BlockTags.WALLS) ||
+            if (block instanceof WallBlock || state.is(BlockTags.WALLS) ||
                     (isShapeEqual(WALL_SHAPE, s))) return 2;
             if (isShapeEqual(POST_SHAPE, s)) return 1;
         }

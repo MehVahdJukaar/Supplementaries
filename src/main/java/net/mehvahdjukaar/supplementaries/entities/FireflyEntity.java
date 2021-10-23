@@ -2,55 +2,44 @@ package net.mehvahdjukaar.supplementaries.entities;
 
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.entity.*;
-import net.minecraft.world.entity.ai.util.RandomPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.Tag;
+import net.minecraft.util.Mth;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.FlyingMoveControl;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.ai.util.RandomPos;
 import net.minecraft.world.entity.animal.FlyingAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Arrow;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
-import net.minecraft.world.entity.ai.navigation.PathNavigation;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.Tag;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.core.BlockPos;
-import net.minecraft.util.Mth;
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.fmllegacy.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.Random;
-
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityDimensions;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.MobType;
-import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.Pose;
-import net.minecraft.world.entity.SpawnGroupData;
 
 public class FireflyEntity extends PathfinderMob implements FlyingAnimal, IEntityAdditionalSpawnData {
     public float alpha = 0f;
@@ -93,13 +82,14 @@ public class FireflyEntity extends PathfinderMob implements FlyingAnimal, IEntit
 
     public static boolean canSpawnOn(EntityType<? extends Mob> firefly, LevelAccessor worldIn, MobSpawnType reason, BlockPos pos, Random random) {
         BlockState blockstate = worldIn.getBlockState(pos.below());
-        if (pos.getY() <= worldIn.getSeaLevel()) {return false;}
+        if (pos.getY() <= worldIn.getSeaLevel()) {
+            return false;
+        }
         return (blockstate.is(BlockTags.LEAVES) || blockstate.is(Blocks.GRASS_BLOCK) || blockstate.is(BlockTags.LOGS) || blockstate.is(Blocks.AIR)) && worldIn.getRawBrightness(pos, 0) > 8;
     }
 
     @Override
-    public boolean checkSpawnRules(LevelAccessor world, MobSpawnType spawnReasonIn)
-    {
+    public boolean checkSpawnRules(LevelAccessor world, MobSpawnType spawnReasonIn) {
         return !this.level.isDay() && !this.level.isThundering();
     }
 
@@ -111,10 +101,6 @@ public class FireflyEntity extends PathfinderMob implements FlyingAnimal, IEntit
     @Override
     public void tick() {
         super.tick();
-
-
-
-
     }
 
     @Override
@@ -126,7 +112,7 @@ public class FireflyEntity extends PathfinderMob implements FlyingAnimal, IEntit
     @Override
     public void writeSpawnData(FriendlyByteBuf buffer) {
         this.flickerPeriod = ServerConfigs.cached.FIREFLY_PERIOD + this.random.nextInt(10);
-        this.offset = this.random.nextInt(this.flickerPeriod/2);
+        this.offset = this.random.nextInt(this.flickerPeriod / 2);
         buffer.writeInt(this.offset);
         buffer.writeInt(this.flickerPeriod);
     }
@@ -250,12 +236,12 @@ public class FireflyEntity extends PathfinderMob implements FlyingAnimal, IEntit
         //this.particleCooldown--;
 
         //despawn when entity is not lit
-        if (this.alpha == 0f && !this.level.isClientSide){
+        if (this.alpha == 0f && !this.level.isClientSide) {
 
-            if(this.level.isRaining() && this.random.nextFloat()<0.1) {
+            if (this.level.isRaining() && this.random.nextFloat() < 0.1) {
                 this.remove();
             }
-            if(ServerConfigs.cached.FIREFLY_DESPAWN) {
+            if (ServerConfigs.cached.FIREFLY_DESPAWN) {
                 long dayTime = this.level.getDayTime() % 24000;
                 if (dayTime > 23500 || dayTime < 12500 && this.random.nextFloat() < 0.1)
                     this.remove();
@@ -269,14 +255,14 @@ public class FireflyEntity extends PathfinderMob implements FlyingAnimal, IEntit
         this.prevAlpha = this.alpha;
         float a = (float) ClientConfigs.cached.FIREFLY_INTENSITY; //0.3
         float p = (float) ClientConfigs.cached.FIREFLY_EXPONENT;
-        float time = this.tickCount+this.offset;
+        float time = this.tickCount + this.offset;
         boolean w = this.level.isClientSide;
 
-        this.alpha = Math.max(((1-a)*Mth.sin(time * ((float)Math.PI*2 / this.flickerPeriod))+a),0);
-        if (this.alpha!=0)this.alpha= (float) Math.pow(this.alpha,p);
+        this.alpha = Math.max(((1 - a) * Mth.sin(time * ((float) Math.PI * 2 / this.flickerPeriod)) + a), 0);
+        if (this.alpha != 0) this.alpha = (float) Math.pow(this.alpha, p);
         //this.alpha =  Math.max( ( (1-p)*MathHelper.sin(this.ticksExisted * ((float) Math.PI / this.flickerPeriod))+p), 0);
 
-        if(this.level.isClientSide) {
+        if (this.level.isClientSide) {
             if (prevAlpha == 0 && this.alpha != 0) this.switchLight(true);
             else if (prevAlpha != 0 && this.alpha == 0) this.switchLight(false);
         }
@@ -286,11 +272,10 @@ public class FireflyEntity extends PathfinderMob implements FlyingAnimal, IEntit
                 0.02 * (this.random.nextDouble() - 0.5)));
     }
 
-    private void switchLight(boolean on){
-        if(on)this.setItemSlot(EquipmentSlot.HEAD, new ItemStack(Items.MAGMA_BLOCK));
+    private void switchLight(boolean on) {
+        if (on) this.setItemSlot(EquipmentSlot.HEAD, new ItemStack(Items.MAGMA_BLOCK));
         else this.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
     }
-
 
 
     //bee code

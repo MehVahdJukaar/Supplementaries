@@ -7,6 +7,8 @@ import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManag
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.minecraft.client.model.geom.EntityModelSet;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -19,6 +21,10 @@ import net.minecraftforge.client.model.data.EmptyModelData;
 
 public class BlackboardItemRenderer extends BlockEntityWithoutLevelRenderer {
     private static final BlockState state = ModRegistry.BLACKBOARD.get().defaultBlockState();
+
+    public BlackboardItemRenderer(BlockEntityRenderDispatcher pBlockEntityRenderDispatcher, EntityModelSet pEntityModelSet) {
+        super(pBlockEntityRenderDispatcher, pEntityModelSet);
+    }
 
     @Override
     public void renderByItem(ItemStack stack, ItemTransforms.TransformType transformType, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {

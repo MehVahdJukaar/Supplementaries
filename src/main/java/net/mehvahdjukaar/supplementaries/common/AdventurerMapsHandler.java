@@ -7,24 +7,24 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.world.data.map.CMDreg;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.npc.VillagerProfession;
-import net.minecraft.world.entity.npc.VillagerTrades;
-import net.minecraft.world.item.MapItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.trading.MerchantOffer;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.entity.npc.VillagerTrades;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.MapItem;
+import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.feature.OceanMonumentFeature;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.feature.WoodlandMansionFeature;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.level.saveddata.maps.MapDecoration;
+import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.tuple.Pair;
@@ -98,7 +98,7 @@ public class AdventurerMapsHandler {
 
         try {
             List<? extends List<String>> tradeData = ConfigHandler.safeGetListString(ServerConfigs.SERVER_SPEC, ServerConfigs.tweaks.CUSTOM_ADVENTURER_MAPS_TRADES);
-            ;
+
             for (List<String> l : tradeData) {
                 int s = l.size();
                 if (s > 0) {
@@ -132,7 +132,7 @@ public class AdventurerMapsHandler {
 
                         customTrades.add(new TradeData(structure, level, minPrice, maxPrice, mapName, mapColor, marker));
                     } catch (Exception e) {
-                        Supplementaries.LOGGER.warn("wrong formatting for configs 'custom_adventurer_maps'(" + l.toString() + "), skipping it :" + e);
+                        Supplementaries.LOGGER.warn("wrong formatting for configs 'custom_adventurer_maps'(" + l + "), skipping it :" + e);
                     }
                 }
 
@@ -206,10 +206,7 @@ public class AdventurerMapsHandler {
         }
 
         private ItemStack createMap(Level world, BlockPos pos) {
-            if (!(world instanceof ServerLevel)) {
-                return ItemStack.EMPTY;
-            } else {
-                ServerLevel serverWorld = ((ServerLevel) world);
+            if (world instanceof ServerLevel serverWorld) {
                 if (!serverWorld.getServer().getWorldData().worldGenSettings().generateFeatures())
                     return ItemStack.EMPTY;
 
@@ -230,8 +227,8 @@ public class AdventurerMapsHandler {
                         return stack;
                     }
                 }
-                return ItemStack.EMPTY;
             }
+            return ItemStack.EMPTY;
         }
     }
 

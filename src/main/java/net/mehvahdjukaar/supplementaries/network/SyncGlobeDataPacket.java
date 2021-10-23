@@ -4,15 +4,16 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.world.data.GlobeData;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
 
 public class SyncGlobeDataPacket {
     public GlobeData data;
+
     public SyncGlobeDataPacket(FriendlyByteBuf buffer) {
-        this.data = new GlobeData() ;
+        this.data = new GlobeData();
         this.data.load(buffer.readNbt());
     }
 

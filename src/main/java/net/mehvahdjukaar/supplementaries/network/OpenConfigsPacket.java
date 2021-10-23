@@ -7,15 +7,19 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.ExtensionPoint;
 import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
 public class OpenConfigsPacket {
-    public OpenConfigsPacket(FriendlyByteBuf buffer) {}
-    public OpenConfigsPacket() {}
+    public OpenConfigsPacket(FriendlyByteBuf buffer) {
+    }
 
-    public static void buffer(OpenConfigsPacket message, FriendlyByteBuf buf) {}
+    public OpenConfigsPacket() {
+    }
+
+    public static void buffer(OpenConfigsPacket message, FriendlyByteBuf buf) {
+    }
 
     public static void handler(OpenConfigsPacket message, Supplier<NetworkEvent.Context> ctx) {
         // client world
@@ -34,7 +38,7 @@ public class OpenConfigsPacket {
 
             mc.setScreen(ModList.get().getModContainerById(Supplementaries.MOD_ID).get()
                     .getCustomExtension(ExtensionPoint.CONFIGGUIFACTORY).get()
-                    .apply(mc,mc.screen));
+                    .apply(mc, mc.screen));
 
 
         });

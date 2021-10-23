@@ -2,6 +2,8 @@ package net.mehvahdjukaar.supplementaries.items;
 
 import com.google.common.collect.ImmutableSet;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.selene.api.IFirstPersonAnimationProvider;
 import net.mehvahdjukaar.selene.api.IThirdPersonAnimationProvider;
 import net.mehvahdjukaar.selene.util.TwoHandedAnimation;
@@ -12,37 +14,26 @@ import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.stats.Stats;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.item.Vanishable;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.item.*;
-import net.minecraft.stats.Stats;
-import net.minecraft.util.*;
-import net.minecraft.util.math.MathHelper;
-import com.mojang.math.Quaternion;
-import net.minecraft.world.phys.Vec3;
-import com.mojang.math.Vector3f;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Predicate;
-
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CrossbowItem;
-import net.minecraft.world.item.Item.Properties;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ProjectileWeaponItem;
-import net.minecraft.world.item.UseAnim;
 
 public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, IFirstPersonAnimationProvider, IThirdPersonAnimationProvider {
 
@@ -50,13 +41,11 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
         super(properties);
     }
 
-
     @Override
     public void releaseUsing(ItemStack stack, Level world, LivingEntity entity, int timeLeft) {
-        if (entity instanceof Player) {
-            Player playerentity = (Player) entity;
+        if (entity instanceof Player player) {
 
-            ItemStack projectileStack = playerentity.getProjectile(stack);
+            ItemStack projectileStack = player.getProjectile(stack);
 
             if (!projectileStack.isEmpty() && this.getAllSupportedProjectiles().test(projectileStack)) {
 
@@ -72,13 +61,13 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
                             break;
                         }
                         projectiles.add(projectileStack.copy());
-                        if (!playerentity.abilities.instabuild) {
+                        if (!player.getAbilities().instabuild) {
                             projectileStack.shrink(1);
                             if (projectileStack.isEmpty()) {
-                                playerentity.inventory.removeItem(projectileStack);
+                                player.getInventory().removeItem(projectileStack);
                             }
                         }
-                        projectileStack = playerentity.getProjectile(stack);
+                        projectileStack = player.getProjectile(stack);
                     }
                     if (!world.isClientSide) {
                         float[] pitches = getShotPitches(world.getRandom());
@@ -87,17 +76,16 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
                         for (int j = 0; j < count; j++) {
 
                             boolean stasis = EnchantmentHelper.getItemEnchantmentLevel(ModRegistry.STASIS_ENCHANTMENT.get(), stack) != 0;
-                            InteractionHand hand = playerentity.getUsedItemHand();
+                            InteractionHand hand = player.getUsedItemHand();
                             power *= (ServerConfigs.cached.SLINGSHOT_RANGE + (stasis ? 0.5 : 0)) * 1.1;
                             shootProjectile(world, entity, hand, stack, projectiles.get(j), count == 1 ? 1 : pitches[j], power, 1, angle * (j - (count - 1) / 2f));
                         }
                     }
-                    playerentity.awardStat(Stats.ITEM_USED.get(this));
+                    player.awardStat(Stats.ITEM_USED.get(this));
                 }
             }
         }
     }
-
 
     private static void shootProjectile(Level world, LivingEntity entity, InteractionHand hand, ItemStack stack, ItemStack projectileStack, float soundPitch, float power, float accuracy, float yaw) {
 
@@ -113,17 +101,17 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
         stack.hurtAndBreak(1, entity, (p) -> p.broadcastBreakEvent(hand));
         world.addFreshEntity(projectile);
 
-        world.playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.WITCH_THROW, SoundSource.PLAYERS, 1.0F, soundPitch * (1.0F / (random.nextFloat() * 0.3F + 0.9F) + power * 0.6F));
+        world.playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.WITCH_THROW, SoundSource.PLAYERS, 1.0F, soundPitch * (1.0F / (world.random.nextFloat() * 0.3F + 0.9F) + power * 0.6F));
 
     }
 
     //shoot pitches for multi shot
     private static float[] getShotPitches(Random random) {
         boolean flag = random.nextBoolean();
-        return new float[]{getRandomShotPitch(flag), 1.0F, getRandomShotPitch(!flag)};
+        return new float[]{getRandomShotPitch(random, flag), 1.0F, getRandomShotPitch(random, !flag)};
     }
 
-    private static float getRandomShotPitch(boolean left) {
+    private static float getRandomShotPitch(Random random, boolean left) {
         float f = left ? 0.63F : 0.43F;
         return 1.0F / (random.nextFloat() * 0.5F + 1.8F) + f;
     }
@@ -160,7 +148,6 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
     }
 
 
-
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
@@ -192,7 +179,7 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
 
     @Override
     public <T extends LivingEntity> boolean poseLeftArm(ItemStack stack, HumanoidModel<T> model, T entity, HumanoidArm mainHand, TwoHandedAnimation twoHanded) {
-        if(entity.getUseItemRemainingTicks() > 0 && entity.getUseItem().getItem() == this) {
+        if (entity.getUseItemRemainingTicks() > 0 && entity.getUseItem().getItem() == this) {
             //twoHanded.setTwoHanded(true);
             model.leftArm.yRot = 0.1F + model.head.yRot;
             model.leftArm.xRot = (-(float) Math.PI / 2F) + model.head.xRot;
@@ -204,7 +191,7 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
     //TODO: finish this
     @Override
     public <T extends LivingEntity> boolean poseRightArm(ItemStack stack, HumanoidModel<T> model, T entity, HumanoidArm mainHand, TwoHandedAnimation twoHanded) {
-        if(entity.getUseItemRemainingTicks() > 0 && entity.getUseItem().getItem() == this) {
+        if (entity.getUseItemRemainingTicks() > 0 && entity.getUseItem().getItem() == this) {
             //twoHanded.setTwoHanded(true);
             model.rightArm.yRot = -0.1F + model.head.yRot;
             //model.leftArm.yRot = 0.1F + model.head.yRot + 0.4F;
@@ -249,9 +236,6 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
             //matrixStack.mulPose(Vector3f.YN.rotationDegrees((float)k * 45.0F));
         }
     }
-
-
-
 
 
     public static void animateCrossbowCharge(ModelPart offHand, ModelPart mainHand, LivingEntity entity, boolean right) {

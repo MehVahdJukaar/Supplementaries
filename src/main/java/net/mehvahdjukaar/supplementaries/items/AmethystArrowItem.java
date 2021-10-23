@@ -8,8 +8,6 @@ import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-import net.minecraft.world.item.Item.Properties;
-
 public class AmethystArrowItem extends ArrowItem {
     public AmethystArrowItem(Properties builder) {
         super(builder);

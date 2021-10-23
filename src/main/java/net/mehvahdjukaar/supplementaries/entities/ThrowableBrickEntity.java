@@ -28,6 +28,8 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.fml.network.FMLPlayMessages;
 import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.fmllegacy.network.FMLPlayMessages;
+import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
 public class ThrowableBrickEntity extends ImprovedProjectileEntity{
     public ThrowableBrickEntity(EntityType<? extends ThrowableBrickEntity> type, Level world) {

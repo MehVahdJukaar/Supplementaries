@@ -1,14 +1,12 @@
 package net.mehvahdjukaar.supplementaries.items;
 
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
-
-import net.minecraft.world.item.Item.Properties;
 
 public class ShulkerShellItem extends ArmorItem {
     public ShulkerShellItem(Properties properties) {
@@ -32,6 +30,7 @@ public class ShulkerShellItem extends ArmorItem {
 
     private static class SkulkerShellArmorMaterial implements ArmorMaterial {
         private static final int[] HEALTH_PER_SLOT = new int[]{13, 15, 16, 11};
+
         @Override
         public int getDurabilityForSlot(EquipmentSlot slotType) {
             return HEALTH_PER_SLOT[slotType.getIndex()] * 10;

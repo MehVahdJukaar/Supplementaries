@@ -1,34 +1,28 @@
 package net.mehvahdjukaar.supplementaries.entities;
 
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.world.level.block.entity.TheEndGatewayBlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.util.math.*;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.TheEndGatewayBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.*;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.event.ForgeEventFactory;
 
 import javax.annotation.Nullable;
-
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.ClipContext;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.HitResult;
 
 public abstract class ImprovedProjectileEntity extends ThrowableItemProjectile {
     private static final EntityDataAccessor<Byte> ID_FLAGS = SynchedEntityData.defineId(ImprovedProjectileEntity.class, EntityDataSerializers.BYTE);
@@ -57,18 +51,19 @@ public abstract class ImprovedProjectileEntity extends ThrowableItemProjectile {
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(ID_FLAGS, (byte)0);
+        this.entityData.define(ID_FLAGS, (byte) 0);
     }
 
     private void setFlag(int id, boolean value) {
         byte b0 = this.entityData.get(ID_FLAGS);
         if (value) {
-            this.entityData.set(ID_FLAGS, (byte)(b0 | id));
+            this.entityData.set(ID_FLAGS, (byte) (b0 | id));
         } else {
-            this.entityData.set(ID_FLAGS, (byte)(b0 & ~id));
+            this.entityData.set(ID_FLAGS, (byte) (b0 & ~id));
         }
 
     }
+
     public void setNoPhysics(boolean noPhysics) {
         this.noPhysics = noPhysics;
         this.setFlag(2, noPhysics);
@@ -81,6 +76,7 @@ public abstract class ImprovedProjectileEntity extends ThrowableItemProjectile {
             return (this.entityData.get(ID_FLAGS) & 2) != 0;
         }
     }
+
     @Override
     public void tick() {
         //base tick stuff
@@ -131,11 +127,9 @@ public abstract class ImprovedProjectileEntity extends ThrowableItemProjectile {
         }
 
 
-
         if (this.touchedGround && !noPhysics) {
             this.groundTime++;
-        }
-        else{
+        } else {
             this.groundTime = 0;
 
             this.updateRotation();
@@ -148,14 +142,14 @@ public abstract class ImprovedProjectileEntity extends ThrowableItemProjectile {
             HitResult raytraceresult = this.level.clip(new ClipContext(pos, newPos, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
             if (raytraceresult.getType() != HitResult.Type.MISS) {
                 //get correct land pos
-                if(!noPhysics){
+                if (!noPhysics) {
                     newPos = raytraceresult.getLocation();
                 }
                 //no physics clips through blocks
             }
 
 
-            if(client){
+            if (client) {
                 this.spawnTrailParticles(pos, newPos);
             }
 
@@ -168,7 +162,7 @@ public abstract class ImprovedProjectileEntity extends ThrowableItemProjectile {
             if (this.isInWater()) {
                 if (client) {
                     for (int j = 0; j < 4; ++j) {
-                        double pY = posY + this.getBbHeight()/2d;
+                        double pY = posY + this.getBbHeight() / 2d;
                         this.level.addParticle(ParticleTypes.BUBBLE, posX - velX * 0.25D, pY - velY * 0.25D, posZ - velZ * 0.25D, velX, velY, velZ);
                     }
                 }
@@ -230,7 +224,7 @@ public abstract class ImprovedProjectileEntity extends ThrowableItemProjectile {
         }
     }
 
-    protected float getDeceleration(){
+    protected float getDeceleration() {
         return 0.99F;
     }
 
@@ -238,14 +232,14 @@ public abstract class ImprovedProjectileEntity extends ThrowableItemProjectile {
     /**
      * do stuff before removing, then call remove. Called when age reaches max age
      */
-    public boolean hasReachedEndOfLife(){
+    public boolean hasReachedEndOfLife() {
         return this.tickCount > this.maxAge || this.groundTime > maxGroundTime;
     }
 
     /**
      * remove condition
      */
-    public void reachedEndOfLife(){
+    public void reachedEndOfLife() {
         this.remove();
     }
 
@@ -254,7 +248,8 @@ public abstract class ImprovedProjectileEntity extends ThrowableItemProjectile {
         return ProjectileUtil.getEntityHitResult(this.level, this, oPos, pos, this.getBoundingBox().expandTowards(this.getDeltaMovement()).inflate(1.0D), this::canHitEntity);
     }
 
-    public void spawnTrailParticles(Vec3 currentPos, Vec3 newPos){}
+    public void spawnTrailParticles(Vec3 currentPos, Vec3 newPos) {
+    }
 
     @Override
     public void addAdditionalSaveData(CompoundTag tag) {

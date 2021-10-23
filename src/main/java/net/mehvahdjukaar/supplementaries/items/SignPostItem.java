@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.framedblocks.FramedSignPost;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
@@ -28,6 +29,8 @@ import net.minecraft.world.level.Level;
 
 import net.minecraft.world.item.Item.Properties;
 
+import javax.annotation.Nullable;
+
 public class SignPostItem extends Item {
     public final IWoodType type;
 
@@ -37,14 +40,14 @@ public class SignPostItem extends Item {
     }
 
     @Override
-    public int getBurnTime(ItemStack itemStack) {
+    public int getBurnTime(ItemStack itemStack, @Nullable RecipeType<?> recipeType) {
         return 100;
     }
 
     private boolean isFence(Block b) {
         ResourceLocation res = b.getRegistryName();
         if (res.getNamespace().equals("blockcarpentry")) return false;
-        return (b.is(ModTags.POSTS));
+        return ModTags.POSTS.contains(b);
     }
 
     @Override
@@ -61,9 +64,9 @@ public class SignPostItem extends Item {
 
         boolean framed = false;
 
-        boolean isfence = isFence(targetblock);
-        boolean issignpost = targetblock instanceof SignPostBlock;
-        if (isfence || issignpost) {
+        boolean isFence = isFence(targetblock);
+        boolean isSignPost = targetblock instanceof SignPostBlock;
+        if (isFence || isSignPost) {
 
             //if(!world.isRemote) world.setBlockState(blockpos, Registry.SIGN_POST.get().getDefaultState(), 3);
 
@@ -81,11 +84,9 @@ public class SignPostItem extends Item {
 
             boolean flag = false;
 
-            BlockEntity tileentity = world.getBlockEntity(blockpos);
-            if (tileentity instanceof SignPostBlockTile) {
-                SignPostBlockTile signtile = ((SignPostBlockTile) tileentity);
+            if (world.getBlockEntity(blockpos) instanceof SignPostBlockTile tile) {
 
-                BlockUtils.addOptionalOwnership(playerentity, signtile);
+                BlockUtils.addOptionalOwnership(playerentity, tile);
 
                 int r = Mth.floor((double) ((180.0F + context.getRotation()) * 16.0F / 360.0F) + 0.5D) & 15;
 
@@ -94,22 +95,22 @@ public class SignPostItem extends Item {
                 boolean up = y % ((int) y) > 0.5d;
 
                 if (up) {
-                    if (signtile.up != up) {
-                        signtile.up = true;
-                        signtile.woodTypeUp = this.type;
-                        signtile.yawUp = 90 + r * -22.5f;
+                    if (tile.up != up) {
+                        tile.up = true;
+                        tile.woodTypeUp = this.type;
+                        tile.yawUp = 90 + r * -22.5f;
                         flag = true;
                     }
-                } else if (signtile.down == up) {
-                    signtile.down = true;
-                    signtile.woodTypeDown = this.type;
-                    signtile.yawDown = 90 + r * -22.5f;
+                } else if (tile.down == up) {
+                    tile.down = true;
+                    tile.woodTypeDown = this.type;
+                    tile.yawDown = 90 + r * -22.5f;
                     flag = true;
                 }
                 if (flag) {
-                    if (isfence) signtile.mimic = targetblock.defaultBlockState();
-                    signtile.framed = framed;
-                    signtile.setChanged();
+                    if (isFence) tile.mimic = targetblock.defaultBlockState();
+                    tile.framed = framed;
+                    tile.setChanged();
                 }
 
             }
@@ -121,8 +122,6 @@ public class SignPostItem extends Item {
                 if (!context.getPlayer().isCreative()) itemstack.shrink(1);
                 return InteractionResult.SUCCESS;
             }
-
-
         }
         return InteractionResult.PASS;
     }

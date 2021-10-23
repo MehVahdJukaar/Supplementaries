@@ -4,11 +4,12 @@ import com.google.common.collect.Lists;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.npc.VillagerTrades;
-import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.npc.VillagerTrades;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.BasicTrade;
 import net.minecraftforge.event.village.WandererTradesEvent;
@@ -16,13 +17,6 @@ import net.minecraftforge.event.village.WandererTradesEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.FireworkRocketItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.trading.MerchantOffer;
 
 public class VillagerTradesHandler {
 
@@ -73,34 +67,24 @@ public class VillagerTradesHandler {
         return new BasicTrade(new ItemStack(Items.EMERALD, price), new ItemStack(additional, addQuantity), new ItemStack(item, quantity), maxTrades, 1, BUY);
     }
 
-    static class RocketForEmeraldTrade implements VillagerTrades.ItemListing {
-        private final int maxTrades;
-        private final int price;
-        private final int paper;
-        private final int rockets;
-
-        public RocketForEmeraldTrade(int price, int paper, int rockets, int maxTrades) {
-            this.price = price;
-            this.maxTrades = maxTrades;
-            this.paper = paper;
-            this.rockets = rockets;
-        }
+    record RocketForEmeraldTrade(int price, int paper, int rockets,
+                                 int maxTrades) implements VillagerTrades.ItemListing {
 
         @Override
         public MerchantOffer getOffer(Entity entity, Random random) {
 
             ItemStack itemstack = new ItemStack(Items.FIREWORK_ROCKET, rockets);
-            CompoundTag compoundnbt = itemstack.getOrCreateTagElement("Fireworks");
-            ListTag listnbt = new ListTag();
+            CompoundTag tag = itemstack.getOrCreateTagElement("Fireworks");
+            ListTag listTag = new ListTag();
 
             int stars = 0;
             do {
-                listnbt.add(createRandomFireworkStar(random));
+                listTag.add(createRandomFireworkStar(random));
                 stars++;
             } while (random.nextFloat() < 0.42f && stars < 7);
 
-            compoundnbt.putByte("Flight", (byte) (random.nextInt(3) + 1));
-            compoundnbt.put("Explosions", listnbt);
+            tag.putByte("Flight", (byte) (random.nextInt(3) + 1));
+            tag.put("Explosions", listTag);
 
             return new MerchantOffer(new ItemStack(Items.EMERALD, price), new ItemStack(Items.PAPER, paper),
                     itemstack, maxTrades, 1, BUY);
@@ -109,14 +93,7 @@ public class VillagerTradesHandler {
 
     }
 
-    static class StarForEmeraldTrade implements VillagerTrades.ItemListing {
-        private final int maxTrades;
-        private final int price;
-
-        public StarForEmeraldTrade(int price, int maxTrades) {
-            this.price = price;
-            this.maxTrades = maxTrades;
-        }
+    record StarForEmeraldTrade(int price, int maxTrades) implements VillagerTrades.ItemListing {
 
         public MerchantOffer getOffer(Entity entity, Random random) {
 
@@ -124,8 +101,6 @@ public class VillagerTradesHandler {
             itemstack.addTagElement("Explosion", createRandomFireworkStar(random));
             return new MerchantOffer(new ItemStack(Items.EMERALD, price), itemstack, maxTrades, 1, BUY);
         }
-
-
     }
 
 

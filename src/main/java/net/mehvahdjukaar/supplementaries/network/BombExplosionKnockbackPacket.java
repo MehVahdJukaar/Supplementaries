@@ -11,9 +11,9 @@ import java.util.function.Supplier;
 
 public class BombExplosionKnockbackPacket implements NetworkHandler.Message {
 
-    private double knockbackX;
-    private double knockbackY;
-    private double knockbackZ;
+    private final double knockbackX;
+    private final double knockbackY;
+    private final double knockbackZ;
 
     public BombExplosionKnockbackPacket(Vec3 knockback) {
         this.knockbackX = knockback.x;

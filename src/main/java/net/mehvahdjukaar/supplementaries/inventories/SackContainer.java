@@ -2,21 +2,21 @@ package net.mehvahdjukaar.supplementaries.inventories;
 
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.network.FriendlyByteBuf;
 
 
-public class SackContainer extends AbstractContainerMenu  {
+public class SackContainer extends AbstractContainerMenu {
     public final Container inventory;
 
     public SackContainer(int id, Inventory playerInventory, FriendlyByteBuf packetBuffer) {
-        this(id,playerInventory);
+        this(id, playerInventory);
     }
 
     public SackContainer(int id, Inventory playerInventory) {
@@ -34,22 +34,22 @@ public class SackContainer extends AbstractContainerMenu  {
         int size = ServerConfigs.cached.SACK_SLOTS;
 
         int[] dims = SackContainer.getRatio(size);
-        if(dims[0]>9){
+        if (dims[0] > 9) {
             dims[0] = 9;
-            dims[1] = (int) Math.ceil(size/9f);
+            dims[1] = (int) Math.ceil(size / 9f);
         }
 
-        int yp = 17 +(18*3)/2 - (9)*dims[1];
+        int yp = 17 + (18 * 3) / 2 - (9) * dims[1];
 
         int dimx;
         int xp;
-        for(int h = 0; h < dims[1]; ++h) {
-            dimx = Math.min(dims[0],size);
-            xp = 8+ (18*9)/2 -(dimx*18)/2;
+        for (int h = 0; h < dims[1]; ++h) {
+            dimx = Math.min(dims[0], size);
+            xp = 8 + (18 * 9) / 2 - (dimx * 18) / 2;
             for (int j = 0; j < dimx; ++j) {
-                this.addSlot(new SackSlot(inventory, j + (h*dimx), xp + j * 18, yp+18*h));
+                this.addSlot(new SackSlot(inventory, j + (h * dimx), xp + j * 18, yp + 18 * h));
             }
-            size-=dims[0];
+            size -= dims[0];
         }
 
         for (int si = 0; si < 3; ++si)
@@ -60,11 +60,11 @@ public class SackContainer extends AbstractContainerMenu  {
     }
 
 
-
     @Override
     public boolean stillValid(Player playerIn) {
         return this.inventory.stillValid(playerIn);
     }
+
     /**
      * Handle when the stack in slot {@code index} is shift-clicked. Normally this moves the stack between the player
      * inventory and the other inventory(s).
@@ -72,10 +72,10 @@ public class SackContainer extends AbstractContainerMenu  {
     public ItemStack quickMoveStack(Player playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
-        if (slot != null && slot.hasItem()) {
+        if (slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
-            int activeSlots = (5+(ServerConfigs.cached.SACK_SLOTS*2));
+            int activeSlots = (5 + (ServerConfigs.cached.SACK_SLOTS * 2));
             if (index < activeSlots) {
                 if (!this.moveItemStackTo(itemstack1, activeSlots, this.slots.size(), true)) {
                     return ItemStack.EMPTY;
@@ -116,21 +116,21 @@ public class SackContainer extends AbstractContainerMenu  {
     }
 
 
-    private static final int[][] TARGET_RATIOS = new int[][] {
-            { 1, 1 },
-            { 2, 2 },
-            { 3, 3 },
-            { 4, 2 },
-            { 5, 2 },
-            { 6, 2 },
-            { 7, 2 },
-            { 8, 2 },
-            { 8, 2 },
-            { 9, 2 },
-            { 10, 2 },
-            { 7, 3 },
-            { 8, 3 },
-            { 9, 3 }
+    private static final int[][] TARGET_RATIOS = new int[][]{
+            {1, 1},
+            {2, 2},
+            {3, 3},
+            {4, 2},
+            {5, 2},
+            {6, 2},
+            {7, 2},
+            {8, 2},
+            {8, 2},
+            {9, 2},
+            {10, 2},
+            {7, 3},
+            {8, 3},
+            {9, 3}
     };
 
 

@@ -1,19 +1,18 @@
 package net.mehvahdjukaar.supplementaries.network;
 
 import net.mehvahdjukaar.supplementaries.block.tiles.SpeakerBlockTile;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.Objects;
 import java.util.function.Supplier;
 
-public class UpdateServerSpeakerBlockPacket{
+public class UpdateServerSpeakerBlockPacket {
     private final BlockPos pos;
     private final Component str;
     private final boolean narrator;
@@ -47,21 +46,15 @@ public class UpdateServerSpeakerBlockPacket{
         Level world = Objects.requireNonNull(ctx.get().getSender()).level;
 
         ctx.get().enqueueWork(() -> {
-            if (world != null) {
-                BlockPos pos = message.pos;
-                BlockEntity tileentity = world.getBlockEntity(pos);
-                if (tileentity instanceof SpeakerBlockTile) {
-                    SpeakerBlockTile speaker = (SpeakerBlockTile) tileentity;
-                    speaker.message = message.str.getString();
-                    speaker.narrator = message.narrator;
-                    speaker.volume = message.volume;
-                    //updates client
-                    BlockState state =  world.getBlockState(pos);
-                    world.sendBlockUpdated(pos, state, state, 3);
-                    tileentity.setChanged();
-
-
-                }
+            BlockPos pos = message.pos;
+            if (world.getBlockEntity(pos) instanceof SpeakerBlockTile speaker) {
+                speaker.message = message.str.getString();
+                speaker.narrator = message.narrator;
+                speaker.volume = message.volume;
+                //updates client
+                BlockState state = world.getBlockState(pos);
+                world.sendBlockUpdated(pos, state, state, 3);
+                speaker.setChanged();
             }
         });
         ctx.get().setPacketHandled(true);

@@ -142,14 +142,10 @@ public class RegistryConfigs {
             switch (path) {
                 case ModRegistry.FLAX_WILD_NAME:
                     return reg.FLAX_ENABLED.get();
-                case ModRegistry.FIREFLY_JAR_NAME:
-                    return reg.FIREFLY_ENABLED.get() && reg.JAR_ENABLED.get();
                 case ModRegistry.BRASS_LANTERN_NAME:
                     return reg.HAS_BRASS.get();
                 case ModRegistry.CANDELABRA_NAME_SILVER:
                     return reg.CANDELABRA_ENABLED.get() && reg.HAS_SILVER.get();
-                case ModRegistry.SOUL_JAR_NAME:
-                    return reg.JAR_ENABLED.get();
                 case ModRegistry.KEY_NAME:
                     return reg.NETHERITE_DOOR_ENABLED.get() || reg.NETHERITE_TRAPDOOR_ENABLED.get() || reg.SAFE_ENABLED.get();
             }
@@ -255,8 +251,6 @@ public class RegistryConfigs {
             AMETHYST_ARROW_ENABLED = builder.comment("WIP").define(ModRegistry.AMETHYST_ARROW_NAME,false);
             PRESENT_ENABLED = builder.comment("WIP").define(ModRegistry.PRESENT_NAME,true);
 
-
-            LASER_ENABLED = builder.comment("WIP").define(ModRegistry.LASER_NAME, false);
 
             builder.pop();
 

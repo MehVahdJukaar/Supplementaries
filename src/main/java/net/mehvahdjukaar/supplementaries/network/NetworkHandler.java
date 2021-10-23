@@ -2,15 +2,10 @@ package net.mehvahdjukaar.supplementaries.network;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraftforge.fml.network.NetworkDirection;
-import net.minecraftforge.fml.network.NetworkRegistry;
-import net.minecraftforge.fml.network.simple.SimpleChannel;
-
-
-import SimpleChannel;
+import net.minecraft.world.entity.Entity;
+import net.minecraftforge.fmllegacy.network.NetworkDirection;
 import net.minecraftforge.fmllegacy.network.NetworkRegistry;
 import net.minecraftforge.fmllegacy.network.simple.SimpleChannel;
 
@@ -83,7 +78,7 @@ public class NetworkHandler {
         world.getChunkSource().broadcast(entity, INSTANCE.toVanillaPacket(message, NetworkDirection.PLAY_TO_CLIENT));
     }
 
-    public static void sendToServerPlayer(Message message){
+    public static void sendToServerPlayer(Message message) {
         Minecraft.getInstance().getConnection().send(
                 NetworkHandler.INSTANCE.toVanillaPacket(message, NetworkDirection.PLAY_TO_SERVER));
     }

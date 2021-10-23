@@ -2,48 +2,35 @@ package net.mehvahdjukaar.supplementaries.items;
 
 import net.mehvahdjukaar.selene.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
+import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.common.mobholder.MobContainer;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.entity.*;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.monster.piglin.Piglin;
-import net.minecraft.world.entity.TamableAnimal;
-import net.minecraft.world.entity.animal.WaterAnimal;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.item.*;
+import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.util.Mth;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.animal.WaterAnimal;
+import net.minecraft.world.entity.monster.piglin.Piglin;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
-
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.NeutralMob;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.BucketItem;
-import net.minecraft.world.item.Item.Properties;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.item.context.UseOnContext;
 
 public abstract class AbstractMobContainerItem extends BlockItem {
 
@@ -103,7 +90,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
         if (this.isFull(stack)) return false;
         InteractionHand hand = player.getUsedItemHand();
-        if (hand == null || hand == InteractionHand.OFF_HAND) return false;
+        if (hand == InteractionHand.OFF_HAND) return false;
 
         return this.doInteract(stack, player, entity, player.getUsedItemHand()).consumesAction();
     }
@@ -182,8 +169,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
                     success = true;
                     if (!world.isClientSide) {
                         //anger entity
-                        if (!player.isCreative() && entity instanceof NeutralMob) {
-                            NeutralMob ang = (NeutralMob) entity;
+                        if (!player.isCreative() && entity instanceof NeutralMob ang) {
                             ang.forgetCurrentTargetAndRefreshUniversalAnger();
                             ang.setPersistentAngerTarget(player.getUUID());
                             ang.setLastHurtByMob(player);
@@ -206,7 +192,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
                     //create new uuid for creative itemstack
                     if (player.isCreative()) {
                         if (nbt.contains("UUID")) {
-                            nbt.putUUID("UUID", Mth.createInsecureUUID(random));
+                            nbt.putUUID("UUID", Mth.createInsecureUUID(world.random));
                         }
                     }
                 }
@@ -229,14 +215,12 @@ public abstract class AbstractMobContainerItem extends BlockItem {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        CompoundTag compoundnbt = stack.getTagElement("BlockEntityTag");
-        if (compoundnbt != null) {
-            CompoundTag com = compoundnbt.getCompound("MobHolder");
-            if (com == null || com.isEmpty()) com = compoundnbt.getCompound("BucketHolder");
-            if (com != null) {
-                if (com.contains("Name")) {
-                    tooltip.add(new TextComponent(com.getString("Name")).withStyle(ChatFormatting.GRAY));
-                }
+        CompoundTag tag = stack.getTagElement("BlockEntityTag");
+        if (tag != null) {
+            CompoundTag com = tag.getCompound("MobHolder");
+            if (com.isEmpty()) com = tag.getCompound("BucketHolder");
+            if (com.contains("Name")) {
+                tooltip.add(new TextComponent(com.getString("Name")).withStyle(ChatFormatting.GRAY));
             }
         }
         tooltip.add(new TranslatableComponent("message.supplementaries.cage").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
@@ -261,8 +245,8 @@ public abstract class AbstractMobContainerItem extends BlockItem {
 
     private static List<Mob> getEntitiesInRange(Mob e) {
         double d0 = e.getAttributeValue(Attributes.FOLLOW_RANGE);
-        AABB axisalignedbb = AABB.unitCubeFromLowerCorner(e.position()).inflate(d0, 10.0D, d0);
-        return e.level.getLoadedEntitiesOfClass(e.getClass(), axisalignedbb);
+        AABB aabb = AABB.unitCubeFromLowerCorner(e.position()).inflate(d0, 10.0D, d0);
+        return e.level.getLoadedEntitiesOfClass(e.getClass(), aabb);
     }
 
     //1
@@ -331,6 +315,4 @@ public abstract class AbstractMobContainerItem extends BlockItem {
         }
         return InteractionResult.PASS;
     }
-
-
 }

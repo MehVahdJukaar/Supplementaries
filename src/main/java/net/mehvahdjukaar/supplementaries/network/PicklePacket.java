@@ -2,12 +2,12 @@ package net.mehvahdjukaar.supplementaries.network;
 
 
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.PicklePlayer;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.fml.network.NetworkDirection;
-import net.minecraftforge.fml.network.NetworkEvent;
-import net.minecraftforge.fml.network.PacketDistributor;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.fmllegacy.network.NetworkDirection;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
+import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -41,8 +41,7 @@ public class PicklePacket {
         if (ctx.get().getDirection() == NetworkDirection.PLAY_TO_CLIENT) {
             //receive broadcasted message
             ctx.get().enqueueWork(() -> PicklePlayer.PickleData.set(msg.playerID, msg.on));
-        }
-        else if (ctx.get().getDirection() == NetworkDirection.PLAY_TO_SERVER) {
+        } else if (ctx.get().getDirection() == NetworkDirection.PLAY_TO_SERVER) {
             ctx.get().enqueueWork(() -> {
                 //gets id from server just to be sure
                 Player player = ctx.get().getSender();

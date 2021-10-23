@@ -22,8 +22,8 @@ public class TippedBambooSpikesRecipe extends CustomRecipe {
 
     private boolean isEmptySpike(ItemStack stack){
         if (stack.getItem() == ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get()) {
-            CompoundTag compoundnbt = stack.getTag();
-            return compoundnbt != null && compoundnbt.getInt("Damage")!=0;
+            CompoundTag tag = stack.getTag();
+            return tag != null && tag.getInt("Damage")!=0;
         }
         else return stack.getItem() == ModRegistry.BAMBOO_SPIKES_ITEM.get();
     }
