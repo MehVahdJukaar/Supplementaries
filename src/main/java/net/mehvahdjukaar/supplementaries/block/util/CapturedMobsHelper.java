@@ -202,19 +202,13 @@ public class CapturedMobsHelper {
                 if (size > 4) {
                     String type = l.get(4).toLowerCase();
                     switch (type) {
-                        case "air":
-                            cat = AnimationCategory.AIR;
-                            break;
-                        case "land":
-                            cat = AnimationCategory.LAND;
-                            break;
-                        case "floating":
-                            cat = AnimationCategory.FLOATING;
-                            break;
-                        default:
+                        case "air" -> cat = AnimationCategory.AIR;
+                        case "land" -> cat = AnimationCategory.LAND;
+                        case "floating" -> cat = AnimationCategory.FLOATING;
+                        default -> {
                             fish = strToInt(type);
                             if (fish > 0) cat = AnimationCategory.FISH;
-                            break;
+                        }
                     }
                 }
             /*

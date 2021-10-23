@@ -12,52 +12,39 @@ import net.mehvahdjukaar.supplementaries.common.mobholder.MobContainer;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.items.AbstractMobContainerItem;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.stats.Stats;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.FishBucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.stats.Stats;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
-import net.minecraft.util.*;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.MobBucketItem;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-//most complicated block ever
-import net.minecraft.core.Direction;
-import net.minecraft.core.NonNullList;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
-
-public class JarBlockTile extends ItemDisplayTile implements TickableBlockEntity, IMobContainerProvider, ISoftFluidHolder {
+public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvider, ISoftFluidHolder {
     private final int CAPACITY = ServerConfigs.cached.JAR_CAPACITY;
 
     @Nonnull
     public MobContainer mobContainer;
     public SoftFluidHolder fluidHolder;
 
-    public JarBlockTile() {
-        super(ModRegistry.JAR_TILE.get());
+    public JarBlockTile(BlockPos pos, BlockState state) {
+        super(ModRegistry.JAR_TILE.get(), pos, state);
         this.fluidHolder = new SoftFluidHolder(CAPACITY);
         AbstractMobContainerItem item = ((AbstractMobContainerItem) ModRegistry.JAR_ITEM.get());
-        this.mobContainer = new MobContainer(item.getMobContainerWidth(), item.getMobContainerHeight(), this.level, this.worldPosition);
-    }
-
-    @Override
-    public void onLoad() {
-        super.onLoad();
-        this.mobContainer.setWorldAndPos(level, worldPosition);
-    }
-
-    @Override
-    public double getViewDistance() {
-        return 80;
+        this.mobContainer = new MobContainer(item.getMobContainerWidth(), item.getMobContainerHeight());
     }
 
     @Override
@@ -70,13 +57,13 @@ public class JarBlockTile extends ItemDisplayTile implements TickableBlockEntity
     }
 
     // does all the calculation for handling player interaction.
-    public boolean handleInteraction(Player player, InteractionHand hand) {
+    public boolean handleInteraction(Player player, InteractionHand hand, Level level, BlockPos pos) {
 
         ItemStack handStack = player.getItemInHand(hand);
         ItemStack displayedStack = this.getDisplayedItem();
 
         //interact with fluid holder
-        if (canInteractWithFluidHolder() && this.fluidHolder.interactWithPlayer(player, hand, level, worldPosition)) {
+        if (canInteractWithFluidHolder() && this.fluidHolder.interactWithPlayer(player, hand, level, pos)) {
             return true;
         }
         //empty hand: eat food
@@ -87,14 +74,14 @@ public class JarBlockTile extends ItemDisplayTile implements TickableBlockEntity
             return true;
         }
         //fish buckets
-        else if (this.isEmpty() && this.fluidHolder.isEmpty() && this.mobContainer.interactWithBucket(handStack, player.level, player.blockPosition(), player, hand)) {
+        else if (this.isEmpty() && this.fluidHolder.isEmpty() && this.mobContainer.interactWithBucket(handStack, level, player.blockPosition(), player, hand)) {
             return true;
         }
 
         if (!player.isShiftKeyDown()) {
             //from drink
             if (ServerConfigs.cached.JAR_EAT) {
-                if (this.fluidHolder.tryDrinkUpFluid(player, this.level)) return true;
+                if (this.fluidHolder.tryDrinkUpFluid(player, level)) return true;
                 //cookies
                 if (displayedStack.isEdible() && player.canEat(false) && !player.isCreative()) {
                     //eat cookies
@@ -118,9 +105,9 @@ public class JarBlockTile extends ItemDisplayTile implements TickableBlockEntity
 
     // removes item from te and gives it to player
     public boolean handleExtractItem(Player player, InteractionHand hand) {
-        if (this.getDisplayedItem().getItem() instanceof FishBucketItem) {
+        if (this.getDisplayedItem().getItem() instanceof MobBucketItem) {
             if (player.getItemInHand(hand).getItem() != Items.BUCKET) return false;
-            this.level.playSound(null, player.blockPosition(), SoundEvents.BUCKET_FILL_FISH, SoundSource.BLOCKS, 1.0F, 1.0F);
+            player.level.playSound(null, player.blockPosition(), SoundEvents.BUCKET_FILL_FISH, SoundSource.BLOCKS, 1.0F, 1.0F);
         } else if (!player.getItemInHand(hand).isEmpty()) return false;
         ItemStack extracted = this.extractItem();
         if (!extracted.isEmpty()) {
@@ -160,7 +147,7 @@ public class JarBlockTile extends ItemDisplayTile implements TickableBlockEntity
 
     public void resetHolders() {
         this.fluidHolder.clear();
-        this.mobContainer = null;
+        this.mobContainer.clear();
         this.setDisplayedItem(ItemStack.EMPTY);
     }
 
@@ -188,21 +175,15 @@ public class JarBlockTile extends ItemDisplayTile implements TickableBlockEntity
         return false;
     }
 
-
-
     @Override
-    public void load(BlockState state, CompoundTag compound) {
-        super.load(state, compound);
+    public void load(CompoundTag compound) {
+        super.load(compound);
         this.fluidHolder.load(compound);
         this.mobContainer.load(compound);
-        if(this.level != null){
-            //onLoad();
-        }
     }
 
     @Override
     public CompoundTag save(CompoundTag compound) {
-        //stacks are done by itemDisplayTile
         super.save(compound);
         this.fluidHolder.save(compound);
         this.mobContainer.save(compound);
@@ -247,9 +228,8 @@ public class JarBlockTile extends ItemDisplayTile implements TickableBlockEntity
         return this.getBlockState().getValue(ClockBlock.FACING);
     }
 
-    @Override
-    public void tick() {
-        this.mobContainer.tick();
+    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, JarBlockTile tile) {
+        tile.mobContainer.tick(pLevel, pPos);
     }
 
     @Override

@@ -5,25 +5,25 @@ import net.mehvahdjukaar.supplementaries.block.blocks.HourGlassBlock;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
-import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.Tags;
@@ -33,7 +33,7 @@ import java.util.stream.IntStream;
 
 import static net.mehvahdjukaar.supplementaries.common.Textures.*;
 
-public class HourGlassBlockTile extends ItemDisplayTile implements TickableBlockEntity {
+public class HourGlassBlockTile extends ItemDisplayTile {
     public HourGlassSandType sandType = HourGlassSandType.DEFAULT;
     public float progress = 0; //0-1 percentage of progress
     public float prevProgress = 0;
@@ -41,8 +41,8 @@ public class HourGlassBlockTile extends ItemDisplayTile implements TickableBlock
     //client
     private TextureAtlasSprite cachedTexture = null;
 
-    public HourGlassBlockTile() {
-        super(ModRegistry.HOURGLASS_TILE.get());
+    public HourGlassBlockTile(BlockPos pos, BlockState state) {
+        super(ModRegistry.HOURGLASS_TILE.get(), pos, state);
     }
 
     @Override
@@ -51,7 +51,8 @@ public class HourGlassBlockTile extends ItemDisplayTile implements TickableBlock
         int p = this.getDirection() == Direction.DOWN ? 1 : 0;
         int l = this.sandType.getLight();
         if (l != this.getBlockState().getValue(HourGlassBlock.LIGHT_LEVEL)) {
-            level.setBlock(this.worldPosition, this.getBlockState().setValue(HourGlassBlock.LIGHT_LEVEL, l), 4 | 16);
+            if (this.level != null)
+                level.setBlock(this.worldPosition, this.getBlockState().setValue(HourGlassBlock.LIGHT_LEVEL, l), 4 | 16);
         }
         this.prevProgress = p;
         this.progress = p;
@@ -65,41 +66,34 @@ public class HourGlassBlockTile extends ItemDisplayTile implements TickableBlock
         return this.cachedTexture;
     }
 
-    @Override
-    public double getViewDistance() {
-        return 48;
-    }
-
-    @Override
-    public void tick() {
-
-        Direction dir = this.getDirection();
-        if (!this.sandType.isEmpty()) {
-            this.prevProgress = this.progress;
-            if (dir == Direction.UP && this.progress != 1) {
-                this.progress = Math.min(this.progress + this.sandType.increment, 1f);
-            } else if (dir == Direction.DOWN && this.progress != 0) {
-                this.progress = Math.max(this.progress - this.sandType.increment, 0f);
+    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, HourGlassBlockTile tile) {
+        Direction dir = pState.getValue(HourGlassBlock.FACING);
+        if (!tile.sandType.isEmpty()) {
+            tile.prevProgress = tile.progress;
+            if (dir == Direction.UP && tile.progress != 1) {
+                tile.progress = Math.min(tile.progress + tile.sandType.increment, 1f);
+            } else if (dir == Direction.DOWN && tile.progress != 0) {
+                tile.progress = Math.max(tile.progress - tile.sandType.increment, 0f);
             }
         }
 
-        if (!this.level.isClientSide) {
+        if (!pLevel.isClientSide) {
             int p;
             if (dir == Direction.DOWN) {
-                p = (int) ((1 - this.progress) * 15f);
+                p = (int) ((1 - tile.progress) * 15f);
             } else {
-                p = (int) ((this.progress) * 15f);
+                p = (int) ((tile.progress) * 15f);
             }
-            if (p != this.power) {
-                this.power = p;
-                this.level.updateNeighbourForOutputSignal(this.worldPosition, this.getBlockState().getBlock());
+            if (p != tile.power) {
+                tile.power = p;
+                pLevel.updateNeighbourForOutputSignal(pPos, pState.getBlock());
             }
         }
     }
 
     @Override
-    public void load(BlockState state, CompoundTag compound) {
-        super.load(state, compound);
+    public void load(CompoundTag compound) {
+        super.load(compound);
         int i = compound.getInt("SandType");
         this.sandType = HourGlassSandType.values()[Math.min(i, HourGlassSandType.values().length)];
         this.progress = compound.getFloat("Progress");
@@ -191,8 +185,8 @@ public class HourGlassBlockTile extends ItemDisplayTile implements TickableBlock
             Minecraft mc = Minecraft.getInstance();
             if (this == FORGE_DUST || this == SAND || this == CONCRETE) {
                 ItemRenderer itemRenderer = mc.getItemRenderer();
-                BakedModel ibakedmodel = itemRenderer.getModel(i, world, null);
-                TextureAtlasSprite sprite = ibakedmodel.getParticleIcon();
+                BakedModel model = itemRenderer.getModel(i, world, null, 0);
+                TextureAtlasSprite sprite = model.getParticleIcon();
                 if (sprite instanceof MissingTextureAtlasSprite)
                     sprite = mc.getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(this.texture);
                 return sprite;
@@ -204,13 +198,13 @@ public class HourGlassBlockTile extends ItemDisplayTile implements TickableBlock
         public static HourGlassSandType getHourGlassSandType(Item i) {
             if (i instanceof BlockItem) {
                 Block b = ((BlockItem) i).getBlock();
-                if (b.is(Tags.Blocks.SAND)) return SAND;
-                if (b.is(ModTags.CONCRETE_POWDERS)) return CONCRETE;
+                if (Tags.Blocks.SAND.contains(b)) return SAND;
+                if (ModTags.CONCRETE_POWDERS.contains(b)) return CONCRETE;
             }
             for (HourGlassSandType n : HourGlassSandType.values()) {
                 if (n.item == i) return n;
             }
-            if (i.is(Tags.Items.DUSTS)) return FORGE_DUST;
+            if (Tags.Items.DUSTS.contains(i)) return FORGE_DUST;
             return DEFAULT;
         }
     }

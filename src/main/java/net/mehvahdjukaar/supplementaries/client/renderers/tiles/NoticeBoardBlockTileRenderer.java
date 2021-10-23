@@ -14,6 +14,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.MapRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -42,8 +43,7 @@ import java.util.List;
 public class NoticeBoardBlockTileRenderer extends BlockEntityRenderer<NoticeBoardBlockTile> {
     protected final ItemRenderer itemRenderer;
     protected final MapRenderer mapRenderer;
-    public NoticeBoardBlockTileRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
-        super(rendererDispatcherIn);
+    public NoticeBoardBlockTileRenderer(BlockEntityRendererProvider.Context context) {
         Minecraft minecraft = Minecraft.getInstance();
         itemRenderer = minecraft.getItemRenderer();
         mapRenderer = minecraft.gameRenderer.getMapRenderer();
@@ -227,12 +227,12 @@ public class NoticeBoardBlockTileRenderer extends BlockEntityRenderer<NoticeBoar
 
                 }
                 else{
-                    BakedModel ibakedmodel = itemRenderer.getModel(stack, world, null);
+                    BakedModel model = itemRenderer.getModel(stack, world, null, 0);
 
                     matrixStackIn.translate(0, 0, 0.015625 + 0.00005);
                     matrixStackIn.scale(-0.5f, 0.5f, -0.5f);
                     itemRenderer.render(stack, ItemTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, frontLight,
-                            combinedOverlayIn, ibakedmodel);
+                            combinedOverlayIn, model);
                     //itemRenderer.renderItem(stack, ItemCameraTransforms.TransformType.FIXED, newl, OverlayTexture.NO_OVERLAY, matrixStackIn, bufferIn);
                 }
 

@@ -3,36 +3,30 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 import net.mehvahdjukaar.supplementaries.block.blocks.WindVaneBlock;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
-public class WindVaneBlockTile extends BlockEntity implements TickableBlockEntity {
+public class WindVaneBlockTile extends BlockEntity {
     public float yaw = 0;
     public float prevYaw = 0;
     private float offset = 0;
 
-    public WindVaneBlockTile() {
-        super(ModRegistry.WIND_VANE_TILE.get());
-
+    public WindVaneBlockTile(BlockPos pos, BlockState state) {
+        super(ModRegistry.WIND_VANE_TILE.get(), pos, state);
     }
 
     @Override
-    public double getViewDistance() {
-        return 80;
-    }
-
-    @Override
-    public void load(BlockState state, CompoundTag compound) {
-        super.load(state, compound);
-        float tp = (float) (Math.PI*2);
-        this.offset=400*(Mth.sin((0.005f*this.worldPosition.getX())%tp) + Mth.sin((0.005f*this.worldPosition.getZ())%tp) + Mth.sin((0.005f*this.worldPosition.getY())%tp));
-
+    public void load(CompoundTag compound) {
+        super.load(compound);
+        float tp = (float) (Math.PI * 2);
+        this.offset = 400 * (Mth.sin((0.005f * this.worldPosition.getX()) % tp) + Mth.sin((0.005f * this.worldPosition.getZ()) % tp) + Mth.sin((0.005f * this.worldPosition.getY()) % tp));
     }
 
     @Override
@@ -53,37 +47,34 @@ public class WindVaneBlockTile extends BlockEntity implements TickableBlockEntit
 
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        this.load(this.getBlockState(), pkt.getTag());
+        this.load(pkt.getTag());
     }
 
-    @Override
-    public void tick() {
+    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, WindVaneBlockTile tile) {
 
-        float currentyaw = this.yaw;
-        this.prevYaw = currentyaw;
-        if(this.level == null)return;
-        if (!this.level.isClientSide()) {
-            if (this.level != null && this.level.getGameTime() % 20L == 0L) {
-                BlockState blockstate = this.getBlockState();
-                Block block = blockstate.getBlock();
+        float currentYaw = tile.yaw;
+        tile.prevYaw = currentYaw;
+        if (!pLevel.isClientSide()) {
+            if (pLevel.getGameTime() % 20L == 0L) {
+                Block block = pState.getBlock();
                 if (block instanceof WindVaneBlock) {
-                    WindVaneBlock.updatePower(blockstate, this.level, this.worldPosition);
+                    WindVaneBlock.updatePower(pState, pLevel, pPos);
                 }
             }
         } else {
-            int power = this.getBlockState().getValue(WindVaneBlock.POWER);
+            int power = pState.getValue(WindVaneBlock.POWER);
             // TODO:cache some of this maybe?
-            float tp = (float) (2f*Math.PI);
+            float tp = (float) (2f * Math.PI);
             //float offset = 3f * (MathHelper.sin(0.1f*this.pos.getX()) + 0.1f*MathHelper.sin(this.pos.getZ()) + 0.1f*MathHelper.sin(this.pos.getY()));
-            float t = this.level.getGameTime()%24000 + this.offset;
-            float b = (float) Math.max(1,(power * ClientConfigs.cached.WIND_VANE_POWER_SCALING));
+            float t = pLevel.getGameTime() % 24000 + tile.offset;
+            float b = (float) Math.max(1, (power * ClientConfigs.cached.WIND_VANE_POWER_SCALING));
             float max_angle_1 = (float) ClientConfigs.cached.WIND_VANE_ANGLE_1;
             float max_angle_2 = (float) ClientConfigs.cached.WIND_VANE_ANGLE_2;
             float period_1 = (float) ClientConfigs.cached.WIND_VANE_PERIOD_1;
             float period_2 = (float) ClientConfigs.cached.WIND_VANE_PERIOD_2;
-            float newyaw = max_angle_1 * Mth.sin(tp * ((t * b / period_1)%360))
-                    + max_angle_2 * Mth.sin(tp * ((t * b / period_2)%360));
-            this.yaw = Mth.clamp(newyaw, currentyaw - 8, currentyaw + 8);
+            float newYaw = max_angle_1 * Mth.sin(tp * ((t * b / period_1) % 360))
+                    + max_angle_2 * Mth.sin(tp * ((t * b / period_2) % 360));
+            tile.yaw = Mth.clamp(newYaw, currentYaw - 8, currentYaw + 8);
         }
     }
 }

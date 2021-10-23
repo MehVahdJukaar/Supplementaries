@@ -3,9 +3,11 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.block.tiles.GlobeBlockTile;
 import net.mehvahdjukaar.supplementaries.block.tiles.HourGlassBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -24,6 +26,8 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -116,7 +120,7 @@ public class HourGlassBlock extends WaterBlock implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new HourGlassBlockTile();
+        return new HourGlassBlockTile(pPos, pState);
     }
 
     @Override
@@ -153,5 +157,11 @@ public class HourGlassBlock extends WaterBlock implements EntityBlock {
     @Override
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         BlockUtils.addOptionalOwnership(placer, world, pos);
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
+        return BlockUtils.getTicker(pBlockEntityType, ModRegistry.HOURGLASS_TILE.get(), HourGlassBlockTile::tick);
     }
 }

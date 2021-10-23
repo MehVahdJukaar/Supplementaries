@@ -1,7 +1,5 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
-import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
-import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.client.gui.SpeakerBlockGui;
@@ -9,39 +7,37 @@ import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.SendSpeakerBlockMessagePacket;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.players.PlayerList;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.util.*;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.ChatFormatting;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.network.NetworkDirection;
-import net.minecraftforge.fml.server.ServerLifecycleHooks;
-
-import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.fmllegacy.network.NetworkDirection;
+import net.minecraftforge.fmllegacy.server.ServerLifecycleHooks;
+import org.jetbrains.annotations.Nullable;
 
-public class SpeakerBlock extends Block {
+public class SpeakerBlock extends Block implements EntityBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
@@ -55,10 +51,12 @@ public class SpeakerBlock extends Block {
         builder.add(FACING, POWERED);
     }
 
+    @Override
     public BlockState rotate(BlockState state, Rotation rot) {
         return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
 
+    @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
         return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
@@ -71,12 +69,11 @@ public class SpeakerBlock extends Block {
     @Override
     public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         this.updatePower(state, worldIn, pos);
-        BlockEntity tileentity = worldIn.getBlockEntity(pos);
-        if (tileentity instanceof SpeakerBlockTile) {
+        if (worldIn.getBlockEntity(pos) instanceof SpeakerBlockTile tile) {
             if (stack.hasCustomHoverName()) {
-                ((SpeakerBlockTile) tileentity).setCustomName(stack.getHoverName());
+                tile.setCustomName(stack.getHoverName());
             }
-            BlockUtils.addOptionalOwnership(placer, tileentity);
+            BlockUtils.addOptionalOwnership(placer, tile);
         }
     }
 
@@ -95,21 +92,19 @@ public class SpeakerBlock extends Block {
                 // can I emit sound?
                 Direction facing = state.getValue(FACING);
                 if (pow && world.isEmptyBlock(pos.relative(facing))) {
-                    BlockEntity tileentity = world.getBlockEntity(pos);
-                    if (tileentity instanceof SpeakerBlockTile) {
-                        SpeakerBlockTile speaker = (SpeakerBlockTile) tileentity;
-                        MinecraftServer mcserv = ServerLifecycleHooks.getCurrentServer();
+                    if (world.getBlockEntity(pos) instanceof SpeakerBlockTile tile) {
+                        MinecraftServer currentServer = ServerLifecycleHooks.getCurrentServer();
                         ResourceKey<Level> dimension = world.dimension();
-                        if (mcserv != null && !speaker.message.equals("")) {
+                        if (currentServer != null && !tile.message.equals("")) {
                             // particle
                             world.blockEvent(pos, this, 0, 0);
-                            PlayerList players = mcserv.getPlayerList();
+                            PlayerList players = currentServer.getPlayerList();
 
-                            Component message = new TextComponent(speaker.getName().getString() + ": " + speaker.message).withStyle(ChatFormatting.ITALIC);
+                            Component message = new TextComponent(tile.getName().getString() + ": " + tile.message).withStyle(ChatFormatting.ITALIC);
 
-                            players.broadcast(null, pos.getX(), pos.getY(), pos.getZ(), ServerConfigs.cached.SPEAKER_RANGE * speaker.volume,
+                            players.broadcast(null, pos.getX(), pos.getY(), pos.getZ(), ServerConfigs.cached.SPEAKER_RANGE * tile.volume,
                                     dimension, NetworkHandler.INSTANCE.toVanillaPacket(
-                                            new SendSpeakerBlockMessagePacket(message, speaker.narrator),
+                                            new SendSpeakerBlockMessagePacket(message, tile.narrator),
                                             NetworkDirection.PLAY_TO_CLIENT));
                         }
                     }
@@ -120,12 +115,11 @@ public class SpeakerBlock extends Block {
 
     @Override
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player entity, InteractionHand hand,
-                                BlockHitResult hit) {
-        BlockEntity tileentity = world.getBlockEntity(pos);
-        if (tileentity instanceof SpeakerBlockTile && ((IOwnerProtected) tileentity).isAccessibleBy(entity)) {
+                                 BlockHitResult hit) {
+        if (world.getBlockEntity(pos) instanceof SpeakerBlockTile tile && tile.isAccessibleBy(entity)) {
             // client
             if (world.isClientSide) {
-                SpeakerBlockGui.open((SpeakerBlockTile) tileentity);
+                SpeakerBlockGui.open(tile);
                 return InteractionResult.SUCCESS;
             }
             return InteractionResult.CONSUME;
@@ -133,15 +127,10 @@ public class SpeakerBlock extends Block {
         return InteractionResult.PASS;
     }
 
-
+    @Nullable
     @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
-
-    @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-        return new SpeakerBlockTile();
+    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
+        return new SpeakerBlockTile(pPos, pState);
     }
 
     @Override

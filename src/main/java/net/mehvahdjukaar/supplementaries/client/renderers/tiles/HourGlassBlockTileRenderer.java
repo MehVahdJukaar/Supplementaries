@@ -12,6 +12,7 @@ import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -21,12 +22,15 @@ import net.minecraft.util.Mth;
 import com.mojang.math.Quaternion;
 
 
-public class HourGlassBlockTileRenderer extends BlockEntityRenderer<HourGlassBlockTile> {
+public class HourGlassBlockTileRenderer implements BlockEntityRenderer<HourGlassBlockTile> {
 
-    public HourGlassBlockTileRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
-        super(rendererDispatcherIn);
+    public HourGlassBlockTileRenderer(BlockEntityRendererProvider.Context context) {
     }
 
+    @Override
+    public int getViewDistance() {
+        return 48;
+    }
 
     public static void renderSand(PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
                                   int combinedOverlayIn, TextureAtlasSprite sprite, float height, Direction dir) {

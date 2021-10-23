@@ -6,35 +6,34 @@ import net.mehvahdjukaar.supplementaries.block.blocks.SignPostBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.TurnTableBlock;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.world.level.block.BedBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BedBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.ChestType;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.core.Direction;
-import net.minecraft.core.Direction.Axis;
-import net.minecraft.world.level.block.Rotation;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.level.Level;
 
 
 //TODO: improve this
-public class TurnTableBlockTile extends BlockEntity implements TickableBlockEntity {
+public class TurnTableBlockTile extends BlockEntity {
     private int cooldown = 5;
     private boolean canRotate = false;
     // private long tickedGameTime;
     public int cat = 0;
 
-    public TurnTableBlockTile() {
-        super(ModRegistry.TURN_TABLE_TILE.get());
+    public TurnTableBlockTile(BlockPos pos, BlockState state) {
+        super(ModRegistry.TURN_TABLE_TILE.get(), pos, state);
     }
 
     public void tryRotate() {
@@ -44,24 +43,21 @@ public class TurnTableBlockTile extends BlockEntity implements TickableBlockEnti
         // allows for a rotation try nedxt period
     }
 
-    @Override
-    public void tick() {
-        if (this.level != null && !this.level.isClientSide) {
-            this.cat = Math.max(cat - 1, 0);
-            // cd > 0
-            if (this.cooldown == 0) {
-                boolean success = this.handleRotation();
-                this.cooldown = TurnTableBlock.getPeriod(this.getBlockState());//ServerConfigs.cached.TURN_TABLE_PERIOD;
-                // if it didn't rotate last block that means that block is immovable
-                int power = this.getBlockState().getValue(TurnTableBlock.POWER);
-                this.canRotate = (success && power != 0);
-                //change blockstate after rotation if is powered off
-                if (power == 0) {
-                    level.setBlock(worldPosition, this.getBlockState().setValue(TurnTableBlock.ROTATING, false), 3);
-                }
-            } else if (this.canRotate) {
-                this.cooldown--;
+    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, TurnTableBlockTile tile) {
+        tile.cat = Math.max(tile.cat - 1, 0);
+        // cd > 0
+        if (tile.cooldown == 0) {
+            boolean success = tile.handleRotation();
+            tile.cooldown = TurnTableBlock.getPeriod(pState);//ServerConfigs.cached.TURN_TABLE_PERIOD;
+            // if it didn't rotate last block that means that block is immovable
+            int power = pState.getValue(TurnTableBlock.POWER);
+            tile.canRotate = (success && power != 0);
+            //change blockstate after rotation if is powered off
+            if (power == 0) {
+                pLevel.setBlock(pPos, pState.setValue(TurnTableBlock.ROTATING, false), 3);
             }
+        } else if (tile.canRotate) {
+            tile.cooldown--;
         }
     }
 
@@ -111,9 +107,8 @@ public class TurnTableBlockTile extends BlockEntity implements TickableBlockEnti
         BlockState state = this.getBlockState();
 
         Level world = this.level;
-        BlockPos mypos = this.worldPosition;
         Direction mydir = state.getValue(BlockStateProperties.FACING);
-        BlockPos targetpos = mypos.relative(mydir);
+        BlockPos targetpos = this.worldPosition.relative(mydir);
         BlockState targetState = world.getBlockState(targetpos);
         // is block blacklisted?
         if (this.isInBlacklist(targetState)) return false;
@@ -172,8 +167,8 @@ public class TurnTableBlockTile extends BlockEntity implements TickableBlockEnti
     }
 
     @Override
-    public void load(BlockState state, CompoundTag compound) {
-        super.load(state, compound);
+    public void load(CompoundTag compound) {
+        super.load(compound);
         this.cooldown = compound.getInt("Cooldown");
         this.canRotate = compound.getBoolean("CanRotate");
     }
@@ -198,6 +193,6 @@ public class TurnTableBlockTile extends BlockEntity implements TickableBlockEnti
 
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        this.load(this.getBlockState(), pkt.getTag());
+        this.load(pkt.getTag());
     }
 }

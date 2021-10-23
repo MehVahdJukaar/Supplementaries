@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
-import net.mehvahdjukaar.supplementaries.block.tiles.PistonLauncherArmBlockTile;
+import net.mehvahdjukaar.supplementaries.block.tiles.SpringLauncherArmBlockTile;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -145,7 +145,7 @@ public class SpringLauncherBlock extends Block {
                             world.random.nextFloat() * 0.15F + 0.45F);
                 } else if (bs.getBlock() instanceof SpringLauncherArmBlock
                         && state.getValue(FACING) == bs.getValue(FACING)) {
-                    if (world.getBlockEntity(_bp) instanceof PistonLauncherArmBlockTile) {
+                    if (world.getBlockEntity(_bp) instanceof SpringLauncherArmBlockTile) {
                         world.getBlockTicks().scheduleTick(pos, world.getBlockState(pos).getBlock(), 1);
                     }
                 }

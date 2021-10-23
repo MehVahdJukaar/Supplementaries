@@ -5,6 +5,7 @@ import net.mehvahdjukaar.supplementaries.block.util.IMapDisplay;
 import net.mehvahdjukaar.supplementaries.block.util.ITextHolder;
 import net.mehvahdjukaar.supplementaries.block.util.TextHolder;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.ItemStack;
@@ -18,7 +19,7 @@ import java.util.UUID;
 
 //TODO: make swaying tile an interface
 public class HangingSignBlockTile extends SwayingBlockTile implements IMapDisplay, ITextHolder, IOwnerProtected {
-    public static final int MAXLINES = 7;
+    public static final int MAX_LINES = 7;
 
     private UUID owner = null;
 
@@ -33,9 +34,9 @@ public class HangingSignBlockTile extends SwayingBlockTile implements IMapDispla
         periodDamping = 100f;
     }
 
-    public HangingSignBlockTile() {
-        super(ModRegistry.HANGING_SIGN_TILE.get());
-        this.textHolder = new TextHolder(MAXLINES);
+    public HangingSignBlockTile(BlockPos pos, BlockState state) {
+        super(ModRegistry.HANGING_SIGN_TILE.get(), pos, state);
+        this.textHolder = new TextHolder(MAX_LINES);
     }
 
     @Nullable
@@ -65,8 +66,8 @@ public class HangingSignBlockTile extends SwayingBlockTile implements IMapDispla
     }
 
     @Override
-    public void load(BlockState state, CompoundTag compound) {
-        super.load(state, compound);
+    public void load(CompoundTag compound) {
+        super.load(compound);
 
         this.stacks = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
         ContainerHelper.loadAllItems(compound, this.stacks);

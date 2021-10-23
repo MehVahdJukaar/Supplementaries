@@ -8,19 +8,20 @@ import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.dynamictrees.DynamicTreesCompat;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.client.model.ModelDataManager;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
@@ -41,9 +42,8 @@ public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder 
     private final BlockState[] flowerStates = new BlockState[]{Blocks.AIR.defaultBlockState(),
             Blocks.AIR.defaultBlockState(), Blocks.AIR.defaultBlockState()};
 
-
-    public FlowerBoxBlockTile() {
-        super(ModRegistry.FLOWER_BOX_TILE.get(), 3);
+    public FlowerBoxBlockTile(BlockPos pos, BlockState state) {
+        super(ModRegistry.FLOWER_BOX_TILE.get(), pos, state, 3);
     }
 
     @Override
@@ -76,11 +76,13 @@ public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder 
         BlockState oldMimic1 = this.flowerStates[1];
         BlockState oldMimic2 = this.flowerStates[2];
         CompoundTag tag = pkt.getTag();
-        handleUpdateTag(this.getBlockState(), tag);
+        handleUpdateTag(tag);
         if (!Objects.equals(oldMimic0, this.flowerStates[0]) || !Objects.equals(oldMimic1, this.flowerStates[1]) ||
                 !Objects.equals(oldMimic2, this.flowerStates[2])) {
             ModelDataManager.requestModelDataRefresh(this);
-            this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+            if (level != null) {
+                this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+            }
         }
     }
 
@@ -105,7 +107,9 @@ public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder 
         }
         //TODO: check this
         ModelDataManager.requestModelDataRefresh(this);
-        this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
+        if (level != null) {
+            this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
+        }
     }
 
     @Override
@@ -124,8 +128,7 @@ public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder 
     @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
         if (this.getItem(index).isEmpty()) {
-            Item item = stack.getItem();
-            return item.is(ModTags.FLOWER_BOX_PLANTABLE) || FlowerPotHandler.hasSpecialFlowerModel(item);
+            return stack.is(ModTags.FLOWER_BOX_PLANTABLE) || FlowerPotHandler.hasSpecialFlowerModel(stack.getItem());
         }
         return false;
     }

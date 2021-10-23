@@ -5,7 +5,7 @@ import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.selene.util.Utils;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.PulleyBlockTile;
-import net.mehvahdjukaar.supplementaries.block.util.PlayerLessContext;
+import net.mehvahdjukaar.supplementaries.block.util.BlockUtils.PlayerLessContext;
 import net.mehvahdjukaar.supplementaries.common.BlockItemUtils;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;

@@ -4,12 +4,13 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.util.Constants;
 
 import static net.mehvahdjukaar.supplementaries.block.blocks.RopeKnotBlock.*;
@@ -20,8 +21,8 @@ public class RopeKnotBlockTile extends MimicBlockTile {
     private VoxelShape collisionShape = null;
     private VoxelShape shape = null;
 
-    public RopeKnotBlockTile() {
-        super(ModRegistry.ROPE_KNOT_TILE.get());
+    public RopeKnotBlockTile(BlockPos pos, BlockState state) {
+        super(ModRegistry.ROPE_KNOT_TILE.get(), pos, state);
         this.setHeldBlock(Blocks.AIR.defaultBlockState());
     }
 
@@ -41,7 +42,7 @@ public class RopeKnotBlockTile extends MimicBlockTile {
         try {
             if (state == null || !state.is(ModRegistry.ROPE_KNOT.get()) || this.level == null) return;
             BlockState mimic = this.getHeldBlock();
-            if(mimic.isAir()) mimic = Blocks.STONE.defaultBlockState();
+            if (mimic.isAir()) mimic = Blocks.STONE.defaultBlockState();
             boolean up = state.getValue(UP);
             boolean down = state.getValue(DOWN);
             VoxelShape r;
@@ -64,8 +65,8 @@ public class RopeKnotBlockTile extends MimicBlockTile {
             s = Shapes.or(s, r);
             this.collisionShape = c.optimize();
             this.shape = s.optimize();
-        }catch (Exception e){
-            Supplementaries.LOGGER.warn("failed to calculate roped fence hitbox: "+e);
+        } catch (Exception e) {
+            Supplementaries.LOGGER.warn("failed to calculate roped fence hitbox: " + e);
         }
     }
 
@@ -82,10 +83,9 @@ public class RopeKnotBlockTile extends MimicBlockTile {
     }
 
     @Override
-    public void load(BlockState state, CompoundTag compound) {
-        super.load(state, compound);
+    public void load(CompoundTag compound) {
+        super.load(compound);
         this.collisionShape = null;
         this.shape = null;
     }
-
 }

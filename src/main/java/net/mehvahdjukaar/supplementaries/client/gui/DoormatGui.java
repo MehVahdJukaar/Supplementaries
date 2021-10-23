@@ -46,7 +46,7 @@ public class DoormatGui extends Screen {
     public DoormatGui(DoormatBlockTile teSign) {
         super(new TranslatableComponent("gui.supplementaries.doormat.edit"));
         this.tileSign = teSign;
-        this.cachedLines = IntStream.range(0, DoormatBlockTile.MAXLINES).mapToObj(teSign.textHolder::getText).map(Component::getString).toArray(String[]::new);
+        this.cachedLines = IntStream.range(0, DoormatBlockTile.MAX_LINES).mapToObj(teSign.textHolder::getText).map(Component::getString).toArray(String[]::new);
 
     }
 
@@ -68,7 +68,7 @@ public class DoormatGui extends Screen {
     }
 
     public void scrollText(int amount){
-        this.editLine = Math.floorMod(this.editLine - amount, DoormatBlockTile.MAXLINES);
+        this.editLine = Math.floorMod(this.editLine - amount, DoormatBlockTile.MAX_LINES);
         this.textInputUtil.setCursorToEnd();
     }
 

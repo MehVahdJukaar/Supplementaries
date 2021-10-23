@@ -31,8 +31,8 @@ import javax.annotation.Nullable;
 
 public class PulleyBlockTile extends ItemDisplayTile {
 
-    public PulleyBlockTile() {
-        super(ModRegistry.PULLEY_BLOCK_TILE.get());
+    public PulleyBlockTile(BlockPos pos, BlockState state) {
+        super(ModRegistry.PULLEY_BLOCK_TILE.get(), pos, state);
     }
 
     //no need since it doesn't display stuff
@@ -51,9 +51,9 @@ public class PulleyBlockTile extends ItemDisplayTile {
 
     public static Winding getContentType(Item item) {
         Winding type = Winding.NONE;
-        if (item instanceof BlockItem && ((BlockItem) item).getBlock() instanceof ChainBlock || item.is(ModTags.CHAINS))
+        if (item instanceof BlockItem && ((BlockItem) item).getBlock() instanceof ChainBlock || ModTags.CHAINS.contains(item))
             type = Winding.CHAIN;
-        else if (item.is(ModTags.ROPES)) type = Winding.ROPE;
+        else if (ModTags.ROPES.contains(item)) type = Winding.ROPE;
         return type;
     }
 

@@ -2,45 +2,41 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
-import net.mehvahdjukaar.supplementaries.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.block.tiles.StatueBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.material.Fluids;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
-import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.LockableTileEntity;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.util.*;
-import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 
-import net.minecraft.core.Direction;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-
-public class StatueBlock extends WaterBlock {
-    protected static final VoxelShape SHAPE = Block.box(4,0,4,12,16,12);
+public class StatueBlock extends WaterBlock implements EntityBlock {
+    protected static final VoxelShape SHAPE = Block.box(4, 0, 4, 12, 16, 12);
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
@@ -48,8 +44,8 @@ public class StatueBlock extends WaterBlock {
 
     public StatueBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(POWERED,false)
-                .setValue(WATERLOGGED,false).setValue(FACING, Direction.NORTH).setValue(LIT,false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(POWERED, false)
+                .setValue(WATERLOGGED, false).setValue(FACING, Direction.NORTH).setValue(LIT, false));
     }
 
     @Override
@@ -73,8 +69,8 @@ public class StatueBlock extends WaterBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        boolean flag = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;;
-        return this.defaultBlockState().setValue(WATERLOGGED, flag).setValue(POWERED,context.getLevel().hasNeighborSignal(context.getClickedPos()))
+        boolean flag = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;
+        return this.defaultBlockState().setValue(WATERLOGGED, flag).setValue(POWERED, context.getLevel().hasNeighborSignal(context.getClickedPos()))
                 .setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 
@@ -85,36 +81,30 @@ public class StatueBlock extends WaterBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING,WATERLOGGED,POWERED,LIT);
+        builder.add(FACING, WATERLOGGED, POWERED, LIT);
     }
 
     @Override
     public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        BlockEntity tileentity = worldIn.getBlockEntity(pos);
-        if (tileentity instanceof StatueBlockTile) {
+        if (worldIn.getBlockEntity(pos) instanceof StatueBlockTile tile) {
             if (stack.hasCustomHoverName()) {
-                ((StatueBlockTile) tileentity).setCustomName(stack.getHoverName());
+                tile.setCustomName(stack.getHoverName());
             }
-            BlockUtils.addOptionalOwnership(placer, tileentity);
+            BlockUtils.addOptionalOwnership(placer, tile);
         }
     }
 
+    @Nullable
     @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
-
-    @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-        return new StatueBlockTile();
+    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
+        return new StatueBlockTile(pPos, pState);
     }
 
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
-                                BlockHitResult hit) {
-        BlockEntity tileentity = worldIn.getBlockEntity(pos);
-        if (tileentity instanceof ItemDisplayTile) {
-            return ((ItemDisplayTile) tileentity).interact(player,handIn);
+                                 BlockHitResult hit) {
+        if (worldIn.getBlockEntity(pos) instanceof ItemDisplayTile tile) {
+            return tile.interact(player, handIn);
         }
         return InteractionResult.PASS;
     }
@@ -122,9 +112,8 @@ public class StatueBlock extends WaterBlock {
     @Override
     public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
-            BlockEntity tileentity = world.getBlockEntity(pos);
-            if (tileentity instanceof ItemDisplayTile) {
-                Containers.dropContents(world, pos, (Container) tileentity);
+            if (world.getBlockEntity(pos) instanceof ItemDisplayTile tile) {
+                Containers.dropContents(world, pos, tile);
                 world.updateNeighbourForOutputSignal(pos, this);
             }
             super.onRemove(state, world, pos, newState, isMoving);
@@ -146,22 +135,20 @@ public class StatueBlock extends WaterBlock {
     }
 
     @Override
-    public int getLightValue(BlockState state, BlockGetter world, BlockPos pos) {
-        return state.getValue(LIT)? 7 : 0;
+    public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
+        return state.getValue(LIT) ? 7 : 0;
     }
 
     @Override
     public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
-        if(stateIn.getValue(LIT)){
+        if (stateIn.getValue(LIT)) {
             Direction direction = stateIn.getValue(FACING);
             double d0 = (double) pos.getX() + 0.5D;
-            double d1 = (double) pos.getY() + 0.8 -0.25;
+            double d1 = (double) pos.getY() + 0.8 - 0.25;
             double d2 = (double) pos.getZ() + 0.5D;
             Direction direction1 = direction.getOpposite();
             worldIn.addParticle(ParticleTypes.SMOKE, d0 - 0.1875 * (double) direction1.getStepX(), d1, d2 - 0.1875 * (double) direction1.getStepZ(), 0.0D, 0.0D, 0.0D);
             worldIn.addParticle(ParticleTypes.FLAME, d0 - 0.1875 * (double) direction1.getStepX(), d1, d2 - 0.1875 * (double) direction1.getStepZ(), 0.0D, 0.0D, 0.0D);
         }
-
     }
-
 }

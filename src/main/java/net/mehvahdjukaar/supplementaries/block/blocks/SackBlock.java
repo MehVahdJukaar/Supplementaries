@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
-import com.google.common.collect.Lists;
 import net.mehvahdjukaar.supplementaries.block.tiles.SackBlockTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -11,8 +10,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -27,7 +24,6 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.FallingBlock;
-import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -147,7 +143,7 @@ public class SackBlock extends FallingBlock implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new SackBlockTile();
+        return new SackBlockTile(pPos, pState);
     }
 
     @Override
@@ -220,7 +216,7 @@ public class SackBlock extends FallingBlock implements EntityBlock {
     @Override
     public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         if (stack.hasCustomHoverName()) {
-            if ( worldIn.getBlockEntity(pos) instanceof SackBlockTile tile) {
+            if (worldIn.getBlockEntity(pos) instanceof SackBlockTile tile) {
                 tile.setCustomName(stack.getHoverName());
             }
         }

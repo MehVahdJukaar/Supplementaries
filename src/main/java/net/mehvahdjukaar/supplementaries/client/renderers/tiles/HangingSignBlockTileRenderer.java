@@ -10,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.LOD;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.RequestMapDataFromServerPacket;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -41,19 +42,17 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.MapItem;
 
-public class HangingSignBlockTileRenderer extends BlockEntityRenderer<HangingSignBlockTile> {
+public class HangingSignBlockTileRenderer implements BlockEntityRenderer<HangingSignBlockTile> {
     protected final BlockRenderDispatcher blockRenderer;
     protected final ItemRenderer itemRenderer;
     protected final MapRenderer mapRenderer;
 
-    public HangingSignBlockTileRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
-        super(rendererDispatcherIn);
+    public HangingSignBlockTileRenderer(BlockEntityRendererProvider.Context context) {
         Minecraft minecraft = Minecraft.getInstance();
         blockRenderer = minecraft.getBlockRenderer();
         itemRenderer = minecraft.getItemRenderer();
         mapRenderer = minecraft.gameRenderer.getMapRenderer();
     }
-
 
     @Override
     public void render(HangingSignBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
@@ -111,9 +110,9 @@ public class HangingSignBlockTileRenderer extends BlockEntityRenderer<HangingSig
                 } else if (item instanceof BannerPatternItem) {
 
                     //TODO: cache or not like notice board
-                    Material rendermaterial = Materials.FLAG_MATERIALS.get(((BannerPatternItem) item).getBannerPattern());
+                    Material renderMaterial = Materials.FLAG_MATERIALS.get(((BannerPatternItem) item).getBannerPattern());
 
-                    VertexConsumer builder = rendermaterial.buffer(bufferIn, RenderType::entityNoOutline);
+                    VertexConsumer builder = renderMaterial.buffer(bufferIn, RenderType::entityNoOutline);
 
                     //IVertexBuilder builder = bufferIn.getBuffer(RenderType.itemEntityTranslucentCull(FlagBlockTile.getFlagLocation(((BannerPatternItem) item).getBannerPattern())));
 
@@ -125,7 +124,7 @@ public class HangingSignBlockTileRenderer extends BlockEntityRenderer<HangingSig
                     int lv = combinedLightIn >> 16 & '\uffff';
                     for (int v = 0; v < 2; v++) {
                         RendererUtil.addQuadSide(builder, matrixStackIn, -0.4375F, -0.4375F, 0.07f, 0.4375F, 0.4375F, 0.07f,
-                                0.15625f, 0.0625f, 0.5f + 0.09375f, 1 - 0.0625f, r, g, b, 1, lu, lv, 0, 0, 1, rendermaterial.sprite());
+                                0.15625f, 0.0625f, 0.5f + 0.09375f, 1 - 0.0625f, r, g, b, 1, lu, lv, 0, 0, 1, renderMaterial.sprite());
 
                         matrixStackIn.mulPose(Const.Y180);
                     }
@@ -161,7 +160,7 @@ public class HangingSignBlockTileRenderer extends BlockEntityRenderer<HangingSig
 
                 matrixStackIn.scale(0.010416667F, -0.010416667F, 0.010416667F);
 
-                for (int k1 = 0; k1 < HangingSignBlockTile.MAXLINES; ++k1) {
+                for (int k1 = 0; k1 < HangingSignBlockTile.MAX_LINES; ++k1) {
                     FormattedCharSequence ireorderingprocessor = tile.textHolder.getRenderText(k1, (ss) -> {
                         List<FormattedCharSequence> list = fontrenderer.split(ss, 75);
                         return list.isEmpty() ? FormattedCharSequence.EMPTY : list.get(0);

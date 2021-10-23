@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 
@@ -20,8 +21,7 @@ public class BellowsBlockTileRenderer implements BlockEntityRenderer<BellowsBloc
     private final ModelPart top = new ModelPart(64, 64, 0, 0);
     private final ModelPart leather = new ModelPart(64, 64, 0, 0);
 
-    public BellowsBlockTileRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
-        super(rendererDispatcherIn);
+    public BellowsBlockTileRenderer(BlockEntityRendererProvider.Context context) {
         center.setPos(0.0F, 0.0F, 0.0F);
         center.texOffs(0, 0).addBox(-2.0F, -2.0F, -8.0F, 4.0F, 1.0F, 1.0F, 0.0F, false);
         center.texOffs(0, 2).addBox(-2.0F, 1.0F, -8.0F, 4.0F, 1.0F, 1.0F, 0.0F, false);
@@ -33,7 +33,6 @@ public class BellowsBlockTileRenderer implements BlockEntityRenderer<BellowsBloc
 
         leather.setPos(0.0F, 0.0F, 0.0F);
         leather.texOffs(0, 37).addBox(-7.0F, -5.0F, -7.0F, 14.0F, 10.0F, 14.0F, 0.0F, false);
-
     }
 
     @Override

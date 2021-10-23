@@ -28,7 +28,7 @@ public class CeilingBannerBlockTile extends BlockEntity implements Nameable {
     @Nullable
     private Component name;
     @Nullable
-    private DyeColor baseColor = DyeColor.WHITE;
+    private DyeColor baseColor;
     @Nullable
     private ListTag itemPatterns;
     private boolean receivedData;

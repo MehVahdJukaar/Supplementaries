@@ -8,55 +8,44 @@ import net.mehvahdjukaar.supplementaries.block.blocks.DirectionalCakeBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.DoubleCakeBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.JarBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
-import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.BlockItemUtils;
+import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.items.FullJarItem;
 import net.mehvahdjukaar.supplementaries.items.JarItem;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.*;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.material.Fluids;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.BaseComponent;
-import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.*;
-
-
-import net.minecraft.core.Direction;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.item.BannerItem;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.MapItem;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.block.BedBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.EnchantmentTableBlock;
-import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.state.BlockState;
 
 public class ItemsOverrideHandler {
 
@@ -97,12 +86,12 @@ public class ItemsOverrideHandler {
                     if (b.appliesToItem(i)) {
                         //adds item to block item map
                         Block block = b.getBlockOverride(i);
-                        if (b != null && b.shouldBlockMapToItem(i)) Item.BY_BLOCK.put(block, i);
+                        if (block != null && b.shouldBlockMapToItem(i)) Item.BY_BLOCK.put(block, i);
                         ON_BLOCK_OVERRIDES.put(i, b);
                         break;
                     }
-                }catch (Exception e){
-                    Supplementaries.LOGGER.error("failed to register for override "+ b.getClass().getSimpleName() +" for "+ i.getRegistryName()+" with exception: "+e);
+                } catch (Exception e) {
+                    Supplementaries.LOGGER.error("failed to register for override " + b.getClass().getSimpleName() + " for " + i.getRegistryName() + " with exception: " + e);
                 }
             }
             for (ItemInteractionOverride b : itemBehaviors) {
@@ -113,13 +102,13 @@ public class ItemsOverrideHandler {
 
             }
             for (ItemInteractionOverride b : HPBlockBehaviors) {
-                try{
-                if (b.appliesToItem(i)) {
-                    HIGH_PRIORITY_OVERRIDES.put(i, b);
-                    break;
-                }
-                }catch (Exception e){
-                    Supplementaries.LOGGER.error("failed to register for override " + b.getClass().getSimpleName() +" for "+ i.getRegistryName()+" with exception: "+e);
+                try {
+                    if (b.appliesToItem(i)) {
+                        HIGH_PRIORITY_OVERRIDES.put(i, b);
+                        break;
+                    }
+                } catch (Exception e) {
+                    Supplementaries.LOGGER.error("failed to register for override " + b.getClass().getSimpleName() + " for " + i.getRegistryName() + " with exception: " + e);
                 }
             }
         }
@@ -210,7 +199,7 @@ public class ItemsOverrideHandler {
         }
 
         public abstract InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand,
-                                                             ItemStack stack, @Nullable BlockHitResult hit, boolean isRanged);
+                                                              ItemStack stack, @Nullable BlockHitResult hit, boolean isRanged);
     }
 
     private static class MapMarkerBehavior extends ItemInteractionOverride {
@@ -657,7 +646,7 @@ public class ItemsOverrideHandler {
     }
 
     private static InteractionResult paceBlockOverride(Item itemOverride, Player player, InteractionHand hand, ItemStack heldStack,
-                                                      Level world, BlockHitResult raytrace, boolean isRanged) {
+                                                       Level world, BlockHitResult raytrace, boolean isRanged) {
         if (raytrace.getDirection() != null) {
             //try interacting with block behind
             BlockPos pos = raytrace.getBlockPos();
@@ -689,7 +678,7 @@ public class ItemsOverrideHandler {
     }
 
     private static InteractionResult paceBlockOverride(Block blockOverride, Player player, InteractionHand hand, ItemStack heldStack,
-                                                      Level world, BlockHitResult raytrace, boolean isRanged) {
+                                                       Level world, BlockHitResult raytrace, boolean isRanged) {
         if (raytrace.getDirection() != null) {
             //try interacting with block behind
             BlockPos pos = raytrace.getBlockPos();

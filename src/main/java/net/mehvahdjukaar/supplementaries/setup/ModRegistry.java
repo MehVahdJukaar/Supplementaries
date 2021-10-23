@@ -510,27 +510,6 @@ public class ModRegistry {
             getTab(CreativeModeTab.TAB_DECORATIONS, JAR_NAME)).stacksTo(16).setISTER(() -> JarItemRenderer::new)));
 
 
-    //firefly jar
-    public static final String FIREFLY_JAR_NAME = "firefly_jar";
-    public static final RegistryObject<Block> FIREFLY_JAR = BLOCKS.register(FIREFLY_JAR_NAME, () -> new FireflyJarBlock(
-            BlockBehaviour.Properties.copy(JAR.get())
-                    .lightLevel((state) -> 8), false));
-
-    public static final RegistryObject<Item> FIREFLY_JAR_ITEM = regItem(FIREFLY_JAR_NAME, () -> new BlockItem(FIREFLY_JAR.get(), new Item.Properties()
-            .tab(getTab(CreativeModeTab.TAB_DECORATIONS, FIREFLY_JAR_NAME)).stacksTo(16).setISTER(() -> FireflyJarItemRenderer::new)));
-
-    //soul jar
-    public static final String SOUL_JAR_NAME = "soul_jar";
-    public static final RegistryObject<Block> SOUL_JAR = BLOCKS.register(SOUL_JAR_NAME, () -> new FireflyJarBlock(
-            BlockBehaviour.Properties.copy(JAR_TINTED.get())
-                    .lightLevel((state) -> 8), true
-    ));
-    public static final RegistryObject<Item> SOUL_JAR_ITEM = regItem(SOUL_JAR_NAME, () -> new BlockItem(SOUL_JAR.get(), new Item.Properties()
-            .tab(getTab(CreativeModeTab.TAB_DECORATIONS, SOUL_JAR_NAME)).stacksTo(16)));
-
-    public static final RegistryObject<BlockEntityType<FireflyJarBlockTile>> FIREFLY_JAR_TILE = TILES.register(FIREFLY_JAR_NAME, () -> BlockEntityType.Builder.of(
-            FireflyJarBlockTile::new, FIREFLY_JAR.get(), SOUL_JAR.get()).build(null));
-
     //sack
     public static final String SACK_NAME = "sack";
     public static final RegistryObject<Block> SACK = BLOCKS.register(SACK_NAME, () -> new SackBlock(
@@ -867,8 +846,8 @@ public class ModRegistry {
                     .noOcclusion()
                     .noDrops()
     ));
-    public static final RegistryObject<BlockEntityType<PistonLauncherArmBlockTile>> PISTON_LAUNCHER_ARM_TILE = TILES.register(PISTON_LAUNCHER_ARM_NAME, () -> BlockEntityType.Builder.of(
-            PistonLauncherArmBlockTile::new, SPRING_LAUNCHER_ARM.get()).build(null));
+    public static final RegistryObject<BlockEntityType<SpringLauncherArmBlockTile>> SPRING_LAUNCHER_ARM_TILE = TILES.register(PISTON_LAUNCHER_ARM_NAME, () -> BlockEntityType.Builder.of(
+            SpringLauncherArmBlockTile::new, SPRING_LAUNCHER_ARM.get()).build(null));
 
     //speaker Block
     public static final String SPEAKER_BLOCK_NAME = "speaker_block";
@@ -1093,36 +1072,6 @@ public class ModRegistry {
             BlockBehaviour.Properties.copy(Blocks.CAKE)
                     .dropsLike(Blocks.CAKE)
     ));
-
-    //laser
-    public static final String LASER_NAME = "laser_block";
-    public static final RegistryObject<Block> LASER_BLOCK = BLOCKS.register(LASER_NAME, () -> new LaserBlock(
-            BlockBehaviour.Properties.of(Material.STONE, MaterialColor.STONE)
-                    .strength(3.5f, 3.5f)
-                    .sound(SoundType.STONE)
-                    .harvestTool(ToolType.PICKAXE)
-    ));
-    public static final RegistryObject<BlockEntityType<LaserBlockTile>> LASER_BLOCK_TILE = TILES.register(LASER_NAME, () -> BlockEntityType.Builder.of(
-            LaserBlockTile::new, LASER_BLOCK.get()).build(null));
-    public static final RegistryObject<Item> LASER_BLOCK_ITEM = ITEMS.register(LASER_NAME, () -> new BlockItem(LASER_BLOCK.get(),
-            new Item.Properties().tab(null)
-    ));
-
-
-    //drawers
-    /*
-    public static final String DRAWERS_NAME = "drawers";
-    public static final Block> DRAWERS = new DrawersBlock(
-            AbstractBlock.Properties.create(Material.WOOD, MaterialColor.WOOD)
-                    .hardnessAndResistance(2f, 2f)
-                    .sound(SoundType.WOOD)
-                    .harvestTool(ToolType.AXE)
-                    .notSolid()
-    ));
-    public static final RegistryObject<TileEntityType<?>> DRAWERS_TILE = TILES.register(ITEM_SHELF_NAME,()->  TileEntityType.Builder.create(DrawersBlockTile::new, DRAWERS).build(null));
-    public static final RegistryObject<Item> DRAWERS_ITEM = ITEMS.register(SCONCE_NAME,()-> new BlockItem(DRAWERS.get(),
-            new Item.Properties().group(null)));
-    */
 
     //checker block
     public static final String CHECKER_BLOCK_NAME = "checker_block";
@@ -1434,17 +1383,6 @@ public class ModRegistry {
 
     public static final RegistryObject<BlockEntityType<BookPileBlockTile>> BOOK_PILE_TILE = TILES.register(BOOK_PILE_NAME, () -> BlockEntityType.Builder.of(
             BookPileBlockTile::new, BOOK_PILE.get(), BOOK_PILE_H.get()).build(null));
-
-
-    //cracked bell
-    public static final String CRACKED_BELL_NAME = "cracked_bell";
-    public static final RegistryObject<Block> CRACKED_BELL = BLOCKS.register(CRACKED_BELL_NAME, () -> new CrackedBellBlock(
-            BlockBehaviour.Properties.copy(Blocks.ANVIL)));
-    public static final RegistryObject<Item> CRACKED_BELL_ITEM = regBlockItem(CRACKED_BELL, null);
-
-    public static final RegistryObject<BlockEntityType<CrackedBellBlockTile>> CRACKED_BELL_TILE = TILES.register(CRACKED_BELL_NAME, () -> BlockEntityType.Builder.of(
-            CrackedBellBlockTile::new, CRACKED_BELL.get()).build(null));
-
 
 
     /*

@@ -2,9 +2,12 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
+import net.mehvahdjukaar.supplementaries.block.tiles.BellowsBlockTile;
 import net.mehvahdjukaar.supplementaries.block.tiles.GlobeBlockTile;
+import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -25,6 +28,8 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -171,7 +176,7 @@ public class GlobeBlock extends WaterBlock implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new GlobeBlockTile();
+        return new GlobeBlockTile(pPos, pState);
     }
 
     @Override
@@ -195,4 +200,9 @@ public class GlobeBlock extends WaterBlock implements EntityBlock {
         return 0;
     }
 
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
+        return BlockUtils.getTicker(pBlockEntityType, ModRegistry.GLOBE_TILE.get(), GlobeBlockTile::tick);
+    }
 }

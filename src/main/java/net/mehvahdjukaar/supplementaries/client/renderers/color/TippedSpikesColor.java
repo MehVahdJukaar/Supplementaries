@@ -2,15 +2,15 @@ package net.mehvahdjukaar.supplementaries.client.renderers.color;
 
 import net.mehvahdjukaar.supplementaries.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
-import net.minecraft.world.level.block.state.BlockState;
+import net.mehvahdjukaar.supplementaries.compat.quark.QuarkPistonPlugin;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -44,21 +44,21 @@ public class TippedSpikesColor implements BlockColor, ItemColor {
 
     @Override
     public int getColor(BlockState state, @Nullable BlockAndTintGetter world, @Nullable BlockPos pos, int tint) {
-        BlockEntity te = world.getBlockEntity(pos);
-
-        if (te instanceof BambooSpikesBlockTile) {
-            int color = ((BambooSpikesBlockTile) te).getColor();
-            //return getProcessedColor(color, tint);
-            return getCachedColor(color, tint);
-        }
-        //not actually sure why I need this since quark seems to handle moving tiles pretty well
-        else if (CompatHandler.quark) {
-            if (world instanceof Level) {
-                //te = QuarkPistonPlugin.getMovingTile(pos, (World) world);
-                if (te instanceof BambooSpikesBlockTile) {
-                    int color = ((BambooSpikesBlockTile) te).getColor();
-                    //return getProcessedColor(color, tint);
-                    return getCachedColor(color, tint);
+        if (world != null && pos != null) {
+            if (world.getBlockEntity(pos) instanceof BambooSpikesBlockTile tile) {
+                int color = tile.getColor();
+                //return getProcessedColor(color, tint);
+                return getCachedColor(color, tint);
+            }
+            //not actually sure why I need this since quark seems to handle moving tiles pretty well
+            else if (CompatHandler.quark) {
+                if (world instanceof Level) {
+                    te = QuarkPistonPlugin.getMovingTile(pos, (World) world);
+                    if (te instanceof BambooSpikesBlockTile) {
+                        int color = ((BambooSpikesBlockTile) te).getColor();
+                        //return getProcessedColor(color, tint);
+                        return getCachedColor(color, tint);
+                    }
                 }
             }
         }

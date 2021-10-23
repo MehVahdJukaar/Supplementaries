@@ -5,8 +5,7 @@ import net.mehvahdjukaar.supplementaries.block.blocks.FrameBlock;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -26,19 +25,19 @@ import net.minecraftforge.client.model.ModelDataManager;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.Lazy;
 
+import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
 public class FrameBlockTile extends MimicBlockTile {
 
     public final Lazy<BlockState> WATTLE_AND_DAUB = Lazy.of(() -> ((FrameBlock) this.getBlockState().getBlock()).daub.get().defaultBlockState());
 
-    public FrameBlockTile() {
-        this(() -> null);
+    public FrameBlockTile(BlockPos pos, BlockState state) {
+        this(pos, state, () -> null);
     }
 
-    public FrameBlockTile(Supplier<Block> wattle_and_daub) {
-        super(ModRegistry.TIMBER_FRAME_TILE.get());
-
+    public FrameBlockTile(BlockPos pos, BlockState state, Supplier<Block> wattle_and_daub) {
+        super(ModRegistry.TIMBER_FRAME_TILE.get(), pos, state);
         //data = new ModelDataMap.Builder().withInitial(MIMIC, held).build();
     }
 
@@ -47,7 +46,7 @@ public class FrameBlockTile extends MimicBlockTile {
         //int oldLight = this.getLightValue();
         this.mimic = state;
 
-        if (!this.level.isClientSide) {
+        if (this.level instanceof ServerLevel) {
             this.setChanged();
             int newLight = this.getLightValue();
             this.level.setBlock(this.worldPosition, this.getBlockState().setValue(FrameBlock.HAS_BLOCK, true)
@@ -70,7 +69,7 @@ public class FrameBlockTile extends MimicBlockTile {
         Block b = state.getBlock();
 
         if (b == ModRegistry.DAUB.get() && ServerConfigs.cached.REPLACE_DAUB) {
-            if (!this.level.isClientSide) {
+            if (level != null && !this.level.isClientSide) {
                 state = WATTLE_AND_DAUB.get();
                 if (this.getBlockState().hasProperty(BlockProperties.FLIPPED)) {
                     state = state.setValue(BlockProperties.FLIPPED, this.getBlockState().getValue(BlockProperties.FLIPPED));
@@ -79,7 +78,7 @@ public class FrameBlockTile extends MimicBlockTile {
             }
         } else {
             this.setHeldBlock(state);
-            if (level.isClientSide()) {
+            if (level != null && level.isClientSide()) {
                 ModelDataManager.requestModelDataRefresh(this);
             }
         }
@@ -110,7 +109,8 @@ public class FrameBlockTile extends MimicBlockTile {
         return InteractionResult.FAIL;
     }
 
-    public static boolean isValidBlock(BlockState state, BlockPos pos, Level world) {
+    public static boolean isValidBlock(@Nullable BlockState state, BlockPos pos, Level world) {
+        if (state == null) return false;
         Block b = state.getBlock();
         if (b == Blocks.BEDROCK) return false;
         if (b == ModRegistry.DAUB_FRAME.get() || b == ModRegistry.DAUB_BRACE.get() || b == ModRegistry.DAUB_CROSS_BRACE.get())

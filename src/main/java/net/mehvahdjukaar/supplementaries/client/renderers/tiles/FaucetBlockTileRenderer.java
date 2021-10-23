@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -15,11 +16,16 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.resources.ResourceLocation;
 
 
-public class FaucetBlockTileRenderer extends BlockEntityRenderer<FaucetBlockTile> {
+public class FaucetBlockTileRenderer implements BlockEntityRenderer<FaucetBlockTile> {
     private final Minecraft minecraft = Minecraft.getInstance();
 
-    public FaucetBlockTileRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
-        super(rendererDispatcherIn);
+    public FaucetBlockTileRenderer(BlockEntityRendererProvider.Context context) {
+    }
+
+
+    @Override
+    public int getViewDistance() {
+        return 80;
     }
 
     @Override

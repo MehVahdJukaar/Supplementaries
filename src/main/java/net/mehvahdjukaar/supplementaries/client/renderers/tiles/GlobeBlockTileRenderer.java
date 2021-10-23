@@ -13,12 +13,13 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import com.mojang.math.Vector3f;
 
 
-public class GlobeBlockTileRenderer extends BlockEntityRenderer<GlobeBlockTile> {
+public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTile> {
 
     private final ModelPart globe = new ModelPart(32, 16, 0, 0);
     private final ModelPart flat = new ModelPart(32, 32, 0, 0);
@@ -26,8 +27,8 @@ public class GlobeBlockTileRenderer extends BlockEntityRenderer<GlobeBlockTile> 
     private final ModelPart snow = new ModelPart(32, 32, 0, 0);
 
 
-    public GlobeBlockTileRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
-        super(rendererDispatcherIn);
+    public GlobeBlockTileRenderer(BlockEntityRendererProvider.Context context) {
+
         globe.addBox(-4.0F, -28.0F, -4.0F, 8.0F, 8.0F, 8.0F, 0.0F, false);
         globe.setPos(0.0F, 24.0F, 0.0F);
 

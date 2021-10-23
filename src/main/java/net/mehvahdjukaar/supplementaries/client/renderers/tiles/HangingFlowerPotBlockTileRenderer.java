@@ -1,28 +1,27 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.supplementaries.block.blocks.HangingFlowerPotBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.HangingFlowerPotBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.FlowerPotHandler;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.util.Mth;
-import com.mojang.math.Vector3f;
+import net.minecraft.world.level.block.state.BlockState;
 
 
-public class HangingFlowerPotBlockTileRenderer extends BlockEntityRenderer<HangingFlowerPotBlockTile> {
+public class HangingFlowerPotBlockTileRenderer implements BlockEntityRenderer<HangingFlowerPotBlockTile> {
 
     protected final BlockRenderDispatcher blockRenderer;
 
-    public HangingFlowerPotBlockTileRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
-        super(rendererDispatcherIn);
+    public HangingFlowerPotBlockTileRenderer(BlockEntityRendererProvider.Context context) {
         blockRenderer = Minecraft.getInstance().getBlockRenderer();
     }
 

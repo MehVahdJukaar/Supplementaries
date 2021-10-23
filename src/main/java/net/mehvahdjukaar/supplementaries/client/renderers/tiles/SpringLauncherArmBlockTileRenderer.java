@@ -2,9 +2,10 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.block.blocks.SpringLauncherHeadBlock;
-import net.mehvahdjukaar.supplementaries.block.tiles.PistonLauncherArmBlockTile;
+import net.mehvahdjukaar.supplementaries.block.tiles.SpringLauncherArmBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
@@ -17,16 +18,20 @@ import net.minecraft.util.Mth;
 import net.minecraftforge.client.model.data.EmptyModelData;
 
 
-public class PistonLauncherArmBlockTileRenderer extends BlockEntityRenderer<PistonLauncherArmBlockTile> {
+public class SpringLauncherArmBlockTileRenderer implements BlockEntityRenderer<SpringLauncherArmBlockTile> {
     private final BlockRenderDispatcher blockRenderer;
 
-    public PistonLauncherArmBlockTileRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
-        super(rendererDispatcherIn);
+    public SpringLauncherArmBlockTileRenderer(BlockEntityRendererProvider.Context context) {
         blockRenderer = Minecraft.getInstance().getBlockRenderer();
     }
 
     @Override
-    public void render(PistonLauncherArmBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
+    public int getViewDistance() {
+        return 96;
+    }
+
+    @Override
+    public void render(SpringLauncherArmBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
         matrixStackIn.pushPose();
         matrixStackIn.translate(0.5, 0.5, 0.5);

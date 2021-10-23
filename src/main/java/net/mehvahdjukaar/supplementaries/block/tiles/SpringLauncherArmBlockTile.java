@@ -18,7 +18,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.PushReaction;
@@ -28,19 +27,19 @@ import net.minecraft.world.phys.Vec3;
 import java.util.List;
 import java.util.Random;
 
-public class PistonLauncherArmBlockTile extends BlockEntity implements TickableBlockEntity {
-    public int age = 0;
+public class SpringLauncherArmBlockTile extends BlockEntity {
+    public int age;
     //maybe replace this with boolean?
-    private double increment = 0;
-    public double offset = 0;
-    public double prevOffset = 0;
-    private int dx = 0;
-    private int dy = 0;
-    private int dz = 0;
+    private double increment;
+    public double offset;
+    public double prevOffset;
+    private int dx;
+    private int dy;
+    private int dz;
     protected final Random rand = new Random();
 
-    public PistonLauncherArmBlockTile(BlockPos pos, BlockState state) {
-        super(ModRegistry.PISTON_LAUNCHER_ARM_TILE.get(), pos, state);
+    public SpringLauncherArmBlockTile(BlockPos pos, BlockState state) {
+        super(ModRegistry.SPRING_LAUNCHER_ARM_TILE.get(), pos, state);
         boolean extending = state.getValue(BlockProperties.EXTENDING);
         Direction dir = state.getValue(BlockStateProperties.FACING);
 
@@ -58,11 +57,6 @@ public class PistonLauncherArmBlockTile extends BlockEntity implements TickableB
         this.dx = v.getX();
         this.dy = v.getY();
         this.dz = v.getZ();
-    }
-
-    @Override
-    public double getViewDistance() {
-        return 96;
     }
 
     //TODO: rewrite some of this old code
@@ -100,9 +94,9 @@ public class PistonLauncherArmBlockTile extends BlockEntity implements TickableB
                 } else {
                     BlockState _bs = ModRegistry.SPRING_LAUNCHER.get().defaultBlockState();
                     BlockPos _bp = worldPosition.relative(this.getDirection().getOpposite());
-                    BlockState oldstate = level.getBlockState(_bp);
-                    if (_bs.setValue(SpringLauncherBlock.FACING, this.getDirection()).setValue(SpringLauncherBlock.EXTENDED, true) == oldstate) {
-                        level.setBlock(_bp, oldstate.setValue(SpringLauncherBlock.EXTENDED, false), 3);
+                    BlockState oldState = level.getBlockState(_bp);
+                    if (_bs.setValue(SpringLauncherBlock.FACING, this.getDirection()).setValue(SpringLauncherBlock.EXTENDED, true) == oldState) {
+                        level.setBlock(_bp, oldState.setValue(SpringLauncherBlock.EXTENDED, false), 3);
                     }
                     level.setBlock(worldPosition, Blocks.AIR.defaultBlockState(), 3);
                 }

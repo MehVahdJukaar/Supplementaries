@@ -1,18 +1,18 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.color;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.GunpowderBlock;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.state.BlockState;
 
-public class GunpowderBlockColor implements  BlockColor {
+public class GunpowderBlockColor implements BlockColor {
 
     private static final int[] COLORS = new int[9];
 
     static {
-        for(int i = 0; i < 9; i++){
+        for (int i = 0; i < 9; i++) {
             float litAmount = (float) i / 8.0F;
             float red = litAmount * 0.7F + 0.3F;
 

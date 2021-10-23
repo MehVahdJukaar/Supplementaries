@@ -11,15 +11,16 @@ import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.common.SpecialPlayers;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.players.GameProfileCache;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.players.GameProfileCache;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
@@ -35,19 +36,14 @@ public class StatueBlockTile extends ItemDisplayTile {
     public boolean isWaving = false;
     public BlockState candle = null;
 
-    public StatueBlockTile() {
-        super(ModRegistry.STATUE_TILE.get());
+    public StatueBlockTile(BlockPos pos, BlockState state) {
+        super(ModRegistry.STATUE_TILE.get(), pos, state);
     }
 
     public static void initializeSessionData(MinecraftServer server) {
         profileCache = server.getProfileCache();
         sessionService = server.getSessionService();
         //PlayerProfileCache.setOnlineMode(server.isServerInOnlineMode());
-    }
-
-    @Override
-    public double getViewDistance() {
-        return 60;
     }
 
     @Override
@@ -78,7 +74,7 @@ public class StatueBlockTile extends ItemDisplayTile {
             if (input.isComplete() && input.getProperties().containsKey("textures")) {
                 return input;
             } else if (profileCache != null && sessionService != null) {
-                GameProfile gameprofile = profileCache.get(input.getName());
+                GameProfile gameprofile = profileCache.get(input.getName()).orElseGet(null);
                 if (gameprofile != null) {
                     Property property = Iterables.getFirst(gameprofile.getProperties().get("textures"), null);
                     if (property == null) {
@@ -131,7 +127,7 @@ public class StatueBlockTile extends ItemDisplayTile {
             Item i = stack.getItem();
             if (CommonUtil.isSword(i)) return SWORD;
             if (CommonUtil.isTool(i)) return TOOL;
-            return (i.is(ModTags.CANDLES) || i == ModRegistry.CANDLE_HOLDER_ITEM.get()) ? StatuePose.CANDLE : StatuePose.HOLDING;
+            return (stack.is(ModTags.CANDLES) || i == ModRegistry.CANDLE_HOLDER_ITEM.get()) ? StatuePose.CANDLE : StatuePose.HOLDING;
         }
     }
 }

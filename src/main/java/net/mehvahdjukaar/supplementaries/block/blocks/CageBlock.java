@@ -2,7 +2,10 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.block.tiles.BlockGeneratorBlockTile;
 import net.mehvahdjukaar.supplementaries.block.tiles.CageBlockTile;
+import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -16,6 +19,8 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -147,5 +152,11 @@ public class CageBlock extends WaterBlock implements EntityBlock {
             return cage.mobContainer.onInteract(world, pos, player, hand);
         }
         return InteractionResult.PASS;
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
+        return BlockUtils.getTicker(pBlockEntityType, ModRegistry.CAGE_TILE.get(), CageBlockTile::tick);
     }
 }

@@ -2,6 +2,8 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import it.unimi.dsi.fastutil.floats.Float2ObjectAVLTreeMap;
 import net.mehvahdjukaar.supplementaries.block.tiles.BellowsBlockTile;
+import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -11,6 +13,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BellBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -57,9 +60,8 @@ public class BellowsBlock extends Block implements EntityBlock {
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 
-        BlockEntity te = worldIn.getBlockEntity(pos);
-        if (te instanceof BellowsBlockTile) {
-            float height = ((BellowsBlockTile) te).height;
+        if (worldIn.getBlockEntity(pos) instanceof BellowsBlockTile tile) {
+            float height = tile.height;
             //3 digit
             height = (float) (Math.round(height * 1000.0) / 1000.0);
 
@@ -134,13 +136,13 @@ public class BellowsBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new BellowsBlockTile();
+        return new BellowsBlockTile(pPos, pState);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return EntityBlock.super.getTicker(pLevel, pState, pBlockEntityType);
+        return BlockUtils.getTicker(pBlockEntityType, ModRegistry.BELLOWS_TILE.get(), BellowsBlockTile::tick);
     }
 
     @Override

@@ -5,6 +5,7 @@ import net.mehvahdjukaar.supplementaries.block.blocks.DoormatBlock;
 import net.mehvahdjukaar.supplementaries.block.util.ITextHolder;
 import net.mehvahdjukaar.supplementaries.block.util.TextHolder;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
@@ -14,22 +15,22 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 
 public class DoormatBlockTile extends ItemDisplayTile implements ITextHolder {
-    public static final int MAXLINES = 3;
+    public static final int MAX_LINES = 3;
 
     public TextHolder textHolder;
 
 
-    public DoormatBlockTile() {
-        super(ModRegistry.DOORMAT_TILE.get());
-        this.textHolder = new TextHolder(MAXLINES);
+    public DoormatBlockTile(BlockPos pos, BlockState state) {
+        super(ModRegistry.DOORMAT_TILE.get(),pos, state);
+        this.textHolder = new TextHolder(MAX_LINES);
     }
 
     @Override
     public TextHolder getTextHolder(){return this.textHolder;}
 
     @Override
-    public void load(BlockState state, CompoundTag compound) {
-        super.load(state, compound);
+    public void load(CompoundTag compound) {
+        super.load(compound);
         this.textHolder.read(compound);
     }
 
@@ -62,7 +63,7 @@ public class DoormatBlockTile extends ItemDisplayTile implements ITextHolder {
 
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        this.load(this.getBlockState(), pkt.getTag());
+        this.load(pkt.getTag());
     }
 
 }

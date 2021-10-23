@@ -7,23 +7,22 @@ import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.resources.ResourceLocation;
 
 
-public class GobletBlockTileRenderer extends BlockEntityRenderer<GobletBlockTile> {
+public class GobletBlockTileRenderer implements BlockEntityRenderer<GobletBlockTile> {
 
-    public GobletBlockTileRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
-        super(rendererDispatcherIn);
+    public GobletBlockTileRenderer(BlockEntityRendererProvider.Context context) {
     }
 
-    public static void renderFluid(float h, int color, int luminosity, ResourceLocation texture, PoseStack matrixStackIn, MultiBufferSource bufferIn, int light, int combinedOverlayIn, boolean shading){
+    public static void renderFluid(float h, int color, int luminosity, ResourceLocation texture, PoseStack matrixStackIn, MultiBufferSource bufferIn, int light, int combinedOverlayIn, boolean shading) {
         matrixStackIn.pushPose();
         float opacity = 1;//tile.liquidType.opacity;
-        if(luminosity!=0) light = light & 15728640 | luminosity << 4;
+        if (luminosity != 0) light = light & 15728640 | luminosity << 4;
         TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(texture);
         // TODO:remove breaking animation
         VertexConsumer builder = bufferIn.getBuffer(RenderType.translucentMovingBlock());
@@ -47,7 +46,6 @@ public class GobletBlockTileRenderer extends BlockEntityRenderer<GobletBlockTile
         float b = (float) ((color & 255)) / 255.0F;
 
 
-
         float hw = w / 2f;
 
         RendererUtil.addQuadTop(builder, matrixStackIn, -hw, h, hw, hw, h, -hw, minu, minv, maxu, maxv2, r, g, b, opacity, lu, lv, 0, 1, 0);
@@ -59,10 +57,10 @@ public class GobletBlockTileRenderer extends BlockEntityRenderer<GobletBlockTile
     @Override
     public void render(GobletBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
 
-        if(!tile.fluidHolder.isEmpty()){
+        if (!tile.fluidHolder.isEmpty()) {
 
-            renderFluid(7/16f, tile.fluidHolder.getTintColor(tile.getLevel(),tile.getBlockPos()), tile.fluidHolder.getFluid().getLuminosity(),
-                    tile.fluidHolder.getFluid().getStillTexture(), matrixStackIn,bufferIn,combinedLightIn,combinedOverlayIn,true);
+            renderFluid(7 / 16f, tile.fluidHolder.getTintColor(tile.getLevel(), tile.getBlockPos()), tile.fluidHolder.getFluid().getLuminosity(),
+                    tile.fluidHolder.getFluid().getStillTexture(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, true);
         }
     }
 }

@@ -1,12 +1,10 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.BellowsBlock;
-import net.mehvahdjukaar.supplementaries.client.renderers.tiles.BellowsBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -20,7 +18,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.FireBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.AABB;
@@ -28,7 +26,7 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 
-public class BellowsBlockTile extends BlockEntity implements TickableBlockEntity {
+public class BellowsBlockTile extends BlockEntity {
 
     public float height = 0;
     public float prevHeight = 0;
@@ -49,11 +47,13 @@ public class BellowsBlockTile extends BlockEntity implements TickableBlockEntity
                 .contract(-0.5 * dir.getStepX(), -0.5 * dir.getStepY(), -0.5 * dir.getStepZ());
     }
 
-    private void moveCollidedEntities() {
+    //TODO: rewrite some of this
+
+    private void moveCollidedEntities(Level level) {
         Direction dir = this.getDirection().getAxis() == Direction.Axis.Y ? Direction.SOUTH : Direction.UP;
         for (int j = 0; j < 2; j++) {
-            AABB axisalignedbb = this.getHalfBoundingBox(dir);
-            List<Entity> list = this.level.getEntities(null, axisalignedbb);
+            AABB halfBoundingBox = this.getHalfBoundingBox(dir);
+            List<Entity> list = level.getEntities(null, halfBoundingBox);
             if (!list.isEmpty()) {
                 for (Entity entity : list) {
                     if (entity.getPistonPushReaction() != PushReaction.IGNORE) {
@@ -63,19 +63,19 @@ public class BellowsBlockTile extends BlockEntity implements TickableBlockEntity
                         float f = this.height + 0.01f;
                         switch (dir) {
                             case SOUTH -> {
-                                dz = axisalignedbb.maxZ + f - entityBB.minZ;
+                                dz = halfBoundingBox.maxZ + f - entityBB.minZ;
                                 if (dz < 0) continue;
                             }
                             case NORTH -> {
-                                dz = axisalignedbb.minZ - f - entityBB.maxZ;
+                                dz = halfBoundingBox.minZ - f - entityBB.maxZ;
                                 if (dz > 0) continue;
                             }
                             case UP -> {
-                                dy = axisalignedbb.maxY + f - entityBB.minY;
+                                dy = halfBoundingBox.maxY + f - entityBB.minY;
                                 if (dy < 0) continue;
                             }
                             case DOWN -> {
-                                dy = axisalignedbb.minY - f - entityBB.maxY;
+                                dy = halfBoundingBox.minY - f - entityBB.maxY;
                                 if (dy > 0) continue;
                             }
                         }
@@ -87,17 +87,17 @@ public class BellowsBlockTile extends BlockEntity implements TickableBlockEntity
         }
     }
 
-    private void pushEntities(Direction facing, float period, float range) {
+    private void pushEntities(Direction facing, float period, float range, Level level) {
 
         double velocity = ServerConfigs.cached.BELLOWS_BASE_VEL_SCALING / period; // Affects acceleration
         double maxVelocity = ServerConfigs.cached.BELLOWS_MAX_VEL; // Affects max speed
 
         AABB facingBox = CommonUtil.getDirectionBB(this.worldPosition, facing, (int) range);
-        List<Entity> list = this.level.getEntitiesOfClass(Entity.class, facingBox);
+        List<Entity> list = level.getEntitiesOfClass(Entity.class, facingBox);
 
         for (Entity entity : list) {
 
-            if (!this.inLineOfSight(entity, facing)) continue;
+            if (!this.inLineOfSight(entity, facing, level)) continue;
             if (facing == Direction.UP) maxVelocity *= 0.5D;
             AABB entityBB = entity.getBoundingBox();
             double dist;
@@ -144,25 +144,32 @@ public class BellowsBlockTile extends BlockEntity implements TickableBlockEntity
         }
     }
 
-    private void blowParticles(float air, Direction facing) {
-        if (this.level.random.nextInt(2) == 0 && this.level.random.nextFloat() < air &&
-                !Block.canSupportCenter(this.level, this.worldPosition.relative(facing), facing.getOpposite())) {
-            this.spawnParticle(this.level, this.worldPosition);
+    private void blowParticles(float air, Direction facing, Level level) {
+        if (level.random.nextInt(2) == 0 && level.random.nextFloat() < air &&
+                !Block.canSupportCenter(level, this.worldPosition.relative(facing), facing.getOpposite())) {
+            this.spawnParticle(level, this.worldPosition);
         }
     }
 
-    private void tickFurnaces(BlockPos frontPos) {
+    @SuppressWarnings("unchecked")
+    private <T extends BlockEntity> void tickFurnaces(BlockPos frontPos, Level level, T tile) {
+        BlockState state = level.getBlockState(frontPos);
+        if (tile != null && state.is(ModTags.BELLOWS_TICKABLE_TAG)) {
+            BlockEntityTicker<T> ticker = (BlockEntityTicker<T>) state.getTicker(level, tile.getType());
+            if (ticker != null) {
+                ticker.tick(level, frontPos, state, tile);
+            }
+        }
+    }
+
+    private void tickFurnaces(BlockPos frontPos, Level level) {
         BlockEntity te = level.getBlockEntity(frontPos);
-        Block b = level.getBlockState(frontPos).getBlock();
-        if (te instanceof TickableBlockEntity &&
-                b.is(ModTags.BELLOWS_TICKABLE_TAG)) {
-            ((TickableBlockEntity) te).tick();
-        }
+        this.tickFurnaces(frontPos, level, te);
     }
 
-    private void refreshFire(int n, Direction facing, BlockPos frontPos) {
+    private void refreshFire(int n, Direction facing, BlockPos frontPos, Level level) {
         for (int i = 0; i < n; i++) {
-            BlockState fb = this.level.getBlockState(frontPos);
+            BlockState fb = level.getBlockState(frontPos);
             if (fb.getBlock() instanceof FireBlock) {
                 int age = fb.getValue(FireBlock.AGE);
                 if (age != 0) {
@@ -175,45 +182,44 @@ public class BellowsBlockTile extends BlockEntity implements TickableBlockEntity
     }
 
     //TODO: optimize this (also for flywheel)
-    @Override
-    public void tick() {
+    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, BellowsBlockTile tile) {
 
-        int power = this.getBlockState().getValue(BellowsBlock.POWER);
-        this.prevHeight = this.height;
+        int power = pState.getValue(BellowsBlock.POWER);
+        tile.prevHeight = tile.height;
 
-        if (power != 0 && !(this.offset == 0 && this.height != 0)) {
-            long time = this.level.getGameTime();
-            if (this.offset == 0) {
-                this.offset = time;
+        if (power != 0 && !(tile.offset == 0 && tile.height != 0)) {
+            long time = pLevel.getGameTime();
+            if (tile.offset == 0) {
+                tile.offset = time;
             }
 
             float period = ((float) ServerConfigs.cached.BELLOWS_PERIOD) - (power - 1) * ((float) ServerConfigs.cached.BELLOWS_POWER_SCALING);
-            Direction facing = this.getDirection();
+            Direction facing = pState.getValue(BellowsBlock.FACING);
 
             //slope of animation. for particles and pushing entities
-            float arg = (float) Math.PI * 2 * (((time - offset) / period) % 1);
+            float arg = (float) Math.PI * 2 * (((time - tile.offset) / period) % 1);
             float sin = Mth.sin(arg);
             float cos = Mth.cos(arg);
             final float dh = 1 / 16f;//0.09375f;
-            this.height = dh * cos - dh;
+            tile.height = dh * cos - dh;
 
             //client. particles
-            if (this.level.isClientSide) {
-                this.blowParticles(sin, facing);
+            if (pLevel.isClientSide) {
+                tile.blowParticles(sin, facing, pLevel);
             }
             //server
             else {
                 float range = ServerConfigs.cached.BELLOWS_RANGE;
                 //push entities (only if pushing air)
                 if (sin > 0) {
-                    this.pushEntities(facing, period, range);
+                    tile.pushEntities(facing, period, range, pLevel);
                 }
 
-                BlockPos frontPos = this.worldPosition.relative(facing);
+                BlockPos frontPos = pPos.relative(facing);
 
                 //speeds up furnaces
                 if (time % (10 - (power / 2)) == 0) {
-                    this.tickFurnaces(frontPos);
+                    tile.tickFurnaces(frontPos, pLevel);
                 }
 
                 //refresh fire blocks
@@ -221,52 +227,53 @@ public class BellowsBlockTile extends BlockEntity implements TickableBlockEntity
                 //fire updates (previous random tick) at a minimum of 30 ticks
                 int n = 0;
                 for (int a = 0; a <= range; a++) {
-                    if (time % (15 * (a + 1)) != 0) {
+                    if (time % (15L * (a + 1)) != 0) {
                         n = a;
                         break;
                     }
                 }
                 //only first 4 block will ultimately be kept active. this could change with random ticks if unlucky
-                this.refreshFire(n, facing, frontPos);
+                tile.refreshFire(n, facing, frontPos, pLevel);
 
             }
-        } else if (isPressed) {
+        } else if (tile.isPressed) {
             float minH = -2 / 16f;
-            this.height = Math.max(this.height - 0.01f, minH);
+            tile.height = Math.max(tile.height - 0.01f, minH);
 
-            if (this.height > minH) {
-                Direction facing = this.getDirection();
-                if (this.level.isClientSide) {
-                    this.blowParticles(0.8f, facing);
+            if (tile.height > minH) {
+                Direction facing = pState.getValue(BellowsBlock.FACING);
+
+                if (pLevel.isClientSide) {
+                    tile.blowParticles(0.8f, facing, pLevel);
                 } else {
                     float range = ServerConfigs.cached.BELLOWS_RANGE;
-                    this.pushEntities(facing, ServerConfigs.cached.BELLOWS_PERIOD, range);
+                    tile.pushEntities(facing, ServerConfigs.cached.BELLOWS_PERIOD, range, pLevel);
 
-                    BlockPos frontPos = this.worldPosition.relative(facing);
+                    BlockPos frontPos = pPos.relative(facing);
 
-                    if (this.height % 0.04 == 0) {
-                        this.tickFurnaces(frontPos);
+                    if (tile.height % 0.04 == 0) {
+                        tile.tickFurnaces(frontPos, pLevel);
                     }
 
-                    if (this.height % 0.15 == 0) {
-                        this.refreshFire((int) range, facing, frontPos);
+                    if (tile.height % 0.15 == 0) {
+                        tile.refreshFire((int) range, facing, frontPos, pLevel);
                     }
                 }
             }
         }
         //resets counter when powered off
         else {
-            this.offset = 0;
-            if (this.height < 0)
-                this.height = Math.min(this.height + 0.01f, 0);
+            tile.offset = 0;
+            if (tile.height < 0)
+                tile.height = Math.min(tile.height + 0.01f, 0);
         }
-        if (this.prevHeight != 0 && this.height != 0) {
-            this.moveCollidedEntities();
+        if (tile.prevHeight != 0 && tile.height != 0) {
+            tile.moveCollidedEntities(pLevel);
         }
-        this.isPressed = false;
+        tile.isPressed = false;
     }
 
-    public boolean inLineOfSight(Entity entity, Direction facing) {
+    public boolean inLineOfSight(Entity entity, Direction facing, Level level) {
         int x = facing.getStepX() * (Mth.floor(entity.getX()) - this.worldPosition.getX());
         int y = facing.getStepY() * (Mth.floor(entity.getY()) - this.worldPosition.getY());
         int z = facing.getStepZ() * (Mth.floor(entity.getZ()) - this.worldPosition.getZ());
@@ -274,7 +281,7 @@ public class BellowsBlockTile extends BlockEntity implements TickableBlockEntity
 
         for (int i = 1; i < Math.abs(x + y + z); i++) {
 
-            if (Block.canSupportCenter(this.level, this.worldPosition.relative(facing, i), facing.getOpposite())) {
+            if (Block.canSupportCenter(level, this.worldPosition.relative(facing, i), facing.getOpposite())) {
                 flag = false;
             }
         }

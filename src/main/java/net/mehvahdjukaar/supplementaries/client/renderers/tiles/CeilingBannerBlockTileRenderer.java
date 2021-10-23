@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.supplementaries.block.blocks.CeilingBannerBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.CeilingBannerBlockTile;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -24,13 +25,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.List;
 
-@OnlyIn(Dist.CLIENT)
-public class CeilingBannerBlockTileRenderer extends BlockEntityRenderer<CeilingBannerBlockTile> {
+public class CeilingBannerBlockTileRenderer implements BlockEntityRenderer<CeilingBannerBlockTile> {
     private final ModelPart flag = BannerRenderer.makeFlag();
     private final ModelPart bar;
 
-    public CeilingBannerBlockTileRenderer(BlockEntityRenderDispatcher p_i226002_1_) {
-        super(p_i226002_1_);
+    public CeilingBannerBlockTileRenderer(BlockEntityRendererProvider.Context context) {
         this.bar = new ModelPart(64, 64, 0, 42);
         this.bar.addBox(-10.0F, -32.0F, -1.0F, 20.0F, 2.0F, 2.0F, 0.0F);
     }

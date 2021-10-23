@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
-import net.mehvahdjukaar.supplementaries.block.tiles.PistonLauncherArmBlockTile;
+import net.mehvahdjukaar.supplementaries.block.tiles.SpringLauncherArmBlockTile;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -75,6 +75,6 @@ public class SpringLauncherArmBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new PistonLauncherArmBlockTile(pPos, pState);
+        return new SpringLauncherArmBlockTile(pPos, pState);
     }
 }

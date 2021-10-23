@@ -5,6 +5,7 @@ import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.inventories.SackContainer;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
@@ -40,8 +41,8 @@ public class SackBlockTile extends RandomizableContainerBlockEntity implements W
     private NonNullList<ItemStack> items = NonNullList.withSize(27, ItemStack.EMPTY);
     private int numPlayersUsing;
 
-    public SackBlockTile() {
-        super(ModRegistry.SACK_TILE.get());
+    public SackBlockTile(BlockPos pos, BlockState state) {
+        super(ModRegistry.SACK_TILE.get(), pos, state);
     }
 
     @Override
@@ -77,10 +78,10 @@ public class SackBlockTile extends RandomizableContainerBlockEntity implements W
     }
     public static int calculatePlayersUsing(Level world, BaseContainerBlockEntity tile, int x, int y, int z) {
         int i = 0;
-        for(Player playerentity : world.getEntitiesOfClass(Player.class, new AABB((float)x - 5.0F, (float)y - 5.0F, (float)z - 5.0F, (float)(x + 1) + 5.0F, (float)(y + 1) + 5.0F, (float)(z + 1) + 5.0F))) {
-            if (playerentity.containerMenu instanceof SackContainer) {
-                Container iinventory = ((SackContainer)playerentity.containerMenu).inventory;
-                if (iinventory == tile) {
+        for(Player player : world.getEntitiesOfClass(Player.class, new AABB((float)x - 5.0F, (float)y - 5.0F, (float)z - 5.0F, (float)(x + 1) + 5.0F, (float)(y + 1) + 5.0F, (float)(z + 1) + 5.0F))) {
+            if (player.containerMenu instanceof SackContainer) {
+                Container inventory = ((SackContainer)player.containerMenu).inventory;
+                if (inventory == tile) {
                     ++i;
                 }
             }
@@ -124,8 +125,8 @@ public class SackBlockTile extends RandomizableContainerBlockEntity implements W
     }
 
     @Override
-    public void load(BlockState state, CompoundTag nbt) {
-        super.load(state, nbt);
+    public void load(CompoundTag nbt) {
+        super.load(nbt);
         this.loadFromTag(nbt);
     }
 
@@ -179,7 +180,6 @@ public class SackBlockTile extends RandomizableContainerBlockEntity implements W
         return isSlotUnlocked(index) && CommonUtil.isAllowedInShulker(stack);
     }
 
-    //TODO: figure out what this handlers and ISided inventory do
     @Override
     public int[] getSlotsForFace(Direction side) {
         return IntStream.range(0, this.getContainerSize()).toArray();

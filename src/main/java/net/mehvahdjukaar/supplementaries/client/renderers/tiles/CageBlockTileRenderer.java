@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.common.mobholder.IMobContainerProvider;
 import net.mehvahdjukaar.supplementaries.common.mobholder.MobContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
@@ -15,12 +16,16 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 
 
-public class CageBlockTileRenderer<T extends BlockEntity & IMobContainerProvider> extends BlockEntityRenderer<T> {
+public class CageBlockTileRenderer<T extends BlockEntity & IMobContainerProvider> implements BlockEntityRenderer<T> {
     private final EntityRenderDispatcher entityRenderer;
 
-    public CageBlockTileRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
-        super(rendererDispatcherIn);
+    public CageBlockTileRenderer(BlockEntityRendererProvider.Context context) {
         entityRenderer = Minecraft.getInstance().getEntityRenderDispatcher();
+    }
+
+    @Override
+    public int getViewDistance() {
+        return 80;
     }
 
     public void renderMob(MobContainer mobHolder, float partialTicks, PoseStack matrixStack, MultiBufferSource bufferIn, int combinedLightIn, Direction dir) {

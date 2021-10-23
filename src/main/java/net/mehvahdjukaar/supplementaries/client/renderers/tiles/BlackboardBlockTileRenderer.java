@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
@@ -29,9 +30,13 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
     private final Minecraft MC;
     public final int WIDTH = 6;
 
-    public BlackboardBlockTileRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
-        super(rendererDispatcherIn);
+    public BlackboardBlockTileRenderer(BlockEntityRendererProvider.Context context) {
         this.MC = Minecraft.getInstance();
+    }
+
+    @Override
+    public int getViewDistance() {
+        return 96;
     }
 
     //TODO: use this for culling

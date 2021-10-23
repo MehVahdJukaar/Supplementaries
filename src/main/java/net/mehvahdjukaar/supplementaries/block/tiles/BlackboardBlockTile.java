@@ -27,8 +27,6 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected 
 
     //client side
     public BlackboardKey textureKey = null;
-    //public static final ModelProperty<BlackboardKey> TEXTURE = new ModelProperty<>();
-    //private final IModelData data;
 
     public BlackboardBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.BLACKBOARD_TILE.get(), pos, state);
@@ -38,7 +36,6 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected 
                 this.pixels[x][y] = 0;
             }
         }
-        //this.data = (new ModelDataMap.Builder()).withInitial(TEXTURE, null).build();
     }
 
     //I need this for when it's changed manually
@@ -59,9 +56,6 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected 
         }
     }
 
-
-    //public IModelData getModelData() return this.data;
-
     public boolean isEmpty() {
         boolean flag = false;
         for (byte[] pixel : pixels) {
@@ -78,10 +72,6 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected 
     //client
     public void updateModelData() {
         this.textureKey = null;
-        //this.textureKey = BlackboardTextureManager.INSTANCE.getUpdatedKey(this);
-        //this.data.setData(TEXTURE, textureKey);
-        //ModelDataManager.requestModelDataRefresh(this);
-        //this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
     }
 
     @Override
@@ -158,11 +148,6 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected 
 
     public float getYaw() {
         return -this.getDirection().toYRot();
-    }
-
-    @Override
-    public double getViewDistance() {
-        return 96;
     }
 
     @Nullable

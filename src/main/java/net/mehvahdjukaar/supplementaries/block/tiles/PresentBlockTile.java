@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.block.blocks.PresentBlock;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.inventories.PresentContainer;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
@@ -26,11 +27,9 @@ public class PresentBlockTile extends ItemDisplayTile {
     private boolean packed = false;
 
 
-    public PresentBlockTile() {
-        super(ModRegistry.PRESENT_TILE.get());
+    public PresentBlockTile(BlockPos pos, BlockState state) {
+        super(ModRegistry.PRESENT_TILE.get(), pos, state);
     }
-
-
 
     public boolean isUnused() {
         return this.numPlayersUsing <= 0;
@@ -95,8 +94,8 @@ public class PresentBlockTile extends ItemDisplayTile {
     }
 
     @Override
-    public void load(BlockState state, CompoundTag tag) {
-        super.load(state, tag);
+    public void load(CompoundTag tag) {
+        super.load(tag);
         if (tag.contains("Recipient"))
             this.recipient = tag.getString("Recipient");
         if (tag.contains("Sender"))

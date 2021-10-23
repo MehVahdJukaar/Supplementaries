@@ -5,6 +5,7 @@ import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.util.ITextHolder;
 import net.mehvahdjukaar.supplementaries.block.util.TextHolder;
+import net.mehvahdjukaar.supplementaries.client.renderers.tiles.SignPostBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.VanillaWoodTypes;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
@@ -43,8 +44,8 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolder, IO
     public IWoodType woodTypeUp = VanillaWoodTypes.OAK;
     public IWoodType woodTypeDown = VanillaWoodTypes.OAK;
 
-    public SignPostBlockTile() {
-        super(ModRegistry.SIGN_POST_TILE.get());
+    public SignPostBlockTile(BlockPos pos, BlockState state) {
+        super(ModRegistry.SIGN_POST_TILE.get(), pos, state);
         this.textHolder = new TextHolder(2);
     }
 
@@ -59,11 +60,6 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolder, IO
 
     @Override
     public TextHolder getTextHolder(){ return this.textHolder; }
-
-    @Override
-    public double getViewDistance() {
-        return 96;
-    }
 
     @Override
     public AABB getRenderBoundingBox(){
@@ -93,15 +89,11 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolder, IO
     }
 
     @Override
-    public void load(BlockState state, CompoundTag compound) {
-        super.load(state, compound);
+    public void load(CompoundTag compound) {
+        super.load(compound);
         this.framed = compound.getBoolean("Framed");
 
         this.textHolder.read(compound);
-
-        //TODO: remove in the future
-        if(compound.contains("Fence"))
-            this.mimic = NbtUtils.readBlockState(compound.getCompound("Fence"));
 
         this.yawUp = compound.getFloat("YawUp");
         this.yawDown = compound.getFloat("YawDown");

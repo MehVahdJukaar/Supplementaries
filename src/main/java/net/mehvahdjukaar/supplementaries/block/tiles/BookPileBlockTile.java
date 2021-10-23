@@ -7,11 +7,11 @@ import net.mehvahdjukaar.supplementaries.compat.quark.QuarkPlugin;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.BookItem;
 import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class BookPileBlockTile extends ItemDisplayTile {
@@ -24,6 +24,7 @@ public class BookPileBlockTile extends ItemDisplayTile {
         this.horizontal = horizontal;
     }
 
+    //TODO: add new stuff
     @Override
     public void updateTileOnInventoryChanged() {
         int b = (int) this.getItems().stream().filter(i -> !i.isEmpty()).count();
@@ -33,9 +34,11 @@ public class BookPileBlockTile extends ItemDisplayTile {
         this.enchantPower = 0;
         for (int i = 0; i < 4; i++) {
             Item item = this.getItem(i).getItem();
-            if (item instanceof BookItem) this.enchantPower += ServerConfigs.cached.BOOK_POWER/4f;
-            else if (CompatHandler.quark && QuarkPlugin.isTome(item)) this.enchantPower += (ServerConfigs.cached.BOOK_POWER/4f) * 2;
-            else if (item instanceof EnchantedBookItem) this.enchantPower += ServerConfigs.cached.ENCHANTED_BOOK_POWER/4f;
+            if (item instanceof BookItem) this.enchantPower += ServerConfigs.cached.BOOK_POWER / 4f;
+            else if (CompatHandler.quark && QuarkPlugin.isTome(item))
+                this.enchantPower += (ServerConfigs.cached.BOOK_POWER / 4f) * 2;
+            else if (item instanceof EnchantedBookItem)
+                this.enchantPower += ServerConfigs.cached.ENCHANTED_BOOK_POWER / 4f;
         }
     }
 

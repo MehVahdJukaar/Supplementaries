@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -16,15 +17,13 @@ import net.minecraft.util.Mth;
 import com.mojang.math.Vector3f;
 
 
-public class ClockBlockTileRenderer extends BlockEntityRenderer<ClockBlockTile> {
+public class ClockBlockTileRenderer implements BlockEntityRenderer<ClockBlockTile> {
     public final Material HAND_TEXTURE = new Material(TextureAtlas.LOCATION_BLOCKS, Textures.CLOCK_HAND_TEXTURE);
     public final ModelPart hourHand = new ModelPart(16, 16, 0, 0);
     public final ModelPart minuteHand = new ModelPart(16, 16, 2, 0);
 
 
-    public ClockBlockTileRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
-        super(rendererDispatcherIn);
-
+    public ClockBlockTileRenderer(BlockEntityRendererProvider.Context context) {
         this.hourHand.addBox(-0.5F, 0.0F, 0.0F, 1.0F, 5.0F, 0.0F, 0.0F, false);
         this.hourHand.setPos(0.0F, 24.0F, 0.0F);
         this.minuteHand.addBox(-0.5F, 0.0F, 0.0F, 1.0F, 6.0F, 0.0F, 0.0F, false);

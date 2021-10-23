@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 
-import net.mehvahdjukaar.supplementaries.block.tiles.PistonLauncherArmBlockTile;
+import net.mehvahdjukaar.supplementaries.block.tiles.SpringLauncherArmBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.world.level.block.Block;
@@ -108,8 +108,8 @@ public class SpringLauncherHeadBlock extends DirectionalBlock {
                 worldIn.setBlock(pos, ModRegistry.SPRING_LAUNCHER_ARM.get().defaultBlockState()
                         .setValue(SpringLauncherArmBlock.EXTENDING, false).setValue(FACING, state.getValue(FACING)), 3);
                 BlockEntity te = worldIn.getBlockEntity(pos);
-                if(te instanceof PistonLauncherArmBlockTile){
-                    PistonLauncherArmBlockTile pistonarm = (PistonLauncherArmBlockTile) te;
+                if(te instanceof SpringLauncherArmBlockTile){
+                    SpringLauncherArmBlockTile pistonarm = (SpringLauncherArmBlockTile) te;
                     pistonarm.age = 1;
                     pistonarm.offset = -0.5;
                 }

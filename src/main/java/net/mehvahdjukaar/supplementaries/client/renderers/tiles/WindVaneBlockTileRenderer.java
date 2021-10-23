@@ -2,32 +2,31 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.blocks.WindVaneBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.WindVaneBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import com.mojang.math.Vector3f;
+import net.minecraft.world.level.block.state.BlockState;
 
 
-public class WindVaneBlockTileRenderer extends BlockEntityRenderer<WindVaneBlockTile> {
+public class WindVaneBlockTileRenderer implements BlockEntityRenderer<WindVaneBlockTile> {
 
-    public static final ResourceLocation MODEL_RES = Supplementaries.res(ModRegistry.WIND_VANE_NAME+"_tile");
+    public static final ResourceLocation MODEL_RES = Supplementaries.res(ModRegistry.WIND_VANE_NAME + "_tile");
 
     private final BlockRenderDispatcher blockRenderer;
     private final BlockState STATE;
 
-    public WindVaneBlockTileRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
-        super(rendererDispatcherIn);
+    public WindVaneBlockTileRenderer(BlockEntityRendererProvider.Context context) {
         blockRenderer = Minecraft.getInstance().getBlockRenderer();
         STATE = ModRegistry.WIND_VANE.get().defaultBlockState().setValue(WindVaneBlock.TILE, true);
     }

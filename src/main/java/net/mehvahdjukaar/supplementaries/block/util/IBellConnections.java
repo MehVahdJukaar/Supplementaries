@@ -21,12 +21,11 @@ public interface IBellConnections {
 
         @Override
         public String getSerializedName() {
-            switch (this){
-                default:
-                case NONE:return "none";
-                case ROPE:return "rope";
-                case CHAIN:return "chain";
-            }
+            return switch (this) {
+                case NONE -> "none";
+                case ROPE -> "rope";
+                case CHAIN -> "chain";
+            };
         }
     }
 }

@@ -45,7 +45,7 @@ public class HangingSignGui extends Screen {
     public HangingSignGui(HangingSignBlockTile teSign) {
         super(new TranslatableComponent("sign.edit"));
         this.tileSign = teSign;
-        this.cachedLines = IntStream.range(0, HangingSignBlockTile.MAXLINES).mapToObj(teSign.textHolder::getText).map(Component::getString).toArray(String[]::new);
+        this.cachedLines = IntStream.range(0, HangingSignBlockTile.MAX_LINES).mapToObj(teSign.textHolder::getText).map(Component::getString).toArray(String[]::new);
 
     }
 
@@ -67,7 +67,7 @@ public class HangingSignGui extends Screen {
     }
 
     public void scrollText(int amount){
-        this.editLine = Math.floorMod(this.editLine - amount, HangingSignBlockTile.MAXLINES);
+        this.editLine = Math.floorMod(this.editLine - amount, HangingSignBlockTile.MAX_LINES);
         this.textInputUtil.setCursorToEnd();
     }
 

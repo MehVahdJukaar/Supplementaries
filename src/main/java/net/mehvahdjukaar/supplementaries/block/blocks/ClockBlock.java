@@ -2,8 +2,13 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.block.tiles.BellowsBlockTile;
 import net.mehvahdjukaar.supplementaries.block.tiles.ClockBlockTile;
+import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.events.ItemsOverrideHandler;
+import net.mehvahdjukaar.supplementaries.setup.ClientSetup;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.TextComponent;
@@ -15,6 +20,8 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -100,7 +107,7 @@ public class ClockBlock extends WaterBlock implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new ClockBlockTile();
+        return new ClockBlockTile(pPos, pState);
     }
 
     @Override
@@ -137,7 +144,13 @@ public class ClockBlock extends WaterBlock implements EntityBlock {
     public void onPlace(BlockState state, Level worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
         super.onPlace(state, worldIn, pos, oldState, isMoving);
         if (worldIn.getBlockEntity(pos) instanceof ClockBlockTile tile) {
-            tile.updateInitialTime();
+            tile.updateInitialTime(worldIn, state, pos);
         }
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
+        return BlockUtils.getTicker(pBlockEntityType, ModRegistry.CLOCK_BLOCK_TILE.get(), ClockBlockTile::tick);
     }
 }

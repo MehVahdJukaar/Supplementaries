@@ -1,36 +1,36 @@
 package net.mehvahdjukaar.supplementaries.common.mobholder;
 
+import com.google.common.base.Preconditions;
 import net.mehvahdjukaar.selene.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper;
-import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.common.capabilities.SupplementariesCapabilities;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.AgableMob;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.npc.Villager;
-import net.minecraft.world.entity.monster.EnderMan;
-import net.minecraft.entity.passive.*;
-import net.minecraft.world.entity.animal.AbstractFish;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.DoubleTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.stats.Stats;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.stats.Stats;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ambient.Bat;
+import net.minecraft.world.entity.animal.AbstractFish;
+import net.minecraft.world.entity.animal.Fox;
+import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.util.LazyOptional;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -39,24 +39,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
-//after rewriting this mess it somehow ended up even worse... HOW??
-//edit: third time the charm?
-//edit forth?
-//TODO: maybe remove type here since I'm not using it anymore
-import net.minecraft.world.entity.ambient.Bat;
-import net.minecraft.world.entity.animal.Bee;
-import net.minecraft.world.entity.animal.Fox;
-import net.minecraft.world.entity.animal.IronGolem;
-import net.minecraft.world.entity.animal.Wolf;
-
 public class MobContainer {
 
     private final float width;
     private final float height;
-
-    @Nullable
-    private Level world;
-    private BlockPos pos;
 
     //stuff that actually gets saved
     @Nullable
@@ -66,34 +52,9 @@ public class MobContainer {
     @Nullable
     private ICatchableMob mobDisplayCapInstance;
 
-    //TODO: maybe make this not null so it can use non static save and load
-    public MobContainer(float width, float height, @Nullable Level world, BlockPos pos) {
+    public MobContainer(float width, float height) {
         this.width = width;
         this.height = height;
-        this.world = world;
-        this.pos = pos;
-    }
-
-    //call on load
-    public void setWorldAndPos(Level world, BlockPos pos){
-        this.pos = pos;
-        this.world = world;
-    }
-
-    public void updateLightLevel() {
-        int light;
-        if (world != null && !world.isClientSide) {
-            if (hasDisplayMob()) {
-                light = mobDisplayCapInstance.getLightLevel();
-            } else {
-                light = CapturedMobsHelper.getTypeFromBucket(this.data.filledBucket.getItem()).getLightLevel();
-            }
-
-            BlockState state = this.world.getBlockState(this.pos);
-            if (state.getValue(BlockProperties.LIGHT_LEVEL_0_15) != light) {
-                this.world.setBlock(this.pos, state.setValue(BlockProperties.LIGHT_LEVEL_0_15, light), 2 | 4 | 16);
-            }
-        }
     }
 
     public static <E extends Entity> ICatchableMob getCap(E entity) {
@@ -108,7 +69,7 @@ public class MobContainer {
     }
 
     public CompoundTag save(CompoundTag tag) {
-        if(!this.isEmpty()) {
+        if (!this.isEmpty()) {
             this.data.saveToTag(tag);
         }
         return tag;
@@ -119,28 +80,45 @@ public class MobContainer {
         this.setData(data);
     }
 
-    private void setData(@Nullable MobData data){
+    private void setData(@Nullable MobData data) {
         this.data = data;
         this.needsInitialization = true;
     }
 
+    //----init----
+
     private boolean needsInitialization = false;
 
-    private void initializeEntity(){
+    private void initializeEntity(Level level, BlockPos pos) {
         this.needsInitialization = false;
-        if (data != null && this.world != null && this.pos != null) {
-            Entity entity = createStaticMob(data, world, pos);
+        if (data != null && level != null && pos != null) {
+            Entity entity = createStaticMob(data, level, pos);
 
             //visual entity stored in capability
             this.mobDisplayCapInstance = getCap(entity);
-            this.mobDisplayCapInstance.setContainerDimensions(this.width, this.height);
-            this.mobDisplayCapInstance.onContainerWaterlogged(world.getFluidState(pos).getType() != Fluids.EMPTY);
-
-            this.updateLightLevel();
+            if (this.mobDisplayCapInstance != null) {
+                this.mobDisplayCapInstance.setContainerDimensions(this.width, this.height);
+                this.mobDisplayCapInstance.onContainerWaterlogged(level.getFluidState(pos).getType() != Fluids.EMPTY);
+                this.updateLightLevel(level, pos);
+            }
         }
     }
 
-    //----init----
+    public void updateLightLevel(Level level, BlockPos pos) {
+        int light;
+        if (level != null && !level.isClientSide) {
+            if (hasDisplayMob()) {
+                light = mobDisplayCapInstance.getLightLevel();
+            } else {
+                light = CapturedMobsHelper.getTypeFromBucket(this.data.filledBucket.getItem()).getLightLevel();
+            }
+            BlockState state = level.getBlockState(pos);
+            if (state.getValue(BlockProperties.LIGHT_LEVEL_0_15) != light) {
+                level.setBlock(pos, state.setValue(BlockProperties.LIGHT_LEVEL_0_15, light), 2 | 4 | 16);
+            }
+        }
+    }
+
 
     /**
      * initialize mob holder when loaded. creates a static entity for rendering. serverside too since we need it for mobs like chicken which need to lay eggs
@@ -183,28 +161,9 @@ public class MobContainer {
     }
 
     @Nullable
-    public static Entity createEntityFromNBT(CompoundTag com, @Nullable UUID id, Level world) {
-        if (com != null && com.contains("id")) {
-            Entity entity;
-            //TODO: remove in 1.17
-            String name = com.get("id").getAsString();
-            switch (name) {
-                case "minecraft:bee":
-                    entity = new Bee(EntityType.BEE, world);
-                    break;
-                case "minecraft:iron_golem":
-                    entity = new IronGolem(EntityType.IRON_GOLEM, world);
-                    break;
-                case "minecraft:enderman":
-                    entity = new EnderMan(EntityType.ENDERMAN, world);
-                    break;
-                case "minecraft:wolf":
-                    entity = new Wolf(EntityType.WOLF, world);
-                    break;
-                default:
-                    entity = EntityType.loadEntityRecursive(com, world, o -> o);
-                    break;
-            }
+    public static Entity createEntityFromNBT(CompoundTag tag, @Nullable UUID id, Level world) {
+        if (tag != null && tag.contains("id")) {
+            Entity entity = EntityType.loadEntityRecursive(tag, world, o -> o);
             if (id != null && entity != null) {
                 entity.setUUID(id);
             }
@@ -255,8 +214,7 @@ public class MobContainer {
         return false;
     }
 
-
-    public boolean isEmpty(){
+    public boolean isEmpty() {
         return this.data == null;
     }
 
@@ -264,12 +222,12 @@ public class MobContainer {
         return this.mobDisplayCapInstance != null;
     }
 
-    public void tick() {
-        if(this.needsInitialization) this.initializeEntity();
+    public void tick(Level pLevel, BlockPos pPos) {
+        if (this.needsInitialization) this.initializeEntity(pLevel, pPos);
         if (this.hasDisplayMob()) {
             //TODO: maybe put inside cap
             this.mobDisplayCapInstance.getEntity().tickCount++;
-            this.mobDisplayCapInstance.tickInsideContainer(this.world, this.pos, this.data.scale, this.data.mobTag);
+            this.mobDisplayCapInstance.tickInsideContainer(pLevel, pPos, this.data.scale, this.data.mobTag);
         }
     }
 
@@ -280,13 +238,14 @@ public class MobContainer {
         return InteractionResult.PASS;
     }
 
-    public @Nullable MobData getData() {
+    public @Nullable
+    MobData getData() {
         return data;
     }
 
     @Nullable
     public Entity getDisplayedMob() {
-        if(this.hasDisplayMob()){
+        if (this.hasDisplayMob()) {
             return this.mobDisplayCapInstance.getEntity();
         }
         return null;
@@ -360,8 +319,7 @@ public class MobContainer {
         }
 
         //prepares mob
-        if (mob instanceof LivingEntity) {
-            LivingEntity le = (LivingEntity) mob;
+        if (mob instanceof LivingEntity le) {
             le.yHeadRotO = 0;
             le.yHeadRot = 0;
             le.animationSpeed = 0;
@@ -371,10 +329,10 @@ public class MobContainer {
             le.hurtTime = 0;
             le.attackAnim = 0;
         }
-        mob.yRot = 0;
+        mob.setYRot(0);
         mob.yRotO = 0;
         mob.xRotO = 0;
-        mob.xRot = 0;
+        mob.setXRot(0);
         mob.clearFire();
         mob.invulnerableTime = 0;
 
@@ -409,7 +367,7 @@ public class MobContainer {
     /**
      * get mob scale and vertical offset for a certain container
      *
-     * @param cap mob capability    entity
+     * @param cap    mob capability    entity
      * @param blockW container width
      * @param blockH container height
      * @return scale and y offset
@@ -422,7 +380,7 @@ public class MobContainer {
 
         if (mob instanceof LivingEntity && ((LivingEntity) mob).isBaby()) {
             if ((mob instanceof Villager)) babyScale = 1.125f;
-            else if (mob instanceof AgableMob) babyScale = 2f;
+            else if (mob instanceof AgeableMob) babyScale = 2f;
             else babyScale = 1.125f;
         }
 
@@ -465,6 +423,11 @@ public class MobContainer {
         }
 
         return new ImmutablePair<>(scale, yOffset);
+    }
+
+    public void clear() {
+        this.data = null;
+        this.mobDisplayCapInstance = null;
     }
 
     public static class MobData {
@@ -522,14 +485,14 @@ public class MobContainer {
                 String name = cmp.getString("Name");
 
                 //backwards compat
-                if(cmp.contains("YOffset")){
+                if (cmp.contains("YOffset")) {
                     float y = cmp.getFloat("YOffset");
                     ListTag listnbt = new ListTag();
                     listnbt.add(DoubleTag.valueOf(0.5));
                     listnbt.add(DoubleTag.valueOf(y));
                     listnbt.add(DoubleTag.valueOf(0.5));
 
-                    if(entityData.contains("Pos")) entityData.remove("Pos");
+                    if (entityData.contains("Pos")) entityData.remove("Pos");
                     entityData.put("Pos", listnbt);
                 }
 

@@ -5,7 +5,9 @@ import net.mehvahdjukaar.supplementaries.block.blocks.SackBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.SafeBlock;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.setup.ClientSetup;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
@@ -49,8 +51,8 @@ public class SafeBlockTile extends RandomizableContainerBlockEntity implements W
     public String ownerName = null;
     public UUID owner = null;
 
-    public SafeBlockTile() {
-        super(ModRegistry.SAFE_TILE.get());
+    public SafeBlockTile(BlockPos pos, BlockState state) {
+        super(ModRegistry.SAFE_TILE.get(), pos, state);
     }
 
     @Override
@@ -80,10 +82,13 @@ public class SafeBlockTile extends RandomizableContainerBlockEntity implements W
 
     @Override
     public void setOwner(UUID owner) {
-        this.ownerName = level.getPlayerByUUID(owner).getName().getString();
-        this.owner = owner;
-        this.setChanged();
-        this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
+        if (this.level != null) {
+            if (owner != null) {
+                this.ownerName = level.getPlayerByUUID(owner).getName().getString();
+            }
+            this.setChanged();
+            this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
+        }
     }
 
     public void clearOwner() {
@@ -177,8 +182,8 @@ public class SafeBlockTile extends RandomizableContainerBlockEntity implements W
     }
 
     @Override
-    public void load(BlockState state, CompoundTag nbt) {
-        super.load(state, nbt);
+    public void load(CompoundTag nbt) {
+        super.load(nbt);
         this.loadFromNbt(nbt);
     }
 
@@ -193,7 +198,8 @@ public class SafeBlockTile extends RandomizableContainerBlockEntity implements W
         if (!this.tryLoadLootTable(compound) && compound.contains("Items", 9)) {
             ContainerHelper.loadAllItems(compound, this.items);
         }
-        this.loadOwner(compound);
+        if (compound.contains("Owner"))
+            this.owner = compound.getUUID("Owner");
         if (compound.contains("OwnerName"))
             this.ownerName = compound.getString("OwnerName");
         if (compound.contains("Password"))

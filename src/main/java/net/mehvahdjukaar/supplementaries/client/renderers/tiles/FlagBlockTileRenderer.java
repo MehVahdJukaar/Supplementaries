@@ -13,6 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.SpriteCoordinateExpander;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.resources.model.Material;
 import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -27,13 +28,16 @@ import com.mojang.math.Vector3f;
 
 import java.util.List;
 
-public class FlagBlockTileRenderer extends BlockEntityRenderer<FlagBlockTile> {
+public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile> {
     private final Minecraft minecraft = Minecraft.getInstance();
 
-    public FlagBlockTileRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
-        super(rendererDispatcherIn);
+    public FlagBlockTileRenderer(BlockEntityRendererProvider.Context context) {
     }
 
+    @Override
+    public int getViewDistance() {
+        return 128;
+    }
 
     @Override
     public void render(FlagBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,

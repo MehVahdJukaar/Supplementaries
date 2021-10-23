@@ -5,11 +5,12 @@ import net.mehvahdjukaar.supplementaries.block.tiles.WallLanternBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.LOD;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 
 
 public class WallLanternBlockTileRenderer extends EnhancedLanternBlockTileRenderer<WallLanternBlockTile> {
-    public WallLanternBlockTileRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
-        super(rendererDispatcherIn);
+    public WallLanternBlockTileRenderer(BlockEntityRendererProvider.Context context) {
+        super(context);
     }
 
     @Override

@@ -1,41 +1,52 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.tiles.StructureTempBlockTile;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-
-public class StructureTempBlock extends Block {
+public class StructureTempBlock extends Block implements EntityBlock {
 
     public StructureTempBlock(Properties properties) {
         super(properties);
-
     }
+
     @Override
     public RenderShape getRenderShape(BlockState state) {
         return RenderShape.INVISIBLE;
     }
 
+    @Nullable
     @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-        return new StructureTempBlockTile();
+    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
+        return new StructureTempBlockTile(pPos, pState);
     }
 
     @Override
-    public boolean canBeReplacedByLeaves(BlockState state, LevelReader world, BlockPos pos) {
-        return false;
+    public boolean canHarvestBlock(BlockState state, BlockGetter world, BlockPos pos, Player player) {
+        return super.canHarvestBlock(state, world, pos, player);
     }
 
-    //Todo: make so grass and flowers can replace
     @Override
-    public boolean canBeReplaced(BlockState p_196253_1_, BlockPlaceContext p_196253_2_) {
-        return super.canBeReplaced(p_196253_1_, p_196253_2_);
+    public boolean canBeReplaced(BlockState pState, BlockPlaceContext pUseContext) {
+        return super.canBeReplaced(pState, pUseContext);
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
+        return BlockUtils.getTicker(pBlockEntityType, ModRegistry.STRUCTURE_TEMP_TILE.get(), !pLevel.isClientSide ? StructureTempBlockTile::tick : null);
     }
 }

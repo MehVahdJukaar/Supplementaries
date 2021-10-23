@@ -3,19 +3,16 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.block.blocks.ItemShelfBlock;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.UUID;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class ItemShelfBlockTile extends ItemDisplayTile {
 
-    public ItemShelfBlockTile() {
-        super(ModRegistry.ITEM_SHELF_TILE.get());
+    public ItemShelfBlockTile(BlockPos pos, BlockState state) {
+        super(ModRegistry.ITEM_SHELF_TILE.get(), pos, state);
     }
 
     @Override

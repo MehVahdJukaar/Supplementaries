@@ -4,11 +4,11 @@ import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.supplementaries.block.util.IBlockHolder;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FlowerPotBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.util.Constants;
 import org.jetbrains.annotations.Nullable;
@@ -50,11 +50,12 @@ public class HangingFlowerPotBlockTile extends SwayingBlockTile implements IBloc
 
     @Override
     public boolean setHeldBlock(BlockState state, int index) {
-        if(state.getBlock() instanceof FlowerPotBlock){
+        if (state.getBlock() instanceof FlowerPotBlock) {
             this.pot = state;
             this.setChanged();
             //TODO: optimize mark dirty and block update to send only what's needed
-            this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
+            if (this.level != null)
+                this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
             return true;
         }
         return false;
@@ -80,10 +81,5 @@ public class HangingFlowerPotBlockTile extends SwayingBlockTile implements IBloc
     @Override
     public AABB getRenderBoundingBox() {
         return new AABB(this.worldPosition);
-    }
-
-    @Override
-    public double getViewDistance() {
-        return 64;
     }
 }

@@ -10,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
@@ -17,14 +18,13 @@ import net.minecraft.util.Mth;
 import com.mojang.math.Vector3f;
 
 
-public class JarBoatTileRenderer extends BlockEntityRenderer<JarBoatTile> {
+public class JarBoatTileRenderer implements BlockEntityRenderer<JarBoatTile> {
 
     public static final ModelResourceLocation LOC = new ModelResourceLocation(Supplementaries.MOD_ID+":jar_boat_ship", "");
 
     private final BlockRenderDispatcher blockRenderer;
 
-    public JarBoatTileRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
-        super(rendererDispatcherIn);
+    public JarBoatTileRenderer(BlockEntityRendererProvider.Context context) {
         blockRenderer = Minecraft.getInstance().getBlockRenderer();
 
     }

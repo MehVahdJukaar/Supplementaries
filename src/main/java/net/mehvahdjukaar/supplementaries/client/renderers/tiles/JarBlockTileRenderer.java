@@ -2,6 +2,8 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.selene.fluids.SoftFluid;
 import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
@@ -11,18 +13,16 @@ import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.common.mobholder.MobContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.Random;
 
@@ -31,8 +31,8 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
     private final ItemRenderer itemRenderer;
     private final Minecraft minecraft = Minecraft.getInstance();
 
-    public JarBlockTileRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
-        super(rendererDispatcherIn);
+    public JarBlockTileRenderer(BlockEntityRendererProvider.Context context) {
+        super(context);
         itemRenderer = minecraft.getItemRenderer();
     }
 
@@ -68,9 +68,9 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
                 matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(rand.nextInt(16) * 22.5f));
                 // matrixStackIn.translate(0, 0, 0.0625);
                 matrixStackIn.translate(0, 0, 1 / (16f * scale));
-                BakedModel ibakedmodel = itemRenderer.getModel(stack, tile.getLevel(), null);
+                BakedModel model = itemRenderer.getModel(stack, tile.getLevel(), null, 0);
                 itemRenderer.render(stack, ItemTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
-                        combinedOverlayIn, ibakedmodel);
+                        combinedOverlayIn, model);
             }
             matrixStackIn.popPose();
         }

@@ -4,13 +4,13 @@ import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.blocks.WallLanternBlock;
 import net.mehvahdjukaar.supplementaries.block.util.IBlockHolder;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.ModelDataManager;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
@@ -20,7 +20,7 @@ import net.minecraftforge.common.util.Constants;
 import java.util.Objects;
 
 
-public class WallLanternBlockTile extends EnhancedLanternBlockTile implements TickableBlockEntity, IBlockHolder {
+public class WallLanternBlockTile extends EnhancedLanternBlockTile implements IBlockHolder {
 
     public BlockState mimic = Blocks.LANTERN.defaultBlockState();
     public static final ModelProperty<BlockState> MIMIC = BlockProperties.MIMIC;
@@ -37,8 +37,8 @@ public class WallLanternBlockTile extends EnhancedLanternBlockTile implements Ti
         periodDamping = 70f;
     }
 
-    public WallLanternBlockTile() {
-        super(ModRegistry.WALL_LANTERN_TILE.get());
+    public WallLanternBlockTile(BlockPos pos, BlockState state) {
+        super(ModRegistry.WALL_LANTERN_TILE.get(), pos, state);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class WallLanternBlockTile extends EnhancedLanternBlockTile implements Ti
         BlockState oldMimic = this.mimic;
         CompoundTag tag = pkt.getTag();
         //this calls load
-        handleUpdateTag(this.getBlockState(), tag);
+        handleUpdateTag(tag);
         if (!Objects.equals(oldMimic, this.mimic)) {
             //not needed cause model data doesn't create new obj. updating old one instead
             ModelDataManager.requestModelDataRefresh(this);
@@ -70,8 +70,8 @@ public class WallLanternBlockTile extends EnhancedLanternBlockTile implements Ti
     }
 
     @Override
-    public void load(BlockState state, CompoundTag compound) {
-        super.load(state, compound);
+    public void load(CompoundTag compound) {
+        super.load(compound);
         this.mimic = NbtUtils.readBlockState(compound.getCompound("Lantern"));
         this.isRedstoneLantern = compound.getBoolean("IsRedstone");
     }
@@ -80,7 +80,7 @@ public class WallLanternBlockTile extends EnhancedLanternBlockTile implements Ti
     public CompoundTag save(CompoundTag compound) {
         super.save(compound);
         compound.put("Lantern", NbtUtils.writeBlockState(mimic));
-        compound.putBoolean("IsRedstone",this.isRedstoneLantern);
+        compound.putBoolean("IsRedstone", this.isRedstoneLantern);
         return compound;
     }
 
@@ -95,14 +95,14 @@ public class WallLanternBlockTile extends EnhancedLanternBlockTile implements Ti
 
         int light = state.getLightEmission();
         boolean lit = true;
-        if(this.mimic.getBlock().getRegistryName().toString().equals("charm:redstone_lantern")) {
+        if (this.mimic.getBlock().getRegistryName().toString().equals("charm:redstone_lantern")) {
             this.isRedstoneLantern = true;
             light = 15;
             lit = false;
         }
-        if(this.getBlockState().getValue(WallLanternBlock.LIGHT_LEVEL)!=light)
-            this.getLevel().setBlock(this.worldPosition, this.getBlockState().setValue(WallLanternBlock.LIT,lit)
-                    .setValue(WallLanternBlock.LIGHT_LEVEL,light),4|16);
+        if (this.getBlockState().getValue(WallLanternBlock.LIGHT_LEVEL) != light)
+            this.getLevel().setBlock(this.worldPosition, this.getBlockState().setValue(WallLanternBlock.LIT, lit)
+                    .setValue(WallLanternBlock.LIGHT_LEVEL, light), 4 | 16);
 
         return true;
     }

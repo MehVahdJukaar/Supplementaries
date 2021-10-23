@@ -1,6 +1,9 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Matrix4f;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.supplementaries.block.blocks.PedestalBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.PedestalBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
@@ -10,30 +13,27 @@ import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.core.Direction;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
-import net.minecraft.network.chat.Component;
 
 
-public class PedestalBlockTileRenderer extends BlockEntityRenderer<PedestalBlockTile> {
+public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBlockTile> {
     private final Minecraft minecraft = Minecraft.getInstance();
     private final ItemRenderer itemRenderer;
     private final EntityRenderDispatcher entityRenderer;
+    private final Font font;
 
-    public PedestalBlockTileRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
-        super(rendererDispatcherIn);
-        ;
+    public PedestalBlockTileRenderer(BlockEntityRendererProvider.Context context) {
         itemRenderer = minecraft.getItemRenderer();
         entityRenderer = minecraft.getEntityRenderDispatcher();
+        font = minecraft.font;
     }
 
     protected boolean canRenderName(PedestalBlockTile tile) {
@@ -49,8 +49,6 @@ public class PedestalBlockTileRenderer extends BlockEntityRenderer<PedestalBlock
         double f = 0.875; //height
         int i = 0;
 
-        Font fontrenderer = this.renderer.getFont();
-
         matrixStackIn.pushPose();
 
         matrixStackIn.translate(0, f, 0);
@@ -60,9 +58,9 @@ public class PedestalBlockTileRenderer extends BlockEntityRenderer<PedestalBlock
         float f1 = minecraft.options.getBackgroundOpacity(0.25F);
         int j = (int) (f1 * 255.0F) << 24;
 
-        float f2 = (float) (-fontrenderer.width(displayNameIn) / 2);
+        float f2 = (float) (-font.width(displayNameIn) / 2);
         //drawInBatch == renderTextComponent
-        fontrenderer.drawInBatch(displayNameIn, f2, (float) i, -1, false, matrix4f, bufferIn, false, j, packedLightIn);
+        font.drawInBatch(displayNameIn, f2, (float) i, -1, false, matrix4f, bufferIn, false, j, packedLightIn);
         matrixStackIn.popPose();
 
     }
@@ -137,7 +135,7 @@ public class PedestalBlockTileRenderer extends BlockEntityRenderer<PedestalBlock
             //TODO: make FIXED
             ItemStack stack = tile.getDisplayedItem();
             if (CommonUtil.FESTIVITY.isAprilsFool()) stack = new ItemStack(Items.DIRT);
-            itemRenderer.renderStatic(stack, transform, combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn);
+            itemRenderer.renderStatic(stack, transform, combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn,0);
             //IBakedModel ibakedmodel = itemRenderer.getModel(stack, tile.getLevel(), null);
             //itemRenderer.render(stack, transform, true, matrixStackIn, bufferIn, combinedLightIn,combinedOverlayIn, ibakedmodel);
 

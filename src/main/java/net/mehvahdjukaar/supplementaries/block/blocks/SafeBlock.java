@@ -134,7 +134,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new SafeBlockTile();
+        return new SafeBlockTile(pPos, pState);
     }
 
     @Override
