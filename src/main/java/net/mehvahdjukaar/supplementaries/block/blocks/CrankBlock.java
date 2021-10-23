@@ -3,44 +3,38 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.material.PushReaction;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.particles.DustParticleOptions;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
-import net.minecraft.world.level.pathfinder.PathComputationType;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.util.*;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.Level;
-
-import javax.annotation.Nullable;
-import java.util.Random;
-
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
+
+import javax.annotation.Nullable;
+import java.util.Random;
 
 public class CrankBlock extends WaterBlock {
     protected static final VoxelShape SHAPE_DOWN = Shapes.box(0.125D, 0.6875D, 0.875D, 0.875D, 1D, 0.125D);
@@ -55,7 +49,7 @@ public class CrankBlock extends WaterBlock {
 
     public CrankBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED,false).setValue(POWER, 0).setValue(FACING, Direction.NORTH));
+        this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false).setValue(POWER, 0).setValue(FACING, Direction.NORTH));
     }
 
     @Override
@@ -65,7 +59,7 @@ public class CrankBlock extends WaterBlock {
 
     @Override
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos,
-                                          BlockPos facingPos) {
+                                  BlockPos facingPos) {
         if (stateIn.getValue(WATERLOGGED)) {
             worldIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
         }
@@ -88,7 +82,7 @@ public class CrankBlock extends WaterBlock {
 
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
-                                             BlockHitResult hit) {
+                                 BlockHitResult hit) {
         if (worldIn.isClientSide) {
             Direction direction = state.getValue(FACING).getOpposite();
             // Direction direction1 = getFacing(state).getOpposite();
@@ -105,10 +99,10 @@ public class CrankBlock extends WaterBlock {
 
 
             Direction dir = state.getValue(FACING).getOpposite();
-            if(dir.getAxis()!= Direction.Axis.Y) {
+            if (dir.getAxis() != Direction.Axis.Y) {
                 BlockPos behind = pos.relative(dir);
                 BlockState backState = worldIn.getBlockState(behind);
-                if (backState.getBlock().is(ModRegistry.PULLEY_BLOCK.get()) && dir.getAxis() == backState.getValue(PulleyBlock.AXIS)) {
+                if (backState.is(ModRegistry.PULLEY_BLOCK.get()) && dir.getAxis() == backState.getValue(PulleyBlock.AXIS)) {
                     ((PulleyBlock) backState.getBlock()).axisRotate(backState, behind, worldIn, ccw ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90, dir);
                 }
             }
@@ -118,7 +112,7 @@ public class CrankBlock extends WaterBlock {
 
     public void activate(BlockState state, Level world, BlockPos pos, boolean ccw) {
         //cycle == cycle
-        state = state.setValue(POWER, (16+state.getValue(POWER)+(ccw?-1:1))%16);
+        state = state.setValue(POWER, (16 + state.getValue(POWER) + (ccw ? -1 : 1)) % 16);
         world.setBlock(pos, state, 3);
         this.updateNeighbors(state, world, pos);
     }
@@ -160,13 +154,13 @@ public class CrankBlock extends WaterBlock {
 
 
     public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
-        if (stateIn.getValue(POWER)>0 && rand.nextFloat() < 0.25F) {
+        if (stateIn.getValue(POWER) > 0 && rand.nextFloat() < 0.25F) {
             Direction direction = stateIn.getValue(FACING).getOpposite();
             // Direction direction1 = getFacing(state).getOpposite();
             double d0 = (double) pos.getX() + 0.5D + 0.1D * (double) direction.getStepX() + 0.2D * (double) direction.getStepX();
             double d1 = (double) pos.getY() + 0.5D + 0.1D * (double) direction.getStepY() + 0.2D * (double) direction.getStepY();
             double d2 = (double) pos.getZ() + 0.5D + 0.1D * (double) direction.getStepZ() + 0.2D * (double) direction.getStepZ();
-            worldIn.addParticle(new DustParticleOptions(1.0F, 0.0F, 0.0F, 0.5f), d0, d1, d2, 0.0D, 0.0D, 0.0D);
+            worldIn.addParticle(new DustParticleOptions(DustParticleOptions.REDSTONE_PARTICLE_COLOR, 0.5f), d0, d1, d2, 0.0D, 0.0D, 0.0D);
         }
     }
 
@@ -187,21 +181,14 @@ public class CrankBlock extends WaterBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        switch (state.getValue(FACING)) {
-            case SOUTH :
-            default :
-                return SHAPE_SOUTH;
-            case NORTH :
-                return SHAPE_NORTH;
-            case WEST :
-                return SHAPE_WEST;
-            case EAST :
-                return SHAPE_EAST;
-            case UP :
-                return SHAPE_UP;
-            case DOWN :
-                return SHAPE_DOWN;
-        }
+        return switch (state.getValue(FACING)) {
+            default -> SHAPE_SOUTH;
+            case NORTH -> SHAPE_NORTH;
+            case WEST -> SHAPE_WEST;
+            case EAST -> SHAPE_EAST;
+            case UP -> SHAPE_UP;
+            case DOWN -> SHAPE_DOWN;
+        };
     }
 
     @Override
@@ -228,15 +215,15 @@ public class CrankBlock extends WaterBlock {
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         boolean flag = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;
         BlockState blockstate = this.defaultBlockState();
-        LevelReader iworldreader = context.getLevel();
+        LevelReader level = context.getLevel();
         BlockPos blockpos = context.getClickedPos();
-        Direction[] adirection = context.getNearestLookingDirections();
+        Direction[] directions = context.getNearestLookingDirections();
 
-        for(Direction direction : adirection) {
+        for (Direction direction : directions) {
 
             Direction direction1 = direction.getOpposite();
             blockstate = blockstate.setValue(FACING, direction1);
-            if (blockstate.canSurvive(iworldreader, blockpos)) {
+            if (blockstate.canSurvive(level, blockpos)) {
                 return blockstate.setValue(WATERLOGGED, flag);
             }
 

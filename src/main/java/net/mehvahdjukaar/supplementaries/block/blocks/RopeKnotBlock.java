@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 
 import com.google.common.collect.ImmutableMap;
-import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties.PostType;
 import net.mehvahdjukaar.supplementaries.block.tiles.RopeKnotBlockTile;
@@ -12,51 +11,44 @@ import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.decorativeblocks.DecoBlocksCompatRegistry;
 import net.mehvahdjukaar.supplementaries.compat.quark.QuarkPlugin;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.minecraft.Util;
 import net.minecraft.block.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShearsItem;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.tags.FluidTags;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.util.*;
-import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.WallSide;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.util.Constants;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import net.minecraft.Util;
-import net.minecraft.core.Direction;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.PipeBlock;
-import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.SimpleWaterloggedBlock;
-import net.minecraft.world.level.block.WallBlock;
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.WallSide;
-
-public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock {
+public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock, EntityBlock{
 
     private final Map<BlockState, VoxelShape> SHAPES_MAP = new HashMap<>();
     private final Map<BlockState, VoxelShape> COLLISION_SHAPES_MAP = new HashMap<>();
@@ -93,11 +85,9 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock 
 
     @Nullable
     @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
+    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return new RopeKnotBlockTile();
     }
-
-
 
     /*
     @Override
@@ -109,7 +99,6 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock 
     public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
         return COLLISION_SHAPES_MAP.getOrDefault(state.setValue(WATERLOGGED, false), VoxelShapes.block());
     }*/
-
 
 
     //this is madness
@@ -128,9 +117,8 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock 
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        BlockEntity te = world.getBlockEntity(pos);
-        if (te instanceof RopeKnotBlockTile) {
-            return ((RopeKnotBlockTile) te).getShape();
+        if (world.getBlockEntity(pos) instanceof RopeKnotBlockTile tile) {
+            return tile.getShape();
         }
         return super.getShape(state, world, pos, context);
     }
@@ -148,9 +136,8 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock 
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        BlockEntity te = world.getBlockEntity(pos);
-        if (te instanceof RopeKnotBlockTile) {
-            return ((RopeKnotBlockTile) te).getCollisionShape();
+        if (world.getBlockEntity(pos) instanceof RopeKnotBlockTile tile) {
+            return tile.getCollisionShape();
         }
         return super.getCollisionShape(state, world, pos, context);
     }
@@ -172,19 +159,18 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock 
             int w = state.getValue(POST_TYPE).getWidth();
             int o = (16 - w) / 2;
             switch (state.getValue(AXIS)) {
-                default:
-                case Y:
+                default -> {
                     v = Block.box(o, 0D, o, o + w, 16D, o + w);
                     c = Block.box(o, 0D, o, o + w, 24, o + w);
-                    break;
-                case X:
+                }
+                case X -> {
                     v = Block.box(0D, o, o, 16D, o + w, o + w);
                     c = v;
-                    break;
-                case Z:
+                }
+                case Z -> {
                     v = Block.box(o, o, 0, o + w, o + w, 16);
                     c = v;
-                    break;
+                }
             }
             if (state.getValue(DOWN)) v = Shapes.or(v, down);
             if (state.getValue(UP)) v = Shapes.or(v, up);
@@ -224,13 +210,11 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock 
             world.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
         }
         BlockState newState = state.setValue(RopeBlock.FACING_TO_PROPERTY_MAP.get(facing), RopeBlock.shouldConnectToFace(state, facingState, facingPos, facing, world));
-        BlockEntity te = world.getBlockEntity(currentPos);
-        if (te instanceof RopeKnotBlockTile) {
-            IBlockHolder tile = ((IBlockHolder) te);
+        if (world.getBlockEntity(currentPos) instanceof RopeKnotBlockTile tile) {
             BlockState oldHeld = tile.getHeldBlock();
 
             RopeKnotBlockTile otherTile = null;
-            if (facingState.getBlock().is(ModRegistry.ROPE_KNOT.get())) {
+            if (facingState.is(ModRegistry.ROPE_KNOT.get())) {
                 BlockEntity te2 = world.getBlockEntity(facingPos);
                 if (te2 instanceof RopeKnotBlockTile) {
                     otherTile = ((RopeKnotBlockTile) te2);
@@ -281,7 +265,7 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock 
     }
 
 
-//TODO: fix this not updating mimic block
+    //TODO: fix this not updating mimic block
     @Override
     public BlockState rotate(BlockState state, Rotation rotation) {
         switch (rotation) {

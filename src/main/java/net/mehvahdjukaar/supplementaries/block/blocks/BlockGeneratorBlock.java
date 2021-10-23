@@ -1,15 +1,15 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.tiles.BlockGeneratorBlockTile;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-
-public class BlockGeneratorBlock extends Block {
+public class BlockGeneratorBlock extends Block implements EntityBlock {
     public BlockGeneratorBlock(Properties properties) {
         super(properties);
     }
@@ -19,13 +19,9 @@ public class BlockGeneratorBlock extends Block {
         return RenderShape.INVISIBLE;
     }
 
+    @Nullable
     @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
-
-    @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
+    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return new BlockGeneratorBlockTile();
     }
 }

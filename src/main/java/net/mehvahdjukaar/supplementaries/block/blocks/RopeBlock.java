@@ -6,68 +6,60 @@ import net.mehvahdjukaar.selene.util.Utils;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.PulleyBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.PlayerLessContext;
-import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.common.BlockItemUtils;
+import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.decorativeblocks.RopeChandelierBlock;
 import net.mehvahdjukaar.supplementaries.compat.quark.QuarkPistonPlugin;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.minecraft.Util;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.block.*;
-import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.projectile.Arrow;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShearsItem;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.Level;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.EntityCollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.function.Predicate;
-
-import net.minecraft.Util;
-import net.minecraft.core.Direction;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.level.block.BellBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.CauldronBlock;
-import net.minecraft.world.level.block.ChainBlock;
-import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
-import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.state.BlockState;
 
 public class RopeBlock extends WaterBlock {
     private final Map<BlockState, VoxelShape> SHAPES_MAP = new HashMap<>();
@@ -157,8 +149,8 @@ public class RopeBlock extends WaterBlock {
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         return ((!state.getValue(UP) && (context.isAbove(COLLISION_SHAPE, pos, true) || !state.getValue(DOWN)))
-                || !(context.getEntity() instanceof LivingEntity)) ?
-                getShape(state, worldIn, pos, context) : Shapes.empty();
+                || !(context instanceof EntityCollisionContext && ((EntityCollisionContext) context).getEntity().isPresent()) ?
+                getShape(state, worldIn, pos, context) : Shapes.empty());
 
     }
 
@@ -174,20 +166,22 @@ public class RopeBlock extends WaterBlock {
         boolean isVerticalKnot = isKnot && thisState.getValue(RopeKnotBlock.AXIS) == Direction.Axis.Y;
 
         switch (dir) {
-            case UP:
+            case UP -> {
                 if (isVerticalKnot) return false;
                 return RopeBlock.isSupportingCeiling(facingState, facingPos, world);
-            case DOWN:
+            }
+            case DOWN -> {
                 if (isVerticalKnot) return false;
                 return RopeBlock.isSupportingCeiling(facingPos.above(2), world) || RopeBlock.canConnectDown(facingState);
-            default:
-
-                if (b.is(ModRegistry.ROPE_KNOT.get())) {
+            }
+            default -> {
+                if (facingState.is(ModRegistry.ROPE_KNOT.get())) {
                     return thisBlock != b && (dir.getAxis() == Direction.Axis.Y || facingState.getValue(RopeKnotBlock.AXIS) == Direction.Axis.Y);
                 } else if (isKnot && !isVerticalKnot) {
                     return false;
                 }
                 return b == ModRegistry.ROPE.get();
+            }
         }
     }
 
@@ -200,7 +194,7 @@ public class RopeBlock extends WaterBlock {
             worldIn.getBlockTicks().scheduleTick(currentPos, this, 1);
         }
 
-        if(facing == Direction.UP){
+        if (facing == Direction.UP) {
             stateIn = stateIn.setValue(DOWN, shouldConnectToDir(stateIn, currentPos, worldIn, Direction.DOWN));
         }
         stateIn = stateIn.setValue(FACING_TO_PROPERTY_MAP.get(facing), shouldConnectToDir(stateIn, currentPos, worldIn, facing));
@@ -261,8 +255,8 @@ public class RopeBlock extends WaterBlock {
 
     public static boolean isSupportingCeiling(BlockState facingState, BlockPos pos, LevelReader world) {
         Block b = facingState.getBlock();
-        return canSupportCenter(world, pos, Direction.DOWN) || b.is(ModTags.ROPE_SUPPORT_TAG) ||
-                (b.is(ModRegistry.ROPE_KNOT.get()) && facingState.getValue(RopeKnotBlock.AXIS) != Direction.Axis.Y);
+        return canSupportCenter(world, pos, Direction.DOWN) || facingState.is(ModTags.ROPE_SUPPORT_TAG) ||
+                (facingState.is(ModRegistry.ROPE_KNOT.get()) && facingState.getValue(RopeKnotBlock.AXIS) != Direction.Axis.Y);
     }
 
     public static boolean isSupportingCeiling(BlockPos pos, LevelReader world) {
@@ -276,7 +270,7 @@ public class RopeBlock extends WaterBlock {
 
     public static boolean canConnectDown(BlockState downState) {
         Block b = downState.getBlock();
-        return (b.is(ModRegistry.ROPE.get()) || b.is(ModTags.ROPE_HANG_TAG)
+        return (downState.is(ModRegistry.ROPE.get()) || downState.is(ModTags.ROPE_HANG_TAG)
                 || (downState.is(ModRegistry.ROPE_KNOT.get()) && downState.getValue(RopeKnotBlock.AXIS) != Direction.Axis.Y)
                 || (downState.hasProperty(FaceAttachedHorizontalDirectionalBlock.FACE) && downState.getValue(FaceAttachedHorizontalDirectionalBlock.FACE) == AttachFace.CEILING)
                 || (b instanceof ChainBlock && downState.getValue(BlockStateProperties.AXIS) == Direction.Axis.Y)
@@ -355,9 +349,7 @@ public class RopeBlock extends WaterBlock {
         if (b instanceof RopeBlock) {
             return findConnectedPulley(world, pos.above(), player, it + 1, rot);
         } else if (b instanceof PulleyBlock && it != 0) {
-            BlockEntity te = world.getBlockEntity(pos);
-            if (te instanceof PulleyBlockTile) {
-                PulleyBlockTile tile = ((PulleyBlockTile) te);
+            if (world.getBlockEntity(pos) instanceof PulleyBlockTile tile) {
                 if (tile.isEmpty() && !player.isShiftKeyDown()) {
                     tile.setDisplayedItem(new ItemStack(ModRegistry.ROPE_ITEM.get()));
                     boolean ret = ((PulleyBlock) b).axisRotate(state, pos, world, rot, null);
@@ -379,14 +371,14 @@ public class RopeBlock extends WaterBlock {
         if (i == this.asItem()) {
             if (hit.getDirection().getAxis() == Direction.Axis.Y || state.getValue(DOWN)) {
                 //restores sheared
-                if(state.getValue(UP) && !state.getValue(DOWN)){
+                if (state.getValue(UP) && !state.getValue(DOWN)) {
                     state = state.setValue(DOWN, true);
                     world.setBlock(pos, state, 0);
                 }
                 if (addRope(pos.below(), world, player, handIn, this)) {
                     SoundType soundtype = state.getSoundType(world, pos, player);
                     world.playSound(player, pos, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
-                    if (player == null || !player.abilities.instabuild) {
+                    if (!player.getAbilities().instabuild) {
                         stack.shrink(1);
                     }
                     return InteractionResult.sidedSuccess(world.isClientSide);
@@ -405,7 +397,7 @@ public class RopeBlock extends WaterBlock {
                 if (world.getBlockState(pos.below()).getBlock() == this) {
                     if (removeRope(pos.below(), world, this)) {
                         world.playSound(player, pos, SoundEvents.LEASH_KNOT_PLACE, SoundSource.BLOCKS, 1, 0.6f);
-                        if (player == null || !player.abilities.instabuild) {
+                        if (!player.getAbilities().instabuild) {
                             Utils.swapItem(player, handIn, stack, new ItemStack(this.asItem()));
                         }
                         return InteractionResult.sidedSuccess(world.isClientSide);
@@ -500,7 +492,7 @@ public class RopeBlock extends WaterBlock {
         Block block = state.getBlock();
         PushReaction push = state.getPistonPushReaction();
 
-        if ((push == PushReaction.NORMAL || (toPos.getY() < fromPos.getY() && push == PushReaction.PUSH_ONLY) || block.is(ModTags.ROPE_HANG_TAG)) && state.getDestroySpeed(world, fromPos) != -1
+        if ((push == PushReaction.NORMAL || (toPos.getY() < fromPos.getY() && push == PushReaction.PUSH_ONLY) || state.is(ModTags.ROPE_HANG_TAG)) && state.getDestroySpeed(world, fromPos) != -1
                 && state.canSurvive(world, toPos) && !block.isAir(state, world, fromPos) && !isObsidian(state)) {
 
             BlockEntity tile = world.getBlockEntity(fromPos);
@@ -515,13 +507,21 @@ public class RopeBlock extends WaterBlock {
 
             //gets update state for new position
 
-            boolean toFluid = world.getFluidState(toPos).getType() == Fluids.WATER;
+            Fluid fluidState = world.getFluidState(toPos).getType();
+            boolean waterFluid = fluidState == Fluids.WATER;
             boolean canHoldWater = false;
             if (state.hasProperty(WATERLOGGED)) {
                 canHoldWater = state.is(ModTags.WATER_HOLDER);
-                if (!canHoldWater) state = state.setValue(WATERLOGGED, toFluid);
+                if (!canHoldWater) state = state.setValue(WATERLOGGED, waterFluid);
             }
-            if (state.getBlock() instanceof CauldronBlock && toFluid) state = state.setValue(CauldronBlock.LEVEL, 3);
+            else if (state.getBlock() instanceof AbstractCauldronBlock){
+                if(waterFluid && state.is(Blocks.CAULDRON) || state.is(Blocks.WATER_CAULDRON)){
+                    state = Blocks.WATER_CAULDRON.defaultBlockState().setValue(LayeredCauldronBlock.LEVEL, 3);
+                }
+                if(fluidState == Fluids.LAVA && state.is(Blocks.CAULDRON) || state.is(Blocks.LAVA_CAULDRON)){
+                    state = Blocks.LAVA_CAULDRON.defaultBlockState().setValue(LayeredCauldronBlock.LEVEL, 3);
+                }
+            }
 
 
             FluidState fromFluid = world.getFluidState(fromPos);
@@ -554,7 +554,6 @@ public class RopeBlock extends WaterBlock {
             worldIn.playSound(null, pos, SoundEvents.LEASH_KNOT_BREAK, SoundSource.BLOCKS, 1, 1);
         }
     }
-
 
 
 }

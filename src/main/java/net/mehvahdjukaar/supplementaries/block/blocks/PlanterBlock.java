@@ -1,25 +1,23 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.CropBlock;
-import net.minecraft.world.level.block.StemBlock;
-import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.StemBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.IPlantable;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class PlanterBlock extends WaterBlock {
     protected static final VoxelShape SHAPE = Shapes.or(Shapes.box(0.125D, 0D, 0.125D, 0.875D, 0.687D, 0.875D), Shapes.box(0D, 0.687D, 0D, 1D, 1D, 1D));
@@ -45,12 +43,12 @@ public class PlanterBlock extends WaterBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(EXTENDED,WATERLOGGED);
+        builder.add(EXTENDED, WATERLOGGED);
     }
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return super.getStateForPlacement(context).setValue(EXTENDED, this.canConnect(context.getLevel(),context.getClickedPos()));
+        return super.getStateForPlacement(context).setValue(EXTENDED, this.canConnect(context.getLevel(), context.getClickedPos()));
     }
 
     //called when a neighbor is placed
@@ -59,18 +57,18 @@ public class PlanterBlock extends WaterBlock {
         if (stateIn.getValue(WATERLOGGED)) {
             worldIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
         }
-        if(facing==Direction.UP){
+        if (facing == Direction.UP) {
             return stateIn.setValue(EXTENDED, this.canConnect(worldIn, currentPos));
         }
         return stateIn;
     }
 
-    public boolean canConnect(LevelAccessor world, BlockPos pos){
+    public boolean canConnect(LevelAccessor world, BlockPos pos) {
         BlockPos up = pos.above();
         BlockState state = world.getBlockState(up);
         Block b = state.getBlock();
         VoxelShape shape = state.getShape(world, up);
-        boolean connect = (!shape.isEmpty() && shape.bounds().minY<0.06);
+        boolean connect = (!shape.isEmpty() && shape.bounds().minY < 0.06);
         return (connect && !(b instanceof StemBlock) && !(b instanceof CropBlock));
     }
 

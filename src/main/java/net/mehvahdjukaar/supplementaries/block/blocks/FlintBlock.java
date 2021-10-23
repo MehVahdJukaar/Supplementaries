@@ -15,11 +15,12 @@ public class FlintBlock extends Block {
         super(properties);
     }
 
+    /*
     @Override
     public void stepOn(Level world, BlockPos pos, Entity entity) {
 
         //TODO: add this functionality
-        /*
+
         if (!world.isClientSide && (entity.getDeltaMovement().length() > 0.003F)) {
             if(world.random.nextInt(2) == 0) {
                 //double d0 = Math.abs(entity.getX() - entity.xOld);
@@ -30,11 +31,11 @@ public class FlintBlock extends Block {
                     }
                 //}
             }
-        }*/
+        }
 
         super.stepOn(world, pos, entity);
     }
-
+*/
     //TODO: figure out piston fire interaction
 
     public void onMagnetMoved(Level world, BlockPos blockPos, Direction direction, BlockState blockState, BlockEntity tileEntity) {

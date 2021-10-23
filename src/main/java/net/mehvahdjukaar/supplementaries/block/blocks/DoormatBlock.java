@@ -1,49 +1,41 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
-import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.DoormatBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.client.gui.DoormatGui;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.Container;
-import net.minecraft.world.Containers;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.item.DyeItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.pathfinder.PathComputationType;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.util.*;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.Container;
+import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
 
-public class DoormatBlock extends WaterBlock {
+public class DoormatBlock extends WaterBlock implements EntityBlock{
     protected static final VoxelShape SHAPE_NORTH = Block.box(0.0D, 0.0D, 2.0D, 16.0D, 1.0D, 14.0D);
 
     protected static final VoxelShape SHAPE_WEST = Block.box(2.0D, 0.0D, 0.0D, 14.0D, 1.0D, 16.0D);
@@ -54,34 +46,33 @@ public class DoormatBlock extends WaterBlock {
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false));
     }
 
+    //TODO: remake signs
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
-                                BlockHitResult hit) {
-        BlockEntity tileentity = worldIn.getBlockEntity(pos);
-        if (tileentity instanceof DoormatBlockTile && ((IOwnerProtected) tileentity).isAccessibleBy(player)) {
-            DoormatBlockTile te = (DoormatBlockTile) tileentity;
+                                 BlockHitResult hit) {
+        if (worldIn.getBlockEntity(pos) instanceof DoormatBlockTile tile && tile.isAccessibleBy(player)) {
             ItemStack itemstack = player.getItemInHand(handIn);
             boolean server = !worldIn.isClientSide();
-            boolean flag = itemstack.getItem() instanceof DyeItem && player.abilities.mayBuild;
+            boolean flag = itemstack.getItem() instanceof DyeItem && player.getAbilities().mayBuild;
             boolean sideHit = hit.getDirection() != Direction.UP;
             boolean canExtract = itemstack.isEmpty() && (player.isShiftKeyDown() || sideHit);
-            boolean canInsert = te.isEmpty() && sideHit;
+            boolean canInsert = tile.isEmpty() && sideHit;
             if (canExtract ^ canInsert) {
                 if (!server) return InteractionResult.SUCCESS;
                 if (canExtract) {
-                    ItemStack dropStack = te.removeItemNoUpdate(0);
+                    ItemStack dropStack = tile.removeItemNoUpdate(0);
                     ItemEntity drop = new ItemEntity(worldIn, pos.getX() + 0.5, pos.getY() + 0.125, pos.getZ() + 0.5, dropStack);
                     drop.setDefaultPickUpDelay();
                     worldIn.addFreshEntity(drop);
                 } else {
                     ItemStack newStack = itemstack.copy();
                     newStack.setCount(1);
-                    te.setItems(NonNullList.withSize(1, newStack));
+                    tile.setItems(NonNullList.withSize(1, newStack));
                     if (!player.isCreative()) {
                         itemstack.shrink(1);
                     }
                 }
-                te.setChanged();
+                tile.setChanged();
                 worldIn.playSound(null, pos, SoundEvents.WOOL_PLACE, SoundSource.BLOCKS, 1.0F,
                         1.2f);
                 return InteractionResult.CONSUME;
@@ -89,16 +80,16 @@ public class DoormatBlock extends WaterBlock {
             }
             //color
             if (flag) {
-                if (te.textHolder.setTextColor(((DyeItem) itemstack.getItem()).getDyeColor())) {
+                if (tile.textHolder.setTextColor(((DyeItem) itemstack.getItem()).getDyeColor())) {
                     if (!player.isCreative()) {
                         itemstack.shrink(1);
                     }
-                    if (server) te.setChanged();
+                    if (server) tile.setChanged();
                 }
             }
             // open gui (edit sign with empty hand)
             else if (!server) {
-                DoormatGui.open(te);
+                DoormatGui.open(tile);
             }
             return InteractionResult.sidedSuccess(worldIn.isClientSide);
         }
@@ -120,13 +111,7 @@ public class DoormatBlock extends WaterBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        switch (state.getValue(FACING).getAxis()) {
-            default:
-            case Z:
-                return SHAPE_NORTH;
-            case X:
-                return SHAPE_WEST;
-        }
+        return state.getValue(FACING).getAxis() == Direction.Axis.X ? SHAPE_WEST : SHAPE_NORTH;
     }
 
     @Override
@@ -145,24 +130,15 @@ public class DoormatBlock extends WaterBlock {
         return true;
     }
 
-    /*
-    @Override
-    public PathNodeType getAiPathNodeType(BlockState state, IBlockReader world, BlockPos pos, MobEntity entity) {
-        return PathNodeType.OPEN;
-    }*/
-
     @Override
     public boolean isPathfindable(BlockState state, BlockGetter worldIn, BlockPos pos, PathComputationType type) {
         return true;
     }
 
+//TODO: maybe make conditional tile
+    @Nullable
     @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
-
-    @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
+    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return new DoormatBlockTile();
     }
 
@@ -179,9 +155,8 @@ public class DoormatBlock extends WaterBlock {
     @Override
     public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
-            BlockEntity tileentity = world.getBlockEntity(pos);
-            if (tileentity instanceof Container) {
-                Containers.dropContents(world, pos, (Container) tileentity);
+            if (world.getBlockEntity(pos) instanceof Container tile) {
+                Containers.dropContents(world, pos, tile);
             }
             super.onRemove(state, world, pos, newState, isMoving);
         }

@@ -1,50 +1,43 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
-import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.PedestalBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.items.SackItem;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.Container;
-import net.minecraft.world.Containers;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.util.*;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.Level;
-import net.minecraftforge.common.util.Constants;
-import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.*;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.common.util.Constants;
+import org.jetbrains.annotations.Nullable;
 
-public class PedestalBlock extends WaterBlock {
+public class PedestalBlock extends WaterBlock implements EntityBlock {
     protected static final VoxelShape SHAPE = Shapes.or(Shapes.box(0.1875D, 0.125D, 0.1875D, 0.815D, 0.885D, 0.815D),
             Shapes.box(0.0625D, 0.8125D, 0.0625D, 0.9375D, 1D, 0.9375D),
             Shapes.box(0.0625D, 0D, 0.0625D, 0.9375D, 0.1875D, 0.9375D));
@@ -117,10 +110,9 @@ public class PedestalBlock extends WaterBlock {
 
     @Override
     public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
-        BlockEntity te = world.getBlockEntity(pos);
         if (target.getLocation().y() > pos.getY() + 1 - 0.1875) {
-            if (te instanceof ItemDisplayTile) {
-                ItemStack i = ((ItemDisplayTile) te).getDisplayedItem();
+            if (world.getBlockEntity(pos) instanceof ItemDisplayTile tile) {
+                ItemStack i = tile.getDisplayedItem();
                 if (!i.isEmpty()) return i;
             }
         }
@@ -129,15 +121,13 @@ public class PedestalBlock extends WaterBlock {
 
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
-                                BlockHitResult hit) {
+                                 BlockHitResult hit) {
         //create new tile
         if (!state.getValue(HAS_ITEM)) {
             worldIn.setBlock(pos, state.setValue(HAS_ITEM, true), Constants.BlockFlags.NO_RERENDER | Constants.BlockFlags.BLOCK_UPDATE);
         }
-        BlockEntity tileentity = worldIn.getBlockEntity(pos);
         InteractionResult resultType = InteractionResult.PASS;
-        if (tileentity instanceof PedestalBlockTile && ((IOwnerProtected) tileentity).isAccessibleBy(player)) {
-            PedestalBlockTile te = (PedestalBlockTile) tileentity;
+        if (worldIn.getBlockEntity(pos) instanceof PedestalBlockTile tile && tile.isAccessibleBy(player)) {
 
             ItemStack handItem = player.getItemInHand(handIn);
 
@@ -146,8 +136,8 @@ public class PedestalBlock extends WaterBlock {
 
                 ItemStack it = handItem.copy();
                 it.setCount(1);
-                ItemStack removed = te.removeItemNoUpdate(0);
-                te.setDisplayedItem(it);
+                ItemStack removed = tile.removeItemNoUpdate(0);
+                tile.setDisplayedItem(it);
 
                 if (!player.isCreative()) {
                     handItem.shrink(1);
@@ -155,18 +145,18 @@ public class PedestalBlock extends WaterBlock {
                 if (!worldIn.isClientSide()) {
                     player.setItemInHand(handIn, removed);
                     worldIn.playSound(null, pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, 1.0F, worldIn.random.nextFloat() * 0.10F + 0.95F);
-                    te.setChanged();
+                    tile.setChanged();
                 } else {
                     //also update visuals on client. will get overwritten by packet tho
-                    te.updateClientVisualsOnLoad();
+                    tile.updateClientVisualsOnLoad();
                 }
                 resultType = InteractionResult.sidedSuccess(worldIn.isClientSide);
             } else {
-                resultType = te.interact(player, handIn);
+                resultType = tile.interact(player, handIn);
             }
             if (resultType.consumesAction()) {
                 Direction.Axis axis = player.getDirection().getAxis();
-                boolean isEmpty = te.getDisplayedItem().isEmpty();
+                boolean isEmpty = tile.getDisplayedItem().isEmpty();
                 if (axis != state.getValue(AXIS) || isEmpty) {
                     worldIn.setBlock(pos, state.setValue(AXIS, axis).setValue(HAS_ITEM, !isEmpty), 2);
                     if (isEmpty) worldIn.removeBlockEntity(pos);
@@ -178,7 +168,6 @@ public class PedestalBlock extends WaterBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-
         boolean up = state.getValue(UP);
         boolean down = state.getValue(DOWN);
         if (!up) {
@@ -202,23 +191,20 @@ public class PedestalBlock extends WaterBlock {
         return tileEntity instanceof MenuProvider ? (MenuProvider) tileEntity : null;
     }
 
+    @Nullable
     @Override
-    public boolean hasTileEntity(BlockState state) {
-        //some probably unnecessary optimization
-        return state.getValue(HAS_ITEM);
-    }
-
-    @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-        return new PedestalBlockTile();
+    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
+        if(pState.getValue(HAS_ITEM)){
+            return new PedestalBlockTile();
+        }
+        return null;
     }
 
     @Override
     public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
-            BlockEntity tileentity = world.getBlockEntity(pos);
-            if (tileentity instanceof ItemDisplayTile) {
-                Containers.dropContents(world, pos, (Container) tileentity);
+            if (world.getBlockEntity(pos) instanceof ItemDisplayTile tile) {
+                Containers.dropContents(world, pos, tile);
                 world.updateNeighbourForOutputSignal(pos, this);
             }
             super.onRemove(state, world, pos, newState, isMoving);
@@ -232,28 +218,23 @@ public class PedestalBlock extends WaterBlock {
 
     @Override
     public int getAnalogOutputSignal(BlockState blockState, Level world, BlockPos pos) {
-        BlockEntity tileentity = world.getBlockEntity(pos);
-        if (tileentity instanceof PedestalBlockTile)
-            return ((Container) tileentity).isEmpty() ? 0 : 15;
+        if (world.getBlockEntity(pos) instanceof PedestalBlockTile tile)
+            return tile.isEmpty() ? 0 : 15;
         else
             return 0;
     }
 
     @Override
     public BlockState rotate(BlockState state, Rotation rotation) {
-        switch (rotation) {
-            case COUNTERCLOCKWISE_90:
-            case CLOCKWISE_90:
-                switch (state.getValue(AXIS)) {
-                    case Z:
-                        return state.setValue(AXIS, Direction.Axis.X);
-                    case X:
-                        return state.setValue(AXIS, Direction.Axis.Z);
-                    default:
-                        return state;
-                }
-            default:
-                return state;
+        if(rotation == Rotation.CLOCKWISE_180){
+            return state;
+        }
+        else{
+            return switch (state.getValue(AXIS)) {
+                case Z -> state.setValue(AXIS, Direction.Axis.X);
+                case X -> state.setValue(AXIS, Direction.Axis.Z);
+                default -> state;
+            };
         }
     }
 

@@ -1,43 +1,38 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
-import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
-import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.FlowerBoxBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.Container;
-import net.minecraft.world.Containers;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.util.*;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.core.Direction;
+import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
 
-public class FlowerBoxBlock extends WaterBlock {
+public class FlowerBoxBlock extends WaterBlock implements EntityBlock {
 
     protected static final VoxelShape SHAPE_SOUTH = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 6.0D, 6.0D);
     protected static final VoxelShape SHAPE_NORTH = Block.box(0.0D, 0.0D, 10.0D, 16.0D, 6.0D, 16.0D);
@@ -85,9 +80,8 @@ public class FlowerBoxBlock extends WaterBlock {
 
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
-                                BlockHitResult hit) {
-        BlockEntity tileentity = worldIn.getBlockEntity(pos);
-        if (tileentity instanceof FlowerBoxBlockTile && ((IOwnerProtected) tileentity).isAccessibleBy(player)) {
+                                 BlockHitResult hit) {
+        if (worldIn.getBlockEntity(pos) instanceof FlowerBoxBlockTile tile && tile.isAccessibleBy(player)) {
             int ind;
 
             Direction dir = state.getValue(FACING);
@@ -103,27 +97,22 @@ public class FlowerBoxBlock extends WaterBlock {
                 if (dir.getStepZ() > 0) ind = 2 - ind;
 
             }
-            return ((ItemDisplayTile) tileentity).interact(player, handIn, ind);
+            return tile.interact(player, handIn, ind);
         }
         return InteractionResult.PASS;
     }
 
+    @Nullable
     @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
-
-    @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
+    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return new FlowerBoxBlockTile();
     }
 
     @Override
     public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
-            BlockEntity tileentity = world.getBlockEntity(pos);
-            if (tileentity instanceof FlowerBoxBlockTile) {
-                Containers.dropContents(world, pos, (Container) tileentity);
+            if (world.getBlockEntity(pos) instanceof FlowerBoxBlockTile tile) {
+                Containers.dropContents(world, pos, tile);
                 world.updateNeighbourForOutputSignal(pos, this);
             }
             super.onRemove(state, world, pos, newState, isMoving);
@@ -133,17 +122,12 @@ public class FlowerBoxBlock extends WaterBlock {
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         boolean wall = !state.getValue(FLOOR);
-        switch (state.getValue(FACING)) {
-            case NORTH:
-            default:
-                return wall ? SHAPE_NORTH : SHAPE_NORTH_FLOOR;
-            case SOUTH:
-                return wall ? SHAPE_SOUTH : SHAPE_NORTH_FLOOR;
-            case EAST:
-                return wall ? SHAPE_EAST : SHAPE_WEST_FLOOR;
-            case WEST:
-                return wall ? SHAPE_WEST : SHAPE_WEST_FLOOR;
-        }
+        return switch (state.getValue(FACING)) {
+            default -> wall ? SHAPE_NORTH : SHAPE_NORTH_FLOOR;
+            case SOUTH -> wall ? SHAPE_SOUTH : SHAPE_NORTH_FLOOR;
+            case EAST -> wall ? SHAPE_EAST : SHAPE_WEST_FLOOR;
+            case WEST -> wall ? SHAPE_WEST : SHAPE_WEST_FLOOR;
+        };
     }
 
     @Override

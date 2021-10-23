@@ -2,29 +2,27 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import it.unimi.dsi.fastutil.floats.Float2ObjectAVLTreeMap;
 import net.mehvahdjukaar.supplementaries.block.tiles.BellowsBlockTile;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.pathfinder.PathComputationType;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.core.Direction;
-import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class BellowsBlock extends Block implements EntityBlock {
@@ -60,14 +58,14 @@ public class BellowsBlock extends Block implements EntityBlock {
     public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 
         BlockEntity te = worldIn.getBlockEntity(pos);
-        if(te instanceof BellowsBlockTile){
+        if (te instanceof BellowsBlockTile) {
             float height = ((BellowsBlockTile) te).height;
             //3 digit
-            height = (float)(Math.round(height * 1000.0) / 1000.0);;
-            if(state.getValue(FACING).getAxis() == Direction.Axis.Y){
+            height = (float) (Math.round(height * 1000.0) / 1000.0);
+
+            if (state.getValue(FACING).getAxis() == Direction.Axis.Y) {
                 return SHAPES_Y_CACHE.computeIfAbsent(height, BellowsBlock::createVoxelShapeY);
-            }
-            else{
+            } else {
                 return SHAPES_X_Z_CACHE.computeIfAbsent(height, BellowsBlock::createVoxelShapeXZ);
             }
         }
@@ -149,12 +147,12 @@ public class BellowsBlock extends Block implements EntityBlock {
     public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
         super.entityInside(state, worldIn, pos, entityIn);
         BlockEntity te = worldIn.getBlockEntity(pos);
-        if(te instanceof BellowsBlockTile)((BellowsBlockTile) te).onSteppedOn(entityIn);
+        if (te instanceof BellowsBlockTile) ((BellowsBlockTile) te).onSteppedOn(entityIn);
     }
 
     @Override
-    public void stepOn(Level worldIn, BlockPos pos, Entity entityIn) {
+    public void stepOn(Level worldIn, BlockPos pos, BlockState state, Entity entityIn) {
         BlockEntity te = worldIn.getBlockEntity(pos);
-        if(te instanceof BellowsBlockTile)((BellowsBlockTile) te).onSteppedOn(entityIn);
+        if (te instanceof BellowsBlockTile) ((BellowsBlockTile) te).onSteppedOn(entityIn);
     }
 }

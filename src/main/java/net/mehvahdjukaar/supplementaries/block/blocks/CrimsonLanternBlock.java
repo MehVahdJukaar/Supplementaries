@@ -2,29 +2,29 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.tiles.OilLanternBlockTile;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
 
 public class CrimsonLanternBlock extends CopperLanternBlock {
     public static final VoxelShape SHAPE_DOWN = Shapes.or(Block.box(5.0D, 0.0D, 5.0D, 11.0D, 10.0D, 11.0D),
             Block.box(3.0D, 1.0D, 3.0D, 13.0D, 9.0D, 13.0D));
     public static final VoxelShape SHAPE_UP = Shapes.or(Block.box(5.0D, 4.0D, 5.0D, 11.0D, 14.0D, 11.0D),
             Block.box(3.0D, 5.0D, 3.0D, 13.0D, 13.0D, 13.0D));
+
     public CrimsonLanternBlock(Properties properties) {
         super(properties);
     }
@@ -33,21 +33,17 @@ public class CrimsonLanternBlock extends CopperLanternBlock {
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         boolean water = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;
         BlockState state = super.getStateForPlacement(context);
-        if(state!=null)return state.setValue(LIT,!water);
+        if (state != null) return state.setValue(LIT, !water);
         return null;
     }
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        switch(state.getValue(FACE)) {
-            default:
-            case FLOOR:
-                return SHAPE_DOWN;
-            case CEILING:
-                return SHAPE_UP;
-            case WALL:
-                return super.getShape(state,world,pos,context);
-        }
+        return switch (state.getValue(FACE)) {
+            case FLOOR -> SHAPE_DOWN;
+            case CEILING -> SHAPE_UP;
+            case WALL -> super.getShape(state, world, pos, context);
+        };
     }
 
     @Override
@@ -55,9 +51,8 @@ public class CrimsonLanternBlock extends CopperLanternBlock {
         return InteractionResult.PASS;
     }
 
-
     @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
+    public @Nullable BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return new OilLanternBlockTile(ModRegistry.CRIMSON_LANTERN_TILE.get());
     }
 }

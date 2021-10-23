@@ -1,54 +1,42 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
-import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.HourGlassBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.*;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.Container;
-import net.minecraft.world.Containers;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.util.*;
-import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraft.network.chat.Component;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraftforge.common.extensions.IForgeBlock;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-import net.minecraft.core.Direction;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-
-public class HourGlassBlock extends WaterBlock implements IForgeBlock {
+public class HourGlassBlock extends WaterBlock implements EntityBlock {
     protected static final VoxelShape SHAPE_Y = Block.box(4D, 0D, 4.0D, 12.0D, 16D, 12.0D);
     protected static final VoxelShape SHAPE_Z = Block.box(4D, 4D, 0.0D, 12.0D, 12D, 16.0D);
     protected static final VoxelShape SHAPE_X = Block.box(0D, 4D, 4D, 16D, 12D, 12.0D);
@@ -67,7 +55,7 @@ public class HourGlassBlock extends WaterBlock implements IForgeBlock {
     }
 
     @Override
-    public int getLightValue(BlockState state, BlockGetter world, BlockPos pos) {
+    public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
         return state.getValue(LIGHT_LEVEL);
     }
 
@@ -93,10 +81,8 @@ public class HourGlassBlock extends WaterBlock implements IForgeBlock {
 
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
-                                BlockHitResult hit) {
-
-        BlockEntity tileentity = worldIn.getBlockEntity(pos);
-        if (tileentity instanceof ItemDisplayTile && ((IOwnerProtected) tileentity).isAccessibleBy(player)) {
+                                 BlockHitResult hit) {
+        if (worldIn.getBlockEntity(pos) instanceof ItemDisplayTile tile && tile.isAccessibleBy(player)) {
 
             if (player.isShiftKeyDown() && player.getItemInHand(handIn).isEmpty() && state.getValue(FACING).getAxis() == Direction.Axis.Y) {
                 if (!worldIn.isClientSide) {
@@ -107,22 +93,18 @@ public class HourGlassBlock extends WaterBlock implements IForgeBlock {
                 return InteractionResult.SUCCESS;
             }
 
-            return ((ItemDisplayTile) tileentity).interact(player, handIn);
+            return tile.interact(player, handIn);
         }
         return InteractionResult.PASS;
     }
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        switch (state.getValue(FACING).getAxis()) {
-            case Z:
-                return SHAPE_Z;
-            default:
-            case Y:
-                return SHAPE_Y;
-            case X:
-                return SHAPE_X;
-        }
+        return switch (state.getValue(FACING).getAxis()) {
+            case Z -> SHAPE_Z;
+            default -> SHAPE_Y;
+            case X -> SHAPE_X;
+        };
     }
 
     @Override
@@ -131,22 +113,17 @@ public class HourGlassBlock extends WaterBlock implements IForgeBlock {
         return tileEntity instanceof MenuProvider ? (MenuProvider) tileEntity : null;
     }
 
+    @Nullable
     @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
-
-    @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
+    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return new HourGlassBlockTile();
     }
 
     @Override
     public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
-            BlockEntity tileentity = world.getBlockEntity(pos);
-            if (tileentity instanceof HourGlassBlockTile) {
-                Containers.dropContents(world, pos, (Container) tileentity);
+            if (world.getBlockEntity(pos) instanceof HourGlassBlockTile tile) {
+                Containers.dropContents(world, pos, tile);
                 world.updateNeighbourForOutputSignal(pos, this);
             }
             super.onRemove(state, world, pos, newState, isMoving);
@@ -160,9 +137,8 @@ public class HourGlassBlock extends WaterBlock implements IForgeBlock {
 
     @Override
     public int getAnalogOutputSignal(BlockState blockState, Level world, BlockPos pos) {
-        BlockEntity tileentity = world.getBlockEntity(pos);
-        if (tileentity instanceof HourGlassBlockTile) {
-            return ((HourGlassBlockTile) tileentity).power;
+        if (world.getBlockEntity(pos) instanceof HourGlassBlockTile tile) {
+            return tile.power;
         } else
             return 0;
     }

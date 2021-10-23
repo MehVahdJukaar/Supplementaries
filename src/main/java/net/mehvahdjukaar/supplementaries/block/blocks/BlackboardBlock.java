@@ -8,49 +8,42 @@ import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.client.gui.BlackBoardGui;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.material.Fluids;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.util.*;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.network.chat.Component;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
 import java.util.List;
-
-import net.minecraft.core.Direction;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class BlackboardBlock extends WaterBlock implements EntityBlock {
     public static final VoxelShape SHAPE_SOUTH = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 5.0D);
@@ -88,10 +81,10 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock {
                 }
             }
         }
-        BlockEntity tileentity = world.getBlockEntity(pos);
-        if (tileentity instanceof BlackboardBlockTile) {
-            ((BlackboardBlockTile) tileentity).setCorrectBlockState(state, pos, world);
-            BlockUtils.addOptionalOwnership(placer, tileentity);
+
+        if ( world.getBlockEntity(pos) instanceof BlackboardBlockTile tile) {
+            tile.setCorrectBlockState(state, pos, world);
+            BlockUtils.addOptionalOwnership(placer, tile);
         }
     }
 
@@ -107,31 +100,22 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        switch (state.getValue(FACING)) {
-            default:
-            case NORTH:
-                return SHAPE_NORTH;
-            case SOUTH:
-                return SHAPE_SOUTH;
-            case EAST:
-                return SHAPE_EAST;
-            case WEST:
-                return SHAPE_WEST;
-        }
+        return switch (state.getValue(FACING)) {
+            default -> SHAPE_NORTH;
+            case SOUTH -> SHAPE_SOUTH;
+            case EAST -> SHAPE_EAST;
+            case WEST -> SHAPE_WEST;
+        };
     }
 
     //I started using this convention, so I have to keep it for backwards compat
     private static byte colorToByte(DyeColor color) {
-        switch (color) {
-            case BLACK:
-                return 0;
-            case WHITE:
-                return 1;
-            case ORANGE:
-                return 15;
-            default:
-                return (byte) color.getId();
-        }
+        return switch (color) {
+            case BLACK -> (byte) 0;
+            case WHITE -> (byte) 1;
+            case ORANGE -> (byte) 15;
+            default -> (byte) color.getId();
+        };
     }
 
     public static int colorFromByte(byte b) {
@@ -161,9 +145,10 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock {
             color = DyeColor.getColor(stack);
         }
         if (color == null) {
-            if (item.is(ModTags.CHALK) || item.is(Tags.Items.DYES_WHITE)) {
+
+            if (stack.is(ModTags.CHALK) || stack.is(Tags.Items.DYES_WHITE)) {
                 color = DyeColor.WHITE;
-            } else if (item == Items.COAL || item == Items.CHARCOAL || item.is(Tags.Items.DYES_BLACK)) {
+            } else if (item == Items.COAL || item == Items.CHARCOAL || stack.is(Tags.Items.DYES_BLACK)) {
                 color = DyeColor.BLACK;
             }
         }
@@ -177,9 +162,8 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock {
         if (!state.getValue(WRITTEN)) {
             worldIn.setBlock(pos, state.setValue(WRITTEN, true), Constants.BlockFlags.NO_RERENDER | Constants.BlockFlags.BLOCK_UPDATE);
         }
-        BlockEntity tileentity = worldIn.getBlockEntity(pos);
-        if (tileentity instanceof BlackboardBlockTile) {
-            BlackboardBlockTile te = (BlackboardBlockTile) tileentity;
+        //TODO: do this everywhere
+        if (worldIn.getBlockEntity(pos) instanceof BlackboardBlockTile te) {
 
             if (hit.getDirection() == state.getValue(FACING)) {
                 ItemStack stack = player.getItemInHand(handIn);
@@ -227,8 +211,8 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        CompoundTag compoundnbt = stack.getTagElement("BlockEntityTag");
-        if (compoundnbt != null) {
+        CompoundTag tag = stack.getTagElement("BlockEntityTag");
+        if (tag != null) {
             tooltip.add((new TranslatableComponent("message.supplementaries.blackboard")).withStyle(ChatFormatting.GRAY));
         }
     }
@@ -244,36 +228,19 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock {
         return itemstack;
     }
 
-    //normal drop
-    /*
-    @Override
-    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
-        TileEntity tileentity = builder.getOptionalParameter(LootParameters.BLOCK_ENTITY);
-        if (tileentity instanceof BlackboardBlockTile) {
-            ItemStack itemstack = this.getBlackboardItem((BlackboardBlockTile) tileentity);
-
-            return Collections.singletonList(itemstack);
-        }
-        return super.getDrops(state, builder);
-    }*/
-
-
     @Override
     public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
-        BlockEntity te = world.getBlockEntity(pos);
-        if (te instanceof BlackboardBlockTile) {
-            return this.getBlackboardItem((BlackboardBlockTile) te);
+        if (world.getBlockEntity(pos) instanceof BlackboardBlockTile te) {
+            return this.getBlackboardItem(te);
         }
         return super.getPickBlock(state, target, world, pos, player);
     }
 
-
     @Override
     public void neighborChanged(BlockState state, Level world, BlockPos pos, Block p_220069_4_, BlockPos p_220069_5_, boolean p_220069_6_) {
         super.neighborChanged(state, world, pos, p_220069_4_, p_220069_5_, p_220069_6_);
-        BlockEntity te = world.getBlockEntity(pos);
-        if (te instanceof BlackboardBlockTile) {
-            ((BlackboardBlockTile) te).setCorrectBlockState(state, pos, world);
+        if (world.getBlockEntity(pos) instanceof BlackboardBlockTile te) {
+            te.setCorrectBlockState(state, pos, world);
         }
     }
 

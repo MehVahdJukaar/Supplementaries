@@ -3,33 +3,25 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties.RakeDirection;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.*;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.pathfinder.PathComputationType;
-import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.core.Direction;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.Level;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.FenceGateBlock;
-import net.minecraft.world.level.block.GravelBlock;
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-import net.minecraft.world.level.block.state.BlockState;
 
 public class RakedGravelBlock extends GravelBlock {
 
@@ -52,37 +44,36 @@ public class RakedGravelBlock extends GravelBlock {
         BlockState blockstate = super.defaultBlockState();
         BlockPos pos = context.getClickedPos();
         Level world = context.getLevel();
-        if(!blockstate.canSurvive(world, pos)){
+        if (!blockstate.canSurvive(world, pos)) {
             return Block.pushEntitiesUp(blockstate, Blocks.GRAVEL.defaultBlockState(), world, pos);
         }
         Direction front = context.getHorizontalDirection();
-        return getConnectedState(blockstate,world,pos,front);
+        return getConnectedState(blockstate, world, pos, front);
 
     }
 
-    private static boolean canConnect(BlockState state, Direction dir){
-        if(state.getBlock() == ModRegistry.RAKED_GRAVEL.get()){
+    private static boolean canConnect(BlockState state, Direction dir) {
+        if (state.getBlock() == ModRegistry.RAKED_GRAVEL.get()) {
             return state.getValue(RAKE_DIRECTION).getDirections().contains(dir.getOpposite());
         }
         return false;
     }
 
-    public static BlockState getConnectedState(BlockState blockstate, Level world, BlockPos pos, Direction front){
+    public static BlockState getConnectedState(BlockState blockstate, Level world, BlockPos pos, Direction front) {
         List<Direction> directionList = new ArrayList<>();
 
         Direction back = front.getOpposite();
-        if(canConnect(world.getBlockState(pos.relative(back)),back)){
+        if (canConnect(world.getBlockState(pos.relative(back)), back)) {
             directionList.add(back);
-        }
-        else{
+        } else {
             directionList.add(front);
         }
 
         Direction side = front.getClockWise();
 
-        for(int i = 0; i<2; i++){
+        for (int i = 0; i < 2; i++) {
             BlockState state = world.getBlockState(pos.relative(side));
-            if(canConnect(state,side)){
+            if (canConnect(state, side)) {
                 directionList.add(side);
                 break;
             }
@@ -95,87 +86,54 @@ public class RakedGravelBlock extends GravelBlock {
     @Override
     public BlockState rotate(BlockState state, Rotation rotation) {
         RakeDirection shape = state.getValue(RAKE_DIRECTION);
-        switch(rotation) {
-            case CLOCKWISE_180:
-                switch(shape) {
-                    case SOUTH_EAST:
-                        return state.setValue(RAKE_DIRECTION, RakeDirection.NORTH_WEST);
-                    case SOUTH_WEST:
-                        return state.setValue(RAKE_DIRECTION, RakeDirection.NORTH_EAST);
-                    case NORTH_WEST:
-                        return state.setValue(RAKE_DIRECTION, RakeDirection.SOUTH_EAST);
-                    case NORTH_EAST:
-                        return state.setValue(RAKE_DIRECTION, RakeDirection.SOUTH_WEST);
-                    default:
-                        return state;
-                }
-            case COUNTERCLOCKWISE_90:
-                switch(shape) {
-                    case SOUTH_EAST:
-                        return state.setValue(RAKE_DIRECTION, RakeDirection.NORTH_EAST);
-                    case SOUTH_WEST:
-                        return state.setValue(RAKE_DIRECTION, RakeDirection.SOUTH_EAST);
-                    case NORTH_WEST:
-                        return state.setValue(RAKE_DIRECTION, RakeDirection.SOUTH_WEST);
-                    case NORTH_EAST:
-                        return state.setValue(RAKE_DIRECTION, RakeDirection.NORTH_WEST);
-                    case NORTH_SOUTH:
-                        return state.setValue(RAKE_DIRECTION, RakeDirection.EAST_WEST);
-                    case EAST_WEST:
-                        return state.setValue(RAKE_DIRECTION, RakeDirection.NORTH_SOUTH);
-                }
-            case CLOCKWISE_90:
-                switch(shape) {
-                    case SOUTH_EAST:
-                        return state.setValue(RAKE_DIRECTION, RakeDirection.SOUTH_WEST);
-                    case SOUTH_WEST:
-                        return state.setValue(RAKE_DIRECTION, RakeDirection.NORTH_WEST);
-                    case NORTH_WEST:
-                        return state.setValue(RAKE_DIRECTION, RakeDirection.NORTH_EAST);
-                    case NORTH_EAST:
-                        return state.setValue(RAKE_DIRECTION, RakeDirection.SOUTH_EAST);
-                    case NORTH_SOUTH:
-                        return state.setValue(RAKE_DIRECTION, RakeDirection.EAST_WEST);
-                    case EAST_WEST:
-                        return state.setValue(RAKE_DIRECTION, RakeDirection.NORTH_SOUTH);
-                }
-            default:
-                return state;
-        }
+        return switch (rotation) {
+            case CLOCKWISE_180 -> switch (shape) {
+                case SOUTH_EAST -> state.setValue(RAKE_DIRECTION, RakeDirection.NORTH_WEST);
+                case SOUTH_WEST -> state.setValue(RAKE_DIRECTION, RakeDirection.NORTH_EAST);
+                case NORTH_WEST -> state.setValue(RAKE_DIRECTION, RakeDirection.SOUTH_EAST);
+                case NORTH_EAST -> state.setValue(RAKE_DIRECTION, RakeDirection.SOUTH_WEST);
+                default -> state;
+            };
+            case COUNTERCLOCKWISE_90 -> switch (shape) {
+                case SOUTH_EAST -> state.setValue(RAKE_DIRECTION, RakeDirection.NORTH_EAST);
+                case SOUTH_WEST -> state.setValue(RAKE_DIRECTION, RakeDirection.SOUTH_EAST);
+                case NORTH_WEST -> state.setValue(RAKE_DIRECTION, RakeDirection.SOUTH_WEST);
+                case NORTH_EAST -> state.setValue(RAKE_DIRECTION, RakeDirection.NORTH_WEST);
+                case NORTH_SOUTH -> state.setValue(RAKE_DIRECTION, RakeDirection.EAST_WEST);
+                case EAST_WEST -> state.setValue(RAKE_DIRECTION, RakeDirection.NORTH_SOUTH);
+            };
+            case CLOCKWISE_90 -> switch (shape) {
+                case SOUTH_EAST -> state.setValue(RAKE_DIRECTION, RakeDirection.SOUTH_WEST);
+                case SOUTH_WEST -> state.setValue(RAKE_DIRECTION, RakeDirection.NORTH_WEST);
+                case NORTH_WEST -> state.setValue(RAKE_DIRECTION, RakeDirection.NORTH_EAST);
+                case NORTH_EAST -> state.setValue(RAKE_DIRECTION, RakeDirection.SOUTH_EAST);
+                case NORTH_SOUTH -> state.setValue(RAKE_DIRECTION, RakeDirection.EAST_WEST);
+                case EAST_WEST -> state.setValue(RAKE_DIRECTION, RakeDirection.NORTH_SOUTH);
+            };
+            default -> state;
+        };
     }
 
     @Override
     public BlockState mirror(BlockState state, Mirror mirror) {
         RakeDirection shape = state.getValue(RAKE_DIRECTION);
-        switch(mirror) {
-            case LEFT_RIGHT:
-                switch(shape) {
-                    case SOUTH_EAST:
-                        return state.setValue(RAKE_DIRECTION, RakeDirection.NORTH_EAST);
-                    case SOUTH_WEST:
-                        return state.setValue(RAKE_DIRECTION, RakeDirection.NORTH_WEST);
-                    case NORTH_WEST:
-                        return state.setValue(RAKE_DIRECTION, RakeDirection.SOUTH_WEST);
-                    case NORTH_EAST:
-                        return state.setValue(RAKE_DIRECTION, RakeDirection.SOUTH_EAST);
-                    default:
-                        return super.mirror(state, mirror);
-                }
-            case FRONT_BACK:
-                switch(shape) {
-                    default:
-                        break;
-                    case SOUTH_EAST:
-                        return state.setValue(RAKE_DIRECTION, RakeDirection.SOUTH_WEST);
-                    case SOUTH_WEST:
-                        return state.setValue(RAKE_DIRECTION, RakeDirection.SOUTH_EAST);
-                    case NORTH_WEST:
-                        return state.setValue(RAKE_DIRECTION, RakeDirection.NORTH_EAST);
-                    case NORTH_EAST:
-                        return state.setValue(RAKE_DIRECTION, RakeDirection.NORTH_WEST);
-                }
-        }
-        return super.mirror(state, mirror);
+        return switch (mirror) {
+            case LEFT_RIGHT -> switch (shape) {
+                case SOUTH_EAST -> state.setValue(RAKE_DIRECTION, RakeDirection.NORTH_EAST);
+                case SOUTH_WEST -> state.setValue(RAKE_DIRECTION, RakeDirection.NORTH_WEST);
+                case NORTH_WEST -> state.setValue(RAKE_DIRECTION, RakeDirection.SOUTH_WEST);
+                case NORTH_EAST -> state.setValue(RAKE_DIRECTION, RakeDirection.SOUTH_EAST);
+                default -> super.mirror(state, mirror);
+            };
+            case FRONT_BACK -> switch (shape) {
+                default -> super.mirror(state, mirror);
+                case SOUTH_EAST -> state.setValue(RAKE_DIRECTION, RakeDirection.SOUTH_WEST);
+                case SOUTH_WEST -> state.setValue(RAKE_DIRECTION, RakeDirection.SOUTH_EAST);
+                case NORTH_WEST -> state.setValue(RAKE_DIRECTION, RakeDirection.NORTH_EAST);
+                case NORTH_EAST -> state.setValue(RAKE_DIRECTION, RakeDirection.NORTH_WEST);
+            };
+            default -> super.mirror(state, mirror);
+        };
     }
 
     @Override
@@ -198,8 +156,8 @@ public class RakedGravelBlock extends GravelBlock {
 
     @Override
     public void tick(BlockState state, ServerLevel world, BlockPos pos, Random random) {
-        if(!state.canSurvive(world, pos)) turnToGravel(state, world, pos);
-        super.tick(state,world,pos,random);
+        if (!state.canSurvive(world, pos)) turnToGravel(state, world, pos);
+        super.tick(state, world, pos, random);
     }
 
     public static void turnToGravel(BlockState state, Level world, BlockPos pos) {

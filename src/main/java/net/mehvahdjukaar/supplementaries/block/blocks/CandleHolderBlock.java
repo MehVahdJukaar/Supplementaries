@@ -3,22 +3,20 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.Map;
 import java.util.Random;
 import java.util.function.Supplier;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class CandleHolderBlock extends SconceWallBlock {
 
@@ -35,7 +33,7 @@ public class CandleHolderBlock extends SconceWallBlock {
     }
 
     @Override
-    public int getLightValue(BlockState state, BlockGetter world, BlockPos pos) {
+    public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
         return ServerConfigs.cached.CANDLE_HOLDER_LIGHT;
     }
 
@@ -46,7 +44,7 @@ public class CandleHolderBlock extends SconceWallBlock {
 
     @Override
     public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
-        if(stateIn.getValue(LIT)){
+        if (stateIn.getValue(LIT)) {
             Direction direction = stateIn.getValue(FACING);
             double d0 = (double) pos.getX() + 0.5D;
             double d1 = (double) pos.getY() + 0.8;

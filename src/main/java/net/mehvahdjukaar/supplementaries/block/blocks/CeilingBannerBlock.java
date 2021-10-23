@@ -1,45 +1,38 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.tiles.CeilingBannerBlockTile;
-import net.minecraft.block.*;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BannerBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.util.*;
-import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.ChatFormatting;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.List;
-
-import net.minecraft.core.Direction;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.level.block.AbstractBannerBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.block.state.BlockState;
 
 public class CeilingBannerBlock extends AbstractBannerBlock {
     public static final BooleanProperty ATTACHED = BlockStateProperties.ATTACHED;
@@ -61,7 +54,7 @@ public class CeilingBannerBlock extends AbstractBannerBlock {
         return above.getMaterial().isSolid();
     }
 
-    private boolean canAttach(BlockState state, BlockState above){
+    private boolean canAttach(BlockState state, BlockState above) {
         Block b = above.getBlock();
         if (b instanceof RopeBlock) {
             if (!above.getValue(RopeBlock.DOWN)) {
@@ -73,7 +66,7 @@ public class CeilingBannerBlock extends AbstractBannerBlock {
         }
         //TODO: maybe add this & sticks
         //else if (b instanceof ChainBlock) {
-            //return above.getValue(ChainBlock.AXIS) == state.getValue(FACING).getClockWise().getAxis();
+        //return above.getValue(ChainBlock.AXIS) == state.getValue(FACING).getClockWise().getAxis();
         //}
         return false;
     }
@@ -116,36 +109,28 @@ public class CeilingBannerBlock extends AbstractBannerBlock {
     }
 
     @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
+    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return new CeilingBannerBlockTile(this.getColor());
     }
 
-    public void setPlacedBy(Level p_180633_1_, BlockPos p_180633_2_, BlockState p_180633_3_, @Nullable LivingEntity p_180633_4_, ItemStack p_180633_5_) {
-        if (p_180633_5_.hasCustomHoverName()) {
-            BlockEntity tileentity = p_180633_1_.getBlockEntity(p_180633_2_);
-            if (tileentity instanceof CeilingBannerBlockTile) {
-                ((CeilingBannerBlockTile) tileentity).setCustomName(p_180633_5_.getHoverName());
+    @Override
+    public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlacer, ItemStack pStack) {
+        if (pStack.hasCustomHoverName()) {
+            if (pLevel.getBlockEntity(pPos) instanceof CeilingBannerBlockTile tile) {
+                tile.setCustomName(pStack.getHoverName());
             }
         }
-
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockGetter p_185473_1_, BlockPos p_185473_2_, BlockState p_185473_3_) {
-        BlockEntity tileentity = p_185473_1_.getBlockEntity(p_185473_2_);
-        return tileentity instanceof CeilingBannerBlockTile ? ((CeilingBannerBlockTile) tileentity).getItem(p_185473_3_) : super.getCloneItemStack(p_185473_1_, p_185473_2_, p_185473_3_);
+    public ItemStack getCloneItemStack(BlockGetter pLevel, BlockPos pPos, BlockState pState) {
+        BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
+        return blockEntity instanceof CeilingBannerBlockTile ? ((CeilingBannerBlockTile) blockEntity).getItem(pState) : super.getCloneItemStack(pLevel, pPos, pState);
     }
 
     @Override
-    public InteractionResult use(BlockState p_225533_1_, Level p_225533_2_, BlockPos p_225533_3_, Player p_225533_4_, InteractionHand p_225533_5_, BlockHitResult p_225533_6_) {
-        return super.use(p_225533_1_, p_225533_2_, p_225533_3_, p_225533_4_, p_225533_5_, p_225533_6_);
+    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
+        return super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
         //TODO: add markers for maps
-        //TODO: fix banner rendering
-    }
-
-    @Override
-    public void appendHoverText(ItemStack stack, BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        tooltip.add((new TextComponent("You shouldn't have this")).withStyle(ChatFormatting.GRAY));
     }
 }

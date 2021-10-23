@@ -11,6 +11,7 @@ import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.GobletBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
@@ -35,7 +36,7 @@ import java.util.Random;
 
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
-public class GobletBlock extends WaterBlock {
+public class GobletBlock extends WaterBlock implements EntityBlock {
     protected static final VoxelShape SHAPE = Block.box(5, 0, 5, 11, 9, 11);
 
     public static final IntegerProperty LIGHT_LEVEL = BlockProperties.LIGHT_LEVEL_0_15;
@@ -53,13 +54,11 @@ public class GobletBlock extends WaterBlock {
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
                                 BlockHitResult hit) {
-        BlockEntity tileentity = worldIn.getBlockEntity(pos);
-        if (tileentity instanceof GobletBlockTile && ((IOwnerProtected) tileentity).isAccessibleBy(player)) {
+        if (worldIn.getBlockEntity(pos) instanceof GobletBlockTile tile && tile.isAccessibleBy(player)) {
             // make te do the work
-            GobletBlockTile te = (GobletBlockTile) tileentity;
-            if (te.handleInteraction(player, handIn)) {
+            if (tile.handleInteraction(player, handIn)) {
                 if (!worldIn.isClientSide())
-                    te.setChanged();
+                    tile.setChanged();
                 return InteractionResult.sidedSuccess(worldIn.isClientSide);
             }
         }
@@ -82,18 +81,14 @@ public class GobletBlock extends WaterBlock {
         return PushReaction.DESTROY;
     }
 
+    @Nullable
     @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
-
-    @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
+    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return new GobletBlockTile();
     }
 
     @Override
-    public int getLightValue(BlockState state, BlockGetter world, BlockPos pos) {
+    public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
         return state.getValue(LIGHT_LEVEL);
     }
 
@@ -104,20 +99,17 @@ public class GobletBlock extends WaterBlock {
 
     @Override
     public int getAnalogOutputSignal(BlockState blockState, Level world, BlockPos pos) {
-        BlockEntity tileentity = world.getBlockEntity(pos);
-        if (tileentity instanceof GobletBlockTile) {
-            return ((GobletBlockTile) tileentity).fluidHolder.isEmpty() ? 0 : 15;
+        if (world.getBlockEntity(pos) instanceof GobletBlockTile tile) {
+            return tile.fluidHolder.isEmpty() ? 0 : 15;
         }
         return 0;
     }
 
-
     @Override
     public void animateTick(BlockState state, Level world, BlockPos pos, Random random) {
         if (0.05 > random.nextFloat()) {
-            BlockEntity te = world.getBlockEntity(pos);
-            if (te instanceof GobletBlockTile) {
-                SoftFluidHolder holder = ((ISoftFluidHolder) te).getSoftFluidHolder();
+            if (world.getBlockEntity(pos) instanceof GobletBlockTile tile) {
+                SoftFluidHolder holder = tile.getSoftFluidHolder();
                 SoftFluid fluid = holder.getFluid();
                 if (fluid == SoftFluidRegistry.POTION) {
                     int i = holder.getTintColor(world, pos);

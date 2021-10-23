@@ -9,39 +9,44 @@ import net.mehvahdjukaar.supplementaries.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.world.level.block.*;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.LingeringPotionItem;
-import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.util.*;
-import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.extensions.IForgeBlock;
 import net.minecraftforge.common.util.Lazy;
 
@@ -49,13 +54,6 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-import net.minecraft.core.Direction;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.item.ItemUtils;
 
 public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer, IForgeBlock, EntityBlock {
     protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 13.0D, 16.0D);
@@ -72,7 +70,7 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
     public BambooSpikesBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any()
-                .setValue(FACING, Direction.NORTH).setValue(WATERLOGGED,false).setValue(TIPPED,false));
+                .setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false).setValue(TIPPED, false));
     }
 
     @Override
@@ -90,11 +88,11 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
     public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(worldIn, pos, state, placer, stack);
         BlockEntity te = worldIn.getBlockEntity(pos);
-        if(te instanceof BambooSpikesBlockTile){
+        if (te instanceof BambooSpikesBlockTile) {
             CompoundTag com = stack.getTag();
-            if(com!=null){
+            if (com != null) {
                 Potion p = PotionUtils.getPotion(stack);
-                if(p != Potions.EMPTY && com.contains("Damage")){
+                if (p != Potions.EMPTY && com.contains("Damage")) {
                     ((BambooSpikesBlockTile) te).potion = p;
                     ((BambooSpikesBlockTile) te).setMissingCharges(com.getInt("Damage"));
                 }
@@ -105,14 +103,14 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         CompoundTag com = context.getItemInHand().getTag();
-        int charges = com!=null?context.getItemInHand().getMaxDamage()-com.getInt("Damage"):0;
-        boolean flag = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;;
-        return this.defaultBlockState().setValue(FACING, context.getClickedFace()).setValue(WATERLOGGED,flag)
-                .setValue(TIPPED, charges!=0 && PotionUtils.getPotion(com)!=Potions.EMPTY);
+        int charges = com != null ? context.getItemInHand().getMaxDamage() - com.getInt("Damage") : 0;
+        boolean flag = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;
+        return this.defaultBlockState().setValue(FACING, context.getClickedFace()).setValue(WATERLOGGED, flag)
+                .setValue(TIPPED, charges != 0 && PotionUtils.getPotion(com) != Potions.EMPTY);
     }
 
-    public ItemStack getSpikeItem(BlockEntity te){
-        if(te instanceof BambooSpikesBlockTile) {
+    public ItemStack getSpikeItem(BlockEntity te) {
+        if (te instanceof BambooSpikesBlockTile) {
             return ((BambooSpikesBlockTile) te).getSpikeItem();
         }
         return new ItemStack(ModRegistry.BAMBOO_SPIKES_ITEM.get());
@@ -127,21 +125,14 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        switch (state.getValue(FACING)){
-            default:
-            case DOWN:
-                return SHAPE_DOWN;
-            case UP:
-                return SHAPE_UP;
-            case EAST:
-                return SHAPE_EAST;
-            case WEST:
-                return SHAPE_WEST;
-            case NORTH:
-                return SHAPE_NORTH;
-            case SOUTH:
-                return SHAPE_SOUTH;
-        }
+        return switch (state.getValue(FACING)) {
+            case DOWN -> SHAPE_DOWN;
+            case UP -> SHAPE_UP;
+            case EAST -> SHAPE_EAST;
+            case WEST -> SHAPE_WEST;
+            case NORTH -> SHAPE_NORTH;
+            case SOUTH -> SHAPE_SOUTH;
+        };
     }
 
     @Override
@@ -153,20 +144,20 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
 
     @Override
     public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
-        if(entityIn instanceof Player && ((Player) entityIn).isCreative())return;
-        if(entityIn instanceof LivingEntity && entityIn.isAlive()) {
+        if (entityIn instanceof Player && ((Player) entityIn).isCreative()) return;
+        if (entityIn instanceof LivingEntity && entityIn.isAlive()) {
             boolean up = state.getValue(FACING) == Direction.UP;
             double vy = up ? 0.45 : 0.95;
             entityIn.makeStuckInBlock(state, new Vec3(0.95D, vy, 0.95D));
-            if(!worldIn.isClientSide) {
-                if(up && entityIn instanceof Player && entityIn.isShiftKeyDown())return;
+            if (!worldIn.isClientSide) {
+                if (up && entityIn instanceof Player && entityIn.isShiftKeyDown()) return;
                 float damage = entityIn.getY() > (pos.getY() + 0.0625) ? 2 : 1;
                 entityIn.hurt(CommonUtil.SPIKE_DAMAGE, damage);
-                if(state.getValue(TIPPED)) {
+                if (state.getValue(TIPPED)) {
                     BlockEntity te = worldIn.getBlockEntity(pos);
                     if (te instanceof BambooSpikesBlockTile) {
-                        if(((BambooSpikesBlockTile)te).interactWithEntity(((LivingEntity) entityIn),worldIn)){
-                            worldIn.setBlock(pos,state.setValue(BambooSpikesBlock.TIPPED,false),3);
+                        if (((BambooSpikesBlockTile) te).interactWithEntity(((LivingEntity) entityIn), worldIn)) {
+                            worldIn.setBlock(pos, state.setValue(BambooSpikesBlock.TIPPED, false), 3);
                         }
                     }
                 }
@@ -179,12 +170,12 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
         return BlockPathTypes.DAMAGE_OTHER;
     }
 
-    public static boolean tryAddingPotion(BlockState state, LevelAccessor world, BlockPos pos, ItemStack stack){
+    public static boolean tryAddingPotion(BlockState state, LevelAccessor world, BlockPos pos, ItemStack stack) {
         BlockEntity te = world.getBlockEntity(pos);
         if (te instanceof BambooSpikesBlockTile) {
             if (((BambooSpikesBlockTile) te).tryApplyPotion(PotionUtils.getPotion(stack))) {
                 world.playSound(null, pos, SoundEvents.HONEY_BLOCK_FALL, SoundSource.BLOCKS, 0.5F, 1.5F);
-                world.setBlock(pos,state.setValue(TIPPED,true),3);
+                world.setBlock(pos, state.setValue(TIPPED, true), 3);
                 return true;
             }
         }
@@ -193,11 +184,11 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
 
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        if(!tippedEnabled.get())return InteractionResult.PASS;
+        if (!tippedEnabled.get()) return InteractionResult.PASS;
         ItemStack stack = player.getItemInHand(handIn);
 
-        if(stack.getItem() instanceof LingeringPotionItem) {
-            if(tryAddingPotion(state,worldIn,pos,stack)){
+        if (stack.getItem() instanceof LingeringPotionItem) {
+            if (tryAddingPotion(state, worldIn, pos, stack)) {
                 if (!player.isCreative())
                     player.setItemInHand(handIn, ItemUtils.createFilledResult(stack.copy(), player, new ItemStack(Items.GLASS_BOTTLE), false));
             }
@@ -209,7 +200,7 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING,WATERLOGGED,TIPPED);
+        builder.add(FACING, WATERLOGGED, TIPPED);
     }
 
     @Override
@@ -225,20 +216,20 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
 
     @Override
     public void animateTick(BlockState state, Level world, BlockPos pos, Random random) {
-        if(0.01>random.nextFloat() && state.getValue(TIPPED)){
+        if (0.01 > random.nextFloat() && state.getValue(TIPPED)) {
             BlockEntity te = world.getBlockEntity(pos);
-            if(te instanceof BambooSpikesBlockTile) {
+            if (te instanceof BambooSpikesBlockTile) {
                 ((BambooSpikesBlockTile) te).makeParticle();
             }
         }
     }
 
-    public Lazy<Boolean> tippedEnabled = Lazy.of(()->RegistryConfigs.reg.TIPPED_SPIKES_ENABLED.get());
+    public Lazy<Boolean> tippedEnabled = Lazy.of(() -> RegistryConfigs.reg.TIPPED_SPIKES_ENABLED.get());
 
     @Override
     public boolean tryAcceptingFluid(Level world, BlockState state, BlockPos pos, SoftFluid f, @Nullable CompoundTag nbt, int amount) {
-        if(!tippedEnabled.get())return false;
-        if(f == SoftFluidRegistry.POTION && nbt != null && !state.getValue(TIPPED) && nbt.getString("PotionType").equals("Lingering")){
+        if (!tippedEnabled.get()) return false;
+        if (f == SoftFluidRegistry.POTION && nbt != null && !state.getValue(TIPPED) && nbt.getString("PotionType").equals("Lingering")) {
             BlockEntity te = world.getBlockEntity(pos);
             if (te instanceof BambooSpikesBlockTile) {
                 if (((BambooSpikesBlockTile) te).tryApplyPotion(PotionUtils.getPotion(nbt))) {

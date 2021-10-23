@@ -1,58 +1,45 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
-import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.HangingFlowerPotBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
-import net.mehvahdjukaar.supplementaries.block.util.IBlockHolder;
 import net.mehvahdjukaar.supplementaries.common.FlowerPotHandler;
-import net.minecraft.block.*;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.stats.Stats;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
-import net.minecraft.world.level.pathfinder.PathComputationType;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.stats.Stats;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.core.Direction;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.util.text.*;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.FlowerPotBlock;
-import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-import net.minecraft.world.level.block.state.BlockState;
-
-public class HangingFlowerPotBlock extends Block {
+public class HangingFlowerPotBlock extends Block implements EntityBlock {
 
     protected static final VoxelShape SHAPE = Block.box(5.0D, 0.0D, 5.0D, 11.0D, 6.0D, 11.0D);
     public static final BooleanProperty TILE = BlockProperties.TILE; // is it tile only. used for rendering to store model
@@ -64,21 +51,14 @@ public class HangingFlowerPotBlock extends Block {
 
     @Override
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
-        BlockEntity te = world.getBlockEntity(pos);
         Item i = stack.getItem();
-        if(te instanceof IBlockHolder && i instanceof BlockItem){
-            BlockState mimic = ((BlockItem) i).getBlock().defaultBlockState();
-            ((IBlockHolder) te).setHeldBlock(mimic);
+        if (world.getBlockEntity(pos) instanceof HangingFlowerPotBlockTile tile) {
+            if (i instanceof BlockItem) {
+                BlockState mimic = ((BlockItem) i).getBlock().defaultBlockState();
+                tile.setHeldBlock(mimic);
+            }
+            BlockUtils.addOptionalOwnership(entity, tile);
         }
-        if(te instanceof IOwnerProtected){
-            BlockUtils.addOptionalOwnership(entity, te);
-        }
-    }
-
-    @Override
-    public void appendHoverText(ItemStack stack, BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        tooltip.add((new TextComponent("You shouldn't have this")).withStyle(ChatFormatting.GRAY));
     }
 
     @Override
@@ -99,10 +79,8 @@ public class HangingFlowerPotBlock extends Block {
 
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        BlockEntity tileEntity = worldIn.getBlockEntity(pos);
-        if (tileEntity instanceof HangingFlowerPotBlockTile && ((HangingFlowerPotBlockTile) tileEntity).isAccessibleBy(player)) {
-            HangingFlowerPotBlockTile te = ((HangingFlowerPotBlockTile) tileEntity);
-            Block pot = te.getHeldBlock().getBlock();
+        if (worldIn.getBlockEntity(pos) instanceof HangingFlowerPotBlockTile tile && tile.isAccessibleBy(player)) {
+            Block pot = tile.getHeldBlock().getBlock();
             if (pot instanceof FlowerPotBlock && FlowerPotHandler.isEmptyPot(((FlowerPotBlock) pot).getEmptyPot())) {
                 ItemStack itemstack = player.getItemInHand(handIn);
                 Item item = itemstack.getItem();
@@ -116,9 +94,9 @@ public class HangingFlowerPotBlock extends Block {
 
                 if (isEmptyFlower != isPotEmpty) {
                     if (isPotEmpty) {
-                        te.setHeldBlock(newPot.defaultBlockState());
+                        tile.setHeldBlock(newPot.defaultBlockState());
                         player.awardStat(Stats.POT_FLOWER);
-                        if (!player.abilities.instabuild) {
+                        if (!player.getAbilities().instabuild) {
                             itemstack.shrink(1);
                         }
                     } else {
@@ -131,7 +109,7 @@ public class HangingFlowerPotBlock extends Block {
                                 player.drop(flowerItem, false);
                             }
                         }
-                        te.setHeldBlock(((FlowerPotBlock) pot).getEmptyPot().defaultBlockState());
+                        tile.setHeldBlock(((FlowerPotBlock) pot).getEmptyPot().defaultBlockState());
                     }
                     return InteractionResult.sidedSuccess(worldIn.isClientSide);
                 } else {
@@ -152,13 +130,9 @@ public class HangingFlowerPotBlock extends Block {
         return false;
     }
 
+    @Nullable
     @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
-
-    @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
+    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return new HangingFlowerPotBlockTile();
     }
 
@@ -178,13 +152,11 @@ public class HangingFlowerPotBlock extends Block {
 
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
-        BlockEntity tileentity = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
-        if (tileentity instanceof HangingFlowerPotBlockTile) {
-            Block b = ((HangingFlowerPotBlockTile) tileentity).getHeldBlock().getBlock();
+        if (builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof HangingFlowerPotBlockTile tile) {
+            Block b = tile.getHeldBlock().getBlock();
             if (b instanceof FlowerPotBlock)
                 return Arrays.asList(new ItemStack(((FlowerPotBlock) b).getContent()), new ItemStack(((FlowerPotBlock) b).getEmptyPot()));
         }
-
         return super.getDrops(state, builder);
     }
 
@@ -203,6 +175,7 @@ public class HangingFlowerPotBlock extends Block {
         return facing == Direction.UP && !this.canSurvive(stateIn, worldIn, currentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
 
+    @Override
     public boolean canSurvive(BlockState state, LevelReader worldIn, BlockPos pos) {
         return RopeBlock.isSupportingCeiling(pos.relative(Direction.UP), worldIn);
     }

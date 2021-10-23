@@ -2,67 +2,59 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.HalfTransparentBlock;
-import net.minecraft.world.level.block.DirectionalBlock;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.core.Direction;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
-import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import vazkii.quark.api.IConditionalSticky;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-
 public class MagmaCreamBlock extends HalfTransparentBlock implements IConditionalSticky {
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
+
     public MagmaCreamBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.UP));
     }
 
-
     @Override
-    public void fallOn(Level world, BlockPos pos, Entity entity, float height) {
+    public void fallOn(Level world, BlockState state, BlockPos pos, Entity entity, float height) {
         if (entity.isSuppressingBounce()) {
-            super.fallOn(world, pos, entity, height);
+            super.fallOn(world, state, pos, entity, height);
         } else {
-            entity.causeFallDamage(height, 0.0F);
+            entity.causeFallDamage(height, 0.0F, DamageSource.FALL);
         }
-
     }
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        if(CompatHandler.quark)return;
-        if(!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().options.advancedItemTooltips)return;
+        if (CompatHandler.quark) return;
+        if (!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().options.advancedItemTooltips) return;
         tooltip.add(new TranslatableComponent("message.supplementaries.magma_cream_block").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
     }
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        if(context.getPlayer().isShiftKeyDown()) {
+        if (context.getPlayer().isShiftKeyDown()) {
             return this.defaultBlockState().setValue(FACING, context.getClickedFace().getOpposite());
-        }
-        else return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
+        } else return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
     }
 
     @Override
@@ -79,23 +71,6 @@ public class MagmaCreamBlock extends HalfTransparentBlock implements IConditiona
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
         return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
-    /*
-    public void onFallenUpon(World worldIn, BlockPos pos, Entity entityIn, float fallDistance) {
-        if(worldIn.getBlockState(pos).get(FACING)==Direction.UP)
-            super.onFallenUpon(worldIn,pos,entityIn,fallDistance);
-    }
-
-    public void onLanded(IBlockReader worldIn, Entity entityIn) {
-        BlockState state = entityIn.world.getBlockState(entityIn.getPosition());
-        if(state.getBlock()==this&&state.get(FACING)==Direction.UP)
-            super.onLanded(worldIn,entityIn);
-    }*/
-
-    /*
-    public void onEntityWalk(World worldIn, BlockPos pos, Entity entityIn) {
-        if(worldIn.getBlockState(pos).get(FACING)==Direction.UP)
-            super.onFallenUpon(worldIn,pos,entityIn,fallDistance);
-    }*/
 
     //piston push fix
     @Override
@@ -114,8 +89,8 @@ public class MagmaCreamBlock extends HalfTransparentBlock implements IConditiona
     }
 
     @Override
-    public void stepOn(Level worldIn, BlockPos pos, Entity entityIn) {
-        if (!entityIn.fireImmune() && entityIn instanceof LivingEntity && !EnchantmentHelper.hasFrostWalker((LivingEntity)entityIn)) {
+    public void stepOn(Level worldIn,  BlockPos pos, BlockState state, Entity entityIn) {
+        if (!entityIn.fireImmune() && entityIn instanceof LivingEntity && !EnchantmentHelper.hasFrostWalker((LivingEntity) entityIn)) {
             entityIn.hurt(DamageSource.HOT_FLOOR, 1.0F);
         }
         double d0 = Math.abs(entityIn.getDeltaMovement().y);
@@ -123,21 +98,21 @@ public class MagmaCreamBlock extends HalfTransparentBlock implements IConditiona
             double d1 = 0.4D + d0 * 0.2D;
             entityIn.setDeltaMovement(entityIn.getDeltaMovement().multiply(d1, 1.0D, d1));
         }
-        super.stepOn(worldIn, pos, entityIn);
+        super.stepOn(worldIn, pos, state, entityIn);
     }
 
     @Override
     public boolean canStickToBlock(Level world, BlockPos pistonPos, BlockPos fromPos, BlockPos toPos, BlockState fromState, BlockState toState, Direction moveDir) {
-        if(fromState.getBlock()==this) {
+        if (fromState.getBlock() == this) {
             Direction stickDir = fromState.getValue(FACING);
-            if(fromPos.relative(stickDir).equals(toPos))return true;
-            else if(fromPos.relative(stickDir.getOpposite()).equals(toPos))return false;
-            else if (toState.getBlock()==this){
+            if (fromPos.relative(stickDir).equals(toPos)) return true;
+            else if (fromPos.relative(stickDir.getOpposite()).equals(toPos)) return false;
+            else if (toState.getBlock() == this) {
                 Direction stickDir2 = toState.getValue(FACING);
-                return stickDir2==stickDir ||
-                        toPos.relative(stickDir2).equals(fromPos) && stickDir!=stickDir;
-            }
-            else return toState.getBlock().isStickyBlock(toState);
+                //TODO: fix
+                return stickDir2 == stickDir ||
+                        toPos.relative(stickDir2).equals(fromPos) && stickDir != stickDir;
+            } else return toState.getBlock().isStickyBlock(toState);
         }
         return false;
     }

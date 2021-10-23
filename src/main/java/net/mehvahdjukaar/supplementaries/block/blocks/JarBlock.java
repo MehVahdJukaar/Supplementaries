@@ -1,54 +1,46 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 
-import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
-import net.mehvahdjukaar.supplementaries.block.tiles.StatueBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.LockableTileEntity;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.util.*;
-import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
 
-import net.minecraft.core.Direction;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-
-public class JarBlock extends WaterBlock {
+public class JarBlock extends WaterBlock implements EntityBlock {
     protected static final VoxelShape SHAPE = Shapes.or(Shapes.box(0.1875D, 0D, 0.1875D, 0.8125D, 0.875D, 0.8125D),
             Shapes.box(0.3125, 0.875, 0.3125, 0.6875, 1, 0.6875));
 
@@ -81,30 +73,27 @@ public class JarBlock extends WaterBlock {
 
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
-                                BlockHitResult hit) {
-        BlockEntity tileentity = worldIn.getBlockEntity(pos);
-        if (tileentity instanceof JarBlockTile && ((IOwnerProtected) tileentity).isAccessibleBy(player)) {
+                                 BlockHitResult hit) {
+        if (worldIn.getBlockEntity(pos) instanceof JarBlockTile tile && tile.isAccessibleBy(player)) {
             // make te do the work
-            JarBlockTile te = (JarBlockTile) tileentity;
-            if (te.handleInteraction(player, handIn)) {
+            if (tile.handleInteraction(player, handIn)) {
                 if (!worldIn.isClientSide()) {
-                    te.setChanged();
+                    tile.setChanged();
                 }
                 return InteractionResult.sidedSuccess(worldIn.isClientSide);
             }
-            return ((JarBlockTile) tileentity).mobContainer.onInteract(worldIn, pos, player, handIn);
+            return tile.mobContainer.onInteract(worldIn, pos, player, handIn);
         }
         return InteractionResult.PASS;
     }
 
     @Override
     public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        BlockEntity tileentity = worldIn.getBlockEntity(pos);
-        if (tileentity instanceof JarBlockTile) {
+        if (worldIn.getBlockEntity(pos) instanceof JarBlockTile tile) {
             if (stack.hasCustomHoverName()) {
-                ((JarBlockTile) tileentity).setCustomName(stack.getHoverName());
+                tile.setCustomName(stack.getHoverName());
             }
-            BlockUtils.addOptionalOwnership(placer, tileentity);
+            BlockUtils.addOptionalOwnership(placer, tile);
         }
     }
 
@@ -113,11 +102,11 @@ public class JarBlock extends WaterBlock {
         ItemStack returnStack = new ItemStack(this);
 
         if (te.hasContent()) {
-            CompoundTag compoundnbt = te.save(new CompoundTag());
+            CompoundTag compoundTag = te.save(new CompoundTag());
             //hax
-            if(compoundnbt.contains("Owner"))compoundnbt.remove("Owner");
-            if (!compoundnbt.isEmpty()) {
-                returnStack.addTagElement("BlockEntityTag", compoundnbt);
+            if (compoundTag.contains("Owner")) compoundTag.remove("Owner");
+            if (!compoundTag.isEmpty()) {
+                returnStack.addTagElement("BlockEntityTag", compoundTag);
             }
         }
         if (te.hasCustomName()) {
@@ -156,12 +145,8 @@ public class JarBlock extends WaterBlock {
 
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
-        BlockEntity tileentity = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
-        if (tileentity instanceof JarBlockTile) {
-            JarBlockTile tile = (JarBlockTile) tileentity;
-
+        if (builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof JarBlockTile tile) {
             ItemStack itemstack = this.getJarItem(tile);
-
             return Collections.singletonList(itemstack);
         }
         return super.getDrops(state, builder);
@@ -169,10 +154,7 @@ public class JarBlock extends WaterBlock {
 
     @Override
     public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
-
-        BlockEntity tileentity = world.getBlockEntity(pos);
-        if (tileentity instanceof JarBlockTile) {
-            JarBlockTile tile = (JarBlockTile) tileentity;
+        if (world.getBlockEntity(pos) instanceof JarBlockTile tile) {
             return this.getJarItem(tile);
         }
         return super.getPickBlock(state, target, world, pos, player);
@@ -200,18 +182,14 @@ public class JarBlock extends WaterBlock {
         return tileEntity instanceof MenuProvider ? (MenuProvider) tileEntity : null;
     }
 
+    @Nullable
     @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
-
-    @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
+    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return new JarBlockTile();
     }
 
     @Override
-    public int getLightValue(BlockState state, BlockGetter world, BlockPos pos) {
+    public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
         return state.getValue(LIGHT_LEVEL);
     }
 
@@ -222,14 +200,12 @@ public class JarBlock extends WaterBlock {
 
     @Override
     public int getAnalogOutputSignal(BlockState blockState, Level world, BlockPos pos) {
-        BlockEntity tileentity = world.getBlockEntity(pos);
-        if (tileentity instanceof JarBlockTile) {
-            JarBlockTile te = ((JarBlockTile) tileentity);
-            if (!te.isEmpty())
-                return AbstractContainerMenu.getRedstoneSignalFromContainer(te);
-            else if (!te.fluidHolder.isEmpty()) {
-                return ((JarBlockTile) tileentity).fluidHolder.getComparatorOutput();
-            } else if (!te.mobContainer.isEmpty()) return 15;
+        if (world.getBlockEntity(pos) instanceof JarBlockTile tile) {
+            if (!tile.isEmpty())
+                return AbstractContainerMenu.getRedstoneSignalFromContainer(tile);
+            else if (!tile.fluidHolder.isEmpty()) {
+                return tile.fluidHolder.getComparatorOutput();
+            } else if (!tile.mobContainer.isEmpty()) return 15;
         }
         return 0;
     }

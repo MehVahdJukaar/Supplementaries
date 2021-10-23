@@ -3,42 +3,33 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 import net.mehvahdjukaar.selene.util.Utils;
 import net.mehvahdjukaar.supplementaries.block.util.ILightable;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
-import net.minecraft.item.*;
-import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.entity.projectile.ThrownPotion;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.Level;
 
 import java.util.Random;
-
-import net.mehvahdjukaar.supplementaries.block.util.ILightable.FireSound;
-import net.minecraft.world.item.FireChargeItem;
-import net.minecraft.world.item.FlintAndSteelItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.PotionItem;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public abstract class LightUpBlock extends Block implements ILightable {
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
@@ -63,8 +54,6 @@ public abstract class LightUpBlock extends Block implements ILightable {
     //TODO: remove
     public void onChange(BlockState state, LevelAccessor world, BlockPos pos) {
     }
-
-    ;
 
     @Override
     public boolean lightUp(BlockState state, BlockPos pos, LevelAccessor world, ILightable.FireSound sound) {
@@ -97,10 +86,10 @@ public abstract class LightUpBlock extends Block implements ILightable {
 
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        if (!this.isLit(state) && player.abilities.mayBuild) {
+        if (!this.isLit(state) && player.getAbilities().mayBuild) {
             ItemStack stack = player.getItemInHand(handIn);
             Item item = stack.getItem();
-            if (item instanceof FlintAndSteelItem || item.is(ModTags.FIRE_SOURCES)) {
+            if (item instanceof FlintAndSteelItem || stack.is(ModTags.FIRE_SOURCES)) {
                 if (lightUp(state, pos, worldIn, FireSound.FLINT_AND_STEEL)) {
                     this.onChange(state, worldIn, pos);
                     stack.hurtAndBreak(1, player, (playerIn) -> playerIn.broadcastBreakEvent(handIn));
@@ -128,8 +117,7 @@ public abstract class LightUpBlock extends Block implements ILightable {
     @SuppressWarnings({"StrongCast", "OverlyStrongTypeCast"})
     @Override
     public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
-        if (entityIn instanceof Projectile) {
-            Projectile projectile = (Projectile) entityIn;
+        if (entityIn instanceof Projectile projectile) {
             if (projectile.isOnFire()) {
                 Entity entity = projectile.getOwner();
                 if (entity == null || entity instanceof Player || net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(worldIn, entity)) {
@@ -151,7 +139,6 @@ public abstract class LightUpBlock extends Block implements ILightable {
         BlockState state = this.defaultBlockState();
         return toggleLitState(state, !flag);
     }
-
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {

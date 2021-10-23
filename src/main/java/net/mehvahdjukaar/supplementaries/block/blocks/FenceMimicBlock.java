@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
@@ -23,7 +24,7 @@ import net.minecraft.world.level.Level;
 
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
-public abstract class FenceMimicBlock extends MimicBlock implements SimpleWaterloggedBlock{
+public abstract class FenceMimicBlock extends MimicBlock implements SimpleWaterloggedBlock, EntityBlock {
     protected static final VoxelShape SHAPE = Block.box(5D, 0.0D, 5D, 11D, 16.0D, 11D);
     protected static final VoxelShape COLLISION_SHAPE = Block.box(5D, 0.0D, 5D, 11D, 24.0D, 11D);
 

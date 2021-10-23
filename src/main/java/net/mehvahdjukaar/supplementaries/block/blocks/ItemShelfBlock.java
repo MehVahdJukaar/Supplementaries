@@ -3,10 +3,10 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.ItemShelfBlockTile;
+import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.material.Fluids;
@@ -35,11 +35,9 @@ import org.jetbrains.annotations.Nullable;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
-public class ItemShelfBlock extends WaterBlock {
+public class ItemShelfBlock extends WaterBlock implements EntityBlock {
     protected static final VoxelShape SHAPE_NORTH = Block.box(0D, 1.0D, 13.0D, 16.0D, 4.0D, 16.0D);
     protected static final VoxelShape SHAPE_SOUTH = Block.box(0D, 1.0D, 0.0D, 16.0D, 4.0D, 3.0D);
     protected static final VoxelShape SHAPE_WEST = Block.box(13.0D, 1.0D, 0D, 16.0D, 4.0D, 16.0D);
@@ -103,10 +101,9 @@ public class ItemShelfBlock extends WaterBlock {
 
     @Override
     public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
-        BlockEntity te = world.getBlockEntity(pos);
         if (target.getLocation().y() >= pos.getY() + 0.25) {
-            if (te instanceof ItemShelfBlockTile) {
-                ItemStack i = ((Container) te).getItem(0);
+            if (world.getBlockEntity(pos) instanceof ItemShelfBlockTile tile) {
+                ItemStack i = tile.getItem(0);
                 if (!i.isEmpty()) return i;
             }
         }
@@ -117,9 +114,8 @@ public class ItemShelfBlock extends WaterBlock {
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
                                 BlockHitResult hit) {
-        BlockEntity tileentity = worldIn.getBlockEntity(pos);
-        if (tileentity instanceof ItemDisplayTile) {
-            return ((ItemDisplayTile) tileentity).interact(player, handIn);
+        if (worldIn.getBlockEntity(pos) instanceof ItemDisplayTile tile) {
+            return tile.interact(player, handIn);
         }
         return InteractionResult.PASS;
     }
@@ -131,17 +127,12 @@ public class ItemShelfBlock extends WaterBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        switch (state.getValue(FACING)) {
-            default:
-            case NORTH:
-                return SHAPE_NORTH;
-            case SOUTH:
-                return SHAPE_SOUTH;
-            case EAST:
-                return SHAPE_EAST;
-            case WEST:
-                return SHAPE_WEST;
-        }
+        return switch (state.getValue(FACING)) {
+            default -> SHAPE_NORTH;
+            case SOUTH -> SHAPE_SOUTH;
+            case EAST -> SHAPE_EAST;
+            case WEST -> SHAPE_WEST;
+        };
     }
 
     @Override
@@ -150,22 +141,17 @@ public class ItemShelfBlock extends WaterBlock {
         return tileEntity instanceof MenuProvider ? (MenuProvider) tileEntity : null;
     }
 
+    @Nullable
     @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
-
-    @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
+    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return new ItemShelfBlockTile();
     }
 
     @Override
     public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
-            BlockEntity tileentity = world.getBlockEntity(pos);
-            if (tileentity instanceof ItemShelfBlockTile) {
-                Containers.dropContents(world, pos, (Container) tileentity);
+            if (world.getBlockEntity(pos) instanceof ItemShelfBlockTile tile) {
+                Containers.dropContents(world, pos, tile);
                 world.updateNeighbourForOutputSignal(pos, this);
             }
             super.onRemove(state, world, pos, newState, isMoving);
@@ -179,9 +165,8 @@ public class ItemShelfBlock extends WaterBlock {
 
     @Override
     public int getAnalogOutputSignal(BlockState blockState, Level world, BlockPos pos) {
-        BlockEntity tileentity = world.getBlockEntity(pos);
-        if (tileentity instanceof Container)
-            return ((Container) tileentity).isEmpty() ? 0 : 15;
+        if (world.getBlockEntity(pos) instanceof Container tile)
+            return tile.isEmpty() ? 0 : 15;
         else
             return 0;
     }
@@ -189,11 +174,6 @@ public class ItemShelfBlock extends WaterBlock {
     @Override
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
         super.setPlacedBy(world, pos, state, entity, stack);
-        if(ServerConfigs.cached.SERVER_PROTECTION && entity instanceof Player){
-            BlockEntity tileentity = world.getBlockEntity(pos);
-            if (tileentity instanceof ItemDisplayTile){
-                ((ItemDisplayTile) tileentity).setOwner(entity.getUUID());
-            }
-        }
+        BlockUtils.addOptionalOwnership(entity, world, pos);
     }
 }

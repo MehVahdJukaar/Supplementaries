@@ -9,58 +9,41 @@ import net.mehvahdjukaar.supplementaries.compat.decorativeblocks.DecoBlocksCompa
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.world.explosion.GunpowderExplosion;
-import net.minecraft.block.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.*;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.properties.RedstoneSide;
-import net.minecraft.util.*;
-import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.*;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Random;
 
-import net.mehvahdjukaar.supplementaries.block.util.ILightable.FireSound;
-import net.minecraft.core.Direction;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Explosion;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.CampfireBlock;
-import net.minecraft.world.level.block.FireBlock;
-import net.minecraft.world.level.block.MagmaBlock;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.RedstoneTorchBlock;
-import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.TntBlock;
-import net.minecraft.world.level.block.TorchBlock;
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-import net.minecraft.world.level.block.state.BlockState;
-
 /**
- * The main gunpowder block. Very similar to the {@link net.minecraft.block.RedstoneWireBlock}
+ * The main gunpowder block. Very similar to the RedstoneWireBlock
  * block.
  *
  * @author Tmtravlr (Rebeca Rey), updated by MehVahdJukaar
@@ -84,11 +67,11 @@ public class GunpowderBlock extends LightUpBlock {
     private final Map<BlockState, VoxelShape> SHAPES_CACHE = Maps.newHashMap();
     private final BlockState crossState;
 
-    private static int getDelay(){
+    private static int getDelay() {
         return ServerConfigs.cached.GUNPOWDER_BURN_SPEED;
     }
 
-    private static int getSpreadAge(){
+    private static int getSpreadAge() {
         return ServerConfigs.cached.GUNPOWDER_SPREAD_AGE;
     }
 
@@ -278,28 +261,21 @@ public class GunpowderBlock extends LightUpBlock {
 
     @Override
     public BlockState rotate(BlockState state, Rotation rotation) {
-        switch (rotation) {
-            case CLOCKWISE_180:
-                return state.setValue(NORTH, state.getValue(SOUTH)).setValue(EAST, state.getValue(WEST)).setValue(SOUTH, state.getValue(NORTH)).setValue(WEST, state.getValue(EAST));
-            case COUNTERCLOCKWISE_90:
-                return state.setValue(NORTH, state.getValue(EAST)).setValue(EAST, state.getValue(SOUTH)).setValue(SOUTH, state.getValue(WEST)).setValue(WEST, state.getValue(NORTH));
-            case CLOCKWISE_90:
-                return state.setValue(NORTH, state.getValue(WEST)).setValue(EAST, state.getValue(NORTH)).setValue(SOUTH, state.getValue(EAST)).setValue(WEST, state.getValue(SOUTH));
-            default:
-                return state;
-        }
+        return switch (rotation) {
+            case CLOCKWISE_180 -> state.setValue(NORTH, state.getValue(SOUTH)).setValue(EAST, state.getValue(WEST)).setValue(SOUTH, state.getValue(NORTH)).setValue(WEST, state.getValue(EAST));
+            case COUNTERCLOCKWISE_90 -> state.setValue(NORTH, state.getValue(EAST)).setValue(EAST, state.getValue(SOUTH)).setValue(SOUTH, state.getValue(WEST)).setValue(WEST, state.getValue(NORTH));
+            case CLOCKWISE_90 -> state.setValue(NORTH, state.getValue(WEST)).setValue(EAST, state.getValue(NORTH)).setValue(SOUTH, state.getValue(EAST)).setValue(WEST, state.getValue(SOUTH));
+            default -> state;
+        };
     }
 
     @Override
     public BlockState mirror(BlockState state, Mirror mirror) {
-        switch (mirror) {
-            case LEFT_RIGHT:
-                return state.setValue(NORTH, state.getValue(SOUTH)).setValue(SOUTH, state.getValue(NORTH));
-            case FRONT_BACK:
-                return state.setValue(EAST, state.getValue(WEST)).setValue(WEST, state.getValue(EAST));
-            default:
-                return super.mirror(state, mirror);
-        }
+        return switch (mirror) {
+            case LEFT_RIGHT -> state.setValue(NORTH, state.getValue(SOUTH)).setValue(SOUTH, state.getValue(NORTH));
+            case FRONT_BACK -> state.setValue(EAST, state.getValue(WEST)).setValue(WEST, state.getValue(EAST));
+            default -> super.mirror(state, mirror);
+        };
     }
 
 
@@ -374,7 +350,7 @@ public class GunpowderBlock extends LightUpBlock {
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         InteractionResult lightUp = super.use(state, world, pos, player, hand, hit);
         if (lightUp.consumesAction()) return lightUp;
-        if (player.abilities.mayBuild) {
+        if (player.getAbilities().mayBuild) {
             if (isCross(state) || isDot(state)) {
                 BlockState blockstate = isCross(state) ? this.defaultBlockState() : this.crossState;
                 blockstate = blockstate.setValue(BURNING, state.getValue(BURNING));
@@ -511,22 +487,17 @@ public class GunpowderBlock extends LightUpBlock {
     public void onBlockExploded(BlockState state, Level world, BlockPos pos, Explosion explosion) {
         if (!world.isClientSide && this.canSurvive(state, world, pos)) {
             this.lightUp(state, pos, world, FireSound.FLAMING_ARROW);
-        }
-        else{
+        } else {
             super.onBlockExploded(state, world, pos, explosion);
         }
     }
 
-    @Override
-    public void stepOn(Level p_176199_1_, BlockPos p_176199_2_, Entity p_176199_3_) {
-        super.stepOn(p_176199_1_, p_176199_2_, p_176199_3_);
-    }
 
     //TODO: this is not working
     @Override
-    public void fallOn(Level world, BlockPos pos, Entity entity, float height) {
-        super.fallOn(world, pos, entity, height);
-        if(height > 1){
+    public void fallOn(Level world, BlockState state, BlockPos pos, Entity entity, float height) {
+        super.fallOn(world, state, pos, entity, height);
+        if (height > 1) {
             this.extinguish(world.getBlockState(pos), pos, world);
         }
     }
@@ -566,7 +537,6 @@ public class GunpowderBlock extends LightUpBlock {
     public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
         return new ItemStack(Items.GUNPOWDER);
     }
-
 
     //client
 
@@ -621,6 +591,4 @@ public class GunpowderBlock extends LightUpBlock {
             world.addParticle(ParticleTypes.LARGE_SMOKE, x, y, z, velX, velY, velZ);
         }
     }
-
-
 }

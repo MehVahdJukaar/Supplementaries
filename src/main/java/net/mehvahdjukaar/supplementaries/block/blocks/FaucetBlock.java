@@ -5,45 +5,41 @@ import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.FaucetBlockTile;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.ConcretePowderBlock;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.util.*;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.Level;
-import net.minecraftforge.fluids.FluidUtil;
-
-import java.util.Random;
-
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.FastColor;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.fluids.FluidUtil;
+import org.jetbrains.annotations.Nullable;
 
-public class FaucetBlock extends WaterBlock {
+import java.util.Random;
+
+public class FaucetBlock extends WaterBlock implements EntityBlock {
     protected static final VoxelShape SHAPE_NORTH = Shapes.box(0.6875D, 0.3125D, 1D, 0.3125D, 0.9375D, 0.3125D);
     protected static final VoxelShape SHAPE_SOUTH = Shapes.box(0.3125D, 0.3125D, 0D, 0.6875D, 0.9375D, 0.6875D);
     protected static final VoxelShape SHAPE_WEST = Shapes.box(1D, 0.3125D, 0.3125D, 0.3125D, 0.9375D, 0.6875D);
@@ -71,39 +67,25 @@ public class FaucetBlock extends WaterBlock {
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         if (state.getValue(HAS_JAR)) {
-            switch (state.getValue(FACING)) {
-                case UP:
-                case DOWN:
-                case NORTH:
-                default:
-                    return SHAPE_NORTH_JAR;
-                case SOUTH:
-                    return SHAPE_SOUTH_JAR;
-                case EAST:
-                    return SHAPE_EAST_JAR;
-                case WEST:
-                    return SHAPE_WEST_JAR;
-            }
+            return switch (state.getValue(FACING)) {
+                default -> SHAPE_NORTH_JAR;
+                case SOUTH -> SHAPE_SOUTH_JAR;
+                case EAST -> SHAPE_EAST_JAR;
+                case WEST -> SHAPE_WEST_JAR;
+            };
         } else {
-            switch (state.getValue(FACING)) {
-                case UP:
-                case DOWN:
-                case NORTH:
-                default:
-                    return SHAPE_NORTH;
-                case SOUTH:
-                    return SHAPE_SOUTH;
-                case EAST:
-                    return SHAPE_EAST;
-                case WEST:
-                    return SHAPE_WEST;
-            }
+            return switch (state.getValue(FACING)) {
+                default -> SHAPE_NORTH;
+                case SOUTH -> SHAPE_SOUTH;
+                case EAST -> SHAPE_EAST;
+                case WEST -> SHAPE_WEST;
+            };
         }
     }
 
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
-                                BlockHitResult hit) {
+                                 BlockHitResult hit) {
         //TODO: add item activated method for bottles
         boolean enabled = state.getValue(ENABLED);
         if (!state.getValue(HAS_JAR) && hit.getLocation().y % 1 <= 0.4375) {
@@ -153,10 +135,8 @@ public class FaucetBlock extends WaterBlock {
 
     //returns false if no color (water)
     public boolean updateTileFluid(BlockState state, BlockPos pos, LevelAccessor world) {
-
-        BlockEntity te = world.getBlockEntity(pos);
-        if (te instanceof FaucetBlockTile) {
-            return ((FaucetBlockTile) te).updateContainedFluidVisuals(state);
+        if (world.getBlockEntity(pos) instanceof FaucetBlockTile tile) {
+            return tile.updateContainedFluidVisuals(state);
         }
         return false;
     }
@@ -251,8 +231,6 @@ public class FaucetBlock extends WaterBlock {
             float g = FastColor.ARGB32.green(color) / 255f;
             float b = FastColor.ARGB32.blue(color) / 255f;
             world.addParticle(ModRegistry.DRIPPING_LIQUID.get(), x, y, z, r, g, b);
-
-            //world.addParticle(flag?Registry.FALLING_LIQUID.get():Registry.DRIPPING_LIQUID.get(), x, y, z, 0, 1, 0);
         }
     }
 
@@ -264,15 +242,10 @@ public class FaucetBlock extends WaterBlock {
         return 0x423cf7;
     }
 
+    @Nullable
     @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
-
-    @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
+    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return new FaucetBlockTile();
     }
-
 }
 

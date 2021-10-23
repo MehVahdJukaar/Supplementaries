@@ -1,33 +1,27 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
-import net.minecraft.world.level.material.PushReaction;
-import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.world.level.pathfinder.PathComputationType;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.core.Direction;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
-import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.Level;
 
 import java.util.Random;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class CandelabraBlock extends LightUpWaterBlock {
     protected static final VoxelShape SHAPE_FLOOR = Block.box(5D, 0D, 5D, 11D, 14D, 11D);
@@ -77,25 +71,16 @@ public class CandelabraBlock extends LightUpWaterBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-        switch (state.getValue(FACE)) {
-            default:
-            case FLOOR:
-                return SHAPE_FLOOR;
-            case WALL:
-                switch (state.getValue(FACING)) {
-                    default:
-                    case NORTH:
-                        return SHAPE_WALL_NORTH;
-                    case SOUTH:
-                        return SHAPE_WALL_SOUTH;
-                    case WEST:
-                        return SHAPE_WALL_WEST;
-                    case EAST:
-                        return SHAPE_WALL_EAST;
-                }
-            case CEILING:
-                return SHAPE_CEILING;
-        }
+        return switch (state.getValue(FACE)) {
+            case FLOOR -> SHAPE_FLOOR;
+            case WALL -> switch (state.getValue(FACING)) {
+                default -> SHAPE_WALL_NORTH;
+                case SOUTH -> SHAPE_WALL_SOUTH;
+                case WEST -> SHAPE_WALL_WEST;
+                case EAST -> SHAPE_WALL_EAST;
+            };
+            case CEILING -> SHAPE_CEILING;
+        };
     }
 
     @Override
@@ -109,7 +94,6 @@ public class CandelabraBlock extends LightUpWaterBlock {
     }
 
 
-
     @Override
     public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
         if (!stateIn.getValue(LIT)) return;
@@ -119,8 +103,7 @@ public class CandelabraBlock extends LightUpWaterBlock {
         double xOff = dir.getStepX() * 0.3125D;
         double zOff = dir.getStepZ() * 0.3125D;
         switch (stateIn.getValue(FACE)) {
-            default:
-            case FLOOR:
+            default -> {
                 xm = pos.getX() + 0.5D;
                 ym = pos.getY() + 1D;
                 zm = pos.getZ() + 0.5D;
@@ -129,8 +112,8 @@ public class CandelabraBlock extends LightUpWaterBlock {
                 zl = pos.getZ() + 0.5D - zOff;
                 xr = pos.getX() + 0.5D + xOff;
                 zr = pos.getZ() + 0.5D + zOff;
-                break;
-            case WALL:
+            }
+            case WALL -> {
                 double xo1 = -dir1.getStepX() * 0.3125;
                 double zo2 = -dir1.getStepZ() * 0.3125;
                 xm = pos.getX() + 0.5D + xo1;
@@ -141,25 +124,24 @@ public class CandelabraBlock extends LightUpWaterBlock {
                 zl = pos.getZ() + 0.5D + zo2 - zOff;
                 xr = pos.getX() + 0.5D + xo1 + xOff;
                 zr = pos.getZ() + 0.5D + zo2 + zOff;
-                break;
-            case CEILING:
+            }
+            case CEILING -> {
                 //high
                 xm = pos.getX() + 0.5D + zOff;
                 zm = pos.getZ() + 0.5D - xOff;
                 ym = pos.getY() + 0.875;//0.9375D;
+
                 //2 medium
                 xl = pos.getX() + 0.5D + xOff;
                 zl = pos.getZ() + 0.5D + zOff;
                 xr = pos.getX() + 0.5D - zOff;
                 zr = pos.getZ() + 0.5D + xOff;
                 yl = pos.getY() + 0.8125;
-
                 double xs = pos.getX() + 0.5D - xOff;
                 double zs = pos.getZ() + 0.5D - zOff;
                 double ys = pos.getY() + 0.75;
                 worldIn.addParticle(ParticleTypes.FLAME, xs, ys, zs, 0, 0, 0);
-                break;
-
+            }
         }
         worldIn.addParticle(ParticleTypes.FLAME, xm, ym, zm, 0, 0, 0);
         worldIn.addParticle(ParticleTypes.FLAME, xl, yl, zl, 0, 0, 0);
@@ -179,20 +161,16 @@ public class CandelabraBlock extends LightUpWaterBlock {
 
     @Override
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
-        //return facing == stateIn.getValue(FACING).getOpposite() && !stateIn.canSurvive(worldIn, currentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
         return getFacing(stateIn).getOpposite() == facing && !stateIn.canSurvive(worldIn, currentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
 
 
     protected static Direction getFacing(BlockState state) {
-        switch (state.getValue(FACE)) {
-            case CEILING:
-                return Direction.DOWN;
-            case FLOOR:
-                return Direction.UP;
-            default:
-                return state.getValue(FACING);
-        }
+        return switch (state.getValue(FACE)) {
+            case CEILING -> Direction.DOWN;
+            case FLOOR -> Direction.UP;
+            default -> state.getValue(FACING);
+        };
     }
 
     public static boolean isSideSolidForDirection(LevelReader reader, BlockPos pos, Direction direction) {
@@ -201,7 +179,7 @@ public class CandelabraBlock extends LightUpWaterBlock {
     }
 
     @Override
-    public PushReaction getPistonPushReaction(BlockState p_152047_) {
+    public PushReaction getPistonPushReaction(BlockState state) {
         return PushReaction.DESTROY;
     }
 }

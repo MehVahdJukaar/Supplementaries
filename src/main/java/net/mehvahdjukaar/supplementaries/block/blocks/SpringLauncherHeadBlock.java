@@ -35,8 +35,6 @@ import net.minecraft.world.level.Level;
 
 import java.util.Arrays;
 
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-
 public class SpringLauncherHeadBlock extends DirectionalBlock {
     protected static final VoxelShape PISTON_EXTENSION_EAST_AABB = Block.box(12.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
     protected static final VoxelShape PISTON_EXTENSION_WEST_AABB = Block.box(0.0D, 0.0D, 0.0D, 4.0D, 16.0D, 16.0D);
@@ -108,7 +106,7 @@ public class SpringLauncherHeadBlock extends DirectionalBlock {
             //TODO: add falling block entity support
             if((entityIn instanceof LivingEntity) && !worldIn.isClientSide && fallDistance>(float)ServerConfigs.cached.LAUNCHER_HEIGHT){
                 worldIn.setBlock(pos, ModRegistry.SPRING_LAUNCHER_ARM.get().defaultBlockState()
-                        .setValue(PistonLauncherArmBlock.EXTENDING, false).setValue(FACING, state.getValue(FACING)), 3);
+                        .setValue(SpringLauncherArmBlock.EXTENDING, false).setValue(FACING, state.getValue(FACING)), 3);
                 BlockEntity te = worldIn.getBlockEntity(pos);
                 if(te instanceof PistonLauncherArmBlockTile){
                     PistonLauncherArmBlockTile pistonarm = (PistonLauncherArmBlockTile) te;
@@ -196,7 +194,7 @@ public class SpringLauncherHeadBlock extends DirectionalBlock {
 
     @Override
     public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-        BlockState comp = ModRegistry.SPRING_LAUNCHER_ARM.get().defaultBlockState().setValue(PistonLauncherArmBlock.EXTENDING, false).setValue(FACING, state.getValue(FACING));
+        BlockState comp = ModRegistry.SPRING_LAUNCHER_ARM.get().defaultBlockState().setValue(SpringLauncherArmBlock.EXTENDING, false).setValue(FACING, state.getValue(FACING));
         if ((state.getBlock() != newState.getBlock()) && (newState != comp)) {
             super.onRemove(state, worldIn, pos, newState, isMoving);
             Direction direction = state.getValue(FACING).getOpposite();

@@ -4,37 +4,32 @@ import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.ClockBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.util.*;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.core.Direction;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-
-public class ClockBlock extends WaterBlock {
+public class ClockBlock extends WaterBlock implements EntityBlock {
     protected static final VoxelShape SHAPE_NORTH = Shapes.box(1D, 0D, 1D, 0D, 1D, 0.0625D);
     protected static final VoxelShape SHAPE_SOUTH = Shapes.box(0D, 0D, 0D, 1D, 1D, 0.9375D);
     protected static final VoxelShape SHAPE_EAST = Shapes.box(0D, 0D, 1D, 0.9375D, 1D, 0D);
@@ -45,44 +40,43 @@ public class ClockBlock extends WaterBlock {
 
     public ClockBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED,false).setValue(FACING, Direction.NORTH));
+        this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false).setValue(FACING, Direction.NORTH));
     }
-
-
 
     @Override
     public RenderShape getRenderShape(BlockState state) {
         return super.getRenderShape(state);
-        //return BlockRenderType.MODEL;
     }
 
-    public static void displayCurrentHour(Level world, Player player){
-        int time = ((int) (world.getDayTime()+6000) % 24000);
+    public static void displayCurrentHour(Level world, Player player) {
+        int time = ((int) (world.getDayTime() + 6000) % 24000);
         int m = (int) (((time % 1000f) / 1000f) * 60);
         int h = time / 1000;
-        String a ="";
-        if(!ClientConfigs.cached.CLOCK_24H) {
+        String a = "";
+        if (!ClientConfigs.cached.CLOCK_24H) {
             a = time < 12000 ? " AM" : " PM";
-            h=h%12;
-            if(h==0)h=12;
+            h = h % 12;
+            if (h == 0) h = 12;
         }
-        player.displayClientMessage(new TextComponent(h + ":" + ((m<10)?"0":"") + m + a), true);
+        player.displayClientMessage(new TextComponent(h + ":" + ((m < 10) ? "0" : "") + m + a), true);
 
     }
 
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
-                                             BlockHitResult hit) {
+                                 BlockHitResult hit) {
         if (worldIn.isClientSide()) {
-            displayCurrentHour(worldIn,player);
+            displayCurrentHour(worldIn, player);
         }
         return InteractionResult.sidedSuccess(worldIn.isClientSide);
     }
 
+    @Override
     public BlockState rotate(BlockState state, Rotation rot) {
         return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
 
+    @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
         return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
@@ -95,34 +89,24 @@ public class ClockBlock extends WaterBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        switch (state.getValue(FACING)) {
-            case NORTH :
-            default :
-                return SHAPE_NORTH;
-            case SOUTH :
-                return SHAPE_SOUTH;
-            case EAST :
-                return SHAPE_EAST;
-            case WEST :
-                return SHAPE_WEST;
-        }
+        return switch (state.getValue(FACING)) {
+            default -> SHAPE_NORTH;
+            case SOUTH -> SHAPE_SOUTH;
+            case EAST -> SHAPE_EAST;
+            case WEST -> SHAPE_WEST;
+        };
     }
 
+    @Nullable
     @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
-
-    @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
+    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return new ClockBlockTile();
     }
 
     @Override
     public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
-            BlockEntity tileentity = world.getBlockEntity(pos);
-            if (tileentity instanceof ClockBlockTile) {
+            if (world.getBlockEntity(pos) instanceof ClockBlockTile) {
                 world.updateNeighbourForOutputSignal(pos, this);
             }
             super.onRemove(state, world, pos, newState, isMoving);
@@ -131,7 +115,7 @@ public class ClockBlock extends WaterBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(HOUR,FACING,WATERLOGGED);
+        builder.add(HOUR, FACING, WATERLOGGED);
     }
 
     @Override
@@ -141,10 +125,9 @@ public class ClockBlock extends WaterBlock {
 
     @Override
     public int getAnalogOutputSignal(BlockState blockState, Level world, BlockPos pos) {
-        if(world.dimensionType().natural()) {
-            BlockEntity te = world.getBlockEntity(pos);
-            if (te instanceof ClockBlockTile) {
-                return ((ClockBlockTile) te).power;
+        if (world.dimensionType().natural()) {
+            if (world.getBlockEntity(pos) instanceof ClockBlockTile tile) {
+                return tile.power;
             }
         }
         return 0;
@@ -153,11 +136,8 @@ public class ClockBlock extends WaterBlock {
     @Override
     public void onPlace(BlockState state, Level worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
         super.onPlace(state, worldIn, pos, oldState, isMoving);
-        BlockEntity te = worldIn.getBlockEntity(pos);
-        if(te instanceof ClockBlockTile){
-            ((ClockBlockTile) te).updateInitialTime();
+        if (worldIn.getBlockEntity(pos) instanceof ClockBlockTile tile) {
+            tile.updateInitialTime();
         }
     }
-
-
 }

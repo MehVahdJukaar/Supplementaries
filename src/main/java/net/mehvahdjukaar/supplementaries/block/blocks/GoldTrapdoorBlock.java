@@ -1,21 +1,19 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.TrapDoorBlock;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.block.state.properties.Half;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.TrapDoorBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.Half;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.BlockHitResult;
 
 public class GoldTrapdoorBlock extends TrapDoorBlock {
     public GoldTrapdoorBlock(Properties properties) {
@@ -23,7 +21,7 @@ public class GoldTrapdoorBlock extends TrapDoorBlock {
     }
 
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        if(state.getValue(POWERED))return InteractionResult.PASS;
+        if (state.getValue(POWERED)) return InteractionResult.PASS;
         state = state.cycle(OPEN);
         worldIn.setBlock(pos, state, 2);
         if (state.getValue(WATERLOGGED)) {
@@ -55,7 +53,7 @@ public class GoldTrapdoorBlock extends TrapDoorBlock {
         FluidState fluidstate = context.getLevel().getFluidState(context.getClickedPos());
         Direction direction = context.getClickedFace();
         if (!context.replacingClickedOnBlock() && direction.getAxis().isHorizontal()) {
-            blockstate = blockstate.setValue(FACING, direction).setValue(HALF, context.getClickLocation().y - (double)context.getClickedPos().getY() > 0.5D ? Half.TOP : Half.BOTTOM);
+            blockstate = blockstate.setValue(FACING, direction).setValue(HALF, context.getClickLocation().y - (double) context.getClickedPos().getY() > 0.5D ? Half.TOP : Half.BOTTOM);
         } else {
             blockstate = blockstate.setValue(FACING, context.getHorizontalDirection().getOpposite()).setValue(HALF, direction == Direction.UP ? Half.BOTTOM : Half.TOP);
         }

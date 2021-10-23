@@ -1,25 +1,24 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.tiles.BookPileBlockTile;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.core.Direction;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
-import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraft.world.level.BlockGetter;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import org.jetbrains.annotations.Nullable;
 
 public class BookPileHorizontalBlock extends BookPileBlock {
 
@@ -71,29 +70,25 @@ public class BookPileHorizontalBlock extends BookPileBlock {
         return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
 
+    @Nullable
     @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-        return new BookPileBlockTile(true);
+    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
+        return  new BookPileBlockTile(true);
     }
 
-    public boolean isAcceptedItem(Item i){
+    public boolean isAcceptedItem(Item i) {
         return i == Items.BOOK;
     }
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        boolean x = state.getValue(FACING).getAxis()== Direction.Axis.X;
+        boolean x = state.getValue(FACING).getAxis() == Direction.Axis.X;
 
-        switch (state.getValue(BOOKS)){
-            default:
-            case 1:
-                return x ? SHAPE_1_X : SHAPE_1_Z;
-            case 2:
-                return x ? SHAPE_2_X : SHAPE_2_Z;
-            case 3:
-                return x ? SHAPE_3_X : SHAPE_3_Z;
-            case 4:
-                return x ? SHAPE_4_X : SHAPE_4_Z;
-        }
+        return switch (state.getValue(BOOKS)) {
+            case 1 -> x ? SHAPE_1_X : SHAPE_1_Z;
+            case 2 -> x ? SHAPE_2_X : SHAPE_2_Z;
+            case 3 -> x ? SHAPE_3_X : SHAPE_3_Z;
+            case 4 -> x ? SHAPE_4_X : SHAPE_4_Z;
+        };
     }
 }

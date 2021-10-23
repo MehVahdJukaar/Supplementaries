@@ -858,7 +858,7 @@ public class ModRegistry {
                     .jumpFactor(1.18f)
     ));
     public static final String PISTON_LAUNCHER_ARM_NAME = "spring_launcher_arm";
-    public static final RegistryObject<Block> SPRING_LAUNCHER_ARM = BLOCKS.register(PISTON_LAUNCHER_ARM_NAME, () -> new PistonLauncherArmBlock(
+    public static final RegistryObject<Block> SPRING_LAUNCHER_ARM = BLOCKS.register(PISTON_LAUNCHER_ARM_NAME, () -> new SpringLauncherArmBlock(
             BlockBehaviour.Properties.of(Material.METAL, MaterialColor.METAL)
                     .strength(50f, 50f)
                     .harvestLevel(1)

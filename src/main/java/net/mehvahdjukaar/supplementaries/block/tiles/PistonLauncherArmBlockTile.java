@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
 
-import net.mehvahdjukaar.supplementaries.block.blocks.PistonLauncherArmBlock;
+import net.mehvahdjukaar.supplementaries.block.blocks.SpringLauncherArmBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.SpringLauncherBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.SpringLauncherHeadBlock;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
@@ -195,11 +195,11 @@ public class PistonLauncherArmBlockTile extends BlockEntity implements TickableB
     }
 
     public Direction getDirection() {
-        return this.getBlockState().getValue(PistonLauncherArmBlock.FACING);
+        return this.getBlockState().getValue(SpringLauncherArmBlock.FACING);
     }
 
     public boolean getExtending() {
-        return this.getBlockState().getValue(PistonLauncherArmBlock.EXTENDING);
+        return this.getBlockState().getValue(SpringLauncherArmBlock.EXTENDING);
     }
 
     @Override
