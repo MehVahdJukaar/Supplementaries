@@ -151,6 +151,7 @@ public class ServerConfigs {
         public static ForgeConfigSpec.BooleanValue PLACEABLE_GUNPOWDER;
         public static ForgeConfigSpec.IntValue GUNPOWDER_BURN_SPEED;
         public static ForgeConfigSpec.IntValue GUNPOWDER_SPREAD_AGE;
+        public static ForgeConfigSpec.BooleanValue MIXED_BOOKS;
 
         private static void init(ForgeConfigSpec.Builder builder) {
             builder.comment("Vanilla tweaks")
@@ -260,6 +261,8 @@ public class ServerConfigs {
                     .defineInRange("book_power", 1d, 0, 5);
             ENCHANTED_BOOK_POWER = builder.comment("Enchantment power bonus given by normal book piles with 4 books. Piles with less books will have their respective fraction of this total. For reference a vanilla bookshelf provides 1")
                     .defineInRange("enchanted_book_power", 1.334d, 0, 5);
+            MIXED_BOOKS = builder.comment("Allow all books to be placed both vertically and horizontally")
+                    .define("mixed_books", false);
             builder.pop();
 
             builder.push("zombie_horse");
@@ -665,6 +668,7 @@ public class ServerConfigs {
         public static boolean PLACEABLE_BOOKS;
         public static float ENCHANTED_BOOK_POWER;
         public static float BOOK_POWER;
+        public static boolean MIXED_BOOKS;
         public static boolean PLACEABLE_GUNPOWDER;
         public static int GUNPOWDER_BURN_SPEED;
         public static int GUNPOWDER_SPREAD_AGE;
@@ -740,6 +744,7 @@ public class ServerConfigs {
             MAP_MARKERS = tweaks.MAP_MARKERS.get();
             CEILING_BANNERS = tweaks.CEILING_BANNERS.get();
             PLACEABLE_BOOKS = tweaks.PLACEABLE_BOOKS.get();
+            MIXED_BOOKS = tweaks.MIXED_BOOKS.get();
             BOOK_POWER = (float) ((double) tweaks.BOOK_POWER.get());
             ENCHANTED_BOOK_POWER = (float) ((double) tweaks.ENCHANTED_BOOK_POWER.get());
             PLACEABLE_GUNPOWDER = tweaks.PLACEABLE_GUNPOWDER.get();

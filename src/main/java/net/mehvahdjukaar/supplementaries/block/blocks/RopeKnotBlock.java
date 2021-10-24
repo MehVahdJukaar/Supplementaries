@@ -86,7 +86,7 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new RopeKnotBlockTile();
+        return new RopeKnotBlockTile(pPos, pState);
     }
 
     /*

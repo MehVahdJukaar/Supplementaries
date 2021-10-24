@@ -6,9 +6,17 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.supplementaries.block.tiles.BellowsBlockTile;
 import net.mehvahdjukaar.supplementaries.client.Materials;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
+import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
+import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.renderer.blockentity.BellRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -17,22 +25,40 @@ import net.minecraft.util.Mth;
 
 
 public class BellowsBlockTileRenderer implements BlockEntityRenderer<BellowsBlockTile> {
-    private final ModelPart center = new ModelPart(64, 64, 0, 0);
-    private final ModelPart top = new ModelPart(64, 64, 0, 0);
-    private final ModelPart leather = new ModelPart(64, 64, 0, 0);
+    private final ModelPart center;
+    private final ModelPart top;
+    private final ModelPart leather;
+
+    public static LayerDefinition createMesh() {
+        MeshDefinition mesh = new MeshDefinition();
+        PartDefinition root = mesh.getRoot();
+        root.addOrReplaceChild("center", CubeListBuilder.create()
+                .texOffs(0, 0)
+                .addBox(-2.0F, -2.0F, -8.0F, 4.0F, 1.0F, 1.0F)
+                .texOffs(0, 2)
+                .addBox(-2.0F, 1.0F, -8.0F, 4.0F, 1.0F, 1.0F)
+                .texOffs(0, 19)
+                .addBox(-8.0F, -1.0F, -8.0F, 16.0F, 2.0F, 16.0F),
+                PartPose.offset(0, 0, 0));
+
+        root.addOrReplaceChild("top", CubeListBuilder.create()
+                .texOffs(0, 0)
+                .addBox(-8.0F, 5.0F, -8.0F, 16.0F, 3.0F, 16.0F),
+                PartPose.offset(0, 0, 0));
+
+        root.addOrReplaceChild("leather", CubeListBuilder.create()
+                .texOffs(0, 37)
+                .addBox(-7.0F, -5.0F, -7.0F, 14.0F, 10.0F, 14.0F),
+                PartPose.offset(0, 0, 0));
+
+        return LayerDefinition.create(mesh, 64, 64);
+    }
 
     public BellowsBlockTileRenderer(BlockEntityRendererProvider.Context context) {
-        center.setPos(0.0F, 0.0F, 0.0F);
-        center.texOffs(0, 0).addBox(-2.0F, -2.0F, -8.0F, 4.0F, 1.0F, 1.0F, 0.0F, false);
-        center.texOffs(0, 2).addBox(-2.0F, 1.0F, -8.0F, 4.0F, 1.0F, 1.0F, 0.0F, false);
-        center.texOffs(0, 19).addBox(-8.0F, -1.0F, -8.0F, 16.0F, 2.0F, 16.0F, 0.0F, false);
-
-        top.setPos(0.0F, 0.0F, 0.0F);
-        //top.setTextureOffset(0, 0).addBox(-8.0F, -8.0F, -8.0F, 16.0F, 3.0F, 16.0F, 0.0F, false);
-        top.texOffs(0, 0).addBox(-8.0F, 5.0F, -8.0F, 16.0F, 3.0F, 16.0F, 0.0F, false);
-
-        leather.setPos(0.0F, 0.0F, 0.0F);
-        leather.texOffs(0, 37).addBox(-7.0F, -5.0F, -7.0F, 14.0F, 10.0F, 14.0F, 0.0F, false);
+        ModelPart model = context.bakeLayer(ClientRegistry.BELLOWS_MODEL);
+        this.center = model.getChild("center");
+        this.leather = model.getChild("leather");
+        this.top = model.getChild("top");
     }
 
     @Override

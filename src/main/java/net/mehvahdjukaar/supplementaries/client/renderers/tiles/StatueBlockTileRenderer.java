@@ -13,6 +13,7 @@ import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -25,6 +26,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraftforge.client.model.data.EmptyModelData;
 
 import java.util.Map;
 
@@ -32,10 +34,12 @@ import java.util.Map;
 public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockTile> {
     protected final ItemRenderer itemRenderer;
     private final StatueEntityModel model;
+    private final BlockRenderDispatcher blockRenderer;
 
     public StatueBlockTileRenderer(BlockEntityRendererProvider.Context context) {
         itemRenderer = Minecraft.getInstance().getItemRenderer();
-        model = new StatueEntityModel(0);
+        model = new StatueEntityModel(context, 0);
+        blockRenderer = Minecraft.getInstance().getBlockRenderer();
     }
 
     @Override
@@ -102,7 +106,7 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
 
                 matrixStackIn.translate(0, 0.1875, 0);
                 itemRenderer.renderStatic(Items.CARVED_PUMPKIN.getDefaultInstance(), ItemTransforms.TransformType.FIXED,
-                        combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn);
+                        combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn, 0);
                 matrixStackIn.popPose();
             }
         } else {
@@ -111,15 +115,13 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
         }
 
 
-        if (renderType != null) {
-            matrixStackIn.pushPose();
-            matrixStackIn.scale(0.5f, +0.499f, 0.5f);
-            VertexConsumer ivertexbuilder = bufferIn.getBuffer(renderType);
+        matrixStackIn.pushPose();
+        matrixStackIn.scale(0.5f, +0.499f, 0.5f);
+        VertexConsumer buffer = bufferIn.getBuffer(renderType);
 
-            this.model.setupAnim(tile.getLevel().getGameTime(), partialTicks, dir, pose, tile.isWaving, slim);
-            this.model.renderToBuffer(matrixStackIn, ivertexbuilder, combinedLightIn, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
-            matrixStackIn.popPose();
-        }
+        this.model.setupAnim(tile.getLevel().getGameTime(), partialTicks, dir, pose, tile.isWaving, slim);
+        this.model.renderToBuffer(matrixStackIn, buffer, combinedLightIn, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+        matrixStackIn.popPose();
         this.slim = false;
 
 
@@ -127,13 +129,13 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
             case STANDING:
                 break;
             case CANDLE:
-                matrixStackIn.scale(1f, -1f, -1f);
-                //matrixStackIn.translate(0,-0.75,0.5);
-                //blockRenderer.renderBlock(tile.candle, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
+                //matrixStackIn.scale(1f, -1f, -1f);
+                matrixStackIn.translate(0,-0.75,0.5);
+                blockRenderer.renderSingleBlock(tile.candle, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
                 break;
             default:
                 matrixStackIn.scale(-0.5f, -0.5f, 0.5f);
-                BakedModel ibakedmodel = itemRenderer.getModel(stack, tile.getLevel(), null);
+                BakedModel model = itemRenderer.getModel(stack, tile.getLevel(), null, 0);
 
                 if (pose == StatueBlockTile.StatuePose.SWORD) {
                     matrixStackIn.translate(-0.35, -1.0625, 0.0);
@@ -145,7 +147,7 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
 
                 matrixStackIn.translate(0, -0.5, -0.5);
                 itemRenderer.render(stack, ItemTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
-                        combinedOverlayIn, ibakedmodel);
+                        combinedOverlayIn, model);
 
         }
 

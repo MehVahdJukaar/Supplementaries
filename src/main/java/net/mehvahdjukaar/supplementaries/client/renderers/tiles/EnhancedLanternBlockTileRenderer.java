@@ -18,7 +18,7 @@ public class EnhancedLanternBlockTileRenderer<T extends EnhancedLanternBlockTile
     protected final BlockRenderDispatcher blockRenderer;
 
     public EnhancedLanternBlockTileRenderer(BlockEntityRendererProvider.Context context) {
-        blockRenderer = Minecraft.getInstance().getBlockRenderer();
+        blockRenderer = context.getBlockRenderDispatcher();
     }
 
     public void renderLantern(T tile, BlockState state, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn,

@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.entities;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
@@ -19,15 +20,15 @@ public class ShardProjectileRenderer<T extends Entity & ItemSupplier> extends En
     private final float scale;
     private final boolean fullBright;
 
-    public ShardProjectileRenderer(EntityRenderDispatcher manager, float scale, boolean fullBright) {
-        super(manager);
+    public ShardProjectileRenderer(EntityRendererProvider.Context context, float scale, boolean fullBright) {
+        super(context);
         this.itemRenderer = Minecraft.getInstance().getItemRenderer();
         this.scale = scale;
         this.fullBright = fullBright;
     }
 
-    public ShardProjectileRenderer(EntityRenderDispatcher manager) {
-        this(manager, 1.5F, false);
+    public ShardProjectileRenderer(EntityRendererProvider.Context context) {
+        this(context, 1.5F, false);
     }
 
     protected int getBlockLightLevel(T entity, BlockPos pos) {
@@ -43,7 +44,7 @@ public class ShardProjectileRenderer<T extends Entity & ItemSupplier> extends En
             //matrixStack.mulPose(Vector3f.YP.rotationDegrees(MathHelper.lerp(partialTicks, entity.yRotO, entity.yRot) - 90.0F));
             //matrixStack.mulPose(Vector3f.ZP.rotationDegrees(MathHelper.lerp(partialTicks, entity.xRotO, entity.xRot)));
 
-            this.itemRenderer.renderStatic(entity.getItem(), ItemTransforms.TransformType.GROUND, light, OverlayTexture.NO_OVERLAY, matrixStack, buffer);
+            this.itemRenderer.renderStatic(entity.getItem(), ItemTransforms.TransformType.GROUND, light, OverlayTexture.NO_OVERLAY, matrixStack, buffer, 0);
             matrixStack.popPose();
             super.render(entity, p_225623_2_, partialTicks, matrixStack, buffer, light);
         }

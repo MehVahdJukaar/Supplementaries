@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.block.tiles.StatueBlockTile;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 
@@ -34,7 +35,7 @@ public class StatueEntityModel extends Model {
     public final ModelPart leftSleeveS;
     public final ModelPart rightSleeveS;
 
-    public StatueEntityModel(float offset) {
+    public StatueEntityModel(BlockEntityRendererProvider.Context context, float offset) {
 
         super(RenderType::entityTranslucent);
 
@@ -133,54 +134,47 @@ public class StatueEntityModel extends Model {
 
         int d = dir.getAxisDirection() == Direction.AxisDirection.NEGATIVE ? -1 : 1;
 
-        switch (pose){
-            case SWORD:
+        switch (pose) {
+            case SWORD -> {
                 this.leftLeg.xRot = 0f;
                 this.rightLeg.xRot = 0f;
-                this.leftArm.xRot = (float) (Math.PI /10 *-4);
-
-                this.leftArm.yRot =  (float) (Math.PI /10 *1.5);
-
-                this.rightArm.xRot = (float) (Math.PI /10 *-4);
-
-                this.rightArm.yRot =  (float) (-Math.PI /10 *1.5);
-                break;
-            case TOOL:
+                this.leftArm.xRot = (float) (Math.PI / 10 * -4);
+                this.leftArm.yRot = (float) (Math.PI / 10 * 1.5);
+                this.rightArm.xRot = (float) (Math.PI / 10 * -4);
+                this.rightArm.yRot = (float) (-Math.PI / 10 * 1.5);
+            }
+            case TOOL -> {
                 this.leftLeg.xRot = 0f;
                 this.rightLeg.xRot = 0f;
-                this.leftArm.xRot = (float) (Math.PI /10 *-3);
-
-                this.leftArm.yRot =  (float) (Math.PI /10 *1.5);
-
-                this.rightArm.xRot = (float) (Math.PI /10 *-3);
-
-                this.rightArm.yRot =  (float) (-Math.PI /10 *1.5);
-                break;
-            case HOLDING:
+                this.leftArm.xRot = (float) (Math.PI / 10 * -3);
+                this.leftArm.yRot = (float) (Math.PI / 10 * 1.5);
+                this.rightArm.xRot = (float) (Math.PI / 10 * -3);
+                this.rightArm.yRot = (float) (-Math.PI / 10 * 1.5);
+            }
+            case HOLDING -> {
                 this.leftLeg.xRot = 0f;
                 this.rightLeg.xRot = 0f;
                 this.leftArm.xRot = (float) -(Math.PI / 4f);
                 this.rightArm.xRot = (float) -(Math.PI / 4f);
                 this.leftArm.yRot = 0;
                 this.rightArm.yRot = 0;
-                break;
-            default:
-            case STANDING:
-                this.leftLeg.xRot = (float) (Math.PI/8f)*d;
-                this.rightLeg.xRot = (float) (-Math.PI/8f)*d;
-                this.leftArm.xRot = (float) (-Math.PI/8f)*d;
-                this.rightArm.xRot = (float) (Math.PI/8f)*d;
+            }
+            case STANDING -> {
+                this.leftLeg.xRot = (float) (Math.PI / 8f) * d;
+                this.rightLeg.xRot = (float) (-Math.PI / 8f) * d;
+                this.leftArm.xRot = (float) (-Math.PI / 8f) * d;
+                this.rightArm.xRot = (float) (Math.PI / 8f) * d;
                 this.leftArm.yRot = 0;
                 this.rightArm.yRot = 0;
-                break;
-            case CANDLE:
+            }
+            case CANDLE -> {
                 this.leftLeg.xRot = 0f;
                 this.rightLeg.xRot = 0f;
                 this.leftArm.xRot = (float) -(Math.PI / 8f);
                 this.rightArm.xRot = (float) -(Math.PI / 8f);
                 this.leftArm.yRot = 0;
                 this.rightArm.yRot = 0;
-                break;
+            }
         }
 
 

@@ -31,8 +31,8 @@ public class SlingshotItemRenderer extends BlockEntityWithoutLevelRenderer {
 
         BakedModel baseModel = this.itemRenderer.getItemModelShaper().getModelManager().getModel(SIMPLE_MODEL);
 
-        BakedModel ibakedmodel = baseModel.getOverrides().resolve(baseModel, stack, null, entity);
-        return ibakedmodel == null ? this.itemRenderer.getItemModelShaper().getModelManager().getMissingModel() : ibakedmodel;
+        BakedModel model = baseModel.getOverrides().resolve(baseModel, stack, null, entity, 0);
+        return model == null ? this.itemRenderer.getItemModelShaper().getModelManager().getMissingModel() : model;
     }
 
     @Override
@@ -42,9 +42,9 @@ public class SlingshotItemRenderer extends BlockEntityWithoutLevelRenderer {
         if(this.itemRenderer == null){
             this.itemRenderer = Minecraft.getInstance().getItemRenderer();
         }
-        BakedModel ibakedmodel = this.getSimpleModel(stack, null);
+        BakedModel simpleModel = this.getSimpleModel(stack, null);
 
-        itemRenderer.render(stack, transform, true, matrixStack, buffer, light,overlay, ibakedmodel);
+        itemRenderer.render(stack, transform, true, matrixStack, buffer, light,overlay, simpleModel);
 
         matrixStack.pushPose();
         matrixStack.translate(0.5D, 0.5D, 0.5D);

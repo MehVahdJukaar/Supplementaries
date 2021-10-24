@@ -139,7 +139,7 @@ public class DoormatBlock extends WaterBlock implements EntityBlock{
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new DoormatBlockTile();
+        return new DoormatBlockTile(pPos, pState);
     }
 
     @Override

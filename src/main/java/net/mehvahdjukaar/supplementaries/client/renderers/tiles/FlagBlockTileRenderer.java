@@ -101,10 +101,10 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
 
             matrixStackIn.pushPose();
 
-            int color = list.get(p).getSecond().getColorValue();
-            float b = (NativeImage.getR(color)) / 255f;
-            float g = (NativeImage.getG(color)) / 255f;
-            float r = (NativeImage.getB(color)) / 255f;
+            float[] color = list.get(p).getSecond().getTextureDiffuseColors();
+            float b = color[2];
+            float g = color[1];
+            float r = color[0];
 
             renderCurvedSegment(builder, rendermaterial.sprite(), matrixStackIn, ang, dX, segmentlen, h, lu, lv, dX + segmentlen >= w, r, g, b);
 

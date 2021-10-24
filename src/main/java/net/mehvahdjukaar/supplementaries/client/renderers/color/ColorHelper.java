@@ -5,7 +5,16 @@ import net.minecraft.util.Mth;
 
 import java.util.Random;
 
-public class HSLColor {
+public class ColorHelper {
+
+    public static int pack(float[] rgb) {
+        return 1 * 255 << 24 | ((int) rgb[0] * 255) << 16 | ((int) rgb[1] * 255) << 8 | ((int) rgb[2] * 255);
+    }
+
+    public static float oneToOneSaturation(float saturation, float lightness){
+        float c = 1 - Math.abs((2 * lightness) - 1);
+        return Math.min(saturation, c);
+    }
 
     public static int getRainbowColorPost(float division) {
         float scale = 3600f / division;
@@ -32,8 +41,7 @@ public class HSLColor {
         float s = hsl[1];
         float l = hsl[2];
         //map one to one. no effect on its own
-        float c = 1 - Math.abs((2 * l) - 1);
-        if (s > c) s = c;
+        s = oneToOneSaturation(s, l);
 
         //remove darker colors
         float minLightness = 0.47f;

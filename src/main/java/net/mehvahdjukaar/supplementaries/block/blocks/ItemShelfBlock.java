@@ -144,7 +144,7 @@ public class ItemShelfBlock extends WaterBlock implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new ItemShelfBlockTile();
+        return new ItemShelfBlockTile(pPos, pState);
     }
 
     @Override

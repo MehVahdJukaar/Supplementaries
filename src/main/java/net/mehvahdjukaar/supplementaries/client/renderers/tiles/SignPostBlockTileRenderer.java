@@ -8,8 +8,16 @@ import net.mehvahdjukaar.supplementaries.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.client.Materials;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.client.renderers.LOD;
+import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
+import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -24,17 +32,30 @@ import java.util.List;
 
 public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBlockTile> {
 
-    public static final ModelPart signModel = new ModelPart(64, 16, 0, 0);
+    private final Camera camera;
+    private final Font font;
+    public final ModelPart signModel;
 
-    //TODO: make other tiles this way
-    static {
-        signModel.setPos(0.0F, 0.0F, 0.0F);
-        signModel.texOffs(0, 10).addBox(-12.0F, -5.0F, -3.0F, 2.0F, 1.0F, 1.0F, 0.0F, false);
-        signModel.texOffs(0, 0).addBox(-8.0F, -7.0F, -3.0F, 16.0F, 5.0F, 1.0F, 0.0F, false);
-        signModel.texOffs(0, 6).addBox(-10.0F, -6.0F, -3.0F, 2.0F, 3.0F, 1.0F, 0.0F, false);
+    public static LayerDefinition createMesh() {
+        MeshDefinition mesh = new MeshDefinition();
+        PartDefinition root = mesh.getRoot();
+        root.addOrReplaceChild("sign", CubeListBuilder.create()
+                        .texOffs(0, 10)
+                        .addBox(-12.0F, -5.0F, -3.0F, 2.0F, 1.0F, 1.0F)
+                        .texOffs(0, 0)
+                        .addBox(-8.0F, -7.0F, -3.0F, 16.0F, 5.0F, 1.0F)
+                        .texOffs(0, 6)
+                        .addBox(-10.0F, -6.0F, -3.0F, 2.0F, 3.0F, 1.0F),
+                PartPose.offset(0, 0, 0));
+
+        return LayerDefinition.create(mesh, 64, 16);
     }
 
     public SignPostBlockTileRenderer(BlockEntityRendererProvider.Context context) {
+        ModelPart model = context.bakeLayer(ClientRegistry.SIGN_POST_MODEL);
+        this.signModel = model.getChild("sign");
+        this.camera = Minecraft.getInstance().gameRenderer.getMainCamera();
+        this.font = context.getFont();
     }
 
     @Override
@@ -42,12 +63,13 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
         return 96;
     }
 
+    //TODO: rewrite and cleanup
     @Override
     public void render(SignPostBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
 
         BlockPos pos = tile.getBlockPos();
-        Vec3 cameraPos = this.renderer.camera.getPosition();
+        Vec3 cameraPos = camera.getPosition();
 
         //don't render signs from far away
 
@@ -61,7 +83,6 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
             float relAngle = LOD.getRelativeAngle(cameraPos, pos);
 
             // sign code
-            Font fontrenderer = this.renderer.getFont();
             int i = tile.textHolder.textColor.getTextColor();
             int j = (int) ((double) NativeImage.getR(i) * 0.4D);
             int k = (int) ((double) NativeImage.getG(i) * 0.4D);
@@ -105,13 +126,13 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
                     matrixStackIn.translate(0, 1, 0);
 
 
-                    FormattedCharSequence ireorderingprocessor = tile.textHolder.getRenderText(0, (t) -> {
-                        List<FormattedCharSequence> list = fontrenderer.split(t, 90);
+                    FormattedCharSequence formattedCharSequence = tile.textHolder.getRenderText(0, (t) -> {
+                        List<FormattedCharSequence> list = font.split(t, 90);
                         return list.isEmpty() ? FormattedCharSequence.EMPTY : list.get(0);
                     });
-                    if (ireorderingprocessor != null) {
-                        float f3 = (float) (-fontrenderer.width(ireorderingprocessor) / 2);
-                        fontrenderer.drawInBatch(ireorderingprocessor, f3, (float) (-5), i1, false, matrixStackIn.last().pose(), bufferIn, false, 0, combinedLightIn);
+                    if (formattedCharSequence != null) {
+                        float f3 = (float) (-font.width(formattedCharSequence) / 2);
+                        font.drawInBatch(formattedCharSequence, f3, (float) (-5), i1, false, matrixStackIn.last().pose(), bufferIn, false, 0, combinedLightIn);
                     }
                 }
 
@@ -149,13 +170,13 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
                     matrixStackIn.scale(0.010416667F, -0.010416667F, 0.010416667F);
                     matrixStackIn.translate(0, 1, 0);
 
-                    FormattedCharSequence ireorderingprocessor = tile.textHolder.getRenderText(1, (p_243502_1_) -> {
-                        List<FormattedCharSequence> list = fontrenderer.split(p_243502_1_, 90);
+                    FormattedCharSequence formattedCharSequence = tile.textHolder.getRenderText(1, (p_243502_1_) -> {
+                        List<FormattedCharSequence> list = font.split(p_243502_1_, 90);
                         return list.isEmpty() ? FormattedCharSequence.EMPTY : list.get(0);
                     });
-                    if (ireorderingprocessor != null) {
-                        float f3 = (float) (-fontrenderer.width(ireorderingprocessor) / 2);
-                        fontrenderer.drawInBatch(ireorderingprocessor, f3, (float) (-5), i1, false, matrixStackIn.last().pose(), bufferIn, false, 0, combinedLightIn);
+                    if (formattedCharSequence != null) {
+                        float f3 = (float) (-font.width(formattedCharSequence) / 2);
+                        font.drawInBatch(formattedCharSequence, f3, (float) (-5), i1, false, matrixStackIn.last().pose(), bufferIn, false, 0, combinedLightIn);
                     }
                 }
 

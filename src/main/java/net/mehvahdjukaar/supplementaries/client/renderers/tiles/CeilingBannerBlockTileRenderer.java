@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.supplementaries.block.blocks.CeilingBannerBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.CeilingBannerBlockTile;
+import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -26,14 +27,15 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import java.util.List;
 
 public class CeilingBannerBlockTileRenderer implements BlockEntityRenderer<CeilingBannerBlockTile> {
-    private final ModelPart flag = BannerRenderer.makeFlag();
+    private final ModelPart flag;
     private final ModelPart bar;
 
     public CeilingBannerBlockTileRenderer(BlockEntityRendererProvider.Context context) {
-        this.bar = new ModelPart(64, 64, 0, 42);
-        this.bar.addBox(-10.0F, -32.0F, -1.0F, 20.0F, 2.0F, 2.0F, 0.0F);
+        ModelPart modelpart = context.bakeLayer(ModelLayers.BANNER);
+        this.flag = modelpart.getChild("flag");
+        this.bar = modelpart.getChild("bar");
+        //TODO: fix this using setPos
     }
-
 
     public void render(CeilingBannerBlockTile tile, float p_225616_2_, PoseStack matrixStack, MultiBufferSource p_225616_4_, int p_225616_5_, int p_225616_6_) {
         List<Pair<BannerPattern, DyeColor>> list = tile.getPatterns();
@@ -59,9 +61,9 @@ public class CeilingBannerBlockTileRenderer implements BlockEntityRenderer<Ceili
 
             matrixStack.pushPose();
             matrixStack.scale(0.6666667F, -0.6666667F, -0.6666667F);
-            VertexConsumer ivertexbuilder = ModelBakery.BANNER_BASE.buffer(p_225616_4_, RenderType::entitySolid);
+            VertexConsumer buffer = ModelBakery.BANNER_BASE.buffer(p_225616_4_, RenderType::entitySolid);
 
-            this.bar.render(matrixStack, ivertexbuilder, p_225616_5_, p_225616_6_);
+            this.bar.render(matrixStack, buffer, p_225616_5_, p_225616_6_);
             BlockPos blockpos = tile.getBlockPos();
             float f2 = ((float) Math.floorMod((long) (blockpos.getX() * 7 + blockpos.getY() * 9 + blockpos.getZ() * 13) + i, 100L) + p_225616_2_) / 100.0F;
             this.flag.xRot = (-0.0125F + 0.01F * Mth.cos(((float) Math.PI * 2F) * f2)) * (float) Math.PI;

@@ -48,10 +48,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ColorHandlerEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
-import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -289,6 +286,10 @@ public class ClientSetup {
         colors.register(new CrossbowColor(), Items.CROSSBOW);
     }
 
+    @SubscribeEvent
+    public static void layerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
+        ClientRegistry.register(event);
+    }
 
     //textures
     @SubscribeEvent
@@ -371,7 +372,7 @@ public class ClientSetup {
         BlockEntityRenderers.register(ModRegistry.GOBLET_TILE.get(), GobletBlockTileRenderer::new);
         BlockEntityRenderers.register(ModRegistry.CEILING_BANNER_TILE.get(), CeilingBannerBlockTileRenderer::new);
         BlockEntityRenderers.register(ModRegistry.STATUE_TILE.get(), StatueBlockTileRenderer::new);
-        BlockEntityRenderers.register(ModRegistry.BOOK_PILE_TILE.get(), r -> new BookPileBlockTileRenderer(r, false));
+        BlockEntityRenderers.register(ModRegistry.BOOK_PILE_TILE.get(), BookPileBlockTileRenderer::new);
         BlockEntityRenderers.register(ModRegistry.JAR_BOAT_TILE.get(), JarBoatTileRenderer::new);
     }
 

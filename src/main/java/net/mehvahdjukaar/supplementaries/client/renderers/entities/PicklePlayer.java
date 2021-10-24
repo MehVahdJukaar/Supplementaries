@@ -3,53 +3,54 @@ package net.mehvahdjukaar.supplementaries.client.renderers.entities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.SpecialPlayers;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.PicklePacket;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
-import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.*;
-import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.PlayerModel;
-import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.UseAnim;
-import net.minecraft.world.scores.Score;
-import net.minecraft.world.scores.Objective;
-import net.minecraft.world.scores.Scoreboard;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.Util;
-import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
-import com.mojang.math.Vector3f;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.scores.Objective;
+import net.minecraft.world.scores.Score;
+import net.minecraft.world.scores.Scoreboard;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ClientChatEvent;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.network.PacketDistributor;
+import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -60,6 +61,7 @@ public class PicklePlayer {
     private static PickleRenderer RENDERER_INSTANCE;
     private static JarredRenderer RENDERER_INSTANCE_JAR;
     private static boolean jarvis = false;
+
     @SubscribeEvent
     public static void onLogout(ClientPlayerNetworkEvent.LoggedOutEvent event) {
         PickleData.onPlayerLogOff();
@@ -70,27 +72,25 @@ public class PicklePlayer {
 
         String m = event.getOriginalMessage();
         UUID id = Minecraft.getInstance().player.getGameProfile().getId();
-        if(m.startsWith("/jarvis")){
+        if (m.startsWith("/jarvis")) {
             jarvis = !jarvis;
             event.setCanceled(true);
-            if(jarvis)
-            Minecraft.getInstance().player.sendMessage(
-                    new TextComponent("I am Jarman"), Util.NIL_UUID);
-        }
-
-        else if (PickleData.isDev(id)) {
+            if (jarvis)
+                Minecraft.getInstance().player.sendMessage(
+                        new TextComponent("I am Jarman"), Util.NIL_UUID);
+        } else if (PickleData.isDev(id)) {
             if (m.startsWith("/pickle")) {
 
                 event.setCanceled(true);
                 boolean turnOn = !PickleData.isActive(id);
 
-                if(turnOn) {
+                if (turnOn) {
                     Minecraft.getInstance().player.sendMessage(
                             new TextComponent("I turned myself into a pickle!"), Util.NIL_UUID);
                 }
 
                 PickleData.set(id, turnOn);
-                NetworkHandler.INSTANCE.sendToServer(new PicklePacket(id,turnOn));
+                NetworkHandler.INSTANCE.sendToServer(new PicklePacket(id, turnOn));
             }
         }
 
@@ -106,22 +106,20 @@ public class PicklePlayer {
                 RENDERER_INSTANCE = new PickleRenderer(event.getRenderer().getDispatcher());
             }
 
-            float rot = Mth.rotLerp(event.getPlayer().yRotO, event.getPlayer().yRot, event.getPartialRenderTick());
+            float rot = Mth.rotLerp(event.getPlayer().yRotO, event.getPlayer().getYRot(), event.getPartialRenderTick());
             RENDERER_INSTANCE.render((AbstractClientPlayer) event.getPlayer(), rot, event.getPartialRenderTick(), event.getMatrixStack(), event.getBuffers(), event.getLight());
-        }
-        else if(jarvis&&id.equals(Minecraft.getInstance().player.getUUID())){
+        } else if (jarvis && id.equals(Minecraft.getInstance().player.getUUID())) {
             event.setCanceled(true);
             if (RENDERER_INSTANCE_JAR == null) {
                 RENDERER_INSTANCE_JAR = new JarredRenderer(event.getRenderer().getDispatcher());
             }
 
-            float rot = Mth.rotLerp(event.getPlayer().yRotO, event.getPlayer().yRot, event.getPartialRenderTick());
+            float rot = Mth.rotLerp(event.getPlayer().yRotO, event.getPlayer().getYRot(), event.getPartialRenderTick());
             RENDERER_INSTANCE_JAR.render((AbstractClientPlayer) event.getPlayer(), rot, event.getPartialRenderTick(), event.getMatrixStack(), event.getBuffers(), event.getLight());
 
         }
 
     }
-
 
 
     public static class JarredRenderer extends LivingEntityRenderer<AbstractClientPlayer, JarredModel<AbstractClientPlayer>> {
@@ -163,7 +161,7 @@ public class PicklePlayer {
             if (this.wasCrouching) {
                 float f = (Mth.rotLerp(partialTicks, player.yBodyRotO, player.yBodyRot) + axisFacing) % 360;
                 matrixStack.mulPose(Vector3f.YP.rotationDegrees(f));
-                matrixStack.translate(0,-0.125,0);
+                matrixStack.translate(0, -0.125, 0);
             }
             super.render(player, p_225623_2_, partialTicks, matrixStack, p_225623_5_, p_225623_6_);
         }
@@ -184,7 +182,6 @@ public class PicklePlayer {
             //playermodel.rightArm.visible = !c;
             playermodel.leftLeg.visible = !c;
             playermodel.rightLeg.visible = !c;
-
 
 
             if (this.wasCrouching != c && c) this.axisFacing = -player.getDirection().toYRot();
@@ -319,11 +316,10 @@ public class PicklePlayer {
     }
 
 
-
-
     public static class JarredModel<T extends LivingEntity> extends PlayerModel<T> {
         private final ModelPart eyeLeft;
         private final ModelPart eyeRight;
+
         public JarredModel() {
             super(0f, false);
             this.texWidth = 64;
@@ -362,7 +358,7 @@ public class PicklePlayer {
         public void translateToHand(HumanoidArm handSide, PoseStack matrixStack) {
             matrixStack.translate(0, 0.8, -0.5);
             matrixStack.mulPose(Vector3f.XP.rotationDegrees(90));
-            matrixStack.scale(0.5f,0.5f,0.5f);
+            matrixStack.scale(0.5f, 0.5f, 0.5f);
             ModelPart modelrenderer = this.getArm(handSide);
 
             float f = 1F * (float) (handSide == HumanoidArm.RIGHT ? 1 : -1);
@@ -392,13 +388,13 @@ public class PicklePlayer {
             }
             //this.head.copyFrom(this.body);
 
-            head.y = 6f+Mth.sin(limbSwing/3f)/2f;
+            head.y = 6f + Mth.sin(limbSwing / 3f) / 2f;
 
-            eyeRight.x =  Mth.cos(ageInTicks/16f)/4f;
-            eyeRight.y = Mth.sin(ageInTicks/7f)/4f;
+            eyeRight.x = Mth.cos(ageInTicks / 16f) / 4f;
+            eyeRight.y = Mth.sin(ageInTicks / 7f) / 4f;
 
-            eyeLeft.x = Mth.cos(ageInTicks/12f)/4f;
-            eyeLeft.y = Mth.cos(ageInTicks/7f)/4f;
+            eyeLeft.x = Mth.cos(ageInTicks / 12f) / 4f;
+            eyeLeft.y = Mth.cos(ageInTicks / 7f) / 4f;
 
             //float f = (MathHelper.rotLerp(limbSwingAmount, player.yBodyRotO, player.yBodyRot))%360;
             //this.body.yRot = -f / (180F / (float) Math.PI);
@@ -406,12 +402,11 @@ public class PicklePlayer {
     }
 
 
-
-    public static class PickleRenderer extends LivingEntityRenderer<AbstractClientPlayer,PickleModel<AbstractClientPlayer>> {
-        public PickleRenderer(EntityRenderDispatcher mgr) {
+    public static class PickleRenderer extends LivingEntityRenderer<AbstractClientPlayer, PickleModel<AbstractClientPlayer>> {
+        public PickleRenderer(EntityRendererProvider.Context mgr) {
             super(mgr, new PickleModel<>(), 0.0125F);
-            this.shadowStrength=0;
-            this.shadowRadius=0;
+            this.shadowStrength = 0;
+            this.shadowRadius = 0;
             this.addLayer(new ItemInHandLayer<>(this));
 
             this.addLayer(new PickleArmor<>(this, new HumanoidModel<>(1.0F)));
@@ -443,7 +438,7 @@ public class PicklePlayer {
         public void render(AbstractClientPlayer player, float p_225623_2_, float partialTicks, PoseStack matrixStack, MultiBufferSource p_225623_5_, int p_225623_6_) {
             this.setModelProperties(player);
 
-            if(this.wasCrouching) {
+            if (this.wasCrouching) {
                 float f = (Mth.rotLerp(partialTicks, player.yBodyRotO, player.yBodyRot) + axisFacing) % 360;
                 matrixStack.mulPose(Vector3f.YP.rotationDegrees(f));
             }
@@ -451,11 +446,9 @@ public class PicklePlayer {
         }
 
 
-
-
         @Override
         public Vec3 getRenderOffset(AbstractClientPlayer player, float p_225627_2_) {
-            return player.isCrouching() ? new Vec3(0.0D, -0.25D, 0.0D) :  new Vec3(0.0D, -0.25D, 0.0D);
+            return player.isCrouching() ? new Vec3(0.0D, -0.25D, 0.0D) : new Vec3(0.0D, -0.25D, 0.0D);
         }
 
 
@@ -471,7 +464,7 @@ public class PicklePlayer {
             playermodel.head.visible = !c;
             playermodel.hat.visible = !c;
 
-            if(this.wasCrouching != c &&c)this.axisFacing=-player.getDirection().toYRot();
+            if (this.wasCrouching != c && c) this.axisFacing = -player.getDirection().toYRot();
             this.wasCrouching = c;
 
             //playermodel.crouching = player.isCrouching();
@@ -534,7 +527,7 @@ public class PicklePlayer {
                 if (scoreobjective != null) {
                     Score score = scoreboard.getOrCreatePlayerScore(player.getScoreboardName(), scoreobjective);
                     super.renderNameTag(player, (new TextComponent(Integer.toString(score.getScore()))).append(" ").append(scoreobjective.getDisplayName()), matrixStack, buffer, p_225629_5_);
-                    matrixStack.translate(0.0D, (double)(9.0F * 1.15F * 0.025F), 0.0D);
+                    matrixStack.translate(0.0D, (double) (9.0F * 1.15F * 0.025F), 0.0D);
                 }
             }
 
@@ -568,7 +561,7 @@ public class PicklePlayer {
             float f = player.getSwimAmount(partialTicks);
             if (player.isFallFlying()) {
                 super.setupRotations(player, matrixStack, p_225621_3_, p_225621_4_, partialTicks);
-                float f1 = (float)player.getFallFlyingTicks() + partialTicks;
+                float f1 = (float) player.getFallFlyingTicks() + partialTicks;
                 float f2 = Mth.clamp(f1 * f1 / 100.0F, 0.0F, 1.0F);
                 if (!player.isAutoSpinAttack()) {
                     matrixStack.mulPose(Vector3f.XP.rotationDegrees(f2 * (-90.0F - player.xRot)));
@@ -581,10 +574,9 @@ public class PicklePlayer {
                 if (d0 > 0.0D && d1 > 0.0D) {
                     double d2 = (vector3d1.x * vector3d.x + vector3d1.z * vector3d.z) / Math.sqrt(d0 * d1);
                     double d3 = vector3d1.x * vector3d.z - vector3d1.z * vector3d.x;
-                    matrixStack.mulPose(Vector3f.YP.rotation((float)(Math.signum(d3) * Math.acos(d2))));
+                    matrixStack.mulPose(Vector3f.YP.rotation((float) (Math.signum(d3) * Math.acos(d2))));
                 }
-            }
-            else if (f > 0.0F) {
+            } else if (f > 0.0F) {
                 super.setupRotations(player, matrixStack, p_225621_3_, p_225621_4_, partialTicks);
                 float f3 = player.isInWater() ? -90.0F - player.xRot : -90.0F;
                 float f4 = Mth.lerp(f, 0.0F, f3);
@@ -602,47 +594,46 @@ public class PicklePlayer {
     }
 
 
-
     public static class PickleModel<T extends LivingEntity> extends PlayerModel<T> {
         public PickleModel() {
-            super(0f,false);
+            super(0f, false);
             this.texWidth = 32;
             this.texHeight = 32;
 
             float o = 0;
 
             head = new ModelPart(this);
-            head.setPos(0,13,0);
+            head.setPos(0, 13, 0);
             hat = new ModelPart(this);
             hat.copyFrom(head);
 
             body = new ModelPart(this);
-            body.setPos(0.0F, 0.0F+o, 0.0F);
+            body.setPos(0.0F, 0.0F + o, 0.0F);
             body.texOffs(0, 2).addBox(-4.0F, -2.0F, -4.0F, 8.0F, 14.0F, 8.0F, 0.0F, false);
 
             leftArm = new ModelPart(this);
-            leftArm.setPos(5.0F, 2.5F+o, 0.0F);
+            leftArm.setPos(5.0F, 2.5F + o, 0.0F);
             leftArm.texOffs(2, 18).addBox(-1.0F, -0.5F, -1.0F, 2.0F, 8.0F, 2.0F, 0.0F, false);
 
             rightArm = new ModelPart(this);
-            rightArm.setPos(-5.0F, 2.5F+o, 0.0F);
+            rightArm.setPos(-5.0F, 2.5F + o, 0.0F);
             rightArm.texOffs(16, 18).addBox(-1.0F, -0.5F, -1.0F, 2.0F, 8.0F, 2.0F, 0.0F, false);
 
             leftLeg = new ModelPart(this);
-            leftLeg.setPos(-1.9F, 12.0F+o, 0.0F);
+            leftLeg.setPos(-1.9F, 12.0F + o, 0.0F);
             leftLeg.texOffs(0, 24).addBox(3.85F, 0.0F, -1.0F, 2.0F, 4.0F, 2.0F, 0.0F, true);
 
             rightLeg = new ModelPart(this);
-            rightLeg.setPos(1.9F, 12.0F+o, 0.0F);
+            rightLeg.setPos(1.9F, 12.0F + o, 0.0F);
             rightLeg.texOffs(16, 24).addBox(-5.85F, 0.0F, -1.0F, 2.0F, 4.0F, 2.0F, 0.0F, false);
         }
 
         @Override
         public void translateToHand(HumanoidArm handSide, PoseStack matrixStack) {
-            matrixStack.translate(0,0.5,0);
+            matrixStack.translate(0, 0.5, 0);
             ModelPart modelrenderer = this.getArm(handSide);
 
-            float f = 1F * (float)(handSide == HumanoidArm.RIGHT ? 1 : -1);
+            float f = 1F * (float) (handSide == HumanoidArm.RIGHT ? 1 : -1);
             modelrenderer.x += f;
             modelrenderer.y -= 1;
             modelrenderer.z += 1;
@@ -654,7 +645,7 @@ public class PicklePlayer {
         public void renderToBuffer(PoseStack matrixStack, VertexConsumer p_225598_2_, int p_225598_3_, int p_225598_4_, float p_225598_5_, float p_225598_6_, float p_225598_7_, float p_225598_8_) {
 
             matrixStack.pushPose();
-            matrixStack.translate(0, this.riding?-0.5:0.5f, 0);
+            matrixStack.translate(0, this.riding ? -0.5 : 0.5f, 0);
 
             super.renderToBuffer(matrixStack, p_225598_2_, p_225598_3_, p_225598_4_, p_225598_5_, p_225598_6_, p_225598_7_, p_225598_8_);
             matrixStack.popPose();
@@ -686,13 +677,13 @@ public class PicklePlayer {
             modelIn.hat.visible = head;
             modelIn.head.visible = head;
             modelIn.head.copyFrom(modelIn.body);
-            modelIn.head.y=13;
+            modelIn.head.y = 13;
             modelIn.hat.copyFrom(modelIn.head);
         }
 
         @Override
         public void render(PoseStack p_225628_1_, MultiBufferSource p_225628_2_, int p_225628_3_, T entity, float p_225628_5_, float p_225628_6_, float p_225628_7_, float p_225628_8_, float p_225628_9_, float p_225628_10_) {
-            if(entity.isCrouching())return;
+            if (entity.isCrouching()) return;
             super.render(p_225628_1_, p_225628_2_, p_225628_3_, entity, p_225628_5_, p_225628_6_, p_225628_7_, p_225628_8_, p_225628_9_, p_225628_10_);
         }
     }
@@ -705,15 +696,15 @@ public class PicklePlayer {
 
         @Override
         public void render(PoseStack matrixStack, MultiBufferSource buffer, int p_225628_3_, T entity, float p_225628_5_, float p_225628_6_, float p_225628_7_, float p_225628_8_, float p_225628_9_, float p_225628_10_) {
-            matrixStack.translate(0,0.625,0.09375);
-            matrixStack.scale(0.625f,0.625f,0.625f);
+            matrixStack.translate(0, 0.625, 0.09375);
+            matrixStack.scale(0.625f, 0.625f, 0.625f);
 
-            super.render(matrixStack,buffer,p_225628_3_,entity,p_225628_5_,p_225628_6_,p_225628_7_,p_225628_8_,p_225628_9_,p_225628_10_);
+            super.render(matrixStack, buffer, p_225628_3_, entity, p_225628_5_, p_225628_6_, p_225628_7_, p_225628_8_, p_225628_9_, p_225628_10_);
         }
 
         @Override
         public boolean shouldRender(ItemStack stack, T entity) {
-            if(entity.isCrouching())return false;
+            if (entity.isCrouching()) return false;
             return super.shouldRender(stack, entity);
         }
     }
@@ -724,24 +715,24 @@ public class PicklePlayer {
 
         public static final Map<UUID, PickleValues> PICKLE_PLAYERS = new HashMap<>();
 
-        static{
-            for(UUID id : SpecialPlayers.DEVS)PICKLE_PLAYERS.put(id,new PickleValues());
+        static {
+            for (UUID id : SpecialPlayers.DEVS) PICKLE_PLAYERS.put(id, new PickleValues());
         }
 
         //reset
-        public static void onPlayerLogOff(){
-            for(PickleValues val : PICKLE_PLAYERS.values()){
+        public static void onPlayerLogOff() {
+            for (PickleValues val : PICKLE_PLAYERS.values()) {
                 val.reset();
             }
         }
 
-        public static void onPlayerLogin(Player player){
-            for(UUID id : PICKLE_PLAYERS.keySet()){
+        public static void onPlayerLogin(Player player) {
+            for (UUID id : PICKLE_PLAYERS.keySet()) {
                 boolean on = PICKLE_PLAYERS.get(id).isOn();
-                if(on){
+                if (on) {
                     //to client
                     NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
-                            new PicklePacket(id,on));
+                            new PicklePacket(id, on));
                 }
             }
         }
@@ -750,31 +741,35 @@ public class PicklePlayer {
             return SpecialPlayers.DEVS.contains(id);
         }
 
-        public static void set(UUID id, boolean on){
-            PICKLE_PLAYERS.getOrDefault(id,DEF).toggle(on);
+        public static void set(UUID id, boolean on) {
+            PICKLE_PLAYERS.getOrDefault(id, DEF).toggle(on);
         }
 
-        public static boolean isActiveAndTick(UUID id, PlayerRenderer renderer){
-            return PICKLE_PLAYERS.getOrDefault(id,DEF).isOnAndTick(renderer);
+        public static boolean isActiveAndTick(UUID id, PlayerRenderer renderer) {
+            return PICKLE_PLAYERS.getOrDefault(id, DEF).isOnAndTick(renderer);
         }
-        public static boolean isActive(UUID id){
-            return PICKLE_PLAYERS.getOrDefault(id,DEF).isOn();
+
+        public static boolean isActive(UUID id) {
+            return PICKLE_PLAYERS.getOrDefault(id, DEF).isOn();
         }
 
         private static final PickleValues DEF = new PickleValues();
 
-        public static class PickleValues{
+        public static class PickleValues {
             private State state = State.OFF;
             private float oldShadowSize = 1;
 
-            public void toggle(boolean on){
-                if(on) this.state = State.FIRST_ON;
+            public void toggle(boolean on) {
+                if (on) this.state = State.FIRST_ON;
                 else this.state = State.FIRST_OFF;
             }
-            public void reset(){this.state = State.OFF;}
 
-            public boolean isOnAndTick(PlayerRenderer renderer){
-                switch (this.state){
+            public void reset() {
+                this.state = State.OFF;
+            }
+
+            public boolean isOnAndTick(PlayerRenderer renderer) {
+                switch (this.state) {
                     case ON:
                         return true;
                     default:
@@ -791,12 +786,13 @@ public class PicklePlayer {
                         return true;
                 }
             }
-            public boolean isOn(){
-                return this.state==State.ON||this.state==State.FIRST_ON;
+
+            public boolean isOn() {
+                return this.state == State.ON || this.state == State.FIRST_ON;
             }
 
-            private enum State{
-                ON,OFF,FIRST_ON,FIRST_OFF;
+            private enum State {
+                ON, OFF, FIRST_ON, FIRST_OFF;
             }
         }
     }

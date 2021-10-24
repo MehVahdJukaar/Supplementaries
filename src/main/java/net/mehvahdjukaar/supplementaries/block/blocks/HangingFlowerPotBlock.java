@@ -133,7 +133,7 @@ public class HangingFlowerPotBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new HangingFlowerPotBlockTile();
+        return new HangingFlowerPotBlockTile(pPos, pState);
     }
 
     @Override

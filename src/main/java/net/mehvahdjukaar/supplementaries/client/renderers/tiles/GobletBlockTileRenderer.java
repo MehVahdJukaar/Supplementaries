@@ -2,6 +2,8 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.mehvahdjukaar.selene.fluids.SoftFluid;
+import net.mehvahdjukaar.selene.fluids.SoftFluidHolder;
 import net.mehvahdjukaar.supplementaries.block.tiles.GobletBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.minecraft.client.Minecraft;
@@ -12,6 +14,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 
 public class GobletBlockTileRenderer implements BlockEntityRenderer<GobletBlockTile> {
@@ -19,9 +22,12 @@ public class GobletBlockTileRenderer implements BlockEntityRenderer<GobletBlockT
     public GobletBlockTileRenderer(BlockEntityRendererProvider.Context context) {
     }
 
-    public static void renderFluid(float h, int color, int luminosity, ResourceLocation texture, PoseStack matrixStackIn, MultiBufferSource bufferIn, int light, int combinedOverlayIn, boolean shading) {
+    public static void renderFluid(float h, BlockEntity tile, SoftFluidHolder fluidHolder, PoseStack matrixStackIn, MultiBufferSource bufferIn, int light, int combinedOverlayIn, boolean shading) {
         matrixStackIn.pushPose();
-        float opacity = 1;//tile.liquidType.opacity;
+        int color = fluidHolder.getTintColor(tile.getLevel(), tile.getBlockPos());
+        int luminosity = fluidHolder.getFluid().getLuminosity();
+        ResourceLocation texture = fluidHolder.getFluid().getStillTexture();
+        float opacity = 1;
         if (luminosity != 0) light = light & 15728640 | luminosity << 4;
         TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(texture);
         // TODO:remove breaking animation
@@ -58,9 +64,7 @@ public class GobletBlockTileRenderer implements BlockEntityRenderer<GobletBlockT
     public void render(GobletBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
 
         if (!tile.fluidHolder.isEmpty()) {
-
-            renderFluid(7 / 16f, tile.fluidHolder.getTintColor(tile.getLevel(), tile.getBlockPos()), tile.fluidHolder.getFluid().getLuminosity(),
-                    tile.fluidHolder.getFluid().getStillTexture(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, true);
+            renderFluid(7 / 16f,tile, tile.getSoftFluidHolder(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, true);
         }
     }
 }

@@ -110,7 +110,7 @@ public class CeilingBannerBlock extends AbstractBannerBlock {
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new CeilingBannerBlockTile(this.getColor());
+        return new CeilingBannerBlockTile(pPos, pState, this.getColor());
     }
 
     @Override

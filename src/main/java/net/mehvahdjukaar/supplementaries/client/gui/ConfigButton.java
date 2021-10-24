@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.gui;
 
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.client.renderers.color.HSLColor;
+import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.TitleScreen;
@@ -27,7 +27,7 @@ public class ConfigButton extends Button {
 
     @Override
     public int getFGColor() {
-        return this.isHovered ? HSLColor.getRainbowColorPost(3) : 0xFFAA00;
+        return this.isHovered ? ColorHelper.getRainbowColorPost(3) : 0xFFAA00;
     }
 
     public static void click(Button button) {

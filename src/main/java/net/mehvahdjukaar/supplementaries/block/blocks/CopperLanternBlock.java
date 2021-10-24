@@ -158,6 +158,6 @@ public class CopperLanternBlock extends EnhancedLanternBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new OilLanternBlockTile();
+        return new OilLanternBlockTile(pPos, pState);
     }
 }

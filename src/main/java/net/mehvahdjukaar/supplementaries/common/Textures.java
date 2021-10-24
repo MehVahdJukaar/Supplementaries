@@ -2,14 +2,13 @@ package net.mehvahdjukaar.supplementaries.common;
 
 import net.mehvahdjukaar.selene.Selene;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.setup.Variants;
-import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraft.world.level.block.entity.BannerPattern;
 
-import java.lang.reflect.Field;
 import java.util.*;
 
 public class Textures {
@@ -106,28 +105,22 @@ public class Textures {
     public static final Map<IWoodType, ResourceLocation> HANGING_SIGNS_TEXTURES = new HashMap<>();
     public static final Map<IWoodType, ResourceLocation> SIGN_POSTS_TEXTURES = new HashMap<>();
     public static final Map<BannerPattern, ResourceLocation> FLAG_TEXTURES = new HashMap<>();
-    public static final Map<BookColor, ResourceLocation> BOOK_TEXTURES = new HashMap<>();
-    public static final ResourceLocation BOOK_ENCHANTED_TEXTURES =Supplementaries.res("entity/books/book_enchanted");
-    public static final ResourceLocation BOOK_TOME_TEXTURES =Supplementaries.res("entity/books/book_tome");
+    public static final Map<BookPileBlockTile.BookColor, ResourceLocation> BOOK_TEXTURES = new HashMap<>();
+    public static final ResourceLocation BOOK_ENCHANTED_TEXTURES = Supplementaries.res("entity/books/book_enchanted");
+    public static final ResourceLocation BOOK_TOME_TEXTURES = Supplementaries.res("entity/books/book_tome");
 
     static {
         for (IWoodType type : WoodTypes.TYPES.values()) {
             HANGING_SIGNS_TEXTURES.put(type, Supplementaries.res("entity/hanging_signs/" + type.getLocation() + Variants.getHangingSignName(type)));
             SIGN_POSTS_TEXTURES.put(type, Supplementaries.res("entity/sign_posts/" + type.getLocation() + Variants.getSignPostName(type)));
         }
-        Field f = ObfuscationReflectionHelper.findField(BannerPattern.class, "field_191014_N");
+
         for (BannerPattern pattern : BannerPattern.values()) {
-            try {
-                //get name isn't server side, apparently...
-                f.setAccessible(true);
-                String name = (String) f.get(pattern);
-                FLAG_TEXTURES.put(pattern, Supplementaries.res("entity/flags/" + name));
-            }
-            catch (Exception ignored){}
+            FLAG_TEXTURES.put(pattern, Supplementaries.res("entity/flags/" + pattern.getFilename()));
         }
 
-        for (BookColor color : BookColor.values()) {
-            BOOK_TEXTURES.put(color, Supplementaries.res("entity/books/book_" + color.name));
+        for (BookPileBlockTile.BookColor color : BookPileBlockTile.BookColor.values()) {
+            BOOK_TEXTURES.put(color, Supplementaries.res("entity/books/book_" + color.getName()));
         }
     }
 
@@ -140,24 +133,5 @@ public class Textures {
                 HOURGLASS_GUNPOWDER, BLACKBOARD_GRID));
     }
 
-    public enum BookColor {
-        BROWN("brown"),
-        YELLOW("yellow"),
-        GREEN("green"),
-        TEAL("teal"),
-        BLUE("blue"),
-        PURPLE("purple"),
-        RED("red");
-
-        private final String name;
-
-        BookColor(String s) {
-            this.name = s;
-        }
-
-        public static BookColor rand(Random r){
-            return values()[r.nextInt(values().length)];
-        }
-    }
 
 }

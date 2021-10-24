@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.particles;
 
-import net.mehvahdjukaar.supplementaries.client.renderers.color.HSLColor;
+import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -22,7 +22,7 @@ public class ConfettiParticle extends TextureSheetParticle {
         //longer
         this.lifetime = (int) (80.0D / (this.random.nextFloat() * 0.3D + 0.7D));
 
-        int col = HSLColor.getRandomBrightColor(this.random);
+        int col = ColorHelper.getRandomBrightColor(this.random);
         /*
         float i = random.nextFloat();
         this.rCol = Math.max(0.0F, MathHelper.sin((i + 0.0F) * ((float)Math.PI * 2F)) * 0.65F + 0.35F);

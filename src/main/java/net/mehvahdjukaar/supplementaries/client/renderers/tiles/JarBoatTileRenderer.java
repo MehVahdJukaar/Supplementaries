@@ -25,7 +25,7 @@ public class JarBoatTileRenderer implements BlockEntityRenderer<JarBoatTile> {
     private final BlockRenderDispatcher blockRenderer;
 
     public JarBoatTileRenderer(BlockEntityRendererProvider.Context context) {
-        blockRenderer = Minecraft.getInstance().getBlockRenderer();
+        blockRenderer = context.getBlockRenderDispatcher();
 
     }
 

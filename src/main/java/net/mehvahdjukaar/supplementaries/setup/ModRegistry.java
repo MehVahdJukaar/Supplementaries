@@ -1036,7 +1036,7 @@ public class ModRegistry {
     public static final String GOLD_GATE_NAME = "gold_gate";
     public static final RegistryObject<Block> GOLD_GATE = BLOCKS.register(GOLD_GATE_NAME, () -> new IronGateBlock(
             BlockBehaviour.Properties.copy(Blocks.IRON_BARS), true));
-    public static final RegistryObject<Item> GOLD_GATE_ITEM = regBlockItem(GOLD_GATE, getTab("quark", CreativeModeTab.TAB_REDSTONE, GOLD_GATE_NAME));
+    public static final RegistryObject<Item> GOLD_GATE_ITEM = regBlockItem(GOLD_GATE, getTab("quark", CreativeModeTab.TAB_REDSTONE, IRON_GATE_NAME));
 
 
     //technical blocks
@@ -1097,7 +1097,7 @@ public class ModRegistry {
             BlockBehaviour.Properties.copy(CHECKER_BLOCK.get()))
     );
     public static final RegistryObject<Item> CHECKER_VERTICAL_SLAB_ITEM = ITEMS.register(CHECKER_VERTICAL_SLAB_NAME, () -> new BlockItem(CHECKER_VERTICAL_SLAB.get(),
-            (new Item.Properties()).tab(getTab("quark", CreativeModeTab.TAB_BUILDING_BLOCKS, CHECKER_VERTICAL_SLAB_NAME))
+            (new Item.Properties()).tab(getTab("quark", CreativeModeTab.TAB_BUILDING_BLOCKS, CHECKER_BLOCK_NAME))
     ));
 
     //pancakes

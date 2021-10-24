@@ -87,7 +87,7 @@ public class FlagBlock extends WaterBlock implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new FlagBlockTile();
+        return new FlagBlockTile(pPos, pState);
     }
 
     @Override

@@ -89,7 +89,7 @@ public class EnhancedLanternBlock extends SwayingBlock implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new EnhancedLanternBlockTile();
+        return new EnhancedLanternBlockTile(pPos, pState);
     }
 
     @Override

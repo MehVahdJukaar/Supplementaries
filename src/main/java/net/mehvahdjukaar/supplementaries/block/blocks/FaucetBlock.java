@@ -139,8 +139,8 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
 
     //returns false if no color (water)
     public boolean updateTileFluid(BlockState state, BlockPos pos, LevelAccessor world) {
-        if (world.getBlockEntity(pos) instanceof FaucetBlockTile tile) {
-            return tile.updateContainedFluidVisuals(state);
+        if (world.getBlockEntity(pos) instanceof FaucetBlockTile tile && world instanceof Level level) {
+            return tile.updateContainedFluidVisuals(level, pos, state);
         }
         return false;
     }

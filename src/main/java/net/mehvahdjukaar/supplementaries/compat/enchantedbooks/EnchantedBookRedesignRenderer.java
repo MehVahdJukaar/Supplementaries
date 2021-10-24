@@ -1,12 +1,15 @@
 package net.mehvahdjukaar.supplementaries.compat.enchantedbooks;
 
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderType.CompositeState;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import tfar.enchantedbookredesign.EnchantedBookRedesign;
 import tfar.enchantedbookredesign.Hooks;
@@ -27,7 +30,7 @@ public class EnchantedBookRedesignRenderer extends RenderStateShard{
 
 
     @Nullable
-    public static IVertexBuilder getColoredFoil(ItemStack stack, IRenderTypeBuffer buffer){
+    public static VertexConsumer getColoredFoil(ItemStack stack, MultiBufferSource buffer){
         if (EnchantedBookRedesign.cache.contains(stack.getItem())) {
             return TintedVertexConsumer.withTint(buffer.getBuffer(ModRenderType.TINTED_ENTITY_GLINT_DIRECT), Hooks.getColor(stack));
         }

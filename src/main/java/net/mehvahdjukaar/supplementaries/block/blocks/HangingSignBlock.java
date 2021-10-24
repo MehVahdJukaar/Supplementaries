@@ -197,7 +197,7 @@ public class HangingSignBlock extends SwayingBlock implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new HangingSignBlockTile();
+        return new HangingSignBlockTile(pPos, pState);
     }
 
     @Override

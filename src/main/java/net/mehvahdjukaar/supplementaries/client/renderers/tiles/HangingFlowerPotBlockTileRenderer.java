@@ -22,7 +22,7 @@ public class HangingFlowerPotBlockTileRenderer implements BlockEntityRenderer<Ha
     protected final BlockRenderDispatcher blockRenderer;
 
     public HangingFlowerPotBlockTileRenderer(BlockEntityRendererProvider.Context context) {
-        blockRenderer = Minecraft.getInstance().getBlockRenderer();
+        blockRenderer = context.getBlockRenderDispatcher();
     }
 
     @Override

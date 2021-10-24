@@ -22,9 +22,11 @@ import net.minecraft.world.item.Items;
 
 public class ItemShelfBlockTileRenderer implements BlockEntityRenderer<ItemShelfBlockTile> {
     protected final ItemRenderer itemRenderer;
+    private final Font font;
 
     public ItemShelfBlockTileRenderer(BlockEntityRendererProvider.Context context) {
         itemRenderer = Minecraft.getInstance().getItemRenderer();
+        font = context.getFont();
     }
 
     protected boolean canRenderName(ItemShelfBlockTile tile) {
@@ -40,7 +42,6 @@ public class ItemShelfBlockTileRenderer implements BlockEntityRenderer<ItemShelf
         double f = 0.625; //height
         int i = 0;
 
-        Font fontrenderer = this.renderer.getFont();
         EntityRenderDispatcher renderManager = Minecraft.getInstance().getEntityRenderDispatcher();
 
         matrixStackIn.pushPose();
@@ -52,9 +53,9 @@ public class ItemShelfBlockTileRenderer implements BlockEntityRenderer<ItemShelf
         float f1 = Minecraft.getInstance().options.getBackgroundOpacity(0.25F);
         int j = (int) (f1 * 255.0F) << 24;
 
-        float f2 = (float) (-fontrenderer.width(displayNameIn) / 2);
+        float f2 = (float) (-font.width(displayNameIn) / 2);
         //drawInBatch == renderTextComponent
-        fontrenderer.drawInBatch(displayNameIn, f2, (float) i, -1, false, matrix4f, bufferIn, false, j, packedLightIn);
+        font.drawInBatch(displayNameIn, f2, (float) i, -1, false, matrix4f, bufferIn, false, j, packedLightIn);
         matrixStackIn.popPose();
 
     }
@@ -85,12 +86,12 @@ public class ItemShelfBlockTileRenderer implements BlockEntityRenderer<ItemShelf
 
             ItemStack stack = tile.getDisplayedItem();
             if (CommonUtil.FESTIVITY.isAprilsFool()) stack = new ItemStack(Items.SALMON);
-            BakedModel ibakedmodel = itemRenderer.getModel(stack, tile.getLevel(), null);
-            if (ibakedmodel.isGui3d() && ClientConfigs.cached.SHELF_TRANSLATE) matrixStackIn.translate(0, -0.25, 0);
+            BakedModel model = itemRenderer.getModel(stack, tile.getLevel(), null, 0);
+            if (model.isGui3d() && ClientConfigs.cached.SHELF_TRANSLATE) matrixStackIn.translate(0, -0.25, 0);
 
 
             itemRenderer.render(stack, ItemTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
-                    combinedOverlayIn, ibakedmodel);
+                    combinedOverlayIn, model);
 
             matrixStackIn.popPose();
         }

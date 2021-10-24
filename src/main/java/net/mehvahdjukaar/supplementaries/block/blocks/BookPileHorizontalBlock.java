@@ -1,10 +1,10 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.tiles.BookPileBlockTile;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -30,7 +31,7 @@ public class BookPileHorizontalBlock extends BookPileBlock {
 
 
     private static final VoxelShape SHAPE_3_Z = Block.box(1D, 0D, 4D, 15D, 10D, 12D);
-    private static final VoxelShape SHAPE_3_X = Block.box(4D, 0D, 2D, 12D, 10D, 14D);
+    private static final VoxelShape SHAPE_3_X = Block.box(4D, 0D, 1D, 12D, 10D, 15D);
 
 
     private static final VoxelShape SHAPE_4_Z = Block.box(0D, 0D, 4D, 16D, 10D, 12D);
@@ -53,10 +54,11 @@ public class BookPileHorizontalBlock extends BookPileBlock {
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockState blockstate = context.getLevel().getBlockState(context.getClickedPos());
-        if (blockstate.is(this)) {
+        if (blockstate.getBlock() instanceof BookPileBlock) {
             return blockstate.setValue(BOOKS, blockstate.getValue(BOOKS) + 1);
         }
-        boolean flag = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;
+        FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
+        boolean flag = fluidState.getType() == Fluids.WATER && fluidState.getAmount() == 8;
         return this.defaultBlockState().setValue(WATERLOGGED, flag).setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 
@@ -73,11 +75,11 @@ public class BookPileHorizontalBlock extends BookPileBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return  new BookPileBlockTile(pPos, pState, true);
+        return new BookPileBlockTile(pPos, pState, true);
     }
 
     public boolean isAcceptedItem(Item i) {
-        return i == Items.BOOK;
+        return isNormalBook(i) || (ServerConfigs.cached.MIXED_BOOKS && isEnchantedBook(i));
     }
 
     @Override

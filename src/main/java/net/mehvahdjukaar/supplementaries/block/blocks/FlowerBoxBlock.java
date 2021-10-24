@@ -105,7 +105,7 @@ public class FlowerBoxBlock extends WaterBlock implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new FlowerBoxBlockTile();
+        return new FlowerBoxBlockTile(pPos, pState);
     }
 
     @Override

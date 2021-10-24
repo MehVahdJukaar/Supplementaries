@@ -19,7 +19,7 @@ public class DoormatBlockTileRenderer implements BlockEntityRenderer<DoormatBloc
     private final Font FONT;
 
     public DoormatBlockTileRenderer(BlockEntityRendererProvider.Context context) {
-        FONT = Minecraft.getInstance().font;
+        FONT = context.getFont();
     }
 
     @Override

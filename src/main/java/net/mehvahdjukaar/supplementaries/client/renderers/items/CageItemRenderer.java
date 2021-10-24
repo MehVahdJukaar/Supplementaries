@@ -81,7 +81,7 @@ public class CageItemRenderer extends BlockEntityWithoutLevelRenderer {
         //render block
         matrixStackIn.pushPose();
         BlockState state = ((BlockItem) stack.getItem()).getBlock().defaultBlockState();
-        Minecraft.getInstance().getBlockRenderer().renderBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
+        Minecraft.getInstance().getBlockRenderer().renderSingleBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
         matrixStackIn.popPose();
 
         CompoundTag tag = stack.getTagElement("BlockEntityTag");

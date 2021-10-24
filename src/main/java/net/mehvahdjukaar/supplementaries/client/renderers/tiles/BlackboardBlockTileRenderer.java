@@ -27,22 +27,19 @@ import net.minecraft.world.phys.Vec3;
 
 public class BlackboardBlockTileRenderer implements BlockEntityRenderer<BlackboardBlockTile> {
 
-    private final Minecraft MC;
     public final int WIDTH = 6;
+
+    private final Minecraft MC;
+    private final Camera camera;
 
     public BlackboardBlockTileRenderer(BlockEntityRendererProvider.Context context) {
         this.MC = Minecraft.getInstance();
+        this.camera = this.MC.gameRenderer.getMainCamera();
     }
 
     @Override
     public int getViewDistance() {
         return 96;
-    }
-
-    //TODO: use this for culling
-    @Override
-    public boolean shouldRender(BlackboardBlockTile p_173568_, Vec3 p_173569_) {
-        return BlockEntityRenderer.super.shouldRender(p_173568_, p_173569_);
     }
 
     @Override
@@ -51,7 +48,7 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
 
         Direction dir = tile.getDirection();
         float yaw = -dir.toYRot();
-        Camera camera = this.renderer.camera;
+
         Vec3 cameraPos = camera.getPosition();
         BlockPos pos = tile.getBlockPos();
         if (LOD.isOutOfFocus(cameraPos, pos, yaw, 0, dir, WIDTH / 16f)) return;

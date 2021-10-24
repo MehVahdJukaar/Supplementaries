@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.events;
 
-import net.mehvahdjukaar.selene.map.CustomDecorationHolder;
 import net.mehvahdjukaar.selene.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.blocks.BookPileBlock;
@@ -555,7 +554,7 @@ public class ItemsOverrideHandler {
 
         @Override
         public boolean appliesToItem(Item item) {
-            return ((BookPileBlock) ModRegistry.BOOK_PILE_H.get()).isAcceptedItem(item);
+            return BookPileBlock.isNormalBook(item);
         }
 
         @Override
@@ -588,7 +587,7 @@ public class ItemsOverrideHandler {
 
         @Override
         public boolean appliesToItem(Item item) {
-            return ((BookPileBlock) ModRegistry.BOOK_PILE.get()).isAcceptedItem(item);
+            return BookPileBlock.isEnchantedBook(item);
         }
 
         @Override

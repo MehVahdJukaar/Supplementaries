@@ -1,10 +1,11 @@
 package net.mehvahdjukaar.supplementaries.client.renderers;
 
+import net.minecraft.client.Camera;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 
 public class LOD {
@@ -14,16 +15,12 @@ public class LOD {
         this.distSq = distance;
     }
 
-    public LOD(BlockEntityRenderDispatcher renderer, BlockPos pos) {
-        this(renderer.camera.getPosition(), pos);
+    public LOD(Camera camera, BlockPos pos) {
+        this(camera.getPosition(), pos);
     }
 
     public LOD(Vec3 cameraPos, BlockPos pos) {
         this(Vec3.atCenterOf(pos).distanceToSqr(cameraPos));
-    }
-
-    public boolean isOnEdge(BlockEntity te) {
-        return this.distSq > (te.getViewDistance() * te.getViewDistance()) - BUFFER;
     }
 
     public boolean isNear() {
@@ -59,7 +56,7 @@ public class LOD {
         return isOutOfFocus(relAngle, blockYaw, degMargin);
     }
 
-    public static boolean isOutOfFocus(float relativeAngle, float blockYaw, float degMargin){
+    public static boolean isOutOfFocus(float relativeAngle, float blockYaw, float degMargin) {
         return (Mth.degreesDifference(relativeAngle, blockYaw - 90) > -degMargin);
     }
 

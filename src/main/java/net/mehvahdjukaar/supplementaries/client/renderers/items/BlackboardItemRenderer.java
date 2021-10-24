@@ -31,7 +31,7 @@ public class BlackboardItemRenderer extends BlockEntityWithoutLevelRenderer {
 
         matrixStackIn.pushPose();
         matrixStackIn.translate(0,0,-0.34375);
-        Minecraft.getInstance().getBlockRenderer().renderBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
+        Minecraft.getInstance().getBlockRenderer().renderSingleBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
 
         CompoundTag com = stack.getTagElement("BlockEntityTag");
         long[] packed = new long[16];

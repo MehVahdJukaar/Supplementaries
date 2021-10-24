@@ -40,13 +40,16 @@ import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import java.util.List;
 
 
-public class NoticeBoardBlockTileRenderer extends BlockEntityRenderer<NoticeBoardBlockTile> {
-    protected final ItemRenderer itemRenderer;
-    protected final MapRenderer mapRenderer;
+public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeBoardBlockTile> {
+    private final ItemRenderer itemRenderer;
+    private final MapRenderer mapRenderer;
+    private final Font font;
+
     public NoticeBoardBlockTileRenderer(BlockEntityRendererProvider.Context context) {
         Minecraft minecraft = Minecraft.getInstance();
         itemRenderer = minecraft.getItemRenderer();
         mapRenderer = minecraft.gameRenderer.getMapRenderer();
+        font = context.getFont();
     }
 
     public int getFrontLight(Level world, BlockPos pos, Direction dir) {
@@ -115,8 +118,6 @@ public class NoticeBoardBlockTileRenderer extends BlockEntityRenderer<NoticeBoar
                     return;
                 }
 
-                Font fontrenderer = this.renderer.getFont();
-
                 matrixStackIn.pushPose();
                 matrixStackIn.translate(0,0.5,0.008);
 
@@ -129,7 +130,7 @@ public class NoticeBoardBlockTileRenderer extends BlockEntityRenderer<NoticeBoar
 
 
                 if(CommonUtil.FESTIVITY.isAprilsFool()){
-                    TextUtil.renderBeeMovie(matrixStackIn,bufferIn,frontLight,fontrenderer,d0);
+                    TextUtil.renderBeeMovie(matrixStackIn,bufferIn,frontLight,font,d0);
                     matrixStackIn.popPose();
                     matrixStackIn.popPose();
                     return;
@@ -137,7 +138,7 @@ public class NoticeBoardBlockTileRenderer extends BlockEntityRenderer<NoticeBoar
 
                 String bookName = tile.getItem(0).getHoverName().getString().toLowerCase();
                 if(bookName.equals("credits")){
-                    TextUtil.renderCredits(matrixStackIn,bufferIn,frontLight,fontrenderer,d0);
+                    TextUtil.renderCredits(matrixStackIn,bufferIn,frontLight,font,d0);
                     matrixStackIn.popPose();
                     matrixStackIn.popPose();
                     return;
@@ -156,7 +157,7 @@ public class NoticeBoardBlockTileRenderer extends BlockEntityRenderer<NoticeBoar
 
                 if (tile.getFlag()) {
                     FormattedText txt = TextUtil.iGetPageText(page);
-                    int width = fontrenderer.width(txt);
+                    int width = font.width(txt);
                     float bordery = 0.125f;
                     float borderx = 0.1875f;
                     float lx = 1 - (2 * borderx);
@@ -165,8 +166,8 @@ public class NoticeBoardBlockTileRenderer extends BlockEntityRenderer<NoticeBoar
                     do {
                         scalingfactor = Mth.floor(Mth.sqrt((width * 8f) / (lx * ly)));
 
-                        tempPageLines = fontrenderer.split(txt, Mth.floor(lx * scalingfactor));
-                        //tempPageLines = RenderComponentsUtil.splitText(txt, MathHelper.floor(lx * scalingfactor), fontrenderer, true, true);
+                        tempPageLines = font.split(txt, Mth.floor(lx * scalingfactor));
+                        //tempPageLines = RenderComponentsUtil.splitText(txt, MathHelper.floor(lx * scalingfactor), font, true, true);
 
                         maxlines = ly * scalingfactor / 8f;
                         width += 1;
@@ -190,16 +191,16 @@ public class NoticeBoardBlockTileRenderer extends BlockEntityRenderer<NoticeBoar
                     FormattedCharSequence str = tempPageLines.get(lin);
 
                     //border offsets. always add 0.5 to center properly
-                    //float dx = (float) (-fontrenderer.getStringWidth(str) / 2f) + 0.5f;
-                    float dx = (float) (-fontrenderer.width(str) / 2) + 0.5f;
+                    //float dx = (float) (-font.getStringWidth(str) / 2f) + 0.5f;
+                    float dx = (float) (-font.width(str) / 2) + 0.5f;
 
                     // float dy = (float) scalingfactor * bordery;
                     float dy = ((scalingfactor - (8 * numberoflin)) / 2f) + 0.5f;
 
                     if(!bookName.equals("missingno")) {
-                        fontrenderer.drawInBatch(str, dx, dy + 8 * lin, i1, false, matrixStackIn.last().pose(), bufferIn, false, 0, frontLight);
+                        font.drawInBatch(str, dx, dy + 8 * lin, i1, false, matrixStackIn.last().pose(), bufferIn, false, 0, frontLight);
                     }else {
-                        fontrenderer.drawInBatch("\u00A7ka", dx, dy + 8 * lin, i1, false, matrixStackIn.last().pose(), bufferIn, false, 0, frontLight);
+                        font.drawInBatch("\u00A7ka", dx, dy + 8 * lin, i1, false, matrixStackIn.last().pose(), bufferIn, false, 0, frontLight);
                     }
                 }
                 matrixStackIn.popPose();

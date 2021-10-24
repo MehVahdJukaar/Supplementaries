@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.items;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.selene.fluids.SoftFluid;
 import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
@@ -10,14 +11,13 @@ import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import com.mojang.math.Vector3f;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.Random;
 
@@ -83,9 +83,9 @@ public class JarItemRenderer extends CageItemRenderer {
                     // matrixStackIn.translate(0, 0, 0.0625);
                     matrixStackIn.translate(0, 0, 1 / (16f * scale));
                     ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-                    BakedModel ibakedmodel = itemRenderer.getModel(cookieStack, null, null);
+                    BakedModel model = itemRenderer.getModel(cookieStack, null, null, 0);
                     itemRenderer.render(cookieStack, ItemTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
-                            combinedOverlayIn, ibakedmodel);
+                            combinedOverlayIn, model);
                 }
                 matrixStackIn.popPose();
             }

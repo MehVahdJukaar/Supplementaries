@@ -75,7 +75,7 @@ public class TippedSpikesColor implements BlockColor, ItemColor {
     public static int getProcessedColor(int rgb, int tint) {
         //float[] hsb = Color.RGBtoHSB(r,g,b,null);
         //int rgb2 = Color.HSBtoRGB(hsb[0],0.75f,0.85f);
-        float[] hsl = HSLColor.rgbToHsl(rgb);
+        float[] hsl = ColorHelper.rgbToHsl(rgb);
         if (tint == 1) {
             float h = hsl[0];
             boolean b = h > 0.16667f && h < 0.6667f;
@@ -83,12 +83,12 @@ public class TippedSpikesColor implements BlockColor, ItemColor {
             hsl[0] = (h + i) % 1f;
         }
 
-        hsl = HSLColor.postProcess(hsl);
+        hsl = ColorHelper.postProcess(hsl);
         float h = hsl[0];
         float s = hsl[1];
         float l = hsl[2];
         //0.7,0.6
         s = tint == 0 ? ((s * 0.81f)) : s * 0.74f;
-        return HSLColor.hslToRgb(h, s, l);
+        return ColorHelper.hslToRgb(h, s, l);
     }
 }

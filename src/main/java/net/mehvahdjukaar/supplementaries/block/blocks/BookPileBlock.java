@@ -3,8 +3,10 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.BookPileBlockTile;
+import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.quark.QuarkPlugin;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,7 +25,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -47,16 +48,23 @@ public class BookPileBlock extends WaterBlock implements EntityBlock {
 
     @Override
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
-        if (world.getBlockEntity(pos) instanceof BookPileBlockTile te) {
+        if (world.getBlockEntity(pos) instanceof BookPileBlockTile tile) {
             ItemStack copy = stack.copy();
             copy.setCount(1);
-            te.setItem(state.getValue(BOOKS) - 1, copy);
+            tile.setItem(state.getValue(BOOKS) - 1, copy);
         }
     }
 
-
     public boolean isAcceptedItem(Item i) {
+        return isEnchantedBook(i) || (ServerConfigs.cached.MIXED_BOOKS && isNormalBook(i));
+    }
+
+    public static boolean isEnchantedBook(Item i) {
         return i == Items.ENCHANTED_BOOK || (CompatHandler.quark && QuarkPlugin.isTome(i));
+    }
+
+    public static boolean isNormalBook(Item i) {
+        return ModTags.BOOKS.contains(i);
     }
 
     @Override
@@ -79,11 +87,10 @@ public class BookPileBlock extends WaterBlock implements EntityBlock {
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockState blockstate = context.getLevel().getBlockState(context.getClickedPos());
-        if (blockstate.is(this)) {
+        if (blockstate.getBlock() instanceof BookPileBlock) {
             return blockstate.setValue(BOOKS, blockstate.getValue(BOOKS) + 1);
         }
-        boolean flag = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;
-        return this.defaultBlockState().setValue(WATERLOGGED, flag);
+        return super.getStateForPlacement(context);
     }
 
     @Nullable

@@ -22,7 +22,6 @@ public class FaucetBlockTileRenderer implements BlockEntityRenderer<FaucetBlockT
     public FaucetBlockTileRenderer(BlockEntityRendererProvider.Context context) {
     }
 
-
     @Override
     public int getViewDistance() {
         return 80;

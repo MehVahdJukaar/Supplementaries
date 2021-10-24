@@ -115,6 +115,6 @@ public class WindVaneBlock extends WaterBlock implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new WindVaneBlockTile();
+        return new WindVaneBlockTile(pPos, pState);
     }
 }

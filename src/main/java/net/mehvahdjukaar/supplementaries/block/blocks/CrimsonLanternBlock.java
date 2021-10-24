@@ -53,6 +53,6 @@ public class CrimsonLanternBlock extends CopperLanternBlock {
 
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new OilLanternBlockTile(ModRegistry.CRIMSON_LANTERN_TILE.get());
+        return new OilLanternBlockTile(ModRegistry.CRIMSON_LANTERN_TILE.get(), pPos, pState);
     }
 }

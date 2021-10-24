@@ -1,29 +1,28 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.items;
 
+import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Matrix4f;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
-import com.mojang.blaze3d.platform.NativeImage;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import com.mojang.math.Matrix4f;
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.level.Level;
-
-import javax.annotation.Nullable;
-
-import net.minecraft.core.BlockPos;
-import net.minecraft.util.Mth;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+
+import javax.annotation.Nullable;
 
 public class SlingshotRendererHelper {
 
@@ -47,7 +46,7 @@ public class SlingshotRendererHelper {
     private static BlockPos LOOK_POS = null;
 
 
-    public static void grabNewLookPos(Player player){
+    public static void grabNewLookPos(Player player) {
 
         float blockRange = 40;
 
@@ -58,19 +57,19 @@ public class SlingshotRendererHelper {
         BlockHitResult raytrace = world
                 .clip(new ClipContext(start, start.add(range), ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player));
         if (raytrace.getType() == HitResult.Type.BLOCK && start.distanceToSqr(raytrace.getLocation()) > Mth.square(Minecraft.getInstance().gameMode.getPickRange())) {
-            LOOK_POS = raytrace.getBlockPos().relative(raytrace.getDirection(),(int) ((double)ClientConfigs.general.TEST1.get()));
+            LOOK_POS = raytrace.getBlockPos().relative(raytrace.getDirection(), (int) ((double) ClientConfigs.general.TEST1.get()));
         }
     }
 
-    public static void renderBlockOutline(PoseStack matrixStack, Camera camera, Minecraft mc){
-        if(LOOK_POS != null){
+    public static void renderBlockOutline(PoseStack matrixStack, Camera camera, Minecraft mc) {
+        if (LOOK_POS != null) {
 
             Player player = mc.player;
             Level world = player.level;
             world.getProfiler().popPush("outline");
             BlockPos pos = LOOK_POS;
             BlockState blockstate = world.getBlockState(pos);
-            if (!blockstate.isAir(world, pos) && world.getWorldBorder().isWithinBounds(pos)) {
+            if (!blockstate.isAir() && world.getWorldBorder().isWithinBounds(pos)) {
                 VertexConsumer builder = Minecraft.getInstance().renderBuffers().bufferSource().getBuffer(RenderType.lines());
 
                 Vec3 vector3d = camera.getPosition();
@@ -86,7 +85,7 @@ public class SlingshotRendererHelper {
                 float r = NativeImage.getA(color) / 255f;
 
                 renderVoxelShape(matrixStack, builder, blockstate.getShape(world, pos, CollisionContext.of(camera.getEntity())),
-                        (double)pos.getX() - pX, (double)pos.getY() - pY, (double)pos.getZ() - pZ, r, g, b, a);
+                        (double) pos.getX() - pX, (double) pos.getY() - pY, (double) pos.getZ() - pZ, r, g, b, a);
             }
         }
         LOOK_POS = null;
@@ -96,8 +95,8 @@ public class SlingshotRendererHelper {
             voxelShape, double x, double y, double z, float r, float g, float b, float a) {
         Matrix4f matrix4f = matrixStack.last().pose();
         voxelShape.forAllEdges((e1, e2, e3, e4, e5, e6) -> {
-            builder.vertex(matrix4f, (float)(e1 + x), (float)(e2 + y), (float)(e3 + z)).color(r, g, b, a).endVertex();
-            builder.vertex(matrix4f, (float)(e4 + x), (float)(e5 + y), (float)(e6 + z)).color(r, g, b, a).endVertex();
+            builder.vertex(matrix4f, (float) (e1 + x), (float) (e2 + y), (float) (e3 + z)).color(r, g, b, a).endVertex();
+            builder.vertex(matrix4f, (float) (e4 + x), (float) (e5 + y), (float) (e6 + z)).color(r, g, b, a).endVertex();
         });
     }
 
