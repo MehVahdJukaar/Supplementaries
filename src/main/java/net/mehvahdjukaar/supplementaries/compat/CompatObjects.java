@@ -1,17 +1,15 @@
 package net.mehvahdjukaar.supplementaries.compat;
 
-import net.minecraft.world.level.block.Block;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fml.RegistryObject;
+import net.minecraft.world.level.block.Block;
+import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import javax.annotation.Nullable;
 import java.util.function.Supplier;
-
-import RegistryObject;
 
 public class CompatObjects {
     //object holders
@@ -59,16 +57,16 @@ public class CompatObjects {
 
     //public static final RegistryObject<Block> ENDER_CHANDELIER2 = getCompatObject()
 
-    private static <T extends IForgeRegistryEntry<T>, U extends T> NullableRegistryObject<T,U> makeCompatObject(String name, IForgeRegistry<T> registry){
+    private static <T extends IForgeRegistryEntry<T>, U extends T> NullableRegistryObject<T, U> makeCompatObject(String name, IForgeRegistry<T> registry) {
         return new NullableRegistryObject<>(getRegistryObject(name, registry));
     }
 
-    private static <T extends IForgeRegistryEntry<T>, U extends T> RegistryObject<U> getRegistryObject(String name, IForgeRegistry<T> registry){
+    private static <T extends IForgeRegistryEntry<T>, U extends T> RegistryObject<U> getRegistryObject(String name, IForgeRegistry<T> registry) {
         return RegistryObject.of(new ResourceLocation(name), registry);
     }
 
 
-    private static class NullableRegistryObject<T extends IForgeRegistryEntry<T>, U extends T> implements Supplier<T>{
+    private static class NullableRegistryObject<T extends IForgeRegistryEntry<T>, U extends T> implements Supplier<T> {
 
         private final RegistryObject<U> obj;
 

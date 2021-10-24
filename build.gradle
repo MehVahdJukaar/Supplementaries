@@ -170,18 +170,18 @@ dependencies {
     //implementation fg.deobf("curse.maven:quark-243121:3326040")
 
 
-    //implementation fg.deobf("curse.maven:configured-457570:3434071")
-    //implementation fg.deobf("curse.maven:curios-309927:3343065")
+    implementation fg.deobf("curse.maven:configured-457570:3434072")
+    implementation fg.deobf("curse.maven:curios-309927:3457073")
     //implementation fg.deobf("curse.maven:decorativeblocks-362528:3166283")
     //implementation fg.deobf("curse.maven:farmersdelight-398521:3418719")
-    //implementation fg.deobf("curse.maven:framedblocks-441647:3412173")
+    implementation fg.deobf("curse.maven:framedblocks-441647:3499686")
     //implementation fg.deobf("curse.maven:inspirations-284007:3414517")
     //implementation fg.deobf("curse.maven:mantle-74924:3439180")
     //implementation fg.deobf("curse.maven:mantle-250363:3326041")
     //implementation fg.deobf("curse.maven:dynamictrees-252818:3480621")
     //implementation fg.deobf("curse.maven:enchanted-book-redesign-348076:3239927")
 
-    //implementation fg.deobf("mezz.jei:jei-1.16.5:7.7.1.116")
+    //implementation fg.deobf("curse.maven:jei-238222:3486421)
 
     //implementation fg.deobf("curse.maven:tetra-289712:3371803")
     //implementation fg.deobf("curse.maven:mgui-351914:3291267")

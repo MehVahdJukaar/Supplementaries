@@ -17,7 +17,7 @@ public class ModCommands {
                         )
                         .then(ReloadConfigsCommand.register(dispatcher))
                         .then(OpenConfiguredCommand.register(dispatcher))
-                        .then(RollDiceCommand.register(dispatcher))
+                        .then(IUsedToRollTheDice.register(dispatcher))
                         .then(AddCageMobCommand.register(dispatcher))
         );
 

@@ -4,6 +4,7 @@ import net.mehvahdjukaar.selene.fluids.FluidTextures;
 import net.mehvahdjukaar.selene.fluids.SoftFluid;
 import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
@@ -360,7 +361,7 @@ public class ModSoftFluids {
             SoftFluid s = makeSF(new SoftFluid.Builder(Textures.WATER_TEXTURE, Textures.FLOWING_WATER_TEXTURE, name)
                     .bottle(name + "d_bottle")
                     .translationKey(dye.getDescriptionId())
-                    .color(c.getColorValue())
+                    .color(ColorHelper.pack(c.getTextureDiffuseColors()))
                     .fromMod("inspirations")
                     .copyTexturesFrom("inspirations:potato_soup")
             );

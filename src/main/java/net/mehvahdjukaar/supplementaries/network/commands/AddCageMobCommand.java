@@ -20,13 +20,13 @@ public class AddCageMobCommand implements Command<CommandSourceStack> {
         return Commands.literal("cage")
                 .requires(cs -> cs.hasPermission(2))
                 .then(Commands.argument("entity", EntitySummonArgument.id()).suggests(SuggestionProviders.SUMMONABLE_ENTITIES)
-                .executes(CMD));
+                        .executes(CMD));
     }
 
     @Override
     public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
 
-        ResourceLocation id = EntitySummonArgument.getSummonableEntity( context,"entity");
+        ResourceLocation id = EntitySummonArgument.getSummonableEntity(context, "entity");
 
         CapturedMobsHelper.COMMAND_MOBS.add(id.toString());
         return 0;

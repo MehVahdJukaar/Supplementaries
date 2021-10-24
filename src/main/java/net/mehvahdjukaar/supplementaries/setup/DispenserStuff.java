@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
-import net.mehvahdjukaar.selene.fluids.ISoftFluidConsumer;
 import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.selene.util.DispenserHelper;
 import net.mehvahdjukaar.selene.util.DispenserHelper.AddItemToInventoryBehavior;
@@ -11,38 +10,34 @@ import net.mehvahdjukaar.supplementaries.block.blocks.PancakeBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.block.util.ILightable;
-import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.common.BlockItemUtils;
+import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.entities.AmethystArrowEntity;
 import net.mehvahdjukaar.supplementaries.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.entities.RopeArrowEntity;
 import net.mehvahdjukaar.supplementaries.entities.ThrowableBrickEntity;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
 import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
-import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.item.context.DirectionalPlaceContext;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.Level;
 import net.minecraft.server.level.ServerLevel;
-
-
-import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.context.DirectionalPlaceContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class DispenserStuff {
 
@@ -53,8 +48,6 @@ public class DispenserStuff {
         //jar
         if (RegistryConfigs.reg.JAR_ENABLED.get()) {
 
-            DispenserHelper.registerPlaceBlockBehavior(ModRegistry.SOUL_JAR.get());
-            DispenserHelper.registerPlaceBlockBehavior(ModRegistry.FIREFLY_JAR.get());
             DispenserHelper.registerPlaceBlockBehavior(ModRegistry.JAR_ITEM.get());
             DispenserHelper.registerPlaceBlockBehavior(ModRegistry.JAR_TINTED.get());
 
@@ -70,7 +63,7 @@ public class DispenserStuff {
         DispenserHelper.registerCustomBehavior(new PancakesDispenserBehavior(Items.HONEY_BOTTLE));
 
         if (ServerConfigs.cached.THROWABLE_BRICKS_ENABLED) {
-            for(Item i : ModTags.BRICKS.getValues()){
+            for (Item i : ModTags.BRICKS.getValues()) {
                 DispenserHelper.registerCustomBehavior(new ThrowableBricksDispenserBehavior(i));
             }
         }
@@ -133,9 +126,8 @@ public class DispenserStuff {
             ServerLevel world = source.getLevel();
             BlockPos blockpos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
             BlockState state = world.getBlockState(blockpos);
-            Block block = state.getBlock();
-            if (block instanceof ILightable) {
-                if (((ILightable) block).lightUp(state, blockpos, world, LightUpBlock.FireSound.FLINT_AND_STEEL)) {
+            if (state.getBlock() instanceof ILightable block) {
+                if (block.lightUp(state, blockpos, world, LightUpBlock.FireSound.FLINT_AND_STEEL)) {
                     if (stack.hurt(1, world.random, null)) {
                         stack.setCount(0);
                     }
@@ -157,11 +149,11 @@ public class DispenserStuff {
         @Override
         protected InteractionResultHolder<ItemStack> customBehavior(BlockSource source, ItemStack stack) {
             Level world = source.getLevel();
-            Position iposition = DispenserBlock.getDispensePosition(source);
+            Position dispensePosition = DispenserBlock.getDispensePosition(source);
             Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
-            Projectile projectileentity = this.getProjectileEntity(world, iposition, stack);
-            projectileentity.shoot(direction.getStepX(), (float) direction.getStepY() + 0.1F, direction.getStepZ(), this.getProjectileVelocity(), this.getProjectileInaccuracy());
-            world.addFreshEntity(projectileentity);
+            Projectile projectileEntity = this.getProjectileEntity(world, dispensePosition, stack);
+            projectileEntity.shoot(direction.getStepX(), (float) direction.getStepY() + 0.1F, direction.getStepZ(), this.getProjectileVelocity(), this.getProjectileInaccuracy());
+            world.addFreshEntity(projectileEntity);
             stack.shrink(1);
             return InteractionResultHolder.success(stack);
         }
@@ -247,9 +239,8 @@ public class DispenserStuff {
             ServerLevel world = source.getLevel();
             BlockPos blockpos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
             BlockState state = world.getBlockState(blockpos);
-            Block block = state.getBlock();
-            if (block instanceof PancakeBlock) {
-                if (((ISoftFluidConsumer) block).tryAcceptingFluid(world, state, blockpos, SoftFluidRegistry.HONEY, null, 1)) {
+            if (state.getBlock() instanceof PancakeBlock block) {
+                if (block.tryAcceptingFluid(world, state, blockpos, SoftFluidRegistry.HONEY, null, 1)) {
                     return InteractionResultHolder.consume(new ItemStack(Items.GLASS_BOTTLE));
                 }
                 return InteractionResultHolder.fail(stack);
@@ -269,10 +260,8 @@ public class DispenserStuff {
             //this.setSuccessful(false);
             ServerLevel world = source.getLevel();
             BlockPos blockpos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
-            BlockEntity te = world.getBlockEntity(blockpos);
-            if (te instanceof JarBlockTile) {
+            if (world.getBlockEntity(blockpos) instanceof JarBlockTile tile) {
                 //TODO: add fish buckets
-                JarBlockTile tile = ((JarBlockTile) te);
                 if (tile.fluidHolder.isEmpty() && tile.isEmpty()) {
                     if (tile.mobContainer.interactWithBucket(stack, world, blockpos, null, null)) {
                         tile.setChanged();

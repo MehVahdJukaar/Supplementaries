@@ -25,10 +25,8 @@ public class BeaconMarker extends NamedMapWorldMarker<CustomDecoration> {
 
     @Nullable
     public static BeaconMarker getFromWorld(BlockGetter world, BlockPos pos){
-        BlockEntity tileentity = world.getBlockEntity(pos);
-        if (tileentity instanceof BeaconBlockEntity) {
-            BeaconBlockEntity te = ((BeaconBlockEntity) tileentity);
-            Component name = te.name;
+        if (world.getBlockEntity(pos) instanceof BeaconBlockEntity tile) {
+            Component name = tile.name;
             return new BeaconMarker(pos,name);
         } else {
             return null;

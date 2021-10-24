@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.block.util.IBellConnections;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
@@ -17,11 +18,9 @@ import net.mehvahdjukaar.supplementaries.block.util.IBellConnections.BellConnect
 public abstract class BellTileEntityMixin extends BlockEntity  implements IBellConnections {
     public BellConnection connection = BellConnection.NONE;
 
-
-    public BellTileEntityMixin(BlockEntityType<?> tileEntityTypeIn) {
-        super(tileEntityTypeIn);
+    public BellTileEntityMixin(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
+        super(pType, pWorldPosition, pBlockState);
     }
-
 
     @Override
     public BellConnection getConnected() {
@@ -45,8 +44,8 @@ public abstract class BellTileEntityMixin extends BlockEntity  implements IBellC
     }
 
     @Override
-    public void load(BlockState state, CompoundTag compound) {
-        super.load(state, compound);
+    public void load(CompoundTag compound) {
+        super.load(compound);
         try {
             if(compound.contains("Connection"))
                 this.connection = BellConnection.values()[compound.getInt("Connection")];
@@ -67,7 +66,7 @@ public abstract class BellTileEntityMixin extends BlockEntity  implements IBellC
 
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        this.load(this.getBlockState(), pkt.getTag());
+        this.load(pkt.getTag());
     }
 
     @Override

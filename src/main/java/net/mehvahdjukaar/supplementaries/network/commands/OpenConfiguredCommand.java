@@ -10,11 +10,12 @@ import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.OpenConfigsPacket;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.fml.ExtensionPoint;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.network.PacketDistributor;
+import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 public class OpenConfiguredCommand implements Command<CommandSourceStack> {
     private static final OpenConfiguredCommand CMD = new OpenConfiguredCommand();
@@ -27,15 +28,14 @@ public class OpenConfiguredCommand implements Command<CommandSourceStack> {
 
     @Override
     public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-        if(ModList.get().getModContainerById(Supplementaries.MOD_ID).get()
+        if (ModList.get().getModContainerById(Supplementaries.MOD_ID).get()
                 .getCustomExtension(ExtensionPoint.CONFIGGUIFACTORY).isPresent()) {
 
-            if(context.getSource().getEntity() instanceof ServerPlayer){
+            if (context.getSource().getEntity() instanceof ServerPlayer) {
                 NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() ->
-                                (ServerPlayer) context.getSource().getEntity()), new OpenConfigsPacket());
+                        (ServerPlayer) context.getSource().getEntity()), new OpenConfigsPacket());
             }
-        }
-        else {
+        } else {
             context.getSource().sendSuccess(new TranslatableComponent("message.supplementaries.command.configs"), false);
         }
         return 0;

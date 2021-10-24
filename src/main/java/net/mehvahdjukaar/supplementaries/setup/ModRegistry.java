@@ -5,7 +5,6 @@ import net.mehvahdjukaar.supplementaries.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.block.tiles.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.BlackboardItemRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.CageItemRenderer;
-import net.mehvahdjukaar.supplementaries.client.renderers.items.FireflyJarItemRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.JarItemRenderer;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.CompatObjects;
@@ -18,27 +17,27 @@ import net.mehvahdjukaar.supplementaries.items.crafting.*;
 import net.mehvahdjukaar.supplementaries.items.enchantment.StasisEnchantment;
 import net.mehvahdjukaar.supplementaries.items.tabs.JarTab;
 import net.mehvahdjukaar.supplementaries.items.tabs.SupplementariesTab;
-import net.minecraft.block.*;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentCategory;
-import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.decoration.Motive;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.item.*;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.SimpleRecipeSerializer;
-import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraftforge.common.ToolType;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.decoration.Motive;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.SimpleRecipeSerializer;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentCategory;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
@@ -53,24 +52,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemNameBlockItem;
-import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.RecordItem;
-import net.minecraft.world.item.SpawnEggItem;
-import net.minecraft.world.item.StandingAndWallBlockItem;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.FlowerPotBlock;
-import net.minecraft.world.level.block.RotatedPillarBlock;
-import net.minecraft.world.level.block.SlabBlock;
-import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "ConstantConditions"})
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModRegistry {
 
@@ -232,14 +214,6 @@ public class ModRegistry {
             new SpawnEggItem(RED_MERCHANT_TYPE_RAW, 0x7A090F, 0xF4f1e0,
                     new Item.Properties().tab(tab ? MOD_TAB : null)));
 
-    //label
-    public static final String LABEL_NAME = "label";
-    public static final RegistryObject<EntityType<LabelEntity>> LABEL = ENTITIES.register(LABEL_NAME, () -> (
-            EntityType.Builder.<LabelEntity>of(LabelEntity::new, MobCategory.MISC)
-                    .setCustomClientFactory(LabelEntity::new)
-                    .sized(0.5F, 0.5F).clientTrackingRange(10).updateInterval(10))
-            .build(LABEL_NAME));
-
     //firefly
     public static final String FIREFLY_NAME = "firefly";
     private static final EntityType<FireflyEntity> FIREFLY_TYPE_RAW = (EntityType.Builder.of(FireflyEntity::new, MobCategory.AMBIENT)
@@ -292,41 +266,6 @@ public class ModRegistry {
     public static final RegistryObject<Item> ROPE_ARROW_ITEM = ITEMS.register(ROPE_ARROW_NAME, () -> new RopeArrowItem(
             new Item.Properties().tab(getTab(CreativeModeTab.TAB_MISC, ROPE_ARROW_NAME)).defaultDurability(24).setNoRepair()));
 
-    //amethyst arrow
-    public static final String AMETHYST_ARROW_NAME = "amethyst_arrow";
-    public static final RegistryObject<EntityType<AmethystArrowEntity>> AMETHYST_ARROW = ENTITIES.register(AMETHYST_ARROW_NAME, () -> (
-            EntityType.Builder.<AmethystArrowEntity>of(AmethystArrowEntity::new, MobCategory.MISC)
-                    .setCustomClientFactory(AmethystArrowEntity::new)
-                    .sized(0.5F, 0.5F)
-                    .clientTrackingRange(4)
-                    .updateInterval(20))
-            .build(AMETHYST_ARROW_NAME));
-    public static final RegistryObject<Item> AMETHYST_ARROW_ITEM = ITEMS.register(AMETHYST_ARROW_NAME, () -> new AmethystArrowItem(
-            new Item.Properties().tab(getTab(CreativeModeTab.TAB_COMBAT, AMETHYST_ARROW_NAME))));
-
-    public static final String AMETHYST_SHARD_NAME = "amethyst_shard";
-    public static final RegistryObject<EntityType<ShardProjectileEntity>> AMETHYST_SHARD = ENTITIES.register(AMETHYST_SHARD_NAME, () -> (
-            EntityType.Builder.<ShardProjectileEntity>of(ShardProjectileEntity::new, MobCategory.MISC)
-                    .setCustomClientFactory(ShardProjectileEntity::new)
-                    .sized(0.5F, 0.5F)
-                    .clientTrackingRange(4)
-                    .updateInterval(20))
-            .build(AMETHYST_SHARD_NAME));
-    public static final RegistryObject<Item> AMETHYST_SHARD_ITEM = ITEMS.register(AMETHYST_SHARD_NAME, () ->
-            new Item(new Item.Properties().tab(null)));
-
-
-    public static final String FLINT_SHARD_NAME = "flint_shard";
-    public static final RegistryObject<EntityType<ShardProjectileEntity>> FLINT_SHARD = ENTITIES.register(FLINT_SHARD_NAME, () -> (
-            EntityType.Builder.<ShardProjectileEntity>of(ShardProjectileEntity::new, MobCategory.MISC)
-                    .setCustomClientFactory(ShardProjectileEntity::new)
-                    .sized(0.5F, 0.5F)
-                    .clientTrackingRange(4)
-                    .updateInterval(20))//.size(0.25F, 0.25F).trackingRange(4).updateInterval(10))
-            .build(FLINT_SHARD_NAME));
-    public static final RegistryObject<Item> FLINT_SHARD_ITEM = ITEMS.register(FLINT_SHARD_NAME, () ->
-            new Item(new Item.Properties().tab(null)));
-
     //slingshot projectile
     public static final String SLINGSHOT_PROJECTILE_NAME = "slingshot_projectile";
     public static final RegistryObject<EntityType<SlingshotProjectileEntity>> SLINGSHOT_PROJECTILE = ENTITIES.register(SLINGSHOT_PROJECTILE_NAME, () -> (
@@ -348,6 +287,7 @@ public class ModRegistry {
 
     //variants:
 
+    //TODO: datagen signs tags
     //hanging signs
     public static final String HANGING_SIGN_NAME = "hanging_sign";
     public static final Map<IWoodType, RegistryObject<Block>> HANGING_SIGNS = Variants.makeHangingSingsBlocks();
@@ -364,7 +304,6 @@ public class ModRegistry {
             BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.COLOR_BROWN)
                     .strength(2f, 3f)
                     .sound(SoundType.WOOD)
-                    .harvestTool(ToolType.AXE)
                     .noOcclusion()
     ));
     public static final RegistryObject<BlockEntityType<SignPostBlockTile>> SIGN_POST_TILE = TILES.register(SIGN_POST_NAME, () -> BlockEntityType.Builder.of(
@@ -432,7 +371,6 @@ public class ModRegistry {
             BlockBehaviour.Properties.of(Material.STONE, MaterialColor.TERRACOTTA_RED)
                     .strength(2f, 6f)
                     .requiresCorrectToolForDrops()
-                    .harvestTool(ToolType.PICKAXE)
     ));
     public static final RegistryObject<Item> PLANTER_ITEM = regBlockItem(PLANTER, getTab(CreativeModeTab.TAB_DECORATIONS, PLANTER_NAME));
 
@@ -461,7 +399,6 @@ public class ModRegistry {
     public static final String SAFE_NAME = "safe";
     public static final RegistryObject<Block> SAFE = BLOCKS.register(SAFE_NAME, () -> new SafeBlock(
             BlockBehaviour.Properties.copy(Blocks.NETHERITE_BLOCK)
-                    .harvestLevel(3)
     ));
     public static final RegistryObject<BlockEntityType<SafeBlockTile>> SAFE_TILE = TILES.register(SAFE_NAME, () -> BlockEntityType.Builder.of(
             SafeBlockTile::new, SAFE.get()).build(null));
@@ -474,7 +411,6 @@ public class ModRegistry {
             BlockBehaviour.Properties.of(Material.METAL, MaterialColor.METAL)
                     .strength(3f, 6f)
                     .sound(SoundType.METAL)
-                    .harvestTool(ToolType.PICKAXE)
     ));
     public static final RegistryObject<BlockEntityType<CageBlockTile>> CAGE_TILE = TILES.register(CAGE_NAME, () -> BlockEntityType.Builder.of(
             CageBlockTile::new, CAGE.get()).build(null));
@@ -531,7 +467,6 @@ public class ModRegistry {
     public static final RegistryObject<Block> BLACKBOARD = BLOCKS.register(BLACKBOARD_NAME, () -> new BlackboardBlock(
             BlockBehaviour.Properties.of(Material.METAL, MaterialColor.METAL)
                     .strength(2, 3)
-                    .harvestTool(ToolType.PICKAXE)
     ));
     public static final RegistryObject<BlockEntityType<BlackboardBlockTile>> BLACKBOARD_TILE = TILES.register(BLACKBOARD_NAME, () -> BlockEntityType.Builder.of(
             BlackboardBlockTile::new, BLACKBOARD.get()).build(null));
@@ -544,9 +479,7 @@ public class ModRegistry {
             BlockBehaviour.Properties.of(Material.METAL, MaterialColor.TERRACOTTA_ORANGE)
                     .sound(SoundType.METAL)
                     .strength(2, 4)
-                    .harvestTool(ToolType.PICKAXE)
                     .requiresCorrectToolForDrops()
-                    .harvestLevel(1)
     ));
     public static final RegistryObject<BlockEntityType<GlobeBlockTile>> GLOBE_TILE = TILES.register(GLOBE_NAME, () -> BlockEntityType.Builder.of(
             GlobeBlockTile::new, GLOBE.get()).build(null));
@@ -561,9 +494,6 @@ public class ModRegistry {
                     .sound(SoundType.METAL)
                     .noOcclusion()
                     .lightLevel((state) -> state.getValue(BlockStateProperties.LIT) ? 14 : 0)
-                    .requiresCorrectToolForDrops()
-                    .harvestTool(ToolType.PICKAXE)
-                    .harvestLevel(1)
     ));
     public static final RegistryObject<Item> CANDELABRA_ITEM = regBlockItem(CANDELABRA, getTab(CreativeModeTab.TAB_DECORATIONS, CANDELABRA_NAME));
 
@@ -575,9 +505,6 @@ public class ModRegistry {
                     .sound(SoundType.METAL)
                     .noOcclusion()
                     .lightLevel((state) -> state.getValue(BlockStateProperties.LIT) ? 14 : 0)
-                    .requiresCorrectToolForDrops()
-                    .harvestTool(ToolType.PICKAXE)
-                    .harvestLevel(1)
     ));
     public static final RegistryObject<Item> CANDELABRA_ITEM_SILVER = regBlockItem(CANDELABRA_SILVER, getTab(CreativeModeTab.TAB_DECORATIONS, CANDELABRA_NAME_SILVER));
 
@@ -713,7 +640,6 @@ public class ModRegistry {
     public static final RegistryObject<Block> BAMBOO_SPIKES = BLOCKS.register(BAMBOO_SPIKES_NAME, () -> new BambooSpikesBlock(
             BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.SAND)
                     .sound(SoundType.SCAFFOLDING)
-                    .harvestTool(ToolType.AXE)
                     .isRedstoneConductor((a, b, c) -> false)
                     .strength(2)
                     .noOcclusion()));
@@ -744,9 +670,7 @@ public class ModRegistry {
             BlockBehaviour.Properties.of(Material.METAL, MaterialColor.GOLD)
                     .sound(SoundType.METAL)
                     .strength(2, 4)
-                    .harvestTool(ToolType.PICKAXE)
                     .requiresCorrectToolForDrops()
-                    .harvestLevel(1)
     ));
     public static final RegistryObject<BlockEntityType<HourGlassBlockTile>> HOURGLASS_TILE = TILES.register(HOURGLASS_NAME, () -> BlockEntityType.Builder.of(
             HourGlassBlockTile::new, HOURGLASS.get()).build(null));
@@ -760,7 +684,6 @@ public class ModRegistry {
                     .strength(0.75f, 0.1f)
                     .noOcclusion()
                     .noCollission()
-                    .harvestTool(ToolType.AXE)
     ));
     public static final RegistryObject<BlockEntityType<ItemShelfBlockTile>> ITEM_SHELF_TILE = TILES.register(ITEM_SHELF_NAME, () -> BlockEntityType.Builder.of(
             ItemShelfBlockTile::new, ITEM_SHELF.get()).build(null));
@@ -806,8 +729,6 @@ public class ModRegistry {
                     .strength(3f, 6f)
                     .sound(SoundType.METAL)
                     .requiresCorrectToolForDrops()
-                    .harvestTool(ToolType.PICKAXE)
-                    .harvestLevel(1)
     ));
     public static final RegistryObject<Item> COG_BLOCK_ITEM = regBlockItem(COG_BLOCK, getTab(CreativeModeTab.TAB_REDSTONE, COG_BLOCK_NAME));
 
@@ -816,9 +737,7 @@ public class ModRegistry {
     public static final RegistryObject<Block> SPRING_LAUNCHER = BLOCKS.register(SPRING_LAUNCHER_NAME, () -> new SpringLauncherBlock(
             BlockBehaviour.Properties.of(Material.METAL, MaterialColor.METAL)
                     .strength(4f, 5f)
-                    .harvestLevel(1)
                     .sound(SoundType.METAL)
-                    .harvestTool(ToolType.PICKAXE)
                     .requiresCorrectToolForDrops()
                     .isRedstoneConductor((state, reader, pos) -> !state.getValue(SpringLauncherBlock.EXTENDED))
                     .isSuffocating((state, reader, pos) -> !state.getValue(SpringLauncherBlock.EXTENDED))
@@ -830,9 +749,7 @@ public class ModRegistry {
     public static final RegistryObject<Block> SPRING_LAUNCHER_HEAD = BLOCKS.register(PISTON_LAUNCHER_HEAD_NAME, () -> new SpringLauncherHeadBlock(
             BlockBehaviour.Properties.of(Material.METAL, MaterialColor.METAL)
                     .strength(4f, 5f)
-                    .harvestLevel(1)
                     .sound(SoundType.METAL)
-                    .harvestTool(ToolType.PICKAXE)
                     .noDrops()
                     .jumpFactor(1.18f)
     ));
@@ -840,9 +757,7 @@ public class ModRegistry {
     public static final RegistryObject<Block> SPRING_LAUNCHER_ARM = BLOCKS.register(PISTON_LAUNCHER_ARM_NAME, () -> new SpringLauncherArmBlock(
             BlockBehaviour.Properties.of(Material.METAL, MaterialColor.METAL)
                     .strength(50f, 50f)
-                    .harvestLevel(1)
                     .sound(SoundType.METAL)
-                    .harvestTool(ToolType.PICKAXE)
                     .noOcclusion()
                     .noDrops()
     ));
@@ -855,7 +770,6 @@ public class ModRegistry {
             BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.COLOR_BROWN)
                     .strength(1f, 2f)
                     .sound(SoundType.WOOD)
-                    .harvestTool(ToolType.AXE)
     ));
     public static final RegistryObject<BlockEntityType<?>> SPEAKER_BLOCK_TILE = TILES.register(SPEAKER_BLOCK_NAME, () -> BlockEntityType.Builder.of(
             SpeakerBlockTile::new, SPEAKER_BLOCK.get()).build(null));
@@ -869,7 +783,6 @@ public class ModRegistry {
             BlockBehaviour.Properties.of(Material.STONE, MaterialColor.STONE)
                     .strength(0.75f, 2f)
                     .sound(SoundType.STONE)
-                    .harvestTool(ToolType.PICKAXE)
     ));
     public static final RegistryObject<BlockEntityType<TurnTableBlockTile>> TURN_TABLE_TILE = TILES.register(TURN_TABLE_NAME, () -> BlockEntityType.Builder.of(
             TurnTableBlockTile::new, TURN_TABLE.get()).build(null));
@@ -913,7 +826,6 @@ public class ModRegistry {
             BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.COLOR_BROWN)
                     .strength(3f, 3f)
                     .sound(SoundType.WOOD)
-                    .harvestTool(ToolType.AXE)
                     .noOcclusion()
     ));
     public static final RegistryObject<BlockEntityType<BellowsBlockTile>> BELLOWS_TILE = TILES.register(BELLOWS_NAME, () -> BlockEntityType.Builder.of(
@@ -926,9 +838,7 @@ public class ModRegistry {
     public static final RegistryObject<Block> CLOCK_BLOCK = BLOCKS.register(CLOCK_BLOCK_NAME, () -> new ClockBlock(
             BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.COLOR_BROWN)
                     .strength(3f, 6f)
-                    .harvestLevel(0)
                     .sound(SoundType.WOOD)
-                    .harvestTool(ToolType.AXE)
                     .lightLevel((state) -> 1)
     ));
     public static final RegistryObject<BlockEntityType<ClockBlockTile>> CLOCK_BLOCK_TILE = TILES.register(CLOCK_BLOCK_NAME, () -> BlockEntityType.Builder.of(
@@ -948,7 +858,6 @@ public class ModRegistry {
     public static final RegistryObject<Block> CRANK = BLOCKS.register(CRANK_NAME, () -> new CrankBlock(
             BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.NONE)
                     .strength(0.6f, 0.6f)
-                    .harvestTool(ToolType.PICKAXE)
                     .noCollission()
                     .noOcclusion()
     ));
@@ -959,10 +868,8 @@ public class ModRegistry {
     public static final RegistryObject<Block> WIND_VANE = BLOCKS.register(WIND_VANE_NAME, () -> new WindVaneBlock(
             BlockBehaviour.Properties.of(Material.METAL, MaterialColor.METAL)
                     .strength(5f, 6f)
-                    .harvestLevel(1)
                     .requiresCorrectToolForDrops()
                     .sound(SoundType.METAL)
-                    .harvestTool(ToolType.PICKAXE)
                     .noOcclusion()
     ));
     public static final RegistryObject<BlockEntityType<WindVaneBlockTile>> WIND_VANE_TILE = TILES.register(WIND_VANE_NAME, () -> BlockEntityType.Builder.of(
@@ -975,9 +882,7 @@ public class ModRegistry {
     public static final RegistryObject<Block> FAUCET = BLOCKS.register(FAUCET_NAME, () -> new FaucetBlock(
             BlockBehaviour.Properties.of(Material.METAL, MaterialColor.METAL)
                     .strength(3f, 4.8f)
-                    .harvestLevel(1)
                     .sound(SoundType.METAL)
-                    .harvestTool(ToolType.PICKAXE)
                     .noOcclusion()
     ));
     public static final RegistryObject<BlockEntityType<FaucetBlockTile>> FAUCET_TILE = TILES.register(FAUCET_NAME, () -> BlockEntityType.Builder.of(
@@ -989,7 +894,6 @@ public class ModRegistry {
     public static final String GOLD_DOOR_NAME = "gold_door";
     public static final RegistryObject<Block> GOLD_DOOR = BLOCKS.register(GOLD_DOOR_NAME, () -> new GoldDoorBlock(
             BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK)
-                    .harvestLevel(2)
                     .noOcclusion()));
     public static final RegistryObject<Item> GOLD_DOOR_ITEM = regBlockItem(GOLD_DOOR, getTab(CreativeModeTab.TAB_REDSTONE, GOLD_DOOR_NAME));
 
@@ -998,7 +902,6 @@ public class ModRegistry {
     public static final RegistryObject<Block> GOLD_TRAPDOOR = BLOCKS.register(GOLD_TRAPDOOR_NAME, () -> new GoldTrapdoorBlock(
             BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK)
                     .noOcclusion()
-                    .harvestLevel(2)
                     .isValidSpawn((a, b, c, d) -> false)));
     public static final RegistryObject<Item> GOLD_TRAPDOOR_ITEM = regBlockItem(GOLD_TRAPDOOR, getTab(CreativeModeTab.TAB_REDSTONE, GOLD_TRAPDOOR_NAME));
 
@@ -1007,7 +910,6 @@ public class ModRegistry {
     public static final RegistryObject<Block> NETHERITE_DOOR = BLOCKS.register(NETHERITE_DOOR_NAME, () -> new NetheriteDoorBlock(
             BlockBehaviour.Properties.copy(Blocks.NETHERITE_BLOCK)
                     .noOcclusion()
-                    .harvestLevel(3)
     ));
     public static final RegistryObject<Item> NETHERITE_DOOR_ITEM = ITEMS.register(NETHERITE_DOOR_NAME, () -> new BlockItem(NETHERITE_DOOR.get(),
             (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_REDSTONE, NETHERITE_DOOR_NAME)).fireResistant()));
@@ -1018,7 +920,6 @@ public class ModRegistry {
             BlockBehaviour.Properties.copy(Blocks.NETHERITE_BLOCK)
                     .noOcclusion()
                     .isValidSpawn((a, b, c, d) -> false)
-                    .harvestLevel(3)
     ));
     public static final RegistryObject<Item> NETHERITE_TRAPDOOR_ITEM = ITEMS.register(NETHERITE_TRAPDOOR_NAME, () -> new BlockItem(NETHERITE_TRAPDOOR.get(),
             (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_REDSTONE, NETHERITE_TRAPDOOR_NAME)).fireResistant()));
@@ -1192,7 +1093,6 @@ public class ModRegistry {
     public static final RegistryObject<Block> BLAZE_ROD_BLOCK = BLOCKS.register(BLAZE_ROD_NAME, () -> new BlazeRodBlock(
             BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_YELLOW)
                     .strength(0.25F, 0F)
-                    .harvestTool(ToolType.PICKAXE)
                     .lightLevel(state -> 12)
                     .emissiveRendering((p, w, s) -> true)
                     .sound(SoundType.GILDED_BLACKSTONE))
@@ -1335,8 +1235,11 @@ public class ModRegistry {
     //flower box
     public static final String FLOWER_BOX_NAME = "flower_box";
     public static final RegistryObject<Block> FLOWER_BOX = BLOCKS.register(FLOWER_BOX_NAME, () -> new FlowerBoxBlock(
-            BlockBehaviour.Properties.of(Material.WOOD).strength(0.5F).sound(SoundType.WOOD).harvestTool(ToolType.AXE))
+            BlockBehaviour.Properties.of(Material.WOOD)
+                    .strength(0.5F)
+                    .sound(SoundType.WOOD))
     );
+
     public static final RegistryObject<Item> FLOWER_BOX_ITEM = regBlockItem(FLOWER_BOX, getTab(CreativeModeTab.TAB_DECORATIONS, FLOWER_BOX_NAME), 300);
 
     public static final RegistryObject<BlockEntityType<FlowerBoxBlockTile>> FLOWER_BOX_TILE = TILES.register(FLOWER_BOX_NAME, () -> BlockEntityType.Builder.of(

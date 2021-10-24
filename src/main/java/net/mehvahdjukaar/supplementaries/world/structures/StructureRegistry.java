@@ -6,28 +6,28 @@ import com.mojang.serialization.Codec;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.world.structures.processors.SignDataProcessor;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.Registry;
 import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.FlatLevelSource;
-import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
-import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.StructureSettings;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatureConfiguration;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.RegistryObject;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
+import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -35,8 +35,6 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import RegistryObject;
 
 public class StructureRegistry {
 
@@ -101,8 +99,7 @@ public class StructureRegistry {
     private static Method GETCODEC_METHOD;
 
     public static void addDimensionalSpacing(final WorldEvent.Load event) {
-        if (event.getWorld() instanceof ServerLevel) {
-            ServerLevel serverWorld = (ServerLevel) event.getWorld();
+        if (event.getWorld() instanceof ServerLevel serverWorld) {
 
             /*
              * Skip Terraforged's chunk generator as they are a special case of a mod locking down their chunkgenerator.
@@ -137,15 +134,15 @@ public class StructureRegistry {
             boolean isVillageDimension = false;
 
             //TODO: might be a bug here with .canGenerateStructure
-            try{
+            try {
                 BiomeSource provider = serverWorld.getChunkSource().generator.getBiomeSource();
                 List<Biome> biomes = provider.possibleBiomes();
-                if(biomes.contains(null)){
+                if (biomes.contains(null)) {
                     Supplementaries.LOGGER.throwing(new Exception("something went wrong: found a null biome in the biome provider"));
                 }
 
                 isVillageDimension = provider.canGenerateStructure(StructureFeature.VILLAGE);
-            }catch (Exception ignored){
+            } catch (Exception ignored) {
                 Supplementaries.LOGGER.throwing(new Exception("failed to add structure to biomes: something went wrong, might be some other mod bug"));
             }
 

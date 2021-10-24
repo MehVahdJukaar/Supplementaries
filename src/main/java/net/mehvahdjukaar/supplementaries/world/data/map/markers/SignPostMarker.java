@@ -4,7 +4,6 @@ import net.mehvahdjukaar.selene.map.CustomDecoration;
 import net.mehvahdjukaar.selene.map.markers.NamedMapWorldMarker;
 import net.mehvahdjukaar.supplementaries.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.world.data.map.CMDreg;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -26,16 +25,14 @@ public class SignPostMarker extends NamedMapWorldMarker<CustomDecoration> {
     }
 
     @Nullable
-    public static SignPostMarker getFromWorld(BlockGetter world, BlockPos pos){
-        BlockEntity tileentity = world.getBlockEntity(pos);
-        if (tileentity instanceof SignPostBlockTile) {
-            SignPostBlockTile te = ((SignPostBlockTile) tileentity);
+    public static SignPostMarker getFromWorld(BlockGetter world, BlockPos pos) {
+        if (world.getBlockEntity(pos) instanceof SignPostBlockTile tile) {
             Component t = new TextComponent("");
-            if(te.up)t=te.textHolder.signText[0];
-            if(te.down && t.getString().isEmpty())
-                t=te.textHolder.signText[1];
-            if(t.getString().isEmpty())t=null;
-            return new SignPostMarker(pos,t);
+            if (tile.up) t = tile.textHolder.signText[0];
+            if (tile.down && t.getString().isEmpty())
+                t = tile.textHolder.signText[1];
+            if (t.getString().isEmpty()) t = null;
+            return new SignPostMarker(pos, t);
         } else {
             return null;
         }
@@ -44,7 +41,7 @@ public class SignPostMarker extends NamedMapWorldMarker<CustomDecoration> {
     @Nullable
     @Override
     public CustomDecoration doCreateDecoration(byte mapX, byte mapY, byte rot) {
-        return new CustomDecoration(this.getType(),mapX,mapY,rot,name);
+        return new CustomDecoration(this.getType(), mapX, mapY, rot, name);
     }
 
 }

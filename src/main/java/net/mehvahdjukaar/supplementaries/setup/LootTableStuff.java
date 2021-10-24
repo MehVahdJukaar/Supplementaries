@@ -3,29 +3,27 @@ package net.mehvahdjukaar.supplementaries.setup;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.minecraft.world.item.enchantment.EnchantmentInstance;
+import net.minecraft.Util;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.Items;
-import net.minecraft.loot.*;
-import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
+import net.minecraft.world.item.enchantment.EnchantmentInstance;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.functions.SetItemDamageFunction;
 import net.minecraft.world.level.storage.loot.functions.SetNbtFunction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.Util;
+import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.minecraftforge.event.LootTableLoadEvent;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.regex.Pattern;
-
-import net.minecraft.world.level.storage.loot.BuiltInLootTables;
-import net.minecraft.world.level.storage.loot.ConstantIntValue;
-import net.minecraft.world.level.storage.loot.LootPool;
-import net.minecraft.world.level.storage.loot.RandomValueBounds;
-import net.minecraft.world.level.storage.loot.entries.LootItem;
 
 public class LootTableStuff {
 
@@ -146,7 +144,7 @@ public class LootTableStuff {
             float chance = (float) ServerConfigs.cached.GLOBE_TREASURE_CHANCE;
             LootPool pool = LootPool.lootPool()
                     .name("supplementaries_injected_globe")
-                    .setRolls(ConstantIntValue.exactly(1))
+                    .setRolls(ConstantValue.exactly(1))
                     .when(LootItemRandomChanceCondition.randomChance(chance))
                     .add(LootItem.lootTableItem(ModRegistry.GLOBE_ITEM.get()).setWeight(1))
                     .build();
@@ -160,8 +158,8 @@ public class LootTableStuff {
             float chance = 0.35f;
             LootPool pool = LootPool.lootPool()
                     .name("supplementaries_injected_rope")
-                    .apply(SetItemCountFunction.setCount(RandomValueBounds.between(5.0F, 17.0F)))
-                    .setRolls(ConstantIntValue.exactly(1))
+                    .apply(SetItemCountFunction.setCount(UniformGenerator.between(5.0F, 17.0F)))
+                    .setRolls(ConstantValue.exactly(1))
                     .when(LootItemRandomChanceCondition.randomChance(chance))
                     .add(LootItem.lootTableItem(ModRegistry.ROPE_ITEM.get()).setWeight(1))
                     .build();
@@ -187,8 +185,8 @@ public class LootTableStuff {
 
         LootPool pool = LootPool.lootPool()
                 .name("supplementaries_injected_flax")
-                .apply(SetItemCountFunction.setCount(RandomValueBounds.between(min, max)))
-                .setRolls(ConstantIntValue.exactly(1))
+                .apply(SetItemCountFunction.setCount(UniformGenerator.between(min, max)))
+                .setRolls(ConstantValue.exactly(1))
                 .when(LootItemRandomChanceCondition.randomChance(chance))
                 .add(LootItem.lootTableItem(ModRegistry.FLAX_SEEDS_ITEM.get()).setWeight(1))
                 .build();
@@ -211,7 +209,7 @@ public class LootTableStuff {
 
         LootPool pool = LootPool.lootPool()
                 .name("supplementaries_injected_blue_bomb")
-                .setRolls(ConstantIntValue.exactly(1))
+                .setRolls(ConstantValue.exactly(1))
                 .when(LootItemRandomChanceCondition.randomChance(chance))
                 .add(LootItem.lootTableItem(ModRegistry.BOMB_BLUE_ITEM.get()).setWeight(1))
                 .build();
@@ -232,7 +230,7 @@ public class LootTableStuff {
         } else return;
         LootPool pool = LootPool.lootPool()
                 .name("supplementaries_injected_bomb")
-                .apply(SetItemCountFunction.setCount(RandomValueBounds.between(1F, 3.0F)))
+                .apply(SetItemCountFunction.setCount(UniformGenerator.between(1F, 3.0F)))
                 .when(LootItemRandomChanceCondition.randomChance(chance))
                 .add(LootItem.lootTableItem(ModRegistry.BOMB_ITEM.get()).setWeight(1))
                 .build();
@@ -245,14 +243,14 @@ public class LootTableStuff {
             float chance = 0.38f;
             LootPool pool = LootPool.lootPool()
                     .name("supplementaries_injected_spikes")
-                    .setRolls(ConstantIntValue.exactly(1))
+                    .setRolls(ConstantValue.exactly(1))
                     .when(LootItemRandomChanceCondition.randomChance(chance))
                     .add(LootItem.lootTableItem(ModRegistry.BAMBOO_SPIKES_ITEM.get()).setWeight(4))
                     .add(LootItem.lootTableItem(ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get()).setWeight(3)
                             .apply(SetNbtFunction.setTag(
                                     Util.make(new CompoundTag(), (c) -> c.putString("Potion", "minecraft:poison"))
                             ))
-                            .apply(SetItemDamageFunction.setDamage(RandomValueBounds.between(0.2F, 0.9F)))
+                            .apply(SetItemDamageFunction.setDamage(UniformGenerator.between(0.2F, 0.9F)))
                     )
                     .build();
             e.getTable().addPool(pool);
@@ -266,12 +264,12 @@ public class LootTableStuff {
 
             LootPool pool = LootPool.lootPool()
                     .name("supplementaries_injected_stasis")
-                    .setRolls(ConstantIntValue.exactly(1))
+                    .setRolls(ConstantValue.exactly(1))
                     .when(LootItemRandomChanceCondition.randomChance(chance))
                     .add(LootItem.lootTableItem(Items.ENCHANTED_BOOK)
                             .apply(SetNbtFunction.setTag(
                                     (EnchantedBookItem.createForEnchantment(new EnchantmentInstance(ModRegistry.STASIS_ENCHANTMENT.get(), 1)))
-                                    .getOrCreateTag()
+                                            .getOrCreateTag()
                             ))
                             .setWeight(1))
                     .build();

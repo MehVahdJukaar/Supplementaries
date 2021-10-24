@@ -12,7 +12,6 @@ public class FlagDecorationRenderer extends DecorationRenderer<FlagDecoration> {
 
     @Override
     public int getMapColor(FlagDecoration decoration) {
-
-        return decoration.getColor().getColorValue();
+        return decoration.getColorValue();
     }
 }

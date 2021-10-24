@@ -12,15 +12,15 @@ import net.minecraft.network.chat.TranslatableComponent;
 
 import java.util.Random;
 
-public class RollDiceCommand implements Command<CommandSourceStack> {
+public class IUsedToRollTheDice implements Command<CommandSourceStack> {
 
-    private static final RollDiceCommand CMD = new RollDiceCommand();
+    private static final IUsedToRollTheDice CMD = new IUsedToRollTheDice();
 
     public static ArgumentBuilder<CommandSourceStack, ?> register(CommandDispatcher<CommandSourceStack> dispatcher) {
         return Commands.literal("roll")
                 .requires(cs -> cs.hasPermission(0))
                 .then(Commands.argument("dice", IntegerArgumentType.integer(1))
-                    .executes(CMD));
+                        .executes(CMD));
     }
 
     @Override
@@ -29,7 +29,7 @@ public class RollDiceCommand implements Command<CommandSourceStack> {
         int dice = IntegerArgumentType.getInteger(context, "dice");
 
         int roll = r.nextInt(dice);
-        context.getSource().sendSuccess(new TranslatableComponent("message.supplementaries.command.dice",dice, roll), false);
+        context.getSource().sendSuccess(new TranslatableComponent("message.supplementaries.command.dice", dice, roll), false);
 
         return 0;
     }

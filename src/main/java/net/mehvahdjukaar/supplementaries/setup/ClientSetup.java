@@ -9,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManag
 import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.*;
+import net.mehvahdjukaar.supplementaries.client.renderers.items.CageItemRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.FlowerPotHandler;
@@ -27,8 +28,6 @@ import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
@@ -72,39 +71,11 @@ public class ClientSetup {
         //map markers
         CMDclient.init(event);
 
-        registerTileRenderers();
-
-        //projectiles
-        ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-
-        RenderingRegistry.registerEntityRenderingHandler(ModRegistry.BOMB.get(),
-                renderManager -> new ThrownItemRenderer<>(renderManager, itemRenderer));
-        RenderingRegistry.registerEntityRenderingHandler(ModRegistry.THROWABLE_BRICK.get(),
-                renderManager -> new ThrownItemRenderer<>(renderManager, itemRenderer));
-        RenderingRegistry.registerEntityRenderingHandler(ModRegistry.LABEL.get(),
-                renderManager -> new LabelEntityRenderer(renderManager, itemRenderer));
-
-        RenderingRegistry.registerEntityRenderingHandler(ModRegistry.AMETHYST_SHARD.get(),
-                ShardProjectileRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(ModRegistry.FLINT_SHARD.get(),
-                ShardProjectileRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(ModRegistry.SLINGSHOT_PROJECTILE.get(),
-                SlingshotProjectileRenderer::new);
-
-
         //dynamic textures
         GlobeTextureManager.init(Minecraft.getInstance().textureManager);
         BlackboardTextureManager.init(Minecraft.getInstance().textureManager);
 
-
-        //orange trader
-        RenderingRegistry.registerEntityRenderingHandler(ModRegistry.RED_MERCHANT_TYPE.get(), OrangeTraderEntityRenderer::new);
         MenuScreens.register(ModRegistry.RED_MERCHANT_CONTAINER.get(), OrangeMerchantGui::new);
-
-        //rope arrow
-        RenderingRegistry.registerEntityRenderingHandler(ModRegistry.ROPE_ARROW.get(), RopeArrowRenderer::new);
-        //amethyst arrow
-        RenderingRegistry.registerEntityRenderingHandler(ModRegistry.AMETHYST_ARROW.get(), AmethystArrowRenderer::new);
 
         //wind vane
         ItemBlockRenderTypes.setRenderLayer(ModRegistry.WIND_VANE.get(), RenderType.cutout());
@@ -156,8 +127,6 @@ public class ClientSetup {
         ItemBlockRenderTypes.setRenderLayer(ModRegistry.BRASS_LANTERN.get(), RenderType.cutout());
         //crimson lantern
         ItemBlockRenderTypes.setRenderLayer(ModRegistry.CRIMSON_LANTERN.get(), RenderType.cutout());
-        //doormat
-
         //hanging flower pot
         ItemBlockRenderTypes.setRenderLayer(ModRegistry.HANGING_FLOWER_POT.get(), RenderType.cutout());
         //gold door & trapdoor
@@ -207,7 +176,7 @@ public class ClientSetup {
                 new CrossbowProperty(ModRegistry.ROPE_ARROW_ITEM.get()));
 
         ItemProperties.register(ModRegistry.SLINGSHOT_ITEM.get(), new ResourceLocation("pull"),
-                (stack, world, entity) -> {
+                (stack, world, entity, s) -> {
                     if (entity == null || entity.getUseItem() != stack) {
                         return 0.0F;
                     } else {
@@ -215,34 +184,27 @@ public class ClientSetup {
                     }
                 });
         ItemProperties.register(ModRegistry.SLINGSHOT_ITEM.get(), new ResourceLocation("pulling"),
-                (stack, world, entity) -> entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1.0F : 0.0F);
+                (stack, world, entity, s) -> entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1.0F : 0.0F);
 
 
         ModRegistry.PRESENTS_ITEMS.values().forEach(i -> ItemProperties.register(i.get(), new ResourceLocation("packed"),
-                (stack, world, entity) -> PresentBlockTile.isPacked(stack) ? 1.0F : 1.0F));
+                (stack, world, entity, s) -> PresentBlockTile.isPacked(stack) ? 1.0F : 0F));
 
         ItemProperties.register(ModRegistry.CANDY_ITEM.get(), new ResourceLocation("wrapping"),
-                (stack, world, entity) -> CommonUtil.FESTIVITY.getCandyWrappingIndex());
+                (stack, world, entity, s) -> CommonUtil.FESTIVITY.getCandyWrappingIndex());
 
         //ItemModelsProperties.register(ModRegistry.SPEEDOMETER_ITEM.get(), new ResourceLocation("speed"),
         //       new SpeedometerItem.SpeedometerItemProperty());
     }
 
-    public static class CrossbowProperty implements ItemPropertyFunction {
-
-        private final Item projectile;
-
-        private CrossbowProperty(Item projectile) {
-            this.projectile = projectile;
-        }
+    public record CrossbowProperty(Item projectile) implements ItemPropertyFunction {
 
         @Override
-        public float call(ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity) {
+        public float call(ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity, int seed) {
             return entity != null && CrossbowItem.isCharged(stack)
                     && CrossbowItem.containsChargedProjectile(stack, projectile) ? 1.0F : 0.0F;
         }
     }
-
 
     //particles
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -262,6 +224,46 @@ public class ClientSetup {
         particleManager.register(ModRegistry.SLINGSHOT_PARTICLE.get(), SlingshotParticle.Factory::new);
         particleManager.register(ModRegistry.STASIS_PARTICLE.get(), StasisParticle.Factory::new);
         particleManager.register(ModRegistry.CONFETTI_PARTICLE.get(), ConfettiParticle.Factory::new);
+    }
+
+    @SubscribeEvent
+    public static void entityRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerEntityRenderer(ModRegistry.CAGE_ITEM.get(), CageItemRenderer::new);
+
+        //entities
+        event.registerEntityRenderer(ModRegistry.BOMB.get(), context -> new ThrownItemRenderer<>(context, 1, false));
+        event.registerEntityRenderer(ModRegistry.THROWABLE_BRICK.get(), context -> new ThrownItemRenderer<>(context, 1, false));
+        event.registerEntityRenderer(ModRegistry.SLINGSHOT_PROJECTILE.get(), SlingshotProjectileRenderer::new);
+        event.registerEntityRenderer(ModRegistry.RED_MERCHANT_TYPE.get(), OrangeTraderEntityRenderer::new);
+        event.registerEntityRenderer(ModRegistry.ROPE_ARROW.get(), RopeArrowRenderer::new);
+
+        //tiles
+        event.registerBlockEntityRenderer(ModRegistry.DOORMAT_TILE.get(), DoormatBlockTileRenderer::new);
+        event.registerBlockEntityRenderer(ModRegistry.CLOCK_BLOCK_TILE.get(), ClockBlockTileRenderer::new);
+        event.registerBlockEntityRenderer(ModRegistry.PEDESTAL_TILE.get(), PedestalBlockTileRenderer::new);
+        event.registerBlockEntityRenderer(ModRegistry.WIND_VANE_TILE.get(), WindVaneBlockTileRenderer::new);
+        event.registerBlockEntityRenderer(ModRegistry.NOTICE_BOARD_TILE.get(), NoticeBoardBlockTileRenderer::new);
+        event.registerBlockEntityRenderer(ModRegistry.JAR_TILE.get(), JarBlockTileRenderer::new);
+        event.registerBlockEntityRenderer(ModRegistry.FAUCET_TILE.get(), FaucetBlockTileRenderer::new);
+        event.registerBlockEntityRenderer(ModRegistry.SPRING_LAUNCHER_ARM_TILE.get(), SpringLauncherArmBlockTileRenderer::new);
+        event.registerBlockEntityRenderer(ModRegistry.SIGN_POST_TILE.get(), SignPostBlockTileRenderer::new);
+        event.registerBlockEntityRenderer(ModRegistry.HANGING_SIGN_TILE.get(), HangingSignBlockTileRenderer::new);
+        event.registerBlockEntityRenderer(ModRegistry.WALL_LANTERN_TILE.get(), WallLanternBlockTileRenderer::new);
+        event.registerBlockEntityRenderer(ModRegistry.BELLOWS_TILE.get(), BellowsBlockTileRenderer::new);
+        event.registerBlockEntityRenderer(ModRegistry.FLAG_TILE.get(), FlagBlockTileRenderer::new);
+        event.registerBlockEntityRenderer(ModRegistry.ITEM_SHELF_TILE.get(), ItemShelfBlockTileRenderer::new);
+        event.registerBlockEntityRenderer(ModRegistry.CAGE_TILE.get(), CageBlockTileRenderer::new);
+        event.registerBlockEntityRenderer(ModRegistry.GLOBE_TILE.get(), GlobeBlockTileRenderer::new);
+        event.registerBlockEntityRenderer(ModRegistry.HOURGLASS_TILE.get(), HourGlassBlockTileRenderer::new);
+        event.registerBlockEntityRenderer(ModRegistry.BLACKBOARD_TILE.get(), BlackboardBlockTileRenderer::new);
+        event.registerBlockEntityRenderer(ModRegistry.COPPER_LANTERN_TILE.get(), OilLanternBlockTileRenderer::new);
+        event.registerBlockEntityRenderer(ModRegistry.CRIMSON_LANTERN_TILE.get(), CrimsonLanternBlockTileRenderer::new);
+        event.registerBlockEntityRenderer(ModRegistry.HANGING_FLOWER_POT_TILE.get(), HangingFlowerPotBlockTileRenderer::new);
+        event.registerBlockEntityRenderer(ModRegistry.GOBLET_TILE.get(), GobletBlockTileRenderer::new);
+        event.registerBlockEntityRenderer(ModRegistry.CEILING_BANNER_TILE.get(), CeilingBannerBlockTileRenderer::new);
+        event.registerBlockEntityRenderer(ModRegistry.STATUE_TILE.get(), StatueBlockTileRenderer::new);
+        event.registerBlockEntityRenderer(ModRegistry.BOOK_PILE_TILE.get(), BookPileBlockTileRenderer::new);
+        event.registerBlockEntityRenderer(ModRegistry.JAR_BOAT_TILE.get(), JarBoatTileRenderer::new);
     }
 
     @SubscribeEvent
@@ -328,7 +330,6 @@ public class ClientSetup {
         //ModelLoaderRegistry.registerLoader(new ResourceLocation(Supplementaries.MOD_ID, "blackboard_loader"), new BlackboardBlockLoader());
 
         //fake models & blockstates
-        registerStaticBlockState(ModRegistry.LABEL.get().getRegistryName(), Blocks.AIR, "jar");
 
         registerStaticBlockState(Supplementaries.res("jar_boat_ship"), Blocks.AIR);
 
@@ -345,35 +346,6 @@ public class ClientSetup {
         mapCopy.put(name, builder.create(Block::defaultBlockState, BlockState::new));
 
         ModelBakery.STATIC_DEFINITIONS = mapCopy;
-    }
-
-    public static void registerTileRenderers() {
-        BlockEntityRenderers.register(ModRegistry.DOORMAT_TILE.get(), DoormatBlockTileRenderer::new);
-        BlockEntityRenderers.register(ModRegistry.CLOCK_BLOCK_TILE.get(), ClockBlockTileRenderer::new);
-        BlockEntityRenderers.register(ModRegistry.PEDESTAL_TILE.get(), PedestalBlockTileRenderer::new);
-        BlockEntityRenderers.register(ModRegistry.WIND_VANE_TILE.get(), WindVaneBlockTileRenderer::new);
-        BlockEntityRenderers.register(ModRegistry.NOTICE_BOARD_TILE.get(), NoticeBoardBlockTileRenderer::new);
-        BlockEntityRenderers.register(ModRegistry.JAR_TILE.get(), JarBlockTileRenderer::new);
-        BlockEntityRenderers.register(ModRegistry.FAUCET_TILE.get(), FaucetBlockTileRenderer::new);
-        BlockEntityRenderers.register(ModRegistry.SPRING_LAUNCHER_ARM_TILE.get(), SpringLauncherArmBlockTileRenderer::new);
-        BlockEntityRenderers.register(ModRegistry.SIGN_POST_TILE.get(), SignPostBlockTileRenderer::new);
-        BlockEntityRenderers.register(ModRegistry.HANGING_SIGN_TILE.get(), HangingSignBlockTileRenderer::new);
-        BlockEntityRenderers.register(ModRegistry.WALL_LANTERN_TILE.get(), WallLanternBlockTileRenderer::new);
-        BlockEntityRenderers.register(ModRegistry.BELLOWS_TILE.get(), BellowsBlockTileRenderer::new);
-        BlockEntityRenderers.register(ModRegistry.FLAG_TILE.get(), FlagBlockTileRenderer::new);
-        BlockEntityRenderers.register(ModRegistry.ITEM_SHELF_TILE.get(), ItemShelfBlockTileRenderer::new);
-        BlockEntityRenderers.register(ModRegistry.CAGE_TILE.get(), CageBlockTileRenderer::new);
-        BlockEntityRenderers.register(ModRegistry.GLOBE_TILE.get(), GlobeBlockTileRenderer::new);
-        BlockEntityRenderers.register(ModRegistry.HOURGLASS_TILE.get(), HourGlassBlockTileRenderer::new);
-        BlockEntityRenderers.register(ModRegistry.BLACKBOARD_TILE.get(), BlackboardBlockTileRenderer::new);
-        BlockEntityRenderers.register(ModRegistry.COPPER_LANTERN_TILE.get(), OilLanternBlockTileRenderer::new);
-        BlockEntityRenderers.register(ModRegistry.CRIMSON_LANTERN_TILE.get(), CrimsonLanternBlockTileRenderer::new);
-        BlockEntityRenderers.register(ModRegistry.HANGING_FLOWER_POT_TILE.get(), HangingFlowerPotBlockTileRenderer::new);
-        BlockEntityRenderers.register(ModRegistry.GOBLET_TILE.get(), GobletBlockTileRenderer::new);
-        BlockEntityRenderers.register(ModRegistry.CEILING_BANNER_TILE.get(), CeilingBannerBlockTileRenderer::new);
-        BlockEntityRenderers.register(ModRegistry.STATUE_TILE.get(), StatueBlockTileRenderer::new);
-        BlockEntityRenderers.register(ModRegistry.BOOK_PILE_TILE.get(), BookPileBlockTileRenderer::new);
-        BlockEntityRenderers.register(ModRegistry.JAR_BOAT_TILE.get(), JarBoatTileRenderer::new);
     }
 
 }

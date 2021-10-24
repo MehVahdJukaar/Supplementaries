@@ -3,40 +3,38 @@ package net.mehvahdjukaar.supplementaries.entities;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.events.ItemsOverrideHandler;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.item.*;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.level.Level;
-import net.minecraftforge.common.util.Lazy;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
-import net.minecraftforge.fml.network.FMLPlayMessages;
-import net.minecraftforge.fml.network.NetworkHooks;
-
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.util.Lazy;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.fmllegacy.common.registry.IEntityAdditionalSpawnData;
+import net.minecraftforge.fmllegacy.network.FMLPlayMessages;
+import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
 public class SlingshotProjectileEntity extends ImprovedProjectileEntity implements IEntityAdditionalSpawnData {
     private static final EntityDataAccessor<Byte> ID_LOYALTY = SynchedEntityData.defineId(SlingshotProjectileEntity.class, EntityDataSerializers.BYTE);
@@ -45,11 +43,11 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
     private float xRotInc;
     private float yRotInc;
     private float particleCooldown = 0;
-    public Lazy<Integer> light = Lazy.of(()->{
+    public Lazy<Integer> light = Lazy.of(() -> {
         Item item = this.getItem().getItem();
-        if(item instanceof BlockItem) {
+        if (item instanceof BlockItem) {
             Block b = ((BlockItem) item).getBlock();
-            return b.getBlock().getLightValue(b.defaultBlockState(), this.level, this.blockPosition());
+            return b.getLightEmission(b.defaultBlockState(), this.level, this.blockPosition());
         }
         return 0;
     });
@@ -58,16 +56,16 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
         super(ModRegistry.SLINGSHOT_PROJECTILE.get(), thrower, world);
         this.setItem(item);
         this.entityData.set(ID_LOYALTY, (byte) EnchantmentHelper.getLoyalty(throwerStack));
-        this.setNoGravity(EnchantmentHelper.getItemEnchantmentLevel(ModRegistry.STASIS_ENCHANTMENT.get(), throwerStack)!=0);
+        this.setNoGravity(EnchantmentHelper.getItemEnchantmentLevel(ModRegistry.STASIS_ENCHANTMENT.get(), throwerStack) != 0);
         this.maxAge = 500;
 
 
         this.yRotInc = (this.random.nextBoolean() ? 1 : -1) * (float) (4 * this.random.nextGaussian() + 7);
         this.xRotInc = (this.random.nextBoolean() ? 1 : -1) * (float) (4 * this.random.nextGaussian() + 7);
-        this.xRot = this.random.nextFloat() * 360;
-        this.yRot = this.random.nextFloat() * 360;
-        this.xRotO = this.xRot;
-        this.yRotO = this.yRot;
+        this.setXRot(this.random.nextFloat() * 360);
+        this.setYRot(this.random.nextFloat() * 360);
+        this.xRotO = this.getXRot();
+        this.yRotO = this.getYRot();
     }
 
     public SlingshotProjectileEntity(FMLPlayMessages.SpawnEntity spawnEntity, Level world) {
@@ -114,16 +112,14 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
     @Override
     protected void onHitEntity(EntityHitResult entityRayTraceResult) {
         super.onHitEntity(entityRayTraceResult);
-        Entity entity = entityRayTraceResult.getEntity();
-        if (entity instanceof EnderMan) {
-            EnderMan enderman = ((EnderMan) entity);
+        if (entityRayTraceResult.getEntity() instanceof EnderMan enderman) {
             Item item = this.getItem().getItem();
             if (item instanceof BlockItem) {
                 Block block = ((BlockItem) item).getBlock();
-                if (block.is(BlockTags.ENDERMAN_HOLDABLE) || ServerConfigs.cached.UNRESTRICTED_SLINGSHOT) {
+                if (BlockTags.ENDERMAN_HOLDABLE.contains(block) || ServerConfigs.cached.UNRESTRICTED_SLINGSHOT) {
                     if (enderman.getCarriedBlock() == null) {
                         enderman.setCarriedBlock(block.defaultBlockState());
-                        this.remove();
+                        this.remove(RemovalReason.DISCARDED);
                     }
                 }
             }
@@ -137,22 +133,22 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
         if (this.touchedGround) return;
         Entity owner = this.getOwner();
         boolean success = false;
-        if (owner instanceof Player && ((Player) owner).abilities.mayBuild) {
+        if (owner instanceof Player player && player.getAbilities().mayBuild) {
 
             ItemStack stack = this.getItem();
             Item item = stack.getItem();
             //block override. mimic forge event
-            PlayerInteractEvent.RightClickBlock blockPlaceEvent = new PlayerInteractEvent.RightClickBlock((Player) owner, InteractionHand.MAIN_HAND, hit.getBlockPos(), hit);
+            PlayerInteractEvent.RightClickBlock blockPlaceEvent = new PlayerInteractEvent.RightClickBlock(player, InteractionHand.MAIN_HAND, hit.getBlockPos(), hit);
             ItemsOverrideHandler.tryPerformOverride(blockPlaceEvent, stack, true);
 
             if (blockPlaceEvent.isCanceled() && blockPlaceEvent.getCancellationResult().consumesAction()) {
                 success = true;
             }
             if (!success && item instanceof BlockItem) {
-                BlockPlaceContext ctx = new BlockPlaceContext(this.level, (Player) owner, InteractionHand.MAIN_HAND, this.getItem(), hit);
+                BlockPlaceContext ctx = new BlockPlaceContext(this.level, player, InteractionHand.MAIN_HAND, this.getItem(), hit);
                 success = ((BlockItem) item).place(ctx).consumesAction();
             }
-            if (success) this.remove();
+            if (success) this.remove(RemovalReason.DISCARDED);
 
         }
     }
@@ -191,7 +187,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
     public void playerTouch(Player playerEntity) {
         if (this.isNoPhysics() || this.touchedGround) {
 
-            boolean success = playerEntity.abilities.instabuild || playerEntity.inventory.add(this.getItem());
+            boolean success = playerEntity.getAbilities().instabuild || playerEntity.getInventory().add(this.getItem());
 
             if (!this.level.isClientSide) {
                 if (!success) {
@@ -200,13 +196,13 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
             } else {
                 this.level.playLocalSound(this.getX(), this.getY(), this.getZ(), SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.2F, (this.random.nextFloat() - this.random.nextFloat()) * 1.4F + 2.0F, false);
             }
-            this.remove();
+            this.remove(RemovalReason.DISCARDED);
         }
     }
 
     @Override
     public boolean hasReachedEndOfLife() {
-        if(this.isNoGravity() && this.getDeltaMovement().lengthSqr() < 0.005) return true;
+        if (this.isNoGravity() && this.getDeltaMovement().lengthSqr() < 0.005) return true;
         return super.hasReachedEndOfLife() && !this.isNoPhysics();
     }
 
@@ -226,10 +222,10 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
     protected void updateRotation() {
 
         if (!this.isNoPhysics()) {
-            this.xRotO = this.xRot;
-            this.yRotO = this.yRot;
-            this.xRot += xRotInc;
-            this.yRot += yRotInc;
+            this.xRotO = this.getXRot();
+            this.yRotO = this.getYRot();
+            this.setXRot(this.getXRot() + xRotInc);
+            this.setYRot(this.getYRot() + yRotInc);
             this.particleCooldown++;
         } else {
             super.updateRotation();
@@ -241,9 +237,9 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
         if (!this.isNoPhysics()) {
             double d = this.getDeltaMovement().length();
             if (this.tickCount > 1 && d * this.tickCount > 1.5) {
-                if(this.isNoGravity()) {
+                if (this.isNoGravity()) {
 
-                    Vec3 rot = new Vec3(0.325,0,0).yRot(this.tickCount * 0.32f);
+                    Vec3 rot = new Vec3(0.325, 0, 0).yRot(this.tickCount * 0.32f);
 
                     Vec3 movement = this.getDeltaMovement();
                     Vec3 offset = changeBasis(movement, rot);
@@ -254,13 +250,12 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
 
                     movement = movement.scale(0.25);
                     this.level.addParticle(ModRegistry.STASIS_PARTICLE.get(), px, py, pz, movement.x, movement.y, movement.z);
-                }
-                else {
+                } else {
                     double interval = 4 / (d * 0.95 + 0.05);
                     if (this.particleCooldown > interval) {
                         this.particleCooldown -= interval;
                         double x = currentPos.x;
-                        double y = currentPos.y ;//+ this.getBbHeight() / 2d;
+                        double y = currentPos.y;//+ this.getBbHeight() / 2d;
                         double z = currentPos.z;
                         this.level.addParticle(ModRegistry.SLINGSHOT_PARTICLE.get(), x, y, z, 0, 0.01, 0);
                     }
@@ -269,7 +264,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
         }
     }
 
-    private Vec3 changeBasis(Vec3 dir, Vec3 rot){
+    private Vec3 changeBasis(Vec3 dir, Vec3 rot) {
         Vec3 y = dir.normalize();
         Vec3 x = new Vec3(y.y, y.z, y.x).normalize();
         Vec3 z = y.cross(x).normalize();
@@ -291,8 +286,8 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
         buffer.writeInt(id);
         buffer.writeFloat(this.xRotInc);
         buffer.writeFloat(this.yRotInc);
-        buffer.writeFloat(this.xRot);
-        buffer.writeFloat(this.yRot);
+        buffer.writeFloat(this.getXRot());
+        buffer.writeFloat(this.getYRot());
     }
 
     @Override
@@ -303,9 +298,9 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
         }
         this.xRotInc = buffer.readFloat();
         this.yRotInc = buffer.readFloat();
-        this.xRot = buffer.readFloat();
-        this.yRot = buffer.readFloat();
-        this.xRotO = this.xRot;
-        this.yRotO = this.yRot;
+        this.setXRot(buffer.readFloat());
+        this.setYRot(buffer.readFloat());
+        this.xRotO = this.getXRot();
+        this.yRotO = this.getYRot();
     }
 }

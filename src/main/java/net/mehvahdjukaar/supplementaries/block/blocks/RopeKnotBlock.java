@@ -5,14 +5,12 @@ import com.google.common.collect.ImmutableMap;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties.PostType;
 import net.mehvahdjukaar.supplementaries.block.tiles.RopeKnotBlockTile;
-import net.mehvahdjukaar.supplementaries.block.util.IBlockHolder;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.decorativeblocks.DecoBlocksCompatRegistry;
 import net.mehvahdjukaar.supplementaries.compat.quark.QuarkPlugin;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.Util;
-import net.minecraft.block.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
@@ -48,7 +46,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock, EntityBlock{
+public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock, EntityBlock {
 
     private final Map<BlockState, VoxelShape> SHAPES_MAP = new HashMap<>();
     private final Map<BlockState, VoxelShape> COLLISION_SHAPES_MAP = new HashMap<>();
@@ -266,10 +264,9 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
     //TODO: fix this not updating mimic block
     @Override
     public BlockState rotate(BlockState state, Rotation rotation) {
-        if(rotation == Rotation.CLOCKWISE_180){
+        if (rotation == Rotation.CLOCKWISE_180) {
             return state;
-        }
-        else{
+        } else {
             return switch (state.getValue(AXIS)) {
                 case X -> state.setValue(AXIS, Direction.Axis.Z);
                 case Z -> state.setValue(AXIS, Direction.Axis.X);

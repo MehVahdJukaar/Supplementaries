@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "supplementaries:flower_box",
+    "supplementaries:clock_block",
+    "supplementaries:pulley_block",
+    "supplementaries:lock_block",
+    "supplementaries:bellows",
+    "supplementaries:speaker_block",
+    "supplementaries:bamboo_spikes",
+    "supplementaries:bamboo_spikes_tipped",
+    "supplementaries:notice_board",
+    "supplementaries:sign_post"
+  ]
+}

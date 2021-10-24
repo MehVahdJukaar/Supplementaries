@@ -26,7 +26,7 @@ public class ChangeGlobeSeedCommand implements Command<CommandSourceStack> {
     @Override
     public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         GlobeData data = GlobeData.get(context.getSource().getLevel());
-        data.seed=rand.nextLong();
+        data.seed = rand.nextLong();
         data.updateData();
         data.syncData(context.getSource().getLevel());
         context.getSource().sendSuccess(new TranslatableComponent("message.supplementaries.command.globe_changed"), false);

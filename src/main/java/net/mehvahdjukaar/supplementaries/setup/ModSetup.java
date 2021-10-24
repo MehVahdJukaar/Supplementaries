@@ -25,6 +25,7 @@ import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.BasicTrade;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TagsUpdatedEvent;
@@ -55,8 +56,6 @@ public class ModSetup {
                 CMDreg.init(event);
 
                 Spawns.registerSpawningStuff();
-
-                CapabilitiesHandler.register();
 
                 ComposterBlock.COMPOSTABLES.put(ModRegistry.FLAX_SEEDS_ITEM.get(), 0.3F);
                 ComposterBlock.COMPOSTABLES.put(ModRegistry.FLAX_ITEM.get(), 0.65F);
@@ -126,6 +125,11 @@ public class ModSetup {
             DispenserStuff.registerBehaviors();
             ItemsOverrideHandler.registerOverrides();
         }
+    }
+
+    @SubscribeEvent
+    public static void registerCapabilities(RegisterCapabilitiesEvent event){
+        CapabilitiesHandler.register(event);
     }
 
     @SubscribeEvent

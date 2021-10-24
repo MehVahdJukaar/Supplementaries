@@ -6,18 +6,14 @@ import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.UpdateServerSpeakerBlockPacket;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.CommonComponents;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraftforge.fml.client.gui.widget.Slider;
-
-
-
-import Slider;
+import net.minecraftforge.fmlclient.gui.widget.Slider;
 
 public class SpeakerBlockGui extends Screen {
     private static final Component NARRATOR_TEXT = new TranslatableComponent("gui.supplementaries.speaker_block.chat_message");
@@ -33,6 +29,7 @@ public class SpeakerBlockGui extends Screen {
     private final String message;
     private Button modeBtn;
     private Slider volume;
+
     public SpeakerBlockGui(SpeakerBlockTile te) {
         super(new TranslatableComponent("gui.supplementaries.speaker_block.edit"));
         this.tileSpeaker = te;
@@ -67,13 +64,13 @@ public class SpeakerBlockGui extends Screen {
 
         int range = ServerConfigs.cached.SPEAKER_RANGE;
 
-        double v = this.tileSpeaker.volume*range;
-        this.volume = new Slider(this.width / 2 - 75 , this.height / 4 + 80, 150, 20, VOLUME_TEXT,DISTANCE_BLOCKS, 1,range,v,false,true,null ,null);
+        double v = this.tileSpeaker.volume * range;
+        this.volume = new Slider(this.width / 2 - 75, this.height / 4 + 80, 150, 20, VOLUME_TEXT, DISTANCE_BLOCKS, 1, range, v, false, true, null, null);
 
         this.addWidget(this.volume);
 
-        this.addButton(new Button(this.width / 2 - 100, this.height / 4 + 120, 200, 20, CommonComponents.GUI_DONE, (p_214266_1_) -> this.close()));
-        this.modeBtn = this.addButton(new Button(this.width / 2 - 75, this.height / 4 + 50, 150, 20, CHAT_TEXT, (p_214186_1_) -> {
+        this.addWidget(new Button(this.width / 2 - 100, this.height / 4 + 120, 200, 20, CommonComponents.GUI_DONE, (p_214266_1_) -> this.close()));
+        this.modeBtn = this.addWidget(new Button(this.width / 2 - 75, this.height / 4 + 50, 150, 20, CHAT_TEXT, (p_214186_1_) -> {
             this.toggleMode();
             this.updateMode();
         }));
@@ -85,7 +82,7 @@ public class SpeakerBlockGui extends Screen {
         };
         this.commandTextField.setValue(message);
         this.commandTextField.setMaxLength(32);
-        this.children.add(this.commandTextField);
+        this.addWidget(this.commandTextField);
         this.setInitialFocus(this.commandTextField);
         this.commandTextField.setFocus(true);
     }
@@ -95,7 +92,7 @@ public class SpeakerBlockGui extends Screen {
         this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
         this.tileSpeaker.message = this.commandTextField.getValue();
         this.tileSpeaker.narrator = this.narrator;
-        this.tileSpeaker.volume = this.volume.getValue()/this.volume.maxValue;
+        this.tileSpeaker.volume = this.volume.getValue() / this.volume.maxValue;
         //update server tile
         NetworkHandler.INSTANCE.sendToServer(new UpdateServerSpeakerBlockPacket(this.tileSpeaker.getBlockPos(), this.tileSpeaker.message, this.tileSpeaker.narrator, this.tileSpeaker.volume));
 
@@ -105,6 +102,7 @@ public class SpeakerBlockGui extends Screen {
         this.tileSpeaker.setChanged();
         this.minecraft.setScreen(null);
     }
+
     @Override
     public void onClose() {
         this.close();
@@ -123,13 +121,13 @@ public class SpeakerBlockGui extends Screen {
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if(button==0)
-            this.volume.onRelease(mouseX,mouseY);
+        if (button == 0)
+            this.volume.onRelease(mouseX, mouseY);
         return false;
     }
 
     @Override
-    public void render(PoseStack matrixStack,  int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(matrixStack);
         drawCenteredString(matrixStack, this.font, this.title, this.width / 2, 40, 16777215);
         this.volume.render(matrixStack, mouseX, mouseY, partialTicks);

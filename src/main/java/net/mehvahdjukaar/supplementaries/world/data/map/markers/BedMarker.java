@@ -40,9 +40,8 @@ public class BedMarker extends MapWorldMarker<CustomDecoration> {
 
     @Nullable
     public static BedMarker getFromWorld(BlockGetter world, BlockPos pos){
-        BlockEntity tileentity = world.getBlockEntity(pos);
-        if (tileentity instanceof BedBlockEntity) {
-            DyeColor dyecolor = ((BedBlock)tileentity.getBlockState().getBlock()).getColor();
+        if (world.getBlockEntity(pos) instanceof BedBlockEntity tile) {
+            DyeColor dyecolor = tile.getColor();
             return new BedMarker(pos,dyecolor);
         } else {
             return null;

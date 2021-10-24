@@ -86,15 +86,15 @@ public class HangingSignBlockTileRenderer implements BlockEntityRenderer<Hanging
 
                 //render map
                 if (item instanceof ComplexItem) {
-                    MapItemSavedData mapData = MapItem.getOrCreateSavedData(stack, tile.getLevel());
+                    MapItemSavedData mapData = MapItem.getSavedData(stack, tile.getLevel());
                     if (mapData != null) {
                         for (int v = 0; v < 2; v++) {
                             matrixStackIn.pushPose();
                             matrixStackIn.translate(0, 0, 0.0625 + 0.005);
                             matrixStackIn.scale(0.0068359375F, -0.0068359375F, -0.0068359375F);
                             matrixStackIn.translate(-64.0D, -64.0D, 0.0D);
-                            //matrixStackIn.translate(0.0D, 0.0D, -1.0D);
-                            mapRenderer.render(matrixStackIn, bufferIn, mapData, true, combinedLightIn);
+                            Integer integer = MapItem.getMapId(stack);
+                            mapRenderer.render(matrixStackIn, bufferIn, integer, mapData, true, combinedLightIn);
                             matrixStackIn.popPose();
 
                             matrixStackIn.mulPose(Const.Y180);

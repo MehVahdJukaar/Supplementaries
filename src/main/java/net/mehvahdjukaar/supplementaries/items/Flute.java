@@ -77,7 +77,7 @@ public class Flute extends Item {
 
             playerIn.getCooldowns().addCooldown(this, 20);
             stack.hurtAndBreak(1, playerIn, (en) -> en.broadcastBreakEvent(EquipmentSlot.MAINHAND));
-            worldIn.playSound(null, playerIn.blockPosition(), SoundEvents.NOTE_BLOCK_FLUTE, SoundSource.PLAYERS, 1f, 1.30f + random.nextFloat() * 0.3f);
+            worldIn.playSound(null, playerIn.blockPosition(), SoundEvents.NOTE_BLOCK_FLUTE, SoundSource.PLAYERS, 1f, 1.30f + worldIn.random.nextFloat() * 0.3f);
 
             return InteractionResultHolder.consume(stack);
         }
