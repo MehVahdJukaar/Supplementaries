@@ -220,7 +220,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
         hit.getEntity().hurt(DamageSource.thrown(this, this.getOwner()), 1);
         if (hit.getEntity() instanceof LargeFireball) {
             this.superCharged = true;
-            hit.getEntity().remove();
+            hit.getEntity().remove(RemovalReason.DISCARDED);
         }
     }
 
@@ -237,7 +237,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
         if (!this.level.isClientSide) {
             if (!this.active && entityIn.getInventory().add(this.getItemStack())) {
                 entityIn.take(this, 1);
-                this.remove();
+                this.remove(RemovalReason.DISCARDED);
             }
         }
     }
@@ -273,7 +273,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
             }
 
             //normal explosion
-            if (!this.removed) {
+            if (!this.isRemoved()) {
                 if (!this.blue || this.superCharged) {
                     this.reachedEndOfLife();
                 }
@@ -296,7 +296,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
             this.level.broadcastEntityEvent(this, (byte) 3);
         }
         this.level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.NETHERITE_BLOCK_BREAK, SoundSource.NEUTRAL, 1.5F, 1.5f);
-        this.remove();
+        this.remove(RemovalReason.DISCARDED);
     }
 
     private void createExplosion() {

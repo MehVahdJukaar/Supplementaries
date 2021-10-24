@@ -60,12 +60,12 @@ public class ConfiguredCustomScreen extends ConfigScreen {
         addIcon("pedestal", ModRegistry.PEDESTAL_ITEM.get());
         addIcon("wind vane", ModRegistry.WIND_VANE_ITEM.get());
         addIcon("pedestal", ModRegistry.PEDESTAL_ITEM.get());
-        addIcon("firefly", ModRegistry.FIREFLY_SPAWN_EGG_ITEM.get());
-        addIcon("firefly glow", ModRegistry.FIREFLY_SPAWN_EGG_ITEM.get());
+        //addIcon("firefly", ModRegistry.FIREFLY_SPAWN_EGG_ITEM.get());
+        //addIcon("firefly glow", ModRegistry.FIREFLY_SPAWN_EGG_ITEM.get());
         addIcon("bellows", ModRegistry.BELLOWS_ITEM.get());
         addIcon("blackboard", ModRegistry.BLACKBOARD_ITEM.get());
         addIcon("cage", ModRegistry.CAGE_ITEM.get());
-        addIcon("candle holder", ModRegistry.CANDLE_HOLDER_ITEM.get());
+        //addIcon("candle holder", ModRegistry.CANDLE_HOLDER_ITEM.get());
         addIcon("jar", ModRegistry.JAR_ITEM.get());
         addIcon("notice board", ModRegistry.NOTICE_BOARD_ITEM.get());
         addIcon("sack", ModRegistry.SACK_ITEM.get());

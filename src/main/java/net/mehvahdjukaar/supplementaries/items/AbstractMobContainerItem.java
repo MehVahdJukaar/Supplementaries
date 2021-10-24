@@ -18,6 +18,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.WaterAnimal;
+import net.minecraft.world.entity.monster.ZombifiedPiglin;
 import net.minecraft.world.entity.monster.piglin.Piglin;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
@@ -101,8 +102,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
     protected final boolean isEntityValid(Entity e, Player player) {
         if (!e.isAlive() || (e instanceof LivingEntity && ((LivingEntity) e).isDeadOrDying())) return false;
 
-        if (e instanceof TamableAnimal) {
-            TamableAnimal pet = ((TamableAnimal) e);
+        if (e instanceof TamableAnimal pet) {
             return !pet.isTame() || pet.isOwnedBy(player);
         }
         return true;
@@ -158,7 +158,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
             if (com.contains("BucketHolder")) {
                 ItemStack bucketStack = ItemStack.of(com.getCompound("BucketHolder").getCompound("Bucket"));
                 if (bucketStack.getItem() instanceof BucketItem) {
-                    ((BucketItem) bucketStack.getItem()).checkExtraContent(world, bucketStack, context.getClickedPos());
+                    ((BucketItem) bucketStack.getItem()).checkExtraContent(player, world, bucketStack, context.getClickedPos());
                     success = true;
                 }
             } else if (com.contains("MobHolder")) {
@@ -243,13 +243,15 @@ public abstract class AbstractMobContainerItem extends BlockItem {
         }
     }
 
-    private static List<Mob> getEntitiesInRange(Mob e) {
+    private static List<?> getEntitiesInRange(Mob e) {
         double d0 = e.getAttributeValue(Attributes.FOLLOW_RANGE);
         AABB aabb = AABB.unitCubeFromLowerCorner(e.position()).inflate(d0, 10.0D, d0);
-        return e.level.getLoadedEntitiesOfClass(e.getClass(), aabb);
+        return e.level.getEntitiesOfClass(e.getClass(), aabb, EntitySelector.NO_SPECTATORS);
     }
 
-    //1
+    /**
+     * interact with an entity to catch it
+     */
     public InteractionResult doInteract(ItemStack stack, Player player, Entity entity, InteractionHand hand) {
 
         if (this.isEntityValid(entity, player)) {
@@ -268,7 +270,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
 
                 Utils.swapItemNBT(player, hand, stack, this.captureEntityInItem(entity, stack, bucket));
 
-                entity.remove();
+                entity.remove(Entity.RemovalReason.DISCARDED);
                 return InteractionResult.CONSUME;
             }
         }

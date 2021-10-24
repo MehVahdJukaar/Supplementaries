@@ -37,10 +37,10 @@ import org.jetbrains.annotations.Nullable;
 import javax.annotation.Nonnull;
 
 public class ClockBlock extends WaterBlock implements EntityBlock {
-    protected static final VoxelShape SHAPE_NORTH = Shapes.box(1D, 0D, 1D, 0D, 1D, 0.0625D);
-    protected static final VoxelShape SHAPE_SOUTH = Shapes.box(0D, 0D, 0D, 1D, 1D, 0.9375D);
-    protected static final VoxelShape SHAPE_EAST = Shapes.box(0D, 0D, 1D, 0.9375D, 1D, 0D);
-    protected static final VoxelShape SHAPE_WEST = Shapes.box(1D, 0D, 0D, 0.0625D, 1D, 1D);
+    protected static final VoxelShape SHAPE_NORTH = Block.box(0, 0, 1, 16, 16, 16);
+    protected static final VoxelShape SHAPE_SOUTH = Block.box(0, 0, 0, 16, 16, 15);
+    protected static final VoxelShape SHAPE_EAST = Block.box(0, 0, 0, 15, 16, 16);
+    protected static final VoxelShape SHAPE_WEST = Block.box(1, 0, 0, 16, 16, 16);
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final IntegerProperty HOUR = BlockProperties.HOUR;

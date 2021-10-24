@@ -1,11 +1,11 @@
 package net.mehvahdjukaar.supplementaries.entities.goals;
 
 import net.mehvahdjukaar.supplementaries.entities.RedMerchantEntity;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.util.Mth;
 
 import java.util.EnumSet;
 
@@ -25,7 +25,6 @@ public class EquipAndRangeAttackGoal extends Goal {
     private final float attackRadiusSqr;
 
 
-
     public EquipAndRangeAttackGoal(RedMerchantEntity mob, double speed, int cooldown, int minInt, int maxInt, float range, ItemStack item) {
         this.mob = mob;
         this.cooldown = cooldown;
@@ -40,10 +39,9 @@ public class EquipAndRangeAttackGoal extends Goal {
     }
 
 
-
     @Override
     public boolean canUse() {
-        if(this.mob.attackCooldown > 0) return false;
+        if (this.mob.attackCooldown > 0) return false;
         LivingEntity livingentity = this.mob.getTarget();
         if (livingentity != null && livingentity.isAlive()) {
             this.target = livingentity;
@@ -75,14 +73,14 @@ public class EquipAndRangeAttackGoal extends Goal {
     @Override
     public void tick() {
         double d0 = this.mob.distanceToSqr(this.target.getX(), this.target.getY(), this.target.getZ());
-        boolean flag = this.mob.getSensing().canSee(this.target);
+        boolean flag = this.mob.getSensing().hasLineOfSight(this.target);
         if (flag) {
             ++this.seeTime;
         } else {
             this.seeTime = 0;
         }
 
-        if (!(d0 > (double)this.attackRadiusSqr) && this.seeTime >= 5) {
+        if (!(d0 > (double) this.attackRadiusSqr) && this.seeTime >= 5) {
             this.mob.getNavigation().stop();
         } else {
             this.mob.getNavigation().moveTo(this.target, this.speedModifier);
@@ -95,13 +93,13 @@ public class EquipAndRangeAttackGoal extends Goal {
                 return;
             }
 
-            float f = Mth.sqrt(d0) / this.attackRadius;
+            float f = Mth.sqrt((float) d0) / this.attackRadius;
             float lvt_5_1_ = Mth.clamp(f, 0.1F, 1.0F);
             this.mob.performRangedAttack(this.target, lvt_5_1_);
             this.attackTime = Mth.floor(f * (float) (this.attackIntervalMax - this.attackIntervalMin) + (float) this.attackIntervalMin);
             this.mob.attackCooldown = cooldown + mob.getRandom().nextInt(20);
         } else if (this.attackTime < 0) {
-            float f2 = Mth.sqrt(d0) / this.attackRadius;
+            float f2 = Mth.sqrt((float) d0) / this.attackRadius;
             this.attackTime = Mth.floor(f2 * (float) (this.attackIntervalMax - this.attackIntervalMin) + (float) this.attackIntervalMin);
         }
 

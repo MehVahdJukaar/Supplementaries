@@ -21,12 +21,6 @@ public class TintedJarItem extends JarItem {
                 CapturedMobsHelper.CATCHABLE_FISHES.contains(type.getRegistryName().toString());
     }
 
-    //prevents fireflies
-    @Override
-    public boolean isFirefly(Entity e) {
-        return false;
-    }
-
     @Override
     public boolean isBoat(Entity e) {
         return false;

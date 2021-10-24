@@ -80,10 +80,7 @@ public abstract class ImprovedProjectileEntity extends ThrowableItemProjectile {
     @Override
     public void tick() {
         //base tick stuff
-        if (!this.level.isClientSide) {
-            this.setSharedFlag(6, this.isGlowing());
-        }
-        this.baseTick();
+        //this.baseTick();
 
 
         //fixed vanilla arrow code. You're welcome
@@ -108,7 +105,7 @@ public abstract class ImprovedProjectileEntity extends ThrowableItemProjectile {
         BlockPos blockpos = this.blockPosition();
         BlockState blockstate = this.level.getBlockState(blockpos);
         //sets on ground
-        if (!blockstate.isAir(this.level, blockpos) && !noPhysics) {
+        if (!blockstate.isAir() && !noPhysics) {
             VoxelShape voxelshape = blockstate.getCollisionShape(this.level, blockpos);
             if (!voxelshape.isEmpty()) {
                 Vec3 vector3d1 = this.position();
@@ -179,43 +176,41 @@ public abstract class ImprovedProjectileEntity extends ThrowableItemProjectile {
             this.checkInsideBlocks();
 
             //calls on hit
-            if (!this.removed) {
+            if (!this.isRemoved()) {
                 //try hit entity
-                EntityHitResult entityraytraceresult = this.findHitEntity(pos, newPos);
-                if (entityraytraceresult != null) {
-                    raytraceresult = entityraytraceresult;
+                EntityHitResult hitEntity = this.findHitEntity(pos, newPos);
+                if (hitEntity != null) {
+                    raytraceresult = hitEntity;
                 }
 
-                if (raytraceresult != null) {
-                    HitResult.Type type = raytraceresult.getType();
-                    boolean portalHit = false;
-                    if (type == HitResult.Type.ENTITY) {
-                        Entity entity = ((EntityHitResult) raytraceresult).getEntity();
-                        Entity entity1 = this.getOwner();
-                        if (entity instanceof Player && entity1 instanceof Player && !((Player) entity1).canHarmPlayer((Player) entity)) {
-                            raytraceresult = null;
-                        }
-                    } else if (type == HitResult.Type.BLOCK) {
-                        //portals. done here and not in onBlockHit to prevent any further calls
-                        BlockPos hitPos = ((BlockHitResult) raytraceresult).getBlockPos();
-                        BlockState hitState = this.level.getBlockState(hitPos);
 
-                        if (hitState.is(Blocks.NETHER_PORTAL)) {
-                            this.handleInsidePortal(hitPos);
-                            portalHit = true;
-                        } else if (hitState.is(Blocks.END_GATEWAY)) {
-                            BlockEntity tileentity = this.level.getBlockEntity(hitPos);
-                            if (tileentity instanceof TheEndGatewayBlockEntity && TheEndGatewayBlockEntity.canEntityTeleport(this)) {
-                                ((TheEndGatewayBlockEntity) tileentity).teleportEntity(this);
-                            }
-                            portalHit = true;
-                        }
+                boolean portalHit = false;
+                if (raytraceresult instanceof EntityHitResult hit) {
+                    Entity entity = hit.getEntity();
+                    Entity entity1 = this.getOwner();
+                    if (entity instanceof Player && entity1 instanceof Player && !((Player) entity1).canHarmPlayer((Player) entity)) {
+                        raytraceresult = null;
                     }
+                } else if (raytraceresult instanceof BlockHitResult hit) {
+                    //portals. done here and not in onBlockHit to prevent any further calls
+                    BlockPos hitPos = hit.getBlockPos();
+                    BlockState hitState = this.level.getBlockState(hitPos);
 
-                    if (!portalHit && type != HitResult.Type.MISS && !noPhysics && !ForgeEventFactory.onProjectileImpact(this, raytraceresult)) {
-                        this.onHit(raytraceresult);
-                        this.hasImpulse = true;
+                    if (hitState.is(Blocks.NETHER_PORTAL)) {
+                        this.handleInsidePortal(hitPos);
+                        portalHit = true;
+                    } else if (hitState.is(Blocks.END_GATEWAY)) {
+                        BlockEntity blockEntity = this.level.getBlockEntity(hitPos);
+                        if (blockEntity instanceof TheEndGatewayBlockEntity tile && TheEndGatewayBlockEntity.canEntityTeleport(this)) {
+                            TheEndGatewayBlockEntity.teleportEntity(level, hitPos, hitState, this, tile);
+                        }
+                        portalHit = true;
                     }
+                }
+
+                if (!portalHit && raytraceresult != null && raytraceresult.getType() != HitResult.Type.MISS && !noPhysics && !ForgeEventFactory.onProjectileImpact(this, raytraceresult)) {
+                    this.onHit(raytraceresult);
+                    this.hasImpulse = true;
                 }
             }
         }
@@ -240,7 +235,7 @@ public abstract class ImprovedProjectileEntity extends ThrowableItemProjectile {
      * remove condition
      */
     public void reachedEndOfLife() {
-        this.remove();
+        this.remove(RemovalReason.DISCARDED);
     }
 
     @Nullable

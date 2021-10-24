@@ -17,6 +17,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.players.GameProfileCache;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -127,7 +128,7 @@ public class StatueBlockTile extends ItemDisplayTile {
             Item i = stack.getItem();
             if (CommonUtil.isSword(i)) return SWORD;
             if (CommonUtil.isTool(i)) return TOOL;
-            return (stack.is(ModTags.CANDLES) || i == ModRegistry.CANDLE_HOLDER_ITEM.get()) ? StatuePose.CANDLE : StatuePose.HOLDING;
+            return (stack.is(ItemTags.CANDLES)) ? StatuePose.CANDLE : StatuePose.HOLDING;
         }
     }
 }

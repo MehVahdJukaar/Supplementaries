@@ -14,7 +14,6 @@ import net.mehvahdjukaar.supplementaries.common.BlockItemUtils;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.entities.AmethystArrowEntity;
 import net.mehvahdjukaar.supplementaries.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.entities.RopeArrowEntity;
 import net.mehvahdjukaar.supplementaries.entities.ThrowableBrickEntity;
@@ -68,9 +67,9 @@ public class DispenserStuff {
             }
         }
         //firefly
-        if (RegistryConfigs.reg.FIREFLY_ENABLED.get()) {
-            DispenserHelper.registerSpawnEggBehavior(ModRegistry.FIREFLY_SPAWN_EGG_ITEM.get());
-        }
+       // if (RegistryConfigs.reg.FIREFLY_ENABLED.get()) {
+        //    DispenserHelper.registerSpawnEggBehavior(ModRegistry.FIREFLY_SPAWN_EGG_ITEM.get());
+       // }
         //bomb
         if (RegistryConfigs.reg.BOMB_ENABLED.get()) {
             DispenserBlock.registerBehavior(ModRegistry.BOMB_ITEM.get(), new BombsDispenserBehavior(false));
@@ -99,16 +98,6 @@ public class DispenserStuff {
                 }
             });
 
-        }
-        if (RegistryConfigs.reg.AMETHYST_ARROW_ENABLED.get()) {
-
-            DispenserBlock.registerBehavior(ModRegistry.AMETHYST_ARROW_ITEM.get(), new AbstractProjectileDispenseBehavior() {
-                protected Projectile getProjectile(Level world, Position pos, ItemStack stack) {
-                    AmethystArrowEntity arrow = new AmethystArrowEntity(world, pos.x(), pos.y(), pos.z());
-                    arrow.pickup = AbstractArrow.Pickup.DISALLOWED;
-                    return arrow;
-                }
-            });
         }
 
     }

@@ -50,7 +50,7 @@ public class BlockGeneratorBlockTile extends BlockEntity {
     private static final BlockState lantern = Blocks.LANTERN.defaultBlockState().setValue(LanternBlock.HANGING, true);
     private static final BlockState lanternDown = Blocks.LANTERN.defaultBlockState();
     private static final BlockState fence = Blocks.SPRUCE_FENCE.defaultBlockState();
-    private static final BlockState jar = ModRegistry.FIREFLY_JAR.get().defaultBlockState();
+    private static final BlockState jar = ModRegistry.JAR.get().defaultBlockState(); //TODO: replace with new firefly jar
     private static final BlockState slab = Blocks.SPRUCE_SLAB.defaultBlockState();
     private static final BlockState log = Blocks.STRIPPED_SPRUCE_LOG.defaultBlockState();
     private static final BlockState stoneSlab = Blocks.STONE_SLAB.defaultBlockState();

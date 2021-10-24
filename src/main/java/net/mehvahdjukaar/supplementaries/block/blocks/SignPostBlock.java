@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 
+import net.mehvahdjukaar.selene.map.ExpandedMapData;
 import net.mehvahdjukaar.supplementaries.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.client.gui.SignPostGui;
@@ -56,23 +57,22 @@ public class SignPostBlock extends FenceMimicBlock implements EntityBlock {
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
                                  BlockHitResult hit) {
+        ItemStack itemstack = player.getItemInHand(handIn);
+        Item item = itemstack.getItem();
+
+        //put post on map
+        if (item instanceof MapItem) {
+            if (!worldIn.isClientSide) {
+                if (MapItem.getSavedData(itemstack, worldIn) instanceof ExpandedMapData data) {
+                    data.toggleCustomDecoration(worldIn, pos);
+                }
+            }
+            return InteractionResult.sidedSuccess(worldIn.isClientSide);
+        }
+
         if (hit.getDirection().getAxis() == Direction.Axis.Y) return InteractionResult.PASS;
 
         if (worldIn.getBlockEntity(pos) instanceof SignPostBlockTile tile && tile.isAccessibleBy(player)) {
-            ItemStack itemstack = player.getItemInHand(handIn);
-            Item item = itemstack.getItem();
-
-            //put post on map
-            if (item instanceof MapItem) {
-                if (!worldIn.isClientSide) {
-                    MapItemSavedData data = MapItem.getOrCreateSavedData(itemstack, worldIn);
-                    if (data instanceof CustomDecorationHolder) {
-                        ((CustomDecorationHolder) data).toggleCustomDecoration(worldIn, pos);
-                    }
-                }
-                return InteractionResult.sidedSuccess(worldIn.isClientSide);
-            }
-
 
             boolean server = !worldIn.isClientSide();
             boolean emptyHand = itemstack.isEmpty();

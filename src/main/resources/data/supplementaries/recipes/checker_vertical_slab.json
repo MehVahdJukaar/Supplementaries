@@ -4,8 +4,8 @@
     {
       "conditions": [
         {
-          "flag": "checker_block",
-          "type": "supplementaries:flag"
+          "type": "supplementaries:flag",
+          "flag": "checker_block"
         },
         {
           "modid": "quark",
@@ -33,8 +33,8 @@
     {
       "conditions": [
         {
-          "flag": "checker_block",
-          "type": "supplementaries:flag"
+          "type": "supplementaries:flag",
+          "flag": "checker_block"
         },
         {
           "modid": "quark",

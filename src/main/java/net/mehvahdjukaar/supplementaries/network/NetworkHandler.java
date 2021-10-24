@@ -53,8 +53,8 @@ public class NetworkHandler {
         INSTANCE.registerMessage(nextID(), RequestConfigReloadPacket.class, RequestConfigReloadPacket::buffer,
                 RequestConfigReloadPacket::new, RequestConfigReloadPacket::handler);
 
-        INSTANCE.registerMessage(nextID(), PicklePacket.class, PicklePacket::buffer,
-                PicklePacket::new, PicklePacket::handler);
+        //INSTANCE.registerMessage(nextID(), PicklePacket.class, PicklePacket::buffer,
+       //         PicklePacket::new, PicklePacket::handler);
 
         INSTANCE.registerMessage(nextID(), SendOrangeTraderOffersPacket.class, SendOrangeTraderOffersPacket::buffer,
                 SendOrangeTraderOffersPacket::new, SendOrangeTraderOffersPacket::handler);

@@ -46,16 +46,6 @@ public class FeaturesHandler {
             }
         }
 
-        /*
-        event.getGeneration().getFeatures(GenerationStage.Decoration.SURFACE_STRUCTURES).add(() -> ROAD_SIGN.get()
-                .configured(IFeatureConfig.NONE)
-                .decorated(Features.Placements.HEIGHTMAP_SQUARE)
-                .range(256).chance(100)
-
-
-        );
-        */
-
     }
 
 

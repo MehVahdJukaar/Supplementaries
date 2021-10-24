@@ -37,12 +37,12 @@ import javax.annotation.Nullable;
 import java.util.Random;
 
 public class CrankBlock extends WaterBlock {
-    protected static final VoxelShape SHAPE_DOWN = Shapes.box(0.125D, 0.6875D, 0.875D, 0.875D, 1D, 0.125D);
-    protected static final VoxelShape SHAPE_UP = Shapes.box(0.125D, 0.3125D, 0.125D, 0.875D, 0D, 0.875D);
-    protected static final VoxelShape SHAPE_NORTH = Shapes.box(0.125D, 0.125D, 0.6875D, 0.875D, 0.875D, 1D);
-    protected static final VoxelShape SHAPE_SOUTH = Shapes.box(0.875D, 0.125D, 0.3125D, 0.125D, 0.875D, 0D);
-    protected static final VoxelShape SHAPE_EAST = Shapes.box(0.3125D, 0.125D, 0.125D, 0D, 0.875D, 0.875D);
-    protected static final VoxelShape SHAPE_WEST = Shapes.box(0.6875D, 0.125D, 0.875D, 1D, 0.875D, 0.125D);
+    protected static final VoxelShape SHAPE_DOWN = Shapes.box(2, 11, 2, 14, 16, 14);
+    protected static final VoxelShape SHAPE_UP = Shapes.box(2, 0, 2, 14, 5, 14);
+    protected static final VoxelShape SHAPE_NORTH = Shapes.box(2, 2, 11, 14, 14, 16);
+    protected static final VoxelShape SHAPE_SOUTH = Shapes.box(2, 2, 0, 14, 14, 5);
+    protected static final VoxelShape SHAPE_EAST = Shapes.box(0, 2, 2, 5, 14, 14);
+    protected static final VoxelShape SHAPE_WEST = Shapes.box(11, 2, 2, 16, 14, 14);
 
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final IntegerProperty POWER = BlockStateProperties.POWER;

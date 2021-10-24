@@ -1,6 +1,9 @@
 package net.mehvahdjukaar.supplementaries.items;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.FlagBlock;
+import net.mehvahdjukaar.supplementaries.client.renderers.items.BlackboardItemRenderer;
+import net.mehvahdjukaar.supplementaries.client.renderers.items.FlagItemRenderer;
+import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
@@ -14,13 +17,15 @@ import net.minecraft.world.level.block.entity.BannerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.IItemRenderProperties;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.Consumer;
 
-public class FlagItem extends BlockItem {
+public class FlagItem extends BurnableBlockItem {
     public FlagItem(Block block, Properties properties) {
-        super(block, properties);
+        super(block, properties, 300);
     }
 
     public DyeColor getColor() {
@@ -32,6 +37,7 @@ public class FlagItem extends BlockItem {
         BannerItem.appendHoverTextFromBannerBlockEntityTag(stack, tooltip);
     }
 
+    /*
     @Override
     public InteractionResult useOn(UseOnContext context) {
         //cauldron code
@@ -63,9 +69,11 @@ public class FlagItem extends BlockItem {
         }
         return super.useOn(context);
     }
+     */
 
     @Override
-    public int getBurnTime(ItemStack itemStack) {
-        return 300;
+    public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+        ClientRegistry.registerISTER(consumer, FlagItemRenderer::new);
     }
+
 }

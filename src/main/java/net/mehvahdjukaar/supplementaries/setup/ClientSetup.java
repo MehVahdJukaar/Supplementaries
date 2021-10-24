@@ -107,8 +107,6 @@ public class ClientSetup {
         ItemBlockRenderTypes.setRenderLayer(ModRegistry.SCONCE_GLOW.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(ModRegistry.SCONCE_WALL_GREEN.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(ModRegistry.SCONCE_GREEN.get(), RenderType.cutout());
-        //candelabra
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.CANDELABRA.get(), RenderType.cutout());
         //item shelf
         ItemBlockRenderTypes.setRenderLayer(ModRegistry.ITEM_SHELF.get(), RenderType.cutout());
         //cage
@@ -162,7 +160,7 @@ public class ClientSetup {
         //gold gate
         ItemBlockRenderTypes.setRenderLayer(ModRegistry.GOLD_GATE.get(), RenderType.cutout());
         //present
-        MenuScreens.register(ModRegistry.PRESENT_BLOCK_CONTAINER.get(), PresentBlockGui.GUI_FACTORY);
+        //MenuScreens.register(ModRegistry.PRESENT_BLOCK_CONTAINER.get(), PresentBlockGui.GUI_FACTORY);
         //gunpowder
         ItemBlockRenderTypes.setRenderLayer(ModRegistry.GUNPOWDER_BLOCK.get(), RenderType.cutout());
         //rope knot
@@ -228,13 +226,11 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void entityRenderers(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerEntityRenderer(ModRegistry.CAGE_ITEM.get(), CageItemRenderer::new);
-
         //entities
         event.registerEntityRenderer(ModRegistry.BOMB.get(), context -> new ThrownItemRenderer<>(context, 1, false));
         event.registerEntityRenderer(ModRegistry.THROWABLE_BRICK.get(), context -> new ThrownItemRenderer<>(context, 1, false));
         event.registerEntityRenderer(ModRegistry.SLINGSHOT_PROJECTILE.get(), SlingshotProjectileRenderer::new);
-        event.registerEntityRenderer(ModRegistry.RED_MERCHANT_TYPE.get(), OrangeTraderEntityRenderer::new);
+        event.registerEntityRenderer(ModRegistry.RED_MERCHANT_TYPE.get(), RedMerchantRenderer::new);
         event.registerEntityRenderer(ModRegistry.ROPE_ARROW.get(), RopeArrowRenderer::new);
 
         //tiles

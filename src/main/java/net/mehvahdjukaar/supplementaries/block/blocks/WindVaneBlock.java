@@ -34,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class WindVaneBlock extends WaterBlock implements EntityBlock {
-    protected static final VoxelShape SHAPE = Shapes.box(0.125D, 0D, 0.125D, 0.875D, 1D, 0.875D);
+    protected static final VoxelShape SHAPE = Block.box(2, 0D, 2, 14, 16, 14);
 
     public static final BooleanProperty TILE = BlockProperties.TILE; // is it rooster only?
     public static final IntegerProperty POWER = BlockStateProperties.POWER;
@@ -49,7 +49,6 @@ public class WindVaneBlock extends WaterBlock implements EntityBlock {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         if (!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().options.advancedItemTooltips) return;
         tooltip.add(new TranslatableComponent("message.supplementaries.wind_vane").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
-
     }
 
     //model=block model+ tile. animated=tile, inv=inv

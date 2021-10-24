@@ -16,6 +16,8 @@ public class OilLanternBlockTile extends EnhancedLanternBlockTile{
         super(type, pos, state);
     }
 
+    //TODO: readd
+    /*
     @Override
     public void tick() {
         if(this.level.isClientSide){
@@ -23,4 +25,6 @@ public class OilLanternBlockTile extends EnhancedLanternBlockTile{
                 super.tick();
         }
     }
+    */
+
 }

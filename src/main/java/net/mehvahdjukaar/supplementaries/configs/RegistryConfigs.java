@@ -44,7 +44,7 @@ public class RegistryConfigs {
     }
 
     public static class reg {
-        public static ForgeConfigSpec.BooleanValue FIREFLY_ENABLED;
+        //public static ForgeConfigSpec.BooleanValue FIREFLY_ENABLED;
         public static ForgeConfigSpec.BooleanValue PLANTER_ENABLED;
         public static ForgeConfigSpec.BooleanValue CLOCK_ENABLED;
         public static ForgeConfigSpec.BooleanValue PEDESTAL_ENABLED;
@@ -62,11 +62,9 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue BELLOWS_ENABLED;
         public static ForgeConfigSpec.BooleanValue SCONCE_ENABLED;
         public static ForgeConfigSpec.BooleanValue SCONCE_GREEN_ENABLED;
-        public static ForgeConfigSpec.BooleanValue CANDELABRA_ENABLED;
         public static ForgeConfigSpec.BooleanValue CAGE_ENABLED;
         public static ForgeConfigSpec.BooleanValue ITEM_SHELF_ENABLED;
         public static ForgeConfigSpec.BooleanValue SCONCE_LEVER_ENABLED;
-        public static ForgeConfigSpec.BooleanValue CANDLE_HOLDER_ENABLED;
         public static ForgeConfigSpec.BooleanValue COG_BLOCK_ENABLED;
         public static ForgeConfigSpec.BooleanValue STONE_LAMP_ENABLED;
         public static ForgeConfigSpec.BooleanValue END_STONE_LAMP_ENABLED;
@@ -74,7 +72,6 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue DEEPSLATE_LAMP_ENABLED;
         public static ForgeConfigSpec.BooleanValue GLOBE_ENABLED;
         public static ForgeConfigSpec.BooleanValue HOURGLASS_ENABLED;
-        public static ForgeConfigSpec.BooleanValue LASER_ENABLED;
         public static ForgeConfigSpec.BooleanValue FLAG_ENABLED;
         public static ForgeConfigSpec.BooleanValue SACK_ENABLED;
         public static ForgeConfigSpec.BooleanValue BLACKBOARD_ENABLED;
@@ -114,7 +111,6 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue SHULKER_HELMET_ENABLED;
         public static ForgeConfigSpec.BooleanValue CANDY_ENABLED;
 
-        public static ForgeConfigSpec.BooleanValue AMETHYST_ARROW_ENABLED;
         public static ForgeConfigSpec.BooleanValue PRESENT_ENABLED;
 
         public static ForgeConfigSpec.BooleanValue JAR_TAB;
@@ -144,8 +140,6 @@ public class RegistryConfigs {
                     return reg.FLAX_ENABLED.get();
                 case ModRegistry.BRASS_LANTERN_NAME:
                     return reg.HAS_BRASS.get();
-                case ModRegistry.CANDELABRA_NAME_SILVER:
-                    return reg.CANDELABRA_ENABLED.get() && reg.HAS_SILVER.get();
                 case ModRegistry.KEY_NAME:
                     return reg.NETHERITE_DOOR_ENABLED.get() || reg.NETHERITE_TRAPDOOR_ENABLED.get() || reg.SAFE_ENABLED.get();
             }
@@ -197,12 +191,10 @@ public class RegistryConfigs {
             BELLOWS_ENABLED = builder.define(ModRegistry.BELLOWS_NAME, true);
             SCONCE_ENABLED = builder.define(ModRegistry.SCONCE_NAME, true);
             SCONCE_GREEN_ENABLED = builder.define(ModRegistry.SCONCE_NAME_GREEN, false);
-            CANDELABRA_ENABLED = builder.define(ModRegistry.CANDELABRA_NAME, true);
             CAGE_ENABLED = builder.define(ModRegistry.CAGE_NAME, true);
             ITEM_SHELF_ENABLED = builder.define(ModRegistry.ITEM_SHELF_NAME, true);
             SCONCE_LEVER_ENABLED = builder.define(ModRegistry.SCONCE_LEVER_NAME, true);
             COG_BLOCK_ENABLED = builder.define(ModRegistry.COG_BLOCK_NAME, true);
-            CANDLE_HOLDER_ENABLED = builder.define(ModRegistry.CANDLE_HOLDER_NAME, true);
             GLOBE_ENABLED = builder.define(ModRegistry.GLOBE_NAME, true);
             HOURGLASS_ENABLED = builder.define(ModRegistry.HOURGLASS_NAME, true);
             SACK_ENABLED = builder.define(ModRegistry.SACK_NAME, true);
@@ -248,14 +240,13 @@ public class RegistryConfigs {
             SHULKER_HELMET_ENABLED = builder.define("shulker_shell", true);
             CANDY_ENABLED = builder.define(ModRegistry.CANDY_NAME,true);
 
-            AMETHYST_ARROW_ENABLED = builder.comment("WIP").define(ModRegistry.AMETHYST_ARROW_NAME,false);
             PRESENT_ENABLED = builder.comment("WIP").define(ModRegistry.PRESENT_NAME,true);
 
 
             builder.pop();
 
             builder.push("entities");
-            FIREFLY_ENABLED = builder.define(ModRegistry.FIREFLY_NAME, true);
+            //FIREFLY_ENABLED = builder.define(ModRegistry.FIREFLY_NAME, true);
             builder.pop();
 
             builder.comment("Here you can disable mixins if they clash with other mods ones")

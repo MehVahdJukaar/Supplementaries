@@ -1,27 +1,22 @@
 package net.mehvahdjukaar.supplementaries.client.models;
 
-import com.google.common.collect.ImmutableList;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.blocks.FrameBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.MimicBlock;
-import net.mehvahdjukaar.supplementaries.block.tiles.FrameBlockTile;
 import net.mehvahdjukaar.supplementaries.common.Textures;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.vertex.VertexFormatElement;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -46,7 +41,7 @@ public class FrameBlockBakedModel implements IDynamicBakedModel {
 
         List<BakedQuad> quads = new ArrayList<>();
 
-        if(state != null) {
+        if (state != null) {
             try {
                 BlockState mimic = extraData.getData(BlockProperties.MIMIC);
                 if (mimic == null || (mimic.isAir())) {

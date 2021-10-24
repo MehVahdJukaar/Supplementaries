@@ -94,7 +94,7 @@ public class LockBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new KeyLockableTile();
+        return new KeyLockableTile(pPos, pState);
     }
 
     @Override

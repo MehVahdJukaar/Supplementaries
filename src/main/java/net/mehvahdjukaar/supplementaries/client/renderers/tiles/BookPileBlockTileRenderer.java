@@ -34,12 +34,12 @@ public class BookPileBlockTileRenderer implements BlockEntityRenderer<BookPileBl
                         .texOffs(0, 0).addBox(-2.0F, -5.0F, -4.0F, 4.0F, 10.0F, 7.0F)
                         .texOffs(28, 6).addBox(1.0F, -5.0F, 3.0F, 1.0F, 10.0F, 1.0F)
                         .texOffs(23, 6).addBox(-2.0F, -5.0F, 3.0F, 1.0F, 10.0F, 1.0F),
-                PartPose.offset(0, 0, 0));
+                PartPose.ZERO);
 
         book.addOrReplaceChild("lock", CubeListBuilder.create()
                         .texOffs(0, 0)
                         .addBox(-1.0F, -1.0F, 3.0F, 2.0F, 2.0F, 1.0F),
-                PartPose.offset(0, 0, 0));
+                PartPose.ZERO);
 
         return LayerDefinition.create(mesh, 32, 32);
     }
@@ -47,7 +47,7 @@ public class BookPileBlockTileRenderer implements BlockEntityRenderer<BookPileBl
     public BookPileBlockTileRenderer(BlockEntityRendererProvider.Context context) {
         ModelPart model = context.bakeLayer(ClientRegistry.BOOK_MODEL);
         this.book = model.getChild("book");
-        this.lock = model.getChild("lock");
+        this.lock = this.book.getChild("lock");
     }
 
     @Override

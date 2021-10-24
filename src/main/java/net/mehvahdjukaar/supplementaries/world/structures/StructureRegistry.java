@@ -46,6 +46,7 @@ public class StructureRegistry {
             () -> (new WaySignStructure(NoneFeatureConfiguration.CODEC)));
 
 
+
     //mod init. registers events
     public static void init(IEventBus bus) {
         // For registration and init stuff.
@@ -101,6 +102,8 @@ public class StructureRegistry {
     public static void addDimensionalSpacing(final WorldEvent.Load event) {
         if (event.getWorld() instanceof ServerLevel serverWorld) {
 
+            //TODO: readd
+
             /*
              * Skip Terraforged's chunk generator as they are a special case of a mod locking down their chunkgenerator.
              * They will handle your structure spacing for your if you add to WorldGenRegistries.NOISE_SETTINGS in FMLCommonSetupEvent.
@@ -108,12 +111,12 @@ public class StructureRegistry {
              * If you are using mixins, you can call getCodec with an invoker mixin instead of using reflection.
              */
             try {
-                if (GETCODEC_METHOD == null)
-                    GETCODEC_METHOD = ObfuscationReflectionHelper.findMethod(ChunkGenerator.class, "func_230347_a_");
+                if(GETCODEC_METHOD == null) GETCODEC_METHOD = ObfuscationReflectionHelper.findMethod(ChunkGenerator.class, "m_6909_");
                 ResourceLocation cgRL = Registry.CHUNK_GENERATOR.getKey((Codec<? extends ChunkGenerator>) GETCODEC_METHOD.invoke(serverWorld.getChunkSource().generator));
-                if (cgRL != null && cgRL.getNamespace().equals("terraforged")) return;
-            } catch (Exception e) {
-                Supplementaries.LOGGER.error("Was unable to check if " + serverWorld.dimension().getRegistryName() + " is using Terraforged's ChunkGenerator.");
+                if(cgRL != null && cgRL.getNamespace().equals("terraforged")) return;
+            }
+            catch(Exception e){
+                Supplementaries.LOGGER.error("Was unable to check if " + serverWorld.dimension().location() + " is using Terraforged's ChunkGenerator.");
             }
 
             /*

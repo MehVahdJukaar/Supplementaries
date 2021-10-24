@@ -53,6 +53,6 @@ public class JarBoatBlock extends HorizontalDirectionalBlock implements EntityBl
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new JarBoatTile();
+        return new JarBoatTile(pPos, pState);
     }
 }

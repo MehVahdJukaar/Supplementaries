@@ -8,44 +8,38 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
+import javax.annotation.Nullable;
+
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class GlobeData extends SavedData {
+    private static final int TEXTURE_H = 16;
+    private static final int TEXTURE_W = 32;
     public static final String DATA_NAME = "supplementariesGlobeData";
-    public byte[][] globePixels;
-    public long seed;
 
-    public GlobeData() {
-        super(DATA_NAME);
-        this.globePixels = new byte[32][16];
-    }
+    public final byte[][] globePixels;
+    public final long seed;
 
+    //generate new from seed
     public GlobeData(long seed) {
-        super(DATA_NAME);
         this.seed = seed;
-        this.updateData();
-    }
-
-    public void updateData() {
-        //even when data is recovered from disk this is called anyways
         this.globePixels = GlobeDataGenerator.generate(this.seed);
-        //set and save data
-        this.setDirty();
     }
 
-    @Override
-    public void load(CompoundTag nbt) {
-        for (int i = 0; i < globePixels.length; i++) {
-            this.globePixels[i] = nbt.getByteArray("colors_" + i);
+    //from tag
+    public GlobeData(CompoundTag tag) {
+        this.globePixels = new byte[TEXTURE_W][TEXTURE_H];
+        for (int i = 0; i < TEXTURE_H; i++) {
+            this.globePixels[i] = tag.getByteArray("colors_" + i);
         }
-        this.seed = nbt.getLong("seed");
+        this.seed = tag.getLong("seed");
     }
 
     @Override
@@ -58,39 +52,33 @@ public class GlobeData extends SavedData {
     }
 
     //call after you modify the data value
-    public void syncData(Level world) {
+    public void sendToClient(Level world) {
         this.setDirty();
         if (!world.isClientSide)
             NetworkHandler.INSTANCE.send(PacketDistributor.ALL.noArg(), new SyncGlobeDataPacket(this));
     }
 
     //data received from network is stored here
-    private static GlobeData clientSide = new GlobeData();
+    private static GlobeData clientSide = null;
 
+    @Nullable
     public static GlobeData get(Level world) {
-        if (world instanceof ServerLevel) {
-            return world.getServer().getLevel(Level.OVERWORLD).getDataStorage().computeIfAbsent(
-                    () -> new GlobeData(((WorldGenLevel) world).getSeed()), DATA_NAME);
+        if (world instanceof ServerLevel server) {
+            return world.getServer().overworld().getDataStorage().computeIfAbsent(GlobeData::new,
+                    () -> new GlobeData(server.getSeed()),
+                    DATA_NAME);
         } else {
             return clientSide;
         }
     }
 
+    public static void set(ServerLevel level, GlobeData pData) {
+        level.getServer().overworld().getDataStorage().set(DATA_NAME, pData);
+    }
+
     public static void setClientData(GlobeData data) {
         clientSide = data;
         GlobeTextureManager.INSTANCE.update();
-    }
-
-
-    //i have no idea of what this does anymore
-
-    @SubscribeEvent
-    public static void onWorldLoad(WorldEvent.Load event) {
-        LevelAccessor world = event.getWorld();
-        //TODO: might remove this on final release
-        if (world instanceof ServerLevel && ((Level) world).dimension() == Level.OVERWORLD) {
-            GlobeData.get((Level) world).updateData();
-        }
     }
 
     @SubscribeEvent
@@ -102,8 +90,6 @@ public class GlobeData extends SavedData {
                         new SyncGlobeDataPacket(data));
         }
     }
-
-
 }
 
 

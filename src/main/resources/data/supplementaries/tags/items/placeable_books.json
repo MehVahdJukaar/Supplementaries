@@ -1,0 +1,25 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:book",
+    "minecraft:enchanted_book"
+  ],
+  "optional": [
+    "inspirations:white_book",
+    "inspirations:orange_book",
+    "inspirations:magenta_book",
+    "inspirations:light_blue_book",
+    "inspirations:yellow_book",
+    "inspirations:lime_book",
+    "inspirations:pink_book",
+    "inspirations:gray_book",
+    "inspirations:light_gray_book",
+    "inspirations:cyan_book",
+    "inspirations:purple_book",
+    "inspirations:blue_book",
+    "inspirations:brown_book",
+    "inspirations:green_book",
+    "inspirations:red_book",
+    "inspirations:black_book"
+  ]
+}

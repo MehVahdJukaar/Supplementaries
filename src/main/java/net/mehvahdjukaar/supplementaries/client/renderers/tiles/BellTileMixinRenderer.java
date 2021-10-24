@@ -21,6 +21,8 @@ import net.minecraft.world.level.block.entity.BellBlockEntity;
 
 public class BellTileMixinRenderer {
 
+    //TODO: re add
+    /*
     public static final ModelPart chain = new ModelPart(16, 16, 0, 0);
     public static final ModelPart link = new ModelPart(16, 16, 0, 0);
     public static final ModelPart rope = new ModelPart(16, 16, 0, 0);
@@ -36,7 +38,10 @@ public class BellTileMixinRenderer {
             chain.xRot= (float) Math.PI;
             link.texOffs(6, 10).addBox(-1.5F, -6.0F, 0.0F, 3.0F, 6.0F, 0.0F, 0.0F, false);
         }
-
+*/
+    public static LayerDefinition createMesh() {
+        return null;
+    }
 
     public static void render(BellBlockEntity tile, float partialTicks, PoseStack matrixStackIn,
                               MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
@@ -52,7 +57,7 @@ public class BellTileMixinRenderer {
                 //TODO: fix lighting since none of these methods are shaded properly
                 VertexConsumer builder2 = bufferIn.getBuffer(RenderType.entityCutout(Textures.BELL_ROPE_TEXTURE));
 
-                rope.render(matrixStackIn, builder2, combinedLightIn, combinedOverlayIn, 1, 1, 1, 1);
+                //rope.render(matrixStackIn, builder2, combinedLightIn, combinedOverlayIn, 1, 1, 1, 1);
             }
             else if(connection.isChain()){
 
@@ -94,6 +99,5 @@ public class BellTileMixinRenderer {
         }
     }
 
-    public static LayerDefinition createMesh() {
-    }
+
 }

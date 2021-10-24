@@ -13,8 +13,7 @@ public class SyncGlobeDataPacket {
     public GlobeData data;
 
     public SyncGlobeDataPacket(FriendlyByteBuf buffer) {
-        this.data = new GlobeData();
-        this.data.load(buffer.readNbt());
+        this.data = new GlobeData(buffer.readNbt());
     }
 
     public SyncGlobeDataPacket(GlobeData data) {

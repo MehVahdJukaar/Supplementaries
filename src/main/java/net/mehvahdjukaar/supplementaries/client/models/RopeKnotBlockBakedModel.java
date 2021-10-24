@@ -3,20 +3,16 @@ package net.mehvahdjukaar.supplementaries.client.models;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.blocks.MimicBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.RopeKnotBlock;
-import net.mehvahdjukaar.supplementaries.block.tiles.FrameBlockTile;
-import net.mehvahdjukaar.supplementaries.block.tiles.MimicBlockTile;
-import net.mehvahdjukaar.supplementaries.block.tiles.RopeKnotBlockTile;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
@@ -110,7 +106,7 @@ public class RopeKnotBlockBakedModel implements IDynamicBakedModel {
     }
 
     @Override
-    public TextureAtlasSprite getParticleTexture(@NotNull IModelData data) {
+    public TextureAtlasSprite getParticleIcon(@NotNull IModelData data) {
         BlockState mimic = data.getData(BlockProperties.MIMIC);
         if (mimic != null && !mimic.isAir()) {
 

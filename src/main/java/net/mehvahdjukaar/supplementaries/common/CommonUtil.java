@@ -4,37 +4,27 @@ import net.mehvahdjukaar.supplementaries.block.blocks.SignPostBlock;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.tetra.TetraToolHelper;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.minecraft.block.*;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.item.*;
-import net.minecraft.world.level.block.*;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.core.Direction;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.core.Direction;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.Tags;
 
 import java.util.Calendar;
-
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.DiggerItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.SwordItem;
-import net.minecraft.world.item.TridentItem;
-import net.minecraft.world.level.block.Lantern;
-import net.minecraft.world.level.block.state.BlockState;
 
 public class CommonUtil {
 
@@ -84,7 +74,7 @@ public class CommonUtil {
             return this == EARTH_DAY;
         }
 
-        public boolean isBirthday(){
+        public boolean isBirthday() {
             return this == MOD_BIRTHDAY || this == MY_BIRTHDAY;
         }
 
@@ -222,7 +212,7 @@ public class CommonUtil {
     }
 
     //this is how you do it :D
-    private static final ShulkerBoxBlockEntity SHULKER_TILE = new ShulkerBoxBlockEntity();
+    private static final ShulkerBoxBlockEntity SHULKER_TILE = new ShulkerBoxBlockEntity(BlockPos.ZERO, Blocks.SHULKER_BOX.defaultBlockState());
 
 
     public static boolean isAllowedInShulker(ItemStack stack) {

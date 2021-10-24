@@ -115,7 +115,7 @@ public class WallLanternBakedModel implements IDynamicBakedModel {
     }
 
     @Override
-    public TextureAtlasSprite getParticleTexture(@NotNull IModelData data) {
+    public TextureAtlasSprite getParticleIcon(@NotNull IModelData data) {
         BlockState mimic = data.getData(BlockProperties.MIMIC);
         if (mimic != null && !mimic.isAir()) {
 

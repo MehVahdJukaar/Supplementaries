@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.inventories.PulleyBlockContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.network.chat.Component;
 
@@ -20,8 +21,9 @@ public class PulleyBlockGui extends AbstractContainerScreen<PulleyBlockContainer
 
     @Override
     protected void renderBg(PoseStack matrixStack, float partialTicks, int x, int y) {
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        Minecraft.getInstance().getTextureManager().bind(Textures.PULLEY_BLOCK_GUI_TEXTURE);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, Textures.PULLEY_BLOCK_GUI_TEXTURE);
         int k = (this.width - this.imageWidth) / 2;
         int l = (this.height - this.imageHeight) / 2;
         this.blit(matrixStack, k, l, 0, 0, this.imageWidth, this.imageHeight);
@@ -50,9 +52,9 @@ public class PulleyBlockGui extends AbstractContainerScreen<PulleyBlockContainer
     }
 
     @Override
-    public void init(Minecraft minecraft, int width, int height) {
-        super.init(minecraft, width, height);
-        minecraft.keyboardHandler.setSendRepeatsToGui(true);
+    public void init() {
+        super.init();
+        this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
         this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
     }
 }

@@ -1,26 +1,25 @@
 package net.mehvahdjukaar.supplementaries.client.gui;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.inventories.RedMerchantContainer;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.SelectOrangeTraderTradePacket;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.npc.VillagerData;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class OrangeMerchantGui extends AbstractContainerScreen<RedMerchantContainer> {
     private static final ResourceLocation VILLAGER_LOCATION = Textures.ORANGE_MERCHANT_GUI_TEXTURE;
@@ -51,10 +50,10 @@ public class OrangeMerchantGui extends AbstractContainerScreen<RedMerchantContai
         int j = (this.height - this.imageHeight) / 2;
         int k = j + 16 + 2;
 
-        for(int l = 0; l < 7; ++l) {
-            this.tradeOfferButtons[l] = this.addButton(new OrangeMerchantGui.TradeButton(i + 5, k, l, (p_214132_1_) -> {
+        for (int l = 0; l < 7; ++l) {
+            this.tradeOfferButtons[l] = this.addWidget(new OrangeMerchantGui.TradeButton(i + 5, k, l, (p_214132_1_) -> {
                 if (p_214132_1_ instanceof OrangeMerchantGui.TradeButton) {
-                    this.shopItem = ((OrangeMerchantGui.TradeButton)p_214132_1_).getIndex() + this.scrollOff;
+                    this.shopItem = ((OrangeMerchantGui.TradeButton) p_214132_1_).getIndex() + this.scrollOff;
                     this.postButtonClick();
                 }
 
@@ -64,34 +63,36 @@ public class OrangeMerchantGui extends AbstractContainerScreen<RedMerchantContai
 
     }
 
-    protected void renderLabels(PoseStack p_230451_1_, int p_230451_2_, int p_230451_3_) {
-
+    protected void renderLabels(PoseStack pPoseStack, int pX, int pY) {
 
         Component tradeOffer = new TranslatableComponent("gui.supplementaries.orange_trader.trade")
                 .withStyle(ChatFormatting.WHITE)
                 .withStyle(ChatFormatting.BOLD);
-        this.font.draw(p_230451_1_, tradeOffer, (float)(49 + this.imageWidth / 2 - this.font.width(tradeOffer) / 2), 10.0F, 4210752);
+        this.font.draw(pPoseStack, tradeOffer, (float) (49 + this.imageWidth / 2 - this.font.width(tradeOffer) / 2), 10.0F, 4210752);
 
         Component iReceive = new TranslatableComponent("gui.supplementaries.orange_trader.get")
                 .withStyle(ChatFormatting.WHITE);
-        this.font.draw(p_230451_1_, iReceive, (float)(49 -29 + this.imageWidth / 2 - this.font.width(iReceive) / 2), 24.0F, 4210752);
+        this.font.draw(pPoseStack, iReceive, (float) (49 - 29 + this.imageWidth / 2 - this.font.width(iReceive) / 2), 24.0F, 4210752);
 
         Component uReceive = new TranslatableComponent("gui.supplementaries.orange_trader.receive")
                 .withStyle(ChatFormatting.WHITE);
-        this.font.draw(p_230451_1_, uReceive, (float)(49 + 42 + this.imageWidth / 2 - this.font.width(uReceive) / 2), 24.0F, 4210752);
+        this.font.draw(pPoseStack, uReceive, (float) (49 + 42 + this.imageWidth / 2 - this.font.width(uReceive) / 2), 24.0F, 4210752);
 
 
-        this.font.draw(p_230451_1_, this.inventory.getDisplayName(), (float)this.inventoryLabelX, (float)this.inventoryLabelY, 4210752);
+        this.font.draw(pPoseStack, this.playerInventoryTitle, (float) this.inventoryLabelX, (float) this.inventoryLabelY, 4210752);
         int l = this.font.width(TRADES_LABEL);
-        this.font.draw(p_230451_1_, TRADES_LABEL, (float)(5 - l / 2 + 48), 6.0F, 4210752);
+        this.font.draw(pPoseStack, TRADES_LABEL, (float) (5 - l / 2 + 48), 6.0F, 4210752);
     }
 
-    protected void renderBg(PoseStack p_230450_1_, float p_230450_2_, int p_230450_3_, int p_230450_4_) {
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bind(VILLAGER_LOCATION);
+
+    @Override
+    protected void renderBg(PoseStack pMatrixStack, float pPartialTicks, int pX, int pY) {
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, VILLAGER_LOCATION);
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
-        blit(p_230450_1_, i, j, this.getBlitOffset(), 0.0F, 0.0F, this.imageWidth, this.imageHeight, 256, 512);
+        blit(pMatrixStack, i, j, this.getBlitOffset(), 0.0F, 0.0F, this.imageWidth, this.imageHeight, 256, 512);
         MerchantOffers merchantoffers = this.menu.getOffers();
         if (!merchantoffers.isEmpty()) {
             int k = this.shopItem;
@@ -101,30 +102,30 @@ public class OrangeMerchantGui extends AbstractContainerScreen<RedMerchantContai
 
             MerchantOffer merchantoffer = merchantoffers.get(k);
             if (merchantoffer.isOutOfStock()) {
-                this.minecraft.getTextureManager().bind(VILLAGER_LOCATION);
-                RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-                blit(p_230450_1_, this.leftPos + 83 + 99, this.topPos + 35, this.getBlitOffset(), 311.0F, 0.0F, 28, 21, 256, 512);
+                RenderSystem.setShaderTexture(0, VILLAGER_LOCATION);
+                RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+                blit(pMatrixStack, this.leftPos + 83 + 99, this.topPos + 35, this.getBlitOffset(), 311.0F, 0.0F, 28, 21, 256, 512);
             }
         }
-
     }
 
-    private void renderProgressBar(PoseStack p_238839_1_, int p_238839_2_, int p_238839_3_, MerchantOffer p_238839_4_) {
-        this.minecraft.getTextureManager().bind(VILLAGER_LOCATION);
+    private void renderProgressBar(PoseStack poseStack, int pX, int pY, MerchantOffer merchantOffer) {
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderTexture(0, VILLAGER_LOCATION);
         int i = this.menu.getTraderLevel();
         int j = this.menu.getTraderXp();
         if (i < 5) {
-            blit(p_238839_1_, p_238839_2_ + 136, p_238839_3_ + 16, this.getBlitOffset(), 0.0F, 186.0F, 102, 5, 256, 512);
+            blit(poseStack, pX + 136, pY + 16, this.getBlitOffset(), 0.0F, 186.0F, 102, 5, 256, 512);
             int k = VillagerData.getMinXpPerLevel(i);
             if (j >= k && VillagerData.canLevelUp(i)) {
                 int l = 100;
-                float f = 100.0F / (float)(VillagerData.getMaxXpPerLevel(i) - k);
-                int i1 = Math.min(Mth.floor(f * (float)(j - k)), 100);
-                blit(p_238839_1_, p_238839_2_ + 136, p_238839_3_ + 16, this.getBlitOffset(), 0.0F, 191.0F, i1 + 1, 5, 256, 512);
+                float f = 100.0F / (float) (VillagerData.getMaxXpPerLevel(i) - k);
+                int i1 = Math.min(Mth.floor(f * (float) (j - k)), 100);
+                blit(poseStack, pX + 136, pY + 16, this.getBlitOffset(), 0.0F, 191.0F, i1 + 1, 5, 256, 512);
                 int j1 = this.menu.getFutureTraderXp();
                 if (j1 > 0) {
-                    int k1 = Math.min(Mth.floor((float)j1 * f), 100 - i1);
-                    blit(p_238839_1_, p_238839_2_ + 136 + i1 + 1, p_238839_3_ + 16 + 1, this.getBlitOffset(), 2.0F, 182.0F, k1, 3, 256, 512);
+                    int k1 = Math.min(Mth.floor((float) j1 * f), 100 - i1);
+                    blit(poseStack, pX + 136 + i1 + 1, pY + 16 + 1, this.getBlitOffset(), 2.0F, 182.0F, k1, 3, 256, 512);
                 }
 
             }
@@ -149,22 +150,22 @@ public class OrangeMerchantGui extends AbstractContainerScreen<RedMerchantContai
 
     }
 
-    public void render(PoseStack p_230430_1_, int p_230430_2_, int p_230430_3_, float p_230430_4_) {
-        this.renderBackground(p_230430_1_);
-        super.render(p_230430_1_, p_230430_2_, p_230430_3_, p_230430_4_);
+    @Override
+    public void render(PoseStack pMatrixStack, int pMouseX, int pMouseY, float pPartialTicks) {
+        this.renderBackground(pMatrixStack);
+        super.render(pMatrixStack, pMouseX, pMouseY, pPartialTicks);
         MerchantOffers merchantoffers = this.menu.getOffers();
         if (!merchantoffers.isEmpty()) {
             int i = (this.width - this.imageWidth) / 2;
             int j = (this.height - this.imageHeight) / 2;
             int k = j + 16 + 1;
             int l = i + 5 + 5;
-            RenderSystem.pushMatrix();
-            RenderSystem.enableRescaleNormal();
-            this.minecraft.getTextureManager().bind(VILLAGER_LOCATION);
-            this.renderScroller(p_230430_1_, i, j, merchantoffers);
+            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            RenderSystem.setShaderTexture(0, VILLAGER_LOCATION);
+            this.renderScroller(pMatrixStack, i, j, merchantoffers);
             int i1 = 0;
 
-            for(MerchantOffer merchantoffer : merchantoffers) {
+            for (MerchantOffer merchantoffer : merchantoffers) {
                 if (this.canScroll(merchantoffers.size()) && (i1 < this.scrollOff || i1 >= 7 + this.scrollOff)) {
                     ++i1;
                 } else {
@@ -174,13 +175,13 @@ public class OrangeMerchantGui extends AbstractContainerScreen<RedMerchantContai
                     ItemStack itemstack3 = merchantoffer.getResult();
                     this.itemRenderer.blitOffset = 100.0F;
                     int j1 = k + 2;
-                    this.renderAndDecorateCostA(p_230430_1_, itemstack1, itemstack, l, j1);
+                    this.renderAndDecorateCostA(pMatrixStack, itemstack1, itemstack, l, j1);
                     if (!itemstack2.isEmpty()) {
                         this.itemRenderer.renderAndDecorateFakeItem(itemstack2, i + 5 + 35, j1);
                         this.itemRenderer.renderGuiItemDecorations(this.font, itemstack2, i + 5 + 35, j1);
                     }
 
-                    this.renderButtonArrows(p_230430_1_, merchantoffer, i, j1);
+                    this.renderButtonArrows(pMatrixStack, merchantoffer, i, j1);
                     this.itemRenderer.renderAndDecorateFakeItem(itemstack3, i + 5 + 68, j1);
                     this.itemRenderer.renderGuiItemDecorations(this.font, itemstack3, i + 5 + 68, j1);
                     this.itemRenderer.blitOffset = 0.0F;
@@ -190,98 +191,98 @@ public class OrangeMerchantGui extends AbstractContainerScreen<RedMerchantContai
             }
 
             int k1 = this.shopItem;
-            MerchantOffer merchantoffer1 = merchantoffers.get(k1);
+            MerchantOffer merchantOffer = merchantoffers.get(k1);
             if (this.menu.showProgressBar()) {
-                this.renderProgressBar(p_230430_1_, i, j, merchantoffer1);
+                this.renderProgressBar(pMatrixStack, i, j, merchantOffer);
             }
 
-            if (merchantoffer1.isOutOfStock() && this.isHovering(186, 35, 22, 21, (double)p_230430_2_, (double)p_230430_3_) && this.menu.canRestock()) {
-                this.renderTooltip(p_230430_1_, DEPRECATED_TOOLTIP, p_230430_2_, p_230430_3_);
+            if (merchantOffer.isOutOfStock() && this.isHovering(186, 35, 22, 21, (double) pMouseX, (double) pMouseY) && this.menu.canRestock()) {
+                this.renderTooltip(pMatrixStack, DEPRECATED_TOOLTIP, pMouseX, pMouseY);
             }
 
-            for(OrangeMerchantGui.TradeButton merchantscreen$tradebutton : this.tradeOfferButtons) {
-                if (merchantscreen$tradebutton.isHovered()) {
-                    merchantscreen$tradebutton.renderToolTip(p_230430_1_, p_230430_2_, p_230430_3_);
+            for (OrangeMerchantGui.TradeButton tradeButton : this.tradeOfferButtons) {
+                if (tradeButton.isHovered()) {
+                    tradeButton.renderToolTip(pMatrixStack, pMouseX, pMouseY);
                 }
 
-                merchantscreen$tradebutton.visible = merchantscreen$tradebutton.index < this.menu.getOffers().size();
+                tradeButton.visible = tradeButton.index < this.menu.getOffers().size();
             }
 
-            RenderSystem.popMatrix();
             RenderSystem.enableDepthTest();
         }
 
-        this.renderTooltip(p_230430_1_, p_230430_2_, p_230430_3_);
+        this.renderTooltip(pMatrixStack, pMouseX, pMouseY);
     }
 
-    private void renderButtonArrows(PoseStack p_238842_1_, MerchantOffer p_238842_2_, int p_238842_3_, int p_238842_4_) {
+    private void renderButtonArrows(PoseStack pPoseStack, MerchantOffer pMerchantOffer, int pPosX, int pPosY) {
         RenderSystem.enableBlend();
-        this.minecraft.getTextureManager().bind(VILLAGER_LOCATION);
-        if (p_238842_2_.isOutOfStock()) {
-            blit(p_238842_1_, p_238842_3_ + 5 + 35 + 20, p_238842_4_ + 3, this.getBlitOffset(), 25.0F, 171.0F, 10, 9, 256, 512);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderTexture(0, VILLAGER_LOCATION);
+        if (pMerchantOffer.isOutOfStock()) {
+            blit(pPoseStack, pPosX + 5 + 35 + 20, pPosY + 3, this.getBlitOffset(), 25.0F, 171.0F, 10, 9, 256, 512);
         } else {
-            blit(p_238842_1_, p_238842_3_ + 5 + 35 + 20, p_238842_4_ + 3, this.getBlitOffset(), 15.0F, 171.0F, 10, 9, 256, 512);
+            blit(pPoseStack, pPosX + 5 + 35 + 20, pPosY + 3, this.getBlitOffset(), 15.0F, 171.0F, 10, 9, 256, 512);
         }
-
     }
 
-    private void renderAndDecorateCostA(PoseStack p_238841_1_, ItemStack p_238841_2_, ItemStack p_238841_3_, int p_238841_4_, int p_238841_5_) {
-        this.itemRenderer.renderAndDecorateFakeItem(p_238841_2_, p_238841_4_, p_238841_5_);
-        if (p_238841_3_.getCount() == p_238841_2_.getCount()) {
-            this.itemRenderer.renderGuiItemDecorations(this.font, p_238841_2_, p_238841_4_, p_238841_5_);
+    private void renderAndDecorateCostA(PoseStack pPoseStack, ItemStack pRealCost, ItemStack pBaseCost, int pX, int pY) {
+        this.itemRenderer.renderAndDecorateFakeItem(pRealCost, pX, pY);
+        if (pBaseCost.getCount() == pRealCost.getCount()) {
+            this.itemRenderer.renderGuiItemDecorations(this.font, pRealCost, pX, pY);
         } else {
-            this.itemRenderer.renderGuiItemDecorations(this.font, p_238841_3_, p_238841_4_, p_238841_5_, p_238841_3_.getCount() == 1 ? "1" : null);
-            this.itemRenderer.renderGuiItemDecorations(this.font, p_238841_2_, p_238841_4_ + 14, p_238841_5_, p_238841_2_.getCount() == 1 ? "1" : null);
-            this.minecraft.getTextureManager().bind(VILLAGER_LOCATION);
+            this.itemRenderer.renderGuiItemDecorations(this.font, pBaseCost, pX, pY, pBaseCost.getCount() == 1 ? "1" : null);
+            this.itemRenderer.renderGuiItemDecorations(this.font, pRealCost, pX + 14, pY, pRealCost.getCount() == 1 ? "1" : null);
+            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            RenderSystem.setShaderTexture(0, VILLAGER_LOCATION);
             this.setBlitOffset(this.getBlitOffset() + 300);
-            blit(p_238841_1_, p_238841_4_ + 7, p_238841_5_ + 12, this.getBlitOffset(), 0.0F, 176.0F, 9, 2, 256, 512);
+            blit(pPoseStack, pX + 7, pY + 12, this.getBlitOffset(), 0.0F, 176.0F, 9, 2, 256, 512);
             this.setBlitOffset(this.getBlitOffset() - 300);
         }
 
     }
 
-    private boolean canScroll(int p_214135_1_) {
-        return p_214135_1_ > 7;
+    private boolean canScroll(int pNumOffers) {
+        return pNumOffers > 7;
     }
 
-    public boolean mouseScrolled(double p_231043_1_, double p_231043_3_, double p_231043_5_) {
+    public boolean mouseScrolled(double pMouseX, double pMouseY, double pDelta) {
         int i = this.menu.getOffers().size();
         if (this.canScroll(i)) {
             int j = i - 7;
-            this.scrollOff = (int)((double)this.scrollOff - p_231043_5_);
+            this.scrollOff = (int) ((double) this.scrollOff - pDelta);
             this.scrollOff = Mth.clamp(this.scrollOff, 0, j);
         }
 
         return true;
     }
 
-    public boolean mouseDragged(double p_231045_1_, double p_231045_3_, int p_231045_5_, double p_231045_6_, double p_231045_8_) {
+    public boolean mouseDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {
         int i = this.menu.getOffers().size();
         if (this.isDragging) {
             int j = this.topPos + 18;
             int k = j + 139;
             int l = i - 7;
-            float f = ((float)p_231045_3_ - (float)j - 13.5F) / ((float)(k - j) - 27.0F);
-            f = f * (float)l + 0.5F;
-            this.scrollOff = Mth.clamp((int)f, 0, l);
+            float f = ((float) pMouseY - (float) j - 13.5F) / ((float) (k - j) - 27.0F);
+            f = f * (float) l + 0.5F;
+            this.scrollOff = Mth.clamp((int) f, 0, l);
             return true;
         } else {
-            return super.mouseDragged(p_231045_1_, p_231045_3_, p_231045_5_, p_231045_6_, p_231045_8_);
+            return super.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
         }
     }
 
-    public boolean mouseClicked(double p_231044_1_, double p_231044_3_, int p_231044_5_) {
+    public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
         this.isDragging = false;
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
-        if (this.canScroll(this.menu.getOffers().size()) && p_231044_1_ > (double)(i + 94) && p_231044_1_ < (double)(i + 94 + 6) && p_231044_3_ > (double)(j + 18) && p_231044_3_ <= (double)(j + 18 + 139 + 1)) {
+        if (this.canScroll(this.menu.getOffers().size()) && pMouseX > (double) (i + 94) && pMouseX < (double) (i + 94 + 6) && pMouseY > (double) (j + 18) && pMouseY <= (double) (j + 18 + 139 + 1)) {
             this.isDragging = true;
         }
 
-        return super.mouseClicked(p_231044_1_, p_231044_3_, p_231044_5_);
+        return super.mouseClicked(pMouseX, pMouseY, pButton);
     }
 
-    @OnlyIn(Dist.CLIENT)
+
     class TradeButton extends Button {
         final int index;
 

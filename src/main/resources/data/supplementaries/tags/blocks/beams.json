@@ -1,6 +1,13 @@
 {
   "replace": false,
   "optional": [
+    "betternether:cincinnasite_pedestal",
+    "terrestria:small_oak_log",
+    "terrestria:stripped_sakura_log",
+    "terrestria:stripped_small_oak_log",
+    "terrestria:stripped_yucca_palm_log",
+    "terrestria:yucca_palm_log",
+
     "#valhelsia_structures:posts",
     "valhelsia_structures:oak_post",
     "valhelsia_structures:spruce_post",

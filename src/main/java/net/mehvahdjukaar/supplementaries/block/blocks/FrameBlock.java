@@ -60,7 +60,7 @@ public class FrameBlock extends MimicBlock implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new FrameBlockTile(daub);
+        return new FrameBlockTile(pPos, pState, daub);
     }
 
     @Override

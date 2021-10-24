@@ -4,7 +4,6 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.OpenConfigsPacket;
@@ -12,9 +11,8 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.fml.ExtensionPoint;
 import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.network.PacketDistributor;
+import net.minecraftforge.fmlclient.ConfigGuiHandler;
 import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 public class OpenConfiguredCommand implements Command<CommandSourceStack> {
@@ -27,9 +25,9 @@ public class OpenConfiguredCommand implements Command<CommandSourceStack> {
     }
 
     @Override
-    public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+    public int run(CommandContext<CommandSourceStack> context) {
         if (ModList.get().getModContainerById(Supplementaries.MOD_ID).get()
-                .getCustomExtension(ExtensionPoint.CONFIGGUIFACTORY).isPresent()) {
+                .getCustomExtension(ConfigGuiHandler.ConfigGuiFactory.class).isPresent()) {
 
             if (context.getSource().getEntity() instanceof ServerPlayer) {
                 NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() ->

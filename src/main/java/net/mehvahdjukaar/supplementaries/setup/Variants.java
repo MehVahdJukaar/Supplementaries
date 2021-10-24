@@ -10,18 +10,17 @@ import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.items.BurnableBlockItem;
 import net.mehvahdjukaar.supplementaries.items.FlagItem;
 import net.mehvahdjukaar.supplementaries.items.SignPostItem;
-import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.BannerBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
@@ -31,31 +30,30 @@ import java.util.function.Supplier;
 
 public class Variants {
 
-    public static boolean hasWoodInstalled(IWoodType wood){
+    public static boolean hasWoodInstalled(IWoodType wood) {
         return ModList.get().isLoaded(wood.getNamespace());
     }
 
-    public static<T extends IForgeRegistryEntry<T>> Map<IWoodType, RegistryObject<T>> makeVariants(DeferredRegister<T> registry, String name, Supplier<T> supplier){
+    public static <T extends IForgeRegistryEntry<T>> Map<IWoodType, RegistryObject<T>> makeVariants(DeferredRegister<T> registry, String name, Supplier<T> supplier) {
         Map<IWoodType, RegistryObject<T>> map = new HashMap<>();
 
-        for(IWoodType wood : WoodTypes.TYPES.values()){
-            String s = name+"_"+wood;
+        for (IWoodType wood : WoodTypes.TYPES.values()) {
+            String s = name + "_" + wood;
             map.put(wood, registry.register(s, supplier));
         }
         return map;
     }
 
     //hanging signs
-    public static Map<IWoodType, RegistryObject<Block>> makeHangingSingsBlocks(){
+    public static Map<IWoodType, RegistryObject<Block>> makeHangingSingsBlocks() {
         Map<IWoodType, RegistryObject<Block>> map = new HashMap<>();
 
-        for(IWoodType wood : WoodTypes.TYPES.values()){
+        for (IWoodType wood : WoodTypes.TYPES.values()) {
             String name = getHangingSignName(wood);
-            map.put(wood, ModRegistry.BLOCKS.register(name, ()-> new HangingSignBlock(
+            map.put(wood, ModRegistry.BLOCKS.register(name, () -> new HangingSignBlock(
                     BlockBehaviour.Properties.of(wood.getMaterial(), wood.getColor())
                             .strength(2f, 3f)
                             .sound(SoundType.WOOD)
-                            .harvestTool(ToolType.AXE)
                             .noOcclusion()
                             .noCollission()
             )));
@@ -63,48 +61,49 @@ public class Variants {
         return map;
     }
 
-    public static Map<IWoodType, RegistryObject<Item>> makeHangingSignsItems(){
+    public static Map<IWoodType, RegistryObject<Item>> makeHangingSignsItems() {
         Map<IWoodType, RegistryObject<Item>> map = new HashMap<>();
 
-        for(IWoodType wood : WoodTypes.TYPES.values()){
+        for (IWoodType wood : WoodTypes.TYPES.values()) {
             String name = getHangingSignName(wood);
-            map.put(wood, ModRegistry.ITEMS.register(name, ()-> new BurnableBlockItem(ModRegistry.HANGING_SIGNS.get(wood).get(),
-                    new Item.Properties().tab(!hasWoodInstalled(wood)?null:
-                            ModRegistry.getTab(CreativeModeTab.TAB_DECORATIONS, ModRegistry.HANGING_SIGN_NAME)),200
+            map.put(wood, ModRegistry.ITEMS.register(name, () -> new BurnableBlockItem(ModRegistry.HANGING_SIGNS.get(wood).get(),
+                    new Item.Properties().tab(!hasWoodInstalled(wood) ? null :
+                            ModRegistry.getTab(CreativeModeTab.TAB_DECORATIONS, ModRegistry.HANGING_SIGN_NAME)), 200
             )));
         }
         return map;
     }
 
-    public static String getHangingSignName(IWoodType type){
-        return ModRegistry.HANGING_SIGN_NAME+"_"+type.getRegName();
+    public static String getHangingSignName(IWoodType type) {
+        return ModRegistry.HANGING_SIGN_NAME + "_" + type.getRegName();
     }
 
     //sign posts
-    public static Map<IWoodType, RegistryObject<Item>> makeSignPostItems(){
+    public static Map<IWoodType, RegistryObject<Item>> makeSignPostItems() {
         Map<IWoodType, RegistryObject<Item>> map = new HashMap<>();
 
-        for(IWoodType wood : WoodTypes.TYPES.values()){
+        for (IWoodType wood : WoodTypes.TYPES.values()) {
             String name = getSignPostName(wood);
-            map.put(wood, ModRegistry.ITEMS.register(name, ()-> new SignPostItem(
-                    new Item.Properties().tab(!hasWoodInstalled(wood)?null:
-                            ModRegistry.getTab(CreativeModeTab.TAB_DECORATIONS, ModRegistry.SIGN_POST_NAME)),wood
+            map.put(wood, ModRegistry.ITEMS.register(name, () -> new SignPostItem(
+                    new Item.Properties().tab(!hasWoodInstalled(wood) ? null :
+                            ModRegistry.getTab(CreativeModeTab.TAB_DECORATIONS, ModRegistry.SIGN_POST_NAME)), wood
             )));
         }
         return map;
     }
-    public static String getSignPostName(IWoodType type){
-        return ModRegistry.SIGN_POST_NAME+"_"+type.getRegName();
+
+    public static String getSignPostName(IWoodType type) {
+        return ModRegistry.SIGN_POST_NAME + "_" + type.getRegName();
     }
 
     //flags
 
-    public static Map<DyeColor, RegistryObject<Block>> makeFlagBlocks(String baseName){
+    public static Map<DyeColor, RegistryObject<Block>> makeFlagBlocks(String baseName) {
         Map<DyeColor, RegistryObject<Block>> map = new HashMap<>();
 
-        for(DyeColor color : DyeColor.values()){
-            String name = baseName+"_"+color.getName();
-            map.put(color, ModRegistry.BLOCKS.register(name, ()-> new FlagBlock(color,
+        for (DyeColor color : DyeColor.values()) {
+            String name = baseName + "_" + color.getName();
+            map.put(color, ModRegistry.BLOCKS.register(name, () -> new FlagBlock(color,
                     BlockBehaviour.Properties.of(Material.WOOD, color.getMaterialColor())
                             .strength(1.0F)
                             .noOcclusion()
@@ -114,15 +113,14 @@ public class Variants {
         return map;
     }
 
-    public static Map<DyeColor, RegistryObject<Item>> makeFlagItems(String baseName){
+    public static Map<DyeColor, RegistryObject<Item>> makeFlagItems(String baseName) {
         Map<DyeColor, RegistryObject<Item>> map = new HashMap<>();
 
-        for(DyeColor color : DyeColor.values()){
-            String name = baseName+"_"+color.getName();
-            map.put(color, ModRegistry.ITEMS.register(name, ()-> new FlagItem(ModRegistry.FLAGS.get(color).get(),
+        for (DyeColor color : DyeColor.values()) {
+            String name = baseName + "_" + color.getName();
+            map.put(color, ModRegistry.ITEMS.register(name, () -> new FlagItem(ModRegistry.FLAGS.get(color).get(),
                     new Item.Properties()
                             .stacksTo(16)
-                            .setISTER(()-> FlagItemRenderer::new)
                             .tab(ModRegistry.getTab(CreativeModeTab.TAB_DECORATIONS, ModRegistry.FLAG_NAME))
             )));
         }
@@ -130,17 +128,17 @@ public class Variants {
     }
 
     //ceiling banners
-    public static Map<DyeColor, RegistryObject<Block>> makeCeilingBanners(String baseName){
+    public static Map<DyeColor, RegistryObject<Block>> makeCeilingBanners(String baseName) {
         Map<DyeColor, RegistryObject<Block>> map = new HashMap<>();
 
-        for(DyeColor color : DyeColor.values()){
-            String name = baseName+"_"+color.getName();
-            map.put(color, ModRegistry.BLOCKS.register(name, ()-> new CeilingBannerBlock(color,
-                    BlockBehaviour.Properties.of(Material.WOOD, color.getMaterialColor())
-                            .strength(1.0F)
-                            .noCollission()
-                            .sound(SoundType.WOOD)
-                            .lootFrom(()->BannerBlock.byColor(color))
+        for (DyeColor color : DyeColor.values()) {
+            String name = baseName + "_" + color.getName();
+            map.put(color, ModRegistry.BLOCKS.register(name, () -> new CeilingBannerBlock(color,
+                            BlockBehaviour.Properties.of(Material.WOOD, color.getMaterialColor())
+                                    .strength(1.0F)
+                                    .noCollission()
+                                    .sound(SoundType.WOOD)
+                                    .lootFrom(() -> BannerBlock.byColor(color))
                     )
             ));
         }
@@ -149,28 +147,28 @@ public class Variants {
 
 
     //ceiling banners
-    public static Map<DyeColor, RegistryObject<Item>> makeCeilingBannersItems(){
+    public static Map<DyeColor, RegistryObject<Item>> makeCeilingBannersItems() {
         Map<DyeColor, RegistryObject<Item>> map = new HashMap<>();
 
-        for(DyeColor color : DyeColor.values()){
-            map.put(color, ModRegistry.regBlockItem(ModRegistry.CEILING_BANNERS.get(color),null));
+        for (DyeColor color : DyeColor.values()) {
+            map.put(color, ModRegistry.regBlockItem(ModRegistry.CEILING_BANNERS.get(color), null));
         }
         return map;
     }
 
     //presents
-    public static Map<DyeColor, RegistryObject<Block>> makePresents(String baseName){
+    public static Map<DyeColor, RegistryObject<Block>> makePresents(String baseName) {
         Map<DyeColor, RegistryObject<Block>> map = new HashMap<>();
 
-        for(DyeColor color : DyeColor.values()){
-            String name = baseName+"_"+color.getName();
-            map.put(color, ModRegistry.BLOCKS.register(name, ()-> new PresentBlock(color,
-                            BlockBehaviour.Properties.of(Material.WOOL, color.getMaterialColor())
-                                    .strength(1.0F)
-                                    .sound(SoundType.WOOL))
+        for (DyeColor color : DyeColor.values()) {
+            String name = baseName + "_" + color.getName();
+            map.put(color, ModRegistry.BLOCKS.register(name, () -> new PresentBlock(color,
+                    BlockBehaviour.Properties.of(Material.WOOL, color.getMaterialColor())
+                            .strength(1.0F)
+                            .sound(SoundType.WOOL))
             ));
         }
-        map.put(null, ModRegistry.BLOCKS.register(baseName, ()-> new PresentBlock(null,
+        map.put(null, ModRegistry.BLOCKS.register(baseName, () -> new PresentBlock(null,
                 BlockBehaviour.Properties.of(Material.WOOL, MaterialColor.WOOD)
                         .strength(1.0F)
                         .sound(SoundType.WOOL))
@@ -193,13 +191,5 @@ public class Variants {
 
         return map;
     }
-
-
-
-
-
-
-
-
 
 }

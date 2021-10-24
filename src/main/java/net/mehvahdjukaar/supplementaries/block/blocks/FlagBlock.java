@@ -1,8 +1,9 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import com.google.common.collect.Maps;
+import net.mehvahdjukaar.selene.Selene;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
-import net.mehvahdjukaar.selene.map.CustomDecorationHolder;
+import net.mehvahdjukaar.selene.map.ExpandedMapData;
 import net.mehvahdjukaar.supplementaries.block.tiles.FlagBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.core.BlockPos;
@@ -115,9 +116,8 @@ public class FlagBlock extends WaterBlock implements EntityBlock {
             ItemStack itemstack = player.getItemInHand(hand);
             if (itemstack.getItem() instanceof MapItem) {
                 if (!world.isClientSide) {
-                    MapItemSavedData data = MapItem.getOrCreateSavedData(itemstack, world);
-                    if (data instanceof CustomDecorationHolder) {
-                        ((CustomDecorationHolder) data).toggleCustomDecoration(world, pos);
+                    if (MapItem.getSavedData(itemstack, world) instanceof ExpandedMapData data) {
+                        data.toggleCustomDecoration(world, pos);
                     }
                 }
                 return InteractionResult.sidedSuccess(world.isClientSide);

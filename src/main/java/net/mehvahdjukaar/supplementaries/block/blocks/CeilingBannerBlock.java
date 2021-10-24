@@ -1,6 +1,8 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
+import net.mehvahdjukaar.selene.map.ExpandedMapData;
 import net.mehvahdjukaar.supplementaries.block.tiles.CeilingBannerBlockTile;
+import net.mehvahdjukaar.supplementaries.block.tiles.SignPostBlockTile;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -10,9 +12,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -130,7 +130,18 @@ public class CeilingBannerBlock extends AbstractBannerBlock {
 
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
+        ItemStack itemstack = pPlayer.getItemInHand(pHand);
+        Item item = itemstack.getItem();
+
+        //put post on map
+        if (item instanceof MapItem) {
+            if (!pLevel.isClientSide) {
+                if (MapItem.getSavedData(itemstack, pLevel) instanceof ExpandedMapData data) {
+                    data.toggleCustomDecoration(pLevel, pPos);
+                }
+            }
+            return InteractionResult.sidedSuccess(pLevel.isClientSide);
+        }
         return super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
-        //TODO: add markers for maps
     }
 }

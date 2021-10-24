@@ -6,7 +6,6 @@ import net.mehvahdjukaar.supplementaries.block.blocks.ClockBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.RakedGravelBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.StatueBlockTile;
-import net.mehvahdjukaar.supplementaries.client.renderers.entities.PicklePlayer;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.quark.QuarkPlugin;
@@ -192,7 +191,9 @@ public class ServerEvents {
             Supplementaries.LOGGER.warn("failed to end login message: " + exception);
         }
         //send in pickles
-        PicklePlayer.PickleData.onPlayerLogin(event.getPlayer());
+
+        //TODO: readd
+        //PicklePlayer.PickleData.onPlayerLogin(event.getPlayer());
 
     }
 

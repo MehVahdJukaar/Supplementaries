@@ -6,63 +6,41 @@ import net.mehvahdjukaar.supplementaries.inventories.RedMerchantContainer;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.SendOrangeTraderOffersPacket;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.entity.*;
-import net.minecraft.entity.ai.goal.*;
-import net.minecraft.world.entity.ExperienceOrb;
-import net.minecraft.world.entity.npc.AbstractVillager;
-import net.minecraft.entity.monster.*;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.SimpleMenuProvider;
-import net.minecraft.item.*;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.stats.Stats;
-import net.minecraft.util.*;
-import net.minecraft.core.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.level.Level;
+import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraftforge.fml.network.NetworkHooks;
-import net.minecraftforge.fml.network.PacketDistributor;
-
-import javax.annotation.Nullable;
-import java.util.EnumSet;
-import java.util.OptionalInt;
-
-//pretty much wantering trader class
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.stats.Stats;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.AgableMob;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
-import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
-import net.minecraft.world.entity.ai.goal.LookAtTradingPlayerGoal;
-import net.minecraft.world.entity.ai.goal.MoveTowardsRestrictionGoal;
-import net.minecraft.world.entity.ai.goal.TradeWithPlayerGoal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.monster.Creeper;
-import net.minecraft.world.entity.monster.RangedAttackMob;
-import net.minecraft.world.entity.monster.Vex;
-import net.minecraft.world.entity.monster.Zoglin;
-import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.world.entity.monster.*;
+import net.minecraft.world.entity.npc.AbstractVillager;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.fmllegacy.network.NetworkHooks;
+import net.minecraftforge.fmllegacy.network.PacketDistributor;
+
+import javax.annotation.Nullable;
+import java.util.EnumSet;
+import java.util.OptionalInt;
 
 public class RedMerchantEntity extends AbstractVillager implements RangedAttackMob {
     @Nullable
@@ -73,7 +51,6 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
 
     public RedMerchantEntity(EntityType<? extends RedMerchantEntity> type, Level world) {
         super(type, world);
-        this.forcedLoading = true;
     }
 
     public RedMerchantEntity(Level world) {
@@ -92,7 +69,7 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
         this.goalSelector.addGoal(2, new EquipAndRangeAttackGoal(this, 0.35D, 60, 10, 20, 15, new ItemStack(ModRegistry.BOMB_ITEM.get())));
 
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Mob.class, 8, true, false,
-                (mob) ->  (mob instanceof Raider || mob instanceof Zombie || mob instanceof Zoglin)));
+                (mob) -> (mob instanceof Raider || mob instanceof Zombie || mob instanceof Zoglin)));
 
         this.goalSelector.addGoal(3, new TradeWithPlayerGoal(this));
         this.goalSelector.addGoal(3, new LookAtTradingPlayerGoal(this));
@@ -103,7 +80,7 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
         this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, Raider.class, 11.0F, 0.5D, 0.5D));
         this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, Zoglin.class, 8.0F, 0.5D, 0.5D));
 
-        this.goalSelector.addGoal(4, new ShowWaresGoal(this,400, 1600));
+        this.goalSelector.addGoal(4, new ShowWaresGoal(this, 400, 1600));
         this.goalSelector.addGoal(4, new RedMerchantEntity.MoveToGoal(this, 2.0D, 0.35D));
         this.goalSelector.addGoal(5, new MoveTowardsRestrictionGoal(this, 0.35D));
         this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 0.35D));
@@ -117,7 +94,7 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
     }
 
     @Nullable
-    public AgableMob getBreedOffspring(ServerLevel world, AgableMob entity) {
+    public AgeableMob getBreedOffspring(ServerLevel world, AgeableMob entity) {
         return null;
     }
 
@@ -253,7 +230,7 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
 
     private void maybeDespawn() {
         if (this.despawnDelay > 0 && !this.isTrading() && --this.despawnDelay == 0) {
-            this.remove();
+            this.remove(RemovalReason.DISCARDED);
         }
     }
 
@@ -273,7 +250,7 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
         double d0 = target.getX() + vector3d.x - this.getX();
         double d1 = target.getEyeY() - (double) 3.5F - this.getY();
         double d2 = target.getZ() + vector3d.z - this.getZ();
-        float f = Mth.sqrt(d0 * d0 + d2 * d2);
+        float f = Mth.sqrt((float) (d0 * d0 + d2 * d2));
 
         BombEntity bomb = new BombEntity(this.level, this, false);
         //bomb.xRot -= -90F;

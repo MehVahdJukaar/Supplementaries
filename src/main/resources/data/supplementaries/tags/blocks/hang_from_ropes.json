@@ -3,8 +3,7 @@
   "values": [
     "supplementaries:rope",
     "supplementaries:sack",
-    "supplementaries:hanging_flower_pot",
-    "supplementaries:cracked_bell"
+    "supplementaries:hanging_flower_pot"
   ],
   "optional": [
     "supplementaries:rope_chandelier",

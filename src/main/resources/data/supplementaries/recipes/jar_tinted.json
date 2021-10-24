@@ -11,7 +11,7 @@
       "tag": "minecraft:wooden_slabs"
     },
     "2": {
-      "tag": "forge:stained_glass"
+      "tag": "minecraft:tinted_glass"
     }
   },
   "result": {
@@ -22,18 +22,6 @@
     {
       "type": "supplementaries:flag",
       "flag": "jar"
-    },
-    {
-      "type": "forge:not",
-      "value": {
-        "type": "forge:or",
-        "values": [
-          {
-            "type": "forge:mod_loaded",
-            "modid": "cavesandcliffs"
-          }
-        ]
-      }
     }
   ]
 }

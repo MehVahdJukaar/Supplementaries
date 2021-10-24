@@ -10,10 +10,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -25,6 +27,7 @@ import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.level.material.Fluid;
@@ -34,6 +37,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 
 public class NetheriteTrapdoorBlock extends TrapDoorBlock implements ILavaAndWaterLoggable, EntityBlock {
     public static final BooleanProperty LAVALOGGED = BlockProperties.LAVALOGGED;
@@ -86,7 +90,7 @@ public class NetheriteTrapdoorBlock extends TrapDoorBlock implements ILavaAndWat
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new KeyLockableTile();
+        return new KeyLockableTile(pPos, pState);
     }
 
     @Override
@@ -133,5 +137,15 @@ public class NetheriteTrapdoorBlock extends TrapDoorBlock implements ILavaAndWat
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         if (!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().options.advancedItemTooltips) return;
         tooltip.add(new TranslatableComponent("message.supplementaries.key.lockable").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
+    }
+
+    @Override
+    public ItemStack pickupBlock(LevelAccessor pLevel, BlockPos pPos, BlockState pState) {
+        return ILavaAndWaterLoggable.super.pickupBlock(pLevel, pPos, pState);
+    }
+
+    @Override
+    public Optional<SoundEvent> getPickupSound() {
+        return super.getPickupSound();
     }
 }

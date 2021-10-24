@@ -45,8 +45,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class JarBlock extends WaterBlock implements EntityBlock {
-    protected static final VoxelShape SHAPE = Shapes.or(Shapes.box(0.1875D, 0D, 0.1875D, 0.8125D, 0.875D, 0.8125D),
-            Shapes.box(0.3125, 0.875, 0.3125, 0.6875, 1, 0.6875));
+    protected static final VoxelShape SHAPE = Shapes.or(Block.box(3, 0, 3, 13, 14, 13),
+            Block.box(5, 14, 5, 11, 16, 11));
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final IntegerProperty LIGHT_LEVEL = BlockProperties.LIGHT_LEVEL_0_15;

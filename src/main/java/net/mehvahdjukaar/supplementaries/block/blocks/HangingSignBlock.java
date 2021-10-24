@@ -40,8 +40,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class HangingSignBlock extends SwayingBlock implements EntityBlock {
-    protected static final VoxelShape SHAPE_Z = Shapes.box(0.4375D, 0D, 0D, 0.5625D, 1D, 1D);
-    protected static final VoxelShape SHAPE_X = Shapes.box(0D, 0D, 0.5625D, 1D, 1D, 0.4375D);
+    protected static final VoxelShape SHAPE_Z = Block.box(7, 0, 0, 9, 16, 16);
+    protected static final VoxelShape SHAPE_X = Shapes.box(0, 0, 7, 16, 16, 9);
 
     public static final BooleanProperty HANGING = BlockStateProperties.HANGING;
     public static final BooleanProperty TILE = BlockProperties.TILE; // is it renderer by tile entity? animated part

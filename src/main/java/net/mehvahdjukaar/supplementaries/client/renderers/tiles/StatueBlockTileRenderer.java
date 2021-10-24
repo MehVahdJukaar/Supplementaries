@@ -38,7 +38,7 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
 
     public StatueBlockTileRenderer(BlockEntityRendererProvider.Context context) {
         itemRenderer = Minecraft.getInstance().getItemRenderer();
-        model = new StatueEntityModel(context, 0);
+        model = new StatueEntityModel(context);
         blockRenderer = Minecraft.getInstance().getBlockRenderer();
     }
 
@@ -130,7 +130,7 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
                 break;
             case CANDLE:
                 //matrixStackIn.scale(1f, -1f, -1f);
-                matrixStackIn.translate(0,-0.75,0.5);
+                matrixStackIn.translate(0, -0.75, 0.5);
                 blockRenderer.renderSingleBlock(tile.candle, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
                 break;
             default:

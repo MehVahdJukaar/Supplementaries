@@ -133,6 +133,6 @@ public class WallLanternBlock extends EnhancedLanternBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new WallLanternBlockTile();
+        return new WallLanternBlockTile(pPos, pState);
     }
 }

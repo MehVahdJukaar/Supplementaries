@@ -10,8 +10,8 @@ import org.spongepowered.asm.mixin.Mixin;
 @Mixin({ZombieHorse.class})
 public abstract class ZombieHorseMixin extends AbstractHorse {
 
-    protected ZombieHorseMixin(EntityType<? extends AbstractHorse> p_i48563_1_, Level p_i48563_2_) {
-        super(p_i48563_1_, p_i48563_2_);
+    protected ZombieHorseMixin(EntityType<? extends AbstractHorse> entityType, Level level) {
+        super(entityType, level);
     }
 
     @Override

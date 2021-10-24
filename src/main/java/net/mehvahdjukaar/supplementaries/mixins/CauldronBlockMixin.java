@@ -1,29 +1,8 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.selene.map.CustomDecorationHolder;
-import net.mehvahdjukaar.supplementaries.items.FlagItem;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.CauldronBlock;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.MapItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.stats.Stats;
-import net.minecraft.world.level.block.entity.BannerBlockEntity;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 @Mixin(CauldronBlock.class)
 public abstract class CauldronBlockMixin extends Block {
@@ -32,7 +11,8 @@ public abstract class CauldronBlockMixin extends Block {
         super(properties);
     }
 
-
+//TODO: do it the new way
+    /*
     @Inject(method = "use", at = @At("HEAD"), cancellable = true)
     public void use(BlockState state, Level world, BlockPos pos, Player playerEntity, InteractionHand hand, BlockHitResult rayTraceResult, CallbackInfoReturnable<InteractionResult> info) {
         ItemStack itemstack = playerEntity.getItemInHand(hand);
@@ -77,5 +57,6 @@ public abstract class CauldronBlockMixin extends Block {
             }
         }
     }
+    */
 
 }

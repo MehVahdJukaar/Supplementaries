@@ -1,37 +1,29 @@
 package net.mehvahdjukaar.supplementaries.client.gui;
 
 
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.math.Matrix4f;
 import net.mehvahdjukaar.supplementaries.block.blocks.HangingSignBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.HangingSignBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.UpdateServerTextHolderPacket;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.font.TextFieldHelper;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.math.Matrix4f;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.EmptyModelData;
 
 import java.util.stream.IntStream;
-
-
-import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.BufferUploader;
-import com.mojang.blaze3d.vertex.Tesselator;
-import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 
 public class HangingSignGui extends Screen {
     private TextFieldHelper textInputUtil;
@@ -62,11 +54,11 @@ public class HangingSignGui extends Screen {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        this.scrollText((int)delta);
+        this.scrollText((int) delta);
         return true;
     }
 
-    public void scrollText(int amount){
+    public void scrollText(int amount) {
         this.editLine = Math.floorMod(this.editLine - amount, HangingSignBlockTile.MAX_LINES);
         this.textInputUtil.setCursorToEnd();
     }
@@ -92,7 +84,7 @@ public class HangingSignGui extends Screen {
     @Override
     public void tick() {
         ++this.updateCounter;
-        if (!this.tileSign.getType().isValid(this.tileSign.getBlockState().getBlock())) {
+        if (!this.tileSign.getType().isValid(this.tileSign.getBlockState())) {
             this.close();
         }
     }
@@ -120,7 +112,7 @@ public class HangingSignGui extends Screen {
     protected void init() {
 
         this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
-        this.addButton(new Button(this.width / 2 - 100, this.height / 4 + 120, 200, 20, CommonComponents.GUI_DONE, (p_238847_1_) -> this.close()));
+        this.addWidget(new Button(this.width / 2 - 100, this.height / 4 + 120, 200, 20, CommonComponents.GUI_DONE, (p_238847_1_) -> this.close()));
         //this.tileSign.setEditable(false);
         this.textInputUtil = new TextFieldHelper(() -> this.cachedLines[this.editLine], (p_238850_1_) -> {
             this.cachedLines[this.editLine] = p_238850_1_;
@@ -130,7 +122,7 @@ public class HangingSignGui extends Screen {
 
     @Override
 
-    public void render(PoseStack matrixstack, int  mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack matrixstack, int mouseX, int mouseY, float partialTicks) {
         Lighting.setupForFlatItems();
         this.renderBackground(matrixstack);
         drawCenteredString(matrixstack, this.font, this.title, this.width / 2, 40, 16777215);
@@ -147,12 +139,11 @@ public class HangingSignGui extends Screen {
         matrixstack.pushPose();
         // matrixstack.scale(0.6666667F, 0.6666667F, 0.6666667F);
         matrixstack.mulPose(Const.Y90);
-        matrixstack.translate(0, - 0.5 + 0.1875, -0.5);
+        matrixstack.translate(0, -0.5 + 0.1875, -0.5);
         BlockRenderDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
         BlockState state = this.tileSign.getBlockState().getBlock().defaultBlockState().setValue(HangingSignBlock.TILE, true);
-        blockRenderer.renderBlock(state, matrixstack, irendertypebuffer$impl, 15728880, OverlayTexture.NO_OVERLAY, EmptyModelData.INSTANCE);
+        blockRenderer.renderSingleBlock(state, matrixstack, irendertypebuffer$impl, 15728880, OverlayTexture.NO_OVERLAY, EmptyModelData.INSTANCE);
         matrixstack.popPose();
-
 
 
         //renders text
@@ -168,7 +159,7 @@ public class HangingSignGui extends Screen {
         int k = this.textInputUtil.getSelectionPos();
         int l = this.editLine * 10 - this.tileSign.textHolder.size * 5;
 
-        for(int i1 = 0; i1 < this.cachedLines.length; ++i1) {
+        for (int i1 = 0; i1 < this.cachedLines.length; ++i1) {
             String s = this.cachedLines[i1];
             if (s != null) {
                 if (this.font.isBidirectional()) {
@@ -177,23 +168,26 @@ public class HangingSignGui extends Screen {
                 float f3 = (float) (-this.minecraft.font.width(s) / 2);
                 //this.minecraft.fontRenderer.renderString(s, f3, (float) (k1 * 48 - this.tileSign.signText.length * 5), i, false, matrix4f,
                 //       irendertypebuffer$impl, false, 0, 15728880); //*10
-                this.minecraft.font.drawInBatch(s, f3, 1+(float)(i1 * 10 - this.cachedLines.length * 5), i, false, matrix4f, irendertypebuffer$impl, false, 0, 15728880, false);
+                this.minecraft.font.drawInBatch(s, f3, 1 + (float) (i1 * 10 - this.cachedLines.length * 5), i, false, matrix4f, irendertypebuffer$impl, false, 0, 15728880, false);
                 if (i1 == this.editLine && j >= 0 && flag1) {
                     int j1 = this.minecraft.font.width(s.substring(0, Math.max(Math.min(j, s.length()), 0)));
 
-                    int k1 = ( j1 - this.minecraft.font.width(s) / 2);
+                    int k1 = (j1 - this.minecraft.font.width(s) / 2);
                     if (j >= s.length()) {
-                        this.minecraft.font.drawInBatch("_", (float)k1, (float)l, i, false, matrix4f, irendertypebuffer$impl, false, 0, 15728880, false);
+                        this.minecraft.font.drawInBatch("_", (float) k1, (float) l, i, false, matrix4f, irendertypebuffer$impl, false, 0, 15728880, false);
                     }
                 }
             }
         }
 
 
-
         irendertypebuffer$impl.endBatch();
         //draw highlighted text box
 
+        //TODO: add this
+
+
+        /*
         for(int i3 = 0; i3 < this.cachedLines.length; ++i3) {
             String s1 = this.cachedLines[i3];
             if (s1 != null && i3 == this.editLine && j >= 0) {
@@ -228,6 +222,8 @@ public class HangingSignGui extends Screen {
                 }
             }
         }
+
+         */
         matrixstack.popPose();
         Lighting.setupFor3DItems();
         super.render(matrixstack, mouseX, mouseY, partialTicks);

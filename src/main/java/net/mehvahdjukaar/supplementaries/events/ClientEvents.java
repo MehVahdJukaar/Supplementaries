@@ -54,50 +54,52 @@ public class ClientEvents {
         }
     }
 
-    @SubscribeEvent
-    public static void renderTooltipEvent(RenderTooltipEvent.PostText event) {
-        ItemStack stack = event.getStack();
-        Item i = stack.getItem();
-        if (CompatHandler.quark) {
-            if (i == ModRegistry.SACK_ITEM.get()) {
-                QuarkTooltipPlugin.renderTooltipEvent(event);
-            } else if (i == ModRegistry.SAFE_ITEM.get()) {
-                QuarkTooltipPlugin.renderTooltipEvent(event);
-            }
-        }
-        if (i == ModRegistry.BLACKBOARD_ITEM.get()) {
-            CompoundTag cmp = stack.getTagElement("BlockEntityTag");
-            if (cmp != null && cmp.contains("Pixels")) {
-                long[] packed = cmp.getLongArray("Pixels");
+    //TODO: readd
 
-                //credits to quark. Uses same code so it's consistent with map preview
-                Minecraft mc = Minecraft.getInstance();
-
-                int pad = 7;
-                float size = 135.0F;
-                float scale = 0.5F;
-
-                PoseStack matrixStack = event.getMatrixStack();
-                RenderSystem.color3f(1.0F, 1.0F, 1.0F);
-                mc.getTextureManager().bind(BlackboardTextureManager.INSTANCE.getResourceLocation(packed));
-                Tesselator tessellator = Tesselator.getInstance();
-                BufferBuilder buffer = tessellator.getBuilder();
-
-                matrixStack.translate(event.getX(), (float) event.getY() - size * scale - 5.0F, 500.0D);
-                matrixStack.scale(scale, scale, 1.0F);
-                RenderSystem.enableBlend();
-                Matrix4f mat = matrixStack.last().pose();
-
-                //AbstractGui.blit(matrix, x, y, 0.0F, 0.0F, 1*width, 1*width, 16*width, 16*width);
-                buffer.begin(7, DefaultVertexFormat.POSITION_TEX);
-                buffer.vertex(mat, (float) (-pad), size, 0.0F).uv(0.0F, 1.0F).endVertex();
-                buffer.vertex(mat, size, size, 0.0F).uv(1.0F, 1.0F).endVertex();
-                buffer.vertex(mat, size, (float) (-pad), 0.0F).uv(1.0F, 0.0F).endVertex();
-                buffer.vertex(mat, (float) (-pad), (float) (-pad), 0.0F).uv(0.0F, 0.0F).endVertex();
-                tessellator.end();
-            }
-        }
-    }
+//    @SubscribeEvent
+//    public static void renderTooltipEvent(RenderTooltipEvent.PostText event) {
+//        ItemStack stack = event.getStack();
+//        Item i = stack.getItem();
+//        if (CompatHandler.quark) {
+//            if (i == ModRegistry.SACK_ITEM.get()) {
+//                QuarkTooltipPlugin.renderTooltipEvent(event);
+//            } else if (i == ModRegistry.SAFE_ITEM.get()) {
+//                QuarkTooltipPlugin.renderTooltipEvent(event);
+//            }
+//        }
+//        if (i == ModRegistry.BLACKBOARD_ITEM.get()) {
+//            CompoundTag cmp = stack.getTagElement("BlockEntityTag");
+//            if (cmp != null && cmp.contains("Pixels")) {
+//                long[] packed = cmp.getLongArray("Pixels");
+//
+//                //credits to quark. Uses same code so it's consistent with map preview
+//                Minecraft mc = Minecraft.getInstance();
+//
+//                int pad = 7;
+//                float size = 135.0F;
+//                float scale = 0.5F;
+//
+//                PoseStack matrixStack = event.getMatrixStack();
+//                RenderSystem.color3f(1.0F, 1.0F, 1.0F);
+//                mc.getTextureManager().bind(BlackboardTextureManager.INSTANCE.getResourceLocation(packed));
+//                Tesselator tessellator = Tesselator.getInstance();
+//                BufferBuilder buffer = tessellator.getBuilder();
+//
+//                matrixStack.translate(event.getX(), (float) event.getY() - size * scale - 5.0F, 500.0D);
+//                matrixStack.scale(scale, scale, 1.0F);
+//                RenderSystem.enableBlend();
+//                Matrix4f mat = matrixStack.last().pose();
+//
+//                //AbstractGui.blit(matrix, x, y, 0.0F, 0.0F, 1*width, 1*width, 16*width, 16*width);
+//                buffer.begin(7, DefaultVertexFormat.POSITION_TEX);
+//                buffer.vertex(mat, (float) (-pad), size, 0.0F).uv(0.0F, 1.0F).endVertex();
+//                buffer.vertex(mat, size, size, 0.0F).uv(1.0F, 1.0F).endVertex();
+//                buffer.vertex(mat, size, (float) (-pad), 0.0F).uv(1.0F, 0.0F).endVertex();
+//                buffer.vertex(mat, (float) (-pad), (float) (-pad), 0.0F).uv(0.0F, 0.0F).endVertex();
+//                tessellator.end();
+//            }
+//        }
+//    }
 
 
     //enderman hold block in rain

@@ -121,7 +121,7 @@ public class DoormatGui extends Screen {
     protected void init() {
 
         this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
-        this.addButton(new Button(this.width / 2 - 100, this.height / 4 + 120, 200, 20, CommonComponents.GUI_DONE, (p_238847_1_) -> this.close()));
+        this.addWidget(new Button(this.width / 2 - 100, this.height / 4 + 120, 200, 20, CommonComponents.GUI_DONE, (p_238847_1_) -> this.close()));
         //this.tileSign.setEditable(false);
         this.textInputUtil = new TextFieldHelper(() -> this.cachedLines[this.editLine], (p_238850_1_) -> {
             this.cachedLines[this.editLine] = p_238850_1_;
@@ -153,7 +153,7 @@ public class DoormatGui extends Screen {
         matrixstack.mulPose(Const.Z90);
         BlockRenderDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
         BlockState state = this.tileSign.getBlockState().getBlock().defaultBlockState().setValue(DoormatBlock.FACING, Direction.EAST);
-        blockRenderer.renderBlock(state, matrixstack, irendertypebuffer$impl, 15728880, OverlayTexture.NO_OVERLAY, EmptyModelData.INSTANCE);
+        blockRenderer.renderSingleBlock(state, matrixstack, irendertypebuffer$impl, 15728880, OverlayTexture.NO_OVERLAY, EmptyModelData.INSTANCE);
         matrixstack.popPose();
 
 
@@ -207,6 +207,7 @@ public class DoormatGui extends Screen {
                 }
 
                 if (k != j) {
+                    /*
                     int l3 = Math.min(j, k);
                     int l1 = Math.max(j, k);
 
@@ -214,8 +215,8 @@ public class DoormatGui extends Screen {
                     int j2 = this.minecraft.font.width(s1.substring(0, l1)) - this.minecraft.font.width(s1) / 2;
                     int k2 = Math.min(i2, j2);
                     int l2 = Math.max(i2, j2);
-                    Tesselator tessellator = Tesselator.getInstance();
-                    BufferBuilder bufferbuilder = tessellator.getBuilder();
+                    Tesselator tesselator = Tesselator.getInstance();
+                    BufferBuilder bufferbuilder = tesselator.getBuilder();
                     RenderSystem.disableTexture();
                     RenderSystem.enableColorLogicOp();
                     RenderSystem.logicOp(GlStateManager.LogicOp.OR_REVERSE);
@@ -228,6 +229,8 @@ public class DoormatGui extends Screen {
                     BufferUploader.end(bufferbuilder);
                     RenderSystem.disableColorLogicOp();
                     RenderSystem.enableTexture();
+
+                     */
                 }
             }
         }

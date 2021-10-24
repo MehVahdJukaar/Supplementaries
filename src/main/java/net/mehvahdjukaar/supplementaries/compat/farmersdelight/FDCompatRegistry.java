@@ -19,8 +19,8 @@ public class FDCompatRegistry {
 
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
         IForgeRegistry<Block> reg = event.getRegistry();
-        reg.register(new PlanterRichBlock(BlockBehaviour.Properties.copy(ModRegistry.PLANTER.get()).randomTicks())
-                .setRegistryName(PLANTER_RICH_NAME));
+       // reg.register(new PlanterRichBlock(BlockBehaviour.Properties.copy(ModRegistry.PLANTER.get()).randomTicks())
+       //         .setRegistryName(PLANTER_RICH_NAME));
 
     }
 

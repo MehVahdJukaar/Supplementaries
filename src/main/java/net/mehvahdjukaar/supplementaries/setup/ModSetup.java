@@ -11,8 +11,8 @@ import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.entities.VillagerTradesHandler;
 import net.mehvahdjukaar.supplementaries.events.ItemsOverrideHandler;
 import net.mehvahdjukaar.supplementaries.fluids.ModSoftFluids;
-import net.mehvahdjukaar.supplementaries.mixins.accessors.ChickenEntityAccessor;
-import net.mehvahdjukaar.supplementaries.mixins.accessors.HorseEntityAccessor;
+import net.mehvahdjukaar.supplementaries.mixins.accessors.ChickenAccessor;
+import net.mehvahdjukaar.supplementaries.mixins.accessors.HorseAccessor;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.commands.ModCommands;
 import net.mehvahdjukaar.supplementaries.world.data.map.CMDreg;
@@ -73,7 +73,7 @@ public class ModSetup {
 
                 LootTableStuff.init();
 
-                registerMobFoods();
+               // registerMobFoods();
 
                 hasFinishedSetup = true;
 
@@ -93,17 +93,18 @@ public class ModSetup {
     }
 
     private static void registerMobFoods() {
+        //TODO: this is not working. fix
         List<ItemStack> chickenFood = new ArrayList<>();
-        Collections.addAll(chickenFood, ChickenEntityAccessor.getFoodItems().getItems());
+        Collections.addAll(chickenFood, ChickenAccessor.getFoodItems().getItems());
         chickenFood.add(new ItemStack(ModRegistry.FLAX_SEEDS_ITEM.get()));
-        ChickenEntityAccessor.setFoodItems(Ingredient.of(chickenFood.stream()));
+        ChickenAccessor.setFoodItems(Ingredient.of(chickenFood.stream()));
 
 
         List<ItemStack> horseFood = new ArrayList<>();
-        Collections.addAll(horseFood, HorseEntityAccessor.getFoodItems().getItems());
+        Collections.addAll(horseFood, HorseAccessor.getFoodItems().getItems());
         horseFood.add(new ItemStack(ModRegistry.FLAX_ITEM.get()));
         horseFood.add(new ItemStack(ModRegistry.FLAX_BLOCK_ITEM.get()));
-        HorseEntityAccessor.setFoodItems(Ingredient.of(horseFood.stream()));
+        HorseAccessor.setFoodItems(Ingredient.of(horseFood.stream()));
     }
 
     //damn I hate this. If setup fails forge doesn't do anything and it keeps on going quietly

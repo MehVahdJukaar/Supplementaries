@@ -3,10 +3,9 @@ package net.mehvahdjukaar.supplementaries.world.data.map.markers;
 import net.mehvahdjukaar.selene.map.markers.NamedMapWorldMarker;
 import net.mehvahdjukaar.supplementaries.block.tiles.FlagBlockTile;
 import net.mehvahdjukaar.supplementaries.world.data.map.CMDreg;
-import net.mehvahdjukaar.supplementaries.world.data.map.FlagDecoration;
+import net.mehvahdjukaar.supplementaries.world.data.map.ColoredDecoration;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.BlockGetter;
@@ -14,7 +13,7 @@ import net.minecraft.world.level.BlockGetter;
 import javax.annotation.Nullable;
 import java.util.Objects;
 
-public class FlagMarker extends NamedMapWorldMarker<FlagDecoration> {
+public class FlagMarker extends NamedMapWorldMarker<ColoredDecoration> {
 
     private DyeColor color;
 
@@ -54,8 +53,8 @@ public class FlagMarker extends NamedMapWorldMarker<FlagDecoration> {
 
     @Nullable
     @Override
-    public FlagDecoration doCreateDecoration(byte mapX, byte mapY, byte rot) {
-        return new FlagDecoration(this.getType(), mapX, mapY, rot, this.name, this.color);
+    public ColoredDecoration doCreateDecoration(byte mapX, byte mapY, byte rot) {
+        return new ColoredDecoration(this.getType(), mapX, mapY, rot, this.name, this.color);
     }
 
     @Override

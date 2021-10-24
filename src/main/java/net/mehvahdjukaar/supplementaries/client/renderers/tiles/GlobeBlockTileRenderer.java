@@ -80,11 +80,11 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
         snow.addOrReplaceChild("roof_l", CubeListBuilder.create()
                         .texOffs(11, 27)
                         .addBox(0.0F, -1.0F, -1.0F, 2.0F, 1.0F, 2.0F),
-                PartPose.offset(0, -25.9F, 0));
+                PartPose.offsetAndRotation(0, -25.9F, 0, 0, 0, 0.7854F));
         snow.addOrReplaceChild("roof_r", CubeListBuilder.create()
                         .texOffs(0, 27)
                         .addBox(-2.0F, -1.0F, -1.0F, 3.0F, 1.0F, 2.0F),
-                PartPose.offset(0, -25.9F, 0));
+                PartPose.offsetAndRotation(0, -25.9F, 0, 0, 0,  -0.7854F));
 
 
         return LayerDefinition.create(mesh, 32, 32);
@@ -95,9 +95,7 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
         this.globe = model.getChild("globe");
         ModelPart special = context.bakeLayer(ClientRegistry.GLOBE_SPECIAL_MODEL);
         this.flat = special.getChild("flat");
-        this.snow = special.getChild("flat");
-        this.snow.getChild("roof_l").zRot = 0.7854F;
-        this.snow.getChild("roof_r").zRot = -0.7854F;
+        this.snow = special.getChild("snow");
         this.sheared = special.getChild("sheared");
     }
 

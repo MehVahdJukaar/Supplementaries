@@ -7,15 +7,22 @@ import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.selene.util.PotionNBTHelper;
 import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper;
+import net.mehvahdjukaar.supplementaries.client.renderers.items.CageItemRenderer;
+import net.mehvahdjukaar.supplementaries.client.renderers.items.JarItemRenderer;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.fluids.ModSoftFluids;
 import net.mehvahdjukaar.supplementaries.items.tabs.JarTab;
+import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.geom.EntityModelSet;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -38,9 +45,18 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.client.IItemRenderProperties;
+import net.minecraftforge.common.util.Lazy;
+import net.minecraftforge.common.util.NonNullLazy;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class JarItem extends AbstractMobContainerItem {
 
@@ -53,7 +69,7 @@ public class JarItem extends AbstractMobContainerItem {
         EntityType<?> type = e.getType();
         if (e instanceof Monster) return false;
         if (ServerConfigs.cached.JAR_AUTO_DETECT && this.canFitEntity(e)) return true;
-        return this.isFirefly(e) || type.is(ModTags.JAR_CATCHABLE) || this.isBoat(e) ||
+        return type.is(ModTags.JAR_CATCHABLE) || this.isBoat(e) ||
                 CapturedMobsHelper.CATCHABLE_FISHES.contains(type.getRegistryName().toString());
     }
 
@@ -90,17 +106,17 @@ public class JarItem extends AbstractMobContainerItem {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        CompoundTag compoundnbt = stack.getTagElement("BlockEntityTag");
-        if (compoundnbt == null) {
+        CompoundTag compoundTag = stack.getTagElement("BlockEntityTag");
+        if (compoundTag == null) {
             if (!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().options.advancedItemTooltips) return;
             tooltip.add(new TranslatableComponent("message.supplementaries.jar").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
         } else {
-            if (compoundnbt.contains("LootTable", 8)) {
+            if (compoundTag.contains("LootTable", 8)) {
                 tooltip.add(new TextComponent("???????").withStyle(ChatFormatting.GRAY));
             }
 
-            if (compoundnbt.contains("FluidHolder")) {
-                CompoundTag com = compoundnbt.getCompound("FluidHolder");
+            if (compoundTag.contains("FluidHolder")) {
+                CompoundTag com = compoundTag.getCompound("FluidHolder");
                 SoftFluid s = SoftFluidRegistry.get(com.getString("Fluid"));
                 int count = com.getInt("Count");
                 if (!s.isEmpty() && count > 0) {
@@ -124,9 +140,9 @@ public class JarItem extends AbstractMobContainerItem {
                 }
             }
 
-            if (compoundnbt.contains("Items", 9)) {
+            if (compoundTag.contains("Items", 9)) {
                 NonNullList<ItemStack> nonnulllist = NonNullList.withSize(27, ItemStack.EMPTY);
-                ContainerHelper.loadAllItems(compoundnbt, nonnulllist);
+                ContainerHelper.loadAllItems(compoundTag, nonnulllist);
                 int i = 0;
                 int j = 0;
 
@@ -201,23 +217,23 @@ public class JarItem extends AbstractMobContainerItem {
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player playerEntity, InteractionHand hand) {
         if (this.getUseDuration(playerEntity.getItemInHand(hand)) != 0) {
-            return ItemUtils.useDrink(world, playerEntity, hand);
+            return ItemUtils.startUsingInstantly(world, playerEntity, hand);
         }
         return super.use(world, playerEntity, hand);
     }
+
+    private final Lazy<JarBlockTile> DUMMY_TILE = ()->new JarBlockTile(BlockPos.ZERO, ModRegistry.JAR.get().defaultBlockState());
 
     @Override
     public int getUseDuration(ItemStack stack) {
         if (ServerConfigs.cached.JAR_ITEM_DRINK) {
             CompoundTag tag = stack.getTagElement("BlockEntityTag");
             if (tag != null) {
-                JarBlockTile temp = new JarBlockTile();
-                temp.load(ModRegistry.JAR.get().defaultBlockState(), tag);
-                SoftFluidHolder fh = temp.getSoftFluidHolder();
+                DUMMY_TILE.get().load(tag);
+                SoftFluidHolder fh = DUMMY_TILE.get().getSoftFluidHolder();
                 SoftFluid sf = fh.getFluid();
                 Item food = sf.getFoodItem();
                 return food.getUseDuration(food.getDefaultInstance()) / sf.getFoodDivider();
-
             }
         }
         return 0;
@@ -229,6 +245,16 @@ public class JarItem extends AbstractMobContainerItem {
             return UseAnim.DRINK;
         }
         return UseAnim.NONE;
+    }
+
+    @Override
+    public void registerBlocks(Map<Block, Item> pBlockToItemMap, Item pItem) {
+        super.registerBlocks(pBlockToItemMap, pItem);
+    }
+
+    @Override
+    public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+        ClientRegistry.registerISTER(consumer, JarItemRenderer::new);
     }
 
 }

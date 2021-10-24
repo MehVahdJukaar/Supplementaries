@@ -1,8 +1,13 @@
 package net.mehvahdjukaar.supplementaries.items;
 
 
+import net.mehvahdjukaar.supplementaries.block.blocks.SafeBlock;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.TooltipFlag;
@@ -17,6 +22,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.ShulkerBoxBlock;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
@@ -98,5 +104,19 @@ public class SackItem extends BlockItem {
 
         if (!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().options.advancedItemTooltips) return;
         tooltip.add(new TranslatableComponent("message.supplementaries.sack").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
+    }
+
+    @Override
+    public boolean canFitInsideContainerItems() {
+        return false;
+    }
+
+    @Override
+    public void onDestroyed(ItemEntity pItemEntity) {
+        CompoundTag compoundtag = pItemEntity.getItem().getTag();
+        if (compoundtag != null) {
+            ListTag listtag = compoundtag.getCompound("BlockEntityTag").getList("Items", 10);
+            ItemUtils.onContainerDestroyed(pItemEntity, listtag.stream().map(CompoundTag.class::cast).map(ItemStack::of));
+        }
     }
 }

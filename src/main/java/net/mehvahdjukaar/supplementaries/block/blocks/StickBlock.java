@@ -178,11 +178,9 @@ public class StickBlock extends WaterBlock implements IRotationLockable {
                 world.setBlockAndUpdate(toPos, state);
 
                 tile.setRemoved();
-                tile.setPosition(toPos);
-                BlockEntity target = BlockEntity.loadStatic(state, tile.save(new CompoundTag()));
+                BlockEntity target = BlockEntity.loadStatic(pos, state,  tile.save(new CompoundTag()));
                 if (target != null) {
-                    world.setBlockEntity(toPos, target);
-                    target.clearCache();
+                    world.setBlockEntity(target);
                 }
                 world.playSound(null, toPos, SoundEvents.WOOL_PLACE, SoundSource.BLOCKS, 1F, 1.4F);
                 return true;

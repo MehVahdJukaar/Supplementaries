@@ -1,6 +1,13 @@
 {
   "replace": false,
   "optional": [
+    "cfm:acacia_hedge",
+    "cfm:birch_hedge",
+    "cfm:dark_oak_hedge",
+    "cfm:jungle_hedge",
+    "cfm:oak_hedge",
+    "cfm:spruce_hedge",
+
     "#ilikewood:posts",
     "ilikewood:acacia_post",
     "ilikewood:oak_post",
@@ -22,6 +29,9 @@
     "#ilikewood:stripped_posts",
     "simplefarming:fruit_log",
 
+    "#cfm:fences/hedge",
+    "#lotr:branches",
+    "betternether:willow_trunk",
     "mysticalworld:amethyst_wide_post",
     "mysticalworld:blackened_stone_wide_post",
     "mysticalworld:brown_mushroom_wide_post",

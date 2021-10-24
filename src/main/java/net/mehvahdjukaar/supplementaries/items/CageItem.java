@@ -1,8 +1,11 @@
 package net.mehvahdjukaar.supplementaries.items;
 
 
+import net.mehvahdjukaar.supplementaries.client.renderers.items.CageItemRenderer;
+import net.mehvahdjukaar.supplementaries.client.renderers.items.JarItemRenderer;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
@@ -12,6 +15,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.client.IItemRenderProperties;
+
+import java.util.function.Consumer;
 
 public class CageItem extends AbstractMobContainerItem {
 
@@ -44,6 +50,11 @@ public class CageItem extends AbstractMobContainerItem {
         return ((ServerConfigs.cached.CAGE_ALL_BABIES && isBaby) ||
                 type.is(ModTags.CAGE_CATCHABLE) ||
                 (type.is(ModTags.CAGE_BABY_CATCHABLE) && isBaby));
+    }
+
+    @Override
+    public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+        ClientRegistry.registerISTER(consumer, CageItemRenderer::new);
     }
 
 }

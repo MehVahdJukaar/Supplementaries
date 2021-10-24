@@ -1,50 +1,46 @@
 package net.mehvahdjukaar.supplementaries.compat.quark;
 
 
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import vazkii.quark.content.automation.module.PistonsMoveTileEntitiesModule;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nullable;
-import java.lang.reflect.Field;
-import java.util.Map;
-import java.util.WeakHashMap;
 
 public class QuarkPistonPlugin {
     //not really a plugin
     @Nullable
-    public static BlockEntity getMovingTile(BlockPos pos, Level world){
-        return PistonsMoveTileEntitiesModule.getMovement(world,pos);
+    public static BlockEntity getMovingTile(BlockPos pos, Level world) {
+        //return PistonsMoveTileEntitiesModule.getMovement(world,pos);
+        return null;
     }
 
-    public static boolean updateMovingTIle(BlockPos pos, World world, TileEntity tile) {
-        //not very nice of me to change its private fields :/
-        try {
-            //Class c = Class.forName("vazkii.quark.content.automation.module.PistonsMoveTileEntitiesModule");
-            Class c = PistonsMoveTileEntitiesModule.class;
-            Field f = ObfuscationReflectionHelper.findField(c,"movements");
-            Object o = f.get(null);
-            if(o instanceof WeakHashMap){
-                WeakHashMap<World, Map<BlockPos, CompoundNBT>> movements = (WeakHashMap<World, Map<BlockPos, CompoundNBT>>) o;
-                if (movements.containsKey(world)) {
-                    Map<BlockPos, CompoundNBT> worldMovements = movements.get(world);
-                    if (worldMovements.containsKey(pos)) {
-                        worldMovements.remove(pos);
-                        worldMovements.put(pos,tile.serializeNBT());
-                        return true;
-                    }
-                }
-            }
-        }
-        catch (Exception ignored) {}
+    public static boolean updateMovingTIle(BlockPos pos, Level world, BlockEntity tile) {
+//        //not very nice of me to change its private fields :/
+//        try {
+//            //Class c = Class.forName("vazkii.quark.content.automation.module.PistonsMoveTileEntitiesModule");
+//            Class c = PistonsMoveTileEntitiesModule.class;
+//            Field f = ObfuscationReflectionHelper.findField(c,"movements");
+//            Object o = f.get(null);
+//            if(o instanceof WeakHashMap){
+//                WeakHashMap<World, Map<BlockPos, CompoundNBT>> movements = (WeakHashMap<World, Map<BlockPos, CompoundNBT>>) o;
+//                if (movements.containsKey(world)) {
+//                    Map<BlockPos, CompoundNBT> worldMovements = movements.get(world);
+//                    if (worldMovements.containsKey(pos)) {
+//                        worldMovements.remove(pos);
+//                        worldMovements.put(pos,tile.serializeNBT());
+//                        return true;
+//                    }
+//                }
+//            }
+//        }
+//        catch (Exception ignored) {}
         return false;
     }
 
-    public static boolean canMoveTile(BlockState state){
-        return !PistonsMoveTileEntitiesModule.shouldMoveTE(true, state);
+    public static boolean canMoveTile(BlockState state) {
+        return true;
+        //return !PistonsMoveTileEntitiesModule.shouldMoveTE(true, state);
     }
 }

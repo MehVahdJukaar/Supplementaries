@@ -81,7 +81,7 @@ public class NetheriteDoorBlock extends DoorBlock implements EntityBlock {
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         if(this.hasTileEntity(pState)){
-            return new KeyLockableTile();
+            return new KeyLockableTile(pPos, pState);
         }
         return null;
     }

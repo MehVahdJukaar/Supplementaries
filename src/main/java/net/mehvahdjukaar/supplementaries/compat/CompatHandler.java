@@ -77,7 +77,7 @@ public class CompatHandler {
     }
 
     public static void registerOptionalBlocks(final RegistryEvent.Register<Block> event){
-        if (deco_blocks) DecoBlocksCompatRegistry.registerBlocks(event);
+        //if (deco_blocks) DecoBlocksCompatRegistry.registerBlocks(event);
         if (farmers_delight) FDCompatRegistry.registerBlocks(event);
     }
 

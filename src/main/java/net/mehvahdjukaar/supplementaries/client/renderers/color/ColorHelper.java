@@ -2,14 +2,16 @@ package net.mehvahdjukaar.supplementaries.client.renderers.color;
 
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
-
+import java.awt.*;
 import java.util.Random;
 
 public class ColorHelper {
 
     public static int pack(float[] rgb) {
-        return 1 * 255 << 24 | ((int) rgb[0] * 255) << 16 | ((int) rgb[1] * 255) << 8 | ((int) rgb[2] * 255);
+        return FastColor.ARGB32.color(255, (int)(rgb[0]*255), (int)(rgb[1]*255), (int)(rgb[2]*255));
     }
+
+    Color c = new Color(0);
 
     public static float oneToOneSaturation(float saturation, float lightness){
         float c = 1 - Math.abs((2 * lightness) - 1);

@@ -7,7 +7,8 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 public class CMDclient {
     public static void init(FMLClientSetupEvent event){
-        MapDecorationRenderHandler.bindDecorationRenderer(CMDreg.FLAG_DECORATION_TYPE, new FlagDecorationRenderer(Textures.FLAG_MARKER_TEXTURE));
+        MapDecorationRenderHandler.bindDecorationRenderer(CMDreg.FLAG_DECORATION_TYPE, new ColoredDecorationRenderer(Textures.FLAG_MARKER_TEXTURE));
+        MapDecorationRenderHandler.bindDecorationRenderer(CMDreg.BANNER_DECORATION_TYPE, new ColoredDecorationRenderer(Textures.BANNER_MARKER_TEXTURE));
         MapDecorationRenderHandler.bindSimpleRenderer(CMDreg.BED_DECORATION_TYPE);
         MapDecorationRenderHandler.bindSimpleRenderer(CMDreg.LODESTONE_DECORATION_TYPE);
         MapDecorationRenderHandler.bindSimpleRenderer(CMDreg.NETHER_PORTAL_DECORATION_TYPE);

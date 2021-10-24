@@ -52,10 +52,9 @@ public class TippedSpikesColor implements BlockColor, ItemColor {
             }
             //not actually sure why I need this since quark seems to handle moving tiles pretty well
             else if (CompatHandler.quark) {
-                if (world instanceof Level) {
-                    te = QuarkPistonPlugin.getMovingTile(pos, (World) world);
-                    if (te instanceof BambooSpikesBlockTile) {
-                        int color = ((BambooSpikesBlockTile) te).getColor();
+                if (world instanceof Level level) {
+                    if (QuarkPistonPlugin.getMovingTile(pos, level) instanceof BambooSpikesBlockTile tile) {
+                        int color = tile.getColor();
                         //return getProcessedColor(color, tint);
                         return getCachedColor(color, tint);
                     }

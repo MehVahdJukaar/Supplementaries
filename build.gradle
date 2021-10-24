@@ -138,7 +138,7 @@ dependencies {
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     //minecraft 'net.minecraftforge:forge:1.16.4-35.0.1'
     //minecraft 'net.minecraftforge:forge:1.16.5-36.2.8'
-    minecraft 'net.minecraftforge:forge:1.17.1-37.0.70'
+    minecraft 'net.minecraftforge:forge:1.17.1-37.0.103'
     //1.16.3-34.1.0   1.16.4-35.0.1
 
     // You may put jars on which you depend on in ./libs or you may define them like so..
@@ -181,7 +181,7 @@ dependencies {
     //implementation fg.deobf("curse.maven:dynamictrees-252818:3480621")
     //implementation fg.deobf("curse.maven:enchanted-book-redesign-348076:3239927")
 
-    //implementation fg.deobf("curse.maven:jei-238222:3486421)
+    implementation fg.deobf("curse.maven:jei-238222:3486421")
 
     //implementation fg.deobf("curse.maven:tetra-289712:3371803")
     //implementation fg.deobf("curse.maven:mgui-351914:3291267")
@@ -259,37 +259,6 @@ repositories {
         allowInsecureProtocol = true
     }
 }
-
-repositories{
-    maven {
-        // location of the maven that hosts JEI files
-        name = "Progwml6 maven"
-        url = "https://dvs1.progwml6.com/files/maven/"
-        allowInsecureProtocol = true
-    }
-    maven {
-        // location of a maven mirror for JEI files, as a fallback
-        name = "ModMaven"
-        url = "https://modmaven.k-4u.nl"
-        allowInsecureProtocol = true
-    }
-    jcenter()
-    mavenCentral()
-}
-
-repositories {
-    maven { // JEI
-        url "https://dvs1.progwml6.com/files/maven"
-        allowInsecureProtocol = true
-    }
-    maven { // TOP
-        name 'tterrag maven'
-        url "http://maven.tterrag.com/"
-        allowInsecureProtocol = true
-    }
-}
-
-
 
 // Loads files in the format {modid}-{version}.jar, MC version optional but picky about hyphens.
 // See the regex pattern.

@@ -126,7 +126,7 @@ public class BookPileBlock extends WaterBlock implements EntityBlock {
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return switch (state.getValue(BOOKS)) {
-            case 1 -> SHAPE_1;
+            default -> SHAPE_1;
             case 2 -> SHAPE_2;
             case 3 -> SHAPE_3;
             case 4 -> SHAPE_4;

@@ -14,7 +14,7 @@ import javax.annotation.Nonnull;
 @Mixin(IronGolemRenderer.class)
 public abstract class IronGolemRendererMixin {
 
-    @Inject(method = "getTextureLocation", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "getTextureLocation*", at = @At("HEAD"), cancellable = true)
     public void getEntityTexture(@Nonnull IronGolem entity, CallbackInfoReturnable<ResourceLocation> info) {
         if(entity.getUUID().getLeastSignificantBits()%420==0)
             info.setReturnValue(Textures.THICK_GOLEM);

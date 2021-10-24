@@ -66,13 +66,8 @@ public class CompatObjects {
     }
 
 
-    private static class NullableRegistryObject<T extends IForgeRegistryEntry<T>, U extends T> implements Supplier<T> {
-
-        private final RegistryObject<U> obj;
-
-        private NullableRegistryObject(RegistryObject<U> obj) {
-            this.obj = obj;
-        }
+    private record NullableRegistryObject<T extends IForgeRegistryEntry<T>, U extends T>(
+            RegistryObject<U> obj) implements Supplier<T> {
 
         @Nullable
         @Override

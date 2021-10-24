@@ -1,6 +1,9 @@
 {
   "replace": false,
   "optional": [
+    "betternether:stalagnate_stem",
+    "betternether:mushroom_fir_stem",
+    "betternether:mushroom_stem",
     "decorative_blocks:oak_palisade",
     "decorative_blocks:birch_palisade",
     "decorative_blocks:spruce_palisade",

@@ -68,7 +68,7 @@ public class PresentBlock extends WaterBlock implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new PresentBlockTile();
+        return new PresentBlockTile(pPos, pState);
     }
 
     @Override

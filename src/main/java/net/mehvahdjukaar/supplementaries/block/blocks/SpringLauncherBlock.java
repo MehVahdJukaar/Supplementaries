@@ -108,26 +108,26 @@ public class SpringLauncherBlock extends Block {
     public void checkForMove(BlockState state, Level world, BlockPos pos) {
         if (!world.isClientSide()) {
             boolean flag = this.shouldBeExtended(world, pos, state.getValue(FACING));
-            BlockPos _bp = pos.offset(state.getValue(FACING).getNormal());
+            BlockPos offset = pos.offset(state.getValue(FACING).getNormal());
             if (flag && !state.getValue(EXTENDED)) {
                 boolean flag2 = false;
-                BlockState targetblock = world.getBlockState(_bp);
-                if (targetblock.getPistonPushReaction() == PushReaction.DESTROY || targetblock.isAir()) {
-                    BlockEntity tileentity = targetblock.hasTileEntity() ? world.getBlockEntity(_bp) : null;
-                    dropResources(targetblock, world, _bp, tileentity);
+                BlockState targetBlock = world.getBlockState(offset);
+                if (targetBlock.getPistonPushReaction() == PushReaction.DESTROY || targetBlock.isAir()) {
+                    BlockEntity blockEntity = targetBlock.hasBlockEntity() ? world.getBlockEntity(offset) : null;
+                    dropResources(targetBlock, world, offset, blockEntity);
                     flag2 = true;
                 }
                 /*
-                 * else if (targetblock.getBlock() instanceof FallingBlock &&
-                 * world.getBlockState(_bp.add(state.get(FACING).getDirectionVec())).isAir(
-                 * world, _bp)){ FallingBlockEntity fallingblockentity = new
-                 * FallingBlockEntity(world, (double)_bp.getX() + 0.5D, (double)_bp.getY() ,
-                 * (double)_bp.getZ() + 0.5D, world.getBlockState(_bp));
+                 * else if (targetBlock.getBlock() instanceof FallingBlock &&
+                 * world.getBlockState(offset.add(state.get(FACING).getDirectionVec())).isAir(
+                 * world, offset)){ FallingBlockEntity fallingblockentity = new
+                 * FallingBlockEntity(world, (double)offset.getX() + 0.5D, (double)offset.getY() ,
+                 * (double)offset.getZ() + 0.5D, world.getBlockState(offset));
                  *
                  * world.addEntity(fallingblockentity); flag2=true; }
                  */
                 if (flag2) {
-                    world.setBlock(_bp,
+                    world.setBlock(offset,
                             ModRegistry.SPRING_LAUNCHER_ARM.get().defaultBlockState().setValue(SpringLauncherArmBlock.EXTENDING, true).setValue(FACING, state.getValue(FACING)),
                             3);
                     world.setBlockAndUpdate(pos, state.setValue(EXTENDED, true));
@@ -135,17 +135,17 @@ public class SpringLauncherBlock extends Block {
                             world.random.nextFloat() * 0.25F + 0.45F);
                 }
             } else if (!flag && state.getValue(EXTENDED)) {
-                BlockState bs = world.getBlockState(_bp);
+                BlockState bs = world.getBlockState(offset);
                 if (bs.getBlock() instanceof SpringLauncherHeadBlock && state.getValue(FACING) == bs.getValue(FACING)) {
-                    // world.setBlockState(_bp, Blocks.AIR.getDefaultState(), 3);
-                    world.setBlock(_bp,
+                    // world.setBlockState(offset, Blocks.AIR.getDefaultState(), 3);
+                    world.setBlock(offset,
                             ModRegistry.SPRING_LAUNCHER_ARM.get().defaultBlockState().setValue(SpringLauncherArmBlock.EXTENDING, false).setValue(FACING, state.getValue(FACING)),
                             3);
                     world.playSound(null, pos, SoundEvents.PISTON_CONTRACT, SoundSource.BLOCKS, 0.53F,
                             world.random.nextFloat() * 0.15F + 0.45F);
                 } else if (bs.getBlock() instanceof SpringLauncherArmBlock
                         && state.getValue(FACING) == bs.getValue(FACING)) {
-                    if (world.getBlockEntity(_bp) instanceof SpringLauncherArmBlockTile) {
+                    if (world.getBlockEntity(offset) instanceof SpringLauncherArmBlockTile) {
                         world.getBlockTicks().scheduleTick(pos, world.getBlockState(pos).getBlock(), 1);
                     }
                 }

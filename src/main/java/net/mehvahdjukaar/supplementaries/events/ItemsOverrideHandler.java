@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.events;
 
+import net.mehvahdjukaar.selene.map.ExpandedMapData;
 import net.mehvahdjukaar.selene.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.blocks.BookPileBlock;
@@ -219,9 +220,8 @@ public class ItemsOverrideHandler {
             Block b = world.getBlockState(pos).getBlock();
             if (b instanceof BedBlock || BLOCK_MARKERS.contains(b)) {
                 if (!world.isClientSide) {
-                    MapItemSavedData data = MapItem.getOrCreateSavedData(stack, world);
-                    if (data instanceof CustomDecorationHolder) {
-                        ((CustomDecorationHolder) data).toggleCustomDecoration(world, pos);
+                    if (MapItem.getSavedData(stack, world) instanceof ExpandedMapData data) {
+                        data.toggleCustomDecoration(world, pos);
                     }
                 }
                 return InteractionResult.sidedSuccess(world.isClientSide);
@@ -232,7 +232,7 @@ public class ItemsOverrideHandler {
 
     private static class XpBottlingBehavior extends ItemInteractionOverride {
 
-        private static final JarBlockTile DUMMY_JAR_TILE = new JarBlockTile();
+        private static final JarBlockTile DUMMY_JAR_TILE = new JarBlockTile(BlockPos.ZERO, ModRegistry.JAR_TINTED.get().defaultBlockState());
 
         @Override
         public boolean isEnabled() {
@@ -264,7 +264,7 @@ public class ItemsOverrideHandler {
                         DUMMY_JAR_TILE.resetHolders();
                         CompoundTag tag = stack.getTagElement("BlockEntityTag");
                         if (tag != null) {
-                            DUMMY_JAR_TILE.load(((BlockItem) i).getBlock().defaultBlockState(), tag);
+                            DUMMY_JAR_TILE.load(tag);
                         }
 
                         if (DUMMY_JAR_TILE.canInteractWithFluidHolder()) {

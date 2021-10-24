@@ -161,6 +161,7 @@ public class RedMerchantContainer extends AbstractContainerMenu {
 
     }
 
+    @Override
     public void removed(Player pPlayer) {
         super.removed(pPlayer);
         this.trader.setTradingPlayer(null);
@@ -176,8 +177,8 @@ public class RedMerchantContainer extends AbstractContainerMenu {
                     pPlayer.drop(itemstack, false);
                 }
             } else {
-                pPlayer.getInventory().placeItemBackInInventory(pPlayer.level, this.tradeContainer.removeItemNoUpdate(0));
-                pPlayer.getInventory().placeItemBackInInventory(pPlayer.level, this.tradeContainer.removeItemNoUpdate(1));
+                pPlayer.getInventory().placeItemBackInInventory(this.tradeContainer.removeItemNoUpdate(0));
+                pPlayer.getInventory().placeItemBackInInventory(this.tradeContainer.removeItemNoUpdate(1));
             }
 
         }

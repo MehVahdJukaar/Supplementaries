@@ -42,13 +42,12 @@ public abstract class ItemRendererMixin {
     @Shadow
     public abstract void render(ItemStack stack, ItemTransforms.TransformType transform, boolean leftHand, PoseStack matrixStack, MultiBufferSource buffer, int light, int overlay, BakedModel model);
 
-    @Shadow
-    public abstract BakedModel getModel(ItemStack stack, @Nullable Level world, @Nullable LivingEntity entity);
+    //@Shadow
+    //public abstract BakedModel getModel(ItemStack stack, @Nullable Level world, @Nullable LivingEntity entity);
 
     @Inject(
-            method = "renderGuiItem(Lnet/minecraft/item/ItemStack;IILnet/minecraft/client/renderer/model/IBakedModel;)V",
-            at = @At(value = "RETURN"),
-            cancellable = true
+            method = "renderGuiItem(Lnet/minecraft/world/item/ItemStack;IILnet/minecraft/client/resources/model/BakedModel;)V",
+            at = @At(value = "RETURN")
     )
     private void renderInGui(ItemStack stack, int x, int y, BakedModel model, CallbackInfo ci) {
         if (!stack.isEmpty() && stack.getItem() == ModRegistry.SLINGSHOT_ITEM.get()){
@@ -79,8 +78,10 @@ public abstract class ItemRendererMixin {
 
     //todo: maybe move this out of here
     private void renderSlingshotOverlay(ItemStack ammo, int x, int y) {
-        BakedModel iBakedModel = this.getModel(ammo, null, Minecraft.getInstance().player);
 
+        //TODO: re add this
+/*
+        BakedModel iBakedModel = this.getModel(ammo, null, Minecraft.getInstance().player);
         RenderSystem.pushMatrix();
         this.textureManager.bind(TextureAtlas.LOCATION_BLOCKS);
         this.textureManager.getTexture(TextureAtlas.LOCATION_BLOCKS).setFilter(false, false);
@@ -115,6 +116,9 @@ public abstract class ItemRendererMixin {
         RenderSystem.disableAlphaTest();
         RenderSystem.disableRescaleNormal();
         RenderSystem.popMatrix();
+
+        */
+
     }
 
 

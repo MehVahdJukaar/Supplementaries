@@ -31,7 +31,6 @@ public class ModTags {
     //item tags
     public static final Tags.IOptionalNamedTag<Item> SHULKER_BLACKLIST_TAG = itemTag("shulker_blacklist");
     public static final Tags.IOptionalNamedTag<Item> COOKIES = itemTag("cookies");
-    public static final Tags.IOptionalNamedTag<Item> CANDLES = itemTag("candles");
     public static final Tags.IOptionalNamedTag<Item> BRICKS = itemTag("throwable_bricks");
     public static final Tags.IOptionalNamedTag<Item> ROPES = itemTag("ropes");
     public static final Tags.IOptionalNamedTag<Item> CHAINS = itemTag("chains");

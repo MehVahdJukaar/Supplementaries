@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.common.mobholder.MobContainer;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.CreativeModeTab;
@@ -51,7 +52,7 @@ public class JarTab extends CreativeModeTab {
 
 
     public static void populateTab(NonNullList<ItemStack> items) {
-        JarBlockTile tempTile = new JarBlockTile();
+        JarBlockTile tempTile = new JarBlockTile(BlockPos.ZERO, ModRegistry.JAR_TINTED.get().defaultBlockState());
         SoftFluidHolder fluidHolder = new SoftFluidHolder(tempTile.getMaxStackSize());
 
 

@@ -9,7 +9,6 @@ import net.mehvahdjukaar.supplementaries.block.util.BlockUtils.PlayerLessContext
 import net.mehvahdjukaar.supplementaries.common.BlockItemUtils;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
-import net.mehvahdjukaar.supplementaries.compat.decorativeblocks.RopeChandelierBlock;
 import net.mehvahdjukaar.supplementaries.compat.quark.QuarkPistonPlugin;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
@@ -201,7 +200,7 @@ public class RopeBlock extends WaterBlock {
 
 
         if (facing == Direction.DOWN && !worldIn.isClientSide() && CompatHandler.deco_blocks) {
-            RopeChandelierBlock.tryConverting(facingState, worldIn, facingPos);
+            //RopeChandelierBlock.tryConverting(facingState, worldIn, facingPos);
         }
 
         return stateIn.setValue(KNOT, hasMiddleKnot(stateIn));
@@ -228,7 +227,7 @@ public class RopeBlock extends WaterBlock {
             worldIn.getBlockTicks().scheduleTick(pos, this, 1);
             if (CompatHandler.deco_blocks) {
                 BlockPos down = pos.below();
-                RopeChandelierBlock.tryConverting(worldIn.getBlockState(down), worldIn, down);
+                //RopeChandelierBlock.tryConverting(worldIn.getBlockState(down), worldIn, down);
             }
         }
     }
@@ -493,7 +492,7 @@ public class RopeBlock extends WaterBlock {
         PushReaction push = state.getPistonPushReaction();
 
         if ((push == PushReaction.NORMAL || (toPos.getY() < fromPos.getY() && push == PushReaction.PUSH_ONLY) || state.is(ModTags.ROPE_HANG_TAG)) && state.getDestroySpeed(world, fromPos) != -1
-                && state.canSurvive(world, toPos) && !block.isAir(state, world, fromPos) && !isObsidian(state)) {
+                && state.canSurvive(world, toPos) && !state.isAir() && !isObsidian(state)) {
 
             BlockEntity tile = world.getBlockEntity(fromPos);
             if (tile != null) {
@@ -513,12 +512,11 @@ public class RopeBlock extends WaterBlock {
             if (state.hasProperty(WATERLOGGED)) {
                 canHoldWater = state.is(ModTags.WATER_HOLDER);
                 if (!canHoldWater) state = state.setValue(WATERLOGGED, waterFluid);
-            }
-            else if (state.getBlock() instanceof AbstractCauldronBlock){
-                if(waterFluid && state.is(Blocks.CAULDRON) || state.is(Blocks.WATER_CAULDRON)){
+            } else if (state.getBlock() instanceof AbstractCauldronBlock) {
+                if (waterFluid && state.is(Blocks.CAULDRON) || state.is(Blocks.WATER_CAULDRON)) {
                     state = Blocks.WATER_CAULDRON.defaultBlockState().setValue(LayeredCauldronBlock.LEVEL, 3);
                 }
-                if(fluidState == Fluids.LAVA && state.is(Blocks.CAULDRON) || state.is(Blocks.LAVA_CAULDRON)){
+                if (fluidState == Fluids.LAVA && state.is(Blocks.CAULDRON) || state.is(Blocks.LAVA_CAULDRON)) {
                     state = Blocks.LAVA_CAULDRON.defaultBlockState().setValue(LayeredCauldronBlock.LEVEL, 3);
                 }
             }
@@ -532,11 +530,9 @@ public class RopeBlock extends WaterBlock {
             BlockState newState = Block.updateFromNeighbourShapes(state, world, toPos);
             world.setBlockAndUpdate(toPos, newState);
             if (tile != null) {
-                tile.setPosition(toPos);
-                BlockEntity target = BlockEntity.loadStatic(newState, tile.save(new CompoundTag()));
+                BlockEntity target = BlockEntity.loadStatic(toPos, newState, tile.save(new CompoundTag()));
                 if (target != null) {
-                    world.setBlockEntity(toPos, target);
-                    target.clearCache();
+                    world.setBlockEntity(target);
                 }
             }
             //world.notifyNeighborsOfStateChange(toPos, state.getBlock());

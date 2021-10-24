@@ -16,13 +16,5 @@ public final class DataGenerators {
     public static void gatherData(GatherDataEvent event) {
         DataGenerator gen = event.getGenerator();
         ExistingFileHelper helper = event.getExistingFileHelper();
-        if (true) {
-            gen.addProvider(new ModBlockStateProvider(gen, Supplementaries.MOD_ID, helper));
-            gen.addProvider(new ModItemModelProvider(gen, Supplementaries.MOD_ID, helper));
-            gen.addProvider(new ModRecipeProvider(gen));
-            gen.addProvider(new ModLanguageProvider(gen, Supplementaries.MOD_ID, "en_us"));
-            gen.addProvider(new ModLootTableProvider(gen));
-        }
-
     }
 }

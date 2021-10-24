@@ -1,32 +1,24 @@
 package net.mehvahdjukaar.supplementaries.common.mobholder;
 
-import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
+import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.items.AbstractMobContainerItem;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.*;
 import net.minecraft.world.entity.monster.Endermite;
 import net.minecraft.world.entity.monster.Slime;
-import net.minecraft.entity.passive.*;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.BlockPos;
-import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Random;
-
-import net.minecraft.world.entity.animal.Bee;
-import net.minecraft.world.entity.animal.Chicken;
-import net.minecraft.world.entity.animal.FlyingAnimal;
-import net.minecraft.world.entity.animal.Parrot;
-import net.minecraft.world.entity.animal.Rabbit;
-import net.minecraft.world.entity.animal.Squid;
-import net.minecraft.world.entity.animal.WaterAnimal;
 
 public class DefaultCatchableMobCap<T extends Entity> extends BaseCatchableMobCap<T> {
 
@@ -104,7 +96,7 @@ public class DefaultCatchableMobCap<T extends Entity> extends BaseCatchableMobCa
 
     @Override
     public void tickInsideContainer(Level world, BlockPos pos, float mobScale, CompoundTag tag) {
-        if(world.isClientSide) {
+        if (world.isClientSide) {
             if (this.properties.isFloating()) {
                 this.jumpY = 0.04f * Mth.sin(mob.tickCount / 10f) - 0.03f;
             }
@@ -130,14 +122,14 @@ public class DefaultCatchableMobCap<T extends Entity> extends BaseCatchableMobCa
         return properties.getCategory();
     }
 
-    public static<E extends Entity> ICatchableMob getDefaultCap(E e) {
+    public static <E extends Entity> ICatchableMob getDefaultCap(E e) {
         if (e.level.isClientSide && e instanceof LivingEntity && ClientConfigs.block.TICKLE_MOBS.get()
-                .contains(e.getType().getRegistryName().toString())) return new ClientTickableAnim((LivingEntity)e);
+                .contains(e.getType().getRegistryName().toString())) return new ClientTickableAnim((LivingEntity) e);
         else if (e instanceof Squid) return new DoubleSideTickableAnim((LivingEntity) e);
-        //else if (e instanceof WaterMobEntity) return WATER_MOB;
+            //else if (e instanceof WaterMobEntity) return WATER_MOB;
         else if (e instanceof Slime) return new SlimeAnim((Slime) e);
         else if (e instanceof Parrot) return new ParrotAnim((Parrot) e);
-        //else if (e instanceof CatEntity) return CAT;
+            //else if (e instanceof CatEntity) return CAT;
         else if (e instanceof Rabbit) return new RabbitAnim((Rabbit) e);
         else if (e instanceof Chicken) return new ChickenAnim((Chicken) e);
         else if (e instanceof Endermite) return new EndermiteAnim((Endermite) e);

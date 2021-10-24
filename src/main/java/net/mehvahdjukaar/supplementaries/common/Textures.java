@@ -93,6 +93,7 @@ public class Textures {
     //map markers
     public static final ResourceLocation SIGN_POST_MARKER_TEXTURE = Supplementaries.res("textures/map/sign_post.png");
     public static final ResourceLocation FLAG_MARKER_TEXTURE = Supplementaries.res("textures/map/flag.png");
+    public static final ResourceLocation BANNER_MARKER_TEXTURE = Supplementaries.res("textures/map/banner.png");
     public static final ResourceLocation BED_MARKER_TEXTURE = Supplementaries.res("textures/map/bed.png");
     public static final ResourceLocation RESPAWN_ANCHOR_MARKER_TEXTURE = Supplementaries.res("textures/map/respawn_anchor.png");
     public static final ResourceLocation LODESTONE_MARKER_TEXTURE = Supplementaries.res("textures/map/lodestone.png");

@@ -4,6 +4,7 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 import net.mehvahdjukaar.supplementaries.block.tiles.SpringLauncherArmBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
@@ -96,22 +97,20 @@ public class SpringLauncherHeadBlock extends DirectionalBlock {
         return (state.getValue(SHORT) ? EXTENDED_SHAPES : UNEXTENDED_SHAPES)[state.getValue(FACING).ordinal()];
     }
 
-
-    public void fallOn(Level worldIn, BlockPos pos, Entity entityIn, float fallDistance) {
-        BlockState state = worldIn.getBlockState(pos);
+    @Override
+    public void fallOn(Level worldIn, BlockState state, BlockPos pos, Entity entityIn, float fallDistance) {
         if (entityIn.isSuppressingBounce() || state.getValue(FACING)!=Direction.UP) {
-            super.fallOn(worldIn, pos, entityIn, fallDistance);
+            super.fallOn(worldIn, state, pos, entityIn, fallDistance);
         } else {
-            entityIn.causeFallDamage(fallDistance, 0.0F);
+            entityIn.causeFallDamage(fallDistance, 0.0F, DamageSource.FALL);
             //TODO: add falling block entity support
             if((entityIn instanceof LivingEntity) && !worldIn.isClientSide && fallDistance>(float)ServerConfigs.cached.LAUNCHER_HEIGHT){
                 worldIn.setBlock(pos, ModRegistry.SPRING_LAUNCHER_ARM.get().defaultBlockState()
                         .setValue(SpringLauncherArmBlock.EXTENDING, false).setValue(FACING, state.getValue(FACING)), 3);
                 BlockEntity te = worldIn.getBlockEntity(pos);
-                if(te instanceof SpringLauncherArmBlockTile){
-                    SpringLauncherArmBlockTile pistonarm = (SpringLauncherArmBlockTile) te;
-                    pistonarm.age = 1;
-                    pistonarm.offset = -0.5;
+                if(te instanceof SpringLauncherArmBlockTile launcherArmBlockTile){
+                    launcherArmBlockTile.age = 1;
+                    launcherArmBlockTile.offset = -0.5;
                 }
             }
             //this.bounceEntity(entityIn);
@@ -182,7 +181,7 @@ public class SpringLauncherHeadBlock extends DirectionalBlock {
      */
     @Override
     public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
-        if (!worldIn.isClientSide && player.abilities.instabuild) {
+        if (!worldIn.isClientSide && player.getAbilities().instabuild) {
             BlockPos blockpos = pos.relative(state.getValue(FACING).getOpposite());
             Block block = worldIn.getBlockState(blockpos).getBlock();
             if (block instanceof SpringLauncherBlock) {

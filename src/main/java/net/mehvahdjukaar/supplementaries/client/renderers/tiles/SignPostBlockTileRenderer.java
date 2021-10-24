@@ -46,7 +46,7 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
                         .addBox(-8.0F, -7.0F, -3.0F, 16.0F, 5.0F, 1.0F)
                         .texOffs(0, 6)
                         .addBox(-10.0F, -6.0F, -3.0F, 2.0F, 3.0F, 1.0F),
-                PartPose.offset(0, 0, 0));
+                PartPose.ZERO);
 
         return LayerDefinition.create(mesh, 64, 16);
     }

@@ -25,7 +25,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 
-
+/*
 public class PresentBlockGui extends AbstractContainerScreen<PresentContainer> implements ContainerListener {
 
     protected EditBox recipient;
@@ -309,4 +309,4 @@ public class PresentBlockGui extends AbstractContainerScreen<PresentContainer> i
     }
 
 
-}
+}*/

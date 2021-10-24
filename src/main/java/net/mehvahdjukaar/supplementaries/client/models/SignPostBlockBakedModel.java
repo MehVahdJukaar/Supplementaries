@@ -96,7 +96,7 @@ public class SignPostBlockBakedModel implements IDynamicBakedModel {
     }
 
     @Override
-    public TextureAtlasSprite getParticleTexture(@NotNull IModelData data) {
+    public TextureAtlasSprite getParticleIcon(@NotNull IModelData data) {
         BlockState mimic = data.getData(SignPostBlockTile.MIMIC);
         if (mimic != null && !mimic.isAir()) {
 

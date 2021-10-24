@@ -36,8 +36,10 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class CopperLanternBlock extends EnhancedLanternBlock {
-    public static final VoxelShape SHAPE_DOWN = Shapes.or(Block.box(5.0D, 0.0D, 5.0D, 11.0D, 8.0D, 11.0D), Block.box(6.0D, 8.0D, 6.0D, 10.0D, 9.0D, 10.0D));
-    public static final VoxelShape SHAPE_UP = Shapes.or(Block.box(5.0D, 5.0D, 5.0D, 11.0D, 13.0D, 11.0D), Block.box(6.0D, 13.0D, 6.0D, 10.0D, 14.0D, 10.0D));
+    public static final VoxelShape SHAPE_DOWN = Shapes.or(Block.box(5.0D, 0.0D, 5.0D, 11.0D, 8.0D, 11.0D),
+            Block.box(6.0D, 8.0D, 6.0D, 10.0D, 9.0D, 10.0D));
+    public static final VoxelShape SHAPE_UP = Shapes.or(Block.box(5.0D, 5.0D, 5.0D, 11.0D, 13.0D, 11.0D),
+            Block.box(6.0D, 13.0D, 6.0D, 10.0D, 14.0D, 10.0D));
 
     public static final EnumProperty<AttachFace> FACE = FaceAttachedHorizontalDirectionalBlock.FACE;
     public static final BooleanProperty LIT = BlockStateProperties.LIT;

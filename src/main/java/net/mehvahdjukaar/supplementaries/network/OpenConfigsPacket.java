@@ -2,11 +2,12 @@ package net.mehvahdjukaar.supplementaries.network;
 
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.fml.ExtensionPoint;
 import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fmlclient.ConfigGuiHandler;
 import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -25,8 +26,6 @@ public class OpenConfigsPacket {
         // client world
         ctx.get().enqueueWork(() -> {
 
-            Minecraft mc = Minecraft.getInstance();
-
             //FileConfig f = FileConfig.of(ConfigHandler.getServerConfigPath());
             //ServerConfigs.SERVER_CONFIG.getSpec().apply(ConfigHandler.getServerConfigPath().toString());
             //ServerConfigs.SERVER_CONFIG.getSpec().apply(ConfigHandler.getServerConfigPath().toString());
@@ -36,10 +35,7 @@ public class OpenConfigsPacket {
 
             //if(configured)ConfiguredCustomScreen.openScreen();
 
-            mc.setScreen(ModList.get().getModContainerById(Supplementaries.MOD_ID).get()
-                    .getCustomExtension(ExtensionPoint.CONFIGGUIFACTORY).get()
-                    .apply(mc, mc.screen));
-
+            ConfigHandler.openModConfigs();
 
         });
         ctx.get().setPacketHandled(true);

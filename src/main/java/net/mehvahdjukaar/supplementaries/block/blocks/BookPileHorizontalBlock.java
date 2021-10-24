@@ -87,7 +87,7 @@ public class BookPileHorizontalBlock extends BookPileBlock {
         boolean x = state.getValue(FACING).getAxis() == Direction.Axis.X;
 
         return switch (state.getValue(BOOKS)) {
-            case 1 -> x ? SHAPE_1_X : SHAPE_1_Z;
+            default -> x ? SHAPE_1_X : SHAPE_1_Z;
             case 2 -> x ? SHAPE_2_X : SHAPE_2_Z;
             case 3 -> x ? SHAPE_3_X : SHAPE_3_Z;
             case 4 -> x ? SHAPE_4_X : SHAPE_4_Z;

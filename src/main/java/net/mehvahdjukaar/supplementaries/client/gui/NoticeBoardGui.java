@@ -20,8 +20,9 @@ public class NoticeBoardGui extends AbstractContainerScreen<NoticeBoardContainer
 
     @Override
     protected void renderBg(PoseStack matrixStack, float partialTicks, int x, int y) {
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        Minecraft.getInstance().getTextureManager().bind(Textures.NOTICE_BOARD_GUI_TEXTURE);
+        //TODO: redo this
+        //RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        //Minecraft.getInstance().getTextureManager().bind(Textures.NOTICE_BOARD_GUI_TEXTURE);
         int k = (this.width - this.imageWidth) / 2;
         int l = (this.height - this.imageHeight) / 2;
         this.blit(matrixStack, k, l, 0, 0, this.imageWidth, this.imageHeight);
@@ -49,10 +50,11 @@ public class NoticeBoardGui extends AbstractContainerScreen<NoticeBoardContainer
         Minecraft.getInstance().keyboardHandler.setSendRepeatsToGui(false);
     }
 
+
     @Override
-    public void init(Minecraft minecraft, int width, int height) {
-        super.init(minecraft, width, height);
-        minecraft.keyboardHandler.setSendRepeatsToGui(true);
+    public void init() {
+        super.init();
+        this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
         this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
     }
 }

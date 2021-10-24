@@ -39,17 +39,17 @@ public class BellowsBlockTileRenderer implements BlockEntityRenderer<BellowsBloc
                 .addBox(-2.0F, 1.0F, -8.0F, 4.0F, 1.0F, 1.0F)
                 .texOffs(0, 19)
                 .addBox(-8.0F, -1.0F, -8.0F, 16.0F, 2.0F, 16.0F),
-                PartPose.offset(0, 0, 0));
+                PartPose.ZERO);
 
         root.addOrReplaceChild("top", CubeListBuilder.create()
                 .texOffs(0, 0)
                 .addBox(-8.0F, 5.0F, -8.0F, 16.0F, 3.0F, 16.0F),
-                PartPose.offset(0, 0, 0));
+                PartPose.ZERO);
 
         root.addOrReplaceChild("leather", CubeListBuilder.create()
                 .texOffs(0, 37)
                 .addBox(-7.0F, -5.0F, -7.0F, 14.0F, 10.0F, 14.0F),
-                PartPose.offset(0, 0, 0));
+                PartPose.ZERO);
 
         return LayerDefinition.create(mesh, 64, 64);
     }

@@ -2,7 +2,6 @@
   "replace": false,
   "values": [
     "supplementaries:rope",
-    "supplementaries:cracked_bell",
     "minecraft:bell",
     "minecraft:grindstone"
   ],

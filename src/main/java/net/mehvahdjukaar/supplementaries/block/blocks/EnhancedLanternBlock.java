@@ -16,6 +16,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -29,10 +30,10 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class EnhancedLanternBlock extends SwayingBlock implements EntityBlock {
-    public static final VoxelShape SHAPE_SOUTH = Shapes.box(0.6875D, 0.125D, 0.625D, 0.3125D, 1D, 0D);
-    public static final VoxelShape SHAPE_NORTH = Shapes.box(0.3125D, 0.125D, 0.375D, 0.6875D, 1D, 1D);
-    public static final VoxelShape SHAPE_WEST = Shapes.box(0.375D, 0.125D, 0.6875D, 1D, 1D, 0.3125D);
-    public static final VoxelShape SHAPE_EAST = Shapes.box(0.625D, 0.125D, 0.3125D, 0D, 1D, 0.6875D);
+    public static final VoxelShape SHAPE_SOUTH = Block.box(5, 2, 0, 11, 16, 10);
+    public static final VoxelShape SHAPE_NORTH = Block.box(5, 2, 6, 11, 16, 16);
+    public static final VoxelShape SHAPE_WEST = Block.box(6, 2, 5, 16, 16, 11);
+    public static final VoxelShape SHAPE_EAST = Block.box(0, 2, 5, 10, 16, 11);
 
     public EnhancedLanternBlock(Properties properties) {
         super(properties);
