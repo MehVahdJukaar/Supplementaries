@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
-import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.block.util.IMapDisplay;
@@ -27,11 +26,9 @@ import net.minecraft.util.text.TranslationTextComponent;
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 
 public class NoticeBoardBlockTile extends ItemDisplayTile implements INameable, IMapDisplay {
-    private UUID owner = null;
     //client stuff
     private String text = null;
     private int fontScale = 1;

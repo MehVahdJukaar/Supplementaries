@@ -41,18 +41,6 @@ public class TextHolder {
             }
         }
 
-
-        //remove in the future
-        if(compound.contains("Color"))
-            this.textColor = DyeColor.byName(compound.getString("Color"), DyeColor.BLACK);
-        for(int i = 0; i < 2; ++i) {
-            if(compound.contains("Text" + (i + 1))) {
-                String s = compound.getString("Text" + (i + 1));
-                ITextComponent itextcomponent = ITextComponent.Serializer.fromJson(s.isEmpty() ? "\"\"" : s);
-                this.signText[i] = itextcomponent;
-            }
-        }
-
     }
 
     public CompoundNBT write(CompoundNBT compound) {

@@ -157,7 +157,7 @@
         },
         {
             "type": "bitmap",
-            "file": "supplementaries:font/antique.png",
+            "file": "supplementaries:font/antiquable.png",
             "ascent": 7,
             "chars": [
                 "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000",

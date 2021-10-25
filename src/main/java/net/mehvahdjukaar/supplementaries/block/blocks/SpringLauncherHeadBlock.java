@@ -97,6 +97,7 @@ public class SpringLauncherHeadBlock extends DirectionalBlock {
     }
 
 
+    @Override
     public void fallOn(World worldIn, BlockPos pos, Entity entityIn, float fallDistance) {
         BlockState state = worldIn.getBlockState(pos);
         if (entityIn.isSuppressingBounce() || state.getValue(FACING)!=Direction.UP) {

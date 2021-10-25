@@ -111,7 +111,7 @@ public class Textures {
     public static final ResourceLocation BOOK_ENCHANTED_TEXTURES = Supplementaries.res("entity/books/book_enchanted");
     public static final ResourceLocation BOOK_TOME_TEXTURES = Supplementaries.res("entity/books/book_tome");
 
-    public static final ResourceLocation ANTIQUE_FONT = Supplementaries.res("antique");
+    public static final ResourceLocation ANTIQUABLE_FONT = Supplementaries.res("antiquable");
 
     static {
         for (IWoodType type : WoodTypes.TYPES.values()) {

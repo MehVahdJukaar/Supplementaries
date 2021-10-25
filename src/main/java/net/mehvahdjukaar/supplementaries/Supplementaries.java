@@ -39,7 +39,6 @@ public class Supplementaries {
 
     public Supplementaries() {
 
-
         //TODO: fish bucket on cages
 
         //yes this is where I write crap. deal with it XD
@@ -120,6 +119,10 @@ public class Supplementaries {
         //data driven fluid system
 
         //rework thatch fodder
+
+        //jar pickup fluids directly
+
+        //create stuff can't push stuff into pedestals
 
         MinecraftForge.EVENT_BUS.register(ServerEvents.class);
 

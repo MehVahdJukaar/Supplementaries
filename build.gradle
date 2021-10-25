@@ -159,7 +159,7 @@ dependencies {
     //implementation fg.deobf("curse.maven:flywheel-486392:3384004")
 
     //curse.maven:[project name]-[project id]:[file id]
-    implementation fg.deobf("curse.maven:create-328085:3419412")
+    implementation fg.deobf("curse.maven:create-328085:3499718")
     //implementation fg.deobf("curse.maven:flywheel-486392:3419392")
     implementation fg.deobf("com.jozufozu.flywheel:Flywheel:1.16-0.2.3.49")
     //implementation fg.deobf("vazkii.quark:Quark:r2.4-305.1724")
@@ -169,7 +169,7 @@ dependencies {
     implementation fg.deobf("curse.maven:configured-457570:3434071")
     implementation fg.deobf("curse.maven:curios-309927:3343065")
     implementation fg.deobf("curse.maven:decorativeblocks-362528:3166283")
-    implementation fg.deobf("curse.maven:farmersdelight-398521:3418719")
+    implementation fg.deobf("curse.maven:farmersdelight-398521:3503844")
     implementation fg.deobf("curse.maven:framedblocks-441647:3412173")
     implementation fg.deobf("curse.maven:inspirations-284007:3414517")
     implementation fg.deobf("curse.maven:mantle-74924:3439180")

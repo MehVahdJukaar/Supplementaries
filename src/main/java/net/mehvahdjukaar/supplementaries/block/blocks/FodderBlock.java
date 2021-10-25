@@ -5,17 +5,22 @@ import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.HoeItem;
+import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
-import net.minecraft.util.Direction;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
+import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -95,5 +100,29 @@ public class FodderBlock extends WaterBlock {
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(LAYERS);
+    }
+
+    @Override
+    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (stack.getItem() instanceof HoeItem) {
+            world.playSound(player, pos, SoundEvents.HOE_TILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
+            if (!world.isClientSide) {
+
+                int layers = state.getValue(FodderBlock.LAYERS);
+                if (layers > 1) {
+                    world.levelEvent(2001, pos, Block.getId(state));
+                    world.setBlock(pos, state.setValue(FodderBlock.LAYERS, layers - 1), 11);
+                } else {
+                    world.destroyBlock(pos, false);
+                }
+                stack.hurtAndBreak(1, player, (e) -> {
+                    e.broadcastBreakEvent(hand);
+                });
+            }
+
+            return ActionResultType.sidedSuccess(world.isClientSide);
+        }
+        return ActionResultType.PASS;
     }
 }

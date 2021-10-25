@@ -402,6 +402,11 @@ public class ModRegistry {
     public static final String CANDY_NAME = "candy";
     public static final RegistryObject<Item> CANDY_ITEM = regItem(CANDY_NAME, () -> new CandyItem((new Item.Properties())
             .tab(getTab(ItemGroup.TAB_FOOD, CANDY_NAME))));
+
+    //antique ink
+    public static final String ANTIQUE_INK_NAME = "antique_ink";
+    public static final RegistryObject<Item> ANTIQUE_INK_ITEM = regItem(ANTIQUE_INK_NAME, () -> new AntiqueInkItem(
+            (new Item.Properties()).tab(getTab(ItemGroup.TAB_MATERIALS, ANTIQUE_INK_NAME))));
     //speedometer
     /*
     public static final String SPEEDOMETER_NAME = "speedometer";
@@ -1178,7 +1183,9 @@ public class ModRegistry {
     //fodder
     public static final String FODDER_NAME = "fodder";
     public static final RegistryObject<Block> FODDER = BLOCKS.register(FODDER_NAME, () -> new FodderBlock(
-            AbstractBlock.Properties.copy(Blocks.GRASS_BLOCK)));
+            AbstractBlock.Properties.copy(Blocks.GRASS_BLOCK)
+                    .harvestTool(ToolType.HOE)
+                    .sound(SoundType.CROP)));
     public static final RegistryObject<Item> FODDER_ITEM = ITEMS.register(FODDER_NAME, () -> new BlockItem(FODDER.get(),
             (new Item.Properties()).tab(getTab(ItemGroup.TAB_BUILDING_BLOCKS, FODDER_NAME))));
 

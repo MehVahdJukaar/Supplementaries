@@ -248,7 +248,7 @@ public class ClientSetup {
                 new CrossbowProperty(ModRegistry.ROPE_ARROW_ITEM.get()));
 
         ItemModelsProperties.register(Items.CROSSBOW, new ResourceLocation("amethyst_arrow"),
-                new CrossbowProperty(ModRegistry.ROPE_ARROW_ITEM.get()));
+                new CrossbowProperty(ModRegistry.AMETHYST_ARROW_ITEM.get()));
 
         ItemModelsProperties.register(ModRegistry.SLINGSHOT_ITEM.get(), new ResourceLocation("pull"),
                 (stack, world, entity) -> {

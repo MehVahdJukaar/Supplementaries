@@ -6,8 +6,11 @@ import net.mehvahdjukaar.supplementaries.block.blocks.ClockBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.RakedGravelBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.StatueBlockTile;
+import net.mehvahdjukaar.supplementaries.block.util.ITextHolder;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.PicklePlayer;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.ModTags;
+import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilitiesHandler;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.quark.QuarkPlugin;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -22,6 +25,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ChainBlock;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -29,6 +33,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.item.Items;
+import net.minecraft.tileentity.SignTileEntity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -176,6 +182,16 @@ public class ServerEvents {
         }
     }
 
+
+    private static final ResourceLocation ANTIQUE_INK = new ResourceLocation(Supplementaries.MOD_ID, "antique_ink");
+    @SubscribeEvent
+    public static void onAttachTileCapabilities(AttachCapabilitiesEvent<TileEntity> event) {
+        TileEntity tile = event.getObject();
+        if (tile instanceof SignTileEntity || tile instanceof ITextHolder) {
+            event.addCapability(ANTIQUE_INK, new CapabilitiesHandler.AntiqueInkProvider());
+        }
+    }
+
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
         if(event.side == LogicalSide.SERVER) {
@@ -187,8 +203,11 @@ public class ServerEvents {
     public static void onEntityJoin(EntityJoinWorldEvent event){
         Entity entity = event.getEntity();
         if(entity instanceof AnimalEntity){
-            AnimalEntity animal = (AnimalEntity) entity;
-            animal.goalSelector.addGoal(3, new EatFodderGoal(animal, 1, 8, 2, 30));
+            EntityType<?> type = event.getEntity().getType();
+            if(ModTags.EATS_FODDER.contains(type)){
+                AnimalEntity animal = (AnimalEntity) entity;
+                animal.goalSelector.addGoal(3, new EatFodderGoal(animal, 1, 8, 2, 30));
+            }
         }
     }
 

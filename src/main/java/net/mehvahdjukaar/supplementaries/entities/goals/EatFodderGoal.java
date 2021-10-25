@@ -7,11 +7,11 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.MoveToBlockGoal;
 import net.minecraft.entity.passive.AnimalEntity;
+import net.minecraft.entity.passive.SheepEntity;
 import net.minecraft.particles.BlockParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.ChunkStatus;
@@ -78,10 +78,7 @@ public class EatFodderGoal extends MoveToBlockGoal {
 
     @Override
     public double acceptedDistance() {
-        return 1.375;
-    }
-
-    public void playDestroyProgressSound(IWorld p_203114_1_, BlockPos p_203114_2_) {
+        return 1.4;
     }
 
     private final BlockState FODDER_STATE = ModRegistry.FODDER.get().defaultBlockState();
@@ -108,13 +105,9 @@ public class EatFodderGoal extends MoveToBlockGoal {
                             ((double) random.nextFloat() - 0.5D) * 0.08D, ((double) random.nextFloat() - 0.5D) * 0.08D, ((double) random.nextFloat() - 0.5D) * 0.08D, 0.15F);
                 }
             }
-
-            //sound
-            if (this.ticksSinceReachedGoal % 6 == 0) {
-                this.playDestroyProgressSound(world, this.blockPos);
-                //Minecraft.getInstance().particleEngine.destroy(p_180439_3_, blockstate);
+            if(this.ticksSinceReachedGoal == 1 && this.animal instanceof SheepEntity){
+                world.broadcastEntityEvent(this.mob, (byte)10);
             }
-
 
             //breaking animation
             int k = (int) ((float) this.ticksSinceReachedGoal / (float) this.blockBreakingTime * 10.0F);
@@ -126,9 +119,9 @@ public class EatFodderGoal extends MoveToBlockGoal {
             //break block
             if (this.ticksSinceReachedGoal > this.blockBreakingTime) {
                 int layers = world.getBlockState(targetPos).getValue(FodderBlock.LAYERS);
-                if (layers > 1) {
+                if (layers > 2) {
                     world.levelEvent(2001, targetPos, Block.getId(FODDER_STATE));
-                    world.setBlock(targetPos, FODDER_STATE.setValue(FodderBlock.LAYERS, layers - 1), 2);
+                    world.setBlock(targetPos, FODDER_STATE.setValue(FodderBlock.LAYERS, layers - 2), 2);
                 } else {
                     world.destroyBlock(targetPos, false);
                 }

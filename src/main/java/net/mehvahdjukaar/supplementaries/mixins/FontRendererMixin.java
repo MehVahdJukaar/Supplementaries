@@ -37,7 +37,7 @@ public abstract class FontRendererMixin implements IAntiqueTextProvider {
     @Inject(method = "getFontSet", at = @At("HEAD"), cancellable = true)
     private void accept(ResourceLocation resourceLocation, CallbackInfoReturnable<Font> cir) {
         if (antique) {
-            cir.setReturnValue(this.fonts.apply(Textures.ANTIQUE_FONT));
+            cir.setReturnValue(this.fonts.apply(Textures.ANTIQUABLE_FONT));
         }
     }
 

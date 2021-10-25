@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/thin_block",
 	"textures": {
-		"particle": "supplementaries:blocks/fodder_top",
-		"up": "supplementaries:blocks/fodder_top"
+		"particle": "supplementaries:blocks/fodder",
+		"up": "supplementaries:blocks/fodder"
 	},
 	"elements": [
 		{

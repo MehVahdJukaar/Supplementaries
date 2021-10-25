@@ -1,15 +1,25 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "000",
-    "000",
-    "000"
-  ],
-  "key": {
-    "0": {
+  "ingredients": [
+    {
       "item": "supplementaries:flax"
+    },
+    {
+      "item": "supplementaries:flax"
+    },
+    {
+      "item": "supplementaries:flax"
+    },
+    {
+      "item": "minecraft:wheat"
+    },
+    {
+      "item": "minecraft:wheat"
+    },
+    {
+      "item": "minecraft:wheat"
     }
-  },
+  ],
   "result": {
     "item": "supplementaries:flax_block",
     "count": 1

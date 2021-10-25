@@ -1,6 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common;
 
+import net.mehvahdjukaar.supplementaries.api.IAntiqueTextProvider;
 import net.mehvahdjukaar.supplementaries.block.blocks.SignPostBlock;
+import net.mehvahdjukaar.supplementaries.common.capabilities.SupplementariesCapabilities;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.tetra.TetraToolHelper;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
@@ -11,6 +13,7 @@ import net.minecraft.item.*;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tileentity.ShulkerBoxTileEntity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -243,6 +246,17 @@ public class CommonUtil {
     @OnlyIn(Dist.CLIENT)
     public static PlayerEntity getClientPlayer() {
         return Minecraft.getInstance().player;
+    }
+
+    public static void doStuff(TileEntity tile, Runnable callable){
+        tile.getCapability(SupplementariesCapabilities.ANTIQUE_TEXT_CAP).ifPresent(c -> {
+            if (c.hasAntiqueInk()) {
+                IAntiqueTextProvider FONT = (IAntiqueTextProvider) (Minecraft.getInstance().font);
+                FONT.setAntiqueInk(true);
+                callable.run();;
+                //antiqueFontActive = true;
+            }
+        });
     }
 
 
