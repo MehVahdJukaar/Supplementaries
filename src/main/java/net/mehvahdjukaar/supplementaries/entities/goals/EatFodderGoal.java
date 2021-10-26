@@ -53,7 +53,7 @@ public class EatFodderGoal extends MoveToBlockGoal {
         }
     }
 
-
+    //TODO: finish this. still buggy
     @Override
     public boolean canContinueToUse() {
         //try is low so they dont get stuck

@@ -295,7 +295,6 @@ public class ServerConfigs {
 
     public static class block {
         public static ForgeConfigSpec.IntValue GLOBE_TRADES;
-        public static ForgeConfigSpec.DoubleValue GLOBE_TREASURE_CHANCHE;
 
         public static ForgeConfigSpec.IntValue SPEAKER_RANGE;
 
@@ -367,8 +366,6 @@ public class ServerConfigs {
             builder.push("globe");
             GLOBE_TRADES = builder.comment("how many globe trades to give to the wandering trader. This will effectively increase the chance of him having a globe trader. Increase this if you have other mods that add stuff to that trader")
                     .defineInRange("chance", 2, 0, 50);
-            GLOBE_TREASURE_CHANCHE = builder.comment("chanche of finding a globe in a shipwreck treasure chest.")
-                    .defineInRange("shipwreck_treasure_chance", 0.25, 0, 1);
             builder.pop();
 
             //speaker
@@ -705,7 +702,6 @@ public class ServerConfigs {
         public static boolean SAFE_UNBREAKABLE;
         public static boolean SAFE_SIMPLE;
         public static int GLOBE_TRADES;
-        public static double GLOBE_TREASURE_CHANCE;
         public static boolean BLACKBOARD_COLOR;
         public static int CANDLE_HOLDER_LIGHT;
         public static boolean REPLACE_DAUB;
@@ -774,7 +770,6 @@ public class ServerConfigs {
             DISTANCE_TEXT = spawn.DISTANCE_TEXT.get();
 
             GLOBE_TRADES = block.GLOBE_TRADES.get();
-            GLOBE_TREASURE_CHANCE = block.GLOBE_TREASURE_CHANCHE.get();
 
             SPEAKER_RANGE = block.SPEAKER_RANGE.get();
 

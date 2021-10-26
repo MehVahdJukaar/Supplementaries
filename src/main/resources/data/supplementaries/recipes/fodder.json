@@ -1,21 +1,16 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "pattern": [
-    "111",
-    "222",
-    "222"
-  ],
-  "key": {
-    "1": {
-      "tag": "forge:crops/flax"
+  "ingredients": [
+    {
+      "item": "minecraft:hay_bale"
     },
-    "2": {
-      "item": "minecraft:dirt"
+    {
+      "item": "supplementaries:flax_bale"
     }
-  },
+  ],
   "result": {
     "item": "supplementaries:fodder",
-    "count": 1
+    "count": 2
   },
   "conditions": [
     {

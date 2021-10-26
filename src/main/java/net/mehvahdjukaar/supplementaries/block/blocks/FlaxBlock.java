@@ -1,8 +1,6 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
-import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.block.*;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.EnumProperty;
@@ -14,7 +12,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
@@ -23,7 +20,6 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeHooks;
 
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Random;
 
 public class FlaxBlock extends CropsBlock {
@@ -61,13 +57,6 @@ public class FlaxBlock extends CropsBlock {
             return SHAPES_BOTTOM[state.getValue(AGE)];
         }
         return SHAPES_TOP[state.getValue(AGE)];
-    }
-
-    @Override
-    public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        if(!ClientConfigs.cached.TOOLTIP_HINTS)return;
-        //tooltip.add(new TranslationTextComponent("message.supplementaries.flax").mergeStyle(TextFormatting.GRAY).mergeStyle(TextFormatting.ITALIC));
     }
 
     @Override

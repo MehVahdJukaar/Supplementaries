@@ -1,0 +1,38 @@
+{
+  "pools": [
+    {
+      "rolls": 1,
+      "conditions": [
+        {
+          "condition": "random_chance",
+          "chance": 0.38
+        }
+      ],
+      "entries": [
+        {
+          "type": "item",
+          "weight": 4,
+          "name": "supplementaries:bamboo_spikes"
+        },
+        {
+          "type": "item",
+          "weight": 3,
+          "name": "supplementaries:bamboo_spikes_tipped",
+          "functions": [
+            {
+              "function": "set_nbt",
+              "tag": "{Potion:\"minecraft:poison\"}"
+            },
+            {
+              "function": "set_damage",
+              "damage": {
+                "min": 0.2,
+                "max": 0.9
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

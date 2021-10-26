@@ -1,19 +1,12 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.minecraft.enchantment.EnchantmentData;
-import net.minecraft.item.EnchantedBookItem;
-import net.minecraft.item.Items;
-import net.minecraft.loot.*;
-import net.minecraft.loot.conditions.RandomChance;
-import net.minecraft.loot.functions.SetCount;
-import net.minecraft.loot.functions.SetDamage;
-import net.minecraft.loot.functions.SetNBT;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.loot.LootPool;
+import net.minecraft.loot.LootTables;
+import net.minecraft.loot.TableLootEntry;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Util;
 import net.minecraftforge.event.LootTableLoadEvent;
 
 import java.util.ArrayList;
@@ -51,7 +44,7 @@ public class LootTableStuff {
     public enum TableType {
         OTHER,
         MINESHAFT,
-        SHIPWRECK,
+        SHIPWRECK_TREASURE,
         PILLAGER,
         DUNGEON,
         PYRAMID,
@@ -72,7 +65,7 @@ public class LootTableStuff {
         static boolean RS = CompatHandler.repurposed_structures;
 
         public static TableType getType(String name) {
-            if (isShipwreck(name)) return TableType.SHIPWRECK;
+            if (isShipwreck(name)) return TableType.SHIPWRECK_TREASURE;
             if (isShipwreckStorage(name)) return TableType.SHIPWRECK_STORAGE;
             if (isMineshaft(name)) return TableType.MINESHAFT;
             if (isDungeon(name)) return TableType.DUNGEON;
@@ -134,144 +127,56 @@ public class LootTableStuff {
         }
     }
 
+    private static void injectLootPool(LootTableLoadEvent event, TableType type, String name) {
+        String id = type.toString().toLowerCase() + "_" + name;
+        LootPool pool = LootPool.lootPool().add(
+                        TableLootEntry.lootTableReference(Supplementaries.res("inject/" + id)))
+                .name("supp_" + name).build();
+        event.getTable().addPool(pool);
+    }
 
     public static void tryInjectGlobe(LootTableLoadEvent e, TableType type) {
-        if (type == TableType.SHIPWRECK) {
-            float chance = (float) ServerConfigs.cached.GLOBE_TREASURE_CHANCE;
-            LootPool pool = LootPool.lootPool()
-                    .name("supplementaries_injected_globe")
-                    .setRolls(ConstantRange.exactly(1))
-                    .when(RandomChance.randomChance(chance))
-                    .add(ItemLootEntry.lootTableItem(ModRegistry.GLOBE_ITEM.get()).setWeight(1))
-                    .build();
-            e.getTable().addPool(pool);
+        if (type == TableType.SHIPWRECK_TREASURE) {
+            injectLootPool(e, type, "globe");
         }
     }
 
     public static void tryInjectRope(LootTableLoadEvent e, TableType type) {
-
         if (type == TableType.MINESHAFT) {
-            float chance = 0.35f;
-            LootPool pool = LootPool.lootPool()
-                    .name("supplementaries_injected_rope")
-                    .apply(SetCount.setCount(RandomValueRange.between(5.0F, 17.0F)))
-                    .setRolls(ConstantRange.exactly(1))
-                    .when(RandomChance.randomChance(chance))
-                    .add(ItemLootEntry.lootTableItem(ModRegistry.ROPE_ITEM.get()).setWeight(1))
-                    .build();
-            e.getTable().addPool(pool);
+            injectLootPool(e, type, "rope");
         }
     }
 
     public static void tryInjectFlax(LootTableLoadEvent e, TableType type) {
-        float chance;
-        float min = 1;
-        float max = 3;
-        if (type == TableType.MINESHAFT) {
-            chance = 0.15f;
-        } else if (type == TableType.DUNGEON) {
-            chance = 0.23f;
-        } else if (type == TableType.SHIPWRECK_STORAGE) {
-            chance = 0.2f;
-        } else if (type == TableType.PILLAGER) {
-            chance = 1f;
-            min = 2;
-            max = 5;
-        } else return;
-
-        LootPool pool = LootPool.lootPool()
-                .name("supplementaries_injected_flax")
-                .apply(SetCount.setCount(RandomValueRange.between(min, max)))
-                .setRolls(ConstantRange.exactly(1))
-                .when(RandomChance.randomChance(chance))
-                .add(ItemLootEntry.lootTableItem(ModRegistry.FLAX_SEEDS_ITEM.get()).setWeight(1))
-                .build();
-        e.getTable().addPool(pool);
+        if (type == TableType.MINESHAFT || type == TableType.DUNGEON || type == TableType.SHIPWRECK_STORAGE || type == TableType.PILLAGER) {
+            injectLootPool(e, type, "flax");
+        }
     }
 
     public static void tryInjectBlueBomb(LootTableLoadEvent e, TableType type) {
-        float chance;
-        if (type == TableType.STRONGHOLD) {
-            chance = 0.03f;
-        } else if (type == TableType.MINESHAFT) {
-            chance = 0.028f;
-        } else if (type == TableType.TEMPLE) {
-            chance = 0.07f;
-        } else if (type == TableType.FORTRESS) {
-            chance = 0.035f;
-        } else if (type == TableType.DUNGEON) {
-            chance = 0.01f;
-        } else return;
-
-        LootPool pool = LootPool.lootPool()
-                .name("supplementaries_injected_blue_bomb")
-                .setRolls(ConstantRange.exactly(1))
-                .when(RandomChance.randomChance(chance))
-                .add(ItemLootEntry.lootTableItem(ModRegistry.BOMB_BLUE_ITEM.get()).setWeight(1))
-                .build();
-        e.getTable().addPool(pool);
-
+        if (type == TableType.STRONGHOLD || type == TableType.MINESHAFT || type == TableType.TEMPLE
+                || type == TableType.FORTRESS || type == TableType.DUNGEON) {
+            injectLootPool(e, type, "blue_bomb");
+        }
     }
 
     public static void tryInjectBomb(LootTableLoadEvent e, TableType type) {
-        float chance;
-        if (type == TableType.STRONGHOLD) {
-            chance = 0.25f;
-        } else if (type == TableType.MINESHAFT) {
-            chance = 0.12f;
-        } else if (type == TableType.TEMPLE) {
-            chance = 0.10f;
-        } else if (type == TableType.FORTRESS) {
-            chance = 0.145f;
-        } else return;
-        LootPool pool = LootPool.lootPool()
-                .name("supplementaries_injected_bomb")
-                .apply(SetCount.setCount(RandomValueRange.between(1F, 3.0F)))
-                .when(RandomChance.randomChance(chance))
-                .add(ItemLootEntry.lootTableItem(ModRegistry.BOMB_ITEM.get()).setWeight(1))
-                .build();
-        e.getTable().addPool(pool);
+        if (type == TableType.STRONGHOLD || type == TableType.MINESHAFT || type == TableType.TEMPLE
+                || type == TableType.FORTRESS) {
+            injectLootPool(e, type, "bomb");
+        }
     }
 
     public static void tryInjectSpikes(LootTableLoadEvent e, TableType type) {
         if (type == TableType.TEMPLE) {
-
-            float chance = 0.38f;
-            LootPool pool = LootPool.lootPool()
-                    .name("supplementaries_injected_spikes")
-                    .setRolls(ConstantRange.exactly(1))
-                    .when(RandomChance.randomChance(chance))
-                    .add(ItemLootEntry.lootTableItem(ModRegistry.BAMBOO_SPIKES_ITEM.get()).setWeight(4))
-                    .add(ItemLootEntry.lootTableItem(ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get()).setWeight(3)
-                            .apply(SetNBT.setTag(
-                                    Util.make(new CompoundNBT(), (c) -> c.putString("Potion", "minecraft:poison"))
-                            ))
-                            .apply(SetDamage.setDamage(RandomValueRange.between(0.2F, 0.9F)))
-                    )
-                    .build();
-            e.getTable().addPool(pool);
+            injectLootPool(e, type, "spikes");
         }
     }
 
     public static void tryInjectStasis(LootTableLoadEvent e, TableType type) {
-
         if (type == TableType.END_CITY) {
-            float chance = 0.25f;
-
-            LootPool pool = LootPool.lootPool()
-                    .name("supplementaries_injected_stasis")
-                    .setRolls(ConstantRange.exactly(1))
-                    .when(RandomChance.randomChance(chance))
-                    .add(ItemLootEntry.lootTableItem(Items.ENCHANTED_BOOK)
-                            .apply(SetNBT.setTag(
-                                    (EnchantedBookItem.createForEnchantment(new EnchantmentData(ModRegistry.STASIS_ENCHANTMENT.get(), 1)))
-                                    .getOrCreateTag()
-                            ))
-                            .setWeight(1))
-                    .build();
-            e.getTable().addPool(pool);
+            injectLootPool(e, type, "stasis");
         }
     }
-
 
 }

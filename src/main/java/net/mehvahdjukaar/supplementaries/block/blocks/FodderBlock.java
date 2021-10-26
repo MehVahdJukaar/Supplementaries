@@ -61,6 +61,7 @@ public class FodderBlock extends WaterBlock {
 
     @Override
     public boolean canSurvive(BlockState state, IWorldReader world, BlockPos pos) {
+        if(true)return true;
         BlockPos below = pos.below();
         BlockState blockstate = world.getBlockState(below);
         return Block.isFaceFull(blockstate.getCollisionShape(world, below), Direction.UP);
@@ -73,6 +74,7 @@ public class FodderBlock extends WaterBlock {
 
     @Override
     public boolean canBeReplaced(BlockState state, BlockItemUseContext context) {
+        if(true)return false;
         int i = state.getValue(LAYERS);
         if (context.getItemInHand().getItem() == this.asItem() && i < 16) {
             if (context.replacingClickedOnBlock()) {
@@ -110,9 +112,9 @@ public class FodderBlock extends WaterBlock {
             if (!world.isClientSide) {
 
                 int layers = state.getValue(FodderBlock.LAYERS);
-                if (layers > 1) {
+                if (layers > 2) {
                     world.levelEvent(2001, pos, Block.getId(state));
-                    world.setBlock(pos, state.setValue(FodderBlock.LAYERS, layers - 1), 11);
+                    world.setBlock(pos, state.setValue(FodderBlock.LAYERS, layers - 2), 11);
                 } else {
                     world.destroyBlock(pos, false);
                 }
