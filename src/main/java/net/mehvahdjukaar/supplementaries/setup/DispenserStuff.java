@@ -45,6 +45,11 @@ public class DispenserStuff {
 
         if (!RegistryConfigs.reg.DISPENSERS.get()) return;
 
+
+        if(RegistryConfigs.reg.FODDER_ENABLED.get()){
+            DispenserHelper.registerPlaceBlockBehavior(ModRegistry.FODDER.get());
+        }
+
         //jar
         if (RegistryConfigs.reg.JAR_ENABLED.get()) {
 

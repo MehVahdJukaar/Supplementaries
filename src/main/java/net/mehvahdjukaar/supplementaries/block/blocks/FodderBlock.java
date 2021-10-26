@@ -31,12 +31,12 @@ public class FodderBlock extends WaterBlock {
     protected static final VoxelShape[] SHAPE_BY_LAYER = new VoxelShape[16];
 
     static {
-        Arrays.setAll(SHAPE_BY_LAYER, l -> Block.box(0.0D, 0.0D, 0.0D, 16.0D, l+1, 16.0D));
+        Arrays.setAll(SHAPE_BY_LAYER, l -> Block.box(0.0D, 0.0D, 0.0D, 16.0D, l + 1, 16.0D));
     }
 
     public FodderBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(LAYERS, 16).setValue(WATERLOGGED,false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(LAYERS, 16).setValue(WATERLOGGED, false));
     }
 
     @Override
@@ -61,20 +61,57 @@ public class FodderBlock extends WaterBlock {
 
     @Override
     public boolean canSurvive(BlockState state, IWorldReader world, BlockPos pos) {
-        if(true)return true;
+        if (true) return true;
         BlockPos below = pos.below();
         BlockState blockstate = world.getBlockState(below);
         return Block.isFaceFull(blockstate.getCollisionShape(world, below), Direction.UP);
     }
 
+    //ugly but works
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState oldState, IWorld world, BlockPos p_196271_5_, BlockPos p_196271_6_) {
-        return !state.canSurvive(world, p_196271_5_) ? Blocks.AIR.defaultBlockState() : super.updateShape(state, direction, oldState, world, p_196271_5_, p_196271_6_);
+    public BlockState updateShape(BlockState state, Direction direction, BlockState facingState, IWorld world, BlockPos currentPos, BlockPos otherPos) {
+        if (facingState.is(this)) {
+            if(direction == Direction.UP) {
+                int layers = state.getValue(LAYERS);
+                int missing = 16 - layers;
+                if (missing > 0) {
+                    int otherLayers = facingState.getValue(LAYERS);
+                    int newOtherLayers = otherLayers - missing;
+                    BlockState newOtherState;
+                    if (newOtherLayers <= 0) {
+                        newOtherState = Blocks.AIR.defaultBlockState();
+                    } else {
+                        newOtherState = facingState.setValue(LAYERS, newOtherLayers);
+                    }
+                    BlockState newState = state.setValue(LAYERS, layers + otherLayers - Math.max(0, newOtherLayers));
+                    world.setBlock(currentPos, newState, 0);
+                    world.setBlock(otherPos, newOtherState, 0);
+                    return newState;
+                }
+            }
+            else if(direction == Direction.DOWN){
+                int layers = facingState.getValue(LAYERS);
+                int missing = 16 - layers;
+                if (missing > 0) {
+                    int myLayers = state.getValue(LAYERS);
+                    int myNewLayers = myLayers - missing;
+                    BlockState myNewState;
+                    if (myNewLayers <= 0) {
+                        myNewState = Blocks.AIR.defaultBlockState();
+                    } else {
+                        myNewState = state.setValue(LAYERS, myNewLayers);
+                    }
+                    world.setBlock(otherPos, state.setValue(LAYERS, layers + myLayers - Math.max(0, myNewLayers)), 0);
+                    return myNewState;
+                }
+            }
+        }
+        return super.updateShape(state, direction, facingState, world, currentPos, otherPos);
     }
 
     @Override
     public boolean canBeReplaced(BlockState state, BlockItemUseContext context) {
-        if(true)return false;
+        if (true) return false;
         int i = state.getValue(LAYERS);
         if (context.getItemInHand().getItem() == this.asItem() && i < 16) {
             if (context.replacingClickedOnBlock()) {

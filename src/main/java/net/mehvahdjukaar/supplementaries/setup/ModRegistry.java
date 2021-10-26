@@ -405,8 +405,8 @@ public class ModRegistry {
 
     //antique ink
     public static final String ANTIQUE_INK_NAME = "antique_ink";
-    public static final RegistryObject<Item> ANTIQUE_INK_ITEM = regItem(ANTIQUE_INK_NAME, () -> new AntiqueInkItem(
-            (new Item.Properties()).tab(getTab(ItemGroup.TAB_MATERIALS, ANTIQUE_INK_NAME))));
+    //public static final RegistryObject<Item> ANTIQUE_INK_ITEM = regItem(ANTIQUE_INK_NAME, () -> new AntiqueInkItem(
+    //        (new Item.Properties()).tab(getTab(ItemGroup.TAB_MATERIALS, ANTIQUE_INK_NAME))));
     //speedometer
     /*
     public static final String SPEEDOMETER_NAME = "speedometer";

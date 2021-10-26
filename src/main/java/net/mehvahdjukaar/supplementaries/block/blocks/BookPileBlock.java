@@ -1,38 +1,24 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import com.mojang.blaze3d.vertex.VertexBuilderUtils;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.BookPileBlockTile;
-import net.mehvahdjukaar.supplementaries.client.Materials;
-import net.mehvahdjukaar.supplementaries.client.renderers.color.HSLColor;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
-import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
-import net.mehvahdjukaar.supplementaries.compat.enchantedbooks.EnchantedBookRedesignRenderer;
 import net.mehvahdjukaar.supplementaries.compat.quark.QuarkPlugin;
-import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.model.RenderMaterial;
-import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.*;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ColorHelper;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -41,9 +27,6 @@ import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
 
 public class BookPileBlock extends WaterBlock {
 
@@ -77,11 +60,19 @@ public class BookPileBlock extends WaterBlock {
     }
 
     public static boolean isEnchantedBook(Item i){
-        return i == Items.ENCHANTED_BOOK || (CompatHandler.quark && QuarkPlugin.isTome(i));
+        return i == Items.ENCHANTED_BOOK || isQuarkTome(i);
     }
 
     public static boolean isNormalBook(Item i){
-        return i.is(ModTags.BOOKS);
+        return i.is(ModTags.BOOKS) || (ServerConfigs.cached.WRITTEN_BOOKS && isWrittenBook(i));
+    }
+
+    public static boolean isWrittenBook(Item i){
+        return i instanceof WrittenBookItem || i instanceof WritableBookItem;
+    }
+
+    public static boolean isQuarkTome(Item i){
+        return CompatHandler.quark && QuarkPlugin.isTome(i);
     }
 
     @Override

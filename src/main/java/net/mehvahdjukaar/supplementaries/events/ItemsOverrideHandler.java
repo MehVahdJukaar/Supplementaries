@@ -557,6 +557,8 @@ public class ItemsOverrideHandler {
         @Override
         public ActionResultType tryPerformingAction(World world, PlayerEntity player, Hand hand, ItemStack stack, BlockRayTraceResult hit, boolean isRanged) {
             if (player.abilities.mayBuild) {
+                //require shift for written books
+                if(BookPileBlock.isWrittenBook(stack.getItem()) && !player.isShiftKeyDown()) return ActionResultType.PASS;
                 return paceBlockOverride(BOOK_PILE_H_ITEM, player, hand, stack, world, hit, isRanged);
             }
             return ActionResultType.PASS;
@@ -595,6 +597,7 @@ public class ItemsOverrideHandler {
         @Override
         public ActionResultType tryPerformingAction(World world, PlayerEntity player, Hand hand, ItemStack stack, BlockRayTraceResult hit, boolean isRanged) {
             if (player.abilities.mayBuild) {
+                if(BookPileBlock.isWrittenBook(stack.getItem()) && !player.isShiftKeyDown()) return ActionResultType.PASS;
                 return paceBlockOverride(ModRegistry.BOOK_PILE.get(), player, hand, stack, world, hit, isRanged);
             }
             return ActionResultType.PASS;

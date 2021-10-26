@@ -14,7 +14,6 @@ import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.FlowerPotHandler;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandlerClient;
-import net.mehvahdjukaar.supplementaries.compat.optifine.OptifineHandler;
 import net.mehvahdjukaar.supplementaries.items.SlingshotItem;
 import net.mehvahdjukaar.supplementaries.world.data.map.client.CMDclient;
 import net.minecraft.block.Block;
@@ -24,7 +23,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.particle.FlameParticle;
 import net.minecraft.client.particle.ParticleManager;
-import net.minecraft.client.renderer.Atlases;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
@@ -32,8 +30,6 @@ import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.client.renderer.entity.SpriteRenderer;
 import net.minecraft.client.renderer.model.ModelBakery;
-import net.minecraft.client.renderer.texture.AtlasTexture;
-import net.minecraft.client.renderer.texture.MissingTextureSprite;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.*;
@@ -330,29 +326,10 @@ public class ClientSetup {
         colors.register(new CrossbowColor(), Items.CROSSBOW);
     }
 
-
     //textures
     @SubscribeEvent
     public static void onTextureStitch(TextureStitchEvent.Pre event) {
-        ResourceLocation loc = event.getMap().location();
-
-        if (loc.equals(AtlasTexture.LOCATION_BLOCKS)) {
-            for (ResourceLocation r : Textures.getTexturesToStitch()) {
-                event.addSprite(r);
-            }
-        } else if (loc.equals(Atlases.BANNER_SHEET)) {
-            try {
-                Textures.FLAG_TEXTURES.values().stream().filter(r -> !MissingTextureSprite.getLocation().equals(r))
-                        .forEach(event::addSprite);
-            } catch (Exception ignored) {
-            }
-        } else if (loc.equals(Atlases.SHULKER_SHEET)) {
-            event.addSprite(Textures.BOOK_ENCHANTED_TEXTURES);
-            event.addSprite(Textures.BOOK_TOME_TEXTURES);
-            Textures.BOOK_TEXTURES.values().forEach(event::addSprite);
-        }
-
-        OptifineHandler.refresh();
+        Textures.stitchTextures(event);
     }
 
     @SubscribeEvent

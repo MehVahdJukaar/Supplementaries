@@ -6,12 +6,19 @@ import net.mehvahdjukaar.supplementaries.block.tiles.BookPileBlockTile.BookColor
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.setup.Variants;
+import net.minecraft.client.renderer.Atlases;
+import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.renderer.texture.MissingTextureSprite;
 import net.minecraft.tileentity.BannerPattern;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Textures {
 
@@ -110,6 +117,8 @@ public class Textures {
     public static final Map<BookColor, ResourceLocation> BOOK_TEXTURES = new HashMap<>();
     public static final ResourceLocation BOOK_ENCHANTED_TEXTURES = Supplementaries.res("entity/books/book_enchanted");
     public static final ResourceLocation BOOK_TOME_TEXTURES = Supplementaries.res("entity/books/book_tome");
+    public static final ResourceLocation BOOK_WRITTEN_TEXTURES = Supplementaries.res("entity/books/book_written");
+    public static final ResourceLocation BOOK_ANTIQUE_TEXTURES = Supplementaries.res("entity/books/book_antique");
 
     public static final ResourceLocation ANTIQUABLE_FONT = Supplementaries.res("antiquable");
 
@@ -135,13 +144,30 @@ public class Textures {
     }
 
 
-    //TODO: rethink this
-    public static List<ResourceLocation> getTexturesToStitch() {
-        return new ArrayList<>(Arrays.asList(
+    public static void stitchTextures(TextureStitchEvent.Pre event) {
+        ArrayList<ResourceLocation> blocks = new ArrayList<>(Arrays.asList(
                 FISHIES_TEXTURE, BELLOWS_TEXTURE, LASER_BEAM_TEXTURE, LASER_BEAM_END_TEXTURE, LASER_OVERLAY_TEXTURE,
                 SUGAR_TEXTURE, CLOCK_HAND_TEXTURE, HOURGLASS_REDSTONE, HOURGLASS_GLOWSTONE, HOURGLASS_SUGAR, HOURGLASS_BLAZE,
                 HOURGLASS_GUNPOWDER, BLACKBOARD_GRID));
+
+        ResourceLocation loc = event.getMap().location();
+
+        if (loc.equals(AtlasTexture.LOCATION_BLOCKS)) {
+            for (ResourceLocation r : blocks) {
+                event.addSprite(r);
+            }
+        } else if (loc.equals(Atlases.BANNER_SHEET)) {
+            try {
+                Textures.FLAG_TEXTURES.values().stream().filter(r -> !MissingTextureSprite.getLocation().equals(r))
+                        .forEach(event::addSprite);
+            } catch (Exception ignored) {
+            }
+        } else if (loc.equals(Atlases.SHULKER_SHEET)) {
+            event.addSprite(Textures.BOOK_ENCHANTED_TEXTURES);
+            event.addSprite(Textures.BOOK_TOME_TEXTURES);
+            event.addSprite(Textures.BOOK_WRITTEN_TEXTURES);
+            event.addSprite(Textures.BOOK_ANTIQUE_TEXTURES);
+            Textures.BOOK_TEXTURES.values().forEach(event::addSprite);
+        }
     }
-
-
 }

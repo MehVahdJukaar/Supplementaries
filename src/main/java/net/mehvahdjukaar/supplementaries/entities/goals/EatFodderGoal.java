@@ -4,6 +4,7 @@ import net.mehvahdjukaar.supplementaries.block.blocks.FodderBlock;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.MoveToBlockGoal;
 import net.minecraft.entity.passive.AnimalEntity;
@@ -44,7 +45,8 @@ public class EatFodderGoal extends MoveToBlockGoal {
             --this.nextStartTick;
             return false;
         } else if (this.tryFindBlock()) {
-            //this.nextStartTick = 20;
+            //cooldown between attempts
+            this.nextStartTick = 600;
             return true;
         } else {
             //no blocks around. cooldown
@@ -57,11 +59,15 @@ public class EatFodderGoal extends MoveToBlockGoal {
     @Override
     public boolean canContinueToUse() {
         //try is low so they dont get stuck
-        return this.tryTicks >= -100 && this.tryTicks <= 500 && this.isValidTarget(this.mob.level, this.blockPos);
+        return this.tryTicks >= -100 && this.tryTicks <= 200 && this.isValidTarget(this.mob.level, this.blockPos);
     }
 
     private boolean tryFindBlock() {
         return this.blockPos != null && this.isValidTarget(this.mob.level, this.blockPos) || this.findNearestBlock();
+    }
+
+    protected int nextStartTick(CreatureEntity p_203109_1_) {
+        return 800 + p_203109_1_.getRandom().nextInt(400);
     }
 
     @Override
@@ -93,8 +99,11 @@ public class EatFodderGoal extends MoveToBlockGoal {
         Random random = this.animal.getRandom();
         if (this.isReachedTarget()) {
 
+            //prevents stopping while eating
+            this.ticksSinceReachedGoal--;
+
             BlockPos targetPos = this.getMoveToTarget().below();
-            Vector3d vector3d = Vector3d.atBottomCenterOf(targetPos).add(0.0D, 0.6F, 0.0D);
+            Vector3d vector3d = Vector3d.atBottomCenterOf(targetPos);
             this.mob.getLookControl().setLookAt(vector3d.x(), vector3d.y(), vector3d.z());
             if (this.ticksSinceReachedGoal > 0) {
 
@@ -127,8 +136,8 @@ public class EatFodderGoal extends MoveToBlockGoal {
                 }
                 if(!world.isClientSide) {
                     ((ServerWorld) world).sendParticles(ParticleTypes.HAPPY_VILLAGER,
-                            this.animal.getX(), this.animal.getY(), this.animal.getZ(), 4,
-                            this.animal.getBbWidth(), this.animal.getBbHeight(), this.animal.getBbWidth(), 0);
+                            this.animal.getX(), this.animal.getY(), this.animal.getZ(), 5,
+                            this.animal.getBbWidth()/2f, this.animal.getBbHeight()/2f, this.animal.getBbWidth()/2f, 0);
                 }
                 //so it stops
                 this.nextStartTick = this.nextStartTick(this.mob);

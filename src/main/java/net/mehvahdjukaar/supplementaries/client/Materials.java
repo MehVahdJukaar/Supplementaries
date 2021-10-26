@@ -22,6 +22,7 @@ public class Materials {
     public static final Map<BookColor, RenderMaterial> BOOK_MATERIALS = new HashMap<>();
     public static final RenderMaterial BOOK_ENCHANTED_MATERIAL = new RenderMaterial(Atlases.SHULKER_SHEET, Textures.BOOK_ENCHANTED_TEXTURES);
     public static final RenderMaterial BOOK_TOME_MATERIAL = new RenderMaterial(Atlases.SHULKER_SHEET, Textures.BOOK_TOME_TEXTURES);
+    public static final RenderMaterial BOOK_WRITTEN_MATERIAL = new RenderMaterial(Atlases.SHULKER_SHEET, Textures.BOOK_WRITTEN_TEXTURES);
 
 
     public static final Map<IWoodType, RenderMaterial> HANGING_SIGNS_MATERIALS = new HashMap<>();

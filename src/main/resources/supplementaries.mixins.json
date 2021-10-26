@@ -33,7 +33,6 @@
     "SpawnRedMerchantMixin",
     "StrongholdCrossingMixin",
     "StrongholdRoomMixin",
-    "TileEntityRendererDispatcherTestMixin",
     "VineBlockMixin",
     "ZombieHorseMixin",
     "accessors.ChickenEntityAccessor",
@@ -43,12 +42,10 @@
   "client": [
     "BellTileEntityRendererMixin",
     "ClientPlayerEntityMixin",
-    "FontRendererMixin",
     "IronGolemRendererMixin",
     "ItemRendererMixin",
     "LoomScreenMixin",
     "ParrotPartingMixin",
-    "TileEntityRendererDispatcherTestMixin",
     "UndeadHorseRendererMixin",
     "VillagerModelMixin",
     "WorldRendererMixin"

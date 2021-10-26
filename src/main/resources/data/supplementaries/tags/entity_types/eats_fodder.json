@@ -7,6 +7,8 @@
     "minecraft:chicken"
   ],
   "optional": [
+    "autumnity:snail",
+    "alexsmobs:raccoon"
   ]
 }
 

@@ -8,14 +8,16 @@ import net.mehvahdjukaar.supplementaries.client.Materials;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.HSLColor;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.enchantedbooks.EnchantedBookRedesignRenderer;
-import net.mehvahdjukaar.supplementaries.compat.quark.QuarkPlugin;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.model.RenderMaterial;
-import net.minecraft.item.*;
+import net.minecraft.item.BookItem;
+import net.minecraft.item.DyeColor;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
@@ -54,11 +56,11 @@ public class BookPileBlockTile extends ItemDisplayTile {
         this.enchantPower = 0;
         for (int i = 0; i < 4; i++) {
             Item item = this.getItem(i).getItem();
-            if (item instanceof BookItem) this.enchantPower += ServerConfigs.cached.BOOK_POWER / 4f;
-            else if (CompatHandler.quark && QuarkPlugin.isTome(item))
+            if (BookPileBlock.isQuarkTome(item))
                 this.enchantPower += (ServerConfigs.cached.BOOK_POWER / 4f) * 2;
-            else if (item instanceof EnchantedBookItem)
+            else if (BookPileBlock.isEnchantedBook(item))
                 this.enchantPower += ServerConfigs.cached.ENCHANTED_BOOK_POWER / 4f;
+            else if (BookPileBlock.isNormalBook(item)) this.enchantPower += ServerConfigs.cached.BOOK_POWER / 4f;
         }
     }
 
@@ -109,16 +111,21 @@ public class BookPileBlockTile extends ItemDisplayTile {
 
                 this.material = Materials.BOOK_MATERIALS.get(this.color);
                 this.isEnchanted = false;
-            }else if(item.getRegistryName().getNamespace().equals("inspirations")){
-                String colName = item.getRegistryName().getPath().replace("_book","");
+            }else if(item.getRegistryName().getNamespace().equals("inspirations")) {
+                String colName = item.getRegistryName().getPath().replace("_book", "");
                 this.color = BookColor.byName(colName);
 
                 this.material = Materials.BOOK_MATERIALS.get(this.color);
                 this.isEnchanted = false;
+            }else if(BookPileBlock.isWrittenBook(item)){
+                this.color = null;
+                this.material = Materials.BOOK_WRITTEN_MATERIAL;
+
+                this.isEnchanted = false;
             } else {
                 this.color = null;
 
-                this.material = (CompatHandler.quark && QuarkPlugin.isTome(item)) ? Materials.BOOK_TOME_MATERIAL : Materials.BOOK_ENCHANTED_MATERIAL;
+                this.material = BookPileBlock.isQuarkTome(item) ? Materials.BOOK_TOME_MATERIAL : Materials.BOOK_ENCHANTED_MATERIAL;
                 this.isEnchanted = true;
             }
         }

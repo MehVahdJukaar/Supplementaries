@@ -6,11 +6,9 @@ import net.mehvahdjukaar.supplementaries.block.blocks.ClockBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.RakedGravelBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.StatueBlockTile;
-import net.mehvahdjukaar.supplementaries.block.util.ITextHolder;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.PicklePlayer;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
-import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilitiesHandler;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.quark.QuarkPlugin;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -33,7 +31,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.item.Items;
-import net.minecraft.tileentity.SignTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -186,10 +183,10 @@ public class ServerEvents {
     private static final ResourceLocation ANTIQUE_INK = new ResourceLocation(Supplementaries.MOD_ID, "antique_ink");
     @SubscribeEvent
     public static void onAttachTileCapabilities(AttachCapabilitiesEvent<TileEntity> event) {
-        TileEntity tile = event.getObject();
-        if (tile instanceof SignTileEntity || tile instanceof ITextHolder) {
-            event.addCapability(ANTIQUE_INK, new CapabilitiesHandler.AntiqueInkProvider());
-        }
+        //TileEntity tile = event.getObject();
+        //if (tile instanceof SignTileEntity || tile instanceof ITextHolder) {
+        //    event.addCapability(ANTIQUE_INK, new CapabilitiesHandler.AntiqueInkProvider());
+        //}
     }
 
     @SubscribeEvent
