@@ -89,7 +89,6 @@ public class NoticeBoardBlock extends Block implements EntityBlock {
     @Override
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
         if (facing == stateIn.getValue(FACING)) {
-            //TODO: check if it can be made client side
             if (worldIn.getBlockEntity(currentPos) instanceof NoticeBoardBlockTile tile) {
                 //((NoticeBoardBlockTile)te).textVisible = this.skipRendering(stateIn,facingState,facing);
                 boolean culled = facingState.isSolidRender(worldIn, currentPos) &&

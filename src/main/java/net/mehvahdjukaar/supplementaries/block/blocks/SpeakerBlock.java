@@ -5,7 +5,7 @@ import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.client.gui.SpeakerBlockGui;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
-import net.mehvahdjukaar.supplementaries.network.SendSpeakerBlockMessagePacket;
+import net.mehvahdjukaar.supplementaries.network.ClientBoundPlaySpeakerMessagePacket;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -104,7 +104,7 @@ public class SpeakerBlock extends Block implements EntityBlock {
 
                             players.broadcast(null, pos.getX(), pos.getY(), pos.getZ(), ServerConfigs.cached.SPEAKER_RANGE * tile.volume,
                                     dimension, NetworkHandler.INSTANCE.toVanillaPacket(
-                                            new SendSpeakerBlockMessagePacket(message, tile.narrator),
+                                            new ClientBoundPlaySpeakerMessagePacket(message, tile.narrator),
                                             NetworkDirection.PLAY_TO_CLIENT));
                         }
                     }

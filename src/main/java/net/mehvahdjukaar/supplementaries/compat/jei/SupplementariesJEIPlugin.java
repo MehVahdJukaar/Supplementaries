@@ -77,11 +77,8 @@ public class SupplementariesJEIPlugin implements IModPlugin {
 
             return stringBuilder.toString();
         }
-
     }
 
-
-    //TODO: fix ropes
     public static List<Recipe<?>> createRopeArrowCreateRecipe() {
         List<Recipe<?>> recipes = new ArrayList<>();
         String group = "supplementaries.jei.rope_arrow";

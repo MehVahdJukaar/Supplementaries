@@ -143,6 +143,7 @@ public class ServerConfigs {
         public static ForgeConfigSpec.BooleanValue MAP_MARKERS;
         public static ForgeConfigSpec.BooleanValue CEILING_BANNERS;
         public static ForgeConfigSpec.BooleanValue PLACEABLE_BOOKS;
+        public static ForgeConfigSpec.BooleanValue WRITTEN_BOOKS;
         public static ForgeConfigSpec.DoubleValue BOOK_POWER;
         public static ForgeConfigSpec.DoubleValue ENCHANTED_BOOK_POWER;
         public static ForgeConfigSpec.BooleanValue ZOMBIE_HORSE;
@@ -255,6 +256,8 @@ public class ServerConfigs {
             builder.pop();
 
             builder.push("placeable_books");
+            WRITTEN_BOOKS = builder.comment("Allows written books to be placed down. Requires shift clicking")
+                    .define("enabled", true);
             PLACEABLE_BOOKS = builder.comment("Allow books and enchanted books to be placed on the ground")
                     .define("enabled", true);
             BOOK_POWER = builder.comment("Enchantment power bonus given by normal book piles with 4 books. Piles with less books will have their respective fraction of this total. For reference a vanilla bookshelf provides 1")
@@ -296,7 +299,6 @@ public class ServerConfigs {
 
     public static class block {
         public static ForgeConfigSpec.IntValue GLOBE_TRADES;
-        public static ForgeConfigSpec.DoubleValue GLOBE_TREASURE_CHANCHE;
 
         public static ForgeConfigSpec.IntValue SPEAKER_RANGE;
 
@@ -366,8 +368,6 @@ public class ServerConfigs {
             builder.push("globe");
             GLOBE_TRADES = builder.comment("how many globe trades to give to the wandering trader. This will effectively increase the chance of him having a globe trader. Increase this if you have other mods that add stuff to that trader")
                     .defineInRange("chance", 2, 0, 50);
-            GLOBE_TREASURE_CHANCHE = builder.comment("chanche of finding a globe in a shipwreck treasure chest.")
-                    .defineInRange("shipwreck_treasure_chance", 0.25, 0, 1);
             builder.pop();
 
             //speaker
@@ -555,7 +555,7 @@ public class ServerConfigs {
                     "biomesoplenty:grove_lakes", "biomesoplenty:grove", "biomesoplenty:highland_moor", "biomesoplenty:wetland_marsh",
                     "biomesoplenty:deep_bayou", "biomesoplenty:wetland");
             List<String> fireflyModWhitelist = List.of();
-            //TODO add validation for biomes
+
             FIREFLY_BIOMES = builder.comment("Spawnable biomes")
                     .defineList("biomes", defaultBiomes, STRING_CHECK);
             FIREFLY_MOD_WHITELIST = builder.comment("Whitelisted mods. All biomes from said mods will be able to spawn fireflies. Use the one above for more control")
@@ -586,7 +586,8 @@ public class ServerConfigs {
                     "repurposed_structures:village_giant_taiga", "repurposed_structures:village_jungle", "repurposed_structures:village_mountains", "repurposed_structures:village_oak",
                     "repurposed_structures:village_swamp", "pokecube:village", "pokecube_legends:village", "pokecube_legends:village/ocean",
                     "valhelsia_structures:castle", "valhelsia_structures:castle_ruin", "valhelsia_structures:small_castle", "valhelsia_structures:tower_ruin",
-                    "stoneholm:underground_village", "blue_skies:gatekeeper_house");
+                    "stoneholm:underground_village", "blue_skies:gatekeeper_house",
+                    "feywild:library", "feywild:blacksmith");
 
             SIGNS_VILLAGES = builder.comment("list of structure that a sign can point to. Note that they will only spawn in dimensions where vanilla villages can")
                     .defineList("villages", villages, STRING_CHECK);
@@ -666,6 +667,7 @@ public class ServerConfigs {
         public static boolean MAP_MARKERS;
         public static boolean CEILING_BANNERS;
         public static boolean PLACEABLE_BOOKS;
+        public static boolean WRITTEN_BOOKS;
         public static float ENCHANTED_BOOK_POWER;
         public static float BOOK_POWER;
         public static boolean MIXED_BOOKS;
@@ -706,7 +708,6 @@ public class ServerConfigs {
         public static boolean SAFE_UNBREAKABLE;
         public static boolean SAFE_SIMPLE;
         public static int GLOBE_TRADES;
-        public static double GLOBE_TREASURE_CHANCE;
         public static boolean BLACKBOARD_COLOR;
         public static int CANDLE_HOLDER_LIGHT;
         public static boolean REPLACE_DAUB;
@@ -744,6 +745,7 @@ public class ServerConfigs {
             MAP_MARKERS = tweaks.MAP_MARKERS.get();
             CEILING_BANNERS = tweaks.CEILING_BANNERS.get();
             PLACEABLE_BOOKS = tweaks.PLACEABLE_BOOKS.get();
+            WRITTEN_BOOKS = tweaks.WRITTEN_BOOKS.get();
             MIXED_BOOKS = tweaks.MIXED_BOOKS.get();
             BOOK_POWER = (float) ((double) tweaks.BOOK_POWER.get());
             ENCHANTED_BOOK_POWER = (float) ((double) tweaks.ENCHANTED_BOOK_POWER.get());
@@ -775,7 +777,6 @@ public class ServerConfigs {
             DISTANCE_TEXT = spawn.DISTANCE_TEXT.get();
 
             GLOBE_TRADES = block.GLOBE_TRADES.get();
-            GLOBE_TREASURE_CHANCE = block.GLOBE_TREASURE_CHANCHE.get();
 
             SPEAKER_RANGE = block.SPEAKER_RANGE.get();
 

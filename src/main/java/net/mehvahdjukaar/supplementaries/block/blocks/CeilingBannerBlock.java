@@ -64,10 +64,6 @@ public class CeilingBannerBlock extends AbstractBannerBlock {
             }
             return false;
         }
-        //TODO: maybe add this & sticks
-        //else if (b instanceof ChainBlock) {
-        //return above.getValue(ChainBlock.AXIS) == state.getValue(FACING).getClockWise().getAxis();
-        //}
         return false;
     }
 

@@ -9,6 +9,7 @@
     "supplementaries:speaker_block",
     "supplementaries:bamboo_spikes",
     "supplementaries:notice_board",
-    "supplementaries:sign_post"
+    "supplementaries:sign_post",
+    "#supplementaries:hanging_signs"
   ]
 }

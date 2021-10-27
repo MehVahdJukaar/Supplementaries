@@ -147,6 +147,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
             if (!success && item instanceof BlockItem) {
                 BlockPlaceContext ctx = new BlockPlaceContext(this.level, player, InteractionHand.MAIN_HAND, this.getItem(), hit);
                 success = ((BlockItem) item).place(ctx).consumesAction();
+                //TODO: sound isn't working that well
             }
             if (success) this.remove(RemovalReason.DISCARDED);
 

@@ -26,7 +26,7 @@ public class ConfiguredFeatures {
             .needWater().whitelist(ImmutableSet.of(Blocks.SAND, Blocks.RED_SAND)).build();
 
     /**
-     * Static instance of our structure so we can reference it and add it to biomes easily.
+     * Static instance of our structure, so we can reference it and add it to biomes easily.
      */
     public static final ConfiguredStructureFeature<?, ?> CONFIGURED_WAY_SIGN = StructureRegistry.WAY_SIGN.get().configured(FeatureConfiguration.NONE);
 
@@ -41,7 +41,6 @@ public class ConfiguredFeatures {
      * But the best time to register configured features by code is honestly to do it in FMLCommonSetupEvent.
      */
     public static void register() {
-
 
         Registry.register(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE,
                 new ResourceLocation(Supplementaries.MOD_ID, "configured_way_sign"), CONFIGURED_WAY_SIGN);

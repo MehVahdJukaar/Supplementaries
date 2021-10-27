@@ -47,6 +47,7 @@ public class ModTags {
     public static final Tags.IOptionalNamedTag<EntityType<?>> CAGE_CATCHABLE = entityTag("cage_catchable");
     public static final Tags.IOptionalNamedTag<EntityType<?>> CAGE_BABY_CATCHABLE = entityTag("cage_baby_catchable");
     public static final Tags.IOptionalNamedTag<EntityType<?>> FLUTE_PET = entityTag("flute_pet");
+    public static final Tags.IOptionalNamedTag<EntityType<?>> EATS_FODDER = entityTag("eats_fodder");
 
     private static Tags.IOptionalNamedTag<Item> itemTag(String name) {
         return ItemTags.createOptional(new ResourceLocation(Supplementaries.MOD_ID, name));

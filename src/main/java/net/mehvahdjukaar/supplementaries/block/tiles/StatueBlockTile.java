@@ -4,6 +4,7 @@ import com.google.common.collect.Iterables;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftSessionService;
 import com.mojang.authlib.properties.Property;
+import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.StatueBlock;
@@ -21,6 +22,9 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CandleBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nullable;
@@ -58,9 +62,9 @@ public class StatueBlockTile extends ItemDisplayTile {
         if (this.hasCustomName()) {
 
             String name = this.getCustomName().getString().toLowerCase();
-            UUID id = SpecialPlayers.STATUES.get(name);
-            if (id != null) {
-                this.playerProfile = this.updateGameProfile(new GameProfile(id, name));
+            Pair<UUID, String> profile = SpecialPlayers.STATUES.get(name);
+            if (profile != null) {
+                this.playerProfile = this.updateGameProfile(new GameProfile(profile.getFirst(), profile.getSecond()));
             }
             //ClientPlayNetHandler connection = Minecraft.getInstance().getConnection();
             //if(connection!=null)
@@ -96,7 +100,11 @@ public class StatueBlockTile extends ItemDisplayTile {
         this.pose = StatuePose.getPose(stack);
         this.isWaving = this.getBlockState().getValue(StatueBlock.POWERED);
         if (this.pose == StatuePose.CANDLE) {
-            this.candle = ((BlockItem) stack.getItem()).getBlock().defaultBlockState();
+            Block b = ((BlockItem) stack.getItem()).getBlock();
+            if(!(b instanceof CandleBlock)){
+                b = Blocks.CANDLE;
+            }
+            this.candle = b.defaultBlockState().setValue(CandleBlock.LIT, true);
         }
     }
 

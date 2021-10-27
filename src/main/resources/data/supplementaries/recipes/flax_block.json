@@ -1,15 +1,34 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "000",
-    "000",
-    "000"
-  ],
-  "key": {
-    "0": {
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "supplementaries:flax"
+    },
+    {
+      "item": "supplementaries:flax"
+    },
+    {
+      "item": "supplementaries:flax"
+    },
+    {
+      "item": "supplementaries:flax"
+    },
+    {
+      "item": "supplementaries:flax"
+    },
+    {
+      "item": "supplementaries:flax"
+    },
+    {
+      "item": "supplementaries:flax"
+    },
+    {
+      "item": "supplementaries:flax"
+    },
+    {
       "item": "supplementaries:flax"
     }
-  },
+  ],
   "result": {
     "item": "supplementaries:flax_block",
     "count": 1

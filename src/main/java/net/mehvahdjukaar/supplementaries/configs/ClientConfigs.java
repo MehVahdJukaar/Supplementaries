@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.configs;
 
-import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper;
+import net.mehvahdjukaar.supplementaries.capabilities.mobholder.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.minecraftforge.common.ForgeConfigSpec;

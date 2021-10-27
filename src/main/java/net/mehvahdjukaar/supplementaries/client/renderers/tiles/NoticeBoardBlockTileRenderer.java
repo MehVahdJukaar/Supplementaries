@@ -10,7 +10,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.client.renderers.TextUtil;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
-import net.mehvahdjukaar.supplementaries.network.RequestMapDataFromServerPacket;
+import net.mehvahdjukaar.supplementaries.network.ServerBoundRequestMapDataPacket;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -103,7 +103,7 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
                 } else {
                     //request map data from server
                     Player player = Minecraft.getInstance().player;
-                    NetworkHandler.INSTANCE.sendToServer(new RequestMapDataFromServerPacket(tile.getBlockPos(), player.getUUID()));
+                    NetworkHandler.INSTANCE.sendToServer(new ServerBoundRequestMapDataPacket(tile.getBlockPos(), player.getUUID()));
                 }
                 matrixStackIn.popPose();
                 return;

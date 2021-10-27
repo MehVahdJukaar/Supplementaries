@@ -1,7 +1,6 @@
 {
   "replace": false,
   "values": [
-    "supplementaries:candelabra",
     "supplementaries:hourglass",
     "supplementaries:gold_door",
     "supplementaries:gold_trapdoor",

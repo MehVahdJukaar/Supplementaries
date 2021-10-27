@@ -4,6 +4,7 @@ import net.mehvahdjukaar.selene.fluids.SoftFluid;
 import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.supplementaries.block.util.IBellConnections;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
+import net.mehvahdjukaar.supplementaries.common.SpecialPlayers;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
@@ -49,6 +50,7 @@ public class BlockProperties {
     public static final IntegerProperty BURNING = IntegerProperty.create("burning", 0, 8);
     public static final IntegerProperty BOOKS = IntegerProperty.create("books", 1, 4);
     public static final BooleanProperty WRITTEN = BooleanProperty.create("written");
+    public static final IntegerProperty LAYERS = IntegerProperty.create("layers", 1, 16);
 
     //model properties
     public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();

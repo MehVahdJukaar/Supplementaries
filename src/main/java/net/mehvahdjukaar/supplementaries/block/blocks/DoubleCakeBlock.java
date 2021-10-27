@@ -98,7 +98,6 @@ public class DoubleCakeBlock extends DirectionalCakeBlock {
                 return SHAPES_NORTH[state.getValue(BITES)];
         }
     }
-    //TODO: maybe merge this block with directional cake
 
     @Override
     public void removeSlice(BlockState state, BlockPos pos, LevelAccessor world, Direction dir) {

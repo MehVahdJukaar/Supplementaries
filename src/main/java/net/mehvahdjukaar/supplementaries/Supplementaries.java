@@ -4,6 +4,7 @@ import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.datagen.RecipeCondition;
+import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.setup.ClientSetup;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
@@ -42,7 +43,7 @@ public class Supplementaries {
     public Supplementaries() {
 
         //TODO: fish bucket on cages a
-
+//TODO: candle cake
         //yes this is where I write crap. deal with it XD
 
         //todo: fix projectile hitbox being a single point on y = 0
@@ -117,6 +118,8 @@ public class Supplementaries {
         //data driven fluid system
 
         //label
+
+        //animated pulley texture
 
 
         MinecraftForge.EVENT_BUS.register(ServerEvents.class);

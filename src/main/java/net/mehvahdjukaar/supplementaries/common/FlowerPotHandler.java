@@ -103,6 +103,8 @@ public class FlowerPotHandler {
     static{
         List<String> toAdd = new ArrayList<>();
         toAdd.add(Items.CACTUS.getRegistryName().toString());
+        toAdd.add(Items.FLOWERING_AZALEA.getRegistryName().toString());
+        toAdd.add(Items.AZALEA.getRegistryName().toString());
         toAdd.add(ModRegistry.FLAX_SEEDS_ITEM.get().getRegistryName().toString());
         if(CompatHandler.quark) {
             Item[] items = new Item[]{

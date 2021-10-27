@@ -45,7 +45,7 @@ public class EnhancedLanternBlock extends SwayingBlock implements EntityBlock {
     public void appendHoverText(ItemStack stack, BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         if (!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().options.advancedItemTooltips) return;
-        tooltip.add(new TranslatableComponent("message.supplementaries.wall_lantern").withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.ITALIC));
+        tooltip.add(new TranslatableComponent("message.supplementaries.wall_lantern").withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC));
 
     }
 

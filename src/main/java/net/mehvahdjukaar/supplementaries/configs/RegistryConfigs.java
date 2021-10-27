@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.configs;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.mixins.MixinConfig;
+import net.mehvahdjukaar.supplementaries.mixins.MixinConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.util.Lazy;
@@ -251,7 +251,7 @@ public class RegistryConfigs {
 
             builder.comment("Here you can disable mixins if they clash with other mods ones")
                     .push("mixins");
-            List<String> mixins = MixinConfig.getMixinClassesNames();
+            List<String> mixins = MixinConfigs.getMixinClassesNames();
             for(String c : mixins){
                 MIXIN_VALUES.put(c, builder.define(c.replace("Mixin",""), true));
             }

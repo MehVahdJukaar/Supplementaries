@@ -3,11 +3,14 @@ package net.mehvahdjukaar.supplementaries.client.renderers;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import net.mehvahdjukaar.supplementaries.capabilities.mobholder.MobContainer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
 import net.minecraft.world.entity.animal.Pig;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.event.TickEvent;
@@ -44,8 +47,18 @@ public class CapturedMobCache {
     private static final Lazy<Entity> defaultPig = Lazy.of(() -> new Pig(EntityType.PIG, Minecraft.getInstance().level));
 
     @Nullable
-    public static Entity getCachedMob(UUID id) {
-        return cachedMobs.getIfPresent(id);
+    public static Entity getOrCreateCachedMob(UUID id, CompoundTag tag) {
+        Entity e = cachedMobs.getIfPresent(id);
+        if (e == null) {
+            Level world = Minecraft.getInstance().level;
+            if (world != null) {
+                CompoundTag mobData = tag.getCompound("EntityData");
+
+                e = MobContainer.createEntityFromNBT(mobData, id, world);
+                addMob(e);
+            }
+        }
+        return e;
     }
 
     @SubscribeEvent

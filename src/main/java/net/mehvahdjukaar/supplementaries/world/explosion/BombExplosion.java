@@ -5,7 +5,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.mehvahdjukaar.supplementaries.network.BombExplosionKnockbackPacket;
+import net.mehvahdjukaar.supplementaries.network.ClientBoundSendBombKnockbackPacket;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -236,7 +236,7 @@ public class BombExplosion extends Explosion {
         if (!level.isClientSide) {
             for (Player player : this.hitPlayers.keySet()) {
                 NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
-                        new BombExplosionKnockbackPacket(this.hitPlayers.get(player)));
+                        new ClientBoundSendBombKnockbackPacket(this.hitPlayers.get(player)));
             }
         }
 

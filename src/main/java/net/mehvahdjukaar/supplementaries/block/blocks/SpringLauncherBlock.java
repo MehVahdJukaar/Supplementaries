@@ -52,7 +52,6 @@ public class SpringLauncherBlock extends Block {
     }
 
     @Override
-    //TODO: add this to other blocks
     public boolean useShapeForLightOcclusion(BlockState state) {
         return state.getValue(EXTENDED);
     }

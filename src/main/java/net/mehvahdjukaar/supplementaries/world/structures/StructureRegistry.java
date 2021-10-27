@@ -56,6 +56,7 @@ public class StructureRegistry {
 
         // For events that happen after initialization. This is probably going to be used a lot.
         IEventBus forgeBus = MinecraftForge.EVENT_BUS;
+        forgeBus.addListener(EventPriority.NORMAL, FeaturesHandler::addFeatureToBiomes);
         forgeBus.addListener(EventPriority.NORMAL, StructureRegistry::addDimensionalSpacing);
 
         // The comments for BiomeLoadingEvent and StructureSpawnListGatherEvent says to do HIGH for additions.
@@ -101,9 +102,6 @@ public class StructureRegistry {
 
     public static void addDimensionalSpacing(final WorldEvent.Load event) {
         if (event.getWorld() instanceof ServerLevel serverWorld) {
-
-            //TODO: readd
-
             /*
              * Skip Terraforged's chunk generator as they are a special case of a mod locking down their chunkgenerator.
              * They will handle your structure spacing for your if you add to WorldGenRegistries.NOISE_SETTINGS in FMLCommonSetupEvent.

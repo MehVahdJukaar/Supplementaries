@@ -4,7 +4,7 @@ package net.mehvahdjukaar.supplementaries.client.gui;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
-import net.mehvahdjukaar.supplementaries.network.UpdateServerBlackboardPacket;
+import net.mehvahdjukaar.supplementaries.network.ServerBoundSetBlackboardPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.client.gui.screens.Screen;
@@ -53,7 +53,7 @@ public class BlackBoardGui extends Screen {
                 pixels[xx][yy] = (this.buttons[xx][yy].color);
             }
         }
-        NetworkHandler.INSTANCE.sendToServer(new UpdateServerBlackboardPacket(this.tileBoard.getBlockPos(),pixels));
+        NetworkHandler.INSTANCE.sendToServer(new ServerBoundSetBlackboardPacket(this.tileBoard.getBlockPos(),pixels));
     }
 
     private void close() {

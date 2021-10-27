@@ -8,7 +8,7 @@ import net.mehvahdjukaar.supplementaries.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.LightUpBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.PancakeBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
-import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper;
+import net.mehvahdjukaar.supplementaries.capabilities.mobholder.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.block.util.ILightable;
 import net.mehvahdjukaar.supplementaries.common.BlockItemUtils;
 import net.mehvahdjukaar.supplementaries.common.ModTags;

@@ -20,7 +20,7 @@ import java.util.Set;
 
 import static net.minecraftforge.common.BiomeDictionary.Type.*;
 
-@Mod.EventBusSubscriber(modid = Supplementaries.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+
 public class FeaturesHandler {
 
     public static final DeferredRegister<Feature<?>> FEATURES = DeferredRegister.create(ForgeRegistries.FEATURES, Supplementaries.MOD_ID);
@@ -29,7 +29,6 @@ public class FeaturesHandler {
             () -> new RoadSignFeature(NoneFeatureConfiguration.CODEC));
 
 
-    @SubscribeEvent
     public static void addFeatureToBiomes(BiomeLoadingEvent event) {
         if (ServerConfigs.spawn.WILD_FLAX_ENABLED.get()) {
 

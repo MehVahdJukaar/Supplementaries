@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.ClockBlock;
-import net.mehvahdjukaar.supplementaries.common.mobholder.IMobContainerProvider;
-import net.mehvahdjukaar.supplementaries.common.mobholder.MobContainer;
+import net.mehvahdjukaar.supplementaries.capabilities.mobholder.IMobContainerProvider;
+import net.mehvahdjukaar.supplementaries.capabilities.mobholder.MobContainer;
 import net.mehvahdjukaar.supplementaries.items.AbstractMobContainerItem;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;

@@ -11,7 +11,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.client.renderers.LOD;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
-import net.mehvahdjukaar.supplementaries.network.RequestMapDataFromServerPacket;
+import net.mehvahdjukaar.supplementaries.network.ServerBoundRequestMapDataPacket;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -102,7 +102,7 @@ public class HangingSignBlockTileRenderer implements BlockEntityRenderer<Hanging
                     } else {
                         //request map data from server
                         Player player = Minecraft.getInstance().player;
-                        NetworkHandler.INSTANCE.sendToServer(new RequestMapDataFromServerPacket(tile.getBlockPos(), player.getUUID()));
+                        NetworkHandler.INSTANCE.sendToServer(new ServerBoundRequestMapDataPacket(tile.getBlockPos(), player.getUUID()));
                     }
                 } else if (item instanceof BannerPatternItem) {
 
@@ -120,7 +120,7 @@ public class HangingSignBlockTileRenderer implements BlockEntityRenderer<Hanging
                     int lu = combinedLightIn & '\uffff';
                     int lv = combinedLightIn >> 16 & '\uffff';
                     for (int v = 0; v < 2; v++) {
-                        RendererUtil.addQuadSide(builder, matrixStackIn, -0.4375F, -0.4375F, 0.07f, 0.4375F, 0.4375F, 0.07f,
+                        RendererUtil.addQuadSide(builder, matrixStackIn, -0.4375F, -0.4375F, 0.0725f, 0.4375F, 0.4375F, 0.07f,
                                 0.15625f, 0.0625f, 0.5f + 0.09375f, 1 - 0.0625f, r, g, b, 1, lu, lv, 0, 0, 1, renderMaterial.sprite());
 
                         matrixStackIn.mulPose(Const.Y180);

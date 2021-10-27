@@ -68,21 +68,7 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock {
     @Override
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(world, pos, state, placer, stack);
-        //TODO: backwards compat. remove
-        CompoundTag compoundnbt = stack.getTagElement("BlockEntityTag");
-        if (compoundnbt != null) {
-            BlockEntity te = world.getBlockEntity(pos);
-            if (te instanceof BlackboardBlockTile) {
-                if (compoundnbt.contains("pixels_0")) {
-                    for (int i = 0; i < 16; i++) {
-                        byte[] b = compoundnbt.getByteArray("pixels_" + i);
-                        if (b.length == 16) ((BlackboardBlockTile) te).pixels[i] = b;
-                    }
-                }
-            }
-        }
-
-        if ( world.getBlockEntity(pos) instanceof BlackboardBlockTile tile) {
+        if (world.getBlockEntity(pos) instanceof BlackboardBlockTile tile) {
             tile.setCorrectBlockState(state, pos, world);
             BlockUtils.addOptionalOwnership(placer, tile);
         }
@@ -142,7 +128,9 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock {
         Item item = stack.getItem();
         DyeColor color = null;
         if (ServerConfigs.cached.BLACKBOARD_COLOR) {
-            color = DyeColor.getColor(stack);
+            if (item.getRegistryName().getNamespace().equals("chalk")) {
+                color = DyeColor.byName(item.getRegistryName().getPath().replace("_chalk", ""), DyeColor.WHITE);
+            } else color = DyeColor.getColor(stack);
         }
         if (color == null) {
 
@@ -162,7 +150,6 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock {
         if (!state.getValue(WRITTEN)) {
             worldIn.setBlock(pos, state.setValue(WRITTEN, true), Constants.BlockFlags.NO_RERENDER | Constants.BlockFlags.BLOCK_UPDATE);
         }
-        //TODO: do this everywhere
         if (worldIn.getBlockEntity(pos) instanceof BlackboardBlockTile te) {
 
             if (hit.getDirection() == state.getValue(FACING)) {

@@ -11,9 +11,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -59,12 +57,20 @@ public class BookPileBlock extends WaterBlock implements EntityBlock {
         return isEnchantedBook(i) || (ServerConfigs.cached.MIXED_BOOKS && isNormalBook(i));
     }
 
-    public static boolean isEnchantedBook(Item i) {
-        return i == Items.ENCHANTED_BOOK || (CompatHandler.quark && QuarkPlugin.isTome(i));
+    public static boolean isEnchantedBook(Item i){
+        return i == Items.ENCHANTED_BOOK || isQuarkTome(i);
     }
 
-    public static boolean isNormalBook(Item i) {
-        return ModTags.BOOKS.contains(i);
+    public static boolean isNormalBook(Item i){
+        return ModTags.BOOKS.contains(i) || (ServerConfigs.cached.WRITTEN_BOOKS && isWrittenBook(i));
+    }
+
+    public static boolean isWrittenBook(Item i){
+        return i instanceof WrittenBookItem || i instanceof WritableBookItem;
+    }
+
+    public static boolean isQuarkTome(Item i){
+        return CompatHandler.quark && QuarkPlugin.isTome(i);
     }
 
     @Override

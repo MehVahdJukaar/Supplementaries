@@ -26,7 +26,6 @@ import java.util.function.Supplier;
 
 public class SconceWallBlock extends SconceBlock {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
-    //TODO: make map for other blocks
     private static final Map<Direction, VoxelShape> SHAPES = Maps.newEnumMap(ImmutableMap.of(
             Direction.NORTH, box(6D, 2.0D, 10D, 10D, 13.0D, 16.0D),
             Direction.SOUTH, box(6D, 2.0D, 0.0D, 10D, 13.0D, 6D),

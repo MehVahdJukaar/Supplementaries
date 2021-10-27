@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common;
 
+import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.resources.ResourceLocation;
@@ -11,7 +12,7 @@ public class SpecialPlayers {
     //for pickle
     public static final List<UUID> DEVS = new ArrayList<>();
     //statues valid players
-    public static final Map<String, UUID> STATUES = new HashMap<>();
+    public static final Map<String, Pair<UUID,String>> STATUES = new HashMap<>();
     //custom globes
     public static final Map<String, ResourceLocation> GLOBES = new HashMap<>();
 
@@ -28,6 +29,7 @@ public class SpecialPlayers {
         addSpecialPlayer("Wais", false, true, false, null, "snowglobe");
         addSpecialPlayer("MylesTheChild", false, false, true, "ea92f2be-4bd1-4082-a9b3-e6a8fbd43063", "Wais");
         addSpecialPlayer("E_Y_E_", false, true, false, null, "Dark");
+        addSpecialPlayer("Azrod_dovahkiin", false, false, true, "171ccd8a-3afe-4788-806d-ee643fe33a9c", "dragonborn");
 
     }
 
@@ -51,10 +53,11 @@ public class SpecialPlayers {
                 GLOBES.put(n.toLowerCase(), texture);
             }
         }
+        Pair<UUID,String> p = Pair.of(onlineId,name);
         if (hasStatue) {
-            STATUES.put(name, onlineId);
+            STATUES.put(name, p);
             for (String n : alias) {
-                STATUES.put(n.toLowerCase(), onlineId);
+                STATUES.put(n.toLowerCase(), p);
             }
         }
     }

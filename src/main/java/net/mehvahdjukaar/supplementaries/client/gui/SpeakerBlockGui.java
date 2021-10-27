@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
-import net.mehvahdjukaar.supplementaries.network.UpdateServerSpeakerBlockPacket;
+import net.mehvahdjukaar.supplementaries.network.ServerBoundSetSpeakerBlockPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
@@ -94,7 +94,7 @@ public class SpeakerBlockGui extends Screen {
         this.tileSpeaker.narrator = this.narrator;
         this.tileSpeaker.volume = this.volume.getValue() / this.volume.maxValue;
         //update server tile
-        NetworkHandler.INSTANCE.sendToServer(new UpdateServerSpeakerBlockPacket(this.tileSpeaker.getBlockPos(), this.tileSpeaker.message, this.tileSpeaker.narrator, this.tileSpeaker.volume));
+        NetworkHandler.INSTANCE.sendToServer(new ServerBoundSetSpeakerBlockPacket(this.tileSpeaker.getBlockPos(), this.tileSpeaker.message, this.tileSpeaker.narrator, this.tileSpeaker.volume));
 
     }
 

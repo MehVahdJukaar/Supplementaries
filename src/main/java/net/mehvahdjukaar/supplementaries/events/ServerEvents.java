@@ -5,16 +5,18 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.blocks.ClockBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.RakedGravelBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.RopeBlock;
-import net.mehvahdjukaar.supplementaries.block.tiles.StatueBlockTile;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.ModTags;
+import net.mehvahdjukaar.supplementaries.common.SpecialPlayers;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.quark.QuarkPlugin;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.entities.ThrowableBrickEntity;
+import net.mehvahdjukaar.supplementaries.entities.goals.EatFodderGoal;
 import net.mehvahdjukaar.supplementaries.items.CandyItem;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
-import net.mehvahdjukaar.supplementaries.network.SendLoginMessagePacket;
+import net.mehvahdjukaar.supplementaries.network.ClientBoundSendLoginMessagePacket;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -23,6 +25,9 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -36,6 +41,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
@@ -44,7 +50,6 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fmllegacy.network.PacketDistributor;
-import net.minecraftforge.fmlserverevents.FMLServerAboutToStartEvent;
 
 
 public class ServerEvents {
@@ -64,90 +69,18 @@ public class ServerEvents {
     @SubscribeEvent(priority = EventPriority.LOW)
     public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
         Player player = event.getPlayer();
-        if (player.isSpectator()) return;
+        if (!player.isSpectator()) {
+            ItemStack stack = event.getItemStack();
 
-        ItemStack stack = event.getItemStack();
-
-        //others handled here
-        if (ItemsOverrideHandler.tryPerformOverride(event, stack, false)) {
-            return;
+            ItemsOverrideHandler.tryPerformOverride(event, stack, false);
         }
-
-        //empty hand behaviors
-        //order matters here
-        if (!player.isShiftKeyDown()) {
-
-            InteractionHand hand = event.getHand();
-            Item i = stack.getItem();
-            Level world = event.getWorld();
-            BlockPos pos = event.getPos();
-            BlockState blockstate = world.getBlockState(pos);
-
-            //directional cake conversion
-            if (ServerConfigs.cached.DIRECTIONAL_CAKE && blockstate == Blocks.CAKE.defaultBlockState() &&
-                    !(ServerConfigs.cached.DOUBLE_CAKE_PLACEMENT && i == Items.CAKE)) {
-                world.setBlock(pos, ModRegistry.DIRECTIONAL_CAKE.get().defaultBlockState(), 4);
-                BlockHitResult raytrace = new BlockHitResult(
-                        new Vec3(pos.getX(), pos.getY(), pos.getZ()), event.getFace(), pos, false);
-
-                event.setCanceled(true);
-                event.setCancellationResult(blockstate.use(world, player, hand, raytrace));
-
-                return;
-            }
-
-            //bell chains
-            if (stack.isEmpty() && hand == InteractionHand.MAIN_HAND) {
-                if (ServerConfigs.cached.BELL_CHAIN) {
-                    if (RopeBlock.findAndRingBell(world, pos, player, 0, s -> s.getBlock() instanceof ChainBlock && s.getValue(ChainBlock.AXIS) == Direction.Axis.Y)) {
-
-                        event.setCanceled(true);
-                        event.setCancellationResult(InteractionResult.sidedSuccess(world.isClientSide));
-                    }
-                }
-            }
-        }
-
-
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public static void onRightClickItem(PlayerInteractEvent.RightClickItem event) {
         Player playerIn = event.getPlayer();
-        ItemStack itemstack = playerIn.getItemInHand(event.getHand());
-        Item i = itemstack.getItem();
-        Level worldIn = event.getWorld();
 
-        //TODO: improve
-        // ItemInteractionOverrideHandler.tryPerformOverride(event);
-
-        if (ServerConfigs.cached.THROWABLE_BRICKS_ENABLED && CommonUtil.isBrick(i)) {
-
-            worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), SoundEvents.SNOWBALL_THROW, SoundSource.NEUTRAL, 0.5F, 0.4F / (playerIn.getRandom().nextFloat() * 0.4F + 0.8F));
-            if (!worldIn.isClientSide) {
-                ThrowableBrickEntity brickEntity = new ThrowableBrickEntity(worldIn, playerIn);
-                brickEntity.setItem(itemstack);
-                float pow = 0.7f;
-                brickEntity.shootFromRotation(playerIn, playerIn.getXRot(), playerIn.getYRot(), 0.0F, 1.5F * pow, 1.0F * pow);
-                worldIn.addFreshEntity(brickEntity);
-            }
-
-            if (!playerIn.getAbilities().instabuild) {
-                itemstack.shrink(1);
-            }
-
-            //playerIn.swingArm(handIn);
-            event.setCanceled(true);
-            event.setCancellationResult(InteractionResult.sidedSuccess(worldIn.isClientSide));
-            return;
-
-        }
-        if (worldIn.isClientSide && ClientConfigs.cached.CLOCK_CLICK && i == Items.CLOCK) {
-            ClockBlock.displayCurrentHour(worldIn, playerIn);
-            event.setCanceled(true);
-            event.setCancellationResult(InteractionResult.sidedSuccess(worldIn.isClientSide));
-        }
-
+        ItemsOverrideHandler.tryPerformOverride(event, playerIn.getItemInHand(event.getHand()));
     }
 
     //raked gravel
@@ -183,10 +116,21 @@ public class ServerEvents {
     }
 
     @SubscribeEvent
+    public static void onEntityJoin(EntityJoinWorldEvent event){
+        Entity entity = event.getEntity();
+        if(entity instanceof Animal animal){
+            EntityType<?> type = event.getEntity().getType();
+            if(ModTags.EATS_FODDER.contains(type)){
+                animal.goalSelector.addGoal(3, new EatFodderGoal(animal, 1, 8, 2, 30));
+            }
+        }
+    }
+
+    @SubscribeEvent
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         try {
             NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) event.getPlayer()),
-                    new SendLoginMessagePacket());
+                    new ClientBoundSendLoginMessagePacket());
         } catch (Exception exception) {
             Supplementaries.LOGGER.warn("failed to end login message: " + exception);
         }
@@ -197,10 +141,7 @@ public class ServerEvents {
 
     }
 
-    @SubscribeEvent
-    public static void serverAboutToStart(final FMLServerAboutToStartEvent event) {
-        StatueBlockTile.initializeSessionData(event.getServer());
-    }
+
 
 
 }

@@ -3,15 +3,15 @@ package net.mehvahdjukaar.supplementaries.events;
 import net.mehvahdjukaar.selene.map.ExpandedMapData;
 import net.mehvahdjukaar.selene.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.block.blocks.BookPileBlock;
-import net.mehvahdjukaar.supplementaries.block.blocks.DirectionalCakeBlock;
-import net.mehvahdjukaar.supplementaries.block.blocks.DoubleCakeBlock;
-import net.mehvahdjukaar.supplementaries.block.blocks.JarBlock;
+import net.mehvahdjukaar.supplementaries.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
+import net.mehvahdjukaar.supplementaries.block.tiles.StatueBlockTile;
 import net.mehvahdjukaar.supplementaries.common.BlockItemUtils;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.items.JarItem;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.ChatFormatting;
@@ -26,6 +26,8 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -35,8 +37,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -46,39 +48,49 @@ import java.util.*;
 
 public class ItemsOverrideHandler {
 
-    private static final Map<Item, ItemInteractionOverride> HIGH_PRIORITY_OVERRIDES = new HashMap<>();
+    private static final Map<Item, ItemUseOnBlockOverride> HP_ON_BLOCK_OVERRIDES = new HashMap<>();
+    private static final Map<Item, ItemUseOnBlockOverride> ON_BLOCK_OVERRIDES = new HashMap<>();
 
-    private static final Map<Item, ItemInteractionOverride> ON_BLOCK_OVERRIDES = new HashMap<>();
+    private static final Map<Item, ItemUseOverride> ITEM_OVERRIDES = new HashMap<>();
 
-    private static final Map<Item, ItemInteractionOverride> ITEM_OVERRIDES = new HashMap<>();
+    private static final Map<Block, BlockInteractedWithOverride> BLOCK_INTERACTION_OVERRIDES = new HashMap<>();
 
-    public static boolean hasBlockOverride(Item item) {
-        ItemInteractionOverride override = ON_BLOCK_OVERRIDES.get(item);
+    public static boolean hasBlockPlacementAssociated(Item item) {
+        ItemUseOnBlockOverride override = ON_BLOCK_OVERRIDES.get(item);
         return override != null && override.getBlockOverride(item) != null;
     }
 
     public static void registerOverrides() {
 
-        List<ItemInteractionOverride> HPBlockBehaviors = new ArrayList<>();
-        List<ItemInteractionOverride> itemBehaviors = new ArrayList<>();
-        List<ItemInteractionOverride> blockBehaviors = new ArrayList<>();
+        List<ItemUseOnBlockOverride> HPitemActionOnBlock = new ArrayList<>();
+        List<ItemUseOnBlockOverride> itemActionOnBlock = new ArrayList<>();
 
-        HPBlockBehaviors.add(new WallLanternBehavior());
+        List<ItemUseOverride> itemAction = new ArrayList<>();
 
-        blockBehaviors.add(new WallLanternBehavior());
-        blockBehaviors.add(new MapMarkerBehavior());
-        blockBehaviors.add(new CeilingBannersBehavior());
-        blockBehaviors.add(new HangingPotBehavior());
-        blockBehaviors.add(new EnhancedCakeBehavior());
-        blockBehaviors.add(new PlaceableSticksBehavior());
-        blockBehaviors.add(new PlaceableRodsBehavior());
-        blockBehaviors.add(new XpBottlingBehavior());
-        blockBehaviors.add(new PlaceableGunpowderBehavior());
-        blockBehaviors.add(new BookPileBehavior());
-        blockBehaviors.add(new BookPileHorizontalBehavior());
+        List<BlockInteractedWithOverride> actionOnBlock = new ArrayList<>();
+
+        actionOnBlock.add(new DirectionalCakeConversionBehavior());
+        actionOnBlock.add(new BellChainBehavior());
+
+        itemAction.add(new ThrowableBrickBehavior());
+        itemAction.add(new ClockItemBehavior());
+
+        HPitemActionOnBlock.add(new WallLanternBehavior());
+
+        itemActionOnBlock.add(new WallLanternBehavior());
+        itemActionOnBlock.add(new MapMarkerBehavior());
+        itemActionOnBlock.add(new CeilingBannersBehavior());
+        itemActionOnBlock.add(new HangingPotBehavior());
+        itemActionOnBlock.add(new EnhancedCakeBehavior());
+        itemActionOnBlock.add(new PlaceableSticksBehavior());
+        itemActionOnBlock.add(new PlaceableRodsBehavior());
+        itemActionOnBlock.add(new XpBottlingBehavior());
+        itemActionOnBlock.add(new PlaceableGunpowderBehavior());
+        itemActionOnBlock.add(new BookPileBehavior());
+        itemActionOnBlock.add(new BookPileHorizontalBehavior());
 
         for (Item i : ForgeRegistries.ITEMS) {
-            for (ItemInteractionOverride b : blockBehaviors) {
+            for (ItemUseOnBlockOverride b : itemActionOnBlock) {
                 try {
                     if (b.appliesToItem(i)) {
                         //adds item to block item map
@@ -91,21 +103,37 @@ public class ItemsOverrideHandler {
                     Supplementaries.LOGGER.error("failed to register for override " + b.getClass().getSimpleName() + " for " + i.getRegistryName() + " with exception: " + e);
                 }
             }
-            for (ItemInteractionOverride b : itemBehaviors) {
-                if (b.appliesToItem(i)) {
-                    ITEM_OVERRIDES.put(i, b);
-                    break;
-                }
-
-            }
-            for (ItemInteractionOverride b : HPBlockBehaviors) {
+            for (ItemUseOverride b : itemAction) {
                 try {
                     if (b.appliesToItem(i)) {
-                        HIGH_PRIORITY_OVERRIDES.put(i, b);
+                        ITEM_OVERRIDES.put(i, b);
                         break;
                     }
                 } catch (Exception e) {
                     Supplementaries.LOGGER.error("failed to register for override " + b.getClass().getSimpleName() + " for " + i.getRegistryName() + " with exception: " + e);
+                }
+
+            }
+            for (ItemUseOnBlockOverride b : HPitemActionOnBlock) {
+                try {
+                    if (b.appliesToItem(i)) {
+                        HP_ON_BLOCK_OVERRIDES.put(i, b);
+                        break;
+                    }
+                } catch (Exception e) {
+                    Supplementaries.LOGGER.error("failed to register for override " + b.getClass().getSimpleName() + " for " + i.getRegistryName() + " with exception: " + e);
+                }
+            }
+        }
+        for (Block block : ForgeRegistries.BLOCKS) {
+            for (BlockInteractedWithOverride b : actionOnBlock) {
+                try {
+                    if (b.appliesToBlock(block)) {
+                        BLOCK_INTERACTION_OVERRIDES.put(block, b);
+                        break;
+                    }
+                } catch (Exception e) {
+                    Supplementaries.LOGGER.error("failed to register for override " + b.getClass().getSimpleName() + " for " + block.getRegistryName() + " with exception: " + e);
                 }
             }
         }
@@ -114,7 +142,7 @@ public class ItemsOverrideHandler {
     public static void tryHighPriorityOverride(PlayerInteractEvent.RightClickBlock event, ItemStack stack) {
         Item item = stack.getItem();
 
-        ItemInteractionOverride override = HIGH_PRIORITY_OVERRIDES.get(item);
+        ItemUseOnBlockOverride override = HP_ON_BLOCK_OVERRIDES.get(item);
         if (override != null && override.isEnabled()) {
 
             InteractionResult result = override.tryPerformingAction(event.getWorld(), event.getPlayer(), event.getHand(), stack, event.getHitVec(), false);
@@ -126,30 +154,47 @@ public class ItemsOverrideHandler {
     }
 
 
-    public static boolean tryPerformOverride(PlayerInteractEvent.RightClickBlock event, ItemStack stack, boolean isRanged) {
+    //item clicked on block overrides
+    public static void tryPerformOverride(PlayerInteractEvent.RightClickBlock event, ItemStack stack, boolean isRanged) {
         Item item = stack.getItem();
+        Player player = event.getPlayer();
 
-        ItemInteractionOverride override = ON_BLOCK_OVERRIDES.get(item);
+        ItemUseOnBlockOverride override = ON_BLOCK_OVERRIDES.get(item);
         if (override != null && override.isEnabled()) {
 
-            InteractionResult result = override.tryPerformingAction(event.getWorld(), event.getPlayer(), event.getHand(), stack, event.getHitVec(), isRanged);
+            InteractionResult result = override.tryPerformingAction(event.getWorld(), player, event.getHand(), stack, event.getHitVec(), isRanged);
             if (result != InteractionResult.PASS) {
                 event.setCanceled(true);
                 event.setCancellationResult(result);
-                return true;
+                return;
             }
-
         }
-        return false;
+        //block overrides behaviors (work for any item)
+        if (!player.isShiftKeyDown()) {
+            Level world = event.getWorld();
+            BlockPos pos = event.getPos();
+            BlockState state = world.getBlockState(pos);
+
+            BlockInteractedWithOverride o = BLOCK_INTERACTION_OVERRIDES.get(state.getBlock());
+            if (o != null && o.isEnabled()) {
+
+                InteractionResult result = o.tryPerformingAction(state, pos, world, player, event.getHand(), stack, event.getHitVec());
+                if (result != InteractionResult.PASS) {
+                    event.setCanceled(true);
+                    event.setCancellationResult(result);
+                }
+            }
+        }
     }
 
-    public static void tryPerformOverride(PlayerInteractEvent.RightClickItem event, ItemStack stack, boolean isRanged) {
+    //item clicked overrides
+    public static void tryPerformOverride(PlayerInteractEvent.RightClickItem event, ItemStack stack) {
         Item item = stack.getItem();
 
-        ItemInteractionOverride override = ITEM_OVERRIDES.get(item);
+        ItemUseOverride override = ITEM_OVERRIDES.get(item);
         if (override != null && override.isEnabled()) {
 
-            InteractionResult result = override.tryPerformingAction(event.getWorld(), event.getPlayer(), event.getHand(), stack, null, isRanged);
+            InteractionResult result = override.tryPerformingAction(event.getWorld(), event.getPlayer(), event.getHand(), stack, null, false);
             if (result != InteractionResult.PASS) {
                 event.setCanceled(true);
                 event.setCancellationResult(result);
@@ -161,24 +206,49 @@ public class ItemsOverrideHandler {
     public static void addOverrideTooltips(ItemTooltipEvent event) {
         Item item = event.getItemStack().getItem();
 
-        ItemInteractionOverride override = ON_BLOCK_OVERRIDES.get(item);
+        ItemUseOnBlockOverride override = ON_BLOCK_OVERRIDES.get(item);
         if (override != null && override.isEnabled()) {
             List<Component> tooltip = event.getToolTip();
             BaseComponent t = override.getTooltip();
             if (t != null) tooltip.add(t.withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC));
+        } else {
+            ItemUseOverride o = ITEM_OVERRIDES.get(item);
+            if (o != null && o.isEnabled()) {
+                List<Component> tooltip = event.getToolTip();
+                BaseComponent t = o.getTooltip();
+                if (t != null) tooltip.add(t.withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC));
+            }
         }
-        //TODO: add these
-        else if (ServerConfigs.cached.THROWABLE_BRICKS_ENABLED && CommonUtil.isBrick(item)) {
-            event.getToolTip().add(new TranslatableComponent("message.supplementaries.throwable_brick").withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC));
-        }
+
     }
 
 
-    private static abstract class ItemInteractionOverride {
+    private static abstract class BlockInteractedWithOverride {
+
+        public abstract boolean isEnabled();
+
+        public abstract boolean appliesToBlock(Block block);
+
+        public abstract InteractionResult tryPerformingAction(BlockState state, BlockPos pos, Level world, Player player, InteractionHand hand,
+                                                              ItemStack stack, BlockHitResult hit);
+    }
+
+    private static abstract class ItemUseOverride {
 
         public abstract boolean isEnabled();
 
         public abstract boolean appliesToItem(Item item);
+
+        @Nullable
+        public BaseComponent getTooltip() {
+            return null;
+        }
+
+        public abstract InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand,
+                                                              ItemStack stack, BlockHitResult hit, boolean isRanged);
+    }
+
+    private static abstract class ItemUseOnBlockOverride extends ItemUseOverride {
 
         public boolean shouldBlockMapToItem(Item item) {
             return appliesToItem(item);
@@ -194,12 +264,125 @@ public class ItemsOverrideHandler {
         public BaseComponent getTooltip() {
             return null;
         }
-
-        public abstract InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand,
-                                                              ItemStack stack, @Nullable BlockHitResult hit, boolean isRanged);
     }
 
-    private static class MapMarkerBehavior extends ItemInteractionOverride {
+
+    private static class ClockItemBehavior extends ItemUseOverride {
+
+        @Override
+        public boolean isEnabled() {
+            return ClientConfigs.cached.CLOCK_CLICK;
+        }
+
+        @Override
+        public boolean appliesToItem(Item item) {
+            return item == Items.CLOCK;
+        }
+
+        @Override
+        public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand, ItemStack stack, BlockHitResult hit, boolean isRanged) {
+            if (world.isClientSide) {
+                ClockBlock.displayCurrentHour(world, player);
+            }
+            return InteractionResult.sidedSuccess(world.isClientSide);
+        }
+    }
+
+    private static class ThrowableBrickBehavior extends ItemUseOverride {
+
+        @Override
+        public boolean isEnabled() {
+            return ServerConfigs.cached.THROWABLE_BRICKS_ENABLED;
+        }
+
+        @Nullable
+        @Override
+        public BaseComponent getTooltip() {
+            return new TranslatableComponent("message.supplementaries.throwable_brick");
+        }
+
+        @Override
+        public boolean appliesToItem(Item item) {
+            return CommonUtil.isBrick(item);
+        }
+
+        @Override
+        public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand, ItemStack stack, BlockHitResult hit, boolean isRanged) {
+            world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.SNOWBALL_THROW, SoundSource.NEUTRAL, 0.5F, 0.4F / (player.getRandom().nextFloat() * 0.4F + 0.8F));
+            if (!world.isClientSide) {
+                ThrowableBrickEntity brickEntity = new ThrowableBrickEntity(world, player);
+                brickEntity.setItem(stack);
+                float pow = 0.7f;
+                brickEntity.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 1.5F * pow, 1.0F * pow);
+                world.addFreshEntity(brickEntity);
+            }
+
+            if (!player.getAbilities().instabuild) {
+                stack.shrink(1);
+            }
+            return InteractionResult.sidedSuccess(world.isClientSide);
+        }
+    }
+
+    private static class DirectionalCakeConversionBehavior extends BlockInteractedWithOverride {
+
+        @Override
+        public boolean isEnabled() {
+            return ServerConfigs.cached.DIRECTIONAL_CAKE;
+        }
+
+        @Override
+        public boolean appliesToBlock(Block block) {
+            return block == Blocks.CAKE || BlockTags.CANDLE_CAKES.contains(block);
+        }
+
+        @Override
+        public InteractionResult tryPerformingAction(BlockState state, BlockPos pos, Level world, Player player, InteractionHand hand, ItemStack stack, BlockHitResult hit) {
+            //lets converting to candle cake
+            if (state.is(Blocks.CAKE) && (stack.is(ItemTags.CANDLES) || state.getValue(CakeBlock.BITES) != 6)) {
+                return InteractionResult.PASS;
+            }
+            if (!(ServerConfigs.cached.DOUBLE_CAKE_PLACEMENT && stack.is(Items.CAKE))) {
+                //for candles. normal cakes have no drops
+                Block.dropResources(state, world, pos);
+                BlockState newState = ModRegistry.DIRECTIONAL_CAKE.get().defaultBlockState();
+                world.setBlock(pos, newState, 4);
+                BlockHitResult raytrace = new BlockHitResult(
+                        new Vec3(pos.getX(), pos.getY(), pos.getZ()), hit.getDirection(), pos, false);
+
+                return newState.use(world, player, hand, raytrace);
+            }
+            //fallback to default cake interaction
+            return InteractionResult.PASS;
+        }
+    }
+
+    private static class BellChainBehavior extends BlockInteractedWithOverride {
+
+        @Override
+        public boolean isEnabled() {
+            return ServerConfigs.cached.BELL_CHAIN;
+        }
+
+        @Override
+        public boolean appliesToBlock(Block block) {
+            return block instanceof ChainBlock;
+        }
+
+        @Override
+        public InteractionResult tryPerformingAction(BlockState state, BlockPos pos, Level world, Player player, InteractionHand hand, ItemStack stack, BlockHitResult hit) {
+            //bell chains
+            if (stack.isEmpty() && hand == InteractionHand.MAIN_HAND) {
+                if (RopeBlock.findAndRingBell(world, pos, player, 0, s -> s.getBlock() instanceof ChainBlock && s.getValue(ChainBlock.AXIS) == Direction.Axis.Y)) {
+                    return InteractionResult.sidedSuccess(world.isClientSide);
+                }
+                return InteractionResult.sidedSuccess(world.isClientSide);
+            }
+            return InteractionResult.PASS;
+        }
+    }
+
+    private static class MapMarkerBehavior extends ItemUseOnBlockOverride {
 
         @Override
         public boolean isEnabled() {
@@ -230,7 +413,7 @@ public class ItemsOverrideHandler {
         }
     }
 
-    private static class XpBottlingBehavior extends ItemInteractionOverride {
+    private static class XpBottlingBehavior extends ItemUseOnBlockOverride {
 
         private static final JarBlockTile DUMMY_JAR_TILE = new JarBlockTile(BlockPos.ZERO, ModRegistry.JAR_TINTED.get().defaultBlockState());
 
@@ -296,7 +479,7 @@ public class ItemsOverrideHandler {
         }
     }
 
-    private static class EnhancedCakeBehavior extends ItemInteractionOverride {
+    private static class EnhancedCakeBehavior extends ItemUseOnBlockOverride {
 
         @Nullable
         @Override
@@ -368,7 +551,7 @@ public class ItemsOverrideHandler {
         }
     }
 
-    private static class CeilingBannersBehavior extends ItemInteractionOverride {
+    private static class CeilingBannersBehavior extends ItemUseOnBlockOverride {
 
         @Nullable
         @Override
@@ -398,7 +581,7 @@ public class ItemsOverrideHandler {
         }
     }
 
-    private static class HangingPotBehavior extends ItemInteractionOverride {
+    private static class HangingPotBehavior extends ItemUseOnBlockOverride {
 
         @Nullable
         @Override
@@ -431,7 +614,7 @@ public class ItemsOverrideHandler {
         }
     }
 
-    private static class PlaceableSticksBehavior extends ItemInteractionOverride {
+    private static class PlaceableSticksBehavior extends ItemUseOnBlockOverride {
 
         @Nullable
         @Override
@@ -464,7 +647,7 @@ public class ItemsOverrideHandler {
         }
     }
 
-    private static class PlaceableRodsBehavior extends ItemInteractionOverride {
+    private static class PlaceableRodsBehavior extends ItemUseOnBlockOverride {
 
         @Nullable
         @Override
@@ -497,7 +680,7 @@ public class ItemsOverrideHandler {
         }
     }
 
-    private static class PlaceableGunpowderBehavior extends ItemInteractionOverride {
+    private static class PlaceableGunpowderBehavior extends ItemUseOnBlockOverride {
 
         @Nullable
         @Override
@@ -530,7 +713,7 @@ public class ItemsOverrideHandler {
         }
     }
 
-    private static class BookPileHorizontalBehavior extends ItemInteractionOverride {
+    private static class BookPileHorizontalBehavior extends ItemUseOnBlockOverride {
 
         //hax. I'll leave this here and see what happens
         private static final Item BOOK_PILE_H_ITEM = new BlockItem(ModRegistry.BOOK_PILE_H.get(), (new Item.Properties()).tab(null));
@@ -566,7 +749,7 @@ public class ItemsOverrideHandler {
         }
     }
 
-    private static class BookPileBehavior extends ItemInteractionOverride {
+    private static class BookPileBehavior extends ItemUseOnBlockOverride {
 
         @Nullable
         @Override
@@ -604,7 +787,7 @@ public class ItemsOverrideHandler {
         }
     }
 
-    private static class WallLanternBehavior extends ItemInteractionOverride {
+    private static class WallLanternBehavior extends ItemUseOnBlockOverride {
 
         @Nullable
         @Override
@@ -650,7 +833,15 @@ public class ItemsOverrideHandler {
 
         if (!player.isShiftKeyDown() && !isRanged) {
             BlockState blockstate = world.getBlockState(pos);
-            result = blockstate.use(world, player, hand, raytrace);
+            //call block overrides
+            BlockInteractedWithOverride o = BLOCK_INTERACTION_OVERRIDES.get(blockstate.getBlock());
+            if (o != null && o.isEnabled()) {
+                result = o.tryPerformingAction(blockstate, pos, world, player, hand, heldStack, raytrace);
+            }
+
+            if (result != InteractionResult.PASS) {
+                result = blockstate.use(world, player, hand, raytrace);
+            }
         }
 
         if (!result.consumesAction()) {
@@ -679,7 +870,18 @@ public class ItemsOverrideHandler {
 
         if (!player.isShiftKeyDown() && !isRanged) {
             BlockState blockstate = world.getBlockState(pos);
-            result = blockstate.use(world, player, hand, raytrace);
+
+            //call block overrides
+            BlockInteractedWithOverride o = BLOCK_INTERACTION_OVERRIDES.get(blockstate.getBlock());
+            if (o != null && o.isEnabled()) {
+                result = o.tryPerformingAction(blockstate, pos, world, player, hand, heldStack, raytrace);
+            }
+
+            if (result != InteractionResult.PASS) {
+                result = blockstate.use(world, player, hand, raytrace);
+            }
+
+
         }
 
         if (!result.consumesAction()) {

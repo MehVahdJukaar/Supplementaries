@@ -2,10 +2,11 @@ package net.mehvahdjukaar.supplementaries.setup;
 
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper;
+import net.mehvahdjukaar.supplementaries.block.tiles.StatueBlockTile;
+import net.mehvahdjukaar.supplementaries.capabilities.mobholder.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.common.AdventurerMapsHandler;
 import net.mehvahdjukaar.supplementaries.common.FlowerPotHandler;
-import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilitiesHandler;
+import net.mehvahdjukaar.supplementaries.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.entities.VillagerTradesHandler;
@@ -34,6 +35,7 @@ import net.minecraftforge.event.village.WandererTradesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fmlserverevents.FMLServerAboutToStartEvent;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -130,7 +132,7 @@ public class ModSetup {
 
     @SubscribeEvent
     public static void registerCapabilities(RegisterCapabilitiesEvent event){
-        CapabilitiesHandler.register(event);
+        CapabilityHandler.register(event);
     }
 
     @SubscribeEvent
@@ -154,12 +156,14 @@ public class ModSetup {
         VillagerTradesHandler.registerWanderingTraderTrades(event);
     }
 
-
-    //TODO: maybe move in /data json
     @SubscribeEvent
     public static void onLootLoad(LootTableLoadEvent e) {
         LootTableStuff.injectLootTables(e);
     }
 
+    @SubscribeEvent
+    public static void serverAboutToStart(final FMLServerAboutToStartEvent event) {
+        StatueBlockTile.initializeSessionData(event.getServer());
+    }
 
 }

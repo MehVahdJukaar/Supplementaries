@@ -54,6 +54,7 @@ public class CompatObjects {
 
     public static final Supplier<ParticleType<?>> GLOW_FLAME = makeCompatObject("infernalexp:glowstone_sparkle", ForgeRegistries.PARTICLE_TYPES);
 
+    public static final Supplier<Block> RICH_SOIL = makeCompatObject("farmersdelight:rich_soil", ForgeRegistries.BLOCKS);
 
     //public static final RegistryObject<Block> ENDER_CHANDELIER2 = getCompatObject()
 

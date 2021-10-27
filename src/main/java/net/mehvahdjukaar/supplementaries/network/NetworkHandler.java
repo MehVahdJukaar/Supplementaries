@@ -23,29 +23,29 @@ public class NetworkHandler {
         INSTANCE = NetworkRegistry.newSimpleChannel(new ResourceLocation(Supplementaries.MOD_ID, "network"), () -> PROTOCOL_VERSION,
                 PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
 
-        INSTANCE.registerMessage(nextID(), SendSpeakerBlockMessagePacket.class, SendSpeakerBlockMessagePacket::buffer,
-                SendSpeakerBlockMessagePacket::new, SendSpeakerBlockMessagePacket::handler);
+        INSTANCE.registerMessage(nextID(), ClientBoundPlaySpeakerMessagePacket.class, ClientBoundPlaySpeakerMessagePacket::buffer,
+                ClientBoundPlaySpeakerMessagePacket::new, ClientBoundPlaySpeakerMessagePacket::handler);
 
-        INSTANCE.registerMessage(nextID(), UpdateServerSpeakerBlockPacket.class, UpdateServerSpeakerBlockPacket::buffer,
-                UpdateServerSpeakerBlockPacket::new, UpdateServerSpeakerBlockPacket::handler);
+        INSTANCE.registerMessage(nextID(), ServerBoundSetSpeakerBlockPacket.class, ServerBoundSetSpeakerBlockPacket::buffer,
+                ServerBoundSetSpeakerBlockPacket::new, ServerBoundSetSpeakerBlockPacket::handler);
 
-        INSTANCE.registerMessage(nextID(), UpdateServerTextHolderPacket.class, UpdateServerTextHolderPacket::buffer,
-                UpdateServerTextHolderPacket::new, UpdateServerTextHolderPacket::handler);
+        INSTANCE.registerMessage(nextID(), ServerBoundSetTextHolderPacket.class, ServerBoundSetTextHolderPacket::buffer,
+                ServerBoundSetTextHolderPacket::new, ServerBoundSetTextHolderPacket::handler);
 
-        INSTANCE.registerMessage(nextID(), SyncGlobeDataPacket.class, SyncGlobeDataPacket::buffer,
-                SyncGlobeDataPacket::new, SyncGlobeDataPacket::handler);
+        INSTANCE.registerMessage(nextID(), ClientBoundSyncGlobeDataPacket.class, ClientBoundSyncGlobeDataPacket::buffer,
+                ClientBoundSyncGlobeDataPacket::new, ClientBoundSyncGlobeDataPacket::handler);
 
-        INSTANCE.registerMessage(nextID(), RequestMapDataFromServerPacket.class, RequestMapDataFromServerPacket::buffer,
-                RequestMapDataFromServerPacket::new, RequestMapDataFromServerPacket::handler);
+        INSTANCE.registerMessage(nextID(), ServerBoundRequestMapDataPacket.class, ServerBoundRequestMapDataPacket::buffer,
+                ServerBoundRequestMapDataPacket::new, ServerBoundRequestMapDataPacket::handler);
 
-        INSTANCE.registerMessage(nextID(), UpdateServerBlackboardPacket.class, UpdateServerBlackboardPacket::buffer,
-                UpdateServerBlackboardPacket::new, UpdateServerBlackboardPacket::handler);
+        INSTANCE.registerMessage(nextID(), ServerBoundSetBlackboardPacket.class, ServerBoundSetBlackboardPacket::buffer,
+                ServerBoundSetBlackboardPacket::new, ServerBoundSetBlackboardPacket::handler);
 
         INSTANCE.registerMessage(nextID(), SyncConfigsPacket.class, SyncConfigsPacket::buffer,
                 SyncConfigsPacket::new, SyncConfigsPacket::handler);
 
-        INSTANCE.registerMessage(nextID(), SendLoginMessagePacket.class, SendLoginMessagePacket::buffer,
-                SendLoginMessagePacket::new, SendLoginMessagePacket::handler);
+        INSTANCE.registerMessage(nextID(), ClientBoundSendLoginMessagePacket.class, ClientBoundSendLoginMessagePacket::buffer,
+                ClientBoundSendLoginMessagePacket::new, ClientBoundSendLoginMessagePacket::handler);
 
         INSTANCE.registerMessage(nextID(), OpenConfigsPacket.class, OpenConfigsPacket::buffer,
                 OpenConfigsPacket::new, OpenConfigsPacket::handler);
@@ -56,20 +56,21 @@ public class NetworkHandler {
         //INSTANCE.registerMessage(nextID(), PicklePacket.class, PicklePacket::buffer,
        //         PicklePacket::new, PicklePacket::handler);
 
-        INSTANCE.registerMessage(nextID(), SendOrangeTraderOffersPacket.class, SendOrangeTraderOffersPacket::buffer,
-                SendOrangeTraderOffersPacket::new, SendOrangeTraderOffersPacket::handler);
+        INSTANCE.registerMessage(nextID(), ClientBoundSyncTradesPacket.class, ClientBoundSyncTradesPacket::buffer,
+                ClientBoundSyncTradesPacket::new, ClientBoundSyncTradesPacket::handler);
 
-        INSTANCE.registerMessage(nextID(), NosePacket.class, NosePacket::buffer,
-                NosePacket::new, NosePacket::handler);
 
-        INSTANCE.registerMessage(nextID(), UpdateServerPresentPacket.class, UpdateServerPresentPacket::buffer,
-                UpdateServerPresentPacket::new, UpdateServerPresentPacket::handler);
+        INSTANCE.registerMessage(nextID(), ServerBoundSetPresentPacket.class, ServerBoundSetPresentPacket::buffer,
+                ServerBoundSetPresentPacket::new, ServerBoundSetPresentPacket::handler);
 
-        INSTANCE.registerMessage(nextID(), BombExplosionKnockbackPacket.class, BombExplosionKnockbackPacket::buffer,
-                BombExplosionKnockbackPacket::new, BombExplosionKnockbackPacket::handler);
+        INSTANCE.registerMessage(nextID(), ClientBoundSendBombKnockbackPacket.class, ClientBoundSendBombKnockbackPacket::buffer,
+                ClientBoundSendBombKnockbackPacket::new, ClientBoundSendBombKnockbackPacket::handler);
 
-        INSTANCE.registerMessage(nextID(), SelectOrangeTraderTradePacket.class, SelectOrangeTraderTradePacket::buffer,
-                SelectOrangeTraderTradePacket::new, SelectOrangeTraderTradePacket::handler);
+        INSTANCE.registerMessage(nextID(), ServerBoundSelectMerchantTradePacket.class, ServerBoundSelectMerchantTradePacket::buffer,
+                ServerBoundSelectMerchantTradePacket::new, ServerBoundSelectMerchantTradePacket::handler);
+
+        INSTANCE.registerMessage(nextID(), ClientBoundSyncAntiqueInk.class, ClientBoundSyncAntiqueInk::buffer,
+                ClientBoundSyncAntiqueInk::new, ClientBoundSyncAntiqueInk::handler);
 
 
     }

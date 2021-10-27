@@ -2,13 +2,11 @@ package net.mehvahdjukaar.supplementaries.client.gui;
 
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.mehvahdjukaar.supplementaries.block.blocks.DoormatBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.DoormatBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
-import net.mehvahdjukaar.supplementaries.network.UpdateServerTextHolderPacket;
+import net.mehvahdjukaar.supplementaries.network.ServerBoundSetTextHolderPacket;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.CommonComponents;
@@ -17,7 +15,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import net.minecraft.core.Direction;
 import com.mojang.math.Matrix4f;
 import net.minecraft.network.chat.Component;
@@ -29,9 +26,6 @@ import java.util.stream.IntStream;
 
 
 import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.BufferUploader;
-import com.mojang.blaze3d.vertex.Tesselator;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 
 public class DoormatGui extends Screen {
@@ -108,7 +102,7 @@ public class DoormatGui extends Screen {
     public void removed() {
         this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
         // send new text to the server
-        NetworkHandler.INSTANCE.sendToServer(new UpdateServerTextHolderPacket(this.tileSign.getBlockPos(), this.tileSign.textHolder.signText, this.tileSign.textHolder.size));
+        NetworkHandler.INSTANCE.sendToServer(new ServerBoundSetTextHolderPacket(this.tileSign.getBlockPos(), this.tileSign.textHolder.signText, this.tileSign.textHolder.size));
         //this.tileSign.setEditable(true);
     }
 

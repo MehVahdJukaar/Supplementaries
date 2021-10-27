@@ -2,16 +2,13 @@ package net.mehvahdjukaar.supplementaries.world.data;
 
 import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
-import net.mehvahdjukaar.supplementaries.network.SyncGlobeDataPacket;
+import net.mehvahdjukaar.supplementaries.network.ClientBoundSyncGlobeDataPacket;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.saveddata.SavedData;
-import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fmllegacy.network.PacketDistributor;
@@ -36,7 +33,7 @@ public class GlobeData extends SavedData {
     //from tag
     public GlobeData(CompoundTag tag) {
         this.globePixels = new byte[TEXTURE_W][TEXTURE_H];
-        for (int i = 0; i < TEXTURE_H; i++) {
+        for (int i = 0; i < TEXTURE_W; i++) {
             this.globePixels[i] = tag.getByteArray("colors_" + i);
         }
         this.seed = tag.getLong("seed");
@@ -55,7 +52,7 @@ public class GlobeData extends SavedData {
     public void sendToClient(Level world) {
         this.setDirty();
         if (!world.isClientSide)
-            NetworkHandler.INSTANCE.send(PacketDistributor.ALL.noArg(), new SyncGlobeDataPacket(this));
+            NetworkHandler.INSTANCE.send(PacketDistributor.ALL.noArg(), new ClientBoundSyncGlobeDataPacket(this));
     }
 
     //data received from network is stored here
@@ -87,7 +84,7 @@ public class GlobeData extends SavedData {
             GlobeData data = GlobeData.get(event.getPlayer().level);
             if (data != null)
                 NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) event.getPlayer()),
-                        new SyncGlobeDataPacket(data));
+                        new ClientBoundSyncGlobeDataPacket(data));
         }
     }
 }

@@ -6,7 +6,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.NoiseColumn;
@@ -17,7 +16,6 @@ import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.WorldgenRandom;
-import net.minecraft.world.level.levelgen.feature.RuinedPortalFeature;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.JigsawConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
@@ -25,7 +23,6 @@ import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatur
 import net.minecraft.world.level.levelgen.feature.structures.JigsawPlacement;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.PoolElementStructurePiece;
-import net.minecraft.world.level.levelgen.structure.RuinedPortalPiece;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -92,21 +89,31 @@ public class WaySignStructure extends StructureFeature<NoneFeatureConfiguration>
         // Grab height of land. Will stop at first non-air block.
         int y = gen.getFirstOccupiedHeight(x, z, Heightmap.Types.WORLD_SURFACE_WG, heightLimitView);
 
-        NoiseColumn noisecolumn = gen.getBaseColumn(x, z,heightLimitView);
+        NoiseColumn noisecolumn = gen.getBaseColumn(x, z, heightLimitView);
 
-        Heightmap.Types types = Heightmap.Types.WORLD_SURFACE_WG;
+        // Grabs column of blocks at given position. In overworld, this column will be made of stone, water, and air.
+        // In nether, it will be netherrack, lava, and air. End will only be endstone and air. It depends on what block
+        // the chunk generator will place for that dimension.
 
-        if (types.isOpaque().test(noisecolumn.getBlockState(new BlockPos(x, y, z)))){
+        // Combine the column of blocks with land height and you get the top block itself which you can test.
+
+        BlockState state = noisecolumn.getBlockState(new BlockPos(x, y, z));
+
+        /*
+        if (types.isOpaque().test(state)){
             heightMap.add(y);
             return true;
         }
-        /*
+        */
         try {
-            if (!reader.getFluidState(new BlockPos(x, y, z)).isEmpty()) return false;
+            if (state.getFluidState().isEmpty()) {
+                heightMap.add(y);
+                return true;
+            }
         } catch (Exception e) {
             return false;
         }
-        */
+
         return false;
     }
 
@@ -142,6 +149,7 @@ public class WaySignStructure extends StructureFeature<NoneFeatureConfiguration>
         if (y > 105 || y < chunkGenerator.getSeaLevel() - 1) return false;
 
         TreeSet<Integer> set = new TreeSet<>();
+
 
         set.add(y);
         if (!isValidPos(chunkGenerator, x + 2, z + 2, set, heightLimitView)) return false;
@@ -182,10 +190,9 @@ public class WaySignStructure extends StructureFeature<NoneFeatureConfiguration>
         @Override
         public void generatePieces(RegistryAccess registryAccess, ChunkGenerator chunkGenerator, StructureManager structureManager, ChunkPos pChunkPos, Biome biomeIn, NoneFeatureConfiguration config, LevelHeightAccessor pLevel) {
             // Turns the chunk coordinates into actual coordinates we can use. (Gets center of that chunk)
-            BlockPos blockPos = pChunkPos.getWorldPosition();
 
-            int x = blockPos.getX();
-            int z = blockPos.getZ();
+            int x = pChunkPos.getMinBlockX();
+            int z = pChunkPos.getMinBlockZ();
 
             //I could remove this but it makes for nicer generation
             int sum = 0;
@@ -245,11 +252,6 @@ public class WaySignStructure extends StructureFeature<NoneFeatureConfiguration>
             // Definitely keep this false when placing structures in the nether as otherwise, heightmap placing will put the structure on the Bedrock roof.
 
 
-
-
-
-
-
             // **THE FOLLOWING TWO LINES ARE OPTIONAL**
             //
             // Right here, you can do interesting stuff with the pieces in this.components such as offset the
@@ -273,7 +275,7 @@ public class WaySignStructure extends StructureFeature<NoneFeatureConfiguration>
             // Sets the bounds of the structure once you are finished.
             BoundingBox boundingBox = this.getBoundingBox();
             boundingBox.inflate(2);
-            boundingBox.move(0,2,0);
+            boundingBox.move(0, 2, 0);
 
         }
 

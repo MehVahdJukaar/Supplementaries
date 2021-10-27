@@ -8,7 +8,7 @@ import net.mehvahdjukaar.supplementaries.block.blocks.HangingSignBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.HangingSignBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
-import net.mehvahdjukaar.supplementaries.network.UpdateServerTextHolderPacket;
+import net.mehvahdjukaar.supplementaries.network.ServerBoundSetTextHolderPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.font.TextFieldHelper;
@@ -99,7 +99,7 @@ public class HangingSignGui extends Screen {
     public void removed() {
         this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
         // send new text to the server
-        NetworkHandler.INSTANCE.sendToServer(new UpdateServerTextHolderPacket(this.tileSign.getBlockPos(), this.tileSign.textHolder.signText, this.tileSign.textHolder.size));
+        NetworkHandler.INSTANCE.sendToServer(new ServerBoundSetTextHolderPacket(this.tileSign.getBlockPos(), this.tileSign.textHolder.signText, this.tileSign.textHolder.size));
         //this.tileSign.setEditable(true);
     }
 

@@ -2,7 +2,6 @@
   "replace": false,
   "values": [
     "supplementaries:rope_arrow",
-    "supplementaries:bomb",
     "supplementaries:brick_projectile"
   ]
 }

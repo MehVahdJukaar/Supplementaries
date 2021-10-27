@@ -11,7 +11,7 @@
       "tag": "minecraft:wooden_slabs"
     },
     "2": {
-      "tag": "minecraft:tinted_glass"
+      "item": "minecraft:tinted_glass"
     }
   },
   "result": {

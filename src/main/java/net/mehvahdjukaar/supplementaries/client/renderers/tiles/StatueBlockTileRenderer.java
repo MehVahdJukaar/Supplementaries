@@ -64,13 +64,13 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
 
                 return skinManager.registerTexture(texture, Type.SKIN);
             } else {
+                this.slim = false;
                 return DefaultPlayerSkin.getDefaultSkin(gameProfile.getId());
             }
         }
     }
 
     private boolean isSkinSlim(GameProfile gameProfile) {
-
         return gameProfile != null && gameProfile.getId() != null && (gameProfile.getId().hashCode() & 1) == 1;
     }
 
@@ -88,7 +88,6 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
 
         matrixStackIn.translate(0, -0.25, 0);
 
-        //
         RenderType renderType = RenderType.entityCutout(resourceLocation);
 
         StatueBlockTile.StatuePose pose = tile.pose;
@@ -129,8 +128,8 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
             case STANDING:
                 break;
             case CANDLE:
-                //matrixStackIn.scale(1f, -1f, -1f);
-                matrixStackIn.translate(0, -0.75, 0.5);
+                matrixStackIn.scale(1f, -1f, -1f);
+                matrixStackIn.translate(-0.5, -0.6875, -0.3125);
                 blockRenderer.renderSingleBlock(tile.candle, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
                 break;
             default:

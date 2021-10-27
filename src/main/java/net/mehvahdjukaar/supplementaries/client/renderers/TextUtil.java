@@ -42,6 +42,7 @@ public class TextUtil {
                         \u00A74Donators:\u00A7r
 
                         \u00A70AdaraChristine
+                        Azrod_dovahkiin
                         ThugPug43
                         MetalBox47
                         StonkManHanz

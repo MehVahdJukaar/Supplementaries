@@ -6,33 +6,34 @@
   "refmap": "supplementaries.refmap.json",
   "package": "net.mehvahdjukaar.supplementaries.mixins",
   "mixins": [
-    "BlockBehaviourMixin",
-    "AbstractVillagerMixin",
+    "AbstractVillagersMixin",
+    "BellTileEntityMixin",
     "BellMixin",
-    "BellBlockEntityMixin",
+
     "BrewingStandMixin",
+
     "CampfireBlockMixin",
     "CatSitOnBlockGoalMixin",
     "CauldronBlockMixin",
-    "VillagerFrickMixin",
     "CrossbowItemRopeMixin",
-    "GrindstoneMenuMixin",
     "GrindstoneInputSlotMixin",
+    "GrindstoneMenuMixin",
     "GrindstoneTestSlotMixin",
+    "IronBarsBlockMixin",
     "LakeFeatureMixin",
     "LanternBlockPlacementMixin",
     "LivingEntityLadderMixin",
-    "LoomMenuMixin",
     "LoomInputSlotMixin",
+    "LoomMenuMixin",
     "MineshaftLanternMixin",
-    "IronBarsBlockMixin",
     "PistonBlockEntityMixin",
-    "ShulkerBoxSlotsMixin",
-    "ShulkerBoxBlockEntityMixin",
-    "SkellyHorseMixin",
     "RedMerchantSpawnerMixin",
+    "ShulkerBoxBlockEntityMixin",
+    "ShulkerBoxSlotsMixin",
+    "SkellyHorseMixin",
     "StrongholdCrossingSconceMixin",
     "StrongholdRoomSconceMixin",
+    "VillagerFrickMixin",
     "VineMixin",
     "ZombieHorseMixin",
     "accessors.ChickenAccessor",
@@ -40,17 +41,18 @@
     "accessors.MineshaftAccessor"
   ],
   "client": [
+
     "BellBlockEntityRendererMixin",
     "IronGolemRendererMixin",
     "ItemRendererMixin",
+    "LevelRendererMixin",
     "LoomScreenFlagMixin",
     "ParrotMixin",
     "UndeadHorseRenderMixin",
-    "VillagerModelMixin",
-    "LevelRendererMixin"
+    "VillagerModelMixin"
   ],
   "injectors": {
     "defaultRequire": 1
   },
-  "plugin": "net.mehvahdjukaar.supplementaries.mixins.MixinConfig"
+  "plugin": "net.mehvahdjukaar.supplementaries.mixins.MixinConfigs"
 }

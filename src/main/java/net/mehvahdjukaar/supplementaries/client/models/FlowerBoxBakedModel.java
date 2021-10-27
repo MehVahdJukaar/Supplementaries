@@ -121,7 +121,6 @@ public class FlowerBoxBakedModel implements IDynamicBakedModel {
         for (BakedQuad q : mimicQuads) {
             int[] v = Arrays.copyOf(q.getVertices(), q.getVertices().length);
 
-            //todo add tint swapping for 3 plants
             TextureAtlasSprite texture = this.getParticleIcon();
             if (res == null) {
                 RendererUtil.moveVertices(v, -0.5f, -0.5f, -0.5f, texture);

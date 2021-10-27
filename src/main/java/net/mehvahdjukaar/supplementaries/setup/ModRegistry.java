@@ -1050,7 +1050,7 @@ public class ModRegistry {
     //fodder
     public static final String FODDER_NAME = "fodder";
     public static final RegistryObject<Block> FODDER = BLOCKS.register(FODDER_NAME, () -> new FodderBlock(
-            BlockBehaviour.Properties.copy(Blocks.GRASS_BLOCK)));
+            BlockBehaviour.Properties.copy(Blocks.MOSS_BLOCK)));
     public static final RegistryObject<Item> FODDER_ITEM = ITEMS.register(FODDER_NAME, () -> new BlockItem(FODDER.get(),
             (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_BUILDING_BLOCKS, FODDER_NAME))));
 

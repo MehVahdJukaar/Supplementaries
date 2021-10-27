@@ -7,6 +7,8 @@ import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
@@ -17,10 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -29,6 +28,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
@@ -127,9 +127,8 @@ public class StatueBlock extends WaterBlock implements EntityBlock {
 
     @Override
     public int getAnalogOutputSignal(BlockState blockState, Level world, BlockPos pos) {
-        BlockEntity tileentity = world.getBlockEntity(pos);
-        if (tileentity instanceof Container)
-            return ((Container) tileentity).isEmpty() ? 0 : 15;
+        if (world.getBlockEntity(pos) instanceof Container tile)
+            return tile.isEmpty() ? 0 : 15;
         else
             return 0;
     }
@@ -140,15 +139,25 @@ public class StatueBlock extends WaterBlock implements EntityBlock {
     }
 
     @Override
-    public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
+    public void animateTick(BlockState stateIn, Level level, BlockPos pos, Random rand) {
         if (stateIn.getValue(LIT)) {
-            Direction direction = stateIn.getValue(FACING);
-            double d0 = (double) pos.getX() + 0.5D;
-            double d1 = (double) pos.getY() + 0.8 - 0.25;
-            double d2 = (double) pos.getZ() + 0.5D;
-            Direction direction1 = direction.getOpposite();
-            worldIn.addParticle(ParticleTypes.SMOKE, d0 - 0.1875 * (double) direction1.getStepX(), d1, d2 - 0.1875 * (double) direction1.getStepZ(), 0.0D, 0.0D, 0.0D);
-            worldIn.addParticle(ParticleTypes.FLAME, d0 - 0.1875 * (double) direction1.getStepX(), d1, d2 - 0.1875 * (double) direction1.getStepZ(), 0.0D, 0.0D, 0.0D);
+            Direction direction = stateIn.getValue(FACING).getOpposite();
+            double x = (double) pos.getX() + 0.5D - 0.1875 * (double) direction.getStepX();
+            double y = (double) pos.getY() + 9/16f;
+            double z = (double) pos.getZ() + 0.5D - 0.1875 * (double) direction.getStepZ();
+            addCandleParticleAndSound(level, new Vec3(x,y,z), rand);
         }
+    }
+
+    //candle code
+    public static void addCandleParticleAndSound(Level level, Vec3 vec3, Random random) {
+        float f = random.nextFloat();
+        if (f < 0.3F) {
+            level.addParticle(ParticleTypes.SMOKE, vec3.x, vec3.y, vec3.z, 0.0D, 0.0D, 0.0D);
+            if (f < 0.17F) {
+                level.playLocalSound(vec3.x + 0.5D, vec3.y + 0.5D, vec3.z + 0.5D, SoundEvents.CANDLE_AMBIENT, SoundSource.BLOCKS, 1.0F + random.nextFloat(), random.nextFloat() * 0.7F + 0.3F, false);
+            }
+        }
+        level.addParticle(ParticleTypes.SMALL_FLAME, vec3.x, vec3.y, vec3.z, 0.0D, 0.0D, 0.0D);
     }
 }

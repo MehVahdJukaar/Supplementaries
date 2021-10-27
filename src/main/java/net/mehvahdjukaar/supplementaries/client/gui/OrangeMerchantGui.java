@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.inventories.RedMerchantContainer;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
-import net.mehvahdjukaar.supplementaries.network.SelectOrangeTraderTradePacket;
+import net.mehvahdjukaar.supplementaries.network.ServerBoundSelectMerchantTradePacket;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -41,7 +41,7 @@ public class OrangeMerchantGui extends AbstractContainerScreen<RedMerchantContai
         this.menu.setSelectionHint(this.shopItem);
         this.menu.tryMoveItems(this.shopItem);
 
-        NetworkHandler.sendToServerPlayer(new SelectOrangeTraderTradePacket(this.shopItem));
+        NetworkHandler.sendToServerPlayer(new ServerBoundSelectMerchantTradePacket(this.shopItem));
     }
 
     protected void init() {

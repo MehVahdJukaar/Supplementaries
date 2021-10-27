@@ -65,6 +65,7 @@ public class CMDreg {
         MapDecorationHandler.register(END_PORTAL_DECORATION_TYPE);
         MapDecorationHandler.register(END_GATEWAY_DECORATION_TYPE);
         MapDecorationHandler.register(BEACON_DECORATION_TYPE);
+        MapDecorationHandler.register(BANNER_DECORATION_TYPE);
 
 
         MapDecorationHandler.register(VILLAGE_TYPE);

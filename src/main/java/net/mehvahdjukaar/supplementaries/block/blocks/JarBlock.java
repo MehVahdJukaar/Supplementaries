@@ -119,29 +119,6 @@ public class JarBlock extends WaterBlock implements EntityBlock {
         return returnStack;
     }
 
-    // shulker box code
-
-    //forces creative drop. might remove this since pick block does work
-    /*
-    @Override
-    public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
-        TileEntity tileentity = worldIn.getTileEntity(pos);
-        if (tileentity instanceof JarBlockTile) {
-            JarBlockTile tile = (JarBlockTile) tileentity;
-            if (!worldIn.isRemote && player.isCreative() && tile.hasContent()) {
-
-                ItemStack itemstack = this.getJarItem(tile);
-
-                ItemEntity itementity = new ItemEntity(worldIn, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5, itemstack);
-                itementity.setDefaultPickupDelay();
-                worldIn.addEntity(itementity);
-            } else {
-                tile.fillWithLoot(player);
-            }
-        }
-        super.onBlockHarvested(worldIn, pos, state, player);
-    }*/
-
     @Override
     public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;

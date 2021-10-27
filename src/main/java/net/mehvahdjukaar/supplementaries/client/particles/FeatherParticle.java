@@ -13,7 +13,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class FeatherParticle extends TextureSheetParticle {
-    private float rotSpeed;
+    private final float rotSpeed;
 
     private boolean fallingAnim = false;
     private int animationOffset;
@@ -81,7 +81,7 @@ public class FeatherParticle extends TextureSheetParticle {
                     this.oRoll = this.roll;
                     this.roll = rot;
 
-                } else if (this.fallingAnim) {
+                } else {
                     int t = this.age - this.animationOffset;
 
                     //0.5
@@ -135,9 +135,6 @@ public class FeatherParticle extends TextureSheetParticle {
                     (this.rotOffset + this.roll) * p);
             quaternion.mul(Vector3f.ZP.rotation(f3 / p));
         }
-
-        Vector3f vector3f1 = new Vector3f(-1.0F, -1.0F, 0.0F);
-        vector3f1.transform(quaternion);
         Vector3f[] avector3f = new Vector3f[]{new Vector3f(-1.0F, -1.0F, 0.0F), new Vector3f(-1.0F, 1.0F, 0.0F), new Vector3f(1.0F, 1.0F, 0.0F), new Vector3f(1.0F, -1.0F, 0.0F)};
         float f4 = this.getQuadSize(partialTicks);
 

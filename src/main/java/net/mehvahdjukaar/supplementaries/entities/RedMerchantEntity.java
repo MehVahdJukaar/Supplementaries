@@ -4,7 +4,7 @@ import net.mehvahdjukaar.supplementaries.entities.goals.EquipAndRangeAttackGoal;
 import net.mehvahdjukaar.supplementaries.entities.goals.ShowWaresGoal;
 import net.mehvahdjukaar.supplementaries.inventories.RedMerchantContainer;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
-import net.mehvahdjukaar.supplementaries.network.SendOrangeTraderOffersPacket;
+import net.mehvahdjukaar.supplementaries.network.ClientBoundSyncTradesPacket;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -138,7 +138,7 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
             MerchantOffers merchantoffers = this.getOffers();
             if (!merchantoffers.isEmpty()) {
                 NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
-                        new SendOrangeTraderOffersPacket(optionalint.getAsInt(), merchantoffers, level, this.getVillagerXp(), this.showProgressBar(), this.canRestock())
+                        new ClientBoundSyncTradesPacket(optionalint.getAsInt(), merchantoffers, level, this.getVillagerXp(), this.showProgressBar(), this.canRestock())
                 );
             }
         }

@@ -2,20 +2,25 @@ package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.tiles.PresentBlockTile;
-import net.mehvahdjukaar.supplementaries.client.gui.*;
+import net.mehvahdjukaar.supplementaries.client.gui.NoticeBoardGui;
+import net.mehvahdjukaar.supplementaries.client.gui.OrangeMerchantGui;
+import net.mehvahdjukaar.supplementaries.client.gui.PulleyBlockGui;
+import net.mehvahdjukaar.supplementaries.client.gui.SackGui;
 import net.mehvahdjukaar.supplementaries.client.models.*;
 import net.mehvahdjukaar.supplementaries.client.particles.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.*;
-import net.mehvahdjukaar.supplementaries.client.renderers.entities.*;
-import net.mehvahdjukaar.supplementaries.client.renderers.items.CageItemRenderer;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.RedMerchantRenderer;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.RopeArrowRenderer;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.SlingshotProjectileRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
+import net.mehvahdjukaar.supplementaries.client.tooltip.BlackboardTooltipComponent;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.FlowerPotHandler;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandlerClient;
-import net.mehvahdjukaar.supplementaries.compat.optifine.OptifineHandler;
+import net.mehvahdjukaar.supplementaries.items.BlackboardItem;
 import net.mehvahdjukaar.supplementaries.items.SlingshotItem;
 import net.mehvahdjukaar.supplementaries.world.data.map.client.CMDclient;
 import net.minecraft.client.Minecraft;
@@ -27,12 +32,9 @@ import net.minecraft.client.particle.FlameParticle;
 import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
-import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -47,6 +49,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -64,6 +67,9 @@ public class ClientSetup {
 
     @OnlyIn(Dist.CLIENT)
     public static void init(final FMLClientSetupEvent event) {
+
+        //tooltips
+        MinecraftForgeClient.registerTooltipComponentFactory(BlackboardItem.BlackboardTooltip.class, BlackboardTooltipComponent::new);
 
         //compat
         CompatHandlerClient.init(event);
@@ -168,9 +174,6 @@ public class ClientSetup {
 
 
         ItemProperties.register(Items.CROSSBOW, new ResourceLocation("rope_arrow"),
-                new CrossbowProperty(ModRegistry.ROPE_ARROW_ITEM.get()));
-
-        ItemProperties.register(Items.CROSSBOW, new ResourceLocation("amethyst_arrow"),
                 new CrossbowProperty(ModRegistry.ROPE_ARROW_ITEM.get()));
 
         ItemProperties.register(ModRegistry.SLINGSHOT_ITEM.get(), new ResourceLocation("pull"),
@@ -292,25 +295,7 @@ public class ClientSetup {
     //textures
     @SubscribeEvent
     public static void onTextureStitch(TextureStitchEvent.Pre event) {
-        ResourceLocation loc = event.getMap().location();
-
-        if (loc.equals(TextureAtlas.LOCATION_BLOCKS)) {
-            for (ResourceLocation r : Textures.getTexturesToStitch()) {
-                event.addSprite(r);
-            }
-        } else if (loc.equals(Sheets.BANNER_SHEET)) {
-            try {
-                Textures.FLAG_TEXTURES.values().stream().filter(r -> !MissingTextureAtlasSprite.getLocation().equals(r))
-                        .forEach(event::addSprite);
-            } catch (Exception ignored) {
-            }
-        } else if (loc.equals(Sheets.SHULKER_SHEET)) {
-            event.addSprite(Textures.BOOK_ENCHANTED_TEXTURES);
-            event.addSprite(Textures.BOOK_TOME_TEXTURES);
-            Textures.BOOK_TEXTURES.values().forEach(event::addSprite);
-        }
-
-        OptifineHandler.refresh();
+        Textures.stitchTextures(event);
     }
 
     @SubscribeEvent
