@@ -1,14 +1,18 @@
 package net.mehvahdjukaar.supplementaries.client.gui;
 
 
+import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.mehvahdjukaar.supplementaries.block.blocks.BlackboardBlock;
+import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.sounds.SoundEvents;
@@ -16,7 +20,6 @@ import net.minecraft.sounds.SoundEvents;
 
 public class BlackBoardButton extends GuiComponent implements Widget, GuiEventListener, NarratableEntry {
 
-    //TODO: rewrite all of this using new system
     public int u;
     public int v;
     public int x;
@@ -46,37 +49,34 @@ public class BlackBoardButton extends GuiComponent implements Widget, GuiEventLi
         this.isHovered = this.isMouseOver(mouseX, mouseY);
         this.renderButton(matrixStack);
         this.wasHovered = this.isHovered();
-
     }
 
 
     public void renderButton(PoseStack matrixStack) {
-        //TODO: readd
-        /*
-        Minecraft minecraft = Minecraft.getInstance();
-        minecraft.getTextureManager().bind(Textures.BLACKBOARD_GUI_TEXTURE);
-        RenderSystem.enableDepthTest();
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
 
-        int offset = this.color>0?16:0;
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderTexture(0, Textures.BLACKBOARD_GUI_TEXTURE);
+
+        int offset = this.color > 0 ? 16 : 0;
 
         int rgb = BlackboardBlock.colorFromByte(this.color);
-        float b = NativeImage.getR(rgb)/255f;
-        float g = NativeImage.getG(rgb)/255f;
-        float r = NativeImage.getB(rgb)/255f;
+        float b = NativeImage.getR(rgb) / 255f;
+        float g = NativeImage.getG(rgb) / 255f;
+        float r = NativeImage.getB(rgb) / 255f;
 
-        RenderSystem.color4f(r, g, b, 1);
-        blit(matrixStack, this.x, this.y, (this.u+offset)* WIDTH, this.v* WIDTH, WIDTH, WIDTH,32* WIDTH,16* WIDTH);
-        */
+        RenderSystem.setShaderColor(r, g, b, 1.0F);
+        blit(matrixStack, this.x, this.y, (this.u + offset) * WIDTH, this.v * WIDTH, WIDTH, WIDTH, 32 * WIDTH, 16 * WIDTH);
+
     }
 
     public void renderTooltip(PoseStack matrixStack) {
+        //maybe remove this
         RenderSystem.enableDepthTest();
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
 
-        //RenderSystem.color4f(0.5f, 0.5f, 0.5f, 1);
+        RenderSystem.setShaderColor(0.5f, 0.5f, 0.5f, 1);
+
         blit(matrixStack, this.x - 1, this.y - 1, 16 * WIDTH, 0, WIDTH + 2, WIDTH + 2, 32 * WIDTH, 16 * WIDTH);
         this.renderButton(matrixStack);
     }

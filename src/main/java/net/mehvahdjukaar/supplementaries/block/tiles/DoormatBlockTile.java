@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 
 import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.block.blocks.DoormatBlock;
-import net.mehvahdjukaar.supplementaries.block.util.ITextHolder;
+import net.mehvahdjukaar.supplementaries.block.util.ITextHolderProvider;
 import net.mehvahdjukaar.supplementaries.block.util.TextHolder;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -14,11 +14,10 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 
-public class DoormatBlockTile extends ItemDisplayTile implements ITextHolder {
+public class DoormatBlockTile extends ItemDisplayTile implements ITextHolderProvider {
     public static final int MAX_LINES = 3;
 
-    public TextHolder textHolder;
-
+    public final TextHolder textHolder;
 
     public DoormatBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.DOORMAT_TILE.get(),pos, state);

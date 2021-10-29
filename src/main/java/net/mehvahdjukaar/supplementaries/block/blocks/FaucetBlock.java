@@ -44,14 +44,14 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Random;
 
 public class FaucetBlock extends WaterBlock implements EntityBlock {
-    protected static final VoxelShape SHAPE_NORTH = Shapes.box(5, 5, 5, 11, 15, 16);
-    protected static final VoxelShape SHAPE_SOUTH = Shapes.box(5, 5, 0, 11, 15, 11);
-    protected static final VoxelShape SHAPE_WEST = Shapes.box(5, 5, 5, 16, 15, 11);
-    protected static final VoxelShape SHAPE_EAST = Shapes.box(0, 5, 5, 11, 15, 11);
-    protected static final VoxelShape SHAPE_NORTH_JAR = Shapes.box(5, 0, 5, 11, 10, 16);
-    protected static final VoxelShape SHAPE_SOUTH_JAR = Shapes.box(5, 0, 0, 11, 10, 11);
-    protected static final VoxelShape SHAPE_WEST_JAR = Shapes.box(5, 0, 5, 16, 10, 11);
-    protected static final VoxelShape SHAPE_EAST_JAR = Shapes.box(0, 0, 5, 11, 10, 11);
+    protected static final VoxelShape SHAPE_NORTH = Block.box(5, 5, 5, 11, 15, 16);
+    protected static final VoxelShape SHAPE_SOUTH = Block.box(5, 5, 0, 11, 15, 11);
+    protected static final VoxelShape SHAPE_WEST = Block.box(5, 5, 5, 16, 15, 11);
+    protected static final VoxelShape SHAPE_EAST = Block.box(0, 5, 5, 11, 15, 11);
+    protected static final VoxelShape SHAPE_NORTH_JAR = Block.box(5, 0, 5, 11, 10, 16);
+    protected static final VoxelShape SHAPE_SOUTH_JAR = Block.box(5, 0, 0, 11, 10, 11);
+    protected static final VoxelShape SHAPE_WEST_JAR = Block.box(5, 0, 5, 16, 10, 11);
+    protected static final VoxelShape SHAPE_EAST_JAR = Block.box(0, 0, 5, 11, 10, 11);
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty ENABLED = BlockStateProperties.ENABLED;

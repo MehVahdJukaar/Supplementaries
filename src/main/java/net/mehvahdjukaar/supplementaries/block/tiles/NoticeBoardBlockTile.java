@@ -3,10 +3,12 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.block.util.IMapDisplay;
+import net.mehvahdjukaar.supplementaries.block.util.TextHolder;
 import net.mehvahdjukaar.supplementaries.client.Materials;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.inventories.NoticeBoardContainer;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.minecraft.client.gui.screens.inventory.BookEditScreen;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -50,8 +52,11 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
     // private int packedFrontLight =0;
     private boolean textVisible = true; //for culling
 
+    private final TextHolder textHolder;
+
     public NoticeBoardBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.NOTICE_BOARD_TILE.get(), pos, state);
+        this.textHolder = new TextHolder(1);
     }
 
     @Override
@@ -119,6 +124,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
                 this.text = listTag.getString(this.pageNumber);
             }
         }
+
     }
 
     @Override
@@ -234,18 +240,15 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
 
     public InteractionResult interact(Player player, InteractionHand handIn, BlockPos pos, BlockState state) {
         ItemStack itemStack = player.getItemInHand(handIn);
-        Item item = itemStack.getItem();
+
         boolean server = !player.level.isClientSide;
-        if (item instanceof DyeItem && player.getAbilities().mayBuild) {
-            if (this.setTextColor(((DyeItem) item).getDyeColor())) {
-                if (!player.isCreative()) {
-                    itemStack.shrink(1);
-                }
-                if (server) {
-                    this.setChanged();
-                }
-            }
-        } else if (player.isShiftKeyDown() && !this.isEmpty()) {
+
+        //TODO: add text holder
+        //InteractionResult result = textHolder.interactWithPlayer(level, player, handIn, tile::setChanged);
+        //if(result != InteractionResult.PASS) return result;
+
+
+        if (player.isShiftKeyDown() && !this.isEmpty()) {
             if (server) {
                 ItemStack it = this.removeItemNoUpdate(0);
                 BlockPos newPos = pos.offset(state.getValue(NoticeBoardBlock.FACING).getNormal());

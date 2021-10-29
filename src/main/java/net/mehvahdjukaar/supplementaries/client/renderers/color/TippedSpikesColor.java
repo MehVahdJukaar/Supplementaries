@@ -22,23 +22,27 @@ public class TippedSpikesColor implements BlockColor, ItemColor {
 
     //TODO: figure out if this is actually faster. seems to me about the same, maybe slightly faster this way
     public static int getCachedColor(int base, int tint) {
-        if (tint == 0) {
-            if (!cachedColors0.containsKey(base)) {
-                int c = getProcessedColor(base, tint);
-                cachedColors0.put(base, c);
-                return c;
-            } else {
-                return cachedColors0.get(base);
+        return switch (tint){
+            default -> -1;
+            case 1 -> {
+                if (!cachedColors0.containsKey(base)) {
+                    int c = getProcessedColor(base, tint);
+                    cachedColors0.put(base, c);
+                    yield c;
+                } else {
+                    yield cachedColors0.get(base);
+                }
             }
-        } else {
-            if (!cachedColors1.containsKey(base)) {
-                int c = getProcessedColor(base, tint);
-                cachedColors1.put(base, c);
-                return c;
-            } else {
-                return cachedColors1.get(base);
+            case 2 -> {
+                if (!cachedColors1.containsKey(base)) {
+                    int c = getProcessedColor(base, tint);
+                    cachedColors1.put(base, c);
+                    yield c;
+                } else {
+                    yield cachedColors1.get(base);
+                }
             }
-        }
+        };
     }
 
 
@@ -67,7 +71,7 @@ public class TippedSpikesColor implements BlockColor, ItemColor {
     @Override
     public int getColor(ItemStack stack, int tint) {
         if (tint == 0) return 0xffffff;
-        return getCachedColor(PotionUtils.getColor(stack), tint - 1);
+        return getCachedColor(PotionUtils.getColor(stack), tint);
         //return getProcessedColor(PotionUtils.getColor(stack), tint-1);
     }
 

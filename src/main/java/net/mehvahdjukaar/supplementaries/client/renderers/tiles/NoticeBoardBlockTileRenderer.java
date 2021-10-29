@@ -157,7 +157,7 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
                 List<FormattedCharSequence> tempPageLines;
 
                 if (tile.getFlag()) {
-                    FormattedText txt = TextUtil.iGetPageText(page);
+                    FormattedText txt = TextUtil.parseText(page);
                     int width = font.width(txt);
                     float bordery = 0.125f;
                     float borderx = 0.1875f;

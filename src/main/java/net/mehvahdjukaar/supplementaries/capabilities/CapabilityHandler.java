@@ -3,17 +3,15 @@ package net.mehvahdjukaar.supplementaries.capabilities;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.IAntiqueTextProvider;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
-import net.mehvahdjukaar.supplementaries.block.util.ITextHolder;
+import net.mehvahdjukaar.supplementaries.block.util.ITextHolderProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 
@@ -31,7 +29,7 @@ public class CapabilityHandler {
     @SubscribeEvent
     public static void onAttachTileCapabilities(AttachCapabilitiesEvent<BlockEntity> event) {
         BlockEntity tile = event.getObject();
-        if (tile instanceof ITextHolder) {
+        if (tile instanceof ITextHolderProvider) {
             event.addCapability(ANTIQUE_INK, new AntiqueInkProvider());
         }
     }

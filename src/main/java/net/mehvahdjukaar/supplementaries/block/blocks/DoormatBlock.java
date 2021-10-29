@@ -16,7 +16,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -46,14 +45,14 @@ public class DoormatBlock extends WaterBlock implements EntityBlock{
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false));
     }
 
-    //TODO: remake signs
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn,
                                  BlockHitResult hit) {
-        if (worldIn.getBlockEntity(pos) instanceof DoormatBlockTile tile && tile.isAccessibleBy(player)) {
+        if (level.getBlockEntity(pos) instanceof DoormatBlockTile tile && tile.isAccessibleBy(player)) {
+
             ItemStack itemstack = player.getItemInHand(handIn);
-            boolean server = !worldIn.isClientSide();
-            boolean flag = itemstack.getItem() instanceof DyeItem && player.getAbilities().mayBuild;
+            boolean server = !level.isClientSide();
+
             boolean sideHit = hit.getDirection() != Direction.UP;
             boolean canExtract = itemstack.isEmpty() && (player.isShiftKeyDown() || sideHit);
             boolean canInsert = tile.isEmpty() && sideHit;
@@ -61,9 +60,9 @@ public class DoormatBlock extends WaterBlock implements EntityBlock{
                 if (!server) return InteractionResult.SUCCESS;
                 if (canExtract) {
                     ItemStack dropStack = tile.removeItemNoUpdate(0);
-                    ItemEntity drop = new ItemEntity(worldIn, pos.getX() + 0.5, pos.getY() + 0.125, pos.getZ() + 0.5, dropStack);
+                    ItemEntity drop = new ItemEntity(level, pos.getX() + 0.5, pos.getY() + 0.125, pos.getZ() + 0.5, dropStack);
                     drop.setDefaultPickUpDelay();
-                    worldIn.addFreshEntity(drop);
+                    level.addFreshEntity(drop);
                 } else {
                     ItemStack newStack = itemstack.copy();
                     newStack.setCount(1);
@@ -73,25 +72,20 @@ public class DoormatBlock extends WaterBlock implements EntityBlock{
                     }
                 }
                 tile.setChanged();
-                worldIn.playSound(null, pos, SoundEvents.WOOL_PLACE, SoundSource.BLOCKS, 1.0F,
+                level.playSound(null, pos, SoundEvents.WOOL_PLACE, SoundSource.BLOCKS, 1.0F,
                         1.2f);
                 return InteractionResult.CONSUME;
-
             }
             //color
-            if (flag) {
-                if (tile.textHolder.setTextColor(((DyeItem) itemstack.getItem()).getDyeColor())) {
-                    if (!player.isCreative()) {
-                        itemstack.shrink(1);
-                    }
-                    if (server) tile.setChanged();
-                }
+            InteractionResult result = tile.textHolder.playerInteract(level, pos, player, handIn, tile::setChanged);
+            if(result != InteractionResult.PASS){
+                return result;
             }
             // open gui (edit sign with empty hand)
             else if (!server) {
                 DoormatGui.open(tile);
             }
-            return InteractionResult.sidedSuccess(worldIn.isClientSide);
+            return InteractionResult.sidedSuccess(level.isClientSide);
         }
         return InteractionResult.PASS;
     }

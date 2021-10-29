@@ -15,7 +15,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -41,7 +40,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class HangingSignBlock extends SwayingBlock implements EntityBlock {
     protected static final VoxelShape SHAPE_Z = Block.box(7, 0, 0, 9, 16, 16);
-    protected static final VoxelShape SHAPE_X = Shapes.box(0, 0, 7, 16, 16, 9);
+    protected static final VoxelShape SHAPE_X = Block.box(0, 0, 7, 16, 16, 9);
 
     public static final BooleanProperty HANGING = BlockStateProperties.HANGING;
     public static final BooleanProperty TILE = BlockProperties.TILE; // is it renderer by tile entity? animated part
@@ -53,34 +52,26 @@ public class HangingSignBlock extends SwayingBlock implements EntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn,
                                  BlockHitResult hit) {
-        if (worldIn.getBlockEntity(pos) instanceof HangingSignBlockTile tile && tile.isAccessibleBy(player)) {
+        if (level.getBlockEntity(pos) instanceof HangingSignBlockTile tile && tile.isAccessibleBy(player)) {
             ItemStack handItem = player.getItemInHand(handIn);
-            boolean server = !worldIn.isClientSide();
-            boolean isDye = handItem.getItem() instanceof DyeItem && player.getAbilities().mayBuild;
-            //color
-            if (isDye) {
-                if (tile.textHolder.setTextColor(((DyeItem) handItem.getItem()).getDyeColor())) {
-                    if (!player.isCreative()) {
-                        handItem.shrink(1);
-                    }
-                    if (server) tile.setChanged();
-                    return InteractionResult.sidedSuccess(worldIn.isClientSide);
-                }
-            }
-            //not an else to allow to place dye items after coloring
+            boolean server = !level.isClientSide();
+
+            InteractionResult result = tile.textHolder.playerInteract(level, pos, player, handIn, tile::setChanged);
+            if(result != InteractionResult.PASS) return result;
+
             //place item
-            //TODO: return early for client. fix left hand(shield)
+            //TODO: fix left hand(shield)
             if (handIn == InteractionHand.MAIN_HAND) {
                 //remove
                 if (!tile.isEmpty() && handItem.isEmpty()) {
                     ItemStack it = tile.removeStackFromSlot(0);
-                    if (!worldIn.isClientSide()) {
+                    if (!level.isClientSide()) {
                         player.setItemInHand(handIn, it);
                         tile.setChanged();
                     }
-                    return InteractionResult.sidedSuccess(worldIn.isClientSide);
+                    return InteractionResult.sidedSuccess(level.isClientSide);
                 }
                 //place
                 else if (!handItem.isEmpty() && tile.isEmpty()) {
@@ -91,17 +82,17 @@ public class HangingSignBlock extends SwayingBlock implements EntityBlock {
                     if (!player.isCreative()) {
                         handItem.shrink(1);
                     }
-                    if (!worldIn.isClientSide()) {
-                        worldIn.playSound(null, pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, 1.0F, worldIn.random.nextFloat() * 0.10F + 0.95F);
+                    if (!level.isClientSide()) {
+                        level.playSound(null, pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, 1.0F, level.random.nextFloat() * 0.10F + 0.95F);
                         tile.setChanged();
                     }
-                    return InteractionResult.sidedSuccess(worldIn.isClientSide);
+                    return InteractionResult.sidedSuccess(level.isClientSide);
                 }
 
                 // open gui (edit sign with empty hand)
                 else if (handItem.isEmpty()) {
                     if (!server) HangingSignGui.open(tile);
-                    return InteractionResult.sidedSuccess(worldIn.isClientSide);
+                    return InteractionResult.sidedSuccess(level.isClientSide);
                 }
             }
         }

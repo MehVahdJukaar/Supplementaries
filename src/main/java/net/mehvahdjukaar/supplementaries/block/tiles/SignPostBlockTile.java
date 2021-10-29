@@ -3,16 +3,14 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 
 import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
-import net.mehvahdjukaar.supplementaries.block.util.ITextHolder;
+import net.mehvahdjukaar.supplementaries.block.util.ITextHolderProvider;
 import net.mehvahdjukaar.supplementaries.block.util.TextHolder;
-import net.mehvahdjukaar.supplementaries.client.renderers.tiles.SignPostBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.VanillaWoodTypes;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
@@ -24,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 
 
-public class SignPostBlockTile extends MimicBlockTile implements ITextHolder, IOwnerProtected {
+public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProvider, IOwnerProtected {
     private UUID owner = null;
 
     //is holding a framed fence (for framed blocks mod compat)

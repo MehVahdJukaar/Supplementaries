@@ -1,5 +1,5 @@
 package net.mehvahdjukaar.supplementaries.block.util;
 
-public interface ITextHolder {
+public interface ITextHolderProvider {
     TextHolder getTextHolder();
 }

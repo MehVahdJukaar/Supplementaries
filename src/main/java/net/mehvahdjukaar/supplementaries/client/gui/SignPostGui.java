@@ -43,7 +43,7 @@ public class SignPostGui extends Screen {
     public SignPostGui(SignPostBlockTile teSign) {
         super(new TranslatableComponent("sign.edit"));
         this.tileSign = teSign;
-        this.cachedLines = IntStream.range(0, MAXLINES).mapToObj(teSign.textHolder::getText).map(Component::getString).toArray(String[]::new);
+        this.cachedLines = IntStream.range(0, MAXLINES).mapToObj(teSign.textHolder::getLine).map(Component::getString).toArray(String[]::new);
 
         editLine = !this.tileSign.up ? 1 : 0;
     }
@@ -107,7 +107,7 @@ public class SignPostGui extends Screen {
     public void removed() {
         this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
         // send new text to the server
-        NetworkHandler.INSTANCE.sendToServer(new ServerBoundSetTextHolderPacket(this.tileSign.getBlockPos(), this.tileSign.textHolder.signText, this.tileSign.textHolder.size));
+        NetworkHandler.INSTANCE.sendToServer(new ServerBoundSetTextHolderPacket(this.tileSign.getBlockPos(), this.tileSign.getTextHolder()));
         //this.tileSign.textHolder.setEditable(true);
     }
 
@@ -119,11 +119,11 @@ public class SignPostGui extends Screen {
     @Override
     protected void init() {
         this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
-        this.addWidget(new Button(this.width / 2 - 100, this.height / 4 + 120, 200, 20, CommonComponents.GUI_DONE, (p_238847_1_) -> this.close()));
+        this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 4 + 120, 200, 20, CommonComponents.GUI_DONE, (p_238847_1_) -> this.close()));
         //this.tileSign.textHolder.setEditable(false);
-        this.textInputUtil = new TextFieldHelper(() -> this.cachedLines[this.editLine], (p_238850_1_) -> {
-            this.cachedLines[this.editLine] = p_238850_1_;
-            this.tileSign.textHolder.setText(this.editLine, new TextComponent(p_238850_1_));
+        this.textInputUtil = new TextFieldHelper(() -> this.cachedLines[this.editLine], (s) -> {
+            this.cachedLines[this.editLine] = s;
+            this.tileSign.textHolder.setLine(this.editLine, new TextComponent(s));
         }, TextFieldHelper.createClipboardGetter(this.minecraft), TextFieldHelper.createClipboardSetter(this.minecraft), (p_238848_1_) -> this.minecraft.font.width(p_238848_1_) <= 90);
     }
 
@@ -208,11 +208,11 @@ public class SignPostGui extends Screen {
 
         Matrix4f matrix4f = matrixstack.last().pose();
 
-        int i = this.tileSign.textHolder.textColor.getTextColor();
+        int i = this.tileSign.textHolder.getColor().getTextColor();
         int j = this.textInputUtil.getCursorPos();
         int k = this.textInputUtil.getSelectionPos();
         //int i1 = this.minecraft.fontRenderer.getBidiFlag() ? -1 : 1;
-        int l = this.editLine * 48 - this.tileSign.textHolder.size * 5;
+        int l = this.editLine * 48 - this.tileSign.textHolder.size() * 5;
 
         for (int i1 = 0; i1 < this.cachedLines.length; ++i1) {
             String s = this.cachedLines[i1];

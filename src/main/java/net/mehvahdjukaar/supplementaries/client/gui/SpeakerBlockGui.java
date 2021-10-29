@@ -69,8 +69,8 @@ public class SpeakerBlockGui extends Screen {
 
         this.addWidget(this.volume);
 
-        this.addWidget(new Button(this.width / 2 - 100, this.height / 4 + 120, 200, 20, CommonComponents.GUI_DONE, (p_214266_1_) -> this.close()));
-        this.modeBtn = this.addWidget(new Button(this.width / 2 - 75, this.height / 4 + 50, 150, 20, CHAT_TEXT, (p_214186_1_) -> {
+        this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 4 + 120, 200, 20, CommonComponents.GUI_DONE, (p_214266_1_) -> this.onDone()));
+        this.modeBtn = this.addRenderableWidget(new Button(this.width / 2 - 75, this.height / 4 + 50, 150, 20, CHAT_TEXT, (p_214186_1_) -> {
             this.toggleMode();
             this.updateMode();
         }));
@@ -98,23 +98,24 @@ public class SpeakerBlockGui extends Screen {
 
     }
 
-    private void close() {
+    private void onDone() {
         this.tileSpeaker.setChanged();
         this.minecraft.setScreen(null);
     }
 
     @Override
     public void onClose() {
-        this.close();
+        this.onDone();
     }
 
+    @Override
     public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_) {
         if (super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_)) {
             return true;
         } else if (p_keyPressed_1_ != 257 && p_keyPressed_1_ != 335) {
             return false;
         } else {
-            this.close();
+            this.onDone();
             return true;
         }
     }

@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 
 import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.supplementaries.block.util.IMapDisplay;
-import net.mehvahdjukaar.supplementaries.block.util.ITextHolder;
+import net.mehvahdjukaar.supplementaries.block.util.ITextHolderProvider;
 import net.mehvahdjukaar.supplementaries.block.util.TextHolder;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -18,7 +18,7 @@ import java.util.UUID;
 
 
 //TODO: make swaying tile an interface
-public class HangingSignBlockTile extends SwayingBlockTile implements IMapDisplay, ITextHolder, IOwnerProtected {
+public class HangingSignBlockTile extends SwayingBlockTile implements IMapDisplay, ITextHolderProvider, IOwnerProtected {
     public static final int MAX_LINES = 7;
 
     private UUID owner = null;

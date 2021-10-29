@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.supplementaries.block.blocks.BlackboardBlock;
+import net.mehvahdjukaar.supplementaries.block.blocks.CrankBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.client.Materials;
 import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager;
@@ -43,6 +44,11 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
     }
 
     @Override
+    public boolean shouldRender(BlackboardBlockTile p_173568_, Vec3 p_173569_) {
+        return BlockEntityRenderer.super.shouldRender(p_173568_, p_173569_);
+    }
+
+    @Override
     public void render(BlackboardBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
 
@@ -53,6 +59,7 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
         BlockPos pos = tile.getBlockPos();
         if (LOD.isOutOfFocus(cameraPos, pos, yaw, 0, dir, WIDTH / 16f)) return;
 
+        //TODO: add glow ink support
 
         matrixStackIn.pushPose();
         matrixStackIn.translate(0.5, 0.5, 0.5);

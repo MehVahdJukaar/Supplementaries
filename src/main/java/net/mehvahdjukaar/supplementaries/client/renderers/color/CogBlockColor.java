@@ -23,6 +23,7 @@ public class CogBlockColor implements BlockColor {
 
     @Override
     public int getColor(BlockState state, BlockAndTintGetter reader, BlockPos pos, int color) {
+        if (color != 1) return -1;
         return COLORS[state.getValue(CogBlock.POWER)];
     }
 }

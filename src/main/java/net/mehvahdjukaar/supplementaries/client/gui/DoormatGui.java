@@ -40,7 +40,10 @@ public class DoormatGui extends Screen {
     public DoormatGui(DoormatBlockTile teSign) {
         super(new TranslatableComponent("gui.supplementaries.doormat.edit"));
         this.tileSign = teSign;
-        this.cachedLines = IntStream.range(0, DoormatBlockTile.MAX_LINES).mapToObj(teSign.textHolder::getText).map(Component::getString).toArray(String[]::new);
+        this.cachedLines = IntStream.range(0, DoormatBlockTile.MAX_LINES)
+                .mapToObj(teSign.textHolder::getLine)
+                .map(Component::getString).toArray(String[]::new);
+
 
     }
 
@@ -102,7 +105,7 @@ public class DoormatGui extends Screen {
     public void removed() {
         this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
         // send new text to the server
-        NetworkHandler.INSTANCE.sendToServer(new ServerBoundSetTextHolderPacket(this.tileSign.getBlockPos(), this.tileSign.textHolder.signText, this.tileSign.textHolder.size));
+        NetworkHandler.INSTANCE.sendToServer(new ServerBoundSetTextHolderPacket(this.tileSign.getBlockPos(), this.tileSign.getTextHolder()));
         //this.tileSign.setEditable(true);
     }
 
@@ -119,7 +122,7 @@ public class DoormatGui extends Screen {
         //this.tileSign.setEditable(false);
         this.textInputUtil = new TextFieldHelper(() -> this.cachedLines[this.editLine], (p_238850_1_) -> {
             this.cachedLines[this.editLine] = p_238850_1_;
-            this.tileSign.textHolder.setText(this.editLine, new TextComponent(p_238850_1_));
+            this.tileSign.textHolder.setLine(this.editLine, new TextComponent(p_238850_1_));
         }, TextFieldHelper.createClipboardGetter(this.minecraft), TextFieldHelper.createClipboardSetter(this.minecraft), (p_238848_1_) -> this.minecraft.font.width(p_238848_1_) <= 75);
     }
 
@@ -160,10 +163,10 @@ public class DoormatGui extends Screen {
 
         Matrix4f matrix4f = matrixstack.last().pose();
 
-        int i = this.tileSign.textHolder.textColor.getTextColor();
+        int i = this.tileSign.textHolder.getColor().getTextColor();
         int j = this.textInputUtil.getCursorPos();
         int k = this.textInputUtil.getSelectionPos();
-        int l = this.editLine * 15 - this.tileSign.textHolder.size * 5;
+        int l = this.editLine * 15 - this.tileSign.textHolder.size() * 5;
 
         for(int i1 = 0; i1 < this.cachedLines.length; ++i1) {
             String s = this.cachedLines[i1];
@@ -185,7 +188,6 @@ public class DoormatGui extends Screen {
                 }
             }
         }
-
 
 
         irendertypebuffer$impl.endBatch();

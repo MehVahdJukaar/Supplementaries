@@ -31,7 +31,6 @@ import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
@@ -53,100 +52,93 @@ public class SignPostBlock extends FenceMimicBlock implements EntityBlock {
         return RenderShape.MODEL;
     }
 
-    //TODO: add flip sound here
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn,
                                  BlockHitResult hit) {
         ItemStack itemstack = player.getItemInHand(handIn);
         Item item = itemstack.getItem();
 
         //put post on map
         if (item instanceof MapItem) {
-            if (!worldIn.isClientSide) {
-                if (MapItem.getSavedData(itemstack, worldIn) instanceof ExpandedMapData data) {
-                    data.toggleCustomDecoration(worldIn, pos);
+            if (!level.isClientSide) {
+                if (MapItem.getSavedData(itemstack, level) instanceof ExpandedMapData data) {
+                    data.toggleCustomDecoration(level, pos);
                 }
             }
-            return InteractionResult.sidedSuccess(worldIn.isClientSide);
+            return InteractionResult.sidedSuccess(level.isClientSide);
         }
 
-        if (hit.getDirection().getAxis() == Direction.Axis.Y) return InteractionResult.PASS;
 
-        if (worldIn.getBlockEntity(pos) instanceof SignPostBlockTile tile && tile.isAccessibleBy(player)) {
+        if (level.getBlockEntity(pos) instanceof SignPostBlockTile tile && tile.isAccessibleBy(player)) {
 
-            boolean server = !worldIn.isClientSide();
+            boolean server = !level.isClientSide();
             boolean emptyHand = itemstack.isEmpty();
-            boolean isDye = item instanceof DyeItem && player.getAbilities().mayBuild;
             boolean isSneaking = player.isShiftKeyDown() && emptyHand;
-            boolean isSignPost = item instanceof SignPostItem;
-            boolean isCompass = item instanceof CompassItem;
-            //color
-            if (isDye) {
-                if (tile.textHolder.setTextColor(((DyeItem) itemstack.getItem()).getDyeColor())) {
-                    if (!player.isCreative()) {
-                        itemstack.shrink(1);
-                    }
-                    if (server) tile.setChanged();
-                    return InteractionResult.sidedSuccess(worldIn.isClientSide);
-                }
-                return InteractionResult.FAIL;
-            }
-            //sneak right click rotates the sign on z axis
-            else if (isSneaking) {
-                double y = hit.getLocation().y;
-                boolean up = y % ((int) y) > 0.5d;
-                if (up) {
-                    tile.leftUp = !tile.leftUp;
-                } else {
-                    tile.leftDown = !tile.leftDown;
-                }
-                if (server) tile.setChanged();
-                worldIn.playSound(null, pos, SoundEvents.ITEM_FRAME_ROTATE_ITEM, SoundSource.BLOCKS, 1.0F, 0.6F);
-                return InteractionResult.sidedSuccess(worldIn.isClientSide);
-            }
-            //change direction with compass
-            else if (isCompass) {
-                //itemModelProperties code
-                BlockPos pointingPos = CompassItem.isLodestoneCompass(itemstack) ?
-                        this.getLodestonePos(worldIn, itemstack.getOrCreateTag()) : this.getWorldSpawnPos(worldIn);
 
-                if (pointingPos != null) {
+            if (hit.getDirection().getAxis() != Direction.Axis.Y) {
+
+                InteractionResult result = tile.textHolder.playerInteract(level, pos, player, handIn, tile::setChanged);
+                if(result != InteractionResult.PASS) return result;
+
+                //sneak right click rotates the sign on z axis
+                if (isSneaking) {
                     double y = hit.getLocation().y;
                     boolean up = y % ((int) y) > 0.5d;
-                    if (up && tile.up) {
-                        tile.pointToward(pointingPos, true);
-                    } else if (!up && tile.down) {
-                        tile.pointToward(pointingPos, false);
+                    if (up) {
+                        tile.leftUp = !tile.leftUp;
+                    } else {
+                        tile.leftDown = !tile.leftDown;
                     }
                     if (server) tile.setChanged();
-                    return InteractionResult.sidedSuccess(worldIn.isClientSide);
+                    level.playSound(null, pos, SoundEvents.ITEM_FRAME_ROTATE_ITEM, SoundSource.BLOCKS, 1.0F, 0.6F);
+                    return InteractionResult.sidedSuccess(level.isClientSide);
                 }
-                return InteractionResult.FAIL;
-            } else if (CompatHandler.framedblocks && tile.framed) {
-                boolean success = FramedSignPost.handleInteraction(tile, player, handIn, itemstack, worldIn, pos);
-                if (success) return InteractionResult.sidedSuccess(worldIn.isClientSide);
-            } else if (isSignPost) {
-                //let sign item handle this one
-                return InteractionResult.PASS;
+                //change direction with compass
+                else if (item instanceof CompassItem) {
+                    //itemModelProperties code
+                    BlockPos pointingPos = CompassItem.isLodestoneCompass(itemstack) ?
+                            this.getLodestonePos(level, itemstack) : this.getWorldSpawnPos(level);
+
+                    if (pointingPos != null) {
+                        double y = hit.getLocation().y;
+                        boolean up = y % ((int) y) > 0.5d;
+                        if (up && tile.up) {
+                            tile.pointToward(pointingPos, true);
+                        } else if (!up && tile.down) {
+                            tile.pointToward(pointingPos, false);
+                        }
+                        if (server) tile.setChanged();
+                        return InteractionResult.sidedSuccess(level.isClientSide);
+                    }
+                    return InteractionResult.FAIL;
+                } else if (CompatHandler.framedblocks && tile.framed) {
+                    boolean success = FramedSignPost.handleInteraction(tile, player, handIn, itemstack, level, pos);
+                    if (success) return InteractionResult.sidedSuccess(level.isClientSide);
+                } else if (item instanceof SignPostItem) {
+                    //let sign item handle this one
+                    return InteractionResult.PASS;
+                }
             }
             // open gui (edit sign with empty hand)
             if (!server) {
                 SignPostGui.open(tile);
             }
-            return InteractionResult.sidedSuccess(worldIn.isClientSide);
+            return InteractionResult.sidedSuccess(level.isClientSide);
         }
         return InteractionResult.PASS;
     }
 
-
     @Nullable
-    private BlockPos getLodestonePos(Level world, CompoundTag cmp) {
-        boolean flag = cmp.contains("LodestonePos");
-        boolean flag1 = cmp.contains("LodestoneDimension");
-        if (flag && flag1) {
-            Optional<ResourceKey<Level>> optional = CompassItem.getLodestoneDimension(cmp);
-            if (optional.isPresent() && world.dimension() == optional.get()) {
-                return NbtUtils.readBlockPos(cmp.getCompound("LodestonePos"));
+    private BlockPos getLodestonePos(Level world, ItemStack stack) {
+        CompoundTag tag = stack.getTag();
+        if(tag != null) {
+            boolean flag = tag.contains("LodestonePos");
+            boolean flag1 = tag.contains("LodestoneDimension");
+            if (flag && flag1) {
+                Optional<ResourceKey<Level>> optional = CompassItem.getLodestoneDimension(tag);
+                if (optional.isPresent() && world.dimension() == optional.get()) {
+                    return NbtUtils.readBlockPos(tag.getCompound("LodestonePos"));
+                }
             }
         }
         return null;

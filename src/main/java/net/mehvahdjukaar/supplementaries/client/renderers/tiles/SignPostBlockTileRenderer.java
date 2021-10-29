@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.client.Materials;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.client.renderers.LOD;
+import net.mehvahdjukaar.supplementaries.client.renderers.TextUtil;
 import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
@@ -31,7 +32,7 @@ import java.util.List;
 
 
 public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBlockTile> {
-
+    private static final int LINE_MAX_WIDTH = 90;
     private final Camera camera;
     private final Font font;
     public final ModelPart signModel;
@@ -63,7 +64,6 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
         return 96;
     }
 
-    //TODO: rewrite and cleanup
     @Override
     public void render(SignPostBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
@@ -72,7 +72,6 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
         Vec3 cameraPos = camera.getPosition();
 
         //don't render signs from far away
-
         LOD lod = new LOD(cameraPos, pos);
 
         boolean up = tile.up;
@@ -82,13 +81,7 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
 
             float relAngle = LOD.getRelativeAngle(cameraPos, pos);
 
-            // sign code
-            int i = tile.textHolder.textColor.getTextColor();
-            int j = (int) ((double) NativeImage.getR(i) * 0.4D);
-            int k = (int) ((double) NativeImage.getG(i) * 0.4D);
-            int l = (int) ((double) NativeImage.getB(i) * 0.4D);
-            int i1 = NativeImage.combine(0, l, k, j);
-
+            TextUtil.RenderTextProperties textProperties = new TextUtil.RenderTextProperties(tile.textHolder, combinedLightIn, lod::isVeryNear);
 
             matrixStackIn.pushPose();
             matrixStackIn.translate(0.5, 0.5, 0.5);
@@ -123,17 +116,8 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
                     //text up
                     matrixStackIn.translate(-0.03125 * o, 0.28125, 0.1875 + 0.005);
                     matrixStackIn.scale(0.010416667F, -0.010416667F, 0.010416667F);
-                    matrixStackIn.translate(0, 1, 0);
 
-
-                    FormattedCharSequence formattedCharSequence = tile.textHolder.getRenderText(0, (t) -> {
-                        List<FormattedCharSequence> list = font.split(t, 90);
-                        return list.isEmpty() ? FormattedCharSequence.EMPTY : list.get(0);
-                    });
-                    if (formattedCharSequence != null) {
-                        float f3 = (float) (-font.width(formattedCharSequence) / 2);
-                        font.drawInBatch(formattedCharSequence, f3, (float) (-5), i1, false, matrixStackIn.last().pose(), bufferIn, false, 0, combinedLightIn);
-                    }
+                    TextUtil.renderLine(tile.textHolder, 0, font, LINE_MAX_WIDTH, -4, matrixStackIn, bufferIn, textProperties);
                 }
 
                 matrixStackIn.popPose();
@@ -163,21 +147,14 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
 
                 matrixStackIn.popPose();
 
+                //inverted huh
                 if (lod.isNear() && LOD.isOutOfFocus(relAngle, tile.yawDown + 90, 2)) {
 
                     //text down
                     matrixStackIn.translate(-0.03125 * o, 0.28125, 0.1875 + 0.005);
                     matrixStackIn.scale(0.010416667F, -0.010416667F, 0.010416667F);
-                    matrixStackIn.translate(0, 1, 0);
 
-                    FormattedCharSequence formattedCharSequence = tile.textHolder.getRenderText(1, (p_243502_1_) -> {
-                        List<FormattedCharSequence> list = font.split(p_243502_1_, 90);
-                        return list.isEmpty() ? FormattedCharSequence.EMPTY : list.get(0);
-                    });
-                    if (formattedCharSequence != null) {
-                        float f3 = (float) (-font.width(formattedCharSequence) / 2);
-                        font.drawInBatch(formattedCharSequence, f3, (float) (-5), i1, false, matrixStackIn.last().pose(), bufferIn, false, 0, combinedLightIn);
-                    }
+                    TextUtil.renderLine(tile.textHolder, 1, font, LINE_MAX_WIDTH, -4, matrixStackIn, bufferIn, textProperties);
                 }
 
                 matrixStackIn.popPose();

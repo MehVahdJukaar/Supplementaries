@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.network;
 
-import net.mehvahdjukaar.supplementaries.block.util.ITextHolder;
+import net.mehvahdjukaar.supplementaries.block.util.ITextHolderProvider;
+import net.mehvahdjukaar.supplementaries.block.util.TextHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -15,28 +16,28 @@ import java.util.function.Supplier;
 public class ServerBoundSetTextHolderPacket {
     private final BlockPos pos;
     public final Component[] signText;
-    public final int lines;
+    public final int size;
 
     public ServerBoundSetTextHolderPacket(FriendlyByteBuf buf) {
         this.pos = buf.readBlockPos();
-        this.lines = buf.readInt();
-        this.signText = new Component[this.lines];
-        for (int i = 0; i < this.lines; ++i) {
+        this.size = buf.readInt();
+        this.signText = new Component[this.size];
+        for (int i = 0; i < this.size; ++i) {
             this.signText[i] = buf.readComponent();
         }
 
     }
 
-    public ServerBoundSetTextHolderPacket(BlockPos pos, Component[] signText, int lines) {
+    public ServerBoundSetTextHolderPacket(BlockPos pos, TextHolder textHolder) {
         this.pos = pos;
-        this.lines = lines;
-        this.signText = signText;
+        this.size = textHolder.size();
+        this.signText = textHolder.getSignText();
     }
 
     public static void buffer(ServerBoundSetTextHolderPacket message, FriendlyByteBuf buf) {
         buf.writeBlockPos(message.pos);
-        buf.writeInt(message.lines);
-        for (int i = 0; i < message.lines; ++i) {
+        buf.writeInt(message.size);
+        for (int i = 0; i < message.size; ++i) {
             buf.writeComponent(message.signText[i]);
         }
     }
@@ -47,10 +48,10 @@ public class ServerBoundSetTextHolderPacket {
         ctx.get().enqueueWork(() -> {
             BlockPos pos = message.pos;
             BlockEntity tile = world.getBlockEntity(pos);
-            if (tile instanceof ITextHolder te) {
-                if (te.getTextHolder().size == message.lines) {
-                    for (int i = 0; i < message.lines; ++i) {
-                        te.getTextHolder().setText(i, message.signText[i]);
+            if (tile instanceof ITextHolderProvider te) {
+                if (te.getTextHolder().size() == message.size) {
+                    for (int i = 0; i < message.size; ++i) {
+                        te.getTextHolder().setLine(i, message.signText[i]);
                     }
                 }
                 //updates client

@@ -1,6 +1,8 @@
 package net.mehvahdjukaar.supplementaries.client.renderers;
 
 import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -11,7 +13,7 @@ import net.minecraft.world.phys.Vec3;
 public class LOD {
     private final double distSq;
 
-    public LOD(double distance) {
+    private LOD(double distance) {
         this.distSq = distance;
     }
 
@@ -20,7 +22,17 @@ public class LOD {
     }
 
     public LOD(Vec3 cameraPos, BlockPos pos) {
-        this(Vec3.atCenterOf(pos).distanceToSqr(cameraPos));
+        this(isScoping() ? 1 : Vec3.atCenterOf(pos).distanceToSqr(cameraPos));
+    }
+
+    public static boolean isScoping(){
+        Minecraft minecraft = Minecraft.getInstance();
+        LocalPlayer localplayer = minecraft.player;
+        return localplayer != null && minecraft.options.getCameraType().isFirstPerson() && localplayer.isScoping();
+    }
+
+    public boolean isVeryNear() {
+        return this.distSq < VERY_NEAR_DIST;
     }
 
     public boolean isNear() {
@@ -42,6 +54,7 @@ public class LOD {
 
     //all squared
     public static final int BUFFER = 2 * 2;
+    public static final int VERY_NEAR_DIST = 16 * 16;
     public static final int NEAR_DIST = 32 * 32;
     public static final int NEAR_MED_DIST = 48 * 48;
     public static final int MEDIUM_DIST = 64 * 64;
