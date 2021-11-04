@@ -210,7 +210,7 @@ public abstract class ImprovedProjectileEntity extends ProjectileItemEntity {
                     }
                 }
 
-                if (!portalHit && type != RayTraceResult.Type.MISS && !noPhysics && !ForgeEventFactory.onProjectileImpact(this, raytraceresult)) {
+                if (raytraceresult != null && !portalHit && type != RayTraceResult.Type.MISS && !noPhysics && !ForgeEventFactory.onProjectileImpact(this, raytraceresult)) {
                     this.onHit(raytraceresult);
                     this.hasImpulse = true;
                 }

@@ -52,11 +52,12 @@ public class ModTags {
     private static Tags.IOptionalNamedTag<Item> itemTag(String name) {
         return ItemTags.createOptional(Supplementaries.res(name));
     }
+
     private static Tags.IOptionalNamedTag<Block> blockTag(String name) {
         return BlockTags.createOptional(Supplementaries.res(name));
     }
+
     private static Tags.IOptionalNamedTag<EntityType<?>> entityTag(String name) {
         return EntityTypeTags.createOptional(Supplementaries.res(name));
     }
-
 }
