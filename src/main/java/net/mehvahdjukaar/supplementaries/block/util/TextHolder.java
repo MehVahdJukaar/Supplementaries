@@ -19,18 +19,18 @@ public class TextHolder {
     public DyeColor textColor = DyeColor.BLACK;
 
 
-    public TextHolder(int size){
+    public TextHolder(int size) {
         this.size = size;
         this.renderText = new IReorderingProcessor[size];
         this.signText = new ITextComponent[size];
-        for(int i = 0; i< size; i++){
-            this.signText[i]= new StringTextComponent("");
+        for (int i = 0; i < size; i++) {
+            this.signText[i] = new StringTextComponent("");
         }
     }
 
     //removing command source crap
     public void read(CompoundNBT compound) {
-        if(compound.contains("TextHolder")) {
+        if (compound.contains("TextHolder")) {
             CompoundNBT com = compound.getCompound("TextHolder");
             this.textColor = DyeColor.byName(com.getString("Color"), DyeColor.BLACK);
             for (int i = 0; i < this.size; ++i) {

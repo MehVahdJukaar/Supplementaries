@@ -7,7 +7,6 @@ import net.minecraft.item.Item;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.Tags;
 
 public class ModTags {
@@ -51,13 +50,13 @@ public class ModTags {
     public static final Tags.IOptionalNamedTag<EntityType<?>> EATS_FODDER = entityTag("eats_fodder");
 
     private static Tags.IOptionalNamedTag<Item> itemTag(String name) {
-        return ItemTags.createOptional(new ResourceLocation(Supplementaries.MOD_ID, name));
+        return ItemTags.createOptional(Supplementaries.res(name));
     }
     private static Tags.IOptionalNamedTag<Block> blockTag(String name) {
-        return BlockTags.createOptional(new ResourceLocation(Supplementaries.MOD_ID, name));
+        return BlockTags.createOptional(Supplementaries.res(name));
     }
     private static Tags.IOptionalNamedTag<EntityType<?>> entityTag(String name) {
-        return EntityTypeTags.createOptional(new ResourceLocation(Supplementaries.MOD_ID, name));
+        return EntityTypeTags.createOptional(Supplementaries.res(name));
     }
 
 }

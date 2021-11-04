@@ -187,6 +187,8 @@ public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
             else {
                 IFluidHandler handlerBack = FluidUtil.getFluidHandler(this.level, behind, dir).orElse(null);
                 if (handlerBack != null) {
+                    //only works in 250 increment
+                    if (handlerBack.getFluidInTank(0).getAmount() < 250) return false;
                     this.fluidHolder.copy(handlerBack);
                     if (doTransfer && tryFillingBlockBelow()) {
                         handlerBack.drain(250, IFluidHandler.FluidAction.EXECUTE);
@@ -245,7 +247,7 @@ public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
             int levels = belowState.getValue(BlockStateProperties.LEVEL_CAULDRON);
             if (levels < 3) {
                 TileEntity cauldronTile = level.getBlockEntity(below);
-                if (cauldronTile == null) {
+                if (cauldronTile == null && softFluid == SoftFluidRegistry.WATER) {
                     level.setBlock(below, belowState.setValue(BlockStateProperties.LEVEL_CAULDRON, levels + 1), 3);
                     return true;
                 }

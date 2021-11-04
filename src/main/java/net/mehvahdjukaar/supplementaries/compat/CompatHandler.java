@@ -40,6 +40,7 @@ public class CompatHandler {
     public static final boolean simplefarming;
     public static final boolean atmospheric;
     public static final boolean enchantedbookredesign;
+    public static final boolean customvillagertrades;
 
     static {
         ModList ml = ModList.get();
@@ -70,23 +71,24 @@ public class CompatHandler {
         simplefarming = ml.isLoaded("simplefarming");
         atmospheric = ml.isLoaded("atmospheric");
         enchantedbookredesign = ml.isLoaded("enchantedbookredesign");
+        customvillagertrades = ml.isLoaded("customvillagertrades");
     }
 
-    public static void init(){
+    public static void init() {
         if (create) SupplementariesCreatePlugin.initialize();
     }
 
-    public static void registerOptionalBlocks(final RegistryEvent.Register<Block> event){
+    public static void registerOptionalBlocks(final RegistryEvent.Register<Block> event) {
         if (deco_blocks) DecoBlocksCompatRegistry.registerBlocks(event);
         if (farmers_delight) FDCompatRegistry.registerBlocks(event);
     }
 
-    public static void registerOptionalItems(final RegistryEvent.Register<Item> event){
+    public static void registerOptionalItems(final RegistryEvent.Register<Item> event) {
         if (farmers_delight) FDCompatRegistry.registerItems(event);
 
     }
 
-    public static void registerOptionalRecipes(final RegistryEvent.Register<IRecipeSerializer<?>> event){
+    public static void registerOptionalRecipes(final RegistryEvent.Register<IRecipeSerializer<?>> event) {
         if (inspirations) CauldronRecipes.registerRecipes(event);
     }
 

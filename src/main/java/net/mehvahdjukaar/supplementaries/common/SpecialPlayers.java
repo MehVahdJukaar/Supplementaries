@@ -28,7 +28,7 @@ public class SpecialPlayers {
         addSpecialPlayer("Wais", false, true, false, null, "snowglobe");
         addSpecialPlayer("MylesTheChild", false, false, true, "ea92f2be-4bd1-4082-a9b3-e6a8fbd43063", "Wais");
         addSpecialPlayer("E_Y_E_", false, true, false, null, "Dark");
-
+        addSpecialPlayer("Azrod_dovahkiin", false, false, true, "171ccd8a-3afe-4788-806d-ee643fe33a9c", "dragonborn");
     }
 
     private static void addSpecialPlayer(String name, boolean isDev, boolean hasGlobe, boolean hasStatue, String id, String... alias) {

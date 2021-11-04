@@ -59,10 +59,11 @@ public class DirectionalCakeBlock extends CakeBlock implements IWaterLoggable {
 
     public static final DirectionProperty FACING = HorizontalBlock.FACING;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+
     public DirectionalCakeBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(BITES, 0)
-                .setValue(FACING, Direction.WEST).setValue(WATERLOGGED,false));
+                .setValue(FACING, Direction.WEST).setValue(WATERLOGGED, false));
     }
 
     @Override
@@ -79,7 +80,7 @@ public class DirectionalCakeBlock extends CakeBlock implements IWaterLoggable {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack,  IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         tooltip.add((new StringTextComponent("You shouldn't have this")).withStyle(TextFormatting.GRAY));
     }
@@ -87,7 +88,7 @@ public class DirectionalCakeBlock extends CakeBlock implements IWaterLoggable {
     @Override
     public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         return this.eatSliceD(worldIn, pos, state, player,
-                hit.getDirection().getAxis()!=Direction.Axis.Y?hit.getDirection():player.getDirection().getOpposite());
+                hit.getDirection().getAxis() != Direction.Axis.Y ? hit.getDirection() : player.getDirection().getOpposite());
 
     }
 
@@ -97,14 +98,14 @@ public class DirectionalCakeBlock extends CakeBlock implements IWaterLoggable {
         } else {
             player.awardStat(Stats.EAT_CAKE_SLICE);
             player.getFoodData().eat(2, 0.1F);
-            if(!world.isClientSide()) {
-                this.removeSlice(state,pos,world,dir);
+            if (!world.isClientSide()) {
+                this.removeSlice(state, pos, world, dir);
             }
             return ActionResultType.sidedSuccess(world.isClientSide());
         }
     }
 
-    public void removeSlice(BlockState state, BlockPos pos, IWorld world, Direction dir){
+    public void removeSlice(BlockState state, BlockPos pos, IWorld world, Direction dir) {
         int i = state.getValue(BITES);
         if (i < 6) {
             if (i == 0 && ServerConfigs.cached.DIRECTIONAL_CAKE) state = state.setValue(FACING, dir);
@@ -126,15 +127,14 @@ public class DirectionalCakeBlock extends CakeBlock implements IWaterLoggable {
     }
 
 
-
     @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(FACING,BITES,WATERLOGGED);
+        builder.add(FACING, BITES, WATERLOGGED);
     }
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        switch (state.getValue(FACING)){
+        switch (state.getValue(FACING)) {
             default:
             case WEST:
                 return SHAPE_BY_BITE[state.getValue(BITES)];
@@ -146,11 +146,11 @@ public class DirectionalCakeBlock extends CakeBlock implements IWaterLoggable {
                 return SHAPES_NORTH[state.getValue(BITES)];
         }
     }
-    
+
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite())
-                .setValue(WATERLOGGED,context.getLevel().getFluidState(context.getClickedPos()).getType()==Fluids.WATER);
+                .setValue(WATERLOGGED, context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER);
     }
 
     @Override
@@ -165,8 +165,8 @@ public class DirectionalCakeBlock extends CakeBlock implements IWaterLoggable {
 
     @Override
     public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
-        if(CommonUtil.FESTIVITY.isStValentine()){
-            if(rand.nextFloat()>0.8) {
+        if (CommonUtil.FESTIVITY.isStValentine()) {
+            if (rand.nextFloat() > 0.8) {
                 double d0 = (pos.getX() + 0.5 + (rand.nextFloat() - 0.5));
                 double d1 = (pos.getY() + 0.25 + (rand.nextFloat() - 0.25));
                 double d2 = (pos.getZ() + 0.5 + (rand.nextFloat() - 0.5));

@@ -176,6 +176,7 @@ dependencies {
     implementation fg.deobf("curse.maven:mantle-250363:3326041")
     implementation fg.deobf("curse.maven:dynamictrees-252818:3480621")
     implementation fg.deobf("curse.maven:enchanted-book-redesign-348076:3239927")
+    implementation fg.deobf("curse.maven:custom-villager-trades-463402:3475853")
 
     implementation fg.deobf("mezz.jei:jei-1.16.5:7.7.1.116")
 

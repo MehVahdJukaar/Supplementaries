@@ -71,7 +71,7 @@ public class FodderBlock extends WaterBlock {
     @Override
     public BlockState updateShape(BlockState state, Direction direction, BlockState facingState, IWorld world, BlockPos currentPos, BlockPos otherPos) {
         if (facingState.is(this)) {
-            if(direction == Direction.UP) {
+            if (direction == Direction.UP) {
                 int layers = state.getValue(LAYERS);
                 int missing = 16 - layers;
                 if (missing > 0) {
@@ -88,8 +88,7 @@ public class FodderBlock extends WaterBlock {
                     world.setBlock(otherPos, newOtherState, 0);
                     return newState;
                 }
-            }
-            else if(direction == Direction.DOWN){
+            } else if (direction == Direction.DOWN) {
                 int layers = facingState.getValue(LAYERS);
                 int missing = 16 - layers;
                 if (missing > 0) {

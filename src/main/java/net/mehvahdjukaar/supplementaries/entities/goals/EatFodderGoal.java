@@ -100,7 +100,7 @@ public class EatFodderGoal extends MoveToBlockGoal {
         if (this.isReachedTarget()) {
 
             //prevents stopping while eating
-            this.ticksSinceReachedGoal--;
+            this.tryTicks--;
 
             BlockPos targetPos = this.getMoveToTarget().below();
             Vector3d vector3d = Vector3d.atBottomCenterOf(targetPos);

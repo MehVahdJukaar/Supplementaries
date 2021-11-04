@@ -1,38 +1,23 @@
 {
   "type": "minecraft:crafting_shaped",
-  "ingredients": [
-    {
-      "item": "supplementaries:flax"
-    },
-    {
-      "item": "supplementaries:flax"
-    },
-    {
-      "item": "supplementaries:flax"
-    },
-    {
-      "item": "minecraft:wheat"
-    },
-    {
-      "item": "minecraft:wheat"
-    },
-    {
-      "item": "minecraft:wheat"
-    }
+  "pattern": [
+    "000",
+    "000",
+    "000"
   ],
+  "key": {
+    "0": {
+      "item": "supplementaries:flax"
+    }
+  },
   "result": {
-    "item": "supplementaries:flax_block",
+    "item": "supplementaries:flint_block",
     "count": 1
   },
   "conditions": [
     {
-      "type": "forge:and",
-      "values": [
-        {
-          "type": "supplementaries:flag",
-          "flag": "flax"
-        }
-      ]
+      "type": "supplementaries:flag",
+      "flag": "flint_block"
     }
   ]
 }

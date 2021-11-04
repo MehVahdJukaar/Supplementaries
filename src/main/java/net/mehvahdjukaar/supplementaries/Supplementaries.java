@@ -144,7 +144,6 @@ public class Supplementaries {
 
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> bus.addListener(ClientSetup::init));
 
-
     }
 
 
