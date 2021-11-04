@@ -25,7 +25,7 @@ public class RemapHandler {
 
     static {
 
-        fullReMap.put("orange_trader", ModRegistry.RED_MERCHANT_TYPE.getId());
+        fullReMap.put("orange_trader", ModRegistry.RED_MERCHANT.getId());
 
         fullReMap.put("piston_launcher", ModRegistry.SPRING_LAUNCHER.getId());
         fullReMap.put("piston_launcher_arm", ModRegistry.SPRING_LAUNCHER_ARM.getId());

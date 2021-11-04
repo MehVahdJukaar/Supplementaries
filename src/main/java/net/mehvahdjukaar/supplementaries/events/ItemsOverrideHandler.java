@@ -743,6 +743,8 @@ public class ItemsOverrideHandler {
         @Override
         public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand, ItemStack stack, BlockHitResult hit, boolean isRanged) {
             if (player.getAbilities().mayBuild) {
+                //require shift for written books
+                if(BookPileBlock.isWrittenBook(stack.getItem()) && !player.isShiftKeyDown()) return InteractionResult.PASS;
                 return paceBlockOverride(BOOK_PILE_H_ITEM, player, hand, stack, world, hit, isRanged);
             }
             return InteractionResult.PASS;
@@ -780,7 +782,10 @@ public class ItemsOverrideHandler {
 
         @Override
         public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand, ItemStack stack, BlockHitResult hit, boolean isRanged) {
+            //TODO: maybe replace with player.mayUseItemAt
             if (player.getAbilities().mayBuild) {
+                //require shift for written books
+                if(BookPileBlock.isWrittenBook(stack.getItem()) && !player.isShiftKeyDown()) return InteractionResult.PASS;
                 return paceBlockOverride(ModRegistry.BOOK_PILE.get(), player, hand, stack, world, hit, isRanged);
             }
             return InteractionResult.PASS;

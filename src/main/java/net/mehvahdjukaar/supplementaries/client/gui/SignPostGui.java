@@ -1,19 +1,23 @@
 package net.mehvahdjukaar.supplementaries.client.gui;
 
 import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.vertex.*;
-import com.mojang.math.Matrix4f;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.supplementaries.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.client.Materials;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
+import net.mehvahdjukaar.supplementaries.client.renderers.TextUtil;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.framedblocks.FramedSignPost;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.ServerBoundSetTextHolderPacket;
+import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.font.TextFieldHelper;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
@@ -39,6 +43,8 @@ public class SignPostGui extends Screen {
     private final SignPostBlockTile tileSign;
     private static final int MAXLINES = 2;
     private final String[] cachedLines;
+
+    private ModelPart signModel;
 
     public SignPostGui(SignPostBlockTile teSign) {
         super(new TranslatableComponent("sign.edit"));
@@ -125,160 +131,102 @@ public class SignPostGui extends Screen {
             this.cachedLines[this.editLine] = s;
             this.tileSign.textHolder.setLine(this.editLine, new TextComponent(s));
         }, TextFieldHelper.createClipboardGetter(this.minecraft), TextFieldHelper.createClipboardSetter(this.minecraft), (p_238848_1_) -> this.minecraft.font.width(p_238848_1_) <= 90);
+
+        this.signModel = this.minecraft.getEntityModels().bakeLayer(ClientRegistry.SIGN_POST_MODEL);
     }
 
 
     @Override
-
-    public void render(PoseStack matrixstack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
         Lighting.setupForFlatItems();
-        this.renderBackground(matrixstack);
-        drawCenteredString(matrixstack, this.font, this.title, this.width / 2, 40, 16777215);
+        this.renderBackground(poseStack);
+        drawCenteredString(poseStack, this.font, this.title, this.width / 2, 40, 16777215);
 
-        MultiBufferSource.BufferSource irendertypebuffer$impl = this.minecraft.renderBuffers().bufferSource();
-        matrixstack.pushPose();
-        matrixstack.translate(this.width / 2d, 0.0D, 50.0D);
+        MultiBufferSource.BufferSource bufferSource = this.minecraft.renderBuffers().bufferSource();
+        poseStack.pushPose();
+        poseStack.translate(this.width / 2d, 0.0D, 50.0D);
 
-        matrixstack.scale(93.75F, -93.75F, 93.75F);
-        matrixstack.translate(0.0D, -1.3125D, 0.0D);
+        poseStack.scale(93.75F, -93.75F, 93.75F);
+        poseStack.translate(0.0D, -1.3125D, 0.0D);
         // renders sign
-        matrixstack.pushPose();
-        //matrixstack.scale(0.6666667F, 0.6666667F, 0.6666667F);
-        //matrixstack.rotate(Const.Y90);
+        poseStack.pushPose();
 
         BlockRenderDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
 
-        boolean leftup = tileSign.leftUp;
-        boolean leftdown = tileSign.leftDown;
+        boolean leftUp = tileSign.leftUp;
+        boolean leftDown = tileSign.leftDown;
 
         int[] o = new int[2];
-        o[0] = leftup ? 1 : -1;
-        o[1] = leftdown ? 1 : -1;
+        o[0] = leftUp ? 1 : -1;
+        o[1] = leftDown ? 1 : -1;
 
         //render signs
 
+        boolean blink = this.updateCounter / 6 % 2 == 0;
+
         if (this.tileSign.up) {
 
-            matrixstack.pushPose();
-            if (!leftup) {
-                matrixstack.mulPose(Const.YN180);
-                matrixstack.translate(0, 0, -0.3125);
+            poseStack.pushPose();
+            if (!leftUp) {
+                poseStack.mulPose(Const.YN180);
+                poseStack.translate(0, 0, -0.3125);
             }
-            matrixstack.scale(1, -1, -1);
+            poseStack.scale(1, -1, -1);
             Material material = Materials.SIGN_POSTS_MATERIALS.get(this.tileSign.woodTypeUp);
-            VertexConsumer builder = material.buffer(irendertypebuffer$impl, RenderType::entitySolid);
+            VertexConsumer builder = material.buffer(bufferSource, RenderType::entitySolid);
 
-            //TODO: re add
-            //SignPostBlockTileRenderer.signModel.render(matrixstack, builder, 15728880, OverlayTexture.NO_OVERLAY);
+            this.signModel.render(poseStack, builder, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
 
-
-            matrixstack.popPose();
+            poseStack.popPose();
         }
         if (this.tileSign.down) {
 
-            matrixstack.pushPose();
-            if (!leftdown) {
-                matrixstack.mulPose(Const.YN180);
-                matrixstack.translate(0, 0, -0.3125);
+            poseStack.pushPose();
+            if (!leftDown) {
+                poseStack.mulPose(Const.YN180);
+                poseStack.translate(0, 0, -0.3125);
             }
-            matrixstack.translate(0, -0.5, 0);
-            matrixstack.scale(1, -1, -1);
+            poseStack.translate(0, -0.5, 0);
+            poseStack.scale(1, -1, -1);
             Material material = Materials.SIGN_POSTS_MATERIALS.get(this.tileSign.woodTypeDown);
-            VertexConsumer builder = material.buffer(irendertypebuffer$impl, RenderType::entitySolid);
-            //TODO: readd
-            //SignPostBlockTileRenderer.signModel.render(matrixstack, builder, 15728880, OverlayTexture.NO_OVERLAY);
-            matrixstack.popPose();
+            VertexConsumer builder = material.buffer(bufferSource, RenderType::entitySolid);
+
+            this.signModel.render(poseStack, builder, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+            poseStack.popPose();
         }
 
         //render fence
-        matrixstack.translate(-0.5, -0.5, -0.5);
+        poseStack.translate(-0.5, -0.5, -0.5);
         BlockState fence = this.tileSign.mimic;
         if (CompatHandler.framedblocks && tileSign.framed) fence = FramedSignPost.framedFence;
         if (fence != null) {
-            blockRenderer.renderSingleBlock(fence, matrixstack, irendertypebuffer$impl, 15728880, OverlayTexture.NO_OVERLAY, EmptyModelData.INSTANCE);
+            blockRenderer.renderSingleBlock(fence, poseStack, bufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, EmptyModelData.INSTANCE);
         }
-        matrixstack.popPose();
+        poseStack.popPose();
 
         //renders text
-        boolean flag1 = this.updateCounter / 6 % 2 == 0;
 
+        if (this.tileSign.up || this.tileSign.down) {
+            poseStack.translate(-3 * 0.010416667F * o[0], 0.21875, 0.1875 + 0.005);
+            poseStack.scale(0.010416667F, -0.010416667F, 0.010416667F);
+            TextUtil.RenderTextProperties properties = new TextUtil.RenderTextProperties(tileSign.textHolder, LightTexture.FULL_BRIGHT, () -> true);
 
-        matrixstack.translate(0, 0.21875, 0.1875 + 0.005);
-        matrixstack.scale(0.010416667F, -0.010416667F, 0.010416667F);
+            int cursorPos = this.textInputUtil.getCursorPos();
+            int selectionPos = this.textInputUtil.getSelectionPos();
 
-        Matrix4f matrix4f = matrixstack.last().pose();
-
-        int i = this.tileSign.textHolder.getColor().getTextColor();
-        int j = this.textInputUtil.getCursorPos();
-        int k = this.textInputUtil.getSelectionPos();
-        //int i1 = this.minecraft.fontRenderer.getBidiFlag() ? -1 : 1;
-        int l = this.editLine * 48 - this.tileSign.textHolder.size() * 5;
-
-        for (int i1 = 0; i1 < this.cachedLines.length; ++i1) {
-            String s = this.cachedLines[i1];
-            if (s != null) {
-                if (this.font.isBidirectional()) {
-                    s = this.font.bidirectionalShaping(s);
-                }
-                float f3 = (float) (-this.minecraft.font.width(s) / 2) - 3 * o[i1];
-                //this.minecraft.fontRenderer.renderString(s, f3, (float) (k1 * 48 - this.tileSign.signText.length * 5), i, false, matrix4f,
-                //       irendertypebuffer$impl, false, 0, 15728880); //*10
-                this.minecraft.font.drawInBatch(s, f3, (float) (i1 * 48 - this.cachedLines.length * 5), i, false, matrix4f, irendertypebuffer$impl, false, 0, 15728880, false);
-                if (i1 == this.editLine && j >= 0 && flag1) {
-                    int j1 = this.minecraft.font.width(s.substring(0, Math.max(Math.min(j, s.length()), 0)));
-
-                    int k1 = (-3 * o[i1] + j1 - this.minecraft.font.width(s) / 2);
-                    if (j >= s.length()) {
-                        this.minecraft.font.drawInBatch("_", (float) k1, (float) l, i, false, matrix4f, irendertypebuffer$impl, false, 0, 15728880, false);
-                    }
-                }
+            if (this.tileSign.up) {
+                TextUtil.renderGuiLine(properties, this.cachedLines[0], font, poseStack, bufferSource,
+                        cursorPos, selectionPos, this.editLine == 0, blink, -10);
+            }
+            if (this.tileSign.down) {
+                poseStack.translate(-3 * o[1], 0, 0);
+                TextUtil.renderGuiLine(properties, this.cachedLines[1], font, poseStack, bufferSource,
+                        cursorPos, selectionPos, this.editLine == 1, blink, 48 - 10);
             }
         }
 
-
-        irendertypebuffer$impl.endBatch();
-        //draw highlighted text box
-
-        for (int i3 = 0; i3 < this.cachedLines.length; ++i3) {
-            String s1 = this.cachedLines[i3];
-            if (s1 != null && i3 == this.editLine && j >= 0) {
-                int j3 = this.minecraft.font.width(s1.substring(0, Math.max(Math.min(j, s1.length()), 0)));
-                int k3 = -3 * o[i3] + j3 - this.minecraft.font.width(s1) / 2;
-                if (flag1 && j < s1.length()) {
-                    fill(matrixstack, k3, l - 1, k3 + 1, l + 9, -16777216 | i);
-                }
-
-                if (k != j) {
-                    /*
-                    int l3 = Math.min(j, k);
-                    int l1 = Math.max(j, k);
-
-                    int i2 = this.minecraft.font.width(s1.substring(0, l3)) - this.minecraft.font.width(s1) / 2;
-                    int j2 = this.minecraft.font.width(s1.substring(0, l1)) - this.minecraft.font.width(s1) / 2;
-                    int k2 = -3 * o[i3] + Math.min(i2, j2);
-                    int l2 = -3 * o[i3] + Math.max(i2, j2);
-                    Tesselator tessellator = Tesselator.getInstance();
-                    BufferBuilder bufferbuilder = tessellator.getBuilder();
-                    RenderSystem.disableTexture();
-                    RenderSystem.enableColorLogicOp();
-                    RenderSystem.logicOp(GlStateManager.LogicOp.OR_REVERSE);
-                    bufferbuilder.begin(7, DefaultVertexFormat.POSITION_COLOR);
-                    bufferbuilder.vertex(matrix4f, (float) k2, (float) (l + 9), 0.0F).color(0, 0, 255, 255).endVertex();
-                    bufferbuilder.vertex(matrix4f, (float) l2, (float) (l + 9), 0.0F).color(0, 0, 255, 255).endVertex();
-                    bufferbuilder.vertex(matrix4f, (float) l2, (float) l, 0.0F).color(0, 0, 255, 255).endVertex();
-                    bufferbuilder.vertex(matrix4f, (float) k2, (float) l, 0.0F).color(0, 0, 255, 255).endVertex();
-                    bufferbuilder.end();
-                    BufferUploader.end(bufferbuilder);
-                    RenderSystem.disableColorLogicOp();
-                    RenderSystem.enableTexture();
-
-                     */
-                }
-            }
-        }
-
-        matrixstack.popPose();
+        poseStack.popPose();
         Lighting.setupFor3DItems();
-        super.render(matrixstack, mouseX, mouseY, partialTicks);
+        super.render(poseStack, mouseX, mouseY, partialTicks);
     }
 }

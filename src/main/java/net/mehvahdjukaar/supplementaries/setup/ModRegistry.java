@@ -1,12 +1,9 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
+import net.mehvahdjukaar.selene.util.DispenserHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.block.tiles.*;
-import net.mehvahdjukaar.supplementaries.client.renderers.items.BlackboardItemRenderer;
-import net.mehvahdjukaar.supplementaries.client.renderers.items.CageItemRenderer;
-import net.mehvahdjukaar.supplementaries.client.renderers.items.JarItemRenderer;
-import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.CompatObjects;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
@@ -22,7 +19,6 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
@@ -40,6 +36,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
+import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
@@ -157,7 +154,7 @@ public class ModRegistry {
     //entities
     @SubscribeEvent
     public static void registerEntityAttributes(EntityAttributeCreationEvent event) {
-        event.put(ModRegistry.RED_MERCHANT_TYPE.get(), Mob.createMobAttributes().build());
+        event.put(ModRegistry.RED_MERCHANT.get(), Mob.createMobAttributes().build());
       //  event.put(ModRegistry.FIREFLY_TYPE.get(), FireflyEntity.setCustomAttributes().build());
     }
 
@@ -199,21 +196,20 @@ public class ModRegistry {
 
     //orange trader
     public static final String RED_MERCHANT_NAME = "red_merchant";
-    private static final EntityType<RedMerchantEntity> RED_MERCHANT_TYPE_RAW =
+
+    public static final RegistryObject<EntityType<RedMerchantEntity>> RED_MERCHANT = ENTITIES.register(RED_MERCHANT_NAME, () ->
             EntityType.Builder.<RedMerchantEntity>of(RedMerchantEntity::new, MobCategory.CREATURE)
                     .setShouldReceiveVelocityUpdates(true)
                     .clientTrackingRange(10)
                     .setUpdateInterval(3)
                     .sized(0.6F, 1.95F)
-                    .build(RED_MERCHANT_NAME);
-
-    public static final RegistryObject<EntityType<RedMerchantEntity>> RED_MERCHANT_TYPE = ENTITIES.register(RED_MERCHANT_NAME, () -> RED_MERCHANT_TYPE_RAW);
+                    .build(RED_MERCHANT_NAME));
 
     public static final RegistryObject<MenuType<RedMerchantContainer>> RED_MERCHANT_CONTAINER = CONTAINERS
             .register(RED_MERCHANT_NAME, () -> IForgeContainerType.create(RedMerchantContainer::new));
 
     public static final RegistryObject<Item> RED_MERCHANT_SPAWN_EGG_ITEM = ITEMS.register(RED_MERCHANT_NAME + "_spawn_egg", () ->
-            new SpawnEggItem(RED_MERCHANT_TYPE_RAW, 0x7A090F, 0xF4f1e0,
+            new ForgeSpawnEggItem(RED_MERCHANT, 0x7A090F, 0xF4f1e0,
                     new Item.Properties().tab(tab ? MOD_TAB : null)));
 
     //firefly
@@ -227,7 +223,7 @@ public class ModRegistry {
 //    public static final RegistryObject<EntityType<FireflyEntity>> FIREFLY_TYPE = ENTITIES.register(FIREFLY_NAME, () -> FIREFLY_TYPE_RAW);
 //
 //    public static final RegistryObject<Item> FIREFLY_SPAWN_EGG_ITEM = ITEMS.register(FIREFLY_NAME + "_spawn_egg", () ->
-//            new SpawnEggItem(FIREFLY_TYPE_RAW, -5048018, -14409439, //-4784384, -16777216,
+//            new ForgeSpawnEggItem(FIREFLY_TYPE, -5048018, -14409439, //-4784384, -16777216,
 //                    new Item.Properties().tab(getTab(CreativeModeTab.TAB_MISC, FIREFLY_NAME))));
 
     //brick
@@ -1265,14 +1261,14 @@ public class ModRegistry {
     //feather block
     public static final String FEATHER_BLOCK_NAME = "feather_block";
     public static final RegistryObject<Block> FEATHER_BLOCK = BLOCKS.register(FEATHER_BLOCK_NAME, () -> new FeatherBlock(
-            BlockBehaviour.Properties.copy(Blocks.WHITE_WOOL)
+            BlockBehaviour.Properties.copy(Blocks.WHITE_WOOL).strength(0.5f)
                     .noCollission()));
     public static final RegistryObject<Item> FEATHER_BLOCK_ITEM = regBlockItem(FEATHER_BLOCK, getTab(CreativeModeTab.TAB_BUILDING_BLOCKS, FEATHER_BLOCK_NAME));
 
     //flint block
     public static final String FLINT_BLOCK_NAME = "flint_block";
     public static final RegistryObject<Block> FLINT_BLOCK = BLOCKS.register(FLINT_BLOCK_NAME, () -> new FlintBlock(
-            BlockBehaviour.Properties.copy(Blocks.STONE)));
+            BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_BLACK).strength(2F, 7.5F)));
     public static final RegistryObject<Item> FLINT_BLOCK_ITEM = regBlockItem(FLINT_BLOCK, getTab(CreativeModeTab.TAB_BUILDING_BLOCKS, FLINT_BLOCK_NAME));
 
 

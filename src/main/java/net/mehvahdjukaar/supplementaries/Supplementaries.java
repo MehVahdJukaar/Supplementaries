@@ -5,6 +5,7 @@ import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.datagen.RecipeCondition;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
+import net.mehvahdjukaar.supplementaries.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.setup.ClientSetup;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
@@ -42,8 +43,12 @@ public class Supplementaries {
 
     public Supplementaries() {
 
+
+
         //TODO: fish bucket on cages a
-//TODO: candle cake
+//TODO: shift click to pickup placed book
+
+        //TODO: fix slingshot proj not playing sound on client (all messed up)
         //yes this is where I write crap. deal with it XD
 
         //todo: fix projectile hitbox being a single point on y = 0
@@ -120,6 +125,10 @@ public class Supplementaries {
         //label
 
         //animated pulley texture
+
+        //TODO: add support for new game events
+
+        //TODO: faucets create sprout
 
 
         MinecraftForge.EVENT_BUS.register(ServerEvents.class);

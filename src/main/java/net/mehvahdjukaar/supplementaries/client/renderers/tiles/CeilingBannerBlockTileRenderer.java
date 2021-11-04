@@ -34,17 +34,14 @@ public class CeilingBannerBlockTileRenderer implements BlockEntityRenderer<Ceili
         ModelPart modelpart = context.bakeLayer(ModelLayers.BANNER);
         this.flag = modelpart.getChild("flag");
         this.bar = modelpart.getChild("bar");
-        //TODO: fix this using setPos
     }
 
     public void render(CeilingBannerBlockTile tile, float p_225616_2_, PoseStack matrixStack, MultiBufferSource p_225616_4_, int p_225616_5_, int p_225616_6_) {
         List<Pair<BannerPattern, DyeColor>> list = tile.getPatterns();
         if (list != null) {
-            float f = 0.6666667F;
 
             matrixStack.pushPose();
             long i;
-
 
             i = tile.getLevel().getGameTime();
             BlockState blockstate = tile.getBlockState();
@@ -53,11 +50,9 @@ public class CeilingBannerBlockTileRenderer implements BlockEntityRenderer<Ceili
                 matrixStack.translate(0, 0.625, 0);
             }
             matrixStack.translate(0.5D, -0.3125 - 0.0208333333333, 0.5D); //1/32 * 2/3
-            //matrixStack.translate(0.5D, (double)-0.16666667F, 0.5D);
+
             float f3 = -blockstate.getValue(CeilingBannerBlock.FACING).toYRot();
             matrixStack.mulPose(Vector3f.YP.rotationDegrees(f3));
-            //matrixStack.translate(0.0D, -0.3125D, -0.4375D);
-
 
             matrixStack.pushPose();
             matrixStack.scale(0.6666667F, -0.6666667F, -0.6666667F);

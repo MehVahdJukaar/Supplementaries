@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
-import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
@@ -15,39 +14,38 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
 
 public class FodderBlock extends WaterBlock {
-
-    public static final IntegerProperty LAYERS = BlockProperties.LAYERS;
-    protected static final VoxelShape[] SHAPE_BY_LAYER = new VoxelShape[16];
+    private static final int MAX_LAYERS = 8;
+    public static final IntegerProperty LAYERS = BlockStateProperties.LAYERS;
+    protected static final VoxelShape[] SHAPE_BY_LAYER = new VoxelShape[MAX_LAYERS];
 
     static {
-        Arrays.setAll(SHAPE_BY_LAYER, l -> Block.box(0.0D, 0.0D, 0.0D, 16.0D, l + 1, 16.0D));
+        Arrays.setAll(SHAPE_BY_LAYER, l -> Block.box(0.0D, 0.0D, 0.0D, 16.0D, l * 2 + 1, 16.0D));
     }
 
     public FodderBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(LAYERS, 16).setValue(WATERLOGGED, false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(LAYERS, 8).setValue(WATERLOGGED, false));
     }
 
     @Override
     public boolean isPathfindable(BlockState state, BlockGetter blockGetter, BlockPos pos, PathComputationType pathType) {
         if (pathType == PathComputationType.LAND) {
-            return state.getValue(LAYERS) < 8;
+            return state.getValue(LAYERS) < MAX_LAYERS / 2;
         }
         return false;
     }
@@ -69,7 +67,7 @@ public class FodderBlock extends WaterBlock {
         if (facingState.is(this)) {
             if (direction == Direction.UP) {
                 int layers = state.getValue(LAYERS);
-                int missing = 16 - layers;
+                int missing = MAX_LAYERS - layers;
                 if (missing > 0) {
                     int otherLayers = facingState.getValue(LAYERS);
                     int newOtherLayers = otherLayers - missing;
@@ -86,7 +84,7 @@ public class FodderBlock extends WaterBlock {
                 }
             } else if (direction == Direction.DOWN) {
                 int layers = facingState.getValue(LAYERS);
-                int missing = 16 - layers;
+                int missing = MAX_LAYERS - layers;
                 if (missing > 0) {
                     int myLayers = state.getValue(LAYERS);
                     int myNewLayers = myLayers - missing;
@@ -109,7 +107,7 @@ public class FodderBlock extends WaterBlock {
         BlockState blockstate = context.getLevel().getBlockState(context.getClickedPos());
         if (blockstate.is(this)) {
             int i = blockstate.getValue(LAYERS);
-            return blockstate.setValue(LAYERS, Math.min(16, i + 1));
+            return blockstate.setValue(LAYERS, Math.min(MAX_LAYERS, i + 1));
         } else {
             return super.getStateForPlacement(context);
         }
@@ -129,9 +127,9 @@ public class FodderBlock extends WaterBlock {
             if (!world.isClientSide) {
 
                 int layers = state.getValue(FodderBlock.LAYERS);
-                if (layers > 2) {
+                if (layers > 1) {
                     world.levelEvent(2001, pos, Block.getId(state));
-                    world.setBlock(pos, state.setValue(FodderBlock.LAYERS, layers - 2), 11);
+                    world.setBlock(pos, state.setValue(FodderBlock.LAYERS, layers - 1), 11);
                 } else {
                     world.destroyBlock(pos, false);
                 }

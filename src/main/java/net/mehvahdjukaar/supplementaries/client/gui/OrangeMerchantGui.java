@@ -22,7 +22,7 @@ import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 
 public class OrangeMerchantGui extends AbstractContainerScreen<RedMerchantContainer> {
-    private static final ResourceLocation VILLAGER_LOCATION = Textures.ORANGE_MERCHANT_GUI_TEXTURE;
+    private static final ResourceLocation VILLAGER_LOCATION = Textures.RED_MERCHANT_GUI_TEXTURE;
     private static final Component TRADES_LABEL = new TranslatableComponent("merchant.trades");
     private static final Component LEVEL_SEPARATOR = new TextComponent(" - ");
     private static final Component DEPRECATED_TOOLTIP = new TranslatableComponent("merchant.deprecated");

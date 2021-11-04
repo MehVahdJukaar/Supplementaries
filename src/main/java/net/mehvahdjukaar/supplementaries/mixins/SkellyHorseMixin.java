@@ -50,13 +50,13 @@ public abstract class SkellyHorseMixin extends AbstractHorse implements ICustomD
     @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
     public void addAdditionalSaveData(CompoundTag compoundNBT, CallbackInfo ci) {
         compoundNBT.putInt("FleshCount", this.fleshCount);
-        compoundNBT.putInt("ConversionTile", this.conversionTime);
+        compoundNBT.putInt("ConversionTime", this.conversionTime);
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
     public void readAdditionalSaveData(CompoundTag compoundNBT, CallbackInfo ci) {
         this.fleshCount = compoundNBT.getInt("FleshCount");
-        this.conversionTime = compoundNBT.getInt("ConversionTile");
+        this.conversionTime = compoundNBT.getInt("ConversionTime");
     }
 
     @Inject(method = "mobInteract", at = @At(value = "HEAD"), cancellable = true)

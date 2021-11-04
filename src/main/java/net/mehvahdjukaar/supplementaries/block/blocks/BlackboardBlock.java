@@ -162,9 +162,13 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock {
 
                 DyeColor color = getStackChalkColor(stack);
                 if (color != null) {
-                    te.pixels[x][y] = colorToByte(color);
-                    te.setChanged();
-                    return InteractionResult.sidedSuccess(worldIn.isClientSide);
+                    byte newColor = colorToByte(color);
+                    if (te.pixels[x][y] != newColor) {
+                        te.pixels[x][y] = newColor;
+                        te.setChanged();
+                        return InteractionResult.sidedSuccess(worldIn.isClientSide);
+                    }
+                    return InteractionResult.PASS;
                 } else if (item == Items.SPONGE || item == Items.WET_SPONGE) {
                     te.pixels = new byte[16][16];
                     te.setChanged();

@@ -231,7 +231,7 @@ public class ConfiguredCustomScreen extends ConfigScreen {
         if (this.list != null) {
             double scrollAmount;
             try {
-                Field f = ObfuscationReflectionHelper.findField(AbstractList.class, "field_230678_o_");
+                Field f = ObfuscationReflectionHelper.findField(AbstractList.class, "f_93396_");
                 f.setAccessible(true);
                 scrollAmount = (double) f.get(this.list);
 

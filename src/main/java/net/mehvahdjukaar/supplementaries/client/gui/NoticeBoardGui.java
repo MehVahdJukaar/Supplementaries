@@ -1,13 +1,15 @@
 package net.mehvahdjukaar.supplementaries.client.gui;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.inventories.NoticeBoardContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.client.gui.screens.inventory.FurnaceScreen;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 
 
 public class NoticeBoardGui extends AbstractContainerScreen<NoticeBoardContainer> {
@@ -20,9 +22,9 @@ public class NoticeBoardGui extends AbstractContainerScreen<NoticeBoardContainer
 
     @Override
     protected void renderBg(PoseStack matrixStack, float partialTicks, int x, int y) {
-        //TODO: redo this
-        //RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        //Minecraft.getInstance().getTextureManager().bind(Textures.NOTICE_BOARD_GUI_TEXTURE);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, Textures.NOTICE_BOARD_GUI_TEXTURE);
         int k = (this.width - this.imageWidth) / 2;
         int l = (this.height - this.imageHeight) / 2;
         this.blit(matrixStack, k, l, 0, 0, this.imageWidth, this.imageHeight);
@@ -49,7 +51,6 @@ public class NoticeBoardGui extends AbstractContainerScreen<NoticeBoardContainer
         super.removed();
         Minecraft.getInstance().keyboardHandler.setSendRepeatsToGui(false);
     }
-
 
     @Override
     public void init() {

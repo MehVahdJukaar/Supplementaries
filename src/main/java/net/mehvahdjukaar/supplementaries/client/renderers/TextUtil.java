@@ -1,14 +1,20 @@
 package net.mehvahdjukaar.supplementaries.client.renderers;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.NativeImage;
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.*;
+import com.mojang.math.Matrix4f;
 import net.mehvahdjukaar.supplementaries.block.util.TextHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.blockentity.SignRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
+import net.minecraft.network.chat.Style;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.DyeColor;
@@ -201,6 +207,17 @@ public class TextUtil {
         return ret.toString();
     }
 
+    private static void renderLineInternal(FormattedCharSequence formattedCharSequences, Font font, float xOffset, float yOffset, Matrix4f matrix4f, MultiBufferSource buffer,
+                                           RenderTextProperties properties) {
+        if (properties.hasOutline) {
+            font.drawInBatch8xOutline(formattedCharSequences, xOffset, yOffset, properties.textColor, properties.darkenedColor,
+                    matrix4f, buffer, properties.light);
+        } else {
+            font.drawInBatch(formattedCharSequences, xOffset, yOffset, properties.textColor, false,
+                    matrix4f, buffer, false, 0, properties.light);
+        }
+    }
+
     public static void renderLine(TextHolder textHolder, int line, Font font, int maxSizeX, float yOffset, PoseStack poseStack, MultiBufferSource buffer,
                                   RenderTextProperties properties) {
 
@@ -209,14 +226,8 @@ public class TextUtil {
             return list.isEmpty() ? FormattedCharSequence.EMPTY : list.get(0);
         });
         if (formattedCharSequences == null) return;
-        float centerX = (float) (-font.width(formattedCharSequences) / 2);
-        if (properties.hasOutline) {
-            font.drawInBatch8xOutline(formattedCharSequences, centerX, yOffset, properties.textColor, properties.darkenedColor,
-                    poseStack.last().pose(), buffer, properties.light);
-        } else {
-            font.drawInBatch(formattedCharSequences, centerX, yOffset, properties.textColor, false,
-                    poseStack.last().pose(), buffer, false, 0, properties.light);
-        }
+        float x = (float) (-font.width(formattedCharSequences) / 2);
+        renderLineInternal(formattedCharSequences, font, x, yOffset, poseStack.last().pose(), buffer, properties);
     }
 
     public static void renderLine(TextHolder textHolder, int line, Font font, int maxSizeX, float yOffset, PoseStack poseStack, MultiBufferSource buffer,
@@ -243,7 +254,6 @@ public class TextUtil {
         int k = (int) ((double) NativeImage.getG(i) * 0.4D);
         int l = (int) ((double) NativeImage.getB(i) * 0.4D);
         return i == DyeColor.BLACK.getTextColor() && textHolder.hasGlowingText() ? -988212 : NativeImage.combine(0, l, k, j);
-
     }
 
     public static class RenderTextProperties {
@@ -264,6 +274,82 @@ public class TextUtil {
                 this.hasOutline = false;
                 this.light = combinedLight;
             }
+        }
+    }
+
+    private static final FormattedCharSequence CURSOR_MARKER = FormattedCharSequence.forward("_", Style.EMPTY);
+
+    public static void renderGuiLine(RenderTextProperties properties, String string, Font font, PoseStack poseStack, MultiBufferSource.BufferSource buffer,
+                                     int cursorPos, int selectionPos, boolean isSelected, boolean blink, int yOffset) {
+        poseStack.pushPose();
+        Matrix4f matrix4f = poseStack.last().pose();
+
+        if (string != null) {
+            if (font.isBidirectional()) {
+                string = font.bidirectionalShaping(string);
+            }
+            int centerX = (-font.width(string) / 2);
+
+            FormattedCharSequence charSequence = FormattedCharSequence.forward(string, Style.EMPTY);
+            renderLineInternal(charSequence, font, centerX, yOffset, matrix4f, buffer, properties);
+
+            String substring = string.substring(0, Math.min(cursorPos, string.length()));
+            if (isSelected) {
+
+                int pX = font.width(substring) + centerX;
+
+                if (blink) {
+                    if (cursorPos >= string.length()) {
+                        renderLineInternal(CURSOR_MARKER, font, pX, yOffset, matrix4f, buffer, properties);
+                    }
+                    buffer.endBatch();
+                }
+
+                //highlight
+                if (blink && cursorPos < string.length()) {
+                    GuiComponent.fill(poseStack, pX, yOffset - 1, pX + 1, yOffset + 9, -16777216 | properties.textColor);
+                }
+
+                if (selectionPos != cursorPos) {
+                    int l3 = Math.min(cursorPos, selectionPos);
+                    int l1 = Math.max(cursorPos, selectionPos);
+                    int i2 = font.width(string.substring(0, l3)) - font.width(string) / 2;
+                    int j2 = font.width(string.substring(0, l1)) - font.width(string) / 2;
+                    int k2 = Math.min(i2, j2);
+                    int l2 = Math.max(i2, j2);
+                    Tesselator tesselator = Tesselator.getInstance();
+                    BufferBuilder bufferbuilder = tesselator.getBuilder();
+                    RenderSystem.setShader(GameRenderer::getPositionColorShader);
+                    RenderSystem.disableTexture();
+                    RenderSystem.enableColorLogicOp();
+                    RenderSystem.logicOp(GlStateManager.LogicOp.OR_REVERSE);
+                    bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+                    bufferbuilder.vertex(matrix4f, (float) k2, (float) (yOffset + 9), 0.0F).color(0, 0, 255, 255).endVertex();
+                    bufferbuilder.vertex(matrix4f, (float) l2, (float) (yOffset + 9), 0.0F).color(0, 0, 255, 255).endVertex();
+                    bufferbuilder.vertex(matrix4f, (float) l2, (float) yOffset, 0.0F).color(0, 0, 255, 255).endVertex();
+                    bufferbuilder.vertex(matrix4f, (float) k2, (float) yOffset, 0.0F).color(0, 0, 255, 255).endVertex();
+                    bufferbuilder.end();
+                    BufferUploader.end(bufferbuilder);
+                    RenderSystem.disableColorLogicOp();
+                    RenderSystem.enableTexture();
+                }
+            }
+            if (!(isSelected && blink)) {
+                buffer.endBatch();
+            }
+        }
+    }
+
+    public static void renderGuiText(TextHolder textHolder, String[] guiLines, Font font, PoseStack poseStack, MultiBufferSource.BufferSource buffer,
+                                     int cursorPos, int selectionPos, int currentLine, boolean blink, int lineSpacing) {
+
+        RenderTextProperties properties = new RenderTextProperties(textHolder, LightTexture.FULL_BRIGHT, () -> true);
+        int nOfLines = guiLines.length;
+
+        for (int line = 0; line < nOfLines; ++line) {
+            int yOffset = line * lineSpacing - nOfLines * 5;
+            renderGuiLine(properties, guiLines[line], font, poseStack, buffer, cursorPos, selectionPos,
+                    line == currentLine, blink, yOffset);
         }
     }
 

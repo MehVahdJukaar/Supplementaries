@@ -93,7 +93,7 @@ public class Textures {
     public static final ResourceLocation SLOT_TEXTURE = Supplementaries.res("textures/gui/slot.png");
     public static final ResourceLocation PULLEY_BLOCK_GUI_TEXTURE = Supplementaries.res("textures/gui/pulley_block_gui.png");
     public static final ResourceLocation PRESENT_BLOCK_GUI_TEXTURE = Supplementaries.res("textures/gui/present_block_gui.png");
-    public static final ResourceLocation ORANGE_MERCHANT_GUI_TEXTURE = Supplementaries.res("textures/gui/orange_trader.png");
+    public static final ResourceLocation RED_MERCHANT_GUI_TEXTURE = Supplementaries.res("textures/gui/red_merchant.png");
     //map markers
     public static final ResourceLocation SIGN_POST_MARKER_TEXTURE = Supplementaries.res("textures/map/sign_post.png");
     public static final ResourceLocation FLAG_MARKER_TEXTURE = Supplementaries.res("textures/map/flag.png");
@@ -114,6 +114,7 @@ public class Textures {
     public static final ResourceLocation BOOK_ENCHANTED_TEXTURES = Supplementaries.res("entity/books/book_enchanted");
     public static final ResourceLocation BOOK_TOME_TEXTURES = Supplementaries.res("entity/books/book_tome");
     public static final ResourceLocation BOOK_WRITTEN_TEXTURES = Supplementaries.res("entity/books/book_written");
+    public static final ResourceLocation BOOK_AND_QUILL_TEXTURES = Supplementaries.res("entity/books/book_and_quill");
     public static final ResourceLocation BOOK_ANTIQUE_TEXTURES = Supplementaries.res("entity/books/book_antique");
 
     public static final ResourceLocation ANTIQUABLE_FONT = Supplementaries.res("antiquable");
@@ -155,6 +156,7 @@ public class Textures {
             event.addSprite(Textures.BOOK_ENCHANTED_TEXTURES);
             event.addSprite(Textures.BOOK_TOME_TEXTURES);
             event.addSprite(Textures.BOOK_WRITTEN_TEXTURES);
+            event.addSprite(Textures.BOOK_AND_QUILL_TEXTURES);
             event.addSprite(Textures.BOOK_ANTIQUE_TEXTURES);
             Textures.BOOK_TEXTURES.values().forEach(event::addSprite);
         }

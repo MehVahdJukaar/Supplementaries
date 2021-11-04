@@ -33,7 +33,8 @@ import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraftforge.client.model.data.EmptyModelData;
 
 public class HangingSignBlockTileRenderer implements BlockEntityRenderer<HangingSignBlockTile> {
-    private static final int LINE_MAX_WIDTH = 75;
+    public static final int LINE_MAX_WIDTH = 75;
+    public static final int LINE_SEPARATION = 10;
 
     private final BlockRenderDispatcher blockRenderer;
     private final ItemRenderer itemRenderer;
@@ -150,7 +151,8 @@ public class HangingSignBlockTileRenderer implements BlockEntityRenderer<Hanging
                     poseStack.pushPose();
                     poseStack.translate(0, -34, (0.0625 + 0.005) / 0.010416667F);
 
-                    TextUtil.renderAllLines(tile.textHolder, 10, this.font, LINE_MAX_WIDTH, poseStack, bufferIn, textProperties);
+                    TextUtil.renderAllLines(tile.textHolder, LINE_SEPARATION, this.font, LINE_MAX_WIDTH,
+                            poseStack, bufferIn, textProperties);
 
                     poseStack.popPose();
                     poseStack.mulPose(Const.Y180);

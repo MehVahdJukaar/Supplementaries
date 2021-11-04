@@ -71,7 +71,7 @@ public abstract class RedMerchantSpawnerMixin {
                     if (spawnPos != null && this.hasEnoughSpace(world, spawnPos)) {
                         if (!world.getBiomeName(spawnPos).equals(Optional.of(Biomes.THE_VOID))) {
 
-                            RedMerchantEntity trader = ModRegistry.RED_MERCHANT_TYPE.get().spawn(world, null, null, null, spawnPos, MobSpawnType.EVENT, false, false);
+                            RedMerchantEntity trader = ModRegistry.RED_MERCHANT.get().spawn(world, null, null, null, spawnPos, MobSpawnType.EVENT, false, false);
                             if (trader != null) {
                                 this.serverLevelData.setWanderingTraderId(trader.getUUID());
                                 int lifetime = 25000;

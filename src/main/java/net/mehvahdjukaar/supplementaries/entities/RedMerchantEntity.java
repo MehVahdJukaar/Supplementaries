@@ -54,7 +54,7 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
     }
 
     public RedMerchantEntity(Level world) {
-        this(ModRegistry.RED_MERCHANT_TYPE.get(), world);
+        this(ModRegistry.RED_MERCHANT.get(), world);
     }
 
     @Override

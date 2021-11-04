@@ -13,7 +13,9 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 
 public class DoormatBlockTileRenderer implements BlockEntityRenderer<DoormatBlockTile> {
-    private static final int LINE_MAX_WIDTH = 75;
+    public static final int LINE_MAX_WIDTH = 75;
+    public static final int LINE_SEPARATION = 15;
+
     private final Font font;
     private final Camera camera;
 
@@ -35,10 +37,10 @@ public class DoormatBlockTileRenderer implements BlockEntityRenderer<DoormatBloc
         poseStack.mulPose(Const.rot(tile.getDirection().getOpposite()));
 
         // render text
-        poseStack.translate(0, -0.010416667F * 20, -0.0625 - 0.005);
+        poseStack.translate(0, -0.010416667F * 19, -0.0625 - 0.005);
         poseStack.scale(0.010416667F, 0.010416667F, -0.010416667F);
 
-        TextUtil.renderAllLines(tile.getTextHolder(), 15, font, LINE_MAX_WIDTH, poseStack, bufferIn, combinedLightIn, lod::isVeryNear);
+        TextUtil.renderAllLines(tile.getTextHolder(), LINE_SEPARATION, font, LINE_MAX_WIDTH, poseStack, bufferIn, combinedLightIn, lod::isVeryNear);
 
         poseStack.popPose();
     }

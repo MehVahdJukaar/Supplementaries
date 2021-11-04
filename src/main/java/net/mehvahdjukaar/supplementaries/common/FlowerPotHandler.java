@@ -59,10 +59,6 @@ public class FlowerPotHandler {
         }
         FULL_POTS = Maps.newHashMap();
         for (FlowerPotBlock pot : emptyPots) {
-
-            pot.getFullPotsView();
-            Field f = ObfuscationReflectionHelper.findField(FlowerPotBlock.class, "fullPots");
-            f.setAccessible(true);
             FULL_POTS.put(pot,pot.getFullPotsView());
             FULL_POTs_BLOCKSTATES_LIST.addAll((pot.getFullPotsView()).values().stream().map(s -> s.get().defaultBlockState()).collect(Collectors.toList()));
         }

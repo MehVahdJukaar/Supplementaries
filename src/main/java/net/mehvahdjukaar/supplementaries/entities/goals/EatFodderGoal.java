@@ -130,9 +130,9 @@ public class EatFodderGoal extends MoveToBlockGoal {
             //break block
             if (this.ticksSinceReachedGoal > this.blockBreakingTime) {
                 int layers = world.getBlockState(targetPos).getValue(FodderBlock.LAYERS);
-                if (layers > 2) {
+                if (layers > 1) {
                     world.levelEvent(2001, targetPos, Block.getId(FODDER_STATE));
-                    world.setBlock(targetPos, FODDER_STATE.setValue(FodderBlock.LAYERS, layers - 2), 2);
+                    world.setBlock(targetPos, FODDER_STATE.setValue(FodderBlock.LAYERS, layers - 1), 2);
                 } else {
                     world.destroyBlock(targetPos, false);
                 }

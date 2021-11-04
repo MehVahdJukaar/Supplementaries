@@ -22,19 +22,18 @@ import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.CauldronBlock;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -59,7 +58,6 @@ public class FaucetBlockTile extends BlockEntity {
         }
         super.setChanged();
     }
-
 
     @Override
     public AABB getRenderBoundingBox() {
@@ -97,6 +95,7 @@ public class FaucetBlockTile extends BlockEntity {
         return this.tryExtract(level, pos, state, false);
     }
 
+    @SuppressWarnings("ConstantConditions")
     private boolean tryExtract(Level level, BlockPos pos, BlockState state, boolean doTransfer) {
         Direction dir = state.getValue(FaucetBlock.FACING);
         BlockPos behind = pos.relative(dir.getOpposite());
@@ -148,24 +147,26 @@ public class FaucetBlockTile extends BlockEntity {
             }
         }
         //cauldron
-        else if (backBlock instanceof CauldronBlock) {
+        else if (backBlock == Blocks.WATER_CAULDRON) {
             if (backState.getValue(BlockStateProperties.LEVEL_CAULDRON) > 0) {
-                BlockEntity cauldronTile = level.getBlockEntity(behind);
-                if (cauldronTile == null) {
-                    this.fluidHolder.fill(SoftFluidRegistry.WATER);
-                    if (doTransfer && tryFillingBlockBelow(level, pos)) {
-                        level.setBlock(behind, backState.setValue(BlockStateProperties.LEVEL_CAULDRON,
-                                backState.getValue(BlockStateProperties.LEVEL_CAULDRON) - 1), 3);
-                        return true;
-                    }
-                } else if (CompatHandler.inspirations) {
-                    return CauldronPlugin.doStuff(cauldronTile, this.fluidHolder, doTransfer, () -> this.tryFillingBlockBelow(level, pos));
+                if (CompatHandler.inspirations) {
+                    return CauldronPlugin.doStuff(level.getBlockEntity(behind), this.fluidHolder, doTransfer, () -> this.tryFillingBlockBelow(level, pos));
                 }
+
+                this.fluidHolder.fill(SoftFluidRegistry.WATER);
+                if (doTransfer && tryFillingBlockBelow(level, pos)) {
+                    level.setBlock(behind, backState.setValue(BlockStateProperties.LEVEL_CAULDRON,
+                            backState.getValue(BlockStateProperties.LEVEL_CAULDRON) - 1), 3);
+                    return true;
+                }
+
             }
             return false;
-        } else {
-            //soft fluid holders
-            BlockEntity tileBack = level.getBlockEntity(behind);
+            //tile stuff
+        }
+        //soft fluid holders
+        BlockEntity tileBack = level.getBlockEntity(behind);
+        if(tileBack != null) {
             if (tileBack instanceof ISoftFluidHolder && ((ISoftFluidHolder) tileBack).canInteractWithFluidHolder()) {
                 SoftFluidHolder fluidHolder = ((ISoftFluidHolder) tileBack).getSoftFluidHolder();
                 this.fluidHolder.copy(fluidHolder);
@@ -177,8 +178,10 @@ public class FaucetBlockTile extends BlockEntity {
             }
             //forge tanks
             else {
-                IFluidHandler handlerBack = FluidUtil.getFluidHandler(level, behind, dir).orElse(null);
+                IFluidHandler handlerBack = tileBack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir).orElse(null);
                 if (handlerBack != null) {
+                    //only works in 250 increment
+                    if (handlerBack.getFluidInTank(0).getAmount() < 250) return false;
                     this.fluidHolder.copy(handlerBack);
                     if (doTransfer && tryFillingBlockBelow(level, pos)) {
                         handlerBack.drain(250, IFluidHandler.FluidAction.EXECUTE);
@@ -190,19 +193,26 @@ public class FaucetBlockTile extends BlockEntity {
                     return true;
                 }
             }
+            if (!doTransfer) return !this.fluidHolder.isEmpty();
+            //pull other items from containers
+            return this.spillItemsFromInventory(level, pos, dir, tileBack);
         }
+
         if (!doTransfer) return !this.fluidHolder.isEmpty();
-        //pull other items
-        return this.pullItems(level, pos, state);
+        return false;
     }
 
 
     //sf->ff/sf
+    @SuppressWarnings("ConstantConditions")
     private boolean tryFillingBlockBelow(Level level, BlockPos pos) {
+        SoftFluid softFluid = this.fluidHolder.getFluid();
+        //can't full below if empty
+        if (softFluid.isEmpty()) return false;
+
         BlockPos below = pos.below();
         BlockState belowState = level.getBlockState(below);
         Block belowBlock = belowState.getBlock();
-        SoftFluid softFluid = this.fluidHolder.getFluid();
 
         //consumer
         if (belowBlock instanceof ISoftFluidConsumer consumer) {
@@ -232,21 +242,28 @@ public class FaucetBlockTile extends BlockEntity {
         } else if (softFluid == SoftFluidRegistry.XP && belowState.isAir()) {
             this.dropXP(level, pos);
             return true;
-        } else if (belowState.getBlock() instanceof CauldronBlock) {
-            int levels = belowState.getValue(BlockStateProperties.LEVEL_CAULDRON);
-            if (levels < 3) {
-                BlockEntity cauldronTile = level.getBlockEntity(below);
-                if (cauldronTile == null) {
-                    level.setBlock(below, belowState.setValue(BlockStateProperties.LEVEL_CAULDRON, levels + 1), 3);
+        } else if (belowBlock instanceof AbstractCauldronBlock) {
+            //if any other mod adds a cauldron tile this will crash
+            if (CompatHandler.inspirations) {
+                return CauldronPlugin.tryAddFluid(level.getBlockEntity(below), this.fluidHolder);
+            } else if (softFluid == SoftFluidRegistry.WATER) {
+                //TODO: finish
+                if (belowBlock == Blocks.WATER_CAULDRON) {
+                    int levels = belowState.getValue(BlockStateProperties.LEVEL_CAULDRON);
+                    if (levels < 3) {
+                        level.setBlock(below, belowState.setValue(BlockStateProperties.LEVEL_CAULDRON, levels + 1), 3);
+                        return true;
+                    }
+                    return false;
+                } else if (belowBlock instanceof CauldronBlock) {
+                    level.setBlock(below, Blocks.WATER_CAULDRON.defaultBlockState().setValue(BlockStateProperties.LEVEL_CAULDRON, 1), 3);
                     return true;
                 }
-                //if any other mod adds a cauldron tile this will crash
-                else if (CompatHandler.inspirations) {
-                    return CauldronPlugin.tryAddFluid(cauldronTile, this.fluidHolder);
-                }
             }
+
             return false;
         }
+
 
         //default behavior
         boolean result;
@@ -262,7 +279,7 @@ public class FaucetBlockTile extends BlockEntity {
             return result;
         }
         //forge tanks
-        IFluidHandler handlerDown = FluidUtil.getFluidHandler(level, below, Direction.UP).orElse(null);
+        IFluidHandler handlerDown = tileBelow.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, Direction.UP).orElse(null);
         if (handlerDown != null) {
             result = this.fluidHolder.tryTransferToFluidTank(handlerDown);
             if (result) {
@@ -303,61 +320,33 @@ public class FaucetBlockTile extends BlockEntity {
         return this.getBlockState().getValue(FaucetBlock.HAS_JAR);
     }
 
-    //-----hopper-code-----
-    private static boolean canExtractItemFromSlot(Container inventoryIn, ItemStack stack, int index, Direction side) {
-        return !(inventoryIn instanceof WorldlyContainer) || ((WorldlyContainer) inventoryIn).canTakeItemThroughFace(index, stack, side);
-    }
+    //------items------
 
-    private boolean pullItemFromSlot(Level level, BlockPos pos, Container inventoryIn, int index, Direction direction) {
-        ItemStack itemstack = inventoryIn.getItem(index);
-        // special case for jars. has to be done to prevent other hoppers
-        // frominteracting with them cause canextractitems is always false
-        if (this.isConnectedBelow()) {
+    @SuppressWarnings("ConstantConditions")
+    public boolean spillItemsFromInventory(Level level, BlockPos pos, Direction dir, BlockEntity tile) {
+        //TODO: maybe add here insertion in containers below
+        if(this.isConnectedBelow()) return false;
+        IItemHandler itemHandler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir).orElse(null);
+        if (itemHandler != null) {
+            for(int slot = 0; slot<itemHandler.getSlots(); slot++) {
+                ItemStack itemstack = itemHandler.getStackInSlot(slot);
+                if (!itemstack.isEmpty()) {
+                    ItemStack extracted = itemHandler.extractItem(slot,1, false);
+                    //non empty stack can't be extracted. trying next
+                    //if(extracted.isEmpty())continue;
+                    tile.setChanged();
+                    ItemEntity drop = new ItemEntity(level, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, extracted);
+                    drop.setDeltaMovement(new Vec3(0, 0, 0));
+                    level.addFreshEntity(drop);
+                    float f = (this.rand.nextFloat() - 0.5f) / 4f;
+                    level.playSound(null, pos, SoundEvents.CHICKEN_EGG, SoundSource.BLOCKS, 0.3F, 0.5f + f);
+                    return true;
+                }
+            }
             return false;
-        } else if (!itemstack.isEmpty() && canExtractItemFromSlot(inventoryIn, itemstack, index, direction)) {
-            ItemStack it = itemstack.copy();
-            itemstack.shrink(1);
-            inventoryIn.setChanged();
-            it.setCount(1);
-            ItemEntity drop = new ItemEntity(level, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, it);
-            drop.setDeltaMovement(new Vec3(0, 0, 0));
-            level.addFreshEntity(drop);
-            float f = (this.rand.nextFloat() - 0.5f) / 4f;
-            level.playSound(null, pos, SoundEvents.CHICKEN_EGG, SoundSource.BLOCKS, 0.3F, 0.5f + f);
-            return true;
         }
         return false;
     }
-
-    public boolean pullItems(Level level, BlockPos pos, BlockState state) {
-        Container inventory = getSourceInventory(level, pos, state);
-        if (inventory != null) {
-            Direction direction = this.getBlockState().getValue(HorizontalDirectionalBlock.FACING);
-            return getSlots(inventory, direction).anyMatch((i)
-                    -> pullItemFromSlot(level, pos, inventory, i, direction));
-        }
-        return false;
-    }
-
-    public Container getSourceInventory(Level level, BlockPos pos, BlockState state) {
-        BlockPos behind = pos.relative(state.getValue(HorizontalDirectionalBlock.FACING), -1);
-        Container containerAt = HopperBlockEntity.getContainerAt(level, behind);
-        if (containerAt != null) {
-            return containerAt;
-        } else if (level.getBlockState(behind).isRedstoneConductor(level, pos)) {
-            return HopperBlockEntity.getContainerAt(level,
-                    pos.relative(state.getValue(HorizontalDirectionalBlock.FACING), -2));
-        } else
-            return null;
-    }
-
-    private static IntStream getSlots(Container inv, Direction dir) {
-        return inv instanceof WorldlyContainer
-                ? IntStream.of(((WorldlyContainer) inv).getSlotsForFace(dir))
-                : IntStream.range(0, inv.getContainerSize());
-    }
-
-    //------end-hopper-code------
 
     @Override
     public void load(CompoundTag compound) {

@@ -31,9 +31,9 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
     private final Font font;
 
     public PedestalBlockTileRenderer(BlockEntityRendererProvider.Context context) {
-        itemRenderer = minecraft.getItemRenderer();
-        entityRenderer = minecraft.getEntityRenderDispatcher();
-        font = minecraft.font;
+        this.itemRenderer = minecraft.getItemRenderer();
+        this.entityRenderer = minecraft.getEntityRenderDispatcher();
+        this.font = minecraft.font;
     }
 
     protected boolean canRenderName(PedestalBlockTile tile) {
@@ -65,13 +65,10 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
 
     }
 
-
     @Override
     public void render(PedestalBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
-
         if (!tile.isEmpty()) {
-            //TODO: optimize transforms
             matrixStackIn.pushPose();
             matrixStackIn.translate(0.5, 1.125, 0.5);
 
@@ -88,18 +85,14 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
                 matrixStackIn.mulPose(Const.Y90);
             }
 
-
             ItemTransforms.TransformType transform = ItemTransforms.TransformType.FIXED;
             boolean fancy = ClientConfigs.cached.PEDESTAL_SPECIAL;
             if (tile.type == PedestalBlockTile.DisplayType.SWORD && fancy) {
                 //sword
-                //matrixStackIn.translate(0,-0.03125,0);
                 matrixStackIn.translate(0, -0.03125, 0);
                 matrixStackIn.scale(1.5f, 1.5f, 1.5f);
                 matrixStackIn.mulPose(Const.Z135);
             } else if (tile.type == PedestalBlockTile.DisplayType.TRIDENT && fancy) {
-                //transform = ItemCameraTransforms.TransformType.HEAD;
-                //matrixStackIn.scale(1.75f,1.75f,1.75f);
                 matrixStackIn.translate(0, 0.03125, 0);
                 matrixStackIn.scale(1.5f, 1.5f, 1.5f);
                 matrixStackIn.mulPose(Const.ZN45);
@@ -115,7 +108,6 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
                 //long blockoffset = (long) (blockpos.getX() * 7 + blockpos.getY() * 9 + blockpos.getZ() * 13);
 
                 //long time = System.currentTimeMillis();
-                //TODO: fix stuttering
                 //float tt = tile.getWorld().getGameTime()+ partialTicks;
                 float tt = tile.counter + partialTicks;
 
@@ -124,20 +116,13 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
                 float angle = (tt * (float) ClientConfigs.cached.PEDESTAL_SPEED) % 360f;
                 Quaternion rotation = Vector3f.YP.rotationDegrees(angle);
 
-                //matrixStackIn.scale(1,1,0.f);
-                //matrixStackIn.rotate(Const.XN22);
-                //matrixStackIn.rotate(Const.Y45);
-
                 matrixStackIn.mulPose(rotation);
             }
-
 
             //TODO: make FIXED
             ItemStack stack = tile.getDisplayedItem();
             if (CommonUtil.FESTIVITY.isAprilsFool()) stack = new ItemStack(Items.DIRT);
             itemRenderer.renderStatic(stack, transform, combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn,0);
-            //IBakedModel ibakedmodel = itemRenderer.getModel(stack, tile.getLevel(), null);
-            //itemRenderer.render(stack, transform, true, matrixStackIn, bufferIn, combinedLightIn,combinedOverlayIn, ibakedmodel);
 
             matrixStackIn.popPose();
         }

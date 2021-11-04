@@ -44,6 +44,11 @@ public class DispenserStuff {
 
         if (!RegistryConfigs.reg.DISPENSERS.get()) return;
 
+        //fodder
+        if(RegistryConfigs.reg.FODDER_ENABLED.get()){
+            DispenserHelper.registerPlaceBlockBehavior(ModRegistry.FODDER.get());
+        }
+
         //jar
         if (RegistryConfigs.reg.JAR_ENABLED.get()) {
 
@@ -66,10 +71,7 @@ public class DispenserStuff {
                 DispenserHelper.registerCustomBehavior(new ThrowableBricksDispenserBehavior(i));
             }
         }
-        //firefly
-       // if (RegistryConfigs.reg.FIREFLY_ENABLED.get()) {
-        //    DispenserHelper.registerSpawnEggBehavior(ModRegistry.FIREFLY_SPAWN_EGG_ITEM.get());
-       // }
+
         //bomb
         if (RegistryConfigs.reg.BOMB_ENABLED.get()) {
             DispenserBlock.registerBehavior(ModRegistry.BOMB_ITEM.get(), new BombsDispenserBehavior(false));

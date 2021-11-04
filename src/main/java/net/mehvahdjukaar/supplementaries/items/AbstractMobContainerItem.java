@@ -95,7 +95,6 @@ public abstract class AbstractMobContainerItem extends BlockItem {
         return this.doInteract(stack, player, entity, player.getUsedItemHand()).consumesAction();
     }
 
-
     //TODO: merge
     //immediately discards pets and not alive entities
     protected final boolean isEntityValid(Entity e, Player player) {
