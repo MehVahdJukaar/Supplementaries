@@ -1,0 +1,7 @@
+{
+  "parent": "supplementaries:block/plants/azalea",
+  "textures": {
+    "top": "minecraft:block/potted_flowering_azalea_bush_top",
+    "side": "minecraft:block/potted_flowering_azalea_bush_side"
+  }
+}

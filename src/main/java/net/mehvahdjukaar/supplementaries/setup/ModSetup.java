@@ -3,12 +3,10 @@ package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.tiles.StatueBlockTile;
-import net.mehvahdjukaar.supplementaries.capabilities.mobholder.CapturedMobsHelper;
-import net.mehvahdjukaar.supplementaries.entities.trades.AdventurerMapsHandler;
-import net.mehvahdjukaar.supplementaries.common.FlowerPotHandler;
 import net.mehvahdjukaar.supplementaries.capabilities.CapabilityHandler;
+import net.mehvahdjukaar.supplementaries.capabilities.mobholder.CapturedMobsHelper;
+import net.mehvahdjukaar.supplementaries.common.FlowerPotHandler;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.entities.trades.VillagerTradesHandler;
 import net.mehvahdjukaar.supplementaries.events.ItemsOverrideHandler;
 import net.mehvahdjukaar.supplementaries.fluids.ModSoftFluids;
@@ -19,11 +17,9 @@ import net.mehvahdjukaar.supplementaries.network.commands.ModCommands;
 import net.mehvahdjukaar.supplementaries.world.data.map.CMDreg;
 import net.mehvahdjukaar.supplementaries.world.structures.StructureLocator;
 import net.mehvahdjukaar.supplementaries.world.structures.StructureRegistry;
-import net.minecraft.world.level.block.ComposterBlock;
-import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraftforge.common.BasicTrade;
+import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -81,7 +77,7 @@ public class ModSetup {
 
                 LootTableStuff.init();
                 setupStage++;
-               // registerMobFoods();
+                // registerMobFoods();
 
                 hasFinishedSetup = true;
 
@@ -93,7 +89,7 @@ public class ModSetup {
         });
     }
 
-    private static void terminateWhenSetupFails(){
+    private static void terminateWhenSetupFails() {
         //if setup fails crash the game. idk why it doesn't do that on its own wtf
         Supplementaries.LOGGER.throwing(new Exception("Mod setup has failed to complete (stage = " + setupStage + "). This might be due to some mod incompatibility. Refusing to continue loading with a broken modstate. Next step: crashing this game, no survivors. Executing 69/0"));
         //proper way to crash the game lol
@@ -137,7 +133,7 @@ public class ModSetup {
     }
 
     @SubscribeEvent
-    public static void registerCapabilities(RegisterCapabilitiesEvent event){
+    public static void registerCapabilities(RegisterCapabilitiesEvent event) {
         CapabilityHandler.register(event);
     }
 

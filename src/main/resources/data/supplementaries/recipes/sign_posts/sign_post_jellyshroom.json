@@ -1,0 +1,30 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "flag": "sign_post",
+          "type": "supplementaries:flag"
+        },
+        {
+          "modid": "betterendforge",
+          "type": "forge:mod_loaded"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shapeless",
+        "group": "sign_post",
+        "ingredients": [
+          {
+            "item": "betterendforge:jellyshroom_sign"
+          }
+        ],
+        "result": {
+          "item": "supplementaries:sign_post_jellyshroom",
+          "count": 2
+        }
+      }
+    }
+  ]
+}
