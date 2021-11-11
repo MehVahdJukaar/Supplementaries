@@ -37,6 +37,7 @@ public class FlagItem extends BurnableBlockItem {
         BannerItem.appendHoverTextFromBannerBlockEntityTag(stack, tooltip);
     }
 
+    //TODO: readd
     /*
     @Override
     public InteractionResult useOn(UseOnContext context) {

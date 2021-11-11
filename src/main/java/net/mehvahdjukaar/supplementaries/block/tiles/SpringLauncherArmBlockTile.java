@@ -16,8 +16,10 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.piston.PistonMovingBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.PushReaction;
@@ -36,7 +38,6 @@ public class SpringLauncherArmBlockTile extends BlockEntity {
     private int dx;
     private int dy;
     private int dz;
-    protected final Random rand = new Random();
 
     public SpringLauncherArmBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.SPRING_LAUNCHER_ARM_TILE.get(), pos, state);
@@ -64,50 +65,50 @@ public class SpringLauncherArmBlockTile extends BlockEntity {
         return new AABB(worldPosition).move(this.dx * this.offset, this.dy * this.offset, this.dz * this.offset);
     }
 
-    public void tick() {
-        if (this.level.isClientSide()) {
-            if (this.getExtending()) {
-                double x = this.worldPosition.getX() + 0.5 + this.dx * this.offset;
-                double y = this.worldPosition.getY() + this.dy * this.offset;
-                double z = this.worldPosition.getZ() + 0.5 + this.dz * this.offset;
-                Random random = this.rand;
-                for (int l = 0; l < 2; ++l) {
-                    double d0 = (x + random.nextFloat() - 0.5D);
-                    double d1 = (y + random.nextFloat() + 0.5D);
-                    double d2 = (z + random.nextFloat() - 0.5D);
-                    double d3 = (random.nextFloat() - 0.5D) * 0.05D;
-                    double d4 = (random.nextFloat() - 0.5D) * 0.05D;
-                    double d5 = (random.nextFloat() - 0.5D) * 0.05D;
-                    // world.addParticle(ParticleTypes.POOF, d0, d1, d2, d3, d4, d5);
-                    this.level.addParticle(ParticleTypes.CLOUD, d0, d1, d2, d3, d4, d5);
-                    //TODO:add swirl particle
-                    //this.world.addParticle(ParticleTypes.ENTITY_EFFECT, d0, d1, d2, d3, d4, d5);
-                }
+    public static void tick(Level level, BlockPos pos, BlockState state, SpringLauncherArmBlockTile tile) {
+        boolean extending = state.getValue(SpringLauncherArmBlock.EXTENDING);
+        if (level.isClientSide && extending) {
+
+            double x = pos.getX() + 0.5 + tile.dx * tile.offset;
+            double y = pos.getY() + tile.dy * tile.offset;
+            double z = pos.getZ() + 0.5 + tile.dz * tile.offset;
+            Random random = level.random;
+            for (int l = 0; l < 2; ++l) {
+                double d0 = (x + random.nextFloat() - 0.5D);
+                double d1 = (y + random.nextFloat() + 0.5D);
+                double d2 = (z + random.nextFloat() - 0.5D);
+                double d3 = (random.nextFloat() - 0.5D) * 0.05D;
+                double d4 = (random.nextFloat() - 0.5D) * 0.05D;
+                double d5 = (random.nextFloat() - 0.5D) * 0.05D;
+
+                level.addParticle(ParticleTypes.CLOUD, d0, d1, d2, d3, d4, d5);
+                //TODO:add swirl particle
             }
         }
-        if (this.age > 1) {
-            this.prevOffset = this.offset;
-            if (!this.level.isClientSide()) {
-                if (this.getExtending()) {
-                    BlockState _bs = ModRegistry.SPRING_LAUNCHER_HEAD.get().defaultBlockState();
-                    level.setBlock(worldPosition, _bs.setValue(SpringLauncherHeadBlock.FACING, this.getDirection()), 3);
+        if (tile.age > 1) {
+            tile.prevOffset = tile.offset;
+            if (!level.isClientSide) {
+                Direction dir = state.getValue(SpringLauncherArmBlock.FACING);
+                if (extending) {
+                    BlockState state1 = ModRegistry.SPRING_LAUNCHER_HEAD.get().defaultBlockState();
+                    level.setBlock(pos, state1.setValue(SpringLauncherHeadBlock.FACING, dir), 3);
                 } else {
                     BlockState _bs = ModRegistry.SPRING_LAUNCHER.get().defaultBlockState();
-                    BlockPos _bp = worldPosition.relative(this.getDirection().getOpposite());
-                    BlockState oldState = level.getBlockState(_bp);
-                    if (_bs.setValue(SpringLauncherBlock.FACING, this.getDirection()).setValue(SpringLauncherBlock.EXTENDED, true) == oldState) {
-                        level.setBlock(_bp, oldState.setValue(SpringLauncherBlock.EXTENDED, false), 3);
+                    BlockPos behindPos = pos.relative(tile.getDirection().getOpposite());
+                    BlockState oldState = level.getBlockState(behindPos);
+                    if (_bs.setValue(SpringLauncherBlock.FACING, dir).setValue(SpringLauncherBlock.EXTENDED, true) == oldState) {
+                        level.setBlock(behindPos, oldState.setValue(SpringLauncherBlock.EXTENDED, false), 3);
                     }
-                    level.setBlock(worldPosition, Blocks.AIR.defaultBlockState(), 3);
+                    level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
                 }
             }
         } else {
-            this.age = this.age + 1;
-            this.prevOffset = this.offset;
-            this.offset += this.increment;
-            if (this.getExtending()) {
-                AABB p_bb = this.getAdjustedBoundingBox();
-                List<Entity> list1 = this.level.getEntities(null, p_bb);
+            tile.age ++;
+            tile.prevOffset = tile.offset;
+            tile.offset += tile.increment;
+            if (extending) {
+                AABB p_bb = tile.getAdjustedBoundingBox();
+                List<Entity> list1 = level.getEntities(null, p_bb);
                 if (!list1.isEmpty()) {
                     for (Entity entity : list1) {
                         if (entity.getPistonPushReaction() != PushReaction.IGNORE) {
@@ -116,18 +117,18 @@ public class SpringLauncherArmBlockTile extends BlockEntity {
                             double d2 = vec3d.y;
                             double d3 = vec3d.z;
                             double speed = ServerConfigs.cached.LAUNCHER_VEL;
-                            if (dx != 0) {
-                                d1 = this.dx * speed;
+                            if (tile.dx != 0) {
+                                d1 = tile.dx * speed;
                             }
-                            if (dy != 0) {
-                                d2 = this.dy * speed;
+                            if (tile.dy != 0) {
+                                d2 = tile.dy * speed;
                             }
-                            if (dz != 0) {
-                                d3 = this.dz * speed;
+                            if (tile.dz != 0) {
+                                d3 = tile.dz * speed;
                             }
                             entity.setDeltaMovement(d1, d2, d3);
                             entity.hurtMarked = true;
-                            moveCollidedEntity(entity, p_bb);
+                            tile.moveCollidedEntity(entity, p_bb);
                         }
                     }
                 }

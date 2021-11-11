@@ -6,6 +6,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Matrix4f;
 import net.mehvahdjukaar.supplementaries.block.util.TextHolder;
+import net.mehvahdjukaar.supplementaries.common.Textures;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
@@ -259,6 +261,7 @@ public class TextUtil {
     public static class RenderTextProperties {
         private final int light;
         private final boolean hasOutline;
+        private final Style style;
         private final int textColor;
         private final int darkenedColor;
 
@@ -274,6 +277,7 @@ public class TextUtil {
                 this.hasOutline = false;
                 this.light = combinedLight;
             }
+            style = textHolder.hasAntiqueInk() ? Style.EMPTY.withFont(Textures.ANTIQUABLE_FONT) : Style.EMPTY;
         }
     }
 
@@ -290,7 +294,7 @@ public class TextUtil {
             }
             int centerX = (-font.width(string) / 2);
 
-            FormattedCharSequence charSequence = FormattedCharSequence.forward(string, Style.EMPTY);
+            FormattedCharSequence charSequence = FormattedCharSequence.forward(string, properties.style);
             renderLineInternal(charSequence, font, centerX, yOffset, matrix4f, buffer, properties);
 
             String substring = string.substring(0, Math.min(cursorPos, string.length()));

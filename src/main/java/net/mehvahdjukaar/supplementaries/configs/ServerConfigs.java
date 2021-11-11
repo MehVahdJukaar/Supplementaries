@@ -238,7 +238,9 @@ public class ServerConfigs {
                              - <map_name> map item name
                              - <map_color> hex color of the map item overlay texture
                              - <map_marker> id of the map marker to be used (ie: supplementaries:igloo).\s
-                            See texture folder for all the names. Leave empty for default ones
+                            See texture folder for all the names. Leave empty for default ones.
+                            You can also use vanilla map markers by referring to them with their enum name (i.e: minecraft:target_x)
+                            Other vanilla valid ones are: player, target, red_marker, target_point, player_off_map, player_off_limits, mansion, monument, red_x, banner_white
                             Note that ony the first parameter is required, each of the others others can me removed and will be defaulted to reasonable values
                             example: ['minecraft:swamp_hut','2','5','7','witch hut map','0x00ff33']""")
 

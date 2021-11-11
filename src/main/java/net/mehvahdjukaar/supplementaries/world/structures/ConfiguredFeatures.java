@@ -31,7 +31,7 @@ public class ConfiguredFeatures {
     public static final ConfiguredStructureFeature<?, ?> CONFIGURED_WAY_SIGN = StructureRegistry.WAY_SIGN.get().configured(FeatureConfiguration.NONE);
 
     public static final ConfiguredFeature<?, ?> CONFIGURED_WILD_FLAX = Feature.RANDOM_PATCH.configured(WILD_FLAX_CONFIG)
-            .decorated(Features.Decorators.HEIGHTMAP_DOUBLE_SQUARE).count(20);
+            .decorated(Features.Decorators.HEIGHTMAP_DOUBLE_SQUARE).count(25);
 
     /**
      * Registers the configured structure which is what gets added to the biomes.

@@ -5,6 +5,7 @@ import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.CageBlockTile;
 import net.mehvahdjukaar.supplementaries.block.tiles.FaucetBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
+import net.mehvahdjukaar.supplementaries.client.renderers.tiles.FaucetBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -22,6 +23,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -143,6 +145,16 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
             return tile.updateContainedFluidVisuals(level, pos, state);
         }
         return false;
+    }
+
+    @Override
+    public void onNeighborChange(BlockState state, LevelReader world, BlockPos pos, BlockPos neighbor) {
+        if (world.getBlockEntity(pos) instanceof FaucetBlockTile tile && world instanceof Level level) {
+            boolean water = tile.updateContainedFluidVisuals(level, pos, state);
+            if(state.getValue(HAS_WATER) != water){
+                level.setBlock(pos, state.setValue(HAS_WATER, water),2);
+            }
+        }
     }
 
     //TODO: redo

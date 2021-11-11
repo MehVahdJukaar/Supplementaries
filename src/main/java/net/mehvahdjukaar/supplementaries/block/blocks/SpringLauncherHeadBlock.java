@@ -1,11 +1,15 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 
+import net.mehvahdjukaar.supplementaries.block.tiles.BellowsBlockTile;
 import net.mehvahdjukaar.supplementaries.block.tiles.SpringLauncherArmBlockTile;
+import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DirectionalBlock;
@@ -33,6 +37,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 
@@ -67,29 +72,18 @@ public class SpringLauncherHeadBlock extends DirectionalBlock {
     }
 
     private static VoxelShape[] getShapesForExtension(boolean extended) {
-        return Arrays.stream(Direction.values()).map((direction) -> {
-            return getShapeForDirection(direction, extended);
-        }).toArray((id) -> {
-            return new VoxelShape[id];
-        });
+        return Arrays.stream(Direction.values()).map((direction) -> getShapeForDirection(direction, extended)).toArray(VoxelShape[]::new);
     }
 
     private static VoxelShape getShapeForDirection(Direction direction, boolean shortArm) {
-        switch(direction) {
-            case DOWN:
-            default:
-                return Shapes.or(PISTON_EXTENSION_DOWN_AABB, shortArm ? SHORT_DOWN_ARM_AABB : DOWN_ARM_AABB);
-            case UP:
-                return Shapes.or(PISTON_EXTENSION_UP_AABB, shortArm ? SHORT_UP_ARM_AABB : UP_ARM_AABB);
-            case NORTH:
-                return Shapes.or(PISTON_EXTENSION_NORTH_AABB, shortArm ? SHORT_NORTH_ARM_AABB : NORTH_ARM_AABB);
-            case SOUTH:
-                return Shapes.or(PISTON_EXTENSION_SOUTH_AABB, shortArm ? SHORT_SOUTH_ARM_AABB : SOUTH_ARM_AABB);
-            case WEST:
-                return Shapes.or(PISTON_EXTENSION_WEST_AABB, shortArm ? SHORT_WEST_ARM_AABB : WEST_ARM_AABB);
-            case EAST:
-                return Shapes.or(PISTON_EXTENSION_EAST_AABB, shortArm ? SHORT_EAST_ARM_AABB : EAST_ARM_AABB);
-        }
+        return switch (direction) {
+            default -> Shapes.or(PISTON_EXTENSION_DOWN_AABB, shortArm ? SHORT_DOWN_ARM_AABB : DOWN_ARM_AABB);
+            case UP -> Shapes.or(PISTON_EXTENSION_UP_AABB, shortArm ? SHORT_UP_ARM_AABB : UP_ARM_AABB);
+            case NORTH -> Shapes.or(PISTON_EXTENSION_NORTH_AABB, shortArm ? SHORT_NORTH_ARM_AABB : NORTH_ARM_AABB);
+            case SOUTH -> Shapes.or(PISTON_EXTENSION_SOUTH_AABB, shortArm ? SHORT_SOUTH_ARM_AABB : SOUTH_ARM_AABB);
+            case WEST -> Shapes.or(PISTON_EXTENSION_WEST_AABB, shortArm ? SHORT_WEST_ARM_AABB : WEST_ARM_AABB);
+            case EAST -> Shapes.or(PISTON_EXTENSION_EAST_AABB, shortArm ? SHORT_EAST_ARM_AABB : EAST_ARM_AABB);
+        };
     }
 
     @Override
@@ -107,8 +101,7 @@ public class SpringLauncherHeadBlock extends DirectionalBlock {
             if((entityIn instanceof LivingEntity) && !worldIn.isClientSide && fallDistance>(float)ServerConfigs.cached.LAUNCHER_HEIGHT){
                 worldIn.setBlock(pos, ModRegistry.SPRING_LAUNCHER_ARM.get().defaultBlockState()
                         .setValue(SpringLauncherArmBlock.EXTENDING, false).setValue(FACING, state.getValue(FACING)), 3);
-                BlockEntity te = worldIn.getBlockEntity(pos);
-                if(te instanceof SpringLauncherArmBlockTile launcherArmBlockTile){
+                if(worldIn.getBlockEntity(pos) instanceof SpringLauncherArmBlockTile launcherArmBlockTile){
                     launcherArmBlockTile.age = 1;
                     launcherArmBlockTile.offset = -0.5;
                 }
@@ -221,18 +214,19 @@ public class SpringLauncherHeadBlock extends DirectionalBlock {
                 : super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
 
+    @Override
     public boolean canSurvive(BlockState state, LevelReader worldIn, BlockPos pos) {
         BlockState bs = worldIn.getBlockState(pos.relative(state.getValue(FACING).getOpposite()));
         return bs == ModRegistry.SPRING_LAUNCHER.get().defaultBlockState().setValue(BlockStateProperties.EXTENDED, true).setValue(FACING, state.getValue(FACING));
-        // return bs == PistonLauncherBlock.block || block ==
-        // PistonLauncherArmTileBlock.block;
     }
 
+    @Override
     public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
         if (state.canSurvive(worldIn, pos)) {
             BlockPos blockpos = pos.relative(state.getValue(FACING).getOpposite());
             worldIn.getBlockState(blockpos).neighborChanged(worldIn, blockpos, blockIn, fromPos, false);
         }
     }
+
 }
 

@@ -23,6 +23,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.BaseComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -45,6 +46,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.Supplier;
 
 public class ItemsOverrideHandler {
 
@@ -82,12 +84,19 @@ public class ItemsOverrideHandler {
         itemActionOnBlock.add(new CeilingBannersBehavior());
         itemActionOnBlock.add(new HangingPotBehavior());
         itemActionOnBlock.add(new EnhancedCakeBehavior());
-        itemActionOnBlock.add(new PlaceableSticksBehavior());
-        itemActionOnBlock.add(new PlaceableRodsBehavior());
         itemActionOnBlock.add(new XpBottlingBehavior());
         itemActionOnBlock.add(new PlaceableGunpowderBehavior());
         itemActionOnBlock.add(new BookPileBehavior());
         itemActionOnBlock.add(new BookPileHorizontalBehavior());
+        itemActionOnBlock.add(new PlaceableRodsBehavior());
+        itemActionOnBlock.add(new PlaceableSticksBehavior(ModRegistry.STICK_BLOCK, Items.STICK));
+
+        PlaceableSticksBehavior.optional(ModRegistry.PRISMARINE_ROD_BLOCK, "upgrade_aquatic:prismarine_rod")
+                .ifPresent(itemActionOnBlock::add);
+        PlaceableSticksBehavior.optional(ModRegistry.PROPELPLANT_ROD_BLOCK, "nethers_delight:propelplant_cane")
+                .ifPresent(itemActionOnBlock::add);
+        PlaceableSticksBehavior.optional(ModRegistry.EDELWOOD_STICK_BLOCK, "forbidden_arcanus:edelwood_stick")
+                .ifPresent(itemActionOnBlock::add);
 
         for (Item i : ForgeRegistries.ITEMS) {
             for (ItemUseOnBlockOverride b : itemActionOnBlock) {
@@ -616,6 +625,22 @@ public class ItemsOverrideHandler {
 
     private static class PlaceableSticksBehavior extends ItemUseOnBlockOverride {
 
+        private final Supplier<Block> block;
+        private final Item item;
+
+        private PlaceableSticksBehavior(Supplier<Block> block, Item item) {
+            this.block = block;
+            this.item = item;
+        }
+
+        private static Optional<PlaceableSticksBehavior> optional(Supplier<Block> block, String itemRes) {
+            Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemRes));
+            if (item != null && item != Items.AIR) {
+                return Optional.of(new PlaceableSticksBehavior(block, item));
+            }
+            return Optional.empty();
+        }
+
         @Nullable
         @Override
         public BaseComponent getTooltip() {
@@ -625,7 +650,7 @@ public class ItemsOverrideHandler {
         @Nullable
         @Override
         public Block getBlockOverride(Item i) {
-            return ModRegistry.STICK_BLOCK.get();
+            return this.block.get();
         }
 
         @Override
@@ -634,49 +659,28 @@ public class ItemsOverrideHandler {
         }
 
         @Override
-        public boolean appliesToItem(Item item) {
-            return item == Items.STICK;
+        public boolean appliesToItem(Item i) {
+            return i == this.item;
         }
 
         @Override
         public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand, ItemStack stack, BlockHitResult hit, boolean isRanged) {
             if (player.getAbilities().mayBuild) {
-                return paceBlockOverride(ModRegistry.STICK_BLOCK.get(), player, hand, stack, world, hit, isRanged);
+                return paceBlockOverride(block.get(), player, hand, stack, world, hit, isRanged);
             }
             return InteractionResult.PASS;
         }
     }
 
-    private static class PlaceableRodsBehavior extends ItemUseOnBlockOverride {
+    private static class PlaceableRodsBehavior extends PlaceableSticksBehavior {
 
-        @Nullable
-        @Override
-        public BaseComponent getTooltip() {
-            return new TranslatableComponent("message.supplementaries.placeable");
-        }
-
-        @Nullable
-        @Override
-        public Block getBlockOverride(Item i) {
-            return ModRegistry.BLAZE_ROD_BLOCK.get();
+        private PlaceableRodsBehavior() {
+            super(ModRegistry.BLAZE_ROD_BLOCK, Items.BLAZE_ROD);
         }
 
         @Override
         public boolean isEnabled() {
             return ServerConfigs.cached.PLACEABLE_RODS;
-        }
-
-        @Override
-        public boolean appliesToItem(Item item) {
-            return item == Items.BLAZE_ROD;
-        }
-
-        @Override
-        public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand, ItemStack stack, BlockHitResult hit, boolean isRanged) {
-            if (player.getAbilities().mayBuild) {
-                return paceBlockOverride(ModRegistry.BLAZE_ROD_BLOCK.get(), player, hand, stack, world, hit, isRanged);
-            }
-            return InteractionResult.PASS;
         }
     }
 

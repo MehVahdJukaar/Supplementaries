@@ -221,17 +221,17 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
         if (entity.isUsingItem() && entity.getUseItemRemainingTicks() > 0 && entity.getUsedItemHand() == hand) {
             //bow anim
 
-            float timeLeft = (float) stack.getUseDuration() - ((float) Minecraft.getInstance().player.getUseItemRemainingTicks() - partialTicks + 1.0F);
+            float timeLeft = (float) stack.getUseDuration() - ((float)entity.getUseItemRemainingTicks() - partialTicks + 1.0F);
             float f12 = getPowerForTime(stack, timeLeft);
 
             if (f12 > 0.1F) {
                 float f15 = Mth.sin((timeLeft - 0.1F) * 1.3F);
                 float f18 = f12 - 0.1F;
                 float f20 = f15 * f18;
-                matrixStack.translate(f20 * 0.0F, f20 * 0.004F, f20 * 0.0F);
+                matrixStack.translate(0, f20 * 0.004F, 0);
             }
 
-            matrixStack.translate(f12 * 0.0F, f12 * 0.0F, f12 * 0.04F);
+            matrixStack.translate(0, 0, f12 * 0.04F);
             matrixStack.scale(1.0F, 1.0F, 1.0F + f12 * 0.2F);
             //matrixStack.mulPose(Vector3f.YN.rotationDegrees((float)k * 45.0F));
         }

@@ -1,0 +1,49 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"spyglass": "supplementaries:items/flute_model"
+	},
+	"elements": [
+		{
+			"from": [7, 0, 7],
+			"to": [9, 14, 9],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8.5, 8]},
+			"faces": {
+				"north": {"uv": [2, 2, 4, 16], "texture": "#spyglass"},
+				"east": {"uv": [0, 2, 2, 16], "texture": "#spyglass"},
+				"south": {"uv": [6, 2, 8, 16], "texture": "#spyglass"},
+				"west": {"uv": [4, 2, 6, 16], "texture": "#spyglass"},
+				"up": {"uv": [2, 0, 4, 2], "texture": "#spyglass"},
+				"down": {"uv": [4, 0, 6, 2], "texture": "#spyglass"}
+			}
+		}
+	],
+	"gui_light": "front",
+	"display": {
+		"thirdperson_righthand": {
+			"translation": [0, -1, 0]
+		},
+		"thirdperson_lefthand": {
+			"translation": [0, -1, 0]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, 90, 0]
+		},
+		"ground": {
+			"rotation": [90, 0, 0]
+		},
+		"gui": {
+			"rotation": [-67.5, 0, 45],
+			"scale": [1.5, 1.5, 1.5]
+		},
+		"head": {
+			"rotation": [90, 0, 90],
+			"translation": [5.5, 0, 0],
+			"scale": [1.6, 1.6, 1.6]
+		},
+		"fixed": {
+			"translation": [0, 0, -1.5],
+			"scale": [1.5, 1.5, 1.5]
+		}
+	}
+}

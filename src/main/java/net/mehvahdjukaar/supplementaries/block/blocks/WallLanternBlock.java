@@ -1,8 +1,12 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.block.tiles.SpringLauncherArmBlockTile;
+import net.mehvahdjukaar.supplementaries.block.tiles.SwayingBlockTile;
 import net.mehvahdjukaar.supplementaries.block.tiles.WallLanternBlockTile;
+import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.block.util.IBlockHolder;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -20,6 +24,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -93,12 +99,11 @@ public class WallLanternBlock extends EnhancedLanternBlock {
     @Override
     public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random rand) {
         super.tick(state, worldIn, pos, rand);
-        BlockEntity te = worldIn.getBlockEntity(pos);
-        if (te instanceof WallLanternBlockTile && ((WallLanternBlockTile) te).isRedstoneLantern) {
+        if (worldIn.getBlockEntity(pos) instanceof WallLanternBlockTile te && te.isRedstoneLantern) {
             if (state.getValue(LIT) && !worldIn.hasNeighborSignal(pos)) {
                 worldIn.setBlock(pos, state.cycle(LIT), 2);
-                if (((WallLanternBlockTile) te).mimic.hasProperty(LIT))
-                    ((WallLanternBlockTile) te).mimic = ((WallLanternBlockTile) te).mimic.cycle(LIT);
+                if (te.mimic.hasProperty(LIT))
+                    te.mimic = te.mimic.cycle(LIT);
             }
         }
     }
@@ -134,5 +139,11 @@ public class WallLanternBlock extends EnhancedLanternBlock {
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return new WallLanternBlockTile(pPos, pState);
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
+        return BlockUtils.getTicker(pBlockEntityType, ModRegistry.WALL_LANTERN_TILE.get(), pLevel.isClientSide ? SwayingBlockTile::clientTick : null);
     }
 }

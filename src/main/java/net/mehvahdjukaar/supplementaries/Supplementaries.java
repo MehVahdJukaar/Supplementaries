@@ -4,18 +4,15 @@ import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.datagen.RecipeCondition;
-import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
-import net.mehvahdjukaar.supplementaries.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.setup.ClientSetup;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModSetup;
+import net.mehvahdjukaar.supplementaries.world.songs.FluteSongsReloadListener;
 import net.mehvahdjukaar.supplementaries.world.structures.StructureRegistry;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.BlockTags;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
@@ -44,6 +41,7 @@ public class Supplementaries {
     public Supplementaries() {
 
 
+        //TODO: events
 
         //TODO: fish bucket on cages a
 //TODO: shift click to pickup placed book
@@ -85,11 +83,7 @@ public class Supplementaries {
 
         //firefly glow block
 
-        //TODO: fix tint breaking particle like grass block
-
         //TODO: replace soft fluid system with forge caps to itemstacks and register actual forge fluids
-
-        //TODO: rework ItemDisplayTile with proper capability usage
 
         //TODO: bugs: bell ropes(add to flywheel instance), brewing stand colors(?)
 
@@ -101,8 +95,6 @@ public class Supplementaries {
 
         //add shift middle click to swap to correct tool
 
-        //use onNeighborchanged for faucets
-
         //mod idea: status effect jei plugin
 
         //mod idea: better birch trees
@@ -112,9 +104,7 @@ public class Supplementaries {
 
         //wrench, throwable slimeballs
 
-        //TODO: make dummy not show numbers at a distance
-
-        //baby villagers trick or treat
+        //TODO: make dummy not show numbers at a distance, headshot
 
         //simple mode for doors and trapdoors
 
@@ -130,8 +120,19 @@ public class Supplementaries {
 
         //TODO: faucets create sprout
 
+        // randomium item particle when drop
 
-        MinecraftForge.EVENT_BUS.register(ServerEvents.class);
+        //TODO: xp bottling whose cost depends on player total xp
+        //TODO: randomium that can spawn in other dimensions via whitelist
+        //TODO: add compat stuff recently provided
+        //todo: serene easons & moon stuff for haunted harvest
+
+        //TODO: hanging sign bigger item
+
+        //TODO: wiki for custom map markers icons. add simple icon datapacks
+
+
+
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ServerConfigs.SERVER_SPEC);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfigs.CLIENT_SPEC);
@@ -150,6 +151,7 @@ public class Supplementaries {
 
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> bus.addListener(ClientSetup::init));
 
+        MinecraftForge.EVENT_BUS.register(ServerEvents.class);
 
     }
 

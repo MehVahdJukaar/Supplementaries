@@ -1,21 +1,30 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
+import dan200.computercraft.api.lua.LuaFunction;
+import dan200.computercraft.api.peripheral.IPeripheral;
+import dan200.computercraft.api.peripheral.IPeripheralProvider;
 import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.Nameable;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.util.LazyOptional;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
 import java.util.UUID;
 
-public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerProtected {
+public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerProtected, IPeripheralProvider {
     private UUID owner = null;
 
     public String message = "";
@@ -93,5 +102,77 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
     @Override
     public void setOwner(UUID owner) {
         this.owner = owner;
+    }
+
+    @NotNull
+    @Override
+    public LazyOptional<IPeripheral> getPeripheral(@NotNull Level world, @NotNull BlockPos pos, @NotNull Direction side) {
+        return peripheral;
+    }
+
+    private final LazyOptional<IPeripheral> peripheral = LazyOptional.of(() -> new SpeakerPeripheral(this));
+
+    public static class SpeakerPeripheral implements IPeripheral {
+
+        private final SpeakerBlockTile tile;
+
+        public SpeakerPeripheral(SpeakerBlockTile tile) {
+            this.tile = tile;
+        }
+
+        @LuaFunction
+        public final void setNarrator(boolean narratorOn) {
+            tile.narrator = narratorOn;
+            tile.setChanged();
+        }
+
+        @LuaFunction
+        public final boolean isNarratorEnabled() {
+            return tile.narrator;
+        }
+
+        @LuaFunction
+        public final void setMessage(String message) {
+            tile.message = message;
+            tile.setChanged();
+        }
+
+        @LuaFunction
+        public final String getMessage() {
+            return tile.message;
+        }
+
+        @LuaFunction
+        public final void setName(String name) {
+            tile.customName = new TextComponent(name);
+            tile.setChanged();
+        }
+
+        @LuaFunction
+        public final String getName() {
+            return tile.customName.getString();
+        }
+
+        @LuaFunction
+        public final double getVolume() {
+            return tile.volume;
+        }
+
+        @LuaFunction
+        public final void setVolume(double volume) {
+            tile.volume = volume;
+            tile.setChanged();
+        }
+
+        @NotNull
+        @Override
+        public String getType() {
+            return "speaker_block";
+        }
+
+        @Override
+        public boolean equals(@Nullable IPeripheral other) {
+            return Objects.equals(this, other);
+        }
     }
 }

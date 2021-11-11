@@ -14,6 +14,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.color.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.RedMerchantRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.RopeArrowRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.SlingshotProjectileRenderer;
+import net.mehvahdjukaar.supplementaries.client.renderers.items.FluteItemRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
 import net.mehvahdjukaar.supplementaries.client.tooltip.BlackboardTooltipComponent;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
@@ -36,14 +37,13 @@ import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
 import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -53,6 +53,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.*;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -174,6 +175,8 @@ public class ClientSetup {
         //rope knot
         ItemBlockRenderTypes.setRenderLayer(ModRegistry.ROPE_KNOT.get(), RenderType.cutout());
 
+        //ItemProperties.register(ModRegistry.FLUTE_ITEM.get(), new ResourceLocation("in_hand"),
+        //        (stack, world, entity, s) -> Math.min(s, 0));
 
         ItemProperties.register(Items.CROSSBOW, new ResourceLocation("rope_arrow"),
                 new CrossbowProperty(ModRegistry.ROPE_ARROW_ITEM.get()));
@@ -314,21 +317,15 @@ public class ClientSetup {
 
         //fake models & blockstates
 
-        registerStaticBlockState(Supplementaries.res("jar_boat_ship"), Blocks.AIR);
+        //registerStaticBlockState(Supplementaries.res("jar_boat_ship"), Blocks.AIR);
 
-        FlowerPotHandler.registerCustomModels(n -> registerStaticBlockState(new ResourceLocation(n), Blocks.AIR));
-    }
+        ModelLoader.addSpecialModel(FluteItemRenderer.FLUTE_3D_MODEL);
+        ModelLoader.addSpecialModel(FluteItemRenderer.FLUTE_2D_MODEL);
+        ModelLoader.addSpecialModel(JarBoatTileRenderer.BOAT_MODEL);
 
-    private static void registerStaticBlockState(ResourceLocation name, Block parent, String... booleanProperties) {
-        Map<ResourceLocation, StateDefinition<Block, BlockState>> mapCopy = new HashMap<>(ModelBakery.STATIC_DEFINITIONS);
+        //registerStaticItemModel(new ModelResourceLocation("supplementaries:flute_in_hand#inventory"));
 
-        StateDefinition.Builder<Block, BlockState> builder = (new StateDefinition.Builder<>(parent));
-
-        for (String p : booleanProperties) builder.add(BooleanProperty.create(p));
-
-        mapCopy.put(name, builder.create(Block::defaultBlockState, BlockState::new));
-
-        ModelBakery.STATIC_DEFINITIONS = mapCopy;
+        FlowerPotHandler.registerCustomModels(n -> ModelLoader.addSpecialModel(new ModelResourceLocation(n,"")));
     }
 
 }

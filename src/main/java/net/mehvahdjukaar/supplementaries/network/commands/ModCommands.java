@@ -8,7 +8,7 @@ import net.minecraft.commands.Commands;
 
 public class ModCommands {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        LiteralCommandNode<CommandSourceStack> mymod = dispatcher.register(
+        LiteralCommandNode<CommandSourceStack> commands = dispatcher.register(
                 Commands.literal(Supplementaries.MOD_ID)
                         .then(Commands.literal("globe")
                                 .requires((p) -> p.hasPermission(2))
@@ -19,8 +19,9 @@ public class ModCommands {
                         .then(OpenConfiguredCommand.register(dispatcher))
                         .then(IUsedToRollTheDice.register(dispatcher))
                         .then(AddCageMobCommand.register(dispatcher))
+                        .then(RecordSongCommand.register(dispatcher))
         );
 
-        //dispatcher.register(Commands.literal("splm").redirect(mymod));
+        //dispatcher.register(Commands.literal("splm").redirect(commands));
     }
 }

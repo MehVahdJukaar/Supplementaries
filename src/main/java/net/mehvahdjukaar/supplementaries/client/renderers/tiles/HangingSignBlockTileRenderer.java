@@ -129,14 +129,15 @@ public class HangingSignBlockTileRenderer implements BlockEntityRenderer<Hanging
                     BakedModel model = itemRenderer.getModel(stack, tile.getLevel(), null, 0);
                     for (int v = 0; v < 2; v++) {
                         poseStack.pushPose();
-                        poseStack.translate(0, 0, -0.0705);
-                        poseStack.scale(0.5f, 0.5f, 0.5f);
+                        poseStack.scale(0.75f, 0.75f, 0.75f);
+                        poseStack.translate(0, 0, -1);
                         //poseStack.mulPose(Const.Y180);
                         itemRenderer.render(stack, ItemTransforms.TransformType.FIXED, true, poseStack, bufferIn, combinedLightIn,
                                 combinedOverlayIn, model);
                         poseStack.popPose();
 
                         poseStack.mulPose(Const.Y180);
+                        poseStack.scale(0.9995f, 0.9995f, 0.9995f);
                     }
                 }
             }

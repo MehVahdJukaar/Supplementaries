@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
-import net.mehvahdjukaar.selene.util.DispenserHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.block.tiles.*;
@@ -155,14 +154,15 @@ public class ModRegistry {
     @SubscribeEvent
     public static void registerEntityAttributes(EntityAttributeCreationEvent event) {
         event.put(ModRegistry.RED_MERCHANT.get(), Mob.createMobAttributes().build());
-      //  event.put(ModRegistry.FIREFLY_TYPE.get(), FireflyEntity.setCustomAttributes().build());
+        //  event.put(ModRegistry.FIREFLY_TYPE.get(), FireflyEntity.setCustomAttributes().build());
     }
 
     //paintings
     public static final RegistryObject<Motive> BOMB_PAINTING = PAINTINGS.register("bombs", () -> new Motive(32, 32));
 
     //enchantment
-    public static final RegistryObject<Enchantment> STASIS_ENCHANTMENT = ENCHANTMENTS.register("stasis", () -> new StasisEnchantment(Enchantment.Rarity.VERY_RARE, EnchantmentCategory.CROSSBOW, EquipmentSlot.MAINHAND));
+    public static final RegistryObject<Enchantment> STASIS_ENCHANTMENT = ENCHANTMENTS.register("stasis", () ->
+            new StasisEnchantment(Enchantment.Rarity.VERY_RARE, EnchantmentCategory.CROSSBOW, EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND));
 
     //particles
     public static final RegistryObject<SimpleParticleType> FIREFLY_GLOW = regParticle("firefly_glow");
@@ -348,13 +348,19 @@ public class ModRegistry {
             (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_TOOLS, KEY_NAME))));
     //flute
     public static final String FLUTE_NAME = "flute";
-    public static final RegistryObject<Item> FLUTE_ITEM = regItem(FLUTE_NAME, () -> new Flute((new Item.Properties())
+    public static final RegistryObject<Item> FLUTE_ITEM = regItem(FLUTE_NAME, () -> new FluteItem((new Item.Properties())
             .tab(getTab(CreativeModeTab.TAB_TOOLS, FLUTE_NAME)).stacksTo(1).durability(32)));
 
     //candy
     public static final String CANDY_NAME = "candy";
     public static final RegistryObject<Item> CANDY_ITEM = regItem(CANDY_NAME, () -> new CandyItem((new Item.Properties())
             .tab(getTab(CreativeModeTab.TAB_FOOD, CANDY_NAME))));
+
+    //antique ink
+    public static final String ANTIQUE_INK_NAME = "antique_ink";
+    public static final RegistryObject<Item> ANTIQUE_INK = regItem(ANTIQUE_INK_NAME, () -> new Item((new Item.Properties())
+            .tab(getTab(CreativeModeTab.TAB_MISC, ANTIQUE_INK_NAME))));
+
     //speedometer
     /*
     public static final String SPEEDOMETER_NAME = "speedometer";
@@ -753,6 +759,7 @@ public class ModRegistry {
             BlockBehaviour.Properties.of(Material.METAL, MaterialColor.METAL)
                     .strength(4f, 5f)
                     .sound(SoundType.METAL)
+                    .requiresCorrectToolForDrops()
                     .noDrops()
                     .jumpFactor(1.18f)
     ));
@@ -769,7 +776,7 @@ public class ModRegistry {
 
     //speaker Block
     public static final String SPEAKER_BLOCK_NAME = "speaker_block";
-    public static final RegistryObject<Block> SPEAKER_BLOCK = BLOCKS.register(SPEAKER_BLOCK_NAME, () -> new SpeakerBlock(
+    public static final RegistryObject<SpeakerBlock> SPEAKER_BLOCK = BLOCKS.register(SPEAKER_BLOCK_NAME, () -> new SpeakerBlock(
             BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.COLOR_BROWN)
                     .strength(1f, 2f)
                     .sound(SoundType.WOOD)
@@ -1087,8 +1094,19 @@ public class ModRegistry {
     public static final RegistryObject<Block> STICK_BLOCK = BLOCKS.register(STICK_NAME, () -> new StickBlock(
             BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.WOOD)
                     .strength(0.25F, 0F)
-                    .sound(SoundType.WOOD))
-    );
+                    .sound(SoundType.WOOD)));
+    public static final RegistryObject<Block> EDELWOOD_STICK_BLOCK = BLOCKS.register("edelwood_stick", () -> new StickBlock(
+            BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.TERRACOTTA_BROWN)
+                    .strength(0.25F, 0F)
+                    .sound(SoundType.WOOD)));
+    public static final RegistryObject<Block> PRISMARINE_ROD_BLOCK = BLOCKS.register("prismarine_rod", () -> new StickBlock(
+            BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_CYAN)
+                    .strength(0.25F, 0F)
+                    .sound(SoundType.STONE),0));
+    public static final RegistryObject<Block> PROPELPLANT_ROD_BLOCK = BLOCKS.register("propelplant_cane", () -> new StickBlock(
+            BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.CRIMSON_STEM)
+                    .strength(0.25F, 0F)
+                    .sound(SoundType.WOOD)));
 
     //blaze rod
     public static final String BLAZE_ROD_NAME = "blaze_rod";

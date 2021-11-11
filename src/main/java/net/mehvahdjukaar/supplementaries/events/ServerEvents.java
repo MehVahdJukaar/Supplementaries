@@ -11,6 +11,7 @@ import net.mehvahdjukaar.supplementaries.common.SpecialPlayers;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.quark.QuarkPlugin;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.entities.goals.EatFodderGoal;
@@ -18,6 +19,7 @@ import net.mehvahdjukaar.supplementaries.items.CandyItem;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.ClientBoundSendLoginMessagePacket;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.world.songs.FluteSongsReloadListener;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
@@ -39,6 +41,7 @@ import net.minecraft.world.level.block.ChainBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -115,13 +118,18 @@ public class ServerEvents {
         }
     }
 
+    private static final boolean FODDER_ENABLED = RegistryConfigs.reg.FODDER_ENABLED.get();
+
     @SubscribeEvent
     public static void onEntityJoin(EntityJoinWorldEvent event){
-        Entity entity = event.getEntity();
-        if(entity instanceof Animal animal){
-            EntityType<?> type = event.getEntity().getType();
-            if(ModTags.EATS_FODDER.contains(type)){
-                animal.goalSelector.addGoal(3, new EatFodderGoal(animal, 1, 8, 2, 30));
+        if(FODDER_ENABLED) {
+            Entity entity = event.getEntity();
+            if (entity instanceof Animal animal) {
+                EntityType<?> type = event.getEntity().getType();
+                if (ModTags.EATS_FODDER.contains(type)) {
+                    animal.goalSelector.addGoal(3,
+                            new EatFodderGoal(animal, 1, 8, 2, 30));
+                }
             }
         }
     }
@@ -141,7 +149,10 @@ public class ServerEvents {
 
     }
 
-
+    @SubscribeEvent
+    public static void onAddReloadListeners(final AddReloadListenerEvent event) {
+        event.addListener(new FluteSongsReloadListener());
+    }
 
 
 }

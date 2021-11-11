@@ -86,7 +86,7 @@ public abstract class SwayingBlockTile extends BlockEntity {
         return true;
     }
 
-    public static void clientTick(Level pLevel, BlockPos pPos, BlockState pState, SwayingBlockTile tile) {
+    public static void clientTick(Level pLevel, BlockPos pPos, BlockState pState,SwayingBlockTile tile) {
         if (tile.hasAnimation()) {
 
             //TODO: improve physics

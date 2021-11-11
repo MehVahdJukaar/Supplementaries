@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
+import dan200.computercraft.api.peripheral.IPeripheral;
+import dan200.computercraft.api.peripheral.IPeripheralProvider;
 import net.mehvahdjukaar.supplementaries.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.client.gui.SpeakerBlockGui;
@@ -33,11 +35,13 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fmllegacy.network.NetworkDirection;
 import net.minecraftforge.fmllegacy.server.ServerLifecycleHooks;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class SpeakerBlock extends Block implements EntityBlock {
+public class SpeakerBlock extends Block implements EntityBlock , IPeripheralProvider {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
@@ -142,6 +146,16 @@ public class SpeakerBlock extends Block implements EntityBlock {
             return true;
         }
         return super.triggerEvent(state, world, pos, eventID, eventParam);
+    }
+
+
+    @NotNull
+    @Override
+    public LazyOptional<IPeripheral> getPeripheral(@NotNull Level world, @NotNull BlockPos pos, @NotNull Direction side) {
+        if(world.getBlockEntity(pos) instanceof SpeakerBlockTile tile){
+            return tile.getPeripheral(world, pos, side);
+        }
+        return LazyOptional.empty();
     }
 
 }

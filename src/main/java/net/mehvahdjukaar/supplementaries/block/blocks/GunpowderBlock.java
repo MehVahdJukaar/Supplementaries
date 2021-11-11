@@ -252,10 +252,9 @@ public class GunpowderBlock extends LightUpBlock {
         return state.isFaceSturdy(world, pos, Direction.UP) || state.is(Blocks.HOPPER);
     }
 
-    //TODO: add more cases
     protected boolean canConnectTo(BlockState state, BlockGetter world, BlockPos pos, @Nullable Direction dir) {
         Block b = state.getBlock();
-        return b instanceof ILightable || b instanceof TntBlock || b instanceof CampfireBlock ||
+        return b instanceof ILightable || b instanceof TntBlock || b instanceof CampfireBlock || b instanceof AbstractCandleBlock ||
                 (CompatHandler.deco_blocks && DecoBlocksCompatRegistry.isBrazier(b));
     }
 

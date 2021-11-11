@@ -4,7 +4,6 @@ import net.mehvahdjukaar.supplementaries.block.blocks.CeilingBannerBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.FlagBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.HangingSignBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.PresentBlock;
-import net.mehvahdjukaar.supplementaries.client.renderers.items.FlagItemRenderer;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.items.BurnableBlockItem;
@@ -178,7 +177,7 @@ public class Variants {
 
 
     //presents
-    public static Map<DyeColor, RegistryObject<Item>> makePresentsItems(){
+    public static Map<DyeColor, RegistryObject<Item>> makePresentsItems() {
         Map<DyeColor, RegistryObject<Item>> map = new HashMap<>();
 
         /*

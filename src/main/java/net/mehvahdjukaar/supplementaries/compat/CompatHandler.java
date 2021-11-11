@@ -1,10 +1,12 @@
 package net.mehvahdjukaar.supplementaries.compat;
 
 
+import dan200.computercraft.api.ComputerCraftAPI;
 import net.mehvahdjukaar.supplementaries.compat.create.SupplementariesCreatePlugin;
 import net.mehvahdjukaar.supplementaries.compat.decorativeblocks.DecoBlocksCompatRegistry;
 import net.mehvahdjukaar.supplementaries.compat.farmersdelight.FDCompatRegistry;
 import net.mehvahdjukaar.supplementaries.compat.inspirations.CauldronRecipes;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -40,6 +42,8 @@ public class CompatHandler {
     public static final boolean simplefarming;
     public static final boolean atmospheric;
     public static final boolean enchantedbookredesign;
+    public static final boolean computercraft;
+    public static final boolean customvillagertrades;
 
     static {
         ModList ml = ModList.get();
@@ -70,11 +74,15 @@ public class CompatHandler {
         simplefarming = ml.isLoaded("simplefarming");
         atmospheric = ml.isLoaded("atmospheric");
         enchantedbookredesign = ml.isLoaded("enchantedbookredesign");
+        customvillagertrades = ml.isLoaded("customvillagertrades");
+        computercraft = ml.isLoaded("computercraft");
     }
 
-    public static void init(){
+    public static void init() {
         if (create) SupplementariesCreatePlugin.initialize();
+        if (computercraft) ComputerCraftAPI.registerPeripheralProvider(ModRegistry.SPEAKER_BLOCK.get());
     }
+
 
     public static void registerOptionalBlocks(final RegistryEvent.Register<Block> event){
         //if (deco_blocks) DecoBlocksCompatRegistry.registerBlocks(event);

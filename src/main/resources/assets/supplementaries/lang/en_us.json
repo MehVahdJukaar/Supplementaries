@@ -249,6 +249,9 @@
   "block.supplementaries.present_cyan": "Cyan Present",
   "structure.supplementaries.way_sign": "Way Sign",
   "item.supplementaries.candy": "Candy",
+  "item.supplementaries.antique_ink": "Antique Ink",
+  "message.supplementaries.command.record.start": "Noteblocks recording started",
+  "message.supplementaries.command.record.stop": "Noteblocks recording stopped: saved song at recorded_songs/%s",
 
   "item.supplementaries.key_chain": "Key Chain",
   "block.supplementaries.skull_candle": "Skull Candle",
@@ -258,6 +261,12 @@
   "item.supplementaries.amethyst_arrow": "Amethyst Arrow",
 
 
+
+  "block.supplementaries.edelwood_stick": "Edelwood Stick",
+  "block.supplementaries.propelplant_cane": "Propelplant Cane",
+  "block.supplementaries.prismarine_rod": "Prismarine Rod",
+  "block.supplementaries.hanging_sign_polished": "Polished Hanging Sign",
+  "item.supplementaries.sign_post_polished": "Polished Hanging Sign",
   "block.supplementaries.hanging_sign_bamboo": "Bamboo Hanging Sign",
   "item.supplementaries.hanging_sign_bamboo": "Bamboo Hanging Sign",
   "item.supplementaries.sign_post_bamboo": "Bamboo Sign Post",

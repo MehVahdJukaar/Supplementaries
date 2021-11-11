@@ -142,7 +142,7 @@ public class TurnTableBlock extends Block implements EntityBlock {
     }
 
     public static int getPeriod(BlockState state) {
-        return (60 - state.getValue(POWER) * 4) + 5;
+        return (60 - state.getValue(POWER) * 4) + 4;
     }
 
     // rotate entities

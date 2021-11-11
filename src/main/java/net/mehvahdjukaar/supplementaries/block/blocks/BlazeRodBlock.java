@@ -27,33 +27,8 @@ import java.util.Random;
 public class BlazeRodBlock extends StickBlock {
 
     public BlazeRodBlock(Properties properties) {
-        super(properties);
+        super(properties, 0);
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, Boolean.FALSE).setValue(AXIS_Y, true).setValue(AXIS_X, false).setValue(AXIS_Z, false));
-    }
-
-    @Override
-    public boolean canBeReplaced(BlockState state, BlockPlaceContext context) {
-        Item item = context.getItemInHand().getItem();
-        if (item == Items.BLAZE_ROD || item == this.asItem()) {
-            BooleanProperty axis = this.AXIS2PROPERTY.get(context.getClickedFace().getAxis());
-            if (!state.getValue(axis)) return true;
-        }
-        return state.getMaterial().isReplaceable() && (context.getItemInHand().isEmpty() || context.getItemInHand().getItem() != this.asItem());
-    }
-
-    @Override
-    public int getFireSpreadSpeed(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
-        return 0;
-    }
-
-    @Override
-    public int getFlammability(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
-        return 0;
-    }
-
-    @Override
-    public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
-        return new ItemStack(Items.BLAZE_ROD);
     }
 
     @Override
@@ -96,10 +71,5 @@ public class BlazeRodBlock extends StickBlock {
             }
             world.addParticle(particle, x, y, z, 0.0D, 0.0D, 0.0D);
         }
-    }
-
-    @Override
-    public InteractionResult use(BlockState p_225533_1_, Level p_225533_2_, BlockPos p_225533_3_, Player p_225533_4_, InteractionHand p_225533_5_, BlockHitResult p_225533_6_) {
-        return InteractionResult.PASS;
     }
 }

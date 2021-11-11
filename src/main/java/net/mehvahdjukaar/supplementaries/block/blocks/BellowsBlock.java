@@ -148,13 +148,11 @@ public class BellowsBlock extends Block implements EntityBlock {
     @Override
     public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
         super.entityInside(state, worldIn, pos, entityIn);
-        BlockEntity te = worldIn.getBlockEntity(pos);
-        if (te instanceof BellowsBlockTile) ((BellowsBlockTile) te).onSteppedOn(entityIn);
+        if (worldIn.getBlockEntity(pos) instanceof BellowsBlockTile te) te.onSteppedOn(entityIn);
     }
 
     @Override
     public void stepOn(Level worldIn, BlockPos pos, BlockState state, Entity entityIn) {
-        BlockEntity te = worldIn.getBlockEntity(pos);
-        if (te instanceof BellowsBlockTile) ((BellowsBlockTile) te).onSteppedOn(entityIn);
+        if (worldIn.getBlockEntity(pos) instanceof BellowsBlockTile te) te.onSteppedOn(entityIn);
     }
 }

@@ -1,15 +1,13 @@
 package net.mehvahdjukaar.supplementaries.block.util;
 
-import net.mehvahdjukaar.supplementaries.block.tiles.NoticeBoardBlockTile;
-import net.mehvahdjukaar.supplementaries.client.renderers.LOD;
-import net.mehvahdjukaar.supplementaries.client.renderers.TextUtil;
-import net.mehvahdjukaar.supplementaries.client.renderers.tiles.SignPostBlockTileRenderer;
+import net.mehvahdjukaar.supplementaries.api.IAntiqueTextProvider;
+import net.mehvahdjukaar.supplementaries.common.Textures;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.client.gui.screens.inventory.LecternScreen;
-import net.minecraft.client.gui.screens.inventory.SignEditScreen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -18,17 +16,17 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.SignBlock;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.function.Function;
 
-public class TextHolder {
+public class TextHolder implements IAntiqueTextProvider {
 
     private final int lines;
     //text
@@ -43,7 +41,7 @@ public class TextHolder {
         this.lines = size;
         this.renderText = new FormattedCharSequence[size];
         this.signText = new Component[size];
-        Arrays.fill(this.signText,TextComponent.EMPTY);
+        Arrays.fill(this.signText, TextComponent.EMPTY);
     }
 
     //removing command source crap
@@ -84,8 +82,10 @@ public class TextHolder {
     }
 
     public void setLine(int line, Component text) {
+        Style style = this.hasAntiqueInk ? Style.EMPTY.withFont(Textures.ANTIQUABLE_FONT) : Style.EMPTY;
+        text = text.copy().setStyle(style);
         this.signText[line] = text;
-        this.renderText[line] =  null;
+        this.renderText[line] = null;
     }
 
     public Component[] getSignText() {
@@ -129,8 +129,15 @@ public class TextHolder {
             if (item == Items.INK_SAC) {
                 if (this.hasGlowingText || this.hasAntiqueInk) {
                     level.playSound(null, pos, SoundEvents.INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
-                    this.hasAntiqueInk = false;
+                    this.setAntiqueInk(false);
                     this.hasGlowingText = false;
+                    success = true;
+                }
+                //else return InteractionResult.FAIL;
+            } else if (item == ModRegistry.ANTIQUE_INK.get()) {
+                if (!this.hasAntiqueInk) {
+                    level.playSound(null, pos, SoundEvents.GLOW_INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                    this.setAntiqueInk(true);
                     success = true;
                 }
                 //else return InteractionResult.FAIL;
@@ -144,7 +151,7 @@ public class TextHolder {
             } else {
                 DyeColor color = DyeColor.getColor(stack);
                 if (color != null) {
-                    if(this.setTextColor(color)){
+                    if (this.setTextColor(color)) {
                         level.playSound(null, pos, SoundEvents.DYE_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
                         success = true;
                     }
@@ -155,7 +162,7 @@ public class TextHolder {
                 if (!player.isCreative()) {
                     stack.shrink(1);
                 }
-                if(player instanceof ServerPlayer serverPlayer) {
+                if (player instanceof ServerPlayer serverPlayer) {
                     CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
                     successCallback.run();
                 }
@@ -163,5 +170,18 @@ public class TextHolder {
             }
         }
         return InteractionResult.PASS;
+    }
+
+    @Override
+    public boolean hasAntiqueInk() {
+        return this.hasAntiqueInk;
+    }
+
+    @Override
+    public void setAntiqueInk(boolean hasInk) {
+        this.hasAntiqueInk = hasInk;
+        for (int i = 0; i < this.signText.length; i++) {
+            this.setLine(i, this.signText[i]);
+        }
     }
 }

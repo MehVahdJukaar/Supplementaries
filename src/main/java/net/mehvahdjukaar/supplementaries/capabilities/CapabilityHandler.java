@@ -4,6 +4,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.IAntiqueTextProvider;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.block.util.ITextHolderProvider;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -17,8 +18,10 @@ import javax.annotation.Nonnull;
 
 public class CapabilityHandler {
 
-    public static final Capability<ICatchableMob> CATCHABLE_MOB_CAP = CapabilityManager.get(new CapabilityToken<>(){});
-    public static final Capability<IAntiqueTextProvider> ANTIQUE_TEXT_CAP = CapabilityManager.get(new CapabilityToken<>(){});
+    public static final Capability<ICatchableMob> CATCHABLE_MOB_CAP = CapabilityManager.get(new CapabilityToken<>() {
+    });
+    public static final Capability<IAntiqueTextProvider> ANTIQUE_TEXT_CAP = CapabilityManager.get(new CapabilityToken<>() {
+    });
 
     public static void register(RegisterCapabilitiesEvent event) {
         event.register(ICatchableMob.class);
@@ -26,6 +29,7 @@ public class CapabilityHandler {
     }
 
     private static final ResourceLocation ANTIQUE_INK = new ResourceLocation(Supplementaries.MOD_ID, "antique_ink");
+
     @SubscribeEvent
     public static void onAttachTileCapabilities(AttachCapabilitiesEvent<BlockEntity> event) {
         BlockEntity tile = event.getObject();
@@ -48,7 +52,7 @@ public class CapabilityHandler {
         @Override
         public CompoundTag serializeNBT() {
             CompoundTag tag = new CompoundTag();
-            tag.putBoolean("ink",this.hasAntiqueInk);
+            tag.putBoolean("ink", this.hasAntiqueInk);
             return tag;
         }
 
@@ -68,5 +72,16 @@ public class CapabilityHandler {
         }
     }
 
+
+    public static void doStuff(BlockEntity tile, Runnable callable){
+        tile.getCapability(ANTIQUE_TEXT_CAP).ifPresent(c -> {
+            if (c.hasAntiqueInk()) {
+                IAntiqueTextProvider FONT = (IAntiqueTextProvider) (Minecraft.getInstance().font);
+                FONT.setAntiqueInk(true);
+                callable.run();;
+                //antiqueFontActive = true;
+            }
+        });
+    }
 
 }

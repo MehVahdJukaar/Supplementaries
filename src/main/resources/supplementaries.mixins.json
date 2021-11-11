@@ -7,11 +7,9 @@
   "package": "net.mehvahdjukaar.supplementaries.mixins",
   "mixins": [
     "AbstractVillagersMixin",
-    "BellTileEntityMixin",
     "BellMixin",
-
+    "BellTileEntityMixin",
     "BrewingStandMixin",
-
     "CampfireBlockMixin",
     "CatSitOnBlockGoalMixin",
     "CauldronBlockMixin",
@@ -26,6 +24,7 @@
     "LoomInputSlotMixin",
     "LoomMenuMixin",
     "MineshaftLanternMixin",
+    "NoteBlockMixin",
     "PistonBlockEntityMixin",
     "RedMerchantSpawnerMixin",
     "ShulkerBoxBlockEntityMixin",
@@ -41,8 +40,9 @@
     "accessors.MineshaftAccessor"
   ],
   "client": [
-
     "BellBlockEntityRendererMixin",
+    "BlockEntityRendererDispatcher",
+    "FontRendererMixin",
     "IronGolemRendererMixin",
     "ItemRendererMixin",
     "LevelRendererMixin",
