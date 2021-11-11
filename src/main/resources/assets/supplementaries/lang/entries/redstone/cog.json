@@ -1,0 +1,19 @@
+{
+  "name": "book.supplementaries.entry.cog.name",
+  "category": "patchouli:redstone",
+  "icon": "supplementaries:cog_block",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "supplementaries:cog_block",
+      "title": "book.supplementaries.entry.cog.spotlight.title",
+      "link_recipe": true,
+      "text": "book.supplementaries.entry.cog.spotlight"
+    },
+    {
+      "type": "crafting",
+      "recipe": "supplementaries:cog_block",
+      "text": "book.supplementaries.entry.cog.crafting"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "name": "book.supplementaries.entry.zombie_horse.name",
+  "category": "tweaks",
+  "icon": "minecraft:zombie_horse_spawn_egg",
+  "pages": [
+    {
+      "type": "patchouli:zombie_horse"
+    },
+    {
+      "type": "image",
+      "text": "book.supplementaries.entry.zombie_horse.page.2",
+      "images": [
+        "supplementaries:textures/gui/book/wild_flax/wild_flax1.png",
+        "supplementaries:textures/gui/book/wild_flax/wild_flax2.png"
+      ]
+    }
+  ]
+}

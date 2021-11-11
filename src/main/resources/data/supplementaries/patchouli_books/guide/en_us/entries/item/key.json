@@ -1,0 +1,19 @@
+{
+  "name": "book.supplementaries.entry.key.name",
+  "category": "item",
+  "icon": "supplementaries:key",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "supplementaries:key",
+      "title": "book.supplementaries.entry.key.page.1.title",
+      "link_recipe": true,
+      "text": "book.supplementaries.entry.key.page.1"
+    },
+    {
+      "type": "crafting",
+      "recipe": "supplementaries:key",
+      "text": "book.supplementaries.entry.key.page.2"
+    }
+  ]
+}

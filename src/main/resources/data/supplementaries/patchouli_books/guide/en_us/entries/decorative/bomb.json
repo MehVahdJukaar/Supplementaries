@@ -1,0 +1,19 @@
+{
+  "name": "book.supplementaries.entry.bomb.name",
+  "category": "decorative",
+  "icon": "supplementaries:bomb",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "supplementaries:bomb",
+      "title": "book.supplementaries.entry.bomb.page.1.title",
+      "link_recipe": true,
+      "text": "book.supplementaries.entry.bomb.page.1"
+    },
+    {
+      "type": "crafting",
+      "recipe": "supplementaries:bomb",
+      "text": "book.supplementaries.entry.bomb.page.2"
+    }
+  ]
+}

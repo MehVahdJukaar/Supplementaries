@@ -1,0 +1,30 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "flag": "sign_post",
+          "type": "supplementaries:flag"
+        },
+        {
+          "modid": "undergarden",
+          "type": "forge:mod_loaded"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shapeless",
+        "group": "sign_post",
+        "ingredients": [
+          {
+            "item": "undergarden:wigglewood_sign"
+          }
+        ],
+        "result": {
+          "item": "supplementaries:sign_post_wigglewood",
+          "count": 2
+        }
+      }
+    }
+  ]
+}

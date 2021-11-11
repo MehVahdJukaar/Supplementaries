@@ -1,0 +1,8 @@
+{
+	"credit": "Made with Blockbench",
+	  "parent": "supplementaries:block/stick_cross",
+	"textures": {
+		"0": "supplementaries:blocks/edelwood_stick_cross",
+		"particle": "supplementaries:blocks/edelwood_stick_cross"
+	}
+}

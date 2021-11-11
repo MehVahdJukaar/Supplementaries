@@ -1,0 +1,19 @@
+{
+  "name": "book.supplementaries.entry.slingshot.name",
+  "category": "item",
+  "icon": "supplementaries:slingshot",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "supplementaries:slingshot",
+      "title": "book.supplementaries.entry.slingshot.page.1.title",
+      "link_recipe": true,
+      "text": "book.supplementaries.entry.slingshot.page.1"
+    },
+    {
+      "type": "crafting",
+      "recipe": "supplementaries:slingshot",
+      "text": "book.supplementaries.entry.slingshot.page.2"
+    }
+  ]
+}

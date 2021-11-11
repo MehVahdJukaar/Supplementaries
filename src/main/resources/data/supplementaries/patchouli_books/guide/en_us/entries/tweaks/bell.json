@@ -1,0 +1,22 @@
+{
+  "name": "book.supplementaries.entry.bell.name",
+  "category": "tweaks",
+  "icon": "minecraft:bell",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "minecraft:bell",
+      "title": "book.supplementaries.entry.bell.page.1.title",
+      "link_recipe": true,
+      "text": "book.supplementaries.entry.bell.page.1"
+    },
+    {
+      "type": "image",
+      "text": "book.supplementaries.entry.bell.page.2",
+      "images": [
+        "supplementaries:textures/gui/book/wild_flax/wild_flax1.png",
+        "supplementaries:textures/gui/book/wild_flax/wild_flax2.png"
+      ]
+    }
+  ]
+}

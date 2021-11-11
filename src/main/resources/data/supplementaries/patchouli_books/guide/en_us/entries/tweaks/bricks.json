@@ -1,0 +1,18 @@
+{
+  "name": "book.supplementaries.entry.bricks.name",
+  "category": "tweaks",
+  "icon": "minecraft:brick",
+  "pages": [
+    {
+      "type": "patchouli:bricks"
+    },
+    {
+      "type": "image",
+      "text": "book.supplementaries.entry.bricks.page.2",
+      "images": [
+        "supplementaries:textures/gui/book/wild_flax/wild_flax1.png",
+        "supplementaries:textures/gui/book/wild_flax/wild_flax2.png"
+      ]
+    }
+  ]
+}

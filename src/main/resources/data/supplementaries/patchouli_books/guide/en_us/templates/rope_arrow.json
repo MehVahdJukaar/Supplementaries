@@ -1,0 +1,69 @@
+{
+	"components": [
+		{
+		  "type": "image",
+		  "image": "patchouli:textures/gui/crafting.png",
+		  "x": 7,
+		  "y": 10,
+		  "u": 0,
+		  "v": 0,
+		  "texture_width": 128,
+		  "texture_height": 256,
+		  "width": 100,
+		  "height": 62
+		},
+		{
+			"type": "item",
+			"item": {"item": "minecraft:arrow"},
+			"x": 12,
+			"y": 15,
+			"link_recipe": true
+		},
+		{
+			"type": "item",
+			"item": {"item": "supplementaries:rope"},
+			"x": 31,
+			"y": 15,
+			"link_recipe": true
+		},
+		{
+			"type": "item",
+			"item": {"item": "supplementaries:rope"},
+			"x": 50,
+			"y": 15,
+			"link_recipe": true
+		},
+		{
+			"type": "item",
+			"item": {"item": "supplementaries:rope"},
+			"x": 12,
+			"y": 34,
+			"link_recipe": true
+		},
+		{
+			"type": "item",
+			"item": {"item": "supplementaries:rope"},
+			"x": 31,
+			"y": 34,
+			"link_recipe": true
+		},
+		{
+			"type": "item",
+			"item": {"item": "supplementaries:rope_arrow"},
+			"x": 88,
+			"y": 34,
+			"link_recipe": true
+		},
+		{
+		  "type": "header",
+		  "text": "book.supplementaries.entry.rope_arrow.page.2.title",
+		  "x": -1,
+		  "y": -1
+		},
+        {
+          "type": "text",
+          "text": "book.supplementaries.entry.rope_arrow.page.2"
+        }
+
+	]
+}

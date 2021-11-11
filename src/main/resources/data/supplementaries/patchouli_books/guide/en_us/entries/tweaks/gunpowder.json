@@ -1,0 +1,22 @@
+{
+  "name": "book.supplementaries.entry.gunpowder.name",
+  "category": "tweaks",
+  "icon": "minecraft:gunpowder",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "minecraft:gunpowder",
+      "title": "book.supplementaries.entry.gunpowder.page.1.title",
+      "link_recipe": true,
+      "text": "book.supplementaries.entry.gunpowder.page.1"
+    },
+    {
+      "type": "image",
+      "text": "book.supplementaries.entry.gunpowder.page.2",
+      "images": [
+        "supplementaries:textures/gui/book/wild_flax/wild_flax1.png",
+        "supplementaries:textures/gui/book/wild_flax/wild_flax2.png"
+      ]
+    }
+  ]
+}

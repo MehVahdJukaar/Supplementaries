@@ -1,0 +1,19 @@
+{
+  "name": "book.supplementaries.entry.flax.name",
+  "category": "item",
+  "icon": "supplementaries:flax",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "supplementaries:flax",
+      "title": "book.supplementaries.entry.flax.page.1.title",
+      "link_recipe": true,
+      "text": "book.supplementaries.entry.flax.page.1"
+    },
+    {
+      "type": "crafting",
+      "recipe": "supplementaries:flax",
+      "text": "book.supplementaries.entry.flax.page.2"
+    }
+  ]
+}

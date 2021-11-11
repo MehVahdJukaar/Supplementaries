@@ -1,0 +1,19 @@
+{
+  "name": "book.supplementaries.entry.wind_vane.name",
+  "category": "patchouli:redstone",
+  "icon": "supplementaries:wind_vane",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "supplementaries:wind_vane",
+      "title": "book.supplementaries.entry.wind_vane.spotlight.title",
+      "link_recipe": true,
+      "text": "book.supplementaries.entry.wind_vane.spotlight"
+    },
+    {
+      "type": "crafting",
+      "recipe": "supplementaries:wind_vane",
+      "text": "book.supplementaries.entry.wind_vane.crafting"
+    }
+  ]
+}

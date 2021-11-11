@@ -1,0 +1,19 @@
+{
+  "name": "book.supplementaries.entry.speaker.name",
+  "category": "redstone",
+  "icon": "supplementaries:speaker_block",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "supplementaries:speaker_block",
+      "title": "book.supplementaries.entry.speaker.page.1.title",
+      "link_recipe": true,
+      "text": "book.supplementaries.entry.speaker.page.1"
+    },
+    {
+      "type": "crafting",
+      "recipe": "supplementaries:speaker_block",
+      "text": "book.supplementaries.entry.speaker.page.2"
+    }
+  ]
+}

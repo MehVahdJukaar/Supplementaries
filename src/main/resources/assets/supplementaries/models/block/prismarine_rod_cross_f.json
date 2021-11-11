@@ -1,0 +1,8 @@
+{
+	"credit": "Made with Blockbench",
+	  "parent": "supplementaries:block/stick_cross_f",
+	"textures": {
+		"0": "supplementaries:blocks/prismarine_rod_cross",
+		"particle": "supplementaries:blocks/prismarine_rod_cross"
+	}
+}

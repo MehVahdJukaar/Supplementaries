@@ -1,0 +1,26 @@
+{
+  "name": "book.supplementaries.entry.way_sign.name",
+  "category": "world",
+  "icon": "supplementaries:sign_post_oak",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "supplementaries:sign_post_oak",
+      "title": "book.supplementaries.entry.way_sign.page.1.title",
+      "link_recipe": true,
+      "text": "book.supplementaries.entry.way_sign.page.1"
+    },
+    {
+      "type": "image",
+      "text": "book.supplementaries.entry.way_sign.page.2",
+      "images": [
+        "supplementaries:textures/gui/book/way_sign/way_sign1.png",
+        "supplementaries:textures/gui/book/way_sign/way_sign2.png",
+        "supplementaries:textures/gui/book/way_sign/way_sign3.png",
+        "supplementaries:textures/gui/book/way_sign/way_sign4.png",
+        "supplementaries:textures/gui/book/way_sign/way_sign5.png",
+        "supplementaries:textures/gui/book/way_sign/way_sign6.png"
+      ]
+    }
+  ]
+}

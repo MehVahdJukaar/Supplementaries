@@ -1,0 +1,20 @@
+{
+  "name": "book.supplementaries.entry.adventure_map.name",
+  "category": "tweaks",
+  "icon": "minecraft:filled_map",
+  "pages": [
+    {
+      "type": "patchouli:adventure_map"
+    },
+    {
+      "type": "image",
+      "text": "book.supplementaries.entry.adventure_map.page.2",
+      "images": [
+        "supplementaries:textures/gui/book/wild_flax/wild_flax1.png",
+        "supplementaries:textures/gui/book/wild_flax/wild_flax2.png"
+      ]
+    }
+  ]
+}
+
+

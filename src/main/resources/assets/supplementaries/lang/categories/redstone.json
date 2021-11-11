@@ -1,0 +1,6 @@
+{
+  "name": "book.supplementaries.category.redstone_components",
+  "description": "book.supplementaries.category.redstone_components.description",
+  "icon": "minecraft:redstone_block",
+  "sortnum": 0
+}

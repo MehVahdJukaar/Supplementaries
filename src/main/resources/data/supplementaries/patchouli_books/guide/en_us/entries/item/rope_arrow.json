@@ -1,0 +1,17 @@
+{
+  "name": "book.supplementaries.entry.rope_arrow.name",
+  "category": "item",
+  "icon": "supplementaries:rope_arrow",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "supplementaries:rope_arrow",
+      "title": "book.supplementaries.entry.rope_arrow.page.1.title",
+      "link_recipe": true,
+      "text": "book.supplementaries.entry.rope_arrow.page.1"
+    },
+    {
+      "type": "patchouli:rope_arrow"
+    }
+  ]
+}
