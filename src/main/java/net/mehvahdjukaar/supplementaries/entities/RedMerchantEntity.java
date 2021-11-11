@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.entities;
 
 import net.mehvahdjukaar.supplementaries.entities.goals.EquipAndRangeAttackGoal;
 import net.mehvahdjukaar.supplementaries.entities.goals.ShowWaresGoal;
+import net.mehvahdjukaar.supplementaries.entities.trades.VillagerTradesHandler;
 import net.mehvahdjukaar.supplementaries.inventories.RedMerchantContainer;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.SendOrangeTraderOffersPacket;

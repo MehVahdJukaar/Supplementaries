@@ -11,13 +11,13 @@
     }
   },
   "result": {
-    "item": "supplementaries:flint_block",
+    "item": "supplementaries:flax_block",
     "count": 1
   },
   "conditions": [
     {
       "type": "supplementaries:flag",
-      "flag": "flint_block"
+      "flag": "flax_block"
     }
   ]
 }

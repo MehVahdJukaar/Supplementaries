@@ -129,14 +129,16 @@ public class HangingSignBlockTileRenderer extends TileEntityRenderer<HangingSign
                     IBakedModel ibakedmodel = itemRenderer.getModel(stack, tile.getLevel(), null);
                     for (int v = 0; v < 2; v++) {
                         matrixStackIn.pushPose();
-                        matrixStackIn.translate(0, 0, -0.0705);
-                        matrixStackIn.scale(0.5f, 0.5f, 0.5f);
+
+                        matrixStackIn.scale(0.75f, 0.75f, 0.75f);
+                        matrixStackIn.translate(0, 0, -1);
                         //matrixStackIn.mulPose(Const.Y180);
                         itemRenderer.render(stack, ItemCameraTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
                                 combinedOverlayIn, ibakedmodel);
                         matrixStackIn.popPose();
 
                         matrixStackIn.mulPose(Const.Y180);
+                        matrixStackIn.scale(0.9995f, 0.9995f, 0.9995f);
                     }
                 }
 

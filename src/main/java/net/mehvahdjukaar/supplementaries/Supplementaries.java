@@ -119,11 +119,14 @@ public class Supplementaries {
 
         //data driven fluid system
 
-        //rework thatch fodder
-
         //jar pickup fluids directly
 
         //create stuff can't push stuff into pedestals
+
+        //TODO: xp bottling whose cost depends on player total xp
+        //TODO: randomium that can spawn in other dimensions via whitelist
+        //TODO: add compat stuff recently provided
+        //todo: serene seasons & moon stuff for haunted harvest
 
         MinecraftForge.EVENT_BUS.register(ServerEvents.class);
 

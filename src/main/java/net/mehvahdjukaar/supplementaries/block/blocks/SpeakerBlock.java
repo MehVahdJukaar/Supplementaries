@@ -1,7 +1,8 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
+import dan200.computercraft.api.peripheral.IPeripheral;
+import dan200.computercraft.api.peripheral.IPeripheralProvider;
 import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
-import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.client.gui.SpeakerBlockGui;
@@ -30,10 +31,12 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
+import org.jetbrains.annotations.NotNull;
 
-public class SpeakerBlock extends Block {
+public class SpeakerBlock extends Block implements IPeripheralProvider {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
@@ -147,4 +150,13 @@ public class SpeakerBlock extends Block {
         return super.triggerEvent(state, world, pos, eventID, eventParam);
     }
 
+    @NotNull
+    @Override
+    public LazyOptional<IPeripheral> getPeripheral(@NotNull World world, @NotNull BlockPos pos, @NotNull Direction side) {
+        TileEntity tile = world.getBlockEntity(pos);
+        if(tile instanceof SpeakerBlockTile){
+            return ((SpeakerBlockTile) tile).getPeripheral(world, pos, side);
+        }
+        return LazyOptional.empty();
+    }
 }

@@ -5,20 +5,9 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -27,33 +16,8 @@ import java.util.Random;
 public class BlazeRodBlock extends StickBlock{
 
     public BlazeRodBlock(Properties properties) {
-        super(properties);
+        super(properties, 0);
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, Boolean.FALSE).setValue(AXIS_Y,true).setValue(AXIS_X,false).setValue(AXIS_Z,false));
-    }
-
-    @Override
-    public boolean canBeReplaced(BlockState state, BlockItemUseContext context) {
-        Item item = context.getItemInHand().getItem();
-        if(item == Items.BLAZE_ROD || item == this.asItem()){
-            BooleanProperty axis = this.AXIS2PROPERTY.get(context.getClickedFace().getAxis());
-            if(!state.getValue(axis))return true;
-        }
-        return state.getMaterial().isReplaceable() && (context.getItemInHand().isEmpty() || context.getItemInHand().getItem() != this.asItem());
-    }
-
-    @Override
-    public int getFireSpreadSpeed(BlockState state, IBlockReader world, BlockPos pos, Direction face) {
-        return 0;
-    }
-
-    @Override
-    public int getFlammability(BlockState state, IBlockReader world, BlockPos pos, Direction face) {
-        return 0;
-    }
-
-    @Override
-    public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
-        return new ItemStack(Items.BLAZE_ROD);
     }
 
     @Override
@@ -97,10 +61,5 @@ public class BlazeRodBlock extends StickBlock{
             }
             world.addParticle(particle, x, y, z, 0.0D, 0.0D, 0.0D);
         }
-    }
-
-    @Override
-    public ActionResultType use(BlockState p_225533_1_, World p_225533_2_, BlockPos p_225533_3_, PlayerEntity p_225533_4_, Hand p_225533_5_, BlockRayTraceResult p_225533_6_) {
-        return ActionResultType.PASS;
     }
 }

@@ -146,6 +146,9 @@ public class WoodTypes {
         for (IWoodType w : BambooBlocksWoodType.values()){
             TYPES.put(w.toNBT(),w);
         }
+        for (IWoodType w : EidolonWoodType.values()){
+            TYPES.put(w.toNBT(),w);
+        }
 
 
     }

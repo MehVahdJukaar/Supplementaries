@@ -204,13 +204,13 @@ public class HourGlassBlockTile extends ItemDisplayTile implements ITickableTile
         public static HourGlassSandType getHourGlassSandType(Item i) {
             if (i instanceof BlockItem) {
                 Block b = ((BlockItem) i).getBlock();
-                if (b.is(Tags.Blocks.SAND)) return SAND;
+                if (i.is(ModTags.SANDS)) return SAND;
                 if (b.is(ModTags.CONCRETE_POWDERS)) return CONCRETE;
             }
             for (HourGlassSandType n : HourGlassSandType.values()) {
                 if (n.item == i) return n;
             }
-            if (i.is(Tags.Items.DUSTS)) return FORGE_DUST;
+            if (i.is(ModTags.DUSTS) || i.is(Tags.Items.DUSTS)) return FORGE_DUST;
             return DEFAULT;
         }
     }

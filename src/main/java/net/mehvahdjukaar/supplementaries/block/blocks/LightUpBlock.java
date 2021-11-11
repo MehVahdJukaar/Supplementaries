@@ -54,8 +54,6 @@ public abstract class LightUpBlock extends Block implements ILightable {
     public void onChange(BlockState state, IWorld world, BlockPos pos) {
     }
 
-    ;
-
     @Override
     public boolean lightUp(BlockState state, BlockPos pos, IWorld world, ILightable.FireSound sound) {
         if (!isLit(state)) {

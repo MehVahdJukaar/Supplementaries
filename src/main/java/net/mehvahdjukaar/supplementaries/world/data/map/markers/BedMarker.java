@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.world.data.map.markers;
 import net.mehvahdjukaar.selene.map.CustomDecoration;
 import net.mehvahdjukaar.selene.map.markers.MapWorldMarker;
 import net.mehvahdjukaar.supplementaries.world.data.map.CMDreg;
-import net.minecraft.block.BedBlock;
 import net.minecraft.item.DyeColor;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.BedTileEntity;
@@ -42,8 +41,9 @@ public class BedMarker extends MapWorldMarker<CustomDecoration> {
     public static BedMarker getFromWorld(IBlockReader world, BlockPos pos){
         TileEntity tileentity = world.getBlockEntity(pos);
         if (tileentity instanceof BedTileEntity) {
-            DyeColor dyecolor = ((BedBlock)tileentity.getBlockState().getBlock()).getColor();
-            return new BedMarker(pos,dyecolor);
+            //TODO: readd
+            //DyeColor dyecolor = ((BedBlock)tileentity.getBlockState().getBlock()).getColor();
+            return new BedMarker(pos,DyeColor.RED);
         } else {
             return null;
         }

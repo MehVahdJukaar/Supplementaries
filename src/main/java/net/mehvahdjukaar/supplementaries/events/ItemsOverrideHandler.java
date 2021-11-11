@@ -38,6 +38,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.Supplier;
 
 
 public class ItemsOverrideHandler {
@@ -66,12 +67,20 @@ public class ItemsOverrideHandler {
         blockBehaviors.add(new CeilingBannersBehavior());
         blockBehaviors.add(new HangingPotBehavior());
         blockBehaviors.add(new EnhancedCakeBehavior());
-        blockBehaviors.add(new PlaceableSticksBehavior());
-        blockBehaviors.add(new PlaceableRodsBehavior());
         blockBehaviors.add(new XpBottlingBehavior());
         blockBehaviors.add(new PlaceableGunpowderBehavior());
         blockBehaviors.add(new BookPileBehavior());
         blockBehaviors.add(new BookPileHorizontalBehavior());
+        blockBehaviors.add(new PlaceableRodsBehavior());
+        blockBehaviors.add(new PlaceableSticksBehavior(ModRegistry.STICK_BLOCK, Items.STICK));
+
+        PlaceableSticksBehavior.optional(ModRegistry.PRISMARINE_ROD_BLOCK, "upgrade_aquatic:prismarine_rod")
+                .ifPresent(blockBehaviors::add);
+        PlaceableSticksBehavior.optional(ModRegistry.PROPELPLANT_ROD_BLOCK, "nethers_delight:propelplant_cane")
+                .ifPresent(blockBehaviors::add);
+        PlaceableSticksBehavior.optional(ModRegistry.EDELWOOD_STICK_BLOCK, "forbidden_arcanus:edelwood_stick")
+                .ifPresent(blockBehaviors::add);
+
 
         for (Item i : ForgeRegistries.ITEMS) {
             for (ItemInteractionOverride b : blockBehaviors) {
@@ -83,8 +92,8 @@ public class ItemsOverrideHandler {
                         ON_BLOCK_OVERRIDES.put(i, b);
                         break;
                     }
-                }catch (Exception e){
-                    Supplementaries.LOGGER.error("failed to register for override "+ b.getClass().getSimpleName() +" for "+ i.getRegistryName()+" with exception: "+e);
+                } catch (Exception e) {
+                    Supplementaries.LOGGER.error("failed to register for override " + b.getClass().getSimpleName() + " for " + i.getRegistryName() + " with exception: " + e);
                 }
             }
             for (ItemInteractionOverride b : itemBehaviors) {
@@ -95,13 +104,13 @@ public class ItemsOverrideHandler {
 
             }
             for (ItemInteractionOverride b : HPBlockBehaviors) {
-                try{
-                if (b.appliesToItem(i)) {
-                    HIGH_PRIORITY_OVERRIDES.put(i, b);
-                    break;
-                }
-                }catch (Exception e){
-                    Supplementaries.LOGGER.error("failed to register for override " + b.getClass().getSimpleName() +" for "+ i.getRegistryName()+" with exception: "+e);
+                try {
+                    if (b.appliesToItem(i)) {
+                        HIGH_PRIORITY_OVERRIDES.put(i, b);
+                        break;
+                    }
+                } catch (Exception e) {
+                    Supplementaries.LOGGER.error("failed to register for override " + b.getClass().getSimpleName() + " for " + i.getRegistryName() + " with exception: " + e);
                 }
             }
         }
@@ -430,6 +439,22 @@ public class ItemsOverrideHandler {
 
     private static class PlaceableSticksBehavior extends ItemInteractionOverride {
 
+        private final Supplier<Block> block;
+        private final Item item;
+
+        private PlaceableSticksBehavior(Supplier<Block> block, Item item) {
+            this.block = block;
+            this.item = item;
+        }
+
+        private static Optional<PlaceableSticksBehavior> optional(Supplier<Block> block, String itemRes) {
+            Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemRes));
+            if (item != null && item != Items.AIR) {
+                return Optional.of(new PlaceableSticksBehavior(block, item));
+            }
+            return Optional.empty();
+        }
+
         @Nullable
         @Override
         public TextComponent getTooltip() {
@@ -439,7 +464,7 @@ public class ItemsOverrideHandler {
         @Nullable
         @Override
         public Block getBlockOverride(Item i) {
-            return ModRegistry.STICK_BLOCK.get();
+            return this.block.get();
         }
 
         @Override
@@ -448,49 +473,28 @@ public class ItemsOverrideHandler {
         }
 
         @Override
-        public boolean appliesToItem(Item item) {
-            return item == Items.STICK;
+        public boolean appliesToItem(Item i) {
+            return i == this.item;
         }
 
         @Override
         public ActionResultType tryPerformingAction(World world, PlayerEntity player, Hand hand, ItemStack stack, BlockRayTraceResult hit, boolean isRanged) {
             if (player.abilities.mayBuild) {
-                return paceBlockOverride(ModRegistry.STICK_BLOCK.get(), player, hand, stack, world, hit, isRanged);
+                return paceBlockOverride(block.get(), player, hand, stack, world, hit, isRanged);
             }
             return ActionResultType.PASS;
         }
     }
 
-    private static class PlaceableRodsBehavior extends ItemInteractionOverride {
+    private static class PlaceableRodsBehavior extends PlaceableSticksBehavior {
 
-        @Nullable
-        @Override
-        public TextComponent getTooltip() {
-            return new TranslationTextComponent("message.supplementaries.placeable");
-        }
-
-        @Nullable
-        @Override
-        public Block getBlockOverride(Item i) {
-            return ModRegistry.BLAZE_ROD_BLOCK.get();
+        private PlaceableRodsBehavior() {
+            super(ModRegistry.BLAZE_ROD_BLOCK, Items.BLAZE_ROD);
         }
 
         @Override
         public boolean isEnabled() {
             return ServerConfigs.cached.PLACEABLE_RODS;
-        }
-
-        @Override
-        public boolean appliesToItem(Item item) {
-            return item == Items.BLAZE_ROD;
-        }
-
-        @Override
-        public ActionResultType tryPerformingAction(World world, PlayerEntity player, Hand hand, ItemStack stack, BlockRayTraceResult hit, boolean isRanged) {
-            if (player.abilities.mayBuild) {
-                return paceBlockOverride(ModRegistry.BLAZE_ROD_BLOCK.get(), player, hand, stack, world, hit, isRanged);
-            }
-            return ActionResultType.PASS;
         }
     }
 
@@ -558,7 +562,8 @@ public class ItemsOverrideHandler {
         public ActionResultType tryPerformingAction(World world, PlayerEntity player, Hand hand, ItemStack stack, BlockRayTraceResult hit, boolean isRanged) {
             if (player.abilities.mayBuild) {
                 //require shift for written books
-                if(BookPileBlock.isWrittenBook(stack.getItem()) && !player.isShiftKeyDown()) return ActionResultType.PASS;
+                if (BookPileBlock.isWrittenBook(stack.getItem()) && !player.isShiftKeyDown())
+                    return ActionResultType.PASS;
                 return paceBlockOverride(BOOK_PILE_H_ITEM, player, hand, stack, world, hit, isRanged);
             }
             return ActionResultType.PASS;
@@ -597,7 +602,8 @@ public class ItemsOverrideHandler {
         @Override
         public ActionResultType tryPerformingAction(World world, PlayerEntity player, Hand hand, ItemStack stack, BlockRayTraceResult hit, boolean isRanged) {
             if (player.abilities.mayBuild) {
-                if(BookPileBlock.isWrittenBook(stack.getItem()) && !player.isShiftKeyDown()) return ActionResultType.PASS;
+                if (BookPileBlock.isWrittenBook(stack.getItem()) && !player.isShiftKeyDown())
+                    return ActionResultType.PASS;
                 return paceBlockOverride(ModRegistry.BOOK_PILE.get(), player, hand, stack, world, hit, isRanged);
             }
             return ActionResultType.PASS;

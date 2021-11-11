@@ -57,20 +57,26 @@ public class StickBlock extends WaterBlock implements IRotationLockable{
 
     protected final Map<Direction.Axis,BooleanProperty> AXIS2PROPERTY = ImmutableMap.of(Direction.Axis.X,AXIS_X,Direction.Axis.Y,AXIS_Y,Direction.Axis.Z,AXIS_Z);
 
+    private final int fireSpread;
 
-    public StickBlock(Properties properties) {
+    public StickBlock(Properties properties, int fireSpread) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, Boolean.FALSE).setValue(AXIS_Y,true).setValue(AXIS_X,false).setValue(AXIS_Z,false));
+        this.fireSpread = fireSpread;
+    }
+
+    public StickBlock(Properties properties) {
+        this(properties, 60);
     }
 
     @Override
     public int getFlammability(BlockState state, IBlockReader world, BlockPos pos, Direction face) {
-        return 60;
+        return fireSpread;
     }
 
     @Override
     public int getFireSpreadSpeed(BlockState state, IBlockReader world, BlockPos pos, Direction face) {
-        return 60;
+        return fireSpread;
     }
 
     @Override
@@ -120,16 +126,21 @@ public class StickBlock extends WaterBlock implements IRotationLockable{
     @Override
     public boolean canBeReplaced(BlockState state, BlockItemUseContext context) {
         Item item = context.getItemInHand().getItem();
-        if(item == Items.STICK || item == this.asItem()){
+        //TODO: fix as item not working
+        if(item == this.getItemOverride()){
             BooleanProperty axis = AXIS2PROPERTY.get(context.getClickedFace().getAxis());
             if(!state.getValue(axis))return true;
         }
         return super.canBeReplaced(state, context);
     }
 
+    public Item getItemOverride(){
+        return Item.byBlock(this);
+    }
+
     @Override
     public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
-        return new ItemStack(Items.STICK);
+        return new ItemStack(this.getItemOverride());
     }
 
     @Override
@@ -142,6 +153,7 @@ public class StickBlock extends WaterBlock implements IRotationLockable{
 
         if (player.getItemInHand(hand).isEmpty() && hand == Hand.MAIN_HAND) {
             if (ServerConfigs.cached.STICK_POLE) {
+                if(this.getItemOverride() != Items.STICK) return ActionResultType.PASS;
                 if(world.isClientSide)return ActionResultType.SUCCESS;
                 else{
                     Direction moveDir = player.isShiftKeyDown()?Direction.DOWN:Direction.UP;

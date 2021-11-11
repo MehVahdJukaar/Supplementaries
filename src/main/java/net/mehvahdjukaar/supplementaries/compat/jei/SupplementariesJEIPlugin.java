@@ -92,7 +92,7 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         Ingredient arrow = Ingredient.of(new ItemStack(Items.ARROW));
         Ingredient rope = Ingredient.of(ModTags.ROPES);//fromStacks(new ItemStack(Registry.ROPE_ITEM.get()));
         NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, arrow, rope,rope,rope,rope);
-        ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "jei_rope_arrow_create");
+        ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "rope_arrow_create");
         ShapelessRecipe recipe = new ShapelessRecipe(id, group, ropeArrow, inputs);
         recipes.add(recipe);
 
@@ -109,7 +109,7 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         Ingredient arrow = Ingredient.of(ropeArrow2);
         Ingredient rope = Ingredient.of(ModTags.ROPES);//.fromStacks(new ItemStack(Registry.ROPE_ITEM.get()));
         NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, rope,rope,rope,rope,arrow,rope,rope,rope,rope);
-        ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "jei_rope_arrow_add");
+        ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "rope_arrow_add");
         ShapelessRecipe recipe = new ShapelessRecipe(id, group, ropeArrow, inputs);
         recipes.add(recipe);
 
@@ -167,7 +167,7 @@ public class SupplementariesJEIPlugin implements IModPlugin {
 
             Ingredient emptyFlag = Ingredient.of(new ItemStack(ModRegistry.FLAGS.get(color).get()));
             NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, emptyFlag, Ingredient.of(banner));
-            ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "jei_flag_from_banner");
+            ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "flag_from_banner");
 
             ShapelessRecipe recipe = new ShapelessRecipe(id, group, fullFlag, inputs);
             recipes.add(recipe);
@@ -206,7 +206,7 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         Ingredient emptyBoard = Ingredient.of(new ItemStack(ModRegistry.BLACKBOARD_ITEM.get()));
         Ingredient fullBoard = Ingredient.of(blackboard);
         NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, emptyBoard, fullBoard);
-        ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "jei_blackboard_duplicate");
+        ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "blackboard_duplicate");
         ShapelessRecipe recipe = new ShapelessRecipe(id, group, blackboard, inputs);
         recipes.add(recipe);
 
@@ -249,7 +249,7 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         Ingredient emptyBoard = Ingredient.of(new ItemStack(Items.WATER_BUCKET));
         Ingredient fullBoard = Ingredient.of(blackboard);
         NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, emptyBoard, fullBoard);
-        ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "jei_blackboard_clear");
+        ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "blackboard_clear");
         ShapelessRecipe recipe = new ShapelessRecipe(id, group, new ItemStack(ModRegistry.BLACKBOARD_ITEM.get()), inputs);
         recipes.add(recipe);
         return recipes;

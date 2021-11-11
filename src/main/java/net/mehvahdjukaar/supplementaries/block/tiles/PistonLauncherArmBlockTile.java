@@ -44,26 +44,6 @@ public class PistonLauncherArmBlockTile extends TileEntity implements ITickableT
     //TODO rewrite this old code
     public PistonLauncherArmBlockTile(boolean extending, Direction dir) {
         this();
-        this.setParameters(extending,dir);
-        if(true)return;
-        Vector3i v = dir.getNormal();
-        this.dx = v.getX();
-        this.dy = v.getY();
-        this.dz = v.getZ();
-        if (extending) {
-            this.increment = 0.5;
-            this.offset = -1;
-            this.prevOffset = -1;
-        } else {
-            this.increment = -0.5;
-            this.offset = 0;
-            this.prevOffset = 0;
-        }
-    }
-
-
-
-    private void setParameters(boolean extending, Direction dir){
         // boolean extending = this.getExtending();
         //Direction dir = this.getDirection();
         this.age = 0;
@@ -122,9 +102,9 @@ public class PistonLauncherArmBlockTile extends TileEntity implements ITickableT
                 } else {
                     BlockState _bs = ModRegistry.SPRING_LAUNCHER.get().defaultBlockState();
                     BlockPos _bp = worldPosition.relative(this.getDirection().getOpposite());
-                    BlockState oldstate = level.getBlockState(_bp);
-                    if (_bs.setValue(SpringLauncherBlock.FACING, this.getDirection()).setValue(SpringLauncherBlock.EXTENDED, true) == oldstate) {
-                        level.setBlock(_bp, oldstate.setValue(SpringLauncherBlock.EXTENDED, false), 3);
+                    BlockState oldState = level.getBlockState(_bp);
+                    if (_bs.setValue(SpringLauncherBlock.FACING, this.getDirection()).setValue(SpringLauncherBlock.EXTENDED, true) == oldState) {
+                        level.setBlock(_bp, oldState.setValue(SpringLauncherBlock.EXTENDED, false), 3);
                     }
                     level.setBlock(worldPosition, Blocks.AIR.defaultBlockState(), 3);
                 }

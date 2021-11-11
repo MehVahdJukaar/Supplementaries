@@ -3,12 +3,12 @@ package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper;
-import net.mehvahdjukaar.supplementaries.common.AdventurerMapsHandler;
 import net.mehvahdjukaar.supplementaries.common.FlowerPotHandler;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilitiesHandler;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
-import net.mehvahdjukaar.supplementaries.entities.VillagerTradesHandler;
+import net.mehvahdjukaar.supplementaries.entities.trades.AdventurerMapsHandler;
+import net.mehvahdjukaar.supplementaries.entities.trades.VillagerTradesHandler;
 import net.mehvahdjukaar.supplementaries.events.ItemsOverrideHandler;
 import net.mehvahdjukaar.supplementaries.fluids.ModSoftFluids;
 import net.mehvahdjukaar.supplementaries.mixins.accessors.ChickenEntityAccessor;
@@ -47,34 +47,48 @@ public class ModSetup {
             try {
 
                 StructureRegistry.setup();
+                setupStage++;
 
                 StructureLocator.init();
+                setupStage++;
 
                 CompatHandler.init();
+                setupStage++;
 
                 CMDreg.init(event);
+                setupStage++;
 
                 Spawns.registerSpawningStuff();
+                setupStage++;
 
                 CapabilitiesHandler.register();
+                setupStage++;
 
                 ComposterBlock.COMPOSTABLES.put(ModRegistry.FLAX_SEEDS_ITEM.get(), 0.3F);
                 ComposterBlock.COMPOSTABLES.put(ModRegistry.FLAX_ITEM.get(), 0.65F);
                 ComposterBlock.COMPOSTABLES.put(ModRegistry.FLAX_BLOCK_ITEM.get(), 1);
+                setupStage++;
 
                 ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(ModRegistry.FLAX_ITEM.get().getRegistryName(), ModRegistry.FLAX_POT);
+                setupStage++;
 
                 FlowerPotHandler.init();
+                setupStage++;
 
                 CapturedMobsHelper.refresh();
+                setupStage++;
 
                 ModSoftFluids.init();
+                setupStage++;
 
                 NetworkHandler.registerMessages();
+                setupStage++;
 
                 LootTableStuff.init();
+                setupStage++;
 
                 registerMobFoods();
+                setupStage++;
 
                 hasFinishedSetup = true;
 
@@ -86,9 +100,9 @@ public class ModSetup {
         });
     }
 
-    private static void terminateWhenSetupFails(){
+    private static void terminateWhenSetupFails() {
         //if setup fails crash the game. idk why it doesn't do that on its own wtf
-        Supplementaries.LOGGER.throwing(new Exception("Mod setup has failed to complete. This might be due to some mod incompatibility. Refusing to continue loading with a broken modstate. Next step: crashing this game, no survivors. Executing 69/0"));
+        Supplementaries.LOGGER.throwing(new Exception("Mod setup has failed to complete (stage = " + setupStage + "). This might be due to some mod incompatibility. Refusing to continue loading with a broken modstate. Next step: crashing this game, no survivors. Executing 69/0"));
         //proper way to crash the game lol
         int a = 69 / 0;
     }
@@ -109,20 +123,20 @@ public class ModSetup {
 
     //damn I hate this. If setup fails forge doesn't do anything and it keeps on going quietly
     private static boolean hasFinishedSetup = false;
-
+    private static int setupStage = 0;
     private static boolean firstTagLoad = false;
 
     //events on setup
     @SubscribeEvent
     public static void onTagLoad(TagsUpdatedEvent event) {
-
-        //using this as a post setup event
-        if (!hasFinishedSetup) {
-            terminateWhenSetupFails();
-        }
-
         //stuff that needs to be loaded after tags
         if (!firstTagLoad) {
+
+            //using this as a post setup event
+            if (!hasFinishedSetup) {
+                terminateWhenSetupFails();
+            }
+
             firstTagLoad = true;
             DispenserStuff.registerBehaviors();
             ItemsOverrideHandler.registerOverrides();
@@ -151,8 +165,6 @@ public class ModSetup {
         VillagerTradesHandler.registerWanderingTraderTrades(event);
     }
 
-
-    //TODO: maybe move in /data json
     @SubscribeEvent
     public static void onLootLoad(LootTableLoadEvent e) {
         LootTableStuff.injectLootTables(e);

@@ -862,7 +862,7 @@ public class ModRegistry {
 
     //speaker Block
     public static final String SPEAKER_BLOCK_NAME = "speaker_block";
-    public static final RegistryObject<Block> SPEAKER_BLOCK = BLOCKS.register(SPEAKER_BLOCK_NAME, () -> new SpeakerBlock(
+    public static final RegistryObject<SpeakerBlock> SPEAKER_BLOCK = BLOCKS.register(SPEAKER_BLOCK_NAME, () -> new SpeakerBlock(
             AbstractBlock.Properties.of(Material.WOOD, MaterialColor.COLOR_BROWN)
                     .strength(1f, 2f)
                     .sound(SoundType.WOOD)
@@ -1226,8 +1226,20 @@ public class ModRegistry {
     public static final RegistryObject<Block> STICK_BLOCK = BLOCKS.register(STICK_NAME, () -> new StickBlock(
             AbstractBlock.Properties.of(Material.WOOD, MaterialColor.WOOD)
                     .strength(0.25F, 0F)
-                    .sound(SoundType.WOOD))
-    );
+                    .sound(SoundType.WOOD)));
+    public static final RegistryObject<Block> EDELWOOD_STICK_BLOCK = BLOCKS.register("edelwood_stick", () -> new StickBlock(
+            AbstractBlock.Properties.of(Material.WOOD, MaterialColor.TERRACOTTA_BROWN)
+                    .strength(0.25F, 0F)
+                    .sound(SoundType.WOOD)));
+    public static final RegistryObject<Block> PRISMARINE_ROD_BLOCK = BLOCKS.register("prismarine_rod", () -> new StickBlock(
+            AbstractBlock.Properties.of(Material.STONE, MaterialColor.COLOR_CYAN)
+                    .strength(0.25F, 0F)
+                    .harvestTool(ToolType.PICKAXE)
+                    .sound(SoundType.STONE),0));
+    public static final RegistryObject<Block> PROPELPLANT_ROD_BLOCK = BLOCKS.register("propelplant_cane", () -> new StickBlock(
+            AbstractBlock.Properties.of(Material.WOOD, MaterialColor.CRIMSON_STEM)
+                    .strength(0.25F, 0F)
+                    .sound(SoundType.WOOD)));
 
     //blaze rod
     public static final String BLAZE_ROD_NAME = "blaze_rod";

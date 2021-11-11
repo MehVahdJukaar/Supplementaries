@@ -257,7 +257,11 @@
   "death.attack.supplementaries.amethyst_shard.player": "%1$s was sharded to death by %2$s",
   "item.supplementaries.amethyst_arrow": "Amethyst Arrow",
 
-
+  "block.supplementaries.edelwood_stick": "Edelwood Stick",
+  "block.supplementaries.propelplant_cane": "Propelplant Cane",
+  "block.supplementaries.prismarine_rod": "Prismarine Rod",
+  "block.supplementaries.hanging_sign_polished": "Polished Hanging Sign",
+  "item.supplementaries.sign_post_polished": "Polished Hanging Sign",
   "block.supplementaries.hanging_sign_bamboo": "Bamboo Hanging Sign",
   "item.supplementaries.hanging_sign_bamboo": "Bamboo Hanging Sign",
   "item.supplementaries.sign_post_bamboo": "Bamboo Sign Post",
@@ -618,5 +622,240 @@
   "item.supplementaries.sign_post_pine_lotr": "Pine Sign Post",
   "item.supplementaries.sign_post_rotten_lotr": "Rotten Sign Post",
   "item.supplementaries.sign_post_runewood": "Runewood Sign Post",
-  "item.supplementaries.sign_post_archwood": "Archwood Sign Post"
+  "item.supplementaries.sign_post_archwood": "Archwood Sign Post",
+
+
+
+  //Book
+
+  "book.supplementaries.book_name": "Supplemental guide of supplementaries",
+  "book.supplementaries.landing_text": "You can get help in this book ! Or on $(l)$(l:https://github.com/MehVahdJukaar/Supplementaries/wiki)GitHub Wiki$(/l)$(reset) our join in supplementaries $(l)$(l:https://discord.gg/cw27h3aW7Z)Discord Server$(/l)$(reset)",
+
+
+  //Category
+
+  "book.supplementaries.category.redstone.name": "Redstone Components",
+  "book.supplementaries.category.redstone.description": "Find all redstone component of supplementaries",
+
+  "book.supplementaries.category.tweaks.name": "Tweaks",
+  "book.supplementaries.category.tweaks.description": "Find all redstone component of supplementaries",
+
+  "book.supplementaries.category.decorative.name": "Decorative Blocks",
+  "book.supplementaries.category.decorative.description": "Find all redstone component of supplementaries",
+
+  "book.supplementaries.category.world.name": "World and Entities",
+  "book.supplementaries.category.world.description": "Find all redstone component of supplementaries",
+
+  "book.supplementaries.category.item.name": "Tools, Foods and Items",
+  "book.supplementaries.category.item.description": "Find all redstone component of supplementaries",
+
+
+
+  //Entry
+
+
+  //Redstone
+
+  "book.supplementaries.entry.cog.name": "Cog",
+  "book.supplementaries.entry.cog.page.1.title": "Cog",
+  "book.supplementaries.entry.cog.page.1": "Acts as a form of upgraded redstone in solid block form.$(br)Pretty intuitive to use, you just power one and it will power its adjacent cogs, up to 14 blocks away, just like with redstone dust. The real use for this is to be able to make compact vertical redstone signaling.$()",
+  "book.supplementaries.entry.cog.page.2": "Simple descriction",
+
+  "book.supplementaries.entry.wind_vane.name": "Wind Vane",
+  "book.supplementaries.entry.wind_vane.page.1.title": "Wind Vane",
+  "book.supplementaries.entry.wind_vane.page.1": "Descriction of properties",
+  "book.supplementaries.entry.wind_vane.page.2": "Simple descriction",
+
+  "book.supplementaries.entry.spring_launcher.name": "Spring Launcher",
+  "book.supplementaries.entry.spring_launcher.page.1.title": "Spring Launcher",
+  "book.supplementaries.entry.spring_launcher.page.1": "Descriction of properties",
+  "book.supplementaries.entry.spring_launcher.page.2": "Simple descriction",
+
+  "book.supplementaries.entry.bellows.name": "Bellows",
+  "book.supplementaries.entry.bellows.page.1.title": "Bellows",
+  "book.supplementaries.entry.bellows.page.1": "Descriction of properties",
+  "book.supplementaries.entry.bellows.page.2": "Simple descriction",
+
+  "book.supplementaries.entry.clock.name": "Clock Blcok",
+  "book.supplementaries.entry.clock.page.1.title": "Clock Block",
+  "book.supplementaries.entry.clock.page.1": "Descriction of properties",
+  "book.supplementaries.entry.clock.page.2": "Simple descriction",
+
+  "book.supplementaries.entry.hourglass.name": "Hourglass",
+  "book.supplementaries.entry.hourglass.page.1.title": "Hourglass",
+  "book.supplementaries.entry.hourglass.page.1": "Descriction of properties",
+  "book.supplementaries.entry.hourglass.page.2": "Simple descriction",
+
+  "book.supplementaries.entry.illuminator.name": "Redstone Illuminator",
+  "book.supplementaries.entry.illuminator.page.1.title": "Redstone Illuminator",
+  "book.supplementaries.entry.illuminator.page.1": "Descriction of properties",
+  "book.supplementaries.entry.illuminator.page.2": "Simple descriction",
+
+  "book.supplementaries.entry.lock.name": "Lock",
+  "book.supplementaries.entry.lock.page.1.title": "Lock",
+  "book.supplementaries.entry.lock.page.1": "Descriction of properties",
+  "book.supplementaries.entry.lock.page.2": "Simple descriction",
+
+  "book.supplementaries.entry.magma_cream.name": "Magma Cream Block",
+  "book.supplementaries.entry.magma_cream.page.1.title": "Magma Cream Block",
+  "book.supplementaries.entry.magma_cream.page.1": "Descriction of properties",
+  "book.supplementaries.entry.magma_cream.page.2": "Simple descriction",
+
+  "book.supplementaries.entry.pulley.name": "Pulley",
+  "book.supplementaries.entry.pulley.page.1.title": "Pulley",
+  "book.supplementaries.entry.pulley.page.1": "Descriction of properties",
+  "book.supplementaries.entry.pulley.page.2": "Simple descriction",
+
+  "book.supplementaries.entry.sconce_lever.name": "Sconce Lever",
+  "book.supplementaries.entry.sconce_lever.page.1.title": "Sconce Lever",
+  "book.supplementaries.entry.sconce_lever.page.1": "Descriction of properties",
+  "book.supplementaries.entry.sconce_lever.page.2": "Simple descriction",
+
+  "book.supplementaries.entry.speaker.name": "Speaker",
+  "book.supplementaries.entry.speaker.page.1.title": "Speaker",
+  "book.supplementaries.entry.speaker.page.1": "Descriction of properties",
+  "book.supplementaries.entry.speaker.page.2": "Simple descriction",
+
+  "book.supplementaries.entry.turn_table.name": "Turn Table",
+  "book.supplementaries.entry.turn_table.page.1.title": "Turn Table",
+  "book.supplementaries.entry.turn_table.page.1": "Descriction of properties",
+  "book.supplementaries.entry.turn_table.page.2": "Simple descriction",
+
+  "book.supplementaries.entry.faucet.name": "Faucet",
+  "book.supplementaries.entry.faucet.page.1.title": "Faucet",
+  "book.supplementaries.entry.faucet.page.1": "Descriction of properties",
+  "book.supplementaries.entry.faucet.page.2": "Simple descriction",
+
+  "book.supplementaries.entry.crank.name": "Crank",
+  "book.supplementaries.entry.crank.page.1.title": "Crank",
+  "book.supplementaries.entry.crank.page.1": "Descriction of properties",
+  "book.supplementaries.entry.crank.page.2": "Simple descriction",
+
+
+  //Item
+
+  "book.supplementaries.entry.bomb.name": "Bomb",
+  "book.supplementaries.entry.bomb.page.1.title": "Bomb",
+  "book.supplementaries.entry.bomb.page.1": "Descriction of properties",
+  "book.supplementaries.entry.bomb.page.2": "Simple descriction",
+
+  "book.supplementaries.entry.slingshot.name": "Slingshot",
+  "book.supplementaries.entry.slingshot.page.1.title": "Slingshot",
+  "book.supplementaries.entry.slingshot.page.1": "Descriction of properties",
+  "book.supplementaries.entry.slingshot.page.2": "Simple descriction",
+
+  "book.supplementaries.entry.candy.name": "Candy",
+  "book.supplementaries.entry.candy.page.1.title": "Candy",
+  "book.supplementaries.entry.candy.page.1": "Descriction of properties",
+  "book.supplementaries.entry.candy.page.2": "Simple descriction",
+
+  "book.supplementaries.entry.flax.name": "Flax",
+  "book.supplementaries.entry.flax.page.1.title": "Flax",
+  "book.supplementaries.entry.flax.page.1": "Descriction of properties",
+  "book.supplementaries.entry.flax.page.2": "Simple descriction",
+
+  "book.supplementaries.entry.flute.name": "Flute",
+  "book.supplementaries.entry.flute.page.1.title": "Flute",
+  "book.supplementaries.entry.flute.page.1": "Descriction of properties",
+  "book.supplementaries.entry.flute.page.2": "Simple descriction",
+
+  "book.supplementaries.entry.key.name": "Key",
+  "book.supplementaries.entry.key.page.1.title": "Key",
+  "book.supplementaries.entry.key.page.1": "Descriction of properties",
+  "book.supplementaries.entry.key.page.2": "Simple descriction",
+
+  "book.supplementaries.entry.pancake.name": "Pancake",
+  "book.supplementaries.entry.pancake.page.1.title": "Pancake",
+  "book.supplementaries.entry.pancake.page.1": "Descriction of properties",
+  "book.supplementaries.entry.pancake.page.2": "Simple descriction",
+
+  "book.supplementaries.entry.rope_arrow.name": "Rope Arrow",
+  "book.supplementaries.entry.rope_arrow.page.1.title": "Rope Arrow",
+  "book.supplementaries.entry.rope_arrow.page.1": "Descriction of properties",
+  "book.supplementaries.entry.rope_arrow.page.2.title": "Rope Arrow",
+  "book.supplementaries.entry.rope_arrow.page.2": "$(br2)$()$(br2)$()$(br2)$()$(br2)$()$(br)$()Simple descriction",
+
+
+  //World
+
+  "book.supplementaries.entry.way_sign.name": "Way Sign",
+  "book.supplementaries.entry.way_sign.page.1.title": "Way Sign",
+  "book.supplementaries.entry.way_sign.page.1": "Descriction of properties",
+  "book.supplementaries.entry.way_sign.page.2": "Simple descriction",
+
+  "book.supplementaries.entry.wild_flax.name": "Wild Flax",
+  "book.supplementaries.entry.wild_flax.page.1.title": "Wild Flax",
+  "book.supplementaries.entry.wild_flax.page.1": "Descriction of properties",
+  "book.supplementaries.entry.wild_flax.page.2": "Simple descriction",
+
+  "book.supplementaries.entry.merchant.name": "Red Merchant",
+  "book.supplementaries.entry.merchant.page.1.title": "Red Merchant",
+  "book.supplementaries.entry.merchant.page.1": "Descriction of properties",
+  "book.supplementaries.entry.merchant.page.2": "Simple descriction",
+
+  "book.supplementaries.entry.fireflies.name": "Fireflies",
+  "book.supplementaries.entry.fireflies.page.1.title": "Fireflies",
+  "book.supplementaries.entry.fireflies.page.1": "Descriction of properties",
+  "book.supplementaries.entry.fireflies.page.2": "Simple descriction",
+
+
+  //Tweaks
+
+  "book.supplementaries.entry.wall_lantern.name": "Wall Lantern",
+  "book.supplementaries.entry.wall_lantern.page.1.title": "Wall Lantern",
+  "book.supplementaries.entry.wall_lantern.page.1": "$(br2)$()$(br2)$()$(br2)$()$(br)$()Descriction of properties",
+  "book.supplementaries.entry.wall_lantern.page.2": "Simple descriction",
+
+  "book.supplementaries.entry.map_markers.name": "Map Markers",
+  "book.supplementaries.entry.map_markers.page.1.title": "Map Markers",
+  "book.supplementaries.entry.map_markers.page.1": "$(br2)$()$(br2)$()Descriction of properties",
+  "book.supplementaries.entry.map_markers.page.2": "Simple descriction",
+
+  "book.supplementaries.entry.adventure_map.name": "Adventure Map",
+  "book.supplementaries.entry.adventure_map.page.1.title": "Adventure Map",
+  "book.supplementaries.entry.adventure_map.page.1": "$(br2)$()$(br2)$()Descriction of properties",
+  "book.supplementaries.entry.adventure_map.page.2": "Simple descriction",
+
+  "book.supplementaries.entry.zombie_horse.name": "Zombie Horse Conversion",
+  "book.supplementaries.entry.zombie_horse.page.1.title": "Zombie Horse Conversion",
+  "book.supplementaries.entry.zombie_horse.page.1": "$(br2)$()$(br2)$()Descriction of properties",
+  "book.supplementaries.entry.zombie_horse.page.2": "Simple descriction",
+
+  "book.supplementaries.entry.gunpowder.name": "Placeable Gunpowder",
+  "book.supplementaries.entry.gunpowder.page.1.title": "Placeable Gunpowder",
+  "book.supplementaries.entry.gunpowder.page.1": "Descriction of properties",
+  "book.supplementaries.entry.gunpowder.page.2": "Simple descriction",
+
+  "book.supplementaries.entry.books.name": "Placeable Books",
+  "book.supplementaries.entry.books.page.1.title": "Placeable Books",
+  "book.supplementaries.entry.books.page.1": "$(br2)$()$(br2)$()Descriction of properties",
+  "book.supplementaries.entry.books.page.2": "Simple descriction",
+
+  "book.supplementaries.entry.banner.name": "Ceiling Banner",
+  "book.supplementaries.entry.banner.page.1.title": "Ceiling Banner",
+  "book.supplementaries.entry.banner.page.1": "Descriction of properties",
+  "book.supplementaries.entry.banner.page.2": "Simple descriction",
+
+  "book.supplementaries.entry.bell.name": "Bell Chain Ringing",
+  "book.supplementaries.entry.bell.page.1.title": "Bell Chain Ringing",
+  "book.supplementaries.entry.bell.page.1": "Descriction of properties",
+  "book.supplementaries.entry.bell.page.2": "Simple descriction",
+
+  "book.supplementaries.entry.bricks.name": "Throwable Bricks",
+  "book.supplementaries.entry.bricks.page.1.title": "Throwable Bricks",
+  "book.supplementaries.entry.bricks.page.1": "$(br2)$()$(br2)$()Descriction of properties",
+  "book.supplementaries.entry.bricks.page.2": "Simple descriction",
+
+
+  "book.supplementaries.entry.xp_bottling.name": "Xp Bottling",
+  "book.supplementaries.entry.xp_bottling.page.1.title": "Xp Bottling",
+  "book.supplementaries.entry.xp_bottling.page.1": "Descriction of properties",
+  "book.supplementaries.entry.xp_bottling.page.2": "Simple descriction",
+
+
+  "book.supplementaries.entry.sticks_rods.name": "Placeable Sticks and Rods",
+  "book.supplementaries.entry.sticks_rods.page.1.title": "Placeable Sticks and Rods",
+  "book.supplementaries.entry.sticks_rods.page.1": "$(br2)$()$(br2)$()Descriction of properties",
+  "book.supplementaries.entry.sticks_rods.page.2": "Simple descriction"
+
 }
