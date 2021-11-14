@@ -6,9 +6,6 @@ import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.supplementaries.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.client.gui.SpeakerBlockGui;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
-import net.mehvahdjukaar.supplementaries.network.SendSpeakerBlockMessagePacket;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -16,8 +13,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.management.PlayerList;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
@@ -26,14 +21,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fml.network.NetworkDirection;
-import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.NotNull;
 
 public class SpeakerBlock extends Block implements IPeripheralProvider {
@@ -92,21 +82,7 @@ public class SpeakerBlock extends Block implements IPeripheralProvider {
                 if (pow && world.isEmptyBlock(pos.relative(facing))) {
                     TileEntity tileentity = world.getBlockEntity(pos);
                     if (tileentity instanceof SpeakerBlockTile) {
-                        SpeakerBlockTile speaker = (SpeakerBlockTile) tileentity;
-                        MinecraftServer mcserv = ServerLifecycleHooks.getCurrentServer();
-                        RegistryKey<World> dimension = world.dimension();
-                        if (mcserv != null && !speaker.message.equals("")) {
-                            // particle
-                            world.blockEvent(pos, this, 0, 0);
-                            PlayerList players = mcserv.getPlayerList();
-
-                            ITextComponent message = new StringTextComponent(speaker.getName().getString() + ": " + speaker.message).withStyle(TextFormatting.ITALIC);
-
-                            players.broadcast(null, pos.getX(), pos.getY(), pos.getZ(), ServerConfigs.cached.SPEAKER_RANGE * speaker.volume,
-                                    dimension, NetworkHandler.INSTANCE.toVanillaPacket(
-                                            new SendSpeakerBlockMessagePacket(message, speaker.narrator),
-                                            NetworkDirection.PLAY_TO_CLIENT));
-                        }
+                        ((SpeakerBlockTile) tileentity).sendMessage();
                     }
                 }
             }

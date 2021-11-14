@@ -131,7 +131,7 @@ public class HangingSignBlockTileRenderer extends TileEntityRenderer<HangingSign
                         matrixStackIn.pushPose();
 
                         matrixStackIn.scale(0.75f, 0.75f, 0.75f);
-                        matrixStackIn.translate(0, 0, -1);
+                        matrixStackIn.translate(0, 0, -0.1);
                         //matrixStackIn.mulPose(Const.Y180);
                         itemRenderer.render(stack, ItemCameraTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
                                 combinedOverlayIn, ibakedmodel);

@@ -168,6 +168,7 @@ dependencies {
 
     implementation fg.deobf("curse.maven:configured-457570:3434071")
     implementation fg.deobf("curse.maven:curios-309927:3343065")
+
     implementation fg.deobf("curse.maven:decorativeblocks-362528:3166283")
     implementation fg.deobf("curse.maven:farmersdelight-398521:3503844")
     implementation fg.deobf("curse.maven:framedblocks-441647:3412173")
