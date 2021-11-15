@@ -21,4 +21,9 @@ public class OilLanternBlockTile extends EnhancedLanternBlockTile{
                 super.tick();
         }
     }
+    
+    @Override
+    public boolean hasAnimation() {
+        return this.oldRendererState;
+    }
 }
