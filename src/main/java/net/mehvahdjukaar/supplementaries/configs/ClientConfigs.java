@@ -137,6 +137,7 @@ public class ClientConfigs {
         public static ForgeConfigSpec.ConfigValue<List<? extends String>> TICKLE_MOBS;
 
         public static ForgeConfigSpec.BooleanValue FAST_LANTERNS;
+        public static ForgeConfigSpec.BooleanValue TURN_TABLE_PARTICLES;
 
         private static void init(ForgeConfigSpec.Builder builder) {
 
@@ -268,6 +269,11 @@ public class ClientConfigs {
                         .define("populate_creative_tab", true);
             builder.pop();
 
+            builder.push("turn_table");
+            TURN_TABLE_PARTICLES = builder.comment("Display visual particles when a block is rotated")
+                    .define("turn_particles", true);
+            builder.pop();
+
             builder.pop();
         }
     }
@@ -317,7 +323,7 @@ public class ClientConfigs {
 
     public static class cached {
         public static boolean COLORED_ARROWS;
-        public static boolean COLORED_BWERING_STAND;
+        public static boolean COLORED_BREWING_STAND;
         public static boolean CLOCK_CLICK;
         public static boolean TOOLTIP_HINTS;
         public static int FIREFLY_PAR_MAXAGE;
@@ -349,10 +355,11 @@ public class ClientConfigs {
         public static boolean SLINGSHOT_OVERLAY;
         public static float SLINGSHOT_PROJECTILE_SCALE;
         public static boolean BOOK_GLINT;
+        public static boolean TURN_TABLE_PARTICLES;
 
         public static void refresh(){
             //tweaks
-            COLORED_BWERING_STAND = tweaks.COLORED_BREWING_STAND.get();
+            COLORED_BREWING_STAND = tweaks.COLORED_BREWING_STAND.get();
             COLORED_ARROWS = tweaks.COLORED_ARROWS.get();
             CLOCK_CLICK = tweaks.CLOCK_CLICK.get();
             BOOK_GLINT = tweaks.BOOK_GLINT.get();
@@ -385,7 +392,7 @@ public class ClientConfigs {
             FLAG_WAVELENGTH = block.FLAG_WAVELENGTH.get();
             FLAG_FANCINESS = block.FLAG_FANCINESS.get();
             FAST_LANTERNS = block.FAST_LANTERNS.get();
-            FAST_LANTERNS = block.FAST_LANTERNS.get();
+            TURN_TABLE_PARTICLES = block.TURN_TABLE_PARTICLES.get();
             //items
             SLINGSHOT_OUTLINE = items.SLINGSHOT_OUTLINE.get();
             SLINGSHOT_OUTLINE_COLOR = Integer.parseUnsignedInt(items.SLINGSHOT_OUTLINE_COLOR.get().replace("0x", ""), 16);

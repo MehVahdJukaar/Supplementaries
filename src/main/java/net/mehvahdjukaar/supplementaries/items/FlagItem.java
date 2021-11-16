@@ -32,7 +32,6 @@ public class FlagItem extends BlockItem {
         BannerItem.appendHoverTextFromBannerBlockEntityTag(stack, tooltip);
     }
 
-
     @Override
     public ActionResultType useOn(ItemUseContext context) {
         //cauldron code

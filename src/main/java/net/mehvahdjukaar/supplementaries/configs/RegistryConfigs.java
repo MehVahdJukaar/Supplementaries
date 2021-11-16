@@ -19,8 +19,9 @@ import java.util.Map;
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 //loaded before registry
 public class RegistryConfigs {
-    public static ForgeConfigSpec REGISTRY_CONFIG;
 
+    public static final String FILE_NAME = Supplementaries.MOD_ID + "-registry.toml";
+    public static ForgeConfigSpec REGISTRY_CONFIG;
 
     public static void createSpec() {
         ForgeConfigSpec.Builder REGISTRY_BUILDER = new ForgeConfigSpec.Builder();
@@ -30,7 +31,7 @@ public class RegistryConfigs {
 
     public static void load() {
         CommentedFileConfig replacementConfig = CommentedFileConfig
-                .builder(FMLPaths.CONFIGDIR.get().resolve(Supplementaries.MOD_ID + "-registry.toml"))
+                .builder(FMLPaths.CONFIGDIR.get().resolve(FILE_NAME))
                 .sync()
                 .preserveInsertionOrder()
                 .writingMode(WritingMode.REPLACE)

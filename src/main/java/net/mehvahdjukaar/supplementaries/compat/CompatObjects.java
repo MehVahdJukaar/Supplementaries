@@ -56,6 +56,8 @@ public class CompatObjects {
 
     public static final Supplier<Block> RICH_SOIL = makeCompatObject("farmersdelight:rich_soil", ForgeRegistries.BLOCKS);
 
+    public static final Supplier<Block> RICH_SOUL_SOIL = makeCompatObject("nethers_delight:rich_soul_soil", ForgeRegistries.BLOCKS);
+
 
     //public static final RegistryObject<Block> ENDER_CHANDELIER2 = getCompatObject()
 

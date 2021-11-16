@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.compat.farmersdelight;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.PlanterBlock;
-import net.mehvahdjukaar.supplementaries.compat.CompatObjects;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootContext;
@@ -12,12 +12,16 @@ import net.minecraftforge.common.util.Lazy;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Supplier;
 
 public class PlanterRichBlock extends PlanterBlock {
 
-    public PlanterRichBlock(Properties properties) {
+    private final Lazy<BlockState> RICH_SOIL_DELEGATE;
 
+    public PlanterRichBlock(Properties properties, Supplier<Block> mimic) {
         super(properties);
+        RICH_SOIL_DELEGATE = Lazy.of(() -> mimic.get().defaultBlockState());
+
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false)
                 .setValue(EXTENDED, false));
     }
@@ -27,8 +31,6 @@ public class PlanterRichBlock extends PlanterBlock {
         return Collections.singletonList(new ItemStack(this));
     }
 
-    //fd stuff
-    private static final Lazy<BlockState> RICH_SOIL_DELEGATE = Lazy.of(()->CompatObjects.RICH_SOIL.get().defaultBlockState());
 
     @Override
     public void randomTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {

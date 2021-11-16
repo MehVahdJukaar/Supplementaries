@@ -183,7 +183,8 @@ public class ModRegistry {
     public static final RegistryObject<BasicParticleType> SLINGSHOT_PARTICLE = regParticle("air_burst");
     public static final RegistryObject<BasicParticleType> STASIS_PARTICLE = regParticle("stasis");
     public static final RegistryObject<BasicParticleType> CONFETTI_PARTICLE = regParticle("confetti");
-
+    public static final RegistryObject<BasicParticleType> ROTATION_TRAIL = regParticle("rotation_trail");
+    public static final RegistryObject<BasicParticleType> ROTATION_TRAIL_EMITTER = regParticle("rotation_trail_emitter");
 
     //recipes
     public static final RegistryObject<IRecipeSerializer<?>> BLACKBOARD_DUPLICATE_RECIPE = RECIPES.register("blackboard_duplicate_recipe", () ->

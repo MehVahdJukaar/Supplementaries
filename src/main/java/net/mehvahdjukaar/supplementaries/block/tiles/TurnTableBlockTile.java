@@ -51,6 +51,11 @@ public class TurnTableBlockTile extends TileEntity implements ITickableTileEntit
             // cd > 0
             if (this.cooldown == 0) {
                 boolean success = this.handleRotation();
+
+                if (success) {
+                    this.level.blockEvent(this.worldPosition, this.getBlockState().getBlock(), 0, 0);
+                }
+
                 this.cooldown = TurnTableBlock.getPeriod(this.getBlockState());//ServerConfigs.cached.TURN_TABLE_PERIOD;
                 // if it didn't rotate last block that means that block is immovable
                 int power = this.getBlockState().getValue(TurnTableBlock.POWER);

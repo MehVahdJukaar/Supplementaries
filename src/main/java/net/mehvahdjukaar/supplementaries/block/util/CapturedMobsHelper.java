@@ -58,7 +58,7 @@ public class CapturedMobsHelper {
     static {
         //1=default fish
 
-        DEFAULT_CONFIG.add(addDef("minecraft:bee", 0.3125f, 0.5f));
+        DEFAULT_CONFIG.add(addDef("minecraft:bee", 0.3125f, 0f));
         DEFAULT_CONFIG.add(addDef("minecraft:vex", 0, 0.125f, 0, AnimationCategory.FLOATING));
         DEFAULT_CONFIG.add(addDef("minecraft:silverfish", 0, 0.25f));
         DEFAULT_CONFIG.add(addDef("minecraft:chicken", 0.25f, 0.3125f));

@@ -17,8 +17,8 @@ public class RequestConfigReloadPacket {
         //server
         ctx.get().enqueueWork(() -> {
             //TODO: fix confis synginc
-            ServerConfigs.loadLocal();
-            ConfigHandler.syncServerConfigs(ctx.get().getSender());
+            //ServerConfigs.loadLocal();
+            ConfigHandler.sendSyncedConfigsToAllPlayers();
             ServerConfigs.cached.refresh();
 
         });

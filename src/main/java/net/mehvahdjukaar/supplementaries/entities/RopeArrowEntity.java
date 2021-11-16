@@ -25,6 +25,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.FMLPlayMessages;
@@ -194,6 +195,36 @@ public class RopeArrowEntity extends AbstractArrowEntity {
                 this.continueUnwindingRope();
             }
         }
+    }
 
+    @Override
+    protected void onHitEntity(EntityRayTraceResult pResult) {
+        Entity entity = pResult.getEntity();
+        int k = entity.getRemainingFireTicks();
+        if (this.isOnFire() && entity.getType() != EntityType.ENDERMAN) {
+            entity.setSecondsOnFire(5);
+        }
+        entity.setRemainingFireTicks(k);
+
+        this.setDeltaMovement(this.getDeltaMovement().scale(-0.1D));
+        this.yRot = this.yRot + 180.0F;
+        this.yRotO += 180.0F;
+        if (!this.level.isClientSide && this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
+            if (this.pickup == PickupStatus.ALLOWED) {
+                this.spawnAtLocation(this.getPickupItem(), 0.1F);
+            }
+
+            this.remove();
+        }
+    }
+
+    @Override
+    public void playerTouch(PlayerEntity entityIn) {
+        if (!this.level.isClientSide) {
+            if (entityIn.inventory.add(this.getPickupItem())) {
+                entityIn.take(this, 1);
+                this.remove();
+            }
+        }
     }
 }

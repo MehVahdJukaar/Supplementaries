@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.TurnTableBlockTile;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.Block;
@@ -111,9 +112,9 @@ public class TurnTableBlock extends Block {
     @Override
     public void neighborChanged(BlockState state, World world, BlockPos pos, Block neighborBlock, BlockPos fromPos, boolean moving) {
         super.neighborChanged(state, world, pos, neighborBlock, fromPos, moving);
-        boolean powerchanged = this.updatePower(state, world, pos);
+        boolean updatePower = this.updatePower(state, world, pos);
         // if power changed and is powered or facing block changed
-        if (world.getBlockState(pos).getValue(POWER) != 0 && (powerchanged || fromPos.equals(pos.relative(state.getValue(FACING)))))
+        if (world.getBlockState(pos).getValue(POWER) != 0 && (updatePower || fromPos.equals(pos.relative(state.getValue(FACING)))))
             this.tryRotate(world, pos);
     }
 
@@ -200,4 +201,22 @@ public class TurnTableBlock extends Block {
         return new TurnTableBlockTile();
     }
 
+
+    @Override
+    public boolean triggerEvent(BlockState state, World world, BlockPos pos, int eventID, int eventParam) {
+        if (eventID == 0) {
+            if (world.isClientSide && ClientConfigs.cached.TURN_TABLE_PARTICLES) {
+                Direction dir = state.getValue(TurnTableBlock.FACING);
+                BlockPos front = pos.relative(dir);
+
+                world.addParticle(ModRegistry.ROTATION_TRAIL_EMITTER.get(),
+                        front.getX() + 0.5D, front.getY() + 0.5, front.getZ() + 0.5D,
+                        dir.get3DDataValue(),
+                        0.71, (state.getValue(INVERTED) ? 1 : -1));
+            }
+            return true;
+        }
+
+        return super.triggerEvent(state, world, pos, eventID, eventParam);
+    }
 }

@@ -22,16 +22,10 @@ import static net.mehvahdjukaar.supplementaries.configs.ConfigHandler.STRING_CHE
 
 public class ServerConfigs {
 
-
     //overwritten by server one
     public static ForgeConfigSpec SERVER_SPEC;
 
     static {
-        createConfig();
-    }
-
-
-    public static void createConfig() {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
 
         block.init(builder);
@@ -359,7 +353,6 @@ public class ServerConfigs {
         public static ForgeConfigSpec.IntValue STICK_POLE_LENGTH;
 
 
-
         private static void init(ForgeConfigSpec.Builder builder) {
 
             builder.comment("Server side blocks configs")
@@ -585,7 +578,7 @@ public class ServerConfigs {
                     "repurposed_structures:village_giant_taiga", "repurposed_structures:village_jungle", "repurposed_structures:village_mountains", "repurposed_structures:village_oak",
                     "repurposed_structures:village_swamp", "pokecube:village", "pokecube_legends:village", "pokecube_legends:village/ocean",
                     "valhelsia_structures:castle", "valhelsia_structures:castle_ruin", "valhelsia_structures:small_castle", "valhelsia_structures:tower_ruin",
-                    "stoneholm:underground_village", "blue_skies:gatekeeper_house","feywild:library", "feywild:blacksmith");
+                    "stoneholm:underground_village", "blue_skies:gatekeeper_house", "feywild:library", "feywild:blacksmith");
 
             SIGNS_VILLAGES = builder.comment("list of structure that a sign can point to. Note that they will only spawn in dimensions where vanilla villages can")
                     .defineList("villages", villages, STRING_CHECK);

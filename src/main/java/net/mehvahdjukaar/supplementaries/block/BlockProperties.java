@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.block;
 
 import net.mehvahdjukaar.selene.fluids.SoftFluid;
 import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
-import net.mehvahdjukaar.supplementaries.block.util.IBellConnections;
+import net.mehvahdjukaar.supplementaries.block.util.IBellConnection;
 import net.minecraft.block.BlockState;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.EnumProperty;
@@ -43,7 +43,7 @@ public class BlockProperties {
     public static final BooleanProperty ROTATING = BooleanProperty.create("rotating");
     public static final EnumProperty<PostType> POST_TYPE = EnumProperty.create("type", PostType.class);
     public static final EnumProperty<BellAttachment> BELL_ATTACHMENT = EnumProperty.create("attachment", BellAttachment.class);
-    public static final EnumProperty<IBellConnections.BellConnection> BELL_CONNECTION = EnumProperty.create("connection", IBellConnections.BellConnection.class);
+    public static final EnumProperty<IBellConnection.BellConnection> BELL_CONNECTION = EnumProperty.create("connection", IBellConnection.BellConnection.class);
     public static final IntegerProperty HONEY_LEVEL_POT = IntegerProperty.create("honey_level", 0, 4);
     public static final IntegerProperty BURNING = IntegerProperty.create("burning", 0, 8);
     public static final IntegerProperty BOOKS = IntegerProperty.create("books", 1, 4);

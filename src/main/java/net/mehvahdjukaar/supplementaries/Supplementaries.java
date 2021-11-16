@@ -1,8 +1,6 @@
 package net.mehvahdjukaar.supplementaries;
 
-import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.datagen.RecipeCondition;
 import net.mehvahdjukaar.supplementaries.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.setup.ClientSetup;
@@ -15,9 +13,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -125,13 +121,9 @@ public class Supplementaries {
 
         //TODO: xp bottling whose cost depends on player total xp
         //TODO: randomium that can spawn in other dimensions via whitelist
-        //TODO: add compat stuff recently provided
         //todo: serene seasons & moon stuff for haunted harvest
 
         MinecraftForge.EVENT_BUS.register(ServerEvents.class);
-
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ServerConfigs.SERVER_SPEC);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfigs.CLIENT_SPEC);
 
         ConfigHandler.init();
 

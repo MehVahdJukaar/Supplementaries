@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.entities;
 
+import net.mehvahdjukaar.supplementaries.common.VectorUtils;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.events.ItemsOverrideHandler;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
@@ -240,7 +241,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
                     Vector3d rot = new Vector3d(0.325,0,0).yRot(this.tickCount * 0.32f);
 
                     Vector3d movement = this.getDeltaMovement();
-                    Vector3d offset = changeBasis(movement, rot);
+                    Vector3d offset = VectorUtils.changeBasisN(movement, rot);
 
                     double px = newPos.x + offset.x;
                     double py = newPos.y + offset.y; //+ this.getBbHeight() / 2d;
@@ -261,13 +262,6 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
                 }
             }
         }
-    }
-
-    private Vector3d changeBasis(Vector3d dir, Vector3d rot){
-        Vector3d y = dir.normalize();
-        Vector3d x = new Vector3d(y.y, y.z, y.x).normalize();
-        Vector3d z = y.cross(x).normalize();
-        return x.scale(rot.x).add(y.scale(rot.y)).add(z.scale(rot.z));
     }
 
     @Override

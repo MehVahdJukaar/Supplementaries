@@ -26,7 +26,7 @@ public class ReloadConfigsCommand implements Command<CommandSource> {
     public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
         //TODO: figure out server/client side
         ClientConfigs.cached.refresh();
-        ConfigHandler.syncServerConfigs();
+        ConfigHandler.sendSyncedConfigsToAllPlayers();
         ServerConfigs.cached.refresh();
         context.getSource().sendSuccess(new TranslationTextComponent("message.supplementaries.command.configs_reloaded"), false);
         return 0;

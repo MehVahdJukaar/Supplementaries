@@ -283,7 +283,6 @@ public class ClientSetup {
         }
     }
 
-
     //particles
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void registerParticles(ParticleFactoryRegisterEvent event) {
@@ -302,6 +301,8 @@ public class ClientSetup {
         particleManager.register(ModRegistry.SLINGSHOT_PARTICLE.get(), SlingshotParticle.Factory::new);
         particleManager.register(ModRegistry.STASIS_PARTICLE.get(), StasisParticle.Factory::new);
         particleManager.register(ModRegistry.CONFETTI_PARTICLE.get(), ConfettiParticle.Factory::new);
+        particleManager.register(ModRegistry.ROTATION_TRAIL.get(), RotationTrailParticle.Factory::new);
+        particleManager.register(ModRegistry.ROTATION_TRAIL_EMITTER.get(), new  RotationTrailEmitter.Factory());
     }
 
     @SubscribeEvent

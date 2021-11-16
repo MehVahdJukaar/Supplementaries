@@ -249,6 +249,7 @@
   "block.supplementaries.present_cyan": "Cyan Present",
   "structure.supplementaries.way_sign": "Way Sign",
   "item.supplementaries.candy": "Candy",
+  "block.supplementaries.planter_rich_soul": "Rich Soul Soil Planter",
 
   "item.supplementaries.key_chain": "Key Chain",
   "block.supplementaries.skull_candle": "Skull Candle",
@@ -626,13 +627,12 @@
 
 
 
-  //Book
+
 
   "book.supplementaries.book_name": "Supplemental guide of supplementaries",
   "book.supplementaries.landing_text": "You can get help in this book ! Or on $(l)$(l:https://github.com/MehVahdJukaar/Supplementaries/wiki)GitHub Wiki$(/l)$(reset) our join in supplementaries $(l)$(l:https://discord.gg/cw27h3aW7Z)Discord Server$(/l)$(reset)",
 
 
-  //Category
 
   "book.supplementaries.category.redstone.name": "Redstone Components",
   "book.supplementaries.category.redstone.description": "Find all redstone component of supplementaries",
@@ -651,10 +651,7 @@
 
 
 
-  //Entry
 
-
-  //Redstone
 
   "book.supplementaries.entry.cog.name": "Cog",
   "book.supplementaries.entry.cog.page.1.title": "Cog",
@@ -732,7 +729,6 @@
   "book.supplementaries.entry.crank.page.2": "Simple descriction",
 
 
-  //Item
 
   "book.supplementaries.entry.bomb.name": "Bomb",
   "book.supplementaries.entry.bomb.page.1.title": "Bomb",
@@ -776,7 +772,7 @@
   "book.supplementaries.entry.rope_arrow.page.2": "$(br2)$()$(br2)$()$(br2)$()$(br2)$()$(br)$()Simple descriction",
 
 
-  //World
+
 
   "book.supplementaries.entry.way_sign.name": "Way Sign",
   "book.supplementaries.entry.way_sign.page.1.title": "Way Sign",
@@ -799,7 +795,7 @@
   "book.supplementaries.entry.fireflies.page.2": "Simple descriction",
 
 
-  //Tweaks
+
 
   "book.supplementaries.entry.wall_lantern.name": "Wall Lantern",
   "book.supplementaries.entry.wall_lantern.page.1.title": "Wall Lantern",

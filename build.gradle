@@ -22,7 +22,7 @@ mixin {
     add sourceSets.main, "supplementaries.refmap.json"
 }
 
-version = '1.16.5-0.17.9'
+version = '1.16.5-0.17.10'
 group = 'net.mehvahdjukaar.supplementaries' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'supplementaries'
 
@@ -166,7 +166,7 @@ dependencies {
     implementation fg.deobf("curse.maven:quark-243121:3326040")
     //implementation fg.deobf("curse.maven:quarkoddities-301051:3088871")
 
-    implementation fg.deobf("curse.maven:configured-457570:3434071")
+    implementation fg.deobf("curse.maven:configured-457570:3523091")
     implementation fg.deobf("curse.maven:curios-309927:3343065")
 
     implementation fg.deobf("curse.maven:decorativeblocks-362528:3166283")
@@ -179,6 +179,8 @@ dependencies {
     implementation fg.deobf("curse.maven:patchouli-306770:3459118")
     implementation fg.deobf("curse.maven:enchanted-book-redesign-348076:3239927")
     implementation fg.deobf("curse.maven:custom-villager-trades-463402:3475853")
+    implementation fg.deobf("curse.maven:nethers-delight-496394:3443481")
+    implementation fg.deobf("curse.maven:blueprint-382216:3457851")
     //implementation fg.deobf("curse.maven:cc-tweaked-282001:3434680")
 
     implementation fg.deobf("mezz.jei:jei-1.16.5:7.7.1.116")
