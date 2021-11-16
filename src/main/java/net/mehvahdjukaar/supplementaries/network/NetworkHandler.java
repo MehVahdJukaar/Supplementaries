@@ -81,11 +81,12 @@ public class NetworkHandler {
 
         register(ClientBoundSyncSongsPacket.class, ClientBoundSyncSongsPacket::buffer,
                 ClientBoundSyncSongsPacket::new, ClientBoundSyncSongsPacket::handler);
-
+        register(ClientBoundSetSongPacket.class, ClientBoundSetSongPacket::buffer,
+                ClientBoundSetSongPacket::new, ClientBoundSetSongPacket::handler);
 
     }
 
-    public static void sendToAllTrackingClient(Entity entity, ServerLevel world, Message message) {
+    public static void sendToAllTrackingClients(Entity entity, ServerLevel world, Message message) {
         world.getChunkSource().broadcast(entity, INSTANCE.toVanillaPacket(message, NetworkDirection.PLAY_TO_CLIENT));
     }
 

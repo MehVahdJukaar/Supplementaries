@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.items.enchantment;
 
+import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.items.SlingshotItem;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
@@ -9,8 +10,11 @@ import net.minecraft.world.item.enchantment.Enchantments;
 
 public class StasisEnchantment extends Enchantment {
 
+    private final boolean enabled;
+
     public StasisEnchantment(Rarity rarity, EnchantmentCategory type, EquipmentSlot... slotTypes) {
         super(rarity, type, slotTypes);
+        enabled = RegistryConfigs.reg.SLINGSHOT_ENABLED.get();
     }
 
     @Override
@@ -26,6 +30,21 @@ public class StasisEnchantment extends Enchantment {
     @Override
     public boolean isTreasureOnly() {
         return true;
+    }
+
+    @Override
+    public boolean isTradeable() {
+        return enabled;
+    }
+
+    @Override
+    public boolean isDiscoverable() {
+        return enabled;
+    }
+
+    @Override
+    public boolean isAllowedOnBooks() {
+        return enabled;
     }
 
     @Override

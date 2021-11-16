@@ -1,14 +1,19 @@
 package net.mehvahdjukaar.supplementaries.world.songs;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.client.gui.ConfigButton;
 import net.mehvahdjukaar.supplementaries.items.InstrumentItem;
+import net.mehvahdjukaar.supplementaries.network.ClientBoundSetSongPacket;
 import net.mehvahdjukaar.supplementaries.network.ClientBoundSyncSongsPacket;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.RecordItem;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.JukeboxBlock;
 import net.minecraft.world.level.block.NoteBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
@@ -24,13 +29,16 @@ public class SongsManager {
     //randomly selected currently playing songs
     private static final Map<UUID, Song> CURRENTLY_PAYING = new HashMap<>();
 
-    public static Song startPlaying(UUID id, ResourceLocation songKey){
-        Song song = SONGS.getOrDefault(songKey,Song.EMPTY);
+    public static Song setCurrentlyPlaying(UUID id, ResourceLocation songKey) {
+        Song song = SONGS.getOrDefault(songKey, Song.EMPTY);
         CURRENTLY_PAYING.put(id, song);
+
+
+
         return song;
     }
 
-    public static void stopPlayingSong(UUID id) {
+    public static void clearCurrentlyPlaying(UUID id) {
         CURRENTLY_PAYING.remove(id);
     }
 
@@ -46,15 +54,20 @@ public class SongsManager {
                                          long timeSinceStarted) {
         UUID id = entity.getUUID();
         Song song;
-        if(!CURRENTLY_PAYING.containsKey(id)){
+        if (!CURRENTLY_PAYING.containsKey(id)) {
             //both client and server select one random. selected should be the same since random uses the same seed
 
-            ResourceLocation res = selectRandomSong(new Random(entity.tickCount));
-            song = startPlaying(id, res);
+            if (entity.level.isClientSide) return false;
+            ResourceLocation res = selectRandomSong(entity.level.random);
+            song = setCurrentlyPlaying(id, res);
 
-            //NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) entity.getPlayer()),
-        }
-        else{
+            if(entity instanceof ServerPlayer player) {
+                player.displayClientMessage(new TextComponent("Playing: "+song.getTranslationKey()), true);
+            }
+
+            NetworkHandler.INSTANCE.send(PacketDistributor.TRACKING_ENTITY.with(() -> entity), new ClientBoundSetSongPacket(id, res));
+
+        } else {
             song = CURRENTLY_PAYING.get(id);
         }
         return playSong(instrument, entity, song, timeSinceStarted);
@@ -130,8 +143,10 @@ public class SongsManager {
             if (interval != 0) {
                 intervals.add(-interval);
                 if (-interval > largestInterval) largestInterval = -interval;
+                //skips first 0 interval
+                arrayList.add(interval);
             }
-            arrayList.add(interval);
+
             arrayList.add(note);
         }
 
@@ -156,7 +171,7 @@ public class SongsManager {
 
         if (name.isEmpty()) name = "recorded-" + start;
 
-        Song song = new Song(name, GCD, finalNotes.toArray(new Integer[0]), "recorded in-game", speedup);
+        Song song = new Song(name, GCD, finalNotes.toArray(new Integer[0]), "recorded in-game");
 
         FluteSongsReloadListener.saveRecordedSong(song);
 

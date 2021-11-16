@@ -18,7 +18,7 @@ public class RecordSongCommand {
 
     public static ArgumentBuilder<CommandSourceStack, ?> register(CommandDispatcher<CommandSourceStack> dispatcher) {
         return Commands.literal("record")
-                .requires(cs -> cs.hasPermission(0))
+                .requires(cs -> cs.hasPermission(2))
                 .then(Commands.literal("stop").executes(c -> RecordSongCommand.stop(c, "", 0))
                         .then(Commands.argument("name", StringArgumentType.word())
                                 .executes(c -> RecordSongCommand.stop(c, StringArgumentType.getString(c, "name"), 0))

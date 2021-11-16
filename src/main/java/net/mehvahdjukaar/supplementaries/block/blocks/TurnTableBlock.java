@@ -4,6 +4,7 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.TurnTableBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -112,9 +113,8 @@ public class TurnTableBlock extends Block implements EntityBlock {
     }
 
     private void tryRotate(Level world, BlockPos pos) {
-        BlockEntity te = world.getBlockEntity(pos);
-        if (te instanceof TurnTableBlockTile) {
-            ((TurnTableBlockTile) te).tryRotate();
+        if (world.getBlockEntity(pos) instanceof TurnTableBlockTile te) {
+            te.tryRotate();
         }
     }
 
@@ -168,16 +168,16 @@ public class TurnTableBlock extends Block implements EntityBlock {
 
 
             //TODO: use setMotion
-            if ((e instanceof LivingEntity)) {
+            if ((e instanceof LivingEntity entity)) {
                 e.setOnGround(false); //remove this?
                 float diff = e.getYHeadRot() - increment;
                 e.setYBodyRot(diff);
                 e.setYHeadRot(diff);
-                ((LivingEntity) e).yHeadRotO = ((LivingEntity) e).yHeadRot;
-                ((LivingEntity) e).setNoActionTime(20);
+                entity.yHeadRotO = ((LivingEntity) e).yHeadRot;
+                entity.setNoActionTime(20);
                 //e.velocityChanged = true;
 
-                if (e instanceof Cat && ((TamableAnimal) e).isOrderedToSit() && !world.isClientSide) {
+                if (e instanceof Cat cat && cat.isOrderedToSit() && !world.isClientSide) {
                     if (world.getBlockEntity(pos) instanceof TurnTableBlockTile tile) {
                         if (tile.cat == 0) {
                             tile.cat = 20 * 20;
@@ -205,5 +205,23 @@ public class TurnTableBlock extends Block implements EntityBlock {
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
         return BlockUtils.getTicker(pBlockEntityType, ModRegistry.TURN_TABLE_TILE.get(), !pLevel.isClientSide ? TurnTableBlockTile::tick : null);
+    }
+
+    @Override
+    public boolean triggerEvent(BlockState state, Level world, BlockPos pos, int eventID, int eventParam) {
+        if (eventID == 0) {
+            if (world.isClientSide && ClientConfigs.cached.TURN_TABLE_PARTICLES) {
+                Direction dir = state.getValue(TurnTableBlock.FACING);
+                BlockPos front = pos.relative(dir);
+
+                world.addParticle(ModRegistry.ROTATION_TRAIL_EMITTER.get(),
+                        front.getX() + 0.5D, front.getY() + 0.5, front.getZ() + 0.5D,
+                        dir.get3DDataValue(),
+                        0.71, (state.getValue(INVERTED) ? 1 : -1));
+            }
+            return true;
+        }
+
+        return super.triggerEvent(state, world, pos, eventID, eventParam);
     }
 }

@@ -27,6 +27,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.fmllegacy.network.FMLPlayMessages;
 import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
@@ -195,5 +196,36 @@ public class RopeArrowEntity extends AbstractArrow {
             }
         }
 
+    }
+
+    @Override
+    protected void onHitEntity(EntityHitResult pResult) {
+        Entity entity = pResult.getEntity();
+        int k = entity.getRemainingFireTicks();
+        if (this.isOnFire() && entity.getType() != EntityType.ENDERMAN) {
+            entity.setSecondsOnFire(5);
+        }
+        entity.setRemainingFireTicks(k);
+
+        this.setDeltaMovement(this.getDeltaMovement().scale(-0.1D));
+        this.setYRot(this.getYRot() + 180.0F);
+        this.yRotO += 180.0F;
+        if (!this.level.isClientSide && this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
+            if (this.pickup == AbstractArrow.Pickup.ALLOWED) {
+                this.spawnAtLocation(this.getPickupItem(), 0.1F);
+            }
+
+            this.discard();
+        }
+    }
+
+    @Override
+    public void playerTouch(Player entityIn) {
+        if (!this.level.isClientSide) {
+            if (entityIn.getInventory().add(this.getPickupItem())) {
+                entityIn.take(this, 1);
+                this.remove(RemovalReason.DISCARDED);
+            }
+        }
     }
 }

@@ -1,20 +1,38 @@
 {
   "variants": {
-    "facing=north": {
+    "facing=north,ye_olde=false": {
       "model": "supplementaries:block/speaker_block"
     },
-    "facing=east": {
+    "facing=east,ye_olde=false": {
       "model": "supplementaries:block/speaker_block",
       "y": 90,
       "uvlock": true
     },
-    "facing=south": {
+    "facing=south,ye_olde=false": {
       "model": "supplementaries:block/speaker_block",
       "y": 180,
       "uvlock": true
     },
-    "facing=west": {
+    "facing=west,ye_olde=false": {
       "model": "supplementaries:block/speaker_block",
+      "y": 270,
+      "uvlock": true
+    },
+	"facing=north,ye_olde=true": {
+      "model": "supplementaries:block/speaker_block_olde"
+    },
+    "facing=east,ye_olde=true": {
+      "model": "supplementaries:block/speaker_block_olde",
+      "y": 90,
+      "uvlock": true
+    },
+    "facing=south,ye_olde=true": {
+      "model": "supplementaries:block/speaker_block_olde",
+      "y": 180,
+      "uvlock": true
+    },
+    "facing=west,ye_olde=true": {
+      "model": "supplementaries:block/speaker_block_olde",
       "y": 270,
       "uvlock": true
     }

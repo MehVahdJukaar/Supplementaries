@@ -2,21 +2,29 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralProvider;
+import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
+import net.mehvahdjukaar.supplementaries.block.util.TextHolder;
 import net.mehvahdjukaar.supplementaries.client.gui.SpeakerBlockGui;
+import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.ClientBoundPlaySpeakerMessagePacket;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.ChatFormatting;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -44,15 +52,17 @@ import org.jetbrains.annotations.Nullable;
 public class SpeakerBlock extends Block implements EntityBlock , IPeripheralProvider {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
+    public static final BooleanProperty ANTIQUE = BlockProperties.ANTIQUE;
 
     public SpeakerBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(POWERED, false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH)
+                .setValue(ANTIQUE,false).setValue(POWERED, false));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING, POWERED);
+        builder.add(FACING, POWERED, ANTIQUE);
     }
 
     @Override
@@ -97,20 +107,7 @@ public class SpeakerBlock extends Block implements EntityBlock , IPeripheralProv
                 Direction facing = state.getValue(FACING);
                 if (pow && world.isEmptyBlock(pos.relative(facing))) {
                     if (world.getBlockEntity(pos) instanceof SpeakerBlockTile tile) {
-                        MinecraftServer currentServer = ServerLifecycleHooks.getCurrentServer();
-                        ResourceKey<Level> dimension = world.dimension();
-                        if (currentServer != null && !tile.message.equals("")) {
-                            // particle
-                            world.blockEvent(pos, this, 0, 0);
-                            PlayerList players = currentServer.getPlayerList();
-
-                            Component message = new TextComponent(tile.getName().getString() + ": " + tile.message).withStyle(ChatFormatting.ITALIC);
-
-                            players.broadcast(null, pos.getX(), pos.getY(), pos.getZ(), ServerConfigs.cached.SPEAKER_RANGE * tile.volume,
-                                    dimension, NetworkHandler.INSTANCE.toVanillaPacket(
-                                            new ClientBoundPlaySpeakerMessagePacket(message, tile.narrator),
-                                            NetworkDirection.PLAY_TO_CLIENT));
-                        }
+                        tile.sendMessage();
                     }
                 }
             }
@@ -118,11 +115,26 @@ public class SpeakerBlock extends Block implements EntityBlock , IPeripheralProv
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player entity, InteractionHand hand,
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand,
                                  BlockHitResult hit) {
-        if (world.getBlockEntity(pos) instanceof SpeakerBlockTile tile && tile.isAccessibleBy(entity)) {
+        if (level.getBlockEntity(pos) instanceof SpeakerBlockTile tile && tile.isAccessibleBy(player)) {
+            //ink
+            if (player.getAbilities().mayBuild && !state.getValue(ANTIQUE)) {
+                ItemStack stack = player.getItemInHand(hand);
+                if(stack.is(ModRegistry.ANTIQUE_INK.get())){
+                    level.playSound(null, pos, SoundEvents.INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                    if (!player.isCreative()) {
+                        stack.shrink(1);
+                    }
+                    if (player instanceof ServerPlayer serverPlayer) {
+                        CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
+                        level.setBlockAndUpdate(pos, state.setValue(ANTIQUE,true));
+                    }
+                    return InteractionResult.sidedSuccess(level.isClientSide);
+                }
+            }
             // client
-            if (world.isClientSide) {
+            if (level.isClientSide) {
                 SpeakerBlockGui.open(tile);
                 return InteractionResult.SUCCESS;
             }

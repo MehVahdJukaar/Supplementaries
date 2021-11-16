@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.configs;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.network.RequestConfigReloadPacket;
 import net.mehvahdjukaar.supplementaries.network.SyncConfigsPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
@@ -11,7 +12,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -29,7 +32,18 @@ import java.util.function.Predicate;
 
 public class ConfigHandler {
 
+    public static ModConfig CLIENT_CONFIG_OBJECT;
+    public static ModConfig SERVER_CONFIG_OBJECT;
+    public static ModConfig REGISTRY_CONFIG_OBJECT;
+
     public static void init() {
+        ModContainer modContainer = ModLoadingContext.get().getActiveContainer();
+        CLIENT_CONFIG_OBJECT = new ModConfig(ModConfig.Type.CLIENT, ClientConfigs.CLIENT_SPEC, modContainer);
+        SERVER_CONFIG_OBJECT = new ModConfig(ModConfig.Type.COMMON, ServerConfigs.SERVER_SPEC, modContainer);
+        REGISTRY_CONFIG_OBJECT = new ModConfig(ModConfig.Type.COMMON, RegistryConfigs.REGISTRY_CONFIG, modContainer, RegistryConfigs.FILE_NAME);
+        modContainer.addConfig(CLIENT_CONFIG_OBJECT);
+        modContainer.addConfig(SERVER_CONFIG_OBJECT);
+
         //need to register on 2 different busses, can't use subscribe event
         MinecraftForge.EVENT_BUS.addListener(ConfigHandler::onPlayerLoggedIn);
         MinecraftForge.EVENT_BUS.addListener(ConfigHandler::onPlayerLoggedOut);
@@ -70,10 +84,9 @@ public class ConfigHandler {
     public static Predicate<Object> LIST_STRING_CHECK = o -> o instanceof List<?> && ((Collection<?>) o).stream().allMatch(s -> s instanceof String);
 
     public static void reloadConfigsEvent(ModConfigEvent event) {
-        //TODO: common aren't working...
         if (event.getConfig().getSpec() == ServerConfigs.SERVER_SPEC) {
             //send this configuration to connected clients
-            syncServerConfigs();
+            sendSyncedConfigsToAllPlayers();
             ServerConfigs.cached.refresh();
         } else if (event.getConfig().getSpec() == ClientConfigs.CLIENT_SPEC)
             ClientConfigs.cached.refresh();
@@ -83,16 +96,15 @@ public class ConfigHandler {
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         if (!event.getPlayer().level.isClientSide) {
             //send this configuration to connected clients
-            syncServerConfigs(event.getPlayer());
+            syncServerConfigs((ServerPlayer)event.getPlayer());
         }
     }
 
     public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
-        //TODO: fix server configs sync
         if (event.getPlayer().level.isClientSide) {
             //reload local common configs
             //maybe not needed
-            ServerConfigs.loadLocal();
+            //ServerConfigs.loadLocal();
             ServerConfigs.cached.refresh();
         }
     }
@@ -102,10 +114,17 @@ public class ConfigHandler {
         return FMLPaths.CONFIGDIR.get().resolve(Supplementaries.MOD_ID + "-common.toml").toAbsolutePath();
     }
 
-    public static void syncServerConfigs() {
-        final MinecraftServer currentServer = ServerLifecycleHooks.getCurrentServer();
+
+    //called on client. client -> server -..-> all clients
+    public static void clientRequestServerConfigReload(){
+        NetworkHandler.INSTANCE.sendToServer(new RequestConfigReloadPacket());
+    }
+
+    //called on server. sync server -> all clients
+    public static void sendSyncedConfigsToAllPlayers() {
+        MinecraftServer currentServer = ServerLifecycleHooks.getCurrentServer();
         if (currentServer != null) {
-            final PlayerList playerList = currentServer.getPlayerList();
+            PlayerList playerList = currentServer.getPlayerList();
             for (ServerPlayer player : playerList.getPlayers()) {
                 syncServerConfigs(player);
             }
@@ -113,10 +132,11 @@ public class ConfigHandler {
 
     }
 
-    public static void syncServerConfigs(Player player) {
+    //send configs from server -> client
+    public static void syncServerConfigs(ServerPlayer player) {
         try {
             final byte[] configData = Files.readAllBytes(getServerConfigPath());
-            NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
+            NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player),
                     new SyncConfigsPacket(configData));
         } catch (IOException e) {
             Supplementaries.LOGGER.error(Supplementaries.MOD_ID + ": Failed to sync common configs", e);
@@ -125,7 +145,6 @@ public class ConfigHandler {
 
 
     //TODO: remake config system
-
     public static class CachedConfigValue<T, C extends ForgeConfigSpec.ConfigValue<T>> {
         private T cached;
         private final C config;

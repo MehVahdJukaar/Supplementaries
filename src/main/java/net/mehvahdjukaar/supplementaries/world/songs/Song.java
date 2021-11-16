@@ -16,20 +16,18 @@ public class Song {
     private Integer[] notes;
 
     private String credits;
-    private int sped_up_ticks;
 
     public static final Song EMPTY = new Song("Error", 1, new Integer[0]);
 
     public Song(String name, int tempo, Integer[] notes) {
-        this(name, tempo, notes, "", 0);
+        this(name, tempo, notes, "");
     }
 
-    public Song(String name, int tempo, Integer[] notes, String credits, int skip) {
+    public Song(String name, int tempo, Integer[] notes, String credits) {
         this.name = name;
-        this.tempo = tempo;
+        this.tempo = Math.max(1, tempo);
         this.notes = notes;
         this.credits = credits;
-        this.sped_up_ticks = skip;
     }
 
     //makes it usable to be played
@@ -39,13 +37,8 @@ public class Song {
             if (i <= 0) {
                 int j = -Math.min(-1, i);
                 //-1 and 0 are the same
-                int blanks;
-                if (sped_up_ticks == 0) {
-                    blanks = j - 1;
-                } else {
-                    //hax
-                    blanks = (j * tempo - sped_up_ticks - 1);
-                }
+                int blanks = j - 1;
+
                 for (int k = 0; k < blanks; k++) {
                     newNotes.add(0);
                 }
@@ -64,7 +57,10 @@ public class Song {
     }
 
     public int getTempo() {
-        return sped_up_ticks == 0 ? tempo : 1;
+        if(tempo<1){
+            int a =1;
+        }
+        return  Math.max(1,tempo);
     }
 
     public Integer[] getNotes() {
@@ -77,7 +73,6 @@ public class Song {
         tag.putInt("tempo", song.tempo);
         tag.putIntArray("notes", List.of(song.notes));
         tag.putString("credits", song.credits);
-        tag.putInt("ticks_sped_up", song.sped_up_ticks);
         return tag;
     }
 
@@ -91,8 +86,7 @@ public class Song {
             n[i] = notes[i];
         }
         String credits = tag.getString("credits");
-        int skip = tag.getInt("ticks_sped_up");
-        return new Song(name, tempo, n, credits, skip);
+        return new Song(name, tempo, n, credits);
     }
 
     public List<Integer> getNoteToPlay(long timeSinceStarted) {

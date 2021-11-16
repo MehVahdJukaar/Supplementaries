@@ -19,14 +19,16 @@ import net.minecraft.world.level.block.state.BlockState;
 import static net.mehvahdjukaar.supplementaries.common.Textures.*;
 
 public class GlobeBlockTile extends BlockEntity implements Nameable {
+
+    private final boolean sepia;
+
+    private Component customName;
+
     public float yaw = 0;
     public float prevYaw = 0;
     public int face = 0;
 
-    private Component customName;
-
     public boolean sheared = false;
-
     //client
     public ResourceLocation texture = null;
     public boolean isFlat = false;
@@ -34,6 +36,11 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
 
     public GlobeBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.GLOBE_TILE.get(), pos, state);
+        this.sepia = state.is(ModRegistry.GLOBE_SEPIA.get());
+    }
+
+    public boolean isSepia() {
+        return sepia;
     }
 
     public void setCustomName(Component name) {
@@ -135,6 +142,7 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
     public Direction getDirection() {
         return this.getBlockState().getValue(GlobeBlock.FACING);
     }
+
 
     //TODO: improve. this is a mess
     public enum GlobeType {

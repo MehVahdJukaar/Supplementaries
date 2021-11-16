@@ -22,16 +22,10 @@ import static net.mehvahdjukaar.supplementaries.configs.ConfigHandler.STRING_CHE
 
 public class ServerConfigs {
 
-
     //overwritten by server one
     public static ForgeConfigSpec SERVER_SPEC;
 
     static {
-        createConfig();
-    }
-
-
-    public static void createConfig() {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
 
         block.init(builder);

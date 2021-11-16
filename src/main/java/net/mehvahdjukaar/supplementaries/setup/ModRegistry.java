@@ -179,6 +179,8 @@ public class ModRegistry {
     public static final RegistryObject<SimpleParticleType> SLINGSHOT_PARTICLE = regParticle("air_burst");
     public static final RegistryObject<SimpleParticleType> STASIS_PARTICLE = regParticle("stasis");
     public static final RegistryObject<SimpleParticleType> CONFETTI_PARTICLE = regParticle("confetti");
+    public static final RegistryObject<SimpleParticleType> ROTATION_TRAIL = regParticle("rotation_trail");
+    public static final RegistryObject<SimpleParticleType> ROTATION_TRAIL_EMITTER = regParticle("rotation_trail_emitter");
 
 
     //recipes
@@ -192,6 +194,8 @@ public class ModRegistry {
             new SimpleRecipeSerializer<>(RopeArrowAddRecipe::new));
     public static final RegistryObject<RecipeSerializer<?>> FLAG_FROM_BANNER_RECIPE = RECIPES.register("flag_from_banner_recipe", () ->
             new SimpleRecipeSerializer<>(FlagFromBannerRecipe::new));
+    public static final RegistryObject<RecipeSerializer<?>> TREASURE_MAP_RECIPE = RECIPES.register("treasure_map_recipe", () ->
+            new SimpleRecipeSerializer<>(TreasureMapRecipe::new));
 
 
     //orange trader
@@ -349,7 +353,7 @@ public class ModRegistry {
     //flute
     public static final String FLUTE_NAME = "flute";
     public static final RegistryObject<Item> FLUTE_ITEM = regItem(FLUTE_NAME, () -> new FluteItem((new Item.Properties())
-            .tab(getTab(CreativeModeTab.TAB_TOOLS, FLUTE_NAME)).stacksTo(1).durability(32)));
+            .tab(getTab(CreativeModeTab.TAB_TOOLS, FLUTE_NAME)).stacksTo(1).durability(64)));
 
     //candy
     public static final String CANDY_NAME = "candy";
@@ -486,10 +490,18 @@ public class ModRegistry {
                     .strength(2, 4)
                     .requiresCorrectToolForDrops()
     ));
-    public static final RegistryObject<BlockEntityType<GlobeBlockTile>> GLOBE_TILE = TILES.register(GLOBE_NAME, () -> BlockEntityType.Builder.of(
-            GlobeBlockTile::new, GLOBE.get()).build(null));
-    public static final RegistryObject<Item> GLOBE_ITEM = ITEMS.register(GLOBE_NAME, () -> new BlockItem(GLOBE.get(),
+   public static final RegistryObject<Item> GLOBE_ITEM = ITEMS.register(GLOBE_NAME, () -> new BlockItem(GLOBE.get(),
             new Item.Properties().tab(getTab(CreativeModeTab.TAB_DECORATIONS, GLOBE_NAME)).rarity(Rarity.RARE)));
+
+    public static final String GLOBE_SEPIA_NAME = "globe_sepia";
+    public static final RegistryObject<Block> GLOBE_SEPIA = BLOCKS.register(GLOBE_SEPIA_NAME, () -> new GlobeBlock(
+            BlockBehaviour.Properties.copy(GLOBE.get())));
+    public static final RegistryObject<Item> GLOBE_SEPIA_ITEM = ITEMS.register(GLOBE_SEPIA_NAME, () -> new BlockItem(GLOBE_SEPIA.get(),
+            new Item.Properties().tab(getTab(CreativeModeTab.TAB_DECORATIONS, GLOBE_NAME)).rarity(Rarity.RARE)));
+
+    public static final RegistryObject<BlockEntityType<GlobeBlockTile>> GLOBE_TILE = TILES.register(GLOBE_NAME, () -> BlockEntityType.Builder.of(
+            GlobeBlockTile::new, GLOBE.get(), GLOBE_SEPIA.get()).build(null));
+
     /*
     //candle holder
     public static final String CANDLE_HOLDER_NAME = "candle_holder";

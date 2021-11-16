@@ -4,20 +4,32 @@ import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralProvider;
 import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
+import net.mehvahdjukaar.supplementaries.block.blocks.SpeakerBlock;
+import net.mehvahdjukaar.supplementaries.common.Textures;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.network.ClientBoundPlaySpeakerMessagePacket;
+import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fmllegacy.network.NetworkDirection;
+import net.minecraftforge.fmllegacy.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -76,6 +88,30 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
         compound.putDouble("Volume", this.volume);
         this.saveOwner(compound);
         return compound;
+    }
+
+    public void sendMessage() {
+        BlockState state = this.getBlockState();
+        MinecraftServer currentServer = ServerLifecycleHooks.getCurrentServer();
+        ResourceKey<Level> dimension = level.dimension();
+        if (currentServer != null && !this.message.equals("")) {
+            // particle
+            BlockPos pos = this.getBlockPos();
+            level.blockEvent(pos, this.getBlockState().getBlock(), 0, 0);
+            PlayerList players = currentServer.getPlayerList();
+
+            Style style = !state.getValue(SpeakerBlock.ANTIQUE) ? Style.EMPTY.applyFormats(ChatFormatting.ITALIC) :
+                    Style.EMPTY.withFont(Textures.ANTIQUABLE_FONT).applyFormats(ChatFormatting.ITALIC);
+
+            Component message = new TextComponent(this.getName().getString() + ": " + this.message)
+                    .withStyle(style);
+
+            players.broadcast(null, pos.getX(), pos.getY(), pos.getZ(),
+                    ServerConfigs.cached.SPEAKER_RANGE * this.volume,
+                    dimension, NetworkHandler.INSTANCE.toVanillaPacket(
+                            new ClientBoundPlaySpeakerMessagePacket(message, this.narrator),
+                            NetworkDirection.PLAY_TO_CLIENT));
+        }
     }
 
     @Override
@@ -162,6 +198,12 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
         public final void setVolume(double volume) {
             tile.volume = volume;
             tile.setChanged();
+        }
+
+        @LuaFunction
+        public final void activate() {
+            if (tile.level.isClientSide) return;
+            tile.sendMessage();
         }
 
         @NotNull

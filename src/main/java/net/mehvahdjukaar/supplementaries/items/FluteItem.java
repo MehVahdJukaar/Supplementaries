@@ -12,11 +12,13 @@ import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.model.*;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.entity.PaintingRenderer;
 import net.minecraft.client.renderer.entity.layers.CustomHeadLayer;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -60,10 +62,9 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
     @Override
     public InteractionResult interactLivingEntity(ItemStack stack, Player playerIn, LivingEntity target, InteractionHand hand) {
         CompoundTag c = stack.getTagElement("Enchantments");
-        String s = target.getType().getRegistryName().toString();
-        if ((c == null || !c.contains("Pet")) && (target instanceof TamableAnimal && ((TamableAnimal) target).isTame() &&
-                ((TamableAnimal) target).getOwnerUUID().equals(playerIn.getUUID())) ||
-                target.getType().is(ModTags.FLUTE_PET)) {
+        if ((c == null || !c.contains("Pet")) && (
+                target instanceof TamableAnimal  animal && animal.isTame() && animal.getOwnerUUID().equals(playerIn.getUUID()))
+                || target.getType().is(ModTags.FLUTE_PET)) {
             if (target instanceof AbstractHorse && !((AbstractHorse) target).isTamed()) return InteractionResult.PASS;
             //if(target instanceof FoxEntity && ! ((FoxEntity)target).isTrustedUUID(p_213497_1_.getUniqueID())return ActionResultType.PASS;
             CompoundTag com = new CompoundTag();
@@ -83,14 +84,19 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        if (!(entity instanceof LivingEntity)) return false;
-        return this.interactLivingEntity(stack, player, ((LivingEntity) entity), player.getUsedItemHand()).consumesAction();
-    }
+        if (entity instanceof LivingEntity livingEntity){
+            return this.interactLivingEntity(stack, player, livingEntity, player.getUsedItemHand()).consumesAction();
+        }
+        return false;
+   }
 
-    //@Override
-    public InteractionResultHolder<ItemStack> use1(Level worldIn, Player playerIn, InteractionHand handIn) {
+   //TODO: figure out continous use
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
+        super.use(worldIn, playerIn, handIn);
         ItemStack stack = playerIn.getItemInHand(handIn);
         if (!worldIn.isClientSide) {
+
             double x = playerIn.getX();
             double y = playerIn.getY();
             double z = playerIn.getZ();
@@ -118,18 +124,17 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
                     }
                 }
             }
-
-
             playerIn.getCooldowns().addCooldown(this, 20);
-            stack.hurtAndBreak(1, playerIn, (en) -> en.broadcastBreakEvent(EquipmentSlot.MAINHAND));
-            worldIn.playSound(null, playerIn.blockPosition(), SoundEvents.NOTE_BLOCK_FLUTE, SoundSource.PLAYERS, 1f, 1.30f + worldIn.random.nextFloat() * 0.3f);
-
-            return InteractionResultHolder.consume(stack);
         }
-        //swings hand
-        return InteractionResultHolder.success(stack);
+        //consumes on both so doesn't swing hand
+        return InteractionResultHolder.consume(stack);
     }
 
+    @Override
+    public void releaseUsing(ItemStack pStack, Level pLevel, LivingEntity entity, int pTimeCharged) {
+        super.releaseUsing(pStack, pLevel, entity, pTimeCharged);
+        pStack.hurtAndBreak(1, entity, (en) -> en.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+    }
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
@@ -287,8 +292,8 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
             poseStack.pushPose();
 
             boolean leftHand = humanoidArm == HumanoidArm.LEFT;
-
-            if (entity.getUseItem() == stack && entity.swingTime == 0) {
+            // entity.swingTime == 0
+            if (entity.getUseItem() == stack) {
                 ModelPart head = parentModel.getHead();
 
                 //hax
@@ -304,6 +309,7 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
 
                 transform = ItemTransforms.TransformType.HEAD;
             } else {
+                //default rendering
                 parentModel.translateToHand(humanoidArm, poseStack);
                 poseStack.mulPose(Vector3f.XP.rotationDegrees(-90.0F));
                 poseStack.mulPose(Vector3f.YP.rotationDegrees(180.0F));

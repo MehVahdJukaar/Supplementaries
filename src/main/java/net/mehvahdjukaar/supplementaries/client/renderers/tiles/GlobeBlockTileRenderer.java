@@ -131,7 +131,7 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
         }
 
         if (texture == null) {
-            builder = bufferIn.getBuffer(GlobeTextureManager.INSTANCE.getRenderType(tile.getLevel()));
+            builder = bufferIn.getBuffer(GlobeTextureManager.INSTANCE.getRenderType(tile.getLevel(), tile.isSepia()));
         } else {
             builder = bufferIn.getBuffer(RenderType.entityCutout(texture));
         }

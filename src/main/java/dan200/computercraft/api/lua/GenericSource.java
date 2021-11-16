@@ -8,7 +8,6 @@ package dan200.computercraft.api.lua;
 import dan200.computercraft.api.ComputerCraftAPI;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralProvider;
-import dan200.computercraft.core.asm.LuaMethod;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.IItemHandler;
@@ -16,7 +15,7 @@ import net.minecraftforge.items.IItemHandler;
 import javax.annotation.Nonnull;
 
 /**
- * A generic source of {@link LuaMethod} functions.
+ * A generic source of LuaMethod functions.
  *
  * Unlike normal objects ({@link IDynamicLuaObject} or {@link IPeripheral}), methods do not target this object but
  * instead are defined as {@code static} and accept their target as the first parameter. This allows you to inject

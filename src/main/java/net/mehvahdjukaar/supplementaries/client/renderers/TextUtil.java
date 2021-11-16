@@ -292,15 +292,16 @@ public class TextUtil {
             if (font.isBidirectional()) {
                 string = font.bidirectionalShaping(string);
             }
-            int centerX = (-font.width(string) / 2);
+            //int centerX = (-font.width(string) / 2);
 
             FormattedCharSequence charSequence = FormattedCharSequence.forward(string, properties.style);
+            float centerX = (float) (-font.width(charSequence) / 2);
             renderLineInternal(charSequence, font, centerX, yOffset, matrix4f, buffer, properties);
 
             String substring = string.substring(0, Math.min(cursorPos, string.length()));
             if (isSelected) {
 
-                int pX = font.width(substring) + centerX;
+                int pX = (int) (font.width( FormattedCharSequence.forward(substring, properties.style)) + centerX);
 
                 if (blink) {
                     if (cursorPos >= string.length()) {

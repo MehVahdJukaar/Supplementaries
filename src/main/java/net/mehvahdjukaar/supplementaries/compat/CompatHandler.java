@@ -44,6 +44,7 @@ public class CompatHandler {
     public static final boolean enchantedbookredesign;
     public static final boolean computercraft;
     public static final boolean customvillagertrades;
+    public static final boolean nethersdelight;
 
     static {
         ModList ml = ModList.get();
@@ -76,6 +77,7 @@ public class CompatHandler {
         enchantedbookredesign = ml.isLoaded("enchantedbookredesign");
         customvillagertrades = ml.isLoaded("customvillagertrades");
         computercraft = ml.isLoaded("computercraft");
+        nethersdelight = ml.isLoaded("nethers_delight");
     }
 
     public static void init() {

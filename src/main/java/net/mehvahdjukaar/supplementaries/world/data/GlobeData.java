@@ -15,7 +15,7 @@ import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 import javax.annotation.Nullable;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
+
 public class GlobeData extends SavedData {
     private static final int TEXTURE_H = 16;
     private static final int TEXTURE_W = 32;
@@ -78,13 +78,14 @@ public class GlobeData extends SavedData {
         GlobeTextureManager.INSTANCE.update();
     }
 
-    @SubscribeEvent
-    public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+
+    public static void sendGlobeData(PlayerEvent.PlayerLoggedInEvent event) {
         if (!event.getPlayer().level.isClientSide) {
             GlobeData data = GlobeData.get(event.getPlayer().level);
-            if (data != null)
+            if (data != null) {
                 NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) event.getPlayer()),
                         new ClientBoundSyncGlobeDataPacket(data));
+            }
         }
     }
 }

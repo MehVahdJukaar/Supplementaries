@@ -389,22 +389,21 @@ public class MobContainer {
 
         boolean isAir = cap.isFlyingMob(waterlogged);
 
-
-        float addWidth = cap.getHitBoxWidthIncrement();
-        float addHeight = cap.getHitBoxHeightIncrement();
+        float aW = w + cap.getHitBoxWidthIncrement();
+        float aH = h + cap.getHitBoxHeightIncrement();
 
         //1 pixel margin
         float margin = 1 / 16f * 2;
         float yMargin = 1 / 16f;
 
-        float maxH = blockH - 2 * (isAir ? margin : yMargin) - addHeight;
-        float maxW = blockW - 2 * margin - addWidth;
+        float maxH = blockH - 2 * (isAir ? margin : yMargin);
+        float maxW = blockW - 2 * margin;
         //if width and height are greater than maximum allowed vales for container scale down
-        if (w > maxW || h > maxH) {
-            if (w - maxW > h - maxH)
-                scale = maxW / w;
+        if (aW > maxW || aH > maxH) {
+            if (aW - maxW > aH - maxH)
+                scale = maxW / aW;
             else
-                scale = maxH / h;
+                scale = maxH / aH;
         }
         //ice&fire dragons
         String name = mob.getType().getRegistryName().toString();
@@ -412,7 +411,7 @@ public class MobContainer {
             scale *= 0.45;
         }
 
-        float yOffset = isAir ? (blockH / 2f) - h * scale / 2f : yMargin;
+        float yOffset = isAir ? (blockH / 2f) - aH * scale / 2f : yMargin;
 
         if (mob instanceof Bat) {
             yOffset *= 1.5f;

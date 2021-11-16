@@ -19,18 +19,19 @@ import java.util.Map;
 @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
 //loaded before registry
 public class RegistryConfigs {
+
+    public static final String FILE_NAME = Supplementaries.MOD_ID + "-registry.toml";
     public static ForgeConfigSpec REGISTRY_CONFIG;
 
-
-    public static void createSpec(){
+    public static void createSpec() {
         ForgeConfigSpec.Builder REGISTRY_BUILDER = new ForgeConfigSpec.Builder();
         reg.init(REGISTRY_BUILDER);
         REGISTRY_CONFIG = REGISTRY_BUILDER.build();
     }
 
-    public static void load(){
+    public static void load() {
         CommentedFileConfig replacementConfig = CommentedFileConfig
-                .builder(FMLPaths.CONFIGDIR.get().resolve(Supplementaries.MOD_ID + "-registry.toml"))
+                .builder(FMLPaths.CONFIGDIR.get().resolve(FILE_NAME))
                 .sync()
                 .preserveInsertionOrder()
                 .writingMode(WritingMode.REPLACE)
@@ -157,8 +158,7 @@ public class RegistryConfigs {
 
         private static void init(ForgeConfigSpec.Builder builder) {
 
-            builder.comment("Here are configs that need reloading to take effect")
-                    .push("initialization");
+            builder.comment("Here are configs that need reloading to take effect");
 
             builder.push("general");
             CREATIVE_TAB = builder.comment("Enable Creative Tab").define("creative_tab",false);
@@ -255,8 +255,6 @@ public class RegistryConfigs {
             for(String c : mixins){
                 MIXIN_VALUES.put(c, builder.define(c.replace("Mixin",""), true));
             }
-            builder.pop();
-
             builder.pop();
 
         }

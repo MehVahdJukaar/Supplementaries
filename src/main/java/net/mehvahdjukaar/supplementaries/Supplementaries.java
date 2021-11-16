@@ -10,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModSetup;
 import net.mehvahdjukaar.supplementaries.world.songs.FluteSongsReloadListener;
 import net.mehvahdjukaar.supplementaries.world.structures.StructureRegistry;
+import net.minecraft.client.particle.BubbleParticle;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
@@ -67,8 +68,6 @@ public class Supplementaries {
 
         //use feather particle on spriggans
 
-        //flute 3d model and more uses
-
         //TODO: fix JER loot tables percentages
 
         //zipline mod ropewalk
@@ -91,7 +90,7 @@ public class Supplementaries {
 
         //TODO: add stick window loggable clipping
 
-        //flute animation
+        //flute animation fix
 
         //add shift middle click to swap to correct tool
 
@@ -131,11 +130,15 @@ public class Supplementaries {
 
         //TODO: wiki for custom map markers icons. add simple icon datapacks
 
+        //randomium can give onl stuff already obtained by a player in survival
 
+        //golden carrots to breed baby pignis
+        //rope arrows buffed and don't get consumed by hitting an entity
+        //turn table particles
 
-
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ServerConfigs.SERVER_SPEC);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfigs.CLIENT_SPEC);
+        //directiona books fixed
+        //particles for randomium
+        //data driven fluid system
 
         ConfigHandler.init();
 

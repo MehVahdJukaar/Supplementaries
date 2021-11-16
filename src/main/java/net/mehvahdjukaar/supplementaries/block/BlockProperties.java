@@ -50,7 +50,7 @@ public class BlockProperties {
     public static final IntegerProperty BURNING = IntegerProperty.create("burning", 0, 8);
     public static final IntegerProperty BOOKS = IntegerProperty.create("books", 1, 4);
     public static final BooleanProperty WRITTEN = BooleanProperty.create("written");
-    public static final IntegerProperty LAYERS = IntegerProperty.create("layers", 1, 16);
+    public static final BooleanProperty ANTIQUE = BooleanProperty.create("ye_olde");
 
     //model properties
     public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();

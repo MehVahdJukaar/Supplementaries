@@ -7,6 +7,7 @@
   ],
   "optional": [
     "#forge:dusts",
+    "darkerdepths:ash",
     "thermal:sawdust",
     "immersiveengineering:dust_wood",
     "immersiveengineering:dust_saltpeter",
@@ -16,7 +17,6 @@
     "eidolon:ender_calx",
     "shretnether:ashpile",
     "infernalexp:moth_dust",
-    "infernalexp:glowdust_sand",
     "infernalexp:basalt_silt",
     "create:powdered_obsidian",
     "feywild:fey_dust",

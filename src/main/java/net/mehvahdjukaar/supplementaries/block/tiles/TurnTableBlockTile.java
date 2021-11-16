@@ -12,6 +12,7 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
@@ -43,21 +44,27 @@ public class TurnTableBlockTile extends BlockEntity {
         // allows for a rotation try nedxt period
     }
 
-    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, TurnTableBlockTile tile) {
+    public static void tick(Level level, BlockPos pos, BlockState state, TurnTableBlockTile tile) {
         tile.cat = Math.max(tile.cat - 1, 0);
         // cd > 0
         if (tile.cooldown == 0) {
             boolean success = tile.handleRotation();
-            tile.cooldown = TurnTableBlock.getPeriod(pState);//ServerConfigs.cached.TURN_TABLE_PERIOD;
+
+            if (success) {
+                level.blockEvent(pos, state.getBlock(), 0, 0);
+            }
+
+            tile.cooldown = TurnTableBlock.getPeriod(state);//ServerConfigs.cached.TURN_TABLE_PERIOD;
             // if it didn't rotate last block that means that block is immovable
-            int power = pState.getValue(TurnTableBlock.POWER);
+            int power = state.getValue(TurnTableBlock.POWER);
             tile.canRotate = (success && power != 0);
             //change blockstate after rotation if is powered off
             if (power == 0) {
-                pLevel.setBlock(pPos, pState.setValue(TurnTableBlock.ROTATING, false), 3);
+                level.setBlock(pos, state.setValue(TurnTableBlock.ROTATING, false), 3);
             }
         } else if (tile.canRotate) {
             tile.cooldown--;
+            ServerLevel l;
         }
     }
 

@@ -130,7 +130,7 @@ public class HangingSignBlockTileRenderer implements BlockEntityRenderer<Hanging
                     for (int v = 0; v < 2; v++) {
                         poseStack.pushPose();
                         poseStack.scale(0.75f, 0.75f, 0.75f);
-                        poseStack.translate(0, 0, -1);
+                        poseStack.translate(0, 0, -0.1);
                         //poseStack.mulPose(Const.Y180);
                         itemRenderer.render(stack, ItemTransforms.TransformType.FIXED, true, poseStack, bufferIn, combinedLightIn,
                                 combinedOverlayIn, model);
