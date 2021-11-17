@@ -142,7 +142,6 @@ public class ModRegistry {
                     .stacksTo(64)
                     .tab(CreativeModeTab.TAB_MATERIALS)).setRegistryName("minecraft:shulker_shell"));
         }
-
     }
 
     @SubscribeEvent
@@ -364,6 +363,11 @@ public class ModRegistry {
     public static final String ANTIQUE_INK_NAME = "antique_ink";
     public static final RegistryObject<Item> ANTIQUE_INK = regItem(ANTIQUE_INK_NAME, () -> new Item((new Item.Properties())
             .tab(getTab(CreativeModeTab.TAB_MISC, ANTIQUE_INK_NAME))));
+
+    //wrench
+    public static final String WRENCH_NAME = "wrench";
+    public static final RegistryObject<Item> WRENCH = regItem(WRENCH_NAME, () -> new WrenchItem((new Item.Properties())
+            .tab(getTab(CreativeModeTab.TAB_TOOLS, WRENCH_NAME)).stacksTo(1).durability(200)));
 
     //speedometer
     /*

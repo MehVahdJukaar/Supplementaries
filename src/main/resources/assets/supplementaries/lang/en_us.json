@@ -252,7 +252,8 @@
   "item.supplementaries.antique_ink": "Antique Ink",
   "message.supplementaries.command.record.start": "Noteblocks recording started",
   "message.supplementaries.command.record.stop": "Noteblocks recording stopped: saved song at recorded_songs/%s",
-    "block.supplementaries.planter_rich_soul": "Rich Soul Soil Planter",
+  "block.supplementaries.planter_rich_soul": "Rich Soul Soil Planter",
+  "item.supplementaries.wrench": "Wrench",
 
   "item.supplementaries.key_chain": "Key Chain",
   "block.supplementaries.skull_candle": "Skull Candle",

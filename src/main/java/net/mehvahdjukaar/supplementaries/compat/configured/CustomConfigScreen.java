@@ -93,6 +93,7 @@ public class CustomConfigScreen extends ConfigScreen {
         addIcon("slingshot", ModRegistry.SLINGSHOT_ITEM.get());
         addIcon("server protection", Items.COMMAND_BLOCK);
         addIcon("bamboo spikes", ModRegistry.BAMBOO_SPIKES_ITEM.get());
+        addIcon("wrench", ModRegistry.WRENCH.get());
         addIcon("placeable books", Items.ENCHANTED_BOOK);
 
         Field temp = null;

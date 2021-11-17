@@ -27,7 +27,7 @@ public class ModTags {
     public static final Tags.IOptionalNamedTag<Block> VINE_SUPPORT = blockTag("vine_support");
     public static final Tags.IOptionalNamedTag<Block> PANE_CONNECTION = blockTag("pane_connection");
     public static final Tags.IOptionalNamedTag<Block> CONCRETE_POWDERS = blockTag("concrete_powders");
-    public static final Tags.IOptionalNamedTag<Block> DEEPSLATE = blockTag("deepslate");
+    public static final Tags.IOptionalNamedTag<Block> ROTATION_BLACKLIST = blockTag("un_rotatable");
     //item tags
     public static final Tags.IOptionalNamedTag<Item> SHULKER_BLACKLIST_TAG = itemTag("shulker_blacklist");
     public static final Tags.IOptionalNamedTag<Item> COOKIES = itemTag("cookies");

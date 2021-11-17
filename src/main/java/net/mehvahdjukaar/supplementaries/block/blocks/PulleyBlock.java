@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
+import net.mehvahdjukaar.supplementaries.api.IRotatable;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties.Winding;
 import net.mehvahdjukaar.supplementaries.block.tiles.PulleyBlockTile;
@@ -13,6 +14,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RotatedPillarBlock;
@@ -26,7 +28,7 @@ import net.minecraft.world.phys.BlockHitResult;
 
 import javax.annotation.Nullable;
 
-public class PulleyBlock extends RotatedPillarBlock implements EntityBlock {
+public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRotatable {
     public static final EnumProperty<Winding> TYPE = BlockProperties.WINDING;
     public static final BooleanProperty FLIPPED = BlockProperties.FLIPPED;
 
@@ -43,22 +45,36 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock {
 
     //rotates itself and pull up/down. unchecked
     //all methods here are called server side
-    public boolean axisRotate(BlockState state, BlockPos pos, Level world, Rotation rot, @Nullable Direction normal) {
-        world.setBlockAndUpdate(pos, state.cycle(FLIPPED));
-        BlockEntity tile = world.getBlockEntity(pos);
-        if (tile instanceof PulleyBlockTile) {
-            boolean success = ((PulleyBlockTile) tile).handleRotation(rot);
-            //try turning connected
-            if (normal != null) {
-                BlockPos connectedPos = pos.relative(normal);
-                BlockState connected = world.getBlockState(connectedPos);
-                if (connected.is(this) && state.getValue(AXIS) == connected.getValue(AXIS)) {
-                    success = this.axisRotate(connected, connectedPos, world, rot, normal) || success;
-                }
+    public boolean windPulley(BlockState state, BlockPos pos, Level world, Rotation rot, @Nullable Direction dir) {
+        BlockState newState = state.cycle(FLIPPED);
+        world.setBlockAndUpdate(pos, newState);
+        if(dir == null) return false;
+        return this.onRotated(newState, state, dir, rot, world, pos);
+    }
+
+    @Override
+    public boolean onRotated(BlockState newState, BlockState oldState, Direction axis, Rotation rot, Level world, BlockPos pos) {
+        boolean success = false;
+        if(axis.getAxis().isHorizontal()) {
+
+            if (world.getBlockEntity(pos) instanceof PulleyBlockTile pulley) {
+                success = pulley.handleRotation(rot);
+
             }
-            return success;
+            //try turning connected
+            BlockPos connectedPos = pos.relative(axis);
+            BlockState connected = world.getBlockState(connectedPos);
+            if (connected.is(this) && newState.getValue(AXIS) == connected.getValue(AXIS)) {
+                return this.windPulley(connected, connectedPos, world, rot, axis);
+            }
         }
-        return false;
+        return success;
+    }
+
+    @Override
+    public BlockState rotateState(BlockState state, LevelAccessor world, BlockPos pos, Rotation rotation, Direction axis) {
+        if(state.getValue(RotatedPillarBlock.AXIS) == axis.getAxis()) return state.cycle(FLIPPED);
+        return state;
     }
 
     @Override
@@ -66,7 +82,7 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock {
                                  BlockHitResult hit) {
         if (worldIn.getBlockEntity(pos) instanceof PulleyBlockTile tile && tile.isAccessibleBy(player)) {
             if (player instanceof ServerPlayer) {
-                if (!(player.isShiftKeyDown() && this.axisRotate(state, pos, worldIn, Rotation.COUNTERCLOCKWISE_90, null)))
+                if (!(player.isShiftKeyDown() && this.windPulley(state, pos, worldIn, Rotation.COUNTERCLOCKWISE_90, null)))
                     player.openMenu(tile);
             }
             return InteractionResult.sidedSuccess(worldIn.isClientSide());

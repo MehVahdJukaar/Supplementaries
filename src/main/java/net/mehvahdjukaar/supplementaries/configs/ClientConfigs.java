@@ -32,6 +32,7 @@ public class ClientConfigs {
         public static ForgeConfigSpec.BooleanValue SLINGSHOT_OUTLINE;
         public static ForgeConfigSpec.ConfigValue<String> SLINGSHOT_OUTLINE_COLOR;
         public static ForgeConfigSpec.DoubleValue SLINGSHOT_PROJECTILE_SCALE;
+        public static ForgeConfigSpec.BooleanValue WRENCH_PARTICLES;
         private static void init(ForgeConfigSpec.Builder builder) {
             builder.comment("Items")
                     .push("items");
@@ -53,6 +54,12 @@ public class ClientConfigs {
             SLINGSHOT_PROJECTILE_SCALE = builder.comment("How big should a slingshot projectile look")
                     .defineInRange("projectile_scale", 0.5, 0, 1);
             builder.pop();
+
+            builder.push("wrench");
+            WRENCH_PARTICLES = builder.comment("Display visual particles when a block is rotated")
+                    .define("turn_particles", true);
+            builder.pop();
+
             builder.pop();
         }
     }
@@ -357,6 +364,7 @@ public class ClientConfigs {
         public static float SLINGSHOT_PROJECTILE_SCALE;
         public static boolean BOOK_GLINT;
         public static boolean TURN_TABLE_PARTICLES;
+        public static boolean WRENCH_PARTICLES;
 
         public static void refresh(){
             //tweaks
@@ -399,6 +407,7 @@ public class ClientConfigs {
             SLINGSHOT_OUTLINE_COLOR = Integer.parseUnsignedInt(items.SLINGSHOT_OUTLINE_COLOR.get().replace("0x", ""), 16);
             SLINGSHOT_OVERLAY = items.SLINGSHOT_OVERLAY.get();
             SLINGSHOT_PROJECTILE_SCALE = (float)((double)items.SLINGSHOT_PROJECTILE_SCALE.get());
+            WRENCH_PARTICLES = items.WRENCH_PARTICLES.get();
 
             CapturedMobsHelper.refresh();
             GlobeTextureManager.GlobeColors.refreshColorsFromConfig();

@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 
 import net.mehvahdjukaar.selene.map.ExpandedMapData;
+import net.mehvahdjukaar.supplementaries.api.IRotatable;
 import net.mehvahdjukaar.supplementaries.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.client.gui.SignPostGui;
@@ -41,7 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class SignPostBlock extends FenceMimicBlock implements EntityBlock {
+public class SignPostBlock extends FenceMimicBlock implements EntityBlock, IRotatable {
 
     public SignPostBlock(Properties properties) {
         super(properties);
@@ -184,10 +185,21 @@ public class SignPostBlock extends FenceMimicBlock implements EntityBlock {
     }
 
     @Override
-    public BlockState rotate(BlockState state, LevelAccessor world, BlockPos pos, Rotation rot) {
+    public boolean alwaysRotateOverAxis(BlockState state, Direction axis) {
+        return axis.getAxis() == Direction.Axis.Y;
+    }
+
+    @Override
+    public BlockState rotateState(BlockState state, LevelAccessor world, BlockPos pos, Rotation rotation, Direction axis) {
+        return state;
+    }
+
+    @Override
+    public boolean onRotated(BlockState newState, BlockState oldState, Direction axis, Rotation rot, Level world, BlockPos pos) {
         float angle = rot.equals(Rotation.CLOCKWISE_90) ? 90 : -90;
+        boolean success = false;
         if (world.getBlockEntity(pos) instanceof SignPostBlockTile tile) {
-            boolean success = false;
+
             if (tile.up) {
                 tile.yawUp = Mth.wrapDegrees(tile.yawUp + angle);
                 success = true;
@@ -202,6 +214,11 @@ public class SignPostBlock extends FenceMimicBlock implements EntityBlock {
                 tile.setChanged();
             }
         }
+        return success;
+    }
+
+    @Override
+    public BlockState rotate(BlockState state, LevelAccessor world, BlockPos pos, Rotation rot) {
         return state;
     }
 

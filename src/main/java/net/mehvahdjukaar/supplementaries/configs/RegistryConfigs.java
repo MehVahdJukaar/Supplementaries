@@ -111,6 +111,7 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue SLINGSHOT_ENABLED;
         public static ForgeConfigSpec.BooleanValue SHULKER_HELMET_ENABLED;
         public static ForgeConfigSpec.BooleanValue CANDY_ENABLED;
+        public static ForgeConfigSpec.BooleanValue WRENCH_ENABLED;
 
         public static ForgeConfigSpec.BooleanValue PRESENT_ENABLED;
 
@@ -119,13 +120,6 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue DISPENSERS;
         public static ForgeConfigSpec.BooleanValue CUSTOM_CONFIGURED_SCREEN;
 
-        public static Lazy<Boolean> HAS_SILVER = Lazy.of(()->{
-            ModList ml = ModList.get();
-            return (ml.isLoaded("mysticalworld")||ml.isLoaded("immersiveengineering")||
-                    ml.isLoaded("bluepower")||ml.isLoaded("silents_mechanisms ")||
-                    ml.isLoaded("thermal")||ml.isLoaded("iceandfire")
-                    ||ml.isLoaded("silentgems")||ml.isLoaded("occultism"));
-        });
         public static Lazy<Boolean> HAS_BRASS = Lazy.of(()->ModList.get().isLoaded("create"));
 
         public static boolean HAS_MINESHAFT_LANTERN = false;
@@ -239,6 +233,7 @@ public class RegistryConfigs {
             SLINGSHOT_ENABLED = builder.define(ModRegistry.SLINGSHOT_NAME, true);
             SHULKER_HELMET_ENABLED = builder.define("shulker_shell", true);
             CANDY_ENABLED = builder.define(ModRegistry.CANDY_NAME,true);
+            WRENCH_ENABLED = builder.define(ModRegistry.WRENCH_NAME,true);
 
             PRESENT_ENABLED = builder.comment("WIP").define(ModRegistry.PRESENT_NAME,true);
 

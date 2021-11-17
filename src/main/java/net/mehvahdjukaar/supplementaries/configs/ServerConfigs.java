@@ -309,7 +309,6 @@ public class ServerConfigs {
         public static ForgeConfigSpec.IntValue LAUNCHER_HEIGHT;
 
         public static ForgeConfigSpec.BooleanValue TURN_TABLE_ROTATE_ENTITIES;
-        public static ForgeConfigSpec.ConfigValue<List<? extends String>> TURN_TABLE_BLACKLIST;
 
         public static ForgeConfigSpec.IntValue JAR_CAPACITY;
         public static ForgeConfigSpec.BooleanValue JAR_EAT;
@@ -403,13 +402,8 @@ public class ServerConfigs {
             builder.pop();
             //turn table
             builder.push("turn_table");
-            //TURN_TABLE_PERIOD = builder.comment("how many ticks it takes to rotate a block/entity")
-            //        .defineInRange("period", 20, 1, 256);
             TURN_TABLE_ROTATE_ENTITIES = builder.comment("can rotate entities standing on it?")
                     .define("rotate_entities", true);
-            List<String> turnTableBlacklist = List.of("minecraft:end_portal_frame");
-            TURN_TABLE_BLACKLIST = builder.comment("blocks that can't be rotated. Some special ones like chests, beds and pistons are already hardcoded")
-                    .defineList("blacklist", turnTableBlacklist, STRING_CHECK);
             builder.pop();
             //jar
             builder.push("jar");
@@ -689,7 +683,6 @@ public class ServerConfigs {
         public static double LAUNCHER_VEL;
         public static int LAUNCHER_HEIGHT;
         public static boolean TURN_TABLE_ROTATE_ENTITIES;
-        public static List<? extends String> TURN_TABLE_BLACKLIST;
         public static int JAR_CAPACITY;
         public static boolean JAR_EAT;
         public static boolean JAR_ITEM_DRINK;
@@ -786,9 +779,7 @@ public class ServerConfigs {
             LAUNCHER_VEL = block.LAUNCHER_VEL.get();
             LAUNCHER_HEIGHT = block.LAUNCHER_HEIGHT.get();
 
-            //TURN_TABLE_PERIOD = block.TURN_TABLE_PERIOD.get();
             TURN_TABLE_ROTATE_ENTITIES = block.TURN_TABLE_ROTATE_ENTITIES.get();
-            TURN_TABLE_BLACKLIST = block.TURN_TABLE_BLACKLIST.get();
 
             JAR_CAPACITY = block.JAR_CAPACITY.get();
             JAR_EAT = block.JAR_EAT.get();

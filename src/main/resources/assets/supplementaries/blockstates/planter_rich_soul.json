@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "extended=false": {
+      "model": "supplementaries:block/planter_rich_soul"
+    },
+    "extended=true": {
+      "model": "supplementaries:block/planter_rich_soul_extended"
+    }
+  }
+}
