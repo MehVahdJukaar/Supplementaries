@@ -720,8 +720,8 @@ public class ServerConfigs {
             BOTTLING_COST = tweaks.BOTTLING_COST.get();
             BOTTLE_XP = tweaks.BOTTLE_XP.get();
             RAKED_GRAVEL = tweaks.RAKED_GRAVEL.get() && RegistryConfigs.reg.RAKED_GRAVEL_ENABLED.get();
-            PLACEABLE_RODS = tweaks.PLACEABLE_RODS.get() && RegistryConfigs.reg.ROD_ENABLED.get();
-            PLACEABLE_STICKS = tweaks.PLACEABLE_STICKS.get() && RegistryConfigs.reg.STICK_ENABLED.get();
+            PLACEABLE_RODS = tweaks.PLACEABLE_RODS.get();
+            PLACEABLE_STICKS = tweaks.PLACEABLE_STICKS.get();
             DIRECTIONAL_CAKE = tweaks.DIRECTIONAL_CAKE.get();
             DOUBLE_CAKE_PLACEMENT = tweaks.DOUBLE_CAKE_PLACEMENT.get();
             HANGING_POT_PLACEMENT = tweaks.WALL_LANTERN_PLACEMENT.get();

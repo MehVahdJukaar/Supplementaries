@@ -1,7 +1,5 @@
 {
-  "type": "forge:conditional",
-  "recipes": [
-    {
+  "type": "minecraft:crafting_shapeless",
       "conditions": [
         {
           "flag": "sign_post",
@@ -31,8 +29,4 @@
         "result": {
           "item": "supplementaries:sign_post_aged",
           "count": 3
-        }
-      }
-    }
-  ]
-}
+}}

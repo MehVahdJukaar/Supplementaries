@@ -7,11 +7,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector4f;
 import net.mehvahdjukaar.supplementaries.common.Textures;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.ItemRenderer;
@@ -19,16 +17,25 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.HalfTransparentBlock;
+import net.minecraft.world.level.block.StainedGlassPaneBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
 
 import java.util.Random;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public class RendererUtil {
     //centered on x,z. aligned on y=0
@@ -325,9 +332,19 @@ public class RendererUtil {
         moveVertices(v, vector4f.x(), vector4f.y(), vector4f.z(), sprite);
     }
 
-    public static void renderGuiItemRelative(ItemStack stack, int x, int y, PoseStack relativeStack, ItemRenderer renderer){
+    public static void renderGuiItemRelative(ItemStack stack, int x, int y, ItemRenderer renderer,
+                                             BiConsumer<PoseStack, Boolean> movement){
+        renderGuiItemRelative(stack, x,y,renderer,movement, LightTexture.FULL_BRIGHT);
+    }
+
+
+        public static void renderGuiItemRelative(ItemStack stack, int x, int y, ItemRenderer renderer,
+                                             BiConsumer<PoseStack, Boolean> movement, int combinedLight){
 
         BakedModel model = renderer.getModel(stack, null, null, 0);
+
+        renderer.blitOffset = renderer.blitOffset + 50.0F;
+
         Minecraft.getInstance().textureManager.getTexture(TextureAtlas.LOCATION_BLOCKS).setFilter(false, false);
         RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_BLOCKS);
         RenderSystem.enableBlend();
@@ -341,13 +358,69 @@ public class RendererUtil {
         posestack.scale(16.0F, 16.0F, 16.0F);
         RenderSystem.applyModelViewMatrix();
 
+        PoseStack matrixStack = new PoseStack();
+
         MultiBufferSource.BufferSource bufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
         boolean flag = !model.usesBlockLight();
         if (flag) {
             Lighting.setupForFlatItems();
         }
 
-        renderer.render(stack, ItemTransforms.TransformType.GUI, false, relativeStack, bufferSource, 15728880, OverlayTexture.NO_OVERLAY, model);
+        //-----render---
+
+
+         int pCombinedOverlay = OverlayTexture.NO_OVERLAY;
+
+        ItemTransforms.TransformType pTransformType = ItemTransforms.TransformType.GUI;
+
+        matrixStack.pushPose();
+
+        if (stack.is(Items.TRIDENT)) {
+            model = renderer.getItemModelShaper().getModelManager().getModel(new ModelResourceLocation("minecraft:trident#inventory"));
+        } else if (stack.is(Items.SPYGLASS)) {
+            model = renderer.getItemModelShaper().getModelManager().getModel(new ModelResourceLocation("minecraft:spyglass#inventory"));
+        }
+
+        model = ForgeHooksClient.handleCameraTransforms(matrixStack, model, pTransformType, false);
+
+
+        //custom rotation
+        movement.accept(matrixStack, model.isGui3d() && stack.getItem() != ModRegistry.FLUTE_ITEM.get());
+
+        matrixStack.translate(-0.5D, -0.5D, -0.5D);
+
+        if (!model.isCustomRenderer() && (!stack.is(Items.TRIDENT) || flag)) {
+
+
+            if (model.isLayered()) {
+                ForgeHooksClient.drawItemLayered(renderer, model, stack, matrixStack, bufferSource, combinedLight, pCombinedOverlay, true);
+            }
+            else {
+                RenderType rendertype = ItemBlockRenderTypes.getRenderType(stack, true);
+                VertexConsumer vertexconsumer;
+                if (stack.is(Items.COMPASS) && stack.hasFoil()) {
+                    matrixStack.pushPose();
+                    PoseStack.Pose pose = matrixStack.last();
+                    pose.pose().multiply(0.5F);
+
+                    vertexconsumer = ItemRenderer.getCompassFoilBufferDirect(bufferSource, rendertype, pose);
+
+                    matrixStack.popPose();
+                } else {
+                    vertexconsumer = ItemRenderer.getFoilBufferDirect(bufferSource, rendertype, true, stack.hasFoil());
+                }
+
+                renderer.renderModelLists(model, stack, combinedLight, pCombinedOverlay, matrixStack, vertexconsumer);
+            }
+        } else {
+            net.minecraftforge.client.RenderProperties.get(stack).getItemStackRenderer().renderByItem(stack, pTransformType, matrixStack, bufferSource, combinedLight, pCombinedOverlay);
+        }
+
+        matrixStack.popPose();
+
+
+        //----end-render---
+
         bufferSource.endBatch();
         RenderSystem.enableDepthTest();
         if (flag) {
@@ -356,6 +429,8 @@ public class RendererUtil {
 
         posestack.popPose();
         RenderSystem.applyModelViewMatrix();
+
+        renderer.blitOffset = renderer.blitOffset - 50.0F;
 
     }
 

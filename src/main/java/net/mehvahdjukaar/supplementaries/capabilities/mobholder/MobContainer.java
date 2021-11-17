@@ -14,12 +14,10 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.AgeableMob;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.animal.AbstractFish;
+import net.minecraft.world.entity.animal.Bucketable;
 import net.minecraft.world.entity.animal.Fox;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
@@ -302,20 +300,26 @@ public class MobContainer {
     }
 
     /**
-     * prepares the mob nbt to be stored in a MobHolder (Item and Block)
+     * prepares the entity nbt to be stored in a MobHolder (Item and Block)
      *
-     * @param mob entity
-     * @return mob tag
+     * @param entity entity
+     * @return entity tag
      */
     @Nullable
-    private static CompoundTag prepareMobTagForContainer(Entity mob) {
+    private static CompoundTag prepareMobTagForContainer(Entity entity) {
 
-        if (mob.isPassenger()) {
-            mob.getVehicle().ejectPassengers();
+        if (entity.isPassenger()) {
+            entity.getVehicle().ejectPassengers();
+        }
+        if(entity instanceof Mob mob){
+            mob.setPersistenceRequired();
+        }
+        if(entity instanceof Bucketable bucketable){
+            bucketable.setFromBucket(true);
         }
 
-        //prepares mob
-        if (mob instanceof LivingEntity le) {
+        //prepares entity
+        if (entity instanceof LivingEntity le) {
             le.yHeadRotO = 0;
             le.yHeadRot = 0;
             le.animationSpeed = 0;
@@ -325,28 +329,28 @@ public class MobContainer {
             le.hurtTime = 0;
             le.attackAnim = 0;
         }
-        mob.setYRot(0);
-        mob.yRotO = 0;
-        mob.xRotO = 0;
-        mob.setXRot(0);
-        mob.clearFire();
-        mob.invulnerableTime = 0;
+        entity.setYRot(0);
+        entity.yRotO = 0;
+        entity.xRotO = 0;
+        entity.setXRot(0);
+        entity.clearFire();
+        entity.invulnerableTime = 0;
 
-        if (mob instanceof Bat) {
-            ((Bat) mob).setResting(true);
+        if (entity instanceof Bat) {
+            ((Bat) entity).setResting(true);
         }
-        if (mob instanceof Fox) {
-            ((Fox) mob).setSleeping(true);
+        if (entity instanceof Fox) {
+            ((Fox) entity).setSleeping(true);
         }
-        if (mob instanceof AbstractFish) {
-            ((AbstractFish) mob).setFromBucket(true);
+        if (entity instanceof AbstractFish) {
+            ((AbstractFish) entity).setFromBucket(true);
         }
 
         CompoundTag mobTag = new CompoundTag();
-        mob.save(mobTag);
+        entity.save(mobTag);
 
         if (mobTag.isEmpty()) {
-            Supplementaries.LOGGER.error("failed to capture mob " + mob + "Something went wrong :/");
+            Supplementaries.LOGGER.error("failed to capture entity " + entity + "Something went wrong :/");
             return null;
         }
 
@@ -355,6 +359,9 @@ public class MobContainer {
         mobTag.remove("UUID");
         if (mobTag.contains("FromBucket")) {
             mobTag.putBoolean("FromBucket", true);
+        }
+        if (mobTag.contains("FromPot")) {
+            mobTag.putBoolean("FromPot", true);
         }
 
         return mobTag;

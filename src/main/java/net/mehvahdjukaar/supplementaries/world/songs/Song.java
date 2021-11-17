@@ -57,7 +57,7 @@ public class Song {
     }
 
     public int getTempo() {
-        if(tempo<1){
+        if(tempo<=1){
             int a =1;
         }
         return  Math.max(1,tempo);

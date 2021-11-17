@@ -278,15 +278,17 @@ public class FaucetBlockTile extends BlockEntity {
             }
             return result;
         }
-        //forge tanks
-        IFluidHandler handlerDown = tileBelow.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, Direction.UP).orElse(null);
-        if (handlerDown != null) {
-            result = this.fluidHolder.tryTransferToFluidTank(handlerDown);
-            if (result) {
-                tileBelow.setChanged();
-                this.fluidHolder.fillCount();
+        if(tileBelow != null) {
+            //forge tanks
+            IFluidHandler handlerDown = tileBelow.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, Direction.UP).orElse(null);
+            if (handlerDown != null) {
+                result = this.fluidHolder.tryTransferToFluidTank(handlerDown);
+                if (result) {
+                    tileBelow.setChanged();
+                    this.fluidHolder.fillCount();
+                }
+                return result;
             }
-            return result;
         }
 
         return false;

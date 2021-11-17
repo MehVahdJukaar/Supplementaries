@@ -1,7 +1,5 @@
 {
-  "type": "forge:conditional",
-  "recipes": [
-    {
+  "type": "minecraft:crafting_shaped",
       "conditions": [
         {
           "flag": "hanging_sign",
@@ -12,8 +10,7 @@
           "type": "forge:mod_loaded"
         }
       ],
-      "recipe": {
-        "type": "minecraft:crafting_shaped",
+
         "group": "hanging_sign",
         "pattern": [
           "010",
@@ -34,8 +31,4 @@
         "result": {
           "item": "supplementaries:hanging_sign_cypress_bb",
           "count": 2
-        }
-      }
-    }
-  ]
-}
+}}

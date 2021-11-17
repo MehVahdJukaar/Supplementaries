@@ -1,7 +1,5 @@
 {
-  "type": "forge:conditional",
-  "recipes": [
-    {
+  "type": "minecraft:crafting_shaped",
       "conditions": [
         {
           "flag": "sign_post",
@@ -12,8 +10,7 @@
           "type": "forge:mod_loaded"
         }
       ],
-      "recipe": {
-        "type": "minecraft:crafting_shaped",
+
         "group": "sign_post",
         "pattern": [
           "   ",
@@ -31,8 +28,4 @@
         "result": {
           "item": "supplementaries:sign_post_dreamwood",
           "count": 3
-        }
-      }
-    }
-  ]
-}
+}}

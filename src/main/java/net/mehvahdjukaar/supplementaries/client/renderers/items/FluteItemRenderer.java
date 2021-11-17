@@ -49,8 +49,6 @@ public class FluteItemRenderer extends BlockEntityWithoutLevelRenderer {
                 model = itemRenderer.getItemModelShaper().getModelManager().getModel(FLUTE_3D_MODEL);
             }
 
-
-
             if (model.isLayered()) {
                 ForgeHooksClient.drawItemLayered(itemRenderer, model, stack, matrixStack, buffer, light, overlay, true); }
             else {

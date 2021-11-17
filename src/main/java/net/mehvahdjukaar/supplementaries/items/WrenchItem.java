@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.items;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import net.mehvahdjukaar.supplementaries.block.blocks.TurnTableBlock;
 import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
@@ -92,7 +93,7 @@ public class WrenchItem extends Item {
             BlockPos pos = context.getClickedPos();
             ItemStack itemstack = context.getItemInHand();
             Direction dir = context.getClickedFace();
-            boolean ccw = player.isShiftKeyDown();
+            boolean ccw = player.isShiftKeyDown() ; //^ (dir == Direction.DOWN)
             boolean success = BlockUtils.tryRotatingBlockAndConnected(dir, ccw, pos, level);
             if (success) {
 
@@ -100,6 +101,7 @@ public class WrenchItem extends Item {
                     CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayer) player, pos, itemstack);
                 } else {
                     if(ClientConfigs.cached.WRENCH_PARTICLES) {
+                        if(dir == Direction.DOWN) ccw =!ccw;
                         level.addParticle(ModRegistry.ROTATION_TRAIL_EMITTER.get(),
                                 pos.getX() + 0.5D, pos.getY() + 0.5, pos.getZ() + 0.5D,
                                 dir.get3DDataValue(),

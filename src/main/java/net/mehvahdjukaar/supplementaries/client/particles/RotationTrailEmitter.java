@@ -7,8 +7,6 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 
 public class RotationTrailEmitter extends NoRenderParticle {
@@ -23,7 +21,7 @@ public class RotationTrailEmitter extends NoRenderParticle {
         super(world, x, y, z, 0.0D, 0.0D, 0.0D);
         this.radius = radius;
         this.axis = axis;
-        this.ccw = velocity > 0  ? -1 : 1;
+        this.ccw = velocity > 0 ? -1 : 1;
     }
 
     @Override
@@ -49,9 +47,14 @@ public class RotationTrailEmitter extends NoRenderParticle {
                                        double centerX, double centerY, double centerZ,
                                        double direction, double radius, double angularVelocity) {
 
+            Direction dir = Direction.from3DDataValue((int) direction);
+            if (dir == Direction.DOWN) {
+                angularVelocity *= -1;
+                dir = dir.getOpposite();
+            }
 
             return new RotationTrailEmitter(world, centerX, centerY, centerZ,
-                    Direction.from3DDataValue((int) direction), radius, angularVelocity);
+                    dir, radius, angularVelocity);
 
         }
 

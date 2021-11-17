@@ -8,6 +8,7 @@ import net.mehvahdjukaar.selene.api.IThirdPersonSpecialItemRenderer;
 import net.mehvahdjukaar.selene.util.TwoHandedAnimation;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.FluteItemRenderer;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
 import net.minecraft.ChatFormatting;
@@ -150,6 +151,7 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
 
     @Override
     public void spawnNoteParticle(ClientLevel level, LivingEntity entity, int note) {
+        if(!ClientConfigs.cached.FLUTE_PARTICLES) return;
         //default base
         Vec3 bx = new Vec3(1, 0, 0);
         Vec3 by = new Vec3(0, 1, 0);

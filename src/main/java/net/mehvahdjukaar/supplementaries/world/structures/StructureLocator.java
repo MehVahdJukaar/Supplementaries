@@ -93,22 +93,25 @@ public class StructureLocator {
                             if (edgeX || edgeY) {
 
                                 StructureFeatureConfiguration settings = sepSettings.get(ind);
-                                StructureFeature<?> s = possibleTargets.get(ind);
+                                StructureFeature<?> structure = possibleTargets.get(ind);
 
                                 int spacing = settings.spacing();
 
                                 int k1 = chunkX + spacing * x;
                                 int l1 = chunkY + spacing * y;
-                                ChunkPos chunkpos = s.getPotentialFeatureChunk(settings, seed, worldgenRandom, k1, l1);
-                                ChunkAccess ichunk = world.getChunk(chunkpos.x, chunkpos.z, ChunkStatus.STRUCTURE_STARTS);
-                                StructureStart<?> structureStart = manager.getStartForFeature(SectionPos.of(ichunk.getPos(), 0), s, ichunk);
-                                if (structureStart != null && structureStart.isValid()) {
-                                    BlockPos p = structureStart.getLocatePos();
-                                    int distance = dist(new BlockPos(posX,0,posZ), p);
-                                    //discard one spawning in a village
-                                    if (distance > 90) found.add(new ImmutablePair<>(distance, p));
-                                    else inVillage = true;
-                                    //checking all nearby villages to find the closest
+                                ChunkPos chunkpos = structure.getPotentialFeatureChunk(settings, seed, worldgenRandom, k1, l1);
+                                //telepatic grunt optimization. only checks biomes that can spawn said structure. world.getChunk is very costly
+                                if(world.getNoiseBiome((chunkpos.x << 2) + 2, 60, (chunkpos.z << 2) + 2).getGenerationSettings().isValidStart(structure)) {
+                                    ChunkAccess ichunk = world.getChunk(chunkpos.x, chunkpos.z, ChunkStatus.STRUCTURE_STARTS);
+                                    StructureStart<?> structureStart = manager.getStartForFeature(SectionPos.of(ichunk.getPos(), 0), structure, ichunk);
+                                    if (structureStart != null && structureStart.isValid()) {
+                                        BlockPos p = structureStart.getLocatePos();
+                                        int distance = dist(new BlockPos(posX, 0, posZ), p);
+                                        //discard one spawning in a village
+                                        if (distance > 90) found.add(new ImmutablePair<>(distance, p));
+                                        else inVillage = true;
+                                        //checking all nearby villages to find the closest
+                                    }
                                 }
 
                                 if (r == 0) {

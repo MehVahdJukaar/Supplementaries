@@ -33,6 +33,7 @@ public class ClientConfigs {
         public static ForgeConfigSpec.ConfigValue<String> SLINGSHOT_OUTLINE_COLOR;
         public static ForgeConfigSpec.DoubleValue SLINGSHOT_PROJECTILE_SCALE;
         public static ForgeConfigSpec.BooleanValue WRENCH_PARTICLES;
+        public static ForgeConfigSpec.BooleanValue FLUTE_PARTICLES;
         private static void init(ForgeConfigSpec.Builder builder) {
             builder.comment("Items")
                     .push("items");
@@ -58,6 +59,11 @@ public class ClientConfigs {
             builder.push("wrench");
             WRENCH_PARTICLES = builder.comment("Display visual particles when a block is rotated")
                     .define("turn_particles", true);
+            builder.pop();
+
+            builder.push("flute");
+            FLUTE_PARTICLES = builder.comment("Display visual particles when a playing a flute")
+                    .define("note_particles", true);
             builder.pop();
 
             builder.pop();
@@ -365,6 +371,7 @@ public class ClientConfigs {
         public static boolean BOOK_GLINT;
         public static boolean TURN_TABLE_PARTICLES;
         public static boolean WRENCH_PARTICLES;
+        public static boolean FLUTE_PARTICLES;
 
         public static void refresh(){
             //tweaks
@@ -408,6 +415,7 @@ public class ClientConfigs {
             SLINGSHOT_OVERLAY = items.SLINGSHOT_OVERLAY.get();
             SLINGSHOT_PROJECTILE_SCALE = (float)((double)items.SLINGSHOT_PROJECTILE_SCALE.get());
             WRENCH_PARTICLES = items.WRENCH_PARTICLES.get();
+            FLUTE_PARTICLES = items.FLUTE_PARTICLES.get();
 
             CapturedMobsHelper.refresh();
             GlobeTextureManager.GlobeColors.refreshColorsFromConfig();

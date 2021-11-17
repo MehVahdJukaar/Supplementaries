@@ -1,10 +1,11 @@
 package net.mehvahdjukaar.supplementaries.compat.configured;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 import com.mrcrayfish.configured.client.screen.ConfigScreen;
 import com.mrcrayfish.configured.client.util.ScreenUtil;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
@@ -14,6 +15,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
@@ -23,6 +25,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
@@ -41,35 +44,16 @@ public class CustomConfigScreen extends ConfigScreen {
     private static final ItemStack MAIN_ICON = new ItemStack(ModRegistry.GLOBE_ITEM.get());
 
     static {
-        addIcon("blocks", Items.GRASS_BLOCK);
-        addIcon("entities", Items.LEATHER);
-        addIcon("general", Items.BOOK);
+        addIcon("blocks", Items.OXIDIZED_COPPER);
+        addIcon("entities", Items.RABBIT_HIDE);
+        addIcon("general", Items.BOOKSHELF);
         addIcon("particles", Items.BLAZE_POWDER);
-        addIcon("items", Items.LAPIS_LAZULI);
+        addIcon("items", Items.AMETHYST_SHARD);
         addIcon("spawns", Items.TURTLE_EGG);
-        addIcon("tweaks", Items.ENCHANTING_TABLE);
-        addIcon("captured mobs", Items.CAVE_SPIDER_SPAWN_EGG);
-        addIcon("clock block", ModRegistry.CLOCK_BLOCK_ITEM.get());
+        addIcon("tweaks", ModRegistry.WRENCH.get());
+
+        addIcon("captured mobs", ModRegistry.CAGE_ITEM.get());
         addIcon("flag", ModRegistry.FLAGS_ITEMS.get(DyeColor.WHITE).get());
-        addIcon("globe", ModRegistry.GLOBE_ITEM.get());
-        addIcon("item shelf", ModRegistry.ITEM_SHELF_ITEM.get());
-        addIcon("pedestal", ModRegistry.PEDESTAL_ITEM.get());
-        addIcon("wind vane", ModRegistry.WIND_VANE_ITEM.get());
-        addIcon("pedestal", ModRegistry.PEDESTAL_ITEM.get());
-        //addIcon("firefly", ModRegistry.FIREFLY_SPAWN_EGG_ITEM.get());
-        addIcon("bellows", ModRegistry.BELLOWS_ITEM.get());
-        addIcon("blackboard", ModRegistry.BLACKBOARD_ITEM.get());
-        addIcon("cage", ModRegistry.CAGE_ITEM.get());
-        //addIcon("candle holder", ModRegistry.CANDLE_HOLDER_ITEM.get());
-        addIcon("jar", ModRegistry.JAR_ITEM.get());
-        addIcon("notice board", ModRegistry.NOTICE_BOARD_ITEM.get());
-        addIcon("sack", ModRegistry.SACK_ITEM.get());
-        addIcon("safe", ModRegistry.SAFE_ITEM.get());
-        addIcon("speaker block", ModRegistry.SPEAKER_BLOCK_ITEM.get());
-        addIcon("spring launcher", ModRegistry.PISTON_LAUNCHER_ITEM.get());
-        addIcon("turn table", ModRegistry.TURN_TABLE_ITEM.get());
-        addIcon("flute", ModRegistry.FLUTE_ITEM.get());
-        addIcon("rope arrow", ModRegistry.ROPE_ARROW_ITEM.get());
         addIcon("structures", ModRegistry.SIGN_POST_ITEMS.get(VanillaWoodTypes.OAK).get());
         addIcon("bells tweaks", Items.BELL);
         addIcon("cake tweaks", Items.CAKE);
@@ -77,54 +61,58 @@ public class CustomConfigScreen extends ConfigScreen {
         addIcon("throwable bricks", Items.BRICK);
         addIcon("wall lantern", Items.LANTERN);
         addIcon("placeable sticks", Items.STICK);
+        addIcon("placeable sticks", Items.STICK);
         addIcon("brewing stand colors", Items.BREWING_STAND);
         addIcon("timber frame", ModRegistry.TIMBER_BRACE_ITEM.get());
-        addIcon("raked gravel", ModRegistry.RAKED_GRAVEL_ITEM.get());
         addIcon("bottle xp", Items.EXPERIENCE_BOTTLE);
-        addIcon("hourglass", ModRegistry.HOURGLASS_ITEM.get());
         addIcon("map tweaks", Items.FILLED_MAP);
         addIcon("ceiling banners", Items.RED_BANNER);
         addIcon("initialization", ModRegistry.COG_BLOCK_ITEM.get());
-        addIcon("iron gate", ModRegistry.IRON_GATE_ITEM.get());
-        addIcon("zombie horse", Items.ROTTEN_FLESH);
-        addIcon("bomb", ModRegistry.BOMB_ITEM.get());
-        addIcon("blue bomb", ModRegistry.BOMB_BLUE_ITEM.get());
+        addIcon("zombie horse", Items.ZOMBIE_SPAWN_EGG);
         addIcon("placeable gunpowder", Items.GUNPOWDER);
         addIcon("mixins", Items.HOPPER);
-        addIcon("slingshot", ModRegistry.SLINGSHOT_ITEM.get());
         addIcon("server protection", Items.COMMAND_BLOCK);
-        addIcon("bamboo spikes", ModRegistry.BAMBOO_SPIKES_ITEM.get());
-        addIcon("wrench", ModRegistry.WRENCH.get());
         addIcon("placeable books", Items.ENCHANTED_BOOK);
+        addIcon("sign post", ModRegistry.SIGN_POST_ITEMS.get(VanillaWoodTypes.OAK).get());
+        addIcon("wattle and daub", ModRegistry.DAUB_BRACE_ITEM.get());
+        addIcon("shulker shall", Items.SHULKER_SHELL);
+        addIcon("jar tab", ModRegistry.JAR_ITEM.get());
+        addIcon("custom configured screen", ModRegistry.WRENCH.get());
+        addIcon("dispensers", Items.DISPENSER);
+        addIcon("hanging_sign", ModRegistry.HANGING_SIGNS_ITEMS.get(VanillaWoodTypes.OAK).get());
+        addIcon("blue bomb", ModRegistry.BOMB_BLUE_ITEM_ON.get());
+    }
 
-        Field temp = null;
-        try {
-            temp = ObfuscationReflectionHelper.findField(FolderEntry.class, "label");
-        } catch (Exception ignored) {
-        } finally {
-            FOLDER_LABEL = temp;
+    private ItemStack getIcon(String name) {
+        if (!ICONS.containsKey(name)) {
+            String formatted = name.toLowerCase().replace(" ", "_");
+            var item = ForgeRegistries.ITEMS.getValue(Supplementaries.res(formatted));
+            if (item != Items.AIR) {
+                addIcon(name, item);
+            }
         }
-        Field temp1 = null;
+        return ICONS.getOrDefault(name, MAIN_ICON);
+
+    }
+
+    @Nullable
+    private static Method findMethodOrNull(Class<?> c, String methodName) {
+        Method field = null;
         try {
-            temp1 = ObfuscationReflectionHelper.findField(ConfigScreen.class, "folderEntry");
+            field = ObfuscationReflectionHelper.findMethod(c, methodName);
         } catch (Exception ignored) {
-        } finally {
-            FOLDER_ENTRY = temp1;
         }
-        Method temp2 = null;
+        return field;
+    }
+
+    @Nullable
+    private static Field findFieldOrNull(Class<?> c, String fieldName) {
+        Field field = null;
         try {
-            temp2 = ObfuscationReflectionHelper.findMethod(ConfigScreen.class, "saveConfig");
+            field = ObfuscationReflectionHelper.findField(c, fieldName);
         } catch (Exception ignored) {
-        } finally {
-            SAVE_CONFIG = temp2;
         }
-        Field temp3 = null;
-        try {
-            temp3 = ObfuscationReflectionHelper.findField(Button.class, "onPress");
-        } catch (Exception ignored) {
-        } finally {
-            BUTTON_ON_PRESS = temp3;
-        }
+        return field;
     }
 
     private static void addIcon(String s, net.minecraft.world.item.Item i) {
@@ -132,16 +120,20 @@ public class CustomConfigScreen extends ConfigScreen {
     }
 
     @Nullable
-    private static final Field FOLDER_LABEL;
+    private static final Field FOLDER_LABEL = findFieldOrNull(FolderEntry.class, "label");
     @Nullable
-    private static final Field BUTTON_ON_PRESS;
+    private static final Field BUTTON_ON_PRESS = findFieldOrNull(Button.class, "onPress");
     @Nullable
-    private static final Field FOLDER_ENTRY;
+    private static final Field FOLDER_ENTRY = findFieldOrNull(ConfigScreen.class, "folderEntry");
     @Nullable
-    private static final Method SAVE_CONFIG;
+    private static final Method SAVE_CONFIG = findMethodOrNull(ConfigScreen.class, "saveConfig");
+    @Nullable
+    private static final Field CONFIG_VALUE_HOLDER = findFieldOrNull(ConfigItem.class, "holder");
+    @Nullable
+    private static final Field BOOLEAN_ITEM_BUTTON = findFieldOrNull(BooleanItem.class, "button");
 
-    private CustomConfigScreen(Screen parent, Component title, ResourceLocation background, ConfigScreen.FolderEntry folderEntry) {
-        this(parent, title, ConfigHandler.CLIENT_CONFIG_OBJECT, background);
+    private CustomConfigScreen(Screen parent, Component title, ModConfig config, ResourceLocation background, ConfigScreen.FolderEntry folderEntry) {
+        this(parent, title, config, background);
         //hax
         try {
             FOLDER_ENTRY.set(this, folderEntry);
@@ -161,9 +153,16 @@ public class CustomConfigScreen extends ConfigScreen {
 
         EntryList newList = new EntryList(Collections.emptyList());
         //replace list with new custom entries
+        boolean reg = this.config == ConfigHandler.REGISTRY_CONFIG_OBJECT && !this.folderEntry.isRoot();
         for (Item c : list.children()) {
             if (c instanceof FolderItem f) {
                 FolderWrapper wrapper = wrapFolderItem(f);
+                if (wrapper != null) {
+                    newList.children().add(wrapper);
+                    continue;
+                }
+            } else if (reg && c instanceof BooleanItem b) {
+                BooleanWrapper wrapper = wrapBooleanItem(b);
                 if (wrapper != null) {
                     newList.children().add(wrapper);
                     continue;
@@ -178,7 +177,8 @@ public class CustomConfigScreen extends ConfigScreen {
             try {
                 Button.OnPress press = this::saveButtonAction;
                 BUTTON_ON_PRESS.set(this.saveButton, press);
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
         }
     }
 
@@ -249,7 +249,7 @@ public class CustomConfigScreen extends ConfigScreen {
             if (found != null) {
                 return new FolderWrapper(found, oldName);
             }
-        } catch (IllegalAccessException ignored) {
+        } catch (Exception ignored) {
         }
         return null;
     }
@@ -265,9 +265,9 @@ public class CustomConfigScreen extends ConfigScreen {
             this.button = new Button(10, 5, 44, 20, (new TextComponent(label)).withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.WHITE), (onPress) -> {
                 Component newTitle = CustomConfigScreen.this.title.plainCopy().append(" > " + label);
                 CustomConfigScreen.this.minecraft.setScreen(new CustomConfigScreen(CustomConfigScreen.this,
-                        newTitle, CustomConfigScreen.this.background, folderEntry));
+                        newTitle, CustomConfigScreen.this.config, CustomConfigScreen.this.background, folderEntry));
             });
-            this.icon = ICONS.getOrDefault(label.toLowerCase(), MAIN_ICON);
+            this.icon = getIcon(label.toLowerCase());
         }
 
         @Override
@@ -282,12 +282,13 @@ public class CustomConfigScreen extends ConfigScreen {
         public void render(PoseStack matrixStack, int x, int top, int left, int width, int height,
                            int mouseX, int mouseY, boolean selected, float partialTicks) {
 
-            if (selected) {
-                if (lastTick < CustomConfigScreen.this.ticks) ticks++;
-                this.lastTick = CustomConfigScreen.this.ticks;
-            } else {
-                ticks = 0;
+
+            if (lastTick < CustomConfigScreen.this.ticks) {
+                ticks = Math.max(0, ticks + (selected ? 1 : -2)) % (36);
             }
+
+            this.lastTick = CustomConfigScreen.this.ticks;
+
 
             this.button.x = left - 1;
             this.button.y = top;
@@ -298,47 +299,93 @@ public class CustomConfigScreen extends ConfigScreen {
 
             ItemRenderer renderer = CustomConfigScreen.this.itemRenderer;
 
-            PoseStack posestack = RenderSystem.getModelViewStack();
-            posestack.pushPose();
+            float p = (float) (Math.PI / 180f);
 
-            posestack.translate(center + 90 - 17, top + 2, -100.0F - renderer.blitOffset - 100);
-            posestack.translate(8.0F, 8.0F, 0.0F);
-            if (selected) {
-                float scale = 1 + 0.1f * Mth.sin((float) (((ticks + partialTicks) / 3f) % (2 * Math.PI)));
-                posestack.scale(scale, scale, scale);
-                //RenderSystem.rotatef(((ticks + partialTicks) /10f));
-            }
-            posestack.translate(-8.0F, -8.0F, 0.0F);
-            posestack.translate(0, 0, +100.0F + renderer.blitOffset);
-            RenderSystem.applyModelViewMatrix();
+            RendererUtil.renderGuiItemRelative(this.icon, center + 90 - 17, top + 2, renderer, (s, r) -> {
+                if (ticks != 0) {
+                    if (r) {
+                        s.mulPose(Vector3f.YP.rotation(((ticks + partialTicks) * p * 10f)));
 
-            renderer.renderAndDecorateFakeItem(icon, 0, 0);
+                    } else {
+                        float scale = 1 + 0.1f * Mth.sin(((ticks + partialTicks) * p * 20));
+                        s.scale(scale, scale, scale);
+                    }
+                }
+            });
 
-            posestack.popPose();
-            RenderSystem.applyModelViewMatrix();
+            RendererUtil.renderGuiItemRelative(this.icon, center - 90, top + 2, renderer, (s, r) -> {
+                if (ticks != 0) {
+                    if (r) {
+                        s.mulPose(Vector3f.YP.rotation((ticks + partialTicks) * p * 10f));
 
+                    } else {
+                        float scale = 1 + 0.1f * Mth.sin((ticks + partialTicks) * p * 20);
+                        s.scale(scale, scale, scale);
+                    }
+                }
+            });
 
-            //posestack = RenderSystem.getModelViewStack();
-            //posestack.pushPose();
-            //posestack.translate(center - 90, top + 2, -100.0F - renderer.blitOffset + 100);
-            //posestack.translate(8.0F, 8.0F, 0.0F);
-
-            PoseStack pose = new PoseStack();
-
-            if (selected) {
-                float scale = 1 + 0.1f * Mth.sin((float) (((ticks + partialTicks) / 3f) % (2 * Math.PI)));
-                pose.scale(scale, scale, scale);
-                //RenderSystem.rotatef(((ticks + partialTicks) /10f));
-            }
-            //posestack.translate(-8.0F, -8.0F, 0.0F);
-            //posestack.translate(0, 0, +100.0F + renderer.blitOffset);
-            //RenderSystem.applyModelViewMatrix();
-
-            RendererUtil.renderGuiItemRelative(this.icon, 0, 0, pose, renderer);
-
-            //posestack.popPose();
-            //RenderSystem.applyModelViewMatrix();
 
         }
+
+    }
+
+    @Nullable
+    public BooleanWrapper wrapBooleanItem(BooleanItem old) {
+        final FolderEntry folderEntry = CustomConfigScreen.this.folderEntry;
+        try {
+            ValueHolder<Boolean> holder = (ValueHolder<Boolean>) CONFIG_VALUE_HOLDER.get(old);
+
+            //find correct folder
+            ValueEntry found = null;
+            for (IEntry e : folderEntry.getEntries()) {
+                if (e instanceof ConfigScreen.ValueEntry value) {
+                    if (holder == value.getHolder()) found = value;
+                }
+            }
+            if (found != null) {
+                return new BooleanWrapper(holder);
+            }
+        } catch (Exception ignored) {
+        }
+        return null;
+    }
+
+    private class BooleanWrapper extends BooleanItem {
+
+        private final ItemStack icon;
+        protected Button button;
+        protected boolean active = false;
+
+        public BooleanWrapper(ValueHolder<Boolean> holder) {
+            super(holder);
+            try {
+                button = (Button) BOOLEAN_ITEM_BUTTON.get(this);
+            } catch (Exception ignored) {
+            }
+            button.setMessage(new TextComponent(""));
+            this.icon = getIcon(label.getContents().toLowerCase());
+        }
+
+        @Override
+        public void render(PoseStack poseStack, int index, int top, int left, int width, int p_230432_6_, int mouseX, int mouseY, boolean hovered, float partialTicks) {
+            this.button.setMessage(new TextComponent(""));
+            super.render(poseStack, index, top, left, width, p_230432_6_, mouseX, mouseY, hovered, partialTicks);
+
+            int light = this.holder.getValue() ? LightTexture.FULL_BRIGHT : 0;
+
+            int center = (int) (this.button.x + this.button.getWidth() / 2f);
+            ItemRenderer renderer = CustomConfigScreen.this.itemRenderer;
+
+            RendererUtil.renderGuiItemRelative(this.icon, center - 8, top + 2, renderer, (a, b) -> {
+            }, light);
+
+        }
+
+        @Override
+        public void onResetValue() {
+            this.button.setMessage(new TextComponent(""));
+        }
+
     }
 }

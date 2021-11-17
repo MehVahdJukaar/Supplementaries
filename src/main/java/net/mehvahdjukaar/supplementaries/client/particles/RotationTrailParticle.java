@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.particles;
 
 import net.mehvahdjukaar.supplementaries.common.VectorUtils;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
@@ -122,7 +123,6 @@ public class RotationTrailParticle extends SimpleAnimatedParticle {
 
             Direction dir = Direction.from3DDataValue((int) direction);
 
-            if(dir == Direction.DOWN) ccw = -ccw;
 
             float radAngle = (float) (initialAngle * Math.PI / 180);
 

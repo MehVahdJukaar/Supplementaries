@@ -96,8 +96,6 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue BOMB_ENABLED;
         public static ForgeConfigSpec.BooleanValue MAGMA_CREAM_BLOCK_ENABLED;
         public static ForgeConfigSpec.BooleanValue CRIMSON_LANTERN_ENABLED;
-        public static ForgeConfigSpec.BooleanValue STICK_ENABLED;
-        public static ForgeConfigSpec.BooleanValue ROD_ENABLED;
         public static ForgeConfigSpec.BooleanValue DAUB_ENABLED;
         public static ForgeConfigSpec.BooleanValue WATTLE_AND_DAUB_ENABLED;
         public static ForgeConfigSpec.BooleanValue TIMBER_FRAME_ENABLED;
@@ -217,8 +215,6 @@ public class RegistryConfigs {
             BOMB_ENABLED = builder.define(ModRegistry.BOMB_NAME,true);
             CRIMSON_LANTERN_ENABLED = builder.define(ModRegistry.CRIMSON_LANTERN_NAME,true);
             MAGMA_CREAM_BLOCK_ENABLED = builder.define(ModRegistry.MAGMA_CREAM_BLOCK_NAME,true);
-            STICK_ENABLED = builder.define(ModRegistry.STICK_NAME,true);
-            ROD_ENABLED = builder.define(ModRegistry.BLAZE_ROD_NAME,true);
             DAUB_ENABLED = builder.define(ModRegistry.DAUB_NAME,true);
             WATTLE_AND_DAUB_ENABLED = builder.define("wattle_and_daub",true);
             TIMBER_FRAME_ENABLED = builder.define(ModRegistry.TIMBER_FRAME_NAME,true);

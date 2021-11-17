@@ -1,3 +1,17 @@
 {
-  "parent": "supplementaries:block/timber_brace"
+  "parent": "supplementaries:block/timber_brace_f",
+  "display": {
+    "gui": {
+      "rotation": [
+        30,
+        135,
+        0
+      ],
+      "scale": [
+        0.625,
+        0.625,
+        0.625
+      ]
+    }
+  }
 }
