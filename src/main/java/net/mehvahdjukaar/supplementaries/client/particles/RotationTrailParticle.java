@@ -119,8 +119,10 @@ public class RotationTrailParticle extends SimpleAnimatedParticle {
                 direction = -direction;
             }
 
+
             Direction dir = Direction.from3DDataValue((int) direction);
 
+            if(dir == Direction.DOWN) ccw = -ccw;
 
             float radAngle = (float) (initialAngle * Math.PI / 180);
 

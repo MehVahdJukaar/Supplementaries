@@ -196,7 +196,7 @@ public class SignPostBlock extends FenceMimicBlock implements EntityBlock, IRota
 
     @Override
     public boolean onRotated(BlockState newState, BlockState oldState, Direction axis, Rotation rot, Level world, BlockPos pos) {
-        float angle = rot.equals(Rotation.CLOCKWISE_90) ? 90 : -90;
+        float angle = rot.equals(Rotation.CLOCKWISE_90) ? -90 : 90;
         boolean success = false;
         if (world.getBlockEntity(pos) instanceof SignPostBlockTile tile) {
 

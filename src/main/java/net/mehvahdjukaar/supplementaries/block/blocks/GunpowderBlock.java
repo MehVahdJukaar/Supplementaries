@@ -471,7 +471,7 @@ public class GunpowderBlock extends LightUpBlock {
         Block b = state.getBlock();
         //TODO: add tag
         if (b instanceof FireBlock || b instanceof MagmaBlock || (b instanceof TorchBlock && !(b instanceof RedstoneTorchBlock)) ||
-                b == ModRegistry.BLAZE_ROD_BLOCK.get() || b == ModRegistry.MAGMA_CREAM_BLOCK.get())
+                b == ModRegistry.BLAZE_ROD_BLOCK.get())
             return true;
         if (b instanceof CampfireBlock || (CompatHandler.deco_blocks && DecoBlocksCompatRegistry.isBrazier(b))) {
             return state.getValue(CampfireBlock.LIT);

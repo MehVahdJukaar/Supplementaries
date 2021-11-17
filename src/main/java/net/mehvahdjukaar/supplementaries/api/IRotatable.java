@@ -28,7 +28,9 @@ public interface IRotatable {
      * @param pos position
      * @return if the action performed was successful
      */
-    boolean onRotated(BlockState newState, BlockState oldState, Direction axis, Rotation rotation, Level world, BlockPos pos);
+    default boolean onRotated(BlockState newState, BlockState oldState, Direction axis, Rotation rotation, Level world, BlockPos pos){
+        return false;
+    }
 
     /**
      * if this should always be considered "rotated" onto an axis even when no blockstate change is detected

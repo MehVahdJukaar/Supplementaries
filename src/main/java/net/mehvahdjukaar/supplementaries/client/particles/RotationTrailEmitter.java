@@ -30,13 +30,11 @@ public class RotationTrailEmitter extends NoRenderParticle {
     public void tick() {
         int maximumTime = 6;
         for (int i = 0; i < 4; i++) {
-            int c = ccw;
-            if(axis == Direction.DOWN) c = -c;
 
             this.level.addParticle(ModRegistry.ROTATION_TRAIL.get(),
                     this.x, this.y, this.z,
                     this.axis.get3DDataValue() * ccw,
-                    this.radius, (i * 90 + 45) + c * timeSinceStart * RotationTrailParticle.SPEED);
+                    this.radius, (i * 90 + 45) + ccw * timeSinceStart * RotationTrailParticle.SPEED);
         }
 
         ++this.timeSinceStart;

@@ -147,7 +147,7 @@ public class ClientSetup {
         //boat
         ItemBlockRenderTypes.setRenderLayer(ModRegistry.JAR_BOAT.get(), RenderType.translucent());
         //magma cream block
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.MAGMA_CREAM_BLOCK.get(), RenderType.translucent());
+        //ItemBlockRenderTypes.setRenderLayer(ModRegistry.MAGMA_CREAM_BLOCK.get(), RenderType.translucent());
         //flower box
         ItemBlockRenderTypes.setRenderLayer(ModRegistry.FLOWER_BOX.get(), RenderType.cutout());
         //timber frames
@@ -270,7 +270,7 @@ public class ClientSetup {
         colors.register(new TippedSpikesColor(), ModRegistry.BAMBOO_SPIKES.get());
         colors.register(new DefaultWaterColor(), ModRegistry.JAR_BOAT.get());
         colors.register(new BrewingStandColor(), Blocks.BREWING_STAND);
-        colors.register(new MimicBlockColor.noParticle(), ModRegistry.SIGN_POST.get(), ModRegistry.TIMBER_BRACE.get(), ModRegistry.TIMBER_FRAME.get(),
+        colors.register(new MimicBlockColor(), ModRegistry.SIGN_POST.get(), ModRegistry.TIMBER_BRACE.get(), ModRegistry.TIMBER_FRAME.get(),
                 ModRegistry.TIMBER_CROSS_BRACE.get(), ModRegistry.WALL_LANTERN.get(), ModRegistry.ROPE_KNOT.get());
         colors.register(new CogBlockColor(), ModRegistry.COG_BLOCK.get());
         colors.register(new GunpowderBlockColor(), ModRegistry.GUNPOWDER_BLOCK.get());

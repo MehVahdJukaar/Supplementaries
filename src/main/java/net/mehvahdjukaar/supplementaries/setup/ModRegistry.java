@@ -730,10 +730,10 @@ public class ModRegistry {
 
     //magma cream block
     public static final String MAGMA_CREAM_BLOCK_NAME = "magma_cream_block";
-    public static final RegistryObject<Block> MAGMA_CREAM_BLOCK = BLOCKS.register(MAGMA_CREAM_BLOCK_NAME, () -> new MagmaCreamBlock(
-            BlockBehaviour.Properties.copy(Blocks.SLIME_BLOCK)));
-    public static final RegistryObject<Item> MAGMA_CREAM_BLOCK_ITEM = ITEMS.register(MAGMA_CREAM_BLOCK_NAME, () -> new BlockItem(MAGMA_CREAM_BLOCK.get(),
-            (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_DECORATIONS, MAGMA_CREAM_BLOCK_NAME))));
+    //public static final RegistryObject<Block> MAGMA_CREAM_BLOCK = BLOCKS.register(MAGMA_CREAM_BLOCK_NAME, () -> new MagmaCreamBlock(
+    //        BlockBehaviour.Properties.copy(Blocks.SLIME_BLOCK)));
+    //public static final RegistryObject<Item> MAGMA_CREAM_BLOCK_ITEM = ITEMS.register(MAGMA_CREAM_BLOCK_NAME, () -> new BlockItem(MAGMA_CREAM_BLOCK.get(),
+    //        (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_DECORATIONS, MAGMA_CREAM_BLOCK_NAME))));
 
     //raked gravel
     public static final String RAKED_GRAVEL_NAME = "raked_gravel";

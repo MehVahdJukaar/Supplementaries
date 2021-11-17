@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import com.google.common.collect.ImmutableMap;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
+import net.mehvahdjukaar.supplementaries.api.IRotatable;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.FlagBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
@@ -24,7 +25,9 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -41,7 +44,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 
-public class StickBlock extends WaterBlock implements IRotationLockable {
+public class StickBlock extends WaterBlock implements IRotationLockable, IRotatable {
     protected static final VoxelShape Y_AXIS_AABB = Block.box(7D, 0.0D, 7D, 9D, 16.0D, 9D);
     protected static final VoxelShape Z_AXIS_AABB = Block.box(7D, 7D, 0.0D, 9D, 9D, 16.0D);
     protected static final VoxelShape X_AXIS_AABB = Block.box(0.0D, 7D, 7D, 16.0D, 9D, 9D);
@@ -210,5 +213,17 @@ public class StickBlock extends WaterBlock implements IRotationLockable {
         if (i == 1) state.setValue(AXIS_Z, false).setValue(AXIS_X, false)
                 .setValue(AXIS_Y, false).setValue(AXIS2PROPERTY.get(dir.getAxis()), true);
         return state;
+    }
+
+    @Override
+    public BlockState rotateState(BlockState state, LevelAccessor world, BlockPos pos, Rotation rotation, Direction axis) {
+        boolean x = state.getValue(AXIS_X);
+        boolean y = state.getValue(AXIS_Y);
+        boolean z = state.getValue(AXIS_Z);
+        return switch (axis.getAxis()){
+            case Y -> state.setValue(AXIS_X, z).setValue(AXIS_Z, x);
+            case X -> state.setValue(AXIS_Y, z).setValue(AXIS_Z, y);
+            case Z -> state.setValue(AXIS_X, y).setValue(AXIS_Y, x);
+        };
     }
 }

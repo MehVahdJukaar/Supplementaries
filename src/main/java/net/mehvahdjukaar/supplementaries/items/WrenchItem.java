@@ -93,7 +93,7 @@ public class WrenchItem extends Item {
             ItemStack itemstack = context.getItemInHand();
             Direction dir = context.getClickedFace();
             boolean ccw = player.isShiftKeyDown();
-            boolean success = BlockUtils.tryRotatingBlock(dir, ccw, pos, level);
+            boolean success = BlockUtils.tryRotatingBlockAndConnected(dir, ccw, pos, level);
             if (success) {
 
                 if (player instanceof ServerPlayer) {

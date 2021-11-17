@@ -2,6 +2,10 @@ package net.mehvahdjukaar.supplementaries.block.util;
 
 import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.supplementaries.api.IRotatable;
+import net.mehvahdjukaar.supplementaries.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.block.blocks.IronGateBlock;
+import net.mehvahdjukaar.supplementaries.block.blocks.RopeBlock;
+import net.mehvahdjukaar.supplementaries.block.blocks.StickBlock;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.common.VectorUtils;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
@@ -10,21 +14,20 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BedBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.ChestType;
+import net.minecraft.world.level.block.state.properties.*;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
@@ -59,6 +62,12 @@ public class BlockUtils {
     }
 
     //rotation stuff
+
+    public static boolean tryRotatingBlockAndConnected(Direction face, boolean ccw, BlockPos targetPos, Level level) {
+        BlockState state = level.getBlockState(targetPos);
+        if(tryRotatingSpecial(face, ccw, targetPos, level, state)) return true;
+        return tryRotatingBlock(face, ccw, targetPos, level, state);
+    }
 
     public static boolean tryRotatingBlock(Direction face, boolean ccw, BlockPos targetPos, Level level) {
         return tryRotatingBlock(face,ccw,targetPos,level, level.getBlockState(targetPos));
@@ -101,36 +110,61 @@ public class BlockUtils {
         if(block instanceof IRotatable rotatable){
             return Optional.of(rotatable.rotateState(state, world, targetPos, rot, dir));
         }
+        if(state.hasProperty(BlockProperties.FLIPPED)){
+            return Optional.of(state.cycle(BlockProperties.FLIPPED));
+        }
         //horizontal facing blocks -easy
-        else if (dir.getAxis() == Direction.Axis.Y) {
+        if (dir.getAxis() == Direction.Axis.Y) {
             return Optional.of(state.rotate(world, targetPos, rot));
         }
         // 6 dir blocks blocks
-        else if (state.hasProperty(BlockStateProperties.FACING)) {
+        if (state.hasProperty(BlockStateProperties.FACING)) {
             Vec3 targetNormal = VectorUtils.ItoD(state.getValue(BlockStateProperties.FACING).getNormal());
             Vec3 myNormal = VectorUtils.ItoD(dir.getNormal());
             if (!ccw) targetNormal = targetNormal.scale(-1);
 
             Vec3 rotated = myNormal.cross(targetNormal);
-            if (rotated == Vec3.ZERO) {
-                // same axis, can't rotate
-                return Optional.empty();
+            // not on same axis, can rotate
+            if (rotated != Vec3.ZERO) {
+                Direction newDir = Direction.getNearest(rotated.x(), rotated.y(), rotated.z());
+                return Optional.of(state.setValue(BlockStateProperties.FACING, newDir));
             }
-            Direction newDir = Direction.getNearest(rotated.x(), rotated.y(), rotated.z());
-            return Optional.of(state.setValue(BlockStateProperties.FACING, newDir));
         }
         // axis blocks
-        else if (state.hasProperty(BlockStateProperties.AXIS)) {
+        if (state.hasProperty(BlockStateProperties.AXIS)) {
             Direction.Axis targetAxis = state.getValue(BlockStateProperties.AXIS);
             Direction.Axis myAxis = dir.getAxis();
-            if (myAxis == targetAxis) {
-                // same axis, can't rotate
-                return Optional.empty();
-            } else if (myAxis == Direction.Axis.X) {
+            if (myAxis == Direction.Axis.X) {
                 return Optional.of(state.setValue(BlockStateProperties.AXIS, targetAxis == Direction.Axis.Y ? Direction.Axis.Z : Direction.Axis.Y));
             } else if (myAxis == Direction.Axis.Z) {
                 return Optional.of(state.setValue(BlockStateProperties.AXIS, targetAxis == Direction.Axis.Y ? Direction.Axis.X : Direction.Axis.Y));
             }
+        }
+        if(block instanceof StairBlock){
+            Direction facing = state.getValue(StairBlock.FACING);
+            if(facing.getAxis() == dir.getAxis()) return Optional.empty();
+
+            boolean flipped = dir.getAxisDirection() == Direction.AxisDirection.POSITIVE ^ ccw;
+            Half half = state.getValue(StairBlock.HALF);
+            boolean top = half == Half.TOP;
+            boolean positive = facing.getAxisDirection() == Direction.AxisDirection.POSITIVE;
+
+            if((top ^ positive) ^ flipped){
+                half = top ? Half.BOTTOM : Half.TOP;
+            }
+            else{
+                facing = facing.getOpposite();
+            }
+
+            return Optional.of(state.setValue(StairBlock.HALF, half).setValue(StairBlock.FACING, facing));
+        }
+        if(state.hasProperty(SlabBlock.TYPE)){
+            SlabType type = state.getValue(SlabBlock.TYPE);
+            if(type == SlabType.DOUBLE) return Optional.empty();
+            return Optional.of(state.setValue(SlabBlock.TYPE, type == SlabType.BOTTOM ? SlabType.TOP : SlabType.BOTTOM));
+        }
+        if(state.hasProperty(TrapDoorBlock.HALF)){
+            return Optional.of(state.cycle(TrapDoorBlock.HALF));
         }
         return Optional.empty();
     }
@@ -150,4 +184,35 @@ public class BlockUtils {
 
         return state.is(ModTags.ROTATION_BLACKLIST);
     }
+
+
+    private static boolean tryRotatingSpecial(Direction face, boolean ccw, BlockPos pos, Level level, BlockState state) {
+        Block b = state.getBlock();
+        Rotation rot = ccw ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90;
+        if(b instanceof BedBlock && face.getAxis() == Direction.Axis.Y){
+            BlockState newBed = state.rotate(level, pos, rot);
+            BlockPos oldPos = pos.relative(getConnectedBedDirection(state));
+            BlockPos targetPos = pos.relative(getConnectedBedDirection(newBed));
+            if(level.getBlockState(targetPos).getMaterial().isReplaceable()){
+                level.setBlock(targetPos, level.getBlockState(oldPos).rotate(level, oldPos, rot),2);
+                level.setBlock(pos, newBed, 2);
+                level.removeBlock(oldPos, false);
+                return true;
+            }
+        }
+        if(DoorBlock.isWoodenDoor(state)){
+            //TODO: add
+            //level.setBlockAndUpdate(state.rotate(level, pos, rot));
+
+        }
+        return false;
+    }
+
+    private static Direction getConnectedBedDirection(BlockState bedState) {
+        BedPart part = bedState.getValue(BedBlock.PART);
+        Direction dir = bedState.getValue(BedBlock.FACING);
+        return part == BedPart.FOOT ? dir : dir.getOpposite();
+    }
+
+    //TODO: add rotation vertical slabs & dorrs
 }

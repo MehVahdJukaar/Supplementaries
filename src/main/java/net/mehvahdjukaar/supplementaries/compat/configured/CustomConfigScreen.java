@@ -5,6 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mrcrayfish.configured.client.screen.ConfigScreen;
 import com.mrcrayfish.configured.client.util.ScreenUtil;
+import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
 import net.mehvahdjukaar.supplementaries.datagen.types.VanillaWoodTypes;
@@ -317,23 +318,26 @@ public class CustomConfigScreen extends ConfigScreen {
             RenderSystem.applyModelViewMatrix();
 
 
-            posestack = RenderSystem.getModelViewStack();
-            posestack.pushPose();
-            posestack.translate(center - 90, top + 2, -100.0F - renderer.blitOffset + 100);
-            posestack.translate(8.0F, 8.0F, 0.0F);
+            //posestack = RenderSystem.getModelViewStack();
+            //posestack.pushPose();
+            //posestack.translate(center - 90, top + 2, -100.0F - renderer.blitOffset + 100);
+            //posestack.translate(8.0F, 8.0F, 0.0F);
+
+            PoseStack pose = new PoseStack();
+
             if (selected) {
                 float scale = 1 + 0.1f * Mth.sin((float) (((ticks + partialTicks) / 3f) % (2 * Math.PI)));
-                posestack.scale(scale, scale, scale);
+                pose.scale(scale, scale, scale);
                 //RenderSystem.rotatef(((ticks + partialTicks) /10f));
             }
-            posestack.translate(-8.0F, -8.0F, 0.0F);
-            posestack.translate(0, 0, +100.0F + renderer.blitOffset);
-            RenderSystem.applyModelViewMatrix();
+            //posestack.translate(-8.0F, -8.0F, 0.0F);
+            //posestack.translate(0, 0, +100.0F + renderer.blitOffset);
+            //RenderSystem.applyModelViewMatrix();
 
-            renderer.renderAndDecorateFakeItem(icon, 0, 0);
+            RendererUtil.renderGuiItemRelative(this.icon, 0, 0, pose, renderer);
 
-            posestack.popPose();
-            RenderSystem.applyModelViewMatrix();
+            //posestack.popPose();
+            //RenderSystem.applyModelViewMatrix();
 
         }
     }
