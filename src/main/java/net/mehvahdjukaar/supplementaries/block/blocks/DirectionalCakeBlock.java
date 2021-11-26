@@ -1,7 +1,10 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
+import net.mehvahdjukaar.supplementaries.compat.farmersdelight.FDCompatRegistry;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -101,7 +104,13 @@ public class DirectionalCakeBlock extends CakeBlock implements SimpleWaterlogged
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         ItemStack itemstack = player.getItemInHand(handIn);
         Item item = itemstack.getItem();
-        if (itemstack.is(ItemTags.CANDLES) && state.getValue(BITES) == 0) {
+
+        if(CompatHandler.farmers_delight){
+            InteractionResult res = FDCompatRegistry.onCakeInteraction(state, pos, level, itemstack);
+            if(res.consumesAction())return res;
+        }
+
+        if (itemstack.is(ItemTags.CANDLES) && state.getValue(BITES) == 0 && state.is(ModRegistry.DIRECTIONAL_CAKE.get())) {
             Block block = Block.byItem(item);
             if (block instanceof CandleBlock) {
                 if (!player.isCreative()) {

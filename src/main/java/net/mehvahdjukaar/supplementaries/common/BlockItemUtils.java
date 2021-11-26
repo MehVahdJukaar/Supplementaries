@@ -32,22 +32,22 @@ public class BlockItemUtils {
     }
 
     public static boolean canPlace(BlockPlaceContext context, BlockState state) {
-        Player playerentity = context.getPlayer();
-        CollisionContext iselectioncontext = playerentity == null ? CollisionContext.empty() : CollisionContext.of(playerentity);
-        return (state.canSurvive(context.getLevel(), context.getClickedPos())) && context.getLevel().isUnobstructed(state, context.getClickedPos(), iselectioncontext);
+        Player player = context.getPlayer();
+        CollisionContext collisionContext = player == null ? CollisionContext.empty() : CollisionContext.of(player);
+        return (state.canSurvive(context.getLevel(), context.getClickedPos())) && context.getLevel().isUnobstructed(state, context.getClickedPos(), collisionContext);
     }
 
     private static BlockState updateBlockStateFromTag(BlockPos pos, Level world, ItemStack stack, BlockState state) {
         BlockState blockstate = state;
-        CompoundTag compoundnbt = stack.getTag();
-        if (compoundnbt != null) {
-            CompoundTag compoundnbt1 = compoundnbt.getCompound("BlockStateTag");
-            StateDefinition<Block, BlockState> statecontainer = state.getBlock().getStateDefinition();
+        CompoundTag tag = stack.getTag();
+        if (tag != null) {
+            CompoundTag blockStateTag = tag.getCompound("BlockStateTag");
+            StateDefinition<Block, BlockState> stateDefinition = state.getBlock().getStateDefinition();
 
-            for(String s : compoundnbt1.getAllKeys()) {
-                Property<?> property = statecontainer.getProperty(s);
+            for(String s : blockStateTag.getAllKeys()) {
+                Property<?> property = stateDefinition.getProperty(s);
                 if (property != null) {
-                    String s1 = compoundnbt1.get(s).getAsString();
+                    String s1 = blockStateTag.get(s).getAsString();
                     blockstate = updateState(blockstate, property, s1);
                 }
             }
@@ -80,22 +80,22 @@ public class BlockItemUtils {
             } else {
                 BlockPos blockpos = context.getClickedPos();
                 Level world = context.getLevel();
-                Player playerentity = context.getPlayer();
+                Player player = context.getPlayer();
                 ItemStack itemstack = context.getItemInHand();
                 BlockState placedState = world.getBlockState(blockpos);
                 Block block = placedState.getBlock();
                 if (block == blockstate.getBlock()) {
                     placedState = updateBlockStateFromTag(blockpos, world, itemstack, placedState);
-                    BlockItem.updateCustomBlockEntityTag(world, playerentity, blockpos, itemstack);
-                    block.setPlacedBy(world, blockpos, placedState, playerentity, itemstack);
-                    if (playerentity instanceof ServerPlayer) {
-                        CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayer) playerentity, blockpos, itemstack);
+                    BlockItem.updateCustomBlockEntityTag(world, player, blockpos, itemstack);
+                    block.setPlacedBy(world, blockpos, placedState, player, itemstack);
+                    if (player instanceof ServerPlayer) {
+                        CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayer) player, blockpos, itemstack);
                     }
                 }
 
                 SoundType soundtype = placedState.getSoundType(world, blockpos, context.getPlayer());
-                world.playSound(playerentity, blockpos, getPlaceSound(placedState, world, blockpos, context.getPlayer()), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
-                if (playerentity == null || !playerentity.getAbilities().instabuild) {
+                world.playSound(player, blockpos, getPlaceSound(placedState, world, blockpos, context.getPlayer()), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+                if (player == null || !player.getAbilities().instabuild) {
                     itemstack.shrink(1);
                 }
 

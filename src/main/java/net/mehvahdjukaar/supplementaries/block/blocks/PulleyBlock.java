@@ -25,8 +25,10 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRotatable {
     public static final EnumProperty<Winding> TYPE = BlockProperties.WINDING;
@@ -43,39 +45,48 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
         builder.add(TYPE, FLIPPED);
     }
 
-    //rotates itself and pull up/down. unchecked
-    //all methods here are called server side
-    public boolean windPulley(BlockState state, BlockPos pos, Level world, Rotation rot, @Nullable Direction dir) {
-        BlockState newState = state.cycle(FLIPPED);
-        world.setBlockAndUpdate(pos, newState);
-        if(dir == null) return false;
-        return this.onRotated(newState, state, dir, rot, world, pos);
+    /**
+     * simplified rotate method that only rotates pulley on it axis
+     * if direction is null assumes default orientation
+     * @return true if rotation was successful
+     */
+    public boolean windPulley(BlockState state, BlockPos pos, LevelAccessor world, Rotation rot, @Nullable Direction dir) {
+        Direction.Axis axis = state.getValue(AXIS);
+        if (axis == Direction.Axis.Y) return false;
+        if (dir == null) dir = axis == Direction.Axis.Z ? Direction.NORTH : Direction.WEST;
+        return this.rotateOverAxis(state, world, pos, rot, dir, null).isPresent();
     }
 
     @Override
-    public boolean onRotated(BlockState newState, BlockState oldState, Direction axis, Rotation rot, Level world, BlockPos pos) {
-        boolean success = false;
-        if(axis.getAxis().isHorizontal()) {
+    public Optional<BlockState> getRotatedState(BlockState state, LevelAccessor world, BlockPos pos, Rotation rotation, Direction axis, Vec3 hit) {
+        Direction.Axis myAxis = state.getValue(RotatedPillarBlock.AXIS);
+        Direction.Axis targetAxis = axis.getAxis();
+        if (myAxis == targetAxis) return Optional.of(state.cycle(FLIPPED));
+        if (myAxis == Direction.Axis.X) {
+            return Optional.of(state.setValue(AXIS, targetAxis == Direction.Axis.Y ? Direction.Axis.Z : Direction.Axis.Y));
+        } else if (myAxis == Direction.Axis.Z) {
+            return Optional.of(state.setValue(AXIS, targetAxis == Direction.Axis.Y ? Direction.Axis.X : Direction.Axis.Y));
+        }
+        return Optional.of(state);
+    }
+
+    //actually unwinds ropes & rotate connected
+    @Override
+    public void onRotated(BlockState newState, BlockState oldState, LevelAccessor world, BlockPos pos, Rotation rot, Direction axis, @Nullable Vec3 hit) {
+        if (axis.getAxis().isHorizontal()) {
 
             if (world.getBlockEntity(pos) instanceof PulleyBlockTile pulley) {
-                success = pulley.handleRotation(rot);
-
+                pulley.handleRotation(rot);
             }
             //try turning connected
             BlockPos connectedPos = pos.relative(axis);
             BlockState connected = world.getBlockState(connectedPos);
             if (connected.is(this) && newState.getValue(AXIS) == connected.getValue(AXIS)) {
-                return this.windPulley(connected, connectedPos, world, rot, axis);
+                this.windPulley(connected, connectedPos, world, rot, axis);
             }
         }
-        return success;
     }
 
-    @Override
-    public BlockState rotateState(BlockState state, LevelAccessor world, BlockPos pos, Rotation rotation, Direction axis) {
-        if(state.getValue(RotatedPillarBlock.AXIS) == axis.getAxis()) return state.cycle(FLIPPED);
-        return state;
-    }
 
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,

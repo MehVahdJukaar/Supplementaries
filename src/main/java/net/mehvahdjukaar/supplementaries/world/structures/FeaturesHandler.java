@@ -44,6 +44,14 @@ public class FeaturesHandler {
 
             }
         }
+        if (ServerConfigs.spawn.URN_PILE_ENABLED.get()) {
+
+            ResourceLocation res = event.getName();
+            if (res != null) {
+                event.getGeneration().getFeatures(GenerationStep.Decoration.UNDERGROUND_DECORATION)
+                        .add(() -> ConfiguredFeatures.CONFIGURED_URN_PILE);
+            }
+        }
 
     }
 

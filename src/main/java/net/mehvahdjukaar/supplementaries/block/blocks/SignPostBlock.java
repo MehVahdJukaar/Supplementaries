@@ -18,12 +18,14 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.CompassItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.MapItem;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -36,6 +38,7 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -79,7 +82,7 @@ public class SignPostBlock extends FenceMimicBlock implements EntityBlock, IRota
             if (hit.getDirection().getAxis() != Direction.Axis.Y) {
 
                 InteractionResult result = tile.textHolder.playerInteract(level, pos, player, handIn, tile::setChanged);
-                if(result != InteractionResult.PASS) return result;
+                if (result != InteractionResult.PASS) return result;
 
                 //sneak right click rotates the sign on z axis
                 if (isSneaking) {
@@ -132,7 +135,7 @@ public class SignPostBlock extends FenceMimicBlock implements EntityBlock, IRota
     @Nullable
     private BlockPos getLodestonePos(Level world, ItemStack stack) {
         CompoundTag tag = stack.getTag();
-        if(tag != null) {
+        if (tag != null) {
             boolean flag = tag.contains("LodestonePos");
             boolean flag1 = tag.contains("LodestoneDimension");
             if (flag && flag1) {
@@ -184,42 +187,47 @@ public class SignPostBlock extends FenceMimicBlock implements EntityBlock, IRota
         return super.getDrops(state, builder);
     }
 
-    @Override
-    public boolean alwaysRotateOverAxis(BlockState state, Direction axis) {
-        return axis.getAxis() == Direction.Axis.Y;
-    }
 
     @Override
-    public BlockState rotateState(BlockState state, LevelAccessor world, BlockPos pos, Rotation rotation, Direction axis) {
+    public BlockState rotate(BlockState state, LevelAccessor world, BlockPos pos, Rotation rot) {
         return state;
     }
 
     @Override
-    public boolean onRotated(BlockState newState, BlockState oldState, Direction axis, Rotation rot, Level world, BlockPos pos) {
-        float angle = rot.equals(Rotation.CLOCKWISE_90) ? -90 : 90;
+    public Optional<BlockState> getRotatedState(BlockState state, LevelAccessor world, BlockPos pos, Rotation rotation, Direction axis, @Nullable Vec3 hit) {
+        return Optional.of(state);
+    }
+
+    @Override
+    public Optional<Direction> rotateOverAxis(BlockState state, LevelAccessor world, BlockPos pos, Rotation rot, Direction axis, @Nullable Vec3 hit) {
+
         boolean success = false;
         if (world.getBlockEntity(pos) instanceof SignPostBlockTile tile) {
 
-            if (tile.up) {
-                tile.yawUp = Mth.wrapDegrees(tile.yawUp + angle);
-                success = true;
-            }
-            if (tile.down) {
-                tile.yawDown = Mth.wrapDegrees(tile.yawDown + angle);
-                success = true;
+            boolean simple = hit == null;
+            boolean ccw = rot.equals(Rotation.COUNTERCLOCKWISE_90);
+
+            float angle = simple ? (ccw ? 90 : -90) : (22.5f * (ccw ? 1 : -1));
+
+            if (simple) {
+                if (tile.rotateSign(true, angle, false)) success = true;
+                if (tile.rotateSign(false, angle, false)) success = true;
+            } else {
+                boolean up = hit.y % ((int) hit.y) > 0.5d;
+                if (tile.rotateSign(up, angle, true)) success = true;
+                else if (tile.rotateSign(!up, angle, true)) success = true;
             }
 
             if (success) {
                 //world.notifyBlockUpdate(pos, tile.getBlockState(), tile.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
                 tile.setChanged();
+                if (world instanceof Level level) {
+                    level.sendBlockUpdated(pos, state, state, 3);
+                }
+                return Optional.of(Direction.UP);
             }
         }
-        return success;
-    }
-
-    @Override
-    public BlockState rotate(BlockState state, LevelAccessor world, BlockPos pos, Rotation rot) {
-        return state;
+        return Optional.empty();
     }
 
     @Nullable

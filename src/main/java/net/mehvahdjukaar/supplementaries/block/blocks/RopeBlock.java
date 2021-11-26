@@ -347,15 +347,15 @@ public class RopeBlock extends WaterBlock {
         Block b = state.getBlock();
         if (b instanceof RopeBlock) {
             return findConnectedPulley(world, pos.above(), player, it + 1, rot);
-        } else if (b instanceof PulleyBlock && it != 0) {
+        } else if (b instanceof PulleyBlock pulley && it != 0) {
             if (world.getBlockEntity(pos) instanceof PulleyBlockTile tile) {
                 if (tile.isEmpty() && !player.isShiftKeyDown()) {
                     tile.setDisplayedItem(new ItemStack(ModRegistry.ROPE_ITEM.get()));
-                    boolean ret = ((PulleyBlock) b).windPulley(state, pos, world, rot, null);
+                    boolean ret = pulley.windPulley(state, pos, world, rot, null);
                     tile.getDisplayedItem().shrink(1);
                     return ret;
                 } else {
-                    return ((PulleyBlock) b).windPulley(state, pos, world, rot, null);
+                    return pulley.windPulley(state, pos, world, rot, null);
                 }
             }
         }

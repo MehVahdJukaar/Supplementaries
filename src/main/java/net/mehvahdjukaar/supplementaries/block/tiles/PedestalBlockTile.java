@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
 public class PedestalBlockTile extends ItemDisplayTile {
+    //needed on servers for crystals
     public DisplayType type = DisplayType.ITEM;
     public int counter = 0;
 
@@ -63,6 +64,7 @@ public class PedestalBlockTile extends ItemDisplayTile {
     @Override
     public void load(CompoundTag compound) {
         super.load(compound);
+        //needed on client
         this.type = DisplayType.values()[compound.getInt("Type")];
     }
 

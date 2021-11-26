@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "supplementaries:blackstone_tile_wall",
+    "supplementaries:ash_bricks_wall",
+    "supplementaries:stone_tile_wall"
+  ]
+}

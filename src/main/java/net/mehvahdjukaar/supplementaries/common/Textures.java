@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraftforge.client.event.TextureStitchEvent;
 
@@ -84,7 +85,6 @@ public class Textures {
     public static final ResourceLocation SEA_PICKLE_RICK = Supplementaries.res("textures/entity/misc/sea_pickle.png");
     public static final ResourceLocation JAR_MAN = Supplementaries.res("textures/entity/misc/jar_man.png");
 
-
     //gui
     public static final ResourceLocation BLACKBOARD_GUI_TEXTURE = Supplementaries.res("textures/gui/blackboard.png");
     public static final ResourceLocation CONFIG_BACKGROUND = Supplementaries.res("textures/gui/config_background.png");
@@ -94,6 +94,7 @@ public class Textures {
     public static final ResourceLocation PULLEY_BLOCK_GUI_TEXTURE = Supplementaries.res("textures/gui/pulley_block_gui.png");
     public static final ResourceLocation PRESENT_BLOCK_GUI_TEXTURE = Supplementaries.res("textures/gui/present_block_gui.png");
     public static final ResourceLocation RED_MERCHANT_GUI_TEXTURE = Supplementaries.res("textures/gui/red_merchant.png");
+    public static final ResourceLocation MISC_ICONS_TEXTURE = Supplementaries.res("textures/gui/misc.png");
     //map markers
     public static final ResourceLocation SIGN_POST_MARKER_TEXTURE = Supplementaries.res("textures/map/sign_post.png");
     public static final ResourceLocation FLAG_MARKER_TEXTURE = Supplementaries.res("textures/map/flag.png");
@@ -117,6 +118,8 @@ public class Textures {
     public static final ResourceLocation BOOK_AND_QUILL_TEXTURES = Supplementaries.res("entity/books/book_and_quill");
     public static final ResourceLocation BOOK_ANTIQUE_TEXTURES = Supplementaries.res("entity/books/book_antique");
 
+    public static final Map<DyeColor, ResourceLocation> SKULL_CANDLES_TEXTURES = new HashMap<>();
+
     public static final ResourceLocation ANTIQUABLE_FONT = Supplementaries.res("antiquable");
 
     static {
@@ -132,6 +135,11 @@ public class Textures {
         for (BookPileBlockTile.BookColor color : BookPileBlockTile.BookColor.values()) {
             BOOK_TEXTURES.put(color, Supplementaries.res("entity/books/book_" + color.getName()));
         }
+
+        for(DyeColor color : DyeColor.values()){
+            SKULL_CANDLES_TEXTURES.put(color, Supplementaries.res("textures/entity/skull_candles/"+ color.getName()+".png"));
+        }
+        SKULL_CANDLES_TEXTURES.put(null, Supplementaries.res("textures/entity/skull_candles/default.png"));
     }
 
     public static void stitchTextures(TextureStitchEvent.Pre event) {

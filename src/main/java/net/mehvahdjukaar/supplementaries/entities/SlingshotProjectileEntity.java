@@ -139,7 +139,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
             Item item = stack.getItem();
             //block override. mimic forge event
             PlayerInteractEvent.RightClickBlock blockPlaceEvent = new PlayerInteractEvent.RightClickBlock(player, InteractionHand.MAIN_HAND, hit.getBlockPos(), hit);
-            ItemsOverrideHandler.tryPerformOverride(blockPlaceEvent, stack, true);
+            ItemsOverrideHandler.tryPerformClickedBlockOverride(blockPlaceEvent, stack, true);
 
             if (blockPlaceEvent.isCanceled() && blockPlaceEvent.getCancellationResult().consumesAction()) {
                 success = true;

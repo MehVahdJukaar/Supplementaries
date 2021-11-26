@@ -86,17 +86,12 @@ public class DoubleCakeBlock extends DirectionalCakeBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-        switch (state.getValue(FACING)) {
-            default:
-            case WEST:
-                return SHAPES_WEST[state.getValue(BITES)];
-            case EAST:
-                return SHAPES_EAST[state.getValue(BITES)];
-            case SOUTH:
-                return SHAPES_SOUTH[state.getValue(BITES)];
-            case NORTH:
-                return SHAPES_NORTH[state.getValue(BITES)];
-        }
+        return switch (state.getValue(FACING)) {
+            default -> SHAPES_WEST[state.getValue(BITES)];
+            case EAST -> SHAPES_EAST[state.getValue(BITES)];
+            case SOUTH -> SHAPES_SOUTH[state.getValue(BITES)];
+            case NORTH -> SHAPES_NORTH[state.getValue(BITES)];
+        };
     }
 
     @Override
@@ -106,7 +101,7 @@ public class DoubleCakeBlock extends DirectionalCakeBlock {
             if (i == 0 && ServerConfigs.cached.DIRECTIONAL_CAKE) state = state.setValue(FACING, dir);
             world.setBlock(pos, state.setValue(BITES, i + 1), 3);
         } else {
-            if (ServerConfigs.cached.DIRECTIONAL_CAKE) {
+            if (state.getValue(WATERLOGGED) && ServerConfigs.cached.DIRECTIONAL_CAKE) {
                 world.setBlock(pos, ModRegistry.DIRECTIONAL_CAKE.get().defaultBlockState()
                         .setValue(FACING, state.getValue(FACING)).setValue(WATERLOGGED, state.getValue(WATERLOGGED)), 3);
             } else {

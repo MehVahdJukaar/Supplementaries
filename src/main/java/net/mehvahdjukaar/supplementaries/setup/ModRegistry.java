@@ -14,10 +14,12 @@ import net.mehvahdjukaar.supplementaries.items.crafting.*;
 import net.mehvahdjukaar.supplementaries.items.enchantment.StasisEnchantment;
 import net.mehvahdjukaar.supplementaries.items.tabs.JarTab;
 import net.mehvahdjukaar.supplementaries.items.tabs.SupplementariesTab;
+import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
@@ -35,6 +37,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
@@ -47,6 +50,7 @@ import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.EnumMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -92,7 +96,7 @@ public class ModRegistry {
         return null;
     }
 
-    private static CreativeModeTab getTab(String modId, CreativeModeTab g, String regName) {
+    public static CreativeModeTab getTab(String modId, CreativeModeTab g, String regName) {
         return ModList.get().isLoaded(modId) ? getTab(g, regName) : null;
     }
 
@@ -115,6 +119,9 @@ public class ModRegistry {
     private static RegistryObject<SoundEvent> makeSoundEvent(String name) {
         return SOUNDS.register(name, () -> new SoundEvent(Supplementaries.res(name)));
     }
+
+    public static final LootItemFunctionType CURSE_LOOT_FUNCTION = Registry.register(Registry.LOOT_FUNCTION_TYPE, Supplementaries.res("curse_loot"),
+            new LootItemFunctionType(new CurseLootFunction.Serializer()));
 
     //these are the names in sound.json. not actual location. this is so a sound event can play multiple sounds
     public static final RegistryObject<SoundEvent> TOM_SOUND = makeSoundEvent("block.tom");
@@ -214,6 +221,24 @@ public class ModRegistry {
     public static final RegistryObject<Item> RED_MERCHANT_SPAWN_EGG_ITEM = ITEMS.register(RED_MERCHANT_NAME + "_spawn_egg", () ->
             new ForgeSpawnEggItem(RED_MERCHANT, 0x7A090F, 0xF4f1e0,
                     new Item.Properties().tab(tab ? MOD_TAB : null)));
+
+    //urn
+    public static final String FALLING_URN_NAME = "falling_urn";
+    public static final RegistryObject<EntityType<FallingUrnEntity>> FALLING_URN = ENTITIES.register(FALLING_URN_NAME, () ->
+            EntityType.Builder.<FallingUrnEntity>of(FallingUrnEntity::new, MobCategory.MISC)
+                    .sized(0.98F, 0.98F)
+                    .clientTrackingRange(10)
+                    .updateInterval(20)
+                    .build(FALLING_URN_NAME));
+
+    //ash
+    public static final String FALLING_ASH_NAME = "falling_ash";
+    public static final RegistryObject<EntityType<FallingAshEntity>> FALLING_ASH = ENTITIES.register(FALLING_ASH_NAME, () ->
+            EntityType.Builder.<FallingAshEntity>of(FallingAshEntity::new, MobCategory.MISC)
+                    .sized(0.98F, 0.98F)
+                    .clientTrackingRange(10)
+                    .updateInterval(20)
+                    .build(FALLING_ASH_NAME));
 
     //firefly
 
@@ -441,8 +466,8 @@ public class ModRegistry {
                     .noOcclusion()
     ));
 
-    public static final String JAR_NAME_TINTED = "jar_tinted";
-    public static final RegistryObject<Block> JAR_TINTED = BLOCKS.register(JAR_NAME_TINTED, () -> new JarBlock(
+    public static final String JAR_TINTED_NAME = "jar_tinted";
+    public static final RegistryObject<Block> JAR_TINTED = BLOCKS.register(JAR_TINTED_NAME, () -> new JarBlock(
             BlockBehaviour.Properties.of(Material.GLASS, MaterialColor.COLOR_BLACK)
                     .strength(1f, 1f)
                     .sound(SoundType.GLASS)
@@ -455,8 +480,8 @@ public class ModRegistry {
     public static final RegistryObject<Item> JAR_ITEM = ITEMS.register(JAR_NAME, () -> new JarItem(JAR.get(), new Item.Properties().tab(
             getTab(CreativeModeTab.TAB_DECORATIONS, JAR_NAME)).stacksTo(16)));
 
-    public static final RegistryObject<Item> JAR_ITEM_TINTED = ITEMS.register(JAR_NAME_TINTED, () -> new TintedJarItem(JAR_TINTED.get(), new Item.Properties().tab(
-            getTab(CreativeModeTab.TAB_DECORATIONS, JAR_NAME)).stacksTo(16)));
+    public static final RegistryObject<Item> JAR_ITEM_TINTED = ITEMS.register(JAR_TINTED_NAME, () -> new TintedJarItem(JAR_TINTED.get(), new Item.Properties().tab(
+            getTab(CreativeModeTab.TAB_DECORATIONS, JAR_TINTED_NAME)).stacksTo(16)));
 
 
     //sack
@@ -494,7 +519,7 @@ public class ModRegistry {
                     .strength(2, 4)
                     .requiresCorrectToolForDrops()
     ));
-   public static final RegistryObject<Item> GLOBE_ITEM = ITEMS.register(GLOBE_NAME, () -> new BlockItem(GLOBE.get(),
+    public static final RegistryObject<Item> GLOBE_ITEM = ITEMS.register(GLOBE_NAME, () -> new BlockItem(GLOBE.get(),
             new Item.Properties().tab(getTab(CreativeModeTab.TAB_DECORATIONS, GLOBE_NAME)).rarity(Rarity.RARE)));
 
     public static final String GLOBE_SEPIA_NAME = "globe_sepia";
@@ -567,7 +592,7 @@ public class ModRegistry {
                     .dropsLike(SCONCE_SOUL.get()),
             () -> ParticleTypes.SOUL_FIRE_FLAME));
     public static final RegistryObject<Item> SCONCE_ITEM_SOUL = ITEMS.register(SCONCE_NAME_SOUL, () -> new StandingAndWallBlockItem(SCONCE_SOUL.get(), SCONCE_WALL_SOUL.get(),
-            (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_DECORATIONS, SCONCE_NAME_SOUL))));
+            (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_DECORATIONS, SCONCE_NAME))));
 
     //optional: endergetic
     public static final String SCONCE_NAME_ENDER = "sconce_ender";
@@ -580,7 +605,7 @@ public class ModRegistry {
                     .dropsLike(SCONCE_ENDER.get()),
             CompatObjects.ENDER_FLAME));
     public static final RegistryObject<Item> SCONCE_ITEM_ENDER = ITEMS.register(SCONCE_NAME_ENDER, () -> new StandingAndWallBlockItem(SCONCE_ENDER.get(), SCONCE_WALL_ENDER.get(),
-            (new Item.Properties()).tab(getTab("endergetic", CreativeModeTab.TAB_DECORATIONS, SCONCE_NAME_ENDER))));
+            (new Item.Properties()).tab(getTab("endergetic", CreativeModeTab.TAB_DECORATIONS, SCONCE_NAME))));
 
     //optional: infernal expansion
     public static final String SCONCE_NAME_GLOW = "sconce_glow";
@@ -593,7 +618,7 @@ public class ModRegistry {
                     .dropsLike(SCONCE_GLOW.get()),
             CompatObjects.GLOW_FLAME));
     public static final RegistryObject<Item> SCONCE_ITEM_GLOW = ITEMS.register(SCONCE_NAME_GLOW, () -> new StandingAndWallBlockItem(SCONCE_GLOW.get(), SCONCE_WALL_GLOW.get(),
-            (new Item.Properties()).tab(getTab("infernalexp", CreativeModeTab.TAB_DECORATIONS, SCONCE_NAME_GLOW))));
+            (new Item.Properties()).tab(getTab("infernalexp", CreativeModeTab.TAB_DECORATIONS, SCONCE_NAME))));
 
     //green
     public static final String SCONCE_NAME_GREEN = "sconce_green";
@@ -1107,22 +1132,22 @@ public class ModRegistry {
 
     //sticks
     public static final String STICK_NAME = "stick";
-    public static final RegistryObject<Block> STICK_BLOCK = BLOCKS.register(STICK_NAME, () -> new StickBlock(
+    public static final RegistryObject<StickBlock> STICK_BLOCK = BLOCKS.register(STICK_NAME, () -> new StickBlock(
             BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.WOOD)
                     .strength(0.25F, 0F)
-                    .sound(SoundType.WOOD)));
-    public static final RegistryObject<Block> EDELWOOD_STICK_BLOCK = BLOCKS.register("edelwood_stick", () -> new StickBlock(
+                    .sound(SoundType.WOOD), 0, "minecraft:stick"));
+    public static final RegistryObject<StickBlock> EDELWOOD_STICK_BLOCK = BLOCKS.register("edelwood_stick", () -> new StickBlock(
             BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.TERRACOTTA_BROWN)
                     .strength(0.25F, 0F)
-                    .sound(SoundType.WOOD)));
-    public static final RegistryObject<Block> PRISMARINE_ROD_BLOCK = BLOCKS.register("prismarine_rod", () -> new StickBlock(
+                    .sound(SoundType.WOOD), "forbidden_arcanus:edelwood_stick"));
+    public static final RegistryObject<StickBlock> PRISMARINE_ROD_BLOCK = BLOCKS.register("prismarine_rod", () -> new StickBlock(
             BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_CYAN)
                     .strength(0.25F, 0F)
-                    .sound(SoundType.STONE),0));
-    public static final RegistryObject<Block> PROPELPLANT_ROD_BLOCK = BLOCKS.register("propelplant_cane", () -> new StickBlock(
+                    .sound(SoundType.STONE), 0, "upgrade_aquatic:prismarine_rod"));
+    public static final RegistryObject<StickBlock> PROPELPLANT_ROD_BLOCK = BLOCKS.register("propelplant_cane", () -> new StickBlock(
             BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.CRIMSON_STEM)
                     .strength(0.25F, 0F)
-                    .sound(SoundType.WOOD)));
+                    .sound(SoundType.WOOD), "nethers_delight:propelplant_cane"));
 
     //blaze rod
     public static final String BLAZE_ROD_NAME = "blaze_rod";
@@ -1167,7 +1192,7 @@ public class ModRegistry {
     public static final String TIMBER_FRAME_NAME = "timber_frame";
     public static final RegistryObject<Block> TIMBER_FRAME = BLOCKS.register(TIMBER_FRAME_NAME, () -> new FrameBlock(
             BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.WOOD)
-                    .strength(0f, 0f)
+                    .strength(0.1f, 0f)
                     .dynamicShape()
                     .sound(SoundType.SCAFFOLDING), DAUB_FRAME));
     public static final RegistryObject<Item> TIMBER_FRAME_ITEM = ITEMS.register(TIMBER_FRAME_NAME, () -> new TimberFrameItem(TIMBER_FRAME.get(),
@@ -1189,6 +1214,25 @@ public class ModRegistry {
     public static final RegistryObject<BlockEntityType<FrameBlockTile>> TIMBER_FRAME_TILE = TILES.register(TIMBER_FRAME_NAME, () -> BlockEntityType.Builder.of(
             FrameBlockTile::new, TIMBER_FRAME.get(), TIMBER_CROSS_BRACE.get(), TIMBER_BRACE.get()).build(null));
 
+    //ashen bricks
+    public static final String ASH_BRICKS_NAME = "ash_bricks";
+
+    public static EnumMap<Variants.VariantType, RegistryObject<Block>> ASH_BRICKS_BLOCKS =
+            Variants.registerFullBlockSet(ASH_BRICKS_NAME, Blocks.STONE_BRICKS);
+
+
+    //stone tile
+    public static final String STONE_TILE_NAME = "stone_tile";
+
+    public static EnumMap<Variants.VariantType, RegistryObject<Block>> STONE_TILE_BLOCKS =
+            Variants.registerFullBlockSet(STONE_TILE_NAME, Blocks.STONE_BRICKS);
+
+    //blackstone tile
+    public static final String BLACKSTONE_TILE_NAME = "blackstone_tile";
+
+    public static EnumMap<Variants.VariantType, RegistryObject<Block>> BLACKSTONE_TILE_BLOCKS =
+            Variants.registerFullBlockSet(BLACKSTONE_TILE_NAME, Blocks.BLACKSTONE);
+
     //stone lamp
     public static final String STONE_LAMP_NAME = "stone_lamp";
     public static final RegistryObject<Block> STONE_LAMP = BLOCKS.register(STONE_LAMP_NAME, () -> new Block(
@@ -1199,29 +1243,6 @@ public class ModRegistry {
     public static final RegistryObject<Item> STONE_LAMP_ITEM = ITEMS.register(STONE_LAMP_NAME, () -> new BlockItem(STONE_LAMP.get(),
             (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_BUILDING_BLOCKS, STONE_LAMP_NAME))
     ));
-    //stone tile
-    public static final String STONE_TILE_NAME = "stone_tile";
-    public static final RegistryObject<Block> STONE_TILE = BLOCKS.register(STONE_TILE_NAME, () -> new Block(
-            BlockBehaviour.Properties.copy(Blocks.STONE_BRICKS))
-    );
-    public static final RegistryObject<Item> STONE_TILE_ITEM = ITEMS.register(STONE_TILE_NAME, () -> new BlockItem(STONE_TILE.get(),
-            (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_BUILDING_BLOCKS, STONE_TILE_NAME))
-    ));
-    //slab
-    public static final String STONE_TILE_SLAB_NAME = "stone_tile_slab";
-    public static final RegistryObject<Block> STONE_TILE_SLAB = BLOCKS.register(STONE_TILE_SLAB_NAME, () -> new SlabBlock(
-            BlockBehaviour.Properties.copy(STONE_TILE.get()))
-    );
-    public static final RegistryObject<Item> STONE_TILE_SLAB_ITEM = ITEMS.register(STONE_TILE_SLAB_NAME, () -> new BlockItem(STONE_TILE_SLAB.get(),
-            (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_BUILDING_BLOCKS, STONE_TILE_NAME))
-    ));
-    //vertical slab
-    public static final String STONE_TILE_VERTICAL_SLAB_NAME = "stone_tile_vertical_slab";
-    public static final RegistryObject<Block> STONE_TILE_VERTICAL_SLAB = BLOCKS.register(STONE_TILE_VERTICAL_SLAB_NAME, () -> new VerticalSlabBlock(
-            BlockBehaviour.Properties.copy(STONE_TILE.get()))
-    );
-    public static final RegistryObject<Item> STONE_TILE_VERTICAL_SLAB_ITEM = regBlockItem(STONE_TILE_VERTICAL_SLAB,
-            getTab("quark", CreativeModeTab.TAB_BUILDING_BLOCKS, STONE_TILE_NAME));
 
     //blackstone lamp
     public static final String BLACKSTONE_LAMP_NAME = "blackstone_lamp";
@@ -1231,29 +1252,6 @@ public class ModRegistry {
                     .lightLevel((s) -> 15)
                     .sound(SoundType.STONE)));
     public static final RegistryObject<Item> BLACKSTONE_LAMP_ITEM = regBlockItem(BLACKSTONE_LAMP, getTab(CreativeModeTab.TAB_BUILDING_BLOCKS, BLACKSTONE_LAMP_NAME));
-
-    //blackstone tile
-    public static final String BLACKSTONE_TILE_NAME = "blackstone_tile";
-    public static final RegistryObject<Block> BLACKSTONE_TILE = BLOCKS.register(BLACKSTONE_TILE_NAME, () -> new Block(
-            BlockBehaviour.Properties.copy(Blocks.BLACKSTONE))
-    );
-    public static final RegistryObject<Item> BLACKSTONE_TILE_ITEM = ITEMS.register(BLACKSTONE_TILE_NAME, () -> new BlockItem(BLACKSTONE_TILE.get(),
-            (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_BUILDING_BLOCKS, STONE_TILE_NAME))
-    ));
-    //slab
-    public static final String BLACKSTONE_TILE_SLAB_NAME = "blackstone_tile_slab";
-    public static final RegistryObject<Block> BLACKSTONE_TILE_SLAB = BLOCKS.register(BLACKSTONE_TILE_SLAB_NAME, () -> new SlabBlock(
-            BlockBehaviour.Properties.copy(BLACKSTONE_TILE.get()))
-    );
-    public static final RegistryObject<Item> BLACKSTONE_TILE_SLAB_ITEM = regBlockItem(BLACKSTONE_TILE_SLAB,
-            getTab(CreativeModeTab.TAB_BUILDING_BLOCKS, STONE_TILE_NAME));
-    //vertical slab
-    public static final String BLACKSTONE_TILE_VERTICAL_SLAB_NAME = "blackstone_tile_vertical_slab";
-    public static final RegistryObject<Block> BLACKSTONE_TILE_VERTICAL_SLAB = BLOCKS.register(BLACKSTONE_TILE_VERTICAL_SLAB_NAME, () -> new VerticalSlabBlock(
-            BlockBehaviour.Properties.copy(BLACKSTONE_TILE.get()))
-    );
-    public static final RegistryObject<Item> BLACKSTONE_TILE_VERTICAL_SLAB_ITEM = regBlockItem(BLACKSTONE_TILE_VERTICAL_SLAB,
-            getTab("quark", CreativeModeTab.TAB_BUILDING_BLOCKS, STONE_TILE_NAME));
 
     //deepslate lamp
     public static final String DEEPSLATE_LAMP_NAME = "deepslate_lamp";
@@ -1305,7 +1303,6 @@ public class ModRegistry {
             BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_BLACK).strength(2F, 7.5F)));
     public static final RegistryObject<Item> FLINT_BLOCK_ITEM = regBlockItem(FLINT_BLOCK, getTab(CreativeModeTab.TAB_BUILDING_BLOCKS, FLINT_BLOCK_NAME));
 
-
     //gunpowder block
     public static final String GUNPOWDER_BLOCK_NAME = "gunpowder";
     public static final RegistryObject<Block> GUNPOWDER_BLOCK = BLOCKS.register(GUNPOWDER_BLOCK_NAME, () -> new GunpowderBlock(
@@ -1324,6 +1321,58 @@ public class ModRegistry {
     public static final RegistryObject<BlockEntityType<BookPileBlockTile>> BOOK_PILE_TILE = TILES.register(BOOK_PILE_NAME, () -> BlockEntityType.Builder.of(
             BookPileBlockTile::new, BOOK_PILE.get(), BOOK_PILE_H.get()).build(null));
 
+    //urn
+    public static final String URN_NAME = "urn";
+    public static final RegistryObject<Block> URN = BLOCKS.register(URN_NAME, () -> new UrnBlock(
+            BlockBehaviour.Properties.of(Material.STONE, MaterialColor.WOOD)
+                    .sound(SoundType.GLASS)
+                    .strength(0, 0)
+    ));
+    public static final RegistryObject<BlockEntityType<UrnBlockTile>> URN_TILE = TILES.register(URN_NAME, () -> BlockEntityType.Builder.of(
+            UrnBlockTile::new, URN.get()).build(null));
+    public static final RegistryObject<Item> URN_ITEM = regBlockItem(URN, getTab(CreativeModeTab.TAB_DECORATIONS, URN_NAME));
+
+    //ash
+    public static final String ASH_NAME = "ash";
+    public static final RegistryObject<Block> ASH_BLOCK = BLOCKS.register(ASH_NAME, () -> new AshBlock(
+            BlockBehaviour.Properties.copy(Blocks.GRAY_CONCRETE_POWDER)
+                    .randomTicks().strength(0.1F).requiresCorrectToolForDrops()));
+    public static final RegistryObject<Item> ASH_ITEM = regBlockItem(ASH_BLOCK, getTab(CreativeModeTab.TAB_DECORATIONS, ASH_NAME));
+
+    //ash
+    public static final String ASH_BRICK_NAME = "ash_brick";
+
+    public static final RegistryObject<Item> ASH_BRICK_ITEM = regItem(ASH_BRICK_NAME, () -> new Item(
+            (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_MISC, ASH_BRICKS_NAME))));
+
+    //soap
+    public static final String SOAP_NAME = "soap";
+    public static final RegistryObject<Item> SOAP = regItem(SOAP_NAME, () -> new Item(
+            (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_MISC, SOAP_NAME))));
+
+    public static final String SOAP_BLOCK_NAME = "soap_block";
+    public static final RegistryObject<Block> SOAP_BLOCK = BLOCKS.register(SOAP_BLOCK_NAME, () -> new Block(
+            BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_PINK).strength(1.25F, 4.0F).sound(SoundType.CORAL_BLOCK)));
+    public static final RegistryObject<Item> SOAP_BLOCK_ITEM = regBlockItem(SOAP_BLOCK, getTab(CreativeModeTab.TAB_DECORATIONS, SOAP_BLOCK_NAME));
+
+    //stackable skulls
+    public static final String SKULL_PILE_NAME = "skull_pile";
+    public static final RegistryObject<Block> SKULL_PILE = BLOCKS.register(SKULL_PILE_NAME, () -> new DoubleSkullBlock(
+            BlockBehaviour.Properties.copy(Blocks.SKELETON_SKULL).sound(SoundType.BONE_BLOCK)));
+
+
+    public static final RegistryObject<BlockEntityType<DoubleSkullBlockTile>> SKULL_PILE_TILE = TILES.register(SKULL_PILE_NAME, () ->
+            BlockEntityType.Builder.of(DoubleSkullBlockTile::new, SKULL_PILE.get()).build(null));
+
+
+    //skulls candles
+    public static final String SKULL_CANDLE_NAME = "skull_candle";
+    public static final RegistryObject<Block> SKULL_CANDLE = BLOCKS.register(SKULL_CANDLE_NAME, () -> new CandleSkullBlock(
+            BlockBehaviour.Properties.copy(Blocks.SKELETON_SKULL).sound(SoundType.BONE_BLOCK)));
+
+
+    public static final RegistryObject<BlockEntityType<CandleSkullBlockTile>> SKULL_CANDLE_TILE = TILES.register(SKULL_CANDLE_NAME, () ->
+            BlockEntityType.Builder.of(CandleSkullBlockTile::new, SKULL_CANDLE.get()).build(null));
 
     /*
     public static final String REDSTONE_DRIVER_NAME = "redstone_driver";
@@ -1331,6 +1380,8 @@ public class ModRegistry {
             AbstractBlock.Properties.copy(Blocks.REPEATER)));
     public static final RegistryObject<Item> REDSTONE_DRIVER_ITEM = ITEMS.register(REDSTONE_DRIVER_NAME,()-> new BlockItem(REDSTONE_DRIVER.get(),
             (new Item.Properties()).tab(getTab(ItemGroup.TAB_REDSTONE,REDSTONE_DRIVER_NAME))));
+
+
 
     */
 

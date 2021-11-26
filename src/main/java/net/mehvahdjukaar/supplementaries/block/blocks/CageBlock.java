@@ -39,7 +39,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class CageBlock extends WaterBlock implements EntityBlock {
-    private static final ResourceLocation CONTENTS = new ResourceLocation("contents");
+
     protected static final VoxelShape SHAPE = Block.box(1D, 0D, 1D, 15.0D, 16.0D, 15.0D);
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;

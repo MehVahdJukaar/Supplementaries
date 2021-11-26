@@ -22,7 +22,8 @@ public class NetherPortalMarker extends MapWorldMarker<CustomDecoration> {
 
     @Nullable
     public static NetherPortalMarker getFromWorld(BlockGetter world, BlockPos pos){
-        if(world.getBlockState(pos).getBlock() instanceof NetherPortalBlock){
+        if(world.getBlockState(pos).getBlock() instanceof NetherPortalBlock ||
+                world.getFluidState(pos).getType().getRegistryName().toString().equals("betterportals:portal_fluid")) {
             return new NetherPortalMarker(pos);
         } else {
             return null;

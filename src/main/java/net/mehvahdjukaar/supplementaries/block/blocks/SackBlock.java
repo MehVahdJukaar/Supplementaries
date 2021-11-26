@@ -165,6 +165,7 @@ public class SackBlock extends FallingBlock implements EntityBlock {
         }
     }
 
+    //for creative drop
     @Override
     public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
         if (worldIn.getBlockEntity(pos) instanceof SackBlockTile tile) {

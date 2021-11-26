@@ -9,6 +9,8 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
@@ -28,6 +30,24 @@ public class VerticalSlabBlock extends WaterBlock {
     public VerticalSlabBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(TYPE, VerticalSlabType.NORTH).setValue(WATERLOGGED, false));
+    }
+
+    @Override
+    public BlockState rotate(BlockState state, Rotation rot) {
+        return state.getValue(TYPE) == VerticalSlabType.DOUBLE ? state : state.setValue(TYPE, VerticalSlabType.fromDirection(rot.rotate(state.getValue(TYPE).direction)));
+    }
+
+    @Override
+    public BlockState mirror(BlockState state, Mirror mirrorIn) {
+        VerticalSlabType type = state.getValue(TYPE);
+        if(type == VerticalSlabType.DOUBLE || mirrorIn == Mirror.NONE)
+            return state;
+
+        if((mirrorIn == Mirror.LEFT_RIGHT && type.direction.getAxis() == Direction.Axis.Z)
+                || (mirrorIn == Mirror.FRONT_BACK && type.direction.getAxis() == Direction.Axis.X))
+            return state.setValue(TYPE, VerticalSlabType.fromDirection(state.getValue(TYPE).direction.getOpposite()));
+
+        return state;
     }
 
     @Override

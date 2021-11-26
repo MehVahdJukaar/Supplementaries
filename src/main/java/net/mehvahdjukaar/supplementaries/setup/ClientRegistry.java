@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.RedMerchantRenderer;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.SkullCandleOverlay;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
@@ -29,6 +30,7 @@ public class ClientRegistry {
     public static ModelLayerLocation GLOBE_SPECIAL_MODEL = loc("globe_special");
     public static ModelLayerLocation SIGN_POST_MODEL = loc("sign_post");
     public static ModelLayerLocation RED_MERCHANT_MODEL = loc("red_merchant");
+    public static ModelLayerLocation SKULL_CANDLE_OVERLAY = loc("skull_candle");
 
     public static void register(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(BELLOWS_MODEL, BellowsBlockTileRenderer::createMesh);
@@ -39,6 +41,7 @@ public class ClientRegistry {
         event.registerLayerDefinition(GLOBE_SPECIAL_MODEL, GlobeBlockTileRenderer::createSpecialMesh);
         event.registerLayerDefinition(SIGN_POST_MODEL, SignPostBlockTileRenderer::createMesh);
         event.registerLayerDefinition(RED_MERCHANT_MODEL, RedMerchantRenderer::createMesh);
+        event.registerLayerDefinition(SKULL_CANDLE_OVERLAY, SkullCandleOverlay::createMesh);
     }
 
     public static void registerISTER(Consumer<IItemRenderProperties> consumer, BiFunction<BlockEntityRenderDispatcher, EntityModelSet, BlockEntityWithoutLevelRenderer> factory) {

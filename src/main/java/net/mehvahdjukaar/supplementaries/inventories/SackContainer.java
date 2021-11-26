@@ -41,13 +41,15 @@ public class SackContainer extends AbstractContainerMenu {
 
         int yp = 17 + (18 * 3) / 2 - (9) * dims[1];
 
-        int dimx;
+        int dimx = 0;
+        int dimXPrev;
         int xp;
         for (int h = 0; h < dims[1]; ++h) {
+            dimXPrev = dimx;
             dimx = Math.min(dims[0], size);
             xp = 8 + (18 * 9) / 2 - (dimx * 18) / 2;
             for (int j = 0; j < dimx; ++j) {
-                this.addSlot(new SackSlot(inventory, j + (h * dimx), xp + j * 18, yp + 18 * h));
+                this.addSlot(new SackSlot(inventory, j + (h * dimXPrev), xp + j * 18, yp + 18 * h));
             }
             size -= dims[0];
         }
@@ -73,18 +75,18 @@ public class SackContainer extends AbstractContainerMenu {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
         if (slot.hasItem()) {
-            ItemStack itemstack1 = slot.getItem();
-            itemstack = itemstack1.copy();
-            int activeSlots = (5 + (ServerConfigs.cached.SACK_SLOTS * 2));
+            ItemStack item = slot.getItem();
+            itemstack = item.copy();
+            int activeSlots = ServerConfigs.cached.SACK_SLOTS;
             if (index < activeSlots) {
-                if (!this.moveItemStackTo(itemstack1, activeSlots, this.slots.size(), true)) {
+                if (!this.moveItemStackTo(item, activeSlots, this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.moveItemStackTo(itemstack1, 0, activeSlots, false)) {
+            } else if (!this.moveItemStackTo(item, 0, activeSlots, false)) {
                 return ItemStack.EMPTY;
             }
 
-            if (itemstack1.isEmpty()) {
+            if (item.isEmpty()) {
                 slot.set(ItemStack.EMPTY);
             } else {
                 slot.setChanged();

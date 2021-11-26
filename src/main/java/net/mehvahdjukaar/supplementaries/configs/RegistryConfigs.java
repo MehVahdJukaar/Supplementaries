@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 //loaded before registry
 public class RegistryConfigs {
 
@@ -45,6 +45,8 @@ public class RegistryConfigs {
     }
 
     public static class reg {
+        public static ForgeConfigSpec.BooleanValue ASH_ENABLED;
+        public static ForgeConfigSpec.BooleanValue ASH_BRICKS_ENABLED;
         //public static ForgeConfigSpec.BooleanValue FIREFLY_ENABLED;
         public static ForgeConfigSpec.BooleanValue PLANTER_ENABLED;
         public static ForgeConfigSpec.BooleanValue CLOCK_ENABLED;
@@ -54,6 +56,7 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue NOTICE_BOARD_ENABLED;
         public static ForgeConfigSpec.BooleanValue CRANK_ENABLED;
         public static ForgeConfigSpec.BooleanValue JAR_ENABLED;
+        public static ForgeConfigSpec.BooleanValue JAR_TINTED_ENABLED;
         public static ForgeConfigSpec.BooleanValue FAUCET_ENABLED;
         public static ForgeConfigSpec.BooleanValue TURN_TABLE_ENABLED;
         public static ForgeConfigSpec.BooleanValue PISTON_LAUNCHER_ENABLED;
@@ -110,6 +113,12 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue SHULKER_HELMET_ENABLED;
         public static ForgeConfigSpec.BooleanValue CANDY_ENABLED;
         public static ForgeConfigSpec.BooleanValue WRENCH_ENABLED;
+        public static ForgeConfigSpec.BooleanValue URN_ENABLED;
+        public static ForgeConfigSpec.BooleanValue ANTIQUE_INK_ENABLED;
+        public static ForgeConfigSpec.BooleanValue DOORMAT_ENABLED;
+        public static ForgeConfigSpec.BooleanValue FLOWER_BOX_ENABLED;
+        public static ForgeConfigSpec.BooleanValue BLACKSTONE_TILE_ENABLED;
+        public static ForgeConfigSpec.BooleanValue SOAP_ENABLED;
 
         public static ForgeConfigSpec.BooleanValue PRESENT_ENABLED;
 
@@ -117,16 +126,19 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue CREATIVE_TAB;
         public static ForgeConfigSpec.BooleanValue DISPENSERS;
         public static ForgeConfigSpec.BooleanValue CUSTOM_CONFIGURED_SCREEN;
+        public static ForgeConfigSpec.BooleanValue CONDITIONAL_SIGN_REGISTRATIONS;
 
-        public static Lazy<Boolean> HAS_BRASS = Lazy.of(()->ModList.get().isLoaded("create"));
+        public static Lazy<Boolean> HAS_BRASS = Lazy.of(() -> ModList.get().isLoaded("create"));
 
         public static boolean HAS_MINESHAFT_LANTERN = false;
         public static boolean HAS_STRONGHOLD_SCONCE = false;
 
-        public static final Map<String,ForgeConfigSpec.BooleanValue> MIXIN_VALUES = new HashMap<>();
+        public static final Map<String, ForgeConfigSpec.BooleanValue> MIXIN_VALUES = new HashMap<>();
 
         //oh god what have I done
-        public static boolean isEnabled(String path){
+        public static boolean isEnabled(String path) {
+
+            if(path.equals(ModRegistry.PRESENT_NAME)) return false;
 
             switch (path) {
                 case ModRegistry.FLAX_WILD_NAME:
@@ -137,13 +149,14 @@ public class RegistryConfigs {
                     return reg.NETHERITE_DOOR_ENABLED.get() || reg.NETHERITE_TRAPDOOR_ENABLED.get() || reg.SAFE_ENABLED.get();
             }
             for (Field f : reg.class.getDeclaredFields()) {
-                try{
-                    if(ForgeConfigSpec.BooleanValue.class.isAssignableFrom(f.getType())){
+                try {
+                    if (ForgeConfigSpec.BooleanValue.class.isAssignableFrom(f.getType())) {
                         ForgeConfigSpec.BooleanValue b = (ForgeConfigSpec.BooleanValue) f.get(null);
-                        String p = b.getPath().get(b.getPath().size()-1);
-                        if(p.equals(path))return b.get();
+                        String p = b.getPath().get(b.getPath().size() - 1);
+                        if (p.equals(path)) return b.get();
                     }
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
             }
             return true;
         }
@@ -153,14 +166,19 @@ public class RegistryConfigs {
             builder.comment("Here are configs that need reloading to take effect");
 
             builder.push("general");
-            CREATIVE_TAB = builder.comment("Enable Creative Tab").define("creative_tab",false);
+            CREATIVE_TAB = builder.comment("Enable Creative Tab").define("creative_tab", false);
 
-            DISPENSERS = builder.comment("Set to false to disable custom dispenser behaviors (i.e: filling jars) if for some reason they are causing trouble").define("dispensers",true);
+            DISPENSERS = builder.comment("Set to false to disable custom dispenser behaviors (i.e: filling jars) if for some reason they are causing trouble").define("dispensers", true);
 
             JAR_TAB = builder.comment("Creates a creative tab full of filled jars")
-                    .define("jar_tab",false);
+                    .define("jar_tab", false);
             CUSTOM_CONFIGURED_SCREEN = builder.comment("Enables custom Configured config screen")
-                    .define("custom_configured_screen",true);
+                    .define("custom_configured_screen", true);
+
+            CONDITIONAL_SIGN_REGISTRATIONS = builder.comment("The mod adds around 150 signs posts and hanging signs that are made with wood types from other mods (which make up the majority of registered blocks the mod adds)." +
+                    "These are always registered and since they are so many could clutter up JEI and slow the game a bit. It's usually forge doesn't reccomend dynamically registering blocks but if you wish to enable such options you can here." +
+                    "With this option enabled the mod will on register the signs made from wood types of the currently installed mods")
+                    .define("conditional_sign_registration", false);
             builder.pop();
 
 
@@ -173,6 +191,7 @@ public class RegistryConfigs {
             NOTICE_BOARD_ENABLED = builder.define(ModRegistry.NOTICE_BOARD_NAME, true);
             CRANK_ENABLED = builder.define(ModRegistry.CRANK_NAME, true);
             JAR_ENABLED = builder.define(ModRegistry.JAR_NAME, true);
+            JAR_TINTED_ENABLED = builder.define(ModRegistry.JAR_TINTED_NAME, false);
             FAUCET_ENABLED = builder.define(ModRegistry.FAUCET_NAME, true);
             TURN_TABLE_ENABLED = builder.define(ModRegistry.TURN_TABLE_NAME, true);
             PISTON_LAUNCHER_ENABLED = builder.define(ModRegistry.SPRING_LAUNCHER_NAME, true);
@@ -194,10 +213,10 @@ public class RegistryConfigs {
             SAFE_ENABLED = builder.define(ModRegistry.SAFE_NAME, true);
             COPPER_LANTERN_ENABLED = builder.define(ModRegistry.COPPER_LANTERN_NAME, true);
             FLUTE_ENABLED = builder.define(ModRegistry.FLUTE_NAME, true);
-            GOLD_TRAPDOOR_ENABLED = builder.define(ModRegistry.GOLD_TRAPDOOR_NAME,true);
-            GOLD_DOOR_ENABLED = builder.define(ModRegistry.GOLD_DOOR_NAME,true);
-            BAMBOO_SPIKES_ENABLED = builder.define(ModRegistry.BAMBOO_SPIKES_NAME,true);
-            TIPPED_SPIKES_ENABLED = builder.define(ModRegistry.TIPPED_SPIKES_NAME,true);
+            GOLD_TRAPDOOR_ENABLED = builder.define(ModRegistry.GOLD_TRAPDOOR_NAME, true);
+            GOLD_DOOR_ENABLED = builder.define(ModRegistry.GOLD_DOOR_NAME, true);
+            BAMBOO_SPIKES_ENABLED = builder.define(ModRegistry.BAMBOO_SPIKES_NAME, true);
+            TIPPED_SPIKES_ENABLED = builder.define(ModRegistry.TIPPED_SPIKES_NAME, true);
             STONE_LAMP_ENABLED = builder.define(ModRegistry.STONE_LAMP_NAME, true);
             END_STONE_LAMP_ENABLED = builder.define(ModRegistry.END_STONE_LAMP_NAME, true);
             BLACKSTONE_LAMP_ENABLED = builder.define(ModRegistry.BLACKSTONE_LAMP_NAME, true);
@@ -205,33 +224,42 @@ public class RegistryConfigs {
             CHECKERBOARD_ENABLED = builder.define(ModRegistry.CHECKER_BLOCK_NAME, true);
             NETHERITE_DOOR_ENABLED = builder.define(ModRegistry.NETHERITE_DOOR_NAME, true);
             NETHERITE_TRAPDOOR_ENABLED = builder.define(ModRegistry.NETHERITE_TRAPDOOR_NAME, true);
-            PANCAKES_ENABLED = builder.define(ModRegistry.PANCAKE_NAME,true);
-            LOCK_BLOCK_ENABLED = builder.define(ModRegistry.LOCK_BLOCK_NAME,true);
-            FLAX_ENABLED = builder.define(ModRegistry.FLAX_NAME,true);
-            ROPE_ENABLED = builder.define(ModRegistry.ROPE_NAME,true);
-            ROPE_ARROW_ENABLED = builder.define(ModRegistry.ROPE_ARROW_NAME,true);
-            PULLEY_ENABLED = builder.define(ModRegistry.PULLEY_BLOCK_NAME,true);
-            FODDER_ENABLED = builder.define(ModRegistry.FODDER_NAME,true);
-            BOMB_ENABLED = builder.define(ModRegistry.BOMB_NAME,true);
-            CRIMSON_LANTERN_ENABLED = builder.define(ModRegistry.CRIMSON_LANTERN_NAME,true);
-            MAGMA_CREAM_BLOCK_ENABLED = builder.define(ModRegistry.MAGMA_CREAM_BLOCK_NAME,true);
-            DAUB_ENABLED = builder.define(ModRegistry.DAUB_NAME,true);
-            WATTLE_AND_DAUB_ENABLED = builder.define("wattle_and_daub",true);
-            TIMBER_FRAME_ENABLED = builder.define(ModRegistry.TIMBER_FRAME_NAME,true);
+            PANCAKES_ENABLED = builder.define(ModRegistry.PANCAKE_NAME, true);
+            LOCK_BLOCK_ENABLED = builder.define(ModRegistry.LOCK_BLOCK_NAME, true);
+            FLAX_ENABLED = builder.define(ModRegistry.FLAX_NAME, true);
+            ROPE_ENABLED = builder.define(ModRegistry.ROPE_NAME, true);
+            ROPE_ARROW_ENABLED = builder.define(ModRegistry.ROPE_ARROW_NAME, true);
+            PULLEY_ENABLED = builder.define(ModRegistry.PULLEY_BLOCK_NAME, true);
+            FODDER_ENABLED = builder.define(ModRegistry.FODDER_NAME, true);
+            BOMB_ENABLED = builder.define(ModRegistry.BOMB_NAME, true);
+            CRIMSON_LANTERN_ENABLED = builder.define(ModRegistry.CRIMSON_LANTERN_NAME, true);
+            MAGMA_CREAM_BLOCK_ENABLED = builder.define(ModRegistry.MAGMA_CREAM_BLOCK_NAME, true);
+            DAUB_ENABLED = builder.define(ModRegistry.DAUB_NAME, true);
+            WATTLE_AND_DAUB_ENABLED = builder.define("wattle_and_daub", true);
+            TIMBER_FRAME_ENABLED = builder.define(ModRegistry.TIMBER_FRAME_NAME, true);
             FLAG_ENABLED = builder.define(ModRegistry.FLAG_NAME, true);
-            TILE_ENABLED = builder.define(ModRegistry.STONE_TILE_NAME,true);
-            GOBLET_ENABLED = builder.define(ModRegistry.GOBLET_NAME,true);
-            RAKED_GRAVEL_ENABLED = builder.define(ModRegistry.RAKED_GRAVEL_NAME,true);
-            STATUE_ENABLED = builder.define(ModRegistry.STATUE_NAME,true);
+            TILE_ENABLED = builder.define(ModRegistry.STONE_TILE_NAME, true);
+            GOBLET_ENABLED = builder.define(ModRegistry.GOBLET_NAME, true);
+            RAKED_GRAVEL_ENABLED = builder.define(ModRegistry.RAKED_GRAVEL_NAME, true);
+            STATUE_ENABLED = builder.define(ModRegistry.STATUE_NAME, true);
             IRON_GATE_ENABLED = builder.define(ModRegistry.IRON_GATE_NAME, true);
             FEATHER_BLOCK_ENABLED = builder.define(ModRegistry.FEATHER_BLOCK_NAME, true);
             FLINT_BLOCK_ENABLED = builder.define(ModRegistry.FLINT_BLOCK_NAME, true);
             SLINGSHOT_ENABLED = builder.define(ModRegistry.SLINGSHOT_NAME, true);
             SHULKER_HELMET_ENABLED = builder.define("shulker_shell", true);
-            CANDY_ENABLED = builder.define(ModRegistry.CANDY_NAME,true);
-            WRENCH_ENABLED = builder.define(ModRegistry.WRENCH_NAME,true);
+            CANDY_ENABLED = builder.define(ModRegistry.CANDY_NAME, true);
+            WRENCH_ENABLED = builder.define(ModRegistry.WRENCH_NAME, true);
+            URN_ENABLED = builder.define(ModRegistry.URN_NAME, true);
+            ASH_ENABLED = builder.define(ModRegistry.ASH_NAME, true);
+            ASH_BRICKS_ENABLED = builder.define(ModRegistry.ASH_BRICKS_NAME, true);
+            ANTIQUE_INK_ENABLED = builder.define(ModRegistry.ANTIQUE_INK_NAME, true);
+            DOORMAT_ENABLED = builder.define(ModRegistry.DOORMAT_NAME, true);
+            FLOWER_BOX_ENABLED = builder.define(ModRegistry.FLOWER_BOX_NAME, true);
+            BLACKSTONE_TILE_ENABLED = builder.define(ModRegistry.BLACKSTONE_TILE_NAME, true);
+            SOAP_ENABLED = builder.define(ModRegistry.SOAP_NAME, true);
 
-            PRESENT_ENABLED = builder.comment("WIP").define(ModRegistry.PRESENT_NAME,true);
+
+            PRESENT_ENABLED = builder.comment("WIP").define(ModRegistry.PRESENT_NAME, true);
 
 
             builder.pop();
@@ -243,8 +271,8 @@ public class RegistryConfigs {
             builder.comment("Here you can disable mixins if they clash with other mods ones")
                     .push("mixins");
             List<String> mixins = MixinConfigs.getMixinClassesNames();
-            for(String c : mixins){
-                MIXIN_VALUES.put(c, builder.define(c.replace("Mixin",""), true));
+            for (String c : mixins) {
+                MIXIN_VALUES.put(c, builder.define(c.replace("Mixin", ""), true));
             }
             builder.pop();
 

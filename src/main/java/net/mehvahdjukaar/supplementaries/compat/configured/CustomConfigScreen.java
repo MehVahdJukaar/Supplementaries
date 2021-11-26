@@ -1,6 +1,8 @@
 package net.mehvahdjukaar.supplementaries.compat.configured;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import com.mrcrayfish.configured.client.screen.ConfigScreen;
@@ -15,14 +17,18 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -30,10 +36,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 //credits to MrCrayfish's Configured Mod
 public class CustomConfigScreen extends ConfigScreen {
@@ -41,7 +44,7 @@ public class CustomConfigScreen extends ConfigScreen {
     private final ResourceLocation background;
 
     private static final Map<String, ItemStack> ICONS = new HashMap<>();
-    private static final ItemStack MAIN_ICON = new ItemStack(ModRegistry.GLOBE_ITEM.get());
+    public static final ItemStack MAIN_ICON = new ItemStack(ModRegistry.GLOBE_ITEM.get());
 
     static {
         addIcon("blocks", Items.OXIDIZED_COPPER);
@@ -52,9 +55,10 @@ public class CustomConfigScreen extends ConfigScreen {
         addIcon("spawns", Items.TURTLE_EGG);
         addIcon("tweaks", ModRegistry.WRENCH.get());
 
+        addIcon("turn particles", ModRegistry.TURN_TABLE.get());
         addIcon("captured mobs", ModRegistry.CAGE_ITEM.get());
         addIcon("flag", ModRegistry.FLAGS_ITEMS.get(DyeColor.WHITE).get());
-        addIcon("structures", ModRegistry.SIGN_POST_ITEMS.get(VanillaWoodTypes.OAK).get());
+        addIcon("way sign", ModRegistry.SIGN_POST_ITEMS.get(VanillaWoodTypes.OAK).get());
         addIcon("bells tweaks", Items.BELL);
         addIcon("cake tweaks", Items.CAKE);
         addIcon("hanging flower pots", Items.FLOWER_POT);
@@ -68,19 +72,25 @@ public class CustomConfigScreen extends ConfigScreen {
         addIcon("map tweaks", Items.FILLED_MAP);
         addIcon("ceiling banners", Items.RED_BANNER);
         addIcon("initialization", ModRegistry.COG_BLOCK_ITEM.get());
-        addIcon("zombie horse", Items.ZOMBIE_SPAWN_EGG);
+        addIcon("zombie horse", Items.ZOMBIE_HORSE_SPAWN_EGG);
         addIcon("placeable gunpowder", Items.GUNPOWDER);
         addIcon("mixins", Items.HOPPER);
         addIcon("server protection", Items.COMMAND_BLOCK);
         addIcon("placeable books", Items.ENCHANTED_BOOK);
         addIcon("sign post", ModRegistry.SIGN_POST_ITEMS.get(VanillaWoodTypes.OAK).get());
         addIcon("wattle and daub", ModRegistry.DAUB_BRACE_ITEM.get());
-        addIcon("shulker shall", Items.SHULKER_SHELL);
+        addIcon("shulker shell", Items.SHULKER_SHELL);
         addIcon("jar tab", ModRegistry.JAR_ITEM.get());
         addIcon("custom configured screen", ModRegistry.WRENCH.get());
         addIcon("dispensers", Items.DISPENSER);
-        addIcon("hanging_sign", ModRegistry.HANGING_SIGNS_ITEMS.get(VanillaWoodTypes.OAK).get());
+        addIcon("hanging sign", ModRegistry.HANGING_SIGNS_ITEMS.get(VanillaWoodTypes.OAK).get());
         addIcon("blue bomb", ModRegistry.BOMB_BLUE_ITEM_ON.get());
+        addIcon("dispensers", Items.DISPENSER);
+        addIcon("cave urns", ModRegistry.URN_ITEM.get());
+        addIcon("structures", Items.BRICKS);
+        addIcon("soap", ModRegistry.SOAP_BLOCK.get());
+        addIcon("mob head tweaks", Items.SKELETON_SKULL);
+        addIcon("conditional sign registration", Items.BARRIER);
     }
 
     private ItemStack getIcon(String name) {
@@ -115,7 +125,7 @@ public class CustomConfigScreen extends ConfigScreen {
         return field;
     }
 
-    private static void addIcon(String s, net.minecraft.world.item.Item i) {
+    private static void addIcon(String s, ItemLike i) {
         ICONS.put(s, new ItemStack(i));
     }
 
@@ -137,8 +147,7 @@ public class CustomConfigScreen extends ConfigScreen {
         //hax
         try {
             FOLDER_ENTRY.set(this, folderEntry);
-        } catch (Exception ignored) {
-        }
+        } catch (Exception ignored) {}
     }
 
     //needed for custom title
@@ -151,35 +160,41 @@ public class CustomConfigScreen extends ConfigScreen {
     protected void init() {
         super.init();
 
-        EntryList newList = new EntryList(Collections.emptyList());
         //replace list with new custom entries
         boolean reg = this.config == ConfigHandler.REGISTRY_CONFIG_OBJECT && !this.folderEntry.isRoot();
-        for (Item c : list.children()) {
-            if (c instanceof FolderItem f) {
-                FolderWrapper wrapper = wrapFolderItem(f);
-                if (wrapper != null) {
-                    newList.children().add(wrapper);
-                    continue;
-                }
-            } else if (reg && c instanceof BooleanItem b) {
-                BooleanWrapper wrapper = wrapBooleanItem(b);
-                if (wrapper != null) {
-                    newList.children().add(wrapper);
-                    continue;
-                }
-            }
-            newList.children().add(c);
-        }
-        this.list.replaceEntries(newList.children());
+
+        this.list.replaceEntries(replaceItems(this.list.children(),reg));
+        Collection<Item> temp = replaceItems(this.entries,reg);
+        this.entries = new ArrayList<>(temp);
 
         //overrides save button
         if (this.saveButton != null && SAVE_CONFIG != null && BUTTON_ON_PRESS != null) {
             try {
                 Button.OnPress press = this::saveButtonAction;
                 BUTTON_ON_PRESS.set(this.saveButton, press);
-            } catch (Exception ignored) {
-            }
+            } catch (Exception ignored) {}
         }
+    }
+
+    private Collection<Item> replaceItems(Collection<Item> originals, boolean fancyBooleans){
+        ArrayList<Item> newList = new ArrayList<>();
+        for (Item c : originals) {
+            if (c instanceof FolderItem f) {
+                FolderWrapper wrapper = wrapFolderItem(f);
+                if (wrapper != null) {
+                    newList.add(wrapper);
+                    continue;
+                }
+            } else if (c instanceof BooleanItem b) {
+                BooleanWrapper wrapper = wrapBooleanItem(b, fancyBooleans);
+                if (wrapper != null) {
+                    newList.add(wrapper);
+                    continue;
+                }
+            }
+            newList.add(c);
+        }
+        return newList;
     }
 
     //sync configs to server when saving
@@ -331,7 +346,7 @@ public class CustomConfigScreen extends ConfigScreen {
     }
 
     @Nullable
-    public BooleanWrapper wrapBooleanItem(BooleanItem old) {
+    public BooleanWrapper wrapBooleanItem(BooleanItem old, boolean displayItem) {
         final FolderEntry folderEntry = CustomConfigScreen.this.folderEntry;
         try {
             ValueHolder<Boolean> holder = (ValueHolder<Boolean>) CONFIG_VALUE_HOLDER.get(old);
@@ -344,18 +359,48 @@ public class CustomConfigScreen extends ConfigScreen {
                 }
             }
             if (found != null) {
-                return new BooleanWrapper(holder);
+                return displayItem ? new BooleanWrapperItem(holder) : new BooleanWrapper(holder);
             }
         } catch (Exception ignored) {
         }
         return null;
     }
 
-    private class BooleanWrapper extends BooleanItem {
+    private class BooleanWrapperItem extends BooleanWrapper {
 
-        private final ItemStack icon;
+        private final ItemStack item;
+
+        public BooleanWrapperItem(ValueHolder<Boolean> holder) {
+            super(holder);
+
+            this.item = getIcon(label.getContents().toLowerCase());
+            this.iconOffset = 7;
+        }
+
+        @Override
+        public void render(PoseStack poseStack, int index, int top, int left, int width, int p_230432_6_, int mouseX, int mouseY, boolean hovered, float partialTicks) {
+            boolean on = this.holder.getValue();
+            super.render(poseStack, index, top, left, width, p_230432_6_, mouseX, mouseY, hovered, partialTicks);
+
+            int light = on ? LightTexture.FULL_BRIGHT : 0;
+            int center = (int) (this.button.x + this.button.getWidth() / 2f);
+            ItemRenderer renderer = CustomConfigScreen.this.itemRenderer;
+
+            RendererUtil.renderGuiItemRelative(this.item, center - 8 - iconOffset, top + 2, renderer, (a, b) -> {
+            }, light, OverlayTexture.NO_OVERLAY);
+        }
+
+        @Override
+        public void onResetValue() {
+            this.button.setMessage(new TextComponent(""));
+        }
+    }
+
+    private class BooleanWrapper extends BooleanItem {
+        private static final int ICON_WIDTH = 12;
         protected Button button;
         protected boolean active = false;
+        protected int iconOffset = 0;
 
         public BooleanWrapper(ValueHolder<Boolean> holder) {
             super(holder);
@@ -364,7 +409,6 @@ public class CustomConfigScreen extends ConfigScreen {
             } catch (Exception ignored) {
             }
             button.setMessage(new TextComponent(""));
-            this.icon = getIcon(label.getContents().toLowerCase());
         }
 
         @Override
@@ -372,20 +416,29 @@ public class CustomConfigScreen extends ConfigScreen {
             this.button.setMessage(new TextComponent(""));
             super.render(poseStack, index, top, left, width, p_230432_6_, mouseX, mouseY, hovered, partialTicks);
 
-            int light = this.holder.getValue() ? LightTexture.FULL_BRIGHT : 0;
+            //TODO: replace with button icon
 
-            int center = (int) (this.button.x + this.button.getWidth() / 2f);
-            ItemRenderer renderer = CustomConfigScreen.this.itemRenderer;
+            RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+            RenderSystem.setShaderTexture(0, CustomConfigSelectScreen.ICONS_TEXTURES);
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1);
+            RenderSystem.enableDepthTest();
+            RenderSystem.enableBlend();
+            RenderSystem.defaultBlendFunc();
+            RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 
-            RendererUtil.renderGuiItemRelative(this.icon, center - 8, top + 2, renderer, (a, b) -> {
-            }, light);
+            int iconX = iconOffset + (int) (this.button.x + Math.ceil((this.button.getWidth() - ICON_WIDTH) / 2f));
+            int iconY = (int) (this.button.y + Math.ceil(((this.button.getHeight() - ICON_WIDTH) / 2f)));
 
+            int u = this.holder.getValue() ? ICON_WIDTH : 0;
+
+            blit(poseStack, iconX, iconY, this.button.getBlitOffset(), (float) u, (float) 0, ICON_WIDTH, ICON_WIDTH, 64, 64);
+
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1);
         }
 
         @Override
         public void onResetValue() {
             this.button.setMessage(new TextComponent(""));
         }
-
     }
 }

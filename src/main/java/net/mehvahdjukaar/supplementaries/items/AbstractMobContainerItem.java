@@ -11,15 +11,18 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.animal.AbstractFish;
+import net.minecraft.world.entity.ai.village.ReputationEventType;
+import net.minecraft.world.entity.animal.Bucketable;
 import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.monster.piglin.Piglin;
+import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -175,6 +178,10 @@ public abstract class AbstractMobContainerItem extends BlockItem {
                         }
                         entity.absMoveTo(v.x(), v.y(), v.z(), context.getRotation(), 0);
 
+                        if (ServerConfigs.cached.CAGE_PERSISTENT_MOBS && entity instanceof Mob mob) {
+                            mob.setPersistenceRequired();
+                        }
+
                         UUID temp = entity.getUUID();
                         if (nbt.contains("UUID")) {
                             UUID id = nbt.getUUID("UUID");
@@ -240,6 +247,9 @@ public abstract class AbstractMobContainerItem extends BlockItem {
         if (entity instanceof Piglin) {
             entity.hurt(DamageSource.playerAttack(player), 0);
         }
+        if (entity instanceof Villager villager && player.level instanceof ServerLevel serverLevel) {
+            serverLevel.onReputationEvent(ReputationEventType.VILLAGER_HURT, player, villager);
+        }
     }
 
     private static List<?> getEntitiesInRange(Mob e) {
@@ -253,10 +263,14 @@ public abstract class AbstractMobContainerItem extends BlockItem {
      */
     public InteractionResult doInteract(ItemStack stack, Player player, Entity entity, InteractionHand hand) {
 
+        if (hand == null) {
+            int a = 1;
+            return InteractionResult.PASS;
+        }
         if (this.isEntityValid(entity, player)) {
             ItemStack bucket = ItemStack.EMPTY;
             //try getting a filled bucket for any water mobs for aquariums and only catchable for others
-            if (entity instanceof WaterAnimal && (this.isAquarium || this.canCatch(entity))) {
+            if ((entity instanceof WaterAnimal || entity instanceof Bucketable) && (this.isAquarium || this.canCatch(entity))) {
                 bucket = this.tryGettingFishBucket(player, entity, hand);
             }
             if (!bucket.isEmpty() || this.canCatch(entity)) {
@@ -267,7 +281,16 @@ public abstract class AbstractMobContainerItem extends BlockItem {
                 this.playCatchSound(player);
                 this.angerNearbyEntities(entity, player);
 
+                if (ServerConfigs.cached.CAGE_PERSISTENT_MOBS && entity instanceof Mob mob) {
+                    mob.setPersistenceRequired();
+                }
+
+                if (entity instanceof Mob mob) {
+                    mob.dropLeash(true, !player.getAbilities().instabuild);
+                }
+
                 Utils.swapItemNBT(player, hand, stack, this.captureEntityInItem(entity, stack, bucket));
+
 
                 entity.remove(Entity.RemovalReason.DISCARDED);
                 return InteractionResult.CONSUME;
@@ -282,6 +305,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
      *
      * @return filled bucket stack or empty stack
      */
+    //TODO: replace with bucketable interface
     private ItemStack tryGettingFishBucket(Player player, Entity entity, InteractionHand hand) {
         ItemStack heldItem = player.getItemInHand(hand).copy();
 

@@ -3,9 +3,12 @@ package net.mehvahdjukaar.supplementaries.block.util;
 import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.supplementaries.api.IRotatable;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.block.blocks.SignPostBlock;
+import net.mehvahdjukaar.supplementaries.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.common.VectorUtils;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -20,6 +23,8 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.piston.PistonBaseBlock;
+import net.minecraft.world.level.block.piston.PistonHeadBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.*;
 import net.minecraft.world.phys.BlockHitResult;
@@ -30,6 +35,13 @@ import java.util.Optional;
 
 public class BlockUtils {
 
+    public static <T extends Comparable<T>, A extends Property<T>> BlockState replaceProperty(BlockState from, BlockState to, A property) {
+        if (from.hasProperty(property)) {
+            return to.setValue(property, from.getValue(property));
+        }
+        return to;
+    }
+
     public static <T extends BlockEntity & IOwnerProtected> void addOptionalOwnership(LivingEntity placer, T tileEntity) {
         if (ServerConfigs.cached.SERVER_PROTECTION && placer instanceof Player) {
             tileEntity.setOwner(placer.getUUID());
@@ -38,9 +50,8 @@ public class BlockUtils {
 
     public static void addOptionalOwnership(LivingEntity placer, Level world, BlockPos pos) {
         if (ServerConfigs.cached.SERVER_PROTECTION && placer instanceof Player) {
-            BlockEntity tile = world.getBlockEntity(pos);
-            if (tile instanceof IOwnerProtected) {
-                ((IOwnerProtected) tile).setOwner(placer.getUUID());
+            if (world.getBlockEntity(pos) instanceof IOwnerProtected tile) {
+                tile.setOwner(placer.getUUID());
             }
         }
     }
@@ -58,40 +69,47 @@ public class BlockUtils {
     }
 
     //rotation stuff
-
-    public static boolean tryRotatingBlockAndConnected(Direction face, boolean ccw, BlockPos targetPos, Level level) {
+    //returns rotation direction axis which might be different that the clicked face
+    public static Optional<Direction> tryRotatingBlockAndConnected(Direction face, boolean ccw, BlockPos targetPos, Level level, Vec3 hit) {
         BlockState state = level.getBlockState(targetPos);
-        if (tryRotatingSpecial(face, ccw, targetPos, level, state)) return true;
-        return tryRotatingBlock(face, ccw, targetPos, level, state);
+        if (state.getBlock() instanceof IRotatable rotatable) {
+            return rotatable.rotateOverAxis(state, level, targetPos, ccw ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90, face, hit);
+        }
+        Optional<Direction> special = tryRotatingSpecial(face, ccw, targetPos, level, state, hit);
+        if (special.isPresent()) return special;
+        return tryRotatingBlock(face, ccw, targetPos, level, state, hit);
     }
 
-    public static boolean tryRotatingBlock(Direction face, boolean ccw, BlockPos targetPos, Level level) {
-        return tryRotatingBlock(face, ccw, targetPos, level, level.getBlockState(targetPos));
+    public static Optional<Direction> tryRotatingBlock(Direction face, boolean ccw, BlockPos targetPos, Level level, Vec3 hit) {
+        return tryRotatingBlock(face, ccw, targetPos, level, level.getBlockState(targetPos), hit);
     }
 
     // can be called on both sides
-    public static boolean tryRotatingBlock(Direction dir, boolean ccw, BlockPos targetPos, Level world, BlockState state) {
+    // returns the direction onto which the block was actually rotated
+    public static Optional<Direction> tryRotatingBlock(Direction dir, boolean ccw, BlockPos targetPos, Level world, BlockState state, Vec3 hit) {
+
+        //interface stuff
+        if (state.getBlock() instanceof IRotatable rotatable) {
+            return rotatable.rotateOverAxis(state, world, targetPos, ccw ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90, dir, hit);
+        }
+
         Optional<BlockState> optional = getRotatedState(dir, ccw, targetPos, world, state);
         if (optional.isPresent()) {
             BlockState rotated = optional.get();
-            Block b = state.getBlock();
-            if (rotated != state || (b instanceof IRotatable r && r.alwaysRotateOverAxis(state, dir))) {
 
-                if (rotated.canSurvive(world, targetPos)) {
+            if (rotated.canSurvive(world, targetPos)) {
+                rotated = Block.updateFromNeighbourShapes(rotated, world, targetPos);
+
+                if (rotated != state) {
                     if (world instanceof ServerLevel serverLevel) {
-                        rotated = Block.updateFromNeighbourShapes(rotated, world, targetPos);
                         world.setBlock(targetPos, rotated, 11);
                         //level.updateNeighborsAtExceptFromFacing(pos, newState.getBlock(), mydir.getOpposite());
                     }
-
-                    if (b instanceof IRotatable r) r.onRotated(rotated, state, dir,
-                            ccw ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90, world, targetPos);
-
-                    return true;
+                    return Optional.of(dir);
                 }
             }
         }
-        return false;
+        return Optional.empty();
     }
 
     public static Optional<BlockState> getRotatedState(Direction dir, boolean ccw, BlockPos targetPos, Level world, BlockState state) {
@@ -100,31 +118,25 @@ public class BlockUtils {
         if (isBlacklisted(state)) return Optional.empty();
 
         Rotation rot = ccw ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90;
-
         Block block = state.getBlock();
 
-        if (block instanceof IRotatable rotatable) {
-            return Optional.of(rotatable.rotateState(state, world, targetPos, rot, dir));
-        }
         if (state.hasProperty(BlockProperties.FLIPPED)) {
             return Optional.of(state.cycle(BlockProperties.FLIPPED));
         }
         //horizontal facing blocks -easy
         if (dir.getAxis() == Direction.Axis.Y) {
+
+            if (block == Blocks.CAKE) {
+                int bites = state.getValue(CakeBlock.BITES);
+                if (bites != 0) return Optional.of(ModRegistry.DIRECTIONAL_CAKE.get().defaultBlockState()
+                        .setValue(CakeBlock.BITES, bites).rotate(world, targetPos, rot));
+            }
+
             return Optional.of(state.rotate(world, targetPos, rot));
         }
         // 6 dir blocks blocks
         if (state.hasProperty(BlockStateProperties.FACING)) {
-            Vec3 targetNormal = VectorUtils.ItoD(state.getValue(BlockStateProperties.FACING).getNormal());
-            Vec3 myNormal = VectorUtils.ItoD(dir.getNormal());
-            if (!ccw) targetNormal = targetNormal.scale(-1);
-
-            Vec3 rotated = myNormal.cross(targetNormal);
-            // not on same axis, can rotate
-            if (rotated != Vec3.ZERO) {
-                Direction newDir = Direction.getNearest(rotated.x(), rotated.y(), rotated.z());
-                return Optional.of(state.setValue(BlockStateProperties.FACING, newDir));
-            }
+            return Optional.of(rotateBlockStateOnAxis(state, dir, ccw));
         }
         // axis blocks
         if (state.hasProperty(BlockStateProperties.AXIS)) {
@@ -164,6 +176,21 @@ public class BlockUtils {
         return Optional.empty();
     }
 
+    //check if it has facing property
+    private static BlockState rotateBlockStateOnAxis(BlockState state, Direction axis, boolean ccw) {
+        Vec3 targetNormal = VectorUtils.ItoD(state.getValue(BlockStateProperties.FACING).getNormal());
+        Vec3 myNormal = VectorUtils.ItoD(axis.getNormal());
+        if (!ccw) targetNormal = targetNormal.scale(-1);
+
+        Vec3 rotated = myNormal.cross(targetNormal);
+        // not on same axis, can rotate
+        if (rotated != Vec3.ZERO) {
+            Direction newDir = Direction.getNearest(rotated.x(), rotated.y(), rotated.z());
+            return state.setValue(BlockStateProperties.FACING, newDir);
+        }
+        return state;
+    }
+
     private static boolean isBlacklisted(BlockState state) {
         // double blocks
         if (state.getBlock() instanceof BedBlock) return true;
@@ -181,9 +208,52 @@ public class BlockUtils {
     }
 
 
-    private static boolean tryRotatingSpecial(Direction face, boolean ccw, BlockPos pos, Level level, BlockState state) {
+    private static Optional<Direction> tryRotatingSpecial(Direction face, boolean ccw, BlockPos pos, Level level, BlockState state, Vec3 hit) {
         Block b = state.getBlock();
         Rotation rot = ccw ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90;
+        if (state.hasProperty(BlockStateProperties.ROTATION_16)) {
+            int r = state.getValue(BlockStateProperties.ROTATION_16);
+            r += (ccw ? -1 : 1);
+            if (r < 0) r += 16;
+            r = r % 16;
+            level.setBlock(pos, state.setValue(BlockStateProperties.ROTATION_16, r), 2);
+            return Optional.of(Direction.UP);
+        }
+
+        if (state.hasProperty(BlockStateProperties.EXTENDED) && state.getValue(BlockStateProperties.EXTENDED)) {
+            if (state.hasProperty(PistonHeadBlock.FACING)) {
+                BlockState newBase = rotateBlockStateOnAxis(state, face, ccw);
+                BlockPos headPos = pos.relative(state.getValue(PistonHeadBlock.FACING));
+                if (level.getBlockState(headPos).hasProperty(PistonHeadBlock.SHORT)) {
+                    BlockPos newHeadPos = pos.relative(newBase.getValue(PistonHeadBlock.FACING));
+                    if (level.getBlockState(newHeadPos).getMaterial().isReplaceable()) {
+
+                        level.setBlock(newHeadPos, rotateBlockStateOnAxis(level.getBlockState(headPos), face, ccw), 2);
+                        level.setBlock(pos, newBase, 2);
+                        level.removeBlock(headPos, false);
+                        return Optional.of(face);
+                    }
+                }
+                return Optional.empty();
+            }
+        }
+        if (state.hasProperty(BlockStateProperties.SHORT)) {
+            if (state.hasProperty(PistonHeadBlock.FACING)) {
+                BlockState newBase = rotateBlockStateOnAxis(state, face, ccw);
+                BlockPos headPos = pos.relative(state.getValue(PistonHeadBlock.FACING).getOpposite());
+                if (level.getBlockState(headPos).hasProperty(PistonBaseBlock.EXTENDED)) {
+                    BlockPos newHeadPos = pos.relative(newBase.getValue(PistonHeadBlock.FACING).getOpposite());
+                    if (level.getBlockState(newHeadPos).getMaterial().isReplaceable()) {
+
+                        level.setBlock(newHeadPos, rotateBlockStateOnAxis(level.getBlockState(headPos), face, ccw), 2);
+                        level.setBlock(pos, newBase, 2);
+                        level.removeBlock(headPos, false);
+                        return Optional.of(face);
+                    }
+                }
+                return Optional.empty();
+            }
+        }
         if (b instanceof BedBlock && face.getAxis() == Direction.Axis.Y) {
             BlockState newBed = state.rotate(level, pos, rot);
             BlockPos oldPos = pos.relative(getConnectedBedDirection(state));
@@ -192,38 +262,41 @@ public class BlockUtils {
                 level.setBlock(targetPos, level.getBlockState(oldPos).rotate(level, oldPos, rot), 2);
                 level.setBlock(pos, newBed, 2);
                 level.removeBlock(oldPos, false);
-                return true;
+                return Optional.of(face);
             }
+            return Optional.empty();
         }
-        if (b instanceof ChestBlock && face.getAxis() == Direction.Axis.Y ) {
-            if(state.getValue(ChestBlock.TYPE) == ChestType.SINGLE) return false;
-            BlockState newChest = state.rotate(level, pos, rot);
-            BlockPos oldPos = pos.relative(ChestBlock.getConnectedDirection(state));
-            BlockPos targetPos = pos.relative(ChestBlock.getConnectedDirection(newChest));
-            if (level.getBlockState(targetPos).getMaterial().isReplaceable()) {
-                BlockState connectedNewState = level.getBlockState(oldPos).rotate(level, oldPos, rot);
-                level.setBlock(targetPos, connectedNewState, 2);
-                level.setBlock(pos, newChest, 2);
+        if (b instanceof ChestBlock && face.getAxis() == Direction.Axis.Y) {
+            if (state.getValue(ChestBlock.TYPE) != ChestType.SINGLE) {
+                BlockState newChest = state.rotate(level, pos, rot);
+                BlockPos oldPos = pos.relative(ChestBlock.getConnectedDirection(state));
+                BlockPos targetPos = pos.relative(ChestBlock.getConnectedDirection(newChest));
+                if (level.getBlockState(targetPos).getMaterial().isReplaceable()) {
+                    BlockState connectedNewState = level.getBlockState(oldPos).rotate(level, oldPos, rot);
+                    level.setBlock(targetPos, connectedNewState, 2);
+                    level.setBlock(pos, newChest, 2);
 
-                BlockEntity tile = level.getBlockEntity(oldPos);
-                if (tile != null) {
-                    BlockEntity target = BlockEntity.loadStatic(targetPos, connectedNewState, tile.save(new CompoundTag()));
-                    if (target != null) {
-                        level.setBlockEntity(target);
+                    BlockEntity tile = level.getBlockEntity(oldPos);
+                    if (tile != null) {
+                        BlockEntity target = BlockEntity.loadStatic(targetPos, connectedNewState, tile.save(new CompoundTag()));
+                        if (target != null) {
+                            level.setBlockEntity(target);
+                        }
+                        tile.setRemoved();
                     }
-                    tile.setRemoved();
-                }
 
-                level.setBlockAndUpdate(oldPos, Blocks.AIR.defaultBlockState());
-                return true;
+                    level.setBlockAndUpdate(oldPos, Blocks.AIR.defaultBlockState());
+                    return Optional.of(face);
+                }
             }
+            return Optional.empty();
         }
         if (DoorBlock.isWoodenDoor(state)) {
             //TODO: add
             //level.setBlockAndUpdate(state.rotate(level, pos, rot));
 
         }
-        return false;
+        return Optional.empty();
     }
 
     private static Direction getConnectedBedDirection(BlockState bedState) {
@@ -232,5 +305,7 @@ public class BlockUtils {
         return part == BedPart.FOOT ? dir : dir.getOpposite();
     }
 
-    //TODO: add rotation vertical slabs & dorrs
+    //TODO: add rotation vertical slabs & doors
+
+
 }

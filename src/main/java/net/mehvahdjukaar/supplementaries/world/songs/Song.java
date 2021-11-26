@@ -91,14 +91,20 @@ public class Song {
 
     public List<Integer> getNoteToPlay(long timeSinceStarted) {
         List<Integer> toPlay = new ArrayList<>();
-        int currentIndex = (int) (timeSinceStarted / this.getTempo()) % this.notes.length;
-        int n = notes[currentIndex];
-        while (n > 1) {
-            toPlay.add(Mth.clamp(n % 100, 0, 25));
-            n = n / 100;
+
+        try {
+            int currentIndex = (int) (timeSinceStarted / this.getTempo()) % this.notes.length;
+            int n = notes[currentIndex];
+            while (n > 1) {
+                toPlay.add(Mth.clamp(n % 100, 0, 25));
+                n = n / 100;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return toPlay;
     }
+    //TODO: fix 0 ength songs
 
     @Override
     public String toString() {

@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.entities;
 
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.world.explosion.BombExplosion;
@@ -202,15 +203,13 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
     }
 
     public static boolean canBreakBlock(BlockState state, boolean blue) {
-        switch (blue ? ServerConfigs.cached.BOMB_BLUE_BREAKS : ServerConfigs.cached.BOMB_BREAKS) {
-            default:
-            case NONE:
-                return false;
-            case ALL:
-                return true;
-            case WEAK:
-                return state.canBeReplaced(Fluids.WATER) || state.getBlock() instanceof TntBlock;
-        }
+        return switch (blue ? ServerConfigs.cached.BOMB_BLUE_BREAKS : ServerConfigs.cached.BOMB_BREAKS) {
+            default -> false;
+            case ALL -> true;
+            case WEAK -> state.canBeReplaced(Fluids.WATER) ||
+                    state.is(ModTags.BOMB_BREAKABLE) ||
+                    state.getBlock() instanceof TntBlock;
+        };
     }
 
 

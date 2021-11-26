@@ -2,7 +2,8 @@
   "replace": false,
   "values": [
     "#forge:ingots/nether_brick",
-    "#forge:ingots/brick"
+    "#forge:ingots/brick",
+    "supplementaries:ash_brick"
   ],
   "optional": [
     "unnamedanimalmod:dried_mud_brick",

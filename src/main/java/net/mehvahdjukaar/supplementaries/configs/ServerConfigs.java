@@ -147,6 +147,8 @@ public class ServerConfigs {
         public static ForgeConfigSpec.IntValue GUNPOWDER_BURN_SPEED;
         public static ForgeConfigSpec.IntValue GUNPOWDER_SPREAD_AGE;
         public static ForgeConfigSpec.BooleanValue MIXED_BOOKS;
+        public static ForgeConfigSpec.BooleanValue SKULL_PILES;
+        public static ForgeConfigSpec.BooleanValue SKULL_CANDLES;
 
         private static void init(ForgeConfigSpec.Builder builder) {
             builder.comment("Vanilla tweaks")
@@ -156,8 +158,16 @@ public class ServerConfigs {
             builder.push("cake_tweaks");
             DOUBLE_CAKE_PLACEMENT = builder.comment("Allows you to place a cake on top of another")
                     .define("double_cake", true);
-            DIRECTIONAL_CAKE = builder.comment("Replaces normal cake placement with a directional one")
+            DIRECTIONAL_CAKE = builder.comment("Allows eating a cake from every side")
                     .define("directional_cake", true);
+            builder.pop();
+
+            //skulls stuff
+            builder.push("mob_head_tweaks");
+            SKULL_PILES = builder.comment("Allows you to place two mob heads on top of each other")
+                    .define("skull_piles", true);
+            SKULL_CANDLES = builder.comment("Allows candles to be placed on top of skulls")
+                    .define("skull_candles", true);
             builder.pop();
 
             //hanging pot
@@ -314,10 +324,12 @@ public class ServerConfigs {
         public static ForgeConfigSpec.BooleanValue JAR_EAT;
         public static ForgeConfigSpec.BooleanValue JAR_ITEM_DRINK;
         public static ForgeConfigSpec.BooleanValue JAR_AUTO_DETECT;
+        public static ForgeConfigSpec.BooleanValue GOBLET_DRINK;
 
         public static ForgeConfigSpec.BooleanValue CAGE_ALL_MOBS;
         public static ForgeConfigSpec.BooleanValue CAGE_ALL_BABIES;
         public static ForgeConfigSpec.BooleanValue CAGE_AUTO_DETECT;
+        public static ForgeConfigSpec.BooleanValue CAGE_PERSISTENT_MOBS;
 
         public static ForgeConfigSpec.BooleanValue NOTICE_BOARDS_UNRESTRICTED;
 
@@ -427,6 +439,12 @@ public class ServerConfigs {
                     .define("cage_allow_all_babies", false);
             CAGE_AUTO_DETECT = builder.comment("Dynamically allows all small mobs inside cages depending on their hitbox size")
                     .define("cage_auto_detect", false);
+            CAGE_PERSISTENT_MOBS =  builder.comment("Makes it so all (hostile) mobs captured by cages and jars will be set to persistent so they won't despawn when released")
+                    .define("persistent_mobs", false);
+            builder.pop();
+
+            builder.push("goblet");
+            GOBLET_DRINK = builder.comment("Allows drinking from goblets").define("allow_drinking", true);
             builder.pop();
 
             //notice boards
@@ -531,10 +549,12 @@ public class ServerConfigs {
         public static ForgeConfigSpec.IntValue ROAD_SIGN_DISTANCE_AVR;
 
         public static ForgeConfigSpec.BooleanValue WILD_FLAX_ENABLED;
+        public static ForgeConfigSpec.BooleanValue URN_PILE_ENABLED;
 
         private static void init(ForgeConfigSpec.Builder builder) {
             builder.comment("Configure spawning conditions")
                     .push("spawns");
+            builder.push("entities");
             builder.push("firefly");
             List<String> defaultBiomes = Arrays.asList("minecraft:swamp", "minecraft:swamp_hills", "minecraft:plains",
                     "minecraft:sunflower_plains", "minecraft:dark_forest", "minecraft:dark_forest_hills", "byg:bayou",
@@ -558,6 +578,10 @@ public class ServerConfigs {
             FIREFLY_MAX = builder.comment("Maximum group size")
                     .defineInRange("max", 9, 0, 64);
 
+            builder.pop();
+
+            builder.push("owl");
+            builder.pop();
             builder.pop();
 
             builder.push("structures");
@@ -586,6 +610,10 @@ public class ServerConfigs {
 
             builder.push("wild_flax");
             WILD_FLAX_ENABLED = builder.define("enabled", true);
+            builder.pop();
+
+            builder.push("cave_urns");
+            URN_PILE_ENABLED = builder.define("enabled", true);
             builder.pop();
 
             builder.pop();
@@ -622,6 +650,7 @@ public class ServerConfigs {
 
     //maybe not need but hey
     public static class cached {
+
         //items
         public static String ROPE_ARROW_ROPE;
         public static Block ROPE_ARROW_BLOCK;
@@ -664,6 +693,8 @@ public class ServerConfigs {
         public static boolean PLACEABLE_GUNPOWDER;
         public static int GUNPOWDER_BURN_SPEED;
         public static int GUNPOWDER_SPREAD_AGE;
+        public static boolean SKULL_PILES;
+        public static boolean SKULL_CANDLES;
         //spawns
         public static int FIREFLY_MIN;
         public static int FIREFLY_MAX;
@@ -706,6 +737,8 @@ public class ServerConfigs {
         public static boolean CONSISTENT_GATE;
         public static boolean STICK_POLE;
         public static int STICK_POLE_LENGTH;
+        public static boolean GOBLET_DRINK;
+        public static boolean CAGE_PERSISTENT_MOBS;
 
         public static boolean SERVER_PROTECTION;
 
@@ -741,6 +774,8 @@ public class ServerConfigs {
             PLACEABLE_GUNPOWDER = tweaks.PLACEABLE_GUNPOWDER.get();
             GUNPOWDER_BURN_SPEED = tweaks.GUNPOWDER_BURN_SPEED.get();
             GUNPOWDER_SPREAD_AGE = tweaks.GUNPOWDER_SPREAD_AGE.get();
+            SKULL_PILES = tweaks.SKULL_PILES.get();
+            SKULL_CANDLES = tweaks.SKULL_CANDLES.get();
 
             ROPE_ARROW_CAPACITY = item.ROPE_ARROW_CAPACITY.get();
             ROPE_ARROW_ROPE = item.ROPE_ARROW_ROPE.get();
@@ -791,6 +826,7 @@ public class ServerConfigs {
             CAGE_ALL_MOBS = block.CAGE_ALL_MOBS.get();
             CAGE_ALL_BABIES = block.CAGE_ALL_BABIES.get();
             CAGE_AUTO_DETECT = block.CAGE_AUTO_DETECT.get();
+            CAGE_PERSISTENT_MOBS = block.CAGE_PERSISTENT_MOBS.get();
 
             SACK_INCREMENT = block.SACK_INCREMENT.get();
             SACK_PENALTY = block.SACK_PENALTY.get();
@@ -813,6 +849,8 @@ public class ServerConfigs {
 
             STICK_POLE = block.STICK_POLE.get();
             STICK_POLE_LENGTH = block.STICK_POLE_LENGTH.get();
+
+            GOBLET_DRINK = block.GOBLET_DRINK.get();
 
             FIREFLY_PERIOD = entity.FIREFLY_PERIOD.get();
             FIREFLY_SPEED = entity.FIREFLY_SPEED.get();

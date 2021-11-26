@@ -214,10 +214,10 @@ public class BombExplosion extends Explosion {
                             }
                         }
 
-                        if (entity instanceof LivingEntity) {
+                        if (entity instanceof LivingEntity livingEntity) {
                             if (blue) {
                                 if (!isPlayer || (!playerentity.isSpectator() && !playerentity.isCreative())) {
-                                    ((LivingEntity) entity).addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 20 * 30));
+                                    livingEntity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 20 * 30));
                                     entity.setSecondsOnFire(10);
                                 }
                             }

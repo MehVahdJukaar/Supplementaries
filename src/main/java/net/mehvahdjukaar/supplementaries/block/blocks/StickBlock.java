@@ -13,6 +13,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -33,16 +34,20 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.api.IRotationLockable;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class StickBlock extends WaterBlock implements IRotationLockable, IRotatable {
     protected static final VoxelShape Y_AXIS_AABB = Block.box(7D, 0.0D, 7D, 9D, 16.0D, 9D);
@@ -66,14 +71,22 @@ public class StickBlock extends WaterBlock implements IRotationLockable, IRotata
 
     private final int fireSpread;
 
-    public StickBlock(Properties properties, int fireSpread) {
+    private final Item item;
+
+    public StickBlock(Properties properties, int fireSpread, String itemRes) {
         super(properties);
+        this.item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemRes));
+
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, Boolean.FALSE).setValue(AXIS_Y,true).setValue(AXIS_X,false).setValue(AXIS_Z,false));
         this.fireSpread = fireSpread;
     }
 
-    public StickBlock(Properties properties) {
-        this(properties, 60);
+    public StickBlock(Properties properties, String itemName) {
+        this(properties, 60, itemName);
+    }
+
+    public Item getStickItem() {
+        return item;
     }
 
     @Override
@@ -216,14 +229,23 @@ public class StickBlock extends WaterBlock implements IRotationLockable, IRotata
     }
 
     @Override
-    public BlockState rotateState(BlockState state, LevelAccessor world, BlockPos pos, Rotation rotation, Direction axis) {
+    public Optional<BlockState> getRotatedState(BlockState state, LevelAccessor world, BlockPos pos, Rotation rotation, Direction axis, @org.jetbrains.annotations.Nullable Vec3 hit) {
         boolean x = state.getValue(AXIS_X);
         boolean y = state.getValue(AXIS_Y);
         boolean z = state.getValue(AXIS_Z);
-        return switch (axis.getAxis()){
+        return Optional.of(switch (axis.getAxis()){
             case Y -> state.setValue(AXIS_X, z).setValue(AXIS_Z, x);
             case X -> state.setValue(AXIS_Y, z).setValue(AXIS_Z, y);
             case Z -> state.setValue(AXIS_X, y).setValue(AXIS_Y, x);
-        };
+        });
+    }
+
+    @Override
+    public List<ItemStack> getDrops(BlockState state, LootContext.Builder pBuilder) {
+        int i = 0;
+        if(state.getValue(AXIS_X))i++;
+        if(state.getValue(AXIS_Y))i++;
+        if(state.getValue(AXIS_Z))i++;
+        return List.of(new ItemStack(this.item, i));
     }
 }

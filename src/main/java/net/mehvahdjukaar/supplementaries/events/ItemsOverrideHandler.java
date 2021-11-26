@@ -4,7 +4,11 @@ import net.mehvahdjukaar.selene.map.ExpandedMapData;
 import net.mehvahdjukaar.selene.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.blocks.*;
+import net.mehvahdjukaar.supplementaries.block.tiles.CandleSkullBlockTile;
+import net.mehvahdjukaar.supplementaries.block.tiles.DoubleSkullBlockTile;
 import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
+import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
+import net.mehvahdjukaar.supplementaries.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.BlockItemUtils;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
@@ -23,11 +27,11 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.BaseComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -37,8 +41,12 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -47,6 +55,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
 public class ItemsOverrideHandler {
@@ -68,7 +77,7 @@ public class ItemsOverrideHandler {
 
     public static void registerOverrides() {
 
-        List<ItemUseOnBlockOverride> HPitemActionOnBlock = new ArrayList<>();
+        List<ItemUseOnBlockOverride> HPItemActionOnBlock = new ArrayList<>();
         List<ItemUseOnBlockOverride> itemActionOnBlock = new ArrayList<>();
 
         List<ItemUseOverride> itemAction = new ArrayList<>();
@@ -81,7 +90,7 @@ public class ItemsOverrideHandler {
         itemAction.add(new ThrowableBrickBehavior());
         itemAction.add(new ClockItemBehavior());
 
-        HPitemActionOnBlock.add(new WallLanternBehavior());
+        HPItemActionOnBlock.add(new WallLanternBehavior());
 
         itemActionOnBlock.add(new WrenchBehavior());
         itemActionOnBlock.add(new WallLanternBehavior());
@@ -94,13 +103,16 @@ public class ItemsOverrideHandler {
         itemActionOnBlock.add(new BookPileBehavior());
         itemActionOnBlock.add(new BookPileHorizontalBehavior());
         itemActionOnBlock.add(new PlaceableRodsBehavior());
-        itemActionOnBlock.add(new PlaceableSticksBehavior(ModRegistry.STICK_BLOCK, Items.STICK));
+        itemActionOnBlock.add(new PlaceableSticksBehavior<>(ModRegistry.STICK_BLOCK, Items.STICK));
+        itemActionOnBlock.add(new AntiqueInkBehavior());
+        itemActionOnBlock.add(new SkullPileBehavior());
+        itemActionOnBlock.add(new SkullCandlesBehavior());
 
-        PlaceableSticksBehavior.optional(ModRegistry.PRISMARINE_ROD_BLOCK, "upgrade_aquatic:prismarine_rod")
+        PlaceableSticksBehavior.optional(ModRegistry.PRISMARINE_ROD_BLOCK, ModRegistry.PRISMARINE_ROD_BLOCK.get().getStickItem())
                 .ifPresent(itemActionOnBlock::add);
-        PlaceableSticksBehavior.optional(ModRegistry.PROPELPLANT_ROD_BLOCK, "nethers_delight:propelplant_cane")
+        PlaceableSticksBehavior.optional(ModRegistry.PROPELPLANT_ROD_BLOCK, ModRegistry.PROPELPLANT_ROD_BLOCK.get().getStickItem())
                 .ifPresent(itemActionOnBlock::add);
-        PlaceableSticksBehavior.optional(ModRegistry.EDELWOOD_STICK_BLOCK, "forbidden_arcanus:edelwood_stick")
+        PlaceableSticksBehavior.optional(ModRegistry.EDELWOOD_STICK_BLOCK, ModRegistry.EDELWOOD_STICK_BLOCK.get().getStickItem())
                 .ifPresent(itemActionOnBlock::add);
 
         for (Item i : ForgeRegistries.ITEMS) {
@@ -128,7 +140,7 @@ public class ItemsOverrideHandler {
                 }
 
             }
-            for (ItemUseOnBlockOverride b : HPitemActionOnBlock) {
+            for (ItemUseOnBlockOverride b : HPItemActionOnBlock) {
                 try {
                     if (b.appliesToItem(i)) {
                         HP_ON_BLOCK_OVERRIDES.put(i, b);
@@ -153,7 +165,7 @@ public class ItemsOverrideHandler {
         }
     }
 
-    public static void tryHighPriorityOverride(PlayerInteractEvent.RightClickBlock event, ItemStack stack) {
+    public static void tryHighPriorityClickedBlockOverride(PlayerInteractEvent.RightClickBlock event, ItemStack stack) {
         Item item = stack.getItem();
 
         ItemUseOnBlockOverride override = HP_ON_BLOCK_OVERRIDES.get(item);
@@ -169,7 +181,7 @@ public class ItemsOverrideHandler {
 
 
     //item clicked on block overrides
-    public static void tryPerformOverride(PlayerInteractEvent.RightClickBlock event, ItemStack stack, boolean isRanged) {
+    public static void tryPerformClickedBlockOverride(PlayerInteractEvent.RightClickBlock event, ItemStack stack, boolean isRanged) {
         Item item = stack.getItem();
         Player player = event.getPlayer();
 
@@ -202,7 +214,7 @@ public class ItemsOverrideHandler {
     }
 
     //item clicked overrides
-    public static void tryPerformOverride(PlayerInteractEvent.RightClickItem event, ItemStack stack) {
+    public static void tryPerformClickedItemOverride(PlayerInteractEvent.RightClickItem event, ItemStack stack) {
         Item item = stack.getItem();
 
         ItemUseOverride override = ITEM_USE_OVERRIDES.get(item);
@@ -268,7 +280,8 @@ public class ItemsOverrideHandler {
             return appliesToItem(item);
         }
 
-        //if this item can place a block
+        //if this item can place a block. needed for items that dont already have one.
+        //TODO: fix block map
         @Nullable
         public Block getPlacedBlock(Item i) {
             return null;
@@ -353,7 +366,7 @@ public class ItemsOverrideHandler {
         @Override
         public InteractionResult tryPerformingAction(BlockState state, BlockPos pos, Level world, Player player, InteractionHand hand, ItemStack stack, BlockHitResult hit) {
             //lets converting to candle cake
-            if (state.is(Blocks.CAKE) && (stack.is(ItemTags.CANDLES) || state.getValue(CakeBlock.BITES) != 6)) {
+            if (state.is(Blocks.CAKE) && (stack.is(ItemTags.CANDLES) || player.getDirection() == Direction.EAST || state.getValue(CakeBlock.BITES) != 0)) {
                 return InteractionResult.PASS;
             }
             if (!(ServerConfigs.cached.DOUBLE_CAKE_PLACEMENT && stack.is(Items.CAKE))) {
@@ -415,7 +428,8 @@ public class ItemsOverrideHandler {
         public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand, ItemStack stack, BlockHitResult hit, boolean isRanged) {
             BlockPos pos = hit.getBlockPos();
             Block b = world.getBlockState(pos).getBlock();
-            if (b instanceof BedBlock || BLOCK_MARKERS.contains(b)) {
+            if (b instanceof BedBlock || BLOCK_MARKERS.contains(b) ||
+                    world.getFluidState(pos).getType().getRegistryName().toString().equals("betterportals:portal_fluid")) {
                 if (!world.isClientSide) {
                     if (MapItem.getSavedData(stack, world) instanceof ExpandedMapData data) {
                         data.toggleCustomDecoration(world, pos);
@@ -521,24 +535,9 @@ public class ItemsOverrideHandler {
             boolean isDirectional = state.getBlock() == ModRegistry.DIRECTIONAL_CAKE.get();
 
             if ((isDirectional && state.getValue(DirectionalCakeBlock.BITES) == 0) || state == Blocks.CAKE.defaultBlockState()) {
-                BlockState newState = ModRegistry.DOUBLE_CAKE.get().defaultBlockState()
-                        .setValue(DoubleCakeBlock.FACING, isDirectional ? state.getValue(DoubleCakeBlock.FACING) : Direction.WEST)
-                        .setValue(DoubleCakeBlock.WATERLOGGED, world.getFluidState(pos).getType() == Fluids.WATER);
-                if (!world.setBlock(pos, newState, 3)) {
-                    return InteractionResult.FAIL;
-                }
-                if (player instanceof ServerPlayer) {
-                    CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayer) player, pos, stack);
-                }
-                SoundType soundtype = newState.getSoundType(world, pos, player);
-                world.playSound(player, pos, newState.getSoundType(world, pos, player).getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
-                if (player == null || !player.getAbilities().instabuild) {
-                    stack.shrink(1);
-                }
-                if (player instanceof ServerPlayer && !isRanged) {
-                    CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayer) player, pos, stack);
-                }
-                return InteractionResult.sidedSuccess(world.isClientSide);
+
+                return replaceSimilarBlock(ModRegistry.DOUBLE_CAKE.get(), player, stack, pos, world, state, isRanged,
+                        null, DoubleCakeBlock.FACING);
             }
             return InteractionResult.PASS;
         }
@@ -628,20 +627,19 @@ public class ItemsOverrideHandler {
         }
     }
 
-    private static class PlaceableSticksBehavior extends ItemUseOnBlockOverride {
+    private static class PlaceableSticksBehavior<T extends Block> extends ItemUseOnBlockOverride {
 
-        private final Supplier<Block> block;
+        private final Supplier<T> block;
         private final Item item;
 
-        private PlaceableSticksBehavior(Supplier<Block> block, Item item) {
+        private PlaceableSticksBehavior(Supplier<T> block, Item item) {
             this.block = block;
             this.item = item;
         }
 
-        private static Optional<PlaceableSticksBehavior> optional(Supplier<Block> block, String itemRes) {
-            Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemRes));
+        private static <A extends Block> Optional<PlaceableSticksBehavior<A>> optional(Supplier<A> block, Item item) {
             if (item != null && item != Items.AIR) {
-                return Optional.of(new PlaceableSticksBehavior(block, item));
+                return Optional.of(new PlaceableSticksBehavior<>(block, item));
             }
             return Optional.empty();
         }
@@ -686,6 +684,48 @@ public class ItemsOverrideHandler {
         @Override
         public boolean isEnabled() {
             return ServerConfigs.cached.PLACEABLE_RODS;
+        }
+    }
+
+    private static class AntiqueInkBehavior extends ItemUseOnBlockOverride {
+
+        @Override
+        public boolean isEnabled() {
+            return CapabilityHandler.ANTIQUE_CAP_ENABLED;
+        }
+
+        @Override
+        public boolean appliesToItem(Item item) {
+            return item == Items.INK_SAC || item == ModRegistry.ANTIQUE_INK.get();
+        }
+
+        @Override
+        public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand, ItemStack stack, BlockHitResult hit, boolean isRanged) {
+            if (player.getAbilities().mayBuild) {
+                boolean newState = !stack.is(Items.INK_SAC);
+                BlockPos pos = hit.getBlockPos();
+                BlockEntity tile = world.getBlockEntity(pos);
+                if (tile != null) {
+                    var cap = tile.getCapability(CapabilityHandler.ANTIQUE_TEXT_CAP);
+                    AtomicBoolean success = new AtomicBoolean(false);
+                    cap.ifPresent(c -> {
+                        if (c.hasAntiqueInk() != newState) {
+                            c.setAntiqueInk(newState);
+                            success.set(true);
+                        }
+                    });
+                    if (success.get()) {
+                        if (newState) {
+                            world.playSound(null, pos, SoundEvents.GLOW_INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                        } else {
+                            world.playSound(null, pos, SoundEvents.INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                        }
+                        stack.shrink(1);
+                        return InteractionResult.sidedSuccess(world.isClientSide);
+                    }
+                }
+            }
+            return InteractionResult.PASS;
         }
     }
 
@@ -775,7 +815,8 @@ public class ItemsOverrideHandler {
         public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand, ItemStack stack, BlockHitResult hit, boolean isRanged) {
             if (player.getAbilities().mayBuild) {
                 //require shift for written books
-                if(BookPileBlock.isWrittenBook(stack.getItem()) && !player.isShiftKeyDown()) return InteractionResult.PASS;
+                if (BookPileBlock.isWrittenBook(stack.getItem()) && !player.isShiftKeyDown())
+                    return InteractionResult.PASS;
                 return paceBlockOverride(BOOK_PILE_H_ITEM, player, hand, stack, world, hit, isRanged);
             }
             return InteractionResult.PASS;
@@ -816,8 +857,95 @@ public class ItemsOverrideHandler {
             //TODO: maybe replace with player.mayUseItemAt
             if (player.getAbilities().mayBuild) {
                 //require shift for written books
-                if(BookPileBlock.isWrittenBook(stack.getItem()) && !player.isShiftKeyDown()) return InteractionResult.PASS;
+                if (BookPileBlock.isWrittenBook(stack.getItem()) && !player.isShiftKeyDown())
+                    return InteractionResult.PASS;
                 return paceBlockOverride(ModRegistry.BOOK_PILE.get(), player, hand, stack, world, hit, isRanged);
+            }
+            return InteractionResult.PASS;
+        }
+    }
+
+    private static class SkullPileBehavior extends ItemUseOnBlockOverride {
+
+        @Nullable
+        @Override
+        public BaseComponent getTooltip() {
+            return new TranslatableComponent("message.supplementaries.double_cake");
+        }
+
+        @Override
+        public boolean isEnabled() {
+            return ServerConfigs.cached.SKULL_PILES;
+        }
+
+        @Override
+        public boolean appliesToItem(Item item) {
+            return item instanceof BlockItem bi && bi.getBlock() instanceof SkullBlock skull && skull.getType() != SkullBlock.Types.DRAGON;
+        }
+
+        @Override
+        public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand, ItemStack stack, BlockHitResult hit, boolean isRanged) {
+            if (player.getAbilities().mayBuild) {
+                BlockPos pos = hit.getBlockPos();
+
+                if (world.getBlockEntity(pos) instanceof SkullBlockEntity oldTile) {
+                    BlockState state = oldTile.getBlockState();
+                    if ((state.getBlock() instanceof SkullBlock skullBlock && skullBlock.getType() != SkullBlock.Types.DRAGON)) {
+
+                        ItemStack copy = stack.copy();
+
+                        InteractionResult result = replaceSimilarBlock(ModRegistry.SKULL_PILE.get(), player, stack, pos, world,
+                                state, isRanged, null, SkullBlock.ROTATION);
+
+                        if (result.consumesAction()) {
+                            if (world.getBlockEntity(pos) instanceof DoubleSkullBlockTile tile) {
+                                tile.initialize(oldTile, skullBlock, copy, player);
+                            }
+                        }
+                        return result;
+                    }
+                }
+
+            }
+            return InteractionResult.PASS;
+        }
+    }
+
+    private static class SkullCandlesBehavior extends ItemUseOnBlockOverride {
+
+        @Override
+        public boolean isEnabled() {
+            return ServerConfigs.cached.SKULL_CANDLES;
+        }
+
+        @Override
+        public boolean appliesToItem(Item item) {
+            return ItemTags.CANDLES.contains(item) && item.getRegistryName().getNamespace().equals("minecraft");
+        }
+
+        @Override
+        public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand, ItemStack stack, BlockHitResult hit, boolean isRanged) {
+            if (player.getAbilities().mayBuild) {
+                BlockPos pos = hit.getBlockPos();
+
+                BlockEntity te = world.getBlockEntity(pos);
+                if (te instanceof SkullBlockEntity oldTile) {
+                    BlockState state = oldTile.getBlockState();
+                    if ((state.getBlock() instanceof SkullBlock skullBlock && skullBlock.getType() != SkullBlock.Types.DRAGON)) {
+
+                        ItemStack copy = stack.copy();
+
+                        InteractionResult result = replaceSimilarBlock(ModRegistry.SKULL_CANDLE.get(), player, stack, pos, world,
+                                state, isRanged, SoundType.CANDLE, SkullBlock.ROTATION);
+
+                        if (result.consumesAction()) {
+                            if (world.getBlockEntity(pos) instanceof CandleSkullBlockTile tile) {
+                                tile.initialize(oldTile, skullBlock, copy, player);
+                            }
+                        }
+                        return result;
+                    }
+                }
             }
             return InteractionResult.PASS;
         }
@@ -875,7 +1003,7 @@ public class ItemsOverrideHandler {
                 result = o.tryPerformingAction(blockstate, pos, world, player, hand, heldStack, raytrace);
             }
 
-            if (result != InteractionResult.PASS) {
+            if (result == InteractionResult.PASS) {
                 result = blockstate.use(world, player, hand, raytrace);
             }
         }
@@ -913,10 +1041,9 @@ public class ItemsOverrideHandler {
                 result = o.tryPerformingAction(blockstate, pos, world, player, hand, heldStack, raytrace);
             }
 
-            if (result != InteractionResult.PASS) {
+            if (result == InteractionResult.PASS) {
                 result = blockstate.use(world, player, hand, raytrace);
             }
-
 
         }
 
@@ -932,6 +1059,36 @@ public class ItemsOverrideHandler {
         }
         if (result == InteractionResult.FAIL) return InteractionResult.PASS;
         return result;
+    }
+
+    private static InteractionResult replaceSimilarBlock(Block blockOverride, Player player, ItemStack stack,
+                                                         BlockPos pos, Level world, BlockState replaced,
+                                                         boolean isRanged, @Nullable SoundType sound, Property<?>... properties) {
+
+        BlockState newState = blockOverride.defaultBlockState();
+        for (Property<?> p : properties) {
+            newState = BlockUtils.replaceProperty(replaced, newState, p);
+        }
+        if (newState.hasProperty(BlockStateProperties.WATERLOGGED)) {
+            FluidState fluidstate = world.getFluidState(pos);
+            newState = newState.setValue(BlockStateProperties.WATERLOGGED, fluidstate.is(FluidTags.WATER) && fluidstate.getAmount() == 8);
+        }
+        if (!world.setBlock(pos, newState, 3)) {
+            return InteractionResult.FAIL;
+        }
+        if (player instanceof ServerPlayer) {
+            CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayer) player, pos, stack);
+        }
+        if (sound == null) sound = newState.getSoundType(world, pos, player);
+        world.playSound(player, pos, sound.getPlaceSound(), SoundSource.BLOCKS, (sound.getVolume() + 1.0F) / 2.0F, sound.getPitch() * 0.8F);
+        if (player == null || !player.getAbilities().instabuild) {
+            stack.shrink(1);
+        }
+        if (player instanceof ServerPlayer serverPlayer && !isRanged) {
+            CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
+        }
+        return InteractionResult.sidedSuccess(world.isClientSide);
+
     }
 
 }

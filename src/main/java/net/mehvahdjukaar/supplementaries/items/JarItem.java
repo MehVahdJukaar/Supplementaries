@@ -12,7 +12,7 @@ import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.fluids.ModSoftFluids;
+import net.mehvahdjukaar.supplementaries.setup.ModSoftFluids;
 import net.mehvahdjukaar.supplementaries.items.tabs.JarTab;
 import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;

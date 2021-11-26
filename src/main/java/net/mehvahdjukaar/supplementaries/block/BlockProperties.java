@@ -51,6 +51,9 @@ public class BlockProperties {
     public static final IntegerProperty BOOKS = IntegerProperty.create("books", 1, 4);
     public static final BooleanProperty WRITTEN = BooleanProperty.create("written");
     public static final BooleanProperty ANTIQUE = BooleanProperty.create("ye_olde");
+    public static final BooleanProperty TREASURE = BooleanProperty.create("treasure");
+    public static final IntegerProperty ROTATION_16_UP = IntegerProperty.create("rotation_up", 0, 15);
+    public static final IntegerProperty WIND_STRENGTH = IntegerProperty.create("wind_strength", 0, 3);
 
     //model properties
     public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();

@@ -1,28 +1,19 @@
 package net.mehvahdjukaar.supplementaries;
 
-import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.datagen.RecipeCondition;
 import net.mehvahdjukaar.supplementaries.events.ServerEvents;
-import net.mehvahdjukaar.supplementaries.items.WrenchItem;
 import net.mehvahdjukaar.supplementaries.setup.ClientSetup;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModSetup;
-import net.mehvahdjukaar.supplementaries.world.songs.FluteSongsReloadListener;
 import net.mehvahdjukaar.supplementaries.world.structures.StructureRegistry;
-import net.minecraft.client.particle.BubbleParticle;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.FOVUpdateEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -97,20 +88,16 @@ public class Supplementaries {
 
         //add shift middle click to swap to correct tool
 
-        //mod idea: status effect jei plugin
-
         //mod idea: better birch trees
 
         //mod idea: blackboard banners and flags with villager
         //weed mod
 
-        //wrench, throwable slimeballs
+        //throwable slimeballs
 
         //TODO: make dummy not show numbers at a distance, headshot
 
         //simple mode for doors and trapdoors
-
-        //JEI painting plugin
 
         //data driven fluid system
 
@@ -129,8 +116,6 @@ public class Supplementaries {
         //TODO: add compat stuff recently provided
         //todo: serene easons & moon stuff for haunted harvest
 
-        //TODO: hanging sign bigger item
-
         //TODO: wiki for custom map markers icons. add simple icon datapacks
 
         //randomium can give onl stuff already obtained by a player in survival
@@ -140,6 +125,29 @@ public class Supplementaries {
         //directiona books fixed
         //particles for randomium
         //data driven fluid system :0
+        //TODO: credist screen
+
+        //TODO: way signs as villages pieces
+
+        //TODO: fix sack shift clicking
+
+        //small honey slime in cage
+
+
+        //skii mod
+        //blackboard texture glitchyness (baked model)
+        //fix axolotsl in jars
+
+        //fix cauldron & faucet & update visual water
+
+        //ender pearls dispensers
+
+        //ashreplaceable
+
+        //tater in a jar
+
+        //TODO: maybe remove light level blockstate to tile entities
+
 
         ConfigHandler.init();
 

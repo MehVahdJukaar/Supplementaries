@@ -9,14 +9,18 @@ import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.VanillaWoodTypes;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -51,37 +55,37 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
     public IModelData getModelData() {
         //return data;
         return new ModelDataMap.Builder()
-                .withInitial(FRAMED,this.framed)
+                .withInitial(FRAMED, this.framed)
                 .withInitial(MIMIC, this.getHeldBlock())
                 .build();
     }
 
     @Override
-    public TextHolder getTextHolder(){ return this.textHolder; }
+    public TextHolder getTextHolder() {
+        return this.textHolder;
+    }
 
     @Override
-    public AABB getRenderBoundingBox(){
-        return new AABB(this.getBlockPos().offset(-0.25,0,-0.25), this.getBlockPos().offset(1.25,1,1.25));
+    public AABB getRenderBoundingBox() {
+        return new AABB(this.getBlockPos().offset(-0.25, 0, -0.25), this.getBlockPos().offset(1.25, 1, 1.25));
     }
 
     //TODO: maybe add constraints to this so it snaps to 22.5deg
-    public void pointToward(BlockPos targetPos, boolean up){
+    public void pointToward(BlockPos targetPos, boolean up) {
         //int r = MathHelper.floor((double) ((180.0F + yaw) * 16.0F / 360.0F) + 0.5D) & 15;
         // r*-22.5f;
-        float yaw = (float)(Math.atan2(targetPos.getX() - worldPosition.getX(), targetPos.getZ() - worldPosition.getZ()) * 180d / Math.PI);
-        if(up){
+        float yaw = (float) (Math.atan2(targetPos.getX() - worldPosition.getX(), targetPos.getZ() - worldPosition.getZ()) * 180d / Math.PI);
+        if (up) {
             this.yawUp = Mth.wrapDegrees(yaw - (this.leftUp ? 180 : 0));
-        }
-        else {
+        } else {
             this.yawDown = Mth.wrapDegrees(yaw - (this.leftDown ? 180 : 0));
         }
     }
 
-    public float getPointingYaw(boolean up){
-        if(up){
+    public float getPointingYaw(boolean up) {
+        if (up) {
             return Mth.wrapDegrees(-this.yawUp - (this.leftUp ? 180 : 0));
-        }
-        else {
+        } else {
             return Mth.wrapDegrees(-this.yawDown - (this.leftDown ? 180 : 0));
         }
     }
@@ -107,14 +111,14 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
     @Override
     public CompoundTag save(CompoundTag compound) {
         super.save(compound);
-        compound.putBoolean("Framed",this.framed);
+        compound.putBoolean("Framed", this.framed);
 
         this.textHolder.write(compound);
 
-        compound.putFloat("YawUp",this.yawUp);
-        compound.putFloat("YawDown",this.yawDown);
-        compound.putBoolean("LeftUp",this.leftUp);
-        compound.putBoolean("LeftDown",this.leftDown);
+        compound.putFloat("YawUp", this.yawUp);
+        compound.putFloat("YawDown", this.yawDown);
+        compound.putBoolean("LeftUp", this.leftUp);
+        compound.putBoolean("LeftDown", this.leftDown);
         compound.putBoolean("Up", this.up);
         compound.putBoolean("Down", this.down);
         compound.putString("TypeUp", this.woodTypeUp.toNBT());
@@ -132,5 +136,27 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
     @Override
     public void setOwner(UUID owner) {
         this.owner = owner;
+    }
+
+    public boolean rotateSign(boolean up, float angle, boolean constrainAngle) {
+        if (up && this.up) {
+            this.yawUp = Mth.wrapDegrees(this.yawUp + angle);
+            if (constrainAngle) this.yawUp -= this.yawUp % 22.5f;
+            return true;
+        } else if (this.down) {
+            this.yawDown = Mth.wrapDegrees(this.yawDown + angle);
+            if (constrainAngle)
+                this.yawDown -= this.yawDown % 22.5f;
+            return true;
+        }
+        return false;
+    }
+
+    @NotNull
+    @Override
+    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+//TODO: add antique ink cap also
+        //if(cap == CapabilityHandler.ANTIQUE_TEXT_CAP) return LazyOptional.of(()->this.textHolder);
+        return super.getCapability(cap, side);
     }
 }

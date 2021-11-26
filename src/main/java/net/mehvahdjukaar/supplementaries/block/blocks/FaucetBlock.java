@@ -44,9 +44,10 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.fluids.FluidUtil;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
 import java.util.Random;
 
-public class FaucetBlock extends WaterBlock implements EntityBlock, IRotatable {
+public class FaucetBlock extends WaterBlock implements EntityBlock {
     protected static final VoxelShape SHAPE_NORTH = Block.box(5, 5, 5, 11, 15, 16);
     protected static final VoxelShape SHAPE_SOUTH = Block.box(5, 5, 0, 11, 15, 11);
     protected static final VoxelShape SHAPE_WEST = Block.box(5, 5, 5, 16, 15, 11);
@@ -205,23 +206,7 @@ public class FaucetBlock extends WaterBlock implements EntityBlock, IRotatable {
         builder.add(EXTENDED, FACING, ENABLED, POWERED, HAS_WATER, HAS_JAR, WATERLOGGED, LIGHT_LEVEL);
     }
 
-    @Override
-    public BlockState rotateState(BlockState state, LevelAccessor world, BlockPos pos, Rotation rotation, Direction axis) {
-        if(axis.getAxis() == Direction.Axis.Y) return this.rotate(state, rotation);
-        return state;
-    }
-
-    //TODO: clean this up & fix this.. not working
-    @Override
-    public boolean onRotated(BlockState state, BlockState oldState, Direction axis, Rotation rotation, Level world, BlockPos pos) {
-        if (world.getBlockEntity(pos) instanceof FaucetBlockTile tile) {
-            boolean water = tile.updateContainedFluidVisuals(world, pos, state);
-            if(state.getValue(HAS_WATER) != water){
-                world.setBlock(pos, state.setValue(HAS_WATER, water),2);
-            }
-        }
-        return true;
-    }
+    //TODO: fix water faucet connecting on rotation
 
     @Override
     public BlockState rotate(BlockState state, Rotation rot) {

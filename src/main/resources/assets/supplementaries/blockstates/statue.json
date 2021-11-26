@@ -1,33 +1,18 @@
 {
   "variants": {
-    "facing=north,lit=false": {
+    "facing=north": {
       "model": "supplementaries:block/statue"
     },
-    "facing=east,lit=false": {
+    "facing=east": {
       "model": "supplementaries:block/statue",
       "y": 90
     },
-    "facing=south,lit=false": {
+    "facing=south": {
       "model": "supplementaries:block/statue",
       "y": 180
     },
-    "facing=west,lit=false": {
+    "facing=west": {
       "model": "supplementaries:block/statue",
-      "y": 270
-    },
-    "facing=north,lit=true": {
-      "model": "supplementaries:block/statue_candle"
-    },
-    "facing=east,lit=true": {
-      "model": "supplementaries:block/statue_candle",
-      "y": 90
-    },
-    "facing=south,lit=true": {
-      "model": "supplementaries:block/statue_candle",
-      "y": 180
-    },
-    "facing=west,lit=true": {
-      "model": "supplementaries:block/statue_candle",
       "y": 270
     }
   }

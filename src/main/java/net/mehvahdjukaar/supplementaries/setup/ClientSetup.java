@@ -11,6 +11,7 @@ import net.mehvahdjukaar.supplementaries.client.particles.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.*;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.FallingBlockRendererGeneric;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.RedMerchantRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.RopeArrowRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.SlingshotProjectileRenderer;
@@ -33,12 +34,14 @@ import net.minecraft.client.particle.FlameParticle;
 import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.FallingBlockRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -234,6 +237,8 @@ public class ClientSetup {
         event.registerEntityRenderer(ModRegistry.SLINGSHOT_PROJECTILE.get(), SlingshotProjectileRenderer::new);
         event.registerEntityRenderer(ModRegistry.RED_MERCHANT.get(), RedMerchantRenderer::new);
         event.registerEntityRenderer(ModRegistry.ROPE_ARROW.get(), RopeArrowRenderer::new);
+        event.registerEntityRenderer(ModRegistry.FALLING_URN.get(), FallingBlockRendererGeneric::new);
+        event.registerEntityRenderer(ModRegistry.FALLING_ASH.get(), FallingBlockRendererGeneric::new);
 
         //tiles
         event.registerBlockEntityRenderer(ModRegistry.DOORMAT_TILE.get(), DoormatBlockTileRenderer::new);
@@ -262,6 +267,8 @@ public class ClientSetup {
         event.registerBlockEntityRenderer(ModRegistry.STATUE_TILE.get(), StatueBlockTileRenderer::new);
         event.registerBlockEntityRenderer(ModRegistry.BOOK_PILE_TILE.get(), BookPileBlockTileRenderer::new);
         event.registerBlockEntityRenderer(ModRegistry.JAR_BOAT_TILE.get(), JarBoatTileRenderer::new);
+        event.registerBlockEntityRenderer(ModRegistry.SKULL_PILE_TILE.get(), DoubleSkullBlockTileRenderer::new);
+        event.registerBlockEntityRenderer(ModRegistry.SKULL_CANDLE_TILE.get(), CandleSkullBlockTileRenderer::new);
     }
 
     @SubscribeEvent

@@ -80,7 +80,7 @@ public class GobletBlockTile extends BlockEntity implements ISoftFluidHolder, IO
         //empty hand: eat food
         if (!player.isShiftKeyDown()) {
             //from drink
-            if (ServerConfigs.cached.JAR_EAT) {
+            if (ServerConfigs.cached.GOBLET_DRINK) {
                 return this.fluidHolder.tryDrinkUpFluid(player, this.level);
             }
         }

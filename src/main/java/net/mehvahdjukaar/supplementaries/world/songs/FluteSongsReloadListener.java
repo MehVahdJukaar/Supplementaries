@@ -37,7 +37,12 @@ public class FluteSongsReloadListener extends SimpleJsonResourceReloadListener {
             if (input != null) {
                 try {
                     Song song = GSON.fromJson(input, Song.class);
-                    SongsManager.SONGS.put(key, song);
+                    if(song.getNotes().length ==0){
+                        Supplementaries.LOGGER.error("Failed to parse JSON object for song " + key+": a song can't have 0 notes!");
+                    }
+                    else {
+                        SongsManager.SONGS.put(key, song);
+                    }
                 } catch (Exception e) {
                     Supplementaries.LOGGER.error("Failed to parse JSON object for song " + key);
                 }

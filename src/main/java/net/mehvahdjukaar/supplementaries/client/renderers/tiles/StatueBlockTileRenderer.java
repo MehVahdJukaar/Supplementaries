@@ -79,8 +79,8 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
                        int combinedOverlayIn) {
 
         matrixStackIn.pushPose();
-        GameProfile playerInfo = tile.playerProfile;
-        ResourceLocation resourceLocation = tile.playerProfile == null ? Textures.STATUE : getSkin(playerInfo);
+        GameProfile playerInfo = tile.owner;
+        ResourceLocation resourceLocation = tile.owner == null ? Textures.STATUE : getSkin(playerInfo);
         matrixStackIn.translate(0.5, 0.5, 0.5);
         Direction dir = tile.getDirection();
         matrixStackIn.mulPose(Const.rot(dir));

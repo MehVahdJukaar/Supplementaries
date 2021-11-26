@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.events;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.blocks.RakedGravelBlock;
+import net.mehvahdjukaar.supplementaries.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.quark.QuarkPlugin;
@@ -27,6 +28,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -50,7 +52,7 @@ public class ServerEvents {
         if (ServerConfigs.cached.WALL_LANTERN_HIGH_PRIORITY) {
             Player player = event.getPlayer();
             if (!player.isSpectator()) {
-                ItemsOverrideHandler.tryHighPriorityOverride(event, event.getItemStack());
+                ItemsOverrideHandler.tryHighPriorityClickedBlockOverride(event, event.getItemStack());
             }
         }
     }
@@ -62,7 +64,7 @@ public class ServerEvents {
         if (!player.isSpectator()) {
             ItemStack stack = event.getItemStack();
 
-            ItemsOverrideHandler.tryPerformOverride(event, stack, false);
+            ItemsOverrideHandler.tryPerformClickedBlockOverride(event, stack, false);
         }
     }
 
@@ -70,7 +72,7 @@ public class ServerEvents {
     public static void onRightClickItem(PlayerInteractEvent.RightClickItem event) {
         Player playerIn = event.getPlayer();
 
-        ItemsOverrideHandler.tryPerformOverride(event, playerIn.getItemInHand(event.getHand()));
+        ItemsOverrideHandler.tryPerformClickedItemOverride(event, playerIn.getItemInHand(event.getHand()));
     }
 
     //raked gravel
@@ -96,6 +98,11 @@ public class ServerEvents {
         if (CompatHandler.quark) {
             QuarkPlugin.attachCapabilities(event);
         }
+    }
+
+    @SubscribeEvent
+    public static void onAttachTileCapabilities(AttachCapabilitiesEvent<BlockEntity> event) {
+        CapabilityHandler.attachCapabilities(event);
     }
 
     @SubscribeEvent
@@ -141,6 +148,9 @@ public class ServerEvents {
     public static void onAddReloadListeners(final AddReloadListenerEvent event) {
         event.addListener(new FluteSongsReloadListener());
     }
+
+
+
 
 
 }

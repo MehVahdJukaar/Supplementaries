@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "##",
+    "##"
+  ],
+  "key": {
+    "#": {
+      "item": "supplementaries:ash_brick"
+    }
+  },
+  "result": {
+    "item": "supplementaries:ash_bricks"
+  }
+}

@@ -45,7 +45,7 @@ public class FodderBlock extends WaterBlock {
     @Override
     public boolean isPathfindable(BlockState state, BlockGetter blockGetter, BlockPos pos, PathComputationType pathType) {
         if (pathType == PathComputationType.LAND) {
-            return state.getValue(LAYERS) < MAX_LAYERS / 2;
+            return state.getValue(LAYERS) <= MAX_LAYERS / 2;
         }
         return false;
     }

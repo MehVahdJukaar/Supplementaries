@@ -33,8 +33,6 @@ public class SongsManager {
         Song song = SONGS.getOrDefault(songKey, Song.EMPTY);
         CURRENTLY_PAYING.put(id, song);
 
-
-
         return song;
     }
 

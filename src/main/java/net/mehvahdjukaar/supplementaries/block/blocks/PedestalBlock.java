@@ -64,9 +64,8 @@ public class PedestalBlock extends WaterBlock implements EntityBlock {
 
     @Override
     public float getEnchantPowerBonus(BlockState state, LevelReader world, BlockPos pos) {
-        BlockEntity te = world.getBlockEntity(pos);
-        if (te instanceof PedestalBlockTile) {
-            if (((PedestalBlockTile) te).type == PedestalBlockTile.DisplayType.CRYSTAL) return 3;
+        if (world.getBlockEntity(pos) instanceof PedestalBlockTile te) {
+            if (te.type == PedestalBlockTile.DisplayType.CRYSTAL) return 3;
         }
         return 0;
     }

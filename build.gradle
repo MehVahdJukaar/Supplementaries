@@ -170,7 +170,7 @@ dependencies {
     //implementation fg.deobf("curse.maven:quark-243121:3326040")
 
 
-    implementation fg.deobf("curse.maven:configured-457570:3523089")
+    implementation fg.deobf("curse.maven:configured-457570:3533864")
     implementation fg.deobf("curse.maven:curios-309927:3457073")
     //implementation fg.deobf("curse.maven:decorativeblocks-362528:3166283")
     //implementation fg.deobf("curse.maven:farmersdelight-398521:3418719")

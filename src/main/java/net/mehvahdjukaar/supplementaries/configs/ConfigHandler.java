@@ -32,6 +32,7 @@ import java.util.function.Predicate;
 
 public class ConfigHandler {
 
+
     public static ModConfig CLIENT_CONFIG_OBJECT;
     public static ModConfig SERVER_CONFIG_OBJECT;
     public static ModConfig REGISTRY_CONFIG_OBJECT;
@@ -79,9 +80,18 @@ public class ConfigHandler {
         return value.get();
     }
 
-    public static Predicate<Object> STRING_CHECK = o -> o instanceof String;
+    public static final Predicate<Object> STRING_CHECK = o -> o instanceof String;
 
-    public static Predicate<Object> LIST_STRING_CHECK = o -> o instanceof List<?> && ((Collection<?>) o).stream().allMatch(s -> s instanceof String);
+    public static final Predicate<Object> LIST_STRING_CHECK = o -> o instanceof List<?> && ((Collection<?>) o).stream().allMatch(s -> s instanceof String);
+
+    public static final Predicate<Object> COLOR_CHECK = s -> {
+        try {
+            Integer.parseUnsignedInt(((String) s).replace("0x", ""), 16);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    };
 
     public static void reloadConfigsEvent(ModConfigEvent event) {
         if (event.getConfig().getSpec() == ServerConfigs.SERVER_SPEC) {

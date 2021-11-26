@@ -8,6 +8,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.*;
@@ -137,7 +138,7 @@ public class CapturedMobsHelper {
         if (en == null) return def;
         return en.getDescription().getString();
     }
-
+    //TODO: maybe simplify this to use new bucketable interface
     public static CapturedMobConfigProperties getTypeFromBucket(Item bucket) {
         return getType(VALID_BUCKETS.getOrDefault(bucket, "minecraft:fish"));
     }
@@ -210,12 +211,14 @@ public class CapturedMobsHelper {
                         }
                     }
                 }
-            /*
-            if(size>5) {
-                addValidBucket(l.get(5));
-            }else{
-                tryAddingValidBucket(id);
-            }*/
+                //skip if mod isn't loaded
+                if(!ModList.get().isLoaded(new ResourceLocation(id).getNamespace()) && cat != AnimationCategory.FISH) continue;
+                /*
+                if(size>5) {
+                    addValidBucket(l.get(5));
+                }else{
+                    tryAddingValidBucket(id);
+                }*/
                 CapturedMobConfigProperties type = new CapturedMobConfigProperties(id, h, w, light, fish, cat);
                 TYPES.put(id, type);
             } catch (Exception e) {

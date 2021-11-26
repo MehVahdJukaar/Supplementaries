@@ -6,7 +6,7 @@ import net.mehvahdjukaar.supplementaries.block.blocks.FaucetBlock;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.CompatObjects;
 import net.mehvahdjukaar.supplementaries.compat.inspirations.CauldronPlugin;
-import net.mehvahdjukaar.supplementaries.fluids.ModSoftFluids;
+import net.mehvahdjukaar.supplementaries.setup.ModSoftFluids;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -16,13 +16,14 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.Container;
-import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.AbstractCauldronBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CauldronBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -38,7 +39,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Random;
-import java.util.stream.IntStream;
 
 public class FaucetBlockTile extends BlockEntity {
     private int transferCooldown = 0;
@@ -122,6 +122,7 @@ public class FaucetBlockTile extends BlockEntity {
             }
             return false;
         }
+        //TODO: move in compat class
         //honey pot
         else if (CompatHandler.buzzier_bees && backState.hasProperty(BlockProperties.HONEY_LEVEL_POT)) {
             if (backState.getValue(BlockProperties.HONEY_LEVEL_POT) > 0) {
@@ -155,8 +156,11 @@ public class FaucetBlockTile extends BlockEntity {
 
                 this.fluidHolder.fill(SoftFluidRegistry.WATER);
                 if (doTransfer && tryFillingBlockBelow(level, pos)) {
-                    level.setBlock(behind, backState.setValue(BlockStateProperties.LEVEL_CAULDRON,
-                            backState.getValue(BlockStateProperties.LEVEL_CAULDRON) - 1), 3);
+                    int waterLevel = backState.getValue(BlockStateProperties.LEVEL_CAULDRON);
+                    if (waterLevel > 2) {
+                        level.setBlock(behind, backState.setValue(BlockStateProperties.LEVEL_CAULDRON,
+                                waterLevel - 1), 3);
+                    } else level.setBlock(behind, Blocks.CAULDRON.defaultBlockState(), 3);
                     return true;
                 }
 
@@ -166,9 +170,9 @@ public class FaucetBlockTile extends BlockEntity {
         }
         //soft fluid holders
         BlockEntity tileBack = level.getBlockEntity(behind);
-        if(tileBack != null) {
-            if (tileBack instanceof ISoftFluidHolder && ((ISoftFluidHolder) tileBack).canInteractWithFluidHolder()) {
-                SoftFluidHolder fluidHolder = ((ISoftFluidHolder) tileBack).getSoftFluidHolder();
+        if (tileBack != null) {
+            if (tileBack instanceof ISoftFluidHolder holder && holder.canInteractWithFluidHolder()) {
+                SoftFluidHolder fluidHolder = holder.getSoftFluidHolder();
                 this.fluidHolder.copy(fluidHolder);
                 if (doTransfer && tryFillingBlockBelow(level, pos)) {
                     fluidHolder.shrink(1);
@@ -214,9 +218,14 @@ public class FaucetBlockTile extends BlockEntity {
         BlockState belowState = level.getBlockState(below);
         Block belowBlock = belowState.getBlock();
 
+
         //consumer
         if (belowBlock instanceof ISoftFluidConsumer consumer) {
             return consumer.tryAcceptingFluid(level, belowState, below, softFluid, this.fluidHolder.getNbt(), 1);
+        }
+        //sponge voiding
+        if (belowBlock == Blocks.SPONGE) {
+            return true;
         }
         //beehive
         else if (softFluid == SoftFluidRegistry.HONEY) {
@@ -269,8 +278,8 @@ public class FaucetBlockTile extends BlockEntity {
         boolean result;
         //soft fluid holders
         BlockEntity tileBelow = level.getBlockEntity(below);
-        if (tileBelow instanceof ISoftFluidHolder) {
-            SoftFluidHolder fluidHolder = ((ISoftFluidHolder) tileBelow).getSoftFluidHolder();
+        if (tileBelow instanceof ISoftFluidHolder holder) {
+            SoftFluidHolder fluidHolder = holder.getSoftFluidHolder();
             result = this.fluidHolder.tryTransferFluid(fluidHolder);
             if (result) {
                 tileBelow.setChanged();
@@ -278,7 +287,7 @@ public class FaucetBlockTile extends BlockEntity {
             }
             return result;
         }
-        if(tileBelow != null) {
+        if (tileBelow != null) {
             //forge tanks
             IFluidHandler handlerDown = tileBelow.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, Direction.UP).orElse(null);
             if (handlerDown != null) {
@@ -327,22 +336,23 @@ public class FaucetBlockTile extends BlockEntity {
     @SuppressWarnings("ConstantConditions")
     public boolean spillItemsFromInventory(Level level, BlockPos pos, Direction dir, BlockEntity tile) {
         //TODO: maybe add here insertion in containers below
-        if(this.isConnectedBelow()) return false;
+        if (this.isConnectedBelow()) return false;
         IItemHandler itemHandler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir).orElse(null);
         if (itemHandler != null) {
-            for(int slot = 0; slot<itemHandler.getSlots(); slot++) {
+            for (int slot = 0; slot < itemHandler.getSlots(); slot++) {
                 ItemStack itemstack = itemHandler.getStackInSlot(slot);
                 if (!itemstack.isEmpty()) {
-                    ItemStack extracted = itemHandler.extractItem(slot,1, false);
-                    //non empty stack can't be extracted. trying next
-                    //if(extracted.isEmpty())continue;
-                    tile.setChanged();
-                    ItemEntity drop = new ItemEntity(level, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, extracted);
-                    drop.setDeltaMovement(new Vec3(0, 0, 0));
-                    level.addFreshEntity(drop);
-                    float f = (this.rand.nextFloat() - 0.5f) / 4f;
-                    level.playSound(null, pos, SoundEvents.CHICKEN_EGG, SoundSource.BLOCKS, 0.3F, 0.5f + f);
-                    return true;
+                    ItemStack extracted = itemHandler.extractItem(slot, 1, false);
+                    //empty stack means it can't extract from inventory
+                    if (!extracted.isEmpty()) {
+                        tile.setChanged();
+                        ItemEntity drop = new ItemEntity(level, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, extracted);
+                        drop.setDeltaMovement(new Vec3(0, 0, 0));
+                        level.addFreshEntity(drop);
+                        float f = (this.rand.nextFloat() - 0.5f) / 4f;
+                        level.playSound(null, pos, SoundEvents.CHICKEN_EGG, SoundSource.BLOCKS, 0.3F, 0.5f + f);
+                        return true;
+                    }
                 }
             }
             return false;

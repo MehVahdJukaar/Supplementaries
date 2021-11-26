@@ -31,17 +31,10 @@ public class BlackboardBlockGeometry implements IModelGeometry<BlackboardBlockGe
     }
     */
 
-    /**
-     * Model to replace cauldron water texture with the relevant fluid texture
-     */
     private final BlockModel model;
     private final String toRetextureName;
 
-    /**
-     * Creates a new model instance
-     * @param model        Model instance
-     * @param toRetextureName   Names of fluid textures to retexture. If empty, assumes no fluid exists
-     */
+
     protected BlackboardBlockGeometry(BlockModel model, String toRetextureName) {
         this.model = model;
         this.toRetextureName = toRetextureName;

@@ -120,7 +120,7 @@ public class AdventurerMapsHandler {
 
                         if (s > 1) level = Integer.parseInt(l.get(1));
                         if (level < 1 || level > 5) {
-                            Supplementaries.LOGGER.warn("skipping configs 'custom_adventurer_maps' (" + l.toString() + "): invalid level, must be between 1 and 5");
+                            Supplementaries.LOGGER.warn("skipping configs 'custom_adventurer_maps' (" + l + "): invalid level, must be between 1 and 5");
                             continue;
                         }
                         if (s > 2) minPrice = Integer.parseInt(l.get(2));
@@ -242,7 +242,7 @@ public class AdventurerMapsHandler {
         @Override
         public MerchantOffer getOffer(@Nonnull Entity entity, @Nonnull Random random) {
 
-            int i = random.nextInt(Math.max(1, tradeData.maxPrice - tradeData.minPrice + 1) + tradeData.minPrice);
+            int i = Math.max(1,random.nextInt(Math.max(1, tradeData.maxPrice - tradeData.minPrice)) + tradeData.minPrice);
 
             ItemStack itemstack = createMap(entity.level, entity.blockPosition());
             if (itemstack.isEmpty()) return null;

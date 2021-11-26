@@ -53,7 +53,7 @@ public class TurnTableBlockTile extends BlockEntity {
         if (tile.cooldown == 0) {
             Direction dir = state.getValue(TurnTableBlock.FACING);
             boolean ccw = state.getValue(TurnTableBlock.INVERTED) ^ (state.getValue(TurnTableBlock.FACING) == Direction.DOWN);
-            boolean success = BlockUtils.tryRotatingBlock(dir,ccw, pos.relative(dir), level);
+            boolean success = BlockUtils.tryRotatingBlock(dir,ccw, pos.relative(dir), level, null).isPresent();
             if(success){
                 level.blockEvent(pos, state.getBlock(),0,0);
                 level.playSound(null, pos, SoundEvents.ITEM_FRAME_ROTATE_ITEM, SoundSource.BLOCKS, 1.0F, 0.6F);

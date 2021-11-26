@@ -44,14 +44,7 @@ public class ClientConfigs {
             SLINGSHOT_OUTLINE = builder.comment("Render the block outline for distant blocks that are reachable with a slingshot enchanted with Stasis")
                     .define("stasis_block_outline",true);
             SLINGSHOT_OUTLINE_COLOR = builder.comment("An RGBA color for the block outline in hex format, for example 0x00000066 for vanilla outline colors")
-                    .define("block_outline_color","ffffff66", s -> {
-                        try {
-                            Integer.parseUnsignedInt(((String) s).replace("0x", ""), 16);
-                            return true;
-                        }catch (Exception e){
-                            return false;
-                        }
-                    });
+                    .define("block_outline_color","ffffff66", ConfigHandler.COLOR_CHECK);
             SLINGSHOT_PROJECTILE_SCALE = builder.comment("How big should a slingshot projectile look")
                     .defineInRange("projectile_scale", 0.5, 0, 1);
             builder.pop();
@@ -124,8 +117,6 @@ public class ClientConfigs {
     }
 
     public static class block {
-        public static ForgeConfigSpec.DoubleValue FIREFLY_SPAWN_CHANCE;
-        public static ForgeConfigSpec.IntValue FIREFLY_SPAWN_PERIOD;
 
         public static ForgeConfigSpec.BooleanValue PEDESTAL_SPIN;
         public static ForgeConfigSpec.BooleanValue PEDESTAL_SPECIAL;
@@ -187,14 +178,6 @@ public class ClientConfigs {
 
             builder.push("clock_block");
             CLOCK_24H = builder.comment("Display 24h time format. False for 12h format").define("24h_format", true);
-            builder.pop();
-
-            builder.push("firefly_jar");
-            FIREFLY_SPAWN_PERIOD = builder.comment("Particle in firefly jars spawn as explained below:\n"+
-                    "Every <spawn_period> ticks a particle has a chance to spawn determined by <spawn_chance>x100 %.")
-                    .defineInRange("spawn_period",8, 1, 20);
-            FIREFLY_SPAWN_CHANCE = builder.comment("Spawn chance every period")
-                    .defineInRange("spawn_chance", 0.3, 0, 1);
             builder.pop();
 
             builder.push("pedestal");
@@ -294,6 +277,8 @@ public class ClientConfigs {
 
 
     public static class particle {
+        private static ForgeConfigSpec.ConfigValue<String> TURN_INITIAL_COLOR;
+        private static ForgeConfigSpec.ConfigValue<String> TURN_FADE_COLOR;
         public static ForgeConfigSpec.IntValue FIREFLY_PAR_MAXAGE;
         public static ForgeConfigSpec.DoubleValue FIREFLY_PAR_SCALE;
         private static void init(ForgeConfigSpec.Builder builder) {
@@ -307,6 +292,16 @@ public class ClientConfigs {
                     .defineInRange("max_age", 40, 1,256);
             builder.pop();
 
+            builder.comment("Rotation particle")
+                    .push("turn_particle");
+
+            TURN_INITIAL_COLOR = builder.comment("An RGBA color")
+                    .define("initial_color","2a77ea", ConfigHandler.COLOR_CHECK);
+            TURN_FADE_COLOR = builder.comment("An RGBA color")
+                    .define("fade_color","32befa", ConfigHandler.COLOR_CHECK);
+
+            builder.pop();
+
             builder.pop();
         }
     }
@@ -318,13 +313,14 @@ public class ClientConfigs {
             builder.comment("Entities parameters")
                     .push("entities");
             builder.push("firefly");
-            FIREFLY_INTENSITY = builder.comment("Firefly glow animation uses following equation:\n"+
-                    "scale = {max[(1-<intensity>)*sin(time*2pi/<period>)+<intensity>, 0]}^<exponent>\n"+
-                    "Where:\n"+
-                    " - scale = entity transparency & entity scale\n"+
-                    " - period = period of the animation. This variable is located in common configs"+
-                    "<intensity> affects how long the pulse last, not how frequently it occurs.\n"+
-                    "Use 0.5 for normal sin wave. Higher and it won't turn off completely\n")
+            FIREFLY_INTENSITY = builder.comment("""
+                            Firefly glow animation uses following equation:
+                            scale = {max[(1-<intensity>)*sin(time*2pi/<period>)+<intensity>, 0]}^<exponent>
+                            Where:
+                             - scale = entity transparency & entity scale
+                             - period = period of the animation. This variable is located in common configs<intensity> affects how long the pulse last, not how frequently it occurs.
+                            Use 0.5 for normal sin wave. Higher and it won't turn off completely
+                            """)
                     .defineInRange("intensity", 0.2,-100,1);
             FIREFLY_EXPONENT = builder.comment("Affects the shape of the wave. Stay under 0.5 for sharper transitions")
                     .defineInRange("exponent", 0.5, 0, 10);
@@ -336,6 +332,8 @@ public class ClientConfigs {
 
 
     public static class cached {
+        public static int TURN_PARTICLE_FADE_COLOR;
+        public static int TURN_PARTICLE_COLOR;
         public static boolean COLORED_ARROWS;
         public static boolean COLORED_BWERING_STAND;
         public static boolean CLOCK_CLICK;
@@ -344,8 +342,7 @@ public class ClientConfigs {
         public static double FIREFLY_PAR_SCALE;
         public static double FIREFLY_INTENSITY;
         public static double FIREFLY_EXPONENT;
-        public static double FIREFLY_SPAWN_CHANCE;
-        public static int FIREFLY_SPAWN_PERIOD;
+
         public static boolean PEDESTAL_SPIN;
         public static double PEDESTAL_SPEED;
         public static boolean PEDESTAL_SPECIAL;
@@ -389,8 +386,6 @@ public class ClientConfigs {
             FIREFLY_INTENSITY = entity.FIREFLY_INTENSITY.get();
             FIREFLY_EXPONENT = entity.FIREFLY_EXPONENT.get();
             //blocks
-            FIREFLY_SPAWN_CHANCE = block.FIREFLY_SPAWN_CHANCE.get();
-            FIREFLY_SPAWN_PERIOD = block.FIREFLY_SPAWN_PERIOD.get();
             PEDESTAL_SPIN = block.PEDESTAL_SPIN.get();
             PEDESTAL_SPEED = block.PEDESTAL_SPEED.get();
             PEDESTAL_SPECIAL = block.PEDESTAL_SPECIAL.get();
@@ -416,6 +411,10 @@ public class ClientConfigs {
             SLINGSHOT_PROJECTILE_SCALE = (float)((double)items.SLINGSHOT_PROJECTILE_SCALE.get());
             WRENCH_PARTICLES = items.WRENCH_PARTICLES.get();
             FLUTE_PARTICLES = items.FLUTE_PARTICLES.get();
+
+            TURN_PARTICLE_COLOR = Integer.parseUnsignedInt(particle.TURN_INITIAL_COLOR.get().replace("0x", ""), 16);
+            TURN_PARTICLE_FADE_COLOR = Integer.parseUnsignedInt(particle.TURN_FADE_COLOR.get().replace("0x", ""), 16);
+
 
             CapturedMobsHelper.refresh();
             GlobeTextureManager.GlobeColors.refreshColorsFromConfig();

@@ -334,12 +334,12 @@ public class RendererUtil {
 
     public static void renderGuiItemRelative(ItemStack stack, int x, int y, ItemRenderer renderer,
                                              BiConsumer<PoseStack, Boolean> movement){
-        renderGuiItemRelative(stack, x,y,renderer,movement, LightTexture.FULL_BRIGHT);
+        renderGuiItemRelative(stack, x,y,renderer,movement, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
     }
 
 
         public static void renderGuiItemRelative(ItemStack stack, int x, int y, ItemRenderer renderer,
-                                             BiConsumer<PoseStack, Boolean> movement, int combinedLight){
+                                             BiConsumer<PoseStack, Boolean> movement, int combinedLight, int pCombinedOverlay){
 
         BakedModel model = renderer.getModel(stack, null, null, 0);
 
@@ -367,9 +367,6 @@ public class RendererUtil {
         }
 
         //-----render---
-
-
-         int pCombinedOverlay = OverlayTexture.NO_OVERLAY;
 
         ItemTransforms.TransformType pTransformType = ItemTransforms.TransformType.GUI;
 

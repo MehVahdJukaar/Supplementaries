@@ -27,7 +27,7 @@ import java.util.Random;
 public class BlazeRodBlock extends StickBlock {
 
     public BlazeRodBlock(Properties properties) {
-        super(properties, 0);
+        super(properties, 0, "minecraft:blaze_rod");
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, Boolean.FALSE).setValue(AXIS_Y, true).setValue(AXIS_X, false).setValue(AXIS_Z, false));
     }
 

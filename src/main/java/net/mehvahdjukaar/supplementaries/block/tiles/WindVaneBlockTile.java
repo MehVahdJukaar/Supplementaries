@@ -62,7 +62,7 @@ public class WindVaneBlockTile extends BlockEntity {
                 }
             }
         } else {
-            int power = pState.getValue(WindVaneBlock.POWER);
+            int power = pState.getValue(WindVaneBlock.WIND_STRENGTH);
             // TODO:cache some of this maybe?
             float tp = (float) (2f * Math.PI);
             //float offset = 3f * (MathHelper.sin(0.1f*this.pos.getX()) + 0.1f*MathHelper.sin(this.pos.getZ()) + 0.1f*MathHelper.sin(this.pos.getY()));

@@ -1,39 +1,40 @@
 package net.mehvahdjukaar.supplementaries.items.crafting;
 
 import net.mehvahdjukaar.supplementaries.items.FlagItem;
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.BannerItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.CustomRecipe;
-import net.minecraft.world.level.block.entity.BannerBlockEntity;
-import net.minecraft.core.NonNullList;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BannerBlockEntity;
 
 public class FlagFromBannerRecipe extends CustomRecipe {
     public FlagFromBannerRecipe(ResourceLocation idIn) {
         super(idIn);
     }
 
+    @Override
     public boolean matches(CraftingContainer inv, Level world) {
         DyeColor dyecolor = null;
         ItemStack withPatterns = null;
         ItemStack empty = null;
 
-        for(int i = 0; i < inv.getContainerSize(); ++i) {
-            ItemStack itemstack2 = inv.getItem(i);
-            Item item = itemstack2.getItem();
-            if (item instanceof FlagItem bannerItem) {
+        for (int i = 0; i < inv.getContainerSize(); ++i) {
+            ItemStack item1 = inv.getItem(i);
+            Item item = item1.getItem();
+            if (item instanceof FlagItem flagItem) {
                 if (dyecolor == null) {
-                    dyecolor = bannerItem.getColor();
-                } else if (dyecolor != bannerItem.getColor()) {
+                    dyecolor = flagItem.getColor();
+                } else if (dyecolor != flagItem.getColor()) {
                     return false;
                 }
 
-                int j = BannerBlockEntity.getPatternCount(itemstack2);
+                int j = BannerBlockEntity.getPatternCount(item1);
                 if (j > 6) {
                     return false;
                 }
@@ -43,14 +44,13 @@ public class FlagFromBannerRecipe extends CustomRecipe {
                         return false;
                     }
 
-                    withPatterns = itemstack2;
-                }
-                else {
+                    withPatterns = item1;
+                } else {
                     if (empty != null) {
                         return false;
                     }
 
-                    empty = itemstack2;
+                    empty = item1;
                 }
 
             }
@@ -61,23 +61,22 @@ public class FlagFromBannerRecipe extends CustomRecipe {
                     return false;
                 }
 
-                int j = BannerBlockEntity.getPatternCount(itemstack2);
+                int j = BannerBlockEntity.getPatternCount(item1);
                 if (j > 6) {
                     return false;
                 }
                 //exclude banner to banner
-                if (j > 0 && !(empty!=null && empty.getItem() instanceof BannerItem)) {
+                if (j > 0 && !(empty != null && empty.getItem() instanceof BannerItem)) {
                     if (withPatterns != null) {
                         return false;
                     }
-                    withPatterns = itemstack2;
-                }
-                else if(!(withPatterns!=null && withPatterns.getItem() instanceof BannerItem)){
+                    withPatterns = item1;
+                } else if (!(withPatterns != null && withPatterns.getItem() instanceof BannerItem)) {
                     if (empty != null) {
                         return false;
                     }
 
-                    empty = itemstack2;
+                    empty = item1;
                 }
             }
         }
@@ -86,14 +85,14 @@ public class FlagFromBannerRecipe extends CustomRecipe {
     }
 
     public ItemStack assemble(CraftingContainer inv) {
-        for(int i = 0; i < inv.getContainerSize(); ++i) {
+        for (int i = 0; i < inv.getContainerSize(); ++i) {
             ItemStack withPatterns = inv.getItem(i);
             if (!withPatterns.isEmpty()) {
-                int j = BannerBlockEntity.getPatternCount(withPatterns);
+                int patternCount = BannerBlockEntity.getPatternCount(withPatterns);
                 //find item with patterns
-                if (j > 0 && j <= 6) {
-                    for(int k = 0; k < inv.getContainerSize(); ++k) {
-                        if(i!=j) {
+                if (patternCount > 0 && patternCount <= 6) {
+                    for (int k = 0; k < inv.getContainerSize(); ++k) {
+                        if (i != k) {
                             ItemStack empty = inv.getItem(k);
 
 
@@ -118,7 +117,7 @@ public class FlagFromBannerRecipe extends CustomRecipe {
     public NonNullList<ItemStack> getRemainingItems(CraftingContainer inv) {
         NonNullList<ItemStack> stacks = NonNullList.withSize(inv.getContainerSize(), ItemStack.EMPTY);
 
-        for(int i = 0; i < stacks.size(); ++i) {
+        for (int i = 0; i < stacks.size(); ++i) {
             ItemStack itemstack = inv.getItem(i);
             if (!itemstack.isEmpty()) {
                 if (itemstack.hasContainerItem()) {

@@ -52,7 +52,7 @@ public class WaySignStructure extends StructureFeature<NoneFeatureConfiguration>
     //getDecorationStage
     @Override
     public GenerationStep.Decoration step() {
-        return GenerationStep.Decoration.SURFACE_STRUCTURES;
+        return GenerationStep.Decoration.STRONGHOLDS;
     }
 
 

@@ -1,27 +1,25 @@
 package net.mehvahdjukaar.supplementaries.events;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Matrix4f;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.gui.ConfigButton;
-import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager;
+import net.mehvahdjukaar.supplementaries.client.renderers.GlowRenderType;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.quark.QuarkTooltipPlugin;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.client.Minecraft;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import com.mojang.math.Matrix4f;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.client.event.RenderTooltipEvent;
+import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -45,9 +43,9 @@ public class ClientEvents {
                 QuarkTooltipPlugin.onItemTooltipEvent(event);
             }
 
-            if(event.getItemStack().getItem() == ModRegistry.ROPE_ARROW_ITEM.get()){
+            if (event.getItemStack().getItem() == ModRegistry.ROPE_ARROW_ITEM.get()) {
                 List<Component> tooltip = event.getToolTip();
-                Optional<Component> r = tooltip.stream().filter(t-> (t instanceof TranslatableComponent) && ((TranslatableComponent) t)
+                Optional<Component> r = tooltip.stream().filter(t -> (t instanceof TranslatableComponent) && ((TranslatableComponent) t)
                         .getKey().equals("item.durability")).findFirst();
                 r.ifPresent(tooltip::remove);
             }
@@ -146,4 +144,34 @@ public class ClientEvents {
         ConfigButton.setupConfigButton(event);
 
     }
+
+
+    public static void render(RenderLivingEvent.Post event) {
+        LocalPlayer player = Minecraft.getInstance().player;
+
+        if (player.getMainHandItem().getItem() == Items.GHAST_TEAR) {
+            showMobs(event.getMatrixStack(), event.getBuffers(), event.getEntity());
+        }
+    }
+
+    private static void greenLine(VertexConsumer builder, Matrix4f positionMatrix, float dx1, float dy1, float dz1, float dx2, float dy2, float dz2) {
+        builder.vertex(positionMatrix, dx1, dy1, dz1)
+                .color(0.0f, 1.0f, 0.0f, 1.0f)
+                .endVertex();
+        builder.vertex(positionMatrix, dx2, dy2, dz2)
+                .color(0.0f, 1.0f, 0.0f, 1.0f)
+                .endVertex();
+    }
+
+
+    private static void showMobs(PoseStack matrixStack, MultiBufferSource buffer, LivingEntity entity) {
+        VertexConsumer builder = buffer.getBuffer(GlowRenderType.GLOW_LINES);
+
+        Matrix4f positionMatrix = matrixStack.last().pose();
+
+
+        greenLine(builder, positionMatrix, 0, .5f, 0, 0, 6, 0);
+
+    }
+
 }

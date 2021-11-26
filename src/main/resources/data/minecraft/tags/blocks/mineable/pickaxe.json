@@ -7,10 +7,14 @@
     "supplementaries:blackstone_tile_vertical_slab",
     "supplementaries:blackstone_tile_slab",
     "supplementaries:blackstone_tile",
+    "supplementaries:blackstone_tile_stairs",
+    "supplementaries:blackstone_tile_wall",
     "supplementaries:blackstone_lamp",
     "supplementaries:stone_tile_vertical_slab",
     "supplementaries:stone_tile_slab",
     "supplementaries:stone_tile",
+    "supplementaries:stone_tile_stairs",
+    "supplementaries:stone_tile_wall",
     "supplementaries:stone_lamp",
     "supplementaries:daub_cross_brace",
     "supplementaries:daub_brace",
@@ -47,6 +51,12 @@
     "supplementaries:pedestal",
     "supplementaries:planter",
     "supplementaries:globe",
-    "supplementaries:globe"
+	"supplementaries:ash_bricks_vertical_slab",
+    "supplementaries:ash_bricks_slab",
+    "supplementaries:ash_bricks",
+    "supplementaries:ash_bricks_stairs",
+    "supplementaries:ash_bricks_wall",
+    "supplementaries:soap_block"
+
   ]
 }

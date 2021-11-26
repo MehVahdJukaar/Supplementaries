@@ -1,0 +1,14 @@
+
+{
+  "variants": {
+    "type=bottom": {
+      "model": "supplementaries:block/ash_bricks_slab"
+    },
+    "type=double": {
+      "model": "supplementaries:block/ash_bricks"
+    },
+    "type=top": {
+      "model": "supplementaries:block/ash_bricks_slab_top"
+    }
+  }
+}

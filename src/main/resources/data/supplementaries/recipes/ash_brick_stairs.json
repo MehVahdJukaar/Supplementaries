@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#  ",
+    "## ",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "supplementaries:ash_bricks"
+    }
+  },
+  "result": {
+    "item": "supplementaries:ash_bricks_stairs",
+    "count": 4
+  }
+}

@@ -2,14 +2,12 @@ package net.mehvahdjukaar.supplementaries.setup;
 
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.block.tiles.StatueBlockTile;
 import net.mehvahdjukaar.supplementaries.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.capabilities.mobholder.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.common.FlowerPotHandler;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.entities.trades.VillagerTradesHandler;
 import net.mehvahdjukaar.supplementaries.events.ItemsOverrideHandler;
-import net.mehvahdjukaar.supplementaries.fluids.ModSoftFluids;
 import net.mehvahdjukaar.supplementaries.mixins.accessors.ChickenAccessor;
 import net.mehvahdjukaar.supplementaries.mixins.accessors.HorseAccessor;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
@@ -42,6 +40,8 @@ public class ModSetup {
 
         event.enqueueWork(() -> {
             try {
+
+
 
                 StructureRegistry.setup();
                 setupStage++;
@@ -114,7 +114,7 @@ public class ModSetup {
     //damn I hate this. If setup fails forge doesn't do anything and it keeps on going quietly
     private static boolean hasFinishedSetup = false;
     private static int setupStage = 0;
-    private static boolean firstTagLoad = false;
+    public static boolean firstTagLoad = false;
 
     //events on setup
     @SubscribeEvent
@@ -159,7 +159,7 @@ public class ModSetup {
 
     @SubscribeEvent
     public static void serverAboutToStart(final FMLServerAboutToStartEvent event) {
-        StatueBlockTile.initializeSessionData(event.getServer());
+
     }
 
 }

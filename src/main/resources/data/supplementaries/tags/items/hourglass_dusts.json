@@ -3,7 +3,8 @@
   "replace": false,
   "values": [
     "minecraft:gunpowder",
-    "#forge:dusts"
+    "#forge:dusts",
+    "supplementaries:ash"
   ],
   "optional": [
     "#forge:dusts",
