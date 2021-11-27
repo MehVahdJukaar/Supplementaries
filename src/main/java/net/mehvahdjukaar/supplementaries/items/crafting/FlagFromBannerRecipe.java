@@ -95,7 +95,7 @@ public class FlagFromBannerRecipe extends SpecialRecipe {
                 //find item with patterns
                 if (j > 0 && j <= 6) {
                     for(int k = 0; k < inv.getContainerSize(); ++k) {
-                        if(i!=j) {
+                        if(i!=k) {
                             ItemStack empty = inv.getItem(k);
 
 

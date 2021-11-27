@@ -245,7 +245,7 @@ public class AdventurerMapsHandler {
         @Override
         public MerchantOffer getOffer(@Nonnull Entity entity, @Nonnull Random random) {
 
-            int i = random.nextInt(Math.max(1, tradeData.maxPrice - tradeData.minPrice + 1) + tradeData.minPrice);
+            int i = Math.max(1,random.nextInt(Math.max(1, tradeData.maxPrice - tradeData.minPrice)) + tradeData.minPrice);
 
             ItemStack itemstack = createMap(entity.level, entity.blockPosition());
             if (itemstack.isEmpty()) return null;

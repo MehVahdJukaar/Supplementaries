@@ -4,7 +4,6 @@ import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.selene.fluids.ISoftFluidHolder;
 import net.mehvahdjukaar.selene.fluids.SoftFluidHolder;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -79,9 +78,9 @@ public class GobletBlockTile extends TileEntity implements ISoftFluidHolder, IOw
         //empty hand: eat food
         if (!player.isShiftKeyDown()) {
             //from drink
-            if (ServerConfigs.cached.JAR_EAT) {
-                return this.fluidHolder.tryDrinkUpFluid(player, this.level);
-            }
+
+            return this.fluidHolder.tryDrinkUpFluid(player, this.level);
+
         }
         return false;
     }

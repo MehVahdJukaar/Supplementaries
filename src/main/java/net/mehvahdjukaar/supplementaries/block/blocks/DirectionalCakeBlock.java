@@ -1,6 +1,8 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
+import net.mehvahdjukaar.supplementaries.compat.farmersdelight.FDCompatRegistry;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.block.*;
 import net.minecraft.client.util.ITooltipFlag;
@@ -87,6 +89,11 @@ public class DirectionalCakeBlock extends CakeBlock implements IWaterLoggable {
 
     @Override
     public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if(CompatHandler.farmers_delight){
+            ActionResultType res = FDCompatRegistry.onCakeInteraction(state, pos, worldIn, player.getItemInHand(handIn));
+            if(res.consumesAction())return res;
+        }
+
         return this.eatSliceD(worldIn, pos, state, player,
                 hit.getDirection().getAxis() != Direction.Axis.Y ? hit.getDirection() : player.getDirection().getOpposite());
 

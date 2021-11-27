@@ -90,12 +90,13 @@ public class ServerEvents {
             //directional cake conversion
             if (ServerConfigs.cached.DIRECTIONAL_CAKE && blockstate == Blocks.CAKE.defaultBlockState() &&
                     !(ServerConfigs.cached.DOUBLE_CAKE_PLACEMENT && i == Items.CAKE)) {
-                world.setBlock(pos, ModRegistry.DIRECTIONAL_CAKE.get().defaultBlockState(), 4);
+                BlockState newState = ModRegistry.DIRECTIONAL_CAKE.get().defaultBlockState();
+                world.setBlock(pos, newState, 4);
                 BlockRayTraceResult raytrace = new BlockRayTraceResult(
                         new Vector3d(pos.getX(), pos.getY(), pos.getZ()), event.getFace(), pos, false);
 
                 event.setCanceled(true);
-                event.setCancellationResult(blockstate.use(world, player, hand, raytrace));
+                event.setCancellationResult(newState.use(world, player, hand, raytrace));
 
                 return;
             }

@@ -99,6 +99,7 @@ public class Textures {
     public static final ResourceLocation PULLEY_BLOCK_GUI_TEXTURE = Supplementaries.res("textures/gui/pulley_block_gui.png");
     public static final ResourceLocation PRESENT_BLOCK_GUI_TEXTURE = Supplementaries.res("textures/gui/present_block_gui.png");
     public static final ResourceLocation ORANGE_MERCHANT_GUI_TEXTURE = Supplementaries.res("textures/gui/orange_trader.png");
+    public static final ResourceLocation MISC_ICONS_TEXTURE = Supplementaries.res("textures/gui/misc.png");
     //map markers
     public static final ResourceLocation SIGN_POST_MARKER_TEXTURE = Supplementaries.res("textures/map/sign_post.png");
     public static final ResourceLocation FLAG_MARKER_TEXTURE = Supplementaries.res("textures/map/flag.png");

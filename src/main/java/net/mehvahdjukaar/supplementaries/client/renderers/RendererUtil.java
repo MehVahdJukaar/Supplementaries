@@ -1,28 +1,33 @@
 package net.mehvahdjukaar.supplementaries.client.renderers;
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.mehvahdjukaar.supplementaries.common.Textures;
-import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
-import net.mehvahdjukaar.supplementaries.compat.flywheel.FlywheelPlugin;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.vertex.VertexFormatElement;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector4f;
 import net.minecraft.world.World;
+import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
-import net.minecraftforge.common.util.Lazy;
 
 import java.util.Random;
-import java.util.function.Supplier;
+import java.util.function.BiConsumer;
 
 public class RendererUtil {
     //centered on x,z. aligned on y=0
@@ -317,6 +322,114 @@ public class RendererUtil {
         Vector4f vector4f = new Vector4f(0, 0, 0, 1.0F);
         vector4f.transform(stack.last().pose());
         moveVertices(v, vector4f.x(), vector4f.y(), vector4f.z(), sprite);
+    }
+
+
+
+
+
+
+    public static void renderGuiItemRelative(ItemStack stack, int x, int y, ItemRenderer renderer,
+                                             BiConsumer<MatrixStack, Boolean> movement) {
+        renderGuiItemRelative(stack, x, y, renderer, movement, 15728880, OverlayTexture.NO_OVERLAY);
+    }
+
+
+    public static void renderGuiItemRelative(ItemStack stack, int x, int y, ItemRenderer renderer,
+                                             BiConsumer<MatrixStack, Boolean> movement, int combinedLight, int pCombinedOverlay) {
+
+        IBakedModel model = renderer.getModel(stack, null, null);
+
+        renderer.blitOffset = renderer.blitOffset + 50.0F;
+
+        RenderSystem.pushMatrix();
+
+        TextureManager manager = Minecraft.getInstance().textureManager;
+        manager.bind(AtlasTexture.LOCATION_BLOCKS);
+        manager.getTexture(AtlasTexture.LOCATION_BLOCKS).setFilter(false, false);
+
+        RenderSystem.enableRescaleNormal();
+        RenderSystem.enableAlphaTest();
+        RenderSystem.defaultAlphaFunc();
+        RenderSystem.enableBlend();
+        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+
+        RenderSystem.translatef(x, y, 100.0F + renderer.blitOffset);
+        RenderSystem.translatef(8.0f, 8.0f, 0.0f);
+
+        RenderSystem.scalef(1.0F, -1.0F, 1.0F);
+        RenderSystem.scalef(16.0F, 16.0F, 16.0F);
+
+        MatrixStack matrixStack = new MatrixStack();
+        IRenderTypeBuffer.Impl bufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
+
+        boolean flag = !model.usesBlockLight();
+        if (flag) {
+            RenderHelper.setupForFlatItems();
+        }
+
+        //-----render---
+
+        ItemCameraTransforms.TransformType pTransformType = ItemCameraTransforms.TransformType.GUI;
+
+        matrixStack.pushPose();
+
+        if (stack.getItem()==Items.TRIDENT) {
+            model = renderer.getItemModelShaper().getModelManager().getModel(new ModelResourceLocation("minecraft:trident#inventory"));
+        }
+
+        model = ForgeHooksClient.handleCameraTransforms(matrixStack, model, pTransformType, false);
+
+
+        //custom rotation
+        movement.accept(matrixStack, model.isGui3d() && stack.getItem() != ModRegistry.FLUTE_ITEM.get());
+
+        matrixStack.translate(-0.5D, -0.5D, -0.5D);
+
+        if (!model.isCustomRenderer() && (stack.getItem() != Items.TRIDENT || flag)) {
+
+
+            if (model.isLayered()) {
+                ForgeHooksClient.drawItemLayered(renderer, model, stack, matrixStack, bufferSource, combinedLight, pCombinedOverlay, true);
+            } else {
+                RenderType rendertype = RenderTypeLookup.getRenderType(stack, true);
+                IVertexBuilder iVertexBuilder;
+                if (stack.getItem() == Items.COMPASS  && stack.hasFoil()) {
+                    matrixStack.pushPose();
+                    MatrixStack.Entry pose = matrixStack.last();
+                    pose.pose().multiply(0.5F);
+
+                    iVertexBuilder = ItemRenderer.getCompassFoilBufferDirect(bufferSource, rendertype, pose);
+
+                    matrixStack.popPose();
+                } else {
+                    iVertexBuilder = ItemRenderer.getFoilBufferDirect(bufferSource, rendertype, true, stack.hasFoil());
+                }
+
+                renderer.renderModelLists(model, stack, combinedLight, pCombinedOverlay, matrixStack, iVertexBuilder);
+            }
+        } else {
+            stack.getItem().getItemStackTileEntityRenderer().renderByItem(stack, pTransformType, matrixStack, bufferSource, combinedLight, pCombinedOverlay);
+        }
+
+        matrixStack.popPose();
+
+
+        //----end-render---
+
+        bufferSource.endBatch();
+        RenderSystem.enableDepthTest();
+        if (flag) {
+            RenderHelper.setupFor3DItems();
+        }
+
+        RenderSystem.disableAlphaTest();
+        RenderSystem.disableRescaleNormal();
+        RenderSystem.popMatrix();
+
+        renderer.blitOffset = renderer.blitOffset - 50.0F;
+
     }
 
 

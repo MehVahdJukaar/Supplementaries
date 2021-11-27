@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.block.blocks.DirectionalCakeBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.DoubleCakeBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.JarBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
+import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.StaticBlockItem;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
@@ -20,10 +21,16 @@ import net.minecraft.block.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.fluid.Fluids;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.*;
+import net.minecraft.state.Property;
+import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
@@ -43,22 +50,22 @@ import java.util.function.Supplier;
 
 public class ItemsOverrideHandler {
 
-    private static final Map<Item, ItemInteractionOverride> HIGH_PRIORITY_OVERRIDES = new HashMap<>();
+    private static final Map<Item, ItemUseOnBlockOverride> HIGH_PRIORITY_OVERRIDES = new HashMap<>();
 
-    private static final Map<Item, ItemInteractionOverride> ON_BLOCK_OVERRIDES = new HashMap<>();
+    private static final Map<Item, ItemUseOnBlockOverride> ON_BLOCK_OVERRIDES = new HashMap<>();
 
-    private static final Map<Item, ItemInteractionOverride> ITEM_OVERRIDES = new HashMap<>();
+    private static final Map<Item, ItemUseOnBlockOverride> ITEM_OVERRIDES = new HashMap<>();
 
     public static boolean hasBlockOverride(Item item) {
-        ItemInteractionOverride override = ON_BLOCK_OVERRIDES.get(item);
-        return override != null && override.getBlockOverride(item) != null;
+        ItemUseOnBlockOverride override = ON_BLOCK_OVERRIDES.get(item);
+        return override != null && override.getPlacedBlock(item) != null;
     }
 
     public static void registerOverrides() {
 
-        List<ItemInteractionOverride> HPBlockBehaviors = new ArrayList<>();
-        List<ItemInteractionOverride> itemBehaviors = new ArrayList<>();
-        List<ItemInteractionOverride> blockBehaviors = new ArrayList<>();
+        List<ItemUseOnBlockOverride> HPBlockBehaviors = new ArrayList<>();
+        List<ItemUseOnBlockOverride> itemBehaviors = new ArrayList<>();
+        List<ItemUseOnBlockOverride> blockBehaviors = new ArrayList<>();
 
         HPBlockBehaviors.add(new WallLanternBehavior());
 
@@ -74,20 +81,20 @@ public class ItemsOverrideHandler {
         blockBehaviors.add(new PlaceableRodsBehavior());
         blockBehaviors.add(new PlaceableSticksBehavior(ModRegistry.STICK_BLOCK, Items.STICK));
 
-        PlaceableSticksBehavior.optional(ModRegistry.PRISMARINE_ROD_BLOCK, "upgrade_aquatic:prismarine_rod")
+        PlaceableSticksBehavior.optional(ModRegistry.PRISMARINE_ROD_BLOCK, ModRegistry.PRISMARINE_ROD_BLOCK.get().getStickItem())
                 .ifPresent(blockBehaviors::add);
-        PlaceableSticksBehavior.optional(ModRegistry.PROPELPLANT_ROD_BLOCK, "nethers_delight:propelplant_cane")
+        PlaceableSticksBehavior.optional(ModRegistry.PROPELPLANT_ROD_BLOCK, ModRegistry.PROPELPLANT_ROD_BLOCK.get().getStickItem())
                 .ifPresent(blockBehaviors::add);
-        PlaceableSticksBehavior.optional(ModRegistry.EDELWOOD_STICK_BLOCK, "forbidden_arcanus:edelwood_stick")
+        PlaceableSticksBehavior.optional(ModRegistry.EDELWOOD_STICK_BLOCK, ModRegistry.EDELWOOD_STICK_BLOCK.get().getStickItem())
                 .ifPresent(blockBehaviors::add);
 
 
         for (Item i : ForgeRegistries.ITEMS) {
-            for (ItemInteractionOverride b : blockBehaviors) {
+            for (ItemUseOnBlockOverride b : blockBehaviors) {
                 try {
                     if (b.appliesToItem(i)) {
                         //adds item to block item map
-                        Block block = b.getBlockOverride(i);
+                        Block block = b.getPlacedBlock(i);
                         if (block != null && b.shouldBlockMapToItem(i)) Item.BY_BLOCK.put(block, i);
                         ON_BLOCK_OVERRIDES.put(i, b);
                         break;
@@ -96,14 +103,14 @@ public class ItemsOverrideHandler {
                     Supplementaries.LOGGER.error("failed to register for override " + b.getClass().getSimpleName() + " for " + i.getRegistryName() + " with exception: " + e);
                 }
             }
-            for (ItemInteractionOverride b : itemBehaviors) {
+            for (ItemUseOnBlockOverride b : itemBehaviors) {
                 if (b.appliesToItem(i)) {
                     ITEM_OVERRIDES.put(i, b);
                     break;
                 }
 
             }
-            for (ItemInteractionOverride b : HPBlockBehaviors) {
+            for (ItemUseOnBlockOverride b : HPBlockBehaviors) {
                 try {
                     if (b.appliesToItem(i)) {
                         HIGH_PRIORITY_OVERRIDES.put(i, b);
@@ -119,7 +126,7 @@ public class ItemsOverrideHandler {
     public static void tryHighPriorityOverride(PlayerInteractEvent.RightClickBlock event, ItemStack stack) {
         Item item = stack.getItem();
 
-        ItemInteractionOverride override = HIGH_PRIORITY_OVERRIDES.get(item);
+        ItemUseOnBlockOverride override = HIGH_PRIORITY_OVERRIDES.get(item);
         if (override != null && override.isEnabled()) {
 
             ActionResultType result = override.tryPerformingAction(event.getWorld(), event.getPlayer(), event.getHand(), stack, event.getHitVec(), false);
@@ -134,7 +141,7 @@ public class ItemsOverrideHandler {
     public static boolean tryPerformOverride(PlayerInteractEvent.RightClickBlock event, ItemStack stack, boolean isRanged) {
         Item item = stack.getItem();
 
-        ItemInteractionOverride override = ON_BLOCK_OVERRIDES.get(item);
+        ItemUseOnBlockOverride override = ON_BLOCK_OVERRIDES.get(item);
         if (override != null && override.isEnabled()) {
 
             ActionResultType result = override.tryPerformingAction(event.getWorld(), event.getPlayer(), event.getHand(), stack, event.getHitVec(), isRanged);
@@ -151,7 +158,7 @@ public class ItemsOverrideHandler {
     public static void tryPerformOverride(PlayerInteractEvent.RightClickItem event, ItemStack stack, boolean isRanged) {
         Item item = stack.getItem();
 
-        ItemInteractionOverride override = ITEM_OVERRIDES.get(item);
+        ItemUseOnBlockOverride override = ITEM_OVERRIDES.get(item);
         if (override != null && override.isEnabled()) {
 
             ActionResultType result = override.tryPerformingAction(event.getWorld(), event.getPlayer(), event.getHand(), stack, null, isRanged);
@@ -166,7 +173,7 @@ public class ItemsOverrideHandler {
     public static void addOverrideTooltips(ItemTooltipEvent event) {
         Item item = event.getItemStack().getItem();
 
-        ItemInteractionOverride override = ON_BLOCK_OVERRIDES.get(item);
+        ItemUseOnBlockOverride override = ON_BLOCK_OVERRIDES.get(item);
         if (override != null && override.isEnabled()) {
             List<ITextComponent> tooltip = event.getToolTip();
             TextComponent t = override.getTooltip();
@@ -179,7 +186,7 @@ public class ItemsOverrideHandler {
     }
 
 
-    private static abstract class ItemInteractionOverride {
+    private static abstract class ItemUseOnBlockOverride {
 
         public abstract boolean isEnabled();
 
@@ -191,7 +198,7 @@ public class ItemsOverrideHandler {
 
         //if this item can place a block
         @Nullable
-        public Block getBlockOverride(Item i) {
+        public Block getPlacedBlock(Item i) {
             return null;
         }
 
@@ -204,7 +211,7 @@ public class ItemsOverrideHandler {
                                                              ItemStack stack, @Nullable BlockRayTraceResult hit, boolean isRanged);
     }
 
-    private static class MapMarkerBehavior extends ItemInteractionOverride {
+    private static class MapMarkerBehavior extends ItemUseOnBlockOverride {
 
         @Override
         public boolean isEnabled() {
@@ -236,7 +243,7 @@ public class ItemsOverrideHandler {
         }
     }
 
-    private static class XpBottlingBehavior extends ItemInteractionOverride {
+    private static class XpBottlingBehavior extends ItemUseOnBlockOverride {
 
         private static final JarBlockTile DUMMY_JAR_TILE = new JarBlockTile();
 
@@ -287,7 +294,7 @@ public class ItemsOverrideHandler {
                         Utils.swapItem(player, hand, returnStack);
 
                         if (!player.isCreative())
-                            player.giveExperiencePoints(-Utils.getXPinaBottle(1, world.random)-1);
+                            player.giveExperiencePoints(-Utils.getXPinaBottle(1, world.random) - 1);
 
                         if (world.isClientSide) {
                             Minecraft.getInstance().particleEngine.createTrackingEmitter(player, ModRegistry.BOTTLING_XP_PARTICLE.get(), 1);
@@ -302,7 +309,8 @@ public class ItemsOverrideHandler {
         }
     }
 
-    private static class EnhancedCakeBehavior extends ItemInteractionOverride {
+    private static class EnhancedCakeBehavior extends ItemUseOnBlockOverride {
+
 
         @Nullable
         @Override
@@ -310,9 +318,8 @@ public class ItemsOverrideHandler {
             return new TranslationTextComponent("message.supplementaries.double_cake");
         }
 
-        @Nullable
         @Override
-        public Block getBlockOverride(Item i) {
+        public Block getPlacedBlock(Item i) {
             return ModRegistry.DOUBLE_CAKE.get();
         }
 
@@ -330,24 +337,9 @@ public class ItemsOverrideHandler {
             boolean isDirectional = state.getBlock() == ModRegistry.DIRECTIONAL_CAKE.get();
 
             if ((isDirectional && state.getValue(DirectionalCakeBlock.BITES) == 0) || state == Blocks.CAKE.defaultBlockState()) {
-                BlockState newState = ModRegistry.DOUBLE_CAKE.get().defaultBlockState()
-                        .setValue(DoubleCakeBlock.FACING, isDirectional ? state.getValue(DoubleCakeBlock.FACING) : Direction.WEST)
-                        .setValue(DoubleCakeBlock.WATERLOGGED, world.getFluidState(pos).getType() == Fluids.WATER);
-                if (!world.setBlock(pos, newState, 3)) {
-                    return ActionResultType.FAIL;
-                }
-                if (player instanceof ServerPlayerEntity) {
-                    CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayerEntity) player, pos, stack);
-                }
-                SoundType soundtype = newState.getSoundType(world, pos, player);
-                world.playSound(player, pos, newState.getSoundType(world, pos, player).getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
-                if (player == null || !player.abilities.instabuild) {
-                    stack.shrink(1);
-                }
-                if (player instanceof ServerPlayerEntity && !isRanged) {
-                    CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayerEntity) player, pos, stack);
-                }
-                return ActionResultType.sidedSuccess(world.isClientSide);
+
+                return replaceSimilarBlock(ModRegistry.DOUBLE_CAKE.get(), player, stack, pos, world, state, isRanged,
+                        null, DoubleCakeBlock.FACING);
             }
             return ActionResultType.PASS;
         }
@@ -374,11 +366,11 @@ public class ItemsOverrideHandler {
         }
     }
 
-    private static class CeilingBannersBehavior extends ItemInteractionOverride {
+    private static class CeilingBannersBehavior extends ItemUseOnBlockOverride {
 
         @Nullable
         @Override
-        public Block getBlockOverride(Item i) {
+        public Block getPlacedBlock(Item i) {
             if (i instanceof BannerItem) {
                 return ModRegistry.CEILING_BANNERS.get(((BannerItem) i).getColor()).get();
             }
@@ -404,7 +396,7 @@ public class ItemsOverrideHandler {
         }
     }
 
-    private static class HangingPotBehavior extends ItemInteractionOverride {
+    private static class HangingPotBehavior extends ItemUseOnBlockOverride {
 
         @Nullable
         @Override
@@ -414,7 +406,7 @@ public class ItemsOverrideHandler {
 
         @Nullable
         @Override
-        public Block getBlockOverride(Item i) {
+        public Block getPlacedBlock(Item i) {
             return ModRegistry.HANGING_FLOWER_POT.get();
         }
 
@@ -437,20 +429,19 @@ public class ItemsOverrideHandler {
         }
     }
 
-    private static class PlaceableSticksBehavior extends ItemInteractionOverride {
+    private static class PlaceableSticksBehavior<T extends Block> extends ItemUseOnBlockOverride {
 
-        private final Supplier<Block> block;
+        private final Supplier<T> block;
         private final Item item;
 
-        private PlaceableSticksBehavior(Supplier<Block> block, Item item) {
+        private PlaceableSticksBehavior(Supplier<T> block, Item item) {
             this.block = block;
             this.item = item;
         }
 
-        private static Optional<PlaceableSticksBehavior> optional(Supplier<Block> block, String itemRes) {
-            Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemRes));
+        private static <A extends Block> Optional<PlaceableSticksBehavior<A>> optional(Supplier<A> block, Item item) {
             if (item != null && item != Items.AIR) {
-                return Optional.of(new PlaceableSticksBehavior(block, item));
+                return Optional.of(new PlaceableSticksBehavior<>(block, item));
             }
             return Optional.empty();
         }
@@ -463,7 +454,7 @@ public class ItemsOverrideHandler {
 
         @Nullable
         @Override
-        public Block getBlockOverride(Item i) {
+        public Block getPlacedBlock(Item i) {
             return this.block.get();
         }
 
@@ -498,7 +489,7 @@ public class ItemsOverrideHandler {
         }
     }
 
-    private static class PlaceableGunpowderBehavior extends ItemInteractionOverride {
+    private static class PlaceableGunpowderBehavior extends ItemUseOnBlockOverride {
 
         @Nullable
         @Override
@@ -508,7 +499,7 @@ public class ItemsOverrideHandler {
 
         @Nullable
         @Override
-        public Block getBlockOverride(Item i) {
+        public Block getPlacedBlock(Item i) {
             return ModRegistry.GUNPOWDER_BLOCK.get();
         }
 
@@ -531,7 +522,7 @@ public class ItemsOverrideHandler {
         }
     }
 
-    private static class BookPileHorizontalBehavior extends ItemInteractionOverride {
+    private static class BookPileHorizontalBehavior extends ItemUseOnBlockOverride {
 
         //hax. I'll leave this here and see what happens
         private static final Item BOOK_PILE_H_ITEM = new BlockItem(ModRegistry.BOOK_PILE_H.get(), (new Item.Properties()).tab(null));
@@ -544,7 +535,7 @@ public class ItemsOverrideHandler {
 
         @Nullable
         @Override
-        public Block getBlockOverride(Item i) {
+        public Block getPlacedBlock(Item i) {
             return ModRegistry.BOOK_PILE_H.get();
         }
 
@@ -570,7 +561,7 @@ public class ItemsOverrideHandler {
         }
     }
 
-    private static class BookPileBehavior extends ItemInteractionOverride {
+    private static class BookPileBehavior extends ItemUseOnBlockOverride {
 
         @Nullable
         @Override
@@ -580,7 +571,7 @@ public class ItemsOverrideHandler {
 
         @Nullable
         @Override
-        public Block getBlockOverride(Item i) {
+        public Block getPlacedBlock(Item i) {
             return ModRegistry.BOOK_PILE.get();
         }
 
@@ -610,7 +601,7 @@ public class ItemsOverrideHandler {
         }
     }
 
-    private static class WallLanternBehavior extends ItemInteractionOverride {
+    private static class WallLanternBehavior extends ItemUseOnBlockOverride {
 
         @Nullable
         @Override
@@ -620,7 +611,7 @@ public class ItemsOverrideHandler {
 
         @Nullable
         @Override
-        public Block getBlockOverride(Item i) {
+        public Block getPlacedBlock(Item i) {
             return ModRegistry.WALL_LANTERN.get();
         }
 
@@ -706,6 +697,37 @@ public class ItemsOverrideHandler {
             return result;
         }
         return ActionResultType.PASS;
+    }
+
+    private static ActionResultType replaceSimilarBlock(Block blockOverride, PlayerEntity player, ItemStack stack,
+                                                        BlockPos pos, World world, BlockState replaced,
+                                                        boolean isRanged, @Nullable SoundType sound, Property<?>... properties) {
+
+        BlockState newState = blockOverride.defaultBlockState();
+
+        for (Property<?> p : properties) {
+            newState = BlockUtils.replaceProperty(replaced, newState, p);
+        }
+        if (newState.hasProperty(BlockStateProperties.WATERLOGGED)) {
+            FluidState fluidstate = world.getFluidState(pos);
+            newState = newState.setValue(BlockStateProperties.WATERLOGGED, fluidstate.is(FluidTags.WATER) && fluidstate.getAmount() == 8);
+        }
+        if (!world.setBlock(pos, newState, 3)) {
+            return ActionResultType.FAIL;
+        }
+        if (player instanceof ServerPlayerEntity) {
+            CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayerEntity) player, pos, stack);
+        }
+        if (sound == null) sound = newState.getSoundType(world, pos, player);
+        world.playSound(player, pos, sound.getPlaceSound(), SoundCategory.BLOCKS, (sound.getVolume() + 1.0F) / 2.0F, sound.getPitch() * 0.8F);
+        if (player == null || !player.abilities.instabuild) {
+            stack.shrink(1);
+        }
+        if (player instanceof ServerPlayerEntity && !isRanged) {
+            CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayerEntity) player, pos, stack);
+        }
+        return ActionResultType.sidedSuccess(world.isClientSide);
+
     }
 
 }

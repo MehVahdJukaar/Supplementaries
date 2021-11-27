@@ -33,8 +33,10 @@ public class CageBlockTile extends TileEntity implements ITickableTileEntity, IM
     }
 
     public void saveToNbt(ItemStack stack){
-        CompoundNBT compound = new CompoundNBT();
-        stack.addTagElement("BlockEntityTag",save(compound));
+        if(!this.mobContainer.isEmpty()) {
+            CompoundNBT compound = new CompoundNBT();
+            stack.addTagElement("BlockEntityTag", this.mobContainer.save(compound));
+        }
     }
 
     //ugly but the world is given as null when loading

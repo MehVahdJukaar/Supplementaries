@@ -575,7 +575,7 @@ public class ServerConfigs {
 
 
             List<String> villages = Arrays.asList("minecraft:village", "repurposed_structures:village_badlands", "repurposed_structures:village_dark_oak", "repurposed_structures:village_birch",
-                    "repurposed_structures:village_giant_taiga", "repurposed_structures:village_jungle", "repurposed_structures:village_mountains", "repurposed_structures:village_oak",
+                    "repurposed_structures:village_giant_taiga","repurposed_structures:village_mushroom", "repurposed_structures:village_jungle", "repurposed_structures:village_mountains", "repurposed_structures:village_oak",
                     "repurposed_structures:village_swamp", "pokecube:village", "pokecube_legends:village", "pokecube_legends:village/ocean",
                     "valhelsia_structures:castle", "valhelsia_structures:castle_ruin", "valhelsia_structures:small_castle", "valhelsia_structures:tower_ruin",
                     "stoneholm:underground_village", "blue_skies:gatekeeper_house", "feywild:library", "feywild:blacksmith");

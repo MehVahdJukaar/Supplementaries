@@ -2,8 +2,8 @@ package net.mehvahdjukaar.supplementaries.items;
 
 import net.mehvahdjukaar.selene.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
+import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.common.mobholder.MobContainer;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.block.Block;
@@ -268,6 +268,14 @@ public abstract class AbstractMobContainerItem extends BlockItem {
 
                 this.playCatchSound(player);
                 this.angerNearbyEntities(entity, player);
+
+
+
+                if (entity instanceof MobEntity) {
+                    ((MobEntity)entity).setPersistenceRequired();
+                    ((MobEntity)entity).dropLeash(true, !player.abilities.instabuild);
+                }
+
 
                 Utils.swapItemNBT(player, hand, stack, this.captureEntityInItem(entity, stack, bucket));
 

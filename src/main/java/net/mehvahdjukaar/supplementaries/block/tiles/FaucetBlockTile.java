@@ -273,17 +273,20 @@ public class FaucetBlockTile extends TileEntity implements ITickableTileEntity {
             return result;
         }
         //forge tanks
-        IFluidHandler handlerDown = FluidUtil.getFluidHandler(this.level, below, Direction.UP).orElse(null);
-        if (handlerDown != null) {
-            result = this.fluidHolder.tryTransferToFluidTank(handlerDown);
-            if (result) {
-                tileBelow.setChanged();
-                this.fluidHolder.fillCount();
+        if(tileBelow != null) {
+            IFluidHandler handlerDown = FluidUtil.getFluidHandler(this.level, below, Direction.UP).orElse(null);
+            if (handlerDown != null) {
+                result = this.fluidHolder.tryTransferToFluidTank(handlerDown);
+                if (result) {
+                    tileBelow.setChanged();
+                    this.fluidHolder.fillCount();
+                }
+                return result;
             }
-            return result;
         }
 
         return false;
+
     }
 
     private void dropXP() {

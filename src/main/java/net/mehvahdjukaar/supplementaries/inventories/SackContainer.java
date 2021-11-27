@@ -75,7 +75,7 @@ public class SackContainer extends Container  {
         if (slot != null && slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
-            int activeSlots = (5+(ServerConfigs.cached.SACK_SLOTS*2));
+            int activeSlots = ((ServerConfigs.cached.SACK_SLOTS));
             if (index < activeSlots) {
                 if (!this.moveItemStackTo(itemstack1, activeSlots, this.slots.size(), true)) {
                     return ItemStack.EMPTY;

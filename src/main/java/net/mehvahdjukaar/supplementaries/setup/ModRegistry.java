@@ -894,7 +894,6 @@ public class ModRegistry {
             AbstractBlock.Properties.of(Material.BUILDABLE_GLASS, MaterialColor.QUARTZ)
                     .strength(0.3f, 0.3f)
                     .sound(SoundType.GLASS)
-                    .lightLevel((state) -> 15)
     ));
     public static final RegistryObject<Item> REDSTONE_ILLUMINATOR_ITEM = regBlockItem(REDSTONE_ILLUMINATOR, getTab(ItemGroup.TAB_REDSTONE, REDSTONE_ILLUMINATOR_NAME));
 
@@ -1224,23 +1223,22 @@ public class ModRegistry {
 
     //sticks
     public static final String STICK_NAME = "stick";
-    public static final RegistryObject<Block> STICK_BLOCK = BLOCKS.register(STICK_NAME, () -> new StickBlock(
+    public static final RegistryObject<StickBlock> STICK_BLOCK = BLOCKS.register(STICK_NAME, () -> new StickBlock(
             AbstractBlock.Properties.of(Material.WOOD, MaterialColor.WOOD)
                     .strength(0.25F, 0F)
-                    .sound(SoundType.WOOD)));
-    public static final RegistryObject<Block> EDELWOOD_STICK_BLOCK = BLOCKS.register("edelwood_stick", () -> new StickBlock(
+                    .sound(SoundType.WOOD), 0, "minecraft:stick"));
+    public static final RegistryObject<StickBlock> EDELWOOD_STICK_BLOCK = BLOCKS.register("edelwood_stick", () -> new StickBlock(
             AbstractBlock.Properties.of(Material.WOOD, MaterialColor.TERRACOTTA_BROWN)
                     .strength(0.25F, 0F)
-                    .sound(SoundType.WOOD)));
-    public static final RegistryObject<Block> PRISMARINE_ROD_BLOCK = BLOCKS.register("prismarine_rod", () -> new StickBlock(
+                    .sound(SoundType.WOOD), "forbidden_arcanus:edelwood_stick"));
+    public static final RegistryObject<StickBlock> PRISMARINE_ROD_BLOCK = BLOCKS.register("prismarine_rod", () -> new StickBlock(
             AbstractBlock.Properties.of(Material.STONE, MaterialColor.COLOR_CYAN)
                     .strength(0.25F, 0F)
-                    .harvestTool(ToolType.PICKAXE)
-                    .sound(SoundType.STONE),0));
-    public static final RegistryObject<Block> PROPELPLANT_ROD_BLOCK = BLOCKS.register("propelplant_cane", () -> new StickBlock(
+                    .sound(SoundType.STONE), 0, "upgrade_aquatic:prismarine_rod"));
+    public static final RegistryObject<StickBlock> PROPELPLANT_ROD_BLOCK = BLOCKS.register("propelplant_cane", () -> new StickBlock(
             AbstractBlock.Properties.of(Material.WOOD, MaterialColor.CRIMSON_STEM)
                     .strength(0.25F, 0F)
-                    .sound(SoundType.WOOD)));
+                    .sound(SoundType.WOOD), "nethers_delight:propelplant_cane"));
 
     //blaze rod
     public static final String BLAZE_ROD_NAME = "blaze_rod";
@@ -1248,7 +1246,6 @@ public class ModRegistry {
     public static final RegistryObject<Block> BLAZE_ROD_BLOCK = BLOCKS.register(BLAZE_ROD_NAME, () -> new BlazeRodBlock(
             AbstractBlock.Properties.of(Material.STONE, MaterialColor.COLOR_YELLOW)
                     .strength(0.25F, 0F)
-                    .harvestTool(ToolType.PICKAXE)
                     .lightLevel(state -> 12)
                     .emissiveRendering((p, w, s) -> true)
                     .sound(SoundType.GILDED_BLACKSTONE))
