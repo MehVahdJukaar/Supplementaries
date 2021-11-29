@@ -5,17 +5,16 @@
       "item": "minecraft:suspicious_stew"
     },
     "title": {
-      "translate":   "advancements.husbandry.sus_stew.title"
+      "translate": "advancements.husbandry.sus_stew.title"
     },
     "description": {
-      "translate":   "advancements.husbandry.sus_stew.description"
+      "translate": "advancements.husbandry.sus_stew.description"
     },
     "frame": "challenge",
     "show_toast": true,
     "announce_to_chat": false,
     "hidden": true
   },
-
   "criteria": {
     "stew": {
       "trigger": "minecraft:consume_item",
@@ -26,7 +25,6 @@
       }
     }
   },
-
   "requirements": [
     [
       "stew"

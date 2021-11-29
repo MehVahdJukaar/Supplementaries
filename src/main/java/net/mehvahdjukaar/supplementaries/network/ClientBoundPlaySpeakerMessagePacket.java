@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.network;
 
 
 import com.mojang.text2speech.Narrator;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
@@ -36,7 +37,7 @@ public class ClientBoundPlaySpeakerMessagePacket {
 
 
             //TODO: add @p command support
-            if (message.narrator) {
+            if (message.narrator && !ClientConfigs.cached.SPEAKER_BLOCK_MUTE) {
                 Narrator.getNarrator().say(message.str.getString(), true);
             } else {
                 Minecraft.getInstance().player.sendMessage(message.str, Util.NIL_UUID);

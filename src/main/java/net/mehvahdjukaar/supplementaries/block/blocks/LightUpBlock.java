@@ -12,7 +12,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionUtils;
@@ -25,9 +24,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.event.ForgeEventFactory;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 
@@ -56,19 +58,20 @@ public abstract class LightUpBlock extends Block implements ILightable {
     }
 
     @Override
-    public boolean lightUp(BlockState state, BlockPos pos, LevelAccessor world, ILightable.FireSound sound) {
+    public boolean lightUp(@Nullable Entity player, BlockState state, BlockPos pos, LevelAccessor world, ILightable.FireSound sound) {
         if (!isLit(state)) {
             if (!world.isClientSide()) {
                 world.setBlock(pos, toggleLitState(state, true), 11);
                 sound.play(world, pos);
             }
+            world.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
             return true;
         }
         return false;
     }
 
     @Override
-    public boolean extinguish(BlockState state, BlockPos pos, LevelAccessor world) {
+    public boolean extinguish(@Nullable Entity player, BlockState state, BlockPos pos, LevelAccessor world) {
         if (this.isLit(state)) {
             if (!world.isClientSide()) {
                 world.playSound(null, pos, SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 0.5F, 1.5F);
@@ -79,6 +82,7 @@ public abstract class LightUpBlock extends Block implements ILightable {
                     world.addParticle(ParticleTypes.SMOKE, pos.getX() + 0.25f + random.nextFloat() * 0.5f, pos.getY() + 0.35f + random.nextFloat() * 0.5f, pos.getZ() + 0.25f + random.nextFloat() * 0.5f, 0, 0.005, 0);
                 }
             }
+            world.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
             return true;
         }
         return false;
@@ -90,20 +94,20 @@ public abstract class LightUpBlock extends Block implements ILightable {
             ItemStack stack = player.getItemInHand(handIn);
             Item item = stack.getItem();
             if (item instanceof FlintAndSteelItem || stack.is(ModTags.FIRE_SOURCES)) {
-                if (lightUp(state, pos, worldIn, FireSound.FLINT_AND_STEEL)) {
+                if (lightUp(player, state, pos, worldIn, FireSound.FLINT_AND_STEEL)) {
                     this.onChange(state, worldIn, pos);
                     stack.hurtAndBreak(1, player, (playerIn) -> playerIn.broadcastBreakEvent(handIn));
                     return InteractionResult.sidedSuccess(worldIn.isClientSide);
                 }
             } else if (item instanceof FireChargeItem) {
-                if (lightUp(state, pos, worldIn, FireSound.FIRE_CHANGE)) {
+                if (lightUp(player, state, pos, worldIn, FireSound.FIRE_CHANGE)) {
                     this.onChange(state, worldIn, pos);
                     stack.hurtAndBreak(1, player, (playerIn) -> playerIn.broadcastBreakEvent(handIn));
                     if (!player.isCreative()) stack.shrink(1);
                     return InteractionResult.sidedSuccess(worldIn.isClientSide);
                 }
             } else if (item instanceof PotionItem && PotionUtils.getPotion(stack) == Potions.WATER) {
-                if (extinguish(state, pos, worldIn)) {
+                if (extinguish(player, state, pos, worldIn)) {
                     this.onChange(state, worldIn, pos);
                     Utils.swapItem(player, handIn, stack, new ItemStack(Items.GLASS_BOTTLE));
                     return InteractionResult.sidedSuccess(worldIn.isClientSide);
@@ -113,22 +117,19 @@ public abstract class LightUpBlock extends Block implements ILightable {
         return InteractionResult.PASS;
     }
 
-
-    @SuppressWarnings({"StrongCast", "OverlyStrongTypeCast"})
     @Override
-    public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
-        if (entityIn instanceof Projectile projectile) {
-            if (projectile.isOnFire()) {
-                Entity entity = projectile.getOwner();
-                if (entity == null || entity instanceof Player || net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(worldIn, entity)) {
-                    if (lightUp(state, pos, worldIn, FireSound.FLAMING_ARROW)) this.onChange(state, worldIn, pos);
-                }
-            } else if (projectile instanceof ThrownPotion && PotionUtils.getPotion(((ThrowableItemProjectile) projectile).getItem()) == Potions.WATER) {
-                Entity entity = projectile.getOwner();
-                boolean flag = entity == null || entity instanceof Player || net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(worldIn, entity);
-                if (flag && extinguish(state, pos, worldIn)) {
-                    this.onChange(state, worldIn, pos);
-                }
+    public void onProjectileHit(Level level, BlockState state, BlockHitResult pHit, Projectile projectile) {
+        BlockPos pos = pHit.getBlockPos();
+        if (projectile.isOnFire()) {
+            Entity entity = projectile.getOwner();
+            if (entity == null || entity instanceof Player || ForgeEventFactory.getMobGriefingEvent(level, entity)) {
+                if (lightUp(projectile, state, pos, level, FireSound.FLAMING_ARROW)) this.onChange(state, level, pos);
+            }
+        } else if (projectile instanceof ThrownPotion potion && PotionUtils.getPotion(potion.getItem()) == Potions.WATER) {
+            Entity entity = projectile.getOwner();
+            boolean flag = entity == null || entity instanceof Player || ForgeEventFactory.getMobGriefingEvent(level, entity);
+            if (flag && extinguish(projectile, state, pos, level)) {
+                this.onChange(state, level, pos);
             }
         }
     }

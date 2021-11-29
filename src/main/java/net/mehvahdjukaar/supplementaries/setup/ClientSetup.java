@@ -23,6 +23,7 @@ import net.mehvahdjukaar.supplementaries.common.FlowerPotHandler;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandlerClient;
 import net.mehvahdjukaar.supplementaries.items.BlackboardItem;
+import net.mehvahdjukaar.supplementaries.items.BubbleBlower;
 import net.mehvahdjukaar.supplementaries.items.SlingshotItem;
 import net.mehvahdjukaar.supplementaries.world.data.map.client.CMDclient;
 import net.minecraft.client.Minecraft;
@@ -187,6 +188,10 @@ public class ClientSetup {
         ItemProperties.register(ModRegistry.SLINGSHOT_ITEM.get(), new ResourceLocation("pulling"),
                 (stack, world, entity, s) -> entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1.0F : 0.0F );
 
+        ItemProperties.register(ModRegistry.BUBBLE_BLOWER.get(), new ResourceLocation("using"), BubbleBlower::isBeingUsed);
+
+
+
 
         ModRegistry.PRESENTS_ITEMS.values().forEach(i -> ItemProperties.register(i.get(), new ResourceLocation("packed"),
                 (stack, world, entity, s) -> PresentBlockTile.isPacked(stack) ? 1.0F : 0F));
@@ -227,6 +232,7 @@ public class ClientSetup {
         particleManager.register(ModRegistry.CONFETTI_PARTICLE.get(), ConfettiParticle.Factory::new);
         particleManager.register(ModRegistry.ROTATION_TRAIL.get(), RotationTrailParticle.Factory::new);
         particleManager.register(ModRegistry.ROTATION_TRAIL_EMITTER.get(),new RotationTrailEmitter.Factory());
+        particleManager.register(ModRegistry.SUDS_PARTICLE.get(), SudsParticle.Factory::new);
     }
 
     @SubscribeEvent

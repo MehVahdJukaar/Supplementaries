@@ -25,8 +25,8 @@ public class FlagFromBannerRecipe extends CustomRecipe {
         ItemStack empty = null;
 
         for (int i = 0; i < inv.getContainerSize(); ++i) {
-            ItemStack item1 = inv.getItem(i);
-            Item item = item1.getItem();
+            ItemStack itemStack = inv.getItem(i);
+            Item item = itemStack.getItem();
             if (item instanceof FlagItem flagItem) {
                 if (dyecolor == null) {
                     dyecolor = flagItem.getColor();
@@ -34,7 +34,7 @@ public class FlagFromBannerRecipe extends CustomRecipe {
                     return false;
                 }
 
-                int j = BannerBlockEntity.getPatternCount(item1);
+                int j = BannerBlockEntity.getPatternCount(itemStack);
                 if (j > 6) {
                     return false;
                 }
@@ -44,24 +44,24 @@ public class FlagFromBannerRecipe extends CustomRecipe {
                         return false;
                     }
 
-                    withPatterns = item1;
+                    withPatterns = itemStack;
                 } else {
                     if (empty != null) {
                         return false;
                     }
 
-                    empty = item1;
+                    empty = itemStack;
                 }
 
             }
-            if (item instanceof BannerItem banneritem) {
+            else if (item instanceof BannerItem banneritem) {
                 if (dyecolor == null) {
                     dyecolor = banneritem.getColor();
                 } else if (dyecolor != banneritem.getColor()) {
                     return false;
                 }
 
-                int j = BannerBlockEntity.getPatternCount(item1);
+                int j = BannerBlockEntity.getPatternCount(itemStack);
                 if (j > 6) {
                     return false;
                 }
@@ -70,15 +70,16 @@ public class FlagFromBannerRecipe extends CustomRecipe {
                     if (withPatterns != null) {
                         return false;
                     }
-                    withPatterns = item1;
+                    withPatterns = itemStack;
                 } else if (!(withPatterns != null && withPatterns.getItem() instanceof BannerItem)) {
                     if (empty != null) {
                         return false;
                     }
 
-                    empty = item1;
+                    empty = itemStack;
                 }
             }
+            else if(!itemStack.isEmpty())return false;
         }
 
         return withPatterns != null && empty != null;

@@ -57,7 +57,7 @@ public class SlingshotRendererHelper {
         BlockHitResult raytrace = world
                 .clip(new ClipContext(start, start.add(range), ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player));
         if (raytrace.getType() == HitResult.Type.BLOCK && start.distanceToSqr(raytrace.getLocation()) > Mth.square(Minecraft.getInstance().gameMode.getPickRange())) {
-            LOOK_POS = raytrace.getBlockPos().relative(raytrace.getDirection(), (int) ((double) ClientConfigs.general.TEST1.get()));
+            LOOK_POS = raytrace.getBlockPos().relative(raytrace.getDirection(), 0);
         }
     }
 
@@ -91,14 +91,20 @@ public class SlingshotRendererHelper {
         LOOK_POS = null;
     }
 
-    private static void renderVoxelShape(PoseStack matrixStack, VertexConsumer builder, VoxelShape
-            voxelShape, double x, double y, double z, float r, float g, float b, float a) {
-        Matrix4f matrix4f = matrixStack.last().pose();
-        voxelShape.forAllEdges((e1, e2, e3, e4, e5, e6) -> {
-            builder.vertex(matrix4f, (float) (e1 + x), (float) (e2 + y), (float) (e3 + z)).color(r, g, b, a).endVertex();
-            builder.vertex(matrix4f, (float) (e4 + x), (float) (e5 + y), (float) (e6 + z)).color(r, g, b, a).endVertex();
+    private static void renderVoxelShape(PoseStack pMatrixStack, VertexConsumer pBuffer, VoxelShape pShape,
+                                    double pX, double pY, double pZ, float pRed, float pGreen, float pBlue, float pAlpha) {
+        PoseStack.Pose last = pMatrixStack.last();
+        pShape.forAllEdges((e1, e2, e3, e4, e5, e6) -> {
+            float f = (float)(e4 - e1);
+            float f1 = (float)(e5 - e2);
+            float f2 = (float)(e6 - e3);
+            float f3 = Mth.sqrt(f * f + f1 * f1 + f2 * f2);
+            f = f / f3;
+            f1 = f1 / f3;
+            f2 = f2 / f3;
+            pBuffer.vertex(last.pose(), (float)(e1 + pX), (float)(e2 + pY), (float)(e3 + pZ)).color(pRed, pGreen, pBlue, pAlpha).normal(last.normal(), f, f1, f2).endVertex();
+            pBuffer.vertex(last.pose(), (float)(e4 + pX), (float)(e5 + pY), (float)(e6 + pZ)).color(pRed, pGreen, pBlue, pAlpha).normal(last.normal(), f, f1, f2).endVertex();
         });
     }
-
 
 }

@@ -16,6 +16,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.font.TextFieldHelper;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.SignEditScreen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -115,7 +116,10 @@ public class HangingSignGui extends Screen {
     protected void init() {
 
         this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
-        this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 4 + 120, 200, 20, CommonComponents.GUI_DONE, (p_238847_1_) -> this.close()));
+
+        this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 4 + 120, 200, 20, CommonComponents.GUI_DONE, (p_169820_) -> {
+            this.close();
+        }));
         //this.tileSign.setEditable(false);
         this.textInputUtil = new TextFieldHelper(() -> this.cachedLines[this.editLine], (t) -> {
             this.cachedLines[this.editLine] = t;
@@ -125,10 +129,13 @@ public class HangingSignGui extends Screen {
     }
 
     @Override
-
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+
         Lighting.setupForFlatItems();
         this.renderBackground(poseStack);
+
+        super.render(poseStack, mouseX, mouseY, partialTicks);
+
         drawCenteredString(poseStack, this.font, this.title, this.width / 2, 40, 16777215);
 
         MultiBufferSource.BufferSource bufferSource = this.minecraft.renderBuffers().bufferSource();
@@ -148,6 +155,8 @@ public class HangingSignGui extends Screen {
         blockRenderer.renderSingleBlock(state, poseStack, bufferSource, 15728880, OverlayTexture.NO_OVERLAY, EmptyModelData.INSTANCE);
         poseStack.popPose();
 
+        bufferSource.endBatch();
+        bufferSource = this.minecraft.renderBuffers().bufferSource();
 
         //renders text
         boolean blink = this.updateCounter / 6 % 2 == 0;
@@ -160,7 +169,7 @@ public class HangingSignGui extends Screen {
 
         poseStack.popPose();
         Lighting.setupFor3DItems();
-        super.render(poseStack, mouseX, mouseY, partialTicks);
+
     }
 }
 

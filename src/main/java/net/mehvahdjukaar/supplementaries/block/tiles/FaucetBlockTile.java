@@ -192,14 +192,15 @@ public class FaucetBlockTile extends BlockEntity {
                         tileBack.setChanged();
                         return true;
                     }
-                } else if (level.getFluidState(behind).getType() == Fluids.WATER) {
-                    this.fluidHolder.fill(SoftFluidRegistry.WATER);
-                    return true;
                 }
             }
             if (!doTransfer) return !this.fluidHolder.isEmpty();
             //pull other items from containers
             return this.spillItemsFromInventory(level, pos, dir, tileBack);
+        }
+        else if (level.getFluidState(behind).getType() == Fluids.WATER) {
+            this.fluidHolder.fill(SoftFluidRegistry.WATER);
+            return true;
         }
 
         if (!doTransfer) return !this.fluidHolder.isEmpty();

@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries;
 
+import net.mehvahdjukaar.supplementaries.block.blocks.PedestalBlock;
 import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
 import net.mehvahdjukaar.supplementaries.datagen.RecipeCondition;
 import net.mehvahdjukaar.supplementaries.events.ServerEvents;
@@ -7,16 +8,25 @@ import net.mehvahdjukaar.supplementaries.setup.ClientSetup;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModSetup;
 import net.mehvahdjukaar.supplementaries.world.structures.StructureRegistry;
+import net.minecraft.Util;
+import net.minecraft.client.ResourceLoadStateTracker;
+import net.minecraft.client.gui.screens.LoadingOverlay;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackResources;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Mod(Supplementaries.MOD_ID)
 public class Supplementaries {
@@ -36,7 +46,6 @@ public class Supplementaries {
     public Supplementaries() {
 
 
-        //TODO: events
 
         //TODO: fish bucket on cages a
 //TODO: shift click to pickup placed book
@@ -45,8 +54,6 @@ public class Supplementaries {
         //yes this is where I write crap. deal with it XD
 
         //todo: fix projectile hitbox being a single point on y = 0
-
-        //randomium name change
 
         //add chain knot
 
@@ -88,8 +95,6 @@ public class Supplementaries {
 
         //add shift middle click to swap to correct tool
 
-        //mod idea: better birch trees
-
         //mod idea: blackboard banners and flags with villager
         //weed mod
 
@@ -113,7 +118,7 @@ public class Supplementaries {
 
         //TODO: xp bottling whose cost depends on player total xp
         //TODO: randomium that can spawn in other dimensions via whitelist
-        //TODO: add compat stuff recently provided
+
         //todo: serene easons & moon stuff for haunted harvest
 
         //TODO: wiki for custom map markers icons. add simple icon datapacks
@@ -129,7 +134,6 @@ public class Supplementaries {
 
         //TODO: way signs as villages pieces
 
-        //TODO: fix sack shift clicking
 
         //small honey slime in cage
 
@@ -146,7 +150,12 @@ public class Supplementaries {
 
         //tater in a jar
 
-        //TODO: maybe remove light level blockstate to tile entities
+        //Increase range of enchantment table
+
+        //TODO: FIX ALL ADVANCEMENTS
+
+        //TODO: fix faucet water is completely bugged
+        //TODO: add oxidising copper
 
 
         ConfigHandler.init();

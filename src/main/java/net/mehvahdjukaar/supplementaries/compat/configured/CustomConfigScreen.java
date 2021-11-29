@@ -37,6 +37,7 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.function.Function;
 
 //credits to MrCrayfish's Configured Mod
 public class CustomConfigScreen extends ConfigScreen {
@@ -441,4 +442,43 @@ public class CustomConfigScreen extends ConfigScreen {
             this.button.setMessage(new TextComponent(""));
         }
     }
+
+    /*
+    public class StringColorWrapper extends ConfigScreen.ConfigItem<String> {
+        private final FocusedEditBox textField;
+
+        public StringColorWrapper(ConfigScreen.ValueHolder<String> holder) {
+            super(holder);
+            this.textField = new FocusedEditBox(CustomConfigScreen.this.font, 0, 0, 44, 18, this.label);
+            this.textField.setValue((holder.getValue()));
+            this.textField.setResponder((s) -> {
+                try {
+                    if (holder.valueSpec.test(s)) {
+                        this.textField.setTextColor(14737632);
+                        holder.setValue(s);
+                        CustomConfigScreen.this.updateButtons();
+                    } else {
+                        this.textField.setTextColor(16711680);
+                    }
+                } catch (Exception var5) {
+                    this.textField.setTextColor(16711680);
+                }
+
+            });
+            this.eventListeners.add(this.textField);
+        }
+
+        public void render(PoseStack poseStack, int index, int top, int left, int width, int p_230432_6_, int mouseX, int mouseY, boolean hovered, float partialTicks) {
+            super.render(poseStack, index, top, left, width, p_230432_6_, mouseX, mouseY, hovered, partialTicks);
+            this.textField.x = left + width - 68;
+            this.textField.y = top + 1;
+            this.textField.render(poseStack, mouseX, mouseY, partialTicks);
+        }
+
+        public void onResetValue() {
+            this.textField.setValue((this.holder.getValue()));
+        }
+    }
+    */
+
 }

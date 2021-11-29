@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
@@ -30,7 +31,7 @@ public abstract class LightUpWaterBlock extends LightUpBlock implements SimpleWa
     public boolean placeLiquid(LevelAccessor worldIn, BlockPos pos, BlockState state, FluidState fluidStateIn) {
         if (!state.getValue(BlockStateProperties.WATERLOGGED) && fluidStateIn.getType() == Fluids.WATER) {
 
-            extinguish(state, pos, worldIn);
+            extinguish(null, state, pos, worldIn);
 
             worldIn.setBlock(pos, state.setValue(WATERLOGGED, true).setValue(LIT, false), 3);
             worldIn.getLiquidTicks().scheduleTick(pos, fluidStateIn.getType(), fluidStateIn.getType().getTickDelay(worldIn));
@@ -41,9 +42,9 @@ public abstract class LightUpWaterBlock extends LightUpBlock implements SimpleWa
     }
 
     @Override
-    public boolean lightUp(BlockState state, BlockPos pos, LevelAccessor world, FireSound sound) {
+    public boolean lightUp(Entity entity, BlockState state, BlockPos pos, LevelAccessor world, FireSound sound) {
         if (!state.getValue(WATERLOGGED)) {
-            return super.lightUp(state, pos, world, sound);
+            return super.lightUp(entity, state, pos, world, sound);
         }
         return false;
     }

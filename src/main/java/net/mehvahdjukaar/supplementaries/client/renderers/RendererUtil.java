@@ -21,21 +21,15 @@ import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.HalfTransparentBlock;
-import net.minecraft.world.level.block.StainedGlassPaneBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
 
 import java.util.Random;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 public class RendererUtil {
     //centered on x,z. aligned on y=0
@@ -333,13 +327,13 @@ public class RendererUtil {
     }
 
     public static void renderGuiItemRelative(ItemStack stack, int x, int y, ItemRenderer renderer,
-                                             BiConsumer<PoseStack, Boolean> movement){
-        renderGuiItemRelative(stack, x,y,renderer,movement, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+                                             BiConsumer<PoseStack, Boolean> movement) {
+        renderGuiItemRelative(stack, x, y, renderer, movement, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
     }
 
 
-        public static void renderGuiItemRelative(ItemStack stack, int x, int y, ItemRenderer renderer,
-                                             BiConsumer<PoseStack, Boolean> movement, int combinedLight, int pCombinedOverlay){
+    public static void renderGuiItemRelative(ItemStack stack, int x, int y, ItemRenderer renderer,
+                                             BiConsumer<PoseStack, Boolean> movement, int combinedLight, int pCombinedOverlay) {
 
         BakedModel model = renderer.getModel(stack, null, null, 0);
 
@@ -391,8 +385,7 @@ public class RendererUtil {
 
             if (model.isLayered()) {
                 ForgeHooksClient.drawItemLayered(renderer, model, stack, matrixStack, bufferSource, combinedLight, pCombinedOverlay, true);
-            }
-            else {
+            } else {
                 RenderType rendertype = ItemBlockRenderTypes.getRenderType(stack, true);
                 VertexConsumer vertexconsumer;
                 if (stack.is(Items.COMPASS) && stack.hasFoil()) {
@@ -430,7 +423,6 @@ public class RendererUtil {
         renderer.blitOffset = renderer.blitOffset - 50.0F;
 
     }
-
 
 
 }

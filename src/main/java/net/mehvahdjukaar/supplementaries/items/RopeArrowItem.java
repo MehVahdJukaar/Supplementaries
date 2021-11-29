@@ -6,7 +6,6 @@ import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.entities.RopeArrowEntity;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.LivingEntity;
@@ -27,13 +26,7 @@ public class RopeArrowItem extends ArrowItem {
 
     @Override
     public AbstractArrow createArrow(Level world, ItemStack stack, LivingEntity shooter) {
-        CompoundTag com = stack.getTag();
-        int charges = stack.getMaxDamage();
-        if (com != null) {
-            if (com.contains("Damage")) {
-                charges = charges - com.getInt("Damage");
-            }
-        }
+        int charges = stack.getMaxDamage() - stack.getDamageValue();
         return new RopeArrowEntity(world, shooter, charges);
     }
 

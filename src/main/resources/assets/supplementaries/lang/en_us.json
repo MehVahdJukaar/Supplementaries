@@ -270,6 +270,10 @@
   "block.supplementaries.soap_block": "Soap Block",
   "item.supplementaries.soap": "Soap",
   "item.supplementaries.soap_water": "Soapy Water",
+  "advancements.story.wrench.title": "Engineer Gaming",
+  "advancements.story.wrench.description": "Use a Wrench to rotate a block",
+  "item.supplementaries.bubble_blower": "Bubble Blower",
+  "message.supplementaries.bubble_blower_tooltip": "Soap: %1$s / %2$s",
 
   "block.supplementaries.laser_block": "Ender Beamer",
   "death.attack.supplementaries.amethyst_shard": "%1$s was sharded to death",

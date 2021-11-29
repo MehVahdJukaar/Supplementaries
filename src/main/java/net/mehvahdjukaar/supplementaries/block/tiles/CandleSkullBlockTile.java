@@ -53,6 +53,10 @@ public class CandleSkullBlockTile extends EnhancedSkullBlockTile {
         return candle;
     }
 
+    public void setCandle(BlockState candle) {
+        this.candle = candle;
+    }
+
     public boolean tryAddingCandle(Block candle) {
         if (this.candle.isAir() || (candle == this.candle.getBlock() && this.candle.getValue(CandleBlock.CANDLES) != 4)) {
 

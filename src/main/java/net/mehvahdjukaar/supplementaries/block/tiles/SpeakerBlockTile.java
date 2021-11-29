@@ -72,7 +72,8 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
         }
 
         this.message = compound.getString("Message");
-        this.narrator = compound.getBoolean("Narrator");
+        if (!ServerConfigs.cached.SPEAKER_NARRATOR) this.narrator = false;
+        else this.narrator = compound.getBoolean("Narrator");
         this.volume = compound.getDouble("Volume");
         this.loadOwner(compound);
     }

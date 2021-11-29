@@ -1,16 +1,19 @@
 package net.mehvahdjukaar.supplementaries.block.util;
 
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.LevelAccessor;
+import org.jetbrains.annotations.Nullable;
 
 public interface ILightable {
 
-    boolean lightUp(BlockState state, BlockPos pos, LevelAccessor world, FireSound sound);
+    boolean lightUp(@Nullable Entity entity, BlockState state, BlockPos pos, LevelAccessor world, FireSound sound);
 
-    boolean extinguish(BlockState state, BlockPos pos, LevelAccessor world);
+    boolean extinguish(@Nullable Entity entity, BlockState state, BlockPos pos, LevelAccessor world);
 
     enum FireSound{
         FLINT_AND_STEEL,

@@ -142,6 +142,7 @@ public class ClientConfigs {
 
         public static ForgeConfigSpec.BooleanValue FAST_LANTERNS;
         public static ForgeConfigSpec.BooleanValue TURN_TABLE_PARTICLES;
+        public static ForgeConfigSpec.BooleanValue SPEAKER_BLOCK_MUTE;
 
         private static void init(ForgeConfigSpec.Builder builder) {
 
@@ -271,6 +272,11 @@ public class ClientConfigs {
                     .define("turn_particles", true);
             builder.pop();
 
+            builder.push("speaker_block");
+            SPEAKER_BLOCK_MUTE = builder.comment("Mute speaker block incoming narrator messages and displays them in chat instead")
+                            .define("mute_narrator", false);
+            builder.pop();
+
             builder.pop();
         }
     }
@@ -369,6 +375,7 @@ public class ClientConfigs {
         public static boolean TURN_TABLE_PARTICLES;
         public static boolean WRENCH_PARTICLES;
         public static boolean FLUTE_PARTICLES;
+        public static boolean SPEAKER_BLOCK_MUTE;
 
         public static void refresh(){
             //tweaks
@@ -404,6 +411,7 @@ public class ClientConfigs {
             FLAG_FANCINESS = block.FLAG_FANCINESS.get();
             FAST_LANTERNS = block.FAST_LANTERNS.get();
             TURN_TABLE_PARTICLES = block.TURN_TABLE_PARTICLES.get();
+            SPEAKER_BLOCK_MUTE = block.SPEAKER_BLOCK_MUTE.get();
             //items
             SLINGSHOT_OUTLINE = items.SLINGSHOT_OUTLINE.get();
             SLINGSHOT_OUTLINE_COLOR = Integer.parseUnsignedInt(items.SLINGSHOT_OUTLINE_COLOR.get().replace("0x", ""), 16);

@@ -11,6 +11,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.MoverType;
@@ -20,6 +21,7 @@ import net.minecraft.world.level.block.FireBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -30,7 +32,7 @@ public class BellowsBlockTile extends BlockEntity {
 
     public float height = 0;
     public float prevHeight = 0;
-    private long offset = 0;
+    private long startTime = 0;
     public boolean isPressed = false;
 
     public BellowsBlockTile(BlockPos pos, BlockState state) {
@@ -144,27 +146,33 @@ public class BellowsBlockTile extends BlockEntity {
         }
     }
 
-    private void blowParticles(float air, Direction facing, Level level) {
+    private void blowParticles(float air, Direction facing, Level level, boolean waterInFront) {
         if (level.random.nextInt(2) == 0 && level.random.nextFloat() < air &&
                 !Block.canSupportCenter(level, this.worldPosition.relative(facing), facing.getOpposite())) {
-            this.spawnParticle(level, this.worldPosition);
+            this.spawnParticle(level, this.worldPosition, facing, waterInFront);
         }
     }
 
     @SuppressWarnings("unchecked")
-    private <T extends BlockEntity> void tickFurnaces(BlockPos frontPos, Level level, T tile) {
-        BlockState state = level.getBlockState(frontPos);
-        if (tile != null && state.is(ModTags.BELLOWS_TICKABLE_TAG)) {
-            BlockEntityTicker<T> ticker = (BlockEntityTicker<T>) state.getTicker(level, tile.getType());
+    private <T extends BlockEntity> void tickFurnaces(BlockPos frontPos, BlockState frontState, Level level, T tile) {
+        if (tile != null) {
+            BlockEntityTicker<T> ticker = (BlockEntityTicker<T>) frontState.getTicker(level, tile.getType());
             if (ticker != null) {
-                ticker.tick(level, frontPos, state, tile);
+                ticker.tick(level, frontPos, frontState, tile);
             }
         }
     }
 
     private void tickFurnaces(BlockPos frontPos, Level level) {
-        BlockEntity te = level.getBlockEntity(frontPos);
-        this.tickFurnaces(frontPos, level, te);
+        BlockState state = level.getBlockState(frontPos);
+        if (state.is(ModTags.BELLOWS_TICKABLE_TAG)) {
+            BlockEntity te = level.getBlockEntity(frontPos);
+            this.tickFurnaces(frontPos, state, level, te);
+        }
+        //TODO: add oxidising copper here
+        else {
+
+        }
     }
 
     private void refreshFire(int n, Direction facing, BlockPos frontPos, Level level) {
@@ -181,96 +189,95 @@ public class BellowsBlockTile extends BlockEntity {
         }
     }
 
-    //TODO: optimize this (also for flywheel)
-    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, BellowsBlockTile tile) {
+    private float getPeriodForPower(int power) {
+        return ((float) ServerConfigs.cached.BELLOWS_BASE_PERIOD) - (power - 1) * ((float) ServerConfigs.cached.BELLOWS_POWER_SCALING);
+    }
 
-        int power = pState.getValue(BellowsBlock.POWER);
+    //TODO: optimize this (also for flywheel)
+    public static void tick(Level level, BlockPos pos, BlockState state, BellowsBlockTile tile) {
+
+        int power = state.getValue(BellowsBlock.POWER);
         tile.prevHeight = tile.height;
 
-        if (power != 0 && !(tile.offset == 0 && tile.height != 0)) {
-            long time = pLevel.getGameTime();
-            if (tile.offset == 0) {
-                tile.offset = time;
+        if (power != 0 && !(tile.startTime == 0 && tile.height != 0)) {
+            long time = level.getGameTime();
+            if (tile.startTime == 0) {
+                tile.startTime = time;
             }
 
-            float period = ((float) ServerConfigs.cached.BELLOWS_PERIOD) - (power - 1) * ((float) ServerConfigs.cached.BELLOWS_POWER_SCALING);
-            Direction facing = pState.getValue(BellowsBlock.FACING);
+            float period = tile.getPeriodForPower(power);
 
             //slope of animation. for particles and pushing entities
-            float arg = (float) Math.PI * 2 * (((time - tile.offset) / period) % 1);
+            float arg = (float) Math.PI * 2 * (((time - tile.startTime) / period) % 1);
             float sin = Mth.sin(arg);
             float cos = Mth.cos(arg);
             final float dh = 1 / 16f;//0.09375f;
             tile.height = dh * cos - dh;
 
-            //client. particles
-            if (pLevel.isClientSide) {
-                tile.blowParticles(sin, facing, pLevel);
-            }
-            //server
-            else {
-                float range = ServerConfigs.cached.BELLOWS_RANGE;
-                //push entities (only if pushing air)
-                if (sin > 0) {
-                    tile.pushEntities(facing, period, range, pLevel);
-                }
 
-                BlockPos frontPos = pPos.relative(facing);
+            tile.pushAir(level, pos, state, power, time, period, sin);
 
-                //speeds up furnaces
-                if (time % (10 - (power / 2)) == 0) {
-                    tile.tickFurnaces(frontPos, pLevel);
-                }
-
-                //refresh fire blocks
-                //update more frequently block closed to it
-                //fire updates (previous random tick) at a minimum of 30 ticks
-                int n = 0;
-                for (int a = 0; a <= range; a++) {
-                    if (time % (15L * (a + 1)) != 0) {
-                        n = a;
-                        break;
-                    }
-                }
-                //only first 4 block will ultimately be kept active. this could change with random ticks if unlucky
-                tile.refreshFire(n, facing, frontPos, pLevel);
-
-            }
         } else if (tile.isPressed) {
             float minH = -2 / 16f;
             tile.height = Math.max(tile.height - 0.01f, minH);
 
             if (tile.height > minH) {
-                Direction facing = pState.getValue(BellowsBlock.FACING);
+                long time = level.getGameTime();
+                //when operated by a mob it behaves like a constant with 7 power
+                int p = 7;
+                float period = tile.getPeriodForPower(p);
 
-                if (pLevel.isClientSide) {
-                    tile.blowParticles(0.8f, facing, pLevel);
-                } else {
-                    float range = ServerConfigs.cached.BELLOWS_RANGE;
-                    tile.pushEntities(facing, ServerConfigs.cached.BELLOWS_PERIOD, range, pLevel);
-
-                    BlockPos frontPos = pPos.relative(facing);
-
-                    if (tile.height % 0.04 == 0) {
-                        tile.tickFurnaces(frontPos, pLevel);
-                    }
-
-                    if (tile.height % 0.15 == 0) {
-                        tile.refreshFire((int) range, facing, frontPos, pLevel);
-                    }
-                }
+                tile.pushAir(level, pos, state, power, time, period, 0.8f);
             }
         }
         //resets counter when powered off
         else {
-            tile.offset = 0;
-            if (tile.height < 0)
+            tile.startTime = 0;
+            if (tile.height < 0) {
                 tile.height = Math.min(tile.height + 0.01f, 0);
+            }
         }
         if (tile.prevHeight != 0 && tile.height != 0) {
-            tile.moveCollidedEntities(pLevel);
+            tile.moveCollidedEntities(level);
         }
         tile.isPressed = false;
+    }
+
+    private void pushAir(Level level, BlockPos pos, BlockState state, int power, long time, float period, float airIntensity) {
+        Direction facing = state.getValue(BellowsBlock.FACING);
+        BlockPos frontPos = pos.relative(facing);
+        FluidState fluid = level.getFluidState(frontPos);
+
+        //client. particles
+        if (level.isClientSide) {
+            this.blowParticles(airIntensity, facing, level, fluid.getType().is(FluidTags.WATER));
+        }
+        //server
+        else if (fluid.isEmpty()) {
+            float range = ServerConfigs.cached.BELLOWS_RANGE;
+            //push entities (only if pushing air)
+            if (airIntensity > 0) {
+                this.pushEntities(facing, period, range, level);
+            }
+
+            //speeds up furnaces
+            if (time % (10 - (power / 2)) == 0) {
+                this.tickFurnaces(frontPos, level);
+            }
+
+            //refresh fire blocks
+            //update more frequently block closed to it
+            //fire updates (previous random tick) at a minimum of 30 ticks
+            int n = 0;
+            for (int a = 0; a <= range; a++) {
+                if (time % (15L * (a + 1)) != 0) {
+                    n = a;
+                    break;
+                }
+            }
+            //only first 4 block will ultimately be kept active. this could change with random ticks if unlucky
+            this.refreshFire(n, facing, frontPos, level);
+        }
     }
 
     public boolean inLineOfSight(Entity entity, Direction facing, Level level) {
@@ -288,8 +295,7 @@ public class BellowsBlockTile extends BlockEntity {
         return flag;
     }
 
-    public void spawnParticle(Level world, BlockPos pos) {
-        Direction dir = this.getDirection();
+    public void spawnParticle(Level world, BlockPos pos, Direction dir, boolean waterInFront) {
         double xo = dir.getStepX();
         double yo = dir.getStepY();
         double zo = dir.getStepZ();
@@ -303,7 +309,11 @@ public class BellowsBlockTile extends BlockEntity {
         double velY = yo * vel;
         double velZ = zo * vel;
 
-        world.addParticle(ParticleTypes.SMOKE, x, y, z, velX, velY, velZ);
+        if (waterInFront) {
+            world.addParticle(ParticleTypes.BUBBLE, x, y, z, velX * 0.5, velY * 0.5, velZ * 0.5);
+        } else {
+            world.addParticle(ParticleTypes.SMOKE, x, y, z, velX, velY, velZ);
+        }
     }
 
     public Direction getDirection() {
@@ -313,13 +323,13 @@ public class BellowsBlockTile extends BlockEntity {
     @Override
     public void load(CompoundTag compound) {
         super.load(compound);
-        this.offset = compound.getLong("Offset");
+        this.startTime = compound.getLong("Offset");
     }
 
     @Override
     public CompoundTag save(CompoundTag compound) {
         super.save(compound);
-        compound.putLong("Offset", this.offset);
+        compound.putLong("Offset", this.startTime);
         return compound;
     }
 

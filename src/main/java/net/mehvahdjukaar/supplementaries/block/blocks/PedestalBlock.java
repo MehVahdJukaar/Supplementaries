@@ -3,9 +3,9 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
-import net.mehvahdjukaar.supplementaries.block.tiles.HourGlassBlockTile;
 import net.mehvahdjukaar.supplementaries.block.tiles.PedestalBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.items.SackItem;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -64,7 +64,7 @@ public class PedestalBlock extends WaterBlock implements EntityBlock {
 
     @Override
     public float getEnchantPowerBonus(BlockState state, LevelReader world, BlockPos pos) {
-        if (world.getBlockEntity(pos) instanceof PedestalBlockTile te) {
+        if (ServerConfigs.cached.CRYSTAL_ENCHANTING && world.getBlockEntity(pos) instanceof PedestalBlockTile te) {
             if (te.type == PedestalBlockTile.DisplayType.CRYSTAL) return 3;
         }
         return 0;

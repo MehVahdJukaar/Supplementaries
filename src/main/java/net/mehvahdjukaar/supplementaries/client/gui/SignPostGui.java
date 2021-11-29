@@ -140,6 +140,9 @@ public class SignPostGui extends Screen {
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
         Lighting.setupForFlatItems();
         this.renderBackground(poseStack);
+
+        super.render(poseStack, mouseX, mouseY, partialTicks);
+
         drawCenteredString(poseStack, this.font, this.title, this.width / 2, 40, 16777215);
 
         MultiBufferSource.BufferSource bufferSource = this.minecraft.renderBuffers().bufferSource();
@@ -227,6 +230,5 @@ public class SignPostGui extends Screen {
 
         poseStack.popPose();
         Lighting.setupFor3DItems();
-        super.render(poseStack, mouseX, mouseY, partialTicks);
     }
 }

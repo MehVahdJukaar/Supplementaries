@@ -398,7 +398,7 @@ public class GunpowderBlock extends LightUpBlock {
                 for (Direction dir : Direction.values()) {
                     BlockPos p = pos.relative(dir);
                     if (this.isFireSource(world, p)) {
-                        this.lightUp(state, pos, world, FireSound.FLAMING_ARROW);
+                        this.lightUp(null, state, pos, world, FireSound.FLAMING_ARROW);
                         world.getBlockTicks().scheduleTick(pos, this, getDelay());
                         break;
                     }
@@ -416,8 +416,8 @@ public class GunpowderBlock extends LightUpBlock {
     }
 
     @Override
-    public boolean lightUp(BlockState state, BlockPos pos, LevelAccessor world, FireSound sound) {
-        boolean ret = super.lightUp(state, pos, world, sound);
+    public boolean lightUp(Entity entity, BlockState state, BlockPos pos, LevelAccessor world, FireSound sound) {
+        boolean ret = super.lightUp(entity, state, pos, world, sound);
         if (ret) {
             //spawn particles when first lit
             if (!world.isClientSide()) {
@@ -485,7 +485,7 @@ public class GunpowderBlock extends LightUpBlock {
     @Override
     public void onBlockExploded(BlockState state, Level world, BlockPos pos, Explosion explosion) {
         if (!world.isClientSide && this.canSurvive(state, world, pos)) {
-            this.lightUp(state, pos, world, FireSound.FLAMING_ARROW);
+            this.lightUp(null, state, pos, world, FireSound.FLAMING_ARROW);
         } else {
             super.onBlockExploded(state, world, pos, explosion);
         }
@@ -497,7 +497,7 @@ public class GunpowderBlock extends LightUpBlock {
     public void fallOn(Level world, BlockState state, BlockPos pos, Entity entity, float height) {
         super.fallOn(world, state, pos, entity, height);
         if (height > 1) {
-            this.extinguish(world.getBlockState(pos), pos, world);
+            this.extinguish(entity, world.getBlockState(pos), pos, world);
         }
     }
 

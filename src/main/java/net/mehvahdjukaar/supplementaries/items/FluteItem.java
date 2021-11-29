@@ -247,8 +247,10 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
 
         float mirror = leftHand ? -1 : 1;
 
+        //Rotate hand vector on y axis
         armVec = armVec.yRot(-0.99f * mirror);
 
+        //change hand vector onto direction vector basis
         Vec3 newV = bx.scale(armVec.x).add(by.scale(armVec.y)).add(bz.scale(armVec.z));
 
 

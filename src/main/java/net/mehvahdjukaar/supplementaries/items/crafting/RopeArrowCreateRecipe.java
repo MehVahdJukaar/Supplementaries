@@ -30,11 +30,12 @@ public class RopeArrowCreateRecipe extends CustomRecipe {
                 }
                 itemstack = stack;
             }
-            if (stack.is(ModTags.ROPES)) {
+            else if (stack.is(ModTags.ROPES)) {
 
                 itemstack1 = stack;
 
             }
+            else if(!stack.isEmpty())return false;
         }
         return itemstack != null && itemstack1 != null;
     }

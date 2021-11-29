@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.block.tiles.CandleSkullBlockTile;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.world.level.block.CandleBlock;
 import net.minecraft.world.level.block.SkullBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.EmptyModelData;
@@ -26,12 +27,13 @@ public class CandleSkullBlockTileRenderer extends AbstractSkullBlockTileRenderer
 
         BlockState candle = tile.getCandle();
         if (!candle.isAir()) {
-
+            candle = candle.setValue(CandleBlock.LIT, blockstate.getValue(CandleBlock.LIT))
+                    .setValue(CandleBlock.CANDLES, blockstate.getValue(CandleBlock.CANDLES));
 
             this.renderOverlay(poseStack, buffer, pCombinedLight, Textures.SKULL_CANDLES_TEXTURES.get(tile.getCandleColor()), yaw);
 
             poseStack.translate(0.5, 0, 0.5);
-            poseStack.mulPose(Vector3f.YP.rotationDegrees(-yaw));
+           // poseStack.mulPose(Vector3f.YP.rotationDegrees(-yaw));
             poseStack.translate(-0.5, 0.5, -0.5);
             blockRenderer.renderSingleBlock(candle, poseStack, buffer, pCombinedLight, pCombinedOverlay, EmptyModelData.INSTANCE);
         }

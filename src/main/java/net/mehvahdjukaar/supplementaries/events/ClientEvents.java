@@ -16,6 +16,8 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.GuiScreenEvent;
@@ -43,10 +45,11 @@ public class ClientEvents {
                 QuarkTooltipPlugin.onItemTooltipEvent(event);
             }
 
-            if (event.getItemStack().getItem() == ModRegistry.ROPE_ARROW_ITEM.get()) {
+            Item item = event.getItemStack().getItem();
+            if (item == ModRegistry.ROPE_ARROW_ITEM.get() || item == ModRegistry.BUBBLE_BLOWER.get()) {
                 List<Component> tooltip = event.getToolTip();
-                Optional<Component> r = tooltip.stream().filter(t -> (t instanceof TranslatableComponent) && ((TranslatableComponent) t)
-                        .getKey().equals("item.durability")).findFirst();
+                Optional<Component> r = tooltip.stream().filter(t -> (t instanceof TranslatableComponent component) &&
+                        component.getKey().equals("item.durability")).findFirst();
                 r.ifPresent(tooltip::remove);
             }
         }

@@ -41,6 +41,7 @@ public class RopeArrowAddRecipe extends CustomRecipe {
                 rope = stack;
                 missingRopes--;
             }
+            else if(!stack.isEmpty())return false;
         }
         return arrow != null && rope != null;
     }

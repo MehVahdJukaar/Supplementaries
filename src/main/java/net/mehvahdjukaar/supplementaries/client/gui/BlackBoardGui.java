@@ -97,8 +97,8 @@ public class BlackBoardGui extends Screen {
         }
 
         this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
-        this.addWidget(new Button(this.width / 2 - 100, this.height / 4 + 120, 100 - 4, 20, new TranslatableComponent("gui.supplementaries.blackboard.clear"), (b) -> this.clear()));
-        this.addWidget(new Button(this.width / 2 + 4, this.height / 4 + 120, 100 - 4, 20, CommonComponents.GUI_DONE, (p_238847_1_) -> this.close()));
+        this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 4 + 120, 100 - 4, 20, new TranslatableComponent("gui.supplementaries.blackboard.clear"), (b) -> this.clear()));
+        this.addRenderableWidget(new Button(this.width / 2 + 4, this.height / 4 + 120, 100 - 4, 20, CommonComponents.GUI_DONE, (p_238847_1_) -> this.close()));
     }
 
     @Override

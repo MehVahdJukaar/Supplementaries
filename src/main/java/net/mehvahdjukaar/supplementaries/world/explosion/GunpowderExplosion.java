@@ -115,10 +115,9 @@ public class GunpowderExplosion extends Explosion {
                 }
             }
             //lights up burnable blocks
-            if (block instanceof ILightable) {
-                ((ILightable) block).lightUp(state, pos, this.level, ILightable.FireSound.FLAMING_ARROW);
-            }
-            else if ((state.is(BlockTags.CAMPFIRES) && CampfireBlock.canLight(state)) ||
+            if (block instanceof ILightable lightable) {
+                lightable.lightUp(null, state, pos, this.level, ILightable.FireSound.FLAMING_ARROW);
+            } else if ((state.is(BlockTags.CAMPFIRES) && CampfireBlock.canLight(state)) ||
                     (state.getBlock() instanceof AbstractCandleBlock && !AbstractCandleBlock.isLit(state)) ||
                     (CompatHandler.deco_blocks && DecoBlocksCompatRegistry.canLightBrazier(state))) {
                 level.setBlock(pos, state.setValue(BlockStateProperties.LIT, Boolean.TRUE), 11);

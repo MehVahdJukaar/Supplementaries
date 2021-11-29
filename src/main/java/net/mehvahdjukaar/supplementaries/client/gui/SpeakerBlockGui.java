@@ -74,6 +74,10 @@ public class SpeakerBlockGui extends Screen {
             this.toggleMode();
             this.updateMode();
         }));
+        if(!ServerConfigs.cached.SPEAKER_NARRATOR){
+            this.modeBtn.active =false;
+        }
+
         this.updateMode();
         this.commandTextField = new EditBox(this.font, this.width / 2 - 100, this.height / 4 + 10, 200, 20, this.title) {
             protected MutableComponent createNarrationMessage() {

@@ -5,14 +5,14 @@
       "item": "minecraft:enchanted_golden_apple"
     },
     "title": {
-      "translate":   "advancements.story.unenchanter.title"
+      "translate": "advancements.story.unenchanter.title"
     },
     "description": {
-      "translate":   "advancements.story.unenchanter.description"
+      "translate": "advancements.story.unenchanter.description"
     },
     "frame": "challenge",
     "show_toast": true,
-    "announce_to_chat": false,
+    "announce_to_chat": true,
     "hidden": true
   },
   "criteria": {
@@ -20,7 +20,11 @@
       "trigger": "minecraft:grind_item",
       "conditions": {
         "item": {
-          "item": "minecraft:golden_apple"
+          "items": [
+            {
+              "item": "minecraft:golden_apple"
+            }
+          ]
         }
       }
     },
@@ -28,7 +32,11 @@
       "trigger": "minecraft:grind_item",
       "conditions": {
         "item": {
-          "item": "supplementaries:bomb"
+          "items": [
+            {
+              "item": "supplementaries:bomb"
+            }
+          ]
         }
       }
     }

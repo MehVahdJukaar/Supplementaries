@@ -121,7 +121,7 @@ public class DoormatGui extends Screen {
     protected void init() {
 
         this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
-        this.addWidget(new Button(this.width / 2 - 100, this.height / 4 + 120, 200, 20, CommonComponents.GUI_DONE, (button) -> this.close()));
+        this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 4 + 120, 200, 20, CommonComponents.GUI_DONE, (button) -> this.close()));
         //this.tileSign.setEditable(false);
         this.textInputUtil = new TextFieldHelper(() -> this.cachedLines[this.editLine], (h) -> {
             this.cachedLines[this.editLine] = h;
@@ -132,46 +132,49 @@ public class DoormatGui extends Screen {
 
     @Override
 
-    public void render(PoseStack matrixstack, int  mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack poseStack, int  mouseX, int mouseY, float partialTicks) {
         Lighting.setupForFlatItems();
-        this.renderBackground(matrixstack);
-        drawCenteredString(matrixstack, this.font, this.title, this.width / 2, 40, 16777215);
+        this.renderBackground(poseStack);
+
+        super.render(poseStack, mouseX, mouseY, partialTicks);
+
+        drawCenteredString(poseStack, this.font, this.title, this.width / 2, 40, 16777215);
 
 
         MultiBufferSource.BufferSource bufferSource = this.minecraft.renderBuffers().bufferSource();
 
-        matrixstack.pushPose();
+        poseStack.pushPose();
 
-        matrixstack.translate((this.width / 2d), 0.0D, 50.0D);
-        matrixstack.scale(93.75F, -93.75F, 93.75F);
-        matrixstack.translate(0.0D, -1.25D, 0.0D);
+        poseStack.translate((this.width / 2d), 0.0D, 50.0D);
+        poseStack.scale(93.75F, -93.75F, 93.75F);
+        poseStack.translate(0.0D, -1.25D, 0.0D);
 
         // renders sign
-        matrixstack.pushPose();
+        poseStack.pushPose();
 
-        matrixstack.mulPose(Const.Y90);
-        matrixstack.translate(0, - 0.5, -0.5);
-        matrixstack.mulPose(Const.Z90);
+        poseStack.mulPose(Const.Y90);
+        poseStack.translate(0, - 0.5, -0.5);
+        poseStack.mulPose(Const.Z90);
 
         BlockRenderDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
         BlockState state = this.tileSign.getBlockState().getBlock().defaultBlockState().setValue(DoormatBlock.FACING, Direction.EAST);
-        blockRenderer.renderSingleBlock(state, matrixstack, bufferSource, 15728880, OverlayTexture.NO_OVERLAY, EmptyModelData.INSTANCE);
+        blockRenderer.renderSingleBlock(state, poseStack, bufferSource, 15728880, OverlayTexture.NO_OVERLAY, EmptyModelData.INSTANCE);
 
-        matrixstack.popPose();
+        poseStack.popPose();
 
 
         //renders text
         boolean blink = this.updateCounter / 6 % 2 == 0;
 
-        matrixstack.translate(0, 0.0625-2*0.010416667F, 0.0625 + 0.005);
-        matrixstack.scale(0.010416667F, -0.010416667F, 0.010416667F);
+        poseStack.translate(0, 0.0625-2*0.010416667F, 0.0625 + 0.005);
+        poseStack.scale(0.010416667F, -0.010416667F, 0.010416667F);
 
-        TextUtil.renderGuiText(this.tileSign.textHolder, this.cachedLines, this.font, matrixstack, bufferSource,
+        TextUtil.renderGuiText(this.tileSign.textHolder, this.cachedLines, this.font, poseStack, bufferSource,
                 this.textInputUtil.getCursorPos(), this.textInputUtil.getSelectionPos(), this.editLine, blink, DoormatBlockTileRenderer.LINE_SEPARATION);
 
-        matrixstack.popPose();
+        poseStack.popPose();
         Lighting.setupFor3DItems();
-        super.render(matrixstack, mouseX, mouseY, partialTicks);
+
     }
 }
 

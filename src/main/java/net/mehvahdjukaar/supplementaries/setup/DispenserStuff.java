@@ -118,7 +118,7 @@ public class DispenserStuff {
             BlockPos blockpos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
             BlockState state = world.getBlockState(blockpos);
             if (state.getBlock() instanceof ILightable block) {
-                if (block.lightUp(state, blockpos, world, LightUpBlock.FireSound.FLINT_AND_STEEL)) {
+                if (block.lightUp(null, state, blockpos, world, LightUpBlock.FireSound.FLINT_AND_STEEL)) {
                     if (stack.hurt(1, world.random, null)) {
                         stack.setCount(0);
                     }

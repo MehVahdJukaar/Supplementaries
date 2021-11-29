@@ -42,14 +42,14 @@ public class TippedBambooSpikesRecipe extends CustomRecipe {
                 }
                 itemstack = stack;
             }
-            if(stack.getItem() == Items.LINGERING_POTION) {
+            else if(stack.getItem() == Items.LINGERING_POTION) {
 
                 if (itemstack1 != null) {
                     return false;
                 }
                 itemstack1 = stack;
-
             }
+            else if(!stack.isEmpty())return false;
         }
         return itemstack != null && itemstack1 != null;
     }

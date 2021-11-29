@@ -29,8 +29,10 @@ public class CageBlockTile extends BlockEntity implements IMobContainerProvider 
     }
 
     public void saveToNbt(ItemStack stack) {
-        CompoundTag compound = new CompoundTag();
-        stack.addTagElement("BlockEntityTag", save(compound));
+        if(!this.mobContainer.isEmpty()) {
+            CompoundTag compound = new CompoundTag();
+            stack.addTagElement("BlockEntityTag", save(compound));
+        }
     }
 
     @Override

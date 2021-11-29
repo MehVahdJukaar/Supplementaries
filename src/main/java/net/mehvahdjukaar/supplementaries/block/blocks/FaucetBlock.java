@@ -192,8 +192,8 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
 
     public void trySolidifyConcrete(BlockPos pos, Level world) {
         Block b = world.getBlockState(pos).getBlock();
-        if (b instanceof ConcretePowderBlock)
-            world.setBlock(pos, ((ConcretePowderBlock) b).concrete, 2 | 16);
+        if (b instanceof ConcretePowderBlock concretePowderBlock)
+            world.setBlock(pos, concretePowderBlock.concrete, 2 | 16);
     }
 
 

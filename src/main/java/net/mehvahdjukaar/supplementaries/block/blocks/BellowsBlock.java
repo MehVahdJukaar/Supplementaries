@@ -109,7 +109,7 @@ public class BellowsBlock extends Block implements EntityBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
+        return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
     }
 
     @Override
@@ -118,11 +118,11 @@ public class BellowsBlock extends Block implements EntityBlock {
     }
 
     public void updatePower(BlockState state, Level world, BlockPos pos) {
-        int newpower = world.getBestNeighborSignal(pos);
-        int currentpower = state.getValue(POWER);
+        int signal = world.getBestNeighborSignal(pos);
+        int currentPower = state.getValue(POWER);
         // on-off
-        if (newpower != currentpower) {
-            world.setBlock(pos, state.setValue(POWER, newpower), 2 | 4);
+        if (signal != currentPower) {
+            world.setBlock(pos, state.setValue(POWER, signal), 2 | 4);
             //returns if state changed
         }
     }

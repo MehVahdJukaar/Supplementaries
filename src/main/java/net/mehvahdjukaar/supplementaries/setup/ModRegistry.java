@@ -19,7 +19,6 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
@@ -84,14 +83,13 @@ public class ModRegistry {
     }
 
     //creative tab
-    private static final boolean tab = RegistryConfigs.reg.CREATIVE_TAB.get();
 
-    public static final CreativeModeTab MOD_TAB = !tab ? null : new SupplementariesTab("supplementaries");
+    public static final CreativeModeTab MOD_TAB = !RegistryConfigs.reg.CREATIVE_TAB.get() ? null : new SupplementariesTab("supplementaries");
     public static final CreativeModeTab JAR_TAB = !RegistryConfigs.reg.JAR_TAB.get() ? null : new JarTab("jars");
 
     public static CreativeModeTab getTab(CreativeModeTab g, String regName) {
         if (RegistryConfigs.reg.isEnabled(regName)) {
-            return tab ? MOD_TAB : g;
+            return MOD_TAB == null ? g : MOD_TAB;
         }
         return null;
     }
@@ -187,7 +185,7 @@ public class ModRegistry {
     public static final RegistryObject<SimpleParticleType> CONFETTI_PARTICLE = regParticle("confetti");
     public static final RegistryObject<SimpleParticleType> ROTATION_TRAIL = regParticle("rotation_trail");
     public static final RegistryObject<SimpleParticleType> ROTATION_TRAIL_EMITTER = regParticle("rotation_trail_emitter");
-
+    public static final RegistryObject<SimpleParticleType> SUDS_PARTICLE = regParticle("suds");
 
     //recipes
     public static final RegistryObject<RecipeSerializer<?>> BLACKBOARD_DUPLICATE_RECIPE = RECIPES.register("blackboard_duplicate_recipe", () ->
@@ -220,7 +218,7 @@ public class ModRegistry {
 
     public static final RegistryObject<Item> RED_MERCHANT_SPAWN_EGG_ITEM = ITEMS.register(RED_MERCHANT_NAME + "_spawn_egg", () ->
             new ForgeSpawnEggItem(RED_MERCHANT, 0x7A090F, 0xF4f1e0,
-                    new Item.Properties().tab(tab ? MOD_TAB : null)));
+                    new Item.Properties().tab(getTab(null,RED_MERCHANT_NAME))));
 
     //urn
     public static final String FALLING_URN_NAME = "falling_urn";
@@ -308,6 +306,12 @@ public class ModRegistry {
     public static final RegistryObject<Item> SLINGSHOT_ITEM = regItem(SLINGSHOT_NAME, () -> new SlingshotItem((new Item.Properties())
             .tab(getTab(CreativeModeTab.TAB_TOOLS, SLINGSHOT_NAME))
             .stacksTo(1).durability(192))); //setISTER(() -> SlingshotItemRenderer::new)
+
+    //soap bubbler
+    public static final String BUBBLE_BLOWER_NAME = "bubble_blower";
+    public static final RegistryObject<Item> BUBBLE_BLOWER = regItem(BUBBLE_BLOWER_NAME, () -> new BubbleBlower((new Item.Properties())
+            .tab(getTab(CreativeModeTab.TAB_TOOLS, BUBBLE_BLOWER_NAME))
+            .stacksTo(1).durability(250)));
 
 
     //blocks
@@ -1351,8 +1355,11 @@ public class ModRegistry {
             (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_MISC, SOAP_NAME))));
 
     public static final String SOAP_BLOCK_NAME = "soap_block";
-    public static final RegistryObject<Block> SOAP_BLOCK = BLOCKS.register(SOAP_BLOCK_NAME, () -> new Block(
-            BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_PINK).strength(1.25F, 4.0F).sound(SoundType.CORAL_BLOCK)));
+    public static final RegistryObject<Block> SOAP_BLOCK = BLOCKS.register(SOAP_BLOCK_NAME, () -> new SoapBlock(
+            BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_PINK)
+                    .friction(0.94f)
+                    .strength(1.25F, 4.0F)
+                    .sound(SoundType.CORAL_BLOCK)));
     public static final RegistryObject<Item> SOAP_BLOCK_ITEM = regBlockItem(SOAP_BLOCK, getTab(CreativeModeTab.TAB_DECORATIONS, SOAP_BLOCK_NAME));
 
     //stackable skulls

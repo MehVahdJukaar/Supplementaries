@@ -283,7 +283,8 @@ public class TextUtil {
 
     private static final FormattedCharSequence CURSOR_MARKER = FormattedCharSequence.forward("_", Style.EMPTY);
 
-    public static void renderGuiLine(RenderTextProperties properties, String string, Font font, PoseStack poseStack, MultiBufferSource.BufferSource buffer,
+    public static void renderGuiLine(RenderTextProperties properties, String string, Font font, PoseStack poseStack,
+                                     MultiBufferSource.BufferSource buffer,
                                      int cursorPos, int selectionPos, boolean isSelected, boolean blink, int yOffset) {
         poseStack.pushPose();
         Matrix4f matrix4f = poseStack.last().pose();
@@ -345,8 +346,9 @@ public class TextUtil {
         }
     }
 
-    public static void renderGuiText(TextHolder textHolder, String[] guiLines, Font font, PoseStack poseStack, MultiBufferSource.BufferSource buffer,
-                                     int cursorPos, int selectionPos, int currentLine, boolean blink, int lineSpacing) {
+    public static void renderGuiText(TextHolder textHolder, String[] guiLines, Font font, PoseStack poseStack,
+                                     MultiBufferSource.BufferSource buffer, int cursorPos, int selectionPos,
+                                     int currentLine, boolean blink, int lineSpacing) {
 
         RenderTextProperties properties = new RenderTextProperties(textHolder, LightTexture.FULL_BRIGHT, () -> true);
         int nOfLines = guiLines.length;

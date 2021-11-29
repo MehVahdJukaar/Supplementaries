@@ -41,6 +41,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.api.IRotationLockable;
 
@@ -71,11 +72,11 @@ public class StickBlock extends WaterBlock implements IRotationLockable, IRotata
 
     private final int fireSpread;
 
-    private final Item item;
+    private final Lazy<Item> item;
 
     public StickBlock(Properties properties, int fireSpread, String itemRes) {
         super(properties);
-        this.item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemRes));
+        this.item = Lazy.of(()->ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemRes)));
 
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, Boolean.FALSE).setValue(AXIS_Y,true).setValue(AXIS_X,false).setValue(AXIS_Z,false));
         this.fireSpread = fireSpread;
@@ -86,7 +87,7 @@ public class StickBlock extends WaterBlock implements IRotationLockable, IRotata
     }
 
     public Item getStickItem() {
-        return item;
+        return item.get();
     }
 
     @Override
@@ -246,6 +247,6 @@ public class StickBlock extends WaterBlock implements IRotationLockable, IRotata
         if(state.getValue(AXIS_X))i++;
         if(state.getValue(AXIS_Y))i++;
         if(state.getValue(AXIS_Z))i++;
-        return List.of(new ItemStack(this.item, i));
+        return List.of(new ItemStack(this.item.get(), i));
     }
 }

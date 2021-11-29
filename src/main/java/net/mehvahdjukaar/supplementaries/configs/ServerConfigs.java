@@ -149,6 +149,7 @@ public class ServerConfigs {
         public static ForgeConfigSpec.BooleanValue MIXED_BOOKS;
         public static ForgeConfigSpec.BooleanValue SKULL_PILES;
         public static ForgeConfigSpec.BooleanValue SKULL_CANDLES;
+        public static ForgeConfigSpec.BooleanValue SKULL_CANDLES_MULTIPLE;
 
         private static void init(ForgeConfigSpec.Builder builder) {
             builder.comment("Vanilla tweaks")
@@ -168,6 +169,8 @@ public class ServerConfigs {
                     .define("skull_piles", true);
             SKULL_CANDLES = builder.comment("Allows candles to be placed on top of skulls")
                     .define("skull_candles", true);
+            SKULL_CANDLES_MULTIPLE = builder.comment("Allows placing more than one candle ontop of each skull")
+                    .define("multiple_candles", true);
             builder.pop();
 
             //hanging pot
@@ -307,6 +310,7 @@ public class ServerConfigs {
         public static ForgeConfigSpec.IntValue GLOBE_TRADES;
 
         public static ForgeConfigSpec.IntValue SPEAKER_RANGE;
+        public static ForgeConfigSpec.BooleanValue SPEAKER_NARRATOR;
 
         public static ForgeConfigSpec.IntValue BELLOWS_PERIOD;
         public static ForgeConfigSpec.IntValue BELLOWS_POWER_SCALING;
@@ -325,6 +329,7 @@ public class ServerConfigs {
         public static ForgeConfigSpec.BooleanValue JAR_ITEM_DRINK;
         public static ForgeConfigSpec.BooleanValue JAR_AUTO_DETECT;
         public static ForgeConfigSpec.BooleanValue GOBLET_DRINK;
+        public static ForgeConfigSpec.BooleanValue CRYSTAL_ENCHANTING;
 
         public static ForgeConfigSpec.BooleanValue CAGE_ALL_MOBS;
         public static ForgeConfigSpec.BooleanValue CAGE_ALL_BABIES;
@@ -371,6 +376,11 @@ public class ServerConfigs {
             builder.comment("Server side blocks configs")
                     .push("blocks");
 
+            builder.push("pedestal");
+            CRYSTAL_ENCHANTING = builder.comment("If enabled end crystals placed on a pedestals will provide an enchantment power bonus equivalent to 3 bookshelves")
+                    .define("crystal_enchanting", true);
+            builder.pop();
+
             //globe
             builder.push("globe");
             GLOBE_TRADES = builder.comment("how many globe trades to give to the wandering trader. This will effectively increase the chance of him having a globe trader. Increase this if you have other mods that add stuff to that trader")
@@ -379,6 +389,8 @@ public class ServerConfigs {
 
             //speaker
             builder.push("speaker_block");
+            SPEAKER_NARRATOR = builder.comment("Enable/disable speaker block narrator mode")
+                    .define("narrator_enabled", true);
             SPEAKER_RANGE = builder.comment("Maximum block range")
                     .defineInRange("range", 64, 0, 100000000);
             builder.pop();
@@ -439,7 +451,7 @@ public class ServerConfigs {
                     .define("cage_allow_all_babies", false);
             CAGE_AUTO_DETECT = builder.comment("Dynamically allows all small mobs inside cages depending on their hitbox size")
                     .define("cage_auto_detect", false);
-            CAGE_PERSISTENT_MOBS =  builder.comment("Makes it so all (hostile) mobs captured by cages and jars will be set to persistent so they won't despawn when released")
+            CAGE_PERSISTENT_MOBS = builder.comment("Makes it so all (hostile) mobs captured by cages and jars will be set to persistent so they won't despawn when released")
                     .define("persistent_mobs", false);
             builder.pop();
 
@@ -651,6 +663,7 @@ public class ServerConfigs {
     //maybe not need but hey
     public static class cached {
 
+
         //items
         public static String ROPE_ARROW_ROPE;
         public static Block ROPE_ARROW_BLOCK;
@@ -695,6 +708,7 @@ public class ServerConfigs {
         public static int GUNPOWDER_SPREAD_AGE;
         public static boolean SKULL_PILES;
         public static boolean SKULL_CANDLES;
+        public static boolean SKULL_CANDLES_MULTIPLE;
         //spawns
         public static int FIREFLY_MIN;
         public static int FIREFLY_MAX;
@@ -705,7 +719,8 @@ public class ServerConfigs {
         public static boolean DISTANCE_TEXT;
         //blocks
         public static int SPEAKER_RANGE;
-        public static int BELLOWS_PERIOD;
+        public static boolean SPEAKER_NARRATOR;
+        public static int BELLOWS_BASE_PERIOD;
         public static int BELLOWS_POWER_SCALING;
         public static double BELLOWS_MAX_VEL;
         public static double BELLOWS_BASE_VEL_SCALING;
@@ -739,6 +754,7 @@ public class ServerConfigs {
         public static int STICK_POLE_LENGTH;
         public static boolean GOBLET_DRINK;
         public static boolean CAGE_PERSISTENT_MOBS;
+        public static boolean CRYSTAL_ENCHANTING;
 
         public static boolean SERVER_PROTECTION;
 
@@ -776,6 +792,7 @@ public class ServerConfigs {
             GUNPOWDER_SPREAD_AGE = tweaks.GUNPOWDER_SPREAD_AGE.get();
             SKULL_PILES = tweaks.SKULL_PILES.get();
             SKULL_CANDLES = tweaks.SKULL_CANDLES.get();
+            SKULL_CANDLES_MULTIPLE = tweaks.SKULL_CANDLES_MULTIPLE.get();
 
             ROPE_ARROW_CAPACITY = item.ROPE_ARROW_CAPACITY.get();
             ROPE_ARROW_ROPE = item.ROPE_ARROW_ROPE.get();
@@ -803,8 +820,9 @@ public class ServerConfigs {
             GLOBE_TRADES = block.GLOBE_TRADES.get();
 
             SPEAKER_RANGE = block.SPEAKER_RANGE.get();
+            SPEAKER_NARRATOR = block.SPEAKER_NARRATOR.get();
 
-            BELLOWS_PERIOD = block.BELLOWS_PERIOD.get();
+            BELLOWS_BASE_PERIOD = block.BELLOWS_PERIOD.get();
             BELLOWS_POWER_SCALING = block.BELLOWS_POWER_SCALING.get();
             BELLOWS_MAX_VEL = block.BELLOWS_MAX_VEL.get();
             BELLOWS_BASE_VEL_SCALING = block.BELLOWS_BASE_VEL_SCALING.get();
@@ -851,6 +869,7 @@ public class ServerConfigs {
             STICK_POLE_LENGTH = block.STICK_POLE_LENGTH.get();
 
             GOBLET_DRINK = block.GOBLET_DRINK.get();
+            CRYSTAL_ENCHANTING = block.CRYSTAL_ENCHANTING.get();
 
             FIREFLY_PERIOD = entity.FIREFLY_PERIOD.get();
             FIREFLY_SPEED = entity.FIREFLY_SPEED.get();
