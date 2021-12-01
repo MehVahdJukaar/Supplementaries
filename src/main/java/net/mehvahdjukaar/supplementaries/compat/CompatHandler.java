@@ -1,16 +1,12 @@
 package net.mehvahdjukaar.supplementaries.compat;
 
 
-import dan200.computercraft.api.ComputerCraftAPI;
+import net.mehvahdjukaar.supplementaries.compat.botania.BotaniaCompatRegistry;
+import net.mehvahdjukaar.supplementaries.compat.cctweaked.SpeakerBlockCC;
 import net.mehvahdjukaar.supplementaries.compat.create.SupplementariesCreatePlugin;
 import net.mehvahdjukaar.supplementaries.compat.decorativeblocks.DecoBlocksCompatRegistry;
 import net.mehvahdjukaar.supplementaries.compat.farmersdelight.FDCompatRegistry;
 import net.mehvahdjukaar.supplementaries.compat.inspirations.CauldronRecipes;
-import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.ModList;
 
 public class CompatHandler {
@@ -45,6 +41,7 @@ public class CompatHandler {
     public static final boolean customvillagertrades;
     public static final boolean computercraft;
     public static final boolean nethersdelight;
+    public static final boolean botania;
 
     static {
         ModList ml = ModList.get();
@@ -78,25 +75,20 @@ public class CompatHandler {
         customvillagertrades = ml.isLoaded("customvillagertrades");
         computercraft = ml.isLoaded("computercraft");
         nethersdelight = ml.isLoaded("nethers_delight");
+        botania = ml.isLoaded("botania");
     }
 
-    public static void init() {
+    public static void onSetup() {
         if (create) SupplementariesCreatePlugin.initialize();
-        if (computercraft) ComputerCraftAPI.registerPeripheralProvider(ModRegistry.SPEAKER_BLOCK.get());
+        if (computercraft) SpeakerBlockCC.initialize();
     }
 
-    public static void registerOptionalBlocks(final RegistryEvent.Register<Block> event) {
-        if (deco_blocks) DecoBlocksCompatRegistry.registerBlocks(event);
-        if (farmers_delight) FDCompatRegistry.registerBlocks(event);
+    public static void registerOptionalStuff() {
+        if (deco_blocks) DecoBlocksCompatRegistry.registerStuff();
+        if (farmers_delight) FDCompatRegistry.registerStuff();
+        if (inspirations) CauldronRecipes.registerStuff();
+        if (botania) BotaniaCompatRegistry.registerStuff();
     }
 
-    public static void registerOptionalItems(final RegistryEvent.Register<Item> event) {
-        if (farmers_delight) FDCompatRegistry.registerItems(event);
-
-    }
-
-    public static void registerOptionalRecipes(final RegistryEvent.Register<IRecipeSerializer<?>> event) {
-        if (inspirations) CauldronRecipes.registerRecipes(event);
-    }
 
 }

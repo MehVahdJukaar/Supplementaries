@@ -19,8 +19,8 @@ import java.util.Random;
 
 public class VillagerTradesHandler {
 
-    private static final float BUY = 0.05f;
-    private static final float SELL = 0.2f;
+    public static final float BUY = 0.05f;
+    public static final float SELL = 0.2f;
 
     public static final VillagerTrades.ITrade[] TRADES;
 
@@ -54,7 +54,7 @@ public class VillagerTradesHandler {
         TRADES = trades.toArray(new VillagerTrades.ITrade[0]);
     }
 
-    static BasicTrade itemForEmeraldTrade(IItemProvider item, int quantity, int price, int maxTrades) {
+    public static BasicTrade itemForEmeraldTrade(IItemProvider item, int quantity, int price, int maxTrades) {
         return itemForEmeraldTrade(new ItemStack(item, quantity), price, maxTrades);
     }
 
@@ -151,7 +151,6 @@ public class VillagerTradesHandler {
     }
 
     public static void registerWanderingTraderTrades(WandererTradesEvent event) {
-
         if (RegistryConfigs.reg.GLOBE_ENABLED.get()) {
             //adding twice cause it's showing up too rarely
             for (int i = 0; i < ServerConfigs.cached.GLOBE_TRADES; i++) {

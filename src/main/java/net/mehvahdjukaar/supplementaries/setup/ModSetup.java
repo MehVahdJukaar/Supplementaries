@@ -52,7 +52,7 @@ public class ModSetup {
                 StructureLocator.init();
                 setupStage++;
 
-                CompatHandler.init();
+                CompatHandler.onSetup();
                 setupStage++;
 
                 CMDreg.init(event);
@@ -99,12 +99,14 @@ public class ModSetup {
 
         });
     }
-
+    @SuppressWarnings("unchecked")
     private static void terminateWhenSetupFails() {
         //if setup fails crash the game. idk why it doesn't do that on its own wtf
-        Supplementaries.LOGGER.throwing(new Exception("Mod setup has failed to complete (stage = " + setupStage + "). This might be due to some mod incompatibility. Refusing to continue loading with a broken modstate. Next step: crashing this game, no survivors. Executing 69/0"));
+        IllegalStateException e = new IllegalStateException("Mod setup has failed to complete (stage = " + setupStage + "). This might be due to some mod incompatibility. Refusing to continue loading with a broken modstate. Next step: crashing this game, no survivors.");
+        Supplementaries.LOGGER.throwing(e);
         //proper way to crash the game lol
-        int a = 69 / 0;
+        throw e;
+
     }
 
     private static void registerMobFoods() {
@@ -151,9 +153,11 @@ public class ModSetup {
 
     @SubscribeEvent
     public static void villagerTradesEvent(VillagerTradesEvent ev) {
-        if (RegistryConfigs.reg.FLAX_ENABLED.get()) {
-            if (ev.getType().equals(VillagerProfession.FARMER)) {
-                ev.getTrades().get(3).add(new BasicTrade(new ItemStack(ModRegistry.FLAX_SEEDS_ITEM.get(), 15), new ItemStack(net.minecraft.item.Items.EMERALD), 16, 2, 0.05f));
+        if(!CompatHandler.customvillagertrades) {
+            if (RegistryConfigs.reg.FLAX_ENABLED.get()) {
+                if (ev.getType().equals(VillagerProfession.FARMER)) {
+                    ev.getTrades().get(3).add(new BasicTrade(new ItemStack(ModRegistry.FLAX_SEEDS_ITEM.get(), 15), new ItemStack(net.minecraft.item.Items.EMERALD), 16, 2, 0.05f));
+                }
             }
         }
         AdventurerMapsHandler.loadCustomTrades();
@@ -162,7 +166,9 @@ public class ModSetup {
 
     @SubscribeEvent
     public static void registerWanderingTraderTrades(WandererTradesEvent event) {
-        VillagerTradesHandler.registerWanderingTraderTrades(event);
+        if(!CompatHandler.customvillagertrades) {
+            VillagerTradesHandler.registerWanderingTraderTrades(event);
+        }
     }
 
     @SubscribeEvent

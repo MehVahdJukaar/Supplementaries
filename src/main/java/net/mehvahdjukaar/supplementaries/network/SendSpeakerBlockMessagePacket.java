@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.network;
 
 
 import com.mojang.text2speech.Narrator;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.Util;
@@ -13,6 +14,7 @@ import java.util.function.Supplier;
 public class SendSpeakerBlockMessagePacket {
     private final ITextComponent str;
     private final boolean narrator;
+
     public SendSpeakerBlockMessagePacket(PacketBuffer buf) {
         this.str = buf.readComponent();
         this.narrator = buf.readBoolean();
@@ -35,7 +37,7 @@ public class SendSpeakerBlockMessagePacket {
 
 
             //TODO: add @p command support
-            if (message.narrator) {
+            if (message.narrator && !ServerConfigs.cached.SPEAKER_NARRATOR) {
                 Narrator.getNarrator().say(message.str.getString(), true);
             } else {
                 Minecraft.getInstance().player.sendMessage(message.str, Util.NIL_UUID);

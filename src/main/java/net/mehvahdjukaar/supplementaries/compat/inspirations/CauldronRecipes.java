@@ -1,24 +1,17 @@
 package net.mehvahdjukaar.supplementaries.compat.inspirations;
 
 import knightminer.inspirations.library.recipe.cauldron.special.DyeableCauldronRecipe;
-import net.minecraft.item.crafting.IRecipeSerializer;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.item.crafting.SpecialRecipeSerializer;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.registries.IForgeRegistry;
 
 public class CauldronRecipes {
 
-    public static void registerRecipes(RegistryEvent.Register<IRecipeSerializer<?>> event){
-        IForgeRegistry<IRecipeSerializer<?>> reg = event.getRegistry();
+    public static void registerStuff() {
 
-        reg.register(new DyeableCauldronRecipe.Serializer(CauldronBlackboardRecipe::new)
-                .setRegistryName("cauldron_blackboard"));
+        ModRegistry.RECIPES.register("cauldron_blackboard",()->new DyeableCauldronRecipe.Serializer(CauldronBlackboardRecipe::new));
 
-        reg.register(new DyeableCauldronRecipe.Serializer(CauldronFlagDyeRecipe::new)
-                .setRegistryName("cauldron_flag_dye"));
+        ModRegistry.RECIPES.register("cauldron_flag_dye",()->new DyeableCauldronRecipe.Serializer(CauldronFlagDyeRecipe::new));
 
-        reg.register(new SpecialRecipeSerializer<>(CauldronFlagClearRecipe::new)
-                .setRegistryName("cauldron_flag_clear"));
-
+        ModRegistry.RECIPES.register("cauldron_flag_clear",()->new SpecialRecipeSerializer<>(CauldronFlagClearRecipe::new));
     }
 }

@@ -5,7 +5,6 @@ import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
-import net.mehvahdjukaar.supplementaries.block.tiles.StatueBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -25,7 +24,6 @@ import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.LockableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -42,7 +40,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class JarBlock extends WaterBlock {
-    protected static final VoxelShape SHAPE = VoxelShapes.or(VoxelShapes.box(0.1875D, 0D, 0.1875D, 0.8125D, 0.875D, 0.8125D),
+    public static final VoxelShape SHAPE = VoxelShapes.or(VoxelShapes.box(0.1875D, 0D, 0.1875D, 0.8125D, 0.875D, 0.8125D),
             VoxelShapes.box(0.3125, 0.875, 0.3125, 0.6875, 1, 0.6875));
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;

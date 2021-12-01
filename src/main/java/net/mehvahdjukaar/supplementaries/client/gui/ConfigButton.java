@@ -3,6 +3,8 @@ package net.mehvahdjukaar.supplementaries.client.gui;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.HSLColor;
+import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
+import net.mehvahdjukaar.supplementaries.compat.quark.QuarkPlugin;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.IngameMenuScreen;
 import net.minecraft.client.gui.screen.MainMenuScreen;
@@ -44,7 +46,7 @@ public class ConfigButton extends Button {
     public static void setupConfigButton(GuiScreenEvent.InitGuiEvent event) {
         Screen gui = event.getGui();
         if (gui instanceof MainMenuScreen || gui instanceof IngameMenuScreen) {
-            boolean isOnRight = true;//!CompatHandler.quark || !QuarkPlugin.hasQButtonOnRight();
+            boolean isOnRight = !CompatHandler.quark || !QuarkPlugin.hasQButtonOnRight();
             List<String> targets = isOnRight ?
                     Arrays.asList(new TranslationTextComponent("menu.online").getString(), new TranslationTextComponent("fml.menu.modoptions").getString(), new TranslationTextComponent("menu.shareToLan").getString())
                     : Arrays.asList(new TranslationTextComponent("menu.options").getString(), new TranslationTextComponent("fml.menu.mods").getString());
@@ -54,7 +56,8 @@ public class ConfigButton extends Button {
             for (Widget b : widgets) {
                 String name = b.getMessage().getString();
                 if (targets.contains(name)) {
-                    Button button = new ConfigButton(b.x + (isOnRight ? 102 : -24), b.y);
+                    int spacing = 4;
+                    Button button = new ConfigButton(b.x + (isOnRight ? b.getWidth() + spacing : -20 - spacing), b.y);
                     event.addWidget(button);
                     return;
                 }

@@ -9,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.items.FireflyJarItemRe
 import net.mehvahdjukaar.supplementaries.client.renderers.items.JarItemRenderer;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.CompatObjects;
+import net.mehvahdjukaar.supplementaries.compat.cctweaked.SpeakerBlockCC;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.entities.*;
@@ -54,7 +55,7 @@ import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.function.Supplier;
 
-@SuppressWarnings({"unused", "ConstantConditions"})
+@SuppressWarnings({"unused", "ConstantConditions", "EmptyClassInitializer"})
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModRegistry {
 
@@ -81,6 +82,8 @@ public class ModRegistry {
         RECIPES.register(bus);
         PAINTINGS.register(bus);
         ENCHANTMENTS.register(bus);
+
+        CompatHandler.registerOptionalStuff();
     }
 
     //creative tab
@@ -101,15 +104,15 @@ public class ModRegistry {
         return ModList.get().isLoaded(modId) ? getTab(g, regName) : null;
     }
 
-    private static RegistryObject<Item> regItem(String name, Supplier<? extends Item> sup) {
+    public static RegistryObject<Item> regItem(String name, Supplier<? extends Item> sup) {
         return ITEMS.register(name, sup);
     }
 
-    protected static RegistryObject<Item> regBlockItem(RegistryObject<Block> blockSup, ItemGroup group) {
+    public static RegistryObject<Item> regBlockItem(RegistryObject<Block> blockSup, ItemGroup group) {
         return regItem(blockSup.getId().getPath(), () -> new BlockItem(blockSup.get(), (new Item.Properties()).tab(group)));
     }
 
-    protected static RegistryObject<Item> regBlockItem(RegistryObject<Block> blockSup, ItemGroup group, int burnTime) {
+    public static RegistryObject<Item> regBlockItem(RegistryObject<Block> blockSup, ItemGroup group, int burnTime) {
         return regItem(blockSup.getId().getPath(), () -> new BurnableBlockItem(blockSup.get(), (new Item.Properties()).tab(group), burnTime));
     }
 
@@ -130,18 +133,8 @@ public class ModRegistry {
     public static final RegistryObject<SoundEvent> GUNPOWDER_IGNITE = makeSoundEvent("block.gunpowder.ignite");
 
 
-    //dynamic registration so I can use their classes
-    //TODO: use deferred registries
-    @SubscribeEvent
-    public static void registerCompatBlocks(final RegistryEvent.Register<Block> event) {
-        CompatHandler.registerOptionalBlocks(event);
-    }
-
     @SubscribeEvent
     public static void registerCompatItems(final RegistryEvent.Register<Item> event) {
-        CompatHandler.registerOptionalItems(event);
-        //shulker shell
-
         if (RegistryConfigs.reg.SHULKER_HELMET_ENABLED.get()) {
             event.getRegistry().register(new ShulkerShellItem(new Item.Properties()
                     .stacksTo(64)
@@ -150,10 +143,6 @@ public class ModRegistry {
 
     }
 
-    @SubscribeEvent
-    public static void registerCompatRecipes(final RegistryEvent.Register<IRecipeSerializer<?>> event) {
-        CompatHandler.registerOptionalRecipes(event);
-    }
 
     //entities
     @SubscribeEvent
@@ -494,10 +483,10 @@ public class ModRegistry {
     public static final RegistryObject<TileEntityType<JarBlockTile>> JAR_TILE = TILES.register(JAR_NAME, () -> TileEntityType.Builder.of(
             JarBlockTile::new, JAR.get(), JAR_TINTED.get()).build(null));
 
-    public static final RegistryObject<Item> JAR_ITEM = ITEMS.register(JAR_NAME, () -> new JarItem(JAR.get(), new Item.Properties().tab(
+    public static final RegistryObject<JarItem> JAR_ITEM = ITEMS.register(JAR_NAME, () -> new JarItem(JAR.get(), new Item.Properties().tab(
             getTab(ItemGroup.TAB_DECORATIONS, JAR_NAME)).stacksTo(16).setISTER(() -> JarItemRenderer::new)));
 
-    public static final RegistryObject<Item> JAR_ITEM_TINTED = ITEMS.register(JAR_NAME_TINTED, () -> new TintedJarItem(JAR_TINTED.get(), new Item.Properties().tab(
+    public static final RegistryObject<TintedJarItem> JAR_ITEM_TINTED = ITEMS.register(JAR_NAME_TINTED, () -> new TintedJarItem(JAR_TINTED.get(), new Item.Properties().tab(
             getTab(ItemGroup.TAB_DECORATIONS, JAR_NAME)).stacksTo(16).setISTER(() -> JarItemRenderer::new)));
 
 
@@ -863,12 +852,8 @@ public class ModRegistry {
 
     //speaker Block
     public static final String SPEAKER_BLOCK_NAME = "speaker_block";
-    public static final RegistryObject<SpeakerBlock> SPEAKER_BLOCK = BLOCKS.register(SPEAKER_BLOCK_NAME, () -> new SpeakerBlock(
-            AbstractBlock.Properties.of(Material.WOOD, MaterialColor.COLOR_BROWN)
-                    .strength(1f, 2f)
-                    .sound(SoundType.WOOD)
-                    .harvestTool(ToolType.AXE)
-    ));
+    public static final RegistryObject<SpeakerBlock> SPEAKER_BLOCK = BLOCKS.register(SPEAKER_BLOCK_NAME, () ->
+            CompatHandler.computercraft ? new SpeakerBlockCC() : new SpeakerBlock());
     public static final RegistryObject<TileEntityType<?>> SPEAKER_BLOCK_TILE = TILES.register(SPEAKER_BLOCK_NAME, () -> TileEntityType.Builder.of(
             SpeakerBlockTile::new, SPEAKER_BLOCK.get()).build(null));
 

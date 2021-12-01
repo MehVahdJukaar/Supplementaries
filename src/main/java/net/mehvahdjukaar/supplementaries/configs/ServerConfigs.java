@@ -294,6 +294,7 @@ public class ServerConfigs {
         public static ForgeConfigSpec.IntValue GLOBE_TRADES;
 
         public static ForgeConfigSpec.IntValue SPEAKER_RANGE;
+        public static ForgeConfigSpec.BooleanValue SPEAKER_NARRATOR;
 
         public static ForgeConfigSpec.IntValue BELLOWS_PERIOD;
         public static ForgeConfigSpec.IntValue BELLOWS_POWER_SCALING;
@@ -368,6 +369,8 @@ public class ServerConfigs {
             builder.push("speaker_block");
             SPEAKER_RANGE = builder.comment("Maximum block range")
                     .defineInRange("range", 64, 0, 100000000);
+            SPEAKER_NARRATOR = builder.comment("Enable/disable speaker block narrator mode")
+                    .define("narrator_enabled", true);
             builder.pop();
             //bellows
             builder.push("bellows");
@@ -674,6 +677,7 @@ public class ServerConfigs {
         public static boolean DISTANCE_TEXT;
         //blocks
         public static int SPEAKER_RANGE;
+        public static boolean SPEAKER_NARRATOR;
         public static int BELLOWS_PERIOD;
         public static int BELLOWS_POWER_SCALING;
         public static double BELLOWS_MAX_VEL;
@@ -770,6 +774,7 @@ public class ServerConfigs {
             GLOBE_TRADES = block.GLOBE_TRADES.get();
 
             SPEAKER_RANGE = block.SPEAKER_RANGE.get();
+            SPEAKER_NARRATOR = block.SPEAKER_NARRATOR.get();
 
             BELLOWS_PERIOD = block.BELLOWS_PERIOD.get();
             BELLOWS_POWER_SCALING = block.BELLOWS_POWER_SCALING.get();

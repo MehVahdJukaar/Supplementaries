@@ -8,6 +8,8 @@ import net.mehvahdjukaar.selene.util.PotionNBTHelper;
 import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
+import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
+import net.mehvahdjukaar.supplementaries.compat.botania.BotaniaCompatRegistry;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
@@ -63,7 +65,7 @@ public class JarItem extends AbstractMobContainerItem {
     public ItemStack captureEntityInItem(Entity entity, ItemStack currentStack, ItemStack bucket) {
         if (this.isFirefly(entity)) {
             return new ItemStack(ModRegistry.FIREFLY_JAR_ITEM.get());
-        }else if(this.isBoat(entity)){
+        } else if (this.isBoat(entity)) {
             return new ItemStack(ModRegistry.JAR_BOAT_ITEM.get());
         } else {
             return super.captureEntityInItem(entity, currentStack, bucket);
@@ -206,7 +208,7 @@ public class JarItem extends AbstractMobContainerItem {
 
     @Override
     public int getUseDuration(ItemStack stack) {
-        if(ServerConfigs.cached.JAR_ITEM_DRINK) {
+        if (ServerConfigs.cached.JAR_ITEM_DRINK) {
             CompoundNBT tag = stack.getTagElement("BlockEntityTag");
             if (tag != null) {
                 JarBlockTile temp = new JarBlockTile();
@@ -223,10 +225,18 @@ public class JarItem extends AbstractMobContainerItem {
 
     @Override
     public UseAction getUseAnimation(ItemStack stack) {
-        if(ServerConfigs.cached.JAR_ITEM_DRINK) {
+        if (ServerConfigs.cached.JAR_ITEM_DRINK) {
             return UseAction.DRINK;
         }
         return UseAction.NONE;
     }
 
+    @Override
+    public ActionResultType useOn(ItemUseContext context) {
+        if (CompatHandler.botania && this == ModRegistry.JAR_ITEM.get()) {
+            ActionResultType r = BotaniaCompatRegistry.tryCaptureTater(this, context);
+            if (r.consumesAction()) return r;
+        }
+        return super.useOn(context);
+    }
 }

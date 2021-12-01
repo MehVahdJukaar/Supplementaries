@@ -150,7 +150,7 @@ public class ServerEvents {
         if (worldIn.isClientSide && ClientConfigs.cached.CLOCK_CLICK && i == Items.CLOCK) {
             ClockBlock.displayCurrentHour(worldIn, playerIn);
             event.setCanceled(true);
-            event.setCancellationResult(ActionResultType.sidedSuccess(worldIn.isClientSide));
+            event.setCancellationResult(ActionResultType.sidedSuccess(true));
         }
 
     }

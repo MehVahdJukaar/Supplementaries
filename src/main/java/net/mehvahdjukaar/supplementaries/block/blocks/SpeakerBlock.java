@@ -1,14 +1,16 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
-import dan200.computercraft.api.peripheral.IPeripheral;
-import dan200.computercraft.api.peripheral.IPeripheralProvider;
 import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.supplementaries.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.client.gui.SpeakerBlockGui;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.material.MaterialColor;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
@@ -23,15 +25,17 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.LazyOptional;
-import org.jetbrains.annotations.NotNull;
+import net.minecraftforge.common.ToolType;
 
-public class SpeakerBlock extends Block implements IPeripheralProvider {
+public class SpeakerBlock extends Block {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
-    public SpeakerBlock(Properties properties) {
-        super(properties);
+    public SpeakerBlock() {
+        super(AbstractBlock.Properties.of(Material.WOOD, MaterialColor.COLOR_BROWN)
+                .strength(1f, 2f)
+                .sound(SoundType.WOOD)
+                .harvestTool(ToolType.AXE));
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(POWERED, false));
     }
 
@@ -126,13 +130,5 @@ public class SpeakerBlock extends Block implements IPeripheralProvider {
         return super.triggerEvent(state, world, pos, eventID, eventParam);
     }
 
-    @NotNull
-    @Override
-    public LazyOptional<IPeripheral> getPeripheral(@NotNull World world, @NotNull BlockPos pos, @NotNull Direction side) {
-        TileEntity tile = world.getBlockEntity(pos);
-        if(tile instanceof SpeakerBlockTile){
-            return ((SpeakerBlockTile) tile).getPeripheral(world, pos, side);
-        }
-        return LazyOptional.empty();
-    }
+
 }

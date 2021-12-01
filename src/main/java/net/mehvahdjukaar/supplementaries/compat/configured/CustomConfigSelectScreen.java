@@ -145,8 +145,8 @@ public class CustomConfigSelectScreen extends ModConfigSelectionScreen {
                 if (button.getWidth() == 150) found = button;
             }
         }
-
         if (found != null) {
+            this.children.remove(found);
             this.buttons.remove(found);
         }
 

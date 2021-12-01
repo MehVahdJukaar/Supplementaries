@@ -28,8 +28,9 @@ public class RopeChandelierBlock extends ChandelierBlock {
     private final Supplier<Block> mimic;
     private final Lazy<BlockState> defMimic;
     protected final Lazy<BasicParticleType> particleData;
-    public <T extends ParticleType<?>> RopeChandelierBlock(Properties properties,  Supplier<Block> chandelier, Supplier<T> particleData) {
-        super(properties, chandelier==CompatObjects.SOUL_CHANDELIER);
+
+    public <T extends ParticleType<?>> RopeChandelierBlock(Properties properties, Supplier<Block> chandelier, Supplier<T> particleData) {
+        super(properties, chandelier == CompatObjects.SOUL_CHANDELIER);
         /*
         this.mimic = Lazy.of(()->{
             Block data = chandelier.get();
@@ -37,11 +38,11 @@ public class RopeChandelierBlock extends ChandelierBlock {
             return data;
         });*/
         this.mimic = chandelier;
-        defMimic = Lazy.of(()->this.mimic.get().defaultBlockState());
+        defMimic = Lazy.of(() -> this.mimic.get().defaultBlockState());
 
-        this.particleData = Lazy.of(()->{
+        this.particleData = Lazy.of(() -> {
             BasicParticleType data = (BasicParticleType) particleData.get();
-            if(data==null)data = ParticleTypes.FLAME;
+            if (data == null) data = ParticleTypes.FLAME;
             return data;
         });
     }
@@ -53,7 +54,7 @@ public class RopeChandelierBlock extends ChandelierBlock {
 
     @Override
     public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
-        return mimic.get().getPickBlock(defMimic.get(), target, world,pos,player);
+        return mimic.get().getPickBlock(defMimic.get(), target, world, pos, player);
     }
 
     @Override
@@ -63,7 +64,7 @@ public class RopeChandelierBlock extends ChandelierBlock {
 
     @Override
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
-        if(facing==Direction.UP && !(facingState.getBlock() instanceof RopeBlock)){
+        if (facing == Direction.UP && !(facingState.getBlock() instanceof RopeBlock)) {
             return defMimic.get();
         }
         return stateIn;
@@ -88,19 +89,16 @@ public class RopeChandelierBlock extends ChandelierBlock {
         worldIn.addParticle(particleData.get(), d0 + off2, d1, d2 - off1, 0.0D, 0.0D, 0.0D);
     }
 
-    public static void tryConverting(BlockState state, IWorld world, BlockPos pos){
+    public static void tryConverting(BlockState state, IWorld world, BlockPos pos) {
         Block b = state.getBlock();
-        if(b == CompatObjects.CHANDELIER.get()){
-            world.setBlock(pos, DecoBlocksCompatRegistry.CHANDELIER_ROPE.defaultBlockState(), 3);
-        }
-        else if(b == CompatObjects.SOUL_CHANDELIER.get()){
-            world.setBlock(pos, DecoBlocksCompatRegistry.SOUL_CHANDELIER_ROPE.defaultBlockState(), 3);
-        }
-        else if(b == CompatObjects.ENDER_CHANDELIER.get()){
-            world.setBlock(pos, DecoBlocksCompatRegistry.ENDER_CHANDELIER_ROPE.defaultBlockState(), 3);
-        }
-        else if(b == CompatObjects.GLOW_CHANDELIER.get()){
-            world.setBlock(pos, DecoBlocksCompatRegistry.GLOW_CHANDELIER_ROPE.defaultBlockState(), 3);
+        if (b == CompatObjects.CHANDELIER.get()) {
+            world.setBlock(pos, DecoBlocksCompatRegistry.CHANDELIER_ROPE.get().defaultBlockState(), 3);
+        } else if (b == CompatObjects.SOUL_CHANDELIER.get()) {
+            world.setBlock(pos, DecoBlocksCompatRegistry.SOUL_CHANDELIER_ROPE.get().defaultBlockState(), 3);
+        } else if (b == CompatObjects.ENDER_CHANDELIER.get()) {
+            world.setBlock(pos, DecoBlocksCompatRegistry.ENDER_CHANDELIER_ROPE.get().defaultBlockState(), 3);
+        } else if (b == CompatObjects.GLOW_CHANDELIER.get()) {
+            world.setBlock(pos, DecoBlocksCompatRegistry.GLOW_CHANDELIER_ROPE.get().defaultBlockState(), 3);
         }
     }
 }
