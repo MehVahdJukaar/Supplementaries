@@ -27,6 +27,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -37,6 +38,7 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
+import net.minecraftforge.event.world.PistonEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -149,6 +151,15 @@ public class ServerEvents {
         event.addListener(new FluteSongsReloadListener());
     }
 
+    @SubscribeEvent
+    public static void onPistonMoved(final PistonEvent.Post event) {
+
+        if(event.getPistonMoveType() == PistonEvent.PistonMoveType.RETRACT){
+            LevelAccessor level = event.getWorld();
+            var pos = event.getPos();
+        }
+
+    }
 
 
 

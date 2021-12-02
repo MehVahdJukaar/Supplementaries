@@ -15,6 +15,7 @@ import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.BannerPatternItem;
@@ -50,6 +51,7 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         registry.addRecipes(createRopeArrowCreateRecipe(), VanillaRecipeCategoryUid.CRAFTING);
         registry.addRecipes(createRopeArrowAddRecipe(), VanillaRecipeCategoryUid.CRAFTING);
         registry.addRecipes(createFlagFromBanner(), VanillaRecipeCategoryUid.CRAFTING);
+        registry.addRecipes(createAntiqueMaoRecipe(), VanillaRecipeCategoryUid.CRAFTING);
     }
 
 
@@ -77,6 +79,24 @@ public class SupplementariesJEIPlugin implements IModPlugin {
 
             return stringBuilder.toString();
         }
+    }
+
+    public static List<Recipe<?>> createAntiqueMaoRecipe() {
+        List<Recipe<?>> recipes = new ArrayList<>();
+        String group = "supplementaries.jei.antique_map";
+
+        ItemStack stack = new ItemStack(Items.FILLED_MAP);
+        stack.setHoverName(new TranslatableComponent("filled_map.antique"));
+
+        Ingredient ink = Ingredient.of(new ItemStack(ModRegistry.ANTIQUE_INK.get()));
+        Ingredient map = Ingredient.of(new ItemStack(Items.FILLED_MAP));
+
+        NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, ink, map);
+        ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "jei_antique_map_create");
+        ShapelessRecipe recipe = new ShapelessRecipe(id, group, stack, inputs);
+        recipes.add(recipe);
+
+        return recipes;
     }
 
     public static List<Recipe<?>> createRopeArrowCreateRecipe() {

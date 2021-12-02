@@ -5,24 +5,12 @@ import dan200.computercraft.api.peripheral.IPeripheralProvider;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
-import net.mehvahdjukaar.supplementaries.block.util.TextHolder;
 import net.mehvahdjukaar.supplementaries.client.gui.SpeakerBlockGui;
-import net.mehvahdjukaar.supplementaries.common.Textures;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
-import net.mehvahdjukaar.supplementaries.network.ClientBoundPlaySpeakerMessagePacket;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.players.PlayerList;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -32,32 +20,32 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fmllegacy.network.NetworkDirection;
-import net.minecraftforge.fmllegacy.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class SpeakerBlock extends Block implements EntityBlock , IPeripheralProvider {
+public class SpeakerBlock extends Block implements EntityBlock{
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     public static final BooleanProperty ANTIQUE = BlockProperties.ANTIQUE;
 
-    public SpeakerBlock(Properties properties) {
-        super(properties);
+    public SpeakerBlock() {
+        super(BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.COLOR_BROWN)
+                .strength(1f, 2f)
+                .sound(SoundType.WOOD));
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH)
-                .setValue(ANTIQUE,false).setValue(POWERED, false));
+                .setValue(ANTIQUE, false).setValue(POWERED, false));
     }
 
     @Override
@@ -121,14 +109,14 @@ public class SpeakerBlock extends Block implements EntityBlock , IPeripheralProv
             //ink
             if (player.getAbilities().mayBuild && !state.getValue(ANTIQUE)) {
                 ItemStack stack = player.getItemInHand(hand);
-                if(stack.is(ModRegistry.ANTIQUE_INK.get())){
+                if (stack.is(ModRegistry.ANTIQUE_INK.get())) {
                     level.playSound(null, pos, SoundEvents.INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
                     if (!player.isCreative()) {
                         stack.shrink(1);
                     }
                     if (player instanceof ServerPlayer serverPlayer) {
                         CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
-                        level.setBlockAndUpdate(pos, state.setValue(ANTIQUE,true));
+                        level.setBlockAndUpdate(pos, state.setValue(ANTIQUE, true));
                     }
                     return InteractionResult.sidedSuccess(level.isClientSide);
                 }
@@ -158,16 +146,6 @@ public class SpeakerBlock extends Block implements EntityBlock , IPeripheralProv
             return true;
         }
         return super.triggerEvent(state, world, pos, eventID, eventParam);
-    }
-
-
-    @NotNull
-    @Override
-    public LazyOptional<IPeripheral> getPeripheral(@NotNull Level world, @NotNull BlockPos pos, @NotNull Direction side) {
-        if(world.getBlockEntity(pos) instanceof SpeakerBlockTile tile){
-            return tile.getPeripheral(world, pos, side);
-        }
-        return LazyOptional.empty();
     }
 
 }

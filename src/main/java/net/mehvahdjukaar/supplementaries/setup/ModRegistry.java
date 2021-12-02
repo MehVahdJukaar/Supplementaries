@@ -5,6 +5,7 @@ import net.mehvahdjukaar.supplementaries.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.block.tiles.*;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.CompatObjects;
+import net.mehvahdjukaar.supplementaries.compat.cctweaked.CCStuff;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.entities.*;
@@ -218,7 +219,7 @@ public class ModRegistry {
 
     public static final RegistryObject<Item> RED_MERCHANT_SPAWN_EGG_ITEM = ITEMS.register(RED_MERCHANT_NAME + "_spawn_egg", () ->
             new ForgeSpawnEggItem(RED_MERCHANT, 0x7A090F, 0xF4f1e0,
-                    new Item.Properties().tab(getTab(null,RED_MERCHANT_NAME))));
+                    new Item.Properties().tab(getTab(null, RED_MERCHANT_NAME))));
 
     //urn
     public static final String FALLING_URN_NAME = "falling_urn";
@@ -821,11 +822,8 @@ public class ModRegistry {
 
     //speaker Block
     public static final String SPEAKER_BLOCK_NAME = "speaker_block";
-    public static final RegistryObject<SpeakerBlock> SPEAKER_BLOCK = BLOCKS.register(SPEAKER_BLOCK_NAME, () -> new SpeakerBlock(
-            BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.COLOR_BROWN)
-                    .strength(1f, 2f)
-                    .sound(SoundType.WOOD)
-    ));
+    public static final RegistryObject<SpeakerBlock> SPEAKER_BLOCK = BLOCKS.register(SPEAKER_BLOCK_NAME, () ->
+            CompatHandler.computercraft ? CCStuff.makeSpeaker() : new SpeakerBlock());
     public static final RegistryObject<BlockEntityType<?>> SPEAKER_BLOCK_TILE = TILES.register(SPEAKER_BLOCK_NAME, () -> BlockEntityType.Builder.of(
             SpeakerBlockTile::new, SPEAKER_BLOCK.get()).build(null));
 

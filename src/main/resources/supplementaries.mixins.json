@@ -37,7 +37,10 @@
     "StrongholdRoomSconceMixin",
     "VillagerFrickMixin",
     "VineMixin",
-    "ZombieHorseMixin"
+    "ZombieHorseMixin",
+    "accessors.ChickenAccessor",
+    "accessors.HorseAccessor",
+    "accessors.MineshaftAccessor"
   ],
   "client": [
     "BellBlockEntityRendererMixin",

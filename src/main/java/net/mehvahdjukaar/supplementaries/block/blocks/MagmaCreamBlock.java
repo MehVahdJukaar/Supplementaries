@@ -46,7 +46,7 @@ public class MagmaCreamBlock extends HalfTransparentBlock implements IConditiona
     @Override
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         if (CompatHandler.quark) return;
-        if (!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().options.advancedItemTooltips) return;
+        if (!ClientConfigs.cached.TOOLTIP_HINTS || !flagIn.isAdvanced()) return;
         tooltip.add(new TranslatableComponent("message.supplementaries.magma_cream_block").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
     }
 

@@ -32,11 +32,14 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class HangingSignBlock extends SwayingBlock implements EntityBlock {
     protected static final VoxelShape SHAPE_Z = Block.box(7, 0, 0, 9, 16, 16);
@@ -194,6 +197,12 @@ public class HangingSignBlock extends SwayingBlock implements EntityBlock {
     @Override
     public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         BlockUtils.addOptionalOwnership(placer, worldIn, pos);
+    }
+
+
+    @Override
+    public List<ItemStack> getDrops(BlockState pState, LootContext.Builder pBuilder) {
+        return List.of(new ItemStack(this));
     }
 }
 

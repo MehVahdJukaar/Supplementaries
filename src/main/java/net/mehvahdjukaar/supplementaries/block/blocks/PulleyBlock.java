@@ -67,13 +67,16 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
         } else if (myAxis == Direction.Axis.Z) {
             return Optional.of(state.setValue(AXIS, targetAxis == Direction.Axis.Y ? Direction.Axis.X : Direction.Axis.Y));
         }
+        else if(myAxis == Direction.Axis.Y){
+            return Optional.of(state.setValue(AXIS, targetAxis == Direction.Axis.Z ? Direction.Axis.X : Direction.Axis.Z));
+        }
         return Optional.of(state);
     }
 
     //actually unwinds ropes & rotate connected
     @Override
     public void onRotated(BlockState newState, BlockState oldState, LevelAccessor world, BlockPos pos, Rotation rot, Direction axis, @Nullable Vec3 hit) {
-        if (axis.getAxis().isHorizontal()) {
+        if (axis.getAxis().isHorizontal() && axis.getAxis() == oldState.getValue(AXIS)) {
 
             if (world.getBlockEntity(pos) instanceof PulleyBlockTile pulley) {
                 pulley.handleRotation(rot);

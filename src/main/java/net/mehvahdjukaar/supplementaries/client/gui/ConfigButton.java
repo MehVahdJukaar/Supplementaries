@@ -52,7 +52,8 @@ public class ConfigButton extends Button {
                 if(w instanceof AbstractWidget b) {
                     String name = b.getMessage().getString();
                     if (targets.contains(name)) {
-                        Button button = new ConfigButton(b.x + (isOnRight ? 102 : -24), b.y);
+                        int spacing = 4;
+                        Button button = new ConfigButton(b.x + (isOnRight ? b.getWidth() + spacing : -20 - spacing), b.y);
                         event.addWidget(button);
                         return;
                     }

@@ -102,7 +102,7 @@ public class SackItem extends BlockItem {
         }
         */
 
-        if (!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().options.advancedItemTooltips) return;
+        if (!ClientConfigs.cached.TOOLTIP_HINTS || !flagIn.isAdvanced()) return;
         tooltip.add(new TranslatableComponent("message.supplementaries.sack").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
     }
 

@@ -1,0 +1,8 @@
+{
+  "parent": "supplementaries:item/globe",
+  "textures": {
+    "0": "supplementaries:blocks/globe_stand",
+    "1": "supplementaries:entity/globes/globe_sepia",
+    "particle": "supplementaries:blocks/globe_stand"
+  }
+}

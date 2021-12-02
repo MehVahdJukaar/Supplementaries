@@ -99,7 +99,7 @@ public class JarItem extends AbstractMobContainerItem {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         CompoundTag compoundTag = stack.getTagElement("BlockEntityTag");
         if (compoundTag == null) {
-            if (!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().options.advancedItemTooltips) return;
+            if (!ClientConfigs.cached.TOOLTIP_HINTS || !flagIn.isAdvanced()) return;
             tooltip.add(new TranslatableComponent("message.supplementaries.jar").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
         } else {
             if (compoundTag.contains("LootTable", 8)) {

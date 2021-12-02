@@ -28,6 +28,7 @@ import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Random;
 
 public class BubbleBlower extends Item implements IThirdPersonAnimationProvider, IFirstPersonAnimationProvider {
 
@@ -131,12 +132,13 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
         if (level.isClientSide) {
             Vec3 v = entity.getViewVector(0).scale(1);
             double x = entity.getX() + v.x;
-            double y = entity.getEyeY() + v.y - 0.11;
+            double y = entity.getEyeY() + v.y - 0.12;
             double z = entity.getZ() + v.z;
-            v.scale(6);
+            Random r = entity.getRandom();
+            v.scale(5.5+r.nextFloat()*2f);
 
             level.addParticle(ModRegistry.SUDS_PARTICLE.get(), x, y, z,
-                    v.x, v.y, v.z);
+                    v.x+r.nextFloat()*0.06f, v.y, v.z+r.nextFloat()*0.06f);
         }
     }
 

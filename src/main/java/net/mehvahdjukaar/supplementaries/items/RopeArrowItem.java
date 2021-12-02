@@ -74,7 +74,7 @@ public class RopeArrowItem extends ArrowItem {
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         tooltip.add(new TranslatableComponent("message.supplementaries.rope_arrow_tooltip", stack.getMaxDamage() - stack.getDamageValue(), stack.getMaxDamage()));
-        if (!ClientConfigs.cached.TOOLTIP_HINTS || !Minecraft.getInstance().options.advancedItemTooltips) return;
+        if (!ClientConfigs.cached.TOOLTIP_HINTS || !flagIn.isAdvanced()) return;
         if (worldIn == null) return;
         String override = ServerConfigs.cached.ROPE_ARROW_BLOCK.getRegistryName().getNamespace();
         if (!override.equals(Supplementaries.MOD_ID)) {

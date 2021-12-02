@@ -274,6 +274,9 @@
   "advancements.story.wrench.description": "Use a Wrench to rotate a block",
   "item.supplementaries.bubble_blower": "Bubble Blower",
   "message.supplementaries.bubble_blower_tooltip": "Soap: %1$s / %2$s",
+  "filled_map.antique.tooltip": "Antique",
+  "filled_map.antique": "Antique Map",
+  "block.supplementaries.globe_sepia": "Sepia Globe",
 
   "block.supplementaries.laser_block": "Ender Beamer",
   "death.attack.supplementaries.amethyst_shard": "%1$s was sharded to death",
@@ -284,9 +287,8 @@
   "block.supplementaries.propelplant_cane": "Propelplant Cane",
   "block.supplementaries.prismarine_rod": "Prismarine Rod",
   "block.supplementaries.hanging_sign_polished": "Polished Hanging Sign",
-  "item.supplementaries.sign_post_polished": "Polished Hanging Sign",
+  "item.supplementaries.sign_post_polished": "Polished Sign Post",
   "block.supplementaries.hanging_sign_bamboo": "Bamboo Hanging Sign",
-  "item.supplementaries.hanging_sign_bamboo": "Bamboo Hanging Sign",
   "item.supplementaries.sign_post_bamboo": "Bamboo Sign Post",
 
   "block.supplementaries.hanging_sign_cherry_bop": "Cherry Hanging Sign",

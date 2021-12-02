@@ -177,6 +177,8 @@ dependencies {
     implementation fg.deobf("curse.maven:framedblocks-441647:3499686")
     implementation fg.deobf("curse.maven:patchouli-306770:3528319")
     implementation fg.deobf("curse.maven:crimson-nbt-tags-445260:3400077")
+    implementation fg.deobf("curse.maven:cc-tweaked-282001:3540987")
+    implementation fg.deobf("curse.maven:just-enough-resources-jer-240630:3489131")
     //implementation fg.deobf("curse.maven:inspirations-284007:3414517")
     //implementation fg.deobf("curse.maven:mantle-74924:3439180")
     //implementation fg.deobf("curse.maven:mantle-250363:3326041")

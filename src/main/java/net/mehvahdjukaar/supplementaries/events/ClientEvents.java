@@ -37,7 +37,7 @@ public class ClientEvents {
     public static void onItemTooltip(ItemTooltipEvent event) {
         if ((event.getPlayer() != null) && (event.getPlayer().level != null)) {
 
-            if (ClientConfigs.cached.TOOLTIP_HINTS && Minecraft.getInstance().options.advancedItemTooltips) {
+            if (ClientConfigs.cached.TOOLTIP_HINTS && event.getFlags().isAdvanced()) {
                 ItemsOverrideHandler.addOverrideTooltips(event);
             }
 

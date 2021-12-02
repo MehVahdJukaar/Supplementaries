@@ -8,6 +8,7 @@ import net.mehvahdjukaar.selene.fluids.SoftFluid;
 import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -58,12 +59,12 @@ public class JarItemRenderer extends CageItemRenderer {
         }
         if (tag.contains("FluidHolder")) {
             CompoundTag com = tag.getCompound("FluidHolder");
-            int height = com.getInt("Count");
-            if (height != 0) {
+            int count = com.getInt("Count");
+            if (count != 0) {
                 int color = com.getInt("CachedColor");
                 SoftFluid fluid = SoftFluidRegistry.get(com.getString("Fluid"));
-                if (!fluid.isEmpty() && height > 0)
-                    renderFluid(height / 16f, color, 0, fluid.getStillTexture(),
+                if (!fluid.isEmpty() && count > 0)
+                    renderFluid(getHeight(count, 0.75f) , color, 0, fluid.getStillTexture(),
                             matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, false);
             }
         }
@@ -91,6 +92,10 @@ public class JarItemRenderer extends CageItemRenderer {
             }
         }
 
+    }
+
+    public static float getHeight(float count, float maxHeight) {
+        return maxHeight * count / (float) ServerConfigs.cached.JAR_CAPACITY;
     }
 }
 

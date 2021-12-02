@@ -102,7 +102,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
     //TODO: merge
     //immediately discards pets and not alive entities
     protected final boolean isEntityValid(Entity e, Player player) {
-        if (!e.isAlive() || (e instanceof LivingEntity && ((LivingEntity) e).isDeadOrDying())) return false;
+        if (!e.isAlive() || (e instanceof LivingEntity living && living.isDeadOrDying())) return false;
 
         if (e instanceof TamableAnimal pet) {
             return !pet.isTame() || pet.isOwnedBy(player);
@@ -270,8 +270,14 @@ public abstract class AbstractMobContainerItem extends BlockItem {
         if (this.isEntityValid(entity, player)) {
             ItemStack bucket = ItemStack.EMPTY;
             //try getting a filled bucket for any water mobs for aquariums and only catchable for others
-            if ((entity instanceof WaterAnimal || entity instanceof Bucketable) && (this.isAquarium || this.canCatch(entity))) {
-                bucket = this.tryGettingFishBucket(player, entity, hand);
+            if (this.isAquarium || this.canCatch(entity)) {
+                if(entity instanceof Bucketable bucketable){
+                    bucket = bucketable.getBucketItemStack();
+                }
+                //maybe remove. not needed with new bucketable interface. might improve compat
+                else if(entity instanceof WaterAnimal){
+                    bucket = this.tryGettingFishBucketHackery(player, entity, hand);
+                }
             }
             if (!bucket.isEmpty() || this.canCatch(entity)) {
                 entity.revive();
@@ -305,8 +311,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
      *
      * @return filled bucket stack or empty stack
      */
-    //TODO: replace with bucketable interface
-    private ItemStack tryGettingFishBucket(Player player, Entity entity, InteractionHand hand) {
+    private ItemStack tryGettingFishBucketHackery(Player player, Entity entity, InteractionHand hand) {
         ItemStack heldItem = player.getItemInHand(hand).copy();
 
         ItemStack bucket = ItemStack.EMPTY;

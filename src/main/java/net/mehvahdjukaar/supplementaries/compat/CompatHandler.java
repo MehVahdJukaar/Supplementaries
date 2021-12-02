@@ -1,15 +1,13 @@
 package net.mehvahdjukaar.supplementaries.compat;
 
 
-import dan200.computercraft.api.ComputerCraftAPI;
+import net.mehvahdjukaar.supplementaries.compat.cctweaked.CCStuff;
 import net.mehvahdjukaar.supplementaries.compat.create.SupplementariesCreatePlugin;
-import net.mehvahdjukaar.supplementaries.compat.decorativeblocks.DecoBlocksCompatRegistry;
 import net.mehvahdjukaar.supplementaries.compat.farmersdelight.FDCompatRegistry;
 import net.mehvahdjukaar.supplementaries.compat.inspirations.CauldronRecipes;
-import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.ModList;
 
@@ -82,21 +80,22 @@ public class CompatHandler {
 
     public static void init() {
         if (create) SupplementariesCreatePlugin.initialize();
-        if (computercraft) ComputerCraftAPI.registerPeripheralProvider(ModRegistry.SPEAKER_BLOCK.get());
+        if (computercraft) CCStuff.initialize();
     }
 
 
-    public static void registerOptionalBlocks(final RegistryEvent.Register<Block> event){
+    //TODO: port stuff here
+    public static void registerOptionalBlocks(final RegistryEvent.Register<Block> event) {
         //if (deco_blocks) DecoBlocksCompatRegistry.registerBlocks(event);
         if (farmers_delight) FDCompatRegistry.registerBlocks(event);
     }
 
-    public static void registerOptionalItems(final RegistryEvent.Register<Item> event){
+    public static void registerOptionalItems(final RegistryEvent.Register<Item> event) {
         if (farmers_delight) FDCompatRegistry.registerItems(event);
 
     }
 
-    public static void registerOptionalRecipes(final RegistryEvent.Register<RecipeSerializer<?>> event){
+    public static void registerOptionalRecipes(final RegistryEvent.Register<RecipeSerializer<?>> event) {
         if (inspirations) CauldronRecipes.registerRecipes(event);
     }
 

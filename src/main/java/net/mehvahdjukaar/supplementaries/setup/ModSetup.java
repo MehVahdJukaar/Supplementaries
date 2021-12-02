@@ -13,6 +13,7 @@ import net.mehvahdjukaar.supplementaries.mixins.accessors.HorseAccessor;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.commands.ModCommands;
 import net.mehvahdjukaar.supplementaries.world.data.map.CMDreg;
+import net.mehvahdjukaar.supplementaries.world.data.map.WeatheredMap;
 import net.mehvahdjukaar.supplementaries.world.structures.StructureLocator;
 import net.mehvahdjukaar.supplementaries.world.structures.StructureRegistry;
 import net.minecraft.world.item.ItemStack;
@@ -53,6 +54,9 @@ public class ModSetup {
                 setupStage++;
 
                 CMDreg.init(event);
+                setupStage++;
+
+                WeatheredMap.init();
                 setupStage++;
 
                 Spawns.registerSpawningStuff();
