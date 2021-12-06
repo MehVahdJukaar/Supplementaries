@@ -4,8 +4,8 @@ package net.mehvahdjukaar.supplementaries.network;
 import net.mehvahdjukaar.supplementaries.world.songs.SongsManager;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fmllegacy.network.NetworkDirection;
-import net.minecraftforge.fmllegacy.network.NetworkEvent;
+import net.minecraftforge.network.NetworkDirection;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -33,7 +33,7 @@ public class ClientBoundSetSongPacket {
         // client world
         if (ctx.get().getDirection() == NetworkDirection.PLAY_TO_CLIENT) {
             ctx.get().enqueueWork(() -> {
-                SongsManager.setCurrentlyPlaying(message.id,message.song);
+                SongsManager.setCurrentlyPlaying(message.id, message.song);
             });
         }
         ctx.get().setPacketHandled(true);

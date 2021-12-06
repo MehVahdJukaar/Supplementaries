@@ -34,7 +34,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.fmllegacy.network.NetworkHooks;
+import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
@@ -95,7 +95,8 @@ public class PresentBlock extends WaterBlock implements EntityBlock {
 
 
     public ItemStack getPresentItem(PresentBlockTile te) {
-        CompoundTag compoundTag = te.save(new CompoundTag());
+        CompoundTag compoundTag = new CompoundTag();
+        te.saveAdditional(compoundTag);
         ItemStack itemstack = new ItemStack(this);
         if (!compoundTag.isEmpty()) {
             itemstack.addTagElement("BlockEntityTag", compoundTag);
@@ -136,8 +137,8 @@ public class PresentBlock extends WaterBlock implements EntityBlock {
     }
 
     @Override
-    public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
-        ItemStack itemstack = super.getPickBlock(state, target, world, pos, player);
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+        ItemStack itemstack = super.getCloneItemStack(state, target, world, pos, player);
         if (world.getBlockEntity(pos) instanceof PresentBlockTile tile) {
             return getPresentItem(tile);
         }

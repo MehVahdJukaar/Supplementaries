@@ -50,15 +50,13 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.*;
-import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.ForgeModelBakery;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import org.jetbrains.annotations.Nullable;
-
-import java.awt.*;
 
 @Mod.EventBusSubscriber(modid = Supplementaries.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientSetup {
@@ -243,7 +241,7 @@ public class ClientSetup {
         @Override
         public Particle createParticle(SimpleParticleType pType, ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed) {
             Particle p = super.createParticle(pType, pLevel, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed);
-            if (p != null) p.setColor(108/255f, 103/255f, 103/255f);
+            if (p != null) p.setColor(108 / 255f, 103 / 255f, 103 / 255f);
             return p;
         }
     }
@@ -339,13 +337,13 @@ public class ClientSetup {
 
         //registerStaticBlockState(Supplementaries.res("jar_boat_ship"), Blocks.AIR);
 
-        ModelLoader.addSpecialModel(FluteItemRenderer.FLUTE_3D_MODEL);
-        ModelLoader.addSpecialModel(FluteItemRenderer.FLUTE_2D_MODEL);
-        ModelLoader.addSpecialModel(JarBoatTileRenderer.BOAT_MODEL);
+        ForgeModelBakery.addSpecialModel(FluteItemRenderer.FLUTE_3D_MODEL);
+        ForgeModelBakery.addSpecialModel(FluteItemRenderer.FLUTE_2D_MODEL);
+        ForgeModelBakery.addSpecialModel(JarBoatTileRenderer.BOAT_MODEL);
 
         //registerStaticItemModel(new ModelResourceLocation("supplementaries:flute_in_hand#inventory"));
 
-        FlowerPotHandler.registerCustomModels(n -> ModelLoader.addSpecialModel(new ModelResourceLocation(n, "")));
+        FlowerPotHandler.registerCustomModels(n -> ForgeModelBakery.addSpecialModel(new ModelResourceLocation(n, "")));
     }
 
 }

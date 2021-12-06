@@ -77,10 +77,9 @@ public class WallLanternBlock extends EnhancedLanternBlock {
     }
 
     @Override
-    public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
-        BlockEntity te = world.getBlockEntity(pos);
-        if (te instanceof WallLanternBlockTile) {
-            return new ItemStack(((WallLanternBlockTile) te).mimic.getBlock());
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+        if (world.getBlockEntity(pos) instanceof WallLanternBlockTile te) {
+            return new ItemStack(te.mimic.getBlock());
         }
         return new ItemStack(Blocks.LANTERN, 1);
     }
@@ -116,7 +115,7 @@ public class WallLanternBlock extends EnhancedLanternBlock {
                 boolean flag = state.getValue(LIT);
                 if (flag != world.hasNeighborSignal(pos)) {
                     if (flag) {
-                        world.getBlockTicks().scheduleTick(pos, this, 4);
+                        world.scheduleTick(pos, this, 4);
                     } else {
                         world.setBlock(pos, state.cycle(LIT), 2);
                         if (tile.mimic.hasProperty(LIT))

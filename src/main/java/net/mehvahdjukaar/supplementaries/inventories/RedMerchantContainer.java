@@ -154,9 +154,9 @@ public class RedMerchantContainer extends AbstractContainerMenu {
     }
 
     private void playTradeSound() {
-        if (!this.trader.getLevel().isClientSide) {
+        if (!this.trader.isClientSide()) {
             Entity entity = (Entity) this.trader;
-            this.trader.getLevel().playLocalSound(entity.getX(), entity.getY(), entity.getZ(), this.trader.getNotifyTradeSound(), SoundSource.NEUTRAL, 1.0F, 1.0F, false);
+            entity.getLevel().playLocalSound(entity.getX(), entity.getY(), entity.getZ(), this.trader.getNotifyTradeSound(), SoundSource.NEUTRAL, 1.0F, 1.0F, false);
         }
 
     }
@@ -165,7 +165,7 @@ public class RedMerchantContainer extends AbstractContainerMenu {
     public void removed(Player pPlayer) {
         super.removed(pPlayer);
         this.trader.setTradingPlayer(null);
-        if (!this.trader.getLevel().isClientSide) {
+        if (!this.trader.isClientSide()) {
             if (!pPlayer.isAlive() || pPlayer instanceof ServerPlayer && ((ServerPlayer) pPlayer).hasDisconnected()) {
                 ItemStack itemstack = this.tradeContainer.removeItemNoUpdate(0);
                 if (!itemstack.isEmpty()) {

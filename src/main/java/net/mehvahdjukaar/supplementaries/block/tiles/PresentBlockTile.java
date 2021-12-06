@@ -104,15 +104,14 @@ public class PresentBlockTile extends ItemDisplayTile {
     }
 
     @Override
-    public CompoundTag save(CompoundTag tag) {
-        super.save(tag);
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         if (!this.recipient.isEmpty())
             tag.putString("Recipient", this.recipient);
         if (!this.sender.isEmpty())
             tag.putString("Sender", this.sender);
 
         tag.putBoolean("Packed", this.packed);
-        return tag;
     }
 
     @Override

@@ -14,8 +14,6 @@ import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.commands.ModCommands;
 import net.mehvahdjukaar.supplementaries.world.data.map.CMDreg;
 import net.mehvahdjukaar.supplementaries.world.data.map.WeatheredMap;
-import net.mehvahdjukaar.supplementaries.world.structures.StructureLocator;
-import net.mehvahdjukaar.supplementaries.world.structures.StructureRegistry;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.ComposterBlock;
@@ -23,12 +21,12 @@ import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TagsUpdatedEvent;
+import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.event.village.WandererTradesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fmlserverevents.FMLServerAboutToStartEvent;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,10 +41,10 @@ public class ModSetup {
             try {
 
 
-                StructureRegistry.setup();
+               // StructureRegistry.setup();
                 setupStage++;
 
-                StructureLocator.init();
+              //  StructureLocator.init();
                 setupStage++;
 
                 CompatHandler.init();
@@ -161,7 +159,7 @@ public class ModSetup {
     }
 
     @SubscribeEvent
-    public static void serverAboutToStart(final FMLServerAboutToStartEvent event) {
+    public static void serverAboutToStart(final ServerAboutToStartEvent event) {
 
     }
 

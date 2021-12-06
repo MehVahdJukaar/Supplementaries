@@ -82,15 +82,14 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
-        super.save(compound);
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         if (this.customName != null) {
-            compound.putString("CustomName", Component.Serializer.toJson(this.customName));
+            tag.putString("CustomName", Component.Serializer.toJson(this.customName));
         }
-        compound.putInt("Face", this.face);
-        compound.putFloat("Yaw", this.yaw);
-        compound.putBoolean("Sheared", this.sheared);
-        return compound;
+        tag.putInt("Face", this.face);
+        tag.putFloat("Yaw", this.yaw);
+        tag.putBoolean("Sheared", this.sheared);
     }
 
     public void spin() {
@@ -114,12 +113,12 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
 
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return new ClientboundBlockEntityDataPacket(this.worldPosition, 0, this.getUpdateTag());
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
     public CompoundTag getUpdateTag() {
-        return this.save(new CompoundTag());
+        return this.saveWithoutMetadata();
     }
 
     @Override

@@ -1,10 +1,7 @@
 package net.mehvahdjukaar.supplementaries.compat.quark;
 
-import net.mehvahdjukaar.supplementaries.block.tiles.SackBlockTile;
-import net.mehvahdjukaar.supplementaries.block.tiles.SafeBlockTile;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 
 // credits to Vazkii and Quark
@@ -13,7 +10,7 @@ public class QuarkTooltipPlugin {
     //private static final SackBlockTile DUMMY_SACK_TILE = new SackBlockTile();
     private static final BlockState DEFAULT_SACK = ModRegistry.SACK.get().defaultBlockState();
 
-   // private static final SafeBlockTile DUMMY_SAFE_TILE = new SafeBlockTile();
+    // private static final SafeBlockTile DUMMY_SAFE_TILE = new SafeBlockTile();
     private static final BlockState DEFAULT_SAFE = ModRegistry.SAFE.get().defaultBlockState();
 
     public static boolean canRenderTooltip() {
@@ -44,7 +41,7 @@ public class QuarkTooltipPlugin {
 //        }
     }
 
-    public static void renderTooltipEvent(RenderTooltipEvent.PostText event) {
+    // public static void renderTooltipEvent(RenderTooltipEvent.PostText event) {
 //        if(canRenderTooltip()){
 //            ItemStack stack = event.getStack();
 //            CompoundNBT cmp = ItemNBTHelper.getCompound(stack, "BlockEntityTag", true);
@@ -63,7 +60,7 @@ public class QuarkTooltipPlugin {
 //                }
 //            }
 //        }
-    }
+//    }
 
 //    private static void cleanupTooltip(List<ITextComponent> tooltip){
 //        List<ITextComponent> tooltipCopy = new ArrayList<>(tooltip);

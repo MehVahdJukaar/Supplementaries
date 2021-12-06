@@ -56,7 +56,7 @@ public class AshBlock extends FallingBlock {
     @Override
     public void onPlace(BlockState state, Level worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
         if (state.getBlock() != oldState.getBlock())
-            worldIn.getBlockTicks().scheduleTick(pos, this, this.getDelayAfterPlace());
+            worldIn.scheduleTick(pos, this, this.getDelayAfterPlace());
     }
 
     @Override
@@ -68,7 +68,7 @@ public class AshBlock extends FallingBlock {
     public VoxelShape getCollisionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         if (pContext instanceof EntityCollisionContext c) {
             var e = c.getEntity();
-            if (e.isPresent() && e.get() instanceof LivingEntity) {
+            if (e instanceof LivingEntity) {
                 return SHAPE_BY_LAYER[pState.getValue(LAYERS) - 1];
             }
         }

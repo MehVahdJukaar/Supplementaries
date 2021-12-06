@@ -1,17 +1,17 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,9 +41,9 @@ public class RemapHandler {
         itemReMap.put(ModRegistry.BLAZE_ROD_NAME, Items.BLAZE_ROD.getRegistryName());
         itemReMap.put(ModRegistry.HANGING_FLOWER_POT_NAME, Items.FLOWER_POT.getRegistryName());
         itemReMap.put(ModRegistry.GUNPOWDER_BLOCK_NAME, Items.GUNPOWDER.getRegistryName());
-        for(RegistryObject<Block> banner : ModRegistry.CEILING_BANNERS.values()){
+        for (RegistryObject<Block> banner : ModRegistry.CEILING_BANNERS.values()) {
             itemReMap.put(banner.getId().getPath(), new ResourceLocation("minecraft",
-                    banner.getId().getPath().replace("ceiling_banner_","")+"_banner"));
+                    banner.getId().getPath().replace("ceiling_banner_", "") + "_banner"));
         }
         itemReMap.put(ModRegistry.DIRECTIONAL_CAKE_NAME, Items.CAKE.getRegistryName());
 

@@ -34,7 +34,7 @@ public abstract class LightUpWaterBlock extends LightUpBlock implements SimpleWa
             extinguish(null, state, pos, worldIn);
 
             worldIn.setBlock(pos, state.setValue(WATERLOGGED, true).setValue(LIT, false), 3);
-            worldIn.getLiquidTicks().scheduleTick(pos, fluidStateIn.getType(), fluidStateIn.getType().getTickDelay(worldIn));
+            worldIn.scheduleTick(pos, fluidStateIn.getType(), fluidStateIn.getType().getTickDelay(worldIn));
             return true;
         } else {
             return false;
@@ -65,7 +65,7 @@ public abstract class LightUpWaterBlock extends LightUpBlock implements SimpleWa
     @Override
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
         if (stateIn.getValue(WATERLOGGED)) {
-            worldIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
+            worldIn.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
         }
         return stateIn;
     }

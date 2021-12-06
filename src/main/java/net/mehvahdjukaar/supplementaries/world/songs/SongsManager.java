@@ -15,28 +15,30 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.NoteBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
-import net.minecraftforge.fmllegacy.network.PacketDistributor;
+import net.minecraftforge.network.PacketDistributor;
 
 import javax.annotation.Nonnull;
 import java.util.*;
 
 public class SongsManager {
 
-    private static final Map<ResourceLocation,Song> SONGS = new LinkedHashMap<>();
+    private static final Map<ResourceLocation, Song> SONGS = new LinkedHashMap<>();
     private static final List<WeightedEntry.Wrapper<ResourceLocation>> SONG_WEIGHTED_LIST = new ArrayList<>();
 
     //randomly selected currently playing songs
     private static final Map<UUID, Song> CURRENTLY_PAYING = new HashMap<>();
 
-    public static void addSong(ResourceLocation res, Song song){
+    public static void addSong(ResourceLocation res, Song song) {
         SONGS.put(res, song);
         SONG_WEIGHTED_LIST.add(WeightedEntry.wrap(res, song.getWeight()));
     }
-    public static void clearSongs(){
+
+    public static void clearSongs() {
         SONGS.clear();
         SONG_WEIGHTED_LIST.clear();
     }
-    public static void sendSongsToClient(){
+
+    public static void sendSongsToClient() {
         NetworkHandler.INSTANCE.send(PacketDistributor.ALL.noArg(), new ClientBoundSyncSongsPacket(SongsManager.SONGS));
     }
 
@@ -69,7 +71,7 @@ public class SongsManager {
             ResourceLocation res = selectRandomSong(entity.level.random);
             song = setCurrentlyPlaying(id, res);
 
-            if(entity instanceof ServerPlayer player) {
+            if (entity instanceof ServerPlayer player) {
                 //player.displayClientMessage(new TextComponent("Playing: "+song.getTranslationKey()), true);
             }
 
@@ -83,7 +85,7 @@ public class SongsManager {
 
     public static boolean playSong(InstrumentItem instrumentItem, LivingEntity entity, ResourceLocation sandstorm,
                                    long timeSinceStarted) {
-        return playSong(instrumentItem, entity, SONGS.getOrDefault(sandstorm,Song.EMPTY), timeSinceStarted);
+        return playSong(instrumentItem, entity, SONGS.getOrDefault(sandstorm, Song.EMPTY), timeSinceStarted);
     }
 
     public static boolean playSong(InstrumentItem instrument, LivingEntity entity, Song song,
@@ -187,7 +189,7 @@ public class SongsManager {
         //TODO: remove
         SONGS.clear();
         song.processForPlaying();
-        SONGS.put(Supplementaries.res(name),song);
+        SONGS.put(Supplementaries.res(name), song);
         if (!level.isClientSide) {
             NetworkHandler.INSTANCE.send(PacketDistributor.ALL.noArg(), new ClientBoundSyncSongsPacket(SongsManager.SONGS));
         }

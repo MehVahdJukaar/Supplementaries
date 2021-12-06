@@ -8,7 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
-import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.client.ConfigGuiHandler;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -19,9 +19,8 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
-import net.minecraftforge.fmlclient.ConfigGuiHandler;
-import net.minecraftforge.fmllegacy.network.PacketDistributor;
-import net.minecraftforge.fmllegacy.server.ServerLifecycleHooks;
+import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.server.ServerLifecycleHooks;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -31,7 +30,6 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class ConfigHandler {
-
 
     public static ModConfig CLIENT_CONFIG_OBJECT;
     public static ModConfig SERVER_CONFIG_OBJECT;
@@ -51,7 +49,7 @@ public class ConfigHandler {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(ConfigHandler::reloadConfigsEvent);
     }
 
-    public static void openModConfigs(){
+    public static void openModConfigs() {
         Minecraft mc = Minecraft.getInstance();
 
         mc.setScreen(ModList.get().getModContainerById(Supplementaries.MOD_ID).get()
@@ -106,7 +104,7 @@ public class ConfigHandler {
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         if (!event.getPlayer().level.isClientSide) {
             //send this configuration to connected clients
-            syncServerConfigs((ServerPlayer)event.getPlayer());
+            syncServerConfigs((ServerPlayer) event.getPlayer());
         }
     }
 
@@ -126,7 +124,7 @@ public class ConfigHandler {
 
 
     //called on client. client -> server -..-> all clients
-    public static void clientRequestServerConfigReload(){
+    public static void clientRequestServerConfigReload() {
         NetworkHandler.INSTANCE.sendToServer(new RequestConfigReloadPacket());
     }
 

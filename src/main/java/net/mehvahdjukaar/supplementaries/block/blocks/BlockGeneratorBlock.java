@@ -30,9 +30,9 @@ public class BlockGeneratorBlock extends Block implements EntityBlock {
         return new BlockGeneratorBlockTile(pPos, pState);
     }
 
-    @Nullable
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return BlockUtils.getTicker(pBlockEntityType, ModRegistry.BLOCK_GENERATOR_TILE.get(), BlockGeneratorBlockTile::tick);
-    }
+    //@Nullable
+   // @Override
+   // public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
+    //    return BlockUtils.getTicker(pBlockEntityType, ModRegistry.BLOCK_GENERATOR_TILE.get(), BlockGeneratorBlockTile::tick);
+    //}
 }

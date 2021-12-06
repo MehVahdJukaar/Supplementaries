@@ -14,7 +14,10 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraftforge.client.event.TextureStitchEvent;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Textures {
 
@@ -136,8 +139,8 @@ public class Textures {
             BOOK_TEXTURES.put(color, Supplementaries.res("entity/books/book_" + color.getName()));
         }
 
-        for(DyeColor color : DyeColor.values()){
-            SKULL_CANDLES_TEXTURES.put(color, Supplementaries.res("textures/entity/skull_candles/"+ color.getName()+".png"));
+        for (DyeColor color : DyeColor.values()) {
+            SKULL_CANDLES_TEXTURES.put(color, Supplementaries.res("textures/entity/skull_candles/" + color.getName() + ".png"));
         }
         SKULL_CANDLES_TEXTURES.put(null, Supplementaries.res("textures/entity/skull_candles/default.png"));
     }
@@ -148,7 +151,7 @@ public class Textures {
                 SUGAR_TEXTURE, CLOCK_HAND_TEXTURE, HOURGLASS_REDSTONE, HOURGLASS_GLOWSTONE, HOURGLASS_SUGAR, HOURGLASS_BLAZE,
                 HOURGLASS_GUNPOWDER, BLACKBOARD_GRID));
 
-        ResourceLocation loc = event.getMap().location();
+        ResourceLocation loc = event.getAtlas().location();
 
         if (loc.equals(TextureAtlas.LOCATION_BLOCKS)) {
             for (ResourceLocation r : blocks) {

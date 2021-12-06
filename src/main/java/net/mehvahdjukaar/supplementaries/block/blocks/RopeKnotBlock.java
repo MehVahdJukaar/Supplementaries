@@ -40,7 +40,6 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.util.Constants;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -205,7 +204,7 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
     public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor world, BlockPos currentPos,
                                   BlockPos facingPos) {
         if (state.getValue(WATERLOGGED)) {
-            world.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
+            world.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
         }
         BlockState newState = state.setValue(RopeBlock.FACING_TO_PROPERTY_MAP.get(facing), RopeBlock.shouldConnectToFace(state, facingState, facingPos, facing, world));
         if (world.getBlockEntity(currentPos) instanceof RopeKnotBlockTile tile) {
@@ -304,12 +303,12 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
 
 
     @Override
-    public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
         if (world.getBlockEntity(pos) instanceof RopeKnotBlockTile tile) {
             BlockState mimic = tile.getHeldBlock();
-            return mimic.getBlock().getPickBlock(state, target, world, pos, player);
+            return mimic.getBlock().getCloneItemStack(state, target, world, pos, player);
         }
-        return super.getPickBlock(state, target, world, pos, player);
+        return super.getCloneItemStack(state, target, world, pos, player);
     }
 
     public static @Nullable PostType getPostType(BlockState state) {
@@ -355,7 +354,7 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
             tile.setHeldBlock(state);
             tile.setChanged();
         }
-        newState.updateNeighbourShapes(world, pos, 2 | Constants.BlockFlags.RERENDER_MAIN_THREAD);
+        newState.updateNeighbourShapes(world, pos, UPDATE_CLIENTS | Block.UPDATE_INVISIBLE);
         return newState;
     }
 }

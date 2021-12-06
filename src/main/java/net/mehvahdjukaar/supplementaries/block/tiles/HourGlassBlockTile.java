@@ -102,12 +102,11 @@ public class HourGlassBlockTile extends ItemDisplayTile {
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
-        super.save(compound);
-        compound.putInt("SandType", this.sandType.ordinal());
-        compound.putFloat("Progress", this.progress);
-        compound.putFloat("PrevProgress", this.prevProgress);
-        return compound;
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        tag.putInt("SandType", this.sandType.ordinal());
+        tag.putFloat("Progress", this.progress);
+        tag.putFloat("PrevProgress", this.prevProgress);
     }
 
     @Override

@@ -119,6 +119,7 @@ public class TextUtil {
 
                         \u00A70Guys on Discord
                         TmTravlr
+                        CandyCraft
                         Umaroth
                         Howester84
                         spiritwolf_twitch

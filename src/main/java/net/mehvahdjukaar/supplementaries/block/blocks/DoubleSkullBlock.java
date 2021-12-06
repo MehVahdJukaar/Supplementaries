@@ -57,13 +57,13 @@ public class DoubleSkullBlock extends SkullBlock implements IRotatable {
     }
 
     @Override
-    public ItemStack getPickBlock(BlockState state, HitResult hitResult, BlockGetter world, BlockPos pos, Player player) {
+    public ItemStack getCloneItemStack(BlockState state, HitResult hitResult, BlockGetter world, BlockPos pos, Player player) {
         if (world.getBlockEntity(pos) instanceof DoubleSkullBlockTile tile) {
             double y = hitResult.getLocation().y;
             boolean up = y % ((int) y) > 0.5d;
             return up ? tile.getSkullItemUp() : tile.getSkullItem();
         }
-        return super.getPickBlock(state, hitResult, world, pos, player);
+        return super.getCloneItemStack(state, hitResult, world, pos, player);
     }
 
     @Override

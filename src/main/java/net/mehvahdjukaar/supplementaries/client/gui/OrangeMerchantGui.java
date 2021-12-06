@@ -201,7 +201,7 @@ public class OrangeMerchantGui extends AbstractContainerScreen<RedMerchantContai
             }
 
             for (OrangeMerchantGui.TradeButton tradeButton : this.tradeOfferButtons) {
-                if (tradeButton.isHovered()) {
+                if (tradeButton.isHoveredOrFocused()) {
                     tradeButton.renderToolTip(pMatrixStack, pMouseX, pMouseY);
                 }
 

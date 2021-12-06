@@ -183,11 +183,10 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
-        super.save(compound);
-        this.fluidHolder.save(compound);
-        this.mobContainer.save(compound);
-        return compound;
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        this.fluidHolder.save(tag);
+        this.mobContainer.save(tag);
     }
 
     public boolean hasContent() {

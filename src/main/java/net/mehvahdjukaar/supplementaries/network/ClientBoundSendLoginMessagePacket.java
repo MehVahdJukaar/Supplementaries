@@ -13,13 +13,14 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fmllegacy.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
 public class ClientBoundSendLoginMessagePacket {
     public ClientBoundSendLoginMessagePacket(FriendlyByteBuf buf) {
     }
+
 
     public ClientBoundSendLoginMessagePacket() {
     }
@@ -34,7 +35,7 @@ public class ClientBoundSendLoginMessagePacket {
             if (ClientConfigs.general.ANTI_REPOST_WARNING.get()) {
                 try {
                     String fileName = ModList.get().getModFileById(Supplementaries.MOD_ID).getFile().getFileName();
-                    if(fileName.contains(".jar")) {
+                    if (fileName.contains(".jar")) {
                         if (!fileName.toLowerCase().contains("supplementaries-1") || fileName.toLowerCase().contains("supplementaries-mod") || fileName.contains("supplementaries-1.16.53")) {
                             LocalPlayer player = Minecraft.getInstance().player;
                             MutableComponent link = new TranslatableComponent("message.supplementaries.anti_repost_link");

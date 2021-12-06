@@ -29,27 +29,6 @@ public class WindVaneBlockTile extends BlockEntity {
         this.offset = 400 * (Mth.sin((0.005f * this.worldPosition.getX()) % tp) + Mth.sin((0.005f * this.worldPosition.getZ()) % tp) + Mth.sin((0.005f * this.worldPosition.getY()) % tp));
     }
 
-    @Override
-    public CompoundTag save(CompoundTag compound) {
-        super.save(compound);
-        return compound;
-    }
-
-    @Override
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return new ClientboundBlockEntityDataPacket(this.worldPosition, 0, this.getUpdateTag());
-    }
-
-    @Override
-    public CompoundTag getUpdateTag() {
-        return this.save(new CompoundTag());
-    }
-
-    @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        this.load(pkt.getTag());
-    }
-
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, WindVaneBlockTile tile) {
 
         float currentYaw = tile.yaw;

@@ -32,10 +32,10 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.fmllegacy.common.registry.IEntityAdditionalSpawnData;
-import net.minecraftforge.fmllegacy.network.FMLPlayMessages;
-import net.minecraftforge.fmllegacy.network.NetworkHooks;
+import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.network.PlayMessages;
 
 import java.util.Random;
 
@@ -65,7 +65,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
         this.maxAge = 200;
     }
 
-    public BombEntity(FMLPlayMessages.SpawnEntity packet, Level world) {
+    public BombEntity(PlayMessages.SpawnEntity packet, Level world) {
         super(ModRegistry.BOMB.get(), world);
         this.maxAge = 200;
         //packet.getAdditionalData().rea

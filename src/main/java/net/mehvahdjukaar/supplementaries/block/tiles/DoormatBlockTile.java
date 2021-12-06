@@ -34,10 +34,9 @@ public class DoormatBlockTile extends ItemDisplayTile implements ITextHolderProv
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
-        super.save(compound);
-        this.textHolder.write(compound);
-        return compound;
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        this.textHolder.write(tag);
     }
 
     @Override
@@ -52,12 +51,12 @@ public class DoormatBlockTile extends ItemDisplayTile implements ITextHolderProv
     //TODO: optimize this two methods to send only what's needed
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return new ClientboundBlockEntityDataPacket(this.worldPosition, 0, this.getUpdateTag());
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
     public CompoundTag getUpdateTag() {
-        return this.save(new CompoundTag());
+        return this.saveWithoutMetadata();
     }
 
     @Override

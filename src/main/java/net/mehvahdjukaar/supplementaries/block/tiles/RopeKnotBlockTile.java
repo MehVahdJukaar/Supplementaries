@@ -11,7 +11,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.util.Constants;
 
 import static net.mehvahdjukaar.supplementaries.block.blocks.RopeKnotBlock.*;
 
@@ -74,7 +73,7 @@ public class RopeKnotBlockTile extends MimicBlockTile {
     public void setChanged() {
         if (this.level == null) return;
         this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(),
-                Constants.BlockFlags.BLOCK_UPDATE | Constants.BlockFlags.NOTIFY_NEIGHBORS);
+                Block.UPDATE_CLIENTS | Block.UPDATE_NEIGHBORS);
         //not sure if needed here
         this.requestModelDataUpdate();
         this.collisionShape = null;

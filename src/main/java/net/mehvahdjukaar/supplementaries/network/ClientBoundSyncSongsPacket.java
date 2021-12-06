@@ -5,9 +5,8 @@ import net.mehvahdjukaar.supplementaries.world.songs.SongsManager;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.random.WeightedEntry;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fmllegacy.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -47,7 +46,7 @@ public class ClientBoundSyncSongsPacket {
         if (context.getDirection().getReceptionSide() == LogicalSide.CLIENT) {
             context.enqueueWork(() -> {
                 SongsManager.clearSongs();
-                message.songs.keySet().forEach(k->{
+                message.songs.keySet().forEach(k -> {
                     Song s = message.songs.get(k);
                     s.processForPlaying();
                     SongsManager.addSong(k, s);

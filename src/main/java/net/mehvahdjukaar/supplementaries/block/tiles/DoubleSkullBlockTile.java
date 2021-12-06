@@ -39,8 +39,8 @@ public class DoubleSkullBlockTile extends EnhancedSkullBlockTile {
     }
 
     @Override
-    public CompoundTag save(CompoundTag tag) {
-        super.save(tag);
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         if (waxColorInd != -1) {
             tag.putInt("WaxColor", waxColorInd);
         }
@@ -51,8 +51,6 @@ public class DoubleSkullBlockTile extends EnhancedSkullBlockTile {
             NbtUtils.writeGameProfile(compoundtag, this.ownerUp);
             tag.put("SkullOwnerUp", compoundtag);
         }
-
-        return tag;
     }
 
     @Override

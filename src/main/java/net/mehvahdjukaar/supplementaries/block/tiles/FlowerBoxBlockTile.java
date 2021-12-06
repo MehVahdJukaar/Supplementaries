@@ -26,7 +26,6 @@ import net.minecraftforge.client.model.ModelDataManager;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
-import net.minecraftforge.common.util.Constants;
 
 import java.util.Objects;
 
@@ -81,7 +80,7 @@ public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder 
                 !Objects.equals(oldMimic2, this.flowerStates[2])) {
             ModelDataManager.requestModelDataRefresh(this);
             if (level != null) {
-                this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+                this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS | Block.UPDATE_NEIGHBORS);
             }
         }
     }
@@ -108,7 +107,7 @@ public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder 
         //TODO: check this
         ModelDataManager.requestModelDataRefresh(this);
         if (level != null) {
-            this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
+            this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS);
         }
     }
 

@@ -149,7 +149,7 @@ public class RakedGravelBlock extends GravelBlock {
     @Override
     public BlockState updateShape(BlockState state, Direction direction, BlockState fromState, LevelAccessor world, BlockPos pos, BlockPos fromPos) {
         if (direction == Direction.UP && !state.canSurvive(world, pos)) {
-            world.getBlockTicks().scheduleTick(pos, this, 1);
+            world.scheduleTick(pos, this, 1);
         }
         return super.updateShape(state, direction, fromState, world, pos, fromPos);
     }

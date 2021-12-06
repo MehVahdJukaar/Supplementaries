@@ -7,7 +7,6 @@ import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.items.BurnableBlockItem;
 import net.mehvahdjukaar.supplementaries.items.FlagItem;
 import net.mehvahdjukaar.supplementaries.items.SignPostItem;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
@@ -17,12 +16,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fmllegacy.RegistryObject;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -39,7 +37,7 @@ public class Variants {
         Map<IWoodType, RegistryObject<Block>> map = new HashMap<>();
 
         for (IWoodType wood : WoodTypes.TYPES.values()) {
-            if(RegistryConfigs.reg.CONDITIONAL_SIGN_REGISTRATIONS.get() && !wood.isModActive()) continue;
+            if (RegistryConfigs.reg.CONDITIONAL_SIGN_REGISTRATIONS.get() && !wood.isModActive()) continue;
             String name = getHangingSignName(wood);
             map.put(wood, ModRegistry.BLOCKS.register(name, () -> new HangingSignBlock(
                     BlockBehaviour.Properties.of(wood.getMaterial(), wood.getColor())
@@ -56,7 +54,7 @@ public class Variants {
         Map<IWoodType, RegistryObject<Item>> map = new HashMap<>();
 
         for (IWoodType wood : WoodTypes.TYPES.values()) {
-            if(RegistryConfigs.reg.CONDITIONAL_SIGN_REGISTRATIONS.get() && !wood.isModActive()) continue;
+            if (RegistryConfigs.reg.CONDITIONAL_SIGN_REGISTRATIONS.get() && !wood.isModActive()) continue;
             String name = getHangingSignName(wood);
             map.put(wood, ModRegistry.ITEMS.register(name, () -> new BurnableBlockItem(ModRegistry.HANGING_SIGNS.get(wood).get(),
                     new Item.Properties().tab(doesntHaveWoodInstalled(wood) ? null :
@@ -75,7 +73,7 @@ public class Variants {
         Map<IWoodType, RegistryObject<Item>> map = new HashMap<>();
 
         for (IWoodType wood : WoodTypes.TYPES.values()) {
-            if(RegistryConfigs.reg.CONDITIONAL_SIGN_REGISTRATIONS.get() && !wood.isModActive()) continue;
+            if (RegistryConfigs.reg.CONDITIONAL_SIGN_REGISTRATIONS.get() && !wood.isModActive()) continue;
             String name = getSignPostName(wood);
             map.put(wood, ModRegistry.ITEMS.register(name, () -> new SignPostItem(
                     new Item.Properties().tab(doesntHaveWoodInstalled(wood) ? null :
@@ -191,16 +189,18 @@ public class Variants {
         VERTICAL_SLAB(VerticalSlabBlock::new),
         WALL(WallBlock::new),
         STAIRS(StairBlock::new);
-        private final BiFunction<Supplier<BlockState>,BlockBehaviour.Properties,Block> constructor;
+        private final BiFunction<Supplier<BlockState>, BlockBehaviour.Properties, Block> constructor;
 
-        VariantType(BiFunction<Supplier<BlockState>,BlockBehaviour.Properties, Block> constructor) {
+        VariantType(BiFunction<Supplier<BlockState>, BlockBehaviour.Properties, Block> constructor) {
             this.constructor = constructor;
         }
-        VariantType(Function<BlockBehaviour.Properties,Block> constructor){
-            this.constructor = (b,p)->constructor.apply(p);
+
+        VariantType(Function<BlockBehaviour.Properties, Block> constructor) {
+            this.constructor = (b, p) -> constructor.apply(p);
         }
-        private Block create(Block parent){
-            return this.constructor.apply(parent::defaultBlockState,  BlockBehaviour.Properties.copy(parent));
+
+        private Block create(Block parent) {
+            return this.constructor.apply(parent::defaultBlockState, BlockBehaviour.Properties.copy(parent));
         }
     }
 
@@ -209,9 +209,9 @@ public class Variants {
         for (VariantType type : VariantType.values()) {
             String name = baseName;
             if (!type.equals(VariantType.BLOCK)) name += "_" + type.name().toLowerCase();
-            RegistryObject<Block> block = ModRegistry.BLOCKS.register(name, ()->type.create(parentBlock));
-            CreativeModeTab tab = switch (type){
-                case VERTICAL_SLAB -> ModRegistry.getTab("quark",CreativeModeTab.TAB_BUILDING_BLOCKS, baseName);
+            RegistryObject<Block> block = ModRegistry.BLOCKS.register(name, () -> type.create(parentBlock));
+            CreativeModeTab tab = switch (type) {
+                case VERTICAL_SLAB -> ModRegistry.getTab("quark", CreativeModeTab.TAB_BUILDING_BLOCKS, baseName);
                 case WALL -> ModRegistry.getTab(CreativeModeTab.TAB_DECORATIONS, baseName);
                 default -> ModRegistry.getTab(CreativeModeTab.TAB_BUILDING_BLOCKS, baseName);
             };

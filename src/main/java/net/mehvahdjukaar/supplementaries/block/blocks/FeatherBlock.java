@@ -102,8 +102,8 @@ public class FeatherBlock extends Block {
     @Override
     public VoxelShape getCollisionShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
         if (collisionContext instanceof EntityCollisionContext entityCollisionContext) {
-            Optional<Entity> optional = entityCollisionContext.getEntity();
-            if (optional.isPresent() && optional.get() instanceof LivingEntity entity) {
+            Entity e = entityCollisionContext.getEntity();
+            if (e instanceof LivingEntity entity) {
 
                 float dy = (float) (entity.getY() - blockPos.getY());
 

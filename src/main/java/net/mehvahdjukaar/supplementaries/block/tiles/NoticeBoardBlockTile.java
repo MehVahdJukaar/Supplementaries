@@ -157,12 +157,11 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
-        super.save(compound);
-        compound.putString("Color", this.textColor.getName());
-        compound.putBoolean("TextVisible", this.textVisible);
-        compound.putInt("PageNumber", this.pageNumber);
-        return compound;
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        tag.putString("Color", this.textColor.getName());
+        tag.putBoolean("TextVisible", this.textVisible);
+        tag.putInt("PageNumber", this.pageNumber);
     }
 
     @Override

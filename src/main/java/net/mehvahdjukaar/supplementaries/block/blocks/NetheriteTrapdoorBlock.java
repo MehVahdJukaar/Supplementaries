@@ -57,7 +57,7 @@ public class NetheriteTrapdoorBlock extends TrapDoorBlock implements ILavaAndWat
                 state = state.cycle(OPEN);
                 worldIn.setBlock(pos, state, 2);
                 if (state.getValue(WATERLOGGED)) {
-                    worldIn.getLiquidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
+                    worldIn.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
                 }
 
                 //TODO: replace with proper sound event
@@ -71,9 +71,9 @@ public class NetheriteTrapdoorBlock extends TrapDoorBlock implements ILavaAndWat
     @Override
     public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
         if (state.getValue(WATERLOGGED)) {
-            worldIn.getLiquidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
+            worldIn.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
         } else if (state.getValue(LAVALOGGED)) {
-            worldIn.getLiquidTicks().scheduleTick(pos, Fluids.LAVA, Fluids.LAVA.getTickDelay(worldIn));
+            worldIn.scheduleTick(pos, Fluids.LAVA, Fluids.LAVA.getTickDelay(worldIn));
         }
     }
 
@@ -96,7 +96,7 @@ public class NetheriteTrapdoorBlock extends TrapDoorBlock implements ILavaAndWat
     @Override
     public BlockState updateShape(BlockState pState, Direction direction, BlockState pFacingState, LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pFacingPos) {
         if (pState.getValue(LAVALOGGED)) {
-            pLevel.getLiquidTicks().scheduleTick(pCurrentPos, Fluids.LAVA, Fluids.LAVA.getTickDelay(pLevel));
+            pLevel.scheduleTick(pCurrentPos, Fluids.LAVA, Fluids.LAVA.getTickDelay(pLevel));
         }
         return super.updateShape(pState, direction, pFacingState, pLevel, pCurrentPos, pFacingPos);
     }

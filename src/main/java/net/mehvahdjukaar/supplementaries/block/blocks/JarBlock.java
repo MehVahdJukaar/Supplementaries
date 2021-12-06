@@ -106,7 +106,8 @@ public class JarBlock extends WaterBlock implements EntityBlock {
         ItemStack returnStack = new ItemStack(this);
 
         if (te.hasContent()) {
-            CompoundTag compoundTag = te.save(new CompoundTag());
+            CompoundTag compoundTag = new CompoundTag();
+            te.saveAdditional(compoundTag);
             //hax
             if (compoundTag.contains("Owner")) compoundTag.remove("Owner");
             if (!compoundTag.isEmpty()) {
@@ -134,11 +135,11 @@ public class JarBlock extends WaterBlock implements EntityBlock {
     }
 
     @Override
-    public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
         if (world.getBlockEntity(pos) instanceof JarBlockTile tile) {
             return this.getJarItem(tile);
         }
-        return super.getPickBlock(state, target, world, pos, player);
+        return super.getCloneItemStack(state, target, world, pos, player);
     }
 
     // end shoulker box code

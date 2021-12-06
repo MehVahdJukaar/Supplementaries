@@ -158,7 +158,7 @@ public class StickBlock extends WaterBlock implements IRotationLockable, IRotata
     }
 
     @Override
-    public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
         return new ItemStack(this.getItemOverride());
     }
 

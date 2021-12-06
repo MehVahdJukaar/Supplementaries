@@ -108,13 +108,13 @@ public class CandleSkullBlock extends AbstractCandleBlock implements EntityBlock
     }
 
     @Override
-    public ItemStack getPickBlock(BlockState state, HitResult hitResult, BlockGetter world, BlockPos pos, Player player) {
+    public ItemStack getCloneItemStack(BlockState state, HitResult hitResult, BlockGetter world, BlockPos pos, Player player) {
         if (world.getBlockEntity(pos) instanceof CandleSkullBlockTile tile) {
             double y = hitResult.getLocation().y;
             boolean up = y % ((int) y) > 0.5d;
-            return up ? tile.getCandle().getBlock().getPickBlock(state, hitResult, world, pos, player) : tile.getSkullItem();
+            return up ? tile.getCandle().getBlock().getCloneItemStack(state, hitResult, world, pos, player) : tile.getSkullItem();
         }
-        return super.getPickBlock(state, hitResult, world, pos, player);
+        return super.getCloneItemStack(state, hitResult, world, pos, player);
     }
 
     @Override

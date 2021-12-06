@@ -72,8 +72,9 @@ public class UrnBlock extends FallingBlock implements EntityBlock {
     //falling block
     @Override
     public void onPlace(BlockState state, Level worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
-        if (state.getBlock() != oldState.getBlock())
-            worldIn.getBlockTicks().scheduleTick(pos, this, this.getDelayAfterPlace());
+        if (state.getBlock() != oldState.getBlock()) {
+            worldIn.scheduleTick(pos, this, this.getDelayAfterPlace());
+        }
     }
 
     @Override
@@ -107,7 +108,7 @@ public class UrnBlock extends FallingBlock implements EntityBlock {
     @Override
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
         if (stateIn.getValue(WATERLOGGED)) {
-            worldIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
+            worldIn.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
         }
         if (!stateIn.canSurvive(worldIn, currentPos)) {
             if (worldIn instanceof ServerLevel serverLevel) {

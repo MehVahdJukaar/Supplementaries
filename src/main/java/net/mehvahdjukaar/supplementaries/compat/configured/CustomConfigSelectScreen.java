@@ -19,11 +19,11 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraftforge.client.ConfigGuiHandler;
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
-import net.minecraftforge.fmlclient.ConfigGuiHandler;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -99,7 +99,7 @@ public class CustomConfigSelectScreen extends ModConfigSelectionScreen {
                     new TextComponent("\u00A76Supplementaries Configured"),
                     config, CustomConfigSelectScreen.this.background));
         }, (button, matrixStack, mouseX, mouseY) -> {
-            if (button.isHovered()) {
+            if (button.isHoveredOrFocused()) {
                 if (ConfigScreen.isPlayingGame() && !ConfigHelper.isConfiguredInstalledOnServer()) {
                     CustomConfigSelectScreen.this.renderTooltip(matrixStack, this.font.split(new TranslatableComponent("configured.gui.not_installed"),
                             Math.max(CustomConfigSelectScreen.this.width / 2 - 43, 170)), mouseX, mouseY);
@@ -201,7 +201,7 @@ public class CustomConfigSelectScreen extends ModConfigSelectionScreen {
                 parent.handleComponentClicked(style);
             };
             OnTooltip onTooltip = (button, poseStack, mouseX, mouseY) -> {
-                if (button.isHovered()) {
+                if (button.isHoveredOrFocused()) {
                     parent.renderTooltip(poseStack, parent.getMinecraft().font.split(
                             new TextComponent(tooltip), Math.max(parent.width / 2 - 43, 170)), mouseX, mouseY);
                 }

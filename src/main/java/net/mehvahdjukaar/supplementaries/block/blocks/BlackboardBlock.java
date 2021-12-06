@@ -40,7 +40,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -148,7 +147,7 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock {
                                  BlockHitResult hit) {
         //create tile
         if (!state.getValue(WRITTEN)) {
-            worldIn.setBlock(pos, state.setValue(WRITTEN, true), Constants.BlockFlags.NO_RERENDER | Constants.BlockFlags.BLOCK_UPDATE);
+            worldIn.setBlock(pos, state.setValue(WRITTEN, true), (1 << 1) | (1 << 2));
         }
         if (worldIn.getBlockEntity(pos) instanceof BlackboardBlockTile te) {
 
@@ -211,7 +210,7 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock {
     public ItemStack getBlackboardItem(BlackboardBlockTile te) {
         ItemStack itemstack = new ItemStack(this);
         if (!te.isEmpty()) {
-            CompoundTag compoundnbt = te.saveToTag(new CompoundTag());
+            CompoundTag compoundnbt = te.savePixels(new CompoundTag());
             if (!compoundnbt.isEmpty()) {
                 itemstack.addTagElement("BlockEntityTag", compoundnbt);
             }
@@ -220,11 +219,11 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock {
     }
 
     @Override
-    public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
         if (world.getBlockEntity(pos) instanceof BlackboardBlockTile te) {
             return this.getBlackboardItem(te);
         }
-        return super.getPickBlock(state, target, world, pos, player);
+        return super.getCloneItemStack(state,target,world, pos, player);
     }
 
     @Override

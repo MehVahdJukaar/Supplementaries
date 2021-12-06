@@ -148,7 +148,7 @@ public class RopeBlock extends WaterBlock {
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         return ((!state.getValue(UP) && (context.isAbove(COLLISION_SHAPE, pos, true) || !state.getValue(DOWN)))
-                || !(context instanceof EntityCollisionContext && ((EntityCollisionContext) context).getEntity().isPresent()) ?
+                || !(context instanceof EntityCollisionContext) ?
                 getShape(state, worldIn, pos, context) : Shapes.empty());
 
     }
@@ -186,11 +186,9 @@ public class RopeBlock extends WaterBlock {
 
     @Override
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
-        if (stateIn.getValue(WATERLOGGED)) {
-            worldIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
-        }
+        super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
         if (!worldIn.isClientSide()) {
-            worldIn.getBlockTicks().scheduleTick(currentPos, this, 1);
+            worldIn.scheduleTick(currentPos, this, 1);
         }
 
         if (facing == Direction.UP) {
@@ -200,6 +198,7 @@ public class RopeBlock extends WaterBlock {
 
 
         if (facing == Direction.DOWN && !worldIn.isClientSide() && CompatHandler.deco_blocks) {
+            //TODO: readd
             //RopeChandelierBlock.tryConverting(facingState, worldIn, facingPos);
         }
 
@@ -224,9 +223,10 @@ public class RopeBlock extends WaterBlock {
     @Override
     public void onPlace(BlockState state, Level worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
         if (!worldIn.isClientSide) {
-            worldIn.getBlockTicks().scheduleTick(pos, this, 1);
+            worldIn.scheduleTick(pos, this, 1);
             if (CompatHandler.deco_blocks) {
                 BlockPos down = pos.below();
+                //TODO: readd
                 //RopeChandelierBlock.tryConverting(worldIn.getBlockState(down), worldIn, down);
             }
         }

@@ -73,7 +73,7 @@ public class SackBlockTile extends RandomizableContainerBlockEntity implements W
                         SoundEvents.LEASH_KNOT_PLACE, SoundSource.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.7F);
                 this.level.setBlock(this.getBlockPos(), blockstate.setValue(SackBlock.OPEN, true), 3);
             }
-            this.level.getBlockTicks().scheduleTick(this.getBlockPos(), this.getBlockState().getBlock(), 5);
+            this.level.scheduleTick(this.getBlockPos(), this.getBlockState().getBlock(), 5);
         }
     }
     public static int calculatePlayersUsing(Level world, BaseContainerBlockEntity tile, int x, int y, int z) {
@@ -95,7 +95,7 @@ public class SackBlockTile extends RandomizableContainerBlockEntity implements W
         int k = this.worldPosition.getZ();
         this.numPlayersUsing = calculatePlayersUsing(this.level, this, i, j, k);
         if (this.numPlayersUsing > 0) {
-            this.level.getBlockTicks().scheduleTick(this.getBlockPos(), this.getBlockState().getBlock(), 5);
+            this.level.scheduleTick(this.getBlockPos(), this.getBlockState().getBlock(), 5);
         } else {
             BlockState blockstate = this.getBlockState();
             /*
@@ -132,9 +132,11 @@ public class SackBlockTile extends RandomizableContainerBlockEntity implements W
 
     //TODO: separate save to nbt from write so you don't write data you don't need. it update packet too
     @Override
-    public CompoundTag save(CompoundTag compound) {
-        super.save(compound);
-        return this.saveToTag(compound);
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        if (!this.trySaveLootTable(tag)) {
+            ContainerHelper.saveAllItems(tag, this.items, false);
+        }
     }
 
     public void loadFromTag(CompoundTag compoundNBT) {
@@ -142,14 +144,6 @@ public class SackBlockTile extends RandomizableContainerBlockEntity implements W
         if (!this.tryLoadLootTable(compoundNBT) && compoundNBT.contains("Items", 9)) {
             ContainerHelper.loadAllItems(compoundNBT, this.items);
         }
-    }
-
-    public CompoundTag saveToTag(CompoundTag compoundNBT) {
-        if (!this.trySaveLootTable(compoundNBT)) {
-            ContainerHelper.saveAllItems(compoundNBT, this.items, false);
-        }
-
-        return compoundNBT;
     }
 
     @Override

@@ -44,22 +44,21 @@ public class ClockBlockTile extends BlockEntity {
     }
 
     @Override
-    public CompoundTag save(@Nonnull CompoundTag compound) {
-        super.save(compound);
-        compound.putFloat("MinRoll", this.targetRoll);
-        compound.putFloat("SecRoll", this.sTargetRoll);
-        compound.putInt("Power", this.power);
-        return compound;
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        tag.putFloat("MinRoll", this.targetRoll);
+        tag.putFloat("SecRoll", this.sTargetRoll);
+        tag.putInt("Power", this.power);
     }
 
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return new ClientboundBlockEntityDataPacket(this.worldPosition, 0, this.getUpdateTag());
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
     public CompoundTag getUpdateTag() {
-        return this.save(new CompoundTag());
+        return this.saveWithoutMetadata();
     }
 
     @Override

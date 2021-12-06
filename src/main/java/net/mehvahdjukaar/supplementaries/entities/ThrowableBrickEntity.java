@@ -26,8 +26,8 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.fmllegacy.network.FMLPlayMessages;
-import net.minecraftforge.fmllegacy.network.NetworkHooks;
+import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.network.PlayMessages;
 
 public class ThrowableBrickEntity extends ImprovedProjectileEntity {
     public ThrowableBrickEntity(EntityType<? extends ThrowableBrickEntity> type, Level world) {
@@ -42,7 +42,7 @@ public class ThrowableBrickEntity extends ImprovedProjectileEntity {
         super(ModRegistry.THROWABLE_BRICK.get(), x, y, z, worldIn);
     }
 
-    public ThrowableBrickEntity(FMLPlayMessages.SpawnEntity packet, Level world) {
+    public ThrowableBrickEntity(PlayMessages.SpawnEntity packet, Level world) {
         super(ModRegistry.THROWABLE_BRICK.get(), world);
     }
 

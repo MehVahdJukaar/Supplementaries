@@ -41,7 +41,7 @@ public class AdventurerMapsHandler {
 
     private static final Map<StructureFeature<?>, Pair<CustomDecorationType<?, ?>, Integer>> defaultStructureMarkers = new HashMap<>();
 
-    private static final List<StructureFeature<?>> randomMapPool = Arrays.asList(StructureFeature.SHIPWRECK, StructureFeature.RUINED_PORTAL, StructureFeature.SWAMP_HUT,
+    private static final List<StructureFeature<?>> RANDOM_MAP_POOL = Arrays.asList(StructureFeature.SHIPWRECK, StructureFeature.RUINED_PORTAL, StructureFeature.SWAMP_HUT,
             StructureFeature.BASTION_REMNANT, StructureFeature.JUNGLE_TEMPLE, StructureFeature.DESERT_PYRAMID, StructureFeature.PILLAGER_OUTPOST, StructureFeature.MINESHAFT,
             StructureFeature.OCEAN_RUIN, StructureFeature.IGLOO, StructureFeature.END_CITY);
 
@@ -210,16 +210,19 @@ public class AdventurerMapsHandler {
                 if (!serverWorld.getServer().getWorldData().worldGenSettings().generateFeatures())
                     return ItemStack.EMPTY;
 
-                List<StructureFeature<?>> pool = randomMapPool.stream().filter(s -> serverWorld.getChunkSource().getGenerator()
-                        .getBiomeSource().canGenerateStructure(s)).collect(Collectors.toList());
+                //TODO: readd
+                //List<StructureFeature<?>> pool = RANDOM_MAP_POOL.stream().filter(s -> serverWorld.getChunkSource().getGenerator()
+                //        .getBiomeSource().canGenerateStructure(s)).collect(Collectors.toList());
+
+                List<StructureFeature<?>> pool = RANDOM_MAP_POOL;
 
                 int size = pool.size();
                 if (size > 0) {
                     StructureFeature<?> structure = pool.get(serverWorld.random.nextInt(size));
-                    BlockPos toPos = ((ServerLevel) world).findNearestMapFeature(structure, pos, SEARCH_RADIUS, true);
+                    BlockPos toPos = serverWorld.findNearestMapFeature(structure, pos, SEARCH_RADIUS, true);
                     if (toPos != null) {
                         ItemStack stack = MapItem.create(world, toPos.getX(), toPos.getZ(), (byte) 2, true, true);
-                        MapItem.renderBiomePreviewMap((ServerLevel) world, stack);
+                        MapItem.renderBiomePreviewMap(serverWorld, stack);
 
                         //adds custom decoration
                         MapDecorationHandler.addTargetDecoration(stack, toPos, getVanillaMarker(structure), 0x78151a);

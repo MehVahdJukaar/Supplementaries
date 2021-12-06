@@ -31,7 +31,8 @@ public class CageBlockTile extends BlockEntity implements IMobContainerProvider 
     public void saveToNbt(ItemStack stack) {
         if(!this.mobContainer.isEmpty()) {
             CompoundTag compound = new CompoundTag();
-            stack.addTagElement("BlockEntityTag", save(compound));
+            this.saveAdditional(compound);
+            stack.addTagElement("BlockEntityTag", compound);
         }
     }
 
@@ -42,20 +43,19 @@ public class CageBlockTile extends BlockEntity implements IMobContainerProvider 
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
-        super.save(compound);
+    public void saveAdditional(CompoundTag compound) {
+        super.saveAdditional(compound);
         this.mobContainer.save(compound);
-        return compound;
     }
 
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return new ClientboundBlockEntityDataPacket(this.worldPosition, 0, this.getUpdateTag());
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
     public CompoundTag getUpdateTag() {
-        return this.save(new CompoundTag());
+        return this.saveWithoutMetadata();
     }
 
     @Override

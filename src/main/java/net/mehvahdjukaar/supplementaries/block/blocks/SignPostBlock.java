@@ -155,7 +155,7 @@ public class SignPostBlock extends FenceMimicBlock implements EntityBlock, IRota
     }
 
     @Override
-    public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
         if (world.getBlockEntity(pos) instanceof SignPostBlockTile tile) {
             double y = target.getLocation().y;
             boolean up = y % ((int) y) > 0.5d;

@@ -1,41 +1,21 @@
 package net.mehvahdjukaar.supplementaries;
 
-import net.mehvahdjukaar.supplementaries.block.blocks.PedestalBlock;
-import net.mehvahdjukaar.supplementaries.client.gui.ConfigButton;
 import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
 import net.mehvahdjukaar.supplementaries.datagen.RecipeCondition;
 import net.mehvahdjukaar.supplementaries.events.ServerEvents;
-import net.mehvahdjukaar.supplementaries.items.crafting.TreasureMapRecipe;
 import net.mehvahdjukaar.supplementaries.setup.ClientSetup;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModSetup;
-import net.mehvahdjukaar.supplementaries.world.structures.StructureRegistry;
-import net.minecraft.Util;
-import net.minecraft.client.ResourceLoadStateTracker;
-import net.minecraft.client.gui.screens.LoadingOverlay;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.dedicated.DedicatedServerProperties;
-import net.minecraft.server.packs.PackResources;
-import net.minecraft.world.level.GameRules;
-import net.minecraft.world.level.block.FireBlock;
-import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
-import net.minecraftforge.common.loot.LootTableIdCondition;
-import net.minecraftforge.event.world.PistonEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 @Mod(Supplementaries.MOD_ID)
 public class Supplementaries {
@@ -53,7 +33,6 @@ public class Supplementaries {
     }
 
     public Supplementaries() {
-
 
 
         //TODO: fish bucket on cages a
@@ -150,27 +129,24 @@ public class Supplementaries {
 
         //skii mod
         //blackboard texture glitchyness (baked model)
-        //fix axolotsl in jars
 
         //fix cauldron & faucet & update visual water
 
         //ender pearls dispensers
-
-        //ashreplaceable
-
-        //tater in a jar
 
         //idea: Increase range of enchantment table
 
         //TODO: FIX ALL ADVANCEMENTS
 
         //TODO: fix faucet water is completely bugged
-        //TODO: add oxidising copper & bubbles
         //IRON gate connected model
 
         //hud mod. armor broken hud, items offhadn crafting
 
         //bubble blowing with bellows
+
+        //TODO: readd achievements
+        //structures
 
         ConfigHandler.init();
 
@@ -180,7 +156,7 @@ public class Supplementaries {
 
         ModRegistry.init(bus);
 
-        StructureRegistry.init(bus);
+        //StructureRegistry.init(bus);
 
         bus.addListener(ModSetup::init);
 

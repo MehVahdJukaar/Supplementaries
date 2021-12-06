@@ -109,8 +109,8 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
-        super.save(compound);
+    public void saveAdditional(CompoundTag compound) {
+        super.saveAdditional(compound);
         compound.putBoolean("Framed", this.framed);
 
         this.textHolder.write(compound);
@@ -124,7 +124,6 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
         compound.putString("TypeUp", this.woodTypeUp.toNBT());
         compound.putString("TypeDown", this.woodTypeDown.toNBT());
         this.saveOwner(compound);
-        return compound;
     }
 
     @Nullable

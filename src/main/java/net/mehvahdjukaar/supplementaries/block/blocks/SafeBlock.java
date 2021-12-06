@@ -104,9 +104,9 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
     @Override
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
         if (stateIn.getValue(LAVALOGGED)) {
-            worldIn.getLiquidTicks().scheduleTick(currentPos, Fluids.LAVA, Fluids.LAVA.getTickDelay(worldIn));
+            worldIn.scheduleTick(currentPos, Fluids.LAVA, Fluids.LAVA.getTickDelay(worldIn));
         } else if (stateIn.getValue(WATERLOGGED)) {
-            worldIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
+            worldIn.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
         }
         return super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
@@ -259,7 +259,8 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
     }
 
     public ItemStack getSafeItem(SafeBlockTile te) {
-        CompoundTag compoundTag = te.saveToNbt(new CompoundTag());
+        CompoundTag compoundTag = new CompoundTag();
+        te.saveAdditional(compoundTag);
         ItemStack itemstack = new ItemStack(this);
         if (!compoundTag.isEmpty()) {
             itemstack.addTagElement("BlockEntityTag", compoundTag);
@@ -271,16 +272,15 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
         return itemstack;
     }
 
-
     //break protection
     @Override
-    public boolean removedByPlayer(BlockState state, Level world, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
+    public boolean onDestroyedByPlayer(BlockState state, Level world, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
         if (ServerConfigs.cached.SAFE_UNBREAKABLE) {
             if (world.getBlockEntity(pos) instanceof SafeBlockTile tile) {
                 if (!tile.canPlayerOpen(player, true)) return false;
             }
         }
-        return super.removedByPlayer(state, world, pos, player, willHarvest, fluid);
+        return super.onDestroyedByPlayer(state, world, pos, player, willHarvest, fluid);
     }
 
     //overrides creative drop
@@ -311,8 +311,8 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
     }
 
     @Override
-    public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
-        ItemStack itemstack = super.getPickBlock(state, target, world, pos, player);
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+        ItemStack itemstack = super.getCloneItemStack(state, target, world, pos, player);
         if (world.getBlockEntity(pos) instanceof SafeBlockTile tile) {
             return getSafeItem(tile);
         }

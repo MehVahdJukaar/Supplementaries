@@ -12,7 +12,7 @@ import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.ItemLike;
-import net.minecraftforge.common.BasicTrade;
+import net.minecraftforge.common.BasicItemListing;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.event.village.WandererTradesEvent;
 
@@ -57,16 +57,16 @@ public class VillagerTradesHandler {
         TRADES = trades.toArray(new VillagerTrades.ItemListing[0]);
     }
 
-    static BasicTrade itemForEmeraldTrade(ItemLike item, int quantity, int price, int maxTrades) {
+    static BasicItemListing itemForEmeraldTrade(ItemLike item, int quantity, int price, int maxTrades) {
         return itemForEmeraldTrade(new ItemStack(item, quantity), price, maxTrades);
     }
 
-    static BasicTrade itemForEmeraldTrade(ItemStack itemStack, int price, int maxTrades) {
-        return new BasicTrade(new ItemStack(Items.EMERALD, price), itemStack, maxTrades, 1, BUY);
+    static BasicItemListing itemForEmeraldTrade(ItemStack itemStack, int price, int maxTrades) {
+        return new BasicItemListing(new ItemStack(Items.EMERALD, price), itemStack, maxTrades, 1, BUY);
     }
 
-    static BasicTrade itemForEmeraldTrade(ItemLike item, int quantity, ItemLike additional, int addQuantity, int price, int maxTrades) {
-        return new BasicTrade(new ItemStack(Items.EMERALD, price), new ItemStack(additional, addQuantity), new ItemStack(item, quantity), maxTrades, 1, BUY);
+    static BasicItemListing itemForEmeraldTrade(ItemLike item, int quantity, ItemLike additional, int addQuantity, int price, int maxTrades) {
+        return new BasicItemListing(new ItemStack(Items.EMERALD, price), new ItemStack(additional, addQuantity), new ItemStack(item, quantity), maxTrades, 1, BUY);
     }
 
     record RocketForEmeraldTrade(int price, int paper, int rockets,
@@ -152,7 +152,7 @@ public class VillagerTradesHandler {
     public static void registerVillagerTrades(VillagerTradesEvent event){
         if (RegistryConfigs.reg.FLAX_ENABLED.get()) {
             if (event.getType().equals(VillagerProfession.FARMER)) {
-                event.getTrades().get(3).add(new BasicTrade(new ItemStack(ModRegistry.FLAX_SEEDS_ITEM.get(), 15), new ItemStack(net.minecraft.world.item.Items.EMERALD), 16, 2, 0.05f));
+                event.getTrades().get(3).add(new BasicItemListing(new ItemStack(ModRegistry.FLAX_SEEDS_ITEM.get(), 15), new ItemStack(net.minecraft.world.item.Items.EMERALD), 16, 2, 0.05f));
             }
         }
         AdventurerMapsHandler.loadCustomTrades();

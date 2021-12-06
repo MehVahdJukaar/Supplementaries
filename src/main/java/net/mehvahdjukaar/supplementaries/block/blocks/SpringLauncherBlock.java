@@ -145,7 +145,7 @@ public class SpringLauncherBlock extends Block {
                 } else if (bs.getBlock() instanceof SpringLauncherArmBlock
                         && state.getValue(FACING) == bs.getValue(FACING)) {
                     if (world.getBlockEntity(offset) instanceof SpringLauncherArmBlockTile) {
-                        world.getBlockTicks().scheduleTick(pos, world.getBlockState(pos).getBlock(), 1);
+                        world.scheduleTick(pos, world.getBlockState(pos).getBlock(), 1);
                     }
                 }
             }

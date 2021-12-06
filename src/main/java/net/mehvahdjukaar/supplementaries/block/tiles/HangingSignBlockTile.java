@@ -6,12 +6,12 @@ import net.mehvahdjukaar.supplementaries.block.util.ITextHolderProvider;
 import net.mehvahdjukaar.supplementaries.block.util.TextHolder;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.core.NonNullList;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -51,17 +51,19 @@ public class HangingSignBlockTile extends SwayingBlockTile implements IMapDispla
     }
 
     @Override
-    public TextHolder getTextHolder(){return this.textHolder;}
+    public TextHolder getTextHolder() {
+        return this.textHolder;
+    }
 
     @Override
-    public ItemStack getMapStack(){
+    public ItemStack getMapStack() {
         return this.getStackInSlot(0);
     }
 
     @Override
     public void setChanged() {
-        if(this.level==null)return;
-        this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
+        if (this.level == null) return;
+        this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Block.UPDATE_CLIENTS);
         super.setChanged();
     }
 
@@ -77,13 +79,12 @@ public class HangingSignBlockTile extends SwayingBlockTile implements IMapDispla
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
-        super.save(compound);
-        ContainerHelper.saveAllItems(compound, this.stacks);
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        ContainerHelper.saveAllItems(tag, this.stacks);
 
-        this.textHolder.write(compound);
-        this.saveOwner(compound);
-        return compound;
+        this.textHolder.write(tag);
+        this.saveOwner(tag);
     }
 
     //TODO: make this a ISidedInventory again

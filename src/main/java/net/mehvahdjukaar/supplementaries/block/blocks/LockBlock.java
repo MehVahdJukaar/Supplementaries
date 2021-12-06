@@ -51,7 +51,7 @@ public class LockBlock extends Block implements EntityBlock {
             if (tile.handleAction(player, handIn, "lock_block")) {
                 if (!worldIn.isClientSide) {
                     worldIn.setBlock(pos, state.setValue(POWERED, true), 2 | 4 | 3);
-                    worldIn.getBlockTicks().scheduleTick(pos, this, 20);
+                    worldIn.scheduleTick(pos, this, 20);
                 }
 
                 worldIn.levelEvent(player, 1037, pos, 0);

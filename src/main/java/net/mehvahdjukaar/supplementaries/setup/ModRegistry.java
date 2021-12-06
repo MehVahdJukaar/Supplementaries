@@ -39,16 +39,16 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraftforge.common.ForgeSpawnEggItem;
-import net.minecraftforge.common.extensions.IForgeContainerType;
+import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -216,7 +216,7 @@ public class ModRegistry {
                     .build(RED_MERCHANT_NAME));
 
     public static final RegistryObject<MenuType<RedMerchantContainer>> RED_MERCHANT_CONTAINER = CONTAINERS
-            .register(RED_MERCHANT_NAME, () -> IForgeContainerType.create(RedMerchantContainer::new));
+            .register(RED_MERCHANT_NAME, () -> IForgeMenuType.create(RedMerchantContainer::new));
 
     public static final RegistryObject<Item> RED_MERCHANT_SPAWN_EGG_ITEM = ITEMS.register(RED_MERCHANT_NAME + "_spawn_egg", () ->
             new ForgeSpawnEggItem(RED_MERCHANT, 0x7A090F, 0xF4f1e0,
@@ -409,8 +409,7 @@ public class ModRegistry {
     public static final Map<DyeColor, RegistryObject<Item>> PRESENTS_ITEMS = Variants.makePresentsItems();
 
     public static final RegistryObject<MenuType<PresentContainer>> PRESENT_BLOCK_CONTAINER = CONTAINERS
-            .register(PRESENT_NAME, () -> IForgeContainerType.create(PresentContainer::new));
-
+            .register(PRESENT_NAME, () -> IForgeMenuType.create(PresentContainer::new));
 
 
     //decoration blocks
@@ -443,7 +442,7 @@ public class ModRegistry {
             new Item.Properties().tab(getTab(CreativeModeTab.TAB_DECORATIONS, NOTICE_BOARD_NAME)), 300));
 
     public static final RegistryObject<MenuType<NoticeBoardContainer>> NOTICE_BOARD_CONTAINER = CONTAINERS
-            .register(NOTICE_BOARD_NAME, () -> IForgeContainerType.create(NoticeBoardContainer::new));
+            .register(NOTICE_BOARD_NAME, () -> IForgeMenuType.create(NoticeBoardContainer::new));
 
     //safe
     public static final String SAFE_NAME = "safe";
@@ -506,7 +505,7 @@ public class ModRegistry {
     public static final RegistryObject<BlockEntityType<SackBlockTile>> SACK_TILE = TILES.register(SACK_NAME, () -> BlockEntityType.Builder.of(
             SackBlockTile::new, SACK.get()).build(null));
 
-    public static final RegistryObject<MenuType<SackContainer>> SACK_CONTAINER = CONTAINERS.register(SACK_NAME, () -> IForgeContainerType.create(
+    public static final RegistryObject<MenuType<SackContainer>> SACK_CONTAINER = CONTAINERS.register(SACK_NAME, () -> IForgeMenuType.create(
             SackContainer::new));
 
     public static final RegistryObject<Item> SACK_ITEM = regItem(SACK_NAME, () -> new SackItem(SACK.get(),
@@ -866,7 +865,7 @@ public class ModRegistry {
     public static final RegistryObject<Item> PULLEY_BLOCK_ITEM = regBlockItem(PULLEY_BLOCK, getTab(CreativeModeTab.TAB_DECORATIONS, PULLEY_BLOCK_NAME), 300);
 
     public static final RegistryObject<MenuType<PulleyBlockContainer>> PULLEY_BLOCK_CONTAINER = CONTAINERS
-            .register(PULLEY_BLOCK_NAME, () -> IForgeContainerType.create(PulleyBlockContainer::new));
+            .register(PULLEY_BLOCK_NAME, () -> IForgeMenuType.create(PulleyBlockContainer::new));
     public static final RegistryObject<BlockEntityType<PulleyBlockTile>> PULLEY_BLOCK_TILE = TILES.register(PULLEY_BLOCK_NAME, () -> BlockEntityType.Builder.of(
             PulleyBlockTile::new, PULLEY_BLOCK.get()).build(null));
 
@@ -1135,7 +1134,7 @@ public class ModRegistry {
 
     public static final String BLOCK_GENERATOR_NAME = "block_generator";
     public static final RegistryObject<Block> BLOCK_GENERATOR = BLOCKS.register(BLOCK_GENERATOR_NAME, () -> new BlockGeneratorBlock(
-            BlockBehaviour.Properties.copy(STRUCTURE_TEMP.get()).lightLevel((s)-> 14)));
+            BlockBehaviour.Properties.copy(STRUCTURE_TEMP.get()).lightLevel((s) -> 14)));
     public static final RegistryObject<BlockEntityType<BlockGeneratorBlockTile>> BLOCK_GENERATOR_TILE = TILES.register(BLOCK_GENERATOR_NAME, () -> BlockEntityType.Builder.of(
             BlockGeneratorBlockTile::new, BLOCK_GENERATOR.get()).build(null));
 
@@ -1344,7 +1343,7 @@ public class ModRegistry {
     //ash
     public static final String ASH_NAME = "ash";
     public static final RegistryObject<Block> ASH_BLOCK = BLOCKS.register(ASH_NAME, () -> new AshBlock(
-            BlockBehaviour.Properties.of(Material.TOP_SNOW,MaterialColor.COLOR_GRAY)
+            BlockBehaviour.Properties.of(Material.TOP_SNOW, MaterialColor.COLOR_GRAY)
                     .sound(SoundType.SAND).randomTicks().strength(0.1F).requiresCorrectToolForDrops()));
     public static final RegistryObject<Item> ASH_ITEM = regBlockItem(ASH_BLOCK, getTab(CreativeModeTab.TAB_DECORATIONS, ASH_NAME));
 

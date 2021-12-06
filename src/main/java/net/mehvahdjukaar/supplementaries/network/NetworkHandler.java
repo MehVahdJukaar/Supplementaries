@@ -1,16 +1,9 @@
 package net.mehvahdjukaar.supplementaries.network;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.block.blocks.SpeakerBlock;
-import net.mehvahdjukaar.supplementaries.common.Textures;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -18,12 +11,11 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fmllegacy.network.NetworkDirection;
-import net.minecraftforge.fmllegacy.network.NetworkEvent;
-import net.minecraftforge.fmllegacy.network.NetworkRegistry;
-import net.minecraftforge.fmllegacy.network.simple.IndexedMessageCodec;
-import net.minecraftforge.fmllegacy.network.simple.SimpleChannel;
-import net.minecraftforge.fmllegacy.server.ServerLifecycleHooks;
+import net.minecraftforge.network.NetworkDirection;
+import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.simple.SimpleChannel;
+import net.minecraftforge.server.ServerLifecycleHooks;
 
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -74,7 +66,7 @@ public class NetworkHandler {
                 RequestConfigReloadPacket::new, RequestConfigReloadPacket::handler);
 
         //INSTANCE.registerMessage(nextID(), PicklePacket.class, PicklePacket::buffer,
-       //         PicklePacket::new, PicklePacket::handler);
+        //         PicklePacket::new, PicklePacket::handler);
 
         register(ClientBoundSyncTradesPacket.class, ClientBoundSyncTradesPacket::buffer,
                 ClientBoundSyncTradesPacket::new, ClientBoundSyncTradesPacket::handler);
@@ -108,9 +100,9 @@ public class NetworkHandler {
         world.getChunkSource().broadcast(entity, INSTANCE.toVanillaPacket(message, NetworkDirection.PLAY_TO_CLIENT));
     }
 
-    public static void sendToAllInRangeClients(BlockPos pos, ServerLevel level, double distance, Message message){
+    public static void sendToAllInRangeClients(BlockPos pos, ServerLevel level, double distance, Message message) {
         MinecraftServer currentServer = ServerLifecycleHooks.getCurrentServer();
-        if(currentServer != null) {
+        if (currentServer != null) {
             PlayerList players = currentServer.getPlayerList();
             ResourceKey<Level> dimension = level.dimension();
             players.broadcast(null, pos.getX(), pos.getY(), pos.getZ(),

@@ -13,7 +13,6 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.util.Constants;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -43,7 +42,7 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected 
     public void setChanged() {
         if (this.level == null || this.level.isClientSide) return;
         this.setCorrectBlockState(this.getBlockState(), this.worldPosition, this.level);
-        this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
+        this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), 3);
         super.setChanged();
     }
 
@@ -85,14 +84,13 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected 
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
-        super.save(compound);
-        this.saveToTag(compound);
+    public void saveAdditional(CompoundTag compound) {
+        super.saveAdditional(compound);
+        this.savePixels(compound);
         this.saveOwner(compound);
-        return compound;
     }
 
-    public CompoundTag saveToTag(CompoundTag compound) {
+    public CompoundTag savePixels(CompoundTag compound) {
         compound.putLongArray("Pixels", packPixels(pixels));
         return compound;
     }
@@ -128,12 +126,12 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected 
 
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return new ClientboundBlockEntityDataPacket(this.worldPosition, 0, this.getUpdateTag());
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
     public CompoundTag getUpdateTag() {
-        return this.save(new CompoundTag());
+        return this.saveWithoutMetadata();
     }
 
     @Override

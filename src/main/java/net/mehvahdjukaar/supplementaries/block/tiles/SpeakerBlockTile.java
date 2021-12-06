@@ -23,6 +23,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.FurnaceBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
@@ -78,8 +79,8 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
-        super.save(compound);
+    public void saveAdditional(CompoundTag compound) {
+        super.saveAdditional(compound);
         if (this.customName != null) {
             compound.putString("CustomName", Component.Serializer.toJson(this.customName));
         }
@@ -87,7 +88,6 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
         compound.putBoolean("Narrator", this.narrator);
         compound.putDouble("Volume", this.volume);
         this.saveOwner(compound);
-        return compound;
     }
 
     public void sendMessage() {
@@ -109,21 +109,6 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
                     new ClientBoundPlaySpeakerMessagePacket(message, this.narrator));
 
         }
-    }
-
-    @Override
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return new ClientboundBlockEntityDataPacket(this.worldPosition, 0, this.getUpdateTag());
-    }
-
-    @Override
-    public CompoundTag getUpdateTag() {
-        return this.save(new CompoundTag());
-    }
-
-    @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        this.load(pkt.getTag());
     }
 
     @Nullable

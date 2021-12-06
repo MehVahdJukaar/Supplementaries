@@ -42,13 +42,13 @@ public class BambooSpikesTippedItem extends BurnableBlockItem implements SimpleW
     }
 
     @Override
-    public int getRGBDurabilityForDisplay(ItemStack stack) {
+    public int getBarColor(ItemStack stack) {
         return PotionUtils.getColor(stack);
         //return MathHelper.rgb(106,81,178);
     }
 
     @Override
-    public boolean showDurabilityBar(ItemStack stack) {
+    public boolean isBarVisible(ItemStack stack) {
         return true;
     }
 

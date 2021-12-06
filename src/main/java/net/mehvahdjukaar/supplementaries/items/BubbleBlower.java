@@ -4,7 +4,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.selene.api.IFirstPersonAnimationProvider;
 import net.mehvahdjukaar.selene.api.IThirdPersonAnimationProvider;
 import net.mehvahdjukaar.selene.util.TwoHandedAnimation;
-import net.mehvahdjukaar.supplementaries.client.particles.SudsParticle;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.AnimationUtils;
@@ -46,7 +45,7 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
     }
 
     @Override
-    public int getRGBDurabilityForDisplay(ItemStack stack) {
+    public int getBarColor(ItemStack stack) {
         return 0xe8a4e4;
     }
 
@@ -84,7 +83,7 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
     }
 
     @Override
-    public boolean showDurabilityBar(ItemStack stack) {
+    public boolean isBarVisible(ItemStack stack) {
         return this.getCharges(stack) > 0;
     }
 
@@ -132,9 +131,9 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
             double z = entity.getZ() + v.z;
             Random r = entity.getRandom();
             v = v.scale(0.1 + r.nextFloat() * 0.1f);
-            double dx = v.x + ((0.5-r.nextFloat()) * 0.08);
-            double dy = v.y + ((0.5-r.nextFloat()) * 0.04);
-            double dz = v.z + ((0.5-r.nextFloat()) * 0.08);
+            double dx = v.x + ((0.5 - r.nextFloat()) * 0.08);
+            double dy = v.y + ((0.5 - r.nextFloat()) * 0.04);
+            double dz = v.z + ((0.5 - r.nextFloat()) * 0.08);
 
             level.addParticle(ModRegistry.SUDS_PARTICLE.get(), x, y, z, dx, dy, dz);
         }

@@ -25,7 +25,7 @@ public class GoldTrapdoorBlock extends TrapDoorBlock {
         state = state.cycle(OPEN);
         worldIn.setBlock(pos, state, 2);
         if (state.getValue(WATERLOGGED)) {
-            worldIn.getLiquidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
+            worldIn.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
         }
 
         this.playSound(player, worldIn, pos, state.getValue(OPEN));
@@ -40,7 +40,7 @@ public class GoldTrapdoorBlock extends TrapDoorBlock {
 
                 worldIn.setBlock(pos, state.setValue(POWERED, hasPower), 2);
                 if (state.getValue(WATERLOGGED)) {
-                    worldIn.getLiquidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
+                    worldIn.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
                 }
             }
 

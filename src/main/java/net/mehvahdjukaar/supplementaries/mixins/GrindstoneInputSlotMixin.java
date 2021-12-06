@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class GrindstoneInputSlotMixin {
 
 
-    @Inject(method = {"mayPlace", "m_5857_"}, at = @At("HEAD"), cancellable = true)
+    @Inject(method = {"mayPlace"}, at = @At("HEAD"), cancellable = true)
     private void mayPlace(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
         Item i = stack.getItem();
         if (i == Items.ENCHANTED_GOLDEN_APPLE || i == ModRegistry.BOMB_BLUE_ITEM.get()) {

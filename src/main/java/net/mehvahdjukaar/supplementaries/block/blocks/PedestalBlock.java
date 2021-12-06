@@ -24,6 +24,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -38,7 +39,6 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.util.Constants;
 import org.jetbrains.annotations.Nullable;
 
 public class PedestalBlock extends WaterBlock implements EntityBlock {
@@ -99,9 +99,7 @@ public class PedestalBlock extends WaterBlock implements EntityBlock {
     //called when a neighbor is placed
     @Override
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
-        if (stateIn.getValue(WATERLOGGED)) {
-            worldIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
-        }
+        super.updateShape(stateIn,facing,facingState,worldIn,currentPos,facingPos);
 
         if (facing == Direction.UP) {
             return stateIn.setValue(UP, canConnect(facingState, currentPos, worldIn, facing, stateIn.getValue(HAS_ITEM)));
@@ -112,14 +110,14 @@ public class PedestalBlock extends WaterBlock implements EntityBlock {
     }
 
     @Override
-    public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
         if (target.getLocation().y() > pos.getY() + 1 - 0.1875) {
             if (world.getBlockEntity(pos) instanceof ItemDisplayTile tile) {
                 ItemStack i = tile.getDisplayedItem();
                 if (!i.isEmpty()) return i;
             }
         }
-        return new ItemStack(this, 1);
+        return super.getCloneItemStack(state, target, world, pos, player);
     }
 
     @Override
@@ -127,7 +125,7 @@ public class PedestalBlock extends WaterBlock implements EntityBlock {
                                  BlockHitResult hit) {
         //create new tile
         if (!state.getValue(HAS_ITEM)) {
-            worldIn.setBlock(pos, state.setValue(HAS_ITEM, true), Constants.BlockFlags.NO_RERENDER | Constants.BlockFlags.BLOCK_UPDATE);
+            worldIn.setBlock(pos, state.setValue(HAS_ITEM, true), (1 << 2) | (1 << 1));
         }
         InteractionResult resultType = InteractionResult.PASS;
         if (worldIn.getBlockEntity(pos) instanceof PedestalBlockTile tile && tile.isAccessibleBy(player)) {

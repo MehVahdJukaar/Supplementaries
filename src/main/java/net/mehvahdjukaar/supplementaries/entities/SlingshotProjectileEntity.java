@@ -31,10 +31,10 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.Lazy;
+import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.fmllegacy.common.registry.IEntityAdditionalSpawnData;
-import net.minecraftforge.fmllegacy.network.FMLPlayMessages;
-import net.minecraftforge.fmllegacy.network.NetworkHooks;
+import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.network.PlayMessages;
 
 public class SlingshotProjectileEntity extends ImprovedProjectileEntity implements IEntityAdditionalSpawnData {
     private static final EntityDataAccessor<Byte> ID_LOYALTY = SynchedEntityData.defineId(SlingshotProjectileEntity.class, EntityDataSerializers.BYTE);
@@ -68,7 +68,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
         this.yRotO = this.getYRot();
     }
 
-    public SlingshotProjectileEntity(FMLPlayMessages.SpawnEntity spawnEntity, Level world) {
+    public SlingshotProjectileEntity(PlayMessages.SpawnEntity spawnEntity, Level world) {
         this(ModRegistry.SLINGSHOT_PROJECTILE.get(), world);
     }
 

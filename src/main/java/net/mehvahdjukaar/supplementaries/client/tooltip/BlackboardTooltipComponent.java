@@ -33,7 +33,7 @@ public class BlackboardTooltipComponent implements ClientTooltipComponent {
     }
 
     @Override
-    public void renderImage(Font pFont, int x, int y, PoseStack poseStack, ItemRenderer pItemRenderer, int pBlitOffset, TextureManager pTextureManager) {
+    public void renderImage(Font pFont, int x, int y, PoseStack poseStack, ItemRenderer pItemRenderer, int pBlitOffset) {
         poseStack.pushPose();
 
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);

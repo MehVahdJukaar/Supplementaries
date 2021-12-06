@@ -92,7 +92,7 @@ public class ItemShelfBlock extends WaterBlock implements EntityBlock {
     @Override
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
         if (stateIn.getValue(WATERLOGGED)) {
-            worldIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
+            worldIn.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
         }
         return facing == stateIn.getValue(FACING).getOpposite() && !stateIn.canSurvive(worldIn, currentPos)
                 ? Blocks.AIR.defaultBlockState()
@@ -100,14 +100,14 @@ public class ItemShelfBlock extends WaterBlock implements EntityBlock {
     }
 
     @Override
-    public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
         if (target.getLocation().y() >= pos.getY() + 0.25) {
             if (world.getBlockEntity(pos) instanceof ItemShelfBlockTile tile) {
                 ItemStack i = tile.getItem(0);
                 if (!i.isEmpty()) return i;
             }
         }
-        return new ItemStack(this, 1);
+        return super.getCloneItemStack(state, target, world, pos, player);
 
     }
 

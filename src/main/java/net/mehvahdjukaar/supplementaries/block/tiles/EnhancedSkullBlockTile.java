@@ -8,7 +8,6 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.util.StringUtil;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.FlintAndSteelItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -30,16 +29,14 @@ public class EnhancedSkullBlockTile extends BlockEntity {
     }
 
     @Override
-    public CompoundTag save(CompoundTag tag) {
-        super.save(tag);
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         tag.putInt("Type", this.type.ordinal());
         if (this.owner != null) {
             CompoundTag compoundtag = new CompoundTag();
             NbtUtils.writeGameProfile(compoundtag, this.owner);
             tag.put("SkullOwner", compoundtag);
         }
-
-        return tag;
     }
 
     @Override
@@ -63,7 +60,7 @@ public class EnhancedSkullBlockTile extends BlockEntity {
 
     @Nullable
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return new ClientboundBlockEntityDataPacket(this.worldPosition, 4, this.getUpdateTag());
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
@@ -73,7 +70,7 @@ public class EnhancedSkullBlockTile extends BlockEntity {
 
     @Override
     public CompoundTag getUpdateTag() {
-        return this.save(new CompoundTag());
+        return this.saveWithoutMetadata();
     }
 
     public void setOwner(@Nullable GameProfile pOwner) {

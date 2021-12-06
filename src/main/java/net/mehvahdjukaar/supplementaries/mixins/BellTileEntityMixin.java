@@ -33,14 +33,13 @@ public abstract class BellTileEntityMixin extends BlockEntity  implements IBellC
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
-        super.save(compound);
+    public void saveAdditional(CompoundTag compound) {
+        super.saveAdditional(compound);
         //not needed but since I keep getting reports lets do this
         try {
             if (this.connection != null)
                 compound.putInt("Connection", this.connection.ordinal());
         }catch (Exception ignored){}
-        return compound;
     }
 
     @Override
@@ -56,12 +55,12 @@ public abstract class BellTileEntityMixin extends BlockEntity  implements IBellC
 
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return new ClientboundBlockEntityDataPacket(this.worldPosition, 0, this.getUpdateTag());
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
     public CompoundTag getUpdateTag() {
-        return this.save(new CompoundTag());
+        return this.saveWithoutMetadata();
     }
 
     @Override

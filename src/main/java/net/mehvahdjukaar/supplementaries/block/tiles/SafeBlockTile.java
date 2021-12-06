@@ -5,33 +5,32 @@ import net.mehvahdjukaar.supplementaries.block.blocks.SackBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.SafeBlock;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.setup.ClientSetup;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
-import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ShulkerBoxMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
-import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
-import net.minecraft.core.Direction;
-import net.minecraft.core.NonNullList;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
+import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -87,7 +86,7 @@ public class SafeBlockTile extends RandomizableContainerBlockEntity implements W
                 this.ownerName = level.getPlayerByUUID(owner).getName().getString();
             }
             this.setChanged();
-            this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
+            this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Block.UPDATE_CLIENTS);
         }
     }
 
@@ -130,7 +129,7 @@ public class SafeBlockTile extends RandomizableContainerBlockEntity implements W
                         SoundEvents.IRON_TRAPDOOR_OPEN, SoundSource.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.65F);
                 this.level.setBlock(this.getBlockPos(), blockstate.setValue(SafeBlock.OPEN, true), 3);
             }
-            this.level.getBlockTicks().scheduleTick(this.getBlockPos(), this.getBlockState().getBlock(), 5);
+            this.level.scheduleTick(this.getBlockPos(), this.getBlockState().getBlock(), 5);
         }
     }
 
@@ -160,7 +159,7 @@ public class SafeBlockTile extends RandomizableContainerBlockEntity implements W
         int k = this.worldPosition.getZ();
         this.numPlayersUsing = calculatePlayersUsing(this.level, this, i, j, k);
         if (this.numPlayersUsing > 0) {
-            this.level.getBlockTicks().scheduleTick(this.getBlockPos(), this.getBlockState().getBlock(), 5);
+            this.level.scheduleTick(this.getBlockPos(), this.getBlockState().getBlock(), 5);
         } else {
             BlockState blockstate = this.getBlockState();
 
@@ -188,9 +187,16 @@ public class SafeBlockTile extends RandomizableContainerBlockEntity implements W
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
-        super.save(compound);
-        return this.saveToNbt(compound);
+    public void saveAdditional(CompoundTag compound) {
+        super.saveAdditional(compound);
+        if (!this.trySaveLootTable(compound)) {
+            ContainerHelper.saveAllItems(compound, this.items, false);
+        }
+        this.saveOwner(compound);
+        if (this.ownerName != null)
+            compound.putString("OwnerName", this.ownerName);
+        if (this.password != null)
+            compound.putString("Password", this.password);
     }
 
     public void loadFromNbt(CompoundTag compound) {
@@ -204,18 +210,6 @@ public class SafeBlockTile extends RandomizableContainerBlockEntity implements W
             this.ownerName = compound.getString("OwnerName");
         if (compound.contains("Password"))
             this.password = compound.getString("Password");
-    }
-
-    public CompoundTag saveToNbt(CompoundTag compound) {
-        if (!this.trySaveLootTable(compound)) {
-            ContainerHelper.saveAllItems(compound, this.items, false);
-        }
-        this.saveOwner(compound);
-        if (this.ownerName != null)
-            compound.putString("OwnerName", this.ownerName);
-        if (this.password != null)
-            compound.putString("Password", this.password);
-        return compound;
     }
 
     @Override
@@ -235,7 +229,7 @@ public class SafeBlockTile extends RandomizableContainerBlockEntity implements W
 
     @Override
     public CompoundTag getUpdateTag() {
-        return this.saveToNbt(new CompoundTag());
+        return this.saveWithoutMetadata();
     }
 
     @Override
@@ -245,7 +239,7 @@ public class SafeBlockTile extends RandomizableContainerBlockEntity implements W
 
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return new ClientboundBlockEntityDataPacket(this.worldPosition, 0, this.getUpdateTag());
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override

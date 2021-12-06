@@ -10,10 +10,10 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.util.Constants;
 
 import java.util.Random;
 
@@ -41,12 +41,12 @@ public abstract class SwayingBlockTile extends BlockEntity {
 
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return new ClientboundBlockEntityDataPacket(this.worldPosition, 9, this.getUpdateTag());
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
     public CompoundTag getUpdateTag() {
-        return this.save(new CompoundTag());
+        return this.saveWithoutMetadata();
     }
 
     @Override
@@ -67,7 +67,7 @@ public abstract class SwayingBlockTile extends BlockEntity {
             if (this.level == Minecraft.getInstance().level) {
                 this.requestModelDataUpdate();
                 //TODO: replace hardcoded int with const.blockFlags
-                this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Constants.BlockFlags.RERENDER_MAIN_THREAD);
+                this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_IMMEDIATE);
 
             }
         }
@@ -86,7 +86,7 @@ public abstract class SwayingBlockTile extends BlockEntity {
         return true;
     }
 
-    public static void clientTick(Level pLevel, BlockPos pPos, BlockState pState,SwayingBlockTile tile) {
+    public static void clientTick(Level pLevel, BlockPos pPos, BlockState pState, SwayingBlockTile tile) {
         if (tile.hasAnimation()) {
 
             //TODO: improve physics

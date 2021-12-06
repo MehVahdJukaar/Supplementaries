@@ -17,6 +17,7 @@ import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BrewingStandBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nonnull;
@@ -127,14 +128,13 @@ public class BambooSpikesBlockTile extends BlockEntity {
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
+    public void saveAdditional(CompoundTag compound) {
+        super.saveAdditional(compound);
         compound.putInt("Charges", this.charges);
         compound.putLong("LastTicked", this.lastTicked);
 
         ResourceLocation resourcelocation = net.minecraft.core.Registry.POTION.getKey(this.potion);
         compound.putString("Potion", resourcelocation.toString());
-
-        return super.save(compound);
     }
 
     @Override
@@ -147,12 +147,12 @@ public class BambooSpikesBlockTile extends BlockEntity {
 
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return new ClientboundBlockEntityDataPacket(this.worldPosition, 0, this.getUpdateTag());
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
     public CompoundTag getUpdateTag() {
-        return this.save(new CompoundTag());
+        return this.saveWithoutMetadata();
     }
 
     @Override

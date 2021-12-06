@@ -28,14 +28,14 @@ public interface ILavaAndWaterLoggable extends BucketPickup, LiquidBlockContaine
         if (!state.getValue(BlockProperties.LAVALOGGED) && fluidState.getType() == Fluids.LAVA) {
             if (!world.isClientSide()) {
                 world.setBlock(pos, state.setValue(BlockProperties.LAVALOGGED, Boolean.TRUE), 3);
-                world.getLiquidTicks().scheduleTick(pos, fluidState.getType(), fluidState.getType().getTickDelay(world));
+                world.scheduleTick(pos, fluidState.getType(), fluidState.getType().getTickDelay(world));
             }
 
             return true;
         } else if (!state.getValue(BlockStateProperties.WATERLOGGED) && fluidState.getType() == Fluids.WATER) {
             if (!world.isClientSide()) {
                 world.setBlock(pos, state.setValue(BlockStateProperties.WATERLOGGED, Boolean.TRUE), 3);
-                world.getLiquidTicks().scheduleTick(pos, fluidState.getType(), fluidState.getType().getTickDelay(world));
+                world.scheduleTick(pos, fluidState.getType(), fluidState.getType().getTickDelay(world));
             }
 
             return true;

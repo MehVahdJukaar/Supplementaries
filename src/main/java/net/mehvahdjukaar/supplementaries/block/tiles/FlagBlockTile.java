@@ -96,15 +96,14 @@ public class FlagBlockTile extends BlockEntity implements Nameable {
     }
 
     @Override
-    public CompoundTag save(CompoundTag compoundNBT) {
-        super.save(compoundNBT);
+    public void saveAdditional(CompoundTag compound) {
+        super.saveAdditional(compound);
         if (this.itemPatterns != null) {
-            compoundNBT.put("Patterns", this.itemPatterns);
+            compound.put("Patterns", this.itemPatterns);
         }
         if (this.name != null) {
-            compoundNBT.putString("CustomName", Component.Serializer.toJson(this.name));
+            compound.putString("CustomName", Component.Serializer.toJson(this.name));
         }
-        return compoundNBT;
     }
 
     @Override
@@ -125,12 +124,12 @@ public class FlagBlockTile extends BlockEntity implements Nameable {
 
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return new ClientboundBlockEntityDataPacket(this.worldPosition, 0, this.getUpdateTag());
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
     public CompoundTag getUpdateTag() {
-        return this.save(new CompoundTag());
+        return this.saveWithoutMetadata();
     }
 
     @Override

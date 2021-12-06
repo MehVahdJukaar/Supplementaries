@@ -1,15 +1,11 @@
 package net.mehvahdjukaar.supplementaries.network;
 
-import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.capabilities.CapabilityHandler;
-import net.mehvahdjukaar.supplementaries.world.data.GlobeData;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.capabilities.ICapabilitySerializable;
-import net.minecraftforge.fmllegacy.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.Objects;
 import java.util.function.Supplier;
@@ -42,7 +38,7 @@ public class ClientBoundSyncAntiqueInk implements NetworkHandler.Message {
                 Level world = Objects.requireNonNull(context.getSender()).level;
 
                 BlockEntity tile = world.getBlockEntity(message.pos);
-                if(tile != null) {
+                if (tile != null) {
                     tile.getCapability(CapabilityHandler.ANTIQUE_TEXT_CAP).ifPresent(c -> c.setAntiqueInk(message.ink));
                 }
             }

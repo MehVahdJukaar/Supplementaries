@@ -48,8 +48,8 @@ public class FlagBlock extends WaterBlock implements EntityBlock {
     }
 
     @Override
-    public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
-        return world.getBlockEntity(pos) instanceof FlagBlockTile tile ? tile.getItem(state) : super.getPickBlock(state, target, world, pos, player);
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+        return world.getBlockEntity(pos) instanceof FlagBlockTile tile ? tile.getItem(state) : super.getCloneItemStack(state, target, world, pos, player);
     }
 
     public DyeColor getColor() {

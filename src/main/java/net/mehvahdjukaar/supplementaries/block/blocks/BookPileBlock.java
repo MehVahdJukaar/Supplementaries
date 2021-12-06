@@ -117,7 +117,7 @@ public class BookPileBlock extends WaterBlock implements EntityBlock {
     }
 
     @Override
-    public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
         if (world.getBlockEntity(pos) instanceof BookPileBlockTile tile) {
             return tile.getItem(Math.max(0, state.getValue(BOOKS) - 1));
         }

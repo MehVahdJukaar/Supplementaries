@@ -29,10 +29,9 @@ public class CandleSkullBlockTile extends EnhancedSkullBlockTile {
     }
 
     @Override
-    public CompoundTag save(CompoundTag tag) {
-        super.save(tag);
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         tag.put("Candle", NbtUtils.writeBlockState(this.candle));
-        return tag;
     }
 
     @Override

@@ -284,7 +284,7 @@ public class GunpowderBlock extends LightUpBlock {
     public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean moving) {
         if (!oldState.is(state.getBlock()) && !world.isClientSide) {
             //doesn't ignite immediately
-            world.getBlockTicks().scheduleTick(pos, this, getDelay());
+            world.scheduleTick(pos, this, getDelay());
 
             for (Direction direction : Direction.Plane.VERTICAL) {
                 world.updateNeighborsAt(pos.relative(direction), this);
@@ -316,7 +316,7 @@ public class GunpowderBlock extends LightUpBlock {
     public void neighborChanged(BlockState state, Level world, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean moving) {
         super.neighborChanged(state, world, pos, neighborBlock, neighborPos, moving);
         if (!world.isClientSide) {
-            world.getBlockTicks().scheduleTick(pos, this, getDelay());
+            world.scheduleTick(pos, this, getDelay());
         }
     }
 
@@ -391,7 +391,7 @@ public class GunpowderBlock extends LightUpBlock {
                     this.lightUpNeighbouringWires(pos, state, world);
                 }
                 world.setBlockAndUpdate(pos, state.setValue(BURNING, burning + 1));
-                world.getBlockTicks().scheduleTick(pos, this, getDelay());
+                world.scheduleTick(pos, this, getDelay());
             }
             //not burning. check if it should
             else {
@@ -399,7 +399,7 @@ public class GunpowderBlock extends LightUpBlock {
                     BlockPos p = pos.relative(dir);
                     if (this.isFireSource(world, p)) {
                         this.lightUp(null, state, pos, world, FireSound.FLAMING_ARROW);
-                        world.getBlockTicks().scheduleTick(pos, this, getDelay());
+                        world.scheduleTick(pos, this, getDelay());
                         break;
                     }
                 }
@@ -423,7 +423,7 @@ public class GunpowderBlock extends LightUpBlock {
             if (!world.isClientSide()) {
                 ((Level) world).blockEvent(pos, this, 0, 0);
             }
-            world.getBlockTicks().scheduleTick(pos, this, getDelay());
+            world.scheduleTick(pos, this, getDelay());
         }
         return ret;
     }
@@ -459,7 +459,7 @@ public class GunpowderBlock extends LightUpBlock {
                 }
             } else continue;
             if (neighbourState.is(this)) {
-                world.getBlockTicks().scheduleTick(p, this, Math.max(getDelay() - 1, 1));
+                world.scheduleTick(p, this, Math.max(getDelay() - 1, 1));
                 this.lightUpByWire(neighbourState, p, world);
             }
         }
@@ -515,8 +515,7 @@ public class GunpowderBlock extends LightUpBlock {
     }
 
     @Override
-    public void catchFire(BlockState state, Level world, BlockPos pos, @Nullable Direction face, @Nullable LivingEntity igniter) {
-
+    public void onCaughtFire(BlockState state, Level world, BlockPos pos, @Nullable Direction face, @Nullable LivingEntity igniter) {
     }
 
     @Override
@@ -533,7 +532,7 @@ public class GunpowderBlock extends LightUpBlock {
      * Gets an item for the block being called on. Args: world, x, y, z
      */
     @Override
-    public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
         return new ItemStack(Items.GUNPOWDER);
     }
 

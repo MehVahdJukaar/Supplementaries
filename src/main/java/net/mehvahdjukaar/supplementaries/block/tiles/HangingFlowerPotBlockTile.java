@@ -6,11 +6,11 @@ import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.common.util.Constants;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -55,20 +55,18 @@ public class HangingFlowerPotBlockTile extends SwayingBlockTile implements IBloc
             this.setChanged();
             //TODO: optimize mark dirty and block update to send only what's needed
             if (this.level != null)
-                this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
+                this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Block.UPDATE_CLIENTS);
             return true;
         }
         return false;
     }
 
-
     @Override
-    public CompoundTag save(CompoundTag compound) {
-        super.save(compound);
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         //if(pot != Blocks.AIR.getDefaultState())
-        compound.put("Pot", NbtUtils.writeBlockState(pot));
-        this.saveOwner(compound);
-        return compound;
+        tag.put("Pot", NbtUtils.writeBlockState(pot));
+        this.saveOwner(tag);
     }
 
     @Override

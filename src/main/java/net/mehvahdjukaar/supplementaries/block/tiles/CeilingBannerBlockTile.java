@@ -59,17 +59,15 @@ public class CeilingBannerBlockTile extends BlockEntity implements Nameable {
     }
 
     @Override
-    public CompoundTag save(CompoundTag p_189515_1_) {
-        super.save(p_189515_1_);
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         if (this.itemPatterns != null) {
-            p_189515_1_.put("Patterns", this.itemPatterns);
+            tag.put("Patterns", this.itemPatterns);
         }
 
         if (this.name != null) {
-            p_189515_1_.putString("CustomName", Component.Serializer.toJson(this.name));
+            tag.putString("CustomName", Component.Serializer.toJson(this.name));
         }
-
-        return p_189515_1_;
     }
 
     @Override
@@ -92,11 +90,11 @@ public class CeilingBannerBlockTile extends BlockEntity implements Nameable {
 
     @Nullable
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return new ClientboundBlockEntityDataPacket(this.worldPosition, 6, this.getUpdateTag());
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     public CompoundTag getUpdateTag() {
-        return this.save(new CompoundTag());
+        return this.saveWithoutMetadata();
     }
 
     @Override

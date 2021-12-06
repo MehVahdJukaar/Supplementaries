@@ -71,8 +71,9 @@ public class SackBlock extends FallingBlock implements EntityBlock {
     //falling block
     @Override
     public void onPlace(BlockState state, Level worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
-        if (state.getBlock() != oldState.getBlock())
-            worldIn.getBlockTicks().scheduleTick(pos, this, this.getDelayAfterPlace());
+        if (state.getBlock() != oldState.getBlock()) {
+            worldIn.scheduleTick(pos, this, this.getDelayAfterPlace());
+        }
     }
 
     @Override
@@ -88,7 +89,7 @@ public class SackBlock extends FallingBlock implements EntityBlock {
     @Override
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
         if (stateIn.getValue(WATERLOGGED)) {
-            worldIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
+            worldIn.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
         }
         return super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
@@ -170,7 +171,8 @@ public class SackBlock extends FallingBlock implements EntityBlock {
     public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
         if (worldIn.getBlockEntity(pos) instanceof SackBlockTile tile) {
             if (!worldIn.isClientSide && player.isCreative() && !tile.isEmpty()) {
-                CompoundTag compoundTag = tile.saveToTag(new CompoundTag());
+                CompoundTag compoundTag = new CompoundTag();
+                tile.saveAdditional(compoundTag);
                 ItemStack itemstack = new ItemStack(this);
                 if (!compoundTag.isEmpty()) {
                     itemstack.addTagElement("BlockEntityTag", compoundTag);
@@ -203,10 +205,11 @@ public class SackBlock extends FallingBlock implements EntityBlock {
     }
 
     @Override
-    public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
-        ItemStack itemstack = super.getPickBlock(state, target, world, pos, player);
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+        ItemStack itemstack = super.getCloneItemStack(state, target, world, pos, player);
         if (world.getBlockEntity(pos) instanceof SackBlockTile tile) {
-            CompoundTag compoundTag = tile.saveToTag(new CompoundTag());
+            CompoundTag compoundTag = new CompoundTag();
+            tile.saveAdditional(compoundTag);
             if (!compoundTag.isEmpty()) {
                 itemstack.addTagElement("BlockEntityTag", compoundTag);
             }

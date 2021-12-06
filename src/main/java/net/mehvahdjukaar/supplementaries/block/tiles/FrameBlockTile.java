@@ -22,7 +22,6 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.client.model.ModelDataManager;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.Lazy;
 
 import javax.annotation.Nullable;
@@ -51,7 +50,7 @@ public class FrameBlockTile extends MimicBlockTile {
             int newLight = this.getLightValue();
             this.level.setBlock(this.worldPosition, this.getBlockState().setValue(FrameBlock.HAS_BLOCK, true)
                     .setValue(FrameBlock.LIGHT_LEVEL, newLight), 3);
-            this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
+            this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Block.UPDATE_CLIENTS);
         }
         //if (this.getLightValue() != oldLight) this.level.getChunkSource().getLightEngine().checkBlock(this.worldPosition);
         return true;

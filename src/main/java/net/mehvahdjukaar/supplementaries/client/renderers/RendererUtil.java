@@ -51,12 +51,12 @@ public class RendererUtil {
     public static void renderBlockModel(BlockState state, PoseStack matrixStack, MultiBufferSource buffer,
                                         BlockRenderDispatcher blockRenderer, Level world, BlockPos pos, RenderType type) {
 
-        net.minecraftforge.client.ForgeHooksClient.setRenderLayer(type);
+        ForgeHooksClient.setRenderType(type);
         blockRenderer.getModelRenderer().tesselateBlock(world,
                 blockRenderer.getBlockModel(state), state, pos, matrixStack,
                 buffer.getBuffer(type), false, new Random(), 0,
                 OverlayTexture.NO_OVERLAY);
-        net.minecraftforge.client.ForgeHooksClient.setRenderLayer(null);
+        ForgeHooksClient.setRenderType(null);
     }
 
     public static void renderBlockModel(ResourceLocation modelLocation, PoseStack matrixStack, MultiBufferSource buffer,

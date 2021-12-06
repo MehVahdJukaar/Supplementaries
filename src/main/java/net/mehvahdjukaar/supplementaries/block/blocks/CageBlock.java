@@ -88,11 +88,11 @@ public class CageBlock extends WaterBlock implements EntityBlock {
     //for pick block
 
     @Override
-    public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
         if (world.getBlockEntity(pos) instanceof CageBlockTile tile) {
             return this.getCageItem(tile);
         }
-        return super.getPickBlock(state, target, world, pos, player);
+        return super.getCloneItemStack(state, target, world, pos, player);
     }
 
     // end shulker box code
