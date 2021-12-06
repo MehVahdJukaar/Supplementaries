@@ -17,11 +17,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -35,7 +35,8 @@ public class ClientEvents {
 
     @SubscribeEvent
     public static void onItemTooltip(ItemTooltipEvent event) {
-        if ((event.getPlayer() != null) && (event.getPlayer().level != null)) {
+        if ((event.getPlayer() != null)) {
+            event.getPlayer();
 
             if (ClientConfigs.cached.TOOLTIP_HINTS && event.getFlags().isAdvanced()) {
                 ItemsOverrideHandler.addOverrideTooltips(event);
@@ -176,5 +177,17 @@ public class ClientEvents {
         greenLine(builder, positionMatrix, 0, .5f, 0, 0, 6, 0);
 
     }
+
+    @SubscribeEvent
+    public static void onRenderLast(RenderWorldLastEvent event) {
+        //TODO: use this for bells
+        /*
+        matrix.pushPose();
+        RenderSystem.enableDepthTest();
+        matrix.translate(-cameraPos.x(), -cameraPos.y(), -cameraPos.z());
+        matrix.translate(pos.getX() + face.translation.x(),pos.getY() + face.translation.y(),pos.getZ() + face.translation.z());
+    */
+    }
+
 
 }

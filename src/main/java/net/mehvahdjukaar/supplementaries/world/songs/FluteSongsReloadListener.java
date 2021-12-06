@@ -10,6 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.util.random.WeightedEntry;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.fml.util.thread.EffectiveSide;
 import net.minecraftforge.fmllegacy.network.PacketDistributor;
@@ -18,6 +19,8 @@ import net.minecraftforge.fmllegacy.server.ServerLifecycleHooks;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class FluteSongsReloadListener extends SimpleJsonResourceReloadListener {
@@ -25,23 +28,24 @@ public class FluteSongsReloadListener extends SimpleJsonResourceReloadListener {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 
     public FluteSongsReloadListener() {
-        super(GSON, "supplementaries/songs");
+        super(GSON, "flute_songs");
     }
 
     @Override
     protected void apply(Map<ResourceLocation, JsonElement> jsons, ResourceManager manager, ProfilerFiller profile) {
 
-        SongsManager.SONGS.clear();
+        SongsManager.clearSongs();
+        List<Song> temp = new ArrayList<>();
 
         jsons.forEach((key, input) -> {
             if (input != null) {
                 try {
                     Song song = GSON.fromJson(input, Song.class);
-                    if(song.getNotes().length ==0){
-                        Supplementaries.LOGGER.error("Failed to parse JSON object for song " + key+": a song can't have 0 notes!");
-                    }
-                    else {
-                        SongsManager.SONGS.put(key, song);
+                    if (song.getNotes().length == 0) {
+                        Supplementaries.LOGGER.error("Failed to parse JSON object for song " + key + ": a song can't have 0 notes!");
+                    } else {
+                        temp.add(song);
+                        SongsManager.addSong(key, song);
                     }
                 } catch (Exception e) {
                     Supplementaries.LOGGER.error("Failed to parse JSON object for song " + key);
@@ -49,15 +53,16 @@ public class FluteSongsReloadListener extends SimpleJsonResourceReloadListener {
             }
         });
 
-        Supplementaries.LOGGER.debug("Loaded  " + SongsManager.SONGS.size() + " songs: " + SongsManager.SONGS.keySet());
+        //Supplementaries.LOGGER.debug("Loaded  " + SongsManager.SONGS.size() + " songs: " + SongsManager.SONGS.keySet());
 
-        SongsManager.SONGS.values().forEach(Song::processForPlaying);
+        //SongsManager.SONGS.values().forEach(Song::processForPlaying);
 
 
         if (EffectiveSide.get().isServer() && ServerLifecycleHooks.getCurrentServer() != null) {
             //only need for particles
-            NetworkHandler.INSTANCE.send(PacketDistributor.ALL.noArg(), new ClientBoundSyncSongsPacket(SongsManager.SONGS));
+            SongsManager.sendSongsToClient();
         }
+        temp.forEach(Song::processForPlaying);
     }
 
     public static void saveRecordedSong(Song song) {

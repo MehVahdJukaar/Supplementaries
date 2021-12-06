@@ -9,6 +9,7 @@ import com.mrcrayfish.configured.client.screen.widget.IconButton;
 import com.mrcrayfish.configured.client.util.ScreenUtil;
 import com.mrcrayfish.configured.util.ConfigHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
 import net.minecraft.client.Minecraft;
@@ -147,29 +148,29 @@ public class CustomConfigSelectScreen extends ModConfigSelectionScreen {
         this.addRenderableWidget(new Button(centerX - 45, y, 90, 20, CommonComponents.GUI_BACK, (button) -> this.minecraft.setScreen(this.parent)));
 
         ButtonIcon patreon = ButtonIcon.linkButton(this, centerX - 45 - 22, y, 3, 1,
-                "https://www.patreon.com/user?u=53696377", "Support me on Patreon :D");
+                getLink("https://www.patreon.com/user?u=53696377"), "Support me on Patreon :D");
 
-        ButtonIcon kofi = ButtonIcon.linkButton(this, centerX - 45 - 22*2, y, 2, 2,
-                "https://ko-fi.com/mehvahdjukaar", "Donate a Coffe");
+        ButtonIcon kofi = ButtonIcon.linkButton(this, centerX - 45 - 22 * 2, y, 2, 2,
+                getLink("https://ko-fi.com/mehvahdjukaar"), "Donate a Coffe");
 
-        ButtonIcon curseforge = ButtonIcon.linkButton(this, centerX - 45 - 22*3, y, 1, 2,
-                "https://www.curseforge.com/minecraft/mc-mods/supplementaries", "CurseForge Page");
+        ButtonIcon curseforge = ButtonIcon.linkButton(this, centerX - 45 - 22 * 3, y, 1, 2,
+                getLink("https://www.curseforge.com/minecraft/mc-mods/supplementaries"), "CurseForge Page");
 
-        ButtonIcon github = ButtonIcon.linkButton(this, centerX - 45 - 22*4, y, 0, 2,
-                "https://github.com/MehVahdJukaar/Supplementaries/wiki", "Mod Wiki");
+        ButtonIcon github = ButtonIcon.linkButton(this, centerX - 45 - 22 * 4, y, 0, 2,
+                getLink("https://github.com/MehVahdJukaar/Supplementaries/wiki"), "Mod Wiki");
 
 
         ButtonIcon discord = ButtonIcon.linkButton(this, centerX + 45 + 2, y, 1, 1,
-                "https://discord.com/invite/qdKRTDf8Cv", "Mod Discord");
+                getLink("https://discord.com/invite/qdKRTDf8Cv"), "Mod Discord");
 
         ButtonIcon youtube = ButtonIcon.linkButton(this, centerX + 45 + 2 + 22, y, 0, 1,
-                "https://www.youtube.com/watch?v=LSPNAtAEn28&t=1s", "Youtube Channel");
+                getLink("https://www.youtube.com/watch?v=LSPNAtAEn28&t=1s"), "Youtube Channel");
 
-        ButtonIcon twitter = ButtonIcon.linkButton(this, centerX + 45 + 2 + 22*2, y, 2, 1,
-                "https://twitter.com/Supplementariez?s=09", "Twitter Page");
+        ButtonIcon twitter = ButtonIcon.linkButton(this, centerX + 45 + 2 + 22 * 2, y, 2, 1,
+                getLink("https://twitter.com/Supplementariez?s=09"), "Twitter Page");
 
-        ButtonIcon akliz = ButtonIcon.linkButton(this, centerX + 45 + 2 + 22*3, y, 3, 2,
-                "https://www.akliz.net/supplementaries", "Need a server? Get one with Akliz");
+        ButtonIcon akliz = ButtonIcon.linkButton(this, centerX + 45 + 2 + 22 * 3, y, 3, 2,
+                getLink("https://www.akliz.net/supplementaries"), "Need a server? Get one with Akliz");
 
 
         this.addRenderableWidget(kofi);
@@ -183,6 +184,9 @@ public class CustomConfigSelectScreen extends ModConfigSelectionScreen {
 
     }
 
+    public String getLink(String original) {
+        return CommonUtil.FESTIVITY.isAprilsFool() ? "https://www.youtube.com/watch?v=dQw4w9WgXcQ" : original;
+    }
 
     public static class ButtonIcon extends Button {
         private static final int ICON_WIDTH = 14;
@@ -224,8 +228,8 @@ public class CustomConfigSelectScreen extends ModConfigSelectionScreen {
             RenderSystem.defaultBlendFunc();
             RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
             int contentWidth = ICON_WIDTH + mc.font.width(this.label);
-            int iconX = (int) (this.x +Math.ceil((this.width - contentWidth) / 2f));
-            int iconY = (int) (this.y +Math.ceil((this.width - ICON_WIDTH) / 2f));
+            int iconX = (int) (this.x + Math.ceil((this.width - contentWidth) / 2f));
+            int iconY = (int) (this.y + Math.ceil((this.width - ICON_WIDTH) / 2f));
             float brightness = this.active ? 1.0F : 0.5F;
             RenderSystem.setShaderColor(brightness, brightness, brightness, this.alpha);
             blit(poseStack, iconX, iconY, this.getBlitOffset(), (float) this.u, (float) this.v, ICON_WIDTH, ICON_WIDTH, 64, 64);

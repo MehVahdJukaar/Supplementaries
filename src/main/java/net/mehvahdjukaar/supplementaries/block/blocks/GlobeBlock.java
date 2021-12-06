@@ -85,6 +85,8 @@ public class GlobeBlock extends WaterBlock implements EntityBlock {
         if (player.getItemInHand(handIn).getItem() instanceof ShearsItem) {
             if (worldIn.getBlockEntity(pos) instanceof GlobeBlockTile tile) {
                 tile.sheared = !tile.sheared;
+                tile.setChanged();
+                worldIn.sendBlockUpdated(pos, state, state, 3);
                 if (worldIn.isClientSide) {
                     Minecraft.getInstance().particleEngine.destroy(pos, state);
                 }

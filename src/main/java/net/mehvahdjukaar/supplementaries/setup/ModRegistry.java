@@ -187,6 +187,7 @@ public class ModRegistry {
     public static final RegistryObject<SimpleParticleType> ROTATION_TRAIL = regParticle("rotation_trail");
     public static final RegistryObject<SimpleParticleType> ROTATION_TRAIL_EMITTER = regParticle("rotation_trail_emitter");
     public static final RegistryObject<SimpleParticleType> SUDS_PARTICLE = regParticle("suds");
+    public static final RegistryObject<SimpleParticleType> ASH_PARTICLE = regParticle("ash");
 
     //recipes
     public static final RegistryObject<RecipeSerializer<?>> BLACKBOARD_DUPLICATE_RECIPE = RECIPES.register("blackboard_duplicate_recipe", () ->
@@ -302,17 +303,52 @@ public class ModRegistry {
                     .updateInterval(20))
             .build(SLINGSHOT_PROJECTILE_NAME));
 
-    //slingshot
-    public static final String SLINGSHOT_NAME = "slingshot";
-    public static final RegistryObject<Item> SLINGSHOT_ITEM = regItem(SLINGSHOT_NAME, () -> new SlingshotItem((new Item.Properties())
-            .tab(getTab(CreativeModeTab.TAB_TOOLS, SLINGSHOT_NAME))
-            .stacksTo(1).durability(192))); //setISTER(() -> SlingshotItemRenderer::new)
 
     //soap bubbler
     public static final String BUBBLE_BLOWER_NAME = "bubble_blower";
     public static final RegistryObject<Item> BUBBLE_BLOWER = regItem(BUBBLE_BLOWER_NAME, () -> new BubbleBlower((new Item.Properties())
             .tab(getTab(CreativeModeTab.TAB_TOOLS, BUBBLE_BLOWER_NAME))
             .stacksTo(1).durability(250)));
+
+
+    //slingshot
+    public static final String SLINGSHOT_NAME = "slingshot";
+    public static final RegistryObject<Item> SLINGSHOT_ITEM = regItem(SLINGSHOT_NAME, () -> new SlingshotItem((new Item.Properties())
+            .tab(getTab(CreativeModeTab.TAB_TOOLS, SLINGSHOT_NAME))
+            .stacksTo(1).durability(192))); //setISTER(() -> SlingshotItemRenderer::new)
+
+    //flute
+    public static final String FLUTE_NAME = "flute";
+    public static final RegistryObject<Item> FLUTE_ITEM = regItem(FLUTE_NAME, () -> new FluteItem((new Item.Properties())
+            .tab(getTab(CreativeModeTab.TAB_TOOLS, FLUTE_NAME)).stacksTo(1).durability(64)));
+
+
+    //key
+    public static final String KEY_NAME = "key";
+    public static final RegistryObject<Item> KEY_ITEM = regItem(KEY_NAME, () -> new KeyItem(
+            (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_TOOLS, KEY_NAME))));
+
+    //candy
+    public static final String CANDY_NAME = "candy";
+    public static final RegistryObject<Item> CANDY_ITEM = regItem(CANDY_NAME, () -> new CandyItem((new Item.Properties())
+            .tab(getTab(CreativeModeTab.TAB_FOOD, CANDY_NAME))));
+
+    //antique ink
+    public static final String ANTIQUE_INK_NAME = "antique_ink";
+    public static final RegistryObject<Item> ANTIQUE_INK = regItem(ANTIQUE_INK_NAME, () -> new Item((new Item.Properties())
+            .tab(getTab(CreativeModeTab.TAB_MISC, ANTIQUE_INK_NAME))));
+
+    //wrench
+    public static final String WRENCH_NAME = "wrench";
+    public static final RegistryObject<Item> WRENCH = regItem(WRENCH_NAME, () -> new WrenchItem((new Item.Properties())
+            .tab(getTab(CreativeModeTab.TAB_TOOLS, WRENCH_NAME)).stacksTo(1).durability(200)));
+
+    //speedometer
+    /*
+    public static final String SPEEDOMETER_NAME = "speedometer";
+    public static final RegistryObject<Item> SPEEDOMETER_ITEM = regItem(SPEEDOMETER_NAME,()-> new SpeedometerItem(
+            (new Item.Properties()).tab(null)));
+    */
 
 
     //blocks
@@ -361,6 +397,7 @@ public class ModRegistry {
                     CEILING_BANNERS.values().stream().map(RegistryObject::get).toArray(Block[]::new)).build(null));
 
     //presents
+
     public static final String PRESENT_NAME = "present";
 
     public static final Map<DyeColor, RegistryObject<Block>> PRESENTS = Variants.makePresents(PRESENT_NAME);
@@ -375,36 +412,6 @@ public class ModRegistry {
             .register(PRESENT_NAME, () -> IForgeContainerType.create(PresentContainer::new));
 
 
-    //key
-    public static final String KEY_NAME = "key";
-    public static final RegistryObject<Item> KEY_ITEM = regItem(KEY_NAME, () -> new KeyItem(
-            (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_TOOLS, KEY_NAME))));
-    //flute
-    public static final String FLUTE_NAME = "flute";
-    public static final RegistryObject<Item> FLUTE_ITEM = regItem(FLUTE_NAME, () -> new FluteItem((new Item.Properties())
-            .tab(getTab(CreativeModeTab.TAB_TOOLS, FLUTE_NAME)).stacksTo(1).durability(64)));
-
-    //candy
-    public static final String CANDY_NAME = "candy";
-    public static final RegistryObject<Item> CANDY_ITEM = regItem(CANDY_NAME, () -> new CandyItem((new Item.Properties())
-            .tab(getTab(CreativeModeTab.TAB_FOOD, CANDY_NAME))));
-
-    //antique ink
-    public static final String ANTIQUE_INK_NAME = "antique_ink";
-    public static final RegistryObject<Item> ANTIQUE_INK = regItem(ANTIQUE_INK_NAME, () -> new Item((new Item.Properties())
-            .tab(getTab(CreativeModeTab.TAB_MISC, ANTIQUE_INK_NAME))));
-
-    //wrench
-    public static final String WRENCH_NAME = "wrench";
-    public static final RegistryObject<Item> WRENCH = regItem(WRENCH_NAME, () -> new WrenchItem((new Item.Properties())
-            .tab(getTab(CreativeModeTab.TAB_TOOLS, WRENCH_NAME)).stacksTo(1).durability(200)));
-
-    //speedometer
-    /*
-    public static final String SPEEDOMETER_NAME = "speedometer";
-    public static final RegistryObject<Item> SPEEDOMETER_ITEM = regItem(SPEEDOMETER_NAME,()-> new SpeedometerItem(
-            (new Item.Properties()).tab(null)));
-    */
 
     //decoration blocks
 
@@ -531,7 +538,7 @@ public class ModRegistry {
     public static final RegistryObject<Block> GLOBE_SEPIA = BLOCKS.register(GLOBE_SEPIA_NAME, () -> new GlobeBlock(
             BlockBehaviour.Properties.copy(GLOBE.get())));
     public static final RegistryObject<Item> GLOBE_SEPIA_ITEM = ITEMS.register(GLOBE_SEPIA_NAME, () -> new BlockItem(GLOBE_SEPIA.get(),
-            new Item.Properties().tab(getTab(CreativeModeTab.TAB_DECORATIONS, GLOBE_NAME)).rarity(Rarity.RARE)));
+            new Item.Properties().tab(getTab(CreativeModeTab.TAB_DECORATIONS, GLOBE_SEPIA_NAME)).rarity(Rarity.RARE)));
 
     public static final RegistryObject<BlockEntityType<GlobeBlockTile>> GLOBE_TILE = TILES.register(GLOBE_NAME, () -> BlockEntityType.Builder.of(
             GlobeBlockTile::new, GLOBE.get(), GLOBE_SEPIA.get()).build(null));
@@ -1128,7 +1135,7 @@ public class ModRegistry {
 
     public static final String BLOCK_GENERATOR_NAME = "block_generator";
     public static final RegistryObject<Block> BLOCK_GENERATOR = BLOCKS.register(BLOCK_GENERATOR_NAME, () -> new BlockGeneratorBlock(
-            BlockBehaviour.Properties.copy(STRUCTURE_TEMP.get())));
+            BlockBehaviour.Properties.copy(STRUCTURE_TEMP.get()).lightLevel((s)-> 14)));
     public static final RegistryObject<BlockEntityType<BlockGeneratorBlockTile>> BLOCK_GENERATOR_TILE = TILES.register(BLOCK_GENERATOR_NAME, () -> BlockEntityType.Builder.of(
             BlockGeneratorBlockTile::new, BLOCK_GENERATOR.get()).build(null));
 
@@ -1328,7 +1335,7 @@ public class ModRegistry {
     public static final RegistryObject<Block> URN = BLOCKS.register(URN_NAME, () -> new UrnBlock(
             BlockBehaviour.Properties.of(Material.STONE, MaterialColor.WOOD)
                     .sound(SoundType.GLASS)
-                    .strength(0, 0)
+                    .strength(0.1f, 0)
     ));
     public static final RegistryObject<BlockEntityType<UrnBlockTile>> URN_TILE = TILES.register(URN_NAME, () -> BlockEntityType.Builder.of(
             UrnBlockTile::new, URN.get()).build(null));
@@ -1337,8 +1344,8 @@ public class ModRegistry {
     //ash
     public static final String ASH_NAME = "ash";
     public static final RegistryObject<Block> ASH_BLOCK = BLOCKS.register(ASH_NAME, () -> new AshBlock(
-            BlockBehaviour.Properties.copy(Blocks.GRAY_CONCRETE_POWDER)
-                    .randomTicks().strength(0.1F).requiresCorrectToolForDrops()));
+            BlockBehaviour.Properties.of(Material.TOP_SNOW,MaterialColor.COLOR_GRAY)
+                    .sound(SoundType.SAND).randomTicks().strength(0.1F).requiresCorrectToolForDrops()));
     public static final RegistryObject<Item> ASH_ITEM = regBlockItem(ASH_BLOCK, getTab(CreativeModeTab.TAB_DECORATIONS, ASH_NAME));
 
     //ash
@@ -1349,7 +1356,7 @@ public class ModRegistry {
 
     //soap
     public static final String SOAP_NAME = "soap";
-    public static final RegistryObject<Item> SOAP = regItem(SOAP_NAME, () -> new Item(
+    public static final RegistryObject<Item> SOAP = regItem(SOAP_NAME, () -> new SoapItem(
             (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_MISC, SOAP_NAME))));
 
     public static final String SOAP_BLOCK_NAME = "soap_block";

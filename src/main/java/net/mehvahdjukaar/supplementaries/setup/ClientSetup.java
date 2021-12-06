@@ -31,18 +31,16 @@ import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.particle.FlameParticle;
-import net.minecraft.client.particle.ParticleEngine;
+import net.minecraft.client.particle.*;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.FallingBlockRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
 import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -59,6 +57,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import org.jetbrains.annotations.Nullable;
+
+import java.awt.*;
 
 @Mod.EventBusSubscriber(modid = Supplementaries.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientSetup {
@@ -186,11 +186,9 @@ public class ClientSetup {
                     }
                 });
         ItemProperties.register(ModRegistry.SLINGSHOT_ITEM.get(), new ResourceLocation("pulling"),
-                (stack, world, entity, s) -> entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1.0F : 0.0F );
+                (stack, world, entity, s) -> entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1.0F : 0.0F);
 
         ItemProperties.register(ModRegistry.BUBBLE_BLOWER.get(), new ResourceLocation("using"), BubbleBlower::isBeingUsed);
-
-
 
 
         ModRegistry.PRESENTS_ITEMS.values().forEach(i -> ItemProperties.register(i.get(), new ResourceLocation("packed"),
@@ -231,8 +229,23 @@ public class ClientSetup {
         particleManager.register(ModRegistry.STASIS_PARTICLE.get(), StasisParticle.Factory::new);
         particleManager.register(ModRegistry.CONFETTI_PARTICLE.get(), ConfettiParticle.Factory::new);
         particleManager.register(ModRegistry.ROTATION_TRAIL.get(), RotationTrailParticle.Factory::new);
-        particleManager.register(ModRegistry.ROTATION_TRAIL_EMITTER.get(),new RotationTrailEmitter.Factory());
+        particleManager.register(ModRegistry.ROTATION_TRAIL_EMITTER.get(), new RotationTrailEmitter.Factory());
         particleManager.register(ModRegistry.SUDS_PARTICLE.get(), SudsParticle.Factory::new);
+        particleManager.register(ModRegistry.ASH_PARTICLE.get(), AshParticleFactory::new);
+
+    }
+
+    public static class AshParticleFactory extends SnowflakeParticle.Provider {
+        public AshParticleFactory(SpriteSet pSprites) {
+            super(pSprites);
+        }
+
+        @Override
+        public Particle createParticle(SimpleParticleType pType, ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed) {
+            Particle p = super.createParticle(pType, pLevel, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed);
+            if (p != null) p.setColor(108/255f, 103/255f, 103/255f);
+            return p;
+        }
     }
 
     @SubscribeEvent
@@ -332,7 +345,7 @@ public class ClientSetup {
 
         //registerStaticItemModel(new ModelResourceLocation("supplementaries:flute_in_hand#inventory"));
 
-        FlowerPotHandler.registerCustomModels(n -> ModelLoader.addSpecialModel(new ModelResourceLocation(n,"")));
+        FlowerPotHandler.registerCustomModels(n -> ModelLoader.addSpecialModel(new ModelResourceLocation(n, "")));
     }
 
 }

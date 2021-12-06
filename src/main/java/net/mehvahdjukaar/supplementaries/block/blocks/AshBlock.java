@@ -4,16 +4,14 @@ import net.mehvahdjukaar.supplementaries.entities.FallingAshEntity;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.particles.BlockParticleOption;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -21,16 +19,15 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.FallingBlock;
-import net.minecraft.world.level.block.HayBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.common.ForgeHooks;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -43,6 +40,7 @@ public class AshBlock extends FallingBlock {
 
     static {
         Arrays.setAll(SHAPE_BY_LAYER, l -> Block.box(0.0D, 0.0D, 0.0D, 16.0D, l * 2, 16.0D));
+        SHAPE_BY_LAYER[0] = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 0.1f, 16.0D);
     }
 
     public AshBlock(Properties properties) {
@@ -115,7 +113,7 @@ public class AshBlock extends FallingBlock {
     @Override
     public void tick(BlockState state, ServerLevel level, BlockPos pos, Random pRand) {
         BlockState below = level.getBlockState(pos.below());
-        if ((isFree(below) || hasIncompleteAshPileBelow(below)) && pos.getY() >= level.getMinBuildHeight()) {
+        if ((FallingAshEntity.isFree(below) || hasIncompleteAshPileBelow(below)) && pos.getY() >= level.getMinBuildHeight()) {
             FallingBlockEntity fallingblockentity = new FallingAshEntity(level, pos, state);
             this.falling(fallingblockentity);
             level.addFreshEntity(fallingblockentity);
@@ -147,20 +145,20 @@ public class AshBlock extends FallingBlock {
 
     @Override
     public void randomTick(BlockState pState, ServerLevel level, BlockPos pPos, Random pRandom) {
-        //if (level.isRainingAt(pPos.above())) {
-        //    this.removeOneLayer(pState, pPos, level);
-        //}
-    }
-
-    @Override
-        public void handlePrecipitation(BlockState pState, Level level, BlockPos pPos, Biome.Precipitation pPrecipitation) {
-        super.handlePrecipitation(pState, level, pPos, pPrecipitation);
-        if(level.random.nextInt(10)==0){
+        if (level.isRainingAt(pPos.above()) && level.random.nextInt(4) == 0) {
             this.removeOneLayer(pState, pPos, level);
         }
     }
 
-    private void removeOneLayer(BlockState state, BlockPos pos, Level level){
+    @Override
+    public void handlePrecipitation(BlockState pState, Level level, BlockPos pPos, Biome.Precipitation pPrecipitation) {
+        super.handlePrecipitation(pState, level, pPos, pPrecipitation);
+        if (level.random.nextInt(2) == 0) {
+            this.removeOneLayer(pState, pPos, level);
+        }
+    }
+
+    private void removeOneLayer(BlockState state, BlockPos pos, Level level) {
         int levels = state.getValue(LAYERS);
         if (levels > 1) level.setBlockAndUpdate(pos, state.setValue(LAYERS, levels - 1));
         else level.removeBlock(pos, false);
@@ -176,36 +174,64 @@ public class AshBlock extends FallingBlock {
         }
     }
 
-
     public static boolean tryConvertToAsh(Level level, BlockPos pPos) {
         BlockState state = level.getBlockState(pPos);
-        if (state.getMaterial() == Material.WOOD && level.random.nextInt(2) == 0) {
-            return level.setBlock(pPos, ModRegistry.ASH_BLOCK.get().defaultBlockState(), 3);
+
+        Item i = state.getBlock().asItem();
+        int count = ForgeHooks.getBurnTime(i.getDefaultInstance(), null) / 100;
+        if (ItemTags.LOGS_THAT_BURN.contains(i)) count += 2;
+
+        if (count > 0) {
+            int layers = Mth.clamp(level.random.nextInt(count), 1, 8);
+            if (layers != 0) {
+                ((ServerLevel) level).sendParticles(ModRegistry.ASH_PARTICLE.get(), (double) pPos.getX() + 0.5D,
+                        (double) pPos.getY() + 0.5D, (double) pPos.getZ() + 0.5D, 10 + layers,
+                        0.5D, 0.5D, 0.5D, 0.0D);
+                return level.setBlock(pPos, ModRegistry.ASH_BLOCK.get()
+                        .defaultBlockState().setValue(AshBlock.LAYERS, layers), 3);
+            }
         }
         return false;
     }
 
+    private void addParticle(Entity entity, BlockPos pos, Level level, int layers, float upSpeed) {
+        level.addParticle(ModRegistry.ASH_PARTICLE.get(), entity.getX(), pos.getY() + layers * (1 / 8f), entity.getZ(),
+                Mth.randomBetween(level.random, -1.0F, 1.0F) * 0.083333336F,
+                upSpeed,
+                Mth.randomBetween(level.random, -1.0F, 1.0F) * 0.083333336F);
+    }
+
     @Override
-    public void fallOn(Level world, BlockState state, BlockPos pos, Entity entity, float height) {
-        entity.causeFallDamage(height, 0.2F, DamageSource.FALL);
-        if (!world.isClientSide) {
-            if (height > 2) {
-                this.removeOneLayer(state, pos, world);
-                //TODO: sound here
-                //world.playSound(null, pos, SoundEvents.WOOL_FALL, SoundSource.BLOCKS, 1F, 0.9F);
-            }
-        } else {
-            for (int i = 0; i < Math.min(6, height * 0.8); i++) {
-                Random random = world.getRandom();
+    public void stepOn(Level level, BlockPos pos, BlockState state, Entity entity) {
+        if (level.isClientSide && level.random.nextInt(8) == 0 && (entity.xOld != entity.getX() || entity.zOld != entity.getZ())) {
+            addParticle(entity, pos, level, state.getValue(LAYERS), 0.05f);
+        }
+        super.stepOn(level, pos, state, entity);
+    }
+
+    @Override
+    public void fallOn(Level level, BlockState state, BlockPos pos, Entity entity, float height) {
+        int layers = state.getValue(LAYERS);
+        entity.causeFallDamage(height, layers > 2 ? 0.3f : 1, DamageSource.FALL);
+        if (level.isClientSide) {
+            for (int i = 0; i < Math.min(12, height * 1.4); i++) {
+
+                addParticle(entity, pos, level, layers, 0.12f);
+
+                /*
                 double dy = Mth.clamp((0.03 * height / 7f), 0.03, 0.055) * 10;
                 world.addParticle(new BlockParticleOption(ParticleTypes.FALLING_DUST, state), entity.getX() + r(random, 0.35),
                         entity.getY(), entity.getZ() + r(random, 0.35), r(random, 0.007), dy, r(random, 0.007));
 
                 world.addParticle(ParticleTypes.ASH, entity.getX() + r(random, 0.35),
                         entity.getY(), entity.getZ() + r(random, 0.35), r(random, 0.007), dy, r(random, 0.007));
+            */
             }
+
+
         }
     }
+
     private double r(Random random, double a) {
         return a * (random.nextFloat() + random.nextFloat() - 1);
     }

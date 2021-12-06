@@ -148,7 +148,6 @@ public class SignPostGui extends Screen {
         MultiBufferSource.BufferSource bufferSource = this.minecraft.renderBuffers().bufferSource();
         poseStack.pushPose();
         poseStack.translate(this.width / 2d, 0.0D, 50.0D);
-
         poseStack.scale(93.75F, -93.75F, 93.75F);
         poseStack.translate(0.0D, -1.3125D, 0.0D);
         // renders sign

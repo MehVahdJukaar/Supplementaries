@@ -11,12 +11,14 @@ import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.entities.goals.EatFodderGoal;
 import net.mehvahdjukaar.supplementaries.items.CandyItem;
-import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.ClientBoundSendLoginMessagePacket;
+import net.mehvahdjukaar.supplementaries.network.ClientBoundSyncAntiqueInk;
+import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.world.data.GlobeData;
 import net.mehvahdjukaar.supplementaries.world.songs.FluteSongsReloadListener;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -31,6 +33,8 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
@@ -38,12 +42,15 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
+import net.minecraftforge.event.world.ChunkWatchEvent;
 import net.minecraftforge.event.world.PistonEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fmllegacy.network.PacketDistributor;
+
+import java.util.Set;
 
 
 public class ServerEvents {
@@ -117,8 +124,8 @@ public class ServerEvents {
     private static final boolean FODDER_ENABLED = RegistryConfigs.reg.FODDER_ENABLED.get();
 
     @SubscribeEvent
-    public static void onEntityJoin(EntityJoinWorldEvent event){
-        if(FODDER_ENABLED) {
+    public static void onEntityJoin(EntityJoinWorldEvent event) {
+        if (FODDER_ENABLED) {
             Entity entity = event.getEntity();
             if (entity instanceof Animal animal) {
                 EntityType<?> type = event.getEntity().getType();
@@ -154,7 +161,7 @@ public class ServerEvents {
     @SubscribeEvent
     public static void onPistonMoved(final PistonEvent.Post event) {
 
-        if(event.getPistonMoveType() == PistonEvent.PistonMoveType.RETRACT){
+        if (event.getPistonMoveType() == PistonEvent.PistonMoveType.RETRACT) {
             LevelAccessor level = event.getWorld();
             var pos = event.getPos();
         }
@@ -162,6 +169,24 @@ public class ServerEvents {
     }
 
 
+    //antique ink sync
+    @SubscribeEvent
+    public static void onPlayerStartTracking(final ChunkWatchEvent.Watch event) {
+        ServerLevel serverLevel = event.getWorld();
+        ChunkAccess chunk = serverLevel.getChunkSource().getChunk(event.getPos().x, event.getPos().z, ChunkStatus.FULL, false);
+        if (chunk != null) {
+            Set<BlockPos> positions = chunk.getBlockEntitiesPos();
+            LevelAccessor level = event.getWorld();
+            for (BlockPos pos : positions) {
+                var te = level.getBlockEntity(pos);
+                if (te != null) {
+                    var cap = te.getCapability(CapabilityHandler.ANTIQUE_TEXT_CAP);
+                    cap.ifPresent(c -> NetworkHandler.sendToAllInRangeClients(pos, serverLevel, 256,
+                            new ClientBoundSyncAntiqueInk(pos, c.hasAntiqueInk())));
+                }
+            }
+        }
+    }
 
 
 }

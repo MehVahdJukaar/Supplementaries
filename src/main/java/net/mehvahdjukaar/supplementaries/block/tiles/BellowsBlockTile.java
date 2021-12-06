@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.BellowsBlock;
+import net.mehvahdjukaar.supplementaries.client.particles.ParticleUtil;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
@@ -11,13 +12,16 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.ChangeOverTimeBlock;
 import net.minecraft.world.level.block.FireBlock;
+import net.minecraft.world.level.block.WetSpongeBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.state.BlockState;
@@ -26,6 +30,7 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.EnumSet;
 import java.util.List;
 
 public class BellowsBlockTile extends BlockEntity {
@@ -147,10 +152,41 @@ public class BellowsBlockTile extends BlockEntity {
     }
 
     private void blowParticles(float air, Direction facing, Level level, boolean waterInFront) {
-        if (level.random.nextInt(2) == 0 && level.random.nextFloat() < air &&
-                !Block.canSupportCenter(level, this.worldPosition.relative(facing), facing.getOpposite())) {
-            this.spawnParticle(level, this.worldPosition, facing, waterInFront);
+        if (level.random.nextFloat() < air) {
+            AirType type = AirType.BUBBLE;
+            BlockPos facingPos = this.worldPosition.relative(facing);
+            BlockPos frontPos = facingPos;
+            boolean hasSponge = false;
+            if (!waterInFront) {
+                BlockState frontState = level.getBlockState(facingPos);
+                if (frontState.getBlock() instanceof WetSpongeBlock) {
+                    hasSponge = true;
+                    frontPos = frontPos.relative(facing);
+                }
+                type = AirType.AIR;
+            }
+            if (!Block.canSupportCenter(level, frontPos, facing.getOpposite())) {
+                BlockPos p = this.worldPosition;
+                if (hasSponge) {
+                    EnumSet<Direction> directions = EnumSet.allOf(Direction.class);
+                    directions.remove(facing.getOpposite());
+                    directions.remove(facing);
+                    for (Direction d : directions) {
+                        if (level.getBlockState(facingPos.relative(d)).is(ModRegistry.SOAP_BLOCK.get())) {
+                            type = AirType.SOAP;
+                            p = facingPos;
+                            break;
+                        }
+                    }
+                    if (type != AirType.SOAP) return;
+                }
+                this.spawnParticle(level, p, facing, type);
+            }
         }
+    }
+
+    private enum AirType {
+        AIR, BUBBLE, SOAP
     }
 
     @SuppressWarnings("unchecked")
@@ -163,15 +199,15 @@ public class BellowsBlockTile extends BlockEntity {
         }
     }
 
-    private void tickFurnaces(BlockPos frontPos, Level level) {
-        BlockState state = level.getBlockState(frontPos);
+    private void tickFurnaces(BlockPos pos, Level level) {
+        BlockState state = level.getBlockState(pos);
         if (state.is(ModTags.BELLOWS_TICKABLE_TAG)) {
-            BlockEntity te = level.getBlockEntity(frontPos);
-            this.tickFurnaces(frontPos, state, level, te);
+            BlockEntity te = level.getBlockEntity(pos);
+            this.tickFurnaces(pos, state, level, te);
         }
-        //TODO: add oxidising copper here
-        else {
-
+        //maybe lower chance
+        else if (state instanceof ChangeOverTimeBlock && level instanceof ServerLevel serverLevel) {
+            state.randomTick(serverLevel, pos, level.random);
         }
     }
 
@@ -295,25 +331,33 @@ public class BellowsBlockTile extends BlockEntity {
         return flag;
     }
 
-    public void spawnParticle(Level world, BlockPos pos, Direction dir, boolean waterInFront) {
-        double xo = dir.getStepX();
-        double yo = dir.getStepY();
-        double zo = dir.getStepZ();
-        double x = xo * 0.5 + pos.getX() + 0.5 + (world.random.nextFloat() - 0.5) / 3d;
-        double y = yo * 0.5 + pos.getY() + 0.5 + (world.random.nextFloat() - 0.5) / 3d;
-        double z = zo * 0.5 + pos.getZ() + 0.5 + (world.random.nextFloat() - 0.5) / 3d;
+    public void spawnParticle(Level world, BlockPos pos, Direction dir, AirType airType) {
+        if (airType == AirType.SOAP) {
+            for (int m = 0; m < (1 + world.random.nextInt(3)); m++) {
+                ParticleUtil.spawnParticleOnFace(world, pos, dir, ModRegistry.SUDS_PARTICLE.get(), 0.6f, true);
+            }
 
-        double vel = 0.125F + world.random.nextFloat() * 0.2F;
-
-        double velX = xo * vel;
-        double velY = yo * vel;
-        double velZ = zo * vel;
-
-        if (waterInFront) {
-            world.addParticle(ParticleTypes.BUBBLE, x, y, z, velX * 0.5, velY * 0.5, velZ * 0.5);
         } else {
-            world.addParticle(ParticleTypes.SMOKE, x, y, z, velX, velY, velZ);
+            double xo = dir.getStepX();
+            double yo = dir.getStepY();
+            double zo = dir.getStepZ();
+            double x = xo * 0.5 + pos.getX() + 0.5 + (world.random.nextFloat() - 0.5) / 3d;
+            double y = yo * 0.5 + pos.getY() + 0.5 + (world.random.nextFloat() - 0.5) / 3d;
+            double z = zo * 0.5 + pos.getZ() + 0.5 + (world.random.nextFloat() - 0.5) / 3d;
+
+            double vel = 0.125F + world.random.nextFloat() * 0.2F;
+
+            double velX = xo * vel;
+            double velY = yo * vel;
+            double velZ = zo * vel;
+
+            if (airType == AirType.BUBBLE) {
+                world.addParticle(ParticleTypes.BUBBLE, x, y, z, velX * 0.8, velY * 0.8, velZ * 0.8);
+            } else {
+                world.addParticle(ParticleTypes.SMOKE, x, y, z, velX, velY, velZ);
+            }
         }
+
     }
 
     public Direction getDirection() {

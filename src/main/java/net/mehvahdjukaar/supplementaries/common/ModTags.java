@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.world.songs.SongsManager;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
@@ -44,6 +45,7 @@ public class ModTags {
     public static final Tags.IOptionalNamedTag<Item> BOOKS = itemTag("placeable_books");
     public static final Tags.IOptionalNamedTag<Item> DUSTS = itemTag("hourglass_dusts");
     public static final Tags.IOptionalNamedTag<Item> SANDS = itemTag("hourglass_sands");
+    public static final Tags.IOptionalNamedTag<Item> KEY = itemTag("key");
     //entity tags
     public static final Tags.IOptionalNamedTag<EntityType<?>> JAR_CATCHABLE = entityTag("jar_catchable");
     public static final Tags.IOptionalNamedTag<EntityType<?>> TINTED_JAR_CATCHABLE = entityTag("jar_tinted_catchable");

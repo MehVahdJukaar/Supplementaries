@@ -134,6 +134,25 @@ public abstract class LightUpBlock extends Block implements ILightable {
         }
     }
 
+    @SuppressWarnings({"StrongCast", "OverlyStrongTypeCast"})
+    @Override
+    public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
+        if (entityIn instanceof Projectile projectile) {
+            if (projectile.isOnFire()) {
+                Entity entity = projectile.getOwner();
+                if (entity == null || entity instanceof Player || ForgeEventFactory.getMobGriefingEvent(worldIn, entity)) {
+                    if (lightUp(projectile,state, pos, worldIn, FireSound.FLAMING_ARROW)) this.onChange(state, worldIn, pos);
+                }
+            } else if (projectile instanceof ThrownPotion pot && PotionUtils.getPotion(pot.getItem()) == Potions.WATER) {
+                Entity entity = projectile.getOwner();
+                boolean flag = entity == null || entity instanceof Player || net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(worldIn, entity);
+                if (flag && extinguish(projectile,state, pos, worldIn)) {
+                    this.onChange(state, worldIn, pos);
+                }
+            }
+        }
+    }
+
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         boolean flag = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;

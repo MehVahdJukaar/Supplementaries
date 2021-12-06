@@ -3,12 +3,10 @@ package net.mehvahdjukaar.supplementaries.client.gui;
 
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Matrix4f;
 import net.mehvahdjukaar.supplementaries.block.blocks.HangingSignBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.HangingSignBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.client.renderers.TextUtil;
-import net.mehvahdjukaar.supplementaries.client.renderers.tiles.DoormatBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.HangingSignBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.ServerBoundSetTextHolderPacket;
@@ -16,7 +14,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.font.TextFieldHelper;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.SignEditScreen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -143,7 +140,6 @@ public class HangingSignGui extends Screen {
 
         poseStack.translate((this.width / 2d), 0.0D, 50.0D);
         poseStack.scale(93.75F, -93.75F, 93.75F);
-
         poseStack.translate(0.0D, -1.3125D, 0.0D);
         // renders sign
         poseStack.pushPose();
@@ -154,9 +150,6 @@ public class HangingSignGui extends Screen {
         BlockState state = this.tileSign.getBlockState().getBlock().defaultBlockState().setValue(HangingSignBlock.TILE, true);
         blockRenderer.renderSingleBlock(state, poseStack, bufferSource, 15728880, OverlayTexture.NO_OVERLAY, EmptyModelData.INSTANCE);
         poseStack.popPose();
-
-        bufferSource.endBatch();
-        bufferSource = this.minecraft.renderBuffers().bufferSource();
 
         //renders text
         boolean blink = this.updateCounter / 6 % 2 == 0;

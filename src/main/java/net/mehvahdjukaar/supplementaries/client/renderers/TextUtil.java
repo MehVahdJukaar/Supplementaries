@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.renderers;
 
+import com.mojang.blaze3d.font.GlyphInfo;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -7,10 +8,11 @@ import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Matrix4f;
 import net.mehvahdjukaar.supplementaries.block.util.TextHolder;
 import net.mehvahdjukaar.supplementaries.common.Textures;
-import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.font.FontSet;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -66,6 +68,7 @@ public class TextUtil {
                         DrPineapple
                         Astralis
                         Toffanelly
+                        Elijah
 
 
                         \u00A74Credits:
@@ -82,9 +85,9 @@ public class TextUtil {
 
                         \u00A70Agrona
                         WenXin2
+                        AlleCraft
                         Frogbirdd
                         MightyGoat
-                        AlleCraft
                         Fr_z_n
                         Brun333rp
 
@@ -179,7 +182,8 @@ public class TextUtil {
             int col = (int) (255 * side);
             int rgba = NativeImage.combine(a, col, col, col);
 
-            fontRenderer.drawInBatch(str, dx, bordery * SCALINGFACTOR - (offset) + 8 * n, rgba, false, matrixStack.last().pose(), bufferIn, false, 0, light);
+            fontRenderer.drawInBatch(str, dx, bordery * SCALINGFACTOR - (offset) + 8 * n, rgba, false,
+                    matrixStack.last().pose(), bufferIn, false, 0, light);
         }
         matrixStack.popPose();
     }
@@ -211,13 +215,18 @@ public class TextUtil {
 
     private static void renderLineInternal(FormattedCharSequence formattedCharSequences, Font font, float xOffset, float yOffset, Matrix4f matrix4f, MultiBufferSource buffer,
                                            RenderTextProperties properties) {
-        if (properties.hasOutline) {
-            font.drawInBatch8xOutline(formattedCharSequences, xOffset, yOffset, properties.textColor, properties.darkenedColor,
+
+        switch (properties.mode) {
+            case GLOWING -> font.drawInBatch8xOutline(formattedCharSequences, xOffset, yOffset, properties.textColor, properties.darkenedColor,
                     matrix4f, buffer, properties.light);
-        } else {
-            font.drawInBatch(formattedCharSequences, xOffset, yOffset, properties.textColor, false,
+            case NORMAL -> font.drawInBatch(formattedCharSequences, xOffset, yOffset, properties.darkenedColor, false,
                     matrix4f, buffer, false, 0, properties.light);
+            case ENGRAVED -> {drawInBatch8xOutline(font,formattedCharSequences, xOffset, yOffset, properties.darkenedColor, properties.textColor,
+                    matrix4f, buffer, properties.light);
+                }
         }
+
+
     }
 
     public static void renderLine(TextHolder textHolder, int line, Font font, int maxSizeX, float yOffset, PoseStack poseStack, MultiBufferSource buffer,
@@ -250,34 +259,59 @@ public class TextUtil {
     }
 
 
-    private static int getColorForRender(TextHolder textHolder) {
-        int i = textHolder.getColor().getTextColor();
-        int j = (int) ((double) NativeImage.getR(i) * 0.4D);
-        int k = (int) ((double) NativeImage.getG(i) * 0.4D);
-        int l = (int) ((double) NativeImage.getB(i) * 0.4D);
-        return i == DyeColor.BLACK.getTextColor() && textHolder.hasGlowingText() ? -988212 : NativeImage.combine(0, l, k, j);
+    private static int getDarkenedColor(int color, boolean glowing) {
+        if(color == DyeColor.BLACK.getTextColor() && glowing) return 0xFFF0EBCC;
+        return getDarkenedColor(color, 0.4f);
+    }
+
+    private static int getDarkenedColor(int color, float amount) {
+        int j = (int) ((double) NativeImage.getR(color) * amount);
+        int k = (int) ((double) NativeImage.getG(color) * amount);
+        int l = (int) ((double) NativeImage.getB(color) * amount);
+        return NativeImage.combine(0, l, k, j);
+    }
+
+
+    private static int adjustColor(int color) {
+        return (color & 0xFC000000) == 0 ? color | 0xFF000000 : color;
+    }
+
+    public enum Mode {
+        NORMAL, GLOWING, ENGRAVED;
     }
 
     public static class RenderTextProperties {
         private final int light;
-        private final boolean hasOutline;
+        private final Mode mode;
         private final Style style;
         private final int textColor;
         private final int darkenedColor;
 
         public RenderTextProperties(TextHolder textHolder, int combinedLight, Supplier<Boolean> isVeryNear) {
-            this.darkenedColor = getColorForRender(textHolder);
-            if (textHolder.hasGlowingText()) {
-                DyeColor c = textHolder.getColor();
-                this.textColor = c.getTextColor();
-                this.hasOutline = isVeryNear.get() || c == DyeColor.BLACK;
-                this.light = 15728880;
+            DyeColor c = textHolder.getColor();
+            int originalColor = c.getTextColor();
+            boolean glowing = textHolder.hasGlowingText();
+            this.darkenedColor = getDarkenedColor(originalColor, glowing);
+
+
+            if (glowing) {
+                if (textHolder.isEngraved()) this.mode = Mode.ENGRAVED;
+                else this.mode = (isVeryNear.get() || c == DyeColor.BLACK) ? Mode.GLOWING : Mode.NORMAL;
+                this.light = LightTexture.FULL_BRIGHT;
+                this.textColor = originalColor;
             } else {
-                this.textColor = darkenedColor;
-                this.hasOutline = false;
+                //this.textColor = darkenedColor;
+                if(textHolder.isEngraved()){
+                    this.mode = Mode.ENGRAVED;
+                    this.textColor = getDarkenedColor(originalColor, 0.8f);
+                }
+                else{
+                    this.mode = Mode.NORMAL;
+                    this.textColor = originalColor;
+                }
                 this.light = combinedLight;
             }
-            style = textHolder.hasAntiqueInk() ? Style.EMPTY.withFont(Textures.ANTIQUABLE_FONT) : Style.EMPTY;
+            this.style = textHolder.hasAntiqueInk() ? Style.EMPTY.withFont(Textures.ANTIQUABLE_FONT) : Style.EMPTY;
         }
     }
 
@@ -302,7 +336,7 @@ public class TextUtil {
             String substring = string.substring(0, Math.min(cursorPos, string.length()));
             if (isSelected) {
 
-                int pX = (int) (font.width( FormattedCharSequence.forward(substring, properties.style)) + centerX);
+                int pX = (int) (font.width(FormattedCharSequence.forward(substring, properties.style)) + centerX);
 
                 if (blink) {
                     if (cursorPos >= string.length()) {
@@ -358,6 +392,41 @@ public class TextUtil {
             renderGuiLine(properties, guiLines[line], font, poseStack, buffer, cursorPos, selectionPos,
                     line == currentLine, blink, yOffset);
         }
+    }
+
+    public static void drawInBatch8xOutline(Font font, FormattedCharSequence charSequence, float xOffset, float yOffset, int color, int color2,
+                                     Matrix4f matrix4f, MultiBufferSource bufferSource, int light) {
+        int c = adjustColor(color2);
+
+        Font.StringRenderOutput stringRenderOutput = font.new StringRenderOutput(bufferSource, 0.0F, 0.0F, c,
+                false, matrix4f, Font.DisplayMode.NORMAL, light);
+
+        int mx = 1;
+        int my = 1;
+
+        for(int j = -mx; j <= mx; ++j) {
+            for(int k = -my; k <= my; ++k) {
+                if (j != 0 || k != 0) {
+                    float[] afloat = new float[]{xOffset};
+                    int pX = j;
+                    int pY = k;
+                    charSequence.accept((a, style, b) -> {
+                        boolean bold = style.isBold();
+                        FontSet fontset = font.getFontSet(style.getFont());
+                        GlyphInfo glyphinfo = fontset.getGlyphInfo(b);
+                        stringRenderOutput.x = afloat[0] + (float)pX * glyphinfo.getShadowOffset();
+                        stringRenderOutput.y = yOffset + (float)pY * glyphinfo.getShadowOffset();
+                        afloat[0] += glyphinfo.getAdvance(bold);
+                        return stringRenderOutput.accept(a, style.withColor(c), b);
+                    });
+                }
+            }
+        }
+
+        Font.StringRenderOutput stringRenderOutput1 = font.new StringRenderOutput(bufferSource, xOffset, yOffset,
+                adjustColor(color), false, matrix4f, Font.DisplayMode.POLYGON_OFFSET, light);
+        charSequence.accept(stringRenderOutput1);
+        stringRenderOutput1.finish(0, xOffset);
     }
 
 }

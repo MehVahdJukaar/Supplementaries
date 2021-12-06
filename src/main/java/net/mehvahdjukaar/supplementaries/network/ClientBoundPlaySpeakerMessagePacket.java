@@ -11,7 +11,7 @@ import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class ClientBoundPlaySpeakerMessagePacket {
+public class ClientBoundPlaySpeakerMessagePacket implements NetworkHandler.Message {
     private final Component str;
     private final boolean narrator;
 

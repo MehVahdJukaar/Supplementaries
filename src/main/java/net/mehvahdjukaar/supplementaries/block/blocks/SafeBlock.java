@@ -4,8 +4,8 @@ import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.KeyLockableTile;
 import net.mehvahdjukaar.supplementaries.block.tiles.SafeBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.ILavaAndWaterLoggable;
+import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.items.KeyItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -36,7 +36,10 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -148,12 +151,12 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
                 //clear ownership with tripwire
                 boolean cleared = false;
                 if (ServerConfigs.cached.SAFE_SIMPLE) {
-                    if ((item == Items.TRIPWIRE_HOOK || item instanceof KeyItem) &&
+                    if ((item == Items.TRIPWIRE_HOOK || ModTags.KEY.contains(item)) &&
                             (tile.isOwnedBy(player) || (tile.isNotOwnedBy(player) && player.isCreative()))) {
                         cleared = true;
                     }
                 } else {
-                    if (player.isShiftKeyDown() && item instanceof KeyItem && (player.isCreative() ||
+                    if (player.isShiftKeyDown() && ModTags.KEY.contains(item) && (player.isCreative() ||
                             KeyLockableTile.isCorrectKey(stack, tile.password))) {
                         cleared = true;
                     }
@@ -182,7 +185,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
                     } else {
                         String key = tile.password;
                         if (key == null) {
-                            if (item instanceof KeyItem) {
+                            if (ModTags.KEY.contains(item)) {
                                 tile.password = stack.getHoverName().getString();
                                 player.displayClientMessage(new TranslatableComponent("message.supplementaries.safe.assigned_key", tile.password), true);
                                 worldIn.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,

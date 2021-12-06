@@ -17,6 +17,8 @@ import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.items.JarItem;
+import net.mehvahdjukaar.supplementaries.network.ClientBoundSyncAntiqueInk;
+import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -27,6 +29,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.BaseComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -711,6 +714,10 @@ public class ItemsOverrideHandler {
                     cap.ifPresent(c -> {
                         if (c.hasAntiqueInk() != newState) {
                             c.setAntiqueInk(newState);
+                            if(world instanceof ServerLevel serverLevel) {
+                                NetworkHandler.sendToAllInRangeClients(pos, serverLevel, 256,
+                                        new ClientBoundSyncAntiqueInk(pos, newState));
+                            }
                             success.set(true);
                         }
                     });
@@ -720,7 +727,7 @@ public class ItemsOverrideHandler {
                         } else {
                             world.playSound(null, pos, SoundEvents.INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
                         }
-                        stack.shrink(1);
+                        if(!player.isCreative()) stack.shrink(1);
                         return InteractionResult.sidedSuccess(world.isClientSide);
                     }
                 }

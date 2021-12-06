@@ -50,13 +50,14 @@
     "supplementaries:safe",
     "supplementaries:pedestal",
     "supplementaries:planter",
-    "supplementaries:globe",
+    "supplementaries:globe_sepia",
 	"supplementaries:ash_bricks_vertical_slab",
     "supplementaries:ash_bricks_slab",
     "supplementaries:ash_bricks",
     "supplementaries:ash_bricks_stairs",
     "supplementaries:ash_bricks_wall",
-    "supplementaries:soap_block"
+    "supplementaries:soap_block",
+    "supplementaries:urn"
 
   ]
 }

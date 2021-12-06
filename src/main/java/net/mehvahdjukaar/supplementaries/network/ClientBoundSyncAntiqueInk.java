@@ -15,9 +15,9 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 
-public class ClientBoundSyncAntiqueInk {
-    private BlockPos pos;
-    private boolean ink;
+public class ClientBoundSyncAntiqueInk implements NetworkHandler.Message {
+    private final BlockPos pos;
+    private final boolean ink;
 
     public ClientBoundSyncAntiqueInk(FriendlyByteBuf buffer) {
         this.pos = buffer.readBlockPos();

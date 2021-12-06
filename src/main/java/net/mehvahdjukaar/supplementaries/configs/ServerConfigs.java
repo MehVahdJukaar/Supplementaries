@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.configs;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.compat.CompatObjects;
 import net.mehvahdjukaar.supplementaries.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.resources.ResourceLocation;
@@ -118,6 +119,7 @@ public class ServerConfigs {
     }
 
     public static class tweaks {
+        public static ForgeConfigSpec.BooleanValue AXE_DISPENSER_BEHAVIORS;
         public static ForgeConfigSpec.BooleanValue DIRECTIONAL_CAKE;
         public static ForgeConfigSpec.BooleanValue DOUBLE_CAKE_PLACEMENT;
         public static ForgeConfigSpec.BooleanValue HANGING_POT_PLACEMENT;
@@ -154,6 +156,11 @@ public class ServerConfigs {
         private static void init(ForgeConfigSpec.Builder builder) {
             builder.comment("Vanilla tweaks")
                     .push("tweaks");
+
+            builder.push("axe_dispenser_behaviors");
+            AXE_DISPENSER_BEHAVIORS = builder.comment("Allows dispensers to use axes on blocks to strip logs and scrape off copper oxidation adn wax")
+                    .define("enabled", true);
+            builder.pop();
 
             //double cake
             builder.push("cake_tweaks");

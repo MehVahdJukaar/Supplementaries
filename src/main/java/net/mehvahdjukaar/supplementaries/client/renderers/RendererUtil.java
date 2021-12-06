@@ -26,6 +26,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.ForgeHooksClient;
+import net.minecraftforge.client.RenderProperties;
 import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
 
 import java.util.Random;
@@ -403,7 +404,7 @@ public class RendererUtil {
                 renderer.renderModelLists(model, stack, combinedLight, pCombinedOverlay, matrixStack, vertexconsumer);
             }
         } else {
-            net.minecraftforge.client.RenderProperties.get(stack).getItemStackRenderer().renderByItem(stack, pTransformType, matrixStack, bufferSource, combinedLight, pCombinedOverlay);
+            RenderProperties.get(stack).getItemStackRenderer().renderByItem(stack, pTransformType, matrixStack, bufferSource, combinedLight, pCombinedOverlay);
         }
 
         matrixStack.popPose();

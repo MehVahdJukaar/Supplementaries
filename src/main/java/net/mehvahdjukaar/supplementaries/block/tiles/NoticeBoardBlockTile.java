@@ -5,10 +5,11 @@ import net.mehvahdjukaar.supplementaries.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.block.util.IMapDisplay;
 import net.mehvahdjukaar.supplementaries.block.util.TextHolder;
 import net.mehvahdjukaar.supplementaries.client.Materials;
+import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
+import net.mehvahdjukaar.supplementaries.compat.cctweaked.CCStuff;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.inventories.NoticeBoardContainer;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.client.gui.screens.inventory.BookEditScreen;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -30,7 +31,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -123,6 +123,27 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
                 }
                 this.text = listTag.getString(this.pageNumber);
             }
+        } else if(CompatHandler.computercraft){
+            if(CCStuff.checkForPrintedBook(item)){
+                CompoundTag com = itemstack.getTag();
+                if(com != null) {
+                    int pages = CCStuff.getPages(itemstack);
+
+                    if (this.pageNumber >= pages) {
+                        this.pageNumber = this.pageNumber % pages;
+                    }
+                    String[] text = CCStuff.getText(itemstack);
+                    StringBuilder combined = new StringBuilder();
+                    for(int i = 0; i< 21; i++){
+                        int ind = this.pageNumber*21 + i;
+                        if(ind<text.length){
+                            combined.append(text[ind]);
+                            combined.append(" ");
+                        }
+                    }
+                    this.text = combined.toString();
+                }
+            }
         }
 
     }
@@ -155,7 +176,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
     }
 
     public static boolean isPageItem(Item item) {
-        return ItemTags.LECTERN_BOOKS.contains(item) || item instanceof MapItem || item instanceof BannerPatternItem;
+        return ItemTags.LECTERN_BOOKS.contains(item) || item instanceof MapItem || item instanceof BannerPatternItem || (CompatHandler.computercraft && CCStuff.checkForPrintedBook(item));
     }
 
     @Override

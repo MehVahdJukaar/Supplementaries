@@ -28,20 +28,26 @@ import java.util.function.Function;
 
 public class TextHolder implements IAntiqueTextProvider {
 
+
     private final int lines;
     //text
     private final Component[] signText;
     //text that gets rendered
     private final FormattedCharSequence[] renderText;
+    private final boolean engraved;
     private DyeColor color = DyeColor.BLACK;
     private boolean hasGlowingText = false;
     private boolean hasAntiqueInk = false;
 
     public TextHolder(int size) {
+        this(size, false);
+    }
+    public TextHolder(int size, boolean engraved){
         this.lines = size;
         this.renderText = new FormattedCharSequence[size];
         this.signText = new Component[size];
         Arrays.fill(this.signText, TextComponent.EMPTY);
+        this.engraved = engraved;
     }
 
     //removing command source crap
@@ -183,5 +189,9 @@ public class TextHolder implements IAntiqueTextProvider {
         for (int i = 0; i < this.signText.length; i++) {
             this.setLine(i, this.signText[i]);
         }
+    }
+
+    public boolean isEngraved() {
+        return engraved;
     }
 }

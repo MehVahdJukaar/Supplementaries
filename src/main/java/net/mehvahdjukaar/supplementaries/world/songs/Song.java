@@ -16,8 +16,9 @@ public class Song {
     private Integer[] notes;
 
     private String credits;
+    private int weight;
 
-    public static final Song EMPTY = new Song("Error", 1, new Integer[0]);
+    public static final Song EMPTY = new Song("Error", 1, new Integer[]{0,0});
 
     public Song(String name, int tempo, Integer[] notes) {
         this(name, tempo, notes, "");
@@ -28,6 +29,7 @@ public class Song {
         this.tempo = Math.max(1, tempo);
         this.notes = notes;
         this.credits = credits;
+        this.weight = 100;
     }
 
     //makes it usable to be played
@@ -111,5 +113,9 @@ public class Song {
         return "Song{" +
                 "name='" + name + '\'' +
                 '}';
+    }
+
+    public int getWeight() {
+        return weight;
     }
 }

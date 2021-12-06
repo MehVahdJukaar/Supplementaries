@@ -91,7 +91,7 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         Ingredient ink = Ingredient.of(new ItemStack(ModRegistry.ANTIQUE_INK.get()));
         Ingredient map = Ingredient.of(new ItemStack(Items.FILLED_MAP));
 
-        NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, ink, map);
+        NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, map, ink);
         ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "jei_antique_map_create");
         ShapelessRecipe recipe = new ShapelessRecipe(id, group, stack, inputs);
         recipes.add(recipe);

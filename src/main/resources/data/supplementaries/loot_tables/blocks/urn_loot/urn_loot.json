@@ -7,21 +7,27 @@
       "entries": [
         {
           "type": "minecraft:loot_table",
-          "weight": 50,
-          "quality": -2,
+          "weight": 60,
+          "quality": -5,
           "name": "supplementaries:blocks/urn_loot/common"
         },
         {
           "type": "minecraft:loot_table",
-          "weight": 30,
-          "quality": -1,
+          "weight": 32,
+          "quality": -2,
           "name": "supplementaries:blocks/urn_loot/uncommon"
         },
         {
           "type": "minecraft:loot_table",
-          "weight": 20,
+          "weight": 7,
           "quality": 2,
           "name": "supplementaries:blocks/urn_loot/rare"
+        },
+        {
+          "type": "minecraft:loot_table",
+          "weight": 1,
+          "quality": 5,
+          "name": "supplementaries:blocks/urn_loot/epic"
         }
       ]
     }

@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.client.particles;
 
-import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -18,15 +17,17 @@ public class SudsParticle extends TextureSheetParticle {
     private final double additionalSize;
 
     SudsParticle(ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, SpriteSet pSprites) {
-        super(pLevel, pX, pY, pZ, pXSpeed + r(0.065),  pYSpeed + r(0.05), pZSpeed + r(0.065));
+        super(pLevel, pX, pY, pZ, 0, 0, 0);
+        this.xd = pXSpeed;
+        this.yd = pYSpeed;
+        this.zd = pZSpeed;
         this.friction = 0.96F;
         this.gravity = -0.05F;
         this.speedUpWhenYMotionIsBlocked = true;
         this.sprites = pSprites;
-        this.yd *= 0.2F;
 
-        this.quadSize *= 1F;
-        this.additionalSize = rand(0.08, 0.9) -0.08;
+        this.quadSize = 0.1F;
+        this.additionalSize = rand(0.08, 0.9) - 0.08;
 
         this.lifetime = (int) rand(32, 0.85);
         this.hasPhysics = true;
@@ -52,14 +53,15 @@ public class SudsParticle extends TextureSheetParticle {
 
     @Override
     public float getQuadSize(float partialTicks) {
-        float t = (float)this.age + partialTicks;
+        float t = (float) this.age + partialTicks;
         double a = 0.15;
-        float inc = (float) (this.additionalSize* (1+1/(-t*a-1)));
+        float inc = (float) (this.additionalSize * (1 + 1 / (-t * a - 1)));
         return this.quadSize + inc;
     }
 
     @Override
     public void tick() {
+        if (this.age > 6) this.hasPhysics = true;
 
         int i = this.lifetime - this.age;
         int s = 2;
@@ -117,8 +119,14 @@ public class SudsParticle extends TextureSheetParticle {
             this.sprite = pSprites;
         }
 
-        public Particle createParticle(SimpleParticleType pType, ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed) {
-            return new SudsParticle(pLevel, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed, this.sprite);
+        public Particle createParticle(SimpleParticleType pType, ClientLevel pLevel, double pX, double pY, double pZ,
+                                       double pXSpeed, double pYSpeed, double pZSpeed) {
+            Random r = pLevel.random;
+            //TODO: add randomness here
+            return new SudsParticle(pLevel, pX, pY, pZ,
+                    pXSpeed + ((0.5-r.nextFloat()) * 0.04),
+                    pYSpeed + ((0.5-r.nextFloat()) * 0.04),
+                    pZSpeed + ((0.5-r.nextFloat()) * 0.04), this.sprite);
         }
     }
 }

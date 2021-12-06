@@ -35,7 +35,6 @@ public class ConfiguredFeatures {
             new SimpleStateProvider(ModRegistry.URN.get().defaultBlockState().setValue(UrnBlock.TREASURE, true)),
             SimpleBlockPlacer.INSTANCE))
             .tries(4).xspread(4).yspread(1).zspread(4).noProjection()
-            .blacklist(ImmutableSet.of(Blocks.COBWEB.defaultBlockState()))
             .build();
     /**
      * Static instance of our structure, so we can reference it and add it to biomes easily.
@@ -50,7 +49,7 @@ public class ConfiguredFeatures {
 
     public static final ConfiguredFeature<?, ?> CONFIGURED_URN_PILE = Feature.RANDOM_PATCH.configured(URN_CONFIG)
             .decorated(FeatureDecorator.CAVE_SURFACE.configured(new CaveDecoratorConfiguration(CaveSurface.FLOOR, 12)))
-            .range(RANGE_BOTTOM_TO_40).squared().count(10);
+            .range(RANGE_BOTTOM_TO_40).squared().count(8);
 
     /**
      * Registers the configured structure which is what gets added to the biomes.

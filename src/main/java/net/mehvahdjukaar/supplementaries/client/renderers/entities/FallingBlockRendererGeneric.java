@@ -36,7 +36,9 @@ public class FallingBlockRendererGeneric<T extends FallingBlockEntity> extends E
         BlockState blockstate = pEntity.getBlockState();
         if (blockstate.getRenderShape() == RenderShape.MODEL) {
             Level level = pEntity.getLevel();
-            if (blockstate != level.getBlockState(pEntity.blockPosition()) && blockstate.getRenderShape() != RenderShape.INVISIBLE) {
+            BlockPos pos = pEntity.blockPosition();
+            boolean isJustSpawned = Math.abs(pEntity.getY()-pos.getY())<0.02 && pEntity.tickCount<2 && blockstate != level.getBlockState(pos) ;
+            if (!isJustSpawned && blockstate.getRenderShape() != RenderShape.INVISIBLE) {
                 pMatrixStack.pushPose();
                 BlockPos blockpos = new BlockPos(pEntity.getX(), pEntity.getBoundingBox().maxY, pEntity.getZ());
                 pMatrixStack.translate(-0.5D, 0.0D, -0.5D);

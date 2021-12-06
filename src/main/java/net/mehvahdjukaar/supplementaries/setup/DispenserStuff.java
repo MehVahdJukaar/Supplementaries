@@ -8,8 +8,8 @@ import net.mehvahdjukaar.supplementaries.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.LightUpBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.PancakeBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
-import net.mehvahdjukaar.supplementaries.capabilities.mobholder.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.block.util.ILightable;
+import net.mehvahdjukaar.supplementaries.capabilities.mobholder.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.common.BlockItemUtils;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
@@ -17,6 +17,7 @@ import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.entities.RopeArrowEntity;
 import net.mehvahdjukaar.supplementaries.entities.ThrowableBrickEntity;
+import net.mehvahdjukaar.supplementaries.items.SoapItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
@@ -30,13 +31,19 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.DirectionalPlaceContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.ToolActions;
+import net.minecraftforge.registries.ForgeRegistries;
+
+import java.util.Optional;
 
 public class DispenserStuff {
 
@@ -45,7 +52,7 @@ public class DispenserStuff {
         if (!RegistryConfigs.reg.DISPENSERS.get()) return;
 
         //fodder
-        if(RegistryConfigs.reg.FODDER_ENABLED.get()){
+        if (RegistryConfigs.reg.FODDER_ENABLED.get()) {
             DispenserHelper.registerPlaceBlockBehavior(ModRegistry.FODDER.get());
         }
 
@@ -74,6 +81,7 @@ public class DispenserStuff {
 
         //bomb
         if (RegistryConfigs.reg.BOMB_ENABLED.get()) {
+            //default behaviors for modded items
             DispenserBlock.registerBehavior(ModRegistry.BOMB_ITEM.get(), new BombsDispenserBehavior(false));
             DispenserBlock.registerBehavior(ModRegistry.BOMB_BLUE_ITEM.get(), new BombsDispenserBehavior(true));
             DispenserBlock.registerBehavior(ModRegistry.BOMB_ITEM_ON.get(), new BombsDispenserBehavior(false));
@@ -102,6 +110,85 @@ public class DispenserStuff {
 
         }
 
+        if (ServerConfigs.tweaks.AXE_DISPENSER_BEHAVIORS.get()) {
+            ForgeRegistries.ITEMS.getValues().stream().filter(i -> i instanceof AxeItem)
+                    .forEach(i -> DispenserHelper.registerCustomBehavior(new AxeDispenserBehavior(i)));
+        }
+
+        if (RegistryConfigs.reg.SOAP_ENABLED.get()) {
+            DispenserHelper.registerCustomBehavior(new SoapBehavior(ModRegistry.SOAP.get()));
+        }
+
+    }
+
+    private static class AxeDispenserBehavior extends AdditionalDispenserBehavior {
+
+        protected AxeDispenserBehavior(Item item) {
+            super(item);
+        }
+
+        @Override
+        protected InteractionResultHolder<ItemStack> customBehavior(BlockSource source, ItemStack stack) {
+            //this.setSuccessful(false);
+            ServerLevel level = source.getLevel();
+            BlockPos pos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
+            BlockState state = level.getBlockState(pos);
+            Block b = state.getBlock();
+
+
+            Optional<BlockState> optional = Optional.ofNullable(b.getToolModifiedState(state, level, pos, null, stack, ToolActions.AXE_STRIP));
+            if (optional.isPresent()) {
+                level.playSound(null, pos, SoundEvents.AXE_STRIP, SoundSource.BLOCKS, 1.0F, 1.0F);
+                level.setBlock(pos, optional.get(), 11);
+                if (stack.hurt(1, level.getRandom(), null)) {
+                    stack.setCount(0);
+                }
+                return InteractionResultHolder.success(stack);
+            }
+
+            optional = Optional.ofNullable(b.getToolModifiedState(state, level, pos, null, stack, ToolActions.AXE_SCRAPE));
+            if (optional.isPresent()) {
+                level.playSound(null, pos, SoundEvents.AXE_SCRAPE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                level.levelEvent(null, 3005, pos, 0);
+                level.setBlock(pos, optional.get(), 11);
+                if (stack.hurt(1, level.getRandom(), null)) {
+                    stack.setCount(0);
+                }
+                return InteractionResultHolder.success(stack);
+            }
+            optional = Optional.ofNullable(b.getToolModifiedState(state, level, pos, null, stack, ToolActions.AXE_WAX_OFF));
+            if (optional.isPresent()) {
+                level.playSound(null, pos, SoundEvents.AXE_WAX_OFF, SoundSource.BLOCKS, 1.0F, 1.0F);
+                level.levelEvent(null, 3004, pos, 0);
+                level.setBlock(pos, optional.get(), 11);
+                if (stack.hurt(1, level.getRandom(), null)) {
+                    stack.setCount(0);
+                }
+                return InteractionResultHolder.success(stack);
+            }
+
+            return InteractionResultHolder.fail(stack);
+        }
+    }
+
+    private static class SoapBehavior extends AdditionalDispenserBehavior {
+
+        protected SoapBehavior(Item item) {
+            super(item);
+        }
+
+        @Override
+        protected InteractionResultHolder<ItemStack> customBehavior(BlockSource source, ItemStack stack) {
+            //this.setSuccessful(false);
+            ServerLevel level = source.getLevel();
+            BlockPos pos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
+
+            if (SoapItem.tryCleaning(stack, level, pos)) {
+                return InteractionResultHolder.success(stack);
+            }
+
+            return InteractionResultHolder.fail(stack);
+        }
     }
 
 
@@ -129,7 +216,6 @@ public class DispenserStuff {
             return InteractionResultHolder.pass(stack);
         }
     }
-
 
     private static class ThrowableBricksDispenserBehavior extends AdditionalDispenserBehavior {
 
@@ -192,7 +278,6 @@ public class DispenserStuff {
             return 1.3F;
         }
     }
-
 
     private static class BambooSpikesDispenserBehavior extends AdditionalDispenserBehavior {
 

@@ -16,7 +16,7 @@ public abstract class FireBlockMixin {
             at = @At(value = "INVOKE",
                     target = "net/minecraft/world/level/Level.removeBlock (Lnet/minecraft/core/BlockPos;Z)Z"))
     private boolean removeBlock(Level level, BlockPos pPos, boolean isMoving) {
-        if(!AshBlock.tryConvertToAsh(level, pPos)) level.removeBlock(pPos, isMoving);
+        if (!AshBlock.tryConvertToAsh(level, pPos)) level.removeBlock(pPos, isMoving);
         return true;
     }
 

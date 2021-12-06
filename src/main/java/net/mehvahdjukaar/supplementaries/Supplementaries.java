@@ -168,6 +168,9 @@ public class Supplementaries {
         //TODO: add oxidising copper & bubbles
         //IRON gate connected model
 
+        //hud mod. armor broken hud, items offhadn crafting
+
+        //bubble blowing with bellows
 
         ConfigHandler.init();
 

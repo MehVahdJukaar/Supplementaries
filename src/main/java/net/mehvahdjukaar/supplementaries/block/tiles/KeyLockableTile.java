@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
+import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.curios.SupplementariesCuriosPlugin;
-import net.mehvahdjukaar.supplementaries.items.KeyItem;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -69,7 +69,7 @@ public class KeyLockableTile extends BlockEntity {
         if (itemHandler.get() != null) {
             for (int _idx = 0; _idx < itemHandler.get().getSlots(); _idx++) {
                 ItemStack stack = itemHandler.get().getStackInSlot(_idx);
-                if (stack.getItem() instanceof KeyItem) {
+                if (stack.is(ModTags.KEY)) {
                     found = KeyStatus.INCORRECT_KEY;
                     if (isCorrectKey(stack, key)) return KeyStatus.CORRECT_KEY;
                 }
@@ -98,7 +98,7 @@ public class KeyLockableTile extends BlockEntity {
         ItemStack stack = player.getItemInHand(handIn);
         Item item = stack.getItem();
 
-        boolean isKey = item instanceof KeyItem;
+        boolean isKey = ModTags.KEY.contains(item);
         //clear ownership
         if (player.isShiftKeyDown() && isKey && (player.isCreative() || this.isCorrectKey(stack))) {
             this.clearOwner();

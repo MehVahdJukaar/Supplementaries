@@ -19,16 +19,12 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.players.PlayerList;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fmllegacy.network.NetworkDirection;
-import net.minecraftforge.fmllegacy.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -96,13 +92,11 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
 
     public void sendMessage() {
         BlockState state = this.getBlockState();
-        MinecraftServer currentServer = ServerLifecycleHooks.getCurrentServer();
-        ResourceKey<Level> dimension = level.dimension();
-        if (currentServer != null && !this.message.equals("")) {
+
+        if (level instanceof ServerLevel server && !this.message.equals("")) {
             // particle
             BlockPos pos = this.getBlockPos();
             level.blockEvent(pos, this.getBlockState().getBlock(), 0, 0);
-            PlayerList players = currentServer.getPlayerList();
 
             Style style = !state.getValue(SpeakerBlock.ANTIQUE) ? Style.EMPTY.applyFormats(ChatFormatting.ITALIC) :
                     Style.EMPTY.withFont(Textures.ANTIQUABLE_FONT).applyFormats(ChatFormatting.ITALIC);
@@ -110,11 +104,10 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
             Component message = new TextComponent(this.getName().getString() + ": " + this.message)
                     .withStyle(style);
 
-            players.broadcast(null, pos.getX(), pos.getY(), pos.getZ(),
+            NetworkHandler.sendToAllInRangeClients(pos, server,
                     ServerConfigs.cached.SPEAKER_RANGE * this.volume,
-                    dimension, NetworkHandler.INSTANCE.toVanillaPacket(
-                            new ClientBoundPlaySpeakerMessagePacket(message, this.narrator),
-                            NetworkDirection.PLAY_TO_CLIENT));
+                    new ClientBoundPlaySpeakerMessagePacket(message, this.narrator));
+
         }
     }
 

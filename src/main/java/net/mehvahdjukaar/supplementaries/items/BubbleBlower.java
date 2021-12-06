@@ -23,7 +23,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
@@ -107,15 +106,13 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
     }
 
 
-
     @Override
     public void onUsingTick(ItemStack stack, LivingEntity entity, int count) {
         Level level = entity.level;
         int damage = this.getDamage(stack) + 1;
         if (damage > this.getMaxDamage(stack)) {
             if (level.isClientSide && entity == Minecraft.getInstance().player) {
-                IS_LOCAL_PLAYER_USING = false;
-                CURRENT_USE_ITEM = null;
+                CURRENT_LOCAL_PLAYER_USE_ITEM = null;
             }
             entity.stopUsingItem();
             return;
@@ -124,27 +121,26 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
             this.setDamage(stack, damage);
         }
         if (level.isClientSide && entity == Minecraft.getInstance().player) {
-            IS_LOCAL_PLAYER_USING = true;
-            CURRENT_USE_ITEM = stack;
+            CURRENT_LOCAL_PLAYER_USE_ITEM = stack;
         }
 
         //stack.hurtAndBreak(1, entity, (e)-> {stack.grow(1); e.stopUsingItem();});
         if (level.isClientSide) {
-            Vec3 v = entity.getViewVector(0).scale(1);
+            Vec3 v = entity.getViewVector(0).normalize();
             double x = entity.getX() + v.x;
             double y = entity.getEyeY() + v.y - 0.12;
             double z = entity.getZ() + v.z;
             Random r = entity.getRandom();
-            v.scale(5.5+r.nextFloat()*2f);
+            v = v.scale(0.1 + r.nextFloat() * 0.1f);
+            double dx = v.x + ((0.5-r.nextFloat()) * 0.08);
+            double dy = v.y + ((0.5-r.nextFloat()) * 0.04);
+            double dz = v.z + ((0.5-r.nextFloat()) * 0.08);
 
-            level.addParticle(ModRegistry.SUDS_PARTICLE.get(), x, y, z,
-                    v.x+r.nextFloat()*0.06f, v.y, v.z+r.nextFloat()*0.06f);
+            level.addParticle(ModRegistry.SUDS_PARTICLE.get(), x, y, z, dx, dy, dz);
         }
     }
 
-
-    private static boolean IS_LOCAL_PLAYER_USING = false;
-    private static ItemStack CURRENT_USE_ITEM = null;
+    private static ItemStack CURRENT_LOCAL_PLAYER_USE_ITEM = null;
 
     //hacky. needed cause it glitches out since i'm changing its nbt constantly
     public static float isBeingUsed(ItemStack stack, Level level, LivingEntity entity, int i) {
@@ -152,16 +148,19 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
         //    InteractionHand hand = entity.get
         //    return IS_LOCAL_PLAYER_USING ? 1 : 0;
         //}&& entity.isUsingItem()
-        return entity != null && entity.isUsingItem() && CURRENT_USE_ITEM == stack? 1.0F : 0.0F;
-    }
 
-    public static void changeLocalModel(InteractionHand hand){}
+        if (entity != null && entity.isUsingItem()) {
+            boolean local = entity == Minecraft.getInstance().player;
+            boolean check = local ? CURRENT_LOCAL_PLAYER_USE_ITEM == stack : entity.getUseItem().getItem() == stack.getItem();
+            return check ? 1.0F : 0.0F;
+        }
+        return 0;
+    }
 
     @Override
     public void releaseUsing(ItemStack stack, Level level, LivingEntity entity, int pTimeCharged) {
         if (level.isClientSide && entity == Minecraft.getInstance().player) {
-            IS_LOCAL_PLAYER_USING = false;
-            CURRENT_USE_ITEM = null;
+            CURRENT_LOCAL_PLAYER_USE_ITEM = null;
         }
         super.releaseUsing(stack, level, entity, pTimeCharged);
     }
@@ -205,7 +204,6 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
 
         AnimationUtils.bobModelPart(mainHand, entity.tickCount, -dir);
     }
-
 
 
     @Override

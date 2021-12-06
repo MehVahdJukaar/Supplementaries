@@ -25,7 +25,6 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.*;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.FallingBlock;
@@ -37,7 +36,10 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -45,6 +47,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -195,7 +198,22 @@ public class UrnBlock extends FallingBlock implements EntityBlock {
                 }
             });
         }
-        return super.getDrops(state, builder);
+        //hax
+        ResourceLocation resourcelocation = this.getLootTable();
+        if (resourcelocation == BuiltInLootTables.EMPTY) {
+            return Collections.emptyList();
+        } else {
+            LootContext lootcontext = builder.withParameter(LootContextParams.BLOCK_STATE, state).create(LootContextParamSets.BLOCK);
+            float oldLuck = lootcontext.getLuck();
+            LootContext.Builder newBuilder = new LootContext.Builder(lootcontext);
+            ItemStack stack = builder.getOptionalParameter(LootContextParams.TOOL);
+            int f = stack == null ? 0 : EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, stack);
+            newBuilder.withLuck(oldLuck + 0.25f * f);
+            lootcontext = newBuilder.withParameter(LootContextParams.BLOCK_STATE, state).create(LootContextParamSets.BLOCK);
+            ServerLevel serverlevel = lootcontext.getLevel();
+            LootTable loottable = serverlevel.getServer().getLootTables().get(resourcelocation);
+            return loottable.getRandomItems(lootcontext);
+        }
     }
 
     @Override
@@ -213,10 +231,9 @@ public class UrnBlock extends FallingBlock implements EntityBlock {
     }
 
     public static void spawnExtraBrokenParticles(BlockState state, BlockPos pos, Level level) {
-        if (level.isClientSide) {
+        if (level.isClientSide && state.getValue(TREASURE)) {
             level.addDestroyBlockEffect(pos, state);
-            level.addDestroyBlockEffect(pos, state);
-            if (level.random.nextInt(1) == 0) {
+            if (level.random.nextInt(20) == 0) {
                 double x = pos.getX() + 0.5;
                 double y = pos.getY() + 0.3125;
                 double z = pos.getZ() + 0.5;
@@ -234,4 +251,6 @@ public class UrnBlock extends FallingBlock implements EntityBlock {
         pLevel.destroyBlock(pos, true);
         spawnExtraBrokenParticles(pState, pos, pLevel);
     }
+
+
 }

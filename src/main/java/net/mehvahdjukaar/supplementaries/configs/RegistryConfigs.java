@@ -120,6 +120,7 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue BLACKSTONE_TILE_ENABLED;
         public static ForgeConfigSpec.BooleanValue SOAP_ENABLED;
         public static ForgeConfigSpec.BooleanValue BUBBLE_BLOWER;
+        public static ForgeConfigSpec.BooleanValue GLOBE_SEPIA;
 
         public static ForgeConfigSpec.BooleanValue PRESENT_ENABLED;
 
@@ -142,6 +143,8 @@ public class RegistryConfigs {
             if(path.equals(ModRegistry.PRESENT_NAME)) return false;
 
             switch (path) {
+                case ModRegistry.GLOBE_SEPIA_NAME:
+                    return reg.GLOBE_SEPIA.get() && reg.ANTIQUE_INK_ENABLED.get();
                 case ModRegistry.FLAX_WILD_NAME:
                     return reg.FLAX_ENABLED.get();
                 case ModRegistry.BRASS_LANTERN_NAME:
@@ -259,6 +262,7 @@ public class RegistryConfigs {
             BLACKSTONE_TILE_ENABLED = builder.define(ModRegistry.BLACKSTONE_TILE_NAME, true);
             SOAP_ENABLED = builder.define(ModRegistry.SOAP_NAME, true);
             BUBBLE_BLOWER = builder.define(ModRegistry.BUBBLE_BLOWER_NAME, true);
+            GLOBE_SEPIA = builder.define(ModRegistry.GLOBE_SEPIA_NAME, true);
 
             PRESENT_ENABLED = builder.comment("WIP").define(ModRegistry.PRESENT_NAME, true);
 

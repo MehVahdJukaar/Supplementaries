@@ -3,12 +3,16 @@ package net.mehvahdjukaar.supplementaries.compat.cctweaked;
 import dan200.computercraft.api.ComputerCraftAPI;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralProvider;
+import dan200.computercraft.shared.media.items.ItemPrintout;
 import net.mehvahdjukaar.supplementaries.block.blocks.SpeakerBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
@@ -39,5 +43,16 @@ public class CCStuff {
             }
         }
         return new SpeakerCC();
+    }
+
+    public static boolean checkForPrintedBook(Item item) {
+        return item instanceof ItemPrintout;
+    }
+
+    public static int getPages(ItemStack itemstack) {
+        return ItemPrintout.getPageCount(itemstack);
+    }
+    public static String[] getText(ItemStack itemstack) {
+        return ItemPrintout.getText(itemstack);
     }
 }
