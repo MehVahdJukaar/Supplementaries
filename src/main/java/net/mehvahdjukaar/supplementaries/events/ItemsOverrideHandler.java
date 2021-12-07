@@ -42,6 +42,7 @@ import net.minecraft.world.storage.MapData;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.registries.ForgeRegistries;
+import vazkii.quark.content.tweaks.module.ReacharoundPlacingModule;
 
 import javax.annotation.Nullable;
 import java.util.*;

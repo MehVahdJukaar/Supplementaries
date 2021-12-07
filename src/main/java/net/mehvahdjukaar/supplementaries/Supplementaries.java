@@ -148,7 +148,7 @@ public class Supplementaries {
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> bus.addListener(ClientSetup::init));
 
 
-        if(CompatHandler.customvillagertrades) CVTHandler.initialize();
+       if(CompatHandler.customvillagertrades) CVTHandler.initialize();
 
     }
 

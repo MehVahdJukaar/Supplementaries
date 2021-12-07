@@ -1,12 +1,14 @@
 package net.mehvahdjukaar.supplementaries.compat;
 
 
+import net.mehvahdjukaar.supplementaries.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.compat.botania.BotaniaCompatRegistry;
-import net.mehvahdjukaar.supplementaries.compat.cctweaked.SpeakerBlockCC;
+import net.mehvahdjukaar.supplementaries.compat.cctweaked.CCStuff;
 import net.mehvahdjukaar.supplementaries.compat.create.SupplementariesCreatePlugin;
 import net.mehvahdjukaar.supplementaries.compat.decorativeblocks.DecoBlocksCompatRegistry;
 import net.mehvahdjukaar.supplementaries.compat.farmersdelight.FDCompatRegistry;
 import net.mehvahdjukaar.supplementaries.compat.inspirations.CauldronRecipes;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.ModList;
 
 public class CompatHandler {
@@ -80,7 +82,7 @@ public class CompatHandler {
 
     public static void onSetup() {
         if (create) SupplementariesCreatePlugin.initialize();
-        if (computercraft) SpeakerBlockCC.initialize();
+        if (computercraft) CCStuff.initialize();
     }
 
     public static void registerOptionalStuff() {
@@ -91,4 +93,12 @@ public class CompatHandler {
     }
 
 
+    public static LazyOptional<Object> getPeripheral(SpeakerBlockTile tile) {
+        if(CompatHandler.computercraft){
+            return CCStuff.getPeripheralSupplier(tile);
+        }
+        else{
+            return LazyOptional.empty();
+        }
+    }
 }

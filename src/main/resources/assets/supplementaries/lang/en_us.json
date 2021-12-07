@@ -684,7 +684,7 @@
   "book.supplementaries.entry.bellows.page.1": "When powered will push air infront of it with frequency that is proportional to its redstone power.$(br)All the effects here described are affected by this.$(br)When pushing air it will push entities that are infront of it away, up to a 5 blocks distance.$(br)Speeds up furnace-like blocks that are right next to it.",
   "book.supplementaries.entry.bellows.page.2": "Refreshes fire blocks in-front of it.$(br)Fire blocks that are up to a 2 blocks distance will be kept alive indefinitely.$(br)Can be placed facing any direction.$(br)When stepped on, if not powered, it will compress.",
 
-  "book.supplementaries.entry.clock.name": "Clock Blcok",
+  "book.supplementaries.entry.clock.name": "Clock Block",
   "book.supplementaries.entry.clock.page.1.title": "Clock Block",
   "book.supplementaries.entry.clock.page.1": "Visually displays the current in-game time.$(br)The Hour hand indicates the current in-game hour while the minute hand ticks every irl second.$(br)Its output can be read with a comparator which will give off a signal from 0 to 15 that is proportional to the in-game time which is from 0 to 24.",
   "book.supplementaries.entry.clock.page.2": "Provides a way to have accurate time keeping in game, not obtainable otherwise (daylight sensors are rendered useless when it's raining for example).$(br)Clicking on it will display the current time as a status message.",
@@ -1124,7 +1124,7 @@
 
   "book.supplementaries.entry.wattle_daub.name": "Wattle and Daub",
   "book.supplementaries.entry.wattle_daub.page.1.title": "Wattle and Daub",
-  "book.supplementaries.entry.wattle_daub.page.1": "$(br2)$()$(br2)$()$(br2)$()$(br)$()A new medieval themed decorative block that goes hand it hand with framed blocks.$(br)When daub is placed inside a framed block it will convert into the respective wattle and daub.",
+  "book.supplementaries.entry.wattle_daub.page.1": "$(br2)$()$(br2)$()$(br2)$()$(br)$()A new medieval themed decorative block that goes hand in hand with framed blocks.$(br)When daub is placed inside a framed block it will convert into the respective wattle and daub.",
   "book.supplementaries.entry.wattle_daub.page.2": "",
 
   "book.supplementaries.entry.checker.name": "Checker Block",

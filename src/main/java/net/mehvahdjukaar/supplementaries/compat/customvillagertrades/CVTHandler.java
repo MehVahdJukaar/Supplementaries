@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.compat.customvillagertrades;
 
+import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.entities.trades.VillagerTradesHandler;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
@@ -92,7 +94,9 @@ public class CVTHandler {
     }
 
     public static void imcSend(final InterModEnqueueEvent event) {
+        if(RegistryConfigs.reg.GLOBE_ENABLED.get())
         InterModComms.sendTo("customvillagertrades", CVTMessage.ADD_WANDERER_TRADES, CVTWanderingTraderTrades::new);
+        if(RegistryConfigs.reg.FLAX_ENABLED.get())
         InterModComms.sendTo("customvillagertrades", CVTMessage.ADD_VILLAGER_TRADES, CVTVillagerTrades::new);
     }
 }

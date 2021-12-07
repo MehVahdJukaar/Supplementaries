@@ -9,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.items.FireflyJarItemRe
 import net.mehvahdjukaar.supplementaries.client.renderers.items.JarItemRenderer;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.CompatObjects;
+import net.mehvahdjukaar.supplementaries.compat.cctweaked.CCStuff;
 import net.mehvahdjukaar.supplementaries.compat.cctweaked.SpeakerBlockCC;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
@@ -853,7 +854,7 @@ public class ModRegistry {
     //speaker Block
     public static final String SPEAKER_BLOCK_NAME = "speaker_block";
     public static final RegistryObject<SpeakerBlock> SPEAKER_BLOCK = BLOCKS.register(SPEAKER_BLOCK_NAME, () ->
-            CompatHandler.computercraft ? new SpeakerBlockCC() : new SpeakerBlock());
+            CompatHandler.computercraft ? CCStuff.makeSpeaker() : new SpeakerBlock());
     public static final RegistryObject<TileEntityType<?>> SPEAKER_BLOCK_TILE = TILES.register(SPEAKER_BLOCK_NAME, () -> TileEntityType.Builder.of(
             SpeakerBlockTile::new, SPEAKER_BLOCK.get()).build(null));
 

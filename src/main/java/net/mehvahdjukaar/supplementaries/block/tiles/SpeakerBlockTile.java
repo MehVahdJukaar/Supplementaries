@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 
 import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
-import net.mehvahdjukaar.supplementaries.compat.cctweaked.SpeakerBlockCC;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.SendSpeakerBlockMessagePacket;
@@ -41,12 +40,10 @@ public class SpeakerBlockTile extends TileEntity implements INameable, IOwnerPro
 
     public SpeakerBlockTile() {
         super(ModRegistry.SPEAKER_BLOCK_TILE.get());
-        if(CompatHandler.computercraft){
-            peripheral = SpeakerBlockCC.getPeripheralSupplier(this);
-        }
-        else{
-            peripheral = LazyOptional.empty();
-        }
+        if(CompatHandler.computercraft)
+            this.peripheral = CompatHandler.getPeripheral(this);
+        else this.peripheral = null;
+
     }
 
     public void setCustomName(ITextComponent name) {
