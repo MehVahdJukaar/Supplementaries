@@ -2,11 +2,12 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 
 
 import net.mehvahdjukaar.supplementaries.block.util.IBlockHolder;
-import net.mehvahdjukaar.supplementaries.block.util.ITextHolder;
+import net.mehvahdjukaar.supplementaries.block.util.ITextHolderProvider;
 import net.mehvahdjukaar.supplementaries.block.util.TextHolder;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.NetworkManager;
@@ -16,7 +17,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 
 
-public class FenceSignBlockTile extends TileEntity implements ITextHolder, IBlockHolder {
+public class FenceSignBlockTile extends TileEntity implements ITextHolderProvider, IBlockHolder {
 
     public TextHolder textHolder;
 
@@ -44,6 +45,11 @@ public class FenceSignBlockTile extends TileEntity implements ITextHolder, IBloc
 
     @Override
     public TextHolder getTextHolder(){ return this.textHolder; }
+
+    @Override
+    public Screen getTextEditScreen() {
+        return null;
+    }
 
     @Override
     public AxisAlignedBB getRenderBoundingBox(){

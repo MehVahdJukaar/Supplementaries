@@ -3,13 +3,15 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 
 import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
-import net.mehvahdjukaar.supplementaries.block.util.ITextHolder;
+import net.mehvahdjukaar.supplementaries.block.util.ITextHolderProvider;
 import net.mehvahdjukaar.supplementaries.block.util.TextHolder;
+import net.mehvahdjukaar.supplementaries.client.gui.SignPostGui;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.VanillaWoodTypes;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -23,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 
 
-public class SignPostBlockTile extends MimicBlockTile implements ITextHolder, IOwnerProtected {
+public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProvider, IOwnerProtected {
     private UUID owner = null;
 
     //is holding a framed fence (for framed blocks mod compat)
@@ -59,6 +61,12 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolder, IO
 
     @Override
     public TextHolder getTextHolder(){ return this.textHolder; }
+
+    @Nullable
+    @Override
+    public Screen getTextEditScreen() {
+        return new SignPostGui(this);
+    }
 
     @Override
     public double getViewDistance() {

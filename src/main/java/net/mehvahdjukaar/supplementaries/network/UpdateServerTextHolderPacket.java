@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.network;
 
-import net.mehvahdjukaar.supplementaries.block.util.ITextHolder;
+import net.mehvahdjukaar.supplementaries.block.util.ITextHolderProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
@@ -48,8 +48,8 @@ public class UpdateServerTextHolderPacket {
             if (world != null) {
                 BlockPos pos = message.pos;
                 TileEntity tileentity = world.getBlockEntity(pos);
-                if (tileentity instanceof ITextHolder) {
-                    ITextHolder te = (ITextHolder) tileentity;
+                if (tileentity instanceof ITextHolderProvider) {
+                    ITextHolderProvider te = (ITextHolderProvider) tileentity;
                     if(te.getTextHolder().size == message.lines){
                         for (int i = 0; i < message.lines; ++i) {
                             te.getTextHolder().setText(i,message.signText[i]);

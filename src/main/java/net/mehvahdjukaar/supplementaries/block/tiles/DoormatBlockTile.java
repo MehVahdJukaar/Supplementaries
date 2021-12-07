@@ -2,10 +2,12 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 
 import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.block.blocks.DoormatBlock;
-import net.mehvahdjukaar.supplementaries.block.util.ITextHolder;
+import net.mehvahdjukaar.supplementaries.block.util.ITextHolderProvider;
 import net.mehvahdjukaar.supplementaries.block.util.TextHolder;
+import net.mehvahdjukaar.supplementaries.client.gui.DoormatGui;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
@@ -13,7 +15,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
-public class DoormatBlockTile extends ItemDisplayTile implements ITextHolder {
+public class DoormatBlockTile extends ItemDisplayTile implements ITextHolderProvider {
     public static final int MAXLINES = 3;
 
     public TextHolder textHolder;
@@ -26,6 +28,11 @@ public class DoormatBlockTile extends ItemDisplayTile implements ITextHolder {
 
     @Override
     public TextHolder getTextHolder(){return this.textHolder;}
+
+    @Override
+    public Screen getTextEditScreen() {
+        return new DoormatGui(this);
+    }
 
     @Override
     public void load(BlockState state, CompoundNBT compound) {

@@ -4,9 +4,7 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.selene.map.CustomDecorationHolder;
 import net.mehvahdjukaar.supplementaries.block.tiles.SignPostBlockTile;
-import net.mehvahdjukaar.supplementaries.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
-import net.mehvahdjukaar.supplementaries.client.gui.SignPostGui;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.framedblocks.FramedSignPost;
 import net.mehvahdjukaar.supplementaries.datagen.types.VanillaWoodTypes;
@@ -132,7 +130,7 @@ public class SignPostBlock extends FenceMimicBlock{
             }
             // open gui (edit sign with empty hand)
             if (!server) {
-                SignPostGui.open(te);
+                ((SignPostBlockTile) tileentity).openTextEditScreen(worldIn, pos, player);
             }
             return ActionResultType.sidedSuccess(worldIn.isClientSide);
         }

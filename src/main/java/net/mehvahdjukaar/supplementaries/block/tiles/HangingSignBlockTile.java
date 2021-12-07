@@ -2,10 +2,12 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 
 import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.supplementaries.block.util.IMapDisplay;
-import net.mehvahdjukaar.supplementaries.block.util.ITextHolder;
+import net.mehvahdjukaar.supplementaries.block.util.ITextHolderProvider;
 import net.mehvahdjukaar.supplementaries.block.util.TextHolder;
+import net.mehvahdjukaar.supplementaries.client.gui.HangingSignGui;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -17,7 +19,7 @@ import java.util.UUID;
 
 
 //TODO: make swaying tile an interface
-public class HangingSignBlockTile extends SwayingBlockTile implements IMapDisplay, ITextHolder, IOwnerProtected {
+public class HangingSignBlockTile extends SwayingBlockTile implements IMapDisplay, ITextHolderProvider, IOwnerProtected {
     public static final int MAXLINES = 7;
 
     private UUID owner = null;
@@ -51,6 +53,12 @@ public class HangingSignBlockTile extends SwayingBlockTile implements IMapDispla
 
     @Override
     public TextHolder getTextHolder(){return this.textHolder;}
+
+    @Nullable
+    @Override
+    public Screen getTextEditScreen() {
+        return new HangingSignGui(this);
+    }
 
     @Override
     public ItemStack getMapStack(){

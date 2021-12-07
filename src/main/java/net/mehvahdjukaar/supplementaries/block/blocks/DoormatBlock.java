@@ -4,7 +4,6 @@ import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.DoormatBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
-import net.mehvahdjukaar.supplementaries.client.gui.DoormatGui;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -88,7 +87,7 @@ public class DoormatBlock extends WaterBlock {
             }
             // open gui (edit sign with empty hand)
             else if (!server) {
-                DoormatGui.open(te);
+                te.openTextEditScreen(worldIn, pos, player);
             }
             return ActionResultType.sidedSuccess(worldIn.isClientSide);
         }
