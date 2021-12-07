@@ -1,0 +1,26 @@
+{
+  "name": "book.supplementaries.entry.wall_lantern.name",
+  "category": "tweaks",
+  "icon": "minecraft:lantern",
+  "pages": [
+    {
+      "type": "supplementaries:spotlight_4",
+
+      "1": "minecraft:lantern",
+      "2": "minecraft:soul_lantern",
+      "3": "supplementaries:copper_lantern",
+      "4": "supplementaries:crimson_lantern",
+      "title": "book.supplementaries.entry.wall_lantern.page.1.title",
+      "text": "book.supplementaries.entry.wall_lantern.page.1"
+    },
+    {
+      "type": "image",
+      "text": "book.supplementaries.entry.wall_lantern.page.2",
+      "images": [
+        "supplementaries:textures/gui/book/wall_lantern/wall_lantern1.png",
+        "supplementaries:textures/gui/book/wall_lantern/wall_lantern2.png",
+        "supplementaries:textures/gui/book/wall_lantern/wall_lantern3.png"
+      ]
+    }
+  ]
+}

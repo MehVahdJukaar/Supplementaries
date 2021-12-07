@@ -1,0 +1,19 @@
+{
+  "name": "book.supplementaries.entry.sack.name",
+  "category": "decorative",
+  "icon": "supplementaries:sack",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "supplementaries:sack",
+      "title": "book.supplementaries.entry.sack.page.1.title",
+      "link_recipe": true,
+      "text": "book.supplementaries.entry.sack.page.1"
+    },
+    {
+      "type": "crafting",
+      "recipe": "supplementaries:sack",
+      "text": "book.supplementaries.entry.sack.page.2"
+    }
+  ]
+}

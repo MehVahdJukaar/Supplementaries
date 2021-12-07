@@ -1,0 +1,19 @@
+{
+  "name": "book.supplementaries.entry.item_shelf.name",
+  "category": "decorative",
+  "icon": "supplementaries:item_shelf",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "supplementaries:item_shelf",
+      "title": "book.supplementaries.entry.item_shelf.page.1.title",
+      "link_recipe": true,
+      "text": "book.supplementaries.entry.item_shelf.page.1"
+    },
+    {
+      "type": "crafting",
+      "recipe": "supplementaries:item_shelf",
+      "text": "book.supplementaries.entry.item_shelf.page.2"
+    }
+  ]
+}

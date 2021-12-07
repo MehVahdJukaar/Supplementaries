@@ -1,0 +1,31 @@
+{
+  "name": "book.supplementaries.entry.wattle_daub.name",
+  "category": "decorative",
+  "icon": "supplementaries:daub_cross_brace",
+  "pages": [
+    {
+      "type": "supplementaries:spotlight_4",
+      
+      "1": "supplementaries:daub",
+      "2": "supplementaries:daub_frame",
+      "3": "supplementaries:daub_brace",
+      "4": "supplementaries:daub_cross_brace",
+      "title": "book.supplementaries.entry.wattle_daub.page.1.title",
+      "text": "book.supplementaries.entry.wattle_daub.page.1"
+    },
+    {
+      "type": "crafting",
+      "recipe": "supplementaries:daub",
+      "recipe2": "supplementaries:daub_frame"
+    },
+    {
+      "type": "crafting",
+      "recipe": "supplementaries:daub_brace",
+      "recipe2": "supplementaries:daub_cross_brace"
+    },
+    {
+      "type": "text",
+      "text": "book.supplementaries.entry.wattle_daub.page.2"
+    }
+  ]
+}

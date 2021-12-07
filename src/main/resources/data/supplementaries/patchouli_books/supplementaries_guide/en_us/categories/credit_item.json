@@ -1,0 +1,6 @@
+{
+  "name": "book.supplementaries.category.credit.name",
+  "description": "book.supplementaries.category.credit.description",
+  "icon": "supplementaries:soul_jar",
+  "parent": "item"
+}

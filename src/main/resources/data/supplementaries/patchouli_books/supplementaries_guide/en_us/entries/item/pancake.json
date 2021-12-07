@@ -1,0 +1,19 @@
+{
+  "name": "book.supplementaries.entry.pancake.name",
+  "category": "item",
+  "icon": "supplementaries:pancake",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "supplementaries:pancake",
+      "title": "book.supplementaries.entry.pancake.page.1.title",
+      "link_recipe": true,
+      "text": "book.supplementaries.entry.pancake.page.1"
+    },
+    {
+      "type": "crafting",
+      "recipe": "supplementaries:pancake",
+      "text": "book.supplementaries.entry.pancake.page.2"
+    }
+  ]
+}

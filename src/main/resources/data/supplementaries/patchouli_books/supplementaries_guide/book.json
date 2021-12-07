@@ -1,0 +1,12 @@
+{
+	"name": "book.supplementaries.book_name",
+	"subtitle": "book.supplementaries.book_subtitle",
+	"landing_text": "book.supplementaries.landing_text",
+	"show_progress": false,
+	"show_toasts": false,
+	"creative_tab":"supplementaries",
+	"i18n": true,
+	"model": "supplementaries:book",
+	"book_texture": "supplementaries:textures/gui/book/book_gui.png",
+	"filler_texture": "supplementaries:textures/gui/book/ink_page.png"
+}

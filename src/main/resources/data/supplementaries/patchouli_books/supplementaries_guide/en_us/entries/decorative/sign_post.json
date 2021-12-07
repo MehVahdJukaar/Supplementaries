@@ -1,0 +1,19 @@
+{
+  "name": "book.supplementaries.entry.sign_post.name",
+  "category": "decorative",
+  "icon": "supplementaries:sign_post_oak",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "supplementaries:sign_post_oak",
+      "title": "book.supplementaries.entry.sign_post.page.1.title",
+      "link_recipe": true,
+      "text": "book.supplementaries.entry.sign_post.page.1"
+    },
+    {
+      "type": "crafting",
+      "recipe": "supplementaries:sign_posts/sign_post_oak",
+      "text": "book.supplementaries.entry.sign_post.page.2"
+    }
+  ]
+}

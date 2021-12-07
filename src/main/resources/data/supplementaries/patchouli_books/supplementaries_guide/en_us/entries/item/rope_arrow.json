@@ -1,0 +1,26 @@
+{
+  "name": "book.supplementaries.entry.rope_arrow.name",
+  "category": "item",
+  "icon": "supplementaries:rope_arrow",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "supplementaries:rope_arrow",
+      "title": "book.supplementaries.entry.rope_arrow.page.1.title",
+      "link_recipe": true,
+      "text": "book.supplementaries.entry.rope_arrow.page.1"
+    },
+    {
+      "type": "supplementaries:custom_crafting",
+
+      "1": "minecraft:arrow",
+      "2": "supplementaries:rope",
+      "3": "supplementaries:rope",
+      "4": "supplementaries:rope",
+      "5": "supplementaries:rope",
+      "output": "supplementaries:rope_arrow",
+      "title": "book.supplementaries.entry.rope_arrow.page.1.title",
+      "text": "book.supplementaries.entry.rope_arrow.page.2"
+    }
+  ]
+}

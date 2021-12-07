@@ -1,0 +1,36 @@
+{
+  "name": "book.supplementaries.entry.sconce_candle.name",
+  "category": "decorative",
+  "icon": "supplementaries:candle_holder",
+  "pages": [
+    {
+      "type": "supplementaries:spotlight_5",
+      
+      "A.1" :"supplementaries:sconce",
+      "A.2" :"supplementaries:sconce_soul",
+      "A.title" :"book.supplementaries.entry.sconce_candle.page.1.title",
+      "A.text" :"book.supplementaries.entry.sconce_candle.page.1",
+
+      "B.1" :"supplementaries:candelabra",
+      "B.2" :"supplementaries:candle_holder",
+      "B.3" :"supplementaries:candelabra_silver",
+      "B.title" :"book.supplementaries.entry.sconce_candle.page.2.title",
+      "B.text" :"book.supplementaries.entry.sconce_candle.page.2"
+    },
+    {
+      "type": "crafting",
+      "recipe": "supplementaries:sconce",
+      "recipe2": "supplementaries:sconce_soul"
+    },
+    {
+      "type": "crafting",
+      "recipe": "supplementaries:candelabra",
+      "recipe2": "supplementaries:candelabra_silver"
+    },
+    {
+      "type": "crafting",
+      "recipe": "supplementaries:candle_holder",
+      "text": "book.supplementaries.entry.sconce_candle.page.3"
+    }
+  ]
+}

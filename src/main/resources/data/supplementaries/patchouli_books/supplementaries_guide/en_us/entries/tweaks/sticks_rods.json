@@ -1,0 +1,23 @@
+{
+  "name": "book.supplementaries.entry.sticks_rods.name",
+  "category": "tweaks",
+  "icon": "minecraft:stick",
+  "pages": [
+    {
+      "type": "supplementaries:spotlight_2",
+
+      "1": "minecraft:stick",
+      "2": "minecraft:blaze_rod",
+      "title": "book.supplementaries.entry.sticks_rods.page.1.title",
+      "text": "book.supplementaries.entry.sticks_rods.page.1"
+    },
+    {
+      "type": "image",
+      "text": "book.supplementaries.entry.sticks_rods.page.2",
+      "images": [
+        "supplementaries:textures/gui/book/sticks_rods/sticks_rods1.png",
+        "supplementaries:textures/gui/book/sticks_rods/sticks_rods2.png"
+      ]
+    }
+  ]
+}

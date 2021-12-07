@@ -1,0 +1,20 @@
+{
+  "name": "book.supplementaries.entry.slingshot.name",
+  "category": "item",
+  "icon": "supplementaries:slingshot",
+  "pages": [
+    {
+      "type": "supplementaries:spotlight_2",
+
+      "1": "supplementaries:slingshot",
+      "2": "minecraft:enchanted_book{StoredEnchantments:[{lvl:1s,id:\"supplementaries:stasis\"}]}",
+      "title": "book.supplementaries.entry.slingshot.page.1.title",
+      "text": "book.supplementaries.entry.slingshot.page.1"
+    },
+    {
+      "type": "crafting",
+      "recipe": "supplementaries:slingshot",
+      "text": "book.supplementaries.entry.slingshot.page.2"
+    }
+  ]
+}

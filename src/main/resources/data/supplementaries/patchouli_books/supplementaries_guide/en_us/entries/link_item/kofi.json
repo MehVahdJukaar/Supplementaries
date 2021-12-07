@@ -1,0 +1,15 @@
+{
+  "name": "book.supplementaries.entry.kofi.name",
+  "category": "link_item",
+  "icon": "supplementaries:textures/gui/book/icon/kofi.png",
+  "sortnum": 5,
+  "pages": [
+    {
+      "type": "link",
+      "url": "https://ko-fi.com/mehvahdjukaar",
+      "link_text": "book.supplementaries.entry.kofi.page.1.link",
+      "title": "book.supplementaries.entry.kofi.page.1.title",
+      "text": "book.supplementaries.entry.kofi.page.1"
+    }
+  ]
+}

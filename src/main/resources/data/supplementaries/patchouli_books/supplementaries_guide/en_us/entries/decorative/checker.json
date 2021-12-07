@@ -1,0 +1,19 @@
+{
+  "name": "book.supplementaries.entry.checker.name",
+  "category": "decorative",
+  "icon": "supplementaries:checker_block",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "supplementaries:checker_block",
+      "title": "book.supplementaries.entry.checker.page.1.title",
+      "link_recipe": true,
+      "text": "book.supplementaries.entry.checker.page.1"
+    },
+    {
+      "type": "crafting",
+      "recipe": "supplementaries:checker",
+      "text": "book.supplementaries.entry.checker.page.2"
+    }
+  ]
+}

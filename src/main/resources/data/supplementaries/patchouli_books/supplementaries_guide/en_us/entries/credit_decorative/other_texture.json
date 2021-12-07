@@ -1,0 +1,17 @@
+{
+  "name": "book.supplementaries.entry.other_texture.name",
+  "category": "credit_decorative",
+  "icon": "supplementaries:statue",
+  "sortnum": 7,
+  "pages": [
+    {
+      "type": "text",
+      "title": "book.supplementaries.entry.other_texture.page.1.title",
+      "text": "book.supplementaries.entry.other_texture.page.1"
+    },
+    {
+      "type": "text",
+      "text": "book.supplementaries.entry.other_texture.page.2"
+    }
+  ]
+}

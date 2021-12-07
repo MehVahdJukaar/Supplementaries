@@ -1,0 +1,15 @@
+{
+  "name": "book.supplementaries.entry.github.name",
+  "category": "link_tweak",
+  "icon": "supplementaries:textures/gui/book/icon/github.png",
+  "sortnum": 3,
+  "pages": [
+    {
+      "type": "link",
+      "url": "https://github.com/MehVahdJukaar/Supplementaries/issues",
+      "link_text": "book.supplementaries.entry.github.page.1.link",
+      "title": "book.supplementaries.entry.github.page.1.title",
+      "text": "book.supplementaries.entry.github.page.1"
+    }
+  ]
+}

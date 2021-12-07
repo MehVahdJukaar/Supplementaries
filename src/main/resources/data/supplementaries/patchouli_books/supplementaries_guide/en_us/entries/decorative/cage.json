@@ -1,0 +1,19 @@
+{
+  "name": "book.supplementaries.entry.cage.name",
+  "category": "decorative",
+  "icon": "supplementaries:cage",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "supplementaries:cage",
+      "title": "book.supplementaries.entry.cage.page.1.title",
+      "link_recipe": true,
+      "text": "book.supplementaries.entry.cage.page.1"
+    },
+    {
+      "type": "crafting",
+      "recipe": "supplementaries:cage",
+      "text": "book.supplementaries.entry.cage.page.2"
+    }
+  ]
+}

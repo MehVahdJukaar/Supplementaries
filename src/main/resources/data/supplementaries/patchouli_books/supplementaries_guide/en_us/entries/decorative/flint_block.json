@@ -1,0 +1,19 @@
+{
+  "name": "book.supplementaries.entry.flint_block.name",
+  "category": "decorative",
+  "icon": "supplementaries:flint_block",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "supplementaries:flint_block",
+      "title": "book.supplementaries.entry.flint_block.page.1.title",
+      "link_recipe": true,
+      "text": "book.supplementaries.entry.flint_block.page.1"
+    },
+    {
+      "type": "crafting",
+      "recipe": "supplementaries:flint_block",
+      "text": "book.supplementaries.entry.flint_block.page.2"
+    }
+  ]
+}

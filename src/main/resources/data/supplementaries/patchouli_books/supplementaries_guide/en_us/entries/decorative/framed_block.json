@@ -1,0 +1,25 @@
+{
+  "name": "book.supplementaries.entry.framed_block.name",
+  "category": "decorative",
+  "icon": "supplementaries:timber_brace",
+  "pages": [
+    {
+      "type": "supplementaries:spotlight_3",
+      "1": "supplementaries:timber_frame",
+      "2": "supplementaries:timber_brace",
+      "3": "supplementaries:timber_cross_brace",
+      "title": "book.supplementaries.entry.framed_block.page.1.title",
+      "text": "book.supplementaries.entry.framed_block.page.1"
+    },
+    {
+      "type": "crafting",
+      "recipe": "supplementaries:timber_frame",
+      "recipe2": "supplementaries:timber_brace"
+    },
+    {
+      "type": "crafting",
+      "recipe": "supplementaries:timber_cross_brace",
+      "text": "book.supplementaries.entry.framed_block.page.2"
+    }
+  ]
+}

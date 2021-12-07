@@ -1,0 +1,19 @@
+{
+  "name": "book.supplementaries.entry.hanging_sign.name",
+  "category": "decorative",
+  "icon": "supplementaries:hanging_sign_oak",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "supplementaries:hanging_sign_oak",
+      "title": "book.supplementaries.entry.hanging_sign.page.1.title",
+      "link_recipe": true,
+      "text": "book.supplementaries.entry.hanging_sign.page.1"
+    },
+    {
+      "type": "crafting",
+      "recipe": "supplementaries:hanging_signs/hanging_sign_oak",
+      "text": "book.supplementaries.entry.hanging_sign.page.2"
+    }
+  ]
+}

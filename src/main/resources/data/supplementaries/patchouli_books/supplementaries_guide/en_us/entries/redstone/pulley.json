@@ -1,0 +1,23 @@
+{
+  "name": "book.supplementaries.entry.pulley.name",
+  "category": "redstone",
+  "icon": "supplementaries:pulley_block",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "supplementaries:pulley_block",
+      "title": "book.supplementaries.entry.pulley.page.1.title",
+      "link_recipe": true,
+      "text": "book.supplementaries.entry.pulley.page.1"
+    },
+    {
+      "type": "crafting",
+      "recipe": "supplementaries:pulley",
+      "text": "book.supplementaries.entry.pulley.page.2"
+    },
+    {
+      "type": "text",
+      "text": "book.supplementaries.entry.pulley.page.3"
+    }
+  ]
+}

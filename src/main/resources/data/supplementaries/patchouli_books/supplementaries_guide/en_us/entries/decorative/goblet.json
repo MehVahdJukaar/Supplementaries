@@ -1,0 +1,19 @@
+{
+  "name": "book.supplementaries.entry.goblet.name",
+  "category": "decorative",
+  "icon": "supplementaries:goblet",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "supplementaries:goblet",
+      "title": "book.supplementaries.entry.goblet.page.1.title",
+      "link_recipe": true,
+      "text": "book.supplementaries.entry.goblet.page.1"
+    },
+    {
+      "type": "crafting",
+      "recipe": "supplementaries:goblet",
+      "text": "book.supplementaries.entry.goblet.page.2"
+    }
+  ]
+}

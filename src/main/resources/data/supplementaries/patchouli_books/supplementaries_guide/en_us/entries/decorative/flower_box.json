@@ -1,0 +1,19 @@
+{
+  "name": "book.supplementaries.entry.flower_box.name",
+  "category": "decorative",
+  "icon": "supplementaries:flower_box",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "supplementaries:flower_box",
+      "title": "book.supplementaries.entry.flower_box.page.1.title",
+      "link_recipe": true,
+      "text": "book.supplementaries.entry.flower_box.page.1"
+    },
+    {
+      "type": "crafting",
+      "recipe": "supplementaries:flower_box",
+      "text": "book.supplementaries.entry.flower_box.page.2"
+    }
+  ]
+}

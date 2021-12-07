@@ -1,0 +1,15 @@
+{
+  "name": "book.supplementaries.entry.akliz.name",
+  "category": "link_world",
+  "icon": "supplementaries:textures/gui/book/icon/akliz.png",
+  "sortnum": 6,
+  "pages": [
+    {
+      "type": "link",
+      "url": "https://www.akliz.net/supplementaries",
+      "link_text": "book.supplementaries.entry.akliz.page.1.link",
+      "title": "book.supplementaries.entry.akliz.page.1.title",
+      "text": "book.supplementaries.entry.akliz.page.1"
+    }
+  ]
+}

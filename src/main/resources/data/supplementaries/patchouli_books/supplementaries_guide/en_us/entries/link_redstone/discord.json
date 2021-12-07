@@ -1,0 +1,15 @@
+{
+  "name": "book.supplementaries.entry.discord.name",
+  "category": "link_redstone",
+  "icon": "supplementaries:textures/gui/book/icon/discord.png",
+  "sortnum": 7,
+  "pages": [
+    {
+      "type": "link",
+      "url": "https://discord.com/invite/qdKRTDf8Cv",
+      "link_text": "book.supplementaries.entry.discord.page.1.link",
+      "title": "book.supplementaries.entry.discord.page.1.title",
+      "text": "book.supplementaries.entry.discord.page.1"
+    }
+  ]
+}

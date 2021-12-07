@@ -1,0 +1,15 @@
+{
+  "name": "book.supplementaries.entry.twitter.name",
+  "category": "link_item",
+  "icon": "supplementaries:textures/gui/book/icon/twitter.png",
+  "sortnum": 5,
+  "pages": [
+    {
+      "type": "link",
+      "url": "https://twitter.com/Supplementariez",
+      "link_text": "book.supplementaries.entry.twitter.page.1.link",
+      "title": "book.supplementaries.entry.twitter.page.1.title",
+      "text": "book.supplementaries.entry.twitter.page.1"
+    }
+  ]
+}

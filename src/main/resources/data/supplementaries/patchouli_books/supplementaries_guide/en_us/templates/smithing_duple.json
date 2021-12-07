@@ -1,0 +1,15 @@
+{
+	"include": [
+		{
+			"template": "smithing",
+			"as": "A",
+			"y": 5
+		},
+		{
+			"template": "smithing",
+			"as": "B",
+			"y": 75
+		}
+	],
+	"components": []
+}

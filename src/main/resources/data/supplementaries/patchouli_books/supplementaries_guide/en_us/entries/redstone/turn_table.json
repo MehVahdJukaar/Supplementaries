@@ -1,0 +1,23 @@
+{
+  "name": "book.supplementaries.entry.turn_table.name",
+  "category": "redstone",
+  "icon": "supplementaries:turn_table",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "supplementaries:turn_table",
+      "title": "book.supplementaries.entry.turn_table.page.1.title",
+      "link_recipe": true,
+      "text": "book.supplementaries.entry.turn_table.page.1"
+    },
+    {
+      "type": "crafting",
+      "recipe": "supplementaries:turn_table",
+      "text": "book.supplementaries.entry.turn_table.page.2"
+    },
+    {
+      "type": "text",
+      "text": "book.supplementaries.entry.turn_table.page.3"
+    }
+  ]
+}

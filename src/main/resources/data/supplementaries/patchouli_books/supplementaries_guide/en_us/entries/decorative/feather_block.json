@@ -1,0 +1,19 @@
+{
+  "name": "book.supplementaries.entry.feather_block.name",
+  "category": "decorative",
+  "icon": "supplementaries:feather_block",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "supplementaries:feather_block",
+      "title": "book.supplementaries.entry.feather_block.page.1.title",
+      "link_recipe": true,
+      "text": "book.supplementaries.entry.feather_block.page.1"
+    },
+    {
+      "type": "crafting",
+      "recipe": "supplementaries:feather_block",
+      "text": "book.supplementaries.entry.feather_block.page.2"
+    }
+  ]
+}

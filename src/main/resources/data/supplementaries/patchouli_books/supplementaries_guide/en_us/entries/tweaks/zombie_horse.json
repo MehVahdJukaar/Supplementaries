@@ -1,0 +1,23 @@
+{
+  "name": "book.supplementaries.entry.zombie_horse.name",
+  "category": "tweaks",
+  "icon": "minecraft:zombie_horse_spawn_egg",
+  "pages": [
+    {
+      "type": "supplementaries:sum",
+      "1": "minecraft:rotten_flesh",
+      "2": "minecraft:skeleton_horse_spawn_egg",
+      "output": "minecraft:zombie_horse_spawn_egg",
+      "title": "book.supplementaries.entry.zombie_horse.page.1.title",
+      "text": "book.supplementaries.entry.zombie_horse.page.1"
+
+    },
+    {
+      "type": "entity",
+      "entity": "minecraft:zombie_horse",
+      "scale": 0.8,
+      "offset": 0.25,
+      "text": "book.supplementaries.entry.zombie_horse.page.2"
+    }
+  ]
+}

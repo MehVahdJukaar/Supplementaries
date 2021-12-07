@@ -1,0 +1,27 @@
+{
+  "name": "book.supplementaries.entry.rope.name",
+  "category": "decorative",
+  "icon": "supplementaries:rope",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "supplementaries:rope",
+      "title": "book.supplementaries.entry.rope.page.1.title",
+      "link_recipe": true,
+      "text": "book.supplementaries.entry.rope.page.1"
+    },
+    {
+      "type": "crafting",
+      "recipe": "supplementaries:rope",
+      "text": "book.supplementaries.entry.rope.page.2"
+    },
+    {
+      "type": "text",
+      "text": "book.supplementaries.entry.rope.page.3"
+    },
+    {
+      "type": "text",
+      "text": "book.supplementaries.entry.rope.page.4"
+    }
+  ]
+}

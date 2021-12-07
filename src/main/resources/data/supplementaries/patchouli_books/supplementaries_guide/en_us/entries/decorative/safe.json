@@ -1,0 +1,27 @@
+{
+  "name": "book.supplementaries.entry.safe.name",
+  "category": "decorative",
+  "icon": "supplementaries:safe",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "supplementaries:safe",
+      "title": "book.supplementaries.entry.safe.page.1.title",
+      "link_recipe": true,
+      "text": "book.supplementaries.entry.safe.page.1"
+    },
+    {
+      "type": "supplementaries:smithing_one",
+      
+      "A.1" :"minecraft:shulker_box{Name:\"Any Shulker\"}",
+      "A.2" :"minecraft:netherite_ingot",
+      "A.output" :"supplementaries:safe",
+      "A.title" :"book.supplementaries.entry.safe.page.2.title",
+      "A.text" :"book.supplementaries.entry.safe.page.2"
+    },
+    {
+      "type": "text",
+      "text": "book.supplementaries.entry.safe.page.3"
+    }
+  ]
+}

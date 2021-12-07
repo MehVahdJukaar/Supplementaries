@@ -1,0 +1,29 @@
+{
+  "name": "book.supplementaries.entry.netherite_door_trapdoor.name",
+  "category": "decorative",
+  "icon": "supplementaries:netherite_door",
+  "pages": [
+    {
+      "type": "supplementaries:spotlight_2",
+      "1": "supplementaries:netherite_door",
+      "2": "supplementaries:netherite_trapdoor",
+      "title": "book.supplementaries.entry.netherite_door_trapdoor.page.1.title",
+      "text": "book.supplementaries.entry.netherite_door_trapdoor.page.1"
+    },
+    {
+      "type": "supplementaries:smithing_duple",
+      
+      "A.1" :"supplementaries:gold_door",
+      "A.2" :"minecraft:netherite_scrap",
+      "A.output" :"supplementaries:netherite_door",
+      "A.title" :"book.supplementaries.entry.netherite_door_trapdoor.page.2.title",
+      "A.text" :"book.supplementaries.entry.netherite_door_trapdoor.page.2",
+
+      "B.1" :"supplementaries:gold_trapdoor",
+      "B.2" :"minecraft:netherite_scrap",
+      "B.output" :"supplementaries:netherite_trapdoor",
+      "B.title" :"book.supplementaries.entry.netherite_door_trapdoor.page.3.title",
+      "B.text" :"book.supplementaries.entry.netherite_door_trapdoor.page.3"
+    }
+  ]
+}

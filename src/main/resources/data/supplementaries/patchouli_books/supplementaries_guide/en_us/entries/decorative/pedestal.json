@@ -1,0 +1,19 @@
+{
+  "name": "book.supplementaries.entry.pedestal.name",
+  "category": "decorative",
+  "icon": "supplementaries:pedestal",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "supplementaries:pedestal",
+      "title": "book.supplementaries.entry.pedestal.page.1.title",
+      "link_recipe": true,
+      "text": "book.supplementaries.entry.pedestal.page.1"
+    },
+    {
+      "type": "crafting",
+      "recipe": "supplementaries:pedestal",
+      "text": "book.supplementaries.entry.pedestal.page.2"
+    }
+  ]
+}

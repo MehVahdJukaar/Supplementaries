@@ -1,0 +1,19 @@
+{
+  "name": "book.supplementaries.entry.iron_gate.name",
+  "category": "decorative",
+  "icon": "supplementaries:iron_gate",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "supplementaries:iron_gate",
+      "title": "book.supplementaries.entry.iron_gate.page.1.title",
+      "link_recipe": true,
+      "text": "book.supplementaries.entry.iron_gate.page.1"
+    },
+    {
+      "type": "crafting",
+      "recipe": "supplementaries:iron_gate",
+      "text": "book.supplementaries.entry.iron_gate.page.2"
+    }
+  ]
+}

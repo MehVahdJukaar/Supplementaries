@@ -1,0 +1,18 @@
+{
+  "name": "book.supplementaries.entry.mehvahdjukaar.name",
+  "category": "credit_redstone",
+  "icon": "minecraft:player_head{SkullOwner:'MehVahdJukaar'}",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "minecraft:player_head{SkullOwner:'MehVahdJukaar'}",
+      "title": "book.supplementaries.entry.mehvahdjukaar.page.1.title",
+      "text": "book.supplementaries.entry.mehvahdjukaar.page.1"
+    },
+    {
+      "type": "text",
+      "text": "book.supplementaries.entry.mehvahdjukaar.page.2"
+    }
+  ]
+}

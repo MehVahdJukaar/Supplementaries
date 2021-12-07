@@ -1,0 +1,19 @@
+{
+  "name": "book.supplementaries.entry.merchant.name",
+  "category": "world",
+  "icon": "supplementaries:red_merchant_spawn_egg",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "supplementaries:red_merchant_spawn_egg",
+      "title": "book.supplementaries.entry.merchant.page.1.title",
+      "link_recipe": true,
+      "text": "book.supplementaries.entry.merchant.page.1"
+    },
+    {
+      "type": "entity",
+      "entity": "supplementaries:red_merchant",
+      "text": "book.supplementaries.entry.merchant.page.2"
+    }
+  ]
+}

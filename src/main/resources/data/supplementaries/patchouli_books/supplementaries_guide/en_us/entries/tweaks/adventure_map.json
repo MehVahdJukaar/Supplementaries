@@ -1,0 +1,29 @@
+{
+  "name": "book.supplementaries.entry.adventure_map.name",
+  "category": "tweaks",
+  "icon": "minecraft:filled_map",
+  "pages": [
+    {
+      "type": "supplementaries:spotlight_2_no_link",
+
+      "1": "minecraft:map",
+      "2": "minecraft:filled_map",
+      "title": "book.supplementaries.entry.adventure_map.page.1.title",
+      "text": "book.supplementaries.entry.adventure_map.page.1"
+    },
+    {
+      "type": "image",
+      "text": "book.supplementaries.entry.adventure_map.page.2",
+      "images": [
+        "supplementaries:textures/gui/book/adventure_map/adventure_map1.png",
+        "supplementaries:textures/gui/book/adventure_map/adventure_map2.png"
+      ]
+    },
+    {
+      "type": "patchouli:text",
+      "text": "book.supplementaries.entry.adventure_map.page.3"
+    }
+  ]
+}
+
+

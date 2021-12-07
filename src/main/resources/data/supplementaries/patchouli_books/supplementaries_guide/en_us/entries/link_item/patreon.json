@@ -1,0 +1,15 @@
+{
+  "name": "book.supplementaries.entry.patreon.name",
+  "category": "link_item",
+  "icon": "supplementaries:textures/gui/book/icon/patreon.png",
+  "sortnum": 4,
+  "pages": [
+    {
+      "type": "link",
+      "url": "https://www.patreon.com/user?u=53696377",
+      "link_text": "book.supplementaries.entry.patreon.page.1.link",
+      "title": "book.supplementaries.entry.patreon.page.1.title",
+      "text": "book.supplementaries.entry.patreon.page.1"
+    }
+  ]
+}

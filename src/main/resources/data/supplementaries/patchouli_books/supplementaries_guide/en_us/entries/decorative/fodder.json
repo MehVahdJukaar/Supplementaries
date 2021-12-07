@@ -1,0 +1,19 @@
+{
+  "name": "book.supplementaries.entry.fodder.name",
+  "category": "decorative",
+  "icon": "supplementaries:fodder",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "supplementaries:fodder",
+      "title": "book.supplementaries.entry.fodder.page.1.title",
+      "link_recipe": true,
+      "text": "book.supplementaries.entry.fodder.page.1"
+    },
+    {
+      "type": "crafting",
+      "recipe": "supplementaries:fodder",
+      "text": "book.supplementaries.entry.fodder.page.2"
+    }
+  ]
+}

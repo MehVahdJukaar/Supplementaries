@@ -1,0 +1,27 @@
+{
+  "name": "book.supplementaries.entry.lamp.name",
+  "category": "decorative",
+  "icon": "supplementaries:stone_lamp",
+  "pages": [
+    {
+      "type": "supplementaries:spotlight_4",
+      
+      "1" :"supplementaries:stone_lamp",
+      "2" :"supplementaries:deepslate_lamp",
+      "3" :"supplementaries:blackstone_lamp",
+      "4" :"supplementaries:end_stone_lamp",
+      "title" :"book.supplementaries.entry.lamp.page.1.title",
+      "text" :"book.supplementaries.entry.lamp.page.1"
+    },
+    {
+      "type": "crafting",
+      "recipe": "supplementaries:stone_lamp",
+      "recipe2": "supplementaries:blackstone_lamp"
+    },
+    {
+      "type": "crafting",
+      "recipe1": "supplementaries:deepslate_lamp",
+      "recipe2": "supplementaries:end_stone_lamp"
+    }
+  ]
+}

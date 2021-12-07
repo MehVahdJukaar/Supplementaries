@@ -1,0 +1,20 @@
+{
+  "name": "book.supplementaries.entry.gold_door_trapdoor.name",
+  "category": "decorative",
+  "icon": "supplementaries:gold_door",
+  "pages": [
+    {
+      "type": "supplementaries:spotlight_2",
+      
+      "1": "supplementaries:gold_door",
+      "2": "supplementaries:gold_trapdoor",
+      "title": "book.supplementaries.entry.gold_door_trapdoor.page.1.title",
+      "text": "book.supplementaries.entry.gold_door_trapdoor.page.1"
+    },
+    {
+      "type": "crafting",
+      "recipe": "supplementaries:gold_door",
+      "recipe2": "supplementaries:gold_trapdoor"
+    }
+  ]
+}

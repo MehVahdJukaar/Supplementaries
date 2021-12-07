@@ -1,0 +1,19 @@
+{
+  "name": "book.supplementaries.entry.statue.name",
+  "category": "decorative",
+  "icon": "supplementaries:statue",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "supplementaries:statue",
+      "title": "book.supplementaries.entry.statue.page.1.title",
+      "link_recipe": true,
+      "text": "book.supplementaries.entry.statue.page.1"
+    },
+    {
+      "type": "crafting",
+      "recipe": "supplementaries:statue",
+      "text": "book.supplementaries.entry.statue.page.2"
+    }
+  ]
+}

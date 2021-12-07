@@ -1,0 +1,19 @@
+{
+  "name": "book.supplementaries.entry.planter.name",
+  "category": "decorative",
+  "icon": "supplementaries:planter",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "supplementaries:planter",
+      "title": "book.supplementaries.entry.planter.page.1.title",
+      "link_recipe": true,
+      "text": "book.supplementaries.entry.planter.page.1"
+    },
+    {
+      "type": "crafting",
+      "recipe": "supplementaries:planter",
+      "text": "book.supplementaries.entry.planter.page.2"
+    }
+  ]
+}

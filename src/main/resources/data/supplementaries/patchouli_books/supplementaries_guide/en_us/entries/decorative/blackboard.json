@@ -1,0 +1,23 @@
+{
+  "name": "book.supplementaries.entry.blackboard.name",
+  "category": "decorative",
+  "icon": "supplementaries:blackboard",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "supplementaries:blackboard",
+      "title": "book.supplementaries.entry.blackboard.page.1.title",
+      "link_recipe": true,
+      "text": "book.supplementaries.entry.blackboard.page.1"
+    },
+    {
+      "type": "crafting",
+      "recipe": "supplementaries:blackboard",
+      "text": "book.supplementaries.entry.blackboard.page.2"
+    },
+    {
+      "type": "text",
+      "text": "book.supplementaries.entry.blackboard.page.3"
+    }
+  ]
+}

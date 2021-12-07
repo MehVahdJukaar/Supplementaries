@@ -1,0 +1,47 @@
+{
+	"components": [
+		{
+			"type": "item",
+			"item": "#1",
+			"framed": true,
+			"x": 37,
+			"y": 15,
+			"link_recipe": true
+		},
+		{
+			"type": "item",
+			"item": "#2",
+			"framed": true,
+			"x": 63,
+			"y": 15,
+			"link_recipe": true
+		},
+		{
+			"type": "item",
+			"item": "#3",
+			"framed": true,
+			"x": 37,
+			"y": 41,
+			"link_recipe": true
+		},
+		{
+			"type": "item",
+			"item": "#4",
+			"framed": true,
+			"x": 63,
+			"y": 41,
+			"link_recipe": true
+		},
+		{
+		  "type": "header",
+		  "text": "#title",
+		  "x": -1,
+		  "y": -1
+		},
+        {
+          "type": "text",
+          "text": "#text"
+        }
+
+	]
+}

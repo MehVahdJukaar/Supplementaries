@@ -1,0 +1,20 @@
+{
+  "name": "book.supplementaries.entry.tiles_blocks.name",
+  "category": "decorative",
+  "icon": "supplementaries:stone_tile",
+  "pages": [
+    {
+      "type": "supplementaries:spotlight_2",
+
+      "1": "supplementaries:stone_tile",
+      "2": "supplementaries:blackstone_tile",
+      "title": "book.supplementaries.entry.tiles_blocks.page.1.title",
+      "text": "book.supplementaries.entry.tiles_blocks.page.1"
+    },
+    {
+      "type": "crafting",
+      "recipe": "supplementaries:stone_tile",
+      "recipe2": "supplementaries:blackstone_tile"
+    }
+  ]
+}

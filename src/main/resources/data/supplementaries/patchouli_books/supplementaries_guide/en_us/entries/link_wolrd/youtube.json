@@ -1,0 +1,15 @@
+{
+  "name": "book.supplementaries.entry.youtube.name",
+  "category": "link_world",
+  "icon": "supplementaries:textures/gui/book/icon/youtube.png",
+  "sortnum": 5,
+  "pages": [
+    {
+      "type": "link",
+      "url": "https://www.youtube.com/channel/UCOaLLgwzOdbH6rCI7izCptw",
+      "link_text": "book.supplementaries.entry.youtube.page.1.link",
+      "title": "book.supplementaries.entry.youtube.page.1.title",
+      "text": "book.supplementaries.entry.youtube.page.1"
+    }
+  ]
+}

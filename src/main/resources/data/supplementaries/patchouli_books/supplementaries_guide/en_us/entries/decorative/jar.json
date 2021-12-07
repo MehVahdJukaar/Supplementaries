@@ -1,0 +1,19 @@
+{
+  "name": "book.supplementaries.entry.jar.name",
+  "category": "decorative",
+  "icon": "supplementaries:jar",
+  "pages": [
+    {
+      "type": "supplementaries:spotlight_2",
+      "1" :"supplementaries:jar",
+      "2" :"supplementaries:jar_tinted",
+      "title" :"book.supplementaries.entry.jar.page.1.title",
+      "text" :"book.supplementaries.entry.jar.page.1"
+    },
+    {
+      "type": "crafting",
+      "recipe": "supplementaries:jar",
+      "text": "book.supplementaries.entry.jar.page.2"
+    }
+  ]
+}

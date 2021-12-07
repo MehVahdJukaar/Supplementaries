@@ -1,0 +1,20 @@
+{
+  "name": "book.supplementaries.entry.bamboo_spikes.name",
+  "category": "decorative",
+  "icon": "supplementaries:bamboo_spikes",
+  "pages": [
+    {
+      "type": "supplementaries:spotlight_2",
+
+      "1": "supplementaries:bamboo_spikes",
+      "2": "supplementaries:bamboo_spikes_tipped",
+      "title": "book.supplementaries.entry.bamboo_spikes.page.1.title",
+      "text": "book.supplementaries.entry.bamboo_spikes.page.1"
+    },
+    {
+      "type": "crafting",
+      "recipe": "supplementaries:bamboo_spikes",
+      "text": "book.supplementaries.entry.bamboo_spikes.page.2"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "name": "book.supplementaries.entry.books.name",
+  "category": "tweaks",
+  "icon": "minecraft:enchanted_book",
+  "pages": [
+    {
+      "type": "supplementaries:spotlight_2",
+
+      "1": "minecraft:book",
+      "2": "minecraft:enchanted_book",
+      "title": "book.supplementaries.entry.books.page.1.title",
+      "text": "book.supplementaries.entry.books.page.1"
+    },
+    {
+      "type": "image",
+      "text": "book.supplementaries.entry.books.page.2",
+      "images": [
+        "supplementaries:textures/gui/book/books/books1.png",
+        "supplementaries:textures/gui/book/books/books2.png"
+      ]
+    },
+    {
+      "type": "patchouli:text",
+      "text": "book.supplementaries.entry.books.page.3"
+    }
+  ]
+}

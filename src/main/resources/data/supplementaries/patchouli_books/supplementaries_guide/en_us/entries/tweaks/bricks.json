@@ -1,0 +1,15 @@
+{
+  "name": "book.supplementaries.entry.bricks.name",
+  "category": "tweaks",
+  "icon": "minecraft:brick",
+  "pages": [
+    {
+      "type": "supplementaries:spotlight_2",
+
+      "1": "minecraft:brick",
+      "2": "minecraft:nether_brick",
+      "title": "book.supplementaries.entry.bricks.page.1.title",
+      "text": "book.supplementaries.entry.bricks.page.1"
+    }
+  ]
+}

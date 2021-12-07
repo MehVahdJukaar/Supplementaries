@@ -1,0 +1,18 @@
+{
+  "name": "book.supplementaries.entry.plantkillable.name",
+  "category": "credit_tweak",
+  "icon": "minecraft:player_head{SkullOwner:'Plantkillable'}",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "minecraft:player_head{SkullOwner:'Plantkillable'}",
+      "title": "book.supplementaries.entry.plantkillable.page.1.title",
+      "text": "book.supplementaries.entry.plantkillable.page.1"
+    },
+    {
+      "type": "text",
+      "text": "book.supplementaries.entry.plantkillable.page.2"
+    }
+  ]
+}

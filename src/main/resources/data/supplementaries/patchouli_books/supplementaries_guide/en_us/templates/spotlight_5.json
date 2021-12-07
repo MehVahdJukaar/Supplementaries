@@ -1,0 +1,14 @@
+{
+	"include": [
+	  {
+		"template": "spotlight_2",
+		"as": "A"
+	  },
+	  {
+		"template": "spotlight_3",
+		"as": "B",
+		"y": 30
+	  }
+	],
+	"components": []
+  }

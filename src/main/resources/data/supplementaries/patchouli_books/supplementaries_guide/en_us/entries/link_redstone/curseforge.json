@@ -1,0 +1,15 @@
+{
+  "name": "book.supplementaries.entry.curseforge.name",
+  "category": "link_redstone",
+  "icon": "supplementaries:textures/gui/book/icon/curseforge.png",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "link",
+      "url": "https://www.curseforge.com/minecraft/mc-mods/supplementaries",
+      "link_text": "book.supplementaries.entry.curseforge.page.1.link",
+      "title": "book.supplementaries.entry.curseforge.page.1.title",
+      "text": "book.supplementaries.entry.curseforge.page.1"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "name": "book.supplementaries.entry.globe.name",
+  "category": "decorative",
+  "icon": "supplementaries:globe",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "supplementaries:globe",
+      "title": "book.supplementaries.entry.globe.page.1.title",
+      "link_recipe": true,
+      "text": "book.supplementaries.entry.globe.page.1"
+    },
+    {
+      "type": "text",
+      "text": "book.supplementaries.entry.globe.page.2"
+    }
+  ]
+}

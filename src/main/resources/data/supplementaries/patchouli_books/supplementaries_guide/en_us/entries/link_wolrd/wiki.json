@@ -1,0 +1,15 @@
+{
+  "name": "book.supplementaries.entry.wiki.name",
+  "category": "link_world",
+  "icon": "minecraft:textures/item/writable_book.png",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "link",
+      "url": "https://github.com/MehVahdJukaar/Supplementaries/wiki",
+      "link_text": "book.supplementaries.entry.wiki.page.1.link",
+      "title": "book.supplementaries.entry.wiki.page.1.title",
+      "text": "book.supplementaries.entry.wiki.page.1"
+    }
+  ]
+}

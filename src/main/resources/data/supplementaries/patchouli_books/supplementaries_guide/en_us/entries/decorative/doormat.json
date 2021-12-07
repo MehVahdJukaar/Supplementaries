@@ -1,0 +1,19 @@
+{
+  "name": "book.supplementaries.entry.doormat.name",
+  "category": "decorative",
+  "icon": "supplementaries:doormat",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "supplementaries:doormat",
+      "title": "book.supplementaries.entry.doormat.page.1.title",
+      "link_recipe": true,
+      "text": "book.supplementaries.entry.doormat.page.1"
+    },
+    {
+      "type": "crafting",
+      "recipe": "supplementaries:doormat",
+      "text": "book.supplementaries.entry.doormat.page.2"
+    }
+  ]
+}

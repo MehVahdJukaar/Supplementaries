@@ -1,0 +1,28 @@
+{
+  "name": "book.supplementaries.entry.flag.name",
+  "category": "decorative",
+  "icon": "supplementaries:flag_white",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "supplementaries:flag_white",
+      "title": "book.supplementaries.entry.flag.page.1.title",
+      "link_recipe": true,
+      "text": "book.supplementaries.entry.flag.page.1"
+    },
+    {
+      "type": "supplementaries:custom_crafting",
+
+      "1": "minecraft:white_wool",
+      "2": "minecraft:white_wool",
+      "3": "minecraft:white_wool",
+      "4": "minecraft:white_wool",
+      "5": "minecraft:white_wool",
+      "6": "minecraft:white_wool",
+      "7": "minecraft:stick",
+      "output": "supplementaries:flag_white",
+      "title": "book.supplementaries.entry.flag.page.1.title",
+      "text": "book.supplementaries.entry.flag.page.2"
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "name": "book.supplementaries.category.link.name",
+  "description": "book.supplementaries.category.link.description",
+  "icon": "supplementaries:firefly_jar",
+  "parent": "redstone"
+}

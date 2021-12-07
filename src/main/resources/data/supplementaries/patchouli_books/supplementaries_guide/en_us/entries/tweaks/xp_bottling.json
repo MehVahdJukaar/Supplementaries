@@ -1,0 +1,14 @@
+{
+  "name": "book.supplementaries.entry.xp_bottling.name",
+  "category": "tweaks",
+  "icon": "minecraft:experience_bottle",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "minecraft:experience_bottle",
+      "title": "book.supplementaries.entry.xp_bottling.page.1.title",
+      "link_recipe": true,
+      "text": "book.supplementaries.entry.xp_bottling.page.1"
+    }
+  ]
+}

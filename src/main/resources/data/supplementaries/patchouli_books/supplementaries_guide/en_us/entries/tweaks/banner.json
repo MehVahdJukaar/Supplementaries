@@ -1,0 +1,23 @@
+{
+  "name": "book.supplementaries.entry.banner.name",
+  "category": "tweaks",
+  "icon": "minecraft:white_banner",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "minecraft:white_banner",
+      "title": "book.supplementaries.entry.banner.page.1.title",
+      "link_recipe": true,
+      "text": "book.supplementaries.entry.banner.page.1"
+    },
+    {
+      "type": "image",
+      "text": "book.supplementaries.entry.banner.page.2",
+      "images": [
+        "supplementaries:textures/gui/book/banner/banner1.png",
+        "supplementaries:textures/gui/book/banner/banner2.png",
+        "supplementaries:textures/gui/book/banner/banner3.png"
+      ]
+    }
+  ]
+}

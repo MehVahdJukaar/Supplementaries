@@ -1,0 +1,16 @@
+{
+  "name": "book.supplementaries.entry.raked_gravel.name",
+  "category": "tweaks",
+  "icon": "supplementaries:raked_gravel",
+  "pages": [
+    {
+      "type": "supplementaries:sum_partial_no_link",
+      "1": "minecraft:gravel",
+      "2": "minecraft:iron_hoe{Name:\"Any Hoe\"}",
+      "output": "supplementaries:raked_gravel",
+      "title": "book.supplementaries.entry.raked_gravel.page.1.title",
+      "text": "book.supplementaries.entry.raked_gravel.page.1"
+
+    }
+  ]
+}

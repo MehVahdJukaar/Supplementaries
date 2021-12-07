@@ -1,0 +1,22 @@
+{
+  "name": "book.supplementaries.entry.map_markers.name",
+  "category": "tweaks",
+  "icon": "minecraft:filled_map",
+  "pages": [
+    {
+      "type": "supplementaries:spotlight_2",
+
+      "1": "minecraft:map",
+      "2": "minecraft:filled_map",
+      "title": "book.supplementaries.entry.map_markers.page.1.title",
+      "text": "book.supplementaries.entry.map_markers.page.1"
+    },
+    {
+      "type": "image",
+      "text": "book.supplementaries.entry.map_markers.page.2",
+      "images": [
+        "supplementaries:textures/gui/book/map_markers/map_markers.png"
+      ]
+    }
+  ]
+}

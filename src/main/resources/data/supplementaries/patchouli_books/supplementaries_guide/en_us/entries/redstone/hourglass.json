@@ -1,0 +1,19 @@
+{
+  "name": "book.supplementaries.entry.hourglass.name",
+  "category": "redstone",
+  "icon": "supplementaries:hourglass",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "supplementaries:hourglass",
+      "title": "book.supplementaries.entry.hourglass.page.1.title",
+      "link_recipe": true,
+      "text": "book.supplementaries.entry.hourglass.page.1"
+    },
+    {
+      "type": "crafting",
+      "recipe": "supplementaries:hourglass",
+      "text": "book.supplementaries.entry.hourglass.page.2"
+    }
+  ]
+}

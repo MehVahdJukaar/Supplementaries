@@ -1,0 +1,22 @@
+{
+  "name": "book.supplementaries.entry.cake.name",
+  "category": "tweaks",
+  "icon": "minecraft:cake",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "minecraft:cake",
+      "title": "book.supplementaries.entry.cake.page.1.title",
+      "link_recipe": true,
+      "text": "book.supplementaries.entry.cake.page.1"
+    },
+    {
+      "type": "image",
+      "text": "book.supplementaries.entry.cake.page.2",
+      "images": [
+        "supplementaries:textures/gui/book/cake/cake1.png",
+        "supplementaries:textures/gui/book/cake/cake2.png"
+      ]
+    }
+  ]
+}

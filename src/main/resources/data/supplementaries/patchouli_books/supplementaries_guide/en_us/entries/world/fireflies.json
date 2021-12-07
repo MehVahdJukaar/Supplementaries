@@ -1,0 +1,19 @@
+{
+  "name": "book.supplementaries.entry.fireflies.name",
+  "category": "world",
+  "icon": "supplementaries:firefly_spawn_egg",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "supplementaries:firefly_spawn_egg",
+      "title": "book.supplementaries.entry.fireflies.page.1.title",
+      "link_recipe": true,
+      "text": "book.supplementaries.entry.fireflies.page.1"
+    },
+    {
+      "type": "entity",
+      "entity": "supplementaries:firefly",
+      "text": "book.supplementaries.entry.fireflies.page.2"
+    }
+  ]
+}

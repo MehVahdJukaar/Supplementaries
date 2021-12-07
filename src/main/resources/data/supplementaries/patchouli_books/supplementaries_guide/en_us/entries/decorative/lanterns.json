@@ -1,0 +1,20 @@
+{
+  "name": "book.supplementaries.entry.lanterns.name",
+  "category": "decorative",
+  "icon": "supplementaries:copper_lantern",
+  "pages": [
+    {
+      "type": "supplementaries:spotlight_2_no_link",
+      
+      "1" :"supplementaries:copper_lantern",
+      "2" :"supplementaries:crimson_lantern",
+      "title" :"book.supplementaries.entry.lanterns.page.1.title",
+      "text" :"book.supplementaries.entry.lanterns.page.1"
+    },
+    {
+      "type": "crafting",
+      "recipe": "supplementaries:copper_lantern",
+      "recipe2": "supplementaries:crimson_lantern"
+    }
+  ]
+}

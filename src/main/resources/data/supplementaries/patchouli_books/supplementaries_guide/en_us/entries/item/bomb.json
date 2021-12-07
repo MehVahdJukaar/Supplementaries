@@ -1,0 +1,24 @@
+{
+  "name": "book.supplementaries.entry.bomb.name",
+  "category": "item",
+  "icon": "supplementaries:bomb",
+  "pages": [
+    {
+      "type": "supplementaries:spotlight_2",
+
+      "1": "supplementaries:bomb",
+      "2": "supplementaries:bomb_blue",
+      "title": "book.supplementaries.entry.bomb.page.1.title",
+      "text": "book.supplementaries.entry.bomb.page.1"
+    },
+    {
+      "type": "crafting",
+      "recipe": "supplementaries:bomb",
+      "text": "book.supplementaries.entry.bomb.page.2"
+    },
+    {
+      "type": "text",
+      "text": "book.supplementaries.entry.bomb.page.3"
+    }
+  ]
+}
