@@ -24,10 +24,16 @@ public class ModSoftFluids {
 
     public static final SoftFluid DIRT;
     public static final SoftFluid SAP;
+    public static final SoftFluid POWDERED_SNOW;
 
     //mod compat fluids
     //TODO: move to data
     static {
+        POWDERED_SNOW = makeSF(new SoftFluid.Builder(Textures.POWDER_SNOW_TEXTURE, Textures.POWDER_SNOW_TEXTURE, "powder_snow")
+                .fromMod(Supplementaries.MOD_ID)
+                .bucket(Items.POWDER_SNOW_BUCKET)
+                .setBucketSounds(SoundEvents.BUCKET_FILL_POWDER_SNOW, SoundEvents.BUCKET_EMPTY_POWDER_SNOW)
+                .translationKey("block.minecraft.powder_snow"));
         DIRT = makeSF(new SoftFluid.Builder(Textures.DIRT_TEXTURE, Textures.DIRT_TEXTURE, "dirt")
                 .fromMod(Supplementaries.MOD_ID)
                 .emptyHandContainerItem(Items.DIRT, 4)
@@ -48,6 +54,7 @@ public class ModSoftFluids {
 
         SoftFluidRegistry.register(SAP);
         SoftFluidRegistry.register(DIRT);
+        SoftFluidRegistry.register(POWDERED_SNOW);
 
         List<SoftFluid> custom = new ArrayList<>(Collections.emptyList());
 

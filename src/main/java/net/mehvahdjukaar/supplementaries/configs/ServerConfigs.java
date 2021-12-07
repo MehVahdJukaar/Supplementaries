@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.configs;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.compat.CompatObjects;
 import net.mehvahdjukaar.supplementaries.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.resources.ResourceLocation;
@@ -64,9 +63,15 @@ public class ServerConfigs {
         public static ForgeConfigSpec.IntValue SLINGSHOT_CHARGE;
         public static ForgeConfigSpec.DoubleValue SLINGSHOT_DECELERATION;
         public static ForgeConfigSpec.BooleanValue UNRESTRICTED_SLINGSHOT;
+        public static ForgeConfigSpec.EnumValue<Hands> WRENCH_BYPASS;
 
         private static void init(ForgeConfigSpec.Builder builder) {
             builder.push("items");
+
+            builder.push("wrench");
+            WRENCH_BYPASS = builder.comment("Allows wrenches to bypass a block interaction action prioritizing their own when on said hand")
+                    .defineEnum("bypass_when_on", Hands.MAIN_HAND);
+            builder.pop();
 
             //rope arrow
             builder.push("rope_arrow");
@@ -116,6 +121,10 @@ public class ServerConfigs {
             builder.pop();
         }
 
+    }
+
+    public enum Hands{
+        MAIN_HAND, OFF_HAND, BOTH, NONE
     }
 
     public static class tweaks {
@@ -685,6 +694,7 @@ public class ServerConfigs {
         public static int SLINGSHOT_CHARGE;
         public static float SLINGSHOT_DECELERATION;
         public static boolean UNRESTRICTED_SLINGSHOT;
+        public static Hands WRENCH_BYPASS;
         //tweaks
         public static int ZOMBIE_HORSE_COST;
         public static boolean ZOMBIE_HORSE;
@@ -801,6 +811,7 @@ public class ServerConfigs {
             SKULL_CANDLES = tweaks.SKULL_CANDLES.get();
             SKULL_CANDLES_MULTIPLE = tweaks.SKULL_CANDLES_MULTIPLE.get();
 
+            WRENCH_BYPASS = item.WRENCH_BYPASS.get();
             ROPE_ARROW_CAPACITY = item.ROPE_ARROW_CAPACITY.get();
             ROPE_ARROW_ROPE = item.ROPE_ARROW_ROPE.get();
             ROPE_ARROW_BLOCK = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ROPE_ARROW_ROPE));

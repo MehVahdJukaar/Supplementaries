@@ -1,27 +1,33 @@
 package net.mehvahdjukaar.supplementaries.compat.quark;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.DoorHingeSide;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import vazkii.quark.base.module.ModuleLoader;
+import vazkii.quark.content.tweaks.module.DoubleDoorOpeningModule;
 
 public class QuarkDoubleDoorPlugin {
     public static void openDoor(Level world, BlockState state, BlockPos pos) {
 
-//        if (ModuleLoader.INSTANCE.isModuleEnabled(DoubleDoorOpeningModule.class)) {
-//            Direction direction = state.getValue(DoorBlock.FACING);
-//            boolean isOpen = state.getValue(DoorBlock.OPEN);
-//            DoorHingeSide isMirrored = state.getValue(DoorBlock.HINGE);
-//            BlockPos mirrorPos = pos.relative(isMirrored == DoorHingeSide.RIGHT ? direction.getCounterClockWise() : direction.getClockWise());
-//            BlockPos doorPos = state.getValue(DoorBlock.HALF) == DoubleBlockHalf.LOWER ? mirrorPos : mirrorPos.below();
-//            BlockState other = world.getBlockState(doorPos);
-//            if (other.getBlock() == state.getBlock() && other.getValue(DoorBlock.FACING) == direction && !other.getValue(DoorBlock.POWERED) &&
-//                    other.getValue(DoorBlock.OPEN) == isOpen && other.getValue(DoorBlock.HINGE) != isMirrored) {
-//                BlockState newState = other.cycle(DoorBlock.OPEN);
-//                world.setBlock(doorPos, newState, 10);
-//            }
-//        }
+        if (ModuleLoader.INSTANCE.isModuleEnabled(DoubleDoorOpeningModule.class)) {
+            Direction direction = state.getValue(DoorBlock.FACING);
+            boolean isOpen = state.getValue(DoorBlock.OPEN);
+            DoorHingeSide isMirrored = state.getValue(DoorBlock.HINGE);
+            BlockPos mirrorPos = pos.relative(isMirrored == DoorHingeSide.RIGHT ? direction.getCounterClockWise() : direction.getClockWise());
+            BlockPos doorPos = state.getValue(DoorBlock.HALF) == DoubleBlockHalf.LOWER ? mirrorPos : mirrorPos.below();
+            BlockState other = world.getBlockState(doorPos);
+            if (other.getBlock() == state.getBlock() && other.getValue(DoorBlock.FACING) == direction && !other.getValue(DoorBlock.POWERED) &&
+                    other.getValue(DoorBlock.OPEN) == isOpen && other.getValue(DoorBlock.HINGE) != isMirrored) {
+                BlockState newState = other.cycle(DoorBlock.OPEN);
+                world.setBlock(doorPos, newState, 10);
+            }
+        }
     }
 
     public static void openDoorKey(Level world, BlockState state, BlockPos pos, Player player, InteractionHand hand) {

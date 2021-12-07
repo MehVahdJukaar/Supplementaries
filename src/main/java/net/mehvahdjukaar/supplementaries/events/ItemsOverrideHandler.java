@@ -20,6 +20,7 @@ import net.mehvahdjukaar.supplementaries.items.JarItem;
 import net.mehvahdjukaar.supplementaries.network.ClientBoundSyncAntiqueInk;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.setup.ModSoftFluids;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.client.Minecraft;
@@ -714,7 +715,7 @@ public class ItemsOverrideHandler {
                     cap.ifPresent(c -> {
                         if (c.hasAntiqueInk() != newState) {
                             c.setAntiqueInk(newState);
-                            if(world instanceof ServerLevel serverLevel) {
+                            if (world instanceof ServerLevel serverLevel) {
                                 NetworkHandler.sendToAllInRangeClients(pos, serverLevel, 256,
                                         new ClientBoundSyncAntiqueInk(pos, newState));
                             }
@@ -727,7 +728,7 @@ public class ItemsOverrideHandler {
                         } else {
                             world.playSound(null, pos, SoundEvents.INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
                         }
-                        if(!player.isCreative()) stack.shrink(1);
+                        if (!player.isCreative()) stack.shrink(1);
                         return InteractionResult.sidedSuccess(world.isClientSide);
                     }
                 }
@@ -785,7 +786,12 @@ public class ItemsOverrideHandler {
         @Override
         public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand, ItemStack stack, BlockHitResult hit, boolean isRanged) {
             if (player.getAbilities().mayBuild) {
-                return stack.useOn(new UseOnContext(player, hand, hit));
+                var h = ServerConfigs.cached.WRENCH_BYPASS;
+                if ((h == ServerConfigs.Hands.MAIN_HAND && hand == InteractionHand.MAIN_HAND) ||
+                        (h == ServerConfigs.Hands.OFF_HAND && hand == InteractionHand.OFF_HAND) || h == ServerConfigs.Hands.BOTH) {
+
+                    return stack.useOn(new UseOnContext(player, hand, hit));
+                }
             }
             return InteractionResult.PASS;
         }

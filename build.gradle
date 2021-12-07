@@ -27,7 +27,7 @@ mixin {
     add sourceSets.main, "supplementaries.refmap.json"
 }
 
-version = '1.18-1.0.0'
+version = '1.18-1.0.1'
 group = 'net.mehvahdjukaar.supplementaries' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'supplementaries'
 
@@ -166,7 +166,7 @@ dependencies {
     //implementation fg.deobf("curse.maven:quark-243121:3326040")
 
 
-    implementation fg.deobf("curse.maven:configured-457570:3537614")
+    implementation fg.deobf("curse.maven:configured-457570:3546349")
     implementation fg.deobf("curse.maven:curios-309927:3551144")
     //implementation fg.deobf("curse.maven:decorativeblocks-362528:3166283")
     //implementation fg.deobf("curse.maven:farmersdelight-398521:3418719")

@@ -6,6 +6,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.util.valueproviders.UniformInt;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -37,12 +39,17 @@ public class ClientBoundSpawnBlockParticlePacket implements NetworkHandler.Messa
                 //assigns data to client
                 // Level world = Objects.requireNonNull(context.getSender()).level;
                 if (message.id == 0) {
+                    spawnParticles(message.pos);
 
-                    ParticleUtil.spawnParticlesOnBlockFaces(Minecraft.getInstance().level, message.pos, ModRegistry.SUDS_PARTICLE.get(),
-                            UniformInt.of(2, 4), 0.01f, true);
                 }
             }
         });
         context.setPacketHandled(true);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    private static void spawnParticles(BlockPos pos){
+        ParticleUtil.spawnParticlesOnBlockFaces(Minecraft.getInstance().level, pos, ModRegistry.SUDS_PARTICLE.get(),
+                UniformInt.of(2, 4), 0.01f, true);
     }
 }

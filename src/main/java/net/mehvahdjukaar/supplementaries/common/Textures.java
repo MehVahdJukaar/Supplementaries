@@ -26,6 +26,7 @@ public class Textures {
 
     //minecraft
     public static final ResourceLocation DIRT_TEXTURE = new ResourceLocation("minecraft:block/dirt");
+    public static final ResourceLocation POWDER_SNOW_TEXTURE = new ResourceLocation("minecraft:block/powder_snow");
     public static final ResourceLocation WHITE_CONCRETE_TEXTURE = new ResourceLocation("minecraft:block/white_concrete_powder");
     public static final ResourceLocation SAND_TEXTURE = new ResourceLocation("minecraft:block/sand");
     public static final ResourceLocation WATER_TEXTURE = new ResourceLocation("minecraft:block/water_still");

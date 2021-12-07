@@ -11,6 +11,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.NetworkRegistry;
@@ -104,13 +106,14 @@ public class NetworkHandler {
         MinecraftServer currentServer = ServerLifecycleHooks.getCurrentServer();
         if (currentServer != null) {
             PlayerList players = currentServer.getPlayerList();
-            ResourceKey<Level> dimension = level.dimension();
+            var dimension = level.dimension();
             players.broadcast(null, pos.getX(), pos.getY(), pos.getZ(),
                     distance,
                     dimension, INSTANCE.toVanillaPacket(message, NetworkDirection.PLAY_TO_CLIENT));
         }
     }
 
+    @OnlyIn(Dist.CLIENT)
     public static void sendToServerPlayer(Message message) {
         Minecraft.getInstance().getConnection().send(
                 INSTANCE.toVanillaPacket(message, NetworkDirection.PLAY_TO_SERVER));
