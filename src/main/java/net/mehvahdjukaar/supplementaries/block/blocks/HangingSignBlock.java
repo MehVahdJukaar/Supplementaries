@@ -12,6 +12,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.DyeItem;
@@ -42,93 +43,97 @@ public class HangingSignBlock extends SwayingBlock {
     public HangingSignBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false)
-                .setValue(EXTENSION, 0).setValue(FACING, Direction.NORTH).setValue(TILE, false).setValue(HANGING,false));
+                .setValue(EXTENSION, 0).setValue(FACING, Direction.NORTH).setValue(TILE, false).setValue(HANGING, false));
     }
 
     @Override
     public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
-                                             BlockRayTraceResult hit) {
-        TileEntity tileentity = worldIn.getBlockEntity(pos);
-        if (tileentity instanceof HangingSignBlockTile && ((IOwnerProtected) tileentity).isAccessibleBy(player)) {
-            HangingSignBlockTile te = (HangingSignBlockTile) tileentity;
-            ItemStack handItem = player.getItemInHand(handIn);
-            boolean server = !worldIn.isClientSide();
-            boolean isDye = handItem.getItem() instanceof DyeItem && player.abilities.mayBuild;
-            //color
-            if (isDye){
-                if(te.textHolder.setTextColor(((DyeItem) handItem.getItem()).getDyeColor())){
-                    if (!player.isCreative()) {
-                        handItem.shrink(1);
+                                BlockRayTraceResult hit) {
+        if (!worldIn.isClientSide) {
+            TileEntity tileentity = worldIn.getBlockEntity(pos);
+            if (tileentity instanceof HangingSignBlockTile && ((IOwnerProtected) tileentity).isAccessibleBy(player)) {
+                HangingSignBlockTile te = (HangingSignBlockTile) tileentity;
+                ItemStack handItem = player.getItemInHand(handIn);
+                boolean server = !worldIn.isClientSide();
+                boolean isDye = handItem.getItem() instanceof DyeItem && player.abilities.mayBuild;
+                //color
+                if (isDye) {
+                    if (te.textHolder.setTextColor(((DyeItem) handItem.getItem()).getDyeColor())) {
+                        if (!player.isCreative()) {
+                            handItem.shrink(1);
+                        }
+                        if (server) te.setChanged();
+                        return ActionResultType.CONSUME;
                     }
-                    if(server)te.setChanged();
-                    return ActionResultType.sidedSuccess(worldIn.isClientSide);
+                }
+                //not an else to allow to place dye items after coloring
+                //place item
+                //TODO: return early for client. fix left hand(shield)
+                if (handIn == Hand.MAIN_HAND) {
+                    //remove
+                    if (!te.isEmpty() && handItem.isEmpty()) {
+                        ItemStack it = te.removeStackFromSlot(0);
+                        if (!worldIn.isClientSide()) {
+                            player.setItemInHand(handIn, it);
+                            te.setChanged();
+                        }
+                        return ActionResultType.CONSUME;
+                    }
+                    //place
+                    else if (!handItem.isEmpty() && te.isEmpty()) {
+                        ItemStack it = handItem.copy();
+                        it.setCount(1);
+                        te.setItems(NonNullList.withSize(1, it));
+
+                        if (!player.isCreative()) {
+                            handItem.shrink(1);
+                        }
+                        if (!worldIn.isClientSide()) {
+                            worldIn.playSound(null, pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundCategory.BLOCKS, 1.0F, worldIn.random.nextFloat() * 0.10F + 0.95F);
+                            te.setChanged();
+                        }
+                        return ActionResultType.CONSUME;
+                    }
+
+                    // open gui (edit sign with empty hand)
+                    else{
+                        te.sendOpenTextEditScreenPacket(worldIn, pos, (ServerPlayerEntity) player);
+                        return ActionResultType.CONSUME;
+                    }
                 }
             }
-            //not an else to allow to place dye items after coloring
-            //place item
-            //TODO: return early for client. fix left hand(shield)
-            if(handIn==Hand.MAIN_HAND) {
-                //remove
-                if (!te.isEmpty() && handItem.isEmpty()) {
-                    ItemStack it = te.removeStackFromSlot(0);
-                    if (!worldIn.isClientSide()) {
-                        player.setItemInHand(handIn, it);
-                        te.setChanged();
-                    }
-                    return ActionResultType.sidedSuccess(worldIn.isClientSide);
-                }
-                //place
-                else if (!handItem.isEmpty() && te.isEmpty()) {
-                    ItemStack it = handItem.copy();
-                    it.setCount(1);
-                    te.setItems(NonNullList.withSize(1, it));
-
-                    if (!player.isCreative()) {
-                        handItem.shrink(1);
-                    }
-                    if (!worldIn.isClientSide()) {
-                        worldIn.playSound(null, pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundCategory.BLOCKS, 1.0F, worldIn.random.nextFloat() * 0.10F + 0.95F);
-                        te.setChanged();
-                    }
-                    return ActionResultType.sidedSuccess(worldIn.isClientSide);
-                }
-
-                // open gui (edit sign with empty hand)
-                else if (handItem.isEmpty()) {
-                    if (!server) te.openScreen(worldIn, pos, player);
-                    return ActionResultType.sidedSuccess(worldIn.isClientSide);
-                }
-            }
+            return ActionResultType.PASS;
         }
-        return ActionResultType.PASS;
+        else {
+            return ActionResultType.SUCCESS;
+        }
+
     }
 
     @Override
     public boolean canSurvive(BlockState state, IWorldReader worldIn, BlockPos pos) {
-        if(state.getValue(HANGING)){
+        if (state.getValue(HANGING)) {
             return worldIn.getBlockState(pos.above()).isFaceSturdy(worldIn, pos.above(), Direction.DOWN);
-        }
-        else {
+        } else {
             return worldIn.getBlockState(pos.relative(state.getValue(FACING).getOpposite())).getMaterial().isSolid();
         }
     }
 
     @Override
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos,
-                                          BlockPos facingPos) {
+                                  BlockPos facingPos) {
         if (stateIn.getValue(WATERLOGGED)) {
             worldIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
         }
 
-        if(facing==Direction.UP){
+        if (facing == Direction.UP) {
             return !stateIn.canSurvive(worldIn, currentPos)
                     ? Blocks.AIR.defaultBlockState()
                     : super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
-        }
-        else {
-            return facing == stateIn.getValue(FACING).getOpposite()? !stateIn.canSurvive(worldIn, currentPos)
+        } else {
+            return facing == stateIn.getValue(FACING).getOpposite() ? !stateIn.canSurvive(worldIn, currentPos)
                     ? Blocks.AIR.defaultBlockState()
-                    : getConnectedState(stateIn,facingState, worldIn,facingPos) : stateIn;
+                    : getConnectedState(stateIn, facingState, worldIn, facingPos) : stateIn;
         }
     }
 
@@ -138,7 +143,7 @@ public class HangingSignBlock extends SwayingBlock {
             default:
             case Z:
                 return SHAPE_NORTH;
-            case X :
+            case X:
                 return SHAPE_WEST;
         }
     }
@@ -151,23 +156,23 @@ public class HangingSignBlock extends SwayingBlock {
     @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(HANGING,TILE);
+        builder.add(HANGING, TILE);
     }
 
     //TODO: merge with lantern
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         boolean water = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;
-        if (context.getClickedFace() == Direction.DOWN||context.getClickedFace() == Direction.UP) {
+        if (context.getClickedFace() == Direction.DOWN || context.getClickedFace() == Direction.UP) {
             return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getCounterClockWise())
-                    .setValue(HANGING, context.getClickedFace()==Direction.DOWN).setValue(WATERLOGGED, water);
+                    .setValue(HANGING, context.getClickedFace() == Direction.DOWN).setValue(WATERLOGGED, water);
         }
         BlockPos blockpos = context.getClickedPos();
         World world = context.getLevel();
         BlockPos facingpos = blockpos.relative(context.getClickedFace().getOpposite());
         BlockState facingState = world.getBlockState(facingpos);
 
-        return getConnectedState(this.defaultBlockState(),facingState, world,facingpos).setValue(FACING, context.getClickedFace()).setValue(WATERLOGGED,water);
+        return getConnectedState(this.defaultBlockState(), facingState, world, facingpos).setValue(FACING, context.getClickedFace()).setValue(WATERLOGGED, water);
     }
 
     //for player bed spawn
@@ -188,8 +193,9 @@ public class HangingSignBlock extends SwayingBlock {
             if (tileentity instanceof HangingSignBlockTile) {
                 //InventoryHelper.dropInventoryItems(world, pos, (HangingSignBlockTile) tileentity);
 
-                ItemStack itemstack =  ((HangingSignBlockTile) tileentity).getStackInSlot(0);
-                ItemEntity itementity = new ItemEntity(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, itemstack);                itementity.setDefaultPickUpDelay();
+                ItemStack itemstack = ((HangingSignBlockTile) tileentity).getStackInSlot(0);
+                ItemEntity itementity = new ItemEntity(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, itemstack);
+                itementity.setDefaultPickUpDelay();
                 world.addFreshEntity(itementity);
                 world.updateNeighbourForOutputSignal(pos, this);
             }

@@ -72,7 +72,8 @@ public class NetworkHandler {
         INSTANCE.registerMessage(nextID(), SelectOrangeTraderTradePacket.class, SelectOrangeTraderTradePacket::buffer,
                 SelectOrangeTraderTradePacket::new, SelectOrangeTraderTradePacket::handler);
 
-
+        INSTANCE.registerMessage(nextID(), ClientBoundOpenScreenPacket.class, ClientBoundOpenScreenPacket::buffer,
+                ClientBoundOpenScreenPacket::new, ClientBoundOpenScreenPacket::handler);
     }
 
     public static void sendToAllTrackingClient(Entity entity, ServerWorld world, Message message) {

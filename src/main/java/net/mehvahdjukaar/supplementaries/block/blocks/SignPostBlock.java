@@ -14,6 +14,7 @@ import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.loot.LootContext;
 import net.minecraft.loot.LootParameters;
@@ -50,91 +51,91 @@ public class SignPostBlock extends FenceMimicBlock{
     @Override
     public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
                                              BlockRayTraceResult hit) {
+
         if(hit.getDirection().getAxis() == Direction.Axis.Y) return ActionResultType.PASS;
 
-        TileEntity tileentity = worldIn.getBlockEntity(pos);
-        if (tileentity instanceof SignPostBlockTile && ((IOwnerProtected) tileentity).isAccessibleBy(player)) {
-            SignPostBlockTile te = (SignPostBlockTile) tileentity;
-            ItemStack itemstack = player.getItemInHand(handIn);
-            Item item = itemstack.getItem();
+        if(!worldIn.isClientSide) {
+            TileEntity tileentity = worldIn.getBlockEntity(pos);
+            if (tileentity instanceof SignPostBlockTile && ((IOwnerProtected) tileentity).isAccessibleBy(player)) {
+                SignPostBlockTile te = (SignPostBlockTile) tileentity;
+                ItemStack itemstack = player.getItemInHand(handIn);
+                Item item = itemstack.getItem();
 
-            //put post on map
-            if(item instanceof FilledMapItem){
-                if(!worldIn.isClientSide){
-                    MapData data = FilledMapItem.getOrCreateSavedData(itemstack,worldIn);
-                    if(data instanceof CustomDecorationHolder) {
+                //put post on map
+                if (item instanceof FilledMapItem) {
+                    MapData data = FilledMapItem.getOrCreateSavedData(itemstack, worldIn);
+                    if (data instanceof CustomDecorationHolder) {
                         ((CustomDecorationHolder) data).toggleCustomDecoration(worldIn, pos);
                     }
+                    return ActionResultType.CONSUME;
                 }
-                return ActionResultType.sidedSuccess(worldIn.isClientSide);
-            }
 
 
-            boolean server = !worldIn.isClientSide();
-            boolean emptyhand = itemstack.isEmpty();
-            boolean isDye = item instanceof DyeItem && player.abilities.mayBuild;
-            boolean isSneaking = player.isShiftKeyDown() && emptyhand;
-            boolean isSignPost = item instanceof SignPostItem;
-            boolean isCompass = item instanceof CompassItem;
-            //color
-            if (isDye){
-                if(te.textHolder.setTextColor(((DyeItem) itemstack.getItem()).getDyeColor())){
-                    if (!player.isCreative()) {
-                        itemstack.shrink(1);
+                boolean server = !worldIn.isClientSide();
+                boolean emptyhand = itemstack.isEmpty();
+                boolean isDye = item instanceof DyeItem && player.abilities.mayBuild;
+                boolean isSneaking = player.isShiftKeyDown() && emptyhand;
+                boolean isSignPost = item instanceof SignPostItem;
+                boolean isCompass = item instanceof CompassItem;
+                //color
+                if (isDye) {
+                    if (te.textHolder.setTextColor(((DyeItem) itemstack.getItem()).getDyeColor())) {
+                        if (!player.isCreative()) {
+                            itemstack.shrink(1);
+                        }
+                        if (server) te.setChanged();
+                        return ActionResultType.CONSUME;
                     }
-                    if(server)te.setChanged();
-                    return ActionResultType.sidedSuccess(worldIn.isClientSide);
+                    return ActionResultType.FAIL;
                 }
-                return ActionResultType.FAIL;
-            }
-            //sneak right click rotates the sign on z axis
-            else if (isSneaking){
-                double y = hit.getLocation().y;
-                boolean up = y%((int)y) > 0.5d;
-                if(up){
-                    te.leftUp = !te.leftUp;
-                }
-                else{
-                    te.leftDown = !te.leftDown;
-                }
-                if(server)te.setChanged();
-                worldIn.playSound(null, pos, SoundEvents.ITEM_FRAME_ROTATE_ITEM, SoundCategory.BLOCKS, 1.0F, 0.6F);
-                return ActionResultType.sidedSuccess(worldIn.isClientSide);
-            }
-            //change direction with compass
-            else if (isCompass){
-                //itemModelProperties code
-                BlockPos pointingPos = CompassItem.isLodestoneCompass(itemstack) ?
-                        this.getLodestonePos(worldIn, itemstack.getOrCreateTag()) : this.getWorldSpawnPos(worldIn);
-
-                if(pointingPos!=null) {
+                //sneak right click rotates the sign on z axis
+                else if (isSneaking) {
                     double y = hit.getLocation().y;
                     boolean up = y % ((int) y) > 0.5d;
-                    if (up && te.up) {
-                        te.pointToward(pointingPos,true);
-                    } else if (!up && te.down) {
-                        te.pointToward(pointingPos,false);
+                    if (up) {
+                        te.leftUp = !te.leftUp;
+                    } else {
+                        te.leftDown = !te.leftDown;
                     }
-                    if(server)te.setChanged();
-                    return ActionResultType.sidedSuccess(worldIn.isClientSide);
+                    if (server) te.setChanged();
+                    worldIn.playSound(null, pos, SoundEvents.ITEM_FRAME_ROTATE_ITEM, SoundCategory.BLOCKS, 1.0F, 0.6F);
+                    return ActionResultType.CONSUME;
                 }
-                return ActionResultType.FAIL;
+                //change direction with compass
+                else if (isCompass) {
+                    //itemModelProperties code
+                    BlockPos pointingPos = CompassItem.isLodestoneCompass(itemstack) ?
+                            this.getLodestonePos(worldIn, itemstack.getOrCreateTag()) : this.getWorldSpawnPos(worldIn);
+
+                    if (pointingPos != null) {
+                        double y = hit.getLocation().y;
+                        boolean up = y % ((int) y) > 0.5d;
+                        if (up && te.up) {
+                            te.pointToward(pointingPos, true);
+                        } else if (!up && te.down) {
+                            te.pointToward(pointingPos, false);
+                        }
+                        if (server) te.setChanged();
+                        return ActionResultType.CONSUME;
+                    }
+                    return ActionResultType.FAIL;
+                } else if (CompatHandler.framedblocks && te.framed) {
+                    boolean success = FramedSignPost.handleInteraction(te, player, handIn, itemstack, worldIn, pos);
+                    if (success) return ActionResultType.CONSUME;
+                } else if (isSignPost) {
+                    //let sign item handle this one
+                    return ActionResultType.PASS;
+                }
+                // open gui (edit sign with empty hand)
+                te.sendOpenTextEditScreenPacket(worldIn, pos, (ServerPlayerEntity) player);
+
+                return ActionResultType.CONSUME;
             }
-            else if (CompatHandler.framedblocks && te.framed){
-                boolean success = FramedSignPost.handleInteraction(te, player, handIn, itemstack, worldIn, pos);
-                if(success)return ActionResultType.sidedSuccess(worldIn.isClientSide);
-            }
-            else if (isSignPost){
-                //let sign item handle this one
-                return ActionResultType.PASS;
-            }
-            // open gui (edit sign with empty hand)
-            if (!server) {
-                ((SignPostBlockTile) tileentity).openScreen(worldIn, pos, player);
-            }
-            return ActionResultType.sidedSuccess(worldIn.isClientSide);
+            return ActionResultType.PASS;
         }
-        return ActionResultType.PASS;
+        else{
+            return ActionResultType.SUCCESS;
+        }
     }
 
 
