@@ -14,6 +14,8 @@ import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.util.Direction;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class DoormatBlockTile extends ItemDisplayTile implements ITextHolderProvider {
     public static final int MAXLINES = 3;
@@ -29,8 +31,8 @@ public class DoormatBlockTile extends ItemDisplayTile implements ITextHolderProv
     @Override
     public TextHolder getTextHolder(){return this.textHolder;}
 
-    @Override
-    public Screen getTextEditScreen() {
+    @OnlyIn(Dist.CLIENT)
+    public Screen getScreen() {
         return new DoormatGui(this);
     }
 

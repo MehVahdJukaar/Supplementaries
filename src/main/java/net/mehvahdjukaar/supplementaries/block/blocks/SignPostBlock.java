@@ -130,7 +130,7 @@ public class SignPostBlock extends FenceMimicBlock{
             }
             // open gui (edit sign with empty hand)
             if (!server) {
-                ((SignPostBlockTile) tileentity).openTextEditScreen(worldIn, pos, player);
+                ((SignPostBlockTile) tileentity).openScreen(worldIn, pos, player);
             }
             return ActionResultType.sidedSuccess(worldIn.isClientSide);
         }

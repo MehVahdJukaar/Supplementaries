@@ -12,6 +12,8 @@ import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants;
 import org.jetbrains.annotations.Nullable;
 
@@ -54,9 +56,9 @@ public class HangingSignBlockTile extends SwayingBlockTile implements IMapDispla
     @Override
     public TextHolder getTextHolder(){return this.textHolder;}
 
+    @OnlyIn(Dist.CLIENT)
     @Nullable
-    @Override
-    public Screen getTextEditScreen() {
+    public Screen getScreen() {
         return new HangingSignGui(this);
     }
 

@@ -17,6 +17,8 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
@@ -62,9 +64,8 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
     @Override
     public TextHolder getTextHolder(){ return this.textHolder; }
 
-    @Nullable
-    @Override
-    public Screen getTextEditScreen() {
+    @OnlyIn(Dist.CLIENT)
+    public Screen getScreen() {
         return new SignPostGui(this);
     }
 

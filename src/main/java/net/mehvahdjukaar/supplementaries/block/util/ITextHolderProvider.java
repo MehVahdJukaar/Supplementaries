@@ -1,23 +1,15 @@
 package net.mehvahdjukaar.supplementaries.block.util;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.mehvahdjukaar.supplementaries.client.gui.IScreenProvider;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nullable;
-
-public interface ITextHolderProvider {
+@OnlyIn(
+        value = Dist.CLIENT,
+        _interface = IScreenProvider.class
+)
+public interface ITextHolderProvider extends IScreenProvider {
     TextHolder getTextHolder();
 
-    default void openTextEditScreen(World level, BlockPos pos, PlayerEntity player) {
-        Screen s = this.getTextEditScreen();
-        if (s != null) {
-            Minecraft.getInstance().setScreen(this.getTextEditScreen());
-        }
-    }
 
-    @Nullable
-    Screen getTextEditScreen();
 }

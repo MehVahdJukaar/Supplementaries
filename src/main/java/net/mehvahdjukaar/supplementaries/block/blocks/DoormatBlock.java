@@ -87,7 +87,7 @@ public class DoormatBlock extends WaterBlock {
             }
             // open gui (edit sign with empty hand)
             else if (!server) {
-                te.openTextEditScreen(worldIn, pos, player);
+                te.openScreen(worldIn, pos, player);
             }
             return ActionResultType.sidedSuccess(worldIn.isClientSide);
         }

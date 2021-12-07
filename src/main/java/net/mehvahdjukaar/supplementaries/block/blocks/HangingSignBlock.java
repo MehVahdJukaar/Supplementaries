@@ -95,7 +95,7 @@ public class HangingSignBlock extends SwayingBlock {
 
                 // open gui (edit sign with empty hand)
                 else if (handItem.isEmpty()) {
-                    if (!server) te.openTextEditScreen(worldIn, pos, player);
+                    if (!server) te.openScreen(worldIn, pos, player);
                     return ActionResultType.sidedSuccess(worldIn.isClientSide);
                 }
             }
