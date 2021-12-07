@@ -96,4 +96,5 @@ public abstract class MimicBlockTile extends BlockEntity implements IBlockHolder
     public CompoundTag getUpdateTag() {
         return this.saveWithoutMetadata();
     }
+
 }

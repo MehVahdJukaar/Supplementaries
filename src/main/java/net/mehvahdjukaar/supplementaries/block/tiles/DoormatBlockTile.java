@@ -4,7 +4,9 @@ import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.block.blocks.DoormatBlock;
 import net.mehvahdjukaar.supplementaries.block.util.ITextHolderProvider;
 import net.mehvahdjukaar.supplementaries.block.util.TextHolder;
+import net.mehvahdjukaar.supplementaries.client.gui.DoormatGui;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.nbt.CompoundTag;
@@ -13,6 +15,8 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class DoormatBlockTile extends ItemDisplayTile implements ITextHolderProvider {
     public static final int MAX_LINES = 3;
@@ -24,8 +28,12 @@ public class DoormatBlockTile extends ItemDisplayTile implements ITextHolderProv
         this.textHolder = new TextHolder(MAX_LINES);
     }
 
-    @Override
     public TextHolder getTextHolder(){return this.textHolder;}
+
+    @OnlyIn(Dist.CLIENT)
+    public Screen getScreen() {
+        return new DoormatGui(this);
+    }
 
     @Override
     public void load(CompoundTag compound) {

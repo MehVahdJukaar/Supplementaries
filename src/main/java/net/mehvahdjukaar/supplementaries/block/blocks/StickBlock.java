@@ -43,14 +43,13 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.registries.ForgeRegistries;
-import vazkii.quark.api.IRotationLockable;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class StickBlock extends WaterBlock implements IRotationLockable, IRotatable {
+public class StickBlock extends WaterBlock implements IRotatable { // IRotationLockable,
     protected static final VoxelShape Y_AXIS_AABB = Block.box(7D, 0.0D, 7D, 9D, 16.0D, 9D);
     protected static final VoxelShape Z_AXIS_AABB = Block.box(7D, 7D, 0.0D, 9D, 9D, 16.0D);
     protected static final VoxelShape X_AXIS_AABB = Block.box(0.0D, 7D, 7D, 16.0D, 9D, 9D);
@@ -76,9 +75,9 @@ public class StickBlock extends WaterBlock implements IRotationLockable, IRotata
 
     public StickBlock(Properties properties, int fireSpread, String itemRes) {
         super(properties);
-        this.item = Lazy.of(()->ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemRes)));
+        this.item = Lazy.of(() -> ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemRes)));
 
-        this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, Boolean.FALSE).setValue(AXIS_Y,true).setValue(AXIS_X,false).setValue(AXIS_Z,false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, Boolean.FALSE).setValue(AXIS_Y, true).setValue(AXIS_X, false).setValue(AXIS_Z, false));
         this.fireSpread = fireSpread;
     }
 
@@ -146,14 +145,14 @@ public class StickBlock extends WaterBlock implements IRotationLockable, IRotata
     public boolean canBeReplaced(BlockState state, BlockPlaceContext context) {
         Item item = context.getItemInHand().getItem();
         //TODO: fix as item not working
-        if(item == this.getItemOverride()){
+        if (item == this.getItemOverride()) {
             BooleanProperty axis = AXIS2PROPERTY.get(context.getClickedFace().getAxis());
-            if(!state.getValue(axis))return true;
+            if (!state.getValue(axis)) return true;
         }
         return super.canBeReplaced(state, context);
     }
 
-    public Item getItemOverride(){
+    public Item getItemOverride() {
         return Item.byBlock(this);
     }
 
@@ -172,7 +171,7 @@ public class StickBlock extends WaterBlock implements IRotationLockable, IRotata
 
         if (player.getItemInHand(hand).isEmpty() && hand == InteractionHand.MAIN_HAND) {
             if (ServerConfigs.cached.STICK_POLE) {
-                if(this.getItemOverride() != Items.STICK) return InteractionResult.PASS;
+                if (this.getItemOverride() != Items.STICK) return InteractionResult.PASS;
                 if (world.isClientSide) return InteractionResult.SUCCESS;
                 else {
                     Direction moveDir = player.isShiftKeyDown() ? Direction.DOWN : Direction.UP;
@@ -205,7 +204,7 @@ public class StickBlock extends WaterBlock implements IRotationLockable, IRotata
                 world.setBlockAndUpdate(toPos, state);
 
                 tile.setRemoved();
-                BlockEntity target = BlockEntity.loadStatic(pos, state,  tile.save(new CompoundTag()));
+                BlockEntity target = BlockEntity.loadStatic(pos, state, tile.save(new CompoundTag()));
                 if (target != null) {
                     world.setBlockEntity(target);
                 }
@@ -218,7 +217,7 @@ public class StickBlock extends WaterBlock implements IRotationLockable, IRotata
 
     //quark
     //TODO: improve for multiple sticks
-    @Override
+    //@Override
     public BlockState applyRotationLock(Level world, BlockPos blockPos, BlockState state, Direction dir, int half) {
         int i = 0;
         if (state.getValue(AXIS_X)) i++;
@@ -234,7 +233,7 @@ public class StickBlock extends WaterBlock implements IRotationLockable, IRotata
         boolean x = state.getValue(AXIS_X);
         boolean y = state.getValue(AXIS_Y);
         boolean z = state.getValue(AXIS_Z);
-        return Optional.of(switch (axis.getAxis()){
+        return Optional.of(switch (axis.getAxis()) {
             case Y -> state.setValue(AXIS_X, z).setValue(AXIS_Z, x);
             case X -> state.setValue(AXIS_Y, z).setValue(AXIS_Z, y);
             case Z -> state.setValue(AXIS_X, y).setValue(AXIS_Y, x);
@@ -244,9 +243,9 @@ public class StickBlock extends WaterBlock implements IRotationLockable, IRotata
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder pBuilder) {
         int i = 0;
-        if(state.getValue(AXIS_X))i++;
-        if(state.getValue(AXIS_Y))i++;
-        if(state.getValue(AXIS_Z))i++;
+        if (state.getValue(AXIS_X)) i++;
+        if (state.getValue(AXIS_Y)) i++;
+        if (state.getValue(AXIS_Z)) i++;
         return List.of(new ItemStack(this.item.get(), i));
     }
 }

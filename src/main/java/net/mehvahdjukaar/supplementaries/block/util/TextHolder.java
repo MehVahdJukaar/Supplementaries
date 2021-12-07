@@ -28,7 +28,6 @@ import java.util.function.Function;
 
 public class TextHolder implements IAntiqueTextProvider {
 
-
     private final int lines;
     //text
     private final Component[] signText;

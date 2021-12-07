@@ -54,10 +54,6 @@ public class SignPostGui extends Screen {
         editLine = !this.tileSign.up ? 1 : 0;
     }
 
-    public static void open(SignPostBlockTile sign) {
-        Minecraft.getInstance().setScreen(new SignPostGui(sign));
-    }
-
     @Override
     public boolean charTyped(char codePoint, int modifiers) {
         this.textInputUtil.charTyped(codePoint);

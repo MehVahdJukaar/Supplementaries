@@ -148,7 +148,7 @@ public class RopeBlock extends WaterBlock {
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         return ((!state.getValue(UP) && (context.isAbove(COLLISION_SHAPE, pos, true) || !state.getValue(DOWN)))
-                || !(context instanceof EntityCollisionContext) ?
+                || !(context instanceof EntityCollisionContext ec && ec.getEntity() instanceof LivingEntity) ?
                 getShape(state, worldIn, pos, context) : Shapes.empty());
 
     }
@@ -174,6 +174,9 @@ public class RopeBlock extends WaterBlock {
                 return RopeBlock.isSupportingCeiling(facingPos.above(2), world) || RopeBlock.canConnectDown(facingState);
             }
             default -> {
+                if(ServerConfigs.cached.ROPE_UNRESTRICTED && facingState.isFaceSturdy(world, facingPos, dir.getOpposite())){
+                    return true;
+                }
                 if (facingState.is(ModRegistry.ROPE_KNOT.get())) {
                     return thisBlock != b && (dir.getAxis() == Direction.Axis.Y || facingState.getValue(RopeKnotBlock.AXIS) == Direction.Axis.Y);
                 } else if (isKnot && !isVerticalKnot) {

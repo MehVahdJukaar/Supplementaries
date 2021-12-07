@@ -79,7 +79,7 @@ public class ServerConfigs {
                             "a rope from another mod which will get deployed by rope arrows instead of mine")
                     .define("rope_arrow_override", "supplementaries:rope");
             ROPE_ARROW_CAPACITY = builder.comment("Max number of robe items allowed to be stored inside a rope arrow")
-                    .defineInRange("capacity", 24, 1, 256);
+                    .defineInRange("capacity", 32, 1, 256);
             builder.pop();
             //flute
             builder.push("flute");
@@ -323,6 +323,7 @@ public class ServerConfigs {
     }
 
     public static class block {
+        public static ForgeConfigSpec.BooleanValue ROPE_UNRESTRICTED;
         public static ForgeConfigSpec.IntValue GLOBE_TRADES;
 
         public static ForgeConfigSpec.IntValue SPEAKER_RANGE;
@@ -391,6 +392,11 @@ public class ServerConfigs {
 
             builder.comment("Server side blocks configs")
                     .push("blocks");
+
+            builder.push("rope");
+            ROPE_UNRESTRICTED = builder.comment("Allows ropes to be supported & attached to solid block sides")
+                            .define("block_side_attachment", false);
+            builder.pop();
 
             builder.push("pedestal");
             CRYSTAL_ENCHANTING = builder.comment("If enabled end crystals placed on a pedestals will provide an enchantment power bonus equivalent to 3 bookshelves")
@@ -679,7 +685,6 @@ public class ServerConfigs {
     //maybe not need but hey
     public static class cached {
 
-
         //items
         public static String ROPE_ARROW_ROPE;
         public static Block ROPE_ARROW_BLOCK;
@@ -772,6 +777,7 @@ public class ServerConfigs {
         public static boolean GOBLET_DRINK;
         public static boolean CAGE_PERSISTENT_MOBS;
         public static boolean CRYSTAL_ENCHANTING;
+        public static boolean ROPE_UNRESTRICTED;
 
         public static boolean SERVER_PROTECTION;
 
@@ -888,6 +894,7 @@ public class ServerConfigs {
 
             GOBLET_DRINK = block.GOBLET_DRINK.get();
             CRYSTAL_ENCHANTING = block.CRYSTAL_ENCHANTING.get();
+            ROPE_UNRESTRICTED = block.ROPE_UNRESTRICTED.get();
 
             FIREFLY_PERIOD = entity.FIREFLY_PERIOD.get();
             FIREFLY_SPEED = entity.FIREFLY_SPEED.get();

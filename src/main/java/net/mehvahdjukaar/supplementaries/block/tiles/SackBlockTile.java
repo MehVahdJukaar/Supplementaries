@@ -6,37 +6,36 @@ import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.inventories.SackContainer;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.Container;
-import net.minecraft.world.WorldlyContainer;
-import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
-import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.phys.AABB;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.Container;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
+import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
-import vazkii.quark.api.ITransferManager;
 
 import javax.annotation.Nullable;
 import java.util.stream.IntStream;
 
-public class SackBlockTile extends RandomizableContainerBlockEntity implements WorldlyContainer, ICapabilityProvider, ITransferManager {
+public class SackBlockTile extends RandomizableContainerBlockEntity implements WorldlyContainer, ICapabilityProvider { //ITransferManager
 
     private NonNullList<ItemStack> items = NonNullList.withSize(27, ItemStack.EMPTY);
     private int numPlayersUsing;
@@ -76,11 +75,12 @@ public class SackBlockTile extends RandomizableContainerBlockEntity implements W
             this.level.scheduleTick(this.getBlockPos(), this.getBlockState().getBlock(), 5);
         }
     }
+
     public static int calculatePlayersUsing(Level world, BaseContainerBlockEntity tile, int x, int y, int z) {
         int i = 0;
-        for(Player player : world.getEntitiesOfClass(Player.class, new AABB((float)x - 5.0F, (float)y - 5.0F, (float)z - 5.0F, (float)(x + 1) + 5.0F, (float)(y + 1) + 5.0F, (float)(z + 1) + 5.0F))) {
+        for (Player player : world.getEntitiesOfClass(Player.class, new AABB((float) x - 5.0F, (float) y - 5.0F, (float) z - 5.0F, (float) (x + 1) + 5.0F, (float) (y + 1) + 5.0F, (float) (z + 1) + 5.0F))) {
             if (player.containerMenu instanceof SackContainer) {
-                Container inventory = ((SackContainer)player.containerMenu).inventory;
+                Container inventory = ((SackContainer) player.containerMenu).inventory;
                 if (inventory == tile) {
                     ++i;
                 }
@@ -107,9 +107,9 @@ public class SackBlockTile extends RandomizableContainerBlockEntity implements W
             boolean flag = blockstate.getValue(SackBlock.OPEN);
             if (flag) {
                 //this.playSound(blockstate, SoundEvents.BLOCK_BARREL_CLOSE);
-                this.level.playSound((Player)null, this.worldPosition.getX()+0.5, this.worldPosition.getY()+0.5, this.worldPosition.getZ()+0.5,
+                this.level.playSound((Player) null, this.worldPosition.getX() + 0.5, this.worldPosition.getY() + 0.5, this.worldPosition.getZ() + 0.5,
                         SoundEvents.WOOL_BREAK, SoundSource.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.5F);
-                this.level.playSound(null, this.worldPosition.getX()+0.5, this.worldPosition.getY()+0.5, this.worldPosition.getZ()+0.5,
+                this.level.playSound(null, this.worldPosition.getX() + 0.5, this.worldPosition.getY() + 0.5, this.worldPosition.getZ() + 0.5,
                         SoundEvents.LEASH_KNOT_PLACE, SoundSource.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.6F);
                 this.level.setBlock(this.getBlockPos(), blockstate.setValue(SackBlock.OPEN, false), 3);
             }
@@ -161,11 +161,11 @@ public class SackBlockTile extends RandomizableContainerBlockEntity implements W
         return new SackContainer(id, player, this);
     }
 
-    public int getUnlockedSlots(){
+    public int getUnlockedSlots() {
         return ServerConfigs.cached.SACK_SLOTS;
     }
 
-    public boolean isSlotUnlocked(int ind){
+    public boolean isSlotUnlocked(int ind) {
         return ind < this.getUnlockedSlots();
     }
 
@@ -190,6 +190,7 @@ public class SackBlockTile extends RandomizableContainerBlockEntity implements W
     }
 
     private final LazyOptional<? extends IItemHandler>[] handlers = SidedInvWrapper.create(this, Direction.values());
+
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
         if (!this.remove && facing != null && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
@@ -204,7 +205,7 @@ public class SackBlockTile extends RandomizableContainerBlockEntity implements W
             handler.invalidate();
     }
 
-    @Override
+    //@Override
     public boolean acceptsTransfer(Player player) {
         return true;
     }

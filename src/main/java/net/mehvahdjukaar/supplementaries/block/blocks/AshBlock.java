@@ -4,6 +4,7 @@ import net.mehvahdjukaar.supplementaries.entities.FallingAshEntity;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.data.worldgen.placement.VegetationPlacements;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
@@ -11,18 +12,23 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BoneMealItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.FallingBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
@@ -31,6 +37,7 @@ import net.minecraftforge.common.ForgeHooks;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 public class AshBlock extends FallingBlock {
@@ -101,11 +108,14 @@ public class AshBlock extends FallingBlock {
     //ugly but works
     @Override
     public BlockState updateShape(BlockState state, Direction direction, BlockState facingState, LevelAccessor world, BlockPos currentPos, BlockPos otherPos) {
-        if (!state.canSurvive(world, currentPos)) {
-            if (world instanceof ServerLevel serverLevel) {
-                this.tick(state, serverLevel, currentPos, world.getRandom());
+        if (world instanceof ServerLevel serverLevel) {
+            BlockPos pos = currentPos.above();
+            BlockState state1 = world.getBlockState(pos);;
+            while (state1.is(this)){
+                serverLevel.scheduleTick( pos,this, this.getDelayAfterPlace());
+                pos = pos.above();
+                state1 = serverLevel.getBlockState(pos);
             }
-            return state;
         }
         return super.updateShape(state, direction, facingState, world, currentPos, otherPos);
     }
@@ -114,9 +124,16 @@ public class AshBlock extends FallingBlock {
     public void tick(BlockState state, ServerLevel level, BlockPos pos, Random pRand) {
         BlockState below = level.getBlockState(pos.below());
         if ((FallingAshEntity.isFree(below) || hasIncompleteAshPileBelow(below)) && pos.getY() >= level.getMinBuildHeight()) {
-            FallingBlockEntity fallingblockentity = new FallingAshEntity(level, pos, state);
-            this.falling(fallingblockentity);
-            level.addFreshEntity(fallingblockentity);
+
+            while (state.is(this)){
+
+                FallingBlockEntity fallingblockentity = new FallingAshEntity(level, pos, state);
+                this.falling(fallingblockentity);
+                level.addFreshEntity(fallingblockentity);
+
+                pos = pos.above();
+                state = level.getBlockState(pos);
+            }
         }
     }
 
@@ -139,9 +156,7 @@ public class AshBlock extends FallingBlock {
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(LAYERS);
-
     }
-
 
     @Override
     public void randomTick(BlockState pState, ServerLevel level, BlockPos pPos, Random pRandom) {
@@ -217,23 +232,72 @@ public class AshBlock extends FallingBlock {
             for (int i = 0; i < Math.min(12, height * 1.4); i++) {
 
                 addParticle(entity, pos, level, layers, 0.12f);
-
-                /*
-                double dy = Mth.clamp((0.03 * height / 7f), 0.03, 0.055) * 10;
-                world.addParticle(new BlockParticleOption(ParticleTypes.FALLING_DUST, state), entity.getX() + r(random, 0.35),
-                        entity.getY(), entity.getZ() + r(random, 0.35), r(random, 0.007), dy, r(random, 0.007));
-
-                world.addParticle(ParticleTypes.ASH, entity.getX() + r(random, 0.35),
-                        entity.getY(), entity.getZ() + r(random, 0.35), r(random, 0.007), dy, r(random, 0.007));
-            */
             }
-
-
         }
     }
 
-    private double r(Random random, double a) {
-        return a * (random.nextFloat() + random.nextFloat() - 1);
+    //TODO: bonemeal thing
+    public static boolean applyBonemeal(ItemStack stack, Level level, BlockPos pos, Player player) {
+        BlockState blockstate = level.getBlockState(pos);
+        if (blockstate.getBlock() instanceof BonemealableBlock bonemealableblock) {
+            if (bonemealableblock.isValidBonemealTarget(level, pos, blockstate, level.isClientSide)) {
+
+                if (level instanceof ServerLevel) {
+                    if (bonemealableblock.isBonemealSuccess(level, level.random, pos, blockstate)) {
+                        bonemealableblock.performBonemeal((ServerLevel)level, level.random, pos, blockstate);
+                    }
+
+                    stack.shrink(1);
+                }
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static final int GRASS_SPREAD_WIDTH = 3;
+    public void performBonemeal(ServerLevel level, Random random, BlockPos pos, BlockState state) {
+        BlockPos blockpos = pos.above();
+        BlockState blockstate = Blocks.GRASS.defaultBlockState();
+
+        label46:
+        for(int i = 0; i < 128; ++i) {
+            BlockPos pos1 = blockpos;
+
+            for(int j = 0; j < i / 16; ++j) {
+                pos1 = pos1.offset(random.nextInt(GRASS_SPREAD_WIDTH) - 1,
+                        (random.nextInt(GRASS_SPREAD_WIDTH) - 1) * random.nextInt(3) / 2,
+                        random.nextInt(GRASS_SPREAD_WIDTH) - 1);
+                if (!level.getBlockState(pos1.below()).is(this) ||
+                        level.getBlockState(pos1).isCollisionShapeFullBlock(level, pos1)) {
+                    continue label46;
+                }
+            }
+
+            BlockState state1 = level.getBlockState(pos1);
+            //if (state1.is(blockstate.getBlock()) && random.nextInt(10) == 0) {
+            //    ((BonemealableBlock)blockstate.getBlock()).performBonemeal(level, random, pos1, state1);
+            //}
+
+            if (state1.isAir()) {
+                PlacedFeature placedfeature;
+                if (random.nextInt(8) == 0) {
+                    List<ConfiguredFeature<?, ?>> list = level.getBiome(pos1).getGenerationSettings().getFlowerFeatures();
+                    if (list.isEmpty()) {
+                        continue;
+                    }
+
+                    placedfeature = ((RandomPatchConfiguration)list.get(0).config()).feature().get();
+                } else {
+                    placedfeature = VegetationPlacements.GRASS_BONEMEAL;
+                }
+
+                placedfeature.place(level, level.getChunkSource().getGenerator(), random, pos1);
+            }
+        }
+
     }
 
 

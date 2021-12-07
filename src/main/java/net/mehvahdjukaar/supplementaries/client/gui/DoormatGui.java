@@ -50,10 +50,6 @@ public class DoormatGui extends Screen {
 
     }
 
-    public static void open(DoormatBlockTile sign) {
-        Minecraft.getInstance().setScreen(new DoormatGui(sign));
-    }
-
     @Override
     public boolean charTyped(char codePoint, int modifiers) {
         this.textInputUtil.charTyped(codePoint);

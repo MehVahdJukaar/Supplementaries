@@ -83,7 +83,7 @@ public class DoormatBlock extends WaterBlock implements EntityBlock{
             }
             // open gui (edit sign with empty hand)
             else if (!server) {
-                DoormatGui.open(tile);
+                tile.openScreen(level, pos, player);
             }
             return InteractionResult.sidedSuccess(level.isClientSide);
         }

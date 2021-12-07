@@ -4,7 +4,9 @@ import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.supplementaries.block.util.IMapDisplay;
 import net.mehvahdjukaar.supplementaries.block.util.ITextHolderProvider;
 import net.mehvahdjukaar.supplementaries.block.util.TextHolder;
+import net.mehvahdjukaar.supplementaries.client.gui.HangingSignGui;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -12,6 +14,8 @@ import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -53,6 +57,11 @@ public class HangingSignBlockTile extends SwayingBlockTile implements IMapDispla
     @Override
     public TextHolder getTextHolder() {
         return this.textHolder;
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public Screen getScreen() {
+        return new HangingSignGui(this);
     }
 
     @Override

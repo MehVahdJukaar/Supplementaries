@@ -125,7 +125,7 @@ public class SignPostBlock extends FenceMimicBlock implements EntityBlock, IRota
             }
             // open gui (edit sign with empty hand)
             if (!server) {
-                SignPostGui.open(tile);
+                tile.openScreen(level, pos, player);
             }
             return InteractionResult.sidedSuccess(level.isClientSide);
         }

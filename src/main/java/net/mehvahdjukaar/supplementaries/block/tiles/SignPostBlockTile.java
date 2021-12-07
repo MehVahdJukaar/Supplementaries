@@ -5,16 +5,20 @@ import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.util.ITextHolderProvider;
 import net.mehvahdjukaar.supplementaries.block.util.TextHolder;
+import net.mehvahdjukaar.supplementaries.client.gui.SignPostGui;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.VanillaWoodTypes;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
@@ -63,6 +67,11 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
     @Override
     public TextHolder getTextHolder() {
         return this.textHolder;
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public Screen getScreen() {
+        return new SignPostGui(this);
     }
 
     @Override

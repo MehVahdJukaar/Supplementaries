@@ -94,7 +94,7 @@ public class HangingSignBlock extends SwayingBlock implements EntityBlock {
 
                 // open gui (edit sign with empty hand)
                 else if (handItem.isEmpty()) {
-                    if (!server) HangingSignGui.open(tile);
+                    if (!server) tile.openScreen(level, pos, player);
                     return InteractionResult.sidedSuccess(level.isClientSide);
                 }
             }

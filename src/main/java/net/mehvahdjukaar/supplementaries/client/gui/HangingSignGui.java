@@ -42,10 +42,6 @@ public class HangingSignGui extends Screen {
 
     }
 
-    public static void open(HangingSignBlockTile sign) {
-        Minecraft.getInstance().setScreen(new HangingSignGui(sign));
-    }
-
     @Override
     public boolean charTyped(char codePoint, int modifiers) {
         this.textInputUtil.charTyped(codePoint);

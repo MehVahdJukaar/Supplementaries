@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries;
 
+import com.mrcrayfish.configured.client.screen.ConfigScreen;
+import net.mehvahdjukaar.supplementaries.client.gui.ConfigButton;
 import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
 import net.mehvahdjukaar.supplementaries.datagen.RecipeCondition;
 import net.mehvahdjukaar.supplementaries.events.ServerEvents;
