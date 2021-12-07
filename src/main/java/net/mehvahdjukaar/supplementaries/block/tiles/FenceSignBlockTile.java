@@ -47,7 +47,7 @@ public class FenceSignBlockTile extends TileEntity implements ITextHolderProvide
     public TextHolder getTextHolder(){ return this.textHolder; }
 
     @Override
-    public Screen getTextEditScreen() {
+    public Screen getScreen() {
         return null;
     }
 

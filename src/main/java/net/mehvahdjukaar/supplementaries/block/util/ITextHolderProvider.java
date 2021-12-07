@@ -11,5 +11,4 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public interface ITextHolderProvider extends IScreenProvider {
     TextHolder getTextHolder();
 
-
 }
