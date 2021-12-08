@@ -6,10 +6,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.util.valueproviders.UniformInt;
-import net.minecraft.world.level.Level;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
-import java.util.Objects;
 import java.util.function.Supplier;
 
 
@@ -37,14 +37,19 @@ public class ClientBoundSpawnBlockParticlePacket implements NetworkHandler.Messa
         context.enqueueWork(() -> {
             if (!context.getDirection().getReceptionSide().isServer()) {
                 //assigns data to client
-               // Level world = Objects.requireNonNull(context.getSender()).level;
-                if (message.id == 0) {
-
-                    ParticleUtil.spawnParticlesOnBlockFaces(Minecraft.getInstance().level, message.pos, ModRegistry.SUDS_PARTICLE.get(),
-                            UniformInt.of(2, 4), 0.01f, true);
-                }
+                // Level world = Objects.requireNonNull(context.getSender()).level;
+                spawnParticles(message.pos, message.id);
             }
         });
         context.setPacketHandled(true);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    private static void spawnParticles(BlockPos pos, int id) {
+        if (id == 0) {
+
+            ParticleUtil.spawnParticlesOnBlockFaces(Minecraft.getInstance().level, pos, ModRegistry.SUDS_PARTICLE.get(),
+                    UniformInt.of(2, 4), 0.01f, true);
+        }
     }
 }

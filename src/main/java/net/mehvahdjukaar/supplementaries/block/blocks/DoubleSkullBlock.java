@@ -2,6 +2,8 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.api.IRotatable;
 import net.mehvahdjukaar.supplementaries.block.tiles.DoubleSkullBlockTile;
+import net.mehvahdjukaar.supplementaries.client.gui.OrangeMerchantGui;
+import net.minecraft.client.gui.screens.inventory.MerchantScreen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -86,11 +88,10 @@ public class DoubleSkullBlock extends SkullBlock implements IRotatable {
                 if (up) tile.rotateUpStep(inc);
                 else {
                     if (world instanceof ServerLevel) {
-                        world.setBlock(pos, state.setValue(ROTATION, (state.getValue(ROTATION) + inc + 16) % 16), 11);
+                        world.setBlock(pos, state.setValue(ROTATION, (state.getValue(ROTATION) - inc + 16) % 16), 11);
                         //level.updateNeighborsAtExceptFromFacing(pos, newState.getBlock(), mydir.getOpposite());
                     }
                 }
-
             }
 
             //world.notifyBlockUpdate(pos, tile.getBlockState(), tile.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
